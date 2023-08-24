@@ -1867,7 +1867,7 @@ void LevelCelView::reportUsage() const
                         for (int user : it->second) {
                             specUses += QString::number(user + 1) + ", ";
                         }
-                        subtileUses.chop(2);
+                        specUses.chop(2);
                         dProgress() << tr("Special-Frame %1 is used by subtile %2.", "", it->second.size()).arg(it->first).arg(specUses);
                     }
                 }
@@ -1883,7 +1883,7 @@ void LevelCelView::reportUsage() const
                 for (int user : specUsers) {
                     specUses += QString::number(user + 1) + ", ";
                 }
-                subtileUses.chop(2);
+                specUses.chop(2);
                 dProgress() << tr("Special-Frame %1 is used by subtile %2.", "", specUsers.size()).arg(specType).arg(specUses);
             }
         }
