@@ -365,7 +365,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         bool palMod;
         D1GfxFrame *frame = this->gfx->insertFrame(index);
         if (!D1Pcx::load(*frame, imagefilePath, frame->isClipped(), this->pal, this->gfx->getPalette(), &palMod)) {
-            this->gfx->removeFrame(index);
+            this->gfx->removeFrame(index, false);
             this->gfx->setModified(wasModified);
             QString msg = tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             if (mode != IMAGE_FILE_MODE::AUTO) {
@@ -484,12 +484,13 @@ void CelView::replaceCurrentFrame(const QString &imagefilePath)
     // this->displayFrame();
 }
 
-void CelView::removeCurrentFrame()
+void CelView::removeCurrentFrame(bool wholeGroup)
 {
     // remove the frame
-    this->gfx->removeFrame(this->currentFrameIndex);
-    if (this->gfx->getFrameCount() == this->currentFrameIndex) {
-        this->currentFrameIndex = std::max(0, this->currentFrameIndex - 1);
+    this->gfx->removeFrame(this->currentFrameIndex, wholeGroup);
+    int numFrame = this->gfx->getFrameCount();
+    if (numFrame <= this->currentFrameIndex) {
+        this->currentFrameIndex = std::max(0, numFrame - 1);
     }
     this->updateGroupIndex();
     // update the view - done by the caller

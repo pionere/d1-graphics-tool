@@ -19401,7 +19401,7 @@ void D1Tileset::patch(int dunType, bool silent)
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
         unsigned refIndex = *it;
-        this->gfx->removeFrame(refIndex - 1);
+        this->gfx->removeFrame(refIndex - 1, false);
         // shift references
         // - shift frame indices of the subtiles
         for (int i = 0; i < this->min->getSubtileCount(); i++) {

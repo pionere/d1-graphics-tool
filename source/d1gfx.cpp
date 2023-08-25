@@ -342,25 +342,47 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
     return resIdx;
 }
 
-void D1Gfx::removeFrame(int idx)
+void D1Gfx::removeFrame(int idx, bool wholeGroup)
 {
-    delete this->frames[idx];
-    this->frames.removeAt(idx);
-    this->modified = true;
+    const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    if (wholeGroup && multiGroup) {
+        for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
+            if (this->groupFrameIndices[i].second < idx)
+                continue;
+            if (this->groupFrameIndices[i].first <= idx) {
+                idx = this->groupFrameIndices[i].first;
+                for (int n = idx; n <= this->groupFrameIndices[i].second; n++) {
+                    delete this->frames[idx];
+                    this->frames.removeAt(idx);
+                }
+                this->groupFrameIndices.erase(this->groupFrameIndices.begin() + i);
+                i--;
+                continue;
+            }
+            int lastIdx = idx + this->groupFrameIndices[i].second - this->groupFrameIndices[i].first;
+            this->groupFrameIndices[i].first = idx;
+            this->groupFrameIndices[i].second = lastIdx;
+            idx = lastIdx + 1;
+        }
+    } else {
+        delete this->frames[idx];
+        this->frames.removeAt(idx);
 
-    for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
-        if (this->groupFrameIndices[i].second < idx)
-            continue;
-        if (this->groupFrameIndices[i].second == idx && this->groupFrameIndices[i].first == idx) {
-            this->groupFrameIndices.erase(this->groupFrameIndices.begin() + i);
-            i--;
-            continue;
+        for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
+            if (this->groupFrameIndices[i].second < idx)
+                continue;
+            if (this->groupFrameIndices[i].second == idx && this->groupFrameIndices[i].first == idx) {
+                this->groupFrameIndices.erase(this->groupFrameIndices.begin() + i);
+                i--;
+                continue;
+            }
+            if (this->groupFrameIndices[i].first > idx) {
+                this->groupFrameIndices[i].first--;
+            }
+            this->groupFrameIndices[i].second--;
         }
-        if (this->groupFrameIndices[i].first > idx) {
-            this->groupFrameIndices[i].first--;
-        }
-        this->groupFrameIndices[i].second--;
     }
+    this->modified = true;
 }
 
 void D1Gfx::remapFrames(const std::map<unsigned, unsigned> &remap)
@@ -1368,7 +1390,7 @@ bool D1Gfx::patchSplIcons(bool silent)
         return false;
     }
     for (int i = 0; i < 8; i++) {
-        this->removeFrame(lastIdx);
+        this->removeFrame(lastIdx, false);
     }
     if (!silent) {
         dProgress() << QApplication::tr("Removed the last 8 frames.");

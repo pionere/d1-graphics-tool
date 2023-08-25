@@ -137,7 +137,7 @@ public:
     D1GfxFrame *addToFrame(int frameIndex, const D1GfxFrame &frame);
     D1GfxFrame *replaceFrame(int frameIndex, const QImage &image);
     int duplicateFrame(int frameIndex, bool wholeGroup);
-    void removeFrame(int frameIndex);
+    void removeFrame(int frameIndex, bool wholeGroup);
     void remapFrames(const std::map<unsigned, unsigned> &remap);
     void swapFrames(unsigned frameIndex0, unsigned frameIndex1);
 
