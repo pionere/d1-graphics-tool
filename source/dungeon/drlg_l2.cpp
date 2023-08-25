@@ -2705,14 +2705,14 @@ static void DRLG_L2FixPreMap(int idx)
 		// fix corners
 		// DRLG_L2Corners(); - commented out, because this is no longer necessary
 		// protect the central room from torch placement
-		for (int y = 9; y < 13; y++) {
-			for (int x = 13; x < 17; x++) {
+		for (int y = 18 / 2; y < 26 / 2; y++) {
+			for (int x = 26 / 2; x < 34 / 2; x++) {
 				lm[2 + 32 * 18 + x + y * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
 		// protect the changing tiles room from torch placement
-		lm[2 + 32 * 18 + 14 + 5 * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
-		lm[2 + 32 * 18 + 18 + 5 * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+		lm[2 + 32 * 18 + (28 / 2) + (10 / 2) * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+		lm[2 + 32 * 18 + (36 / 2) + (10 / 2) * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 	}
 }
 
