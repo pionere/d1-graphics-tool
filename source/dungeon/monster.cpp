@@ -536,7 +536,7 @@ static void InitUniqueMonster(int mnum, int uniqindex)
 
 #ifdef HELLFIRE
     if (uniqindex == UMT_NAKRUL && mnum != MAX_MINIONS) {
-        dProgressErr() << QApplication::tr("Bad Na-Krul placement. Received-Id:%1 instead of %2").arg(mnum).arg(MAX_MINIONS);
+        dProgressErr() << QApplication::tr("Bad Na-Krul placement. Received-Id:%1 instead of %2.").arg(mnum).arg(MAX_MINIONS);
     }
 #endif
 	mon = &monsters[mnum];

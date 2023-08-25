@@ -226,9 +226,9 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 		InitObjectGFX();  // load object graphics
 		IncProgress();
 		HoldThemeRooms(); // protect themes with dFlags
-		InitObjects();      // place objects
+		InitObjects();    // place objects
 		IncProgress();
-		InitMonsters();   // place monsters
+		InitMonsters();     // place monsters
 		InitItems();        // place items
 		CreateThemeRooms(); // populate theme rooms
 	} else {
@@ -531,16 +531,26 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     EnterLevel(params.level);
     IncProgress();
 
+	int32_t questSeed = params.seedQuest;
 	int extraRounds = params.extraRounds;
 	quint64 started = QDateTime::currentMSecsSinceEpoch();
 	SetRndSeed(params.seed);
-	do {
+	while (true) {
 		extern int32_t sglGameSeed;
 		//LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
-		dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(params.seedQuest).arg(params.entryMode);
+		dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(questSeed).arg(params.entryMode);
 		LoadGameLevel(params.entryMode, dun);
 		FreeLvlDungeon();
-	} while (--extraRounds >= 0);
+		if (--extraRounds < 0) {
+			break;
+		}
+		if (params.extraQuestRnd) {
+			// QRandomGenerator *gen = QRandomGenerator::global();
+			// questSeed = (int)gen->generate();
+			questSeed = NextRndSeed();
+			InitQuests(questSeed);
+		}
+	}
 	quint64 now = QDateTime::currentMSecsSinceEpoch();
 	dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms.").arg(params.extraRounds + 1).arg(now - started);
 

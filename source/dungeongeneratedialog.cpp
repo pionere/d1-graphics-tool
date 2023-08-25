@@ -59,6 +59,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.isHellfire = this->ui->hellfireCheckBox->isChecked();
     params.useTileset = this->ui->tilesetCheckBox->isChecked();
     params.patchDunFiles = this->ui->patchDunCheckBox->isChecked();
+    params.extraQuestRnd = this->ui->extraRndCheckBox->isChecked();	
     bool ok;
     QString seedTxt = this->ui->seedLineEdit->text();
     params.seed = seedTxt.toInt(&ok);

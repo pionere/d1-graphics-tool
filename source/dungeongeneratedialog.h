@@ -18,6 +18,7 @@ public:
     int32_t seedQuest;
     int entryMode;
     int extraRounds;
+    bool extraQuestRnd;
 };
 
 namespace Ui {

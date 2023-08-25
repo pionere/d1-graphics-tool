@@ -78,6 +78,7 @@ typedef enum item_indexes {
 	IDI_DROPSHSTAFF= 0x86,
 #ifdef HELLFIRE
 	NUM_IDI        = 0x9A,
+	NUM_IDI_DIABLO = 0x93,
 #else
 	NUM_IDI        = 0x93,
 #endif
@@ -205,6 +206,7 @@ typedef enum unique_item_indexes {
 	//UITEM_DEMONARMOR,
 	UITEM_ACOLYTEAMU,
 	UITEM_GLADIATORING,
+	NUM_UITEM_DIABLO = UITEM_GKNUCKLE;
 #endif
 	NUM_UITEM
 } unique_item_indexes;
@@ -3851,6 +3853,7 @@ typedef enum spell_id {
 	SPL_RUNENOVA,
 	SPL_RUNEWAVE,
 	SPL_RUNESTONE,
+	NUM_SPELLS_DIABLO = SPL_BUCKLE,
 #endif
 	NUM_SPELLS,
 	SPL_INVALID = NUM_SPELLS,
