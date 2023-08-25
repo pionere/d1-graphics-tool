@@ -65,10 +65,8 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define MDMAXX					40
 #define MDMAXY					40
 #ifdef HELLFIRE
-#define ITEMTYPES				43
 #define BASESTAFFCHARGES		18
 #else
-#define ITEMTYPES				35
 #define BASESTAFFCHARGES		40
 #endif
 
