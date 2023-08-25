@@ -207,7 +207,7 @@ typedef enum unique_item_indexes {
 	UITEM_ACOLYTEAMU,
 	UITEM_GLADIATORING,
 #endif
-	NUM_UITEM
+	NUM_UITEM,
 #ifdef HELLFIRE
 	NUM_UITEM_DIABLO = UITEM_GKNUCKLE,
 #endif
