@@ -534,6 +534,11 @@ static void InitUniqueMonster(int mnum, int uniqindex)
 	const UniqMonData* uniqm;
 	MonsterStruct* mon;
 
+#ifdef HELLFIRE
+    if (uniqindex == UMT_NAKRUL && mnum != MAX_MINIONS) {
+        dProgressErr() << QApplication::tr("Bad Na-Krul placement. Received-Id:%1 instead of %2").arg(mnum).arg(MAX_MINIONS);
+    }
+#endif
 	mon = &monsters[mnum];
 	mon->_mNameColor = COL_GOLD;
 	mon->_muniqtype = uniqindex + 1;
