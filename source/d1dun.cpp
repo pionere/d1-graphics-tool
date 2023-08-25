@@ -2963,6 +2963,20 @@ bool D1Dun::maskTilesFrom(const D1Dun *srcDun)
     return result;
 }
 
+bool D1Dun::needsProtectionAt(int posx, int posy) const
+{
+    if (this->objects[posy][posx] == 0 && this->monsters[posy][posx].first == 0) {
+        return false;
+    }
+    int subtileRef = this->subtiles[posy][posx];
+    if ((subtileRef > 0) // UNDEF_SUBTILE || 0
+        && (this->tileset->sol->getSubtileProperties(subtileRef - 1) & PFLAG_BLOCK_PATH)
+        && (this->tileset->spt->getSubtileTrapProperty(subtileRef - 1) == PTT_NONE)) {
+        return false;
+    }
+    return true;
+}
+
 bool D1Dun::protectTiles()
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);
@@ -2970,16 +2984,13 @@ bool D1Dun::protectTiles()
     for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
         for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
             bool needsProtection = this->tiles[tilePosY][tilePosX] > 0; // !0 && !UNDEF_TILE
+            for (int duny = tilePosY * TILE_HEIGHT; duny < (tilePosY + 1) * TILE_HEIGHT; duny++) {
+                for (int dunx = tilePosX * TILE_WIDTH; duny < (tilePosX + 1) * TILE_WIDTH; dunx++) {
+                    needsProtection |= this->needsProtectionAt(dunx, duny);
+                }
+            }
             int dunx = tilePosX * TILE_WIDTH;
             int duny = tilePosY * TILE_HEIGHT;
-            needsProtection |= this->monsters[duny + 0][dunx + 0].first != 0;
-            needsProtection |= this->monsters[duny + 0][dunx + 1].first != 0;
-            needsProtection |= this->monsters[duny + 1][dunx + 0].first != 0;
-            needsProtection |= this->monsters[duny + 1][dunx + 1].first != 0;
-            needsProtection |= this->objects[duny + 0][dunx + 0] != 0;
-            needsProtection |= this->objects[duny + 0][dunx + 1] != 0;
-            needsProtection |= this->objects[duny + 1][dunx + 0] != 0;
-            needsProtection |= this->objects[duny + 1][dunx + 1] != 0;
             if (needsProtection && this->setTileProtectionAt(dunx, duny, Qt::PartiallyChecked)) {
                 dProgress() << tr("Tile at %1:%2 is now '%3'.").arg(dunx).arg(duny).arg(protectionString(Qt::PartiallyChecked));
                 result = true;
@@ -3031,7 +3042,7 @@ bool D1Dun::protectSubtiles()
     bool result = false;
     for (int duny = 0; duny < this->height; duny++) {
         for (int dunx = 0; dunx < this->width; dunx++) {
-            bool needsProtection = this->objects[duny][dunx] != 0 || this->monsters[duny][dunx].first != 0;
+            bool needsProtection = this->needsProtectionAt(dunx, duny);
             if (needsProtection && this->changeSubtileProtectionAt(dunx, duny, 3)) {
                 dProgress() << tr("Subtile at %1:%2 is now protected.").arg(dunx).arg(duny);
                 result = true;

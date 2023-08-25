@@ -246,6 +246,7 @@ private:
     bool changeItemAt(int posx, int posy, int itemIndex);
     bool changeTileProtectionAt(int tilePosX, int tilePosY, Qt::CheckState protection);
     bool changeSubtileProtectionAt(int posx, int posy, int protection);
+    bool needsProtectionAt(int posx, int posy) const;
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;
