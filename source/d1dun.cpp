@@ -3467,6 +3467,15 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
+        // prevent placement of torches on the changing tiles
+        change |= this->changeSubtileProtectionAt(2 * 14 + 0, 2 * 5 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 14 + 1, 2 * 5 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 14 + 0, 2 * 5 + 1, 3);
+        change |= this->changeSubtileProtectionAt(2 * 14 + 1, 2 * 5 + 1, 3);
+        change |= this->changeSubtileProtectionAt(2 * 18 + 0, 2 * 5 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 18 + 1, 2 * 5 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 18 + 0, 2 * 5 + 1, 3);
+        change |= this->changeSubtileProtectionAt(2 * 18 + 1, 2 * 5 + 1, 3);
         break;
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
         // reduce pointless bone-chamber complexity
@@ -4228,6 +4237,11 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeSubtileProtectionAt(x, y, 3);
             }
         }
+        // protect the changing tiles from trap placement
+        change |= this->changeSubtileProtectionAt(2 * 11 + 0, 2 * 11 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 11 + 1, 2 * 11 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 23 + 0, 2 *  8 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 23 + 0, 2 *  8 + 1, 3);
         break;
     case DUN_SKELKING_AFT: // SklKng1.DUN
         // external tiles

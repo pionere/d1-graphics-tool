@@ -3243,6 +3243,9 @@ static void DRLG_L1FixPreMap(int idx)
 				lm[2 + 37 * 25 + x + y * 37] = SwapLE16((3 << 12) | (3 << 14));
 			}
 		}
+		// protect the changing tiles from trap placement
+		lm[2 + 37 * 25 + 11 + 11 * 37] = SwapLE16((3 << 8) | (3 << 10));
+		lm[2 + 37 * 25 + 23 +  8 * 37] = SwapLE16((3 << 8) | (3 << 12));
 	}
 }
 
