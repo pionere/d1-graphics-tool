@@ -939,7 +939,7 @@ void DRLG_L1Shadows()
 				continue;
 			}
 			if (pillar) {
-				if (dungeon[i - 1][j] == 13) {
+				if (dungeon[i - 1][j] == 13 || dungeon[i - 1][j] == 142) {
 					BYTE replace = dungeon[i - 1][j - 1];
 					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 					// pillar = (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;

@@ -288,7 +288,7 @@
         <item>
          <widget class="QLabel">
           <property name="text">
-           <string>Randomize Quests:</string>
+           <string>Rand. Quests:</string>
           </property>
          </widget>
         </item>
