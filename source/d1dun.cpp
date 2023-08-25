@@ -3442,6 +3442,24 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeTileAt(x, y, 0);
             }
         }
+        // prevent placement of torches in the central room
+        for (int y = 9; y < 13; y++) {
+            for (int x = 13; x < 17; x++) {
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
+            }
+        }
+        // prevent placement of torches on the changing tiles
+        change |= this->changeSubtileProtectionAt(28 + 0, 10 + 0, 3);
+        change |= this->changeSubtileProtectionAt(28 + 1, 10 + 0, 3);
+        change |= this->changeSubtileProtectionAt(28 + 0, 10 + 1, 3);
+        change |= this->changeSubtileProtectionAt(28 + 1, 10 + 1, 3);
+        change |= this->changeSubtileProtectionAt(36 + 0, 10 + 0, 3);
+        change |= this->changeSubtileProtectionAt(36 + 1, 10 + 0, 3);
+        change |= this->changeSubtileProtectionAt(36 + 0, 10 + 1, 3);
+        change |= this->changeSubtileProtectionAt(36 + 1, 10 + 1, 3);
         break;
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
         // reduce pointless bone-chamber complexity
@@ -4165,33 +4183,48 @@ void D1Dun::patch(int dunFileIndex)
         }
         // protect subtiles from spawning monsters/objects
         // - protect objects from monsters
-        change |= this->changeSubtileProtectionAt(10 + 1, 20 + 1, 1);
-        change |= this->changeSubtileProtectionAt(10 + 1, 36 + 1, 1);
-        change |= this->changeSubtileProtectionAt(30 + 0, 18 + 1, 1);
-        change |= this->changeSubtileProtectionAt(32 + 1, 36 + 1, 1);
-        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 0, 1);
-        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 1, 1);
-        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 0, 1);
-        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 1, 1);
-        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 0, 1);
-        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 1, 1);
-        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 0, 1);
-        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 1, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 0, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 1, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 18 + 0, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 42 + 1, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 0, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 1, 1);
+        change |= this->changeSubtileProtectionAt(10 + 1, 20 + 1, 3);
+        change |= this->changeSubtileProtectionAt(12 + 0, 20 + 0, 3);
+        change |= this->changeSubtileProtectionAt(12 + 0, 40 + 1, 3);
+        change |= this->changeSubtileProtectionAt(10 + 1, 36 + 1, 3);
+        change |= this->changeSubtileProtectionAt(30 + 0, 18 + 1, 3);
+        change |= this->changeSubtileProtectionAt(32 + 1, 36 + 1, 3);
+        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 0, 3);
+        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 1, 3);
+        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 0, 3);
+        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 1, 3);
+        change |= this->changeSubtileProtectionAt(18 + 0, 30 + 0, 3);
+        change |= this->changeSubtileProtectionAt(18 + 1, 30 + 1, 3);
+        change |= this->changeSubtileProtectionAt(18 + 0, 32 + 0, 3);
+        change |= this->changeSubtileProtectionAt(20 + 0, 30 + 0, 3);
+        change |= this->changeSubtileProtectionAt(20 + 0, 32 + 0, 3);
+        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 0, 3);
+        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 1, 3);
+        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 0, 3);
+        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 1, 3);
+        change |= this->changeSubtileProtectionAt(34 + 0, 18 + 1, 3);
+        change |= this->changeSubtileProtectionAt(46 + 1, 38 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 38 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 1, 38 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 40 + 0, 3);
+        change |= this->changeSubtileProtectionAt(48 + 1, 40 + 0, 3);
+        change |= this->changeSubtileProtectionAt(50 + 0, 38 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 14 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 0, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 18 + 0, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 42 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 0, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 1, 3);
         // - protect the back-room from additional monsters
         for (int y = 31; y <= 37; y++) {
             for (int x = 3; x <= 9; x++) {
-                change |= this->changeSubtileProtectionAt(x, y, 1);
+                change |= this->changeSubtileProtectionAt(x, y, 3);
             }
         }
         for (int y = 33; y <= 35; y++) {
             for (int x = 10; x <= 13; x++) {
-                change |= this->changeSubtileProtectionAt(x, y, 1);
+                change |= this->changeSubtileProtectionAt(x, y, 3);
             }
         }
         // - add empty space after the grate
@@ -4200,9 +4233,14 @@ void D1Dun::patch(int dunFileIndex)
                 if (x == 32 && (y == 30 || y == 32)) {
                     continue;
                 }
-                change |= this->changeSubtileProtectionAt(x, y, 1);
+                change |= this->changeSubtileProtectionAt(x, y, 3);
             }
         }
+        // protect the changing tiles from trap placement
+        change |= this->changeSubtileProtectionAt(22 + 0, 22 + 0, 3);
+        change |= this->changeSubtileProtectionAt(22 + 1, 22 + 0, 3);
+        change |= this->changeSubtileProtectionAt(46 + 0, 16 + 0, 3);
+        change |= this->changeSubtileProtectionAt(46 + 0, 16 + 1, 3);
         break;
     case DUN_SKELKING_AFT: // SklKng1.DUN
         // external tiles
