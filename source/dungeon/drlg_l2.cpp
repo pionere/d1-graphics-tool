@@ -2702,44 +2702,14 @@ static void DRLG_L2FixPreMap(int idx)
 				lm[2 + x + y * 32] = 0;
 			}
 		}
-		/*// place pieces with closed doors
-		lm[2 + 17 + 11 * 32] = SwapLE16(150);
-		// place shadows
-		// - right corridor
-		lm[2 + 12 + 6 * 32] = SwapLE16(47);
-		lm[2 + 12 + 7 * 32] = SwapLE16(51);
-		lm[2 + 16 + 6 * 32] = SwapLE16(47);
-		lm[2 + 16 + 7 * 32] = SwapLE16(51);
-		lm[2 + 16 + 8 * 32] = SwapLE16(47);
-		// - central room (top)
-		lm[2 + 17 + 8 * 32] = SwapLE16(49);
-		lm[2 + 18 + 8 * 32] = SwapLE16(49);
-		lm[2 + 19 + 8 * 32] = SwapLE16(49);
-		lm[2 + 20 + 8 * 32] = SwapLE16(49);
-		// - central room (bottom)
-		lm[2 + 18 + 12 * 32] = SwapLE16(46);
-		lm[2 + 19 + 12 * 32] = SwapLE16(49);
-		// - left corridor
-		lm[2 + 12 + 14 * 32] = SwapLE16(47);
-		lm[2 + 12 + 15 * 32] = SwapLE16(51);
-		lm[2 + 16 + 14 * 32] = SwapLE16(47);
-		lm[2 + 16 + 15 * 32] = SwapLE16(51);
-		// - use common tiles
-		lm[2 + 13 + 12 * 32] = SwapLE16(53);
-		lm[2 + 14 + 12 * 32] = SwapLE16(62);
-		lm[2 + 15 + 12 * 32] = SwapLE16(62);
-		lm[2 + 16 + 12 * 32] = SwapLE16(62);
-		lm[2 + 16 + 11 * 32] = SwapLE16(62);
-		lm[2 + 16 + 10 * 32] = SwapLE16(62);
-		lm[2 + 16 +  9 * 32] = SwapLE16(62);*/
 		// fix corners
 		// DRLG_L2Corners(); - commented out, because this is no longer necessary
-		// protect inner tiles from spawning additional monsters/objects
-		/*for (int y = 5; y < 17; y++) {
-			for (int x = 1; x < 31; x++) {
+		// prevent placement of torches in the central room
+		for (int y = 9; y < 13; y++) {
+			for (int x = 13; x < 17; x++) {
 				lm[2 + 32 * 18 + x + y * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
-		}*/
+		}
 	}
 }
 
