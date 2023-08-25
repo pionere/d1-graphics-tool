@@ -224,7 +224,7 @@ static void SetObjMapRange(int oi, int x1, int y1, int x2, int y2, int v)
  */
 static bool RndLocOk(int xp, int yp)
 {
-	if ((dMonster[xp][yp] | /*dPlayer[xp][yp] |*/ dObject[xp][yp]
+	if ((/*dMonster[xp][yp] | dPlayer[xp][yp] |*/ dObject[xp][yp]
 	 | nSolidTable[dPiece[xp][yp]] | (dFlags[xp][yp] & BFLAG_OBJ_PROTECT)) != 0)
 		return false;
 	// should be covered by Freeupstairs.

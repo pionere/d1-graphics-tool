@@ -226,9 +226,9 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 		InitObjectGFX();  // load object graphics
 		IncProgress();
 		HoldThemeRooms(); // protect themes with dFlags
-		InitMonsters();   // place monsters
-		IncProgress();
 		InitObjects();      // place objects
+		IncProgress();
+		InitMonsters();   // place monsters
 		InitItems();        // place items
 		CreateThemeRooms(); // populate theme rooms
 	} else {
