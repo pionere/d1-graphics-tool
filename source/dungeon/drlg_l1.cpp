@@ -872,7 +872,7 @@ static void DRLG_L1Shadows()
 				continue;
 			}
 			if (pillar) {
-				if (dungeon[i - 1][j] == 13) {
+				if (dungeon[i - 1][j] == 13 || dungeon[i - 1][j] == 142) {
 					BYTE replace = dungeon[i - 1][j - 1];
 					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 					pillar = (nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0;
@@ -888,7 +888,7 @@ static void DRLG_L1Shadows()
 						replace = pillar ? 156 : 156;
 					} else if (replace == 36) {
 						replace = pillar ? 152 : 153;
-					} else if (replace != 164) {
+					} else if (replace != 164 && replace != 159) {
 	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
 					}
