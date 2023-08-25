@@ -4190,33 +4190,33 @@ void D1Dun::patch(int dunFileIndex)
         }
         // protect subtiles from spawning monsters/objects
         // - protect objects from monsters
-        change |= this->changeSubtileProtectionAt(10 + 1, 20 + 1, 1);
-        change |= this->changeSubtileProtectionAt(10 + 1, 36 + 1, 1);
-        change |= this->changeSubtileProtectionAt(30 + 0, 18 + 1, 1);
-        change |= this->changeSubtileProtectionAt(32 + 1, 36 + 1, 1);
-        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 0, 1);
-        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 1, 1);
-        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 0, 1);
-        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 1, 1);
-        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 0, 1);
-        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 1, 1);
-        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 0, 1);
-        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 1, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 0, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 1, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 18 + 0, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 42 + 1, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 0, 1);
-        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 1, 1);
+        change |= this->changeSubtileProtectionAt(10 + 1, 20 + 1, 3);
+        change |= this->changeSubtileProtectionAt(10 + 1, 36 + 1, 3);
+        change |= this->changeSubtileProtectionAt(30 + 0, 18 + 1, 3);
+        change |= this->changeSubtileProtectionAt(32 + 1, 36 + 1, 3);
+        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 0, 3);
+        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 1, 3);
+        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 0, 3);
+        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 1, 3);
+        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 0, 3);
+        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 1, 3);
+        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 0, 3);
+        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 0, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 18 + 0, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 42 + 1, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 0, 3);
+        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 1, 3);
         // - protect the back-room from additional monsters
         for (int y = 31; y <= 37; y++) {
             for (int x = 3; x <= 9; x++) {
-                change |= this->changeSubtileProtectionAt(x, y, 1);
+                change |= this->changeSubtileProtectionAt(x, y, 3);
             }
         }
         for (int y = 33; y <= 35; y++) {
             for (int x = 10; x <= 13; x++) {
-                change |= this->changeSubtileProtectionAt(x, y, 1);
+                change |= this->changeSubtileProtectionAt(x, y, 3);
             }
         }
         // - add empty space after the grate
@@ -4225,7 +4225,7 @@ void D1Dun::patch(int dunFileIndex)
                 if (x == 32 && (y == 30 || y == 32)) {
                     continue;
                 }
-                change |= this->changeSubtileProtectionAt(x, y, 1);
+                change |= this->changeSubtileProtectionAt(x, y, 3);
             }
         }
         break;
