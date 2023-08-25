@@ -4212,8 +4212,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeSubtileProtectionAt(18 + 0, 30 + 0, 3);
         change |= this->changeSubtileProtectionAt(18 + 1, 30 + 1, 3);
         change |= this->changeSubtileProtectionAt(18 + 0, 32 + 0, 3);
-        change |= this->changeSubtileProtectionAt(19 + 0, 30 + 0, 3);
-        change |= this->changeSubtileProtectionAt(19 + 0, 32 + 0, 3);
+        change |= this->changeSubtileProtectionAt(20 + 0, 30 + 0, 3);
+        change |= this->changeSubtileProtectionAt(20 + 0, 32 + 0, 3);
         change |= this->changeSubtileProtectionAt(32 + 0, 22 + 0, 3);
         change |= this->changeSubtileProtectionAt(32 + 0, 22 + 1, 3);
         change |= this->changeSubtileProtectionAt(32 + 0, 40 + 0, 3);
