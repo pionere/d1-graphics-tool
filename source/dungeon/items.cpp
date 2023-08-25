@@ -355,7 +355,7 @@ static void GetBookSpell(int ii, unsigned lvl)
 		lvl = BOOK_MIN;
 
 	ns = 0;
-	for (bs = 0; bs < NUM_SPELLS; bs++) {
+	for (bs = 0; bs < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); bs++) {
 		if (spelldata[bs].sBookLvl != SPELL_NA && lvl >= spelldata[bs].sBookLvl
 		 && (IsMultiGame
 			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))) {
@@ -409,7 +409,7 @@ static void GetScrollSpell(int ii, unsigned lvl)
 		lvl = SCRL_MIN;
 
 	ns = 0;
-	for (bs = 0; bs < lengthof(ss); bs++) {
+	for (bs = 0; bs < (IsHellfireGame ? SPL_RUNE_FIRST : NUM_SPELLS_DIABLO); bs++) {
 		if (spelldata[bs].sScrollLvl != SPELL_NA && lvl >= spelldata[bs].sScrollLvl
 		 && (IsMultiGame
 			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))) {
@@ -491,7 +491,7 @@ static void GetStaffSpell(int ii, unsigned lvl)
 		lvl = STAFF_MIN;
 
 	ns = 0;
-	for (bs = 0; bs < NUM_SPELLS; bs++) {
+	for (bs = 0; bs < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); bs++) {
 		if (spelldata[bs].sStaffLvl != SPELL_NA && lvl >= spelldata[bs].sStaffLvl
 		 && (IsMultiGame
 			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))) {
@@ -524,7 +524,7 @@ static int GetItemSpell()
 	BYTE ss[NUM_SPELLS];
 
 	ns = 0;
-	for (bs = 0; bs < NUM_SPELLS; bs++) {
+	for (bs = 0; bs < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); bs++) {
 		if (spelldata[bs].sManaCost != 0 // TODO: use sSkillFlags ?
 		 && (IsMultiGame
 			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))) {
@@ -979,12 +979,12 @@ static int RndUItem(unsigned lvl)
 	int i, ri;
 	int ril[NUM_IDI - IDI_RNDDROP_FIRST];
 
-	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+	for (i = IDI_RNDDROP_FIRST; i < (IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO); i++) {
 		ril[i - IDI_RNDDROP_FIRST] = (lvl < AllItemsList[i].iMinMLvl ||
 			(AllItemsList[i].itype == ITYPE_MISC && AllItemsList[i].iMiscId != IMISC_BOOK)) ? 0 : AllItemsList[i].iRnd;
 	}
 	ri = 0;
-	for (i = 0; i < (NUM_IDI - IDI_RNDDROP_FIRST); i++)
+	for (i = 0; i < ((IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO) - IDI_RNDDROP_FIRST); i++)
 		ri += ril[i];
 	// assert(ri != 0 && ri <= 0x7FFF);
 	ri = random_low(25, ri);
@@ -1024,11 +1024,11 @@ static int RndAllItems(unsigned lvl)
 	if (random_(26, 128) > 32)
 		return IDI_GOLD;
 
-	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+	for (i = IDI_RNDDROP_FIRST; i < (IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO); i++) {
 		ril[i - IDI_RNDDROP_FIRST] = lvl < AllItemsList[i].iMinMLvl ? 0 : AllItemsList[i].iRnd;
 	}
 	ri = 0;
-	for (i = 0; i < (NUM_IDI - IDI_RNDDROP_FIRST); i++)
+	for (i = 0; i < ((IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO) - IDI_RNDDROP_FIRST); i++)
 		ri += ril[i];
 	// assert(ri != 0 && ri <= 0x7FFF);
 	ri = random_low(26, ri);
@@ -1068,13 +1068,13 @@ static int RndTypeItems(int itype, int imid, unsigned lvl)
 
 	// assert(itype != ITYPE_GOLD);
 
-	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+	for (i = IDI_RNDDROP_FIRST; i < (IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO); i++) {
 		ril[i - IDI_RNDDROP_FIRST] = (lvl < AllItemsList[i].iMinMLvl ||
 			AllItemsList[i].itype != itype ||
 			(/*imid != IMISC_INVALID &&*/ AllItemsList[i].iMiscId != imid)) ? 0 : AllItemsList[i].iRnd;
 	}
 	ri = 0;
-	for (i = 0; i < (NUM_IDI - IDI_RNDDROP_FIRST); i++)
+	for (i = 0; i < ((IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO) - IDI_RNDDROP_FIRST); i++)
 		ri += ril[i];
 	// assert(ri != 0 && ri <= 0x7FFF);
 	ri = random_low(27, ri);
@@ -1100,7 +1100,7 @@ static int CheckUnique(int ii, unsigned lvl, unsigned quality)
 
 	uid = AllItemsList[items[ii]._iIdx].iUniqType;
 	ui = 0;
-	for (i = 0; i < NUM_UITEM; i++) {
+	for (i = 0; i < (IsHellfireGame ? NUM_UITEM : NUM_UITEM_DIABLO); i++) {
 		if (UniqueItemList[i].UIUniqType == uid
 		 && lvl >= UniqueItemList[i].UIMinLvl) {
 			uok[ui] = i;
