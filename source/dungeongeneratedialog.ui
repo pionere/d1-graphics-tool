@@ -199,7 +199,7 @@
          <bool>true</bool>
         </property>
         <property name="toolTip">
-         <string>Check if it is for a multiplayer game</string>
+         <string>A multiplayer game</string>
         </property>
        </widget>
       </item>
@@ -216,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="toolTip">
-         <string>Check if it is for a hellfire game</string>
+         <string>A hellfire game</string>
         </property>
        </widget>
       </item>
@@ -274,14 +274,35 @@
        </widget>
       </item>
       <item row="7" column="1">
-       <widget class="LineEditWidget" name="extraRoundsLineEdit">
-        <property name="charWidth">
-         <number>5</number>
-        </property>
-        <property name="toolTip">
-         <string>Number of extra maps to generate</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="LineEditWidget" name="extraRoundsLineEdit">
+          <property name="charWidth">
+           <number>5</number>
+          </property>
+          <property name="toolTip">
+           <string>Number of extra maps to generate</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string>Rand. Quests:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="extraRndCheckBox">
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <property name="toolTip">
+           <string>Randomize the quests on the extra maps</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="8" column="0">
        <widget class="QLabel">
