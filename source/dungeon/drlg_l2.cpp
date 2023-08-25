@@ -784,7 +784,7 @@ void DRLG_L2Shadows()
 					dungeon[i - 1][j - 1] = replace;
 					dungeon[i - 1][j] = 50;
 				} else {
-					if (drlgFlags[i - 1][j] == 0 && dungeon[i - 1][j] != 2 && dungeon[i - 1][j] != 5 && dungeon[i - 1][j] != 8 && dungeon[i - 1][j] != 9 && dungeon[i - 1][j] != 45 && dungeon[i - 1][j] != 50)
+					if (drlgFlags[i - 1][j] == 0 && dungeon[i - 1][j] != 2 && dungeon[i - 1][j] != 5 && dungeon[i - 1][j] != 8 && dungeon[i - 1][j] != 9 && dungeon[i - 1][j] != 42 && dungeon[i - 1][j] != 45 && dungeon[i - 1][j] != 50)
 						dProgressWarn() << QString("Missing case %1 for pillar %2 @%3:%4").arg(dungeon[i - 1][j]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 				}
 			}

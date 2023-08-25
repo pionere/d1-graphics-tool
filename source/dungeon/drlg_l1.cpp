@@ -956,7 +956,7 @@ void DRLG_L1Shadows()
 						replace = pillar ? 156 : 156;
 					} else if (replace == 36) {
 						replace = pillar ? 152 : 153;
-					} else if (replace != 164) {
+					} else if (replace != 164 && replace != 159) {
 	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
 					}
