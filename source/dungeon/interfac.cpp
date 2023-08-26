@@ -108,7 +108,7 @@ static void LoadTileset(D1Tileset *tileset)
 		}
 	}
 
-	// 'load' SPT
+	// 'load' special frames
 	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
 	entries = std::min(lengthof(nSpecTrapTable) - 1, tileset->sla->getSubtileCount());
 	for (int n = 0; n < entries; n++) {
@@ -116,7 +116,7 @@ static void LoadTileset(D1Tileset *tileset)
 		nSpecTrapTable[n + 1] = bv << 6;
 	}
 
-	// 'load' SOL
+	// 'load' subtile properties
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
@@ -128,7 +128,7 @@ static void LoadTileset(D1Tileset *tileset)
 		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
 	}
 
-	// 'load' SMP
+	// 'load' automap
 	memset(automaptype, 0, sizeof(automaptype));
 	entries = std::min(lengthof(automaptype) - 1, tileset->sla->getSubtileCount());
 	for (int n = 0; n < entries; n++) {

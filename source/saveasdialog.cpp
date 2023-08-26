@@ -7,12 +7,8 @@
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1sla.h"
-#include "d1smp.h"
-#include "d1sol.h"
-#include "d1spt.h"
 #include "d1til.h"
 #include "d1tla.h"
-#include "d1tmi.h"
 #include "mainwindow.h"
 
 SaveAsDialog::SaveAsDialog(QWidget *parent)
@@ -106,9 +102,6 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
             this->ui->outputTilFileEdit->setText(saveFilePath + (upperCase ? ".TIL" : ".til"));
             this->ui->outputSlaFileEdit->setText(saveFilePath + (upperCase ? ".SLA" : ".sla"));
             this->ui->outputTlaFileEdit->setText(saveFilePath + (upperCase ? ".TLA" : ".tla"));
-            this->ui->outputSptFileEdit->setText(saveFilePath + (upperCase ? ".SPT" : ".spt"));
-            this->ui->outputTmiFileEdit->setText(saveFilePath + (upperCase ? ".TMI" : ".tmi"));
-            this->ui->outputSmpFileEdit->setText(saveFilePath + (upperCase ? ".SMP" : ".smp"));
         }
     }
 }
@@ -163,36 +156,6 @@ void SaveAsDialog::on_outputTlaFileBrowseButton_clicked()
     this->ui->outputTlaFileEdit->setText(saveFilePath);
 }
 
-void SaveAsDialog::on_outputSptFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SPT as..."), tr("SPT Files (*.spt *.SPT)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputSptFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputTmiFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TMI as..."), tr("TMI Files (*.tmi *.TMI)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputTmiFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputSmpFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SMP as..."), tr("SMP Files (*.smp *.SMP)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputSmpFileEdit->setText(saveFilePath);
-}
-
 void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
 {
     QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save DUN as..."), tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
@@ -240,9 +203,6 @@ void SaveAsDialog::on_saveButton_clicked()
     params.tilFilePath = this->ui->outputTilFileEdit->text();
     params.slaFilePath = this->ui->outputSlaFileEdit->text();
     params.tlaFilePath = this->ui->outputTlaFileEdit->text();
-    params.sptFilePath = this->ui->outputSptFileEdit->text();
-    params.tmiFilePath = this->ui->outputTmiFileEdit->text();
-    params.smpFilePath = this->ui->outputSmpFileEdit->text();
     params.dunFilePath = this->ui->outputDunFileEdit->text();
     if (this->ui->dunLayerTilesRadioButton->isChecked()) {
         params.dunLayerNum = 0;

@@ -41,36 +41,18 @@ bool D1Sla::load(const QString &filePath)
         dProgressErr() << tr("Invalid SLA file.");
         return false;
     }
-    /*int subtileCount = tileset->sol->getSubtileCount();
-    int slaSubtileCount = fileSize / 4;
-    if (slaSubtileCount != subtileCount + 1 && slaSubtileCount != 0) {
-        dProgressErr() << tr("The size of SLA file does not align with TIL file.");
-        changed = true;
-    }*/
-	int slaSubtileCount = fileSize / 4;
-	int subtileCount = slaSubtileCount != 0 ? slaSubtileCount - 1 : 0;
+	unsigned subtileCount = fileSize / 4;
+	subtileCount = subtileCount != 0 ? subtileCount - 1 : 0;
 
     // prepare empty lists with zeros
-    for (int i = 0; i < subtileCount; i++) {
-        this->renderProperties.append(0);
+    for (unsigned i = 0; i < subtileCount; i++) {
+        this->subProperties.append(0);
         this->trapProperties.append(0);
         this->specProperties.append(0);
-        this->subProperties.append(0);
+        this->renderProperties.append(0);
         this->mapTypes.append(0);
         this->mapProperties.append(0);
     }
-
-    /*if (slaSubtileCount == 0) {
-        for (int i = 0; i < subtileCount; i++) {
-            this->renderProperties[i] = tileset->tmi->getSubtileProperties(i);
-            this->trapProperties[i] = tileset->spt->getSubtileTrapProperty(i);
-            this->specProperties[i] = tileset->spt->getSubtileSpecProperty(i);
-            this->subProperties[i] = tileset->sol->getSubtileProperties(i);
-            this->mapTypes[i] = tileset->smp->getSubtileType(i);
-            this->mapProperties[i] = tileset->smp->getSubtileProperties(i);
-        }
-        return true;
-    }*/
 
     // Read SLA binary data
     QDataStream in(fileData);
@@ -80,14 +62,14 @@ bool D1Sla::load(const QString &filePath)
     // read the sub-properties
     // skip the first byte
     in >> readByte;
-    for (int i = 0; i < slaSubtileCount - 1; i++) {
+    for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
         this->subProperties[i] = readByte;
     }
     // read the trap/spec-properties
     // skip the first byte
     in >> readByte;
-    for (int i = 0; i < slaSubtileCount - 1; i++) {
+    for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
         this->trapProperties[i] = (readByte >> 6) & 3;
         this->specProperties[i] = readByte & PST_SPEC_TYPE;
@@ -95,42 +77,18 @@ bool D1Sla::load(const QString &filePath)
     // read the render-properties
     // skip the first byte
     in >> readByte;
-    for (int i = 0; i < slaSubtileCount - 1; i++) {
+    for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
         this->renderProperties[i] = readByte;
     }
     // read the map-properties
     // skip the first byte
     in >> readByte;
-    for (int i = 0; i < slaSubtileCount - 1; i++) {
+    for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
         this->mapTypes[i] = readByte & MAT_TYPE;
         this->mapProperties[i] = readByte & ~MAT_TYPE;
     }
-
-    /*if (slaSubtileCount != 0) {
-        for (int i = 0; i < subtileCount; i++) {
-            if (this->renderProperties[i] != tileset->tmi->getSubtileProperties(i)) {
-                dProgressErr() << tr("Render property mismatch: %1.: %2 vs. %3").arg(i).arg(this->renderProperties[i]).arg(tileset->tmi->getSubtileProperties(i));
-            }
-            if (this->trapProperties[i] != tileset->spt->getSubtileTrapProperty(i)) {
-                dProgressErr() << tr("Trap property mismatch: %1.: %2 vs. %3").arg(i).arg(this->trapProperties[i]).arg(tileset->spt->getSubtileTrapProperty(i));
-            }
-            if (this->specProperties[i] != tileset->spt->getSubtileSpecProperty(i)) {
-                dProgressErr() << tr("Spec property mismatch: %1.: %2 vs. %3").arg(i).arg(this->specProperties[i]).arg(tileset->spt->getSubtileSpecProperty(i));
-            }
-            if (this->subProperties[i] != tileset->sol->getSubtileProperties(i)) {
-                dProgressErr() << tr("Sub property mismatch: %1.: %2 vs. %3").arg(i).arg(this->subProperties[i]).arg(tileset->sol->getSubtileProperties(i));
-            }
-            if (this->mapTypes[i] != tileset->smp->getSubtileType(i)) {
-                dProgressErr() << tr("Map type mismatch: %1.: %2 vs. %3").arg(i).arg(this->mapTypes[i]).arg(tileset->smp->getSubtileType(i));
-            }
-            if (this->mapProperties[i] != tileset->smp->getSubtileProperties(i)) {
-                dProgressErr() << tr("Map property mismatch: %1.: %2 vs. %3").arg(i).arg(this->mapProperties[i]).arg(tileset->smp->getSubtileProperties(i));
-            }
-        }
-        return true;
-    }*/
 
     this->modified = changed;
     return true;

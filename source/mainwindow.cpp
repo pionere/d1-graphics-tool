@@ -980,11 +980,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
     QString slaFilePath = params.slaFilePath;
-    //QString solFilePath = params.solFilePath;
     QString tlaFilePath = params.tlaFilePath;
-    //QString sptFilePath = params.sptFilePath;
-    //QString tmiFilePath = params.tmiFilePath;
-    //QString smpFilePath = params.smpFilePath;
     QString dunFilePath = params.dunFilePath;
     QString tblFilePath = params.tblFilePath;
 
@@ -1016,21 +1012,9 @@ void MainWindow::openFile(const OpenAsParam &params)
         if (slaFilePath.isEmpty()) {
             slaFilePath = basePath + ".sla";
         }
-        /*if (solFilePath.isEmpty()) {
-            solFilePath = basePath + ".sol";
-        }*/
         if (tlaFilePath.isEmpty()) {
             tlaFilePath = basePath + ".tla";
         }
-        /*if (sptFilePath.isEmpty()) {
-            sptFilePath = basePath + ".spt";
-        }
-        if (tmiFilePath.isEmpty()) {
-            tmiFilePath = basePath + ".tmi";
-        }
-        if (smpFilePath.isEmpty()) {
-            smpFilePath = basePath + ".smp";
-        }*/
     } else if (!dunFilePath.isEmpty()) {
         QFileInfo dunFileInfo = QFileInfo(dunFilePath);
 
@@ -1040,11 +1024,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.sla"), slaFilePath, baseName);
-        // findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.tla"), tlaFilePath, baseName);
-        // findFirstFile(baseDir, QStringLiteral("*.spt"), sptFilePath, baseName);
-        // findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, baseName);
-        // findFirstFile(baseDir, QStringLiteral("*.smp"), smpFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.cel"), gfxFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*s.cel"), clsFilePath, baseName);
     }
@@ -1073,11 +1053,6 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath)));
             return;
         }
-        // Loading SOL
-        /*if (!this->tileset->sol->load(solFilePath)) {
-            this->failWithError(tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath)));
-            return;
-        }*/
 
         // Loading MIN
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
@@ -1097,24 +1072,6 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(tlaFilePath)));
             return;
         }
-
-        // Loading SPT
-        /*if (!this->tileset->spt->load(sptFilePath, this->tileset->sla->getSubtileCount(), params)) {
-            this->failWithError(tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath)));
-            return;
-        }
-
-        // Loading TMI
-        if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sla->getSubtileCount(), params)) {
-            this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
-            return;
-        }
-
-        // Loading SMP
-        if (!this->tileset->smp->load(smpFilePath, this->tileset->sla->getSubtileCount(), params)) {
-            this->failWithError(tr("Failed loading SMP file: %1.").arg(QDir::toNativeSeparators(smpFilePath)));
-            return;
-        }*/
 
         // Loading CEL
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {

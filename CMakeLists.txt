@@ -79,12 +79,6 @@ set(PROJECT_SOURCES
         source/d1pcx.h
         source/d1sla.cpp
         source/d1sla.h
-        source/d1smp.cpp
-        source/d1smp.h
-        source/d1spt.cpp
-        source/d1spt.h
-        source/d1sol.cpp
-        source/d1sol.h
         source/d1tableset.cpp
         source/d1tableset.h
         source/d1tbl.cpp
@@ -95,8 +89,6 @@ set(PROJECT_SOURCES
         source/d1til.h
         source/d1tileset.cpp
         source/d1tileset.h
-        source/d1tmi.cpp
-        source/d1tmi.h
         source/d1trn.cpp
         source/d1trn.h
         source/dungeon/automap.cpp
