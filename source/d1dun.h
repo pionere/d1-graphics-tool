@@ -12,10 +12,8 @@
 class D1Gfx;
 class D1Min;
 class D1Pal;
-class D1Sol;
-class D1Spt;
+class D1Sla;
 class D1Til;
-class D1Tmi;
 class D1Trn;
 
 #define UNDEF_SUBTILE -1
@@ -255,7 +253,7 @@ private:
     D1Tileset *tileset;
     D1Min *min;
     D1Til *til;
-    D1Spt *spt;
+    D1Sla *sla;
     D1Gfx *cls;
     bool modified;
     uint8_t numLayers;

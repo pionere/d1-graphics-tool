@@ -30,6 +30,8 @@ SetPieceStruct pSetPieces[4];
 WarpStruct pWarps[NUM_DWARP];
 /** Specifies the tiles (groups of four subtiles). */
 uint16_t pTiles[MAXTILES + 1][4];
+/* Maps from subtile_id to automap type (_automap_subtypes). */
+BYTE automaptype[MAXSUBTILES + 1];
 /**
  * Flags of tiles to specify room propagation and shadow-type flags (_tile_flags)
  */
@@ -95,7 +97,7 @@ static_assert(MAXITEMS <= UCHAR_MAX, "Index of an item might not fit to dItem.")
 void InitLvlDungeon()
 {
 	size_t dwSubtiles;
-	BYTE *pTmp;
+	BYTE* pTmp;
 	const LevelData* lds = &AllLevels[currLvl._dLevelIdx];
 	const LevelFileData* lfd = &levelfiledata[lds->dfindex];
 
@@ -127,26 +129,35 @@ void InitLvlDungeon()
 	if (lfd->dTileFlags != NULL) {
 		LoadFileWithMem(lfd->dTileFlags, nTrnShadowTable); // .TLA
 	}
-	LoadFileWithMem(lfd->dSpecFlags, &nSpecTrapTable[0]); // .SPT
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
-	BYTE *subFile = LoadFileInMem(lfd->dSolidTable, &dwSubtiles); // .SOL
+	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
+	memset(automaptype, 0, sizeof(automaptype));
+	BYTE* subFile = LoadFileInMem(lfd->dSubtileSettings, &dwSubtiles); // .SLA
 	if (subFile != NULL) {
+		dwSubtiles /= 4;
 		assert(dwSubtiles <= MAXSUBTILES);
+
 		pTmp = subFile;
-
-		// dpiece 0 is always black/void -> make it non-passable to reduce the necessary checks
-		// no longer necessary, because dPiece is never zero
-		//nSolidTable[0] = true;
-
-		for (unsigned i = 1; i <= dwSubtiles; i++) {
-			BYTE bv = *pTmp++;
+		// read sub-properties
+		for (unsigned i = 0; i < dwSubtiles; i++, pTmp++) {
+			BYTE bv = *pTmp;
 			nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
 			nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
 			nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
 		}
+		// read the trap/spec-properties
+		memcpy(nSpecTrapTable, pTmp, dwSubtiles);
+		pTmp += dwSubtiles;
+		// read the render-properties
+		// memcpy(nSpecTrapTable, pTmp, dwSubtiles);
+		pTmp += dwSubtiles;
+		// read the map-properties
+		memcpy(automaptype, pTmp, dwSubtiles);
+		pTmp += dwSubtiles;
+
 		mem_free_dbg(subFile);
 	}
 

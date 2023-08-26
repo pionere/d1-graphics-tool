@@ -6,12 +6,9 @@
 
 #include "d1gfx.h"
 #include "d1min.h"
-#include "d1smp.h"
-#include "d1sol.h"
-#include "d1spt.h"
+#include "d1sla.h"
 #include "d1til.h"
 #include "d1tla.h"
-#include "d1tmi.h"
 #include "mainwindow.h"
 
 SaveAsDialog::SaveAsDialog(QWidget *parent)
@@ -49,11 +46,8 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     this->ui->outputClsFileEdit->setText(isTilesetGfx ? tileset->cls->getFilePath() : "");
     this->ui->outputMinFileEdit->setText(isTilesetGfx ? tileset->min->getFilePath() : "");
     this->ui->outputTilFileEdit->setText(isTilesetGfx ? tileset->til->getFilePath() : "");
-    this->ui->outputSolFileEdit->setText(isTilesetGfx ? tileset->sol->getFilePath() : "");
+    this->ui->outputSlaFileEdit->setText(isTilesetGfx ? tileset->sla->getFilePath() : "");
     this->ui->outputTlaFileEdit->setText(isTilesetGfx ? tileset->tla->getFilePath() : "");
-    this->ui->outputSptFileEdit->setText(isTilesetGfx ? tileset->spt->getFilePath() : "");
-    this->ui->outputTmiFileEdit->setText(isTilesetGfx ? tileset->tmi->getFilePath() : "");
-    this->ui->outputSmpFileEdit->setText(isTilesetGfx ? tileset->smp->getFilePath() : "");
     this->ui->tblFileEdit->setText(isTableset ? tableset->darkTbl->getFilePath() : "");
 
     if (dun == nullptr) {
@@ -106,11 +100,8 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
             this->ui->outputClsFileEdit->setText(saveFilePath + (upperCase ? "S.CEL" : "s.cel"));
             this->ui->outputMinFileEdit->setText(saveFilePath + (upperCase ? ".MIN" : ".min"));
             this->ui->outputTilFileEdit->setText(saveFilePath + (upperCase ? ".TIL" : ".til"));
-            this->ui->outputSolFileEdit->setText(saveFilePath + (upperCase ? ".SOL" : ".sol"));
+            this->ui->outputSlaFileEdit->setText(saveFilePath + (upperCase ? ".SLA" : ".sla"));
             this->ui->outputTlaFileEdit->setText(saveFilePath + (upperCase ? ".TLA" : ".tla"));
-            this->ui->outputSptFileEdit->setText(saveFilePath + (upperCase ? ".SPT" : ".spt"));
-            this->ui->outputTmiFileEdit->setText(saveFilePath + (upperCase ? ".TMI" : ".tmi"));
-            this->ui->outputSmpFileEdit->setText(saveFilePath + (upperCase ? ".SMP" : ".smp"));
         }
     }
 }
@@ -145,14 +136,14 @@ void SaveAsDialog::on_outputTilFileBrowseButton_clicked()
     this->ui->outputTilFileEdit->setText(saveFilePath);
 }
 
-void SaveAsDialog::on_outputSolFileBrowseButton_clicked()
+void SaveAsDialog::on_outputSlaFileBrowseButton_clicked()
 {
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SOL as..."), tr("SOL Files (*.sol *.SOL)"));
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SLA as..."), tr("SLA Files (*.sla *.SLA)"));
 
     if (saveFilePath.isEmpty())
         return;
 
-    this->ui->outputSolFileEdit->setText(saveFilePath);
+    this->ui->outputSlaFileEdit->setText(saveFilePath);
 }
 
 void SaveAsDialog::on_outputTlaFileBrowseButton_clicked()
@@ -163,36 +154,6 @@ void SaveAsDialog::on_outputTlaFileBrowseButton_clicked()
         return;
 
     this->ui->outputTlaFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputSptFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SPT as..."), tr("SPT Files (*.spt *.SPT)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputSptFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputTmiFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TMI as..."), tr("TMI Files (*.tmi *.TMI)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputTmiFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputSmpFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SMP as..."), tr("SMP Files (*.smp *.SMP)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputSmpFileEdit->setText(saveFilePath);
 }
 
 void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
@@ -229,7 +190,7 @@ void SaveAsDialog::on_saveButton_clicked()
     } else {
         params.clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     }
-    // tilSettingsGroupBox: upscaled, min, til, tla, sol, spt, tmi and smp files
+    // tilSettingsGroupBox: upscaled, min, til, sla and tla files
     if (this->ui->minUpscaledYesRadioButton->isChecked()) {
         params.upscaled = SAVE_UPSCALED_TYPE::TRUE;
     } else if (this->ui->minUpscaledNoRadioButton->isChecked()) {
@@ -240,11 +201,8 @@ void SaveAsDialog::on_saveButton_clicked()
     params.clsFilePath = this->ui->outputClsFileEdit->text();
     params.minFilePath = this->ui->outputMinFileEdit->text();
     params.tilFilePath = this->ui->outputTilFileEdit->text();
-    params.solFilePath = this->ui->outputSolFileEdit->text();
+    params.slaFilePath = this->ui->outputSlaFileEdit->text();
     params.tlaFilePath = this->ui->outputTlaFileEdit->text();
-    params.sptFilePath = this->ui->outputSptFileEdit->text();
-    params.tmiFilePath = this->ui->outputTmiFileEdit->text();
-    params.smpFilePath = this->ui->outputSmpFileEdit->text();
     params.dunFilePath = this->ui->outputDunFileEdit->text();
     if (this->ui->dunLayerTilesRadioButton->isChecked()) {
         params.dunLayerNum = 0;

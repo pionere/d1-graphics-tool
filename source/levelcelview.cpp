@@ -109,7 +109,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
     this->dun = d;
 
     this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->tla);
-    this->tabSubtileWidget.initialize(this, this->undoStack, this->gfx, this->min, this->sol, this->spt, this->tmi, this->smp);
+    this->tabSubtileWidget.initialize(this, this->undoStack, this->gfx, this->min, this->sla);
     this->tabFrameWidget.initialize(this, this->undoStack, this->gfx);
 
     bool dunMode = d != nullptr;
@@ -147,11 +147,8 @@ void LevelCelView::setTileset(D1Tileset *ts)
     this->cls = ts->cls;
     this->min = ts->min;
     this->til = ts->til;
-    this->sol = ts->sol;
+    this->sla = ts->sla;
     this->tla = ts->tla;
-    this->spt = ts->spt;
-    this->tmi = ts->tmi;
-    this->smp = ts->smp;
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
         this->currentFrameIndex = 0;
@@ -326,7 +323,7 @@ void LevelCelView::updateLabel()
     bool hasDun = this->dun != nullptr;
 
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
-    const int labelCount = hasDun ? 10 : 9;
+    const int labelCount = hasDun ? 7 : 6;
     while (layout->count() != labelCount + 1) {
         layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
@@ -334,15 +331,12 @@ void LevelCelView::updateLabel()
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(0)->widget()), this->gfx->getFilePath(), this->gfx->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(1)->widget()), this->min->getFilePath(), this->min->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(2)->widget()), this->til->getFilePath(), this->til->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(3)->widget()), this->sol->getFilePath(), this->sol->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(3)->widget()), this->sla->getFilePath(), this->sla->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(4)->widget()), this->tla->getFilePath(), this->tla->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->cls->getFilePath(), this->cls->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->spt->getFilePath(), this->spt->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->smp->getFilePath(), this->smp->isModified());
 
     if (hasDun) {
-        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(9)->widget()), this->dun->getFilePath(), this->dun->isModified());
+        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->dun->getFilePath(), this->dun->isModified());
     }
 }
 
@@ -1869,13 +1863,13 @@ void LevelCelView::reportUsage() const
         dProgress() << "\n";
 
         // collect users of the special frame(s)
-        int specType = this->spt->getSubtileSpecProperty(this->currentSubtileIndex);
+        int specType = this->sla->getSpecProperty(this->currentSubtileIndex);
         if (specType != 0) {
             if (specType < 0) {
                 // collect users of any special frame
                 std::map<int, std::vector<int>> specUsers;
                 for (int i = 0; i < this->min->getSubtileCount(); i++) {
-                    specType = this->spt->getSubtileSpecProperty(i);
+                    specType = this->sla->getSpecProperty(i);
                     if (specType > 0) {
                         specUsers[specType].push_back(i);
                     }
@@ -1896,7 +1890,7 @@ void LevelCelView::reportUsage() const
                 // collect users of the 'current' special frame
                 std::vector<int> specUsers;
                 for (int i = 0; i < this->min->getSubtileCount(); i++) {
-                    if (this->spt->getSubtileSpecProperty(i) == specType) {
+                    if (this->sla->getSpecProperty(i) == specType) {
                         specUsers.push_back(i);
                     }
                 }
@@ -2154,18 +2148,18 @@ void LevelCelView::warnOrReportSubtile(const QString &msg, int subtileIndex) con
 
 void LevelCelView::checkSubtileFlags() const
 {
-    ProgressDialog::incBar(tr("Checking SOL flags..."), 1);
+    ProgressDialog::incBar(tr("Checking Collision settings..."), 1);
     bool result = false;
     unsigned floorMicros = this->min->getSubtileWidth() * this->min->getSubtileWidth() / 2;
 
     // SOL:
     QPair<int, QString> progress;
     progress.first = -1;
-    progress.second = tr("SOL inconsistencies:");
+    progress.second = tr("Inconsistencies in the Collision settings:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
-        quint8 solFlags = this->sol->getSubtileProperties(i);
+        quint8 solFlags = this->sla->getSubProperties(i);
         std::vector<int> subtileUsers;
         this->collectSubtileUsers(i, subtileUsers);
         bool unused = subtileUsers.empty();
@@ -2220,7 +2214,7 @@ void LevelCelView::checkSubtileFlags() const
             if (solFlags & (PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE)) {
                 // block light or missile
                 // - at least one not transparent frame above the floor
-                bool hasColor = this->spt->getSubtileSpecProperty(i) != 0;
+                bool hasColor = this->sla->getSpecProperty(i) != 0;
                 for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
                     unsigned frameRef = frameRefs[n];
                     if (frameRef == 0) {
@@ -2249,20 +2243,20 @@ void LevelCelView::checkSubtileFlags() const
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected in the SOL flags.");
+        progress.second = tr("No inconsistency detected in the Collision settings.");
         dProgress() << progress;
     }
 
     ProgressDialog::decBar();
-    ProgressDialog::incBar(tr("Checking SPT flags..."), 1);
+    ProgressDialog::incBar(tr("Checking SPT Special settings..."), 1);
 
     // SPT:
     result = false;
     progress.first = -1;
-    progress.second = tr("SPT inconsistencies:");
+    progress.second = tr("Inconsistencies in the Special settings:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        int trapFlags = this->spt->getSubtileTrapProperty(i);
+        int trapFlags = this->sla->getTrapProperty(i);
         if (trapFlags != PTT_NONE) {
             const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
             if (trapFlags == PTT_LEFT && this->min->getSubtileHeight() > 1) {
@@ -2286,7 +2280,7 @@ void LevelCelView::checkSubtileFlags() const
                 result = true;
             }
         }
-        int specFrame = this->spt->getSubtileSpecProperty(i);
+        int specFrame = this->sla->getSpecProperty(i);
         if ((unsigned)specFrame > ((1 << 6) - 1)) {
             dProgressErr() << tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg((1 << 6) - 1);
             result = true;
@@ -2296,22 +2290,22 @@ void LevelCelView::checkSubtileFlags() const
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected in the SPT flags.");
+        progress.second = tr("No inconsistency detected in the Special settings.");
         dProgress() << progress;
     }
 
     ProgressDialog::decBar();
-    ProgressDialog::incBar(tr("Checking TMI flags..."), 1);
+    ProgressDialog::incBar(tr("Checking Render settings..."), 1);
 
     // TMI:
     result = false;
     progress.first = -1;
-    progress.second = tr("TMI inconsistencies:");
+    progress.second = tr("Inconsistencies in the Render settings:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
-        quint8 tmiFlags = this->tmi->getSubtileProperties(i);
-        int specFrame = this->spt->getSubtileSpecProperty(i);
+        quint8 tmiFlags = this->sla->getRenderProperties(i);
+        int specFrame = this->sla->getSpecProperty(i);
         if (tmiFlags & TMIF_WALL_TRANS) {
             // transp.wall
             // - at least one not transparent frame above the floor
@@ -2449,7 +2443,7 @@ void LevelCelView::checkSubtileFlags() const
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected in the TMI flags.");
+        progress.second = tr("No inconsistency detected in the Render settings.");
         dProgress() << progress;
     }
 
@@ -2473,12 +2467,12 @@ void LevelCelView::checkTileFlags() const
         if (subtileIndices.size() > 0) {
             int subtileIdx = subtileIndices[0];
             if (tlaFlags & TIF_FLOOR_00) {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
                     dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
                     dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
@@ -2487,12 +2481,12 @@ void LevelCelView::checkTileFlags() const
         if (subtileIndices.size() > 1) {
             int subtileIdx = subtileIndices[1];
             if (tlaFlags & TIF_FLOOR_01) {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
                     dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
                     dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
@@ -2501,12 +2495,12 @@ void LevelCelView::checkTileFlags() const
         if (subtileIndices.size() > 2) {
             int subtileIdx = subtileIndices[2];
             if (tlaFlags & TIF_FLOOR_10) {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
                     dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
                     dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
@@ -2515,12 +2509,12 @@ void LevelCelView::checkTileFlags() const
         if (subtileIndices.size() > 3) {
             int subtileIdx = subtileIndices[3];
             if (tlaFlags & TIF_FLOOR_11) {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
                     dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
                     dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }

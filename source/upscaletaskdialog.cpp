@@ -15,7 +15,6 @@
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1pal.h"
-#include "d1sol.h"
 #include "d1tileset.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
@@ -289,7 +288,6 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, O
         saParams.minFilePath = baseOutPath + ".min";
         // if (params.patchTilesets) {
             saParams.tilFilePath = baseOutPath + ".til";
-            saParams.solFilePath = baseOutPath + ".sol";
         // }
         tileset.save(saParams);
     }

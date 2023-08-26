@@ -110,7 +110,7 @@ bool D1Tla::save(const SaveAsParam &params)
             out << this->properties[i];
         }
     } else {
-        // AMP without content -> delete
+        // TLA without content -> delete
         if (QFile::exists(filePath)) {
             if (!QFile::remove(filePath)) {
                 dProgressFail() << tr("Failed to remove file: %1.").arg(QDir::toNativeSeparators(filePath));

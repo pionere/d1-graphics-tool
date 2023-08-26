@@ -37,7 +37,7 @@
      <item>
       <widget class="QGroupBox" name="solSettingsGroupBox">
        <property name="title">
-        <string>SOL flags</string>
+        <string>Collision settings</string>
        </property>
        <layout class="QGridLayout">
         <item row="0" column="0">
@@ -74,7 +74,7 @@
      <item>
       <widget class="QGroupBox" name="sptSettingsGroupBox">
        <property name="title">
-        <string>SPT flags</string>
+        <string>Special settings</string>
        </property>
        <layout class="QGridLayout">
         <item row="0" column="0">
@@ -149,7 +149,7 @@
    <item>
     <widget class="QGroupBox" name="tmiSettingsGroupBox">
      <property name="title">
-      <string>TMI flags</string>
+      <string>Render settings</string>
      </property>
      <layout class="QGridLayout">
       <item row="0" column="0">
@@ -221,7 +221,7 @@
    <item>
     <widget class="QGroupBox" name="smpSettingsGroupBox">
      <property name="title">
-      <string>SMP settings</string>
+      <string>Map settings</string>
      </property>
      <layout class="QGridLayout">
       <item row="0" column="0">

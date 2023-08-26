@@ -42,125 +42,55 @@ void EditMinCommand::redo()
     this->undo();
 }
 
-EditSolCommand::EditSolCommand(D1Sol *s, int si, quint8 f)
+EditSlaCommand::EditSlaCommand(D1Sla *s, int si, SLA_FIELD_TYPE f, int v)
     : QUndoCommand(nullptr)
-    , sol(s)
+    , sla(s)
     , subtileIndex(si)
-    , flags(f)
-{
-}
-
-void EditSolCommand::undo()
-{
-    if (this->sol.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    quint8 nf = this->flags;
-    this->flags = this->sol->getSubtileProperties(this->subtileIndex);
-    this->sol->setSubtileProperties(this->subtileIndex, nf);
-
-    emit this->modified();
-}
-
-void EditSolCommand::redo()
-{
-    this->undo();
-}
-
-EditSptCommand::EditSptCommand(D1Spt *s, int si, int v, bool t)
-    : QUndoCommand(nullptr)
-    , spt(s)
-    , subtileIndex(si)
+    , field(f)
     , value(v)
-    , trap(t)
 {
 }
 
-void EditSptCommand::undo()
+void EditSlaCommand::undo()
 {
-    if (this->spt.isNull()) {
+    if (this->sla.isNull()) {
         this->setObsolete(true);
         return;
     }
 
-    int nv = this->value;
-    if (this->trap) {
-        this->value = this->spt->getSubtileTrapProperty(this->subtileIndex);
-        this->spt->setSubtileTrapProperty(this->subtileIndex, nv);
-
-        emit this->trapModified();
-    } else {
-        this->value = this->spt->getSubtileSpecProperty(this->subtileIndex);
-        this->spt->setSubtileSpecProperty(this->subtileIndex, nv);
-
-        emit this->specModified();
+    switch (this->field) {
+    case SLA_FIELD_TYPE::SOL_PROP: {
+        quint8 nv = this->value;
+        this->value = this->sla->getSubProperties(this->subtileIndex);
+        this->sla->setSubProperties(this->subtileIndex, nv);
+    } break;
+    case SLA_FIELD_TYPE::TRAP_PROP: {
+        int nv = this->value;
+        this->value = this->sla->getTrapProperty(this->subtileIndex);
+        this->sla->setTrapProperty(this->subtileIndex, nv);
+    } break;
+    case SLA_FIELD_TYPE::SPEC_PROP: {
+        int nv = this->value;
+        this->value = this->sla->getSpecProperty(this->subtileIndex);
+        this->sla->setSpecProperty(this->subtileIndex, nv);
+    } break;
+    case SLA_FIELD_TYPE::RENDER_PROP: {
+        quint8 nv = this->value;
+        this->value = this->sla->getRenderProperties(this->subtileIndex);
+        this->sla->setRenderProperties(this->subtileIndex, nv);
+    } break;
+    case SLA_FIELD_TYPE::MAP_PROP: {
+        quint8 nv = this->value;
+        this->value = this->sla->getMapProperties(this->subtileIndex) | this->sla->getMapType(this->subtileIndex);
+        this->sla->setMapType(this->subtileIndex, nv & MAT_TYPE);
+        this->sla->setMapProperties(this->subtileIndex, nv & ~MAT_TYPE);
+    } break;
     }
-}
-
-void EditSptCommand::redo()
-{
-    this->undo();
-}
-
-EditTmiCommand::EditTmiCommand(D1Tmi *t, int si, quint8 f)
-    : QUndoCommand(nullptr)
-    , tmi(t)
-    , subtileIndex(si)
-    , flags(f)
-{
-}
-
-void EditTmiCommand::undo()
-{
-    if (this->tmi.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    quint8 nf = this->flags;
-    this->flags = this->tmi->getSubtileProperties(this->subtileIndex);
-    this->tmi->setSubtileProperties(this->subtileIndex, nf);
 
     emit this->modified();
 }
 
-void EditTmiCommand::redo()
-{
-    this->undo();
-}
-
-EditSmpCommand::EditSmpCommand(D1Smp *s, int si, int v, int t)
-    : QUndoCommand(nullptr)
-    , smp(s)
-    , subtileIndex(si)
-    , value(v)
-    , typeProp(t)
-{
-}
-
-void EditSmpCommand::undo()
-{
-    if (this->smp.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    int nv = this->value;
-    if (this->typeProp & 1) {
-        this->value = this->smp->getSubtileType(this->subtileIndex);
-        this->smp->setSubtileType(this->subtileIndex, nv & MAT_TYPE);
-    }
-    if (this->typeProp & 2) {
-        this->value = this->smp->getSubtileProperties(this->subtileIndex);
-        this->smp->setSubtileProperties(this->subtileIndex, nv & ~MAT_TYPE);
-
-    }
-    emit this->modified();
-}
-
-void EditSmpCommand::redo()
+void EditSlaCommand::redo()
 {
     this->undo();
 }
@@ -181,16 +111,13 @@ LevelTabSubtileWidget::~LevelTabSubtileWidget()
     delete ui;
 }
 
-void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g, D1Min *m, D1Sol *s, D1Spt *p, D1Tmi *t, D1Smp *mp)
+void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g, D1Min *m, D1Sla *s)
 {
     this->levelCelView = v;
     this->undoStack = us;
     this->gfx = g;
     this->min = m;
-    this->sol = s;
-    this->spt = p;
-    this->tmi = t;
-    this->smp = mp;
+    this->sla = s;
 }
 
 void LevelTabSubtileWidget::updateFields()
@@ -240,12 +167,12 @@ void LevelTabSubtileWidget::updateFields()
     }
 
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    quint8 solFlags = this->sol->getSubtileProperties(subtileIdx);
-    quint8 tmiFlags = this->tmi->getSubtileProperties(subtileIdx);
-    int sptTrapFlags = this->spt->getSubtileTrapProperty(subtileIdx);
-    int sptSpecCel = this->spt->getSubtileSpecProperty(subtileIdx);
-    quint8 smpType = this->smp->getSubtileType(subtileIdx);
-    quint8 smpFlags = this->smp->getSubtileProperties(subtileIdx);
+    quint8 solFlags = this->sla->getSubProperties(subtileIdx);
+    quint8 tmiFlags = this->sla->getRenderProperties(subtileIdx);
+    int sptTrapFlags = this->sla->getTrapProperty(subtileIdx);
+    int sptSpecCel = this->sla->getSpecProperty(subtileIdx);
+    quint8 smpType = this->sla->getMapType(subtileIdx);
+    quint8 smpFlags = this->sla->getMapProperties(subtileIdx);
     std::vector<unsigned> &frames = this->min->getFrameReferences(subtileIdx);
 
     this->ui->sol0->setChecked((solFlags & PFLAG_BLOCK_PATH) != 0);
@@ -311,10 +238,10 @@ void LevelTabSubtileWidget::setSolProperty(quint8 flags)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
-    // Build sol editing command and connect it to the views widget
+    // Build sla editing command and connect it to the views widget
     // to update the label when undo/redo is performed
-    EditSolCommand *command = new EditSolCommand(this->sol, subtileIdx, flags);
-    QObject::connect(command, &EditSolCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::SOL_PROP, flags);
+    QObject::connect(command, &EditSlaCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }
@@ -336,10 +263,10 @@ void LevelTabSubtileWidget::setTmiProperty(quint8 flags)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
-    // Build tmi editing command and connect it to the views widget
+    // Build sla editing command and connect it to the views widget
     // to update the label when undo/redo is performed
-    EditTmiCommand *command = new EditTmiCommand(this->tmi, subtileIdx, flags);
-    QObject::connect(command, &EditTmiCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::RENDER_PROP, flags);
+    QObject::connect(command, &EditSlaCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }
@@ -371,8 +298,8 @@ void LevelTabSubtileWidget::setSmpProperty(quint8 flags)
 
     // Build smp editing command and connect it to the views widget
     // to update the label when undo/redo is performed
-    EditSmpCommand *command = new EditSmpCommand(this->smp, subtileIdx, flags, 3);
-    QObject::connect(command, &EditSmpCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::MAP_PROP, flags);
+    QObject::connect(command, &EditSlaCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }
@@ -425,10 +352,10 @@ void LevelTabSubtileWidget::setTrapProperty(int trap)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
-    // Build spt editing command and connect it to the views widget
+    // Build sla editing command and connect it to the views widget
     // to update the label when undo/redo is performed
-    EditSptCommand *command = new EditSptCommand(this->spt, subtileIdx, trap, true);
-    QObject::connect(command, &EditSptCommand::trapModified, this->levelCelView, &LevelCelView::updateFields);
+    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::TRAP_PROP, trap);
+    QObject::connect(command, &EditSlaCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }
@@ -453,10 +380,10 @@ void LevelTabSubtileWidget::on_specCelLineEdit_returnPressed()
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     int sptSpecCel = this->ui->specCelLineEdit->text().toInt();
 
-    // Build spt editing command and connect it to the views widget
+    // Build sla editing command and connect it to the views widget
     // to update the label and refresh the view when undo/redo is performed
-    EditSptCommand *command = new EditSptCommand(this->spt, subtileIdx, sptSpecCel, false);
-    QObject::connect(command, &EditSptCommand::specModified, this->levelCelView, &LevelCelView::displayFrame);
+    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::SPEC_PROP, sptSpecCel);
+    QObject::connect(command, &EditSlaCommand::modified, this->levelCelView, &LevelCelView::displayFrame);
 
     this->undoStack->push(command);
 
@@ -466,7 +393,7 @@ void LevelTabSubtileWidget::on_specCelLineEdit_returnPressed()
 void LevelTabSubtileWidget::on_specCelLineEdit_escPressed()
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    int sptSpecCel = this->spt->getSubtileSpecProperty(subtileIdx);
+    int sptSpecCel = this->sla->getSpecProperty(subtileIdx);
 
     this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
     this->ui->specCelLineEdit->clearFocus();

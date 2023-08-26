@@ -319,11 +319,8 @@ private:
     D1Gfx *cls;
     D1Min *min;
     D1Til *til;
-    D1Sol *sol;
+    D1Sla *sla;
     D1Tla *tla;
-    D1Spt *spt;
-    D1Tmi *tmi;
-    D1Smp *smp;
     D1Dun *dun;
     bool dunView = false;
     bool isScrolling = false;
