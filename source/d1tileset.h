@@ -52,11 +52,11 @@ public:
     D1Min *min;
     D1Til *til;
     D1Sla *sla;
-    D1Sol *sol;
+    //D1Sol *sol;
     D1Tla *tla;
-    D1Spt *spt;
-    D1Tmi *tmi;
-    D1Smp *smp;
+    //D1Spt *spt;
+    //D1Tmi *tmi;
+    //D1Smp *smp;
 
 private:
     void saveCls(const SaveAsParam &params);

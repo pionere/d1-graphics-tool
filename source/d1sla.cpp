@@ -13,7 +13,7 @@
 
 #include "dungeon/all.h"
 
-bool D1Sla::load(const QString &filePath, D1Tileset *tileset, const OpenAsParam &params)
+bool D1Sla::load(const QString &filePath)
 {
     // prepare file data source
     QFile file;
@@ -23,8 +23,8 @@ bool D1Sla::load(const QString &filePath, D1Tileset *tileset, const OpenAsParam 
     // }
     if (!filePath.isEmpty()) {
         file.setFileName(filePath);
-        if (!file.open(QIODevice::ReadOnly) && !params.slaFilePath.isEmpty()) {
-            return false; // report read-error only if the file was explicitly requested
+        if (!file.open(QIODevice::ReadOnly)) {
+            return false;
         }
     }
 
@@ -41,12 +41,14 @@ bool D1Sla::load(const QString &filePath, D1Tileset *tileset, const OpenAsParam 
         dProgressErr() << tr("Invalid SLA file.");
         return false;
     }
-    int subtileCount = tileset->sol->getSubtileCount();
+    /*int subtileCount = tileset->sol->getSubtileCount();
     int slaSubtileCount = fileSize / 4;
     if (slaSubtileCount != subtileCount + 1 && slaSubtileCount != 0) {
         dProgressErr() << tr("The size of SLA file does not align with TIL file.");
         changed = true;
-    }
+    }*/
+	int slaSubtileCount = fileSize / 4;
+	int subtileCount = slaSubtileCount != 0 ? slaSubtileCount - 1 : 0;
 
     // prepare empty lists with zeros
     for (int i = 0; i < subtileCount; i++) {
@@ -58,7 +60,7 @@ bool D1Sla::load(const QString &filePath, D1Tileset *tileset, const OpenAsParam 
         this->mapProperties.append(0);
     }
 
-    if (slaSubtileCount == 0) {
+    /*if (slaSubtileCount == 0) {
         for (int i = 0; i < subtileCount; i++) {
             this->renderProperties[i] = tileset->tmi->getSubtileProperties(i);
             this->trapProperties[i] = tileset->spt->getSubtileTrapProperty(i);
@@ -68,7 +70,7 @@ bool D1Sla::load(const QString &filePath, D1Tileset *tileset, const OpenAsParam 
             this->mapProperties[i] = tileset->smp->getSubtileProperties(i);
         }
         return true;
-    }
+    }*/
 
     // Read SLA binary data
     QDataStream in(fileData);
@@ -106,7 +108,7 @@ bool D1Sla::load(const QString &filePath, D1Tileset *tileset, const OpenAsParam 
         this->mapProperties[i] = readByte & ~MAT_TYPE;
     }
 
-    if (slaSubtileCount != 0) {
+    /*if (slaSubtileCount != 0) {
         for (int i = 0; i < subtileCount; i++) {
             if (this->renderProperties[i] != tileset->tmi->getSubtileProperties(i)) {
                 dProgressErr() << tr("Render property mismatch: %1.: %2 vs. %3").arg(i).arg(this->renderProperties[i]).arg(tileset->tmi->getSubtileProperties(i));
@@ -128,7 +130,7 @@ bool D1Sla::load(const QString &filePath, D1Tileset *tileset, const OpenAsParam 
             }
         }
         return true;
-    }
+    }*/
 
     this->modified = changed;
     return true;
@@ -448,4 +450,14 @@ void D1Sla::remapSubtiles(const std::map<unsigned, unsigned> &remap)
     }
 
     this->modified = true;
+}
+
+void D1Sla::resetSubtileFlags(int subtileIndex)
+{
+    this->setSubProperties(subtileIndex, 0);
+    this->setTrapProperty(subtileIndex, 0);
+    this->setSpecProperty(subtileIndex, 0);
+    this->setRenderProperties(subtileIndex, 0);
+    this->setMapType(subtileIndex, 0);
+    this->setMapProperties(subtileIndex, 0);
 }

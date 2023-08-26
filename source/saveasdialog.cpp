@@ -52,9 +52,6 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     this->ui->outputTilFileEdit->setText(isTilesetGfx ? tileset->til->getFilePath() : "");
     this->ui->outputSlaFileEdit->setText(isTilesetGfx ? tileset->sla->getFilePath() : "");
     this->ui->outputTlaFileEdit->setText(isTilesetGfx ? tileset->tla->getFilePath() : "");
-    this->ui->outputSptFileEdit->setText(isTilesetGfx ? tileset->spt->getFilePath() : "");
-    this->ui->outputTmiFileEdit->setText(isTilesetGfx ? tileset->tmi->getFilePath() : "");
-    this->ui->outputSmpFileEdit->setText(isTilesetGfx ? tileset->smp->getFilePath() : "");
     this->ui->tblFileEdit->setText(isTableset ? tableset->darkTbl->getFilePath() : "");
 
     if (dun == nullptr) {

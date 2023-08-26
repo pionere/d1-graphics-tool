@@ -8,10 +8,15 @@
 class LevelCelView;
 class D1Gfx;
 class D1Min;
-class D1Sol;
-class D1Spt;
-class D1Tmi;
-class D1Smp;
+class D1Sla;
+
+enum class SLA_FIELD_TYPE {
+    SOL_PROP,
+    TRAP_PROP,
+	SPEC_PROP,
+	RENDER_PROP,
+	MAP_PROP,
+};
 
 class EditMinCommand : public QObject, public QUndoCommand {
     Q_OBJECT
@@ -33,12 +38,12 @@ private:
     int frameRef;
 };
 
-class EditSolCommand : public QObject, public QUndoCommand {
+class EditSlaCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditSolCommand(D1Sol *sol, int subtileIndex, quint8 flags);
-    ~EditSolCommand() = default;
+    explicit EditSlaCommand(D1Sla *sla, int subtileIndex, SLA_FIELD_TYPE field, int value);
+    ~EditSlaCommand() = default;
 
     void undo() override;
     void redo() override;
@@ -47,69 +52,10 @@ signals:
     void modified();
 
 private:
-    QPointer<D1Sol> sol;
+    QPointer<D1Sla> sol;
     int subtileIndex;
-    quint8 flags;
-};
-
-class EditSptCommand : public QObject, public QUndoCommand {
-    Q_OBJECT
-
-public:
-    explicit EditSptCommand(D1Spt *spt, int subtileIndex, int value, bool trap);
-    ~EditSptCommand() = default;
-
-    void undo() override;
-    void redo() override;
-
-signals:
-    void trapModified();
-    void specModified();
-
-private:
-    QPointer<D1Spt> spt;
-    int subtileIndex;
+	SLA_FIELD_TYPE field;
     int value;
-    bool trap;
-};
-
-class EditTmiCommand : public QObject, public QUndoCommand {
-    Q_OBJECT
-
-public:
-    explicit EditTmiCommand(D1Tmi *tmi, int subtileIndex, quint8 flags);
-    ~EditTmiCommand() = default;
-
-    void undo() override;
-    void redo() override;
-
-signals:
-    void modified();
-
-private:
-    QPointer<D1Tmi> tmi;
-    int subtileIndex;
-    quint8 flags;
-};
-
-class EditSmpCommand : public QObject, public QUndoCommand {
-    Q_OBJECT
-
-public:
-    explicit EditSmpCommand(D1Smp *smp, int subtileIndex, int value, int typeProp);
-    ~EditSmpCommand() = default;
-
-    void undo() override;
-    void redo() override;
-
-signals:
-    void modified();
-
-private:
-    QPointer<D1Smp> smp;
-    int subtileIndex;
-    int value;
-    int typeProp;
 };
 
 namespace Ui {
@@ -123,7 +69,7 @@ public:
     explicit LevelTabSubtileWidget(QWidget *parent);
     ~LevelTabSubtileWidget();
 
-    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Spt *spt, D1Tmi *tmi, D1Smp *smp);
+    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Gfx *gfx, D1Min *min, D1Sla *sla);
     void updateFields();
 
     void selectFrame(int index);
@@ -179,10 +125,7 @@ private:
     QUndoStack *undoStack;
     D1Gfx *gfx;
     D1Min *min;
-    D1Sol *sol;
-    D1Spt *spt;
-    D1Tmi *tmi;
-    D1Smp *smp;
+    D1Sla *sla;
 
     bool onUpdate = false;
     int lastSubtileIndex = -1;

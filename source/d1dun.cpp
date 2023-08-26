@@ -15,10 +15,9 @@
 #include "d1cel.h"
 #include "d1cl2.h"
 #include "d1pal.h"
-#include "d1sol.h"
+#include "d1sla.h"
 #include "d1til.h"
 #include "d1tileset.h"
-#include "d1tmi.h"
 #include "d1trn.h"
 #include "progressdialog.h"
 
@@ -524,7 +523,7 @@ void D1Dun::initialize(D1Pal *p, D1Tileset *ts)
     this->cls = ts->cls;
     this->til = ts->til;
     this->min = ts->min;
-    this->spt = ts->spt;
+    this->sla = ts->sla;
 
     if (this->type == D1DUN_TYPE::NORMAL) {
         // prepare subtiles
@@ -1122,7 +1121,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw special cel
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef > 0 && subtileRef <= this->min->getSubtileCount()) {
-            int specRef = this->spt->getSubtileSpecProperty(subtileRef - 1);
+            int specRef = this->sla->getSpecProperty(subtileRef - 1);
             if (specRef != 0 && this->cls->getFrameCount() >= specRef) {
                 QImage specImage = this->cls->getFrameImage(specRef - 1);
                 dungeon.drawImage(drawCursorX, drawCursorY - specImage.height(), specImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
@@ -1253,8 +1252,8 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
     if (params.showMap) {
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef > 0 && subtileRef <= this->min->getSubtileCount()) { // !0 || !UNDEF_SUBTILE
-            quint8 mapType = this->tileset->smp->getSubtileType(subtileRef - 1);
-            quint8 mapProp = this->tileset->smp->getSubtileProperties(subtileRef - 1);
+            quint8 mapType = this->sla->getMapType(subtileRef - 1);
+            quint8 mapProp = this->sla->getMapProperties(subtileRef - 1);
 
             D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | mapProp);
         }
@@ -2314,7 +2313,7 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
     }
 }
 
-std::pair<int, int> D1Dun::collectSpace(const D1Sol *sol) const
+std::pair<int, int> D1Dun::collectSpace() const
 {
     int spaceMonster = 0, spaceObject = 0;
     for (int posy = 0; posy < this->height; posy++) {
@@ -2322,7 +2321,7 @@ std::pair<int, int> D1Dun::collectSpace(const D1Sol *sol) const
             int subtileRef = this->subtiles[posy][posx];
             if (subtileRef <= 0) // UNDEF_SUBTILE || 0
                 continue;
-            quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+            quint8 solFlags = this->sla->getSubProperties(subtileRef - 1);
             if (solFlags & (1 << 0))
                 continue; // subtile is non-passable
             if ((this->subtileProtections[posy][posx] & 1) == 0 && this->monsters[posy][posx].first == 0) {
@@ -2480,7 +2479,7 @@ void D1Dun::checkProtections() const
     ProgressDialog::decBar();
 }
 
-void D1Dun::checkItems(const D1Sol *sol) const
+void D1Dun::checkItems() const
 {
     ProgressDialog::incBar(tr("Checking Items..."), 1);
     bool result = false;
@@ -2504,7 +2503,7 @@ void D1Dun::checkItems(const D1Sol *sol) const
                 dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(itemName).arg(x).arg(y);
                 result = true;
             } else {
-                quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+                quint8 solFlags = this->sla->getSubProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
                     dProgressErr() << tr("'%1' at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(itemName).arg(x).arg(y);
                     result = true;
@@ -2520,7 +2519,7 @@ void D1Dun::checkItems(const D1Sol *sol) const
     ProgressDialog::decBar();
 }
 
-void D1Dun::checkMonsters(const D1Sol *sol) const
+void D1Dun::checkMonsters() const
 {
     ProgressDialog::incBar(tr("Checking Monsters..."), 1);
     bool result = false;
@@ -2548,7 +2547,7 @@ void D1Dun::checkMonsters(const D1Sol *sol) const
                 dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(monsterName).arg(x).arg(y);
                 result = true;
             } else {
-                quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+                quint8 solFlags = this->sla->getSubProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
                     dProgressErr() << tr("'%1' at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(monsterName).arg(x).arg(y);
                     result = true;
@@ -2986,8 +2985,8 @@ bool D1Dun::needsProtectionAt(int posx, int posy) const
     }
     int subtileRef = this->subtiles[posy][posx];
     if ((subtileRef > 0) // UNDEF_SUBTILE || 0
-        && (this->tileset->sol->getSubtileProperties(subtileRef - 1) & PFLAG_BLOCK_PATH)
-        && (this->tileset->spt->getSubtileTrapProperty(subtileRef - 1) == PTT_NONE)) {
+        && (this->sla->getSubProperties(subtileRef - 1) & PFLAG_BLOCK_PATH)
+        && (this->sla->getTrapProperty(subtileRef - 1) == PTT_NONE)) {
         return false;
     }
     return true;

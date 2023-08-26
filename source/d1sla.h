@@ -14,7 +14,7 @@ public:
     D1Sla() = default;
     ~D1Sla() = default;
 
-    bool load(const QString &slaFilePath, D1Tileset *tileset, const OpenAsParam &params);
+    bool load(const QString &slaFilePath, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
     void clear();
 
@@ -38,6 +38,7 @@ public:
     void createSubtile();
     void removeSubtile(int subtileIndex);
     void remapSubtiles(const std::map<unsigned, unsigned> &remap);
+    void resetSubtileFlags(int subtileIndex);
 
 private:
     QString slaFilePath;

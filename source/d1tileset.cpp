@@ -25,11 +25,11 @@ D1Tileset::D1Tileset(D1Gfx *g)
     this->min = new D1Min();
     this->til = new D1Til();
     this->sla = new D1Sla();
-    this->sol = new D1Sol();
+    //this->sol = new D1Sol();
     this->tla = new D1Tla();
-    this->spt = new D1Spt();
+    /*this->spt = new D1Spt();
     this->tmi = new D1Tmi();
-    this->smp = new D1Smp();
+    this->smp = new D1Smp();*/
 }
 
 D1Tileset::~D1Tileset()
@@ -38,11 +38,11 @@ D1Tileset::~D1Tileset()
     delete min;
     delete til;
     delete sla;
-    delete sol;
+    //delete sol;
     delete tla;
-    delete spt;
-    delete tmi;
-    delete smp;
+    //delete spt;
+    //delete tmi;
+    //delete smp;
 }
 
 bool D1Tileset::loadCls(const QString &clsFilePath, const OpenAsParam &params)
@@ -68,11 +68,11 @@ bool D1Tileset::load(const OpenAsParam &params)
     QString tilFilePath = params.tilFilePath;
     QString slaFilePath = params.slaFilePath;
     QString minFilePath = params.minFilePath;
-    QString solFilePath = params.solFilePath;
+    //QString solFilePath = params.solFilePath;
     QString tlaFilePath = params.tlaFilePath;
-    QString sptFilePath = params.sptFilePath;
-    QString tmiFilePath = params.tmiFilePath;
-    QString smpFilePath = params.smpFilePath;
+    //QString sptFilePath = params.sptFilePath;
+    //QString tmiFilePath = params.tmiFilePath;
+    //QString smpFilePath = params.smpFilePath;
 
     if (!gfxFilePath.isEmpty()) {
         QFileInfo celFileInfo = QFileInfo(gfxFilePath);
@@ -91,13 +91,13 @@ bool D1Tileset::load(const OpenAsParam &params)
         if (slaFilePath.isEmpty()) {
             slaFilePath = basePath + ".sla";
         }
-        if (solFilePath.isEmpty()) {
+        /*if (solFilePath.isEmpty()) {
             solFilePath = basePath + ".sol";
-        }
+        }*/
         if (tlaFilePath.isEmpty()) {
             tlaFilePath = basePath + ".tla";
         }
-        if (sptFilePath.isEmpty()) {
+        /*if (sptFilePath.isEmpty()) {
             sptFilePath = basePath + ".spt";
         }
         if (tmiFilePath.isEmpty()) {
@@ -105,26 +105,28 @@ bool D1Tileset::load(const OpenAsParam &params)
         }
         if (smpFilePath.isEmpty()) {
             smpFilePath = basePath + ".smp";
-        }
+        }*/
     }
 
     std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-    if (!this->sol->load(solFilePath)) {
-        dProgressErr() << QApplication::tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
+    // if (!this->sol->load(solFilePath)) {
+    //    dProgressErr() << QApplication::tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
+	if (!this->sla->load(slaFilePath)) {
+		dProgressErr() << QApplication::tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath));
     } else if (!this->min->load(minFilePath, this, celFrameTypes, params)) {
         dProgressErr() << QApplication::tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
     } else if (!this->til->load(tilFilePath, this->min)) {
         dProgressErr() << QApplication::tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
     } else if (!this->tla->load(tlaFilePath, this->til->getTileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(tlaFilePath));
-    } else if (!this->spt->load(sptFilePath, this->sol->getSubtileCount(), params)) {
+    /*} else if (!this->spt->load(sptFilePath, this->sol->getSubtileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath));
     } else if (!this->tmi->load(tmiFilePath, this->sol->getSubtileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
     } else if (!this->smp->load(smpFilePath, this->sol->getSubtileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading SMP file: %1.").arg(QDir::toNativeSeparators(smpFilePath));
     } else if (!this->sla->load(slaFilePath, this, params)) {
-        dProgressErr() << QApplication::tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath));
+        dProgressErr() << QApplication::tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath));*/
     } else if (!this->loadCls(clsFilePath, params)) {
         dProgressErr() << QApplication::tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath));
     } else if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
@@ -138,11 +140,11 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->min->clear();
     this->til->clear();
     this->sla->clear();
-    this->sol->clear();
+    //this->sol->clear();
     this->tla->clear();
-    this->spt->clear();
-    this->tmi->clear();
-    this->smp->clear();
+    //this->spt->clear();
+    //this->tmi->clear();
+    //this->smp->clear();
     return false;
 }
 
@@ -195,11 +197,11 @@ void D1Tileset::save(const SaveAsParam &params)
     this->min->save(params);
     this->til->save(params);
     this->sla->save(params);
-    this->sol->save(params);
+    //this->sol->save(params);
     this->tla->save(params);
-    this->spt->save(params);
+    /*this->spt->save(params);
     this->tmi->save(params);
-    this->smp->save(params);
+    this->smp->save(params);*/
 }
 
 void D1Tileset::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
@@ -244,20 +246,20 @@ void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &fra
 {
     this->min->insertSubtile(subtileIndex, frameReferencesList);
     this->sla->insertSubtile(subtileIndex);
-    this->sol->insertSubtile(subtileIndex);
+    /*this->sol->insertSubtile(subtileIndex);
     this->spt->insertSubtile(subtileIndex);
     this->tmi->insertSubtile(subtileIndex);
-    this->smp->insertSubtile(subtileIndex);
+    this->smp->insertSubtile(subtileIndex);*/
 }
 
 void D1Tileset::createSubtile()
 {
     this->min->createSubtile();
     this->sla->createSubtile();
-    this->sol->createSubtile();
+    /*this->sol->createSubtile();
     this->spt->createSubtile();
     this->tmi->createSubtile();
-    this->smp->createSubtile();
+    this->smp->createSubtile();*/
 }
 
 int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
@@ -269,16 +271,14 @@ int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
     std::vector<unsigned> &baseFrameReferences = this->min->getFrameReferences(subtileIndex);
     std::vector<unsigned> &newFrameReferences = this->min->getFrameReferences(newSubtileIndex);
     newFrameReferences = baseFrameReferences;
-    // D1Sol::duplicate
-    this->sol->setSubtileProperties(newSubtileIndex, this->sol->getSubtileProperties(subtileIndex));
-    // D1Spt::duplicate
-    this->spt->setSubtileTrapProperty(newSubtileIndex, this->spt->getSubtileTrapProperty(subtileIndex));
-    this->spt->setSubtileSpecProperty(newSubtileIndex, this->spt->getSubtileSpecProperty(subtileIndex));
-    // D1Tmi::duplicate
-    this->tmi->setSubtileProperties(newSubtileIndex, this->tmi->getSubtileProperties(subtileIndex));
-    // D1Smp::duplicate
-    this->smp->setSubtileType(newSubtileIndex, this->smp->getSubtileType(subtileIndex));
-    this->smp->setSubtileProperties(newSubtileIndex, this->smp->getSubtileProperties(subtileIndex));
+
+	// D1Sla::duplicate
+    this->sla->setSubProperties(newSubtileIndex, this->sla->getSubProperties(subtileIndex));
+    this->sla->setTrapProperty(newSubtileIndex, this->sla->getTrapProperty(subtileIndex));
+    this->sla->setSpecProperty(newSubtileIndex, this->sla->getSpecProperty(subtileIndex));
+    this->sla->setRenderProperties(newSubtileIndex, this->sla->getRenderProperties(subtileIndex));
+    this->sla->setMapType(newSubtileIndex, this->sla->getMapType(subtileIndex));
+    this->sla->setMapProperties(newSubtileIndex, this->sla->getMapProperties(subtileIndex));
 
     if (deepCopy) {
         for (unsigned i = 0; i < newFrameReferences.size(); i++) {
@@ -296,29 +296,17 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
 {
     this->til->removeSubtile(subtileIndex, replacement);
     this->sla->removeSubtile(subtileIndex);
-    this->sol->removeSubtile(subtileIndex);
-    this->spt->removeSubtile(subtileIndex);
-    this->tmi->removeSubtile(subtileIndex);
-    this->smp->removeSubtile(subtileIndex);
 }
 
 void D1Tileset::resetSubtileFlags(int subtileIndex)
 {
-    this->sol->setSubtileProperties(subtileIndex, 0);
-    this->spt->setSubtileTrapProperty(subtileIndex, 0);
-    this->spt->setSubtileSpecProperty(subtileIndex, 0);
-    this->tmi->setSubtileProperties(subtileIndex, 0);
-    this->smp->setSubtileProperties(subtileIndex, 0);
+	this->sla->resetSubtileFlags(subtileIndex);
 }
 
 void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
 {
     this->min->remapSubtiles(remap);
     this->sla->remapSubtiles(remap);
-    this->sol->remapSubtiles(remap);
-    this->spt->remapSubtiles(remap);
-    this->tmi->remapSubtiles(remap);
-    this->smp->remapSubtiles(remap);
 }
 
 void D1Tileset::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
@@ -386,7 +374,7 @@ void D1Tileset::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
 void D1Tileset::swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1)
 {
     std::map<unsigned, unsigned> remap;
-    const unsigned numSubtiles = this->sol->getSubtileCount();
+    const unsigned numSubtiles = this->sla->getSubtileCount();
     if (subtileIndex0 >= numSubtiles) {
         // move subtileIndex1 to the front
         if (subtileIndex1 == 0 || subtileIndex1 >= numSubtiles) {
@@ -582,19 +570,19 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             if (!match) {
                 continue;
             }
-            if (this->spt->getSubtileSpecProperty(i) != this->spt->getSubtileSpecProperty(j) || this->spt->getSubtileTrapProperty(i) != this->spt->getSubtileTrapProperty(j)) {
+            if (this->sla->getSpecProperty(i) != this->sla->getSpecProperty(j) || this->sla->getTrapProperty(i) != this->sla->getTrapProperty(j)) {
                 dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SPT-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
-            if (this->smp->getSubtileType(i) != this->smp->getSubtileType(j) || this->smp->getSubtileProperties(i) != this->smp->getSubtileProperties(j)) {
+            if (this->sla->getMapType(i) != this->sla->getMapType(j) || this->sla->getMapProperties(i) != this->sla->getMapProperties(j)) {
                 dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SMP-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
-            if (this->sol->getSubtileProperties(i) != this->sol->getSubtileProperties(j)) {
+            if (this->sla->getSubProperties(i) != this->sla->getSubProperties(j)) {
                 dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SOL-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
-            if (this->tmi->getSubtileProperties(i) != this->tmi->getSubtileProperties(j)) {
+            if (this->sla->getRenderProperties(i) != this->sla->getRenderProperties(j)) {
                 dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the TMI-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
@@ -814,7 +802,7 @@ static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int s
     }*/
 }
 
-static void ChangeSubtileSolFlags(D1Sol *sol, int subtileIndex, int solFlag, bool add, bool silent)
+/*static void ChangeSubtileSolFlags(D1Sol *sol, int subtileIndex, int solFlag, bool add, bool silent)
 {
     quint8 currProperties = sol->getSubtileProperties(subtileIndex);
     quint8 newProperties = currProperties;
@@ -828,7 +816,7 @@ static void ChangeSubtileSolFlags(D1Sol *sol, int subtileIndex, int solFlag, boo
             dProgress() << QApplication::tr("The SOL flags of Subtile %1 is changed from %2 to %3.").arg(subtileIndex + 1).arg(currProperties).arg(newProperties);
         }
     }
-}
+}*/
 
 typedef struct {
     int subtileIndex;
@@ -19238,13 +19226,13 @@ void D1Tileset::patch(int dunType, bool silent)
             break; // -- assume it is already done
         }
         // patch dSolidTable - TOWN.SOL
-        ChangeSubtileSolFlags(this->sol, 761 - 1, PFLAG_BLOCK_PATH, true, silent);   // make the tile of the southern window of the church non-walkable
+        /*ChangeSubtileSolFlags(this->sol, 761 - 1, PFLAG_BLOCK_PATH, true, silent);   // make the tile of the southern window of the church non-walkable
         ChangeSubtileSolFlags(this->sol, 945 - 1, PFLAG_BLOCK_PATH, true, silent);   // make the eastern side of Griswold's house consistent (non-walkable)
         ChangeSubtileSolFlags(this->sol, 1240 - 1, PFLAG_BLOCK_PATH, false, silent); // make the eastern side of hell-entrance consistent (walkable)
         ChangeSubtileSolFlags(this->sol, 1241 - 1, PFLAG_BLOCK_PATH, false, silent); // make the eastern side of hell-entrance consistent (walkable)
         ChangeSubtileSolFlags(this->sol, 1247 - 1, PFLAG_BLOCK_PATH, false, silent); // let the player closer to the hell-entrance
         ChangeSubtileSolFlags(this->sol, 1253 - 1, PFLAG_BLOCK_PATH, false, silent); // make the western side of hell-entrance consistent (walkable)
-        ChangeSubtileSolFlags(this->sol, 1255 - 1, PFLAG_BLOCK_PATH, false, silent); // make the western side of hell-entrance consistent (walkable)
+        ChangeSubtileSolFlags(this->sol, 1255 - 1, PFLAG_BLOCK_PATH, false, silent); // make the western side of hell-entrance consistent (walkable)*/
         this->cleanupTown(deletedFrames, silent);
     } break;
     case DTYPE_CATHEDRAL:
@@ -19258,7 +19246,7 @@ void D1Tileset::patch(int dunType, bool silent)
         this->patchCathedralSpec(silent);
         // patch dSolidTable - L1.SOL
         // adjust SOL after fixCathedralShadows
-        ChangeSubtileSolFlags(this->sol, 298 - 1, PFLAG_BLOCK_PATH, true, silent);
+        /*ChangeSubtileSolFlags(this->sol, 298 - 1, PFLAG_BLOCK_PATH, true, silent);
         ChangeSubtileSolFlags(this->sol, 304 - 1, PFLAG_BLOCK_PATH, true, silent);
         ChangeSubtileSolFlags(this->sol, 334 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         // - special subtiles for the banner setpiece
@@ -19271,7 +19259,7 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 139 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 140 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         // - subtile for the separate pillar tile
-        ChangeSubtileSolFlags(this->sol, 61 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
+        ChangeSubtileSolFlags(this->sol, 61 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);*/
         break;
     case DTYPE_CATACOMBS:
         // patch dMiniTiles and dMegaTiles - L2.MIN and L2.TIL
@@ -19284,11 +19272,11 @@ void D1Tileset::patch(int dunType, bool silent)
         this->patchCatacombsSpec(silent);
         // patch dSolidTable - L2.SOL
         // - fix the upstairs IV.
-        ChangeSubtileSolFlags(this->sol, 252 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
+        /*ChangeSubtileSolFlags(this->sol, 252 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
         ChangeSubtileSolFlags(this->sol, 267 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         // ChangeSubtileSolFlags(this->sol, 559 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         // - adjust SOL after cleanupCatacombs
-        ChangeSubtileSolFlags(this->sol, 268 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 268 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);*/
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles and dMegaTiles - L3.MIN and L3.TIL
@@ -19298,7 +19286,7 @@ void D1Tileset::patch(int dunType, bool silent)
         }
         this->cleanupCaves(deletedFrames, silent);
         // patch dSolidTable - L3.SOL
-        ChangeSubtileSolFlags(this->sol, 249 - 1, PFLAG_BLOCK_PATH, false, silent); // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
+        /*ChangeSubtileSolFlags(this->sol, 249 - 1, PFLAG_BLOCK_PATH, false, silent); // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
         ChangeSubtileSolFlags(this->sol, 146 - 1, PFLAG_BLOCK_LIGHT, false, silent); // fix unreasonable light-blocker
         ChangeSubtileSolFlags(this->sol, 150 - 1, PFLAG_BLOCK_LIGHT, false, silent); // fix unreasonable light-blocker
         // - fix fence subtiles
@@ -19311,7 +19299,7 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 166 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 168 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         // - separate subtiles for the automap
-        ChangeSubtileSolFlags(this->sol, 258 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 258 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, true, silent);*/
         break;
     case DTYPE_HELL:
         // patch dMiniTiles and dMegaTiles - L3.MIN and L3.TIL
@@ -19321,14 +19309,14 @@ void D1Tileset::patch(int dunType, bool silent)
         }
         this->cleanupHell(deletedFrames, silent);
         // patch dSolidTable - L4.SOL
-        ChangeSubtileSolFlags(this->sol, 141 - 1, PFLAG_BLOCK_MISSILE, false, silent); // fix missile-blocking tile of down-stairs.
+        /*ChangeSubtileSolFlags(this->sol, 141 - 1, PFLAG_BLOCK_MISSILE, false, silent); // fix missile-blocking tile of down-stairs.
         // fix missile-blocking tile of down-stairs + fix non-walkable tile of down-stairs
         // ChangeSubtileSolFlags(this->sol, 137 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 130 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable I.
         ChangeSubtileSolFlags(this->sol, 132 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable II.
         ChangeSubtileSolFlags(this->sol, 131 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable III.
         // fix all-blocking tile on the diablo-level
-        ChangeSubtileSolFlags(this->sol, 211 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
+        ChangeSubtileSolFlags(this->sol, 211 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);*/
         break;
     case DTYPE_NEST:
         // patch dMiniTiles and dMegaTiles - L6.MIN and L6.TIL
@@ -19338,14 +19326,14 @@ void D1Tileset::patch(int dunType, bool silent)
         }
         this->cleanupNest(deletedFrames, silent);
         // patch dSolidTable - L6.SOL
-        ChangeSubtileSolFlags(this->sol, 390 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable I.
+        /*ChangeSubtileSolFlags(this->sol, 390 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable I.
         ChangeSubtileSolFlags(this->sol, 413 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable II.
         ChangeSubtileSolFlags(this->sol, 416 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable III.
         // - with subtile-based automap
         ChangeSubtileSolFlags(this->sol, 61 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 63 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 65 - 1, PFLAG_BLOCK_LIGHT, false, silent);
-        ChangeSubtileSolFlags(this->sol, 66 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 66 - 1, PFLAG_BLOCK_LIGHT, false, silent);*/
         break;
     case DTYPE_CRYPT:
         // patch pSpecialsCel - L5S.CEL
@@ -19362,7 +19350,7 @@ void D1Tileset::patch(int dunType, bool silent)
         // patch dSolidTable - L5.SOL
         // make collision-checks more reasonable
         // - fix inconsistent subtile on the right side of down-stairs
-        ChangeSubtileSolFlags(this->sol, 143 - 1, PFLAG_BLOCK_PATH, false, silent);
+        /*ChangeSubtileSolFlags(this->sol, 143 - 1, PFLAG_BLOCK_PATH, false, silent);
         //  - fix inconsistent entrance to Na-Krul
         ChangeSubtileSolFlags(this->sol, 299 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
         //  - prevent non-crossable floor-tile configurations I.
@@ -19410,7 +19398,7 @@ void D1Tileset::patch(int dunType, bool silent)
         // ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 149 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 150 - 1, PFLAG_BLOCK_LIGHT, false, silent);
-        ChangeSubtileSolFlags(this->sol, 153 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 153 - 1, PFLAG_BLOCK_LIGHT, false, silent);*/
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
