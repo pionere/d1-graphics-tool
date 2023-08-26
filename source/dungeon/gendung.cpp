@@ -142,8 +142,8 @@ void InitLvlDungeon()
 
 		pTmp = subFile;
 		// read sub-properties
-		for (unsigned i = 0; i < dwSubtiles; i++) {
-			BYTE bv = *pTmp++;
+		for (unsigned i = 0; i < dwSubtiles; i++, pTmp++) {
+			BYTE bv = *pTmp;
 			nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
 			nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
 			nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
