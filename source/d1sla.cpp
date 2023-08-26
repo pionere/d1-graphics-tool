@@ -180,10 +180,11 @@ bool D1Sla::save(const SaveAsParam &params)
     }
     // write the trap/spec-properties
     out << (quint8)0; // add leading zero
-    for (int i = 0; i < this->trapProperties.size(); i++) {
-        in >> readByte;
-        this->trapProperties[i] = (readByte >> 6) & 3;
-        this->specProperties[i] = readByte & PST_SPEC_TYPE;
+    for (int i = 0; i < this->specProperties.size(); i++) {
+        quint8 writeByte;
+        writeByte = this->specProperties[i];
+        writeByte |= this->trapProperties[i] << 6;
+        out << writeByte;
     }
     // write the render-properties
     out << (quint8)0; // add leading zero
