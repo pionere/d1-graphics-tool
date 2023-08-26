@@ -255,19 +255,19 @@
       <item row="4" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Sol File:</string>
+         <string>Sla File:</string>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="LineEditWidget" name="outputSolFileEdit">
+       <widget class="LineEditWidget" name="outputSlaFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QPushButton" name="outputSolFileBrowseButton">
+       <widget class="QPushButton" name="outputSlaFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>

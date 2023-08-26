@@ -979,6 +979,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString clsFilePath = params.clsFilePath;
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
+    QString slaFilePath = params.slaFilePath;
     QString solFilePath = params.solFilePath;
     QString tlaFilePath = params.tlaFilePath;
     QString sptFilePath = params.sptFilePath;
@@ -1012,6 +1013,9 @@ void MainWindow::openFile(const OpenAsParam &params)
         if (minFilePath.isEmpty()) {
             minFilePath = basePath + ".min";
         }
+        if (slaFilePath.isEmpty()) {
+            slaFilePath = basePath + ".sla";
+        }
         if (solFilePath.isEmpty()) {
             solFilePath = basePath + ".sol";
         }
@@ -1035,6 +1039,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.sla"), slaFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.tla"), tlaFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.spt"), sptFilePath, baseName);
@@ -1103,6 +1108,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Loading SMP
         if (!this->tileset->smp->load(smpFilePath, this->tileset->sol->getSubtileCount(), params)) {
             this->failWithError(tr("Failed loading SMP file: %1.").arg(QDir::toNativeSeparators(smpFilePath)));
+            return;
+        }
+
+        // Loading SLA
+        if (!this->tileset->sla->load(slaFilePath, this->tileset, params)) {
+            this->failWithError(tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath)));
             return;
         }
 

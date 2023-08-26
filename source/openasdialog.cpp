@@ -37,7 +37,7 @@ void OpenAsDialog::initialize()
     this->ui->clsFileEdit->setText("");
     this->ui->tilFileEdit->setText("");
     this->ui->minFileEdit->setText("");
-    this->ui->solFileEdit->setText("");
+    this->ui->slaFileEdit->setText("");
     this->ui->tlaFileEdit->setText("");
     this->ui->sptFileEdit->setText("");
     this->ui->tmiFileEdit->setText("");
@@ -78,15 +78,15 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
         QString basePath;
         QString tilFilePath;
         QString minFilePath;
-        QString solFilePath;
+        QString slaFilePath;
         if (openFilePath.toLower().endsWith(".cel")) {
-            // If a SOL, MIN and TIL files exists then preset them
+            // If a SLA, MIN and TIL files exists then preset them
             basePath = openFilePath;
             basePath.chop(4);
             tilFilePath = basePath + ".til";
             minFilePath = basePath + ".min";
-            solFilePath = basePath + ".sol";
-            isTileset = QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath);
+            slaFilePath = basePath + ".sla";
+            isTileset = QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(slaFilePath);
         }
         if (isTileset) {
             QString clsFilePath = basePath + "s.cel";
@@ -97,7 +97,7 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             }
             this->ui->tilFileEdit->setText(tilFilePath);
             this->ui->minFileEdit->setText(minFilePath);
-            this->ui->solFileEdit->setText(solFilePath);
+            this->ui->slaFileEdit->setText(slaFilePath);
             QString tlaFilePath = basePath + ".tla";
             if (QFileInfo::exists(tlaFilePath)) {
                 this->ui->tlaFileEdit->setText(tlaFilePath);
@@ -126,7 +126,7 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             this->ui->clsFileEdit->setText("");
             this->ui->tilFileEdit->setText("");
             this->ui->minFileEdit->setText("");
-            this->ui->solFileEdit->setText("");
+            this->ui->slaFileEdit->setText("");
             this->ui->tlaFileEdit->setText("");
             this->ui->sptFileEdit->setText("");
             this->ui->tmiFileEdit->setText("");
@@ -195,14 +195,14 @@ void OpenAsDialog::on_minFileBrowseButton_clicked()
     this->ui->minFileEdit->setText(openFilePath);
 }
 
-void OpenAsDialog::on_solFileBrowseButton_clicked()
+void OpenAsDialog::on_slaFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select SOL file"), tr("SOL Files (*.sol *.SOL)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select SLA file"), tr("SOL Files (*.sla *.SLA)"));
 
     if (openFilePath.isEmpty())
         return;
 
-    this->ui->solFileEdit->setText(openFilePath);
+    this->ui->slaFileEdit->setText(openFilePath);
 }
 
 void OpenAsDialog::on_tlaFileBrowseButton_clicked()
@@ -295,7 +295,7 @@ void OpenAsDialog::on_openButton_clicked()
     params.clsFilePath = this->ui->clsFileEdit->text();
     params.tilFilePath = this->ui->tilFileEdit->text();
     params.minFilePath = this->ui->minFileEdit->text();
-    params.solFilePath = this->ui->solFileEdit->text();
+    params.slaFilePath = this->ui->slaFileEdit->text();
     params.tlaFilePath = this->ui->tlaFileEdit->text();
     params.sptFilePath = this->ui->sptFileEdit->text();
     params.tmiFilePath = this->ui->tmiFileEdit->text();

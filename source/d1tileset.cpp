@@ -24,6 +24,7 @@ D1Tileset::D1Tileset(D1Gfx *g)
     this->cls->setPalette(g->getPalette());
     this->min = new D1Min();
     this->til = new D1Til();
+    this->sla = new D1Sla();
     this->sol = new D1Sol();
     this->tla = new D1Tla();
     this->spt = new D1Spt();
@@ -36,6 +37,7 @@ D1Tileset::~D1Tileset()
     delete cls;
     delete min;
     delete til;
+    delete sla;
     delete sol;
     delete tla;
     delete spt;
@@ -64,6 +66,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     QString gfxFilePath = params.celFilePath;
     QString clsFilePath = params.clsFilePath;
     QString tilFilePath = params.tilFilePath;
+    QString slaFilePath = params.slaFilePath;
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
     QString tlaFilePath = params.tlaFilePath;
@@ -84,6 +87,9 @@ bool D1Tileset::load(const OpenAsParam &params)
         }
         if (minFilePath.isEmpty()) {
             minFilePath = basePath + ".min";
+        }
+        if (slaFilePath.isEmpty()) {
+            slaFilePath = basePath + ".sla";
         }
         if (solFilePath.isEmpty()) {
             solFilePath = basePath + ".sol";
@@ -117,6 +123,8 @@ bool D1Tileset::load(const OpenAsParam &params)
         dProgressErr() << QApplication::tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
     } else if (!this->smp->load(smpFilePath, this->sol->getSubtileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading SMP file: %1.").arg(QDir::toNativeSeparators(smpFilePath));
+    } else if (!this->sla->load(slaFilePath, this, params)) {
+        dProgressErr() << QApplication::tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath));
     } else if (!this->loadCls(clsFilePath, params)) {
         dProgressErr() << QApplication::tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath));
     } else if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
@@ -129,6 +137,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->cls->clear();
     this->min->clear();
     this->til->clear();
+    this->sla->clear();
     this->sol->clear();
     this->tla->clear();
     this->spt->clear();
@@ -185,6 +194,7 @@ void D1Tileset::save(const SaveAsParam &params)
     this->saveCls(params);
     this->min->save(params);
     this->til->save(params);
+    this->sla->save(params);
     this->sol->save(params);
     this->tla->save(params);
     this->spt->save(params);
@@ -233,6 +243,7 @@ void D1Tileset::removeTile(int tileIndex)
 void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
 {
     this->min->insertSubtile(subtileIndex, frameReferencesList);
+    this->sla->insertSubtile(subtileIndex);
     this->sol->insertSubtile(subtileIndex);
     this->spt->insertSubtile(subtileIndex);
     this->tmi->insertSubtile(subtileIndex);
@@ -242,6 +253,7 @@ void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &fra
 void D1Tileset::createSubtile()
 {
     this->min->createSubtile();
+    this->sla->createSubtile();
     this->sol->createSubtile();
     this->spt->createSubtile();
     this->tmi->createSubtile();
@@ -283,6 +295,7 @@ int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
 void D1Tileset::removeSubtile(int subtileIndex, int replacement)
 {
     this->til->removeSubtile(subtileIndex, replacement);
+    this->sla->removeSubtile(subtileIndex);
     this->sol->removeSubtile(subtileIndex);
     this->spt->removeSubtile(subtileIndex);
     this->tmi->removeSubtile(subtileIndex);
@@ -301,6 +314,7 @@ void D1Tileset::resetSubtileFlags(int subtileIndex)
 void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
 {
     this->min->remapSubtiles(remap);
+    this->sla->remapSubtiles(remap);
     this->sol->remapSubtiles(remap);
     this->spt->remapSubtiles(remap);
     this->tmi->remapSubtiles(remap);

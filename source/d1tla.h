@@ -12,7 +12,7 @@ public:
     D1Tla() = default;
     ~D1Tla() = default;
 
-    bool load(const QString &titFilePath, int tileCount, const OpenAsParam &params);
+    bool load(const QString &tlaFilePath, int tileCount, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
     void clear();
 
