@@ -190,7 +190,7 @@ void SaveAsDialog::on_saveButton_clicked()
     } else {
         params.clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     }
-    // tilSettingsGroupBox: upscaled, min, til, tla, sla, spt, tmi and smp files
+    // tilSettingsGroupBox: upscaled, min, til, sla and tla files
     if (this->ui->minUpscaledYesRadioButton->isChecked()) {
         params.upscaled = SAVE_UPSCALED_TYPE::TRUE;
     } else if (this->ui->minUpscaledNoRadioButton->isChecked()) {
