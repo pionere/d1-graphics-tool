@@ -2298,7 +2298,7 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
     }
 }
 
-std::pair<int, int> D1Dun::collectSpace(const D1Sol *sol) const
+std::pair<int, int> D1Dun::collectSpace() const
 {
     int spaceMonster = 0, spaceObject = 0;
     for (int posy = 0; posy < this->height; posy++) {
@@ -2306,7 +2306,7 @@ std::pair<int, int> D1Dun::collectSpace(const D1Sol *sol) const
             int subtileRef = this->subtiles[posy][posx];
             if (subtileRef <= 0) // UNDEF_SUBTILE || 0
                 continue;
-            quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+            quint8 solFlags = this->tileset->sol->getSubtileProperties(subtileRef - 1);
             if (solFlags & (1 << 0))
                 continue; // subtile is non-passable
             if ((this->subtileProtections[posy][posx] & 1) == 0 && this->monsters[posy][posx].first == 0) {
@@ -2464,7 +2464,7 @@ void D1Dun::checkProtections() const
     ProgressDialog::decBar();
 }
 
-void D1Dun::checkItems(const D1Sol *sol) const
+void D1Dun::checkItems() const
 {
     ProgressDialog::incBar(tr("Checking Items..."), 1);
     bool result = false;
@@ -2488,7 +2488,7 @@ void D1Dun::checkItems(const D1Sol *sol) const
                 dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(itemName).arg(x).arg(y);
                 result = true;
             } else {
-                quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+                quint8 solFlags = this->tileset->sol->getSubtileProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
                     dProgressErr() << tr("'%1' at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(itemName).arg(x).arg(y);
                     result = true;
@@ -2504,7 +2504,7 @@ void D1Dun::checkItems(const D1Sol *sol) const
     ProgressDialog::decBar();
 }
 
-void D1Dun::checkMonsters(const D1Sol *sol) const
+void D1Dun::checkMonsters() const
 {
     ProgressDialog::incBar(tr("Checking Monsters..."), 1);
     bool result = false;
@@ -2532,7 +2532,7 @@ void D1Dun::checkMonsters(const D1Sol *sol) const
                 dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(monsterName).arg(x).arg(y);
                 result = true;
             } else {
-                quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+                quint8 solFlags = this->tileset->sol->getSubtileProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
                     dProgressErr() << tr("'%1' at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(monsterName).arg(x).arg(y);
                     result = true;

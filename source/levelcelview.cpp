@@ -2989,12 +2989,12 @@ void LevelCelView::checkProtections() const
 
 void LevelCelView::checkItems() const
 {
-    this->dun->checkItems(this->sol);
+    this->dun->checkItems();
 }
 
 void LevelCelView::checkMonsters() const
 {
-    this->dun->checkMonsters(this->sol);
+    this->dun->checkMonsters();
 }
 
 void LevelCelView::checkObjects() const

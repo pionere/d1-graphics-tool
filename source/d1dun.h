@@ -177,14 +177,14 @@ public:
     QString getMonsterName(const DunMonsterType &monType) const;
     QString getObjectName(int objectIndex) const;
 
-    std::pair<int, int> collectSpace(const D1Sol *sol) const;
+    std::pair<int, int> collectSpace() const;
     void collectItems(std::vector<std::pair<int, int>> &items) const;
     void collectMonsters(std::vector<std::pair<DunMonsterType, int>> &monsters) const;
     void collectObjects(std::vector<std::pair<int, int>> &objects) const;
     void checkTiles() const;
     void checkProtections() const;
-    void checkItems(const D1Sol *sol) const;
-    void checkMonsters(const D1Sol *sol) const;
+    void checkItems() const;
+    void checkMonsters() const;
     void checkObjects() const;
     bool removeTiles();
     bool removeProtections();
