@@ -34,7 +34,6 @@ uint16_t pTiles[MAXTILES + 1][4];
  * Flags of tiles to specify room propagation and shadow-type flags (_tile_flags)
  */
 BYTE nTrnShadowTable[MAXTILES + 1];
-BYTE* pSolidTbl;
 /**
  * List of light blocking dPieces
  */
@@ -95,7 +94,6 @@ static_assert(MAXITEMS <= UCHAR_MAX, "Index of an item might not fit to dItem.")
 
 void InitLvlDungeon()
 {
-	uint16_t bv;
 	size_t dwSubtiles;
 	BYTE *pTmp;
 	const LevelData* lds = &AllLevels[currLvl._dLevelIdx];
@@ -115,13 +113,13 @@ void InitLvlDungeon()
 		LoadFileWithMem(lfd->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 		for (int i = 1; i < lengthof(pTiles); i++) {
-			for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
+			for (int bv = 0; bv < lengthof(pTiles[0]); bv++) {
 				pTiles[i][bv] = SwapLE16(pTiles[i][bv]);
 			}
 		}
 #endif
 		for (int i = 1; i < lengthof(pTiles); i++) {
-			for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
+			for (int bv = 0; bv < lengthof(pTiles[0]); bv++) {
 				pTiles[i][bv] = pTiles[i][bv] + 1;
 			}
 		}
@@ -134,22 +132,22 @@ void InitLvlDungeon()
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
-	assert(pSolidTbl == NULL);
-	pSolidTbl = LoadFileInMem(lfd->dSolidTable, &dwSubtiles); // .SOL
-	if (pSolidTbl != NULL) {
+	BYTE *subFile = LoadFileInMem(lfd->dSolidTable, &dwSubtiles); // .SOL
+	if (subFile != NULL) {
 		assert(dwSubtiles <= MAXSUBTILES);
-		pTmp = pSolidTbl;
+		pTmp = subFile;
 
 		// dpiece 0 is always black/void -> make it non-passable to reduce the necessary checks
 		// no longer necessary, because dPiece is never zero
 		//nSolidTable[0] = true;
 
 		for (unsigned i = 1; i <= dwSubtiles; i++) {
-			bv = *pTmp++;
+			BYTE bv = *pTmp++;
 			nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
 			nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
 			nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
 		}
+		mem_free_dbg(subFile);
 	}
 
 	switch (currLvl._dType) {
@@ -711,7 +709,6 @@ void FreeSetPieces()
 
 void FreeLvlDungeon()
 {
-	MemFreeDbg(pSolidTbl);
 }
 
 void DRLG_PlaceRndTile(BYTE search, BYTE replace, BYTE rndper)
