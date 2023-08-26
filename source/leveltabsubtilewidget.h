@@ -13,9 +13,9 @@ class D1Sla;
 enum class SLA_FIELD_TYPE {
     SOL_PROP,
     TRAP_PROP,
-	SPEC_PROP,
-	RENDER_PROP,
-	MAP_PROP,
+    SPEC_PROP,
+    RENDER_PROP,
+    MAP_PROP,
 };
 
 class EditMinCommand : public QObject, public QUndoCommand {
@@ -54,7 +54,7 @@ signals:
 private:
     QPointer<D1Sla> sla;
     int subtileIndex;
-	SLA_FIELD_TYPE field;
+    SLA_FIELD_TYPE field;
     int value;
 };
 

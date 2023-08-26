@@ -2148,14 +2148,14 @@ void LevelCelView::warnOrReportSubtile(const QString &msg, int subtileIndex) con
 
 void LevelCelView::checkSubtileFlags() const
 {
-    ProgressDialog::incBar(tr("Checking SOL flags..."), 1);
+    ProgressDialog::incBar(tr("Checking Collision settings..."), 1);
     bool result = false;
     unsigned floorMicros = this->min->getSubtileWidth() * this->min->getSubtileWidth() / 2;
 
     // SOL:
     QPair<int, QString> progress;
     progress.first = -1;
-    progress.second = tr("SOL inconsistencies:");
+    progress.second = tr("Inconsistencies in the Collision settings:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
@@ -2243,17 +2243,17 @@ void LevelCelView::checkSubtileFlags() const
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected in the SOL flags.");
+        progress.second = tr("No inconsistency detected in the Collision settings.");
         dProgress() << progress;
     }
 
     ProgressDialog::decBar();
-    ProgressDialog::incBar(tr("Checking SPT flags..."), 1);
+    ProgressDialog::incBar(tr("Checking Special settings..."), 1);
 
     // SPT:
     result = false;
     progress.first = -1;
-    progress.second = tr("SPT inconsistencies:");
+    progress.second = tr("Inconsistencies in the Special settings:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         int trapFlags = this->sla->getTrapProperty(i);
@@ -2290,17 +2290,17 @@ void LevelCelView::checkSubtileFlags() const
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected in the SPT flags.");
+        progress.second = tr("No inconsistency detected in the Special settings.");
         dProgress() << progress;
     }
 
     ProgressDialog::decBar();
-    ProgressDialog::incBar(tr("Checking TMI flags..."), 1);
+    ProgressDialog::incBar(tr("Checking Render settings..."), 1);
 
     // TMI:
     result = false;
     progress.first = -1;
-    progress.second = tr("TMI inconsistencies:");
+    progress.second = tr("Inconsistencies in the Render settings:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
@@ -2443,7 +2443,7 @@ void LevelCelView::checkSubtileFlags() const
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected in the TMI flags.");
+        progress.second = tr("No inconsistency detected in the Render settings.");
         dProgress() << progress;
     }
 

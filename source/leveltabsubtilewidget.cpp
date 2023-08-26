@@ -58,29 +58,29 @@ void EditSlaCommand::undo()
         return;
     }
 
-	switch (this->field) {
+    switch (this->field) {
     case SLA_FIELD_TYPE::SOL_PROP: {
-		quint8 nv = this->value;
-		this->value = this->sla->getSubProperties(this->subtileIndex);
-		this->sla->setSubProperties(this->subtileIndex, nv);
+        quint8 nv = this->value;
+        this->value = this->sla->getSubProperties(this->subtileIndex);
+        this->sla->setSubProperties(this->subtileIndex, nv);
     } break;
     case SLA_FIELD_TYPE::TRAP_PROP: {
-		int nv = this->value;
-		this->value = this->sla->getTrapProperty(this->subtileIndex);
-		this->sla->setTrapProperty(this->subtileIndex, nv);
+        int nv = this->value;
+        this->value = this->sla->getTrapProperty(this->subtileIndex);
+        this->sla->setTrapProperty(this->subtileIndex, nv);
     } break;
     case SLA_FIELD_TYPE::SPEC_PROP: {
-		int nv = this->value;
-		this->value = this->sla->getSpecProperty(this->subtileIndex);
-		this->sla->setSpecProperty(this->subtileIndex, nv);
+        int nv = this->value;
+        this->value = this->sla->getSpecProperty(this->subtileIndex);
+        this->sla->setSpecProperty(this->subtileIndex, nv);
     } break;
     case SLA_FIELD_TYPE::RENDER_PROP: {
-		quint8 nv = this->value;
-		this->value = this->sla->getRenderProperties(this->subtileIndex);
-		this->sla->setRenderProperties(this->subtileIndex, nv);
+        quint8 nv = this->value;
+        this->value = this->sla->getRenderProperties(this->subtileIndex);
+        this->sla->setRenderProperties(this->subtileIndex, nv);
     } break;
     case SLA_FIELD_TYPE::MAP_PROP: {
-		quint8 nv = this->value;
+        quint8 nv = this->value;
         this->value = this->sla->getMapProperties(this->subtileIndex) | this->sla->getMapType(this->subtileIndex);
         this->sla->setMapType(this->subtileIndex, nv & MAT_TYPE);
         this->sla->setMapProperties(this->subtileIndex, nv & ~MAT_TYPE);

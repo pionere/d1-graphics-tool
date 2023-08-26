@@ -85,8 +85,8 @@ bool D1Tileset::load(const OpenAsParam &params)
     }
 
     std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-	if (!this->sla->load(slaFilePath)) {
-		dProgressErr() << QApplication::tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath));
+    if (!this->sla->load(slaFilePath)) {
+        dProgressErr() << QApplication::tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath));
     } else if (!this->min->load(minFilePath, this, celFrameTypes, params)) {
         dProgressErr() << QApplication::tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
     } else if (!this->til->load(tilFilePath, this->min)) {
@@ -222,7 +222,7 @@ int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
     std::vector<unsigned> &newFrameReferences = this->min->getFrameReferences(newSubtileIndex);
     newFrameReferences = baseFrameReferences;
 
-	// D1Sla::duplicate
+    // D1Sla::duplicate
     this->sla->setSubProperties(newSubtileIndex, this->sla->getSubProperties(subtileIndex));
     this->sla->setTrapProperty(newSubtileIndex, this->sla->getTrapProperty(subtileIndex));
     this->sla->setSpecProperty(newSubtileIndex, this->sla->getSpecProperty(subtileIndex));
@@ -250,7 +250,7 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
 
 void D1Tileset::resetSubtileFlags(int subtileIndex)
 {
-	this->sla->resetSubtileFlags(subtileIndex);
+    this->sla->resetSubtileFlags(subtileIndex);
 }
 
 void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
@@ -521,19 +521,19 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
                 continue;
             }
             if (this->sla->getSpecProperty(i) != this->sla->getSpecProperty(j) || this->sla->getTrapProperty(i) != this->sla->getTrapProperty(j)) {
-                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SPT-properties are different.").arg(i + 1).arg(j + 1);
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the Special-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
             if (this->sla->getMapType(i) != this->sla->getMapType(j) || this->sla->getMapProperties(i) != this->sla->getMapProperties(j)) {
-                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SMP-properties are different.").arg(i + 1).arg(j + 1);
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the Map-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
             if (this->sla->getSubProperties(i) != this->sla->getSubProperties(j)) {
-                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SOL-properties are different.").arg(i + 1).arg(j + 1);
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the Collision-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
             if (this->sla->getRenderProperties(i) != this->sla->getRenderProperties(j)) {
-                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the TMI-properties are different.").arg(i + 1).arg(j + 1);
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the Render-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
             // use subtile 'i' instead of subtile 'j'
