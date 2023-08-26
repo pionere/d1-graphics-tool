@@ -2836,7 +2836,7 @@ void LevelCelView::reportDungeonUsage() const
 {
     ProgressDialog::incBar(tr("Scanning..."), 4);
 
-    std::pair<int, int> space = this->dun->collectSpace(this->sol);
+    std::pair<int, int> space = this->dun->collectSpace();
 
     if (space.first != 0) {
         dProgress() << tr("There are %1 subtiles in the dungeon for monsters.", "", space.first).arg(space.first);
