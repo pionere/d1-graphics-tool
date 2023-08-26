@@ -14,7 +14,7 @@ public:
     D1Sla() = default;
     ~D1Sla() = default;
 
-    bool load(const QString &slaFilePath, const OpenAsParam &params);
+    bool load(const QString &slaFilePath);
     bool save(const SaveAsParam &params);
     void clear();
 

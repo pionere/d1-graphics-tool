@@ -52,7 +52,7 @@ signals:
     void modified();
 
 private:
-    QPointer<D1Sla> sol;
+    QPointer<D1Sla> sla;
     int subtileIndex;
 	SLA_FIELD_TYPE field;
     int value;

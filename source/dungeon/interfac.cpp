@@ -110,9 +110,9 @@ static void LoadTileset(D1Tileset *tileset)
 
 	// 'load' SPT
 	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
-	entries = std::min(lengthof(nSpecTrapTable) - 1, tileset->sol->getSubtileCount());
+	entries = std::min(lengthof(nSpecTrapTable) - 1, tileset->sla->getSubtileCount());
 	for (int n = 0; n < entries; n++) {
-		quint8 bv = tileset->spt->getSubtileTrapProperty(n);
+		quint8 bv = tileset->sla->getTrapProperty(n);
 		nSpecTrapTable[n + 1] = bv << 6;
 	}
 
@@ -120,9 +120,9 @@ static void LoadTileset(D1Tileset *tileset)
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
-	entries = std::min(lengthof(nSolidTable) - 1, tileset->sol->getSubtileCount());
+	entries = std::min(lengthof(nSolidTable) - 1, tileset->sla->getSubtileCount());
 	for (int n = 0; n < entries; n++) {
-		quint8 bv = tileset->sol->getSubtileProperties(n);
+		quint8 bv = tileset->sla->getSubProperties(n);
 		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
 		nBlockTable[n + 1] = (bv & PFLAG_BLOCK_LIGHT) != 0;
 		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
@@ -130,10 +130,10 @@ static void LoadTileset(D1Tileset *tileset)
 
 	// 'load' SMP
 	memset(automaptype, 0, sizeof(automaptype));
-	entries = std::min(lengthof(automaptype) - 1, tileset->sol->getSubtileCount());
+	entries = std::min(lengthof(automaptype) - 1, tileset->sla->getSubtileCount());
 	for (int n = 0; n < entries; n++) {
-		quint8 maptype = tileset->smp->getSubtileType(n);
-		maptype |= tileset->smp->getSubtileProperties(n);
+		quint8 maptype = tileset->sla->getMapType(n);
+		maptype |= tileset->sla->getMapProperties(n);
 		automaptype[n + 1] = maptype;
 	}
 }

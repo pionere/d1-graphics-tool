@@ -13,7 +13,7 @@
 #include "progressdialog.h"
 
 /*
- * Load a MIN file based on the SOL file. Adjusts gfx + sol if necessary.
+ * Load a MIN file based on the SLA file. Adjusts gfx + sla if necessary.
  */
 bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
 {
@@ -41,7 +41,7 @@ bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CE
 
     // calculate subtileWidth/Height
     unsigned fileSize = fileData.size();
-    int subtileCount = this->tileset->sol->getSubtileCount();
+    int subtileCount = this->tileset->sla->getSubtileCount();
     int width = params.minWidth;
     if (width == 0) {
         width = 2;
@@ -87,10 +87,10 @@ bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CE
         if (minSubtileCount != 0 && subtileCount != 0) {
             dProgressWarn() << tr("The size of SOL file does not align with MIN file.");
         }
-        // add subtiles to sol if necessary
+        // add subtiles to sla if necessary
         while (minSubtileCount > subtileCount) {
             subtileCount++;
-            this->tileset->sol->createSubtile();
+            this->tileset->sla->createSubtile();
         }
         if (minSubtileCount < subtileCount) {
             changed = true;
@@ -262,7 +262,7 @@ QImage D1Min::getSpecSubtileImage(int subtileIndex) const
 {
     QImage subtile = this->getSubtileImage(subtileIndex);
 
-    unsigned specRef = this->tileset->spt->getSubtileSpecProperty(subtileIndex);
+    unsigned specRef = this->tileset->sla->getSpecProperty(subtileIndex);
     if (specRef != 0 && (unsigned)this->tileset->cls->getFrameCount() >= specRef) {
         QImage specImage = this->tileset->cls->getFrameImage(specRef - 1);
         QPainter subtilePainter(&subtile);
