@@ -137,7 +137,7 @@ void InitLvlDungeon()
 	memset(automaptype, 0, sizeof(automaptype));
 	subFile = LoadFileInMem(lfd->dSubtileSettings, &dwSubtiles); // .SLA
 	if (subFile != NULL) {
-		dwSubtiles \= 4;
+		dwSubtiles /= 4;
 		assert(dwSubtiles <= MAXSUBTILES);
 
 		pTmp = subFile;

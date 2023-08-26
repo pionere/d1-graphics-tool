@@ -132,7 +132,6 @@ bool D1Sla::save(const SaveAsParam &params)
     // write to file
     QDataStream out(&outFile);
 
-    quint8 readByte;
     // write the sub-properties
     out << (quint8)0; // add leading zero
     for (int i = 0; i < this->subProperties.size(); i++) {
