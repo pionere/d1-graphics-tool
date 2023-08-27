@@ -57,6 +57,21 @@
        </item>
        <item>
         <property name="text">
+         <string>West-facing shrine (LShrineG.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>East-facing shrine (RShrineG.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Light stand in Crypt (L5Light.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Warrior standing in dungeon with mace and shield (WMHAS.CL2)</string>
         </property>
        </item>

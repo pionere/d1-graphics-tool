@@ -211,6 +211,15 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
         if (baseName == "mcirl") {
             fileIndex = GFX_OBJ_MCIRL;
         }
+        if (baseName == "lshrineg") {
+            fileIndex = GFX_OBJ_LSHR;
+        }
+        if (baseName == "rshrineg") {
+            fileIndex = GFX_OBJ_RSHR;
+        }
+        if (baseName == "l5light") {
+            fileIndex = GFX_OBJ_L5LIGHT;
+        }
         if (baseName == "spelicon") {
             fileIndex = GFX_SPL_ICONS;
         }
