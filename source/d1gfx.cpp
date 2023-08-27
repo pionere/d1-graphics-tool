@@ -1592,10 +1592,10 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
         change = this->patchMagicCircle(silent);
         break;
     case GFX_OBJ_LSHR: // patch LShrineG.CEL
-        change = this->patchRightShrine(silent);
+        change = this->patchLeftShrine(silent);
         break;
     case GFX_OBJ_RSHR: // patch RShrineG.CEL
-        change = this->patchLeftShrine(silent);
+        change = this->patchRightShrine(silent);
         break;
     case GFX_OBJ_L5LIGHT: // patch L5Light.CEL
         change = this->patchCryptLight(silent);
