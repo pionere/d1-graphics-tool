@@ -1238,6 +1238,7 @@ bool D1Gfx::patchLeftShrine(bool silent)
             dProgressErr() << tr("Framesize of the west-facing shrine does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
             return false;
         }
+        int change = 0;
         if (i == 0) {
             // use the more rounded shrine-graphics
             if (this->frames.count() < 12) {
@@ -1250,7 +1251,7 @@ bool D1Gfx::patchLeftShrine(bool silent)
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() == 248) {
                         continue; // preserve the dirt/shine on the floor
                     }
-                    change |= frame->setPixel(frameSrc->getPixel(x + 7, y - 2)) ? 1 : 0;
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x + 7, y - 2)) ? 1 : 0;
                 }
             }
         } else if (i > resCelEntries - 1) {
