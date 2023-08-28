@@ -1239,11 +1239,13 @@ bool D1Gfx::patchLeftShrine(bool silent)
             return false;
         }
         int change = 0;
-        if (i == 0) {
+        if (i > resCelEntries - 1) {
+            this->removeFrame(i, false);
+            change |= 2;
+            removedFrames++;
+            i--;
+        } else if (this->frames.count() < 12) {
             // use the more rounded shrine-graphics
-            if (this->frames.count() < 12) {
-                return false; // assume it is already done
-            }
             D1GfxFrame *frameSrc = this->frames[11];
             for (int y = 88; y < 110; y++) {
                 for (int x = 28; x < 80; x++) {
@@ -1254,11 +1256,6 @@ bool D1Gfx::patchLeftShrine(bool silent)
                     change |= frame->setPixel(x, y, frameSrc->getPixel(x + 7, y - 2)) ? 1 : 0;
                 }
             }
-        } else if (i > resCelEntries - 1) {
-            this->removeFrame(i, false);
-            change |= 2;
-            removedFrames++;
-            i--;
         }
 
         if (change) {
@@ -1292,14 +1289,14 @@ bool D1Gfx::patchRightShrine(bool silent)
             return false;
         }
         int change = 0;
-        if (i == 0) {
-            change |= frame->setPixel(85, 101, D1GfxPixel::transparentPixel()) ? 1 : 0;
-            change |= frame->setPixel(88, 100, D1GfxPixel::transparentPixel()) ? 1 : 0;
-        } else if (i > resCelEntries - 1) {
+        if (i > resCelEntries - 1) {
             this->removeFrame(i, false);
             change |= 2;
             removedFrames++;
             i--;
+        } else {
+            change |= frame->setPixel(85, 101, D1GfxPixel::transparentPixel()) ? 1 : 0;
+            change |= frame->setPixel(88, 100, D1GfxPixel::transparentPixel()) ? 1 : 0;
         }
 
         if (change) {

@@ -5104,9 +5104,10 @@ void D1Tileset::patchCatacombsSpec(bool silent)
             }
 
             if (idx == 2) {
-                change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(55));
-                change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(52));
-                change |= frame->setPixel(11, 149, D1GfxPixel::colorPixel(69));
+                change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(39));
+                change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(66));
+                change |= frame->setPixel(10, 149, D1GfxPixel::colorPixel(50));
+                change |= frame->setPixel(11, 149, D1GfxPixel::colorPixel(36));
             }
 
             if (change && !silent) {
@@ -7336,8 +7337,8 @@ static bool shadowColorCaves(D1GfxFrame* frame, int x, int y)
 bool D1Tileset::patchCavesFloor(bool silent)
 {
     const CelMicro micros[] = {
-/*  0 */{ 537 - 1, 2, D1CEL_FRAME_TYPE::Empty },             // used to block subsequent calls
-/*  1 */{ /*537*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },      // fix/mask door
+/*  0 */{ 540 - 1, 3, D1CEL_FRAME_TYPE::Empty },             // used to block subsequent calls
+/*  1 */{ /*537*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },         // fix/mask door
 /*  2 */{ /*537*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /*  3 */{ 538 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  4 */{ 538 - 1, 1, D1CEL_FRAME_TYPE::Empty },             // unused
