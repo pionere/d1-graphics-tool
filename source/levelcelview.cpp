@@ -2281,8 +2281,8 @@ void LevelCelView::checkSubtileFlags() const
             }
         }
         int specFrame = this->sla->getSpecProperty(i);
-        if ((unsigned)specFrame > ((1 << 6) - 1)) {
-            dProgressErr() << tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg((1 << 6) - 1);
+        if ((unsigned)specFrame > PST_SPEC_TYPE) {
+            dProgressErr() << tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg(PST_SPEC_TYPE);
             result = true;
         } else if (specFrame != 0 && this->cls->getFrameCount() < specFrame) {
             dProgressErr() << tr("The special cel-frame (%1) referenced by Subtile %2 does not exist.").arg(specFrame).arg(i + 1);
@@ -2444,6 +2444,72 @@ void LevelCelView::checkSubtileFlags() const
     }
     if (!result) {
         progress.second = tr("No inconsistency detected in the Render settings.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
+    ProgressDialog::incBar(tr("Checking Map settings..."), 1);
+
+    // SMP:
+    result = false;
+    progress.first = -1;
+    progress.second = tr("Inconsistencies in the Map settings:");
+    dProgress() << progress;
+    for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        int mapType = this->sla->getMapType(i);
+        if (mapType == MAT_DOOR_EAST || mapType == MAT_DOOR_WEST) {
+            if (this->sla->getMapProperties(i) != 0) {
+                this->warnOrReportSubtile(tr("Subtile %1 is for doors, but it has also walls.").arg(i + 1), i);
+                result = true;
+            }
+
+            if (i == 0 || this->sla->getMapType(i - 1) != mapType) {
+                int nl = i;
+                while (true) {
+                    nl++;
+                    if (nl >= this->min->getSubtileCount() || this->sla->getMapType(nl) != mapType) {
+                        break;
+                    }
+                }
+                nl--;
+                for (int n = i; n <= nl; n++) {
+                    if (this->sla->getSubProperties(n) & PFLAG_BLOCK_PATH) {
+                        if (n == i) {
+                            if (mapType == MAT_DOOR_EAST) {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for closed east-doors, but Subtile %2 is not for open east-doors.").arg(n + 1).arg(n), n);
+                                result = true;
+                            } else {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for closed west-doors, but Subtile %2 is not for open west-doors.").arg(n + 1).arg(n), n);
+                                result = true;
+                            }
+                        } else {
+                            if (this->sla->getSubProperties(n - 1) & PFLAG_BLOCK_PATH) {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for closed doors, but Subtile %2 is a path-blocker.").arg(n + 1).arg(n), n);
+                                result = true;
+                            }
+                        }
+                    } else {
+                        if (n == nl) {
+                            if (mapType == MAT_DOOR_EAST) {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for open east-doors, but Subtile %2 is not for closed east-doors.").arg(n + 1).arg(n), n);
+                                result = true;
+                            } else {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for open west-doors, but Subtile %2 is not for closed west-doors.").arg(n + 1).arg(n), n);
+                                result = true;
+                            }
+                        } else {
+                            if (!(this->sla->getSubProperties(n + 1) & PFLAG_BLOCK_PATH)) {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for open doors, but Subtile %2 is not a path-blocker.").arg(n + 1).arg(n + 2), n);
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (!result) {
+        progress.second = tr("No inconsistency detected in the Map settings.");
         dProgress() << progress;
     }
 

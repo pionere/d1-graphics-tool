@@ -1377,7 +1377,7 @@ bool D1Gfx::patchCryptLight(bool silent)
         } else {
             // remove shadow
             for (int y = 61; y < 86; y++) {
-                for (int x = 16; x < 63; x++) {
+                for (int x = 15; x < 63; x++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() == 0) {
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()) ? 1 : 0;
