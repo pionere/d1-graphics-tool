@@ -2248,7 +2248,7 @@ void LevelCelView::checkSubtileFlags() const
     }
 
     ProgressDialog::decBar();
-    ProgressDialog::incBar(tr("Checking SPT Special settings..."), 1);
+    ProgressDialog::incBar(tr("Checking Special settings..."), 1);
 
     // SPT:
     result = false;
@@ -2281,8 +2281,8 @@ void LevelCelView::checkSubtileFlags() const
             }
         }
         int specFrame = this->sla->getSpecProperty(i);
-        if ((unsigned)specFrame > ((1 << 6) - 1)) {
-            dProgressErr() << tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg((1 << 6) - 1);
+        if ((unsigned)specFrame > PST_SPEC_TYPE) {
+            dProgressErr() << tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg(PST_SPEC_TYPE);
             result = true;
         } else if (specFrame != 0 && this->cls->getFrameCount() < specFrame) {
             dProgressErr() << tr("The special cel-frame (%1) referenced by Subtile %2 does not exist.").arg(specFrame).arg(i + 1);
