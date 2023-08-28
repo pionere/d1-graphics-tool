@@ -97,7 +97,7 @@ static_assert(MAXITEMS <= UCHAR_MAX, "Index of an item might not fit to dItem.")
 void InitLvlDungeon()
 {
 	size_t dwSubtiles;
-	BYTE *subFile, *pTmp;
+	BYTE* pTmp;
 	const LevelData* lds = &AllLevels[currLvl._dLevelIdx];
 	const LevelFileData* lfd = &levelfiledata[lds->dfindex];
 
@@ -135,7 +135,7 @@ void InitLvlDungeon()
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
 	memset(automaptype, 0, sizeof(automaptype));
-	subFile = LoadFileInMem(lfd->dSubtileSettings, &dwSubtiles); // .SLA
+	BYTE* subFile = LoadFileInMem(lfd->dSubtileSettings, &dwSubtiles); // .SLA
 	if (subFile != NULL) {
 		dwSubtiles /= 4;
 		assert(dwSubtiles <= MAXSUBTILES);

@@ -2839,8 +2839,8 @@ bool D1Tileset::patchCathedralFloor(bool silent)
 
 /* 13 */{ 152 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare }, // blocks subsequent calls
 
-/* 14 */{ 2 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 15 */{ 276 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 14 */{ 23 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 15 */{ 270 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 
 /* 16 */{ 407 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // mask door
 
@@ -2958,24 +2958,21 @@ bool D1Tileset::patchCathedralFloor(bool silent)
                 }
             }
         }
-        // copy 2[1] to 276[1]
-        if (i == 14) {
-            const CelMicro &microDst = micros[i + 1];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-            D1GfxFrame *frameDst = mf.second;
-            if (frameDst == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    if (!pixel.isTransparent()) {
-                        D1GfxPixel dstPixel = frameDst->getPixel(x, y); // 276[1]
-                        quint8 destColor = dstPixel.getPaletteIndex();
-                        if (!dstPixel.isTransparent() && destColor < 124 && destColor > 21 && (destColor < 44 || destColor > 110 || destColor == 101 || destColor == 107)) {
-                            change |= frameDst->setPixel(x, y, pixel);
-                        }
+        // remove shadow from 270[0] using 23[0]
+        if (i == 15) {
+            const CelMicro &microSrc = micros[i - 1];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 22; x < 29; x++) {
+                for (int y = 5; y < 12; y++) {
+                    if (x == 28 && y == 11) {
+                        continue;
                     }
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 23[0]
+                    change |= frame->setPixel(x, y, pixel);
                 }
             }
         }
@@ -3844,7 +3841,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 74 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 75 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 77 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 129 - 1, 0, 23 - 1, silent);
+    // ReplaceSubtile(this->til, 129 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 99 - 1, 1, 6 - 1, silent);   // 204
     ReplaceSubtile(this->til, 103 - 1, 1, 2 - 1, silent);  // 213
@@ -3852,7 +3849,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 105 - 1, 0, 23 - 1, silent); // 220
     ReplaceSubtile(this->til, 114 - 1, 1, 6 - 1, silent);  // 242
     ReplaceSubtile(this->til, 117 - 1, 1, 6 - 1, silent);
-    ReplaceSubtile(this->til, 130 - 1, 0, 23 - 1, silent); // 275
+    // ReplaceSubtile(this->til, 130 - 1, 0, 23 - 1, silent); // 275
     ReplaceSubtile(this->til, 133 - 1, 0, 23 - 1, silent); // 282
     ReplaceSubtile(this->til, 137 - 1, 0, 23 - 1, silent); // 293
     ReplaceSubtile(this->til, 128 - 1, 1, 2 - 1, silent);  // 271
@@ -3865,7 +3862,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 60 - 1, 2, 7 - 1, silent);   // 120
     ReplaceSubtile(this->til, 62 - 1, 2, 7 - 1, silent);   // 125
     ReplaceSubtile(this->til, 128 - 1, 2, 7 - 1, silent);  // 272
-    ReplaceSubtile(this->til, 129 - 1, 2, 7 - 1, silent);  // 273
+    // ReplaceSubtile(this->til, 129 - 1, 2, 7 - 1, silent);  // 273
     ReplaceSubtile(this->til, 136 - 1, 2, 7 - 1, silent);  // 291
     ReplaceSubtile(this->til, 58 - 1, 3, 4 - 1, silent);   // 113
     ReplaceSubtile(this->til, 59 - 1, 3, 4 - 1, silent);   // 117
@@ -3873,7 +3870,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 74 - 1, 3, 4 - 1, silent);   // 158
     ReplaceSubtile(this->til, 76 - 1, 3, 4 - 1, silent);   // 161
     ReplaceSubtile(this->til, 97 - 1, 3, 4 - 1, silent);   // 200
-    ReplaceSubtile(this->til, 130 - 1, 3, 4 - 1, silent);  // 277
+    // ReplaceSubtile(this->til, 130 - 1, 3, 4 - 1, silent);  // 277
     ReplaceSubtile(this->til, 137 - 1, 3, 4 - 1, silent);  // 295
     ReplaceSubtile(this->til, 193 - 1, 3, 4 - 1, silent);  // 419
     ReplaceSubtile(this->til, 196 - 1, 2, 36 - 1, silent); // 428
@@ -4057,7 +4054,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 46 - 1, 3, 302 - 1, silent);
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/*43, 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 93, 95, 96, 119, 120, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
+        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/*43, 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 93, 95, 96, 119, 120, 129, 130, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
     };
     constexpr int blankSubtile = 74 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -4639,7 +4636,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(119, 1, 2, 1);
     // ReplaceMcr(213, 0, 2, 0); // lost details
     // ReplaceMcr(271, 0, 2, 0);
-    ReplaceMcr(276, 0, 2, 0);
+    // ReplaceMcr(276, 0, 2, 0);
     // ReplaceMcr(279, 0, 2, 0);
     // ReplaceMcr(285, 0, 2, 0);
     // ReplaceMcr(290, 0, 2, 0);
@@ -4935,6 +4932,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(269, 1);
     Blk2Mcr(269, 2);
     Blk2Mcr(269, 4);
+    Blk2Mcr(274, 0);
 
     // Blk2Mcr(306, 1);
     Blk2Mcr(314, 0);
@@ -5054,7 +5052,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(449, 7);
 
     const int unusedSubtiles[] = {
-        18, 19, 71, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 113, 117, 119, 120, 121, 122, 125, 200, 212, 220, 250, 253, 267, 268, 273, 275, 278, 280, 281, 282, 303, 305, 316, 318, 329, 331, 341, 405, 430, 432, 435, 436, 440
+        18, 19, 71, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 113, 117, 119, 120, 121, 122, 125, 200, 212, 220, 250, 253, 267, 268, 273, 275, 276, 278, 280, 281, 282, 303, 305, 316, 318, 329, 331, 341, 405, 430, 432, 435, 436, 440
     };
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
         for (int i = 0; i < blockSize; i++) {
