@@ -1223,6 +1223,44 @@ bool D1Gfx::patchMagicCircle(bool silent)
     return true;
 }
 
+bool D1Gfx::patchCandle(bool silent)
+{
+    constexpr int FRAME_WIDTH = 96;
+    constexpr int FRAME_HEIGHT = 96;
+
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << tr("Framesize of the Candle does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false;
+        }
+        // if (i == 0 && frame->getPixel(32, 65).isTransparent()) {
+        //    return false; // assume it is already done
+        // }
+
+        bool change = false;
+        // remove shadow
+        for (int y = 63; y < 80; y++) {
+            for (int x = 28; x < 45; x++) {
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (!pixel.isTransparent() && pixel.getPaletteIndex() == 0) {
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()) ? 1 : 0;
+                }
+            }
+        }
+
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchLeftShrine(bool silent)
 {
     constexpr int FRAME_WIDTH = 128;
@@ -1244,7 +1282,7 @@ bool D1Gfx::patchLeftShrine(bool silent)
             change |= 2;
             removedFrames++;
             i--;
-        } else if (this->frames.count() < 12) {
+        } else if (this->frames.count() > 11) {
             // use the more rounded shrine-graphics
             D1GfxFrame *frameSrc = this->frames[11];
             for (int y = 88; y < 110; y++) {
@@ -1331,28 +1369,21 @@ bool D1Gfx::patchCryptLight(bool silent)
         }
 
         int change = 0;
-        if (i == 0) {
-            // fix shadow
-            for (int y = 79; y < 86; y++) {
-                for (int x = 27; x < 63; x++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    if (pixel.isTransparent() || pixel.getPaletteIndex() != 0) {
-                        continue;
-                    }
-                    if (x == 31 && y == 79) {
-                        continue;
-                    }
-                    if (x == 41 && y == 84) {
-                        continue;
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()) ? 1 : 0;
-                }
-            }
-        } else if (i > resCelEntries - 1) {
+        if (i > resCelEntries - 1) {
             this->removeFrame(i, false);
             change |= 2;
             removedFrames++;
             i--;
+        } else {
+            // remove shadow
+            for (int y = 61; y < 86; y++) {
+                for (int x = 16; x < 63; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() == 0) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()) ? 1 : 0;
+                    }
+                }
+            }
         }
 
         if (change) {
@@ -1587,6 +1618,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
         break;
     case GFX_OBJ_MCIRL: // patch Mcirl.CEL
         change = this->patchMagicCircle(silent);
+        break;
+    case GFX_OBJ_CANDLE2: // patch Candle2.CEL
+        change = this->patchCandle(silent);
         break;
     case GFX_OBJ_LSHR: // patch LShrineG.CEL
         change = this->patchLeftShrine(silent);
