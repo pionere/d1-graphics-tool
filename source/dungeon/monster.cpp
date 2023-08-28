@@ -551,20 +551,22 @@ static void InitUniqueMonster(int mnum, int uniqindex)
 	mon->_mMinDamage2 = uniqm->mMinDamage2;
 	mon->_mMaxDamage2 = uniqm->mMaxDamage2;*/
 
-	/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
-	LoadFileWithMem(filestr, ColorTrns[uniquetrans]);
-	// patch TRN for 'Blighthorn Steelmace' - BHSM.TRN
-	if (uniqindex == UMT_STEELMACE) {
-		// assert(ColorTrns[uniquetrans][188] == 255);
-		ColorTrns[uniquetrans][188] = 0;
-	}
-	// patch TRN for 'Baron Sludge' - BSM.TRN
-	if (uniqindex == UMT_BARON) {
-		// assert(ColorTrns[uniquetrans][241] == 255);
-		ColorTrns[uniquetrans][241] = 0;
-	}*/
+	if (uniqm->mTrnName != NULL) {
+		/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
+		LoadFileWithMem(filestr, ColorTrns[uniquetrans]);
+		// patch TRN for 'Blighthorn Steelmace' - BHSM.TRN
+		if (uniqindex == UMT_STEELMACE) {
+			// assert(ColorTrns[uniquetrans][188] == 255);
+			ColorTrns[uniquetrans][188] = 0;
+		}
+		// patch TRN for 'Baron Sludge' - BSM.TRN
+		if (uniqindex == UMT_BARON) {
+			// assert(ColorTrns[uniquetrans][241] == 255);
+			ColorTrns[uniquetrans][241] = 0;
+		}*/
 
-	mon->_muniqtrans = uniquetrans++;
+		mon->_muniqtrans = uniquetrans++;
+	}
 
 //	mon->_mHit += uniqm->mUnqHit;
 //	mon->_mHit2 += uniqm->mUnqHit2;
