@@ -4260,6 +4260,19 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(12,  2, 143);
         change |= this->changeTileAt(10,  5, 157);
         change |= this->changeTileAt(24, 18, 140);
+        // - remove obsolete shadows
+        change |= this->changeTileAt(10, 12, 0);
+        change |= this->changeTileAt(10, 13, 0);
+        change |= this->changeTileAt(10, 17, 0);
+        change |= this->changeTileAt(10, 18, 0);
+        change |= this->changeTileAt(22, 13, 0);
+        change |= this->changeTileAt(22, 14, 0);
+        change |= this->changeTileAt(22, 16, 0);
+        change |= this->changeTileAt(22, 17, 0);
+        change |= this->changeTileAt(25, 13, 0);
+        change |= this->changeTileAt(25, 14, 0);
+        change |= this->changeTileAt(25, 16, 0);
+        change |= this->changeTileAt(25, 17, 0);
         // use common tiles
         change |= this->changeTileAt(7, 14, 84);
         // use the new shadows
