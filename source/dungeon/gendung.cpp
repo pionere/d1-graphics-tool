@@ -178,7 +178,7 @@ void InitLvlDungeon()
 		break;
 	case DTYPE_CATHEDRAL:
 		// patch dSolidTable - L1.SOL
-		// adjust SOL after fixCathedralShadows
+		/*// adjust SOL after fixCathedralShadows
 		nSolidTable[298] = true;
 		nSolidTable[304] = true;
 		nBlockTable[334] = false;
@@ -197,7 +197,7 @@ void InitLvlDungeon()
 		nBlockTable[140] = false;
 		// - separate subtiles for the automap
 		nBlockTable[61] = false;
-		nMissileTable[61] = false;
+		nMissileTable[61] = false;*/
 		// patch dMiniTiles - L1.MIN
 		// - separate subtiles for the automap
 		// pSubtiles[61][0] = pSubtiles[8][0];
@@ -208,6 +208,16 @@ void InitLvlDungeon()
 		// pSubtiles[61][5] = pSubtiles[8][5];
 		// pSubtiles[61][6] = pSubtiles[8][6];
 		// pSubtiles[61][7] = pSubtiles[8][7];
+		// fix conflict with SPA
+		pTiles[139][2] = 328;
+		pTiles[148][2] = 328;
+		pTiles[149][2] = 328;
+		// pTiles[153][2] = 328;
+		// pTiles[154][2] = 328;
+		// pTiles[156][2] = 328;
+		// pTiles[157][2] = 328;
+		pTiles[141][0] = 23;
+		pTiles[141][1] = 2;
 		// patch dMegaTiles - L1.TIL
 		// make the inner tile at the entrance non-walkable II.
 		pTiles[196][3] = 425;
@@ -346,7 +356,10 @@ void InitLvlDungeon()
 		pTiles[46][3] = pTiles[7][3];
 		break;
 	case DTYPE_CATACOMBS:
-		// patch dMegaTiles, dMiniTiles and dSolidTable - L2.TIL, L2.MIN, L2.SOL
+		// patch dMegaTiles, dMiniTiles - L2.TIL, L2.MIN
+		// fix conflict with SPA
+		pTiles[50][3] = 12;
+		pTiles[77][3] = 12;
 		// create separate pillar tile
 		pTiles[52][0] = pTiles[6][0];
 		pTiles[52][1] = pTiles[6][1];
@@ -431,16 +444,16 @@ void InitLvlDungeon()
 		// fix the upstairs
 		// - make the back of the stairs non-walkable
 		pTiles[72][1] = 56;
-		nSolidTable[252] = true;
+		/*nSolidTable[252] = true;
 		nBlockTable[252] = true;
 		nMissileTable[252] = true;
 		// - make the stair-floor non light-blocker
 		nBlockTable[267] = false;
-		nBlockTable[559] = false;
+		nBlockTable[559] = false;*/
 		break;
 	case DTYPE_CAVES:
 		// patch dSolidTable - L3.SOL
-		nSolidTable[249] = false; // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
+		/*nSolidTable[249] = false; // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
 		nBlockTable[146] = false; // fix unreasonable light-blocker
 		nBlockTable[150] = false; // fix unreasonable light-blocker
 		// fix fence subtiles
@@ -454,7 +467,7 @@ void InitLvlDungeon()
 		nBlockTable[168] = false;
 		// - separate subtiles for the automap
 		nSolidTable[258] = true;
-		nMissileTable[258] = true;
+		nMissileTable[258] = true;*/
 		// patch dMiniTiles - L3.MIN
 		// - separate subtiles for the automap
 		// pSubtiles[258][0] = 0;
@@ -480,7 +493,7 @@ void InitLvlDungeon()
 		break;
 	case DTYPE_HELL:
 		// patch dSolidTable - L4.SOL
-		nMissileTable[141] = false; // fix missile-blocking tile of down-stairs.
+		/*nMissileTable[141] = false; // fix missile-blocking tile of down-stairs.
 		nMissileTable[137] = false; // fix missile-blocking tile of down-stairs.
 		nSolidTable[137] = false;   // fix non-walkable tile of down-stairs. - causes a graphic glitch, but keep in sync with patch users
 		nSolidTable[130] = true;    // make the inner tiles of the down-stairs non-walkable I.
@@ -489,7 +502,7 @@ void InitLvlDungeon()
 		// fix all-blocking tile on the diablo-level
 		nSolidTable[211] = false;
 		nMissileTable[211] = false;
-		nBlockTable[211] = false;
+		nBlockTable[211] = false;*/
 		// patch dMegaTiles - L4.TIL
 		// - separate subtiles for the automap
 		pTiles[44][2] = 136;
@@ -564,7 +577,7 @@ void InitLvlDungeon()
 			nSpecTrapTable[i] &= PST_TRAP_TYPE;
 			// microFlags[i] |= TMIF_WALL_TRANS | TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW;
 		}
-		// patch dSolidTable - L5.SOL
+		/*// patch dSolidTable - L5.SOL
 		// make collision-checks more reasonable
 		//  - fix inconsistent subtile on the right side of down-stairs
 		nSolidTable[143] = false;
@@ -624,7 +637,7 @@ void InitLvlDungeon()
 		// nBlockTable[148] = false;
 		nBlockTable[149] = false;
 		nBlockTable[150] = false;
-		nBlockTable[153] = false;
+		nBlockTable[153] = false;*/
 		// patch dMegaTiles - L5.TIL
 		// - fix automap of the entrance II.
 		// pTiles[52][0] = pTiles[23][0];
