@@ -5,6 +5,10 @@
  */
 #include "all.h"
 
+#include <QApplication>
+
+#include "../progressdialog.h"
+
 /* Limit the number of monsters to be placed. */
 int totalmonsters;
 /* Limit the number of (scattered) monster-types on the current level by the required resources (In CRYPT the values are not valid). */
