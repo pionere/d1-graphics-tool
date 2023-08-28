@@ -1196,6 +1196,184 @@ bool D1Gfx::patchMagicCircle(bool silent)
     return true;
 }
 
+bool D1Gfx::patchCandle(bool silent)
+{
+    constexpr int FRAME_WIDTH = 96;
+    constexpr int FRAME_HEIGHT = 96;
+
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << tr("Framesize of the Candle does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false;
+        }
+        // if (i == 0 && frame->getPixel(32, 65).isTransparent()) {
+        //    return false; // assume it is already done
+        // }
+
+        bool change = false;
+        // remove shadow
+        for (int y = 63; y < 80; y++) {
+            for (int x = 28; x < 45; x++) {
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (!pixel.isTransparent() && pixel.getPaletteIndex() == 0) {
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()) ? 1 : 0;
+                }
+            }
+        }
+
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        }
+    }
+    return result;
+}
+
+bool D1Gfx::patchLeftShrine(bool silent)
+{
+    constexpr int FRAME_WIDTH = 128;
+    constexpr int FRAME_HEIGHT = 128;
+
+    const int resCelEntries = 11;
+
+    bool result = false;
+    int removedFrames = 0;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << tr("Framesize of the west-facing shrine does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false;
+        }
+        int change = 0;
+        if (i > resCelEntries - 1) {
+            this->removeFrame(i, false);
+            change |= 2;
+            removedFrames++;
+            i--;
+        } else if (this->frames.count() > 11) {
+            // use the more rounded shrine-graphics
+            D1GfxFrame *frameSrc = this->frames[11];
+            for (int y = 88; y < 110; y++) {
+                for (int x = 28; x < 80; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() == 248) {
+                        continue; // preserve the dirt/shine on the floor
+                    }
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x + 7, y - 2)) ? 1 : 0;
+                }
+            }
+        }
+
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                if (change & 2) {
+                    dProgress() << QApplication::tr("Frame %1 is removed.").arg(i + 1 + removedFrames);
+                } else {
+                    dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+                }
+            }
+        }
+    }
+    return result;
+}
+
+bool D1Gfx::patchRightShrine(bool silent)
+{
+    constexpr int FRAME_WIDTH = 128;
+    constexpr int FRAME_HEIGHT = 128;
+
+    const int resCelEntries = 11;
+
+    bool result = false;
+    int removedFrames = 0;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << tr("Framesize of the east-facing shrine does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false;
+        }
+        int change = 0;
+        if (i > resCelEntries - 1) {
+            this->removeFrame(i, false);
+            change |= 2;
+            removedFrames++;
+            i--;
+        } else {
+            change |= frame->setPixel(85, 101, D1GfxPixel::transparentPixel()) ? 1 : 0;
+            change |= frame->setPixel(88, 100, D1GfxPixel::transparentPixel()) ? 1 : 0;
+        }
+
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                if (change & 2) {
+                    dProgress() << QApplication::tr("Frame %1 is removed.").arg(i + 1 + removedFrames);
+                } else {
+                    dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+                }
+            }
+        }
+    }
+    return result;
+}
+
+bool D1Gfx::patchCryptLight(bool silent)
+{
+    constexpr int FRAME_WIDTH = 96;
+    constexpr int FRAME_HEIGHT = 96;
+
+    const int resCelEntries = 1;
+
+    bool result = false;
+    int removedFrames = 0;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << tr("Framesize of the Light stand in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false;
+        }
+
+        int change = 0;
+        if (i > resCelEntries - 1) {
+            this->removeFrame(i, false);
+            change |= 2;
+            removedFrames++;
+            i--;
+        } else {
+            // remove shadow
+            for (int y = 61; y < 86; y++) {
+                for (int x = 15; x < 63; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() == 0) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()) ? 1 : 0;
+                    }
+                }
+            }
+        }
+
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                if (change & 2) {
+                    dProgress() << QApplication::tr("Frame %1 is removed.").arg(i + 1 + removedFrames);
+                } else {
+                    dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+                }
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchWarriorStand(bool silent)
 {
     QString baseFilePath = this->getFilePath();
@@ -1413,6 +1591,18 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
         break;
     case GFX_OBJ_MCIRL: // patch Mcirl.CEL
         change = this->patchMagicCircle(silent);
+        break;
+    case GFX_OBJ_CANDLE2: // patch Candle2.CEL
+        change = this->patchCandle(silent);
+        break;
+    case GFX_OBJ_LSHR: // patch LShrineG.CEL
+        change = this->patchLeftShrine(silent);
+        break;
+    case GFX_OBJ_RSHR: // patch RShrineG.CEL
+        change = this->patchRightShrine(silent);
+        break;
+    case GFX_OBJ_L5LIGHT: // patch L5Light.CEL
+        change = this->patchCryptLight(silent);
         break;
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
