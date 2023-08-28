@@ -894,7 +894,7 @@ static void AddHookedBodies()
 	for (j = DBORDERY; j < DBORDERY + DSIZEY; j++) {
 		for (i = DBORDERX; i < DBORDERX + DSIZEX; i++) {
 			ttv = nSpecTrapTable[dPiece[i][j]] & PST_TRAP_TYPE;
-			if (ttv == PTT_NONE)
+			if (ttv == PST_NONE)
 				continue;
 			if (dFlags[i][j] & BFLAG_OBJ_PROTECT)
 				continue;

@@ -2384,12 +2384,6 @@ void DRLG_L3InitTransVals()
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
-	/*const BYTE *floorTypes = L3FTYPES;
-#ifdef HELLFIRE
-	if (currLvl._dType == DTYPE_NEST) {
-		floorTypes = L6FTYPES;
-	}
-#endif*/
 	DRLG_FloodTVal();
 }
 

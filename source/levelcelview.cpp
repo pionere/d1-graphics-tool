@@ -2491,10 +2491,10 @@ void LevelCelView::checkSubtileFlags() const
                     } else {
                         if (n == nl) {
                             if (mapType == MAT_DOOR_EAST) {
-                                this->warnOrReportSubtile(tr("Subtile %1 is for open east-doors, but Subtile %2 is not for closed east-doors.").arg(n + 1).arg(n), n);
+                                this->warnOrReportSubtile(tr("Subtile %1 is for open east-doors, but Subtile %2 is not for closed east-doors.").arg(n + 1).arg(n + 2), n);
                                 result = true;
                             } else {
-                                this->warnOrReportSubtile(tr("Subtile %1 is for open west-doors, but Subtile %2 is not for closed west-doors.").arg(n + 1).arg(n), n);
+                                this->warnOrReportSubtile(tr("Subtile %1 is for open west-doors, but Subtile %2 is not for closed west-doors.").arg(n + 1).arg(n + 2), n);
                                 result = true;
                             }
                         } else {
