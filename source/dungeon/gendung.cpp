@@ -208,6 +208,20 @@ void InitLvlDungeon()
 		// pSubtiles[61][5] = pSubtiles[8][5];
 		// pSubtiles[61][6] = pSubtiles[8][6];
 		// pSubtiles[61][7] = pSubtiles[8][7];
+		// door subtiles - L1.MIN, L1.TIL
+		pTiles[103][1] = 2;
+		pTiles[186][1] = 2;
+		pTiles[25][0] = 392;
+		pTiles[26][0] = 394;
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[213][n] = pSubtiles[408][n];
+		//}
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[43][n] = pSubtiles[393][n];
+		//}
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[45][n] = pSubtiles[395][n];
+		//}
 		// fix conflict with SPA
 		pTiles[139][2] = 328;
 		pTiles[148][2] = 328;
@@ -357,6 +371,21 @@ void InitLvlDungeon()
 		break;
 	case DTYPE_CATACOMBS:
 		// patch dMegaTiles, dMiniTiles - L2.TIL, L2.MIN
+		// door subtiles
+		pTiles[150][2] = 15;
+		pTiles[54][0] = 173;
+		// for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[537][n] = pSubtiles[13][n];
+		//}
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[539][n] = pSubtiles[17][n];
+		//}
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[172][n] = pSubtiles[178][n];
+		//}
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[173][n] = pSubtiles[178][n];
+		//}
 		// fix conflict with SPA
 		pTiles[50][3] = 12;
 		pTiles[77][3] = 12;
@@ -468,6 +497,21 @@ void InitLvlDungeon()
 		// - separate subtiles for the automap
 		nSolidTable[258] = true;
 		nMissileTable[258] = true;*/
+		// door subtiles - L3.MIN, L3.TIL
+		pTiles[148][0] = 531;
+		pTiles[146][2] = 538;
+		pTiles[148][2] = 537;
+		pTiles[147][0] = 541;
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	uint16_t tmp = pSubtiles[531][n];
+		//	pSubtiles[531][n] = pSubtiles[537][n];
+		//	pSubtiles[537][n] = tmp;
+		//}
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	uint16_t tmp = pSubtiles[541][n];
+		//	pSubtiles[541][n] = pSubtiles[533][n];
+		//	pSubtiles[533][n] = tmp;
+		//}
 		// patch dMiniTiles - L3.MIN
 		// - separate subtiles for the automap
 		// pSubtiles[258][0] = 0;
@@ -638,6 +682,15 @@ void InitLvlDungeon()
 		nBlockTable[149] = false;
 		nBlockTable[150] = false;
 		nBlockTable[153] = false;*/
+		// door subtiles - L5.MIN, L5.TIL
+		pTiles[25][1] = 205;
+		pTiles[26][0] = 208;
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[76][n] = pSubtiles[206][n];
+		//}
+		//for (int n = 0; n < lengthof(pSubtiles[0]); n++) {
+		//	pSubtiles[79][n] = pSubtiles[209][n];
+		//}
 		// patch dMegaTiles - L5.TIL
 		// - fix automap of the entrance II.
 		// pTiles[52][0] = pTiles[23][0];

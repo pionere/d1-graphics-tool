@@ -2448,6 +2448,72 @@ void LevelCelView::checkSubtileFlags() const
     }
 
     ProgressDialog::decBar();
+    ProgressDialog::incBar(tr("Checking Map settings..."), 1);
+
+    // SMP:
+    result = false;
+    progress.first = -1;
+    progress.second = tr("Inconsistencies in the Map settings:");
+    dProgress() << progress;
+    for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        int mapType = this->sla->getMapType(i);
+        if (mapType == MAT_DOOR_EAST || mapType == MAT_DOOR_WEST) {
+            if (this->sla->getMapProperties(i) != 0) {
+                this->warnOrReportSubtile(tr("Subtile %1 is for doors, but it has also walls.").arg(i + 1), i);
+                result = true;
+            }
+
+            if (i == 0 || this->sla->getMapType(i - 1) != mapType) {
+                int nl = i;
+                while (true) {
+                    nl++;
+                    if (nl >= this->min->getSubtileCount() || this->sla->getMapType(nl) != mapType) {
+                        break;
+                    }
+                }
+                nl--;
+                for (int n = i; n <= nl; n++) {
+                    if (this->sla->getSubProperties(n) & PFLAG_BLOCK_PATH) {
+                        if (n == i) {
+                            if (mapType == MAT_DOOR_EAST) {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for closed east-doors, but Subtile %2 is not for open east-doors.").arg(n + 1).arg(n), n);
+                                result = true;
+                            } else {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for closed west-doors, but Subtile %2 is not for open west-doors.").arg(n + 1).arg(n), n);
+                                result = true;
+                            }
+                        } else {
+                            if (this->sla->getSubProperties(n - 1) & PFLAG_BLOCK_PATH) {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for closed doors, but Subtile %2 is a path-blocker.").arg(n + 1).arg(n), n);
+                                result = true;
+                            }
+                        }
+                    } else {
+                        if (n == nl) {
+                            if (mapType == MAT_DOOR_EAST) {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for open east-doors, but Subtile %2 is not for closed east-doors.").arg(n + 1).arg(n + 2), n);
+                                result = true;
+                            } else {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for open west-doors, but Subtile %2 is not for closed west-doors.").arg(n + 1).arg(n + 2), n);
+                                result = true;
+                            }
+                        } else {
+                            if (!(this->sla->getSubProperties(n + 1) & PFLAG_BLOCK_PATH)) {
+                                this->warnOrReportSubtile(tr("Subtile %1 is for open doors, but Subtile %2 is not a path-blocker.").arg(n + 1).arg(n + 2), n);
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (!result) {
+        progress.second = tr("No inconsistency detected in the Map settings.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
 }
 
 void LevelCelView::checkTileFlags() const

@@ -423,7 +423,7 @@ static void InitRndBarrels(int numobjs, int otype)
 
 static void AddDunObjs(int x1, int y1, int x2, int y2)
 {
-	int i, j, pn;
+	int i, j, pn, wdoor, edoor, type;
 
 	assert((objectdata[OBJ_L1LDOOR].oLvlTypes & DTM_CATHEDRAL) && (objectdata[OBJ_L1RDOOR].oLvlTypes & DTM_CATHEDRAL) && (objectdata[OBJ_L1LIGHT].oLvlTypes & DTM_CATHEDRAL));
 	assert((objectdata[OBJ_L2LDOOR].oLvlTypes & DTM_CATACOMBS) && (objectdata[OBJ_L2RDOOR].oLvlTypes & DTM_CATACOMBS));
@@ -438,64 +438,46 @@ static void AddDunObjs(int x1, int y1, int x2, int y2)
 				pn = dPiece[i][j];
 				if (pn == 270)
 					AddObject(OBJ_L1LIGHT, i, j);
-				// these pieces are closed doors which are placed directly
-				if (pn == 51 || pn == 56) {
-					dProgressErr() << QApplication::tr("Piece 51 and 56 are closed doors which are placed directly");
-				}
-				if (pn == 44 || /*pn == 51 ||*/ pn == 214)
-					AddObject(OBJ_L1LDOOR, i, j);
-				if (pn == 46 /*|| pn == 56*/)
-					AddObject(OBJ_L1RDOOR, i, j);
 			}
 		}
+		wdoor = OBJ_L1LDOOR;
+		edoor = OBJ_L1RDOOR;
 		break;
 	case DTYPE_CATACOMBS:
-		for (j = y1; j <= y2; j++) {
-			for (i = x1; i <= x2; i++) {
-				pn = dPiece[i][j];
-				// 13 and 17 pieces are open doors and not handled at the moment
-				// 541 and 542 are doorways which are no longer handled as doors
-				// 538 and 540 pieces are closed doors
-				if (/*pn == 13 ||*/ pn == 538 /*|| pn == 541*/)
-					AddObject(OBJ_L2LDOOR, i, j);
-				if (/*pn == 17 ||*/ pn == 540 /*|| pn == 542*/)
-					AddObject(OBJ_L2RDOOR, i, j);
-			}
-		}
+		wdoor = OBJ_L2LDOOR;
+		edoor = OBJ_L2RDOOR;
 		break;
 	case DTYPE_CAVES:
-		for (j = y1; j <= y2; j++) {
-			for (i = x1; i <= x2; i++) {
-				pn = dPiece[i][j];
-				// 531 and 534 pieces are closed doors which are placed directly
-				if (pn == 534)
-					AddObject(OBJ_L3LDOOR, i, j);
-				if (pn == 531)
-					AddObject(OBJ_L3RDOOR, i, j);
-			}
-		}
+		wdoor = OBJ_L3LDOOR;
+		edoor = OBJ_L3RDOOR;
 		break;
 	case DTYPE_HELL:
-		break;
+		return;
 #ifdef HELLFIRE
 	case DTYPE_CRYPT:
-		for (j = y1; j <= y2; j++) {
-			for (i = x1; i <= x2; i++) {
-				pn = dPiece[i][j];
-				// 77 and 80 pieces are closed doors which are placed directly
-				if (pn == 77)
-					AddObject(OBJ_L5LDOOR, i, j);
-				if (pn == 80)
-					AddObject(OBJ_L5RDOOR, i, j);
-			}
-		}
+		wdoor = OBJ_L5LDOOR;
+		edoor = OBJ_L5RDOOR;
 		break;
 	case DTYPE_NEST:
-		break;
+		return;
 #endif
 	default:
 		ASSUME_UNREACHABLE
-		break;
+		return;
+	}
+	for (j = y1; j <= y2; j++) {
+		for (i = x1; i <= x2; i++) {
+			pn = dPiece[i][j];
+			type = automaptype[pn] & MAT_TYPE;
+			if ((type == MAT_DOOR_WEST || type == MAT_DOOR_EAST) && !nSolidTable[pn]) {
+				dProgressErr() << QApplication::tr("Non-blocking door pn:%d type:%d tile:%d").arg(pn).arg(type).arg(dungeon[(i - DBORDERX) >> 1][(j - DBORDERY) >> 1]);
+			}
+			if (type == MAT_DOOR_WEST) {
+				AddObject(wdoor, i, j);
+			} else if (type == MAT_DOOR_EAST) {
+				AddObject(edoor, i, j);
+			}
+		}
 	}
 }
 
