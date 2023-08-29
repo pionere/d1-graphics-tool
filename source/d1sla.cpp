@@ -59,7 +59,7 @@ bool D1Sla::load(const QString &filePath)
     in >> readByte;
     for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
-        this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH),
+        this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH);
         // this->lightRadius[i] = readByte & PSF_LIGHT_RADIUS;
     }
     // read the trap/spec-properties
@@ -159,10 +159,8 @@ bool D1Sla::save(const SaveAsParam &params)
         quint8 writeByte;
         // writeByte = ((this->subProperties[i] & PFLAG_BLOCK_PATH) ? PSF_BLOCK_PATH : 0) | ((this->subProperties[i] & PFLAG_BLOCK_LIGHT) ? PSF_BLOCK_LIGHT : 0) | ((this->subProperties[i] & PFLAG_BLOCK_MISSILE) ? PFLAG_BLOCK_MISSILE : 0);
         // writeByte |= this->lightRadius[i];
-        writeByte = this->subProperties[i];
-        writeByte |= this->lightRadius[i];
+        writeByte = this->subProperties[i] | this->lightRadius[i];
         out << writeByte;
-        // out << this->subProperties[i];
     }
     // write the trap/spec-properties
     out << (quint8)0; // add leading zero
