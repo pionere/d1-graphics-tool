@@ -88,8 +88,7 @@ bool D1Sla::load(const QString &filePath)
 
     if (filePath.indexOf("L6") != -1) {
         for (unsigned pn = 1; pn <= subtileCount; pn++) {
-            if (pn >= 56 && pn <= 161
-                && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
+            if ((pn >= 386 && pn <= 496) || (pn >= 534 && pn <= 537)) {
                 this->lightRadius[pn - 1] = 6;
             }
         }
