@@ -127,11 +127,14 @@ static void LoadTileset(D1Tileset *tileset)
 	// 'load' map properties
 	memset(automaptype, 0, sizeof(automaptype));
 	entries = std::min(lengthof(automaptype) - 1, tileset->sla->getSubtileCount());
+	bool mapEmpty = true;
 	for (int n = 0; n < entries; n++) {
 		quint8 maptype = tileset->sla->getMapType(n);
 		maptype |= tileset->sla->getMapProperties(n);
 		automaptype[n + 1] = maptype;
+		mapEmpty &= maptype == 0;
 	}
+	automaptype[0] = mapEmpty ? 1 : 0;
 }
 
 static void CreateDungeon()
