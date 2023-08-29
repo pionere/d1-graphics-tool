@@ -1947,7 +1947,12 @@ void LevelCelView::activeSubtiles() const
             const std::vector<std::vector<D1GfxPixel>> pixelImage = this->min->getSubtilePixelImage(i);
             int numPixels = countCycledPixels(pixelImage, cycleColors);
             if (numPixels != 0) {
-                dProgress() << tr("Subtile %1 has %2 affected pixels.", "", numPixels).arg(i + 1).arg(numPixels);
+                QString msg = tr("Subtile %1 has %2 affected pixels.", "", numPixels).arg(i + 1).arg(numPixels);
+                if (this->sla->getLightRadius(i) == 0) {
+                    dProgressWarn() << msg.append(tr(" The subtile is not lit."));
+                } else {
+                    dProgress() << msg.append(tr(" The subtile is lit."));
+                }
                 result = true;
             }
         }
