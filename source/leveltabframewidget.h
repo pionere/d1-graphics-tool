@@ -8,6 +8,7 @@
 class LevelCelView;
 class D1Gfx;
 class D1GfxFrame;
+class D1Tileset;
 enum class D1CEL_FRAME_TYPE;
 
 class EditFrameTypeCommand : public QObject, public QUndoCommand {
@@ -40,7 +41,8 @@ public:
     explicit LevelTabFrameWidget(QWidget *parent);
     ~LevelTabFrameWidget();
 
-    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Gfx *g);
+    void initialize(LevelCelView *v, QUndoStack *undoStack);
+    void setTileset(D1Tileset *ts);
     void updateFields();
 
 private slots:

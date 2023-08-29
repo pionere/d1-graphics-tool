@@ -112,13 +112,17 @@ LevelTabSubtileWidget::~LevelTabSubtileWidget()
     delete ui;
 }
 
-void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g, D1Min *m, D1Sla *s)
+void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us)
 {
     this->levelCelView = v;
     this->undoStack = us;
-    this->gfx = g;
-    this->min = m;
-    this->sla = s;
+}
+
+void LevelTabSubtileWidget::setTileset(D1Tileset *ts)
+{
+    this->gfx = ts->gfx;
+    this->min = ts->min;
+    this->sla = ts->sla;
 }
 
 void LevelTabSubtileWidget::updateFields()

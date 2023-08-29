@@ -9,6 +9,7 @@ class LevelCelView;
 class D1Gfx;
 class D1Min;
 class D1Sla;
+class D1Tileset;
 
 enum class SLA_FIELD_TYPE {
     SOL_PROP,
@@ -69,7 +70,8 @@ public:
     explicit LevelTabSubtileWidget(QWidget *parent);
     ~LevelTabSubtileWidget();
 
-    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Gfx *gfx, D1Min *min, D1Sla *sla);
+    void initialize(LevelCelView *v, QUndoStack *undoStack);
+    void setTileset(D1Tileset *ts);
     void updateFields();
 
     void selectFrame(int index);

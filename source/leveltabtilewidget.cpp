@@ -85,13 +85,17 @@ LevelTabTileWidget::~LevelTabTileWidget()
     delete ui;
 }
 
-void LevelTabTileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Til *t, D1Min *m, D1Tla *tt)
+void LevelTabTileWidget::initialize(LevelCelView *v, QUndoStack *us)
 {
     this->levelCelView = v;
     this->undoStack = us;
-    this->til = t;
-    this->min = m;
-    this->tla = tt;
+}
+
+void LevelTabTileWidget::setTileset(D1Tileset *ts)
+{
+    this->til = ts->til;
+    this->min = ts->min;
+    this->tla = ts->tla;
 }
 
 void LevelTabTileWidget::updateFields()

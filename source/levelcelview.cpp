@@ -104,13 +104,13 @@ LevelCelView::~LevelCelView()
 
 void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPanelHidden)
 {
+    this->tabTileWidget.initialize(this, this->undoStack);
+    this->tabSubtileWidget.initialize(this, this->undoStack);
+    this->tabFrameWidget.initialize(this, this->undoStack);
+
     this->pal = p;
     this->setTileset(ts);
     this->dun = d;
-
-    this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->tla);
-    this->tabSubtileWidget.initialize(this, this->undoStack, this->gfx, this->min, this->sla);
-    this->tabFrameWidget.initialize(this, this->undoStack, this->gfx);
 
     bool dunMode = d != nullptr;
     this->dunView = dunMode;
@@ -159,6 +159,10 @@ void LevelCelView::setTileset(D1Tileset *ts)
     if (this->currentTileIndex >= this->til->getTileCount()) {
         this->currentTileIndex = 0;
     }
+
+    this->tabTileWidget.setTileset(ts);
+    this->tabSubtileWidget.setTileset(ts);
+    this->tabFrameWidget.setTileset(ts);
 }
 
 void LevelCelView::setDungeon(D1Dun *dun)
