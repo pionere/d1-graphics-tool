@@ -3345,12 +3345,15 @@ typedef enum piece_flag {
 	PFLAG_BLOCK_PATH       = 1 << 0,
 	PFLAG_BLOCK_LIGHT      = 1 << 1,
 	PFLAG_BLOCK_MISSILE    = 1 << 2,
-	PFLAG_TRANSPARENT      = 1 << 3,
-	PFLAG_TRANS_MASK_LEFT  = 1 << 4,
-	PFLAG_TRANS_MASK_RIGHT = 1 << 5,
-	// PFLAG_TRANS_MASK_NONE  = 1 << 6, - unused. masked the LEFT/RIGHT flags in vanilla.
-	PFLAG_TRAP_SOURCE      = 1 << 7,
+	PFLAG_LIGHT_RADIUS     = 0xF << 3,
 } piece_flag;
+
+typedef enum _piece_sol_flag {
+	PSF_LIGHT_RADIUS     = 0xF,
+	PSF_BLOCK_MISSILE    = 1 << 5,
+	PSF_BLOCK_LIGHT      = 1 << 6,
+	PSF_BLOCK_PATH       = 1 << 7,
+} _piece_sol_flag;
 
 typedef enum _piece_trap_type {
 	PTT_NONE,

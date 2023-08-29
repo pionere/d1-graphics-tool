@@ -61,13 +61,13 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="3">
+        <!--item row="0" column="3">
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </spacer>
-        </item>
+        </item-->
        </layout>
       </widget>
      </item>
@@ -78,13 +78,29 @@
        </property>
        <layout class="QGridLayout">
         <item row="0" column="0">
+         <widget class="QSpinBox" name="lightSpinBox">
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>15</number>
+          </property>
+          <property name="keyboardTracking">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Inherent light radius of this subtile</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
          <widget class="QLabel">
           <property name="text">
            <string>Trap:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="0" column="2">
          <widget class="QRadioButton" name="trapNoneRadioButton">
           <property name="text">
            <string>None</string>
@@ -94,7 +110,7 @@
           </attribute>
          </widget>
         </item>
-        <item row="0" column="2">
+        <item row="0" column="3">
          <widget class="QRadioButton" name="trapLeftRadioButton">
           <property name="text">
            <string>Left</string>
@@ -104,7 +120,7 @@
           </attribute>
          </widget>
         </item>
-        <item row="0" column="3">
+        <item row="0" column="4">
          <widget class="QRadioButton" name="trapRightRadioButton">
           <property name="text">
            <string>Right</string>
@@ -114,14 +130,24 @@
           </attribute>
          </widget>
         </item>
-        <item row="0" column="4">
+        <item row="0" column="5">
          <widget class="QLabel">
           <property name="text">
            <string>Spec:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="5">
+        <item row="0" column="6">
+         <widget class="QSpinBox" name="specCelSpinBox">
+          <property name="keyboardTracking">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Special cel-frame assigned to this subtile</string>
+          </property>
+         </widget>
+        </item>
+        <!--item row="0" column="5">
          <widget class="LineEditWidget" name="specCelLineEdit">
           <property name="charWidth">
            <number>2</number>
@@ -133,8 +159,8 @@
            <string>Special cel-frame assigned to this subtile</string>
           </property>
          </widget>
-        </item>
-        <item row="0" column="5">
+        </item-->
+        <item row="0" column="7">
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>

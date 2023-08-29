@@ -135,7 +135,11 @@ bool D1Sla::save(const SaveAsParam &params)
     // write the sub-properties
     out << (quint8)0; // add leading zero
     for (int i = 0; i < this->subProperties.size(); i++) {
-        out << this->subProperties[i];
+        quint8 writeByte;
+        writeByte = ((this->subProperties[i] & PFLAG_BLOCK_PATH) ? PSF_BLOCK_PATH : 0) | ((this->subProperties[i] & PFLAG_BLOCK_LIGHT) ? PSF_BLOCK_LIGHT : 0) | ((this->subProperties[i] & PFLAG_BLOCK_MISSILE) ? PFLAG_BLOCK_MISSILE : 0);
+        writeByte |= (this->subProperties[i] & PFLAG_LIGHT_RADIUS) >> 3;
+        out << writeByte;
+        // out << this->subProperties[i];
     }
     // write the trap/spec-properties
     out << (quint8)0; // add leading zero

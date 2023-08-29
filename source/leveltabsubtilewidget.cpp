@@ -111,13 +111,27 @@ LevelTabSubtileWidget::~LevelTabSubtileWidget()
     delete ui;
 }
 
-void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g, D1Min *m, D1Sla *s)
+void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us)
 {
     this->levelCelView = v;
     this->undoStack = us;
-    this->gfx = g;
-    this->min = m;
-    this->sla = s;
+}
+
+void LevelTabSubtileWidget::setTileset(D1Tileset *ts)
+{
+    this->gfx = ts->gfx;
+    this->min = ts->min;
+    this->sla = ts->sla;
+
+    int specNum = ts->cls->getFrameCount();
+    this->ui->specCelSpinBox->setEnabled(specNum != 0);
+    if (specNum != 0) {
+        this->ui->specCelSpinBox->setMinimum(-1);
+        this->ui->specCelSpinBox->setMaximum(specNum);
+    } else {
+        this->ui->specCelSpinBox->setMinimum(0);
+        this->ui->specCelSpinBox->setMaximum(0);
+    }
 }
 
 void LevelTabSubtileWidget::updateFields()
@@ -141,8 +155,9 @@ void LevelTabSubtileWidget::updateFields()
         this->ui->sol1->setChecked(false);
         this->ui->sol2->setChecked(false);
 
+        this->ui->lightSpinBox->clear();
         this->ui->trapNoneRadioButton->setChecked(true);
-        this->ui->specCelLineEdit->setText("");
+        this->ui->specCelSpinBox->clear();
 
         this->ui->tmi0->setChecked(false);
         this->ui->tmi1->setChecked(false);
@@ -179,13 +194,14 @@ void LevelTabSubtileWidget::updateFields()
     this->ui->sol1->setChecked((solFlags & PFLAG_BLOCK_LIGHT) != 0);
     this->ui->sol2->setChecked((solFlags & PFLAG_BLOCK_MISSILE) != 0);
 
+    this->ui->lightSpinBox->setValue((solFlags & PFLAG_LIGHT_RADIUS) >> 3);
     if (sptTrapFlags == PTT_NONE)
         this->ui->trapNoneRadioButton->setChecked(true);
     else if (sptTrapFlags == PTT_LEFT)
         this->ui->trapLeftRadioButton->setChecked(true);
     else if (sptTrapFlags == PTT_RIGHT)
         this->ui->trapRightRadioButton->setChecked(true);
-    this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
+    this->ui->specCelSpinBox->setValue(sptSpecCel);
 
     this->ui->tmi0->setChecked((tmiFlags & TMIF_WALL_TRANS) != 0);
     this->ui->tmi1->setChecked((tmiFlags & TMIF_LEFT_REDRAW) != 0);
@@ -255,6 +271,7 @@ void LevelTabSubtileWidget::updateSolProperty()
         flags |= PFLAG_BLOCK_LIGHT;
     if (this->ui->sol2->checkState())
         flags |= PFLAG_BLOCK_MISSILE;
+    flags |= this->ui->lightSpinBox->value() << 3;
 
     this->setSolProperty(flags);
 }
@@ -348,6 +365,20 @@ void LevelTabSubtileWidget::on_sol2_clicked()
     this->updateSolProperty();
 }
 
+void LevelTabSubtileWidget::on_lightSpinBox_valueChanged()
+{
+    this->updateSolProperty();
+}
+
+void LevelTabSubtileWidget::on_lightSpinBox_editingFinished()
+{
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
+    int solFlags = this->sla->getSubProperties(subtileIdx);
+
+    this->ui->lightSpinBox->setValue((solFlags & PFLAG_LIGHT_RADIUS) >> 3);
+    this->ui->lightSpinBox->clearFocus();
+}
+
 void LevelTabSubtileWidget::setTrapProperty(int trap)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
@@ -375,10 +406,10 @@ void LevelTabSubtileWidget::on_trapRightRadioButton_clicked()
     this->setTrapProperty(PTT_RIGHT);
 }
 
-void LevelTabSubtileWidget::on_specCelLineEdit_returnPressed()
+void LevelTabSubtileWidget::on_specCelSpinBox_valueChanged()
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    int sptSpecCel = this->ui->specCelLineEdit->text().toInt();
+    int sptSpecCel = this->ui->specCelSpinBox->value();
 
     // Build sla editing command and connect it to the views widget
     // to update the label and refresh the view when undo/redo is performed
@@ -387,16 +418,16 @@ void LevelTabSubtileWidget::on_specCelLineEdit_returnPressed()
 
     this->undoStack->push(command);
 
-    this->on_specCelLineEdit_escPressed();
+    this->on_specCelSpinBox_editingFinished();
 }
 
-void LevelTabSubtileWidget::on_specCelLineEdit_escPressed()
+void LevelTabSubtileWidget::on_specCelSpinBox_editingFinished()
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     int sptSpecCel = this->sla->getSpecProperty(subtileIdx);
 
-    this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
-    this->ui->specCelLineEdit->clearFocus();
+    this->ui->specCelSpinBox->setValue(sptSpecCel);
+    this->ui->specCelSpinBox->clearFocus();
 }
 
 void LevelTabSubtileWidget::on_tmi0_clicked()

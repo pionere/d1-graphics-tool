@@ -52,11 +52,15 @@ LevelTabFrameWidget::~LevelTabFrameWidget()
     delete ui;
 }
 
-void LevelTabFrameWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g)
+void LevelTabFrameWidget::initialize(LevelCelView *v, QUndoStack *us)
 {
     this->levelCelView = v;
     this->undoStack = us;
-    this->gfx = g;
+}
+
+void LevelTabFrameWidget::setTileset(D1Tileset *ts)
+{
+    this->gfx = ts->gfx;
 }
 
 void LevelTabFrameWidget::updateFields()

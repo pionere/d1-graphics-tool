@@ -9,6 +9,7 @@ class LevelCelView;
 class D1Gfx;
 class D1Min;
 class D1Sla;
+class D1Tileset;
 
 enum class SLA_FIELD_TYPE {
     SOL_PROP,
@@ -69,7 +70,8 @@ public:
     explicit LevelTabSubtileWidget(QWidget *parent);
     ~LevelTabSubtileWidget();
 
-    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Gfx *gfx, D1Min *min, D1Sla *sla);
+    void initialize(LevelCelView *v, QUndoStack *undoStack);
+    void setTileset(D1Tileset *ts);
     void updateFields();
 
     void selectFrame(int index);
@@ -82,11 +84,13 @@ private slots:
     void on_sol1_clicked();
     void on_sol2_clicked();
 
+    void on_lightSpinBox_valueChanged();
+    void on_lightSpinBox_editingFinished();
     void on_trapNoneRadioButton_clicked();
     void on_trapLeftRadioButton_clicked();
     void on_trapRightRadioButton_clicked();
-    void on_specCelLineEdit_returnPressed();
-    void on_specCelLineEdit_escPressed();
+    void on_specCelSpinBox_valueChanged();
+    void on_specCelSpinBox_editingFinished();
 
     void on_tmi0_clicked();
     void on_tmi1_clicked();

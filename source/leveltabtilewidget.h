@@ -9,6 +9,7 @@ class LevelCelView;
 class D1Til;
 class D1Min;
 class D1Tla;
+class D1Tileset;
 
 class EditTileCommand : public QObject, public QUndoCommand {
     Q_OBJECT
@@ -60,7 +61,8 @@ public:
     explicit LevelTabTileWidget(QWidget *parent);
     ~LevelTabTileWidget();
 
-    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Til *t, D1Min *m, D1Tla *tt);
+    void initialize(LevelCelView *v, QUndoStack *undoStack);
+    void setTileset(D1Tileset *ts);
     void updateFields();
 
     void selectSubtile(int index);
