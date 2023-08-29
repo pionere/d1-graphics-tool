@@ -90,7 +90,7 @@ bool D1Sla::load(const QString &filePath)
         for (unsigned pn = 1; pn <= subtileCount; pn++) {
             if (pn >= 56 && pn <= 161
                 && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
-                this->lightRadius[pn] = 6;
+                this->lightRadius[pn - 1] = 6;
             }
         }
         changed = true;
@@ -99,7 +99,7 @@ bool D1Sla::load(const QString &filePath)
         for (unsigned pn = 1; pn <= subtileCount; pn++) {
             if (pn >= 56 && pn <= 161
                 && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
-                this->lightRadius[pn] = 7;
+                this->lightRadius[pn - 1] = 7;
             }
         }
         changed = true;
