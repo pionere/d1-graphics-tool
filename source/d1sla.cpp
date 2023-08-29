@@ -46,12 +46,7 @@ bool D1Sla::load(const QString &filePath)
 
     // prepare empty lists with zeros
     for (unsigned i = 0; i < subtileCount; i++) {
-        this->subProperties.append(0);
-        this->trapProperties.append(0);
-        this->specProperties.append(0);
-        this->renderProperties.append(0);
-        this->mapTypes.append(0);
-        this->mapProperties.append(0);
+        this->createSubtile();
     }
 
     // Read SLA binary data
