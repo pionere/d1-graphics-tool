@@ -2404,6 +2404,11 @@ void LevelCelView::checkSubtileFlags() const
             }
             if (tmiFlags & TMIF_LEFT_FOLIAGE) {
                 // left foliage
+                // - must have second pass set
+                if (!(tmiFlags & TMIF_LEFT_REDRAW)) {
+                    this->warnOrReportSubtile(tr("Subtile %1 has foliage set on the left, but not second pass.").arg(i + 1), i);
+                    result = true;
+                }
                 // - left floor has a foliage pixel
                 if (leftPixels == 0) {
                     this->warnOrReportSubtile(tr("Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.").arg(i + 1), i);
@@ -2425,6 +2430,11 @@ void LevelCelView::checkSubtileFlags() const
             }
             if (tmiFlags & TMIF_RIGHT_FOLIAGE) {
                 // right foliage
+                // - must have second pass set
+                if (!(tmiFlags & TMIF_RIGHT_REDRAW)) {
+                    this->warnOrReportSubtile(tr("Subtile %1 has foliage set on the right, but not second pass.").arg(i + 1), i);
+                    result = true;
+                }
                 // - right floor has a foliage pixel
                 if (rightPixels == 0) {
                     this->warnOrReportSubtile(tr("Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.").arg(i + 1), i);

@@ -1,5 +1,6 @@
 #include "leveltabsubtilewidget.h"
 
+#include <QLineEdit>
 #include <QStyle>
 
 #include <vector>
