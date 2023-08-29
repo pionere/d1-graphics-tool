@@ -421,7 +421,7 @@ void LevelTabSubtileWidget::on_trapRightRadioButton_clicked()
     this->setTrapProperty(PTT_RIGHT);
 }
 
-void LevelTabSubtileWidget::on_specCelComboBox_activated(int index);
+void LevelTabSubtileWidget::on_specCelComboBox_activated(int index)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     QVariant specVal = this->ui->specCelComboBox->currentData();
