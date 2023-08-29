@@ -114,6 +114,7 @@ private:
     void updateFramesSelection(int index);
     void setSolProperty(quint8 flags);
     void updateSolProperty();
+    void setSpecProperty(int spec);
     void setTrapProperty(int trap);
     void setTmiProperty(quint8 flags);
     void updateTmiProperty();
