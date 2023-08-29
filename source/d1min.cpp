@@ -85,7 +85,7 @@ bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CE
     if (minSubtileCount != subtileCount) {
         // warn about misalignment if the files are not empty
         if (minSubtileCount != 0 && subtileCount != 0) {
-            dProgressWarn() << tr("The size of SOL file does not align with MIN file.");
+            dProgressWarn() << tr("The size of SLA file does not align with MIN file.");
         }
         // add subtiles to sla if necessary
         while (minSubtileCount > subtileCount) {

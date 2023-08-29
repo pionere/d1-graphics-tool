@@ -1029,7 +1029,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         findFirstFile(baseDir, QStringLiteral("*s.cel"), clsFilePath, baseName);
     }
 
-    // If SOL, MIN and TIL files exist then build a LevelCelView
+    // If SLA, MIN and TIL files exist then build a LevelCelView
     bool isTileset = params.gfxType == OPEN_GFX_TYPE::TILESET;
     if (params.gfxType == OPEN_GFX_TYPE::AUTODETECT) {
         isTileset = ((fileType == 1 || fileType == 0) && QFileInfo::exists(dunFilePath))

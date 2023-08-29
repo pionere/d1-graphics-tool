@@ -37,13 +37,13 @@ BYTE automaptype[MAXSUBTILES + 1];
  */
 BYTE nTrnShadowTable[MAXTILES + 1];
 /**
- * List of light blocking dPieces
- */
-bool nBlockTable[MAXSUBTILES + 1];
-/**
  * List of path blocking dPieces
  */
 bool nSolidTable[MAXSUBTILES + 1];
+/**
+ * List of light blocking dPieces
+ */
+bool nBlockTable[MAXSUBTILES + 1];
 /**
  * Flags of subtiles to specify trap-sources and special cel-frames (_piece_spectrap_flag)
  */
@@ -130,8 +130,8 @@ void InitLvlDungeon()
 		LoadFileWithMem(lfd->dTileFlags, nTrnShadowTable); // .TLA
 	}
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
-	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
+	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
 	memset(automaptype, 0, sizeof(automaptype));

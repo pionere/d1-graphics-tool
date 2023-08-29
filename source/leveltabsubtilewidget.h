@@ -112,11 +112,11 @@ private:
     void updateFramesSelection(int index);
     void setSolProperty(quint8 flags);
     void updateSolProperty();
+    void setTrapProperty(int trap);
     void setTmiProperty(quint8 flags);
     void updateTmiProperty();
-    void setTrapProperty(int trap);
-    void updateSmpProperty();
     void setSmpProperty(quint8 flags);
+    void updateSmpProperty();
 
     Ui::LevelTabSubtileWidget *ui;
     QPushButton *clearButton;

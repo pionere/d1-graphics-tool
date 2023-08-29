@@ -113,8 +113,8 @@ static void LoadTileset(D1Tileset *tileset)
 	}
 
 	// 'load' collision properties
-	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
+	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	entries = std::min(lengthof(nSolidTable) - 1, tileset->sla->getSubtileCount());
 	for (int n = 0; n < entries; n++) {

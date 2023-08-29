@@ -58,32 +58,33 @@ void EditSlaCommand::undo()
         return;
     }
 
+    int subtileIdx = this->subtileIndex;
     switch (this->field) {
     case SLA_FIELD_TYPE::SOL_PROP: {
         quint8 nv = this->value;
-        this->value = this->sla->getSubProperties(this->subtileIndex);
-        this->sla->setSubProperties(this->subtileIndex, nv);
+        this->value = this->sla->getSubProperties(subtileIdx);
+        this->sla->setSubProperties(subtileIdx, nv);
     } break;
     case SLA_FIELD_TYPE::TRAP_PROP: {
         int nv = this->value;
-        this->value = this->sla->getTrapProperty(this->subtileIndex);
-        this->sla->setTrapProperty(this->subtileIndex, nv);
+        this->value = this->sla->getTrapProperty(subtileIdx);
+        this->sla->setTrapProperty(subtileIdx, nv);
     } break;
     case SLA_FIELD_TYPE::SPEC_PROP: {
         int nv = this->value;
-        this->value = this->sla->getSpecProperty(this->subtileIndex);
-        this->sla->setSpecProperty(this->subtileIndex, nv);
+        this->value = this->sla->getSpecProperty(subtileIdx);
+        this->sla->setSpecProperty(subtileIdx, nv);
     } break;
     case SLA_FIELD_TYPE::RENDER_PROP: {
         quint8 nv = this->value;
-        this->value = this->sla->getRenderProperties(this->subtileIndex);
-        this->sla->setRenderProperties(this->subtileIndex, nv);
+        this->value = this->sla->getRenderProperties(subtileIdx);
+        this->sla->setRenderProperties(subtileIdx, nv);
     } break;
     case SLA_FIELD_TYPE::MAP_PROP: {
         quint8 nv = this->value;
-        this->value = this->sla->getMapProperties(this->subtileIndex) | this->sla->getMapType(this->subtileIndex);
-        this->sla->setMapType(this->subtileIndex, nv & MAT_TYPE);
-        this->sla->setMapProperties(this->subtileIndex, nv & ~MAT_TYPE);
+        this->value = this->sla->getMapProperties(subtileIdx) | this->sla->getMapType(subtileIdx);
+        this->sla->setMapType(subtileIdx, nv & MAT_TYPE);
+        this->sla->setMapProperties(subtileIdx, nv & ~MAT_TYPE);
     } break;
     }
 

@@ -41,8 +41,8 @@ bool D1Sla::load(const QString &filePath)
         dProgressErr() << tr("Invalid SLA file.");
         return false;
     }
-	unsigned subtileCount = fileSize / 4;
-	subtileCount = subtileCount != 0 ? subtileCount - 1 : 0;
+    unsigned subtileCount = fileSize / 4;
+    subtileCount = subtileCount != 0 ? subtileCount - 1 : 0;
 
     // prepare empty lists with zeros
     for (unsigned i = 0; i < subtileCount; i++) {
