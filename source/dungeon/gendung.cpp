@@ -37,6 +37,10 @@ BYTE automaptype[MAXSUBTILES + 1];
  */
 BYTE nTrnShadowTable[MAXTILES + 1];
 /**
+ * Flags of subtiles to specify collision properties and the light radius
+ */
+BYTE nCollLightTable[MAXSUBTILES + 1];
+/**
  * List of light blocking dPieces
  */
 bool nBlockTable[MAXSUBTILES + 1];
@@ -130,6 +134,7 @@ void InitLvlDungeon()
 		LoadFileWithMem(lfd->dTileFlags, nTrnShadowTable); // .TLA
 	}
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
+	memset(nCollLightTable, 0, sizeof(nCollLightTable));
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
@@ -144,9 +149,10 @@ void InitLvlDungeon()
 		// read sub-properties
 		for (unsigned i = 0; i < dwSubtiles; i++, pTmp++) {
 			BYTE bv = *pTmp;
-			nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
-			nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
-			nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+			nCollLightTable[i] = bv;
+			nSolidTable[i] = (bv & PSF_BLOCK_PATH) != 0;
+			nBlockTable[i] = (bv & PSF_BLOCK_LIGHT) != 0;
+			nMissileTable[i] = (bv & PSF_BLOCK_MISSILE) != 0;
 		}
 		// read the trap/spec-properties
 		memcpy(nSpecTrapTable, pTmp, dwSubtiles);
@@ -1293,6 +1299,20 @@ static void DRLG_LightSubtiles()
 			}
 		}
 #endif
+	if (!nCollLightTable[0]) {
+		for (i = 0; i < MAXDUNX; i++) {
+			for (j = 0; j < MAXDUNY; j++) {
+				pn = dPiece[i][j];
+				lr = nCollLightTable[pn];
+				if (lr != 0) {
+					LightList[MAXLIGHTS]._lradius = lr;
+					LightList[MAXLIGHTS]._lx = i;
+					LightList[MAXLIGHTS]._ly = j;
+					DoLighting(MAXLIGHTS);
+				}
+			}
+		}
+	}
 	}*/
 }
 

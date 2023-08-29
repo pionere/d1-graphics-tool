@@ -2167,55 +2167,27 @@ void LevelCelView::checkSubtileFlags() const
         std::vector<int> subtileUsers;
         this->collectSubtileUsers(i, subtileUsers);
         bool unused = subtileUsers.empty();
-        if (solFlags & PFLAG_BLOCK_LIGHT) {
+        if (solFlags & PSF_BLOCK_LIGHT) {
             // block light
-            if (!(solFlags & PFLAG_BLOCK_PATH)) {
+            if (!(solFlags & PSF_BLOCK_PATH)) {
                 this->warnOrReportSubtile(tr("Subtile %1 blocks the light, but still passable (not solid).").arg(i + 1), i);
                 result = true;
             }
-            if (!(solFlags & PFLAG_BLOCK_MISSILE)) {
+            if (!(solFlags & PSF_BLOCK_MISSILE)) {
                 this->warnOrReportSubtile(tr("Subtile %1 blocks the light, but it does not block missiles.").arg(i + 1), i);
                 result = true;
             }
         }
-        if (solFlags & PFLAG_BLOCK_MISSILE) {
+        if (solFlags & PSF_BLOCK_MISSILE) {
             // block missile
-            if (!(solFlags & PFLAG_BLOCK_PATH)) {
+            if (!(solFlags & PSF_BLOCK_PATH)) {
                 this->warnOrReportSubtile(tr("Subtile %1 blocks missiles, but still passable (not solid).").arg(i + 1), i);
                 result = true;
             }
         }
-        /*if (solFlags & PFLAG_TRANS_MASK_LEFT) {
-            // left transparency
-            if (!(solFlags & PFLAG_TRANSPARENT)) {
-                dProgressWarn() << tr("Subtile %1 has left transparency enabled, but transparency is not enabled.").arg(i + 1);
-                result = true;
-            }
-        }
-        if (solFlags & PFLAG_TRANS_MASK_RIGHT) {
-            // right transparency
-            if (!(solFlags & PFLAG_TRANSPARENT)) {
-                dProgressWarn() << tr("Subtile %1 has right transparency enabled, but transparency is not enabled.").arg(i + 1);
-                result = true;
-            }
-        }
-        if (solFlags & PFLAG_TRAP_SOURCE) {
-            if (!(solFlags & PFLAG_BLOCK_PATH)) {
-                dProgressWarn() << tr("Subtile %1 is for traps, but still passable (not solid).").arg(i + 1);
-                result = true;
-            }
-            if (!(solFlags & PFLAG_BLOCK_LIGHT)) {
-                dProgressWarn() << tr("Subtile %1 is for traps, but it does not block light.").arg(i + 1);
-                result = true;
-            }
-            if (!(solFlags & PFLAG_BLOCK_MISSILE)) {
-                dProgressWarn() << tr("Subtile %1 is for traps, but it does not block missiles.").arg(i + 1);
-                result = true;
-            }
-        }*/
         // checks for non-upscaled tilesets
         if (!this->gfx->isUpscaled()) {
-            if (solFlags & (PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE)) {
+            if (solFlags & (PSF_BLOCK_LIGHT | PSF_BLOCK_MISSILE)) {
                 // block light or missile
                 // - at least one not transparent frame above the floor
                 bool hasColor = this->sla->getSpecProperty(i) != 0;
@@ -2232,18 +2204,6 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            /*if (solFlags & PFLAG_TRAP_SOURCE && this->min->getSubtileHeight() > 1) {
-                // trap
-                // - one above the floor is square (left or right)
-                unsigned frameRefLeft = frameRefs[frameRefs.size() - 2 * floorMicros];
-                unsigned frameRefRight = frameRefs[frameRefs.size() - (floorMicros + 1)];
-                bool trapLeft = frameRefLeft != 0 && this->gfx->getFrame(frameRefLeft - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
-                bool trapRight = frameRefRight != 0 && this->gfx->getFrame(frameRefRight - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
-                if (!trapLeft && !trapRight) {
-                    dProgressWarn() << tr("Subtile %1 is for traps, but the frames above the floor is not square on either side.").arg(i + 1);
-                    result = true;
-                }
-            }*/
         }
     }
     if (!result) {
@@ -2487,7 +2447,7 @@ void LevelCelView::checkSubtileFlags() const
                 }
                 nl--;
                 for (int n = i; n <= nl; n++) {
-                    if (this->sla->getSubProperties(n) & PFLAG_BLOCK_PATH) {
+                    if (this->sla->getSubProperties(n) & PSF_BLOCK_PATH) {
                         if (n == i) {
                             if (mapType == MAT_DOOR_EAST) {
                                 this->warnOrReportSubtile(tr("Subtile %1 is for closed east-doors, but Subtile %2 is not for open east-doors.").arg(n + 1).arg(n), n);
@@ -2497,7 +2457,7 @@ void LevelCelView::checkSubtileFlags() const
                                 result = true;
                             }
                         } else {
-                            if (this->sla->getSubProperties(n - 1) & PFLAG_BLOCK_PATH) {
+                            if (this->sla->getSubProperties(n - 1) & PSF_BLOCK_PATH) {
                                 this->warnOrReportSubtile(tr("Subtile %1 is for closed doors, but Subtile %2 is a path-blocker.").arg(n + 1).arg(n), n);
                                 result = true;
                             }
@@ -2512,7 +2472,7 @@ void LevelCelView::checkSubtileFlags() const
                                 result = true;
                             }
                         } else {
-                            if (!(this->sla->getSubProperties(n + 1) & PFLAG_BLOCK_PATH)) {
+                            if (!(this->sla->getSubProperties(n + 1) & PSF_BLOCK_PATH)) {
                                 this->warnOrReportSubtile(tr("Subtile %1 is for open doors, but Subtile %2 is not a path-blocker.").arg(n + 1).arg(n + 2), n);
                                 result = true;
                             }
@@ -2547,12 +2507,12 @@ void LevelCelView::checkTileFlags() const
         if (subtileIndices.size() > 0) {
             int subtileIdx = subtileIndices[0];
             if (tlaFlags & TIF_FLOOR_00) {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PSF_BLOCK_PATH) != 0) {
                     dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PSF_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
                     dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
@@ -2561,12 +2521,12 @@ void LevelCelView::checkTileFlags() const
         if (subtileIndices.size() > 1) {
             int subtileIdx = subtileIndices[1];
             if (tlaFlags & TIF_FLOOR_01) {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PSF_BLOCK_PATH) != 0) {
                     dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PSF_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
                     dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
@@ -2575,12 +2535,12 @@ void LevelCelView::checkTileFlags() const
         if (subtileIndices.size() > 2) {
             int subtileIdx = subtileIndices[2];
             if (tlaFlags & TIF_FLOOR_10) {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PSF_BLOCK_PATH) != 0) {
                     dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PSF_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
                     dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
@@ -2589,12 +2549,12 @@ void LevelCelView::checkTileFlags() const
         if (subtileIndices.size() > 3) {
             int subtileIdx = subtileIndices[3];
             if (tlaFlags & TIF_FLOOR_11) {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PSF_BLOCK_PATH) != 0) {
                     dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
-                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sla->getSubProperties(subtileIdx) & PSF_BLOCK_PATH) == 0 && this->sla->getSpecProperty(subtileIdx) == 0) {
                     dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }

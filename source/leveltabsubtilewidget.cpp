@@ -206,9 +206,9 @@ void LevelTabSubtileWidget::updateFields()
     quint8 smpFlags = this->sla->getMapProperties(subtileIdx);
     std::vector<unsigned> &frames = this->min->getFrameReferences(subtileIdx);
 
-    this->ui->sol0->setChecked((solFlags & PFLAG_BLOCK_PATH) != 0);
-    this->ui->sol1->setChecked((solFlags & PFLAG_BLOCK_LIGHT) != 0);
-    this->ui->sol2->setChecked((solFlags & PFLAG_BLOCK_MISSILE) != 0);
+    this->ui->sol0->setChecked((solFlags & PSF_BLOCK_PATH) != 0);
+    this->ui->sol1->setChecked((solFlags & PSF_BLOCK_LIGHT) != 0);
+    this->ui->sol2->setChecked((solFlags & PSF_BLOCK_MISSILE) != 0);
 
     this->ui->lightComboBox->setCurrentIndex(lightRadius);
     if (sptTrapFlags == PTT_NONE)
@@ -287,11 +287,11 @@ void LevelTabSubtileWidget::updateSolProperty()
 {
     quint8 flags = 0;
     if (this->ui->sol0->checkState())
-        flags |= PFLAG_BLOCK_PATH;
+        flags |= PSF_BLOCK_PATH;
     if (this->ui->sol1->checkState())
-        flags |= PFLAG_BLOCK_LIGHT;
+        flags |= PSF_BLOCK_LIGHT;
     if (this->ui->sol2->checkState())
-        flags |= PFLAG_BLOCK_MISSILE;
+        flags |= PSF_BLOCK_MISSILE;
 
     this->setSolProperty(flags);
 }

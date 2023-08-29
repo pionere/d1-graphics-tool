@@ -117,25 +117,34 @@ static void LoadTileset(D1Tileset *tileset)
 	}
 
 	// 'load' collision properties
-	memset(nBlockTable, 0, sizeof(nBlockTable));
+	memset(nCollLightTable, 0, sizeof(nCollLightTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
+	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	entries = std::min(lengthof(nSolidTable) - 1, tileset->sla->getSubtileCount());
+	bool lightEmpty = true;
 	for (int n = 0; n < entries; n++) {
+		quint8 lr = tileset->sla->getLightRadius(n);
+		nCollLightTable[n + 1] = lr;
+		mapEmpty &= lr == 0;
 		quint8 bv = tileset->sla->getSubProperties(n);
-		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
-		nBlockTable[n + 1] = (bv & PFLAG_BLOCK_LIGHT) != 0;
-		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+		nSolidTable[n + 1] = (bv & PSF_BLOCK_PATH) != 0;
+		nBlockTable[n + 1] = (bv & PSF_BLOCK_LIGHT) != 0;
+		nMissileTable[n + 1] = (bv & PSF_BLOCK_MISSILE) != 0;
 	}
+	nCollLightTable[0] = lightEmpty ? 1 : 0;
 
 	// 'load' map properties
 	memset(automaptype, 0, sizeof(automaptype));
 	entries = std::min(lengthof(automaptype) - 1, tileset->sla->getSubtileCount());
+	bool mapEmpty = true;
 	for (int n = 0; n < entries; n++) {
 		quint8 maptype = tileset->sla->getMapType(n);
 		maptype |= tileset->sla->getMapProperties(n);
 		automaptype[n + 1] = maptype;
+		mapEmpty &= maptype == 0;
 	}
+	automaptype[0] = mapEmpty ? 1 : 0;
 }
 
 static void CreateDungeon()

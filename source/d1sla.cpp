@@ -59,8 +59,8 @@ bool D1Sla::load(const QString &filePath)
     in >> readByte;
     for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
-        this->subProperties[i] = readByte & 7;
-        // this->lightRadius[i] = readByte >> 3;
+        this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH),
+        this->lightRadius[i] = readByte & PSF_LIGHT_RADIUS;
     }
     // read the trap/spec-properties
     // skip the first byte
@@ -86,6 +86,11 @@ bool D1Sla::load(const QString &filePath)
         this->mapProperties[i] = readByte & ~MAT_TYPE;
     }
 
+    if (filePath.indexOf("L6") != -1) {
+        for (unsigned i = 386; i < 496; i++) {
+            this->lightRadius[i + 1] = 6;
+        }
+    }
     this->modified = changed;
     return true;
 }
@@ -124,15 +129,24 @@ bool D1Sla::save(const SaveAsParam &params)
             break;
         }
     }
+    bool isLightEmpty = true;
+    for (int i = 0; i < this->lightRadius.size(); i++) {
+        if (this->lightRadius[i] != 0) {
+            isLightEmpty = false;
+            break;
+        }
+    }
 
     // write to file
     QDataStream out(&outFile);
 
     // write the sub-properties
-    out << (quint8)0; // add leading zero
+    out << (quint8)(isLightEmpty ? 1 : 0);
     for (int i = 0; i < this->subProperties.size(); i++) {
         quint8 writeByte;
-        writeByte = ((this->subProperties[i] & PFLAG_BLOCK_PATH) ? PSF_BLOCK_PATH : 0) | ((this->subProperties[i] & PFLAG_BLOCK_LIGHT) ? PSF_BLOCK_LIGHT : 0) | ((this->subProperties[i] & PFLAG_BLOCK_MISSILE) ? PFLAG_BLOCK_MISSILE : 0);
+        // writeByte = ((this->subProperties[i] & PFLAG_BLOCK_PATH) ? PSF_BLOCK_PATH : 0) | ((this->subProperties[i] & PFLAG_BLOCK_LIGHT) ? PSF_BLOCK_LIGHT : 0) | ((this->subProperties[i] & PFLAG_BLOCK_MISSILE) ? PFLAG_BLOCK_MISSILE : 0);
+        // writeByte |= this->lightRadius[i];
+        writeByte = this->subProperties[i];
         writeByte |= this->lightRadius[i];
         out << writeByte;
         // out << this->subProperties[i];

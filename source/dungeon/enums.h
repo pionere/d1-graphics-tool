@@ -3341,12 +3341,12 @@ typedef enum _setpiece_type {
 	NUM_SPT_TYPES
 } _setpiece_type;
 
-typedef enum piece_flag {
+/*typedef enum piece_flag {
 	PFLAG_BLOCK_PATH       = 1 << 0,
 	PFLAG_BLOCK_LIGHT      = 1 << 1,
 	PFLAG_BLOCK_MISSILE    = 1 << 2,
 	PFLAG_LIGHT_RADIUS     = 0xF << 3,
-} piece_flag;
+} piece_flag;*/
 
 typedef enum _piece_sol_flag {
 	PSF_LIGHT_RADIUS     = 0xF,
