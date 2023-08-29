@@ -215,11 +215,11 @@ void LevelTabSubtileWidget::updateFields()
     else if (sptTrapFlags == PTT_RIGHT)
         this->ui->trapRightRadioButton->setChecked(true);
     int specIdx = this->ui->specCelComboBox->findData(sptSpecCel);
-    if (specIdx == -1) {
-        this->ui->specCelComboBox->addItem(QString::number(sptSpecCel), QVariant::fromValue(sptSpecCel));
-        specIdx = this->ui->specCelComboBox->findData(sptSpecCel);
+    if (specIdx != -1) {
+        this->ui->specCelComboBox->setCurrentIndex(specIdx);
+    } else {
+        specIdx = this->ui->specCelComboBox->setEditText(QString::number(sptSpecCel));
     }
-    this->ui->specCelComboBox->setCurrentIndex(specIdx);
 
     this->ui->tmi0->setChecked((tmiFlags & TMIF_WALL_TRANS) != 0);
     this->ui->tmi1->setChecked((tmiFlags & TMIF_LEFT_REDRAW) != 0);
