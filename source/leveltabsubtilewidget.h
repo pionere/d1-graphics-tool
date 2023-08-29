@@ -87,8 +87,8 @@ private slots:
     void on_trapNoneRadioButton_clicked();
     void on_trapLeftRadioButton_clicked();
     void on_trapRightRadioButton_clicked();
-    void on_specCelLineEdit_returnPressed();
-    void on_specCelLineEdit_escPressed();
+    void on_specCelComboBox_returnPressed();
+    void on_specCelComboBox_activated(int index);
 
     void on_tmi0_clicked();
     void on_tmi1_clicked();

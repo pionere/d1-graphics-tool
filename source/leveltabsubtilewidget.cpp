@@ -1,5 +1,6 @@
 #include "leveltabsubtilewidget.h"
 
+#include <QLineEdit>
 #include <QStyle>
 
 #include <vector>
@@ -105,6 +106,8 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     QLayout *layout = this->ui->buttonsHorizontalLayout;
     this->clearButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarMaxButton, tr("Reset flags"), this, &LevelTabSubtileWidget::on_clearPushButtonClicked);
     this->deleteButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Delete the current subtile"), this, &LevelTabSubtileWidget::on_deletePushButtonClicked);
+
+    QObject::connect(ui->specCelComboBox->lineEdit(), &QLineEdit::returnPressed, this, &LevelTabSubtileWidget::on_specCelComboBox_returnPressed);
 }
 
 LevelTabSubtileWidget::~LevelTabSubtileWidget()
@@ -123,6 +126,16 @@ void LevelTabSubtileWidget::setTileset(D1Tileset *ts)
     this->gfx = ts->gfx;
     this->min = ts->min;
     this->sla = ts->sla;
+
+    this->ui->specCelComboBox->clear();
+    int specNum = ts->cls->getFrameCount();
+    for (int i = 0; i <= specNum; i++) {
+        this->ui->specCelComboBox->addItem(QString::number(i), QVariant::fromValue(i));
+    }
+    // if (specNum != 0) {
+        this->ui->specCelComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
+    // }
+    // this->ui->specCelComboBox->setEnabled(specNum != 0);
 }
 
 void LevelTabSubtileWidget::updateFields()
@@ -147,7 +160,7 @@ void LevelTabSubtileWidget::updateFields()
         this->ui->sol2->setChecked(false);
 
         this->ui->trapNoneRadioButton->setChecked(true);
-        this->ui->specCelLineEdit->setText("");
+        this->ui->specCelComboBox->setCurrentIndex(-1);
 
         this->ui->tmi0->setChecked(false);
         this->ui->tmi1->setChecked(false);
@@ -190,7 +203,12 @@ void LevelTabSubtileWidget::updateFields()
         this->ui->trapLeftRadioButton->setChecked(true);
     else if (sptTrapFlags == PTT_RIGHT)
         this->ui->trapRightRadioButton->setChecked(true);
-    this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
+    int specIdx = this->ui->specCelComboBox->findData(sptSpecCel);
+    if (specIdx != -1) {
+        this->ui->specCelComboBox->setCurrentIndex(specIdx);
+    } else {
+        this->ui->specCelComboBox->setEditText(QString::number(sptSpecCel));
+    }
 
     this->ui->tmi0->setChecked((tmiFlags & TMIF_WALL_TRANS) != 0);
     this->ui->tmi1->setChecked((tmiFlags & TMIF_LEFT_REDRAW) != 0);
@@ -392,20 +410,14 @@ void LevelTabSubtileWidget::setSpecProperty(int spec)
     this->undoStack->push(command);
 }
 
-void LevelTabSubtileWidget::on_specCelLineEdit_returnPressed()
+void LevelTabSubtileWidget::on_specCelComboBox_activated(int index)
 {
-    this->setSpecProperty(this->ui->specCelLineEdit->text().toInt());
-
-    this->on_specCelLineEdit_escPressed();
+    this->setSpecProperty(this->ui->specCelComboBox->currentData().value<int>());
 }
 
-void LevelTabSubtileWidget::on_specCelLineEdit_escPressed()
+void LevelTabSubtileWidget::on_specCelComboBox_returnPressed()
 {
-    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    int sptSpecCel = this->sla->getSpecProperty(subtileIdx);
-
-    this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
-    this->ui->specCelLineEdit->clearFocus();
+    this->setSpecProperty(this->ui->specCelComboBox->currentText().toInt());
 }
 
 void LevelTabSubtileWidget::on_tmi0_clicked()

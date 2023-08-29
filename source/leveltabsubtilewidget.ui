@@ -122,19 +122,19 @@
          </widget>
         </item>
         <item row="0" column="5">
-         <widget class="LineEditWidget" name="specCelLineEdit">
-          <property name="charWidth">
-           <number>2</number>
+         <widget class="QComboBox" name="specCelComboBox">
+          <property name="editable">
+           <bool>true</bool>
           </property>
-          <property name="alignment">
-           <enum>Qt::AlignCenter</enum>
+          <property name="insertPolicy">
+           <enum>QComboBox::NoInsert</enum>
           </property>
           <property name="toolTip">
            <string>Special cel-frame assigned to this subtile</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="5">
+        <item row="0" column="6">
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
