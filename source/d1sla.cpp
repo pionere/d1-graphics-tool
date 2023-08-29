@@ -60,7 +60,7 @@ bool D1Sla::load(const QString &filePath)
     for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
         this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH),
-        this->lightRadius[i] = readByte & PSF_LIGHT_RADIUS;
+        // this->lightRadius[i] = readByte & PSF_LIGHT_RADIUS;
     }
     // read the trap/spec-properties
     // skip the first byte
@@ -87,9 +87,22 @@ bool D1Sla::load(const QString &filePath)
     }
 
     if (filePath.indexOf("L6") != -1) {
-        for (unsigned i = 386; i < 496; i++) {
-            this->lightRadius[i + 1] = 6;
+        for (unsigned pn = 1; pn <= subtileCount; pn++) {
+            if (pn >= 56 && pn <= 161
+                && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
+                this->lightRadius[pn] = 6;
+            }
         }
+        changed = true;
+    }
+    if (filePath.indexOf("L3") != -1) {
+        for (unsigned pn = 1; pn <= subtileCount; pn++) {
+            if (pn >= 56 && pn <= 161
+                && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
+                this->lightRadius[pn] = 7;
+            }
+        }
+        changed = true;
     }
     this->modified = changed;
     return true;
