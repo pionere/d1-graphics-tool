@@ -126,7 +126,7 @@ static void LoadTileset(D1Tileset *tileset)
 	for (int n = 0; n < entries; n++) {
 		quint8 lr = tileset->sla->getLightRadius(n);
 		nCollLightTable[n + 1] = lr;
-		mapEmpty &= lr == 0;
+		lightEmpty &= lr == 0;
 		quint8 bv = tileset->sla->getSubProperties(n);
 		nSolidTable[n + 1] = (bv & PSF_BLOCK_PATH) != 0;
 		nBlockTable[n + 1] = (bv & PSF_BLOCK_LIGHT) != 0;
