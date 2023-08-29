@@ -382,7 +382,7 @@ void LevelTabSubtileWidget::on_sol2_clicked()
     this->updateSolProperty();
 }
 
-void LevelTabSubtileWidget::on_lightComboBox_activated(int index);
+void LevelTabSubtileWidget::on_lightComboBox_activated(int index)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
