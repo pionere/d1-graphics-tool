@@ -218,7 +218,7 @@ void LevelTabSubtileWidget::updateFields()
     if (specIdx != -1) {
         this->ui->specCelComboBox->setCurrentIndex(specIdx);
     } else {
-        specIdx = this->ui->specCelComboBox->setEditText(QString::number(sptSpecCel));
+        this->ui->specCelComboBox->setEditText(QString::number(sptSpecCel));
     }
 
     this->ui->tmi0->setChecked((tmiFlags & TMIF_WALL_TRANS) != 0);
