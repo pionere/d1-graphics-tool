@@ -89,6 +89,7 @@ private slots:
     void on_trapNoneRadioButton_clicked();
     void on_trapLeftRadioButton_clicked();
     void on_trapRightRadioButton_clicked();
+    void on_specCelComboBox_returnPressed();
     void on_specCelComboBox_activated(int index);
 
     void on_tmi0_clicked();
@@ -115,11 +116,13 @@ private:
     void updateFramesSelection(int index);
     void setSolProperty(quint8 flags);
     void updateSolProperty();
+    void setLightRadius(quint8 radius);
+    void setSpecProperty(int spec);
+    void setTrapProperty(int trap);
     void setTmiProperty(quint8 flags);
     void updateTmiProperty();
-    void setTrapProperty(int trap);
-    void updateSmpProperty();
     void setSmpProperty(quint8 flags);
+    void updateSmpProperty();
 
     Ui::LevelTabSubtileWidget *ui;
     QPushButton *clearButton;

@@ -60,7 +60,7 @@ bool D1Sla::load(const QString &filePath)
     for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
         this->subProperties[i] = readByte & 7;
-        this->lightRadius[i] = readByte >> 3;
+        // this->lightRadius[i] = readByte >> 3;
     }
     // read the trap/spec-properties
     // skip the first byte

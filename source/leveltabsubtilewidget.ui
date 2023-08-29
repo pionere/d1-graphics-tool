@@ -137,6 +137,12 @@
         </item>
         <item row="0" column="7">
          <widget class="QComboBox" name="specCelComboBox">
+          <!--property name="minimumWidth">
+           <number>30</number>
+          </property>
+          <property name="maximumWidth">
+           <number>30</number>
+          </property-->
           <property name="editable">
            <bool>true</bool>
           </property>
@@ -161,7 +167,7 @@
           </property>
          </widget>
         </item-->
-        <item row="0" column="7">
+        <item row="0" column="8">
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>

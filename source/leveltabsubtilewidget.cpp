@@ -116,6 +116,8 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     for (int i = 0; i <= MAX_LIGHT_RAD; i++) {
         this->ui->lightComboBox->addItem(QString::number(i), QVariant::fromValue(i));
     }
+
+    QObject::connect(ui->specCelComboBox->lineEdit(), &QLineEdit::returnPressed, this, &LevelTabSubtileWidget::on_specCelComboBox_returnPressed);
 }
 
 LevelTabSubtileWidget::~LevelTabSubtileWidget()
@@ -356,10 +358,12 @@ void LevelTabSubtileWidget::updateSmpProperty()
 void LevelTabSubtileWidget::on_clearPushButtonClicked()
 {
     this->setSolProperty(0);
+    this->setLightRadius(0);
+    this->setSpecProperty(0);
     this->setTrapProperty(PTT_NONE);
     this->setTmiProperty(0);
     this->setSmpProperty(MAT_NONE);
-    this->updateFields();
+    // this->updateFields();
 }
 
 void LevelTabSubtileWidget::on_deletePushButtonClicked()
@@ -382,16 +386,21 @@ void LevelTabSubtileWidget::on_sol2_clicked()
     this->updateSolProperty();
 }
 
-void LevelTabSubtileWidget::on_lightComboBox_activated(int index)
+void LevelTabSubtileWidget::setLightRadius(quint8 radius)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
     // Build sla editing command and connect it to the views widget
     // to update the label when undo/redo is performed
-    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::LIGHT_PROP, index);
+    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::LIGHT_PROP, radius);
     QObject::connect(command, &EditSlaCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
+}
+
+void LevelTabSubtileWidget::on_lightComboBox_activated(int index)
+{
+    this->setLightRadius(index);
 }
 
 void LevelTabSubtileWidget::setTrapProperty(int trap)
@@ -421,23 +430,26 @@ void LevelTabSubtileWidget::on_trapRightRadioButton_clicked()
     this->setTrapProperty(PTT_RIGHT);
 }
 
-void LevelTabSubtileWidget::on_specCelComboBox_activated(int index)
+void LevelTabSubtileWidget::setSpecProperty(int spec)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    QVariant specVal = this->ui->specCelComboBox->currentData();
-    int sptSpecCel;
-    if (specVal.isValid()) {
-        sptSpecCel = specVal.value<int>();
-    } else {
-        sptSpecCel = this->ui->specCelComboBox->currentText().toInt();
-    }
 
     // Build sla editing command and connect it to the views widget
     // to update the label and refresh the view when undo/redo is performed
-    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::SPEC_PROP, sptSpecCel);
+    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::SPEC_PROP, spec);
     QObject::connect(command, &EditSlaCommand::modified, this->levelCelView, &LevelCelView::displayFrame);
 
     this->undoStack->push(command);
+}
+
+void LevelTabSubtileWidget::on_specCelComboBox_activated(int index)
+{
+    this->setSpecProperty(this->ui->specCelComboBox->currentData().value<int>());
+}
+
+void LevelTabSubtileWidget::on_specCelComboBox_returnPressed()
+{
+    this->setSpecProperty(this->ui->specCelComboBox->currentText().toInt());
 }
 
 void LevelTabSubtileWidget::on_tmi0_clicked()
