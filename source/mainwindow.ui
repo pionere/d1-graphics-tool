@@ -293,6 +293,7 @@
     <addaction name="separator"/>
     <addaction name="actionRemap_Colors"/>
     <addaction name="actionGenTrns_Colors"/>
+    <addaction name="actionSaveTrns_Colors"/>
    </widget>
    <widget class="QMenu" name="menuTasks">
     <property name="toolTipsVisible">
@@ -1151,6 +1152,14 @@
    </property>
    <property name="toolTip">
     <string>Generate light translations using the current palette</string>
+   </property>
+  </action>
+  <action name="actionSaveTrns_Colors">
+   <property name="text">
+    <string>Save Translation Set</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the current unique translations as a translation set</string>
    </property>
   </action>
  </widget>
