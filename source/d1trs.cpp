@@ -68,13 +68,13 @@ void D1Trs::generateLightTranslations(D1Pal *pal, std::vector<D1Trn *> &trns)
     currLvl._dType = DTYPE_TOWN;
     MakeLightTable();
 
-    QString filePath = "Light%1.trn";
+    QString filePath = QApplication::tr("Light%1.trn");
     for (unsigned i = 0; i <= MAXDARKNESS; i++) {
         D1Trn *trn = new D1Trn();
         for (unsigned n = 0; n < D1TRN_TRANSLATIONS; n++) {
             trn->setTranslation(n, ColorTrns[i][n]);
         }
-        QString trnFilePath = filePath.arg(i, 2, '0');
+        QString trnFilePath = filePath.arg(i, 2, 10, '0');
         trn->setFilePath(trnFilePath);
         trn->setPalette(pal);
         trn->refreshResultingPalette();
