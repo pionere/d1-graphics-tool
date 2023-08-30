@@ -2226,9 +2226,9 @@ void LevelCelView::checkSubtileFlags() const
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         int trapFlags = this->sla->getTrapProperty(i);
-        if (trapFlags != PTT_NONE) {
+        if (trapFlags != PST_NONE) {
             const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
-            if (trapFlags == PTT_LEFT && this->min->getSubtileHeight() > 1) {
+            if (trapFlags == PST_LEFT && this->min->getSubtileHeight() > 1) {
                 // - one above the floor is square (left or right)
                 unsigned frameRefLeft = frameRefs[frameRefs.size() - 2 * floorMicros];
                 bool trapLeft = frameRefLeft != 0 && this->gfx->getFrame(frameRefLeft - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
@@ -2236,7 +2236,7 @@ void LevelCelView::checkSubtileFlags() const
                     this->warnOrReportSubtile(tr("Subtile %1 is for traps, but the frames above the floor is not square on the left side.").arg(i + 1), i);
                     result = true;
                 }
-            } else if (trapFlags == PTT_RIGHT && this->min->getSubtileHeight() > 1) {
+            } else if (trapFlags == PST_RIGHT && this->min->getSubtileHeight() > 1) {
                 // - one above the floor is square (left or right)
                 unsigned frameRefRight = frameRefs[frameRefs.size() - (floorMicros + 1)];
                 bool trapRight = frameRefRight != 0 && this->gfx->getFrame(frameRefRight - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;

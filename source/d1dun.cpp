@@ -2970,7 +2970,7 @@ bool D1Dun::needsProtectionAt(int posx, int posy) const
     int subtileRef = this->subtiles[posy][posx];
     if ((subtileRef > 0) // UNDEF_SUBTILE || 0
         && (this->sla->getSubProperties(subtileRef - 1) & PSF_BLOCK_PATH)
-        && (this->sla->getTrapProperty(subtileRef - 1) == PTT_NONE)) {
+        && (this->sla->getTrapProperty(subtileRef - 1) == PST_NONE)) {
         return false;
     }
     return true;

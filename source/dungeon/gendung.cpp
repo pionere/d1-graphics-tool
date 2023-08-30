@@ -1262,9 +1262,9 @@ static void DRLG_LightSubtiles()
 		for (i = 0; i < MAXDUNX; i++) {
 			for (j = 0; j < MAXDUNY; j++) {
 				pn = dPiece[i][j];
-				lr = nCollLightTable[pn];
+				c = nCollLightTable[pn] & PSF_LIGHT_RADIUS;
 				if (lr != 0) {
-					LightList[MAXLIGHTS]._lradius = lr & PSF_LIGHT_RADIUS;
+					LightList[MAXLIGHTS]._lradius = c;
 					LightList[MAXLIGHTS]._lx = i;
 					LightList[MAXLIGHTS]._ly = j;
 					DoLighting(MAXLIGHTS);
