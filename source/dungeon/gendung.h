@@ -23,6 +23,7 @@ extern uint16_t pTiles[MAXTILES + 1][4];
 extern BYTE automaptype[MAXSUBTILES + 1];
 extern BYTE nTrnShadowTable[MAXTILES + 1];
 extern BYTE microFlags[MAXSUBTILES + 1];
+extern BYTE nCollLightTable[MAXSUBTILES + 1];
 extern bool nSolidTable[MAXSUBTILES + 1];
 extern bool nBlockTable[MAXSUBTILES + 1];
 extern bool nMissileTable[MAXSUBTILES + 1];

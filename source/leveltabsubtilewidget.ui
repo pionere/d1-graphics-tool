@@ -61,13 +61,6 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="3">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
        </layout>
       </widget>
      </item>
@@ -80,11 +73,25 @@
         <item row="0" column="0">
          <widget class="QLabel">
           <property name="text">
-           <string>Trap:</string>
+           <string>Light Radius:</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
+         <widget class="QComboBox" name="lightComboBox">
+          <property name="toolTip">
+           <string>Inherent light radius of this subtile</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel">
+          <property name="text">
+           <string>Trap:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
          <widget class="QRadioButton" name="trapNoneRadioButton">
           <property name="text">
            <string>None</string>
@@ -94,7 +101,7 @@
           </attribute>
          </widget>
         </item>
-        <item row="0" column="2">
+        <item row="0" column="4">
          <widget class="QRadioButton" name="trapLeftRadioButton">
           <property name="text">
            <string>Left</string>
@@ -104,7 +111,7 @@
           </attribute>
          </widget>
         </item>
-        <item row="0" column="3">
+        <item row="0" column="5">
          <widget class="QRadioButton" name="trapRightRadioButton">
           <property name="text">
            <string>Right</string>
@@ -114,14 +121,14 @@
           </attribute>
          </widget>
         </item>
-        <item row="0" column="4">
+        <item row="0" column="6">
          <widget class="QLabel">
           <property name="text">
            <string>Spec:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="5">
+        <item row="0" column="7">
          <widget class="QComboBox" name="specCelComboBox">
           <property name="editable">
            <bool>true</bool>
@@ -134,7 +141,7 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="6">
+        <item row="0" column="8">
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>

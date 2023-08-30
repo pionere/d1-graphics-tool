@@ -37,6 +37,10 @@ BYTE automaptype[MAXSUBTILES + 1];
  */
 BYTE nTrnShadowTable[MAXTILES + 1];
 /**
+ * Flags of subtiles to specify collision properties and the light radius
+ */
+BYTE nCollLightTable[MAXSUBTILES + 1];
+/**
  * List of path blocking dPieces
  */
 bool nSolidTable[MAXSUBTILES + 1];
@@ -130,6 +134,7 @@ void InitLvlDungeon()
 		LoadFileWithMem(lfd->dTileFlags, nTrnShadowTable); // .TLA
 	}
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
+	memset(nCollLightTable, 0, sizeof(nCollLightTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
@@ -144,9 +149,10 @@ void InitLvlDungeon()
 		// read sub-properties
 		for (unsigned i = 0; i < dwSubtiles; i++, pTmp++) {
 			BYTE bv = *pTmp;
-			nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
-			nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
-			nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+			nCollLightTable[i] = bv;
+			nSolidTable[i] = (bv & PSF_BLOCK_PATH) != 0;
+			nBlockTable[i] = (bv & PSF_BLOCK_LIGHT) != 0;
+			nMissileTable[i] = (bv & PSF_BLOCK_MISSILE) != 0;
 		}
 		// read the trap/spec-properties
 		memcpy(nSpecTrapTable, pTmp, dwSubtiles);
@@ -1252,33 +1258,19 @@ static void DRLG_LightSubtiles()
 
 	assert(LightList[MAXLIGHTS]._lxoff == 0);
 	assert(LightList[MAXLIGHTS]._lyoff == 0);
-	if (currLvl._dType == DTYPE_CAVES) {
-		LightList[MAXLIGHTS]._lradius = 7;
+	if (!nCollLightTable[0]) {
 		for (i = 0; i < MAXDUNX; i++) {
 			for (j = 0; j < MAXDUNY; j++) {
 				pn = dPiece[i][j];
-				if (pn >= 56 && pn <= 161
-				 && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
+				lr = nCollLightTable[pn];
+				if (lr != 0) {
+					LightList[MAXLIGHTS]._lradius = lr & PSF_LIGHT_RADIUS;
 					LightList[MAXLIGHTS]._lx = i;
 					LightList[MAXLIGHTS]._ly = j;
 					DoLighting(MAXLIGHTS);
 				}
 			}
 		}
-#ifdef HELLFIRE
-	} else if (currLvl._dType == DTYPE_NEST) {
-		LightList[MAXLIGHTS]._lradius = 6; // 9
-		for (i = 0; i < MAXDUNX; i++) {
-			for (j = 0; j < MAXDUNY; j++) {
-				pn = dPiece[i][j];
-				if ((pn >= 386 && pn <= 496) || (pn >= 534 && pn <= 537)) {
-					LightList[MAXLIGHTS]._lx = i;
-					LightList[MAXLIGHTS]._ly = j;
-					DoLighting(MAXLIGHTS);
-				}
-			}
-		}
-#endif
 	}*/
 }
 

@@ -10,6 +10,8 @@
 #include "pushbuttonwidget.h"
 #include "ui_leveltabsubtilewidget.h"
 
+#include "dungeon/all.h"
+
 EditMinCommand::EditMinCommand(D1Min *m, int si, int idx, int fr)
     : QUndoCommand(nullptr)
     , min(m)
@@ -66,6 +68,11 @@ void EditSlaCommand::undo()
         this->value = this->sla->getSubProperties(subtileIdx);
         this->sla->setSubProperties(subtileIdx, nv);
     } break;
+    case SLA_FIELD_TYPE::LIGHT_PROP: {
+        quint8 nv = this->value;
+        this->value = this->sla->getLightRadius(subtileIdx);
+        this->sla->setLightRadius(subtileIdx, nv);
+    } break;
     case SLA_FIELD_TYPE::TRAP_PROP: {
         int nv = this->value;
         this->value = this->sla->getTrapProperty(subtileIdx);
@@ -106,6 +113,10 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     QLayout *layout = this->ui->buttonsHorizontalLayout;
     this->clearButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarMaxButton, tr("Reset flags"), this, &LevelTabSubtileWidget::on_clearPushButtonClicked);
     this->deleteButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Delete the current subtile"), this, &LevelTabSubtileWidget::on_deletePushButtonClicked);
+
+    for (int i = 0; i <= MAX_LIGHT_RAD; i++) {
+        this->ui->lightComboBox->addItem(QString::number(i), QVariant::fromValue(i));
+    }
 
     QObject::connect(ui->specCelComboBox->lineEdit(), &QLineEdit::returnPressed, this, &LevelTabSubtileWidget::on_specCelComboBox_returnPressed);
 }
@@ -159,6 +170,7 @@ void LevelTabSubtileWidget::updateFields()
         this->ui->sol1->setChecked(false);
         this->ui->sol2->setChecked(false);
 
+        this->ui->lightComboBox->setCurrentIndex(-1);
         this->ui->trapNoneRadioButton->setChecked(true);
         this->ui->specCelComboBox->setCurrentIndex(-1);
 
@@ -186,6 +198,7 @@ void LevelTabSubtileWidget::updateFields()
 
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     quint8 solFlags = this->sla->getSubProperties(subtileIdx);
+    quint8 lightRadius = this->sla->getLightRadius(subtileIdx);
     quint8 tmiFlags = this->sla->getRenderProperties(subtileIdx);
     int sptTrapFlags = this->sla->getTrapProperty(subtileIdx);
     int sptSpecCel = this->sla->getSpecProperty(subtileIdx);
@@ -193,10 +206,11 @@ void LevelTabSubtileWidget::updateFields()
     quint8 smpFlags = this->sla->getMapProperties(subtileIdx);
     std::vector<unsigned> &frames = this->min->getFrameReferences(subtileIdx);
 
-    this->ui->sol0->setChecked((solFlags & PFLAG_BLOCK_PATH) != 0);
-    this->ui->sol1->setChecked((solFlags & PFLAG_BLOCK_LIGHT) != 0);
-    this->ui->sol2->setChecked((solFlags & PFLAG_BLOCK_MISSILE) != 0);
+    this->ui->sol0->setChecked((solFlags & PSF_BLOCK_PATH) != 0);
+    this->ui->sol1->setChecked((solFlags & PSF_BLOCK_LIGHT) != 0);
+    this->ui->sol2->setChecked((solFlags & PSF_BLOCK_MISSILE) != 0);
 
+    this->ui->lightComboBox->setCurrentIndex(lightRadius);
     if (sptTrapFlags == PTT_NONE)
         this->ui->trapNoneRadioButton->setChecked(true);
     else if (sptTrapFlags == PTT_LEFT)
@@ -273,11 +287,11 @@ void LevelTabSubtileWidget::updateSolProperty()
 {
     quint8 flags = 0;
     if (this->ui->sol0->checkState())
-        flags |= PFLAG_BLOCK_PATH;
+        flags |= PSF_BLOCK_PATH;
     if (this->ui->sol1->checkState())
-        flags |= PFLAG_BLOCK_LIGHT;
+        flags |= PSF_BLOCK_LIGHT;
     if (this->ui->sol2->checkState())
-        flags |= PFLAG_BLOCK_MISSILE;
+        flags |= PSF_BLOCK_MISSILE;
 
     this->setSolProperty(flags);
 }
@@ -345,6 +359,7 @@ void LevelTabSubtileWidget::updateSmpProperty()
 void LevelTabSubtileWidget::on_clearPushButtonClicked()
 {
     this->setSolProperty(0);
+    this->setLightRadius(0);
     this->setSpecProperty(0);
     this->setTrapProperty(PTT_NONE);
     this->setTmiProperty(0);
@@ -369,6 +384,23 @@ void LevelTabSubtileWidget::on_sol1_clicked()
 void LevelTabSubtileWidget::on_sol2_clicked()
 {
     this->updateSolProperty();
+}
+
+void LevelTabSubtileWidget::setLightRadius(quint8 radius)
+{
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
+
+    // Build sla editing command and connect it to the views widget
+    // to update the label when undo/redo is performed
+    EditSlaCommand *command = new EditSlaCommand(this->sla, subtileIdx, SLA_FIELD_TYPE::LIGHT_PROP, radius);
+    QObject::connect(command, &EditSlaCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+
+    this->undoStack->push(command);
+}
+
+void LevelTabSubtileWidget::on_lightComboBox_activated(int index)
+{
+    this->setLightRadius(index);
 }
 
 void LevelTabSubtileWidget::setTrapProperty(int trap)

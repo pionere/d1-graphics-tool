@@ -23,6 +23,8 @@ public:
     int getSubtileCount() const;
     quint8 getSubProperties(int subtileIndex) const;
     bool setSubProperties(int subtileIndex, quint8 value);
+    quint8 getLightRadius(int subtileIndex) const;
+    bool setLightRadius(int subtileIndex, quint8 value);
     int getTrapProperty(int subtileIndex) const;
     bool setTrapProperty(int subtileIndex, int value);
     int getSpecProperty(int subtileIndex) const;
@@ -44,6 +46,7 @@ private:
     QString slaFilePath;
     bool modified;
     QList<quint8> subProperties;
+    QList<quint8> lightRadius;
     QList<int> trapProperties;
     QList<int> specProperties;
     QList<quint8> renderProperties;

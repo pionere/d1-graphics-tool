@@ -13,6 +13,7 @@ class D1Tileset;
 
 enum class SLA_FIELD_TYPE {
     SOL_PROP,
+    LIGHT_PROP,
     TRAP_PROP,
     SPEC_PROP,
     RENDER_PROP,
@@ -84,6 +85,7 @@ private slots:
     void on_sol1_clicked();
     void on_sol2_clicked();
 
+    void on_lightComboBox_activated(int index);
     void on_trapNoneRadioButton_clicked();
     void on_trapLeftRadioButton_clicked();
     void on_trapRightRadioButton_clicked();
@@ -114,6 +116,7 @@ private:
     void updateFramesSelection(int index);
     void setSolProperty(quint8 flags);
     void updateSolProperty();
+    void setLightRadius(quint8 radius);
     void setSpecProperty(int spec);
     void setTrapProperty(int trap);
     void setTmiProperty(quint8 flags);

@@ -59,7 +59,8 @@ bool D1Sla::load(const QString &filePath)
     in >> readByte;
     for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
-        this->subProperties[i] = readByte;
+        this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH);
+        this->lightRadius[i] = readByte & PSF_LIGHT_RADIUS;
     }
     // read the trap/spec-properties
     // skip the first byte
@@ -123,14 +124,23 @@ bool D1Sla::save(const SaveAsParam &params)
             break;
         }
     }
+    bool isLightEmpty = true;
+    for (int i = 0; i < this->lightRadius.size(); i++) {
+        if (this->lightRadius[i] != 0) {
+            isLightEmpty = false;
+            break;
+        }
+    }
 
     // write to file
     QDataStream out(&outFile);
 
     // write the sub-properties
-    out << (quint8)0; // add leading zero
+    out << (quint8)(isLightEmpty ? 1 : 0);
     for (int i = 0; i < this->subProperties.size(); i++) {
-        out << this->subProperties[i];
+        quint8 writeByte;
+        writeByte = this->subProperties[i] | this->lightRadius[i];
+        out << writeByte;
     }
     // write the trap/spec-properties
     out << (quint8)0; // add leading zero
@@ -162,6 +172,7 @@ bool D1Sla::save(const SaveAsParam &params)
 void D1Sla::clear()
 {
     this->subProperties.clear();
+    this->lightRadius.clear();
     this->trapProperties.clear();
     this->specProperties.clear();
     this->renderProperties.clear();
@@ -203,6 +214,28 @@ bool D1Sla::setSubProperties(int subtileIndex, quint8 value)
         return false;
     }
     this->subProperties[subtileIndex] = value;
+    this->modified = true;
+    return true;
+}
+
+quint8 D1Sla::getLightRadius(int subtileIndex) const
+{
+    if ((unsigned)subtileIndex >= (unsigned)this->lightRadius.count()) {
+#ifdef QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Light radius of an invalid subtile %1 requested. Light radius count: %2").arg(subtileIndex).arg(this->lightRadius.count()));
+#endif
+        return 0;
+    }
+
+    return this->lightRadius.at(subtileIndex);
+}
+
+bool D1Sla::setLightRadius(int subtileIndex, quint8 value)
+{
+    if (this->lightRadius[subtileIndex] == value) {
+        return false;
+    }
+    this->lightRadius[subtileIndex] = value;
     this->modified = true;
     return true;
 }
@@ -320,6 +353,7 @@ bool D1Sla::setMapProperties(int subtileIndex, quint8 value)
 void D1Sla::insertSubtile(int subtileIndex)
 {
     this->subProperties.insert(subtileIndex, 0);
+    this->lightRadius.insert(subtileIndex, 0);
     this->trapProperties.insert(subtileIndex, 0);
     this->specProperties.insert(subtileIndex, 0);
     this->renderProperties.insert(subtileIndex, 0);
@@ -331,6 +365,7 @@ void D1Sla::insertSubtile(int subtileIndex)
 void D1Sla::createSubtile()
 {
     this->subProperties.append(0);
+    this->lightRadius.append(0);
     this->trapProperties.append(0);
     this->specProperties.append(0);
     this->renderProperties.append(0);
@@ -342,6 +377,7 @@ void D1Sla::createSubtile()
 void D1Sla::removeSubtile(int subtileIndex)
 {
     this->subProperties.removeAt(subtileIndex);
+    this->lightRadius.removeAt(subtileIndex);
     this->trapProperties.removeAt(subtileIndex);
     this->specProperties.removeAt(subtileIndex);
     this->renderProperties.removeAt(subtileIndex);
@@ -359,6 +395,14 @@ void D1Sla::remapSubtiles(const std::map<unsigned, unsigned> &remap)
             newSubProperties.append(this->subProperties.at(iter->second));
         }
         this->subProperties.swap(newSubProperties);
+    }
+    { // remap light radii
+        QList<quint8> newLightRadius;
+
+        for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+            newLightRadius.append(this->lightRadius.at(iter->second));
+        }
+        this->lightRadius.swap(newLightRadius);
     }
     { // remap trap-properties
         QList<int> newTrapProperties;
