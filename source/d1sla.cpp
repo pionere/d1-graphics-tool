@@ -67,7 +67,7 @@ bool D1Sla::load(const QString &filePath)
     in >> readByte;
     for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
-        this->trapProperties[i] = (readByte >> 6) & 3;
+        this->trapProperties[i] = readByte & PST_TRAP_TYPE;
         this->specProperties[i] = readByte & PST_SPEC_TYPE;
     }
     // read the render-properties
@@ -196,8 +196,7 @@ bool D1Sla::save(const SaveAsParam &params)
     out << (quint8)0; // add leading zero
     for (int i = 0; i < this->specProperties.size(); i++) {
         quint8 writeByte;
-        writeByte = this->specProperties[i];
-        writeByte |= this->trapProperties[i] << 6;
+        writeByte = this->specProperties[i] | this->trapProperties[i];
         out << writeByte;
     }
     // write the render-properties

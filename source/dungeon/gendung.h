@@ -22,7 +22,6 @@ extern uint16_t pTiles[MAXTILES + 1][4];
 /* Maps from subtile_id to automap type (_automap_subtypes). */
 extern BYTE automaptype[MAXSUBTILES + 1];
 extern BYTE nTrnShadowTable[MAXTILES + 1];
-extern BYTE* pSolidTbl;
 extern BYTE microFlags[MAXSUBTILES + 1];
 extern BYTE nCollLightTable[MAXSUBTILES + 1];
 extern bool nSolidTable[MAXSUBTILES + 1];

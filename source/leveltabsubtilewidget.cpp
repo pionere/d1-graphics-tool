@@ -211,11 +211,11 @@ void LevelTabSubtileWidget::updateFields()
     this->ui->sol2->setChecked((solFlags & PSF_BLOCK_MISSILE) != 0);
 
     this->ui->lightComboBox->setCurrentIndex(lightRadius);
-    if (sptTrapFlags == PTT_NONE)
+    if (sptTrapFlags == PST_NONE)
         this->ui->trapNoneRadioButton->setChecked(true);
-    else if (sptTrapFlags == PTT_LEFT)
+    else if (sptTrapFlags == PST_LEFT)
         this->ui->trapLeftRadioButton->setChecked(true);
-    else if (sptTrapFlags == PTT_RIGHT)
+    else if (sptTrapFlags == PST_RIGHT)
         this->ui->trapRightRadioButton->setChecked(true);
     int specIdx = this->ui->specCelComboBox->findData(sptSpecCel);
     if (specIdx != -1) {
@@ -361,7 +361,7 @@ void LevelTabSubtileWidget::on_clearPushButtonClicked()
     this->setSolProperty(0);
     this->setLightRadius(0);
     this->setSpecProperty(0);
-    this->setTrapProperty(PTT_NONE);
+    this->setTrapProperty(PST_NONE);
     this->setTmiProperty(0);
     this->setSmpProperty(MAT_NONE);
     // this->updateFields();
@@ -418,17 +418,17 @@ void LevelTabSubtileWidget::setTrapProperty(int trap)
 
 void LevelTabSubtileWidget::on_trapNoneRadioButton_clicked()
 {
-    this->setTrapProperty(PTT_NONE);
+    this->setTrapProperty(PST_NONE);
 }
 
 void LevelTabSubtileWidget::on_trapLeftRadioButton_clicked()
 {
-    this->setTrapProperty(PTT_LEFT);
+    this->setTrapProperty(PST_LEFT);
 }
 
 void LevelTabSubtileWidget::on_trapRightRadioButton_clicked()
 {
-    this->setTrapProperty(PTT_RIGHT);
+    this->setTrapProperty(PST_RIGHT);
 }
 
 void LevelTabSubtileWidget::setSpecProperty(int spec)

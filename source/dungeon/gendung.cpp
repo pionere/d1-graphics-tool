@@ -1272,40 +1272,13 @@ static void DRLG_LightSubtiles()
 
 	assert(LightList[MAXLIGHTS]._lxoff == 0);
 	assert(LightList[MAXLIGHTS]._lyoff == 0);
-	if (currLvl._dType == DTYPE_CAVES) {
-		LightList[MAXLIGHTS]._lradius = 7;
-		for (i = 0; i < MAXDUNX; i++) {
-			for (j = 0; j < MAXDUNY; j++) {
-				pn = dPiece[i][j];
-				if (pn >= 56 && pn <= 161
-				 && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
-					LightList[MAXLIGHTS]._lx = i;
-					LightList[MAXLIGHTS]._ly = j;
-					DoLighting(MAXLIGHTS);
-				}
-			}
-		}
-#ifdef HELLFIRE
-	} else if (currLvl._dType == DTYPE_NEST) {
-		LightList[MAXLIGHTS]._lradius = 6; // 9
-		for (i = 0; i < MAXDUNX; i++) {
-			for (j = 0; j < MAXDUNY; j++) {
-				pn = dPiece[i][j];
-				if ((pn >= 386 && pn <= 496) || (pn >= 534 && pn <= 537)) {
-					LightList[MAXLIGHTS]._lx = i;
-					LightList[MAXLIGHTS]._ly = j;
-					DoLighting(MAXLIGHTS);
-				}
-			}
-		}
-#endif
 	if (!nCollLightTable[0]) {
 		for (i = 0; i < MAXDUNX; i++) {
 			for (j = 0; j < MAXDUNY; j++) {
 				pn = dPiece[i][j];
-				lr = nCollLightTable[pn];
-				if (lr != 0) {
-					LightList[MAXLIGHTS]._lradius = lr;
+				c = nCollLightTable[pn] & PSF_LIGHT_RADIUS;
+				if (c != 0) {
+					LightList[MAXLIGHTS]._lradius = c;
 					LightList[MAXLIGHTS]._lx = i;
 					LightList[MAXLIGHTS]._ly = j;
 					DoLighting(MAXLIGHTS);

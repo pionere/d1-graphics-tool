@@ -3341,13 +3341,6 @@ typedef enum _setpiece_type {
 	NUM_SPT_TYPES
 } _setpiece_type;
 
-/*typedef enum piece_flag {
-	PFLAG_BLOCK_PATH       = 1 << 0,
-	PFLAG_BLOCK_LIGHT      = 1 << 1,
-	PFLAG_BLOCK_MISSILE    = 1 << 2,
-	PFLAG_LIGHT_RADIUS     = 0xF << 3,
-} piece_flag;*/
-
 typedef enum _piece_sol_flag {
 	PSF_LIGHT_RADIUS     = 0xF,
 	PSF_BLOCK_MISSILE    = 1 << 5,
@@ -3360,7 +3353,7 @@ typedef enum _piece_spectrap_flag {
 	PST_LEFT      = 1 << 6,
 	PST_RIGHT     = 2 << 6,
 	PST_SPEC_TYPE = (1 << 6) - 1,
-	PST_TRAP_TYPE = (PST_LEFT | PST_RIGHT) << 6,
+	PST_TRAP_TYPE = (PST_LEFT | PST_RIGHT),
 } _piece_spectrap_flag;
 
 typedef enum piece_micro_flag {
@@ -3581,7 +3574,6 @@ typedef enum text_color {
 	COL_BLUE,
 	COL_RED,
 	COL_GOLD,
-	COL_BLACK,
 } text_color;
 
 /*typedef enum item_color {
