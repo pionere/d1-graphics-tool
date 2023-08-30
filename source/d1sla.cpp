@@ -110,7 +110,7 @@ typedef enum piece_flag {
 	PFLAG_BLOCK_MISSILE    = 1 << 2,
 } piece_flag;
 
-		QString filePathOld = filePath.replace("one_works", "one_after");
+		QString filePathOld = filePath.replace(QString("one_works"), QString("one_after"));
 		QFile fileOld;
         fileOld.setFileName(filePathOld);
         if (!fileOld.open(QIODevice::ReadOnly)) {
