@@ -59,7 +59,7 @@ bool D1Sla::load(const QString &filePath)
     in >> readByte;
     for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
-        // this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH);
+        this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH);
         this->lightRadius[i] = readByte & PSF_LIGHT_RADIUS;
     }
     // read the trap/spec-properties
@@ -103,7 +103,7 @@ bool D1Sla::load(const QString &filePath)
         }
         changed = true;
     }*/
-    {
+    /*{
 typedef enum piece_flag {
 	PFLAG_BLOCK_PATH       = 1 << 0,
 	PFLAG_BLOCK_LIGHT      = 1 << 1,
@@ -133,7 +133,7 @@ typedef enum piece_flag {
 			if (readByte & PFLAG_BLOCK_LIGHT)
 				this->subProperties[i] |= PSF_BLOCK_LIGHT;
 		}
-    }
+    }*/
     this->modified = changed;
     return true;
 }
