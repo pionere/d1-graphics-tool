@@ -55,20 +55,22 @@ void TrnGenerateDialog::on_actionAddPalette_triggered()
 void TrnGenerateDialog::on_generateButton_clicked()
 {
     GenerateTrnParam params;
+    GenerateTrnColor color;
     bool firstOk, lastOk;
-    params.firstfixcolor = this->ui->firstFixColorLineEdit->text().toUShort(&firstOk);
-    params.lastfixcolor = this->ui->lastFixColorLineEdit->text().toUShort(&lastOk);
+    color.firstfixcolor = this->ui->firstFixColorLineEdit->text().toUShort(&firstOk);
+    color.lastfixcolor = this->ui->lastFixColorLineEdit->text().toUShort(&lastOk);
     if (!lastOk) {
         if (!firstOk) {
-            params.lastfixcolor = -1;
+            color.lastfixcolor = -1;
         } else {
-            params.lastfixcolor = D1PAL_COLORS - 1;
+            color.lastfixcolor = D1PAL_COLORS - 1;
         }
     }
-    params.shadefixcolor = this->ui->shadeFixColorCheckBox->isChecked();
+    color.shadefixcolor = this->ui->shadeFixColorCheckBox->isChecked();
+    params.colors.push_back(color);
 
     for (const QPointer<D1Pal> pal : this->pals) {
-        params.pals.push_back(*pal);
+        params.pals.push_back(pal);
     }
 
     this->close();

@@ -64,7 +64,7 @@ bool D1Trs::save(const QString &filePath, const std::vector<D1Trn *> &trns)
     return true;
 }
 
-void D1Trs::generateLightTranslations(const GenerateTrnParam &params, std::vector<D1Trn *> &trns)
+void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns)
 {
     currLvl._dType = DTYPE_TOWN;
     MakeLightTable();
@@ -75,7 +75,7 @@ void D1Trs::generateLightTranslations(const GenerateTrnParam &params, std::vecto
         for (unsigned n = 0; n < D1TRN_TRANSLATIONS; n++) {
             trn->setTranslation(n, ColorTrns[i][n]);
         }
-        QString trnFilePath = filePath.arg(i, 2, 10, '0');
+        QString trnFilePath = filePath.arg(i, 2, 10, QChar('0'));
         trn->setFilePath(trnFilePath);
         trn->setPalette(pal);
         trn->refreshResultingPalette();

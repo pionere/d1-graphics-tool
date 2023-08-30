@@ -8,11 +8,15 @@
 
 class D1Pal;
 
-class GenerateTrnParam {
-public:
+typedef struct GenerateTrnColor {
     int firstfixcolor;
     int lastfixcolor;
     bool shadefixcolor;
+};
+
+class GenerateTrnParam {
+public:
+    std::vector<GenerateTrnColor> colors;
     std::vector<D1Pal *> pals;
 };
 
@@ -30,8 +34,8 @@ public:
     void initialize(D1Pal *pal);
 
 private slots:
-    void on_actionGenerateSeed_triggered();
-    void on_actionGenerateQuestSeed_triggered();
+    void on_actionAddRange_triggered();
+    void on_actionAddPalette_triggered();
 
     void on_generateButton_clicked();
     void on_cancelButton_clicked();

@@ -94,7 +94,7 @@
        </layout>
       </item>
       <item row="3" column="0">
-       <layout class="QHBoxLayout" name="addRangeButtonLayout"/>
+       <layout class="QHBoxLayout" name="addPaletteButtonLayout"/>
       </item>
      </layout>
     </widget>

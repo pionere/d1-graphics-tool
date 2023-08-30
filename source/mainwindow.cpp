@@ -2634,7 +2634,7 @@ void MainWindow::generateTrn(const GenerateTrnParam &params)
     }
     // generate the TRN files
     std::vector<D1Trn *> lightTrns;
-    D1Trs::generateLightTranslations(params, lightTrns);
+    D1Trs::generateLightTranslations(params, this->pal, lightTrns);
     // load the TRN files
     for (D1Trn *trn : lightTrns) {
         this->uniqueTrns[trn->getFilePath()] = trn;
