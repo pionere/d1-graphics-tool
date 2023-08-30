@@ -59,7 +59,7 @@ bool D1Sla::load(const QString &filePath)
     in >> readByte;
     for (unsigned i = 0; i < subtileCount; i++) {
         in >> readByte;
-        this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH);
+        // this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH);
         this->lightRadius[i] = readByte & PSF_LIGHT_RADIUS;
     }
     // read the trap/spec-properties
@@ -103,6 +103,36 @@ bool D1Sla::load(const QString &filePath)
         }
         changed = true;
     }*/
+    {
+typedef enum piece_flag {
+	PFLAG_BLOCK_PATH       = 1 << 0,
+	PFLAG_BLOCK_LIGHT      = 1 << 1,
+	PFLAG_BLOCK_MISSILE    = 1 << 2,
+} piece_flag;
+
+		QString filePathOld = filePath.replace("one_works", "one_after");
+		QFile fileOld;
+        fileOld.setFileName(filePathOld);
+        if (!fileOld.open(QIODevice::ReadOnly)) {
+            return false;
+        }
+		const QByteArray fileDataOld = fileOld.readAll();
+		QDataStream inOld(fileDataOld);
+
+		quint8 readByte;
+		// read the sub-properties
+		// skip the first byte
+		in >> readByte;
+		for (unsigned i = 0; i < subtileCount; i++) {
+			in >> readByte;
+			if (readByte & PFLAG_BLOCK_PATH)
+				this->subProperties[i] |= PSF_BLOCK_PATH;
+			if (readByte & PFLAG_BLOCK_MISSILE)
+				this->subProperties[i] |= PSF_BLOCK_MISSILE;
+			if (readByte & PFLAG_BLOCK_LIGHT)
+				this->subProperties[i] |= PSF_BLOCK_LIGHT;
+		}
+    }
     this->modified = changed;
     return true;
 }
