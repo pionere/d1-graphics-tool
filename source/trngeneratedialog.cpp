@@ -28,49 +28,57 @@ TrnGenerateDialog::~TrnGenerateDialog()
 
 void TrnGenerateDialog::initialize(D1Pal *p)
 {
-    for (auto it = this->pals.begin(); it != this->pals.end(); ) {
-        if (it->isNull()) {
-            it = this->pals.erase(it);
-        } else {
-            it++;
-        }
-    }
-    if (this->pals.empty()) {
-        this->pals.push_back(p);
+    QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->findChildren<TrnGeneratePalEntryWidget *>();
+    if (palWidgets.empty()) {
+        TrnGeneratePalEntryWidget widget = new TrnGeneratePalEntryWidget(this, p, false);
+        this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignmentTop);
     }
 }
 
 void TrnGenerateDialog::on_actionAddRange_triggered()
 {
-    // QRandomGenerator *gen = QRandomGenerator::global();
-    // this->ui->seedLineEdit->setText(QString::number((int)gen->generate()));
+    TrnGenerateColEntryWidget widget = new TrnGenerateColEntryWidget(this);
+    this->ui->fixColorsVBoxLayout->addWidget(widget, 0, Qt::AlignmentTop);
+}
+
+void TrnGenerateDialog::on_actionDelRange_triggered(TrnGenerateColEntryWidget *caller)
+{
+    this->ui->fixColorsVBoxLayout->removeWidget(caller);
 }
 
 void TrnGenerateDialog::on_actionAddPalette_triggered()
 {
-    // QRandomGenerator *gen = QRandomGenerator::global();
-    // this->ui->questSeedLineEdit->setText(QString::number((int)gen->generate()));
+    QStringList palFilePaths = dMainWindow().filesDialog(tr("Select Palette Files"), tr("PAL Files (*.pal *.PAL)"));
+
+    for (const QString &path : palFilePaths) {
+        D1Pal *newPal = new D1Pal();
+        if (!newPal->load(path)) {
+            delete newPal;
+            dProgressErr() << tr("Failed loading PAL file: %1.").arg(QDir::toNativeSeparators(path));
+            continue;
+        }
+
+        TrnGeneratePalEntryWidget widget = new TrnGeneratePalEntryWidget(this, newPal, true);
+        this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignmentTop);
+    }
+}
+
+void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget *caller)
+{
+    this->ui->palettesVBoxLayout->removeWidget(caller);
 }
 
 void TrnGenerateDialog::on_generateButton_clicked()
 {
     GenerateTrnParam params;
-    GenerateTrnColor color;
-    bool firstOk, lastOk;
-    color.firstfixcolor = this->ui->firstFixColorLineEdit->text().toUShort(&firstOk);
-    color.lastfixcolor = this->ui->lastFixColorLineEdit->text().toUShort(&lastOk);
-    if (!lastOk) {
-        if (!firstOk) {
-            color.lastfixcolor = -1;
-        } else {
-            color.lastfixcolor = D1PAL_COLORS - 1;
-        }
+    QList<TrnGenerateColEntryWidget *> colWidgets = this->ui->fixColorsVBoxLayout->findChildren<TrnGenerateColEntryWidget *>();
+    for (TrnGenerateColEntryWidget *colWidget : colWidgets) {
+        params.colors.push_back(colWidget->getTrnColor());
     }
-    color.shadefixcolor = this->ui->shadeFixColorCheckBox->isChecked();
-    params.colors.push_back(color);
 
-    for (const QPointer<D1Pal> pal : this->pals) {
-        params.pals.push_back(pal);
+    QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->findChildren<TrnGeneratePalEntryWidget *>();
+    for (TrnGeneratePalEntryWidget *palWidget : palWidgets) {
+        params.pals.push_back(palWidget->getPalette());
     }
 
     this->close();

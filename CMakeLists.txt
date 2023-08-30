@@ -189,9 +189,15 @@ set(PROJECT_SOURCES
         source/tblview.cpp
         source/tblview.h
         source/tblview.ui
+        source/trngeneratecolentrywidget.cpp
+        source/trngeneratecolentrywidget.h
+        source/trngeneratecolentrywidget.ui
         source/trngeneratedialog.cpp
         source/trngeneratedialog.h
         source/trngeneratedialog.ui
+        source/trngeneratepalentrywidget.cpp
+        source/trngeneratepalentrywidget.h
+        source/trngeneratepalentrywidget.ui
         source/upscaledialog.cpp
         source/upscaledialog.h
         source/upscaledialog.ui

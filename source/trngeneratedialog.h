@@ -6,6 +6,9 @@
 #include <QList>
 #include <QPointer>
 
+#include "trngeneratecolentrywidget.h"
+#include "trngeneratepalentrywidget.h"
+
 class D1Pal;
 
 typedef struct GenerateTrnColor {
@@ -35,7 +38,9 @@ public:
 
 private slots:
     void on_actionAddRange_triggered();
+    void on_actionDelRange_triggered(TrnGenerateColEntryWidget *caller);
     void on_actionAddPalette_triggered();
+    void on_actionDelPalette_triggered(TrnGeneratePalEntryWidget *caller);
 
     void on_generateButton_clicked();
     void on_cancelButton_clicked();
