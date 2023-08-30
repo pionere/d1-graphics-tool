@@ -123,9 +123,9 @@ typedef enum piece_flag {
 		quint8 readByte;
 		// read the sub-properties
 		// skip the first byte
-		in >> readByte;
+		inOld >> readByte;
 		for (unsigned i = 0; i < subtileCount; i++) {
-			in >> readByte;
+			inOld >> readByte;
 			if (readByte & PFLAG_BLOCK_PATH)
 				this->subProperties[i] |= PSF_BLOCK_PATH;
 			if (readByte & PFLAG_BLOCK_MISSILE)
