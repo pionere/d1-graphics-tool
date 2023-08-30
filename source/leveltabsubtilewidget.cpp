@@ -364,7 +364,6 @@ void LevelTabSubtileWidget::on_clearPushButtonClicked()
     this->setTrapProperty(PST_NONE);
     this->setTmiProperty(0);
     this->setSmpProperty(MAT_NONE);
-    // this->updateFields();
 }
 
 void LevelTabSubtileWidget::on_deletePushButtonClicked()

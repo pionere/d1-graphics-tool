@@ -86,54 +86,6 @@ bool D1Sla::load(const QString &filePath)
         this->mapProperties[i] = readByte & ~MAT_TYPE;
     }
 
-    /*if (filePath.indexOf("L6") != -1) {
-        for (unsigned pn = 1; pn <= subtileCount; pn++) {
-            if ((pn >= 386 && pn <= 496) || (pn >= 534 && pn <= 537)) {
-                this->lightRadius[pn - 1] = 6;
-            }
-        }
-        changed = true;
-    }
-    if (filePath.indexOf("L3") != -1) {
-        for (unsigned pn = 1; pn <= subtileCount; pn++) {
-            if (pn >= 56 && pn <= 161
-                && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
-                this->lightRadius[pn - 1] = 7;
-            }
-        }
-        changed = true;
-    }*/
-    /*{
-typedef enum piece_flag {
-	PFLAG_BLOCK_PATH       = 1 << 0,
-	PFLAG_BLOCK_LIGHT      = 1 << 1,
-	PFLAG_BLOCK_MISSILE    = 1 << 2,
-} piece_flag;
-
-		QString filePathOld = filePath;
-		filePathOld.replace(QString("one_works"), QString("one_after"));
-		QFile fileOld;
-        fileOld.setFileName(filePathOld);
-        if (!fileOld.open(QIODevice::ReadOnly)) {
-            return false;
-        }
-		const QByteArray fileDataOld = fileOld.readAll();
-		QDataStream inOld(fileDataOld);
-
-		quint8 readByte;
-		// read the sub-properties
-		// skip the first byte
-		inOld >> readByte;
-		for (unsigned i = 0; i < subtileCount; i++) {
-			inOld >> readByte;
-			if (readByte & PFLAG_BLOCK_PATH)
-				this->subProperties[i] |= PSF_BLOCK_PATH;
-			if (readByte & PFLAG_BLOCK_MISSILE)
-				this->subProperties[i] |= PSF_BLOCK_MISSILE;
-			if (readByte & PFLAG_BLOCK_LIGHT)
-				this->subProperties[i] |= PSF_BLOCK_LIGHT;
-		}
-    }*/
     this->modified = changed;
     return true;
 }
@@ -187,8 +139,6 @@ bool D1Sla::save(const SaveAsParam &params)
     out << (quint8)(isLightEmpty ? 1 : 0);
     for (int i = 0; i < this->subProperties.size(); i++) {
         quint8 writeByte;
-        // writeByte = ((this->subProperties[i] & PFLAG_BLOCK_PATH) ? PSF_BLOCK_PATH : 0) | ((this->subProperties[i] & PFLAG_BLOCK_LIGHT) ? PSF_BLOCK_LIGHT : 0) | ((this->subProperties[i] & PFLAG_BLOCK_MISSILE) ? PFLAG_BLOCK_MISSILE : 0);
-        // writeByte |= this->lightRadius[i];
         writeByte = this->subProperties[i] | this->lightRadius[i];
         out << writeByte;
     }
