@@ -1,6 +1,7 @@
 #include "trngeneratepalentrywidget.h"
 
 #include <QApplication>
+#include <QMessageBox>
 #include <QStyle>
 
 #include "mainwindow.h"
@@ -39,7 +40,7 @@ D1Pal *TrnGeneratePalEntryWidget::getPalette() const
 void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 {
     // start file-dialog
-    QString palFilePath = dMainWindow().fileDialog(tr("Select Palette File"), tr("PAL File (*.pal *.PAL)"));
+    QString palFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Palette File"), tr("PAL File (*.pal *.PAL)"));
     if (palFilePath.isEmpty()) {
         return;
     }
@@ -47,7 +48,7 @@ void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(palFilePath)) {
         delete newPal;
-        QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file: %1.").arg(QDir::toNativeSeparators(path)));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file: %1.").arg(QDir::toNativeSeparators(palFilePath)));
         return;
     }
     // update the widget

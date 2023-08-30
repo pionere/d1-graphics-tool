@@ -30,14 +30,14 @@ void TrnGenerateDialog::initialize(D1Pal *p)
 {
     QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->findChildren<TrnGeneratePalEntryWidget *>();
     if (palWidgets.empty()) {
-        TrnGeneratePalEntryWidget widget = new TrnGeneratePalEntryWidget(this, p, false);
-        this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignmentTop);
+        TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, p, false);
+        this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
     }
 }
 
 void TrnGenerateDialog::on_actionAddRange_triggered()
 {
-    TrnGenerateColEntryWidget widget = new TrnGenerateColEntryWidget(this);
+    TrnGenerateColEntryWidget *widget = new TrnGenerateColEntryWidget(this);
     this->ui->fixColorsVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
 }
 
@@ -58,7 +58,7 @@ void TrnGenerateDialog::on_actionAddPalette_triggered()
             continue;
         }
 
-        TrnGeneratePalEntryWidget widget = new TrnGeneratePalEntryWidget(this, newPal, true);
+        TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, newPal, true);
         this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
     }
 }

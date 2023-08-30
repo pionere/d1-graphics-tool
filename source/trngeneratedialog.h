@@ -15,7 +15,7 @@ typedef struct GenerateTrnColor {
     int firstfixcolor;
     int lastfixcolor;
     bool shadefixcolor;
-};
+} GenerateTrnColor;
 
 class GenerateTrnParam {
 public:
@@ -36,11 +36,12 @@ public:
 
     void initialize(D1Pal *pal);
 
+    void on_actionDelRange_triggered(TrnGenerateColEntryWidget *caller);
+    void on_actionDelPalette_triggered(TrnGeneratePalEntryWidget *caller);
+
 private slots:
     void on_actionAddRange_triggered();
-    void on_actionDelRange_triggered(TrnGenerateColEntryWidget *caller);
     void on_actionAddPalette_triggered();
-    void on_actionDelPalette_triggered(TrnGeneratePalEntryWidget *caller);
 
     void on_generateButton_clicked();
     void on_cancelButton_clicked();

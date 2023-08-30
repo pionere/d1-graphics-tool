@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QStyle>
 
+#include "d1trn.h"
 #include "trngeneratedialog.h"
 #include "pushbuttonwidget.h"
 #include "ui_trngeneratecolentrywidget.h"
@@ -33,7 +34,7 @@ GenerateTrnColor TrnGenerateColEntryWidget::getTrnColor() const
         if (!firstOk) {
             color.lastfixcolor = -1;
         } else {
-            color.lastfixcolor = D1PAL_COLORS - 1;
+            color.lastfixcolor = D1TRN_TRANSLATIONS - 1;
         }
     }
     color.shadefixcolor = this->ui->shadeFixColorCheckBox->isChecked();
