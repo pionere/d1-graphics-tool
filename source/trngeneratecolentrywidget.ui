@@ -29,7 +29,7 @@
         <number>4</number>
        </property>
        <property name="toolTip">
-        <string>Number of extra maps to generate</string>
+        <string>Index of the first color</string>
        </property>
       </widget>
      </item>
@@ -46,7 +46,7 @@
         <number>4</number>
        </property>
        <property name="toolTip">
-        <string>Number of extra maps to generate</string>
+        <string>Index of the last color</string>
        </property>
       </widget>
      </item>

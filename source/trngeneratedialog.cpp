@@ -44,6 +44,7 @@ void TrnGenerateDialog::on_actionAddRange_triggered()
 void TrnGenerateDialog::on_actionDelRange_triggered(TrnGenerateColEntryWidget *caller)
 {
     this->ui->fixColorsVBoxLayout->removeWidget(caller);
+    delete caller;
 }
 
 void TrnGenerateDialog::on_actionAddPalette_triggered()
@@ -66,6 +67,7 @@ void TrnGenerateDialog::on_actionAddPalette_triggered()
 void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget *caller)
 {
     this->ui->palettesVBoxLayout->removeWidget(caller);
+    delete caller;
 }
 
 void TrnGenerateDialog::on_generateButton_clicked()
