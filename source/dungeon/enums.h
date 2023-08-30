@@ -3584,7 +3584,6 @@ typedef enum text_color {
 	COL_BLUE,
 	COL_RED,
 	COL_GOLD,
-	COL_BLACK,
 } text_color;
 
 /*typedef enum item_color {

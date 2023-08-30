@@ -45,13 +45,13 @@ bool nSolidTable[MAXSUBTILES + 1];
  */
 bool nBlockTable[MAXSUBTILES + 1];
 /**
- * Flags of subtiles to specify trap-sources and special cel-frames (_piece_spectrap_flag)
- */
-BYTE nSpecTrapTable[MAXSUBTILES + 1];
-/**
  * List of missile blocking dPieces
  */
 bool nMissileTable[MAXSUBTILES + 1];
+/**
+ * Flags of subtiles to specify trap-sources and special cel-frames (_piece_spectrap_flag)
+ */
+BYTE nSpecTrapTable[MAXSUBTILES + 1];
 /** The difficuly level of the current game (_difficulty) */
 int gnDifficulty;
 /** Contains the data of the active dungeon level. */
