@@ -280,6 +280,17 @@
     <addaction name="actionClose_Translation_Unique"/>
     <addaction name="actionPatch_Translation_Unique"/>
    </widget>
+   <widget class="QMenu" name="menuTrnSet">
+    <property name="title">
+     <string>Translation Set</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionGenTrns_Colors"/>
+    <addaction name="actionLoadTrns_Colors"/>
+    <addaction name="actionSaveTrns_Colors"/>
+   </widget>
    <widget class="QMenu" name="menuColors">
     <property name="title">
      <string>Colors</string>
@@ -290,10 +301,9 @@
     <addaction name="menuPalette"/>
     <addaction name="menuTrnBase"/>
     <addaction name="menuTrnUnique"/>
+    <addaction name="menuTrnSet"/>
     <addaction name="separator"/>
     <addaction name="actionRemap_Colors"/>
-    <addaction name="actionGenTrns_Colors"/>
-    <addaction name="actionSaveTrns_Colors"/>
    </widget>
    <widget class="QMenu" name="menuTasks">
     <property name="toolTipsVisible">
@@ -1152,6 +1162,14 @@
    </property>
    <property name="toolTip">
     <string>Generate light translations using the current palette</string>
+   </property>
+  </action>
+  <action name="actionLoadTrns_Colors">
+   <property name="text">
+    <string>Load Translation Set</string>
+   </property>
+   <property name="toolTip">
+    <string>Load a translation set as unique translations</string>
    </property>
   </action>
   <action name="actionSaveTrns_Colors">

@@ -2633,6 +2633,40 @@ void MainWindow::on_actionGenTrns_Colors_triggered()
     this->setUniqueTrn(lightTrns[0]->getFilePath());
 }
 
+void MainWindow::on_actionLoadTrns_Colors_triggered()
+{
+    QString trsFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation-Set File"), tr("TRS Files (*.trs *.TRS)"));
+
+    if (trsFilePath.isEmpty()) {
+        return;
+    }
+
+    std::vector<D1Trn *> trns;
+    if (!D1Trs::load(trsFilePath, trns)) {
+        return;
+    }
+
+    // reset unique translations
+    this->on_actionClose_Translation_Unique_triggered();
+    for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
+        if (MainWindow::isResourcePath(it.key())) {
+            it++;
+            continue;
+        }
+        MemFree(it.value());
+        it = this->uniqueTrns.erase(it);
+    }
+    if (trns.empty()) {
+        this->setUniqueTrn(D1Trn::IDENTITY_PATH);
+        return;
+    }
+    // load the TRN files
+    for (D1Trn *trn : trns) {
+        this->uniqueTrns[trn->getFilePath()] = trn;
+    }
+    this->setUniqueTrn(trns[0]->getFilePath());
+}
+
 void MainWindow::on_actionSaveTrns_Colors_triggered()
 {
     std::vector<D1Trn *> trns;

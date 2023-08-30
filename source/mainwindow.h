@@ -239,6 +239,7 @@ private slots:
 
     void on_actionRemap_Colors_triggered();
     void on_actionGenTrns_Colors_triggered();
+    void on_actionLoadTrns_Colors_triggered();
     void on_actionSaveTrns_Colors_triggered();
 
     void on_actionUpscaleTask_triggered();
