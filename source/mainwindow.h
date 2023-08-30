@@ -238,6 +238,7 @@ private slots:
     void on_actionPatch_Translation_Base_triggered();
 
     void on_actionRemap_Colors_triggered();
+    void on_actionGenTrns_Colors_triggered();
 
     void on_actionUpscaleTask_triggered();
 

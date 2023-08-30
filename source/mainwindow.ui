@@ -292,6 +292,7 @@
     <addaction name="menuTrnUnique"/>
     <addaction name="separator"/>
     <addaction name="actionRemap_Colors"/>
+    <addaction name="actionGenTrns_Colors"/>
    </widget>
    <widget class="QMenu" name="menuTasks">
     <property name="toolTipsVisible">
@@ -1142,6 +1143,14 @@
    </property>
    <property name="toolTip">
     <string>Replace colors of the graphics with another colors from the palette or with transparent pixels</string>
+   </property>
+  </action>
+  <action name="actionGenTrns_Colors">
+   <property name="text">
+    <string>Generate Light Translations</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate light translations using the current palette</string>
    </property>
   </action>
  </widget>

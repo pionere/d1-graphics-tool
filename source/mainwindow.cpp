@@ -28,6 +28,7 @@
 #include "d1celtileset.h"
 #include "d1cl2.h"
 #include "d1pcx.h"
+#include "d1trs.h"
 #include "ui_mainwindow.h"
 
 static MainWindow *theMainWindow;
@@ -2598,6 +2599,40 @@ void MainWindow::on_actionRemap_Colors_triggered()
     }
     this->remapDialog->initialize(this->palWidget);
     this->remapDialog->show();
+}
+
+void MainWindow::on_actionGenTrns_Colors_triggered()
+{
+    // reset unique translations
+    this->on_actionClose_Translation_Unique_triggered();
+    for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
+        QString filePath = it->first;
+        if (MainWindow::isResourcePath(it->first)) {
+            it++;
+            continue;
+        }
+        MemFree(it->second);
+        it = this->uniqueTrns.erase(it);
+    }
+    // reset base translations
+    this->on_actionClose_Translation_Base_triggered();
+    for (auto it = this->baseTrns.begin(); it != this->baseTrns.end(); ) {
+        QString filePath = it->first;
+        if (MainWindow::isResourcePath(it->first)) {
+            it++;
+            continue;
+        }
+        MemFree(it->second);
+        it = this->baseTrns.erase(it);
+    }
+    // generate the TRN files
+    std::vector<D1Trn *> lightTrns;
+    D1Trs::generateLightTranslations(this->pal, lightTrns);
+    // load the TRN files
+    for (D1Trn *trn : lightTrns) {
+        this->uniqueTrns[trn->getFilePath()] = trn;
+    }
+    this->setUniqueTrn(lightTrns[0]->getFilePath());
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()

@@ -91,6 +91,8 @@ set(PROJECT_SOURCES
         source/d1tileset.h
         source/d1trn.cpp
         source/d1trn.h
+        source/d1trs.cpp
+        source/d1trs.h
         source/dungeon/automap.cpp
         source/dungeon/drlg_l1.cpp
         source/dungeon/drlg_l2.cpp
