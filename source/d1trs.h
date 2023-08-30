@@ -4,6 +4,8 @@
 
 #include "d1trn.h"
 
+class GenerateTrnParam;
+
 class D1Trs : public QObject {
     Q_OBJECT
 
@@ -14,5 +16,5 @@ public:
     static bool load(const QString &trsFilePath, D1Pal *pal, std::vector<D1Trn *> &trns);
     static bool save(const QString &trsFilePath, const std::vector<D1Trn *> &trns);
 
-    static void generateLightTranslations(D1Pal *pal, std::vector<D1Trn *> &trns);
+    static void generateLightTranslations(const GenerateTrnParam &params, std::vector<D1Trn *> &trns);
 };

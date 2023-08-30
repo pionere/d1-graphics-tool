@@ -29,6 +29,7 @@
 #include "progressdialog.h"
 #include "remapdialog.h"
 #include "resizedialog.h"
+#include "trngeneratedialog.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
 #include "tblview.h"
@@ -80,6 +81,7 @@ public:
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
+    void generateTrn(const GenerateTrnParam &params);
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
 
@@ -289,6 +291,7 @@ private:
     PatchDungeonDialog *patchDungeonDialog = nullptr;
     PatchGfxDialog *patchGfxDialog = nullptr;
     PatchTilesetDialog *patchTilesetDialog = nullptr;
+    TrnGenerateDialog *trnGenerateDialog = nullptr;
     RemapDialog *remapDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
