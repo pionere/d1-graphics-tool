@@ -2642,7 +2642,7 @@ void MainWindow::on_actionLoadTrns_Colors_triggered()
     }
 
     std::vector<D1Trn *> trns;
-    if (!D1Trs::load(trsFilePath, trns)) {
+    if (!D1Trs::load(trsFilePath, this->pal, trns)) {
         return;
     }
 
