@@ -38,7 +38,7 @@ void TrnGenerateDialog::initialize(D1Pal *p)
 void TrnGenerateDialog::on_actionAddRange_triggered()
 {
     TrnGenerateColEntryWidget widget = new TrnGenerateColEntryWidget(this);
-    this->ui->fixColorsVBoxLayout->addWidget(widget, 0, Qt::AlignmentTop);
+    this->ui->fixColorsVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
 }
 
 void TrnGenerateDialog::on_actionDelRange_triggered(TrnGenerateColEntryWidget *caller)
@@ -59,7 +59,7 @@ void TrnGenerateDialog::on_actionAddPalette_triggered()
         }
 
         TrnGeneratePalEntryWidget widget = new TrnGeneratePalEntryWidget(this, newPal, true);
-        this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignmentTop);
+        this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
     }
 }
 

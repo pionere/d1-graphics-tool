@@ -15,7 +15,7 @@ TrnGenerateColEntryWidget::TrnGenerateColEntryWidget(TrnGenerateDialog *parent)
     ui->setupUi(this);
 
     QLayout *layout = this->ui->entryHorizontalLayout;
-    PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Remove"), this, &TrnGenerateColEntryWidget::on_deletePushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarCloseButton, tr("Remove"), this, &TrnGenerateColEntryWidget::on_deletePushButtonClicked);
 }
 
 TrnGenerateColEntryWidget::~TrnGenerateColEntryWidget()

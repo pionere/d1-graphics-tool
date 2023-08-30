@@ -18,7 +18,7 @@ TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, 
     ui->setupUi(this);
 
     QLayout *layout = this->ui->entryHorizontalLayout;
-    PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Remove"), this, &TrnGeneratePalEntryWidget::on_deletePushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarCloseButton, tr("Remove"), this, &TrnGeneratePalEntryWidget::on_deletePushButtonClicked);
 
     this->ui->paletteFileEdit->setText(p->getFilePath());
 }
@@ -39,7 +39,7 @@ D1Pal *TrnGeneratePalEntryWidget::getPalette() const
 void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 {
     // start file-dialog
-    QStringList palFilePath = dMainWindow().fileDialog(tr("Select Palette File"), tr("PAL File (*.pal *.PAL)"));
+    QString palFilePath = dMainWindow().fileDialog(tr("Select Palette File"), tr("PAL File (*.pal *.PAL)"));
     if (palFilePath.isEmpty()) {
         return;
     }

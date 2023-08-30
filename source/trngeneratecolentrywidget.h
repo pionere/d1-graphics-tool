@@ -3,7 +3,7 @@
 #include <QWidget>
 
 class TrnGenerateDialog;
-class GenerateTrnColor;
+struct GenerateTrnColor;
 
 namespace Ui {
 class TrnGenerateColEntryWidget;
