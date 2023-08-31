@@ -194,7 +194,7 @@ static void MakeLightTableNew(int type)
         black.shadefixcolor = false;
         params.colors.push_back(black);
     }
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < 8; i++) {
         GenerateTrnColor levelColor;
         levelColor.firstfixcolor = i == 0 ? 1 : i * 16;
         levelColor.lastfixcolor = (i + 1) * 16 - 1;
@@ -203,15 +203,15 @@ static void MakeLightTableNew(int type)
     }
     for (i = 0; i < 4; i++) {
         GenerateTrnColor stdColor;
-        stdColor.firstfixcolor = 128 + i * 8;
-        stdColor.lastfixcolor = 128 + (i + 1) * 8 - 1;
+        stdColor.firstfixcolor = 16 * 8 + i * 8;
+        stdColor.lastfixcolor = stdColor.firstfixcolor + 8 - 1;
         stdColor.shadefixcolor = true;
         params.colors.push_back(stdColor);
     }
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < 6; i++) {
         GenerateTrnColor stdColor;
-        stdColor.firstfixcolor = i * 16;
-        stdColor.lastfixcolor = i == 15 ? 255 : ((i + 1) * 16 - 1);
+        stdColor.firstfixcolor = 16 * 8 + 8 * 4 + i * 16;
+        stdColor.lastfixcolor = i == 5 ? 255 : (stdColor.firstfixcolor + 15);
         stdColor.shadefixcolor = true;
         params.colors.push_back(stdColor);
     }
