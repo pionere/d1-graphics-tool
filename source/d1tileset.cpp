@@ -540,16 +540,16 @@ bool D1Tileset::reuseSubtiles(std::map<unsigned, unsigned> &remap)
             this->removeSubtile(j, i);
             // calculate the original indices
             int originalIndexI = i;
-            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter <= originalIndexI) {
+            for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+                if (iter->first <= originalIndexI) {
                     originalIndexI++;
                     continue;
                 }
                 break;
             }
             int originalIndexJ = j;
-            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter <= originalIndexJ) {
+            for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+                if (iter->first <= originalIndexJ) {
                     originalIndexJ++;
                     continue;
                 }
@@ -606,16 +606,16 @@ bool D1Tileset::reuseTiles(std::map<unsigned, unsigned> &remap)
             this->removeTile(j);
             // calculate the original indices
             int originalIndexI = i;
-            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter <= originalIndexI) {
+            for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+                if (iter->first <= originalIndexI) {
                     originalIndexI++;
                     continue;
                 }
                 break;
             }
             int originalIndexJ = j;
-            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter <= originalIndexJ) {
+            for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+                if (iter->first <= originalIndexJ) {
                     originalIndexJ++;
                     continue;
                 }

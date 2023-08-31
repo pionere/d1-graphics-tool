@@ -2739,7 +2739,7 @@ bool LevelCelView::reuseSubtiles()
     // update subtile index if necessary
     auto it = removedIndices.lower_bound((unsigned)this->currentSubtileIndex);
     if (it != removedIndices.begin()) {
-        if (*it == (unsigned)this->currentSubtileIndex)
+        if (it->first == (unsigned)this->currentSubtileIndex)
             it--;
         this->currentSubtileIndex -= std::distance(removedIndices.begin(), it);
     }
@@ -2758,7 +2758,7 @@ bool LevelCelView::reuseTiles()
     // update tile index if necessary
     auto it = removedIndices.lower_bound((unsigned)this->currentTileIndex);
     if (it != removedIndices.begin()) {
-        if (*it == (unsigned)this->currentTileIndex)
+        if (it->first == (unsigned)this->currentTileIndex)
             it--;
         this->currentTileIndex -= std::distance(removedIndices.begin(), it);
     }
