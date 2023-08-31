@@ -658,7 +658,7 @@ static void RemoveFrame(D1Min *min, int subtileRef, int microIndex, std::set<uns
         }
         min->setFrameReference(subtileIndex, index, 0);
         if (!silent) {
-            dProgress() << QApplication::tr("Removed frame (%1) @%2 in Subtile %3.").arg(frameReference).arg(index + 1).arg(subtileIndex + 1);
+            dProgress() << QApplication::tr("Removed Frame (%1) @%2 in Subtile %3.").arg(frameReference).arg(index + 1).arg(subtileIndex + 1);
         }
     } else {
         ; // dProgressWarn() << QApplication::tr("The frame @%1 in Subtile %2 is already empty.").arg(index + 1).arg(subtileIndex + 1);
@@ -2724,6 +2724,9 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
                 n2--;
             }
             this->removeSubtile(subtileRef - 1, 0);
+            if (!silent) {
+                dProgress() << QApplication::tr("Removed Subtile %1.").arg(subtileRef);
+            }
         }
     }
     const int unusedPartialSubtiles[] = {
@@ -2743,6 +2746,9 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
             n2--;
         }
         this->removeSubtile(subtileRef - 1, 0);
+        if (!silent) {
+            dProgress() << QApplication::tr("Removed Subtile %1.").arg(subtileRef);
+        }
     }
 }
 
