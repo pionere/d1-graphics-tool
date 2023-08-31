@@ -5,6 +5,7 @@
  */
 #include "all.h"
 
+#include <QApplication>
 #include <QString>
 
 #include "../progressdialog.h"
