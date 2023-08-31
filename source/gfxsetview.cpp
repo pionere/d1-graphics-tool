@@ -842,7 +842,7 @@ void GfxsetView::setGroupIndex(int groupIndex)
 void GfxsetView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = &dMainWindow();
-    QAction actions[7];
+    QAction actions[8];
 
     QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);

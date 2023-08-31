@@ -796,7 +796,7 @@ void CelView::setGroupIndex(int groupIndex)
 void CelView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = &dMainWindow();
-    QAction actions[7];
+    QAction actions[8];
 
     QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
