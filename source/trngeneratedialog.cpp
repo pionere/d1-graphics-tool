@@ -89,6 +89,8 @@ void TrnGenerateDialog::on_generateButton_clicked()
         params.pals.push_back(palWidget->getPalette());
     }
 
+    params.mode = this->ui->levelTypeComboBox->currentIndex();
+
     this->close();
 
     dMainWindow().generateTrn(params);

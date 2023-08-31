@@ -3444,7 +3444,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     cursor++;
     actions[cursor].setText(tr("Append"));
     actions[cursor].setToolTip(tr("Append new frames at the end"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAppend_Frame_triggered()));
     frameMenu.addAction(&actions[cursor]);
 
     cursor++;
@@ -3487,7 +3487,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     cursor++;
     actions[cursor].setText(tr("Append"));
     actions[cursor].setToolTip(tr("Append new subtiles at the end"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Subtile_triggered()));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAppend_Subtile_triggered()));
     subtileMenu.addAction(&actions[cursor]);
 
     cursor++;
@@ -3531,7 +3531,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     cursor++;
     actions[cursor].setText(tr("Append"));
     actions[cursor].setToolTip(tr("Append new tiles at the end"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Tile_triggered()));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAppend_Tile_triggered()));
     tileMenu.addAction(&actions[cursor]);
 
     cursor++;

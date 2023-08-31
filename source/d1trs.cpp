@@ -65,7 +65,7 @@ bool D1Trs::save(const QString &filePath, const std::vector<D1Trn *> &trns)
     return true;
 }
 
-static void MakeLightTableBase(const GenerateTrnParam &params, int type)
+static void MakeLightTableBase(const GenerateTrnParam &params)
 {
     unsigned i, j, k, shade;
     BYTE col, max;
@@ -133,7 +133,7 @@ static void MakeLightTableBase(const GenerateTrnParam &params, int type)
     tbl = ColorTrns[0];
     memset(ColorTrns[MAXDARKNESS], 0, sizeof(ColorTrns[MAXDARKNESS]));
 
-    if (type == DTYPE_HELL) {
+    if (params.mode == DTYPE_HELL) {
         for (i = 0; i <= MAXDARKNESS; i++) {
             shade = i;
             col = 1;
@@ -161,9 +161,9 @@ static void MakeLightTableBase(const GenerateTrnParam &params, int type)
             tbl += NUM_COLORS - 32;
         }
 #ifdef HELLFIRE
-    } else if (type == DTYPE_CAVES || type == DTYPE_CRYPT) {
+    } else if (params.mode == DTYPE_CAVES || params.mode == DTYPE_CRYPT) {
 #else
-    } else if (type == DTYPE_CAVES) {
+    } else if (params.mode == DTYPE_CAVES) {
 #endif
         for (i = 0; i <= MAXDARKNESS; i++) {
             *tbl++ = 0;
@@ -172,7 +172,7 @@ static void MakeLightTableBase(const GenerateTrnParam &params, int type)
             tbl += NUM_COLORS - 32;
         }
 #ifdef HELLFIRE
-    } else if (type == DTYPE_NEST) {
+    } else if (params.mode == DTYPE_NEST) {
         for (i = 0; i <= MAXDARKNESS; i++) {
             *tbl++ = 0;
             for (j = 1; j < 16; j++)
@@ -272,9 +272,11 @@ static void MakeLightTableNew(int type)
 
 void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns)
 {
-    // MakeLightTableBase(params, DTYPE_TOWN);
-    
-    MakeLightTableNew(DTYPE_TOWN);
+    if (params.mode != DTYPE_NONE) {
+        MakeLightTableBase(params);
+    } else {
+        MakeLightTableNew(DTYPE_TOWN);
+    }
 
     QString filePath = QApplication::tr("Light%1.trn");
     for (int i = 0; i <= MAXDARKNESS; i++) {

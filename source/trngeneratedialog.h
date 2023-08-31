@@ -21,6 +21,7 @@ class GenerateTrnParam {
 public:
     std::vector<GenerateTrnColor> colors;
     std::vector<D1Pal *> pals;
+    int mode;
 };
 
 namespace Ui {
