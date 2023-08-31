@@ -1865,7 +1865,7 @@ void D1Dun::tileInserted(unsigned tileIndex)
     for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
         for (int x = 0; x < this->width / TILE_WIDTH; x++) {
             int currTileRef = this->tiles[y][x];
-            if (currTileRef >= subtileRef) {
+            if (currTileRef >= tileRef) {
                 this->tiles[y][x] = currTileRef + 1;
             } else {
                 continue;

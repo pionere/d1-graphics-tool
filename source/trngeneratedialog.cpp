@@ -23,6 +23,8 @@ TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
     this->ui->mainGridLayout->setRowStretch(1, 1);
     this->ui->mainGridLayout->setRowStretch(3, 1);
     this->ui->mainGridLayout->setColumnStretch(1, 1);
+
+    this->on_actionAddRange_triggered();
 }
 
 TrnGenerateDialog::~TrnGenerateDialog()
