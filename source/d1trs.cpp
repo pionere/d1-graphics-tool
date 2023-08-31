@@ -211,7 +211,7 @@ static void MakeLightTableNew(int type)
     for (i = 0; i < 6; i++) {
         GenerateTrnColor stdColor;
         stdColor.firstfixcolor = 16 * 8 + 8 * 4 + i * 16;
-        stdColor.lastfixcolor = i == 5 ? 255 : (stdColor.firstfixcolor + 15);
+        stdColor.lastfixcolor = i == 5 ? 254 : (stdColor.firstfixcolor + 15);
         stdColor.shadefixcolor = true;
         params.colors.push_back(stdColor);
     }
