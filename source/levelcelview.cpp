@@ -2873,7 +2873,7 @@ bool LevelCelView::sortSubtiles_impl()
     }
     this->tileset->remapSubtiles(backmap);
     if (this->dun != nullptr) {
-        this->dun->subtileRemapped(backmap);
+        this->dun->subtilesRemapped(backmap);
     }
     return true;
 }

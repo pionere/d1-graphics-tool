@@ -539,7 +539,7 @@ bool D1Tileset::reuseSubtiles(std::map<unsigned, unsigned> &remap)
             // use subtile 'i' instead of subtile 'j'
             this->removeSubtile(j, i);
             // calculate the original indices
-            int originalIndexI = i;
+            unsigned originalIndexI = i;
             for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
                 if (iter->first <= originalIndexI) {
                     originalIndexI++;
@@ -547,7 +547,7 @@ bool D1Tileset::reuseSubtiles(std::map<unsigned, unsigned> &remap)
                 }
                 break;
             }
-            int originalIndexJ = j;
+            unsigned originalIndexJ = j;
             for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
                 if (iter->first <= originalIndexJ) {
                     originalIndexJ++;
@@ -605,7 +605,7 @@ bool D1Tileset::reuseTiles(std::map<unsigned, unsigned> &remap)
             // remove tile 'j'
             this->removeTile(j);
             // calculate the original indices
-            int originalIndexI = i;
+            unsigned originalIndexI = i;
             for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
                 if (iter->first <= originalIndexI) {
                     originalIndexI++;
@@ -613,7 +613,7 @@ bool D1Tileset::reuseTiles(std::map<unsigned, unsigned> &remap)
                 }
                 break;
             }
-            int originalIndexJ = j;
+            unsigned originalIndexJ = j;
             for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
                 if (iter->first <= originalIndexJ) {
                     originalIndexJ++;
