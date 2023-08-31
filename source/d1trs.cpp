@@ -198,21 +198,21 @@ static void MakeLightTableNew(int type)
         GenerateTrnColor levelColor;
         levelColor.firstfixcolor = i == 0 ? 1 : i * 16;
         levelColor.lastfixcolor = (i + 1) * 16 - 1;
-        black.shadefixcolor = true;
+        levelColor.shadefixcolor = true;
         params.colors.push_back(levelColor);
     }
     for (i = 0; i < 4; i++) {
         GenerateTrnColor stdColor;
         stdColor.firstfixcolor = 128 + i * 8;
         stdColor.lastfixcolor = 128 + (i + 1) * 8 - 1;
-        black.shadefixcolor = true;
+        stdColor.shadefixcolor = true;
         params.colors.push_back(stdColor);
     }
     for (i = 0; i < 16; i++) {
         GenerateTrnColor stdColor;
         stdColor.firstfixcolor = i * 16;
         stdColor.lastfixcolor = i == 15 ? 255 : ((i + 1) * 16 - 1);
-        black.shadefixcolor = true;
+        stdColor.shadefixcolor = true;
         params.colors.push_back(stdColor);
     }
     {
@@ -245,7 +245,7 @@ static void MakeLightTableNew(int type)
     for (i = 0; i < MAXDARKNESS; i++) {
         for (k = 0; k < NUM_COLORS; k++) {
             for (j = 0; j < params.colors.size(); j++) {
-                if (k < params.colors[j].firstfixcolor || k > params.colors[j].lastfixcolor) {
+                if ((int)k < params.colors[j].firstfixcolor || (int)k > params.colors[j].lastfixcolor) {
                     continue;
                 }
                 if (!params.colors[j].shadefixcolor) {
