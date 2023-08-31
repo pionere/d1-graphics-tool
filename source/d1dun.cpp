@@ -1980,6 +1980,48 @@ void D1Dun::tilesSwapped(unsigned tileIndex0, unsigned tileIndex1)
     }
 }
 
+void D1Dun::subtilesRemapped(const std::map<unsigned, unsigned> &remap)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int subtileRef = this->subtiles[y][x];
+            if (subtileRef <= 0) { // 0 || UNDEF_SUBTILE
+                continue;
+            }
+            unsigned subtileIndex = subtileRef - 1;
+            auto it = remap.find(subtileIndex);
+            if (it == remap.end() || it->second == subtileIndex) {
+                continue;
+            }
+            this->subtiles[y][x] = it->second;
+            if (this->type == D1DUN_TYPE::RAW) {
+                this->modified = true;
+            }
+        }
+    }
+}
+
+void D1Dun::tilesRemapped(const std::map<unsigned, unsigned> &remap)
+{
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            int tileRef = this->tiles[y][x];
+            if (tileRef <= 0) { // 0 || UNDEF_TILE
+                continue;
+            }
+            unsigned tileIndex = tileRef - 1;
+            auto it = remap.find(tileIndex);
+            if (it == remap.end() || it->second == tileIndex) {
+                continue;
+            }
+            this->tiles[y][x] = it->second;
+            if (this->type == D1DUN_TYPE::NORMAL) {
+                this->modified = true;
+            }
+        }
+    }
+}
+
 bool D1Dun::swapPositions(int mode, int posx0, int posy0, int posx1, int posy1)
 {
     if (posx0 < 0 || posx0 >= this->width) {

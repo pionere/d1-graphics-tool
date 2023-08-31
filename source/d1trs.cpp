@@ -252,7 +252,7 @@ static void MakeLightTableNew(int type)
                     ColorTrns[i][k] = k;
                 } else {
                     int numColors = params.colors[j].lastfixcolor - params.colors[j].firstfixcolor + 1;
-                    BYTE col = k + (numColors * i) / (MAXDARKNESS + 1);
+                    int col = k + (numColors * i) / (MAXDARKNESS + 1);
                     if (col > params.colors[j].lastfixcolor) {
                         col = 0;
                     }

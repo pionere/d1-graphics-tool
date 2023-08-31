@@ -2730,19 +2730,18 @@ bool LevelCelView::reuseFrames()
 
 bool LevelCelView::reuseSubtiles()
 {
-    std::set<int> removedIndices;
-
+    std::map<unsigned, unsigned> removedIndices;
     bool result = this->tileset->reuseSubtiles(removedIndices);
+    if (this->dun != nullptr) {
+        this->dun->subtilesRemapped(removedIndices);
+    }
 
     // update subtile index if necessary
-    auto it = removedIndices.lower_bound(this->currentSubtileIndex);
+    auto it = removedIndices.lower_bound((unsigned)this->currentSubtileIndex);
     if (it != removedIndices.begin()) {
-        if (*it == this->currentSubtileIndex)
+        if (*it == (unsigned)this->currentSubtileIndex)
             it--;
         this->currentSubtileIndex -= std::distance(removedIndices.begin(), it);
-    }
-    if (this->dun != nullptr) {
-        // FIXME
     }
 
     return result;
@@ -2750,19 +2749,18 @@ bool LevelCelView::reuseSubtiles()
 
 bool LevelCelView::reuseTiles()
 {
-    std::set<int> removedIndices;
-
+    std::map<unsigned, unsigned> removedIndices;
     bool result = this->tileset->reuseTiles(removedIndices);
+    if (this->dun != nullptr) {
+        this->dun->tilesRemapped(removedIndices);
+    }
 
     // update tile index if necessary
-    auto it = removedIndices.lower_bound(this->currentTileIndex);
+    auto it = removedIndices.lower_bound((unsigned)this->currentTileIndex);
     if (it != removedIndices.begin()) {
-        if (*it == this->currentTileIndex)
+        if (*it == (unsigned)this->currentTileIndex)
             it--;
         this->currentTileIndex -= std::distance(removedIndices.begin(), it);
-    }
-    if (this->dun != nullptr) {
-        // FIXME
     }
 
     return result;
@@ -2875,7 +2873,7 @@ bool LevelCelView::sortSubtiles_impl()
     }
     this->tileset->remapSubtiles(backmap);
     if (this->dun != nullptr) {
-        // FIXME
+        this->dun->subtileRemapped(backmap);
     }
     return true;
 }

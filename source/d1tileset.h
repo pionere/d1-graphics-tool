@@ -38,8 +38,8 @@ public:
     void swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1);
     void swapTiles(unsigned tileIndex0, unsigned tileIndex1);
     bool reuseFrames(std::set<int> &removedIndices, bool silent);
-    bool reuseSubtiles(std::set<int> &removedIndices);
-    bool reuseTiles(std::set<int> &removedIndices);
+    bool reuseSubtiles(std::map<unsigned, unsigned> &remap);
+    bool reuseTiles(std::map<unsigned, unsigned> &remap);
 
     void patch(int dunType, bool silent);
 
