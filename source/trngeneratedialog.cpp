@@ -19,6 +19,10 @@ TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
     layout = this->ui->addPaletteButtonLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("Add"), this, &TrnGenerateDialog::on_actionAddPalette_triggered);
     layout->addStretch();
+
+    this->ui->mainGridLayout->setRowStretch(1, 1);
+    this->ui->mainGridLayout->setRowStretch(3, 1);
+    this->ui->mainGridLayout->setColumnStretch(1, 1);
 }
 
 TrnGenerateDialog::~TrnGenerateDialog()

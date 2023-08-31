@@ -8,7 +8,7 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QGroupBox">
-     <layout class="QGridLayout">
+     <layout class="QGridLayout" name="mainGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
