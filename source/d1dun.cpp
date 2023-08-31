@@ -730,6 +730,10 @@ bool D1Dun::save(const SaveAsParam &params)
         // rdun - subtiles must be defined
         int dunWidth = this->width;
         int dunHeight = this->height;
+        if (dunWidth != dunHeight) {
+            dProgressFail() << tr("Non-square dungeons (%1:%2) can not be saved in this format (RDUN).").arg(dunWidth).arg(dunHeight);
+            return false;
+        }
         for (int y = 0; y < dunHeight; y++) {
             for (int x = 0; x < dunWidth; x++) {
                 if (this->subtiles[y][x] == UNDEF_SUBTILE) {
