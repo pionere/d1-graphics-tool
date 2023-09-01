@@ -300,7 +300,9 @@ static BYTE selectColor(BYTE colorIdx, int shade, std::array<bool, NUM_COLORS> &
         std::vector<PaletteColor> dynPalColors;
         pal->getValidColors(dynPalColors);
         for (auto it = dynPalColors.begin(); it != dynPalColors.end(); ) {
-            if (dynColors[it->index]) {
+			unsigned index = it->index;
+			bool isDynColor = dynColors[index];
+            if (isDynColor) {
                 it++;
             } else {
                 it = dynPalColors.erase(it);
