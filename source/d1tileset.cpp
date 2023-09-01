@@ -162,7 +162,7 @@ void D1Tileset::save(const SaveAsParam &params)
     this->tla->save(params);
 }
 
-void D1Min::removeFrame(int frameIndex, int replacement)
+void D1Tileset::removeFrame(int frameIndex, int replacement)
 {
     // remove the frame
     this->gfx->removeFrame(frameIndex, false);
@@ -257,7 +257,7 @@ void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &fra
     // - shift subtile indices of the tiles
     int refIndex = subtileIndex;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        std::vector<int> subtileIndices = this->til->getSubtileIndices(tileIndex);
+        std::vector<int> subtileIndices = this->til->getSubtileIndices(i);
         for (unsigned n = 0; n < subtileIndices.size(); n++) {
             if (subtileIndices[n] < refIndex) {
                 continue;
@@ -313,7 +313,7 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
     // - shift subtile indices of the tiles
     int refIndex = subtileIndex;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        std::vector<int> subtileIndices = this->til->getSubtileIndices(tileIndex);
+        std::vector<int> subtileIndices = this->til->getSubtileIndices(i);
         for (unsigned n = 0; n < subtileIndices.size(); n++) {
             if (subtileIndices[n] < refIndex) {
                 continue;
@@ -19372,6 +19372,6 @@ void D1Tileset::patch(int dunType, bool silent)
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
         unsigned refIndex = *it;
-        this->removeFrame(refIndex - 1);
+        this->removeFrame(refIndex - 1, -1);
     }
 }

@@ -1567,7 +1567,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 void LevelCelView::removeFrame(int frameIndex)
 {
     // remove the frame
-    this->min->removeFrame(frameIndex, 0);
+    this->tileset->removeFrame(frameIndex, 0);
     // update frame index if necessary
     if (frameIndex < this->currentFrameIndex || this->currentFrameIndex == this->gfx->getFrameCount()) {
         this->currentFrameIndex = std::max(0, this->currentFrameIndex - 1);
