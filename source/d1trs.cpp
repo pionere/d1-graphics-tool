@@ -1,5 +1,7 @@
 #include "d1trs.h"
 
+#include <array>
+
 #include <QApplication>
 #include <QChar>
 #include <QDir>
@@ -183,7 +185,7 @@ static void MakeLightTableBase(const GenerateTrnParam &params)
     }
 }
 
-static void MakeLightTableNew(const GenerateTrnParam &params)
+static void MakeLightTableNew(int type)
 {
     unsigned i, j, k;
     GenerateTrnParam params;
@@ -222,7 +224,7 @@ static void MakeLightTableNew(const GenerateTrnParam &params)
         white.shadecolor = false;
         params.colors.push_back(white);
     }
-    switch (params.mode) {
+    switch (type) {
     case DTYPE_TOWN:
         break;
     case DTYPE_CAVES:
@@ -281,7 +283,7 @@ static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color
     }
 }
 
-static BYTE selectColor(BYTE colorIdx, int shade, const bool &dynColors[NUM_COLORS], const std::vector<D1Pal *> &pals)
+static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COLORS> &dynColors, const std::vector<D1Pal *> &pals)
 {
     std::vector<std::array<int, NUM_COLORS>> options;
 
@@ -337,8 +339,10 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
 {
     unsigned i, j, k;
 
-    bool dynColors[NUM_COLORS];
-    memset(dynColors, true, sizeof(dynColors);
+    std::array<bool, NUM_COLORS> dynColors;
+    for (unsigned i = 0; i < NUM_COLORS; i++) {
+        dynColors[i] = true;
+    }
 
     for (k = 0; k < NUM_COLORS; k++) {
         for (j = 0; j < params.colors.size(); j++) {
@@ -381,7 +385,7 @@ void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal
     if (params.mode != DTYPE_NONE) {
         MakeLightTableBase(params);
     } else {
-        // MakeLightTableNew(params);
+        // MakeLightTableNew(DTYPE_NONE);
         MakeLightTableCustom(params);
     }
 
