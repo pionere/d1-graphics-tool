@@ -1178,7 +1178,7 @@ bool D1Tileset::patchTownFloor(bool silent)
             change |= frame->setPixel(17, 5, frame->getPixel(16, 6));
             change |= frame->setPixel(18, 5, frame->getPixel(16, 5));
             change |= frame->setPixel(8, 4, frame->getPixel(5, 2));
-            change |= frame->setPixel(7, 4, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(7, 4, D1GfxPixel::colorPixel(126));
             change |= frame->setPixel(7, 5, frame->getPixel(8, 5));
             change |= frame->setPixel(5, 1, D1GfxPixel::transparentPixel());
         }
@@ -2699,7 +2699,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         Blk2Mcr(1370, 0);
         Blk2Mcr(1376, 0);
         const int unusedSubtilesHellfire[] = {
-            1260, 1268, 1274, 1283, 1284, 1291, 1292, 1293, 1322, 1341, 1342, 1343, 1344, 1345, 1346, 1347, 1348, 1349, 1350, 1351, 1352, 1353, 1354, 1355, 1356, 1357, 1358, 1359, 1361, 1362, 1363, 1364, 1365, 1366, 1367, 1368, 1369, 1371, 1372, 1373, 1374, 1375, 1377, 1378, 1379
+            1260, 1268, 1274, 1283, 1284, 1291, 1292, 1293, 1322, 1340, 1341, 1342, 1343, 1344, 1345, 1346, 1347, 1348, 1349, 1350, 1351, 1352, 1353, 1354, 1355, 1356, 1357, 1358, 1359, 1361, 1362, 1363, 1364, 1365, 1366, 1367, 1368, 1369, 1371, 1372, 1373, 1374, 1375, 1377, 1378, 1379
         };
         for (int n = 0; n < lengthof(unusedSubtilesHellfire); n++) {
             for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {

@@ -1280,7 +1280,7 @@ static void DRLG_LightSubtiles()
 			for (j = 0; j < MAXDUNY; j++) {
 				pn = dPiece[i][j];
 				c = nCollLightTable[pn] & PSF_LIGHT_RADIUS;
-				if (lr != 0) {
+				if (c != 0) {
 					LightList[MAXLIGHTS]._lradius = c;
 					LightList[MAXLIGHTS]._lx = i;
 					LightList[MAXLIGHTS]._ly = j;
