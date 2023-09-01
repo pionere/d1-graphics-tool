@@ -226,7 +226,6 @@ void MainWindow::updateWindow()
     this->ui->actionDel_Subtile->setEnabled(hasSubtile);
     this->ui->actionCreate_Tile->setEnabled(hasSubtile);
     this->ui->actionInsert_Tile->setEnabled(hasSubtile);
-    this->ui->actionAppend_Tile->setEnabled(hasSubtile);
     bool hasTile = this->tileset != nullptr && this->tileset->til->getTileCount() != 0;
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
@@ -1504,7 +1503,7 @@ void MainWindow::addTiles(bool append)
         return;
     }
 
-    this->levelCelView->createTile(bool append);
+    this->levelCelView->createTile(append);
     this->updateWindow();
 }
 

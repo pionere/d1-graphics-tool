@@ -240,7 +240,7 @@ std::vector<std::vector<D1GfxPixel>> D1Gfx::getFramePixelImage(int frameIndex) c
     return frame->getPixels();
 }
 
-void D1Gfx::createFrame(int idx, int width, int height)
+void D1Gfx::insertFrame(int idx, int width, int height)
 {
     D1GfxFrame *frame = this->insertFrame(idx);
 

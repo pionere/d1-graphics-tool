@@ -164,7 +164,7 @@ void D1Tileset::save(const SaveAsParam &params)
 
 void D1Tileset::createFrame(int frameIndex)
 {
-    this->min->insertFrame(newFrameIndex);
+    this->min->insertFrame(frameIndex);
 }
 
 void D1Tileset::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
@@ -214,7 +214,7 @@ void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &fra
 void D1Tileset::createSubtile(int subtileIndex)
 {
     int n = this->min->getSubtileWidth() * this->min->getSubtileHeight();
-    this->insertSubtile(subtileIndex, std::vector<int>(n));
+    this->insertSubtile(subtileIndex, std::vector<unsigned>(n));
 }
 
 int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
