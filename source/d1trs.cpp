@@ -295,7 +295,7 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
             continue;
         }
 
-        color = color.darker(100 * (MAXDARKNESS + 1) / (MAXDARKNESS + 1 - i));
+        color = color.darker(100 * (MAXDARKNESS + 1) / (MAXDARKNESS + 1 - shade));
 
         std::vector<PaletteColor> dynPalColors;
         pal->getValidColors(dynPalColors);
@@ -346,8 +346,8 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
 
     for (k = 0; k < NUM_COLORS; k++) {
         for (j = 0; j < params.colors.size(); j++) {
-            for (i = params.colors[j].firstcolor; i <= params.colors[j].lastcolor; i++) {
-                dynColors[i] = false;
+            for (int c = params.colors[j].firstcolor; c <= params.colors[j].lastcolor; c++) {
+                dynColors[c] = false;
             }
         }
     }
@@ -373,7 +373,7 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
             if (j != params.colors.size()) {
                 continue;
             }
-            ColorTrns[i][k] = selectColor(k, i, dynColor, params.pals);
+            ColorTrns[i][k] = selectColor(k, i, dynColors, params.pals);
         }
     }
 
