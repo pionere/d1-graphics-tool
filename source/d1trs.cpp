@@ -283,7 +283,7 @@ static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color
     }
 }
 
-static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COLORS> &dynColors, const std::vector<D1Pal *> &pals)
+static BYTE selectColor(BYTE colorIdx, int shade, std::array<bool, NUM_COLORS> &dynColors, const std::vector<D1Pal *> &pals)
 {
     std::vector<std::array<int, NUM_COLORS>> options;
 
