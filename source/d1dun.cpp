@@ -1825,6 +1825,187 @@ bool D1Dun::setSubtileObjProtectionAt(int posx, int posy, bool protection)
     return true;
 }
 
+void D1Dun::subtileInserted(unsigned subtileIndex)
+{
+    int subtileRef = subtileIndex + 1;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int currSubtileRef = this->subtiles[y][x];
+            if (currSubtileRef >= subtileRef) {
+                this->subtiles[y][x] = currSubtileRef + 1;
+            } else {
+                continue;
+            }
+            if (this->type == D1DUN_TYPE::RAW) {
+                this->modified = true;
+            }
+        }
+    }
+}
+
+void D1Dun::tileInserted(unsigned tileIndex)
+{
+    int tileRef = tileIndex + 1;
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            int currTileRef = this->tiles[y][x];
+            if (currTileRef >= tileRef) {
+                this->tiles[y][x] = currTileRef + 1;
+            } else {
+                continue;
+            }
+            if (this->type == D1DUN_TYPE::NORMAL) {
+                this->modified = true;
+            }
+        }
+    }
+}
+
+void D1Dun::subtileRemoved(unsigned subtileIndex)
+{
+    int subtileRef = subtileIndex + 1;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int currSubtileRef = this->subtiles[y][x];
+            if (currSubtileRef == subtileRef) {
+                dProgressWarn() << QApplication::tr("Subtile %1 was used at %2:%3.").arg(currSubtileRef).arg(x).arg(y);
+                this->subtiles[y][x] = UNDEF_SUBTILE;
+            } else if (currSubtileRef > subtileRef) {
+                this->subtiles[y][x] = currSubtileRef - 1;
+            } else {
+                continue;
+            }
+            if (this->type == D1DUN_TYPE::RAW) {
+                this->modified = true;
+            }
+        }
+    }
+}
+
+void D1Dun::tileRemoved(unsigned tileIndex)
+{
+    int tileRef = tileIndex + 1;
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            int currTileRef = this->tiles[y][x];
+            if (currTileRef == tileRef) {
+                dProgressWarn() << QApplication::tr("Tile %1 was used at %2:%3.").arg(currTileRef).arg(x * TILE_WIDTH).arg(y * TILE_HEIGHT);
+                this->setTileAt(x * TILE_WIDTH, y * TILE_HEIGHT, UNDEF_TILE);
+            } else if (currTileRef > tileRef) {
+                this->tiles[y][x] = currTileRef - 1;
+            } else {
+                continue;
+            }
+            if (this->type == D1DUN_TYPE::NORMAL) {
+                this->modified = true;
+            }
+        }
+    }
+}
+
+void D1Dun::subtilesSwapped(unsigned subtileIndex0, unsigned subtileIndex1)
+{
+    // TODO: keep in sync with D1Tileset::swapSubtiles
+    const unsigned numSubtiles = this->tileset->sla->getSubtileCount();
+    int subtileRef0, subtileRef1;
+    if (subtileIndex0 >= numSubtiles) {
+        // move subtileIndex1 to the front
+        subtileRef0 = 1;
+        subtileRef1 = subtileIndex1 + 1;
+    } else if (subtileIndex1 >= numSubtiles) {
+        // move subtileIndex0 to the end
+        subtileRef0 = subtileIndex0 + 1;
+        subtileRef1 = numSubtiles;
+    } else {
+        // swap subtileIndex0 and subtileIndex1
+        subtileRef0 = subtileIndex0 + 1;
+        subtileRef1 = subtileIndex1 + 1;
+    }
+
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int subtileRef = this->subtiles[y][x];
+            if (subtileRef == subtileRef0) {
+                this->subtiles[y][x] = subtileRef1;
+            } else if (subtileRef == subtileRef1) {
+                this->subtiles[y][x] = subtileRef0;
+            }
+        }
+    }
+}
+
+void D1Dun::tilesSwapped(unsigned tileIndex0, unsigned tileIndex1)
+{
+    // TODO: keep in sync with D1Tileset::swapTiles
+    const unsigned numTiles = this->tileset->til->getTileCount();
+    int tileRef0, tileRef1;
+    if (tileIndex0 >= numTiles) {
+        // move tileIndex1 to the front
+        tileRef0 = 1;
+        tileRef1 = tileIndex1 + 1;
+    } else if (tileIndex1 >= numTiles) {
+        // move tileIndex0 to the end
+        tileRef0 = tileIndex0 + 1;
+        tileRef1 = numTiles;
+    } else {
+        // swap tileIndex0 and tileIndex1
+        tileRef0 = tileIndex0 + 1;
+        tileRef1 = tileIndex1 + 1;
+    }
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            int tileRef = this->tiles[y][x];
+            if (tileRef == tileRef0) {
+                this->tiles[y][x] = tileRef1;
+            } else if (tileRef == tileRef1) {
+                this->tiles[y][x] = tileRef0;
+            }
+        }
+    }
+}
+
+void D1Dun::subtilesRemapped(const std::map<unsigned, unsigned> &remap)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int subtileRef = this->subtiles[y][x];
+            if (subtileRef <= 0) { // 0 || UNDEF_SUBTILE
+                continue;
+            }
+            unsigned subtileIndex = subtileRef - 1;
+            auto it = remap.find(subtileIndex);
+            if (it == remap.end() || it->second == subtileIndex) {
+                continue;
+            }
+            this->subtiles[y][x] = it->second;
+            if (this->type == D1DUN_TYPE::RAW) {
+                this->modified = true;
+            }
+        }
+    }
+}
+
+void D1Dun::tilesRemapped(const std::map<unsigned, unsigned> &remap)
+{
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            int tileRef = this->tiles[y][x];
+            if (tileRef <= 0) { // 0 || UNDEF_TILE
+                continue;
+            }
+            unsigned tileIndex = tileRef - 1;
+            auto it = remap.find(tileIndex);
+            if (it == remap.end() || it->second == tileIndex) {
+                continue;
+            }
+            this->tiles[y][x] = it->second;
+            if (this->type == D1DUN_TYPE::NORMAL) {
+                this->modified = true;
+            }
+        }
+    }
+}
+
 bool D1Dun::swapPositions(int mode, int posx0, int posy0, int posx1, int posy1)
 {
     if (posx0 < 0 || posx0 >= this->width) {

@@ -494,7 +494,7 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
     return result != 0;
 }
 
-bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
+bool D1Tileset::reuseSubtiles(std::map<unsigned, unsigned> &remap)
 {
     ProgressDialog::incBar(QApplication::tr("Reusing subtiles..."), this->min->getSubtileCount());
     int result = 0;
@@ -539,25 +539,25 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             // use subtile 'i' instead of subtile 'j'
             this->removeSubtile(j, i);
             // calculate the original indices
-            int originalIndexI = i;
-            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter <= originalIndexI) {
+            unsigned originalIndexI = i;
+            for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+                if (iter->first <= originalIndexI) {
                     originalIndexI++;
                     continue;
                 }
                 break;
             }
-            int originalIndexJ = j;
-            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter <= originalIndexJ) {
+            unsigned originalIndexJ = j;
+            for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+                if (iter->first <= originalIndexJ) {
                     originalIndexJ++;
                     continue;
                 }
                 break;
             }
-            removedIndices.insert(originalIndexJ);
+            remap[originalIndexJ] = originalIndexI;
             dProgress() << QApplication::tr("Using subtile %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
-            result = true;
+            result = 1;
             j--;
         }
         if (!ProgressDialog::incValue()) {
@@ -565,14 +565,14 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             break;
         }
     }
-    auto amount = removedIndices.size();
+    auto amount = remap.size();
     dProgress() << QApplication::tr("Reused %n subtile(s).", "", amount);
 
     ProgressDialog::decBar();
     return result != 0;
 }
 
-bool D1Tileset::reuseTiles(std::set<int> &removedIndices)
+bool D1Tileset::reuseTiles(std::map<unsigned, unsigned> &remap)
 {
     ProgressDialog::incBar(QApplication::tr("Deduplicating tiles..."), this->til->getTileCount());
     int result = 0;
@@ -605,25 +605,25 @@ bool D1Tileset::reuseTiles(std::set<int> &removedIndices)
             // remove tile 'j'
             this->removeTile(j);
             // calculate the original indices
-            int originalIndexI = i;
-            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter <= originalIndexI) {
+            unsigned originalIndexI = i;
+            for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+                if (iter->first <= originalIndexI) {
                     originalIndexI++;
                     continue;
                 }
                 break;
             }
-            int originalIndexJ = j;
-            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter <= originalIndexJ) {
+            unsigned originalIndexJ = j;
+            for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+                if (iter->first <= originalIndexJ) {
                     originalIndexJ++;
                     continue;
                 }
                 break;
             }
-            removedIndices.insert(originalIndexJ);
+            remap[originalIndexJ] = originalIndexI;
             dProgress() << QApplication::tr("Removed Tile %1 because it was the same as Tile %2.").arg(originalIndexJ + 1).arg(originalIndexI + 1);
-            result = true;
+            result = 1;
             j--;
         }
         if (!ProgressDialog::incValue()) {
@@ -631,7 +631,7 @@ bool D1Tileset::reuseTiles(std::set<int> &removedIndices)
             break;
         }
     }
-    auto amount = removedIndices.size();
+    auto amount = remap.size();
     dProgress() << QApplication::tr("Removed %n tile(s).", "", amount);
 
     ProgressDialog::decBar();

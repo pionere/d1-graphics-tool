@@ -145,12 +145,14 @@ private:
     bool insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame);
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
+    void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
     void insertSubtile(int subtileIndex, const QImage &image);
     void insertSubtile(int subtileIndex, const D1GfxFrame &frame);
     void insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage &image);
     bool insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame);
     void insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
+    void insertTile(int tileIndex, const std::vector<int> &subtileIndices);
     void insertTile(int tileIndex, const QImage &image);
     void insertTile(int tileIndex, const D1GfxFrame &frame);
     void insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &image);
@@ -173,6 +175,8 @@ private:
     void setFrameIndex(int frameIndex);
     void setSubtileIndex(int subtileIndex);
     void setTileIndex(int tileIndex);
+    void swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1);
+    void swapTiles(unsigned tileIndex0, unsigned tileIndex1);
 
     void selectTilesetPath(QString path);
     void selectAssetPath(QString path);

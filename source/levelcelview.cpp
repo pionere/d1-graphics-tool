@@ -1129,6 +1129,14 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
     // this->displayFrame();
 }
 
+void LevelCelView::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
+{
+    this->tileset->insertSubtile(subtileIndex, frameReferencesList);
+    if (this->dun != nullptr) {
+        this->dun->subtileInserted(subtileIndex);
+    }
+}
+
 void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
 {
     std::vector<unsigned> frameReferencesList;
@@ -1167,7 +1175,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
             frameIndex++;
         }
     }
-    this->tileset->insertSubtile(subtileIndex, frameReferencesList);
+    this->insertSubtile(subtileIndex, frameReferencesList);
 }
 
 void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
@@ -1204,7 +1212,15 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
             frameIndex++;
         }
     }
-    this->tileset->insertSubtile(subtileIndex, frameReferencesList);
+    this->insertSubtile(subtileIndex, frameReferencesList);
+}
+
+void LevelCelView::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
+{
+    this->tileset->insertTile(tileIndex, subtileIndices);
+    if (this->dun != nullptr) {
+        this->dun->tileInserted(tileIndex);
+    }
 }
 
 void LevelCelView::insertTile(int tileIndex, const QImage &image)
@@ -1241,7 +1257,7 @@ void LevelCelView::insertTile(int tileIndex, const QImage &image)
             this->insertSubtile(index, subImage);
         }
     }
-    this->tileset->insertTile(tileIndex, subtileIndices);
+    this->insertTile(tileIndex, subtileIndices);
 }
 
 void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
@@ -1267,7 +1283,7 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
             this->insertSubtile(index, subFrame);
         }
     }
-    this->tileset->insertTile(tileIndex, subtileIndices);
+    this->insertTile(tileIndex, subtileIndices);
 }
 
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &image)
@@ -1639,6 +1655,9 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
 void LevelCelView::removeSubtile(int subtileIndex)
 {
     this->tileset->removeSubtile(subtileIndex, 0);
+    if (this->dun != nullptr) {
+        this->dun->subtileRemoved(subtileIndex);
+    }
 
     // update subtile index if necessary
     if (subtileIndex < this->currentSubtileIndex || this->currentSubtileIndex == this->min->getSubtileCount()) {
@@ -1738,6 +1757,9 @@ void LevelCelView::removeCurrentTile()
     int tileIndex = this->currentTileIndex;
 
     this->tileset->removeTile(tileIndex);
+    if (this->dun != nullptr) {
+        this->dun->tileRemoved(tileIndex);
+    }
     // update tile index if necessary
     if (/*tileIndex < this->currentTileIndex ||*/ this->currentTileIndex == this->til->getTileCount()) {
         this->currentTileIndex = std::max(0, this->currentTileIndex - 1);
@@ -2708,14 +2730,16 @@ bool LevelCelView::reuseFrames()
 
 bool LevelCelView::reuseSubtiles()
 {
-    std::set<int> removedIndices;
-
+    std::map<unsigned, unsigned> removedIndices;
     bool result = this->tileset->reuseSubtiles(removedIndices);
+    if (this->dun != nullptr) {
+        this->dun->subtilesRemapped(removedIndices);
+    }
 
     // update subtile index if necessary
-    auto it = removedIndices.lower_bound(this->currentSubtileIndex);
+    auto it = removedIndices.lower_bound((unsigned)this->currentSubtileIndex);
     if (it != removedIndices.begin()) {
-        if (*it == this->currentSubtileIndex)
+        if (it->first == (unsigned)this->currentSubtileIndex)
             it--;
         this->currentSubtileIndex -= std::distance(removedIndices.begin(), it);
     }
@@ -2725,14 +2749,16 @@ bool LevelCelView::reuseSubtiles()
 
 bool LevelCelView::reuseTiles()
 {
-    std::set<int> removedIndices;
-
+    std::map<unsigned, unsigned> removedIndices;
     bool result = this->tileset->reuseTiles(removedIndices);
+    if (this->dun != nullptr) {
+        this->dun->tilesRemapped(removedIndices);
+    }
 
     // update tile index if necessary
-    auto it = removedIndices.lower_bound(this->currentTileIndex);
+    auto it = removedIndices.lower_bound((unsigned)this->currentTileIndex);
     if (it != removedIndices.begin()) {
-        if (*it == this->currentTileIndex)
+        if (it->first == (unsigned)this->currentTileIndex)
             it--;
         this->currentTileIndex -= std::distance(removedIndices.begin(), it);
     }
@@ -2846,6 +2872,9 @@ bool LevelCelView::sortSubtiles_impl()
         backmap[iter->second] = iter->first;
     }
     this->tileset->remapSubtiles(backmap);
+    if (this->dun != nullptr) {
+        this->dun->subtilesRemapped(backmap);
+    }
     return true;
 }
 
@@ -3558,10 +3587,18 @@ void LevelCelView::on_frameIndexEdit_escPressed()
     this->ui->frameIndexEdit->clearFocus();
 }
 
+void LevelCelView::swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1)
+{
+    this->tileset->swapSubtiles(subtileIndex0, subtileIndex1);
+    if (this->dun != nullptr) {
+        this->dun->subtilesSwapped(subtileIndex0, subtileIndex1);
+    }
+}
+
 void LevelCelView::on_firstSubtileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapSubtiles(UINT_MAX, this->currentSubtileIndex);
+        this->swapSubtiles(UINT_MAX, this->currentSubtileIndex);
     }
     this->setSubtileIndex(0);
 }
@@ -3569,7 +3606,7 @@ void LevelCelView::on_firstSubtileButton_clicked()
 void LevelCelView::on_previousSubtileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapSubtiles(this->currentSubtileIndex - 1, this->currentSubtileIndex);
+        this->swapSubtiles(this->currentSubtileIndex - 1, this->currentSubtileIndex);
     }
     this->setSubtileIndex(this->currentSubtileIndex - 1);
 }
@@ -3577,7 +3614,7 @@ void LevelCelView::on_previousSubtileButton_clicked()
 void LevelCelView::on_nextSubtileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapSubtiles(this->currentSubtileIndex, this->currentSubtileIndex + 1);
+        this->swapSubtiles(this->currentSubtileIndex, this->currentSubtileIndex + 1);
     }
     this->setSubtileIndex(this->currentSubtileIndex + 1);
 }
@@ -3585,7 +3622,7 @@ void LevelCelView::on_nextSubtileButton_clicked()
 void LevelCelView::on_lastSubtileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapSubtiles(this->currentSubtileIndex, UINT_MAX);
+        this->swapSubtiles(this->currentSubtileIndex, UINT_MAX);
     }
     this->setSubtileIndex(this->min->getSubtileCount() - 1);
 }
@@ -3605,10 +3642,18 @@ void LevelCelView::on_subtileIndexEdit_escPressed()
     this->ui->subtileIndexEdit->clearFocus();
 }
 
+void LevelCelView::swapTiles(unsigned tileIndex0, unsigned tileIndex1)
+{
+    this->tileset->swapTiles(tileIndex0, tileIndex1);
+    if (this->dun != nullptr) {
+        this->dun->tilesSwapped(tileIndex0, tileIndex1);
+    }
+}
+
 void LevelCelView::on_firstTileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapTiles(UINT_MAX, this->currentTileIndex);
+        this->swapTiles(UINT_MAX, this->currentTileIndex);
     }
     this->setTileIndex(0);
 }
@@ -3616,7 +3661,7 @@ void LevelCelView::on_firstTileButton_clicked()
 void LevelCelView::on_previousTileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapTiles(this->currentTileIndex - 1, this->currentTileIndex);
+        this->swapTiles(this->currentTileIndex - 1, this->currentTileIndex);
     }
     this->setTileIndex(this->currentTileIndex - 1);
 }
@@ -3624,7 +3669,7 @@ void LevelCelView::on_previousTileButton_clicked()
 void LevelCelView::on_nextTileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapTiles(this->currentTileIndex, this->currentTileIndex + 1);
+        this->swapTiles(this->currentTileIndex, this->currentTileIndex + 1);
     }
     this->setTileIndex(this->currentTileIndex + 1);
 }
@@ -3632,7 +3677,7 @@ void LevelCelView::on_nextTileButton_clicked()
 void LevelCelView::on_lastTileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapTiles(this->currentTileIndex, UINT_MAX);
+        this->swapTiles(this->currentTileIndex, UINT_MAX);
     }
     this->setTileIndex(this->til->getTileCount() - 1);
 }

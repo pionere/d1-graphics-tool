@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <vector>
 
 #include <QPainter>
@@ -198,6 +199,14 @@ public:
     bool resetTiles();
     bool resetSubtiles();
     void refreshSubtiles();
+    void subtileInserted(unsigned subtileIndex);
+    void tileInserted(unsigned tileIndex);
+    void subtileRemoved(unsigned subtileIndex);
+    void tileRemoved(unsigned tileIndex);
+    void subtilesSwapped(unsigned subtileIndex0, unsigned subtileIndex1);
+    void tilesSwapped(unsigned tileIndex0, unsigned tileIndex1);
+    void subtilesRemapped(const std::map<unsigned, unsigned> &remap);
+    void tilesRemapped(const std::map<unsigned, unsigned> &remap);
     bool maskTilesFrom(const D1Dun *srcDun);
     bool protectTiles();
     bool protectTilesFrom(const D1Dun *srcDun);
