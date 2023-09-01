@@ -181,9 +181,8 @@ void D1Tileset::createTile(int tileIndex)
 
 int D1Tileset::duplicateTile(int tileIndex, bool deepCopy)
 {
-    this->createTile();
-
-    int newTileIndex = this->til->getTileCount() - 1;
+    int newTileIndex = this->til->getTileCount();
+    this->createTile(newTileIndex);
     // D1Til::duplicate
     std::vector<int> &baseSubtileIndices = this->til->getSubtileIndices(tileIndex);
     std::vector<int> &newSubtileIndices = this->til->getSubtileIndices(newTileIndex);
@@ -219,9 +218,8 @@ void D1Tileset::createSubtile(int subtileIndex)
 
 int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
 {
-    this->createSubtile();
-
-    int newSubtileIndex = this->min->getSubtileCount() - 1;
+    int newSubtileIndex = this->min->getSubtileCount();
+    this->createSubtile(newSubtileIndex);
     // D1Min::duplicate
     std::vector<unsigned> &baseFrameReferences = this->min->getFrameReferences(subtileIndex);
     std::vector<unsigned> &newFrameReferences = this->min->getFrameReferences(newSubtileIndex);
