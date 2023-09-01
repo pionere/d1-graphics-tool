@@ -162,16 +162,21 @@ void D1Tileset::save(const SaveAsParam &params)
     this->tla->save(params);
 }
 
+void D1Tileset::createFrame(int frameIndex)
+{
+    this->min->insertFrame(newFrameIndex);
+}
+
 void D1Tileset::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
 {
     this->til->insertTile(tileIndex, subtileIndices);
     this->tla->insertTile(tileIndex);
 }
 
-void D1Tileset::createTile()
+void D1Tileset::createTile(int tileIndex)
 {
-    this->til->createTile();
-    this->tla->createTile();
+    int n = TILE_WIDTH * TILE_HEIGHT;
+    this->insertTile(tileIndex, std::vector<int>(n));
 }
 
 int D1Tileset::duplicateTile(int tileIndex, bool deepCopy)
@@ -206,10 +211,10 @@ void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &fra
     this->sla->insertSubtile(subtileIndex);
 }
 
-void D1Tileset::createSubtile()
+void D1Tileset::createSubtile(int subtileIndex)
 {
-    this->min->createSubtile();
-    this->sla->createSubtile();
+    int n = this->min->getSubtileWidth() * this->min->getSubtileHeight();
+    this->insertSubtile(subtileIndex, std::vector<int>(n));
 }
 
 int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)

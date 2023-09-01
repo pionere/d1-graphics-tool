@@ -30,9 +30,9 @@ public:
     QImage getFloorImage(int subtileIndex) const;
     void getFrameUses(std::vector<bool> &frameUses) const;
 
+    void insertFrame(int frameIndex);
     void removeFrame(int frameIndex, int replacement);
     void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
-    void createSubtile();
     void removeSubtile(int subtileIndex);
     void remapSubtiles(const std::map<unsigned, unsigned> &remap);
 

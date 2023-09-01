@@ -24,12 +24,13 @@ public:
     bool load(const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
+    void createFrame(int frameIndex);
+    void createTile(int tileIndex);
     void insertTile(int tileIndex, const std::vector<int> &subtileIndices);
-    void createTile();
     int duplicateTile(int tileIndex, bool deepCopy);
     void removeTile(int tileIndex);
+    void createSubtile(int subtileIndex);
     void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
-    void createSubtile();
     int duplicateSubtile(int subtileIndex, bool deepCopy);
     void removeSubtile(int subtileIndex, int replacement);
     void resetSubtileFlags(int subtileIndex);

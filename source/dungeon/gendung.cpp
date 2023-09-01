@@ -1302,7 +1302,6 @@ static void DRLG_LightSubtiles()
 				}
 			}
 		}
-	}
 	}*/
 }
 

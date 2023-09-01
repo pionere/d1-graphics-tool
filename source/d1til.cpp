@@ -311,12 +311,6 @@ void D1Til::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
     this->modified = true;
 }
 
-void D1Til::createTile()
-{
-    this->subtileIndices.push_back(std::vector<int>(TILE_SIZE));
-    this->modified = true;
-}
-
 void D1Til::removeTile(int tileIndex)
 {
     this->subtileIndices.erase(this->subtileIndices.begin() + tileIndex);

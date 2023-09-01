@@ -46,7 +46,7 @@ bool D1Sla::load(const QString &filePath)
 
     // prepare empty lists with zeros
     for (unsigned i = 0; i < subtileCount; i++) {
-        this->createSubtile();
+        this->insertSubtile(i);
     }
 
     // Read SLA binary data
@@ -358,18 +358,6 @@ void D1Sla::insertSubtile(int subtileIndex)
     this->renderProperties.insert(subtileIndex, 0);
     this->mapTypes.insert(subtileIndex, 0);
     this->mapProperties.insert(subtileIndex, 0);
-    this->modified = true;
-}
-
-void D1Sla::createSubtile()
-{
-    this->subProperties.append(0);
-    this->lightRadius.append(0);
-    this->trapProperties.append(0);
-    this->specProperties.append(0);
-    this->renderProperties.append(0);
-    this->mapTypes.append(0);
-    this->mapProperties.append(0);
     this->modified = true;
 }
 

@@ -323,6 +323,27 @@ void GfxsetView::framePixelHovered(const QPoint &pos)
 {
 }
 
+void GfxsetView::createFrame(bool append)
+{
+    int width, height;
+    int frameCount = this->gfx->getFrameCount();
+    if (frameCount != 0) {
+        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
+        width = frame->getWidth();
+        height = frame->getHeight();
+    } else {
+        // TODO: request from the user?
+        width = 64;
+        height = 128;
+    }
+    int newFrameIndex = append ? this->gfx->getFrameCount() - 1 : this->currentFrameIndex;
+    this->gfx->insertFrame(newFrameIndex, width, height);
+    // jump to the new frame
+    this->currentFrameIndex = newFrameIndex;
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
 void GfxsetView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
 {
     int prevFrameCount = this->gfx->getFrameCount();
@@ -627,6 +648,7 @@ done:
             rangeTo = gfx->getFrameCount();
         }
         rangeTo--;
+		// same as in celview.cpp?
         for (int i = rangeFrom; i <= rangeTo; i++) {
             D1GfxFrame *frame = gfx->getFrame(i);
             int width = params.width;

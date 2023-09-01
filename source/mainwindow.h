@@ -124,23 +124,21 @@ private:
 
 public slots:
     void on_actionAddTo_Frame_triggered();
+    void on_actionCreate_Frame_triggered();
     void on_actionInsert_Frame_triggered();
     void on_actionDuplicate_Frame_triggered();
-    void on_actionAppend_Frame_triggered();
     void on_actionReplace_Frame_triggered();
     void on_actionDel_Frame_triggered();
 
     void on_actionCreate_Subtile_triggered();
     void on_actionInsert_Subtile_triggered();
     void on_actionDuplicate_Subtile_triggered();
-    void on_actionAppend_Subtile_triggered();
     void on_actionReplace_Subtile_triggered();
     void on_actionDel_Subtile_triggered();
 
     void on_actionCreate_Tile_triggered();
     void on_actionInsert_Tile_triggered();
     void on_actionDuplicate_Tile_triggered();
-    void on_actionAppend_Tile_triggered();
     void on_actionReplace_Tile_triggered();
     void on_actionDel_Tile_triggered();
 
