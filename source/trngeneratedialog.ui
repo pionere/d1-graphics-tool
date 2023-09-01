@@ -12,12 +12,12 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Fix colors:</string>
+         <string>Color groups:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1" rowspan="2">
-       <layout class="QVBoxLayout" name="fixColorsVBoxLayout"/>
+       <layout class="QVBoxLayout" name="colorsVBoxLayout"/>
       </item>
       <item row="1" column="0" alignment="Qt::AlignTop">
        <layout class="QHBoxLayout" name="addRangeButtonLayout"/>

@@ -28,16 +28,16 @@ GenerateTrnColor TrnGenerateColEntryWidget::getTrnColor() const
 {
     GenerateTrnColor color;
     bool firstOk, lastOk;
-    color.firstfixcolor = this->ui->firstFixColorLineEdit->text().toUShort(&firstOk);
-    color.lastfixcolor = this->ui->lastFixColorLineEdit->text().toUShort(&lastOk);
+    color.firstcolor = this->ui->firstColorLineEdit->text().toUShort(&firstOk);
+    color.lastcolor = this->ui->lastColorLineEdit->text().toUShort(&lastOk);
     if (!lastOk) {
         if (!firstOk) {
-            color.lastfixcolor = -1;
+            color.lastcolor = -1;
         } else {
-            color.lastfixcolor = D1TRN_TRANSLATIONS - 1;
+            color.lastcolor = D1TRN_TRANSLATIONS - 1;
         }
     }
-    color.shadefixcolor = this->ui->shadeFixColorCheckBox->isChecked();
+    color.shadecolor = this->ui->shadeColorCheckBox->isChecked();
     return color;
 }
 

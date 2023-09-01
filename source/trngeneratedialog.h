@@ -12,9 +12,9 @@
 class D1Pal;
 
 typedef struct GenerateTrnColor {
-    int firstfixcolor;
-    int lastfixcolor;
-    bool shadefixcolor;
+    int firstcolor;
+    int lastcolor;
+    bool shadecolor;
 } GenerateTrnColor;
 
 class GenerateTrnParam {

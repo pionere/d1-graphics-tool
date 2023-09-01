@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "d1pal.h"
 #include "d1trn.h"
 
 class GenerateTrnParam;

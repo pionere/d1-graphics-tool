@@ -44,12 +44,12 @@ void TrnGenerateDialog::initialize(D1Pal *p)
 void TrnGenerateDialog::on_actionAddRange_triggered()
 {
     TrnGenerateColEntryWidget *widget = new TrnGenerateColEntryWidget(this);
-    this->ui->fixColorsVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
+    this->ui->colorsVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
 }
 
 void TrnGenerateDialog::on_actionDelRange_triggered(TrnGenerateColEntryWidget *caller)
 {
-    this->ui->fixColorsVBoxLayout->removeWidget(caller);
+    this->ui->colorsVBoxLayout->removeWidget(caller);
     delete caller;
 }
 
@@ -79,7 +79,7 @@ void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget 
 void TrnGenerateDialog::on_generateButton_clicked()
 {
     GenerateTrnParam params;
-    QList<TrnGenerateColEntryWidget *> colWidgets = this->ui->fixColorsVBoxLayout->findChildren<TrnGenerateColEntryWidget *>();
+    QList<TrnGenerateColEntryWidget *> colWidgets = this->ui->colorsVBoxLayout->findChildren<TrnGenerateColEntryWidget *>();
     for (TrnGenerateColEntryWidget *colWidget : colWidgets) {
         params.colors.push_back(colWidget->getTrnColor());
     }

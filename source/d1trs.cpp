@@ -183,59 +183,59 @@ static void MakeLightTableBase(const GenerateTrnParam &params)
     }
 }
 
-static void MakeLightTableNew(int type)
+static void MakeLightTableNew(const GenerateTrnParam &params)
 {
     unsigned i, j, k;
     GenerateTrnParam params;
     {
         GenerateTrnColor black;
-        black.firstfixcolor = 0;
-        black.lastfixcolor = 0;
-        black.shadefixcolor = false;
+        black.firstcolor = 0;
+        black.lastcolor = 0;
+        black.shadecolor = false;
         params.colors.push_back(black);
     }
     for (i = 0; i < 8; i++) {
         GenerateTrnColor levelColor;
-        levelColor.firstfixcolor = i == 0 ? 1 : i * 16;
-        levelColor.lastfixcolor = (i + 1) * 16 - 1;
-        levelColor.shadefixcolor = true;
+        levelColor.firstcolor = i == 0 ? 1 : i * 16;
+        levelColor.lastcolor = (i + 1) * 16 - 1;
+        levelColor.shadecolor = true;
         params.colors.push_back(levelColor);
     }
     for (i = 0; i < 4; i++) {
         GenerateTrnColor stdColor;
-        stdColor.firstfixcolor = 16 * 8 + i * 8;
-        stdColor.lastfixcolor = stdColor.firstfixcolor + 8 - 1;
-        stdColor.shadefixcolor = true;
+        stdColor.firstcolor = 16 * 8 + i * 8;
+        stdColor.lastcolor = stdColor.firstcolor + 8 - 1;
+        stdColor.shadecolor = true;
         params.colors.push_back(stdColor);
     }
     for (i = 0; i < 6; i++) {
         GenerateTrnColor stdColor;
-        stdColor.firstfixcolor = 16 * 8 + 8 * 4 + i * 16;
-        stdColor.lastfixcolor = i == 5 ? 254 : (stdColor.firstfixcolor + 15);
-        stdColor.shadefixcolor = true;
+        stdColor.firstcolor = 16 * 8 + 8 * 4 + i * 16;
+        stdColor.lastcolor = i == 5 ? 254 : (stdColor.firstcolor + 15);
+        stdColor.shadecolor = true;
         params.colors.push_back(stdColor);
     }
     {
         GenerateTrnColor white;
-        white.firstfixcolor = 255;
-        white.lastfixcolor = 255;
-        white.shadefixcolor = false;
+        white.firstcolor = 255;
+        white.lastcolor = 255;
+        white.shadecolor = false;
         params.colors.push_back(white);
     }
-    switch (type) {
+    switch (params.mode) {
     case DTYPE_TOWN:
         break;
     case DTYPE_CAVES:
         params.colors.erase(params.colors.begin() + 2);
-        params.colors[1].lastfixcolor = 31;
-        params.colors[1].shadefixcolor = false;
+        params.colors[1].lastcolor = 31;
+        params.colors[1].shadecolor = false;
         // FIXME: maxdarkness?
         break;
     case DTYPE_HELL:
         // FIXME:
         break;
     case DTYPE_NEST:
-        params.colors[1].shadefixcolor = false;
+        params.colors[1].shadecolor = false;
         // FIXME: maxdarkness?
         break;
     }
@@ -245,15 +245,15 @@ static void MakeLightTableNew(int type)
     for (i = 0; i < MAXDARKNESS; i++) {
         for (k = 0; k < NUM_COLORS; k++) {
             for (j = 0; j < params.colors.size(); j++) {
-                if ((int)k < params.colors[j].firstfixcolor || (int)k > params.colors[j].lastfixcolor) {
+                if ((int)k < params.colors[j].firstcolor || (int)k > params.colors[j].lastcolor) {
                     continue;
                 }
-                if (!params.colors[j].shadefixcolor) {
+                if (!params.colors[j].shadecolor) {
                     ColorTrns[i][k] = k;
                 } else {
-                    int numColors = params.colors[j].lastfixcolor - params.colors[j].firstfixcolor + 1;
+                    int numColors = params.colors[j].lastcolor - params.colors[j].firstcolor + 1;
                     int col = k + (numColors * i) / (MAXDARKNESS + 1);
-                    if (col > params.colors[j].lastfixcolor) {
+                    if (col > params.colors[j].lastcolor) {
                         col = 0;
                     }
                     ColorTrns[i][k] = col;
@@ -270,12 +270,119 @@ static void MakeLightTableNew(int type)
     memset(ColorTrns[MAXDARKNESS], 0, sizeof(ColorTrns[MAXDARKNESS]));
 }
 
+static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+{
+    for (const PaletteColor &palColor : dynColors) {
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        int curr = currR * currR + currG * currG + currB * currB;
+        palOptions[palColor.index()] = curr;
+    }
+}
+
+static BYTE selectColor(BYTE colorIdx, int shade, const bool &dynColors[NUM_COLORS], const std::vector<D1Pal *> &pals)
+{
+    std::vector<std::array<int, NUM_COLORS>> options;
+
+    for (const D1Pal *pal : pals) {
+        QColor color = pal->getColor(colorIdx);
+        std::array<int, NUM_COLORS> palOptions = { 0 };
+        if (color == pal->getUndefinedColor()) {
+            options.push_back(palOptions);
+            continue;
+        }
+
+        color = color.darker(100 * (MAXDARKNESS + 1) / (MAXDARKNESS + 1 - i));
+
+        std::vector<PaletteColor> dynPalColors;
+        pal->getValidColors(dynPalColors);
+        for (auto it = dynPalColors.begin(); it != dynPalColors.end(); ) {
+            if (dynColors[it->index]) {
+                it++;
+            } else {
+                it = dynPalColors.erase(it);
+            }
+        }
+
+        for (unsigned i = 0; i < NUM_COLORS; i++) {
+            palOptions[i] = INT_MAX;
+        }
+        getPalColor(dynPalColors, color, palOptions);
+
+        options.push_back(palOptions);
+    }
+
+    int best = INT_MAX;
+    BYTE res = 0;
+    for (unsigned i = 0; i < NUM_COLORS; i++) {
+        int curr = 0;
+        for (const auto palOptions : options) {
+            int dist = palOptions[i];
+            if (dist >= INT_MAX - curr) {
+                curr = INT_MAX;
+                break;
+            }
+            curr += dist;
+        }
+        if (curr < best) {
+            res = i;
+            best = curr;
+        }
+    }
+    return res;
+}
+
+static void MakeLightTableCustom(const GenerateTrnParam &params)
+{
+    unsigned i, j, k;
+
+    bool dynColors[NUM_COLORS];
+    memset(dynColors, true, sizeof(dynColors);
+
+    for (k = 0; k < NUM_COLORS; k++) {
+        for (j = 0; j < params.colors.size(); j++) {
+            for (i = params.colors[j].firstcolor; i <= params.colors[j].lastcolor; i++) {
+                dynColors[i] = false;
+            }
+        }
+    }
+
+    for (i = 0; i < MAXDARKNESS; i++) {
+        for (k = 0; k < NUM_COLORS; k++) {
+            for (j = 0; j < params.colors.size(); j++) {
+                if ((int)k < params.colors[j].firstcolor || (int)k > params.colors[j].lastcolor) {
+                    continue;
+                }
+                if (!params.colors[j].shadecolor) {
+                    ColorTrns[i][k] = k;
+                } else {
+                    int numColors = params.colors[j].lastcolor - params.colors[j].firstcolor + 1;
+                    int col = k + (numColors * i) / (MAXDARKNESS + 1);
+                    if (col > params.colors[j].lastcolor) {
+                        col = 0;
+                    }
+                    ColorTrns[i][k] = col;
+                }
+                break;
+            }
+            if (j != params.colors.size()) {
+                continue;
+            }
+            ColorTrns[i][k] = selectColor(k, i, dynColor, params.pals);
+        }
+    }
+
+    memset(ColorTrns[MAXDARKNESS], 0, sizeof(ColorTrns[MAXDARKNESS]));
+}
+
 void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns)
 {
     if (params.mode != DTYPE_NONE) {
         MakeLightTableBase(params);
     } else {
-        MakeLightTableNew(DTYPE_TOWN);
+        // MakeLightTableNew(params);
+        MakeLightTableCustom(params);
     }
 
     QString filePath = QApplication::tr("Light%1.trn");
