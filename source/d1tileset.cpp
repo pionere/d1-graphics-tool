@@ -171,7 +171,7 @@ void D1Tileset::removeFrame(int frameIndex, int replacement)
     // - shift frame indices of the subtiles
     unsigned refIndex = frameIndex + 1;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        std::vector<unsigned> frameRefs = this->min->getFrameReferences(i);
+        std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         for (unsigned n = 0; n < frameRefs.size(); n++) {
             if (frameRefs[n] < refIndex) {
                 continue;
@@ -200,7 +200,7 @@ void D1Tileset::createFrame(int frameIndex)
     // - shift frame indices of the subtiles
     unsigned refIndex = frameIndex + 1;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        std::vector<unsigned> frameRefs = this->min->getFrameReferences(i);
+        std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         for (unsigned n = 0; n < frameRefs.size(); n++) {
             if (frameRefs[n] >= refIndex) {
                 frameRefs[n] += 1;
@@ -257,7 +257,7 @@ void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &fra
     // - shift subtile indices of the tiles
     int refIndex = subtileIndex;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        std::vector<int> subtileIndices = this->til->getSubtileIndices(i);
+        std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
         for (unsigned n = 0; n < subtileIndices.size(); n++) {
             if (subtileIndices[n] < refIndex) {
                 continue;
@@ -313,7 +313,7 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
     // - shift subtile indices of the tiles
     int refIndex = subtileIndex;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        std::vector<int> subtileIndices = this->til->getSubtileIndices(i);
+        std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
         for (unsigned n = 0; n < subtileIndices.size(); n++) {
             if (subtileIndices[n] < refIndex) {
                 continue;
