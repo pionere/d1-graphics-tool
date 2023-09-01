@@ -5,6 +5,7 @@
  */
 #include "all.h"
 
+#include <QApplication>
 #include <QString>
 
 #include "../progressdialog.h"
@@ -115,8 +116,16 @@ void InitLvlDungeon()
 	}
 
 	memset(pTiles, 0, sizeof(pTiles));
-	if (lfd->dMegaTiles != NULL) { 
-		LoadFileWithMem(lfd->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
+	if (lfd->dMegaTiles != NULL) {
+		{   // .TIL
+			BYTE* tilData = LoadFileInMem(lfd->dMegaTiles, &dwSubtiles);
+			if (dwSubtiles > sizeof(pTiles) - sizeof(pTiles[0])) {
+				dProgressErr() << QApplication::tr("TIL file is too large. (%1 bytes. Limit %2").arg(dwSubtiles).arg(sizeof(pTiles) - sizeof(pTiles[0]));
+				dwSubtiles = sizeof(pTiles) - sizeof(pTiles[0]);
+			}
+			memcpy((BYTE*)&pTiles[1][0], tilData, dwSubtiles);
+			mem_free_dbg(tilData);
+		}
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 		for (int i = 1; i < lengthof(pTiles); i++) {
 			for (int bv = 0; bv < lengthof(pTiles[0]); bv++) {
@@ -131,7 +140,15 @@ void InitLvlDungeon()
 		}
 	}
 	if (lfd->dTileFlags != NULL) {
-		LoadFileWithMem(lfd->dTileFlags, nTrnShadowTable); // .TLA
+		{   // .TLA
+			BYTE* tlaData = LoadFileInMem(lfd->dTileFlags, &dwSubtiles);
+			if (dwSubtiles > sizeof(nTrnShadowTable)) {
+				dProgressErr() << QApplication::tr("TLA file is too large. (%1 bytes. Limit %2").arg(dwSubtiles).arg(sizeof(nTrnShadowTable));
+				dwSubtiles = sizeof(nTrnShadowTable);
+			}
+			memcpy(nTrnShadowTable, tlaData, dwSubtiles);
+			mem_free_dbg(tlaData);
+		}
 	}
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
 	memset(nCollLightTable, 0, sizeof(nCollLightTable));
