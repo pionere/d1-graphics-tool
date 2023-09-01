@@ -61,16 +61,17 @@ public:
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
 
     void addToCurrentFrame(const QString &imagefilePath);
+    void createFrame(bool append);
     void duplicateCurrentFrame(bool wholeGroup);
     void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame(bool wholeGroup);
 
-    void createSubtile();
+    void createSubtile(bool append);
     void duplicateCurrentSubtile(bool deepCopy);
     void replaceCurrentSubtile(const QString &imagefilePath);
     void removeCurrentSubtile();
 
-    void createTile();
+    void createTile(bool append);
     void duplicateCurrentTile(bool deepCopy);
     void replaceCurrentTile(const QString &imagefilePath);
     void removeCurrentTile();

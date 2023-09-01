@@ -135,6 +135,7 @@ public:
     bool isFrameSizeConstant() const;
     QImage getFrameImage(int frameIndex) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
+    void insertFrame(int frameIndex, int width, int height);
     D1GfxFrame *insertFrame(int frameIndex);
     D1GfxFrame *insertFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const QImage &image);

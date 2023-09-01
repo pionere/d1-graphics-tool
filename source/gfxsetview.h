@@ -42,6 +42,7 @@ public:
 
     void framePixelClicked(const QPoint &pos, bool first);
     void framePixelHovered(const QPoint &pos);
+    void createFrame(bool append);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void addToCurrentFrame(const QString &imagefilePath);
     void duplicateCurrentFrame(bool wholeGroup);

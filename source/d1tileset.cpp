@@ -162,23 +162,70 @@ void D1Tileset::save(const SaveAsParam &params)
     this->tla->save(params);
 }
 
+void D1Tileset::removeFrame(int frameIndex, int replacement)
+{
+    // remove the frame
+    this->gfx->removeFrame(frameIndex, false);
+    // D1Min::frameRemoved
+    // shift references
+    // - shift frame indices of the subtiles
+    unsigned refIndex = frameIndex + 1;
+    for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
+        for (unsigned n = 0; n < frameRefs.size(); n++) {
+            if (frameRefs[n] < refIndex) {
+                continue;
+            }
+            if (frameRefs[n] == refIndex) {
+                if (replacement < 0) {
+                    frameRefs[n] = 0;
+                    dProgressErr() << QApplication::tr("Frame %1 was removed, but it was still used in Subtile %2 @ %3").arg(refIndex).arg(i + 1).arg(n + 1);
+                } else {
+                    frameRefs[n] = replacement;
+                }
+            } else {
+                frameRefs[n] -= 1;
+            }
+            this->min->setModified();
+        }
+    }
+}
+
+void D1Tileset::createFrame(int frameIndex)
+{
+    // insert the frame
+    this->gfx->insertFrame(frameIndex, MICRO_WIDTH, MICRO_HEIGHT);
+    // D1Min::frameInserted
+    // shift references
+    // - shift frame indices of the subtiles
+    unsigned refIndex = frameIndex + 1;
+    for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
+        for (unsigned n = 0; n < frameRefs.size(); n++) {
+            if (frameRefs[n] >= refIndex) {
+                frameRefs[n] += 1;
+                this->min->setModified();
+            }
+        }
+    }
+}
+
 void D1Tileset::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
 {
     this->til->insertTile(tileIndex, subtileIndices);
     this->tla->insertTile(tileIndex);
 }
 
-void D1Tileset::createTile()
+void D1Tileset::createTile(int tileIndex)
 {
-    this->til->createTile();
-    this->tla->createTile();
+    int n = TILE_WIDTH * TILE_HEIGHT;
+    this->insertTile(tileIndex, std::vector<int>(n));
 }
 
 int D1Tileset::duplicateTile(int tileIndex, bool deepCopy)
 {
-    this->createTile();
-
-    int newTileIndex = this->til->getTileCount() - 1;
+    int newTileIndex = this->til->getTileCount();
+    this->createTile(newTileIndex);
     // D1Til::duplicate
     std::vector<int> &baseSubtileIndices = this->til->getSubtileIndices(tileIndex);
     std::vector<int> &newSubtileIndices = this->til->getSubtileIndices(newTileIndex);
@@ -202,21 +249,35 @@ void D1Tileset::removeTile(int tileIndex)
 
 void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
 {
+    // insert the subtile
     this->min->insertSubtile(subtileIndex, frameReferencesList);
     this->sla->insertSubtile(subtileIndex);
+    // D1Til::subtileInserted
+    // shift references
+    // - shift subtile indices of the tiles
+    int refIndex = subtileIndex;
+    for (int i = 0; i < this->til->getTileCount(); i++) {
+        std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
+        for (unsigned n = 0; n < subtileIndices.size(); n++) {
+            if (subtileIndices[n] < refIndex) {
+                continue;
+            }
+            subtileIndices[n] += 1;
+            this->til->setModified();
+        }
+    }
 }
 
-void D1Tileset::createSubtile()
+void D1Tileset::createSubtile(int subtileIndex)
 {
-    this->min->createSubtile();
-    this->sla->createSubtile();
+    int n = this->min->getSubtileWidth() * this->min->getSubtileHeight();
+    this->insertSubtile(subtileIndex, std::vector<unsigned>(n));
 }
 
 int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
 {
-    this->createSubtile();
-
-    int newSubtileIndex = this->min->getSubtileCount() - 1;
+    int newSubtileIndex = this->min->getSubtileCount();
+    this->createSubtile(newSubtileIndex);
     // D1Min::duplicate
     std::vector<unsigned> &baseFrameReferences = this->min->getFrameReferences(subtileIndex);
     std::vector<unsigned> &newFrameReferences = this->min->getFrameReferences(newSubtileIndex);
@@ -244,8 +305,27 @@ int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
 
 void D1Tileset::removeSubtile(int subtileIndex, int replacement)
 {
-    this->til->removeSubtile(subtileIndex, replacement);
+    // remove the subtile
+    this->min->removeSubtile(subtileIndex);
     this->sla->removeSubtile(subtileIndex);
+    // D1Til::subtileRemoved
+    // shift references
+    // - shift subtile indices of the tiles
+    int refIndex = subtileIndex;
+    for (int i = 0; i < this->til->getTileCount(); i++) {
+        std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
+        for (unsigned n = 0; n < subtileIndices.size(); n++) {
+            if (subtileIndices[n] < refIndex) {
+                continue;
+            }
+            if (subtileIndices[n] == refIndex) {
+                subtileIndices[n] = replacement;
+            } else {
+                subtileIndices[n] -= 1;
+            }
+            this->til->setModified();
+        }
+    }
 }
 
 void D1Tileset::resetSubtileFlags(int subtileIndex)
@@ -456,7 +536,7 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
                 continue;
             }
             // use frame0 instead of frame1
-            this->min->removeFrame(j, i + 1);
+            this->removeFrame(j, i + 1);
             // calculate the original indices
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
@@ -19292,21 +19372,6 @@ void D1Tileset::patch(int dunType, bool silent)
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
         unsigned refIndex = *it;
-        this->gfx->removeFrame(refIndex - 1, false);
-        // shift references
-        // - shift frame indices of the subtiles
-        for (int i = 0; i < this->min->getSubtileCount(); i++) {
-            std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
-            for (unsigned n = 0; n < frameReferences.size(); n++) {
-                if (frameReferences[n] >= refIndex) {
-                    if (frameReferences[n] == refIndex) {
-                        frameReferences[n] = 0;
-                        dProgressErr() << QApplication::tr("Frame %1 was removed, but it was still used in Subtile %2 @ %3").arg(refIndex).arg(i + 1).arg(n + 1);
-                    } else {
-                        frameReferences[n] -= 1;
-                    }
-                }
-            }
-        }
+        this->removeFrame(refIndex - 1, -1);
     }
 }

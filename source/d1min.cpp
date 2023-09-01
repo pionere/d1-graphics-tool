@@ -89,8 +89,8 @@ bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CE
         }
         // add subtiles to sla if necessary
         while (minSubtileCount > subtileCount) {
+            this->tileset->sla->insertSubtile(subtileCount);
             subtileCount++;
-            this->tileset->sla->createSubtile();
         }
         if (minSubtileCount < subtileCount) {
             changed = true;
@@ -490,38 +490,9 @@ bool D1Min::setFrameReference(int subtileIndex, int index, unsigned frameRef)
     return true;
 }
 
-void D1Min::removeFrame(int frameIndex, int replacement)
-{
-    // remove the frame
-    this->gfx->removeFrame(frameIndex, false);
-    // shift references
-    // - shift frame indices of the subtiles
-    unsigned refIndex = frameIndex + 1;
-    for (std::vector<unsigned> &frameRefs : this->frameReferences) {
-        for (unsigned n = 0; n < frameRefs.size(); n++) {
-            if (frameRefs[n] >= refIndex) {
-                if (frameRefs[n] == refIndex) {
-                    frameRefs[n] = replacement;
-                } else {
-                    frameRefs[n] -= 1;
-                }
-                this->modified = true;
-            }
-        }
-    }
-}
-
 void D1Min::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
 {
     this->frameReferences.insert(this->frameReferences.begin() + subtileIndex, frameReferencesList);
-    this->modified = true;
-}
-
-void D1Min::createSubtile()
-{
-    int n = this->subtileWidth * this->subtileHeight;
-
-    this->frameReferences.push_back(std::vector<unsigned>(n));
     this->modified = true;
 }
 

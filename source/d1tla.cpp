@@ -169,12 +169,6 @@ void D1Tla::insertTile(int tileIndex)
     this->modified = true;
 }
 
-void D1Tla::createTile()
-{
-    this->properties.append(0);
-    this->modified = true;
-}
-
 void D1Tla::removeTile(int tileIndex)
 {
     this->properties.removeAt(tileIndex);

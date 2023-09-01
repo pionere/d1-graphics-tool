@@ -229,6 +229,19 @@ std::vector<std::vector<D1GfxPixel>> D1Gfx::getFramePixelImage(int frameIndex) c
     return frame->getPixels();
 }
 
+void D1Gfx::insertFrame(int idx, int width, int height)
+{
+    D1GfxFrame *frame = this->insertFrame(idx);
+
+    for (int y = 0; y < height; y++) {
+        std::vector<D1GfxPixel> pixelLine;
+        for (int x = 0; x < width; x++) {
+            pixelLine.push_back(D1GfxPixel::transparentPixel());
+        }
+        frame->addPixelLine(std::move(pixelLine));
+    }
+}
+
 D1GfxFrame *D1Gfx::insertFrame(int idx)
 {
     bool clipped;

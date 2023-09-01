@@ -225,7 +225,6 @@ void MainWindow::updateWindow()
     this->ui->actionDel_Subtile->setEnabled(hasSubtile);
     this->ui->actionCreate_Tile->setEnabled(hasSubtile);
     this->ui->actionInsert_Tile->setEnabled(hasSubtile);
-    this->ui->actionAppend_Tile->setEnabled(hasSubtile);
     bool hasTile = this->tileset != nullptr && this->tileset->til->getTileCount() != 0;
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
@@ -1462,26 +1461,50 @@ static QString imageNameFilter()
 
 void MainWindow::addFrames(bool append)
 {
-    QString filter = imageNameFilter();
-    QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        QString filter = imageNameFilter();
+        QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
 
-    this->openImageFiles(IMAGE_FILE_MODE::FRAME, files, append);
+        this->openImageFiles(IMAGE_FILE_MODE::FRAME, files, append);
+        return;
+    }
+    if (this->celView != nullptr) {
+        this->celView->createFrame(append);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->createFrame(append);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->createFrame(append);
+    }
+    this->updateWindow();
 }
 
 void MainWindow::addSubtiles(bool append)
 {
-    QString filter = imageNameFilter();
-    QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        QString filter = imageNameFilter();
+        QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
 
-    this->openImageFiles(IMAGE_FILE_MODE::SUBTILE, files, append);
+        this->openImageFiles(IMAGE_FILE_MODE::SUBTILE, files, append);
+        return;
+    }
+    this->levelCelView->createSubtile(append);
+    this->updateWindow();
 }
 
 void MainWindow::addTiles(bool append)
 {
-    QString filter = imageNameFilter();
-    QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        QString filter = imageNameFilter();
+        QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
 
-    this->openImageFiles(IMAGE_FILE_MODE::TILE, files, append);
+        this->openImageFiles(IMAGE_FILE_MODE::TILE, files, append);
+        return;
+    }
+
+    this->levelCelView->createTile(append);
+    this->updateWindow();
 }
 
 void MainWindow::on_actionOpenAs_triggered()
@@ -1605,6 +1628,11 @@ void MainWindow::on_actionAddTo_Frame_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionCreate_Frame_triggered()
+{
+    this->addFrames(true);
+}
+
 void MainWindow::on_actionInsert_Frame_triggered()
 {
     this->addFrames(false);
@@ -1622,11 +1650,6 @@ void MainWindow::on_actionDuplicate_Frame_triggered()
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->duplicateCurrentFrame(wholeGroup);
     }
-}
-
-void MainWindow::on_actionAppend_Frame_triggered()
-{
-    this->addFrames(true);
 }
 
 void MainWindow::on_actionReplace_Frame_triggered()
@@ -1671,8 +1694,7 @@ void MainWindow::on_actionDel_Frame_triggered()
 
 void MainWindow::on_actionCreate_Subtile_triggered()
 {
-    this->levelCelView->createSubtile();
-    this->updateWindow();
+    this->addSubtiles(true);
 }
 
 void MainWindow::on_actionInsert_Subtile_triggered()
@@ -1684,11 +1706,6 @@ void MainWindow::on_actionDuplicate_Subtile_triggered()
 {
     const bool deepCopy = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     this->levelCelView->duplicateCurrentSubtile(deepCopy);
-}
-
-void MainWindow::on_actionAppend_Subtile_triggered()
-{
-    this->addSubtiles(true);
 }
 
 void MainWindow::on_actionReplace_Subtile_triggered()
@@ -1714,12 +1731,6 @@ void MainWindow::on_actionDel_Subtile_triggered()
     this->updateWindow();
 }
 
-void MainWindow::on_actionCreate_Tile_triggered()
-{
-    this->levelCelView->createTile();
-    this->updateWindow();
-}
-
 void MainWindow::on_actionInsert_Tile_triggered()
 {
     this->addTiles(false);
@@ -1731,7 +1742,7 @@ void MainWindow::on_actionDuplicate_Tile_triggered()
     this->levelCelView->duplicateCurrentTile(deepCopy);
 }
 
-void MainWindow::on_actionAppend_Tile_triggered()
+void MainWindow::on_actionCreate_Tile_triggered()
 {
     this->addTiles(true);
 }

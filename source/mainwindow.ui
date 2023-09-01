@@ -309,9 +309,9 @@
      <bool>true</bool>
     </property>
     <addaction name="actionAddTo_Frame"/>
+    <addaction name="actionCreate_Frame"/>
     <addaction name="actionInsert_Frame"/>
     <addaction name="actionDuplicate_Frame"/>
-    <addaction name="actionAppend_Frame"/>
     <addaction name="actionReplace_Frame"/>
     <addaction name="actionDel_Frame"/>
    </widget>
@@ -325,7 +325,6 @@
     <addaction name="actionCreate_Subtile"/>
     <addaction name="actionInsert_Subtile"/>
     <addaction name="actionDuplicate_Subtile"/>
-    <addaction name="actionAppend_Subtile"/>
     <addaction name="actionReplace_Subtile"/>
     <addaction name="actionDel_Subtile"/>
    </widget>
@@ -339,7 +338,6 @@
     <addaction name="actionCreate_Tile"/>
     <addaction name="actionInsert_Tile"/>
     <addaction name="actionDuplicate_Tile"/>
-    <addaction name="actionAppend_Tile"/>
     <addaction name="actionReplace_Tile"/>
     <addaction name="actionDel_Tile"/>
    </widget>
@@ -517,6 +515,14 @@
     <string>Add the content of an image to the current frame</string>
    </property>
   </action>
+  <action name="actionCreate_Frame">
+   <property name="text">
+    <string>Create</string>
+   </property>
+   <property name="toolTip">
+    <string>Create new frames</string>
+   </property>
+  </action>
   <action name="actionInsert_Frame">
    <property name="text">
     <string>Insert</string>
@@ -531,14 +537,6 @@
    </property>
    <property name="toolTip">
     <string>Duplicate the current frame</string>
-   </property>
-  </action>
-  <action name="actionAppend_Frame">
-   <property name="text">
-    <string>Append</string>
-   </property>
-   <property name="toolTip">
-    <string>Append new frames at the end</string>
    </property>
   </action>
   <action name="actionReplace_Frame">
@@ -581,14 +579,6 @@
     <string>Add new subtiles before the current one</string>
    </property>
   </action>
-  <action name="actionAppend_Subtile">
-   <property name="text">
-    <string>Append</string>
-   </property>
-   <property name="toolTip">
-    <string>Append new subtiles at the end</string>
-   </property>
-  </action>
   <action name="actionReplace_Subtile">
    <property name="text">
     <string>Replace</string>
@@ -627,14 +617,6 @@
    </property>
    <property name="toolTip">
     <string>Duplicate the current tile</string>
-   </property>
-  </action>
-  <action name="actionAppend_Tile">
-   <property name="text">
-    <string>Append</string>
-   </property>
-   <property name="toolTip">
-    <string>Append new tiles at the end</string>
    </property>
   </action>
   <action name="actionReplace_Tile">
