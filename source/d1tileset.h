@@ -25,6 +25,7 @@ public:
     void save(const SaveAsParam &params);
 
     void createFrame(int frameIndex);
+    void removeFrame(int frameIndex, int replacement);
     void createTile(int tileIndex);
     void insertTile(int tileIndex, const std::vector<int> &subtileIndices);
     int duplicateTile(int tileIndex, bool deepCopy);

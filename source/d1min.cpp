@@ -497,43 +497,6 @@ bool D1Min::setFrameReference(int subtileIndex, int index, unsigned frameRef)
     return true;
 }
 
-void D1Min::insertFrame(int frameIndex)
-{
-    this->gfx->insertFrame(frameIndex, MICRO_WIDTH, MICRO_HEIGHT);
-    // shift references
-    // - shift frame indices of the subtiles
-    unsigned refIndex = frameIndex + 1;
-    for (std::vector<unsigned> &frameRefs : this->frameReferences) {
-        for (unsigned n = 0; n < frameRefs.size(); n++) {
-            if (frameRefs[n] >= refIndex) {
-                frameRefs[n] += 1;
-                this->modified = true;
-            }
-        }
-    }
-}
-
-void D1Min::removeFrame(int frameIndex, int replacement)
-{
-    // remove the frame
-    this->gfx->removeFrame(frameIndex, false);
-    // shift references
-    // - shift frame indices of the subtiles
-    unsigned refIndex = frameIndex + 1;
-    for (std::vector<unsigned> &frameRefs : this->frameReferences) {
-        for (unsigned n = 0; n < frameRefs.size(); n++) {
-            if (frameRefs[n] >= refIndex) {
-                if (frameRefs[n] == refIndex) {
-                    frameRefs[n] = replacement;
-                } else {
-                    frameRefs[n] -= 1;
-                }
-                this->modified = true;
-            }
-        }
-    }
-}
-
 void D1Min::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
 {
     this->frameReferences.insert(this->frameReferences.begin() + subtileIndex, frameReferencesList);
