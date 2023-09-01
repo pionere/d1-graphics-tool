@@ -1502,7 +1502,7 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
 
 void LevelCelView::createFrame(bool append)
 {
-    int newFrameIndex = append ? this->gfx->getFrameCount() - 1 : this->currentFrameIndex;
+    int newFrameIndex = append ? this->gfx->getFrameCount() : this->currentFrameIndex;
     this->tileset->createFrame(newFrameIndex);
     // jump to the new frame
     this->currentFrameIndex = newFrameIndex;
@@ -1596,7 +1596,7 @@ void LevelCelView::removeCurrentFrame(bool wholeGroup)
 
 void LevelCelView::createSubtile(bool append)
 {
-    int newSubtileIndex = append ? this->min->getSubtileCount() - 1 : this->currentSubtileIndex;
+    int newSubtileIndex = append ? this->min->getSubtileCount() : this->currentSubtileIndex;
     this->tileset->createSubtile(newSubtileIndex);
     // jump to the new subtile
     this->currentSubtileIndex = newSubtileIndex;
@@ -1695,7 +1695,7 @@ void LevelCelView::removeCurrentSubtile()
 
 void LevelCelView::createTile(bool append)
 {
-    int newTileIndex = append ? this->til->getTileCount() - 1 : this->currentTileIndex;
+    int newTileIndex = append ? this->til->getTileCount() : this->currentTileIndex;
     this->tileset->createTile(newTileIndex);
     // jump to the new tile
     this->currentTileIndex = newTileIndex;

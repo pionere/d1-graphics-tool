@@ -1478,6 +1478,7 @@ void MainWindow::addFrames(bool append)
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->createFrame(append);
     }
+    this->updateWindow();
 }
 
 void MainWindow::addSubtiles(bool append)

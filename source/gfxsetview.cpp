@@ -336,7 +336,7 @@ void GfxsetView::createFrame(bool append)
         width = 64;
         height = 128;
     }
-    int newFrameIndex = append ? this->gfx->getFrameCount() - 1 : this->currentFrameIndex;
+    int newFrameIndex = append ? this->gfx->getFrameCount() : this->currentFrameIndex;
     this->gfx->insertFrame(newFrameIndex, width, height);
     // jump to the new frame
     this->currentFrameIndex = newFrameIndex;
