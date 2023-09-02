@@ -303,14 +303,14 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
 		auto a = color.alphaF();
         
 		auto steps = v * (MAXDARKNESS + 1);
-		if (colorIdx == 1) {
+		if (colorIdx == 144) {
 			QMessageBox::critical(nullptr, "Error", QString("light:%1 value:%2 steps:%3").arg(l).arg(v).arg(steps));
         }
 		if (steps <= shade) {
 			color = QColorConstants::Black;
         } else {
-			// color = color.darker(100 * steps / (steps - shade));
-			color.setHslF(h, s, l * (steps - shade) / steps, a);
+			color = color.darker(100 * steps / (steps - shade));
+			// color.setHslF(h, s, l * (steps - shade) / steps, a);
         }
 
         std::vector<PaletteColor> dynPalColors;
