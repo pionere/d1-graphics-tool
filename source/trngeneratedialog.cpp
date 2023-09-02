@@ -78,9 +78,6 @@ void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget 
 
 void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
 {
-    if (index == DTYPE_NONE) {
-        return;
-    }
     std::vector<GenerateTrnColor> colors;
     {
         GenerateTrnColor black;
@@ -89,21 +86,21 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         black.shadecolor = false;
         colors.push_back(black);
     }
-    for (i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         GenerateTrnColor levelColor;
         levelColor.firstcolor = i == 0 ? 1 : i * 16;
         levelColor.lastcolor = (i + 1) * 16 - 1;
         levelColor.shadecolor = true;
         colors.push_back(levelColor);
     }
-    for (i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         GenerateTrnColor stdColor;
         stdColor.firstcolor = 16 * 8 + i * 8;
         stdColor.lastcolor = stdColor.firstcolor + 8 - 1;
         stdColor.shadecolor = true;
         colors.push_back(stdColor);
     }
-    for (i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         GenerateTrnColor stdColor;
         stdColor.firstcolor = 16 * 8 + 8 * 4 + i * 16;
         stdColor.lastcolor = i == 5 ? 254 : (stdColor.firstcolor + 15);
@@ -132,18 +129,20 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         colors[1].shadecolor = false;
         // FIXME: maxdarkness?
         break;
+    case DTYPE_NONE:
+        return;
     }
 
     QList<TrnGenerateColEntryWidget *> colWidgets = this->ui->colorsVBoxLayout->parentWidget()->findChildren<TrnGenerateColEntryWidget *>();
     for (int i = colors.size(); i < colWidgets.count(); i++) {
         this->on_actionDelRange_triggered(colWidgets[i]);
     }
-    for (int i = colWidgets.count(); i < colors.size(); i++) {
+    for (unsigned i = colWidgets.count(); i < colors.size(); i++) {
         this->on_actionAddRange_triggered();
     }
     colWidgets = this->ui->colorsVBoxLayout->parentWidget()->findChildren<TrnGenerateColEntryWidget *>();
     for (int i = 0; i < colWidgets.count(); i++) {
-        colWidgets[i]->initialize(params.cols[i]);
+        colWidgets[i]->initialize(colors[i]);
     }
 }
 
