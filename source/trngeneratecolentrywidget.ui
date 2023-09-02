@@ -51,7 +51,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="shadeStepsLineEdit">
+      <widget class="LineEditWidget" name="shadeStepsLineEdit">
        <property name="charWidth">
         <number>3</number>
        </property>
