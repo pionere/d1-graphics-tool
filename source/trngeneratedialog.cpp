@@ -76,7 +76,7 @@ void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget 
     delete caller;
 }
 
-void TrnGenerateDialog::on_levelTypeComboBox_activated(int index);
+void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
 {
     if (index == DTYPE_NONE) {
         return;
@@ -159,9 +159,9 @@ void TrnGenerateDialog::on_generateButton_clicked()
     for (TrnGeneratePalEntryWidget *palWidget : palWidgets) {
         params.pals.push_back(palWidget->getPalette());
     }
-	if (params.pals.isEmpty()) {
+    if (params.pals.empty()) {
         QMessageBox::critical(nullptr, "Error", tr("At least one reference palette is necessary."));
-		return;
+        return;
     }
 
     params.mode = this->ui->levelTypeComboBox->currentIndex();
