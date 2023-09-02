@@ -421,13 +421,13 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
 
 void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns)
 {
-    if (params.mode != DTYPE_NONE) {
+    // if (params.mode != DTYPE_NONE) {
         // MakeLightTableBase(params);
-        MakeLightTableNew(params);
-    } else {
+    //    MakeLightTableNew(params);
+    //} else {
         // MakeLightTableNew(DTYPE_NONE);
         MakeLightTableCustom(params);
-    }
+    // }
 
     QString filePath = QApplication::tr("Light%1.trn");
     for (int i = 0; i <= MAXDARKNESS; i++) {

@@ -116,6 +116,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
     }
     switch (index) {
     case DTYPE_TOWN:
+        colors.erase(colors.begin() + 1, colors.begin() + 1 + 8);
         break;
     case DTYPE_CAVES:
         colors.erase(colors.begin() + 2);
