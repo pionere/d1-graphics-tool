@@ -185,7 +185,7 @@ static void MakeLightTableBase(const GenerateTrnParam &params)
     }
 }
 
-static void MakeLightTableNew(const GenerateTrnParam& params)
+/*static void MakeLightTableNew(const GenerateTrnParam& params)
 {
     unsigned i, j, k;
     /*GenerateTrnParam params;
@@ -239,7 +239,7 @@ static void MakeLightTableNew(const GenerateTrnParam& params)
         params.colors[1].shadecolor = false;
         // FIXME: maxdarkness?
         break;
-    }*/
+    }* /
 
     // BYTE colors[NUM_COLORS];
     // int numColors;
@@ -250,7 +250,7 @@ static void MakeLightTableNew(const GenerateTrnParam& params)
                 if ((int)k < params.colors[j].firstcolor || (int)k > params.colors[j].lastcolor) {
                     continue;
                 }
-                if (!params.colors[j].shadecolor) {
+                if (!params.colors[j].shadesteps < 0) {
                     ColorTrns[i][k] = k;
                 } else {
                     int numColors = params.colors[j].lastcolor - params.colors[j].firstcolor + 1;
@@ -278,7 +278,7 @@ static void MakeLightTableNew(const GenerateTrnParam& params)
             // FIXME:...
         }
     }
-}
+}*/
 
 static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
 {
