@@ -185,10 +185,10 @@ static void MakeLightTableBase(const GenerateTrnParam &params)
     }
 }
 
-static void MakeLightTableNew(int type)
+static void MakeLightTableNew(const GenerateTrnParam& params)
 {
     unsigned i, j, k;
-    GenerateTrnParam params;
+    /*GenerateTrnParam params;
     {
         GenerateTrnColor black;
         black.firstcolor = 0;
@@ -234,16 +234,16 @@ static void MakeLightTableNew(int type)
         // FIXME: maxdarkness?
         break;
     case DTYPE_HELL:
-        // FIXME:
         break;
     case DTYPE_NEST:
         params.colors[1].shadecolor = false;
         // FIXME: maxdarkness?
         break;
-    }
+    }*/
 
     // BYTE colors[NUM_COLORS];
     // int numColors;
+    D1Pal *basePal = params.pals.front();
     for (i = 0; i < MAXDARKNESS; i++) {
         for (k = 0; k < NUM_COLORS; k++) {
             for (j = 0; j < params.colors.size(); j++) {
@@ -254,9 +254,19 @@ static void MakeLightTableNew(int type)
                     ColorTrns[i][k] = k;
                 } else {
                     int numColors = params.colors[j].lastcolor - params.colors[j].firstcolor + 1;
-                    int col = k + (numColors * i) / (MAXDARKNESS + 1);
-                    if (col > params.colors[j].lastcolor) {
-                        col = 0;
+                    int col = (numColors * i) / (MAXDARKNESS + 1);
+                    QColor colorFirst = basePal->getColor(params.colors[j].firstcolor);
+                    QColor colorLast = basePal->getColor(params.colors[j].lastcolor);
+                    if (colorFirst.lightness() > colorLast.lightness()) {
+                        col = k + col;
+                        if (col > params.colors[j].lastcolor) {
+                            col = 0;
+                        }
+                    } else {
+                        col = k - col;
+                        if (col < params.colors[j].firstcolor) {
+                            col = 0;
+                        }
                     }
                     ColorTrns[i][k] = col;
                 }
@@ -303,8 +313,11 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
 		auto a = color.alphaF();
         
 		auto steps = v * (MAXDARKNESS + 1);
-		if (colorIdx == 144) {
+		/*if (colorIdx == 144) {
 			QMessageBox::critical(nullptr, "Error", QString("light:%1 value:%2 steps:%3").arg(l).arg(v).arg(steps));
+        }*/
+		if (shade == 0) {
+			QMessageBox::critical(nullptr, "Error", QString("color:%1 value:%2 steps:%3").arg(colorIdx).arg(v).arg(steps));
         }
 		if (steps <= shade) {
 			color = QColorConstants::Black;
@@ -367,6 +380,7 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
         }
     }
 
+    D1Pal *basePal = params.pals.front();
     for (i = 0; i < MAXDARKNESS; i++) {
         for (k = 0; k < NUM_COLORS; k++) {
             for (j = 0; j < params.colors.size(); j++) {
@@ -377,9 +391,19 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
                     ColorTrns[i][k] = k;
                 } else {
                     int numColors = params.colors[j].lastcolor - params.colors[j].firstcolor + 1;
-                    int col = k + (numColors * i) / (MAXDARKNESS + 1);
-                    if (col > params.colors[j].lastcolor) {
-                        col = 0;
+                    int col = (numColors * i) / (MAXDARKNESS + 1);
+                    QColor colorFirst = basePal->getColor(params.colors[j].firstcolor);
+                    QColor colorLast = basePal->getColor(params.colors[j].lastcolor);
+                    if (colorFirst.lightness() > colorLast.lightness()) {
+                        col = k + col;
+                        if (col > params.colors[j].lastcolor) {
+                            col = 0;
+                        }
+                    } else {
+                        col = k - col;
+                        if (col < params.colors[j].firstcolor) {
+                            col = 0;
+                        }
                     }
                     ColorTrns[i][k] = col;
                 }
@@ -398,7 +422,8 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
 void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns)
 {
     if (params.mode != DTYPE_NONE) {
-        MakeLightTableBase(params);
+        // MakeLightTableBase(params);
+        MakeLightTableNew(params);
     } else {
         // MakeLightTableNew(DTYPE_NONE);
         MakeLightTableCustom(params);

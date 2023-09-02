@@ -16,6 +16,8 @@ public:
     explicit TrnGenerateColEntryWidget(TrnGenerateDialog *parent);
     ~TrnGenerateColEntryWidget();
 
+    void initialize(const GenerateTrnColor &color);
+
     GenerateTrnColor getTrnColor() const;
 
 private slots:

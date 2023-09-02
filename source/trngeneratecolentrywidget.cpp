@@ -24,6 +24,13 @@ TrnGenerateColEntryWidget::~TrnGenerateColEntryWidget()
     delete ui;
 }
 
+void TrnGenerateColEntryWidget::initialize(const GenerateTrnColor &color)
+{
+    this->ui->firstColorLineEdit->setText(QString::number(color.firstcolor));
+    this->ui->lastColorLineEdit->setText(QString::number(color.lastcolor));
+    this->ui->shadeColorCheckBox->setChecked(color.shadecolor);
+}
+
 GenerateTrnColor TrnGenerateColEntryWidget::getTrnColor() const
 {
     GenerateTrnColor color;
@@ -37,6 +44,10 @@ GenerateTrnColor TrnGenerateColEntryWidget::getTrnColor() const
             color.lastcolor = D1TRN_TRANSLATIONS - 1;
         }
     }
+    if (color.lastcolor >= D1TRN_TRANSLATIONS) {
+        color.lastcolor = D1TRN_TRANSLATIONS - 1;
+    }
+
     color.shadecolor = this->ui->shadeColorCheckBox->isChecked();
     return color;
 }

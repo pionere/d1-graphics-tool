@@ -43,6 +43,7 @@ public:
 private slots:
     void on_actionAddRange_triggered();
     void on_actionAddPalette_triggered();
+    void on_levelTypeComboBox_activated(int index);
 
     void on_generateButton_clicked();
     void on_cancelButton_clicked();

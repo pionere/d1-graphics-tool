@@ -76,6 +76,77 @@ void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget 
     delete caller;
 }
 
+void TrnGenerateDialog::on_levelTypeComboBox_activated(int index);
+{
+    if (index == DTYPE_NONE) {
+        return;
+    }
+    std::vector<GenerateTrnColor> colors;
+    {
+        GenerateTrnColor black;
+        black.firstcolor = 0;
+        black.lastcolor = 0;
+        black.shadecolor = false;
+        colors.push_back(black);
+    }
+    for (i = 0; i < 8; i++) {
+        GenerateTrnColor levelColor;
+        levelColor.firstcolor = i == 0 ? 1 : i * 16;
+        levelColor.lastcolor = (i + 1) * 16 - 1;
+        levelColor.shadecolor = true;
+        colors.push_back(levelColor);
+    }
+    for (i = 0; i < 4; i++) {
+        GenerateTrnColor stdColor;
+        stdColor.firstcolor = 16 * 8 + i * 8;
+        stdColor.lastcolor = stdColor.firstcolor + 8 - 1;
+        stdColor.shadecolor = true;
+        colors.push_back(stdColor);
+    }
+    for (i = 0; i < 6; i++) {
+        GenerateTrnColor stdColor;
+        stdColor.firstcolor = 16 * 8 + 8 * 4 + i * 16;
+        stdColor.lastcolor = i == 5 ? 254 : (stdColor.firstcolor + 15);
+        stdColor.shadecolor = true;
+        colors.push_back(stdColor);
+    }
+    {
+        GenerateTrnColor white;
+        white.firstcolor = 255;
+        white.lastcolor = 255;
+        white.shadecolor = false;
+        colors.push_back(white);
+    }
+    switch (index) {
+    case DTYPE_TOWN:
+        break;
+    case DTYPE_CAVES:
+        colors.erase(colors.begin() + 2);
+        colors[1].lastcolor = 31;
+        colors[1].shadecolor = false;
+        // FIXME: maxdarkness?
+        break;
+    case DTYPE_HELL:
+        break;
+    case DTYPE_NEST:
+        colors[1].shadecolor = false;
+        // FIXME: maxdarkness?
+        break;
+    }
+
+    QList<TrnGenerateColEntryWidget *> colWidgets = this->ui->colorsVBoxLayout->parentWidget()->findChildren<TrnGenerateColEntryWidget *>();
+    for (int i = colors.size(); i < colWidgets.count(); i++) {
+        this->on_actionDelRange_triggered(colWidgets[i]);
+    }
+    for (int i = colWidgets.count(); i < colors.size(); i++) {
+        this->on_actionAddRange_triggered();
+    }
+    colWidgets = this->ui->colorsVBoxLayout->parentWidget()->findChildren<TrnGenerateColEntryWidget *>();
+    for (int i = 0; i < colWidgets.count(); i++) {
+        colWidgets[i]->initialize(params.cols[i]);
+    }
+}
+
 void TrnGenerateDialog::on_generateButton_clicked()
 {
     GenerateTrnParam params;
@@ -88,7 +159,10 @@ void TrnGenerateDialog::on_generateButton_clicked()
     for (TrnGeneratePalEntryWidget *palWidget : palWidgets) {
         params.pals.push_back(palWidget->getPalette());
     }
-	QMessageBox::critical(nullptr, "Error", QString("colors %1 pals %2").arg(params.colors.size()).arg(params.pals.size()));
+	if (params.pals.isEmpty()) {
+        QMessageBox::critical(nullptr, "Error", tr("At least one reference palette is necessary."));
+		return;
+    }
 
     params.mode = this->ui->levelTypeComboBox->currentIndex();
 
