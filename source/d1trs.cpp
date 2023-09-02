@@ -307,7 +307,7 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
 			QMessageBox::critical(nullptr, "Error", QString("light:%1 value:%2 steps:%3").arg(l).arg(v).arg(steps));
         }
 		if (steps <= shade) {
-			color = QColor(0);
+			color = QColorConstants::Black;
         } else {
 			// color = color.darker(100 * steps / (steps - shade));
 			color.setHslF(h, s, l * (steps - shade) / steps, a);
