@@ -203,7 +203,6 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 
 	IncProgress();
 	InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
-//	MakeLightTable();
 	IncProgress();
 
 	InitLvlAutomap();
@@ -235,9 +234,9 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 		InitObjectGFX();  // load object graphics
 		IncProgress();
 		HoldThemeRooms(); // protect themes with dFlags
-		InitObjects();    // place objects
+		InitMonsters();   // place monsters
 		IncProgress();
-		InitMonsters();     // place monsters
+		InitObjects();      // place objects
 		InitItems();        // place items
 		CreateThemeRooms(); // populate theme rooms
 	} else {
