@@ -51,12 +51,26 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="shadeColorCheckBox">
-       <property name="checked">
-        <bool>true</bool>
+      <widget class="QCheckBox" name="shadeStepsLineEdit">
+       <property name="charWidth">
+        <number>3</number>
        </property>
        <property name="toolTip">
-        <string>These colors must not change</string>
+        <string>Number of steps to become pitch black</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="deltaStepsCheckBox">
+       <property name="toolTip">
+        <string>Treat steps as delta</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="protColCheckBox">
+       <property name="toolTip">
+        <string>Prevent the colors to be used as a shade</string>
        </property>
       </widget>
      </item>

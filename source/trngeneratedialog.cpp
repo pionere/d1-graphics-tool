@@ -7,6 +7,8 @@
 #include "progressdialog.h"
 #include "ui_trngeneratedialog.h"
 
+#include "dungeon/all.h"
+
 TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::TrnGenerateDialog())
@@ -83,53 +85,81 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         GenerateTrnColor black;
         black.firstcolor = 0;
         black.lastcolor = 0;
-        black.shadecolor = false;
+        black.shadesteps = 0;
+        black.deltasteps = 0;
+        black.protcolor = false;
         colors.push_back(black);
     }
     for (int i = 0; i < 8; i++) {
         GenerateTrnColor levelColor;
         levelColor.firstcolor = i == 0 ? 1 : i * 16;
         levelColor.lastcolor = (i + 1) * 16 - 1;
-        levelColor.shadecolor = true;
+        levelColor.shadesteps = 0;
+        levelColor.deltasteps = 0;
+        levelColor.protcolor = false;
         colors.push_back(levelColor);
     }
     for (int i = 0; i < 4; i++) {
         GenerateTrnColor stdColor;
         stdColor.firstcolor = 16 * 8 + i * 8;
         stdColor.lastcolor = stdColor.firstcolor + 8 - 1;
-        stdColor.shadecolor = true;
+        stdColor.shadesteps = 0;
+        stdColor.deltasteps = 0;
+        stdColor.protcolor = false;
         colors.push_back(stdColor);
     }
     for (int i = 0; i < 6; i++) {
         GenerateTrnColor stdColor;
         stdColor.firstcolor = 16 * 8 + 8 * 4 + i * 16;
         stdColor.lastcolor = i == 5 ? 254 : (stdColor.firstcolor + 15);
-        stdColor.shadecolor = true;
+        stdColor.shadesteps = 0;
+        stdColor.deltasteps = 0;
+        stdColor.protcolor = false;
         colors.push_back(stdColor);
     }
     {
         GenerateTrnColor white;
         white.firstcolor = 255;
         white.lastcolor = 255;
-        white.shadecolor = false;
+        white.shadesteps = -1;
+        white.deltasteps = 0;
+        white.protcolor = true;
         colors.push_back(white);
     }
     switch (index) {
     case DTYPE_TOWN:
-        colors.erase(colors.begin() + 1, colors.begin() + 1 + 8);
+        for (int i = 1; i < 1 + 8; i++) {
+            colors[i].shadesteps = 5;
+            colors[i].deltasteps = true;
+        }
         break;
     case DTYPE_CAVES:
-        colors.erase(colors.begin() + 2);
         colors[1].lastcolor = 31;
-        colors[1].shadecolor = false;
-        // FIXME: maxdarkness?
+        colors[1].shadesteps = -1;
+        colors[1].deltasteps = 0;
+        colors[1].protcolor = true;
+
+        colors.erase(colors.begin() + 2);
         break;
     case DTYPE_HELL:
+    case DTYPE_CRYPT:
+        colors[1].protcolor = true;
+        colors[2].protcolor = true;
         break;
-    case DTYPE_NEST:
-        colors[1].shadecolor = false;
-        // FIXME: maxdarkness?
-        break;
+    case DTYPE_NEST: {
+        colors[1].lastcolor = 7;
+        colors[1].shadesteps = -1;
+        colors[1].deltasteps = 0;
+        colors[1].protcolor = true;
+
+        GenerateTrnColor stdColor;
+        stdColor.firstcolor = 8;
+        stdColor.lastcolor = 15;
+        stdColor.shadesteps = -1;
+        stdColor.deltasteps = 0;
+        stdColor.protcolor = true;
+        colors.insert(colors.begin() + 2, stdColor);
+    } break;
     case DTYPE_NONE:
         return;
     }
