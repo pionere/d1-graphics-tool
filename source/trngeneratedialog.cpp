@@ -34,7 +34,7 @@ TrnGenerateDialog::~TrnGenerateDialog()
 
 void TrnGenerateDialog::initialize(D1Pal *p)
 {
-    QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->findChildren<TrnGeneratePalEntryWidget *>();
+    QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->parent()->findChildren<TrnGeneratePalEntryWidget *>();
     if (palWidgets.empty()) {
         TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, p, false);
         this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
@@ -79,15 +79,16 @@ void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget 
 void TrnGenerateDialog::on_generateButton_clicked()
 {
     GenerateTrnParam params;
-    QList<TrnGenerateColEntryWidget *> colWidgets = this->ui->colorsVBoxLayout->findChildren<TrnGenerateColEntryWidget *>();
+    QList<TrnGenerateColEntryWidget *> colWidgets = this->ui->colorsVBoxLayout->parent()->findChildren<TrnGenerateColEntryWidget *>();
     for (TrnGenerateColEntryWidget *colWidget : colWidgets) {
         params.colors.push_back(colWidget->getTrnColor());
     }
 
-    QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->findChildren<TrnGeneratePalEntryWidget *>();
+    QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->parent()->findChildren<TrnGeneratePalEntryWidget *>();
     for (TrnGeneratePalEntryWidget *palWidget : palWidgets) {
         params.pals.push_back(palWidget->getPalette());
     }
+	QMessageBox::critical(nullptr, "Error", QString("colors %1 pals %2").arg(params.colors.size()).arg(params.pals.size()));
 
     params.mode = this->ui->levelTypeComboBox->currentIndex();
 
