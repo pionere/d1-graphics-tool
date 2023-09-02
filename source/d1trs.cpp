@@ -296,11 +296,11 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
         }
 		
         // color = color.darker(100 * (MAXDARKNESS + 1) / (MAXDARKNESS + 1 - shade));
-		float h, s, v, l, a;
-		color.getHslF(&h, &s, &l, &a);
-
-		color.getHsvF(&h, &s, &v, &a);
-
+		auto h = color.hslHue();
+		auto s = color.hslSaturation();
+		auto v = color.valueF();
+		auto a = color.lightnessF();
+        
 		float steps = (v * (MAXDARKNESS + 1)) / 256;
 		if (colorIdx == 1) {
 			QMessageBox::critical(nullptr, "Error", QString("light:%1 value:%2 steps:%3").arg(l).arg(v).arg(steps));
@@ -308,7 +308,8 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
 		if (steps <= shade) {
 			color = QColor(0);
         } else {
-			color = color.darker(100 * steps / (steps - shade));
+			// color = color.darker(100 * steps / (steps - shade));
+			color.setHslF(h, s, l * (steps - shade) / steps, a);
         }
 
         std::vector<PaletteColor> dynPalColors;
