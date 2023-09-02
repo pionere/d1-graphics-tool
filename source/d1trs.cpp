@@ -299,7 +299,8 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
 		auto h = color.hslHue();
 		auto s = color.hslSaturation();
 		auto v = color.valueF();
-		auto a = color.lightnessF();
+		auto l = color.lightnessF();
+		auto a = color.alphaF();
         
 		auto steps = v * (MAXDARKNESS + 1);
 		if (colorIdx == 1) {
