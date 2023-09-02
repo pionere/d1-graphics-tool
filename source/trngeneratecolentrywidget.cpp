@@ -28,7 +28,7 @@ void TrnGenerateColEntryWidget::initialize(const GenerateTrnColor &color)
 {
     this->ui->firstColorLineEdit->setText(QString::number(color.firstcolor));
     this->ui->lastColorLineEdit->setText(QString::number(color.lastcolor));
-    this->ui->shadeStepsLineEdit->setText(color.shadesteps == 0 ? "", QString::number(color.shadesteps));
+    this->ui->shadeStepsLineEdit->setText(color.shadesteps == 0 ? QString("") : QString::number(color.shadesteps));
     this->ui->deltaStepsCheckBox->setChecked(color.deltasteps);
     this->ui->protColCheckBox->setChecked(color.protcolor);
 }
