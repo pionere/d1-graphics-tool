@@ -27,6 +27,8 @@ TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
     this->ui->mainGridLayout->setColumnStretch(1, 1);
 
     this->on_actionAddRange_triggered();
+
+    this->ui->levelTypeComboBox->setCurrentIndex(DTYPE_NONE);
 }
 
 TrnGenerateDialog::~TrnGenerateDialog()
@@ -53,6 +55,7 @@ void TrnGenerateDialog::on_actionDelRange_triggered(TrnGenerateColEntryWidget *c
 {
     this->ui->colorsVBoxLayout->removeWidget(caller);
     delete caller;
+    this->adjustSize();
 }
 
 void TrnGenerateDialog::on_actionAddPalette_triggered()
@@ -76,6 +79,7 @@ void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget 
 {
     this->ui->palettesVBoxLayout->removeWidget(caller);
     delete caller;
+    this->adjustSize();
 }
 
 void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
@@ -86,7 +90,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         black.firstcolor = 0;
         black.lastcolor = 0;
         black.shadesteps = 0;
-        black.deltasteps = 0;
+        black.deltasteps = false;
         black.protcolor = false;
         colors.push_back(black);
     }
@@ -95,7 +99,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         levelColor.firstcolor = i == 0 ? 1 : i * 16;
         levelColor.lastcolor = (i + 1) * 16 - 1;
         levelColor.shadesteps = 0;
-        levelColor.deltasteps = 0;
+        levelColor.deltasteps = false;
         levelColor.protcolor = false;
         colors.push_back(levelColor);
     }
@@ -104,7 +108,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         stdColor.firstcolor = 16 * 8 + i * 8;
         stdColor.lastcolor = stdColor.firstcolor + 8 - 1;
         stdColor.shadesteps = 0;
-        stdColor.deltasteps = 0;
+        stdColor.deltasteps = false;
         stdColor.protcolor = false;
         colors.push_back(stdColor);
     }
@@ -113,7 +117,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         stdColor.firstcolor = 16 * 8 + 8 * 4 + i * 16;
         stdColor.lastcolor = i == 5 ? 254 : (stdColor.firstcolor + 15);
         stdColor.shadesteps = 0;
-        stdColor.deltasteps = 0;
+        stdColor.deltasteps = false;
         stdColor.protcolor = false;
         colors.push_back(stdColor);
     }
@@ -122,21 +126,22 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         white.firstcolor = 255;
         white.lastcolor = 255;
         white.shadesteps = -1;
-        white.deltasteps = 0;
+        white.deltasteps = false;
         white.protcolor = true;
         colors.push_back(white);
     }
     switch (index) {
     case DTYPE_TOWN:
-        for (int i = 1; i < 1 + 8; i++) {
-            colors[i].shadesteps = 5;
-            colors[i].deltasteps = true;
-        }
+        colors[1].lastcolor = 127;
+        colors[1].shadesteps = 5;
+        colors[1].deltasteps = true;
+
+        colors.erase(colors.begin() + 2, colors.begin() + 1 + 8);
         break;
     case DTYPE_CAVES:
         colors[1].lastcolor = 31;
         colors[1].shadesteps = -1;
-        colors[1].deltasteps = 0;
+        colors[1].deltasteps = false;
         colors[1].protcolor = true;
 
         colors.erase(colors.begin() + 2);
@@ -149,14 +154,14 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
     case DTYPE_NEST: {
         colors[1].lastcolor = 7;
         colors[1].shadesteps = -1;
-        colors[1].deltasteps = 0;
+        colors[1].deltasteps = false;
         colors[1].protcolor = true;
 
         GenerateTrnColor stdColor;
         stdColor.firstcolor = 8;
         stdColor.lastcolor = 15;
         stdColor.shadesteps = -1;
-        stdColor.deltasteps = 0;
+        stdColor.deltasteps = false;
         stdColor.protcolor = true;
         colors.insert(colors.begin() + 2, stdColor);
     } break;
