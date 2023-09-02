@@ -294,17 +294,25 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
             options.push_back(palOptions);
             continue;
         }
-		QColor c0 = color;
-        color = color.darker(100 * (MAXDARKNESS + 1) / (MAXDARKNESS + 1 - shade));
+		
+        // color = color.darker(100 * (MAXDARKNESS + 1) / (MAXDARKNESS + 1 - shade));
+		float h, s, v, l, a;
+		color.getHslF(&h, &s, &l, &a);
+
+		color.getHsvF(&h, &s, &v, &a);
+
+		float steps = (v * (MAXDARKNESS + 1)) / 256;
 		if (colorIdx == 1) {
-			QMessageBox::critical(nullptr, "Error", QString("RGB %1:%2:%3 to %4:%5:%6").arg(c0.red()).arg(c0.green()).arg(c0.blue()).arg(color.red()).arg(color.green()).arg(color.blue()));
+			QMessageBox::critical(nullptr, "Error", QString("light:%1 value:%2 steps:%3").arg(l).arg(v).arg(steps));
+        }
+		if (steps <= shade) {
+			color = QColor(0);
+        } else {
+			color = color.darker(100 * steps / (steps - shade));
         }
 
         std::vector<PaletteColor> dynPalColors;
         pal->getValidColors(dynPalColors);
-		if (colorIdx == 1) {
-			QMessageBox::critical(nullptr, "Error", QString("Base Valid colors %1").arg(dynPalColors.size()));
-        }
         for (auto it = dynPalColors.begin(); it != dynPalColors.end(); ) {
             if (dynColors[it->index()]) {
                 it++;
@@ -312,16 +320,10 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
                 it = dynPalColors.erase(it);
             }
         }
-		if (colorIdx == 1) {
-			QMessageBox::critical(nullptr, "Error", QString("Filtered Valid colors %1").arg(dynPalColors.size()));
-        }
         for (unsigned i = 0; i < NUM_COLORS; i++) {
             palOptions[i] = INT_MAX;
         }
         getPalColor(dynPalColors, color, palOptions);
-		if (colorIdx == 1) {
-			QMessageBox::critical(nullptr, "Error", QString("Self dist %1").arg(palOptions[1]));
-        }
 
         options.push_back(palOptions);
     }
