@@ -301,7 +301,7 @@ static BYTE selectColor(BYTE colorIdx, int shade, const std::array<bool, NUM_COL
 		auto v = color.valueF();
 		auto a = color.lightnessF();
         
-		float steps = (v * (MAXDARKNESS + 1)) / 256;
+		auto steps = v * (MAXDARKNESS + 1);
 		if (colorIdx == 1) {
 			QMessageBox::critical(nullptr, "Error", QString("light:%1 value:%2 steps:%3").arg(l).arg(v).arg(steps));
         }
