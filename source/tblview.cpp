@@ -359,6 +359,7 @@ void TblView::selectTrsPath(QString path)
             ColorTrns[i][n] = trn->getTranslation(n);
         }
     }
+    this->trsPath = path;
     this->updateTrsIcon();
     // update the view
     this->displayFrame();
