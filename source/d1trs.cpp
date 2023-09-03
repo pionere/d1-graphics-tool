@@ -34,8 +34,10 @@ bool D1Trs::load(const QString &filePath, D1Pal *pal, std::vector<D1Trn *> &trns
             in >> readByte;
             trn->setTranslation(n, readByte);
         }
+        QString counter = QString::number(i);
+        counter = counter.rightJustified(2, QChar('0'));
         QString trnFilePath = filePath;
-        trnFilePath.insert(filePath.length() - 4, QString::number(i));
+        trnFilePath.insert(filePath.length() - 4, counter);
         trn->setFilePath(trnFilePath);
         trn->setPalette(pal);
         trn->refreshResultingPalette();
