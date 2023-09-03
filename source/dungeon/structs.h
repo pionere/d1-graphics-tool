@@ -417,6 +417,7 @@ typedef struct LevelFileData {
 	const char* dMegaTiles;
 	const char* dMiniTiles;
 	const char* dSpecCels;
+	const char* dLightTrns;
 } LevelFileData;
 
 typedef struct LevelData {
