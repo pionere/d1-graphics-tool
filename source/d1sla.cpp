@@ -91,6 +91,9 @@ bool D1Sla::load(const QString &filePath)
 		path.replace(QString("NLevels"), QString("Levels"));
         QFile file;
 		file.setFileName(path);
+        if (!file.open(QIODevice::ReadOnly)) {
+            return false;
+        }
 		const QByteArray fileData = file.readAll();
 
 		subtileCount = 796;
