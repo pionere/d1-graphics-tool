@@ -65,8 +65,6 @@ LevelStruct currLvl;
 BYTE numtrans;
 /* Specifies whether the transvals should be re-processed. */
 static bool gbDoTransVals;
-/** Specifies the active transparency indices. */
-bool TransList[256];
 /** Contains the subtile IDs of each square on the map. */
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the transparency index of each square on the map. */

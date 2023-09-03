@@ -849,10 +849,4 @@ void MakeLightTable()
 	}
 }
 
-void InitVision()
-{
-	static_assert(false == 0, "InitVision fills TransList with 0 instead of false values.");
-	memset(TransList, 0, sizeof(TransList));
-}
-
 DEVILUTION_END_NAMESPACE

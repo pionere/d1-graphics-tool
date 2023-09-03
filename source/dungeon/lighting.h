@@ -27,10 +27,7 @@ void DoLighting(unsigned lnum);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius);
 void MakeLightTable();
-void InitLightGFX();
-void InitLighting();
 unsigned AddLight(int x, int y, int r);
-void InitVision();
 
 /* rdata */
 
