@@ -92,7 +92,15 @@ bool D1Sla::load(const QString &filePath)
         QFile file;
 		file.setFileName(path);
 		const QByteArray fileData = file.readAll();
+
 		subtileCount = 796;
+
+    unsigned fileSize = fileData.size();
+    if (fileSize != (subtileCount + 1) * 4) {
+		dProgressErr() << tr("Invalid base SLA file. %1 - %2 - %3 from %4").arg(path).arg(fileSize).arg((subtileCount + 1) * 4).arg(filePath);
+		return false;
+    }
+
 		QDataStream in(fileData);
     // read the sub-properties
     // skip the first byte
