@@ -87,9 +87,10 @@ bool D1Sla::load(const QString &filePath)
     }
 
     {
-		filePath.replace(QString("NLevels"), QString("Levels"));
+		QString path = filePath;
+		path.replace(QString("NLevels"), QString("Levels"));
         QFile file;
-		file.setFileName(filePath);
+		file.setFileName(path);
 		const QByteArray fileData = file.readAll();
 		subtileCount = 796;
 		QDataStream in(fileData);
