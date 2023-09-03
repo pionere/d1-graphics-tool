@@ -377,7 +377,8 @@ void TblView::on_trsLoadPushButton_clicked()
 void TblView::on_trsClearPushButton_clicked()
 {
     if (!this->trsPath.isEmpty()) {
-        this->selectTrsPath("");
+        this->trsPath.clear();
+        this->updateTrsIcon();
     }
 }
 
