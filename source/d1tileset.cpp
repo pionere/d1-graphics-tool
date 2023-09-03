@@ -1068,22 +1068,26 @@ void D1Tileset::patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRigh
 bool D1Tileset::patchTownFloor(bool silent)
 {
     const CelMicro micros[] = {
-        { 731 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare },  // 1923 move micro
-        { 755 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },       // 1975 change type
-        { 974 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },       // 2805 change type
-        { 1030 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 2943 change type
-        { 220 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },  // 514  move micro
-        { 221 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },  // 516
-        { 962 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },  // 2775
-        { 218 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },  // 511 move micro
-        { 219 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },  // 513
-        { 1166 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 3289 move micro
-        { 1167 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // 3292
-        { 1171 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // 3302
-        { 1172 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 3303
-        { 1175 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // 3311
-        { 1176 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 3317
-        { 845 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },  // 2358
+        {  731 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare },  // move micro
+        {  755 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },       // change type
+        {  974 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },       // change type
+        { 1030 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // change type
+        {  220 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },  // move micro
+        {  221 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+        {  962 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+        {  218 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },  // move micro
+        {  219 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+        { 1166 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // move micro
+        { 1167 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+        { 1171 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+        { 1172 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+        { 1175 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+        { 1176 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+        {  845 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+        {  128 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+        {  128 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+        {  156 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+        {  212 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
         //{ 493 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 866 TODO: fix light?
         //{ 290 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 662 TODO: fix grass?
         //{ 290 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },   // 663

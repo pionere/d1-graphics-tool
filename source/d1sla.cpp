@@ -87,7 +87,7 @@ bool D1Sla::load(const QString &filePath)
     }
 
     {
-		filePath.replace("NLevels", "Levels");
+		filePath.replace(QString("NLevels"), QString("Levels"));
         QFile file;
 		file.setFileName(filePath);
 		const QByteArray fileData = file.readAll();
