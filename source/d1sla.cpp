@@ -86,6 +86,46 @@ bool D1Sla::load(const QString &filePath)
         this->mapProperties[i] = readByte & ~MAT_TYPE;
     }
 
+    {
+		filePath.replace("NLevels", "Levels");
+        QFile file;
+		file.setFileName(filePath);
+		const QByteArray fileData = file.readAll();
+		subtileCount = 796;
+		QDataStream in(fileData);
+    // read the sub-properties
+    // skip the first byte
+    in >> readByte;
+    for (unsigned i = 0; i < subtileCount; i++) {
+        in >> readByte;
+        this->subProperties[i] = readByte & (PSF_BLOCK_MISSILE | PSF_BLOCK_LIGHT | PSF_BLOCK_PATH);
+        this->lightRadius[i] = readByte & PSF_LIGHT_RADIUS;
+    }
+    // read the trap/spec-properties
+    // skip the first byte
+    in >> readByte;
+    for (unsigned i = 0; i < subtileCount; i++) {
+        in >> readByte;
+        this->trapProperties[i] = readByte & PST_TRAP_TYPE;
+        this->specProperties[i] = readByte & PST_SPEC_TYPE;
+    }
+    // read the render-properties
+    // skip the first byte
+    in >> readByte;
+    for (unsigned i = 0; i < subtileCount; i++) {
+        in >> readByte;
+        this->renderProperties[i] = readByte;
+    }
+    // read the map-properties
+    // skip the first byte
+    in >> readByte;
+    for (unsigned i = 0; i < subtileCount; i++) {
+        in >> readByte;
+        this->mapTypes[i] = readByte & MAT_TYPE;
+        this->mapProperties[i] = readByte & ~MAT_TYPE;
+    }
+    }
+
     this->modified = changed;
     return true;
 }
