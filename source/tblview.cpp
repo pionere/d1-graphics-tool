@@ -12,6 +12,7 @@
 #include <QMimeData>
 
 #include "config.h"
+#include "d1trs.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_tblview.h"
@@ -352,7 +353,7 @@ void TblView::selectTrsPath(QString path)
         return;
     }
 
-    for (unsigned i = 0; i < trsn.size() && i <= MAXDARKNESS; i++) {
+    for (unsigned i = 0; i < trns.size() && i <= MAXDARKNESS; i++) {
         const D1Trn *trn = trns[i];
         for (int n = 0; n < NUM_COLORS; n++) {
             ColorTrns[i][n] = trn->getTranslation(n);

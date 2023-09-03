@@ -60,6 +60,7 @@ public:
 private:
     void updateFields();
     void updateLabel();
+    void updateTrsIcon();
     void setRadius(int nextRadius);
     void setOffset(int xoff, int yoff);
     void selectTrsPath(QString path);
