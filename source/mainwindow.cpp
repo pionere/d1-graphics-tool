@@ -28,6 +28,7 @@
 #include "d1celtileset.h"
 #include "d1cl2.h"
 #include "d1pcx.h"
+#include "d1trs.h"
 #include "ui_mainwindow.h"
 
 static MainWindow *theMainWindow;
@@ -2604,6 +2605,103 @@ void MainWindow::on_actionRemap_Colors_triggered()
     }
     this->remapDialog->initialize(this->palWidget);
     this->remapDialog->show();
+}
+
+void MainWindow::on_actionGenTrns_Colors_triggered()
+{
+    if (this->trnGenerateDialog == nullptr) {
+        this->trnGenerateDialog = new TrnGenerateDialog(this);
+    }
+    this->trnGenerateDialog->initialize(this->pal);
+    this->trnGenerateDialog->show();
+}
+
+void MainWindow::generateTrn(const GenerateTrnParam &params)
+{
+    // reset unique translations
+    this->on_actionClose_Translation_Unique_triggered();
+    for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
+        if (MainWindow::isResourcePath(it.key())) {
+            it++;
+            continue;
+        }
+        MemFree(it.value());
+        it = this->uniqueTrns.erase(it);
+    }
+    // reset base translations
+    this->on_actionClose_Translation_Base_triggered();
+    for (auto it = this->baseTrns.begin(); it != this->baseTrns.end(); ) {
+        if (MainWindow::isResourcePath(it.key())) {
+            it++;
+            continue;
+        }
+        MemFree(it.value());
+        it = this->baseTrns.erase(it);
+    }
+    // generate the TRN files
+    std::vector<D1Trn *> lightTrns;
+    D1Trs::generateLightTranslations(params, this->pal, lightTrns);
+    // load the TRN files
+    for (D1Trn *trn : lightTrns) {
+        this->uniqueTrns[trn->getFilePath()] = trn;
+    }
+    this->setUniqueTrn(lightTrns[0]->getFilePath());
+}
+
+void MainWindow::on_actionLoadTrns_Colors_triggered()
+{
+    QString trsFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation-Set File"), tr("TRS Files (*.trs *.TRS)"));
+
+    if (trsFilePath.isEmpty()) {
+        return;
+    }
+
+    std::vector<D1Trn *> trns;
+    if (!D1Trs::load(trsFilePath, this->pal, trns)) {
+        return;
+    }
+
+    // reset unique translations
+    this->on_actionClose_Translation_Unique_triggered();
+    for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
+        if (MainWindow::isResourcePath(it.key())) {
+            it++;
+            continue;
+        }
+        MemFree(it.value());
+        it = this->uniqueTrns.erase(it);
+    }
+    if (trns.empty()) {
+        this->setUniqueTrn(D1Trn::IDENTITY_PATH);
+        return;
+    }
+    // load the TRN files
+    for (D1Trn *trn : trns) {
+        this->uniqueTrns[trn->getFilePath()] = trn;
+    }
+    this->setUniqueTrn(trns[0]->getFilePath());
+}
+
+void MainWindow::on_actionSaveTrns_Colors_triggered()
+{
+    std::vector<D1Trn *> trns;
+    for (auto it = this->uniqueTrns.cbegin(); it != this->uniqueTrns.cend(); it++) {
+        if (MainWindow::isResourcePath(it.key())) {
+            continue;
+        }
+        trns.push_back(it.value());
+    }
+
+    if (trns.empty()) {
+        QMessageBox::critical(this, tr("Error"), tr("Built-in TRN files can not be saved to a translation set."));
+        return;
+    }
+
+    QString trsFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("Save Translation-Set File as..."), tr("TRS Files (*.trs *.TRS)"));
+
+    if (!trsFilePath.isEmpty()) {
+        D1Trs::save(trsFilePath, trns);
+    }
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()

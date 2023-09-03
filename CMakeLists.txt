@@ -91,6 +91,8 @@ set(PROJECT_SOURCES
         source/d1tileset.h
         source/d1trn.cpp
         source/d1trn.h
+        source/d1trs.cpp
+        source/d1trs.h
         source/dungeon/automap.cpp
         source/dungeon/drlg_l1.cpp
         source/dungeon/drlg_l2.cpp
@@ -184,6 +186,15 @@ set(PROJECT_SOURCES
         source/tblview.cpp
         source/tblview.h
         source/tblview.ui
+        source/trngeneratecolentrywidget.cpp
+        source/trngeneratecolentrywidget.h
+        source/trngeneratecolentrywidget.ui
+        source/trngeneratedialog.cpp
+        source/trngeneratedialog.h
+        source/trngeneratedialog.ui
+        source/trngeneratepalentrywidget.cpp
+        source/trngeneratepalentrywidget.h
+        source/trngeneratepalentrywidget.ui
         source/upscaledialog.cpp
         source/upscaledialog.h
         source/upscaledialog.ui
