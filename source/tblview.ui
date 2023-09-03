@@ -293,12 +293,26 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="10" colspan="5">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
+      <item row="1" column="13" colspan="4">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QPushButton" name="trsLoadPushButton">
+          <property name="text">
+           <string notr="true">...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="trsClearPushButton">
+          <property name="text">
+           <string>Clear</string>
+          </property>
+          <property name="toolTip">
+           <string>Clear light-TRS</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
@@ -457,14 +471,14 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="15">
+      <item row="3" column="13">
        <widget class="QLabel">
         <property name="text">
          <string>Value:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="16">
+      <item row="3" column="14">
        <widget class="LineEditWidget" name="valueLineEdit">
         <property name="charWidth">
          <number>4</number>
@@ -474,7 +488,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="17">
+      <item row="3" column="15">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>8</number>
@@ -490,7 +504,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="18">
+      <item row="3" column="16">
        <widget class="LineEditWidget" name="valueAtLineEdit">
         <property name="readOnly">
          <bool>true</bool>

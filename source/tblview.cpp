@@ -76,6 +76,8 @@ TblView::TblView(QWidget *parent, QUndoStack *us)
     QObject::connect(this->ui->offsetXYLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_offsetXYLineEdit_escPressed()));
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
+
+    this->updateTrsIcon();
 }
 
 TblView::~TblView()
@@ -118,6 +120,25 @@ void TblView::updateFields()
     this->ui->radiusLineEdit->setText(QString::number(this->currentLightRadius));
     // Set current offset
     this->ui->offsetXYLineEdit->setText(QString("%1:%2").arg(this->currentXOffset).arg(this->currentYOffset));
+}
+
+void TblView::updateTrsIcon()
+{
+    // update icon of trs
+    QString trsPath = this->trsPath;
+    if (!trsPath.isEmpty()) {
+        QFileInfo fileInfo = QFileInfo(trsPath);
+        trsPath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName();
+        this->ui->trsLoadPushButton->setToolTip(trsPath);
+        QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
+        this->ui->trsLoadPushButton->setIcon(icon);
+        this->ui->trsLoadPushButton->setText("");
+    } else {
+        this->ui->trsLoadPushButton->setToolTip(tr("Select light-TRS"));
+        QIcon icon;
+        this->ui->trsLoadPushButton->setIcon(icon);
+        this->ui->trsLoadPushButton->setText("...");
+    }
 }
 
 void TblView::framePixelClicked(const QPoint &pos, bool first)
@@ -319,8 +340,43 @@ void TblView::toggleBottomPanel()
 
 void TblView::on_levelTypeComboBox_activated(int index)
 {
+    this->on_trsClearPushButton_clicked();
     // update the view
     this->displayFrame();
+}
+
+void TblView::selectTrsPath(QString path)
+{
+    std::vector<D1Trn *> trns;
+    if (!D1Trs::load(path, this->pal, trns)) {
+        return;
+    }
+
+    for (unsigned i = 0; i < trsn.size() && i <= MAXDARKNESS; i++) {
+        const D1Trn *trn = trns[i];
+        for (int n = 0; n < NUM_COLORS; n++) {
+            ColorTrns[i][n] = trn->getTranslation(n);
+        }
+    }
+    this->updateTrsIcon();
+    // update the view
+    this->displayFrame();
+}
+
+void TblView::on_trsLoadPushButton_clicked()
+{
+    QString trsFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select TRS"), tr("TRS Files (*.trs *.TRS)"));
+
+    if (!trsFilePath.isEmpty()) {
+        this->selectTrsPath(trsFilePath);
+    }
+}
+
+void TblView::on_trsClearPushButton_clicked()
+{
+    if (!this->trsPath.isEmpty()) {
+        this->selectTrsPath("");
+    }
 }
 
 void TblView::setRadius(int nextRadius)

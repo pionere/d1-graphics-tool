@@ -62,6 +62,7 @@ private:
     void updateLabel();
     void setRadius(int nextRadius);
     void setOffset(int xoff, int yoff);
+    void selectTrsPath(QString path);
 
 signals:
     void frameRefreshed();
@@ -71,6 +72,8 @@ public slots:
 
 private slots:
     void on_levelTypeComboBox_activated(int index);
+    void on_trsLoadPushButton_clicked();
+    void on_trsClearPushButton_clicked();
 
     void on_radiusDecButton_clicked();
     void on_radiusIncButton_clicked();
@@ -114,4 +117,5 @@ private:
     int playTimer = 0;
     QPoint lastPos;
     QPoint firstPos;
+    QString trsPath;
 };
