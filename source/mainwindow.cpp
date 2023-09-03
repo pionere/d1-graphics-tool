@@ -1013,6 +1013,7 @@ void MainWindow::openFile(const OpenAsParam &params)
                     if (test == sLower) {
                         break;
                     }
+                    match++;
                 }
                 if (match != -1) {
                     break;
@@ -1029,6 +1030,7 @@ void MainWindow::openFile(const OpenAsParam &params)
                     if (test == sLower) {
                         break;
                     }
+                    match++;
                 }
                 if (match != -1) {
                     break;
