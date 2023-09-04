@@ -62,31 +62,35 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     this->mouseEvent(event, true);
 }
 
-void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->buttons() == Qt::NoButton) {
-        // emit this->framePixelHovered(this->lastPos);
-        QPointF scenePos = event->scenePos();
-        QPoint currPos = QPoint(scenePos.x(), scenePos.y());
-        QObject *view = this->parent();
-        CelView *celView = qobject_cast<CelView *>(view);
-        if (celView != nullptr) {
-            celView->framePixelHovered(currPos);
-            return;
-        }
-        LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
-        if (levelCelView != nullptr) {
-            levelCelView->framePixelHovered(currPos);
-            return;
-        }
-        TblView *tblView = qobject_cast<TblView *>(view);
-        if (tblView != nullptr) {
-            tblView->framePixelHovered(currPos);
-            return;
-        }
+    // emit this->framePixelHovered(this->lastPos);
+    QPointF scenePos = event->scenePos();
+    QPoint currPos = QPoint(scenePos.x(), scenePos.y());
+    QObject *view = this->parent();
+    CelView *celView = qobject_cast<CelView *>(view);
+    if (celView != nullptr) {
+        celView->framePixelHovered(currPos);
         return;
     }
-    this->mouseEvent(event, false);
+    LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
+    if (levelCelView != nullptr) {
+        levelCelView->framePixelHovered(currPos);
+        return;
+    }
+    TblView *tblView = qobject_cast<TblView *>(view);
+    if (tblView != nullptr) {
+        tblView->framePixelHovered(currPos);
+        return;
+    }
+}
+
+void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    this->mouseHoverEvent(event);
+    if (event->buttons() != Qt::NoButton) {
+        this->mouseEvent(event, false);
+    }
 }
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
