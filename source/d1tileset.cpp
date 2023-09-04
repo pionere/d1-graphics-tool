@@ -13388,7 +13388,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 72 - 1, 0, 17 - 1, silent);  // 224
     ReplaceSubtile(this->til, 55 - 1, 2, 154 - 1, silent); // 175
     // fix graphical glitch (on explosion)
-    ReplaceSubtile(this->til, 46 - 1, 2, 148 - 1, silent); // (136)
+    ReplaceSubtile(this->til, 44 - 1, 2, 148 - 1, silent); // (136)
 
     // create the new shadows
     ReplaceSubtile(this->til,  61 - 1, 0, 5 - 1, silent); // copy from tile 2
@@ -13432,7 +13432,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 135 - 1, 2, 16 - 1, silent);
     ReplaceSubtile(this->til, 135 - 1, 3, 176 - 1, silent);
     // separate subtiles for the automap
-    ReplaceSubtile(this->til, 44 - 1, 2, 136 - 1, silent);
+    // ReplaceSubtile(this->til, 44 - 1, 2, 136 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 0, 149 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 1, 153 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 2, 97 - 1, silent);
