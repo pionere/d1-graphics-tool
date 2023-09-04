@@ -87,10 +87,10 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    this->mouseHoverEvent(event);
     if (event->buttons() != Qt::NoButton) {
         this->mouseEvent(event, false);
     }
+    this->mouseHoverEvent(event);
 }
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
