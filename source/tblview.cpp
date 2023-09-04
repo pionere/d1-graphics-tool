@@ -399,7 +399,7 @@ void TblView::on_equalizePushButton_clicked()
     }
     if (rangeTo >= MAX_LIGHT_DIST + 1) {
         rangeTo = MAX_LIGHT_DIST + 1;
-        v1 = MAXDARKNESS;
+        v1 = 0;
     } else {
         v1 = D1Tbl::getDarkValueAt(rangeTo * 8, this->currentLightRadius); // DARK_COLUMN_WIDTH
     }
