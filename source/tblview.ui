@@ -165,51 +165,55 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="13" alignment="Qt::AlignRight">
-       <widget class="QLabel">
-        <property name="text">
-         <string>Value:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="14">
-       <widget class="LineEditWidget" name="valueLineEdit">
-        <property name="charWidth">
-         <number>4</number>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="15">
-       <widget class="QLabel">
-        <property name="minimumWidth">
-         <number>8</number>
-        </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property>
-        <property name="text">
-         <string notr="true">@</string>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="16">
-       <widget class="LineEditWidget" name="valueAtLineEdit">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="charWidth">
-         <number>6</number>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
+      <item row="0" column="13" colspan="4" alignment="Qt::AlignRight">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string>Value:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="valueLineEdit">
+          <property name="charWidth">
+           <number>4</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="minimumWidth">
+           <number>8</number>
+          </property>
+          <property name="maximumWidth">
+           <number>8</number>
+          </property>
+          <property name="text">
+           <string notr="true">@</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="valueAtLineEdit">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="charWidth">
+           <number>6</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
@@ -510,41 +514,55 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="13">
-       <widget class="LineEditWidget" name="eqFromLineEdit">
-        <property name="charWidth">
-         <number>3</number>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="14">
-       <widget class="LineEditWidget" name="eqToLineEdit">
-        <property name="charWidth">
-         <number>3</number>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="16">
-       <widget class="QPushButton" name="equalizePushButton">
-        <!--property name="minimumWidth">
-         <number>40</number>
-        </property>
-        <property name="maximumWidth">
-         <number>40</number>
-        </property-->
-        <property name="toolTip">
-         <string>Equalize the brightness level in the selected range</string>
-        </property>
-        <property name="text">
-         <string>Equalize</string>
-        </property>
-       </widget>
+      <item row="3" column="13" colspan="4" alignment="Qt::AlignRight">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="LineEditWidget" name="eqFromLineEdit">
+          <property name="charWidth">
+           <number>3</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="minimumWidth">
+           <number>8</number>
+          </property>
+          <property name="maximumWidth">
+           <number>8</number>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="eqToLineEdit">
+          <property name="charWidth">
+           <number>3</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="equalizePushButton">
+          <property name="toolTip">
+           <string>Equalize the brightness level in the selected range</string>
+          </property>
+          <property name="text">
+           <string>Equalize</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>

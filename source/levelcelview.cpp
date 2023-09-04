@@ -2453,14 +2453,6 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-
-
-			if ((tmiFlags & TMIF_LEFT_FOLIAGE) && leftType == D1CEL_FRAME_TYPE::LeftTrapezoid) {
-				this->warnOrReportSubtile(tr("XXX Subtile %1 foliage and trapeziod XXX.").arg(i + 1), i);
-            }
-			if ((tmiFlags & TMIF_RIGHT_FOLIAGE) && rightType == D1CEL_FRAME_TYPE::RightTrapezoid) {
-				this->warnOrReportSubtile(tr("XXX Subtile %1 foliage and trapeziod XXX.").arg(i + 1), i);
-            }
         }
     }
     if (!result) {

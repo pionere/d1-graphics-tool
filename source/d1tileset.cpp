@@ -1068,14 +1068,14 @@ void D1Tileset::patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRigh
 bool D1Tileset::patchTownFloor(bool silent)
 {
     const CelMicro micros[] = {
-        {  731 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare },  // move micro
-        {  755 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },       // change type
-        {  974 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },       // change type
+        {  731 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare }, // move micro
+        {  755 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // change type
+        {  974 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // change type
         { 1030 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // change type
-        {  220 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },  // move micro
+        {  220 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // move micro
         {  221 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
         {  962 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-        {  218 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },  // move micro
+        {  218 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // move micro
         {  219 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
         { 1166 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // move micro
         { 1167 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -1088,11 +1088,11 @@ bool D1Tileset::patchTownFloor(bool silent)
         {  128 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
         {  156 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
         {  212 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-        //{ 493 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 866 TODO: fix light?
-        //{ 290 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 662 TODO: fix grass?
-        //{ 290 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },   // 663
-        //{ 334 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 750 TODO: fix grass? + (349 & nest)
-        //{ 334 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },   // 751
+        //{ 493 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // TODO: fix light?
+        //{ 290 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // TODO: fix grass?
+        //{ 290 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+        //{ 334 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // TODO: fix grass? + (349 & nest)
+        //{ 334 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
     };
 
     constexpr unsigned blockSize = BLOCK_SIZE_TOWN;
