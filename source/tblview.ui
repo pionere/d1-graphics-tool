@@ -165,8 +165,15 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="13" colspan="4" alignment="Qt::AlignRight">
+      <item row="0" column="13" colspan="4">
        <layout class="QHBoxLayout">
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="QLabel">
           <property name="text">
@@ -514,8 +521,15 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="13" colspan="4" alignment="Qt::AlignRight">
+      <item row="3" column="13" colspan="4">
        <layout class="QHBoxLayout">
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="LineEditWidget" name="eqFromLineEdit">
           <property name="charWidth">
