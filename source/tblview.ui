@@ -511,10 +511,24 @@
        </layout>
       </item>
       <item row="3" column="13">
-       <widget class="QComboBox" name="eqFromComboBox"/>
+       <widget class="LineEditWidget" name="eqFromLineEdit">
+        <property name="charWidth">
+         <number>3</number>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
       </item>
       <item row="3" column="14">
-       <widget class="QComboBox" name="eqToComboBox"/>
+       <widget class="LineEditWidget" name="eqToLineEdit">
+        <property name="charWidth">
+         <number>3</number>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
       </item>
       <item row="3" column="16">
        <widget class="QPushButton" name="equalizePushButton">

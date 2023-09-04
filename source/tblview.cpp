@@ -68,12 +68,8 @@ TblView::TblView(QWidget *parent, QUndoStack *us)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
 
-    for (int i = 0; i <= MAXDARKNESS; i++) {
-        this->ui->eqFromComboBox->addItem(QString::number(i), QVariant(i));
-        this->ui->eqToComboBox->addItem(QString::number(i), QVariant(i));
-    }
-    this->ui->eqFromComboBox->setCurrentIndex(0);
-    this->ui->eqToComboBox->setCurrentIndex(MAXDARKNESS);
+    this->ui->eqFromLineEdit->setText("0");
+    this->ui->eqToLineEdit->setText(QString::number(MAX_LIGHT_DIST + 1));
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->tblScene, &CelScene::framePixelClicked, this, &TblView::framePixelClicked);
@@ -391,21 +387,33 @@ void TblView::on_trsClearPushButton_clicked()
 
 void TblView::on_equalizePushButton_clicked()
 {
-    int rangeFrom = this->ui->eqFromComboBox->currentIndex() * 8; // DARK_COLUMN_WIDTH
-    int rangeTo = this->ui->eqToComboBox->currentIndex() * 8;     // DARK_COLUMN_WIDTH
+    int rangeFrom = this->ui->eqFromLineEdit->text().toInt();
+    int rangeTo = this->ui->eqToLineEdit->text().toInt();
 
-    int v0 = D1Tbl::getDarkValueAt(rangeFrom, this->currentLightRadius);
-    int v1 = D1Tbl::getDarkValueAt(rangeTo, this->currentLightRadius);
-QMessageBox::critical(nullptr, "Error", QString("Values: %1 .. %2 in range %3:%4").arg(v0).arg(v1).arg(rangeFrom).arg(rangeTo));
+    int v0, v1;
+    if (rangeFrom < 0) {
+        rangeFrom = 0;
+    }
+    if (rangeFrom >= MAX_LIGHT_DIST + 1 || rangeTo < 0) {
+        return;
+    }
+    if (rangeTo >= MAX_LIGHT_DIST + 1) {
+        rangeTo = MAX_LIGHT_DIST + 1;
+        v1 = MAXDARKNESS;
+    } else {
+        v1 = D1Tbl::getDarkValueAt(rangeTo * 8, this->currentLightRadius); // DARK_COLUMN_WIDTH
+    }
+    v0 = D1Tbl::getDarkValueAt(rangeFrom, this->currentLightRadius);
+// QMessageBox::critical(nullptr, "Error", QString("Values: %1 .. %2 in range %3:%4").arg(v0).arg(v1).arg(rangeFrom).arg(rangeTo));
     std::vector<TableValue> modValues;
-    for (int i = rangeFrom + 8; i <= rangeTo - 8; i += 8) { // DARK_COLUMN_WIDTH
-        int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
+    for (int i = rangeFrom; i <= rangeTo; i++) {
+        int v = D1Tbl::getDarkValueAt(i * 8, this->currentLightRadius); // DARK_COLUMN_WIDTH
 
         int value = v0 + (v1 - v0) * (i - rangeFrom) / (rangeTo - rangeFrom);
-QMessageBox::critical(nullptr, "Error", QString("Value @%1: %2 should be %3").arg(i).arg(v).arg(value));
+// QMessageBox::critical(nullptr, "Error", QString("Value @%1: %2 should be %3").arg(i).arg(v).arg(value));
 
         if (v != value) {
-            modValues.push_back(TableValue(i, this->currentLightRadius, value));
+            modValues.push_back(TableValue(i * 8, this->currentLightRadius, value)); // DARK_COLUMN_WIDTH
         }
     }
 
