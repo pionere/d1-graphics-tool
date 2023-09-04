@@ -463,7 +463,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     op = QPoint(cX, cY);
 
     overlay->setPos(op);
-    scene->updateRect(overlay->boundingRect());
+    scene->updateSceneRect(overlay->boundingRect());
 }
 
 void BuilderWidget::colorModified()
