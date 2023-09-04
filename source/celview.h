@@ -42,6 +42,7 @@ private:
     static void parseZoomValue(QString &zoom, quint8 &zoomNumerator, quint8 &zoomDenominator);
     void updateQGraphicsView();
     void mouseEvent(QGraphicsSceneMouseEvent *event, bool first);
+    void mouseHoverEvent(QGraphicsSceneMouseEvent *event);
 
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
