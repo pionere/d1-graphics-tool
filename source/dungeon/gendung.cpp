@@ -616,6 +616,8 @@ void InitLvlDungeon()
 		pTiles[135][1] = 31;
 		pTiles[135][2] = 16;
 		pTiles[135][3] = 176;
+		// - free subtile to enable fix for a glitch
+		pTiles[47][3] = 158; // 148
 		break;
 #ifdef HELLFIRE
 	case DTYPE_NEST:

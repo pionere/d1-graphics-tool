@@ -11926,6 +11926,10 @@ bool D1Tileset::patchHellStairs(bool silent)
 /* 27 */{ 134 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 28 */{ 134 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 29 */{ 134 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 30 */{ 141 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 31 */{ 141 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 32 */{ 141 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L4;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -12112,6 +12116,48 @@ bool D1Tileset::patchHellStairs(bool silent)
                     if (y >= 16 - x / 2 && (pixel.getPaletteIndex() % 16) > 12) {
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
+                }
+            }
+        }
+        // 141[5]: move pixels up and move pixels from 141[3]
+        if (i == 30) {
+            const CelMicro &microSrc = micros[i + 1];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+                    if (y < MICRO_HEIGHT / 2) {
+                        pixel = frame->getPixel(x, y + MICRO_HEIGHT / 2);
+                    } else {
+                        pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 141[3]
+                    }
+                    change |= frame->setPixel(x, y, pixel);
+                }
+            }
+        }
+        // 141[3]: move pixels up and move pixels from 141[1]
+        if (i == 31) {
+            const CelMicro &microSrc = micros[i + 1];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+                    if (y < MICRO_HEIGHT / 2) {
+                        pixel = frame->getPixel(x, y + MICRO_HEIGHT / 2);
+                    } else {
+                        if ((y - MICRO_HEIGHT / 2) <= x / 2) {
+                            pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 141[1]
+                        }
+                    }
+                    change |= frame->setPixel(x, y, pixel);
                 }
             }
         }
@@ -13341,6 +13387,8 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 36 - 1, 3, 155 - 1, silent); // 105
     ReplaceSubtile(this->til, 72 - 1, 0, 17 - 1, silent);  // 224
     ReplaceSubtile(this->til, 55 - 1, 2, 154 - 1, silent); // 175
+    // fix graphical glitch (on explosion)
+    ReplaceSubtile(this->til, 46 - 1, 2, 148 - 1, silent); // (136)
 
     // create the new shadows
     ReplaceSubtile(this->til,  61 - 1, 0, 5 - 1, silent); // copy from tile 2
@@ -13522,6 +13570,10 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
         Blk2Mcr(98, 0);
 
         ReplaceMcr(111, 0, 131, 0);
+
+        MoveMcr(148, 0, 141, 3);
+        MoveMcr(148, 2, 141, 5);
+        Blk2Mcr(148, 1);
     }
     this->patchHellWall1(silent);
     this->patchHellWall2(silent);
@@ -14107,7 +14159,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(80, 5);
     Blk2Mcr(81, 2);
     Blk2Mcr(81, 4);
-    Blk2Mcr(148, 1);
+    // Blk2Mcr(148, 1); - reused to fix graphical glitch
     Blk2Mcr(173, 1);
     Blk2Mcr(178, 1);
     Blk2Mcr(178, 3);

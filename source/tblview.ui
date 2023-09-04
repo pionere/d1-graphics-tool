@@ -165,7 +165,7 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="13" colspan="3">
+      <item row="0" column="14" colspan="3">
        <layout class="QHBoxLayout">
         <item>
          <spacer>
@@ -343,7 +343,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="13" colspan="3">
+      <item row="1" column="14" colspan="3">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QPushButton" name="trsLoadPushButton">
@@ -521,7 +521,7 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="13" colspan="3">
+      <item row="3" column="14" colspan="3">
        <layout class="QHBoxLayout">
         <item>
          <spacer>
