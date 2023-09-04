@@ -987,11 +987,58 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString baseDir;
     if (fileType == 4) {
         if (tblFilePath.isEmpty()) {
-            tblFilePath = gfxFilePath;
-            if (gfxFilePath.toLower().endsWith("dark.tbl")) {
-                tblFilePath.replace(tblFilePath.length() - (sizeof("dark.tbl") - 2), 3, "ist");
-            } else if (gfxFilePath.toLower().endsWith("dist.tbl")) {
-                tblFilePath.replace(tblFilePath.length() - (sizeof("dist.tbl") - 2), 3, "ark");
+            QFileInfo tblFileInfo = QFileInfo(gfxFilePath);
+            QString fileLower = tblFileInfo.completeBaseName().toLower();
+            QDirIterator it(tblFileInfo.absolutePath(), QStringList("*.tbl"), QDir::Files | QDir::Readable);
+            while (it.hasNext()) {
+                QString sPath = it.next();
+
+                if (sPath == gfxFilePath) {
+                    continue;
+                }
+                tblFilePath = sPath;
+
+                tblFileInfo = QFileInfo(sPath);
+                QString sLower = tblFileInfo.completeBaseName().toLower();
+
+                // try to find a matching pair for any *dark*.tbl
+                int match = 0;
+                while (true) {
+                    match = fileLower.indexOf("dark", match);
+                    if (match == -1) {
+                        break;
+                    }
+                    QString test = fileLower;
+                    test.replace(match, 4, "dist");
+                    if (test == sLower) {
+                        break;
+                    }
+                    match++;
+                }
+                if (match != -1) {
+                    break;
+                }
+                // try to find a matching pair for any *dist*.tbl
+                match = 0;
+                while (true) {
+                    match = fileLower.indexOf("dist", match);
+                    if (match == -1) {
+                        break;
+                    }
+                    QString test = fileLower;
+                    test.replace(match, 4, "dark");
+                    if (test == sLower) {
+                        break;
+                    }
+                    match++;
+                }
+                if (match != -1) {
+                    break;
+                }
+            }
+            if (tblFilePath.isEmpty()) {
+                this->failWithError(tr("Could not find the other table file for TBL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+                return;
             }
         }
     } else if (!gfxFilePath.isEmpty()) {
