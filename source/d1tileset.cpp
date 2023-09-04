@@ -13573,7 +13573,10 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
 
         MoveMcr(148, 0, 141, 3);
         MoveMcr(148, 2, 141, 5);
-        Blk2Mcr(148, 1);
+        ReplaceMcr(148, 1, 142, 3);
+        HideMcr(142, 3);
+        MoveMcr(148, 3, 142, 5);
+        MoveMcr(148, 5, 142, 7);
     }
     this->patchHellWall1(silent);
     this->patchHellWall2(silent);
