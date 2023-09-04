@@ -304,15 +304,11 @@ static BYTE selectColor(BYTE colorIdx, int shade, int stepsIn, bool deltaSteps, 
             options.push_back(palOptions);
             continue;
         }
-		
-        // color = color.darker(100 * (MAXDARKNESS + 1) / (MAXDARKNESS + 1 - shade));
-		auto h = color.hslHue();
-		auto s = color.hslSaturation();
-		auto v = color.valueF();
-		auto l = color.lightnessF();
-		auto a = color.alphaF();
-        
-		auto steps = v * (MAXDARKNESS + 1);
+
+        auto v = color.valueF();
+        // TODO: use color.lightnessF() instead?
+
+        auto steps = v * (MAXDARKNESS + 1);
         if (stepsIn != 0) {
             if (deltaSteps) {
                 steps += stepsIn;
@@ -320,17 +316,10 @@ static BYTE selectColor(BYTE colorIdx, int shade, int stepsIn, bool deltaSteps, 
                 steps = stepsIn;
             }
         }
-		/*if (colorIdx == 144) {
-			QMessageBox::critical(nullptr, "Error", QString("light:%1 value:%2 steps:%3").arg(l).arg(v).arg(steps));
-        }*/
-		//if (shade == 0) {
-		//	QMessageBox::critical(nullptr, "Error", QString("color:%1 value:%2 steps:%3").arg(colorIdx).arg(v).arg(steps));
-        //}
-		if (steps <= shade) {
-			color = QColorConstants::Black;
+        if (steps <= shade) {
+            color = QColorConstants::Black;
         } else {
-			color = color.darker(100 * steps / (steps - shade));
-			// color.setHslF(h, s, l * (steps - shade) / steps, a);
+            color = color.darker(100 * steps / (steps - shade));
         }
 
         std::vector<PaletteColor> dynPalColors;

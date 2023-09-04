@@ -68,6 +68,13 @@ TblView::TblView(QWidget *parent, QUndoStack *us)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
 
+    for (int i = 0; i <= MAXDARKNESS; i++) {
+        this->ui->eqFromComboBox->addItem(QString::number(i), QVariant(i));
+        this->ui->eqToComboBox->addItem(QString::number(i), QVariant(i));
+    }
+    this->ui->eqFromComboBox->setCurrentIndex(0);
+    this->ui->eqToComboBox->setCurrentIndex(MAXDARKNESS);
+
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->tblScene, &CelScene::framePixelClicked, this, &TblView::framePixelClicked);
     // QObject::connect(&this->tblScene, &CelScene::framePixelHovered, this, &TblView::framePixelHovered);
@@ -380,6 +387,32 @@ void TblView::on_trsClearPushButton_clicked()
         this->trsPath.clear();
         this->updateTrsIcon();
     }
+}
+
+void TblView::on_equalizePushButton_clicked()
+{
+    int rangeFrom = this->ui->eqFromComboBox->currentIndex() * 8; // DARK_COLUMN_WIDTH
+    int rangeTo = this->ui->eqToComboBox->currentIndex() * 8;     // DARK_COLUMN_WIDTH
+
+    int v0 = D1Tbl::getDarkValueAt(rangeFrom, this->currentLightRadius);
+    int v1 = D1Tbl::getDarkValueAt(rangeTo, this->currentLightRadius);
+
+    std::vector<TableValue> modValues;
+    for (int i = rangeFrom + 8; i <= rangeTo - 8; i += 8) { // DARK_COLUMN_WIDTH
+        int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
+
+        int value = v0 + (v1 - v0) * (i - rangeFrom) / (rangeTo - rangeFrom);
+        if (v != value) {
+            modValues.push_back(TableValue(i, this->currentLightRadius, value));
+        }
+    }
+
+    // Build frame editing command and connect it to the current main window widget
+    // to update the palHits and CEL views when undo/redo is performed
+    EditTableCommand *command = new EditTableCommand(this->tableset->darkTbl, modValues);
+    QObject::connect(command, &EditTableCommand::modified, this, &TblView::displayFrame);
+
+    this->undoStack->push(command);
 }
 
 void TblView::setRadius(int nextRadius)

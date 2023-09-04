@@ -75,6 +75,7 @@ private slots:
     void on_levelTypeComboBox_activated(int index);
     void on_trsLoadPushButton_clicked();
     void on_trsClearPushButton_clicked();
+    void on_equalizePushButton_clicked();
 
     void on_radiusDecButton_clicked();
     void on_radiusIncButton_clicked();

@@ -208,8 +208,8 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitLvlAutomap();
 
 	//if (lvldir != ENTRY_LOAD) {
-	//	InitLvlLighting();
-	//	InitLvlVision();
+//		InitLvlLighting();
+//		InitLvlVision();
 	//}
 	InitLvlMonsters(); // reset monsters
 	InitLvlObjects();  // reset objects
