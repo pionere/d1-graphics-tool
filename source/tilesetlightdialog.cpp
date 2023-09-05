@@ -72,12 +72,13 @@ void TilesetLightDialog::on_actionDelRange_triggered(TilesetLightEntryWidget *ca
 {
     this->ui->rangesVBoxLayout->removeWidget(caller);
     delete caller;
-    this->adjustSize();
+    // this->adjustSize();
 }
 
 void TilesetLightDialog::on_lightDecButton_clicked()
 {
     QList<TilesetLightEntryWidget *> ranges = this->ui->rangesVBoxLayout->parentWidget()->findChildren<TilesetLightEntryWidget *>();
+QMessageBox::critical(nullptr, "Error", QString("NumRanges:%1").arg(ranges.count()));
     for (int i = 0; i < ranges.count(); i++) {
         TilesetLightEntryWidget *w = ranges[i];
         int radius = w->getLightRadius() - 1;
@@ -103,7 +104,7 @@ void TilesetLightDialog::on_lightIncButton_clicked()
 
 void TilesetLightDialog::on_lightAcceptButton_clicked()
 {
-    QList<TilesetLightEntryWidget *> ranges = this->ui->subtileRangesScrollArea->findChildren<TilesetLightEntryWidget *>();
+    QList<TilesetLightEntryWidget *> ranges = this->ui->rangesVBoxLayout->parentWidget()->findChildren<TilesetLightEntryWidget *>();
     for (int i = 0; i < this->tileset->sla->getSubtileCount(); i++) {
         int radius = 0;
         for (int n = ranges.count() - 1; n >= 0; n--) {
