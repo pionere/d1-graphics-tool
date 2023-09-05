@@ -21,6 +21,10 @@ TilesetLightDialog::TilesetLightDialog(LevelCelView *v)
     QHBoxLayout *layout = this->ui->addRangeButtonLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("Add"), this, &TilesetLightDialog::on_actionAddRange_triggered);
     layout->addStretch();
+
+    this->ui->mainGridLayout->setRowStretch(1, 1);
+    this->ui->mainGridLayout->setRowStretch(3, 1);
+    this->ui->mainGridLayout->setColumnStretch(1, 1);
 }
 
 TilesetLightDialog::~TilesetLightDialog()
@@ -78,7 +82,6 @@ void TilesetLightDialog::on_actionDelRange_triggered(TilesetLightEntryWidget *ca
 void TilesetLightDialog::on_lightDecButton_clicked()
 {
     QList<TilesetLightEntryWidget *> ranges = this->ui->rangesVBoxLayout->parentWidget()->findChildren<TilesetLightEntryWidget *>();
-QMessageBox::critical(nullptr, "Error", QString("NumRanges:%1").arg(ranges.count()));
     for (int i = 0; i < ranges.count(); i++) {
         TilesetLightEntryWidget *w = ranges[i];
         int radius = w->getLightRadius() - 1;
@@ -119,6 +122,7 @@ void TilesetLightDialog::on_lightAcceptButton_clicked()
     }
 
     this->view->updateFields();
+    this->close();
 }
 
 void TilesetLightDialog::on_lightCancelButton_clicked()
