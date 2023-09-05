@@ -189,6 +189,12 @@ set(PROJECT_SOURCES
         source/tblview.cpp
         source/tblview.h
         source/tblview.ui
+        source/tilesetlightdialog.cpp
+        source/tilesetlightdialog.h
+        source/tilesetlightdialog.ui
+        source/tilesetlightentrywidget.cpp
+        source/tilesetlightentrywidget.h
+        source/tilesetlightentrywidget.ui
         source/trngeneratecolentrywidget.cpp
         source/trngeneratecolentrywidget.h
         source/trngeneratecolentrywidget.ui

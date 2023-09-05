@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TilesetLightDialog</class>
+ <widget class="QDialog">
+  <property name="windowTitle">
+   <string>Light the subtiles</string>
+  </property>
+  <!--property name="modal">
+   <bool>true</bool>
+  </property-->
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Subtiles:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" rowspan="2">
+       <widget class="QScrollArea" name="subtileRangesScrollArea">
+        <property name="minimumWidth">
+         <number>180</number>
+        </property>
+        <property name="minimumHeight">
+         <number>80</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" alignment="Qt::AlignTop">
+       <layout class="QHBoxLayout" name="addRangeButtonLayout"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QPushButton" name="lightDecButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="text">
+        <string notr="true">-</string>
+       </property>
+       <property name="toolTip">
+        <string>Decrement the radius of the lit subtiles</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="lightIncButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="text">
+        <string notr="true">+</string>
+       </property>
+       <property name="toolTip">
+        <string>Increment the radius of the lit subtiles</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="lightAcceptButton">
+       <property name="text">
+        <string>Accept</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="lightCancelButton">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="4" margin="4"/>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="placementButtonGroup"/>
+ </buttongroups>
+</ui>

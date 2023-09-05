@@ -29,6 +29,7 @@
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
 #include "pushbuttonwidget.h"
+#include "tilesetlightdialog.h"
 #include "upscaledialog.h"
 
 namespace Ui {
@@ -85,6 +86,7 @@ public:
     void activeTiles() const;
     void inefficientFrames() const;
     void resetFrameTypes();
+    void lightSubtiles();
     void checkSubtileFlags() const;
     void checkTileFlags() const;
     void checkTilesetFlags() const;
@@ -316,6 +318,7 @@ private:
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
     PushButtonWidget *viewBtn;
 
+    TilesetLightDialog tilesetLightDialog = TilesetLightDialog(this);
     DungeonGenerateDialog dungeonGenerateDialog = DungeonGenerateDialog(this);
     DungeonDecorateDialog dungeonDecorateDialog = DungeonDecorateDialog(this);
     DungeonResourceDialog dungeonResourceDialog = DungeonResourceDialog(this);

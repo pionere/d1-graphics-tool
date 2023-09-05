@@ -1996,7 +1996,30 @@ void LevelCelView::activeSubtiles() const
             dProgress() << progress;
         }
     } else {
-        dProgress() << tr("Colors are not affected if the playback mode is '%1'.").arg(cycleTypeTxt);
+        QPair<int, QString> progress;
+        progress.first = -1;
+        progress.second = tr("Lit subtiles:");
+
+        dProgress() << progress;
+        std::map<int, std::set<int>> radii;
+        for (int i = 0; i < this->sla->getSubtileCount(); i++) {
+            int radius = this->sla->getLightRadius(i);
+            radii[radius].insert(i);
+        }
+        radii.erase(0);
+        if (!radii.empty()) {
+            for (auto it = radii.cbegin(); it != radii.cend(); it++) {
+                QString msg = tr("Radius %1: ").arg(it->first);
+                for (auto sit = it->second.cbegin(); sit != it->second.cend(); sit++) {
+                    msg.append("%1, ").arg((*sit) + 1);
+                }
+                msg.chop(2);
+                dProgress() << msg;
+            }
+        } else {
+            progress.second = tr("None of the subtiles are lit.");
+            dProgress() << progress;
+        }
     }
 
     ProgressDialog::decBar();
@@ -2127,6 +2150,12 @@ void LevelCelView::resetFrameTypes()
     }
 
     ProgressDialog::decBar();
+}
+
+void LevelCelView::lightSubtiles()
+{
+    this->tilesetLightDialog.initialize(this->tileset);
+    this->tilesetLightDialog.show();
 }
 
 static int leftFoliagePixels(const D1GfxFrame *frame)

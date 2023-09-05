@@ -159,6 +159,7 @@
     <addaction name="separator"/>
     <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="actionPatchTileset_Tileset"/>
+    <addaction name="actionLightSubtiles_Tileset"/>
     <addaction name="separator"/>
     <addaction name="menuTilesetCheckFlags"/>
     <addaction name="menuTilesetCleanup"/>
@@ -740,6 +741,14 @@
    </property>
    <property name="toolTip">
     <string>Patch subtiles of the vanilla game</string>
+   </property>
+  </action>
+  <action name="actionLightSubtiles_Tileset">
+   <property name="text">
+    <string>Light Subtiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Adjust the light radius of the subtiles</string>
    </property>
   </action>
   <action name="actionCheckSubtileFlags_Tileset">
