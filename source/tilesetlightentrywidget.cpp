@@ -7,7 +7,7 @@
 #include "pushbuttonwidget.h"
 #include "ui_tilesetlightentrywidget.h"
 
-TilesetLightEntryWidget::TilesetLightEntryWidget(TrnGenerateDialog *parent)
+TilesetLightEntryWidget::TilesetLightEntryWidget(TilesetLightDialog *parent)
     : QWidget(parent)
     , ui(new Ui::TilesetLightEntryWidget())
     , view(parent)
@@ -49,7 +49,7 @@ SubtileLight TilesetLightEntryWidget::getSubtileRange() const
 
     lightRange.radius = this->getLightRadius();
 
-    return color;
+    return lightRange;
 }
 
 int TilesetLightEntryWidget::getLightRadius() const

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QVBoxLayout>
 
 #include "tilesetlightentrywidget.h"
 
@@ -40,6 +41,7 @@ private slots:
 
 private:
     Ui::TilesetLightDialog *ui;
+    QVBoxLayout *rangesLayout;
 
     LevelCelView *view;
     D1Tileset *tileset;

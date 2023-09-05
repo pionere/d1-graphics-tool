@@ -17,6 +17,11 @@ TilesetLightDialog::TilesetLightDialog(LevelCelView *v)
     , view(v)
 {
     ui->setupUi(this);
+
+    QGroupBox *rangesGroupbox = new QGroupBox();
+    this->rangesLayout = new QVBoxLayout();
+    rangesGroupbox->setLayout(rangesLayout);
+    this->ui->subtileRangesScrollArea->setWidget(rangesGroupbox);
 }
 
 TilesetLightDialog::~TilesetLightDialog()
@@ -44,7 +49,7 @@ void TilesetLightDialog::initialize(D1Tileset *ts)
         }
     }
 
-    QList<TilesetLightEntryWidget *> rangeWidgets = this->ui->subtileRangesScrollArea->findChildren<TilesetLightEntryWidget *>();
+    QList<TilesetLightEntryWidget *> rangeWidgets = this->rangesLayout->parentWidget()->findChildren<TilesetLightEntryWidget *>();
     for (int i = ranges.size(); i < rangeWidgets.count(); i++) {
         this->on_actionDelRange_triggered(rangeWidgets[i]);
     }
@@ -52,7 +57,7 @@ void TilesetLightDialog::initialize(D1Tileset *ts)
         this->on_actionAddRange_triggered();
     }
 
-    rangeWidgets = this->ui->subtileRangesScrollArea->findChildren<TilesetLightEntryWidget *>();
+    rangeWidgets = this->rangesLayout->parentWidget()->findChildren<TilesetLightEntryWidget *>();
     for (int i = 0; i < rangeWidgets.count(); i++) {
         rangeWidgets[i]->initialize(ranges[i]);
     }
@@ -61,7 +66,7 @@ void TilesetLightDialog::initialize(D1Tileset *ts)
 void TilesetLightDialog::on_actionAddRange_triggered()
 {
     TilesetLightEntryWidget *widget = new TilesetLightEntryWidget(this);
-    this->ui->subtileRangesScrollArea->addWidget(widget, 0, Qt::AlignTop);
+    this>rangesGroupbox->addWidget(widget, 0, Qt::AlignTop);
 }
 
 void TilesetLightDialog::on_actionDelRange_triggered(TilesetLightEntryWidget *caller)
@@ -73,7 +78,7 @@ void TilesetLightDialog::on_actionDelRange_triggered(TilesetLightEntryWidget *ca
 
 void TilesetLightDialog::on_lightDecButton_clicked()
 {
-    QList<TilesetLightEntryWidget *> ranges = this->ui->subtileRangesScrollArea->findChildren<TilesetLightEntryWidget *>();
+    QList<TilesetLightEntryWidget *> ranges = this->rangesLayout->parentWidget()->findChildren<TilesetLightEntryWidget *>();
     for (int i = 0; i < ranges.count(); i++) {
         TilesetLightEntryWidget *w = ranges[i];
         int radius = w->getLightRadius() - 1;
@@ -86,7 +91,7 @@ void TilesetLightDialog::on_lightDecButton_clicked()
 
 void TilesetLightDialog::on_lightIncButton_clicked()
 {
-    QList<TilesetLightEntryWidget *> ranges = this->ui->subtileRangesScrollArea->findChildren<TilesetLightEntryWidget *>();
+    QList<TilesetLightEntryWidget *> ranges = this->rangesLayout->parentWidget()->findChildren<TilesetLightEntryWidget *>();
     for (int i = 0; i < ranges.count(); i++) {
         TilesetLightEntryWidget *w = ranges[i];
         int radius = w->getLightRadius() + 1;
@@ -110,8 +115,7 @@ void TilesetLightDialog::on_lightAcceptButton_clicked()
                 break;
             }
         }
-        ts->sla->setLightRadius(i, radius);
-        int radius = ts->sla->getLightRadius(i);
+        this->tileset->sla->setLightRadius(i, radius);
     }
 
     this->view->updateFields();
