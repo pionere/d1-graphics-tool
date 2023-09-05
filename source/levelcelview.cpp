@@ -1996,6 +1996,8 @@ void LevelCelView::activeSubtiles() const
             dProgress() << progress;
         }
     } else {
+        dProgress() << tr("Colors are not affected if the playback mode is '%1'.").arg(cycleTypeTxt);
+
         QPair<int, QString> progress;
         progress.first = -1;
         progress.second = tr("Lit subtiles:");

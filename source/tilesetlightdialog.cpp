@@ -18,6 +18,10 @@ TilesetLightDialog::TilesetLightDialog(LevelCelView *v)
 {
     ui->setupUi(this);
 
+    QHBoxLayout *layout = this->ui->addRangeButtonLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("Add"), this, &TrnGenerateDialog::on_actionAddRange_triggered);
+    layout->addStretch();
+
     QGroupBox *rangesGroupbox = new QGroupBox();
     this->rangesLayout = new QVBoxLayout();
     rangesGroupbox->setLayout(rangesLayout);
@@ -61,6 +65,8 @@ void TilesetLightDialog::initialize(D1Tileset *ts)
     for (int i = 0; i < rangeWidgets.count(); i++) {
         rangeWidgets[i]->initialize(ranges[i]);
     }
+
+	QMessageBox::critical(nullptr, "Error", QString("NumRanges:%1").arg(ranges.size()));
 }
 
 void TilesetLightDialog::on_actionAddRange_triggered()
