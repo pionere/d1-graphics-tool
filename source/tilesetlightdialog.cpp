@@ -66,12 +66,12 @@ void TilesetLightDialog::initialize(D1Tileset *ts)
 void TilesetLightDialog::on_actionAddRange_triggered()
 {
     TilesetLightEntryWidget *widget = new TilesetLightEntryWidget(this);
-    this>rangesGroupbox->addWidget(widget, 0, Qt::AlignTop);
+    this->rangesLayout->addWidget(widget, 0, Qt::AlignTop);
 }
 
 void TilesetLightDialog::on_actionDelRange_triggered(TilesetLightEntryWidget *caller)
 {
-    this->ui->subtileRangesScrollArea->removeWidget(caller);
+    this->rangesLayout->removeWidget(caller);
     delete caller;
     this->adjustSize();
 }

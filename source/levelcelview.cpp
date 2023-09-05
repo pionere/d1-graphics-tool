@@ -2011,7 +2011,7 @@ void LevelCelView::activeSubtiles() const
             for (auto it = radii.cbegin(); it != radii.cend(); it++) {
                 QString msg = tr("Radius %1: ").arg(it->first);
                 for (auto sit = it->second.cbegin(); sit != it->second.cend(); sit++) {
-                    msg.append("%1, ").arg((*sit) + 1);
+                    msg = msg.append("%1, ").arg((*sit) + 1);
                 }
                 msg.chop(2);
                 dProgress() << msg;

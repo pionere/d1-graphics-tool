@@ -5,9 +5,9 @@
   <property name="windowTitle">
    <string>Light the subtiles</string>
   </property>
-  <!--property name="modal">
+  <property name="modal">
    <bool>true</bool>
-  </property-->
+  </property>
   <layout class="QVBoxLayout">
    <item>
     <widget class="QGroupBox">
