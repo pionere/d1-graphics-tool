@@ -19,7 +19,7 @@ TilesetLightDialog::TilesetLightDialog(LevelCelView *v)
     ui->setupUi(this);
 
     QHBoxLayout *layout = this->ui->addRangeButtonLayout;
-    PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("Add"), this, &TrnGenerateDialog::on_actionAddRange_triggered);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("Add"), this, &TilesetLightDialog::on_actionAddRange_triggered);
     layout->addStretch();
 
     QGroupBox *rangesGroupbox = new QGroupBox();
