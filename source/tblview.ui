@@ -165,12 +165,62 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="13" colspan="4">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
+      <item row="0" column="14" colspan="3">
+       <layout class="QHBoxLayout">
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string>Value:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="valueLineEdit">
+          <property name="charWidth">
+           <number>4</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="minimumWidth">
+           <number>8</number>
+          </property>
+          <property name="maximumWidth">
+           <number>8</number>
+          </property>
+          <property name="text">
+           <string notr="true">@</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="valueAtLineEdit">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="charWidth">
+           <number>6</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
@@ -293,7 +343,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="13" colspan="4">
+      <item row="1" column="14" colspan="3">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QPushButton" name="trsLoadPushButton">
@@ -405,6 +455,13 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="11" colspan="3">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
       <item row="3" column="6" colspan="5">
        <layout class="QHBoxLayout">
         <item>
@@ -471,51 +528,62 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="13">
-       <widget class="QLabel">
-        <property name="text">
-         <string>Value:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="14">
-       <widget class="LineEditWidget" name="valueLineEdit">
-        <property name="charWidth">
-         <number>4</number>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="15">
-       <widget class="QLabel">
-        <property name="minimumWidth">
-         <number>8</number>
-        </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property>
-        <property name="text">
-         <string notr="true">@</string>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="16">
-       <widget class="LineEditWidget" name="valueAtLineEdit">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="charWidth">
-         <number>6</number>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
+      <item row="3" column="14" colspan="3">
+       <layout class="QHBoxLayout">
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="eqFromLineEdit">
+          <property name="charWidth">
+           <number>3</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="minimumWidth">
+           <number>8</number>
+          </property>
+          <property name="maximumWidth">
+           <number>8</number>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="eqToLineEdit">
+          <property name="charWidth">
+           <number>3</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="equalizePushButton">
+          <property name="toolTip">
+           <string>Equalize the brightness level in the selected range</string>
+          </property>
+          <property name="text">
+           <string>Equalize</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>

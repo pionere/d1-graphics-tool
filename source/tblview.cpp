@@ -68,6 +68,9 @@ TblView::TblView(QWidget *parent, QUndoStack *us)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
 
+    this->ui->eqFromLineEdit->setText("0");
+    this->ui->eqToLineEdit->setText(QString::number(MAX_LIGHT_DIST + 1));
+
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->tblScene, &CelScene::framePixelClicked, this, &TblView::framePixelClicked);
     // QObject::connect(&this->tblScene, &CelScene::framePixelHovered, this, &TblView::framePixelHovered);
@@ -380,6 +383,46 @@ void TblView::on_trsClearPushButton_clicked()
         this->trsPath.clear();
         this->updateTrsIcon();
     }
+}
+
+void TblView::on_equalizePushButton_clicked()
+{
+    int rangeFrom = this->ui->eqFromLineEdit->text().toInt();
+    int rangeTo = this->ui->eqToLineEdit->text().toInt();
+
+    int v0, v1;
+    if (rangeFrom < 0) {
+        rangeFrom = 0;
+    }
+    if (rangeFrom >= MAX_LIGHT_DIST + 1 || rangeTo < 0) {
+        return;
+    }
+    if (rangeTo >= MAX_LIGHT_DIST + 1) {
+        rangeTo = MAX_LIGHT_DIST + 1;
+        v1 = 0;
+    } else {
+        v1 = D1Tbl::getDarkValueAt(rangeTo * 8, this->currentLightRadius); // DARK_COLUMN_WIDTH
+    }
+    v0 = D1Tbl::getDarkValueAt(rangeFrom, this->currentLightRadius);
+// QMessageBox::critical(nullptr, "Error", QString("Values: %1 .. %2 in range %3:%4").arg(v0).arg(v1).arg(rangeFrom).arg(rangeTo));
+    std::vector<TableValue> modValues;
+    for (int i = rangeFrom; i <= rangeTo; i++) {
+        int v = D1Tbl::getDarkValueAt(i * 8, this->currentLightRadius); // DARK_COLUMN_WIDTH
+
+        int value = v0 + (v1 - v0) * (i - rangeFrom) / (rangeTo - rangeFrom);
+// QMessageBox::critical(nullptr, "Error", QString("Value @%1: %2 should be %3").arg(i).arg(v).arg(value));
+
+        if (v != value) {
+            modValues.push_back(TableValue(i * 8, this->currentLightRadius, value)); // DARK_COLUMN_WIDTH
+        }
+    }
+
+    // Build frame editing command and connect it to the current main window widget
+    // to update the palHits and CEL views when undo/redo is performed
+    EditTableCommand *command = new EditTableCommand(this->tableset->darkTbl, modValues);
+    QObject::connect(command, &EditTableCommand::modified, this, &TblView::displayFrame);
+
+    this->undoStack->push(command);
 }
 
 void TblView::setRadius(int nextRadius)
