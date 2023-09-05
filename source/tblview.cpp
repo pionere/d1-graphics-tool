@@ -407,7 +407,7 @@ void TblView::on_equalizePushButton_clicked()
     v0 = D1Tbl::getDarkValueAt(rangeFrom * 8, radius); // DARK_COLUMN_WIDTH
 //QMessageBox::critical(nullptr, "Error", QString("Values: %1 .. %2 in range %3:%4").arg(v0).arg(v1).arg(rangeFrom).arg(rangeTo));
     std::vector<TableValue> modValues;
-    for (int i = rangeFrom; i <= rangeTo; i++) {
+    for (int i = rangeFrom; i < rangeTo; i++) {
         int v = D1Tbl::getDarkValueAt(i * 8, radius); // DARK_COLUMN_WIDTH
 
         int value = v0 + (v1 - v0) * (i - rangeFrom) / (rangeTo - rangeFrom);
