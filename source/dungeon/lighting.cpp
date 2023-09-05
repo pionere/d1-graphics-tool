@@ -510,6 +510,7 @@ void DoLighting(unsigned lnum)
 				temp_x = nXPos + 0;
 				temp_y = nYPos + 0;
 				v = dark[radius_block];
+QMessageBox::critical(nullptr, "Error", QString("v%1, r%2 at%3:%4 o%5:%6").arg(v).arg(radius_block).arg(temp_x).arg(temp_y).arg(xoff).arg(yoff);
 				if (v < dLight[temp_x][temp_y])
 					dLight[temp_x][temp_y] = v;
 			//}
