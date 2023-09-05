@@ -404,13 +404,13 @@ void TblView::on_equalizePushButton_clicked()
         v1 = D1Tbl::getDarkValueAt(rangeTo * 8, this->currentLightRadius); // DARK_COLUMN_WIDTH
     }
     v0 = D1Tbl::getDarkValueAt(rangeFrom, this->currentLightRadius);
-// QMessageBox::critical(nullptr, "Error", QString("Values: %1 .. %2 in range %3:%4").arg(v0).arg(v1).arg(rangeFrom).arg(rangeTo));
+QMessageBox::critical(nullptr, "Error", QString("Values: %1 .. %2 in range %3:%4").arg(v0).arg(v1).arg(rangeFrom).arg(rangeTo));
     std::vector<TableValue> modValues;
     for (int i = rangeFrom; i <= rangeTo; i++) {
         int v = D1Tbl::getDarkValueAt(i * 8, this->currentLightRadius); // DARK_COLUMN_WIDTH
 
         int value = v0 + (v1 - v0) * (i - rangeFrom) / (rangeTo - rangeFrom);
-// QMessageBox::critical(nullptr, "Error", QString("Value @%1: %2 should be %3").arg(i).arg(v).arg(value));
+QMessageBox::critical(nullptr, "Error", QString("Value @%1: %2 should be %3").arg(i).arg(v).arg(value));
 
         if (v != value) {
             modValues.push_back(TableValue(i * 8, this->currentLightRadius, value)); // DARK_COLUMN_WIDTH
