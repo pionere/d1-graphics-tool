@@ -2154,6 +2154,12 @@ void LevelCelView::resetFrameTypes()
     ProgressDialog::decBar();
 }
 
+void LevelCelView::lightSubtiles()
+{
+    this->tilesetLightDialog.initialize(this->tileset);
+    this->tilesetLightDialog.show();
+}
+
 static int leftFoliagePixels(const D1GfxFrame *frame)
 {
     int result = 0;

@@ -1953,6 +1953,11 @@ void MainWindow::on_actionPatchTileset_Tileset_triggered()
     this->patchTilesetDialog->show();
 }
 
+void MainWindow::on_actionLightSubtiles_Tileset_triggered()
+{
+    this->levelCelView->lightSubtiles();
+}
+
 void MainWindow::on_actionCheckSubtileFlags_Tileset_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);

@@ -176,6 +176,7 @@ private slots:
     void on_actionReportInefficientFrames_Tileset_triggered();
     void on_actionResetFrameTypes_Tileset_triggered();
     void on_actionPatchTileset_Tileset_triggered();
+    void on_actionLightSubtiles_Tileset_triggered();
     void on_actionCheckSubtileFlags_Tileset_triggered();
     void on_actionCheckTileFlags_Tileset_triggered();
     void on_actionCheckTilesetFlags_Tileset_triggered();
