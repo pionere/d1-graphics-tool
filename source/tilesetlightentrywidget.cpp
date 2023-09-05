@@ -25,8 +25,8 @@ TilesetLightEntryWidget::~TilesetLightEntryWidget()
 
 void TilesetLightEntryWidget::initialize(const SubtileLight &lightRange)
 {
-    this->ui->firstSubtileLineEdit->setText(QString::number(lightRange.firstsubtile));
-    this->ui->lastSubtileLineEdit->setText(QString::number(lightRange.lastsubtile));
+    this->ui->firstSubtileLineEdit->setText(QString::number(lightRange.firstsubtile + 1));
+    this->ui->lastSubtileLineEdit->setText(QString::number(lightRange.lastsubtile + 1));
     this->setLightRadius(lightRange.radius);
 }
 
@@ -34,8 +34,8 @@ SubtileLight TilesetLightEntryWidget::getSubtileRange() const
 {
     SubtileLight lightRange;
     bool firstOk, lastOk;
-    lightRange.firstsubtile = this->ui->firstSubtileLineEdit->text().toInt(&firstOk);
-    lightRange.lastsubtile = this->ui->lastSubtileLineEdit->text().toInt(&lastOk);
+    lightRange.firstsubtile = this->ui->firstSubtileLineEdit->text().toInt(&firstOk) - 1;
+    lightRange.lastsubtile = this->ui->lastSubtileLineEdit->text().toInt(&lastOk) - 1;
     if (!lastOk) {
         if (!firstOk) {
             lightRange.lastsubtile = -1;

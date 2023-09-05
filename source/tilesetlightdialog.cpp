@@ -23,7 +23,6 @@ TilesetLightDialog::TilesetLightDialog(LevelCelView *v)
     layout->addStretch();
 
     this->ui->mainGridLayout->setRowStretch(1, 1);
-    this->ui->mainGridLayout->setRowStretch(3, 1);
     this->ui->mainGridLayout->setColumnStretch(1, 1);
 }
 
