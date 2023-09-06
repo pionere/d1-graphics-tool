@@ -139,7 +139,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
     switch (index) {
     case DTYPE_TOWN:
         colors[1].lastcolor = 127;
-        colors[1].shadesteps = 5;
+        colors[1].shadesteps = 10;
         colors[1].deltasteps = true;
 
         colors.erase(colors.begin() + 2, colors.begin() + 1 + 8);
@@ -151,7 +151,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         colors[1].deltasteps = false;
         colors[1].protcolor = true;*/
         colors[1].lastcolor = 31;
-        colors[1].shadesteps = 1;
+        colors[1].shadesteps = 16;
         colors[1].deltasteps = true;
         colors[1].protcolor = false;
 
@@ -165,10 +165,10 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         /*  -- vanilla settings:
         colors[1].protcolor = true;
         colors[2].protcolor = true;*/
-        colors[1].shadesteps = 6;
+        colors[1].shadesteps = 16;
         colors[1].deltasteps = true;
         colors[1].protcolor = false;
-        colors[2].shadesteps = 6;
+        colors[2].shadesteps = 16;
         colors[2].deltasteps = true;
         colors[2].protcolor = false;
         break;
@@ -186,14 +186,14 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         stdColor.deltasteps = false;
         stdColor.protcolor = true;*/
         colors[1].lastcolor = 7;
-        colors[1].shadesteps = 6;
+        colors[1].shadesteps = 8;
         colors[1].deltasteps = true;
         colors[1].protcolor = false;
 
         GenerateTrnColor stdColor;
         stdColor.firstcolor = 8;
         stdColor.lastcolor = 15;
-        stdColor.shadesteps = 6;
+        stdColor.shadesteps = 8;
         stdColor.deltasteps = true;
         stdColor.protcolor = false;
         colors.insert(colors.begin() + 2, stdColor);

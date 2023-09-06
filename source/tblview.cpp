@@ -410,7 +410,6 @@ void TblView::on_equalizePushButton_clicked()
         int v = D1Tbl::getDarkValueAt(i * 8, radius); // DARK_COLUMN_WIDTH
 
         int value = v0 + (v1 - v0) * (i - rangeFrom) / (rangeTo - rangeFrom);
-
         if (v != value) {
             modValues.push_back(TableValue(i * 8, radius, value)); // DARK_COLUMN_WIDTH
         }

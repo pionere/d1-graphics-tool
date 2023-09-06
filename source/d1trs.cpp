@@ -92,7 +92,8 @@ static BYTE selectColor(BYTE colorIdx, int shade, int stepsIn, bool deltaSteps, 
             continue;
         }
 
-        auto v = color.valueF();
+        // auto v = color.valueF();
+        auto v = color.lightnessF();
         // TODO: use color.lightnessF() instead?
 
         auto steps = v * (MAXDARKNESS + 1);
