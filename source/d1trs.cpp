@@ -319,7 +319,7 @@ static BYTE selectColor(BYTE colorIdx, int shade, int stepsIn, bool deltaSteps, 
         if (steps <= shade) {
             color = QColorConstants::Black;
         } else {
-            color = color.darker(100 * steps / (steps - shade));
+            color = color.darker(100 * (MAXDARKNESS + 1) / (steps - shade));
         }
 
         std::vector<PaletteColor> dynPalColors;
