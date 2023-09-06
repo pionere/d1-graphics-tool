@@ -152,6 +152,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         colors[2].protcolor = true;
         break;
     case DTYPE_NEST: {
+        /* -- vanilla settings:
         colors[1].lastcolor = 7;
         colors[1].shadesteps = -1;
         colors[1].deltasteps = false;
@@ -162,7 +163,18 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         stdColor.lastcolor = 15;
         stdColor.shadesteps = -1;
         stdColor.deltasteps = false;
-        stdColor.protcolor = true;
+        stdColor.protcolor = true;*/
+        colors[1].lastcolor = 7;
+        colors[1].shadesteps = 6;
+        colors[1].deltasteps = true;
+        colors[1].protcolor = false;
+
+        GenerateTrnColor stdColor;
+        stdColor.firstcolor = 8;
+        stdColor.lastcolor = 15;
+        stdColor.shadesteps = 6;
+        stdColor.deltasteps = true;
+        stdColor.protcolor = false;
         colors.insert(colors.begin() + 2, stdColor);
     } break;
     case DTYPE_NONE:
