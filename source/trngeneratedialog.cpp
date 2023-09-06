@@ -159,10 +159,10 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         /*  -- vanilla settings:
         colors[1].protcolor = true;
         colors[2].protcolor = true;*/
-        colors[1].shadesteps = 1;
+        colors[1].shadesteps = 6;
         colors[1].deltasteps = true;
         colors[1].protcolor = false;
-        colors[2].shadesteps = 1;
+        colors[2].shadesteps = 6;
         colors[2].deltasteps = true;
         colors[2].protcolor = false;
         break;
