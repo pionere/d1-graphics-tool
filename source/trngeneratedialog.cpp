@@ -42,6 +42,12 @@ void TrnGenerateDialog::initialize(D1Pal *p)
     if (palWidgets.empty()) {
         TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, p, false);
         this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
+    } else {
+        for (TrnGeneratePalEntryWidget *palWidget : palWidgets) {
+            if (!palWidget->ownsPalette()) {
+                palWidget->setPalette(p);
+            }
+        }
     }
 }
 

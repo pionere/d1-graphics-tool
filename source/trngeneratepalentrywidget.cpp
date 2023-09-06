@@ -37,6 +37,17 @@ D1Pal *TrnGeneratePalEntryWidget::getPalette() const
     return const_cast<D1Pal *>(this->pal);
 }
 
+void TrnGeneratePalEntryWidget::setPalette(D1Pal *p)
+{
+    // assert(!this->delPal);
+    this->pal = p;
+}
+
+bool TrnGeneratePalEntryWidget::ownsPalette() const
+{
+    return this->delPal;
+}
+
 void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 {
     // start file-dialog
