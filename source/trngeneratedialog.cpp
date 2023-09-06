@@ -152,9 +152,19 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         colors.erase(colors.begin() + 2);
         break;
     case DTYPE_HELL:
-    case DTYPE_CRYPT:
         colors[1].protcolor = true;
         colors[2].protcolor = true;
+        break;
+    case DTYPE_CRYPT:
+        /*  -- vanilla settings:
+        colors[1].protcolor = true;
+        colors[2].protcolor = true;*/
+        colors[1].shadesteps = 6;
+        colors[1].deltasteps = true;
+        colors[1].protcolor = false;
+        colors[2].shadesteps = 6;
+        colors[2].deltasteps = true;
+        colors[2].protcolor = false;
         break;
     case DTYPE_NEST: {
         /* -- vanilla settings:
