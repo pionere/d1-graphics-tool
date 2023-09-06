@@ -306,7 +306,7 @@ static BYTE selectColor(BYTE colorIdx, int shade, int stepsIn, bool deltaSteps, 
         }
 
         // auto v = color.valueF();
-		auto v = color.lightnessF();
+        auto v = color.lightnessF();
         // TODO: use color.lightnessF() instead?
 
         auto steps = v * (MAXDARKNESS + 1);
@@ -319,8 +319,8 @@ static BYTE selectColor(BYTE colorIdx, int shade, int stepsIn, bool deltaSteps, 
         }
         if (steps <= shade) {
             color = QColorConstants::Black;
-        } else if ((MAXDARKNESS + 1) > (steps - shade)) {
-            color = color.darker(100 * (MAXDARKNESS + 1) / (steps - shade));
+        } else {
+            color = color.darker(100 * steps / (steps - shade));
         }
 
         std::vector<PaletteColor> dynPalColors;
