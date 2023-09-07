@@ -255,40 +255,45 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(CPACK_PACKAGE_NAME ${project_name})
-    set(CPACK_GENERATOR "7Z")
-    # Common *nix files
-    set(CPACK_STRIP_FILES TRUE)
-    install(TARGETS ${BIN_TARGET} DESTINATION bin)
-    set(desktop_file "${PROJECT_SOURCE_DIR}/resources/nix/d1gt.desktop")
+  set(CPACK_PACKAGE_NAME ${project_name})
+  set(CPACK_GENERATOR "7Z")
+  # Common *nix files
+  set(CPACK_STRIP_FILES TRUE)
+  install(TARGETS ${BIN_TARGET} DESTINATION bin)
+  set(desktop_file "${PROJECT_SOURCE_DIR}/resources/nix/d1gt.desktop")
 
-    find_program(DFI desktop-file-install)
-    if(DFI)
-      execute_process(COMMAND ${DFI} --dir=${CMAKE_BINARY_DIR} ${desktop_file})
-      set(desktop_file "${CMAKE_BINARY_DIR}/d1gt.desktop")
-    endif()
+  find_program(DFI desktop-file-install)
+  if(DFI)
+    execute_process(COMMAND ${DFI} --dir=${CMAKE_BINARY_DIR} ${desktop_file})
+    set(desktop_file "${CMAKE_BINARY_DIR}/d1gt.desktop")
+  endif()
 
-    install(FILES "${desktop_file}"
-      DESTINATION "share/applications"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/resources/icon.svg"
-      DESTINATION "share/icons/hicolor/512x512/apps"
-      RENAME "d1gt.svg"
-    )
+  install(FILES "${desktop_file}"
+    DESTINATION "share/applications"
+  )
+  install(FILES "${PROJECT_SOURCE_DIR}/resources/icon.svg"
+    DESTINATION "share/icons/hicolor/512x512/apps"
+    RENAME "d1gt.svg"
+  )
 
-    # -G DEB
-    set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} https://github.com/pionere/d1-graphics-tool")
-    set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+  # -G DEB
+  set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} https://github.com/pionere/d1-graphics-tool")
+  set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
-    # -G RPM
-    set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
+  # -G RPM
+  set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
 
-    find_program(RPMBUILD rpmbuild)
-    if(RPMBUILD)
-      list(APPEND CPACK_GENERATOR "RPM")
-    endif()
-    find_program(DPKG dpkg)
-    if(DPKG)
-      list(APPEND CPACK_GENERATOR "DEB")
-    endif()
+  find_program(RPMBUILD rpmbuild)
+  if(RPMBUILD)
+    list(APPEND CPACK_GENERATOR "RPM")
+  endif()
+  find_program(DPKG dpkg)
+  if(DPKG)
+    list(APPEND CPACK_GENERATOR "DEB")
+  endif()
+
+  set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+  set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+  set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+  include(CPack)
 endif()
