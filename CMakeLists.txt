@@ -12,6 +12,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(CPACK "Configure CPack" ON)
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Concurrent Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Widgets LinguistTools)
 
@@ -254,7 +256,9 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${BIN_TARGET})
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(CPACK AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  message(STATUS "Setting CPACK for Linux")
+
   set(CPACK_PACKAGE_NAME ${project_name})
   set(CPACK_GENERATOR "7Z")
   # Common *nix files
