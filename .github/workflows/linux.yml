@@ -23,7 +23,7 @@ jobs:
       run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
     - name: make
-      run: cmake --build build -j $(nproc)
+      run: cmake --build build -j $(nproc) --target package
 
     - name: Show content of workspace
       run: find $RUNNER_WORKSPACE
