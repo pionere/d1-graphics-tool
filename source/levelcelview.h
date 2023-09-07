@@ -255,7 +255,7 @@ private slots:
     void on_showMonstersCheckBox_clicked();
     void on_showObjectsCheckBox_clicked();
 
-    void on_showMetaButtonGroup_idClicked();
+    void on_dunOverlayComboBox_activated(int index);
 
     void on_levelTypeComboBox_activated(int index);
     void on_dungeonDefaultTileLineEdit_returnPressed();

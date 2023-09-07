@@ -1253,7 +1253,8 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
 
     static_assert(TILE_WIDTH == 2 && TILE_HEIGHT == 2, "D1Dun::drawMeta skips boundary checks.");
-    if (params.showMap) {
+    switch (params.overlayType) {
+    case DOT_MAP: {
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef > 0 && subtileRef <= this->min->getSubtileCount()) { // !0 || !UNDEF_SUBTILE
             quint8 mapType = this->sla->getMapType(subtileRef - 1);
@@ -1261,8 +1262,8 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
 
             D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | mapProp);
         }
-    }
-    if (params.showRooms) {
+    } break;
+    case DOT_ROOMS: {
         // draw the room meta info
         unsigned roomIndex = this->rooms[dunCursorY][dunCursorX];
         if (roomIndex != 0) {
@@ -1278,8 +1279,8 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
                 dungeon.setPen(prevPen);
             }
         }
-    }
-    if (params.showTileProtections) {
+    } break;
+    case DOT_TILE_PROTECTIONS: {
         // draw X if the tile-flag is set
         Qt::CheckState tps = this->tileProtections[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
         if (tps == Qt::PartiallyChecked) {
@@ -1292,8 +1293,8 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
             dungeon.drawLine(drawCursorX + backWidth / 4 - SHIFT, drawCursorY - 3 * backHeight / 4 + SHIFT, drawCursorX + 3 * backWidth / 4 - SHIFT, drawCursorY - backHeight / 4 + SHIFT);
             dungeon.drawLine(drawCursorX + backWidth / 4 + SHIFT, drawCursorY - 3 * backHeight / 4 - SHIFT, drawCursorX + 3 * backWidth / 4 + SHIFT, drawCursorY - backHeight / 4 - SHIFT);
         }
-    }
-    if (params.showSubtileProtections) {
+    } break;
+    case DOT_SUBTILE_PROTECTIONS: {
         // draw X if the subtile-flag is set
         int sps = this->subtileProtections[dunCursorY][dunCursorX];
         if (sps & 1) {
@@ -1302,6 +1303,25 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
         if (sps & 2) {
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
         }
+    } break;
+    case DOT_TILE_NUMBERS: {
+        int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
+        unsigned cellCenterX = drawCursorX + backWidth / 2;
+        unsigned cellCenterY = drawCursorY - backHeight / 2;
+        QString text = tileRef == UNDEF_TILE ? QString("???") : QString::number(tileRef);
+        QFontMetrics fm(dungeon.font());
+        unsigned textWidth = fm.horizontalAdvance(text);
+        dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
+    } break;
+    case DOT_SUBTILE_NUMBERS: {
+        unsigned cellCenterX = drawCursorX + backWidth / 2;
+        unsigned cellCenterY = drawCursorY - backHeight / 2;
+        int subtileRef = this->subtiles[dunCursorY][dunCursorX];
+        QString text = subtileRef == UNDEF_SUBTILE ? QString("???") : QString::number(subtileRef);
+        QFontMetrics fm(dungeon.font());
+        unsigned textWidth = fm.horizontalAdvance(text);
+        dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
+    } break;
     }
 }
 

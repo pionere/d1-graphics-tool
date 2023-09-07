@@ -3287,10 +3287,7 @@ void LevelCelView::displayFrame()
     if (this->dunView) {
         DunDrawParam params;
         params.tileState = this->ui->showTilesRadioButton->isChecked() ? Qt::Checked : (this->ui->showFloorRadioButton->isChecked() ? Qt::PartiallyChecked : Qt::Unchecked);
-        params.showMap = this->ui->showMapMetaRadioButton->isChecked();
-        params.showRooms = this->ui->showRoomsMetaRadioButton->isChecked();
-        params.showTileProtections = this->ui->showTileMetaRadioButton->isChecked();
-        params.showSubtileProtections = this->ui->showSubtileMetaRadioButton->isChecked();
+        params.overlayType = this->ui->dunOverlayComboBox->currentIndex();
         params.showItems = this->ui->showItemsCheckBox->isChecked();
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();
@@ -4201,7 +4198,7 @@ void LevelCelView::on_showObjectsCheckBox_clicked()
     this->displayFrame();
 }
 
-void LevelCelView::on_showMetaButtonGroup_idClicked()
+void LevelCelView::on_dunOverlayComboBox_activated(int index)
 {
     // update the view
     this->displayFrame();
