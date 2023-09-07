@@ -1312,7 +1312,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
             QString text = tileRef == UNDEF_TILE ? QString("???") : QString::number(tileRef);
             QFontMetrics fm(dungeon.font());
             unsigned textWidth = fm.horizontalAdvance(text);
-            dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
+            dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight + fm.height() / 2, text);
         }
     } break;
     case DOT_SUBTILE_NUMBERS: {
@@ -1322,7 +1322,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
         QString text = subtileRef == UNDEF_SUBTILE ? QString("???") : QString::number(subtileRef);
         QFontMetrics fm(dungeon.font());
         unsigned textWidth = fm.horizontalAdvance(text);
-        dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
+        dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() / 2, text);
     } break;
     }
 }
