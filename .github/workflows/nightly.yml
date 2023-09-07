@@ -125,22 +125,22 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v3
 
-    - name: dependencies
+    - name: Dependencies
       run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-tools-dev qt6-l10n-tools qt6-tools-dev-tools
 
-    - name: configure
+    - name: Configure
       run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 
-    - name: make
+    - name: Make
       run: cmake --build build -j $(nproc)
 
-    - name: create zip
+    - name: Create zip
       run: zip -r -q D1GraphicsTool.zip build/D1GraphicsTool
 
-    - name: upload
+    - name: Upload
       uses: actions/upload-artifact@v3
       with:
         path: D1GraphicsTool.zip
