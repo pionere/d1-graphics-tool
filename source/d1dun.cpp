@@ -1502,7 +1502,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
 
     this->drawLayer(dunPainter, backImage, params, 0);
     this->drawLayer(dunPainter, backImage, params, 1);
-    if (params.showMap || params.showRooms || params.showTileProtections || params.showSubtileProtections) {
+    if (params.overlayType != DOT_NONE) {
         this->drawLayer(dunPainter, backImage, params, 2);
     }
 
