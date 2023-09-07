@@ -1305,13 +1305,15 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
         }
     } break;
     case DOT_TILE_NUMBERS: {
-        int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
-        unsigned cellCenterX = drawCursorX + backWidth / 2;
-        unsigned cellCenterY = drawCursorY - backHeight / 2;
-        QString text = tileRef == UNDEF_TILE ? QString("???") : QString::number(tileRef);
-        QFontMetrics fm(dungeon.font());
-        unsigned textWidth = fm.horizontalAdvance(text);
-        dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
+        static_assert(TILE_WIDTH == 2 && TILE_HEIGHT == 2, "D1Dun::drawMeta skips boundary checks.");
+        if ((dunCursorX & 1) && (dunCursorY & 1)) {
+            int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
+            unsigned cellCenterX = drawCursorX + backWidth / 2;
+            QString text = tileRef == UNDEF_TILE ? QString("???") : QString::number(tileRef);
+            QFontMetrics fm(dungeon.font());
+            unsigned textWidth = fm.horizontalAdvance(text);
+            dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
+        }
     } break;
     case DOT_SUBTILE_NUMBERS: {
         unsigned cellCenterX = drawCursorX + backWidth / 2;
