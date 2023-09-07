@@ -257,8 +257,6 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 if(CPACK AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  message(STATUS "Setting CPACK for Linux")
-
   set(CPACK_PACKAGE_NAME ${project_name})
   set(CPACK_GENERATOR "7Z")
   # Common *nix files

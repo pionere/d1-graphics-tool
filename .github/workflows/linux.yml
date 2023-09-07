@@ -20,7 +20,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-tools-dev qt6-l10n-tools qt6-tools-dev-tools
 
     - name: configure
-      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCPACK=ON
 
     - name: make
       run: cmake --build build -j $(nproc) --target package
@@ -28,6 +28,10 @@ jobs:
     - name: Show content of workspace
       run: find $RUNNER_WORKSPACE
       shell: bash
+
+    - name: rename the package
+      run: |
+        mv build/d1graphicstool*.deb build/D1GraphicsTool-Linux-x64.deb
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
@@ -41,4 +45,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: D1GraphicsTool-Linux-x64-deb
-        path: build/D1GraphicsTool.deb
+        path: build/D1GraphicsTool-Linux-x64.deb
