@@ -17,6 +17,8 @@ public:
     ~TrnGeneratePalEntryWidget();
 
     D1Pal *getPalette() const;
+    void setPalette(D1Pal *pal);
+    bool ownsPalette() const;
 
 private slots:
     void on_deletePushButtonClicked();
