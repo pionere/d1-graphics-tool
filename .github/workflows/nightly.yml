@@ -140,7 +140,7 @@ jobs:
     - name: Create zip
       run: |
         mv build/d1graphicstool*.deb build/D1GraphicsTool-Linux-x64.deb
-        zip -r -q D1GraphicsTool.zip build/D1GraphicsTool build/D1GraphicsTool-Linux-x64.deb
+        zip -j -q D1GraphicsTool.zip build/D1GraphicsTool build/D1GraphicsTool-Linux-x64.deb
 
     - name: Upload
       uses: actions/upload-artifact@v3
