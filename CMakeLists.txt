@@ -280,6 +280,7 @@ if(CPACK AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
   # -G DEB
   set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} https://github.com/pionere/d1-graphics-tool")
+  set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
   set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
   # -G RPM
