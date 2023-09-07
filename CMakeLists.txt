@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(D1GraphicsTool VERSION 0.5.0 LANGUAGES CXX)
 
+set(BIN_TARGET ${PROJECT_NAME})
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -216,23 +218,23 @@ qt_add_resources(RESOURCES
         ${TRANSLATIONS_QRC})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(D1GraphicsTool
+    qt_add_executable(${BIN_TARGET}
         resources/D1GraphicsTool.rc
         ${RESOURCES}
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 else()
-    add_executable(D1GraphicsTool
+    add_executable(${BIN_TARGET}
         resources/D1GraphicsTool.rc
         ${RESOURCES}
         ${PROJECT_SOURCES}
     )
 endif()
 
-target_link_libraries(D1GraphicsTool PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
 
-set_target_properties(D1GraphicsTool PROPERTIES
+set_target_properties(${BIN_TARGET} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER d1-graphics-tool.savagesteel.net
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -240,10 +242,10 @@ set_target_properties(D1GraphicsTool PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-install(TARGETS D1GraphicsTool
+install(TARGETS ${BIN_TARGET}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(D1GraphicsTool)
+    qt_finalize_executable(${BIN_TARGET})
 endif()
