@@ -387,7 +387,7 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
                 }
                 if (params.colors[j].shadesteps < 0) {
                     ColorTrns[i][k] = k;
-                } else if (params.colors[j].shadesteps == 0) {
+                } else if (params.colors[j].shadesteps == 0 && params.colors[j].shadestepsmpl == 1.0) {
                     int numColors = params.colors[j].lastcolor - params.colors[j].firstcolor + 1;
                     int col = (numColors * i) / (MAXDARKNESS + 1);
                     QColor colorFirst = basePal->getColor(params.colors[j].firstcolor);
