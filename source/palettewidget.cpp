@@ -183,9 +183,10 @@ void PaletteScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void PaletteScene::keyPressEvent(QKeyEvent *event)
 {
     int dir = event->key();
-    // if (dir != Qt::Key_Left && dir != Qt::Key_Right && dir != Qt::Key_Up && dir != Qt::Key_Down) {
-    //    return;
-    // }
+    if (dir != Qt::Key_Left && dir != Qt::Key_Right && dir != Qt::Key_Up && dir != Qt::Key_Down) {
+        QGraphicsScene::keyPressEvent(event);
+        return;
+    }
     bool extend = (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0;
     this->view->changeColorSelection(dir, extend);
 }

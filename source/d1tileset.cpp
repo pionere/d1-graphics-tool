@@ -2900,7 +2900,7 @@ bool D1Tileset::patchTownLight(bool silent)
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 437[1]
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 437[1]
                     if (!pixel.isTransparent()) {
                         change |= frame->setPixel(x, y, pixel);
                     }
@@ -2918,7 +2918,7 @@ bool D1Tileset::patchTownLight(bool silent)
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 435[1]
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 435[1]
                     if (!pixel.isTransparent()) {
                         change |= frame->setPixel(x, y, pixel);
                     }
