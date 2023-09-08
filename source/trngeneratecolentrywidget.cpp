@@ -54,9 +54,9 @@ GenerateTrnColor TrnGenerateColEntryWidget::getTrnColor() const
     color.shadesteps = this->ui->shadeStepsLineEdit->text().toDouble();
     color.deltasteps = this->ui->deltaStepsCheckBox->isChecked();
     bool mplOk;
-    color.shadestepsMpl = this->ui->shadeStepsMplLineEdit->text().toDouble(&mplOk);
+    color.shadestepsmpl = this->ui->shadeStepsMplLineEdit->text().toDouble(&mplOk);
     if (!mplOk) {
-        color.shadestepsMpl = 1.0;
+        color.shadestepsmpl = 1.0;
     }
     color.protcolor = this->ui->protColCheckBox->isChecked();
     return color;
