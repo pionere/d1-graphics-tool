@@ -85,6 +85,7 @@ private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event) override;
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
@@ -121,6 +122,7 @@ public:
     // color selection handlers
     void startColorSelection(int colorIndex);
     void changeColorSelection(int colorIndex);
+    void changeColorSelection(int dir, bool extend);
     void finishColorSelection();
 
     void startTrnColorPicking(bool single);

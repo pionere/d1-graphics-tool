@@ -180,6 +180,16 @@ void PaletteScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     this->view->finishColorSelection();
 }
 
+void PaletteScene::keyPressEvent(QKeyEvent *event)
+{
+    int dir = event->key();
+    // if (dir != Qt::Key_Left && dir != Qt::Key_Right && dir != Qt::Key_Up && dir != Qt::Key_Down) {
+    //    return;
+    // }
+    bool extend = (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0;
+    this->view->changeColorSelection(dir, extend);
+}
+
 void PaletteScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     this->dragMoveEvent(event);
@@ -492,6 +502,80 @@ void PaletteWidget::changeColorSelection(int colorIndex)
 {
     this->selectedLastColorIndex = colorIndex;
 
+    this->updateFields();
+}
+
+void PaletteWidget::changeColorSelection(int dir, bool extend)
+{
+    if (this->selectedFirstColorIndex == COLORIDX_TRANSPARENT) {
+        return;
+    }
+
+    switch (dir) {
+    case Qt::Key_Left:
+        // if ((this->selectedFirstColorIndex % PALETTE_COLORS_PER_LINE) == 0) {
+        //    return;
+        // }
+        if (this->selectedFirstColorIndex == 0) {
+            if (extend) {
+                return;
+            }
+        } else {
+            this->selectedFirstColorIndex--;
+        }
+        break;
+    case Qt::Key_Right:
+        if (this->selectedLastColorIndex == D1PAL_COLORS - 1) {
+            if (extend) {
+                return;
+            }
+        } else {
+            this->selectedLastColorIndex++;
+        }
+        break;
+    case Qt::Key_Up:
+        if (this->selectedFirstColorIndex == 0) {
+            if (extend) {
+                return;
+            }
+        } else {
+            this->selectedFirstColorIndex -= PALETTE_COLORS_PER_LINE;
+            if (this->selectedFirstColorIndex < 0) {
+                this->selectedFirstColorIndex = 0;
+            }
+        }
+        break;
+    case Qt::Key_Down:
+        if (this->selectedLastColorIndex == D1PAL_COLORS - 1) {
+            if (extend) {
+                return;
+            }
+        } else {
+            this->selectedLastColorIndex += PALETTE_COLORS_PER_LINE;
+            if (this->selectedLastColorIndex > D1PAL_COLORS - 1) {
+                this->selectedLastColorIndex = D1PAL_COLORS - 1;
+            }
+        }
+        break;
+    default:
+        return;
+    }
+
+    if (!extend) {    
+        switch (dir) {
+        case Qt::Key_Left:
+        case Qt::Key_Up:
+            this->selectedLastColorIndex = this->selectedFirstColorIndex;
+            break;
+        case Qt::Key_Down:
+        case Qt::Key_Right:
+            this->selectedFirstColorIndex = this->selectedLastColorIndex;
+            break;
+            break;
+        default:
+            return;
+        }
+    }
     this->updateFields();
 }
 

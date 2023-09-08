@@ -2206,14 +2206,8 @@ bool D1Tileset::patchTownDoor(bool silent)
     return true;
 }
 
-void D1Tileset::patchTownLight(bool silent)
+bool D1Tileset::patchTownLight(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        int res_encoding;
-    } CelMicro;
-
     const CelMicro micros[] = {
 /*  0 */{ 724 - 1, 0, D1CEL_FRAME_TYPE::Empty },             // used to block subsequent calls
 /*  1 */{ 522 - 1, 1, D1CEL_FRAME_TYPE::Empty },             // move micros for better light propagation
