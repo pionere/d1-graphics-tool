@@ -2306,7 +2306,7 @@ bool D1Tileset::patchTownLight(bool silent)
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
-            return;
+            return false;
         }
         bool change = false;
 
