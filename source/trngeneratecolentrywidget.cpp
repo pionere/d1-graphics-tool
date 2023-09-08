@@ -28,8 +28,9 @@ void TrnGenerateColEntryWidget::initialize(const GenerateTrnColor &color)
 {
     this->ui->firstColorLineEdit->setText(QString::number(color.firstcolor));
     this->ui->lastColorLineEdit->setText(QString::number(color.lastcolor));
-    this->ui->shadeStepsLineEdit->setText(color.shadesteps == 0 ? QString("") : QString::number(color.shadesteps));
+    this->ui->shadeStepsLineEdit->setText(color.shadesteps == 0.0 ? QString("") : QString::number(color.shadesteps));
     this->ui->deltaStepsCheckBox->setChecked(color.deltasteps);
+    this->ui->shadeStepsMplLineEdit->setText(color.shadestepsmpl == 1.0 ? QString("") : QString::number(color.shadestepsmpl));
     this->ui->protColCheckBox->setChecked(color.protcolor);
 }
 
@@ -50,8 +51,13 @@ GenerateTrnColor TrnGenerateColEntryWidget::getTrnColor() const
         color.lastcolor = D1TRN_TRANSLATIONS - 1;
     }
 
-    color.shadesteps = this->ui->shadeStepsLineEdit->text().toInt();
+    color.shadesteps = this->ui->shadeStepsLineEdit->text().toDouble();
     color.deltasteps = this->ui->deltaStepsCheckBox->isChecked();
+    bool mplOk;
+    color.shadestepsMpl = this->ui->shadeStepsMplLineEdit->text().toDouble(&mplOk);
+    if (!mplOk) {
+        color.shadestepsMpl = 1.0;
+    }
     color.protcolor = this->ui->protColCheckBox->isChecked();
     return color;
 }

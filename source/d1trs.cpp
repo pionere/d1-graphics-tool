@@ -293,7 +293,7 @@ static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color
     }
 }
 
-static BYTE selectColor(BYTE colorIdx, int shade, int stepsIn, bool deltaSteps, const std::array<bool, NUM_COLORS> &dynColors, const std::vector<D1Pal *> &pals)
+static BYTE selectColor(BYTE colorIdx, int shade, double stepsIn, bool deltaSteps, double stepsMpl, const std::array<bool, NUM_COLORS> &dynColors, const std::vector<D1Pal *> &pals)
 {
     std::vector<std::array<int, NUM_COLORS>> options;
 
@@ -317,6 +317,7 @@ static BYTE selectColor(BYTE colorIdx, int shade, int stepsIn, bool deltaSteps, 
                 steps = stepsIn;
             }
         }
+        steps *= stepsMpl;
         if (steps <= shade) {
             color = QColorConstants::Black;
         } else {
@@ -404,14 +405,14 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
                     }
                     ColorTrns[i][k] = col;
                 } else {
-                    ColorTrns[i][k] = selectColor(k, i, params.colors[j].shadesteps, params.colors[j].deltasteps, dynColors, params.pals);
+                    ColorTrns[i][k] = selectColor(k, i, params.colors[j].shadesteps, params.colors[j].deltasteps, params.colors[j].shadestepsmpl, dynColors, params.pals);
                 }
                 break;
             }
             if (j != params.colors.size()) {
                 continue;
             }
-            ColorTrns[i][k] = selectColor(k, i, 0, false, dynColors, params.pals);
+            ColorTrns[i][k] = selectColor(k, i, 0.0, false, 1.0, dynColors, params.pals);
         }
     }
 }

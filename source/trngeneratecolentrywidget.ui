@@ -68,6 +68,16 @@
       </widget>
      </item>
      <item>
+      <widget class="LineEditWidget" name="shadeStepsMplLineEdit">
+       <property name="charWidth">
+        <number>3</number>
+       </property>
+       <property name="toolTip">
+        <string>Steps multiplier</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QCheckBox" name="protColCheckBox">
        <property name="toolTip">
         <string>Prevent the colors to be used as a shade</string>
