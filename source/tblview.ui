@@ -410,6 +410,13 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="4">
+       <widget class="QCheckBox" name="raytraceCheckBox">
+        <property name="toolTip">
+         <string>Use ray-tracing</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="6">
        <widget class="QPushButton" name="moveWButton">
         <property name="minimumWidth">

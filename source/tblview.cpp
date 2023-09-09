@@ -295,7 +295,7 @@ void TblView::displayFrame()
     this->tblScene.clear();
 
     // Getting the current frame to display
-    QImage tblFrame = this->tableset->darkTbl->getTableImage(this->pal, this->currentLightRadius, this->currentXOffset, this->currentYOffset, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
+    QImage tblFrame = this->tableset->darkTbl->getTableImage(this->pal, this->currentLightRadius, this->currentXOffset, this->currentYOffset, this->ui->levelTypeComboBox->currentIndex(), this->currentColor, this->ui->raytraceCheckBox->isChecked());
     QImage lightImage = D1Tbl::getLightImage(this->pal, this->currentColor);
     QImage lumImage = D1Tbl::getLumImage(this->pal, this->currentColor);
     QImage darkImage = D1Tbl::getDarkImage(this->currentLightRadius);
@@ -457,6 +457,12 @@ void TblView::on_radiusLineEdit_escPressed()
 {
     this->ui->radiusLineEdit->setText(QString::number(this->currentLightRadius));
     this->ui->radiusLineEdit->clearFocus();
+}
+
+void TblView::on_raytraceCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
 }
 
 void TblView::setOffset(int xoff, int yoff)

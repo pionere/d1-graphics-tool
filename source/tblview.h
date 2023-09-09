@@ -81,6 +81,7 @@ private slots:
     void on_radiusIncButton_clicked();
     void on_radiusLineEdit_returnPressed();
     void on_radiusLineEdit_escPressed();
+    void on_raytraceCheckBox_clicked();
 
     void on_moveNWButton_clicked();
     void on_moveNButton_clicked();

@@ -24,6 +24,7 @@ extern BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
 
 void DoUnLight(LightListStruct* lis);
 void DoLighting(unsigned lnum);
+void TraceLightSource(int x, int y, int r);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius);
 void MakeLightTable();

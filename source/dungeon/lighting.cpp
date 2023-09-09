@@ -626,6 +626,88 @@ void DoUnLight(LightListStruct* lis)
 	lis->_lunflag = false;
 }
 
+BYTE *srcDark;
+static bool LightPos(int x1, int y1, int radius_block)
+{
+	//int nTrans;
+	assert(IN_DUNGEON_AREA(x1, y1));
+
+	// int yoff = 0;
+	// int xoff = 0;
+	// BYTE (&dist0)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
+	// BYTE radius_block = dist0[abs(nYPos - y1)][abs(nXPos - x1)];
+	// BYTE v = srcDark[radius_block];
+	BYTE v = srcDark[radius_block];
+	if (v < dLight[x1][y1])
+		dLight[x1][y1] = v;
+
+	return !nBlockTable[dPiece[x1][y1]];
+}
+
+void TraceLightSource(int nXPos, int nYPos, int nRadius)
+{
+	const int8_t* cr;
+	int i, x1, y1, limit;
+	int d, dx, dy, xinc, yinc;
+
+	srcDark = darkTable[nRadius];
+	BYTE v = srcDark[0];
+	if (v < dLight[nXPos][nYPos])
+		dLight[nXPos][nYPos] = v;
+
+	nRadius = 2 * (nRadius + 1);
+	cr = &CrawlTable[CrawlNum[15]];
+	for (i = (BYTE)*cr; i > 0; i--) {
+		x1 = nXPos;
+		y1 = nYPos;
+		limit = nRadius;
+		dx = *++cr;
+		dy = *++cr;
+
+		// find out step size and direction on the y coordinate
+		xinc = dx < 0 ? -1 : 1;
+		yinc = dy < 0 ? -1 : 1;
+
+		dy = abs(dy);
+		dx = abs(dx);
+		if (dx >= dy) {
+			assert(dx != 0);
+
+			// multiply by 2 so we round up
+			dy *= 2;
+			d = 0;
+			do {
+				d += dy;
+				if (d >= dx) {
+					d -= 2 * dx; // multiply by 2 to support rounding
+					y1 += yinc;
+					limit--;
+				}
+				x1 += xinc;
+				limit -= 2;
+				if (limit <= 0)
+					break;
+			} while (LightPos(x1, y1, (nRadius - limit) * (MAX_OFFSET / 2)));
+		} else {
+			// multiply by 2 so we round up
+			dx *= 2;
+			d = 0;
+			do {
+				d += dx;
+				if (d >= dy) {
+					d -= 2 * dy; // multiply by 2 to support rounding
+					x1 += xinc;
+					limit--;
+				}
+				y1 += yinc;
+				limit -= 2;
+				if (limit <= 0)
+					break;
+			} while (LightPos(x1, y1, (nRadius - limit) * (MAX_OFFSET / 2)));
+		}
+	}
+}
+
 void DoUnVision(int nXPos, int nYPos, int nRadius)
 {
 	int i, j, x1, y1, x2, y2;
