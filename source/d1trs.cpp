@@ -345,6 +345,9 @@ static BYTE selectColor(BYTE colorIdx, int shade, double stepsIn, bool deltaStep
     BYTE res = 0;
     for (unsigned i = 0; i < NUM_COLORS; i++) {
         int curr = 0;
+if (shade == 0 && colorIdx > 240 && colorIdx != 255 && i == 128) {
+	break;
+}
         for (const auto palOptions : options) {
             int dist = palOptions[i];
             if (dist >= INT_MAX - curr) {
