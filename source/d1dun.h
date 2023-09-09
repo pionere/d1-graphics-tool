@@ -66,6 +66,12 @@ typedef enum dun_overlay_type {
 
 typedef QPair<int, bool> DunMonsterType;
 
+typedef struct MapMonster {
+    DunMonsterType type;
+    int mox;
+    int moy;
+} MapMonster;
+
 typedef struct DunObjectStruct {
     const char *name;
 } DunObjectStruct;
@@ -159,8 +165,8 @@ public:
     bool setSubtileAt(int posx, int posy, int subtileRef);
     int getItemAt(int posx, int posy) const;
     bool setItemAt(int posx, int posy, int itemIndex);
-    DunMonsterType getMonsterAt(int posx, int posy) const;
-    bool setMonsterAt(int posx, int posy, const DunMonsterType monType);
+    MapMonster getMonsterAt(int posx, int posy) const;
+    bool setMonsterAt(int posx, int posy, const DunMonsterType monType, int xoff, int yoff);
     int getObjectAt(int posx, int posy) const;
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;
@@ -280,7 +286,7 @@ private:
     std::vector<std::vector<Qt::CheckState>> tileProtections;
     std::vector<std::vector<int>> subtileProtections;
     std::vector<std::vector<int>> items;
-    std::vector<std::vector<DunMonsterType>> monsters;
+    std::vector<std::vector<MapMonster>> monsters;
     std::vector<std::vector<int>> objects;
     std::vector<std::vector<int>> rooms;
 

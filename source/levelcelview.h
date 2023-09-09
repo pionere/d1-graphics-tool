@@ -182,6 +182,8 @@ private:
     void setTileIndex(int tileIndex);
     void swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1);
     void swapTiles(unsigned tileIndex0, unsigned tileIndex1);
+    void setMonsterType(int monsterIndex, bool monsterUnique);
+    void setMonsterOffset(int xoff, int yoff);
 
     void selectTilesetPath(QString path);
     void selectAssetPath(QString path);
@@ -279,6 +281,10 @@ private slots:
     void on_dungeonMonsterLineEdit_escPressed();
     void on_dungeonMonsterCheckBox_clicked();
     void on_dungeonMonsterComboBox_activated(int index);
+    void on_dungeonMonsterXOffLineEdit_returnPressed();
+    void on_dungeonMonsterXOffLineEdit_escPressed();
+    void on_dungeonMonsterYOffLineEdit_returnPressed();
+    void on_dungeonMonsterYOffLineEdit_escPressed();
     void on_dungeonMonsterAddButton_clicked();
     void on_dungeonItemLineEdit_returnPressed();
     void on_dungeonItemLineEdit_escPressed();

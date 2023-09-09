@@ -1334,43 +1334,78 @@
             </property>
            </spacer>
           </item>
-          <item row="1" column="5">
-           <widget class="QLabel">
-            <property name="text">
-             <string>Monster:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="6">
-           <widget class="LineEditWidget" name="dungeonMonsterLineEdit">
-            <property name="charWidth">
-             <number>5</number>
-            </property>
-            <property name="toolTip">
-             <string>Current monster at the selected position</string>
-            </property>
-            <property name="alignment">
-             <enum>Qt::AlignCenter</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="7">
-           <widget class="QCheckBox" name="dungeonMonsterCheckBox">
-            <property name="toolTip">
-             <string>Current monster at the selected position is unique</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="8">
-           <widget class="QComboBox" name="dungeonMonsterComboBox">
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
-            </property>
-           </widget>
-          </item>
-          <!--item row="1" column="9">
+          <item row="1" column="5" colspan="5">
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QLabel">
+              <property name="text">
+               <string>Monster:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="LineEditWidget" name="dungeonMonsterLineEdit">
+              <property name="charWidth">
+               <number>5</number>
+              </property>
+              <property name="toolTip">
+               <string>Current monster at the selected position</string>
+              </property>
+              <property name="alignment">
+               <enum>Qt::AlignCenter</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="dungeonMonsterCheckBox">
+              <property name="toolTip">
+               <string>Current monster at the selected position is unique</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="dungeonMonsterComboBox">
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContents</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QHBoxLayout" name="dungeonMonsterHBoxLayout"/>
+             </widget>
+            </item>
+            <!--item>
            <widget class="QCheckBox" name="dungeonMonsterAddButton"/>
           </item-->
+            <item>
+             <widget class="LineEditWidget" name="dungeonMonsterXOffLineEdit">
+              <property name="charWidth">
+               <number>3</number>
+              </property>
+              <property name="toolTip">
+               <string>X-Offset of the monster at the selected position</string>
+              </property>
+              <property name="alignment">
+               <enum>Qt::AlignCenter</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="LineEditWidget" name="dungeonMonsterYOffLineEdit">
+              <property name="charWidth">
+               <number>3</number>
+              </property>
+              <property name="toolTip">
+               <string>Y-Offset of the monster at the selected position</string>
+              </property>
+              <property name="alignment">
+               <enum>Qt::AlignCenter</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
           <item row="1" column="10">
            <spacer>
             <property name="orientation">

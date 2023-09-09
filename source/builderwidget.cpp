@@ -16,6 +16,8 @@ DunPos::DunPos(int cx, int cy, int v)
     : cellX(cx)
     , cellY(cy)
     , value(v)
+    , metaValue0(0)
+    , metaValue1(0)
 {
 }
 
@@ -44,7 +46,6 @@ void EditDungeonCommand::undo()
 
     for (DunPos &dp : this->modValues) {
         int currValue;
-        DunMonsterType dmt;
         switch (this->valueType) {
         case BEM_TILE:
             currValue = this->dun->getTileAt(dp.cellX, dp.cellY); // TODO: store subtiles as well
@@ -72,14 +73,16 @@ void EditDungeonCommand::undo()
             this->dun->setObjectAt(dp.cellX, dp.cellY, dp.value);
             dp.value = currValue;
             break;
-        case BEM_MONSTER:
-            dmt = this->dun->getMonsterAt(dp.cellX, dp.cellY);
-            currValue = dmt.first | (dmt.second ? 1 << 31 : 0);
-            dmt.first = dp.value & INT32_MAX;
-            dmt.second = (dp.value & (1 << 31)) != 0;
-            this->dun->setMonsterAt(dp.cellX, dp.cellY, dmt);
+        case BEM_MONSTER: {
+            MapMonster mon = this->dun->getMonsterAt(dp.cellX, dp.cellY);
+            currValue = mon.type.first | (dmt.type.second ? 1 << 31 : 0);
+            mon.type.first = dp.value & INT32_MAX;
+            mon.type.second = (dp.value & (1 << 31)) != 0;
+            this->dun->setMonsterAt(dp.cellX, dp.cellY, mon.type, dp.metaValue0, dp.metaValue1);
             dp.value = currValue;
-            break;
+            dp.metaValue0 = mon.mox;
+            dp.metaValue1 = mon.moy;
+        } break;
         }
     }
 
@@ -258,7 +261,7 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
     case BEM_MONSTER:
         value = this->currentMonsterType.first; // this->ui->monsterLineEdit->text().toInt();
         value |= this->currentMonsterType.second /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
-        if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y())) {
+        if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y()).type) {
             value = 0;
         }
         break;

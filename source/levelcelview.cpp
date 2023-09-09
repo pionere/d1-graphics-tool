@@ -87,6 +87,8 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     QObject::connect(this->ui->dungeonSubtileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonSubtileLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonItemLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonItemLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonMonsterLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonMonsterXOffLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterXOffLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonMonsterYOffLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterYOffLineEdit_escPressed()));	
     QObject::connect(this->ui->dungeonObjectLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonObjectLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonRoomLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonRoomLineEdit_escPressed()));
 
@@ -123,8 +125,12 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
         // add buttons for the custom entities
         QGridLayout *layout = this->ui->dungeonGridLayout;
         PushButtonWidget::addButton(this, layout, 1, 3, QStyle::SP_FileDialogNewFolder, tr("Add Custom Object"), this, &LevelCelView::on_dungeonObjectAddButton_clicked);
-        PushButtonWidget::addButton(this, layout, 1, 9, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
+        // PushButtonWidget::addButton(this, layout, 1, 9, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
         PushButtonWidget::addButton(this, layout, 1, 14, QStyle::SP_FileDialogNewFolder, tr("Add Custom Item"), this, &LevelCelView::on_dungeonItemAddButton_clicked);
+        { // add monster button
+            QLayout *layout = this->ui->dungeonMonsterHBoxLayout;
+            PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
+        }
         // initialize the fields which are not updated
         this->on_dungeonDefaultTileLineEdit_escPressed();
         this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
@@ -386,10 +392,12 @@ void LevelCelView::updateFields()
         int itemIndex = this->dun->getItemAt(posx, posy);
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
-        DunMonsterType monType = this->dun->getMonsterAt(posx, posy);
-        this->ui->dungeonMonsterLineEdit->setText(QString::number(monType.first));
-        this->ui->dungeonMonsterCheckBox->setChecked(monType.second);
-        this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, monType));
+        MapMonster mon = this->dun->getMonsterAt(posx, posy);
+        this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.first));
+        this->ui->dungeonMonsterCheckBox->setChecked(mon.type.second);
+        this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.type));
+        this->ui->dungeonMonsterOffXLineEdit->setText(QString::number(mon.mox));
+        this->ui->dungeonMonsterOffYLineEdit->setText(QString::number(mon.moy));
         int objectIndex = this->dun->getObjectAt(posx, posy);
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
@@ -4381,25 +4389,33 @@ void LevelCelView::on_dungeonObjectAddButton_clicked()
     this->dungeonResourceDialog.show();
 }
 
-void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
+void LevelCelView::setMonsterType(int monsterIndex, bool monsterUnique)
 {
-    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
-    bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
     DunMonsterType monType = { monsterIndex, monsterUnique };
+    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
 
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType);
-    this->on_dungeonMonsterLineEdit_escPressed();
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType, mon.mox, mon.moy);
     if (change) {
         // update the view
         this->displayFrame();
     }
 }
 
+void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
+{
+    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
+    bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
+
+    this->setMonsterType(monsterIndex, monsterUnique);
+
+    this->on_dungeonMonsterLineEdit_escPressed();
+}
+
 void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
 {
-    DunMonsterType monType = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonMonsterLineEdit->setText(QString::number(monType.first));
+    this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.first));
     this->ui->dungeonMonsterLineEdit->clearFocus();
 }
 
@@ -4407,13 +4423,7 @@ void LevelCelView::on_dungeonMonsterCheckBox_clicked()
 {
     int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
     bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
-    DunMonsterType monType = { monsterIndex, monsterUnique };
-
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType);
-    if (change) {
-        // update the view
-        this->displayFrame();
-    }
+    this->setMonsterType(monsterIndex, monsterUnique);
 }
 
 void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
@@ -4423,17 +4433,60 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
     }
     DunMonsterType monType = this->ui->dungeonMonsterComboBox->itemData(index).value<DunMonsterType>();
 
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType);
-    if (change) {
-        // update the view
-        this->displayFrame();
-    }
+    this->setMonsterType(monType.first, monType.second);
 }
 
 void LevelCelView::on_dungeonMonsterAddButton_clicked()
 {
     this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::MONSTER, this->dun);
     this->dungeonResourceDialog.show();
+}
+
+void LevelCelView::setMonsterOffset(int xoff, int yoff)
+{
+    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType, xoff, yoff);
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonMonsterXOffLineEdit_returnPressed()
+{
+    int xo = this->ui->dungeonMonsterXOffLineEdit->text().toInt();
+    if (abs(xo) <= this->min->getSubtileWidth() * MICRO_WIDTH / 2) {
+        this->setMonsterOffset(xo, INT_MAX);
+    }
+
+    this->on_dungeonMonsterXOffLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonMonsterXOffLineEdit_escPressed()
+{
+    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonMonsterXOffLineEdit->setText(QString::number(mon.mox));
+    this->ui->dungeonMonsterXOffLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonMonsterYOffLineEdit_returnPressed()
+{
+    int yo = this->ui->dungeonMonsterYOffLineEdit->text().toInt();
+    if (abs(yo) <= this->min->getSubtileWidth() * MICRO_HEIGHT / 4) {
+        this->setMonsterOffset(INT_MAX, yo);
+    }
+
+    this->on_dungeonMonsterYOffLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonMonsterYOffLineEdit_escPressed()
+{
+    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonMonsterYOffLineEdit->setText(QString::number(mon.moy));
+    this->ui->dungeonMonsterYOffLineEdit->clearFocus();
 }
 
 void LevelCelView::on_dungeonItemLineEdit_returnPressed()
