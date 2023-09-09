@@ -14,8 +14,9 @@ class D1Pal;
 typedef struct GenerateTrnColor {
     int firstcolor;
     int lastcolor;
-    int shadesteps;
+    double shadesteps;
     bool deltasteps;
+    double shadestepsmpl;
     bool protcolor;
 } GenerateTrnColor;
 

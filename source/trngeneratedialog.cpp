@@ -97,6 +97,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         black.lastcolor = 0;
         black.shadesteps = 0;
         black.deltasteps = false;
+        black.shadestepsmpl = 1.0;
         black.protcolor = false;
         colors.push_back(black);
     }
@@ -106,6 +107,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         levelColor.lastcolor = (i + 1) * 16 - 1;
         levelColor.shadesteps = 0;
         levelColor.deltasteps = false;
+        levelColor.shadestepsmpl = 1.0;
         levelColor.protcolor = false;
         colors.push_back(levelColor);
     }
@@ -115,6 +117,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         stdColor.lastcolor = stdColor.firstcolor + 8 - 1;
         stdColor.shadesteps = 0;
         stdColor.deltasteps = false;
+        stdColor.shadestepsmpl = 1.0;
         stdColor.protcolor = false;
         colors.push_back(stdColor);
     }
@@ -124,6 +127,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         stdColor.lastcolor = i == 5 ? 254 : (stdColor.firstcolor + 15);
         stdColor.shadesteps = 0;
         stdColor.deltasteps = false;
+        stdColor.shadestepsmpl = 1.0;
         stdColor.protcolor = false;
         colors.push_back(stdColor);
     }
@@ -133,6 +137,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         white.lastcolor = 255;
         white.shadesteps = -1;
         white.deltasteps = false;
+        white.shadestepsmpl = 1.0;
         white.protcolor = true;
         colors.push_back(white);
     }
@@ -141,6 +146,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         colors[1].lastcolor = 127;
         colors[1].shadesteps = 10;
         colors[1].deltasteps = true;
+        colors[1].shadestepsmpl = 1.0;
 
         colors.erase(colors.begin() + 2, colors.begin() + 1 + 8);
         break;
@@ -153,6 +159,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         colors[1].lastcolor = 31;
         colors[1].shadesteps = 16;
         colors[1].deltasteps = true;
+        colors[1].shadestepsmpl = 1.0;
         colors[1].protcolor = false;
 
         colors.erase(colors.begin() + 2);
@@ -167,9 +174,11 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         colors[2].protcolor = true;*/
         colors[1].shadesteps = 16;
         colors[1].deltasteps = true;
+        colors[1].shadestepsmpl = 1.0;
         colors[1].protcolor = false;
         colors[2].shadesteps = 16;
         colors[2].deltasteps = true;
+        colors[2].shadestepsmpl = 1.0;
         colors[2].protcolor = false;
         break;
     case DTYPE_NEST: {
@@ -177,6 +186,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         colors[1].lastcolor = 7;
         colors[1].shadesteps = -1;
         colors[1].deltasteps = false;
+        colors[1].shadestepsmpl = 1.0;
         colors[1].protcolor = true;
 
         GenerateTrnColor stdColor;
@@ -184,10 +194,12 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         stdColor.lastcolor = 15;
         stdColor.shadesteps = -1;
         stdColor.deltasteps = false;
+        stdColor.shadestepsmpl = 1.0;
         stdColor.protcolor = true;*/
         colors[1].lastcolor = 7;
         colors[1].shadesteps = 8;
         colors[1].deltasteps = true;
+        colors[1].shadestepsmpl = 1.0;
         colors[1].protcolor = false;
 
         GenerateTrnColor stdColor;
@@ -195,6 +207,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
         stdColor.lastcolor = 15;
         stdColor.shadesteps = 8;
         stdColor.deltasteps = true;
+        stdColor.shadestepsmpl = 1.0;
         stdColor.protcolor = false;
         colors.insert(colors.begin() + 2, stdColor);
     } break;
