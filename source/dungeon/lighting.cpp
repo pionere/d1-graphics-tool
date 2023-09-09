@@ -655,7 +655,7 @@ void TraceLightSource(int nXPos, int nYPos, int nRadius)
 	if (v < dLight[nXPos][nYPos])
 		dLight[nXPos][nYPos] = v;
 
-	nRadius = 2 * (nRadius + 1);
+	nRadius = 2 * (nRadius + 1) * 8;
 	cr = &CrawlTable[CrawlNum[15]];
 	for (i = (BYTE)*cr; i > 0; i--) {
 		x1 = nXPos;
@@ -681,13 +681,13 @@ void TraceLightSource(int nXPos, int nYPos, int nRadius)
 				if (d >= dx) {
 					d -= 2 * dx; // multiply by 2 to support rounding
 					y1 += yinc;
-					limit--;
+					limit -= 1 * 7;
 				}
 				x1 += xinc;
-				limit -= 2;
+				limit -= 2 * 8;
 				if (limit <= 0)
 					break;
-			} while (LightPos(x1, y1, (nRadius - limit) * (MAX_OFFSET / 2)));
+			} while (LightPos(x1, y1, (nRadius - limit) >> 1)); // * (MAX_OFFSET / (2 * 8)
 		} else {
 			// multiply by 2 so we round up
 			dx *= 2;
@@ -697,13 +697,13 @@ void TraceLightSource(int nXPos, int nYPos, int nRadius)
 				if (d >= dy) {
 					d -= 2 * dy; // multiply by 2 to support rounding
 					x1 += xinc;
-					limit--;
+					limit -= 1 * 7;
 				}
 				y1 += yinc;
-				limit -= 2;
+				limit -= 2 * 8;
 				if (limit <= 0)
 					break;
-			} while (LightPos(x1, y1, (nRadius - limit) * (MAX_OFFSET / 2)));
+			} while (LightPos(x1, y1, (nRadius - limit) >> 1)); // * (MAX_OFFSET / (2 * 8)
 		}
 	}
 }
