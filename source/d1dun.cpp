@@ -1617,7 +1617,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<int> &itemsRow : this->items) {
         itemsRow.resize(newWidth);
     }
-    for (std::vector<DunMonsterType> &monsRow : this->monsters) {
+    for (std::vector<MapMonster> &monsRow : this->monsters) {
         monsRow.resize(newWidth);
     }
     for (std::vector<int> &objsRow : this->objects) {
@@ -1777,9 +1777,9 @@ bool D1Dun::setItemAt(int posx, int posy, int itemIndex)
     return true;
 }
 
-DunMonsterType D1Dun::getMonsterAt(int posx, int posy) const
+MapMonster D1Dun::getMonsterAt(int posx, int posy) const
 {
-    return this->monsters[posy][posx].type;
+    return this->monsters[posy][posx];
 }
 
 bool D1Dun::setMonsterAt(int posx, int posy, const DunMonsterType monType, int xoff, int yoff)

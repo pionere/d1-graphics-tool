@@ -75,7 +75,7 @@ void EditDungeonCommand::undo()
             break;
         case BEM_MONSTER: {
             MapMonster mon = this->dun->getMonsterAt(dp.cellX, dp.cellY);
-            currValue = mon.type.first | (dmt.type.second ? 1 << 31 : 0);
+            currValue = mon.type.first | (mon.type.second ? 1 << 31 : 0);
             mon.type.first = dp.value & INT32_MAX;
             mon.type.second = (dp.value & (1 << 31)) != 0;
             this->dun->setMonsterAt(dp.cellX, dp.cellY, mon.type, dp.metaValue0, dp.metaValue1);

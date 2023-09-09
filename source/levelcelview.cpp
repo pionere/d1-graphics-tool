@@ -396,8 +396,8 @@ void LevelCelView::updateFields()
         this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.first));
         this->ui->dungeonMonsterCheckBox->setChecked(mon.type.second);
         this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.type));
-        this->ui->dungeonMonsterOffXLineEdit->setText(QString::number(mon.mox));
-        this->ui->dungeonMonsterOffYLineEdit->setText(QString::number(mon.moy));
+        this->ui->dungeonMonsterXOffLineEdit->setText(QString::number(mon.mox));
+        this->ui->dungeonMonsterYOffLineEdit->setText(QString::number(mon.moy));
         int objectIndex = this->dun->getObjectAt(posx, posy);
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
@@ -4445,8 +4445,14 @@ void LevelCelView::on_dungeonMonsterAddButton_clicked()
 void LevelCelView::setMonsterOffset(int xoff, int yoff)
 {
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+    if (xoff == INT_MAX) {
+        xoff = mon.mox;
+    }
+    if (yoff == INT_MAX) {
+        yoff = mon.moy;
+    }
 
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType, xoff, yoff);
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, mon.type, xoff, yoff);
     if (change) {
         // update the view
         this->displayFrame();

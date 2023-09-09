@@ -280,7 +280,7 @@ static void ResetGameLevel(D1Dun *dun, const DecorateDunParam &params)
     for (int y = 0; y < dun->getHeight(); y++) {
         for (int x = 0; x < dun->getWidth(); x++) {
             if (params.resetMonsters && !dun->getSubtileMonProtectionAt(x, y)) {
-                dun->setMonsterAt(x, y, noMon);
+                dun->setMonsterAt(x, y, noMon, 0, 0);
             }
             if (params.resetObjects && !dun->getSubtileObjProtectionAt(x, y)) {
                 dun->setObjectAt(x, y, 0);
@@ -476,7 +476,7 @@ static void StoreDungeon(D1Dun *dun)
         for (int x = 0; x < dun->getWidth() && x < DMAXX * TILE_WIDTH; x++) {
             dun->setSubtileAt(baseX + x, baseY + y, dPiece[DBORDERX + x][DBORDERY + y]);
             dun->setRoomAt(baseX + x, baseY + y, dTransVal[DBORDERX + x][DBORDERY + y]);
-            // TODO: dun->setMonsterAt(baseX + x, baseY + y, dMonster[DBORDERX + x][DBORDERY + y]);
+            // TODO: dun->setMonsterAt(baseX + x, baseY + y, dMonster[DBORDERX + x][DBORDERY + y], 0, 0);
             dun->setObjectAt(baseX + x, baseY + y, dObject[DBORDERX + x][DBORDERY + y]);
             dun->setItemAt(baseX + x, baseY + y, dItem[DBORDERX + x][DBORDERY + y]);
         }
@@ -603,7 +603,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
                 // mon += lengthof(DunMonstConvTbl);
                 monType.first = mon;
             }
-            dun->setMonsterAt(x, y, monType);
+            dun->setMonsterAt(x, y, monType, 0, 0);
             int obj = dObject[x][y];
             if (obj > 0) {
                 GetObjectStr(obj - 1);
