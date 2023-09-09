@@ -1354,13 +1354,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="dungeonMonsterCheckBox">
-            <property name="toolTip">
-             <string>Current monster at the selected position is unique</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="7">
            <widget class="QCheckBox" name="dungeonMonsterCheckBox">
             <property name="toolTip">
