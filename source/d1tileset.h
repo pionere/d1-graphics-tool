@@ -61,6 +61,7 @@ private:
     void patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRightRef, int cathedralBottomLeftRef, bool silent);
     bool patchTownFloor(bool silent);
     bool patchTownDoor(bool silent);
+    bool patchTownLight(bool silent);
     void patchTownChop(bool silent);
     void cleanupTown(std::set<unsigned> &deletedFrames, bool silent);
 
