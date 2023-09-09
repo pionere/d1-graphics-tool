@@ -1081,76 +1081,51 @@
         </item>
        </layout>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Overlay:</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="1" colspan="3">
-       <layout class="QHBoxLayout">
+       <widget class="QComboBox" name="dunOverlayComboBox">
         <item>
-         <widget class="QRadioButton" name="showNoMetaRadioButton">
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-          <property name="toolTip">
-           <string>Draw no meta data</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">showMetaButtonGroup</string>
-          </attribute>
-         </widget>
+         <property name="text">
+          <string notr="true">-</string>
+         </property>
         </item>
         <item>
-         <widget class="QRadioButton" name="showMapMetaRadioButton">
-          <property name="toolTip">
-           <string>Draw map</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">showMetaButtonGroup</string>
-          </attribute>
-         </widget>
+         <property name="text">
+          <string>Map</string>
+         </property>
         </item>
         <item>
-         <widget class="QRadioButton" name="showRoomsMetaRadioButton">
-          <property name="toolTip">
-           <string>Draw rooms</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">showMetaButtonGroup</string>
-          </attribute>
-         </widget>
+         <property name="text">
+          <string>Rooms</string>
+         </property>
         </item>
         <item>
-         <widget class="QLabel">
-          <property name="text">
-           <string notr="true">  </string>
-          </property>
-         </widget>
+         <property name="text">
+          <string>Tile protections</string>
+         </property>
         </item>
         <item>
-         <widget class="QRadioButton" name="showTileMetaRadioButton">
-          <property name="toolTip">
-           <string>Draw tile protections</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">showMetaButtonGroup</string>
-          </attribute>
-         </widget>
+         <property name="text">
+          <string>Subtile protections</string>
+         </property>
         </item>
         <item>
-         <widget class="QRadioButton" name="showSubtileMetaRadioButton">
-          <property name="toolTip">
-           <string>Draw subtile protections</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">showMetaButtonGroup</string>
-          </attribute>
-         </widget>
+         <property name="text">
+          <string>Tile numbers</string>
+         </property>
         </item>
         <item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
+         <property name="text">
+          <string>Subtile numbers</string>
+         </property>
         </item>
-       </layout>
+       </widget>
       </item>
       <item row="3" column="7" colspan="3" alignment="Qt::AlignCenter">
        <widget class="QPushButton" name="moveDownButton">
@@ -1461,6 +1436,5 @@
  <connections/>
  <buttongroups>
   <buttongroup name="showButtonGroup"/>
-  <buttongroup name="showMetaButtonGroup"/>
  </buttongroups>
 </ui>

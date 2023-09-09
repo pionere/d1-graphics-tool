@@ -54,6 +54,16 @@ enum class D1DUN_TYPE {
     RAW,
 };
 
+typedef enum dun_overlay_type {
+    DOT_NONE,
+    DOT_MAP,
+    DOT_ROOMS,
+    DOT_TILE_PROTECTIONS,
+    DOT_SUBTILE_PROTECTIONS,
+    DOT_TILE_NUMBERS,
+    DOT_SUBTILE_NUMBERS,
+} dun_overlay_type;
+
 typedef QPair<int, bool> DunMonsterType;
 
 typedef struct DunObjectStruct {
@@ -110,10 +120,7 @@ typedef struct ItemCacheEntry {
 class DunDrawParam {
 public:
     Qt::CheckState tileState;
-    bool showMap;
-    bool showRooms;
-    bool showTileProtections;
-    bool showSubtileProtections;
+    int overlayType; // dun_overlay_type
     bool showItems;
     bool showMonsters;
     bool showObjects;
