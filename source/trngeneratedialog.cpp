@@ -150,6 +150,21 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
 
         colors.erase(colors.begin() + 2, colors.begin() + 1 + 8);
         break;
+    case DTYPE_CATHEDRAL:
+        /*  -- vanilla settings:
+        break;
+        */
+        colors[1].lastcolor = 127;
+        colors[1].shadesteps = 0;
+        colors[1].deltasteps = false;
+        colors[1].shadestepsmpl = 3.0;
+
+        colors[18].shadesteps = 0;
+        colors[18].deltasteps = false;
+        colors[18].shadestepsmpl = 2.5;
+
+        colors.erase(colors.begin() + 2, colors.begin() + 1 + 8);
+        break;
     case DTYPE_CAVES:
         /*  -- vanilla settings:
         colors[1].lastcolor = 31;
