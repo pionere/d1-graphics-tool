@@ -50,6 +50,6 @@ private slots:
 private:
     Ui::DungeonResourceDialog *ui;
 
-    DUN_ENTITY_TYPE type;
+    int type = -1;
     D1Dun *dun;
 };
