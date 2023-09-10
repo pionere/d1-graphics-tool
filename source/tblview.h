@@ -61,7 +61,6 @@ private:
     void updateFields();
     void updateLabel();
     void updateTrsIcon();
-    void setRadius(int nextRadius);
     void setOffset(int xoff, int yoff);
     void selectTrsPath(QString path);
 
@@ -77,10 +76,7 @@ private slots:
     void on_trsClearPushButton_clicked();
     void on_equalizePushButton_clicked();
 
-    void on_radiusDecButton_clicked();
-    void on_radiusIncButton_clicked();
-    void on_radiusLineEdit_returnPressed();
-    void on_radiusLineEdit_escPressed();
+    void on_radiusSpinBox_valueChanged(int value);
     void on_raytraceCheckBox_clicked();
 
     void on_moveNWButton_clicked();

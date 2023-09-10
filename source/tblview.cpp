@@ -63,7 +63,7 @@ TblView::TblView(QWidget *parent, QUndoStack *us)
 {
     this->ui->setupUi(this);
     this->ui->tblGraphicsView->setScene(&this->tblScene);
-    this->on_radiusLineEdit_escPressed();
+    this->ui->radiusSpinBox->setRange(0, MAX_LIGHT_RAD);
     this->on_offsetXYLineEdit_escPressed();
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
@@ -76,7 +76,6 @@ TblView::TblView(QWidget *parent, QUndoStack *us)
     // QObject::connect(&this->tblScene, &CelScene::framePixelHovered, this, &TblView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
-    QObject::connect(this->ui->radiusLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_radiusLineEdit_escPressed()));
     QObject::connect(this->ui->offsetXYLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_offsetXYLineEdit_escPressed()));
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
@@ -121,7 +120,7 @@ void TblView::updateFields()
     this->updateLabel();
 
     // Set current radius
-    this->ui->radiusLineEdit->setText(QString::number(this->currentLightRadius));
+    this->ui->radiusSpinBox->setValue(this->currentLightRadius);
     // Set current offset
     this->ui->offsetXYLineEdit->setText(QString("%1:%2").arg(this->currentXOffset).arg(this->currentYOffset));
 }
@@ -423,41 +422,27 @@ void TblView::on_equalizePushButton_clicked()
     this->undoStack->push(command);
 }
 
-void TblView::setRadius(int nextRadius)
+void TblView::on_radiusSpinBox_valueChanged(int value)
 {
-    if (nextRadius < 0) {
-        nextRadius = 0;
+    if (value < 0) {
+        value = 0;
     }
-    if (nextRadius > MAX_LIGHT_RAD) {
-        nextRadius = MAX_LIGHT_RAD;
+    if (value > MAX_LIGHT_RAD) {
+        value = MAX_LIGHT_RAD;
     }
-    this->currentLightRadius = nextRadius;
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        if (value < this->currentLightRadius) {
+            value = 0;
+        } else {
+            value = MAX_LIGHT_RAD;
+        }
+    }
+
+    this->currentLightRadius = value;
     // update the view
     this->displayFrame();
 }
 
-void TblView::on_radiusDecButton_clicked()
-{
-    this->setRadius(this->currentLightRadius - 1);
-}
-
-void TblView::on_radiusIncButton_clicked()
-{
-    this->setRadius(this->currentLightRadius + 1);
-}
-
-void TblView::on_radiusLineEdit_returnPressed()
-{
-    int nextRadius = this->ui->radiusLineEdit->text().toInt();
-    this->setRadius(nextRadius);
-    this->on_radiusLineEdit_escPressed();
-}
-
-void TblView::on_radiusLineEdit_escPressed()
-{
-    this->ui->radiusLineEdit->setText(QString::number(this->currentLightRadius));
-    this->ui->radiusLineEdit->clearFocus();
-}
 
 void TblView::on_raytraceCheckBox_clicked()
 {
