@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QSignalBlocker>
 
 #include "config.h"
 #include "d1trs.h"
@@ -120,6 +121,7 @@ void TblView::updateFields()
     this->updateLabel();
 
     // Set current radius
+    const QSignalBlocker blocker(this->ui->radiusSpinBox);
     this->ui->radiusSpinBox->setValue(this->currentLightRadius);
     // Set current offset
     this->ui->offsetXYLineEdit->setText(QString("%1:%2").arg(this->currentXOffset).arg(this->currentYOffset));

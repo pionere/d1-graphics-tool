@@ -1103,10 +1103,10 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
                     quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
                     unsigned drawMask = DM_WALL;
                     if (rp & TMIF_LEFT_REDRAW) {
-                        drawMask |= (rp & TMIF_LEFT_FOLIAGE) ? DM_LTFLOOR : DM_LFLOOR;
+                        drawMask |= (rp & TMIF_LEFT_FOLIAGE) ? DM_LFLOOR : DM_LTFLOOR;
                     }
                     if (rp & TMIF_RIGHT_REDRAW) {
-                        drawMask |= (rp & TMIF_RIGHT_FOLIAGE) ? DM_RTFLOOR : DM_RFLOOR;
+                        drawMask |= (rp & TMIF_RIGHT_FOLIAGE) ? DM_RFLOOR : DM_RTFLOOR;
                     }
                     drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
                     // dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
