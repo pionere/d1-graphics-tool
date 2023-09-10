@@ -135,7 +135,7 @@ void DungeonSearchDialog::search(bool next)
                 found = this->dun->getRoomAt(posx, posy) == params.index;
                 break;
             case DUN_SEARCH_TYPE::Monster: {
-                DunMonsterType monType = this->dun->getMonsterAt(posx, posy);
+                DunMonsterType monType = this->dun->getMonsterAt(posx, posy).type;
                 found = monType.first == params.index && monType.second == params.special;
             } break;
             case DUN_SEARCH_TYPE::Object:
@@ -235,7 +235,8 @@ void DungeonSearchDialog::replace(const QPoint &match, const DungeonSearchParam 
         break;
     case DUN_SEARCH_TYPE::Monster: {
         DunMonsterType monType = { replace, params.replaceSpec };
-        dun->setMonsterAt(match.x(), match.y(), monType);
+        MapMonster mon = dun->getMonsterAt(match.x(), match.y());
+        dun->setMonsterAt(match.x(), match.y(), monType, mon.mox, mon.moy);
     } break;
     case DUN_SEARCH_TYPE::Object:
         dun->setObjectAt(match.x(), match.y(), replace);

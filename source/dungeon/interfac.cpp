@@ -353,7 +353,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
                 // mon += lengthof(DunMonstConvTbl);
                 monType.first = mon;
             }
-            dun->setMonsterAt(x, y, monType);
+            dun->setMonsterAt(x, y, monType, 0, 0);
             int obj = dObject[x][y];
             if (obj > 0) {
                 GetObjectStr(obj - 1);

@@ -1362,15 +1362,42 @@
            </widget>
           </item>
           <item row="1" column="8">
-           <widget class="QComboBox" name="dungeonMonsterComboBox">
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
-            </property>
-           </widget>
-          </item>
-          <!--item row="1" column="9">
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QComboBox" name="dungeonMonsterComboBox">
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContents</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QHBoxLayout" name="dungeonMonsterHBoxLayout"/>
+             </widget>
+            </item>
+            <!--item>
            <widget class="QCheckBox" name="dungeonMonsterAddButton"/>
           </item-->
+           </layout>
+          </item>
+          <item row="1" column="9">
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QSpinBox" name="dungeonMonsterXOffSpinBox">
+              <property name="toolTip">
+               <string>X-Offset of the monster at the selected position</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="dungeonMonsterYOffSpinBox">
+              <property name="toolTip">
+               <string>Y-Offset of the monster at the selected position</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
           <item row="1" column="10">
            <spacer>
             <property name="orientation">

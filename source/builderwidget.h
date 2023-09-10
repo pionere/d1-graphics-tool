@@ -27,6 +27,8 @@ typedef struct DunPos {
     int cellX;
     int cellY;
     int value;
+    int metaValue0;
+    int metaValue1;
 } DunPos;
 
 class EditDungeonCommand : public QObject, public QUndoCommand {
