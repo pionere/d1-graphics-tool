@@ -22,7 +22,7 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, D1Dun *d)
     this->dun = d;
 
     if (this->type != (int)t) {
-        this->type = t;
+        this->type = (int)t;
         // reset the fields
         this->ui->indexLineEdit->setText("");
         this->ui->nameLineEdit->setText("");
