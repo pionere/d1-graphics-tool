@@ -35,7 +35,7 @@ public:
     explicit DungeonResourceDialog(QWidget *view);
     ~DungeonResourceDialog();
 
-    void initialize(DUN_ENTITY_TYPE type, D1Dun *dun);
+    void initialize(DUN_ENTITY_TYPE type, int index, D1Dun *dun);
 
 private slots:
     void on_celFileBrowsePushButton_clicked();

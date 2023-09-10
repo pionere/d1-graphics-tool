@@ -4394,7 +4394,8 @@ void LevelCelView::on_dungeonObjectComboBox_activated(int index)
 
 void LevelCelView::on_dungeonObjectAddButton_clicked()
 {
-    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::OBJECT, this->dun);
+    int objectIndex = this->ui->dungeonObjectLineEdit->text().toUShort();
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::OBJECT, objectIndex, this->dun);
     this->dungeonResourceDialog.show();
 }
 
@@ -4447,7 +4448,8 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
 
 void LevelCelView::on_dungeonMonsterAddButton_clicked()
 {
-    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::MONSTER, this->dun);
+    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::MONSTER, monsterIndex, this->dun);
     this->dungeonResourceDialog.show();
 }
 
@@ -4560,7 +4562,8 @@ void LevelCelView::on_dungeonItemComboBox_activated(int index)
 
 void LevelCelView::on_dungeonItemAddButton_clicked()
 {
-    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::ITEM, this->dun);
+    int itemIndex = this->ui->dungeonItemLineEdit->text().toUShort();
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::ITEM, itemIndex, this->dun);
     this->dungeonResourceDialog.show();
 }
 
