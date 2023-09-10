@@ -21,10 +21,10 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, D1Dun *d)
 {
     this->dun = d;
 
-    if (this->type != t) {
+    if (this->type != (int)t) {
         this->type = t;
         // reset the fields
-        this->ui->indexLineEdit->setText(index == 0 ? QString("") : QString::number(index));
+        this->ui->indexLineEdit->setText("");
         this->ui->nameLineEdit->setText("");
         this->ui->celFileLineEdit->setText("");
         this->ui->widthLineEdit->setText("");
@@ -65,12 +65,19 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, D1Dun *d)
 
         this->adjustSize();
     }
+
+    if (this->prevIndex != index) {
+        this->prevIndex = index;
+        if (index != 0) {
+            this->ui->indexLineEdit->setText(QString::number(index));
+        }
+    }
 }
 
 void DungeonResourceDialog::on_celFileBrowsePushButton_clicked()
 {
-    QString title = this->type == DUN_ENTITY_TYPE::MONSTER ? tr("Select CL2 file") : tr("Select CEL file");
-    QString filter = this->type == DUN_ENTITY_TYPE::MONSTER ? tr("CL2 Files (*.cl2 *.CL2)") : tr("CEL Files (*.cel *.CEL)");
+    QString title = this->type == (int)DUN_ENTITY_TYPE::MONSTER ? tr("Select CL2 file") : tr("Select CEL file");
+    QString filter = this->type == (int)DUN_ENTITY_TYPE::MONSTER ? tr("CL2 Files (*.cl2 *.CL2)") : tr("CEL Files (*.cel *.CEL)");
     QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
 
     if (filePath.isEmpty())
@@ -112,7 +119,7 @@ void DungeonResourceDialog::on_uniqueTrnFileClearPushButton_clicked()
 void DungeonResourceDialog::on_addButton_clicked()
 {
     AddResourceParam params;
-    params.type = this->type;
+    params.type = (DUN_ENTITY_TYPE)this->type;
     params.index = this->ui->indexLineEdit->text().toInt();
     if (params.index <= 0) {
         return;
