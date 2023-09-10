@@ -977,10 +977,10 @@ QImage D1Dun::getItemImage(int itemIndex)
 
 typedef enum _draw_mask {
     DM_WALL    = 1 << 0, // WallMask
-    DM_LTFLOOR = 2 << 0, // LeftMask
-    DM_RTFLOOR = 3 << 0, // RightMask
-    DM_LFLOOR  = 4 << 0, // LeftFoliageMask
-    DM_RFLOOR  = 5 << 0, // RightFoliageMask
+    DM_LTFLOOR = 1 << 1, // LeftMask
+    DM_RTFLOOR = 1 << 2, // RightMask
+    DM_LFLOOR  = 1 << 3, // LeftFoliageMask
+    DM_RFLOOR  = 1 << 4, // RightFoliageMask
 } _draw_mask;
 
 static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subtileImage, int drawCursorX, int drawCursorY, unsigned backWidth, unsigned backHeight, unsigned drawMask)
@@ -1034,7 +1034,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
             if (qAlpha(*srcBits) == 0) {
                 continue;
             }
-            if (x < backWidth / 2) {
+            if (x < CELL_BORDER + backWidth / 2) {
                 if ((drawMask & DM_LFLOOR) && qAlpha(*backBits) != 0) {
                     continue;
                 }
