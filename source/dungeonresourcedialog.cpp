@@ -24,7 +24,7 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, D1Dun *d)
     if (this->type != t) {
         this->type = t;
         // reset the fields
-        this->ui->indexLineEdit->setText(index == 0 : QString("") : QString::number(index));
+        this->ui->indexLineEdit->setText(index == 0 ? QString("") : QString::number(index));
         this->ui->nameLineEdit->setText("");
         this->ui->celFileLineEdit->setText("");
         this->ui->widthLineEdit->setText("");
