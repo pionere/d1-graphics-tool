@@ -1323,7 +1323,7 @@
              <enum>QComboBox::AdjustToContents</enum>
             </property>
            </widget>
-           </item>
+          </item>
           <!--item row="1" column="3">
            <widget class="QCheckBox" name="dungeonObjectAddButton"/>
           </item-->

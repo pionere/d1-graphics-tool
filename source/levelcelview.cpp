@@ -4372,18 +4372,25 @@ void LevelCelView::on_dungeonObjectAddButton_clicked()
     this->dungeonResourceDialog.show();
 }
 
-void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
+void LevelCelView::setMonsterType(int monsterIndex, bool monsterUnique)
 {
-    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
-    bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
     DunMonsterType monType = { monsterIndex, monsterUnique };
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
     bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType, mon.mox, mon.moy);
-    this->on_dungeonMonsterLineEdit_escPressed();
     if (change) {
         // update the view
         this->displayFrame();
     }
+}
+
+void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
+{
+    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
+    bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
+
+    this->setMonsterType(monsterIndex, monsterUnique);
+
+    this->on_dungeonMonsterLineEdit_escPressed();
 }
 
 void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
@@ -4398,13 +4405,7 @@ void LevelCelView::on_dungeonMonsterCheckBox_clicked()
 {
     int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
     bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
-    DunMonsterType monType = { monsterIndex, monsterUnique };
-    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType, mon.mox, mon.moy);
-    if (change) {
-        // update the view
-        this->displayFrame();
-    }
+    this->setMonsterType(monsterIndex, monsterUnique);
 }
 
 void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
@@ -4413,12 +4414,8 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
         return;
     }
     DunMonsterType monType = this->ui->dungeonMonsterComboBox->itemData(index).value<DunMonsterType>();
-    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType, mon.mox, mon.moy);
-    if (change) {
-        // update the view
-        this->displayFrame();
-    }
+
+    this->setMonsterType(monType.first, monType.second);
 }
 
 void LevelCelView::on_dungeonMonsterAddButton_clicked()
