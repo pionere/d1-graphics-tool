@@ -395,13 +395,13 @@ void LevelCelView::updateFields()
         this->ui->dungeonMonsterCheckBox->setChecked(mon.type.second);
         this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.type));
         {
-            const int limit = this->min->getSubtileWidth() * MICRO_WIDTH / 2;
+            const int limit = this->min->getSubtileWidth() * MICRO_WIDTH;
             const QSignalBlocker blocker(this->ui->dungeonMonsterXOffSpinBox);
             this->ui->dungeonMonsterXOffSpinBox->setRange(-limit, limit);
             this->ui->dungeonMonsterXOffSpinBox->setValue(mon.mox);
         }
         {
-            const int limit = this->min->getSubtileWidth() * MICRO_HEIGHT / 4;
+            const int limit = this->min->getSubtileWidth() * MICRO_HEIGHT / 2;
             const QSignalBlocker blocker(this->ui->dungeonMonsterYOffSpinBox);
             this->ui->dungeonMonsterYOffSpinBox->setRange(-limit, limit);
             this->ui->dungeonMonsterYOffSpinBox->setValue(mon.moy);
