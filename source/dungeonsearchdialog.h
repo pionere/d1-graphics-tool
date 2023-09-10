@@ -53,7 +53,7 @@ private slots:
 
 private:
     void search(bool next);
-    void replace(const QPoint &match, const DungeonSearchParam &params);
+    bool replace(const QPoint &match, const DungeonSearchParam &params);
 
 private:
     Ui::DungeonSearchDialog *ui;

@@ -169,26 +169,35 @@ void DungeonSearchDialog::search(bool next)
         }
     }
 
+    int matchIdx = this->index;
+    bool overflow = matches.size() <= (unsigned)matchIdx;
+    if (overflow) {
+        matchIdx = matches.size() != 0 ? 0 : -1;
+    }
+    bool replaced = false;
     if (params.doReplace) {
         if (next) {
-            if (matches.size() > (unsigned)this->index) {
-                this->replace(matches[this->index], params);
-                dProgress() << tr("Replaced with %1%2 at %3:%4.").arg(params.replace).arg(params.replaceSpec ? "*" : "").arg(matches[this->index].x()).arg(matches[this->index].y());
+            if (!overflow && this->replace(matches[matchIdx], params)) {
+                dProgress() << tr("Replaced with %1%2 at %3:%4.").arg(params.replace).arg(params.replaceSpec ? "*" : "").arg(matches[matchIdx].x()).arg(matches[matchIdx].y());
+                replaced = true;
+                this->index = matchIdx - 1;
             }
         } else {
             for (const QPoint &match : matches) {
-                 this->replace(match, params);
+                 replaced |= this->replace(match, params);
             }
-            dProgress() << tr("Replaced with %1%2.").arg(params.replace).arg(params.replaceSpec ? "*" : "");
+            if (replaced) {
+                dProgress() << tr("Replaced with %1%2.").arg(params.replace).arg(params.replaceSpec ? "*" : "");
+            }
         }
     }
 
     bool popup = false;
     if (next) {
-        if ((int)matches.size() <= this->index) {
+        if (overflow) {
             this->index = -1;
             params.scrollTo = false;
-            if (matches.empty()) {
+            if (matchIdx == -1) {
                 popup = true;
             } else {
                 dProgress() << tr("Reached the end of the dungeon.");
@@ -199,52 +208,57 @@ void DungeonSearchDialog::search(bool next)
     // Clear loading message from status bar
     ProgressDialog::done();
 
-    if (!matches.empty() && params.scrollTo) {
-        view->selectPos(matches[this->index]);
+    // update the view
+    if (replaced) {
+        view->displayFrame();
+    }
+    if (matchIdx != -1 && params.scrollTo) {
+        view->selectPos(matches[matchIdx]);
         view->scrollToCurrent();
     }
-
     if (popup) {
         QMessageBox::warning(this, "Warning", "Not found.");
     }
 }
 
-void DungeonSearchDialog::replace(const QPoint &match, const DungeonSearchParam &params)
+bool DungeonSearchDialog::replace(const QPoint &match, const DungeonSearchParam &params)
 {
     D1Dun *dun = this->dun;
     int replace = params.replace;
 
+    bool result = false;
     switch (params.type) {
     case DUN_SEARCH_TYPE::Tile:
-        dun->setTileAt(match.x(), match.y(), replace);
+        result = dun->setTileAt(match.x(), match.y(), replace);
         break;
     case DUN_SEARCH_TYPE::Subtile:
-        dun->setSubtileAt(match.x(), match.y(), replace);
+        result = dun->setSubtileAt(match.x(), match.y(), replace);
         break;
     case DUN_SEARCH_TYPE::Tile_Protection:
-        dun->setTileProtectionAt(match.x(), match.y(), (Qt::CheckState)replace);
+        result = dun->setTileProtectionAt(match.x(), match.y(), (Qt::CheckState)replace);
         break;
     case DUN_SEARCH_TYPE::Monster_Protection:
-        dun->setSubtileMonProtectionAt(match.x(), match.y(), replace != 0);
+        result = dun->setSubtileMonProtectionAt(match.x(), match.y(), replace != 0);
         break;
     case DUN_SEARCH_TYPE::Object_Protection:
-        dun->setSubtileObjProtectionAt(match.x(), match.y(), replace != 0);
+        result = dun->setSubtileObjProtectionAt(match.x(), match.y(), replace != 0);
         break;
     case DUN_SEARCH_TYPE::Room:
-        dun->setRoomAt(match.x(), match.y(), replace);
+        result = dun->setRoomAt(match.x(), match.y(), replace);
         break;
     case DUN_SEARCH_TYPE::Monster: {
         DunMonsterType monType = { replace, params.replaceSpec };
         MapMonster mon = dun->getMonsterAt(match.x(), match.y());
-        dun->setMonsterAt(match.x(), match.y(), monType, mon.mox, mon.moy);
+        result = dun->setMonsterAt(match.x(), match.y(), monType, mon.mox, mon.moy);
     } break;
     case DUN_SEARCH_TYPE::Object:
-        dun->setObjectAt(match.x(), match.y(), replace);
+        result = dun->setObjectAt(match.x(), match.y(), replace);
         break;
     case DUN_SEARCH_TYPE::Item:
-        dun->setItemAt(match.x(), match.y(), replace);
+        result = dun->setItemAt(match.x(), match.y(), replace);
         break;
     }
+    return result;
 }
 
 void DungeonSearchDialog::changeEvent(QEvent *event)
