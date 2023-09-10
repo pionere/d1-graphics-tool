@@ -1025,7 +1025,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
             srcBits += backWidth / 2;
             destBits += backWidth / 2;
         }
-        const unsigned limit = backWidth - CELL_BORDER;
+        unsigned limit = backWidth - CELL_BORDER;
         if ((drawMask & (DM_RTFLOOR | DM_RFLOOR)) == 0) {
             limit -= backWidth / 2;
         }
@@ -1084,7 +1084,7 @@ void D1Dun::drawBack(QPainter &dungeon, const QImage &backImage, int drawCursorX
     }
 }
 
-void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
+void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
@@ -1114,7 +1114,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     // mask the image with backImage
                     QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
                     QImage *destImage = (QImage *)dungeon.device();
-                    QRgb *backBits = reinterpret_cast<QRgb *>(backImage.bits());
+                    const QRgb *backBits = reinterpret_cast<const QRgb *>(backImage.bits());
                     backBits += CELL_BORDER * backWidth;
                     // assert(subtileImage.height() >= backHeight);
                     QRgb *srcBits = reinterpret_cast<QRgb *>(subtileImage.scanLine(subtileImage.height() - backHeight));
@@ -1351,7 +1351,7 @@ void D1Dun::DrawMap(int sx, int sy, uint8_t automap_type)
     }
 }
 
-void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
+void D1Dun::drawMeta(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
@@ -1435,7 +1435,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
     }
 }
 
-void D1Dun::drawLayer(QPainter &dunPainter, QImage &backImage, const DunDrawParam &params, int layer)
+void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDrawParam &params, int layer)
 {
     int maxDunSize = std::max(this->width, this->height);
     int minDunSize = std::min(this->width, this->height);
