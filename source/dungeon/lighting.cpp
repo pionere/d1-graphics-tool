@@ -657,6 +657,7 @@ void TraceLightSource(int nXPos, int nYPos, int nRadius)
 
 	nRadius = 2 * (nRadius + 1) * 8 * 16;
 	static_assert(INT_MAX / (2 * 8 * 16) > MAX_LIGHT_RAD, "Light tracing overflows in TraceLightSource.");
+	static_assert(MAX_OFFSET == 8, "Light tracing shift must be adjusted in TraceLightSource.");
 	cr = &CrawlTable[CrawlNum[15]];
 	for (i = (BYTE)*cr; i > 0; i--) {
 		x1 = nXPos;
@@ -688,7 +689,7 @@ void TraceLightSource(int nXPos, int nYPos, int nRadius)
 				limit -= 2 * 8 * 16;
 				if (limit <= 0)
 					break;
-			} while (LightPos(x1, y1, (nRadius - limit) >> (1 + 4))); // * (MAX_OFFSET / (2 * 8)
+			} while (LightPos(x1, y1, (nRadius - limit) >> (1 + 4))); // * MAX_OFFSET / (2 * 8 * 16)
 		} else {
 			// multiply by 2 so we round up
 			dx *= 2;
@@ -704,7 +705,7 @@ void TraceLightSource(int nXPos, int nYPos, int nRadius)
 				limit -= 2 * 8 * 16;
 				if (limit <= 0)
 					break;
-			} while (LightPos(x1, y1, (nRadius - limit) >> (1 + 4))); // * (MAX_OFFSET / (2 * 8)
+			} while (LightPos(x1, y1, (nRadius - limit) >> (1 + 4))); // * MAX_OFFSET / (2 * 8 * 16)
 		}
 	}
 }

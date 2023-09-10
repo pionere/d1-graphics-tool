@@ -17,6 +17,7 @@
 #include <QPen>
 #include <QRectF>
 #include <QScrollBar>
+#include <QSignalBlocker>
 #include <QTimer>
 
 #include "builderwidget.h"
@@ -87,8 +88,6 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     QObject::connect(this->ui->dungeonSubtileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonSubtileLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonItemLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonItemLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonMonsterLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterLineEdit_escPressed()));
-    QObject::connect(this->ui->dungeonMonsterXOffLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterXOffLineEdit_escPressed()));
-    QObject::connect(this->ui->dungeonMonsterYOffLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterYOffLineEdit_escPressed()));	
     QObject::connect(this->ui->dungeonObjectLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonObjectLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonRoomLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonRoomLineEdit_escPressed()));
 
@@ -396,8 +395,18 @@ void LevelCelView::updateFields()
         this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.first));
         this->ui->dungeonMonsterCheckBox->setChecked(mon.type.second);
         this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.type));
-        this->ui->dungeonMonsterXOffLineEdit->setText(QString::number(mon.mox));
-        this->ui->dungeonMonsterYOffLineEdit->setText(QString::number(mon.moy));
+        {
+            const limit = this->min->getSubtileWidth() * MICRO_WIDTH / 2;
+            const QSignalBlocker blocker(this->ui->dungeonMonsterXOffSpinBox);
+            this->ui->dungeonMonsterXOffSpinBox->setRange(-limit, limit);
+            this->ui->dungeonMonsterXOffSpinBox->setValue(mon.mox);
+        }
+        {
+            const limit = this->min->getSubtileWidth() * MICRO_HEIGHT / 4;
+            const QSignalBlocker blocker(this->ui->dungeonMonsterYOffSpinBox);
+            this->ui->dungeonMonsterYOffSpinBox->setRange(-limit, limit);
+            this->ui->dungeonMonsterYOffSpinBox->setValue(mon.moy);
+        }
         int objectIndex = this->dun->getObjectAt(posx, posy);
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
@@ -4442,49 +4451,75 @@ void LevelCelView::on_dungeonMonsterAddButton_clicked()
     this->dungeonResourceDialog.show();
 }
 
-void LevelCelView::setMonsterOffset(int xoff, int yoff)
+void LevelCelView::setMonsterOffset(const MapMonster &mon)
 {
-    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-    if (xoff == INT_MAX) {
-        xoff = mon.mox;
-    }
-    if (yoff == INT_MAX) {
-        yoff = mon.moy;
-    }
-
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, mon.type, xoff, yoff);
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, mon.type, mon.mox, mon.moy);
+    // update the view
     if (change) {
-        // update the view
         this->displayFrame();
+    } else {
+        this->updateFields();
     }
 }
 
-void LevelCelView::on_dungeonMonsterXOffLineEdit_returnPressed()
+void LevelCelView::on_dungeonMonsterXOffSpinBox_valueChanged(int value);
 {
-    int xo = this->ui->dungeonMonsterXOffLineEdit->text().toInt();
-    if (abs(xo) <= this->min->getSubtileWidth() * MICRO_WIDTH / 2) {
-        this->setMonsterOffset(xo, INT_MAX);
-    }
-
-    this->on_dungeonMonsterXOffLineEdit_escPressed();
-}
-
-void LevelCelView::on_dungeonMonsterXOffLineEdit_escPressed()
-{
+    const int minVal = this->ui->dungeonMonsterXOffSpinBox->minimum();
+    const int maxVal = this->ui->dungeonMonsterXOffSpinBox->maximum();
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-
-    this->ui->dungeonMonsterXOffLineEdit->setText(QString::number(mon.mox));
-    this->ui->dungeonMonsterXOffLineEdit->clearFocus();
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        if (value < mon.mox) {
+            if (value < 0) {
+                value = minVal;
+            } else {
+                value = 0;
+            }
+        } else {
+            if (value <= 0) {
+                value = 0;
+            } else {
+                value = maxVal;
+            }
+        }
+    }
+    if (value < minVal) {
+        value = minVal;
+    }
+    if (value > maxVal) {
+        value = maxVal;
+    }
+    mon.mox = value;
+    this->setMonsterOffset(mon);
 }
 
-void LevelCelView::on_dungeonMonsterYOffLineEdit_returnPressed()
+void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value);
 {
-    int yo = this->ui->dungeonMonsterYOffLineEdit->text().toInt();
-    if (abs(yo) <= this->min->getSubtileWidth() * MICRO_HEIGHT / 4) {
-        this->setMonsterOffset(INT_MAX, yo);
+    const int minVal = this->ui->dungeonMonsterYOffSpinBox->minimum();
+    const int maxVal = this->ui->dungeonMonsterYOffSpinBox->maximum();
+    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        if (value < mon.moy) {
+            if (value < 0) {
+                value = minVal;
+            } else {
+                value = 0;
+            }
+        } else {
+            if (value <= 0) {
+                value = 0;
+            } else {
+                value = maxVal;
+            }
+        }
     }
-
-    this->on_dungeonMonsterYOffLineEdit_escPressed();
+    if (value < minVal) {
+        value = minVal;
+    }
+    if (value > maxVal) {
+        value = maxVal;
+    }
+    mon.moy = value;
+    this->setMonsterOffset(mon);
 }
 
 void LevelCelView::on_dungeonMonsterYOffLineEdit_escPressed()

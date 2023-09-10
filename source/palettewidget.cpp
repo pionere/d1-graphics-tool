@@ -514,9 +514,6 @@ void PaletteWidget::changeColorSelection(int dir, bool extend)
 
     switch (dir) {
     case Qt::Key_Left:
-        // if ((this->selectedFirstColorIndex % PALETTE_COLORS_PER_LINE) == 0) {
-        //    return;
-        // }
         if (this->selectedFirstColorIndex == 0) {
             if (extend) {
                 return;
