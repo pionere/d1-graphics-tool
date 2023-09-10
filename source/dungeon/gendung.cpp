@@ -1273,18 +1273,13 @@ static void DRLG_LightSubtiles()
 #endif
 	memset(dLight, c, sizeof(dLight));
 
-	assert(LightList[MAXLIGHTS]._lxoff == 0);
-	assert(LightList[MAXLIGHTS]._lyoff == 0);
 	if (!nCollLightTable[0]) {
 		for (i = 0; i < MAXDUNX; i++) {
 			for (j = 0; j < MAXDUNY; j++) {
 				pn = dPiece[i][j];
 				c = nCollLightTable[pn] & PSF_LIGHT_RADIUS;
 				if (c != 0) {
-					LightList[MAXLIGHTS]._lradius = c;
-					LightList[MAXLIGHTS]._lx = i;
-					LightList[MAXLIGHTS]._ly = j;
-					DoLighting(MAXLIGHTS);
+					TraceLightSource(i, j, c);
 				}
 			}
 		}
