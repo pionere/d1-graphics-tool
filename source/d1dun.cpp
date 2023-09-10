@@ -975,14 +975,116 @@ QImage D1Dun::getItemImage(int itemIndex)
     }
 }
 
-void D1Dun::drawBack(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
+typedef enum _draw_mask {
+    DM_WALL    = 1 << 0, // WallMask
+    DM_LTFLOOR = 1 << 1, // LeftMask
+    DM_RTFLOOR = 1 << 2, // RightMask
+    DM_LFLOOR  = 1 << 3, // LeftFoliageMask
+    DM_RFLOOR  = 1 << 4, // RightFoliageMask
+} _draw_mask;
+
+static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subtileImage, int drawCursorX, int drawCursorY, unsigned backWidth, unsigned backHeight, unsigned drawMask)
+{
+    QImage *destImage = (QImage *)dungeon.device();
+    // assert(subtileImage.height() >= backHeight);
+    // QRgb *srcBits = reinterpret_cast<QRgb *>(subtileImage.scanLine(subtileImage.height() - backHeight));
+    QRgb *srcBits = reinterpret_cast<QRgb *>(subtileImage.bits());
+    // assert(drawCursorY >= backHeight);
+    QRgb *destBits;
+    int line = drawCursorY;
+    line -= (drawMask & DMT_TWALL) ? (subtileImage.height() + CELL_BORDER) : (backHeight - CELL_BORDER);
+    destBits = reinterpret_cast<QRgb *>(destImage->scanLine(line));
+    destBits += drawCursorX + CELL_BORDER;
+    if (drawMask & DM_WALL) {
+        // draw the non-floor bits
+        for (unsigned y = 0; y < subtileImage.height() - (backHeight - 2 * CELL_BORDER); y++) {
+            // assert(subtileImage.width() == backWidth - 2 * CELL_BORDER);
+            for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++, srcBits++, destBits++) {
+                if (qAlpha(*srcBits) == 0) {
+                    continue;
+                }
+                *destBits = *srcBits;
+            }
+            destBits += destImage->width() - backWidth;
+        }
+    } else {
+        // assert(subtileImage.height() == backHeight - 2 * CELL_BORDER);
+    }
+    // draw the floor
+    if ((drawMask & (DM_LTFLOOR | DM_RTFLOOR | DM_LFLOOR | DM_RFLOOR)) == 0) {
+        return;
+    }
+
+    const QRgb *backBits = reinterpret_cast<const QRgb *>(backImage.scanLine(CELL_BORDER));
+    backBits += CELL_BORDER * backWidth;
+    for (unsigned y = CELL_BORDER; y < backHeight - CELL_BORDER; y++) {
+        unsigned x = CELL_BORDER;
+        if ((drawMask & (DM_LTFLOOR | DM_LFLOOR)) == 0) {
+            x += backWidth / 2;
+            backBits += backWidth / 2;
+            srcBits += backWidth / 2;
+            destBits += backWidth / 2;
+        }
+        unsigned limit = backWidth - CELL_BORDER;
+        if ((drawMask & (DM_RTFLOOR | DM_RFLOOR)) == 0) {
+            limit -= backWidth / 2;
+        }
+        // assert(subtileImage.width() == backWidth - 2 * CELL_BORDER);
+        for (; x < limit; x++, backBits++, srcBits++, destBits++) {
+            if (qAlpha(*srcBits) == 0) {
+                continue;
+            }
+            if (x < CELL_BORDER + backWidth / 2) {
+                if ((drawMask & DM_LFLOOR) && qAlpha(*backBits) != 0) {
+                    continue;
+                }
+            } else {
+                if ((drawMask & DM_RFLOOR) && qAlpha(*backBits) != 0) {
+                    continue;
+                }
+            }
+            *destBits = *srcBits;
+        }
+        if ((drawMask & (DM_RTFLOOR | DM_RFLOOR)) == 0) {
+            backBits += backWidth / 2;
+            srcBits += backWidth / 2;
+            destBits += backWidth / 2;
+        }
+        backBits += 2 * CELL_BORDER;
+        destBits += destImage->width() - backWidth;
+    }
+
+}
+
+void D1Dun::drawBack(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
     dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+    if (params.tileState != Qt::Unchecked) {
+        // draw the subtile
+        int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
+        int subtileRef = this->subtiles[dunCursorY][dunCursorX];
+        if (subtileRef != 0) {
+            if (subtileRef >= 0 && subtileRef <= this->min->getSubtileCount()) {
+                quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
+                unsigned drawMask = 0;
+                if ((rp & (TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE)) != TMIF_LEFT_REDRAW) {
+                    drawMask |= DM_LTFLOOR;
+                }
+                if ((rp & (TMIF_RIGHT_REDRAW | TMIF_RIGHT_FOLIAGE)) != TMIF_RIGHT_REDRAW) {
+                    drawMask |= DM_RTFLOOR;
+                }
+                if (drawMask != 0) {
+                    QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
+                    drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
+                }
+            }
+        }
+    }
 }
 
-void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
+void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
@@ -998,21 +1100,21 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             if (subtileRef >= 0 && subtileRef <= this->min->getSubtileCount()) {
                 if (params.tileState == Qt::Checked) {
                     QImage subtileImage = this->min->getSubtileImage(subtileRef - 1);
-                    dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
-                    /*for (int y = 0; y < subtileImage.height(); y++) {
-                        for (int x = 0; x < subtileImage.width(); x++) {
-                            QColor color = subtileImage.pixelColor(x, y);
-                            if (color.alpha() == 0) {
-                                continue;
-                            }
-                            destImage->setPixelColor(drawCursorX + x, drawCursorY - subtileImage.height() + y, color);
-                        }
-                    }*/
+                    quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
+                    unsigned drawMask = DM_WALL;
+                    if (rp & TMIF_LEFT_REDRAW) {
+                        drawMask |= (rp & TMIF_LEFT_FOLIAGE) ? DM_LFLOOR : DM_LTFLOOR;
+                    }
+                    if (rp & TMIF_RIGHT_REDRAW) {
+                        drawMask |= (rp & TMIF_RIGHT_FOLIAGE) ? DM_RFLOOR : DM_RTFLOOR;
+                    }
+                    drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
+                    // dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
                 } else {
                     // mask the image with backImage
                     QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
                     QImage *destImage = (QImage *)dungeon.device();
-                    QRgb *backBits = reinterpret_cast<QRgb *>(backImage.bits());
+                    const QRgb *backBits = reinterpret_cast<const QRgb *>(backImage.bits());
                     backBits += CELL_BORDER * backWidth;
                     // assert(subtileImage.height() >= backHeight);
                     QRgb *srcBits = reinterpret_cast<QRgb *>(subtileImage.scanLine(subtileImage.height() - backHeight));
@@ -1231,7 +1333,7 @@ void D1Dun::DrawMap(int sx, int sy, uint8_t automap_type)
     }
 }
 
-void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
+void D1Dun::drawMeta(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
@@ -1315,7 +1417,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
     }
 }
 
-void D1Dun::drawLayer(QPainter &dunPainter, QImage &backImage, const DunDrawParam &params, int layer)
+void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDrawParam &params, int layer)
 {
     int maxDunSize = std::max(this->width, this->height);
     int minDunSize = std::min(this->width, this->height);
