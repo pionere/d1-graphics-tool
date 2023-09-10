@@ -396,13 +396,13 @@ void LevelCelView::updateFields()
         this->ui->dungeonMonsterCheckBox->setChecked(mon.type.second);
         this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.type));
         {
-            const limit = this->min->getSubtileWidth() * MICRO_WIDTH / 2;
+            const int limit = this->min->getSubtileWidth() * MICRO_WIDTH / 2;
             const QSignalBlocker blocker(this->ui->dungeonMonsterXOffSpinBox);
             this->ui->dungeonMonsterXOffSpinBox->setRange(-limit, limit);
             this->ui->dungeonMonsterXOffSpinBox->setValue(mon.mox);
         }
         {
-            const limit = this->min->getSubtileWidth() * MICRO_HEIGHT / 4;
+            const int limit = this->min->getSubtileWidth() * MICRO_HEIGHT / 4;
             const QSignalBlocker blocker(this->ui->dungeonMonsterYOffSpinBox);
             this->ui->dungeonMonsterYOffSpinBox->setRange(-limit, limit);
             this->ui->dungeonMonsterYOffSpinBox->setValue(mon.moy);
@@ -4462,7 +4462,7 @@ void LevelCelView::setMonsterOffset(const MapMonster &mon)
     }
 }
 
-void LevelCelView::on_dungeonMonsterXOffSpinBox_valueChanged(int value);
+void LevelCelView::on_dungeonMonsterXOffSpinBox_valueChanged(int value)
 {
     const int minVal = this->ui->dungeonMonsterXOffSpinBox->minimum();
     const int maxVal = this->ui->dungeonMonsterXOffSpinBox->maximum();
@@ -4492,7 +4492,7 @@ void LevelCelView::on_dungeonMonsterXOffSpinBox_valueChanged(int value);
     this->setMonsterOffset(mon);
 }
 
-void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value);
+void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value)
 {
     const int minVal = this->ui->dungeonMonsterYOffSpinBox->minimum();
     const int maxVal = this->ui->dungeonMonsterYOffSpinBox->maximum();
@@ -4520,14 +4520,6 @@ void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value);
     }
     mon.moy = value;
     this->setMonsterOffset(mon);
-}
-
-void LevelCelView::on_dungeonMonsterYOffLineEdit_escPressed()
-{
-    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-
-    this->ui->dungeonMonsterYOffLineEdit->setText(QString::number(mon.moy));
-    this->ui->dungeonMonsterYOffLineEdit->clearFocus();
 }
 
 void LevelCelView::on_dungeonItemLineEdit_returnPressed()

@@ -1383,28 +1383,16 @@
           <item row="1" column="9">
            <layout class="QHBoxLayout">
             <item>
-             <widget class="LineEditWidget" name="dungeonMonsterXOffLineEdit">
-              <property name="charWidth">
-               <number>3</number>
-              </property>
+             <widget class="QSpinBox" name="dungeonMonsterXOffSpinBox">
               <property name="toolTip">
                <string>X-Offset of the monster at the selected position</string>
-              </property>
-              <property name="alignment">
-               <enum>Qt::AlignCenter</enum>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="LineEditWidget" name="dungeonMonsterYOffLineEdit">
-              <property name="charWidth">
-               <number>3</number>
-              </property>
+             <widget class="QSpinBox" name="dungeonMonsterYOffSpinBox">
               <property name="toolTip">
                <string>Y-Offset of the monster at the selected position</string>
-              </property>
-              <property name="alignment">
-               <enum>Qt::AlignCenter</enum>
               </property>
              </widget>
             </item>
