@@ -357,7 +357,7 @@ static void getPalColorNew(const std::vector<PaletteColor> &dynColors, QColor co
         }
         int currR = (color.red() - minC) - (palColor.red() - minP);
         int currG = (color.green() - minC) - (palColor.green() - minP);
-        int currG = (color.blue() - minC) - (palColor.blue() - minP);
+        int currB = (color.blue() - minC) - (palColor.blue() - minP);
         int currL = minC - minP;
         int curr = redWeight * currR * currR + greenWeight * currG * currG + blueWeight * currB * currB + lightWeight * currL * currL;
         palOptions[palColor.index()] = curr;
