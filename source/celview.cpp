@@ -39,10 +39,10 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     this->lastPos = currPos;
 
     if (event->flags() & Qt::MouseEventCreatedDoubleClick) {
-QMessageBox::critical(nullptr, "Error", "Event with dblClick");
+dProgressErr() << "Event with dblClick";
         flags |= DOUBLE_CLICK;
     } else {
-QMessageBox::critical(nullptr, "Error", "Event without dblClick");
+dProgressErr() << "Event without dblClick";
     }
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
         flags |= SHIFT_CLICK;
@@ -73,7 +73,7 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-QMessageBox::critical(nullptr, "Error", "DblClick event");
+dProgressErr() << "DblClick event";
 }
 
 void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
