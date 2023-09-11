@@ -243,6 +243,14 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
     }
 }
 
+void TrnGenerateDialog::on_colorDistanceComboBox_activated(int index)
+{
+    this->ui->redWeightLineEdit->setVisible(index > 2);
+    this->ui->greenWeightLineEdit->setVisible(index > 2);
+    this->ui->blueWeightLineEdit->setVisible(index > 2);
+    this->ui->lightWeightLineEdit->setVisible(index == 5);
+}
+
 void TrnGenerateDialog::on_generateButton_clicked()
 {
     GenerateTrnParam params;
@@ -261,9 +269,11 @@ void TrnGenerateDialog::on_generateButton_clicked()
     }
 
     params.mode = this->ui->levelTypeComboBox->currentIndex();
+    params.colorSelector = this->ui->colorDistanceComboBox->currentIndex();
     params.redWeight = this->ui->redWeightLineEdit->text().toDouble();
     params.greenWeight = this->ui->greenWeightLineEdit->text().toDouble();
     params.blueWeight = this->ui->blueWeightLineEdit->text().toDouble();
+    params.lightWeight = this->ui->lightWeightLineEdit->text().toDouble();
 
     this->close();
 

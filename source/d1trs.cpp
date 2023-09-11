@@ -285,8 +285,40 @@ static void MakeLightTableBase(const GenerateTrnParam &params)
 static double redWeight;
 static double greenWeight;
 static double blueWeight;
-static QColor targets[NUM_COLORS];
-static void getPalColorOld(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+static double lightWeight;
+static void (*colorSelector)(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions);
+static void getPalColorSquare(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+{
+    for (const PaletteColor &palColor : dynColors) {
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        int curr = currR * currR + currG * currG + currB * currB;
+        palOptions[palColor.index()] = curr;
+    }
+}
+static void getPalColorQuad(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+{
+    for (const PaletteColor &palColor : dynColors) {
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        double curr = currR * currR * currR * currR + currG * currG * currG * currG + currB * currB * currB * currB;
+        palOptions[palColor.index()] = sqrt(curr);
+    }
+}
+static void getPalColorRiemersma(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+{
+    for (const PaletteColor &palColor : dynColors) {
+        int r = color.red() + palColor.red();
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        int curr = (1024 + r) * currR * currR + 4 * 512 * currG * currG + (1024 + 510 - r) * currB * currB;
+        palOptions[palColor.index()] = curr;
+    }
+}
+static void getPalColorWeightedSquare(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
 {
     for (const PaletteColor &palColor : dynColors) {
         int currR = color.red() - palColor.red();
@@ -296,14 +328,39 @@ static void getPalColorOld(const std::vector<PaletteColor> &dynColors, QColor co
         palOptions[palColor.index()] = curr;
     }
 }
-static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+static void getPalColorWeightedQuad(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
 {
     for (const PaletteColor &palColor : dynColors) {
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
-		double curr = redWeight * currR * currR * currR * currR + greenWeight * currG * currG * currG * currG + blueWeight * currB * currB * currB * currB;
+        double curr = redWeight * currR * currR * currR * currR + greenWeight * currG * currG * currG * currG + blueWeight * currB * currB * currB * currB;
         palOptions[palColor.index()] = sqrt(curr);
+    }
+}
+static void getPalColorNew(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+{
+    int minC = color.red();
+    if (color.green() < minC) {
+        minC = color.green();
+    }
+    if (color.blue() < minC) {
+        minC = color.blue();
+    }
+    for (const PaletteColor &palColor : dynColors) {
+        int minP = color.red();
+        if (color.green() < minP) {
+            minP = color.green();
+        }
+        if (color.blue() < minP) {
+            minP = color.blue();
+        }
+        int currR = (color.red() - minC) - (palColor.red() - minP);
+        int currG = (color.green() - minC) - (palColor.green() - minP);
+        int currG = (color.blue() - minC) - (palColor.blue() - minP);
+        int currL = minC - minP;
+        int curr = redWeight * currR * currR + greenWeight * currG * currG + blueWeight * currB * currB + lightWeight * currL * currL;
+        palOptions[palColor.index()] = curr;
     }
 }
 
@@ -350,10 +407,7 @@ static BYTE selectColor(BYTE colorIdx, int shade, double stepsIn, bool deltaStep
         for (unsigned i = 0; i < NUM_COLORS; i++) {
             palOptions[i] = INT_MAX;
         }
-if (shade == 2) {
-	targets[colorIdx] = color;
-}
-        getPalColor(dynPalColors, color, palOptions);
+        colorSelector(dynPalColors, color, palOptions);
 
         options.push_back(palOptions);
     }
@@ -439,12 +493,29 @@ void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal
     redWeight = params.redWeight;
     greenWeight = params.greenWeight;
     blueWeight = params.blueWeight;
+    lightWeight = params.lightWeight;
+    switch (params.colorSelector) {
+    case 0:
+        colorSelector = getPalColorSquare;
+        break;
+    case 1:
+        colorSelector = getPalColorQuad;
+        break;
+    case 2:
+        colorSelector = getPalColorRiemersma;
+        break;
+    case 3:
+        colorSelector = getPalColorWeightedSquare;
+        break;
+    case 4:
+        colorSelector = getPalColorWeightedQuad;
+        break;
+    case 5:
+        colorSelector = getPalColorNew;
+        break;
+    }
 
     MakeLightTableCustom(params);
-
-for (int i = 0; i < 128; i++) {
-	pal->setColor(i, targets[i + 128]);
-}
 
     QString filePath = QApplication::tr("Light%1.trn");
     for (int i = 0; i <= MAXDARKNESS; i++) {

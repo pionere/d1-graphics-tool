@@ -25,9 +25,11 @@ public:
     std::vector<GenerateTrnColor> colors;
     std::vector<D1Pal *> pals;
     int mode;
+    int colorSelector;
     double redWeight;
     double greenWeight;
     double blueWeight;
+    double lightWeight;
 };
 
 namespace Ui {
@@ -50,6 +52,7 @@ private slots:
     void on_actionAddRange_triggered();
     void on_actionAddPalette_triggered();
     void on_levelTypeComboBox_activated(int index);
+    void on_colorDistanceComboBox_activated(int index);
 
     void on_generateButton_clicked();
     void on_cancelButton_clicked();
