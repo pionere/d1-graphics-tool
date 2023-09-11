@@ -348,12 +348,12 @@ static void getPalColorNew(const std::vector<PaletteColor> &dynColors, QColor co
         minC = color.blue();
     }
     for (const PaletteColor &palColor : dynColors) {
-        int minP = color.red();
-        if (color.green() < minP) {
-            minP = color.green();
+        int minP = palColor.red();
+        if (palColor.green() < minP) {
+            minP = palColor.green();
         }
-        if (color.blue() < minP) {
-            minP = color.blue();
+        if (palColor.blue() < minP) {
+            minP = palColor.blue();
         }
         int currR = (color.red() - minC) - (palColor.red() - minP);
         int currG = (color.green() - minC) - (palColor.green() - minP);
