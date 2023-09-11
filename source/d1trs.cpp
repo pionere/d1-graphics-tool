@@ -286,7 +286,7 @@ static double redWeight;
 static double greenWeight;
 static double blueWeight;
 static QColor targets[NUM_COLORS];
-static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+static void getPalColorOld(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
 {
     for (const PaletteColor &palColor : dynColors) {
         int currR = color.red() - palColor.red();
@@ -294,6 +294,16 @@ static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color
         int currB = color.blue() - palColor.blue();
         int curr = redWeight * currR * currR + greenWeight * currG * currG + blueWeight * currB * currB;
         palOptions[palColor.index()] = curr;
+    }
+}
+static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
+{
+    for (const PaletteColor &palColor : dynColors) {
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+		double curr = redWeight * currR * currR * currR * currR + greenWeight * currG * currG * currG * currG + blueWeight * currB * currB * currB * currB;
+        palOptions[palColor.index()] = sqrt(curr);
     }
 }
 
