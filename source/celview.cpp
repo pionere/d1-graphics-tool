@@ -68,6 +68,10 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     this->mouseEvent(event, FIRST_CLICK);
 }
 
+void CelScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+}
+
 void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 {
     // emit this->framePixelHovered(this->lastPos);

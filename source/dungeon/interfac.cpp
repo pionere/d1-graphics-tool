@@ -235,21 +235,20 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 		IncProgress();
 		HoldThemeRooms(); // protect themes with dFlags
 		InitMonsters();   // place monsters
-		IncProgress();
-		InitObjects();      // place objects
-		InitItems();        // place items
-		CreateThemeRooms(); // populate theme rooms
 	} else {
 //		InitLvlStores();
 		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
 		// SetRndSeed(seed);
 		IncProgress();
+		InitObjectGFX();  // load object graphics
 		IncProgress();
 
 //		InitTowners();
-		IncProgress();
-//		InitItems();
 	}
+	IncProgress();
+	InitObjects();      // place objects
+	InitItems();        // place items
+	CreateThemeRooms(); // populate theme rooms
 	FreeSetPieces();
 	IncProgress();
 //	InitMissiles();  // reset missiles
