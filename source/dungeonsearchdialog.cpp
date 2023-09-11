@@ -213,7 +213,7 @@ void DungeonSearchDialog::search(bool next)
         view->displayFrame();
     }
     if (matchIdx != -1 && params.scrollTo) {
-        view->selectPos(matches[matchIdx]);
+        view->selectPos(matches[matchIdx], 0);
         view->scrollToCurrent();
     }
     if (popup) {
