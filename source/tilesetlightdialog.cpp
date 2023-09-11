@@ -74,7 +74,7 @@ void TilesetLightDialog::on_actionAddRange_triggered()
 void TilesetLightDialog::on_actionDelRange_triggered(TilesetLightEntryWidget *caller)
 {
     this->ui->rangesVBoxLayout->removeWidget(caller);
-    delete caller;
+    caller->deleteLater();
     // this->adjustSize();
 }
 
