@@ -245,6 +245,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
 
 void TrnGenerateDialog::on_colorDistanceComboBox_activated(int index)
 {
+    this->ui->weightsLabel->setVisible(index > 2);
     this->ui->redWeightLineEdit->setVisible(index > 2);
     this->ui->greenWeightLineEdit->setVisible(index > 2);
     this->ui->blueWeightLineEdit->setVisible(index > 2);
