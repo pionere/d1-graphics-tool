@@ -29,6 +29,7 @@ TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
     this->on_actionAddRange_triggered();
 
     this->ui->levelTypeComboBox->setCurrentIndex(DTYPE_NONE);
+    this->on_colorDistanceComboBox_activated(0);
 }
 
 TrnGenerateDialog::~TrnGenerateDialog()
