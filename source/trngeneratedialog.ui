@@ -95,39 +95,52 @@
       </item>
       <item row="5" column="1">
        <layout class="QHBoxLayout">
-        <widget class="LineEditWidget" name="redWeightLineEdit">
-         <property name="charWidth">
-          <number>3</number>
-         </property>
-         <property name="alignment">
-          <enum>Qt::AlignCenter</enum>
-         </property>
-         <property name="text">
-          <string notr="true">3</string>
-         </property>
-        </widget>
-        <widget class="LineEditWidget" name="greenWeightLineEdit">
-         <property name="charWidth">
-          <number>3</number>
-         </property>
-         <property name="alignment">
-          <enum>Qt::AlignCenter</enum>
-         </property>
-         <property name="text">
-          <string notr="true">4</string>
-         </property>
-        </widget>
-        <widget class="LineEditWidget" name="blueWeightLineEdit">
-         <property name="charWidth">
-          <number>3</number>
-         </property>
-         <property name="alignment">
-          <enum>Qt::AlignCenter</enum>
-         </property>
-         <property name="text">
-          <string notr="true">2</string>
-         </property>
-        </widget>
+        <item>
+         <widget class="LineEditWidget" name="redWeightLineEdit">
+          <property name="charWidth">
+           <number>3</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+          <property name="text">
+           <string notr="true">3</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="greenWeightLineEdit">
+          <property name="charWidth">
+           <number>3</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+          <property name="text">
+           <string notr="true">4</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="blueWeightLineEdit">
+          <property name="charWidth">
+           <number>3</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+          <property name="text">
+           <string notr="true">2</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </item>
      </layout>
