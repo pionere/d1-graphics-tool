@@ -508,7 +508,7 @@ QPoint LevelCelView::getCellPos(const QPoint &pos) const
     return QPoint(cellX, cellY);
 }
 
-void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
+void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -521,7 +521,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
 
     if (this->dunView) {
         QPoint cellPos = this->getCellPos(pos);
-        dMainWindow().dunClicked(cellPos, first);
+        dMainWindow().dunClicked(cellPos, flags);
         return;
     }
     if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING)
@@ -635,7 +635,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    dMainWindow().frameClicked(frame, p, first);
+    dMainWindow().frameClicked(frame, p, flags);
 }
 
 void LevelCelView::framePixelHovered(const QPoint &pos)
@@ -681,12 +681,29 @@ void LevelCelView::scrollToCurrent()
     this->ui->celGraphicsView->centerOn(cX, cY);
 }
 
-void LevelCelView::selectPos(const QPoint &cell)
+void LevelCelView::selectPos(const QPoint &cell, int flags)
 {
     this->currentDunPosX = cell.x();
     this->currentDunPosY = cell.y();
     // update the view
     this->updateFields();
+
+    if (flags & DOUBLE_CLICK) {
+        int tileRef = this->dun->getTileAt(cell.x(), cell.y());
+        int subtileRef = this->dun->getSubtileAt(cell.x(), cell.y());
+        bool switchView = false;
+        if (tileRef != UNDEF_TILE && this->til->getTileCount() >= tileRef) {
+            this->currentTileIndex = tileRef - 1;
+            switchView = true;
+        }
+        if (subtileRef != UNDEF_SUBTILE && this->sla->getSubtileCount() >= subtileRef) {
+            this->currentSubtileIndex = subtileRef - 1;
+            switchView = true;
+        }
+        if (switchView) {
+            dMainWindow().on_actionToggle_View_triggered();
+        }
+    }
 }
 
 void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

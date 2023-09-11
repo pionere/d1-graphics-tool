@@ -89,8 +89,8 @@ public:
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void changeColors(const RemapParam &params);
     void colorModified();
-    void frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
-    void dunClicked(const QPoint &cell, bool first);
+    void frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);
+    void dunClicked(const QPoint &cell, int flags);
     void dunHovered(const QPoint &cell);
     int getDunBuilderMode() const;
     void frameModified(D1GfxFrame *frame);

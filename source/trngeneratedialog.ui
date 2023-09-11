@@ -89,7 +89,7 @@
       <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Weights:</string>
+         <string>Color selection:</string>
         </property>
        </widget>
       </item>

@@ -24,7 +24,7 @@ CelScene::CelScene(QWidget *v)
 {
 }
 
-void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
+void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
 {
     if (!(event->buttons() & Qt::LeftButton)) {
         return;
@@ -38,28 +38,34 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
     }
     this->lastPos = currPos;
 
+    if (event->flags() & Qt::MouseEventCreatedDoubleClick) {
+        flags |= DOUBLE_CLICK;
+    }
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        flags |= SHIFT_CLICK;
+    }
     // emit this->framePixelClicked(this->lastPos, first);
     QObject *view = this->parent();
     CelView *celView = qobject_cast<CelView *>(view);
     if (celView != nullptr) {
-        celView->framePixelClicked(this->lastPos, first);
+        celView->framePixelClicked(this->lastPos, flags);
         return;
     }
     LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
     if (levelCelView != nullptr) {
-        levelCelView->framePixelClicked(this->lastPos, first);
+        levelCelView->framePixelClicked(this->lastPos, flags);
         return;
     }
     TblView *tblView = qobject_cast<TblView *>(view);
     if (tblView != nullptr) {
-        tblView->framePixelClicked(this->lastPos, first);
+        tblView->framePixelClicked(this->lastPos, flags);
         return;
     }
 }
 
 void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    this->mouseEvent(event, true);
+    this->mouseEvent(event, FIRST_CLICK);
 }
 
 void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
@@ -88,7 +94,7 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() != Qt::NoButton) {
-        this->mouseEvent(event, false);
+        this->mouseEvent(event, 0);
     }
     this->mouseHoverEvent(event);
 }
@@ -317,7 +323,7 @@ int CelView::getCurrentFrameIndex() const
     return this->currentFrameIndex;
 }
 
-void CelView::framePixelClicked(const QPoint &pos, bool first)
+void CelView::framePixelClicked(const QPoint &pos, int flags)
 {
     if (this->gfx->getFrameCount() == 0) {
         return;
@@ -325,7 +331,7 @@ void CelView::framePixelClicked(const QPoint &pos, bool first)
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    dMainWindow().frameClicked(frame, p, first);
+    dMainWindow().frameClicked(frame, p, flags);
 }
 
 void CelView::framePixelHovered(const QPoint &pos)

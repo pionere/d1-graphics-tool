@@ -308,7 +308,7 @@ int GfxsetView::getCurrentFrameIndex() const
     return this->currentFrameIndex;
 }
 
-void GfxsetView::framePixelClicked(const QPoint &pos, bool first)
+void GfxsetView::framePixelClicked(const QPoint &pos, int flags)
 {
     if (this->gfx->getFrameCount() == 0) {
         return;
@@ -316,7 +316,7 @@ void GfxsetView::framePixelClicked(const QPoint &pos, bool first)
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
     p -= QPoint(SET_SCENE_MARGIN, SET_SCENE_MARGIN);
-    dMainWindow().frameClicked(frame, p, first);
+    dMainWindow().frameClicked(frame, p, flags);
 }
 
 void GfxsetView::framePixelHovered(const QPoint &pos)

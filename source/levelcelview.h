@@ -57,7 +57,7 @@ public:
     const QComboBox *getObjects() const;
     const QComboBox *getMonsters() const;
 
-    void framePixelClicked(const QPoint &pos, bool first);
+    void framePixelClicked(const QPoint &pos, int flags);
     void framePixelHovered(const QPoint &pos);
 
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
@@ -140,7 +140,7 @@ public:
 
     void scrollTo(int posx, int posy); // initiate scrolling
     void scrollToCurrent();            // do the scrolling
-    void selectPos(const QPoint &cell);
+    void selectPos(const QPoint &cell, int flags);
 
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;

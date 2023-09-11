@@ -169,14 +169,14 @@ int BuilderWidget::getOverlayType() const
     return (this->isHidden() || this->mode == BEM_SELECT) ? -1 : this->mode;
 }
 
-bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
+bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
 {
     if (this->isHidden()) {
         return false;
     }
 
     std::vector<DunPos> modValues;
-    if (!first) {
+    if (!(flags & FIRST_CLICK)) {
         if (this->lastPos == cellClick) {
             return true;
         }

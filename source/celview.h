@@ -27,6 +27,12 @@ class CelView;
 
 enum class IMAGE_FILE_MODE;
 
+typedef enum _mouse_click_flags {
+    FIRST_CLICK  = 1 << 0,
+    DOUBLE_CLICK = 1 << 1,
+    SHIFT_CLICK  = 1 << 2,
+} _mouse_click_flags;
+
 class CelScene : public QGraphicsScene {
     Q_OBJECT
 
@@ -41,7 +47,7 @@ public:
 private:
     static void parseZoomValue(QString &zoom, quint8 &zoomNumerator, quint8 &zoomDenominator);
     void updateQGraphicsView();
-    void mouseEvent(QGraphicsSceneMouseEvent *event, bool first);
+    void mouseEvent(QGraphicsSceneMouseEvent *event, int flags);
     void mouseHoverEvent(QGraphicsSceneMouseEvent *event);
 
 private slots:
@@ -52,7 +58,7 @@ private slots:
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
 
 signals:
-    // void framePixelClicked(const QPoint &pos, bool first);
+    // void framePixelClicked(const QPoint &pos, int flags);
     // void framePixelHovered(const QPoint &pos);
 
 private:
@@ -75,7 +81,7 @@ public:
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
 
-    void framePixelClicked(const QPoint &pos, bool first);
+    void framePixelClicked(const QPoint &pos, int flags);
     void framePixelHovered(const QPoint &pos);
     void createFrame(bool append);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);

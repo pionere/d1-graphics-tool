@@ -64,5 +64,9 @@ GenerateTrnColor TrnGenerateColEntryWidget::getTrnColor() const
 
 void TrnGenerateColEntryWidget::on_deletePushButtonClicked()
 {
-    this->view->on_actionDelRange_triggered(this);
+    TrnGenerateDialog *view = this->view;
+    if (view != nullptr) {
+        this->view = nullptr;
+        view->on_actionDelRange_triggered(this);
+    }
 }

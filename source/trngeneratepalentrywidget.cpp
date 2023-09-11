@@ -73,5 +73,9 @@ void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 
 void TrnGeneratePalEntryWidget::on_deletePushButtonClicked()
 {
-    this->view->on_actionDelPalette_triggered(this);
+    TrnGenerateDialog *view = this->view;
+    if (view != nullptr) {
+        this->view = nullptr;
+        view->on_actionDelPalette_triggered(this);
+    }
 }
