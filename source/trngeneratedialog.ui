@@ -86,6 +86,50 @@
         </item>
        </widget>
       </item>
+      <item row="5" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Weights:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <layout class="QHBoxLayout">
+        <widget class="LineEditWidget" name="redWeightLineEdit">
+         <property name="charWidth">
+          <number>3</number>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+         <property name="text">
+          <string notr="true">3</string>
+         </property>
+        </widget>
+        <widget class="LineEditWidget" name="greenWeightLineEdit">
+         <property name="charWidth">
+          <number>3</number>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+         <property name="text">
+          <string notr="true">4</string>
+         </property>
+        </widget>
+        <widget class="LineEditWidget" name="blueWeightLineEdit">
+         <property name="charWidth">
+          <number>3</number>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+         <property name="text">
+          <string notr="true">2</string>
+         </property>
+        </widget>
+       </layout>
+      </item>
      </layout>
     </widget>
    </item>

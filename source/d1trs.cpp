@@ -282,13 +282,17 @@ static void MakeLightTableBase(const GenerateTrnParam &params)
     }
 }*/
 
+static double redWeight;
+static double greenWeight;
+static double blueWeight;
+static QColor targets[NUM_COLORS];
 static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
 {
     for (const PaletteColor &palColor : dynColors) {
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
-        int curr = currR * currR + currG * currG + currB * currB;
+        int curr = redWeight * currR * currR + greenWeight * currG * currG + blueWeight * currB * currB;
         palOptions[palColor.index()] = curr;
     }
 }
@@ -336,6 +340,9 @@ static BYTE selectColor(BYTE colorIdx, int shade, double stepsIn, bool deltaStep
         for (unsigned i = 0; i < NUM_COLORS; i++) {
             palOptions[i] = INT_MAX;
         }
+if (shade == 2) {
+	targets[colorIdx] = color;
+}
         getPalColor(dynPalColors, color, palOptions);
 
         options.push_back(palOptions);
@@ -419,13 +426,15 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
 
 void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns)
 {
-    // if (params.mode != DTYPE_NONE) {
-        // MakeLightTableBase(params);
-    //    MakeLightTableNew(params);
-    //} else {
-        // MakeLightTableNew(DTYPE_NONE);
-        MakeLightTableCustom(params);
-    // }
+    redWeight = params.redWeight;
+    greenWeight = params.greenWeight;
+    blueWeight = params.blueWeight;
+
+    MakeLightTableCustom(params);
+
+for (int i = 0; i < 128; i++) {
+	pal->setColor(i, targets[i + 128]);
+}
 
     QString filePath = QApplication::tr("Light%1.trn");
     for (int i = 0; i <= MAXDARKNESS; i++) {

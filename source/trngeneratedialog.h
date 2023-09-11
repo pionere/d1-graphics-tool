@@ -25,6 +25,9 @@ public:
     std::vector<GenerateTrnColor> colors;
     std::vector<D1Pal *> pals;
     int mode;
+    double redWeight;
+    double greenWeight;
+    double blueWeight;
 };
 
 namespace Ui {

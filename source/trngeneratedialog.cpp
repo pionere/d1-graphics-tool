@@ -261,6 +261,9 @@ void TrnGenerateDialog::on_generateButton_clicked()
     }
 
     params.mode = this->ui->levelTypeComboBox->currentIndex();
+    params.redWeight = this->ui->redWeightLineEdit->text()->toDouble();
+    params.greenWeight = this->ui->greenWeightLineEdit->text()->toDouble();
+    params.blueWeight = this->ui->blueWeightLineEdit->text()->toDouble();
 
     this->close();
 
