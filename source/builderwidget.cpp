@@ -171,7 +171,7 @@ int BuilderWidget::getOverlayType() const
 
 bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
 {
-    if (this->isHidden()) {
+    if (this->isHidden() || this->mode == BEM_SELECT) {
         return false;
     }
 
@@ -210,8 +210,6 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
     const QPoint cell = this->lastPos;
     int value, v;
     switch (this->mode) {
-    case BEM_SELECT:
-        return false;
     case BEM_TILE:
         value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
         if (value == this->dun->getTileAt(cell.x(), cell.y())) {
