@@ -29,7 +29,8 @@ void CelScene::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
         this->panning = true;
-        this->views()[0]->setCursor(Qt::OpenHandCursor);
+        // this->views()[0]->setCursor(Qt::OpenHandCursor);
+		view->setDragMode(QGraphicsView::ScrollHandDrag);
         return;
     }
     QGraphicsScene::keyPressEvent(event);
@@ -39,7 +40,8 @@ void CelScene::keyReleaseEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
         this->panning = false;
-        this->views()[0]->unsetCursor();
+        // this->views()[0]->unsetCursor();
+		view->setDragMode(QGraphicsView::NoDrag);
         return;
     }
     QGraphicsScene::keyReleaseEvent(event);
@@ -52,7 +54,7 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     }
 
     if (this->panning) {
-        QPointF currPos = event->pos();
+        /*QPointF currPos = event->pos();
         QGraphicsView *view = this->views()[0];
         if (this->leftMousePressed) {
             QPointF delta = currPos - this->lastPanPos;
@@ -63,7 +65,10 @@ dProgressErr() << QString("mouse pressed panning %1:%2 from %3:%4 to %5:%6").arg
             this->leftMousePressed = true;
             view->setCursor(Qt::ClosedHandCursor);
         }
-        this->lastPanPos = currPos;
+        this->lastPanPos = currPos;*/
+        if (!(flags & DOUBLE_CLICK)) {
+            QGraphicsScene::mousePressEvent(event);
+        }
         return;
     }
 
@@ -111,11 +116,12 @@ void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         if (this->panning) {
             this->panning = (event->modifiers() & Qt::ControlModifier) != 0;
             QGraphicsView *view = this->views()[0];
-            if (this->panning) {
+            /*if (this->panning) {
                 view->setCursor(Qt::OpenHandCursor);
             } else {
                 view->unsetCursor();
-            }
+            }*/
+			view->setDragMode(this->panning ? QGraphicsView::ScrollHandDrag : QGraphicsView::NoDrag);
         }
     }
     QGraphicsScene::mouseReleaseEvent(event);
@@ -151,6 +157,10 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+	if (this->panning) {
+		QGraphicsScene::mouseMoveEvent(event);
+		return;
+    }
     Qt::MouseButtons buttons = event->buttons();
     // simulate left click during drag
     // if (buttons != Qt::NoButton) {
