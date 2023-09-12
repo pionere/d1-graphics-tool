@@ -24,24 +24,24 @@ CelScene::CelScene(QWidget *v)
 {
 }
 
-void CelScene::keyPressEvent(QKeyEvent *keyEvent)
+void CelScene::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
         this->panning = true;
         this->views()[0]->setCursor(Qt::OpenHandCursor);
         return;
     }
-    QGraphicsScene::keyPressEvent(keyEvent);
+    QGraphicsScene::keyPressEvent(event);
 }
 
-void CelScene::keyReleaseEvent(QKeyEvent *keyEvent)
+void CelScene::keyReleaseEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
         this->panning = false;
-        this->unsetCursor();
+        this->views()[0]->unsetCursor();
         return;
     }
-    QGraphicsScene::keyReleaseEvent(keyEvent);
+    QGraphicsScene::keyReleaseEvent(event);
 }
 
 void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
@@ -61,7 +61,7 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
             this->leftMousePressed = true;
             view->setCursor(Qt::ClosedHandCursor);
         }
-        this->lastPos = currPos;
+        this->lastPanPos = currPos;
         return;
     }
 
