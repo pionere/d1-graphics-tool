@@ -348,6 +348,7 @@ private:
     quint16 dunviewPlayDelay = 50;
     int currentDunPosX = 0;
     int currentDunPosY = 0;
+    QPoint lastPos;
     int playTimer = 0;
     unsigned playCounter = 0;
 };

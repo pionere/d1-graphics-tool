@@ -332,12 +332,12 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
 
 void MainWindow::dunClicked(const QPoint &cell, int flags)
 {
+    if (this->builderWidget != nullptr && this->builderWidget->dunClicked(cell, flags)) {
+        return;
+    }
     // check if it is a valid position
     if (cell.x() < 0 || cell.x() >= this->dun->getWidth() || cell.y() < 0 || cell.y() >= this->dun->getHeight()) {
         // no target hit -> ignore
-        return;
-    }
-    if (this->builderWidget != nullptr && this->builderWidget->dunClicked(cell, flags)) {
         return;
     }
     // Set dungeon location

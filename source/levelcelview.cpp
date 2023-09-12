@@ -689,6 +689,9 @@ void LevelCelView::selectPos(const QPoint &cell, int flags)
     this->updateFields();
 
     if (flags & DOUBLE_CLICK) {
+        view->scrollToCurrent();
+    }
+    if (flags & SHIFT_CLICK) {
         int tileRef = this->dun->getTileAt(cell.x(), cell.y());
         int subtileRef = this->dun->getSubtileAt(cell.x(), cell.y());
         bool switchView = false;

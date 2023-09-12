@@ -38,12 +38,6 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     }
     this->lastPos = currPos;
 
-    if (event->flags() & Qt::MouseEventCreatedDoubleClick) {
-dProgressErr() << "Event with dblClick";
-        flags |= DOUBLE_CLICK;
-    } else {
-dProgressErr() << "Event without dblClick";
-    }
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
         flags |= SHIFT_CLICK;
     }
@@ -73,7 +67,7 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-dProgressErr() << "DblClick event";
+    this->mouseEvent(event, FIRST_CLICK | DOUBLE_CLICK);
 }
 
 void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
@@ -101,8 +95,15 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->buttons() != Qt::NoButton) {
+    Qt::MouseButtons buttons = event->buttons();
+    // simulate left click during drag
+    // if (buttons != Qt::NoButton) {
+    if (buttons & Qt::LeftButton) {
         this->mouseEvent(event, 0);
+    }
+    // let the user drag the dungeon with right-click
+    if (buttons & Qt::RightButton) {
+        QGraphicsSceneMouseEvent::mouseMoveEvent(event);
     }
     this->mouseHoverEvent(event);
 }

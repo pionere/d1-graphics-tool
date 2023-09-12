@@ -171,7 +171,7 @@ int BuilderWidget::getOverlayType() const
 
 bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
 {
-    if (this->isHidden()) {
+    if (this->isHidden() || this->mode == BEM_SELECT) {
         return false;
     }
 
@@ -208,10 +208,9 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
 
     // calculate the value (reset value if it is the same as before)
     const QPoint cell = this->lastPos;
-    int value, v;
+    int value = 0, v;
+    if (cell.x() >= 0 && cell.x() < this->dun->getWidth() && cell.y() >= 0 && cell.y() >= this->dun->getHeight()) {
     switch (this->mode) {
-    case BEM_SELECT:
-        return false;
     case BEM_TILE:
         value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
         if (value == this->dun->getTileAt(cell.x(), cell.y())) {
@@ -265,6 +264,17 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
             value = 0;
         }
         break;
+    }
+    }
+
+    // filter the positions
+    for (auto it = modValues.begin(); it != modValues.end(); ) {
+        const DunPos &dp = *it;
+        if (dp.x() >= 0 && dp.x() < this->dun->getWidth() && dp.y() >= 0 && dp.y() >= this->dun->getHeight()) {
+            it++;
+        } else {
+            it = modValues.erase(it);
+        }
     }
 
     // set values
