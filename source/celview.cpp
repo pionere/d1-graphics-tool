@@ -103,7 +103,7 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     // let the user drag the dungeon with right-click
     if (buttons & Qt::RightButton) {
-        QGraphicsSceneMouseEvent::mouseMoveEvent(event);
+        QGraphicsScene::mouseMoveEvent(event);
     }
     this->mouseHoverEvent(event);
 }

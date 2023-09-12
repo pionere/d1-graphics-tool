@@ -270,7 +270,7 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
     // filter the positions
     for (auto it = modValues.begin(); it != modValues.end(); ) {
         const DunPos &dp = *it;
-        if (dp.x() >= 0 && dp.x() < this->dun->getWidth() && dp.y() >= 0 && dp.y() >= this->dun->getHeight()) {
+        if (dp.cellX >= 0 && dp.cellX < this->dun->getWidth() && dp.cellY >= 0 && dp.cellY >= this->dun->getHeight()) {
             it++;
         } else {
             it = modValues.erase(it);
