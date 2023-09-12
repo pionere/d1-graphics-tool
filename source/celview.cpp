@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QScrollBar>
 
 #include "config.h"
 #include "d1pcx.h"
