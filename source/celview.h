@@ -51,7 +51,9 @@ private:
     void mouseHoverEvent(QGraphicsSceneMouseEvent *event);
 
 private slots:
+    void keyPressEvent(QKeyEvent *keyEvent) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
@@ -65,6 +67,8 @@ signals:
 private:
     quint8 currentZoomNumerator = 1;
     quint8 currentZoomDenominator = 1;
+    bool panning = false;
+    bool leftMousePressed = false;
     QPoint lastPos;
 };
 

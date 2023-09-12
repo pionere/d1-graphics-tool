@@ -24,11 +24,48 @@ CelScene::CelScene(QWidget *v)
 {
 }
 
+void CelScene::keyPressEvent(QKeyEvent *keyEvent)
+{
+    if (event.key() == Qt.Key_Control && !this->leftMousePressed) {
+        this->panning = true;
+        this->views[0]->setCursor(Qt::OpenHandCursor);
+        return;
+    }
+    QGraphicsScene::keyPressEvent(keyEvent);
+}
+
+void CelScene::keyReleaseEvent(QKeyEvent *keyEvent)
+{
+    if (event.key() == Qt.Key_Control && !this->leftMousePressed) {
+        this->panning = false;
+        this->unsetCursor();
+        return;
+    }
+    QGraphicsScene::keyReleaseEvent(keyEvent);
+}
+
 void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
 {
     if (!(event->buttons() & Qt::LeftButton)) {
         return;
     }
+
+    if (this->panning) {
+        QPoint currPos = event->pos();
+        QGraphicsView *view = this->views[0];
+        if (this->leftMousePressed) {
+            QPoint delta = currPos - this->lastPos;
+            view->horizontalScrollBar().setValue(view->horizontalScrollBar().value() - delta.x());
+            view->verticalScrollBar().setValue(view->verticalScrollBar().value() - delta.y());
+        } else {
+            this->leftMousePressed = true;
+            view->setCursor(Qt::ClosedHandCursor);
+        }
+        this->lastPos = currPos;
+        return;
+    }
+
+    this->leftMousePressed = true;
 
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());
@@ -63,6 +100,23 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
 void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     this->mouseEvent(event, FIRST_CLICK);
+}
+
+void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->buttons() & Qt::LeftButton) {
+        this->leftMousePressed = false;
+        if (this->panning) {
+            this->panning = (event->modifiers() & Qt::ControlModifier) != 0;
+            QGraphicsView *view = this->views[0];
+            if (this->panning) {
+                view->setCursor(Qt::OpenHandCursor);
+            } else {
+                view->unsetCursor();
+            }
+        }
+    }
+    QGraphicsScene::mouseReleaseEvent(event);
 }
 
 void CelScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -100,10 +154,6 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     // if (buttons != Qt::NoButton) {
     if (buttons & Qt::LeftButton) {
         this->mouseEvent(event, 0);
-    }
-    // let the user drag the dungeon with right-click
-    if (buttons & Qt::RightButton) {
-        QGraphicsScene::mouseMoveEvent(event);
     }
     this->mouseHoverEvent(event);
 }
