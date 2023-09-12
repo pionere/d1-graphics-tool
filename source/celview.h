@@ -52,6 +52,7 @@ private:
 
 private slots:
     void keyPressEvent(QKeyEvent *keyEvent) override;
+    void keyReleaseEvent(QKeyEvent *keyEvent) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;

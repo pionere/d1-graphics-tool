@@ -26,9 +26,9 @@ CelScene::CelScene(QWidget *v)
 
 void CelScene::keyPressEvent(QKeyEvent *keyEvent)
 {
-    if (event.key() == Qt.Key_Control && !this->leftMousePressed) {
+    if (event->key() == Qt.Key_Control && !this->leftMousePressed) {
         this->panning = true;
-        this->views[0]->setCursor(Qt::OpenHandCursor);
+        this->views()[0]->setCursor(Qt::OpenHandCursor);
         return;
     }
     QGraphicsScene::keyPressEvent(keyEvent);
@@ -36,7 +36,7 @@ void CelScene::keyPressEvent(QKeyEvent *keyEvent)
 
 void CelScene::keyReleaseEvent(QKeyEvent *keyEvent)
 {
-    if (event.key() == Qt.Key_Control && !this->leftMousePressed) {
+    if (event->key() == Qt.Key_Control && !this->leftMousePressed) {
         this->panning = false;
         this->unsetCursor();
         return;
@@ -52,7 +52,7 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
 
     if (this->panning) {
         QPoint currPos = event->pos();
-        QGraphicsView *view = this->views[0];
+        QGraphicsView *view = this->views()[0];
         if (this->leftMousePressed) {
             QPoint delta = currPos - this->lastPos;
             view->horizontalScrollBar().setValue(view->horizontalScrollBar().value() - delta.x());
@@ -108,7 +108,7 @@ void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         this->leftMousePressed = false;
         if (this->panning) {
             this->panning = (event->modifiers() & Qt::ControlModifier) != 0;
-            QGraphicsView *view = this->views[0];
+            QGraphicsView *view = this->views()[0];
             if (this->panning) {
                 view->setCursor(Qt::OpenHandCursor);
             } else {
