@@ -55,8 +55,8 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
         QGraphicsView *view = this->views()[0];
         if (this->leftMousePressed) {
             QPointF delta = currPos - this->lastPanPos;
-            view->horizontalScrollBar().setValue(view->horizontalScrollBar().value() - delta.x());
-            view->verticalScrollBar().setValue(view->verticalScrollBar().value() - delta.y());
+            view->horizontalScrollBar()->setValue(view->horizontalScrollBar()->value() - delta.x());
+            view->verticalScrollBar()->setValue(view->verticalScrollBar()->value() - delta.y());
         } else {
             this->leftMousePressed = true;
             view->setCursor(Qt::ClosedHandCursor);
