@@ -85,7 +85,7 @@ private:
     void redrawOverlay(bool forceRedraw);
 
 public slots:
-    bool dunClicked(const QPoint &cell, bool first);
+    bool dunClicked(const QPoint &cell, int flags);
     void dunHovered(const QPoint &cell);
     void colorModified();
     void dunResourcesModified();

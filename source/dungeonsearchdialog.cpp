@@ -213,8 +213,7 @@ void DungeonSearchDialog::search(bool next)
         view->displayFrame();
     }
     if (matchIdx != -1 && params.scrollTo) {
-        view->selectPos(matches[matchIdx]);
-        view->scrollToCurrent();
+        view->selectPos(matches[matchIdx], DOUBLE_CLICK);
     }
     if (popup) {
         QMessageBox::warning(this, "Warning", "Not found.");

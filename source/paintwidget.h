@@ -63,7 +63,7 @@ private:
     void selectArea(const QRect &area);
 
 public slots:
-    bool frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
+    bool frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);
     void selectColor(const D1GfxPixel &pixel);
     void palColorsSelected(const std::vector<quint8> &indices);
     void colorModified();

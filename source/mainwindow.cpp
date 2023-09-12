@@ -313,9 +313,9 @@ bool MainWindow::loadBaseTrn(const QString &path)
     return true;
 }
 
-void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
+void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
 {
-    if (this->paintWidget->frameClicked(frame, pos, first)) {
+    if (this->paintWidget->frameClicked(frame, pos, flags)) {
         return;
     }
     // picking
@@ -330,18 +330,18 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
     this->trnBaseWidget->selectColor(pixel);
 }
 
-void MainWindow::dunClicked(const QPoint &cell, bool first)
+void MainWindow::dunClicked(const QPoint &cell, int flags)
 {
     // check if it is a valid position
     if (cell.x() < 0 || cell.x() >= this->dun->getWidth() || cell.y() < 0 || cell.y() >= this->dun->getHeight()) {
         // no target hit -> ignore
         return;
     }
-    if (this->builderWidget != nullptr && this->builderWidget->dunClicked(cell, first)) {
+    if (this->builderWidget != nullptr && this->builderWidget->dunClicked(cell, flags)) {
         return;
     }
     // Set dungeon location
-    this->levelCelView->selectPos(cell);
+    this->levelCelView->selectPos(cell, flags);
 }
 
 void MainWindow::dunHovered(const QPoint &cell)

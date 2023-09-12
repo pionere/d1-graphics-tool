@@ -504,7 +504,7 @@ void PaintWidget::selectArea(const QRect &area)
     this->rubberBand->show();
 }
 
-bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
+bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
 {
     if (this->isHidden()) {
         return false;
@@ -514,7 +514,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
 
     if (this->ui->selectModeRadioButton->isChecked()) {
         // select mode
-        if (first) {
+        if (flags & FIRST_CLICK) {
             if (this->rubberBand && this->selectionMoveMode != 1) {
                 QPoint globalCursorPos = QCursor::pos();
                 QRect rubberBandRect = this->rubberBand->geometry();
@@ -628,7 +628,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         void (PaintWidget::*roundCollectorFunc)(int, int, int, std::vector<FramePixel> &) = &PaintWidget::collectPixelsRound;
         auto collectorFunc = this->ui->squareShapeRadioButton->isChecked() ? squareCollectorFunc : roundCollectorFunc;
 
-        if (first) {
+        if (flags & FIRST_CLICK) {
             this->distance = 0;
             (this->*collectorFunc)(destPos.x(), destPos.y(), this->distance, allPixels);
         } else {

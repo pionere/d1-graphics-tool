@@ -40,7 +40,7 @@ public:
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
 
-    void framePixelClicked(const QPoint &pos, bool first);
+    void framePixelClicked(const QPoint &pos, int flags);
     void framePixelHovered(const QPoint &pos);
     void createFrame(bool append);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
