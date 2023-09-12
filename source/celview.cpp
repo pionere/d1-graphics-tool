@@ -32,7 +32,6 @@ void CelScene::keyPressEvent(QKeyEvent *event)
         this->views()[0]->setCursor(Qt::OpenHandCursor);
         return;
     }
-dProgressErr() << QString("pressed %1 mouse pressed %2").arg(event->key()).arg(this->leftMousePressed);
     QGraphicsScene::keyPressEvent(event);
 }
 
@@ -53,11 +52,11 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     }
 
     if (this->panning) {
-dProgressErr() << QString("mouse pressed panning:%1").arg(this->leftMousePressed);
         QPointF currPos = event->pos();
         QGraphicsView *view = this->views()[0];
         if (this->leftMousePressed) {
             QPointF delta = currPos - this->lastPanPos;
+dProgressErr() << QString("mouse pressed panning %1:%2 from %3:%4 to %5:%6").arg(delta.x()).arg(delta.y()).arg(this->lastPanPos.x()).arg(this->lastPanPos.y()).arg(currPos.x()).arg(currPos.y());
             view->horizontalScrollBar()->setValue(view->horizontalScrollBar()->value() - delta.x());
             view->verticalScrollBar()->setValue(view->verticalScrollBar()->value() - delta.y());
         } else {
@@ -69,7 +68,6 @@ dProgressErr() << QString("mouse pressed panning:%1").arg(this->leftMousePressed
     }
 
     this->leftMousePressed = true;
-dProgressErr() << QString("mouse pressed flags:%1").arg(flags);
 
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());
@@ -109,7 +107,6 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-dProgressErr() << QString("mouse de-pressed");
         this->leftMousePressed = false;
         if (this->panning) {
             this->panning = (event->modifiers() & Qt::ControlModifier) != 0;
@@ -121,7 +118,6 @@ dProgressErr() << QString("mouse de-pressed");
             }
         }
     }
-dProgressErr() << QString("mouse de-pressed non-left");
     QGraphicsScene::mouseReleaseEvent(event);
 }
 
