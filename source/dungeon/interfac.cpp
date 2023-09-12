@@ -231,8 +231,6 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 		GetLevelMTypes(); // select monster types and load their fx
 		InitThemes();     // select theme types
 		IncProgress();
-		InitObjectGFX();  // load object graphics
-		IncProgress();
 		HoldThemeRooms(); // protect themes with dFlags
 		InitMonsters();   // place monsters
 	} else {
@@ -240,11 +238,11 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
 		// SetRndSeed(seed);
 		IncProgress();
-		InitObjectGFX();  // load object graphics
-		IncProgress();
 
 //		InitTowners();
 	}
+	IncProgress();
+	InitObjectGFX();    // load object graphics
 	IncProgress();
 	InitObjects();      // place objects
 	InitItems();        // place items

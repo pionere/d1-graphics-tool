@@ -108,7 +108,7 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->buttons() & Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton) {
 dProgressErr() << QString("mouse de-pressed");
         this->leftMousePressed = false;
         if (this->panning) {
