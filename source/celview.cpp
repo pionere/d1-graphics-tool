@@ -30,7 +30,7 @@ void CelScene::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
         this->panning = true;
         // this->views()[0]->setCursor(Qt::OpenHandCursor);
-		view->setDragMode(QGraphicsView::ScrollHandDrag);
+		this->views()[0]->setDragMode(QGraphicsView::ScrollHandDrag);
         return;
     }
     QGraphicsScene::keyPressEvent(event);
@@ -41,7 +41,7 @@ void CelScene::keyReleaseEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
         this->panning = false;
         // this->views()[0]->unsetCursor();
-		view->setDragMode(QGraphicsView::NoDrag);
+		this->views()[0]->setDragMode(QGraphicsView::NoDrag);
         return;
     }
     QGraphicsScene::keyReleaseEvent(event);
