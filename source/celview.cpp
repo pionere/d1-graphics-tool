@@ -32,6 +32,7 @@ void CelScene::keyPressEvent(QKeyEvent *event)
         this->views()[0]->setCursor(Qt::OpenHandCursor);
         return;
     }
+dProgressErr() << QString("pressed %1 mouse pressed %2").arg(event->key()).arg(this->leftMousePressed);
     QGraphicsScene::keyPressEvent(event);
 }
 
