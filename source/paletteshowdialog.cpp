@@ -49,7 +49,7 @@ int getColorDistance(QColor colorA, QColor colorB)
 void PaletteShowDialog::displayFrame()
 {
     QString path = this->ui->pathComboBox->currentData().value<QString>();
-    const QImage *c = this->images[path];
+    const QImage *baseImage = this->images[path];
     QImage palFrame = *baseImage;
 
     // select pixels
