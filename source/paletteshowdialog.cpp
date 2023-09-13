@@ -49,10 +49,11 @@ int getColorDistance(QColor colorA, QColor colorB)
 void PaletteShowDialog::displayFrame()
 {
     QString path = this->ui->pathComboBox->currentData().value<QString>();
-    QImage palFrame = *this->images[path];
+    const QImage *c = this->images[path];
+    QImage palFrame = *baseImage;
 
     // select pixels
-    QColor color = pal->getUndefinedColor();
+    const QColor color = pal->getUndefinedColor();
     for (int i = 0; i < NUM_COLORS; i++) {
         QColor palColor = pal->getColor(i);
         if (palColor == color) {
@@ -60,8 +61,8 @@ void PaletteShowDialog::displayFrame()
         }
         int pos = -1;
         int dist = 0;
-        QRgb *bits = reinterpret_cast<QRgb *>(image.bits());
-        for (int n = 0; i < image.width() * image.height(); i++) {
+        const QRgb *bits = reinterpret_cast<QRgb *>(baseImage->bits());
+        for (int n = 0; i < baseImage->width() * baseImage->height(); i++) {
             if (qAlpha(bits[n]) != 255) {
                 continue; // ignore non-opaque pixels
             }
@@ -75,7 +76,7 @@ void PaletteShowDialog::displayFrame()
             dProgressWarn() << tr("Non opaque pixels are ignored.");
             break; // only non-opaque pixels -> skip
         }
-        bits[pos] = color;
+        palFrame.bits()[pos] = color.rgba();
     }
 
     this->palScene.setBackgroundBrush(QColor(Qt::transparent));

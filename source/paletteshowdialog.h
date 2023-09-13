@@ -3,6 +3,7 @@
 #include <QDialog>
 #include <QMap>
 
+#include "celview.h"
 #include "d1pal.h"
 
 namespace Ui {
@@ -24,6 +25,7 @@ public:
 
 private:
     void displayFrame();
+    void updatePathComboBoxOptions(const QList<QString> &options, const QString &selectedOption);
 
 private slots:
     void on_openPushButtonClicked();
@@ -35,7 +37,7 @@ private slots:
 
 private:
     Ui::PaletteShowDialog *ui;
-    CelScene celScene = CelScene(this);
+    CelScene palScene = CelScene(this);
 
     D1Pal *pal;
     QMap<QString, QImage *> images;
