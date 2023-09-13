@@ -303,7 +303,7 @@ static void getPalColorQuad(const std::vector<PaletteColor> &dynColors, QColor c
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
-        double curr = currR * currR * currR * currR + currG * currG * currG * currG + currB * currB * currB * currB;
+        double curr = ((double)currR) * currR * currR * currR + ((double)currG) * currG * currG * currG + ((double))currB) * currB * currB * currB;
         palOptions[palColor.index()] = sqrt(curr);
     }
 }

@@ -23,7 +23,7 @@ PaletteShowDialog::PaletteShowDialog(QWidget *parent)
     QHBoxLayout *layout = this->ui->imageHBoxLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteShowDialog::on_openPushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteShowDialog::on_closePushButtonClicked);
-    layout->addSpacerItem(new QSpacerItem(0, 0));
+    layout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding));
 
     this->images[PaletteShowDialog::WHEEL_PATH] = loadImageARGB32(PaletteShowDialog::WHEEL_PATH);
     this->images[PaletteShowDialog::CIE_PATH] = loadImageARGB32(PaletteShowDialog::CIE_PATH);
@@ -87,6 +87,10 @@ void PaletteShowDialog::displayFrame()
 			QColor c1 = QColor(bits[baseImage->width() * baseImage->height() / 2 + baseImage->width() / 2]);
             dProgressWarn() << tr("Non opaque pixels are ignored. Width %1 Height %2. Alpha %3 vs %4 name: %5 vs %6").arg(baseImage->width()).arg(baseImage->height()).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name());
             break; // only non-opaque pixels -> skip
+        } else if (i == 1) {
+			QColor c0 = baseImage->pixelColor(n % baseImage->width(), n / baseImage->width());
+			QColor c1 = QColor(bits[n]);
+            dProgressWarn() << tr("Best dist %1 at %2 Alpha %3 vs %4 name: %5 vs %6 xy %7:%8").arg(dist).arg(n).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name()).arg(n % baseImage->width()).arg(n / baseImage->width());
         }
         palFrame.bits()[pos] = color.rgba();
     }
