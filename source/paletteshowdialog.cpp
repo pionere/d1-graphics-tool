@@ -13,9 +13,10 @@ PaletteShowDialog::PaletteShowDialog(QWidget *parent)
     this->ui->palGraphicsView->setScene(&this->palScene);
 
 
-    QLayout *layout = this->ui->imageHBoxLayout;
+    QHBoxLayout *layout = this->ui->imageHBoxLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteShowDialog::on_openPushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteShowDialog::on_closePushButtonClicked);
+    layout->addSpacerItem(new QSpacerItem(0, 0));
 
     this->images[PaletteShowDialog::WHEEL_PATH] = new QImage(PaletteShowDialog::WHEEL_PATH);
     this->images[PaletteShowDialog::CIE_PATH] = new QImage(PaletteShowDialog::CIE_PATH);
@@ -50,7 +51,7 @@ void PaletteShowDialog::displayFrame()
 {
     QString path = this->ui->pathComboBox->currentData().value<QString>();
     const QImage *baseImage = this->images[path];
-    QImage palFrame = *baseImage;
+    QImage palFrame = baseImage->copy();
 
     // select pixels
     const QColor color = pal->getUndefinedColor();
@@ -73,7 +74,7 @@ void PaletteShowDialog::displayFrame()
             }
         }
         if (pos == -1) {
-            dProgressWarn() << tr("Non opaque pixels are ignored.");
+            dProgressWarn() << tr("Non opaque pixels are ignored. Width %1 Height %2 alpha %3").arg(baseImage->width()).arg(baseImage->height()).arg(qAlpha(bits[baseImage->width() * baseImage->height() / 2 + baseImage->width() / 2]);
             break; // only non-opaque pixels -> skip
         }
         palFrame.bits()[pos] = color.rgba();
@@ -169,6 +170,14 @@ void PaletteShowDialog::on_closePushButtonClicked()
     delete image;
 
     this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::WHEEL_PATH);
+    // update the view
+    this->displayFrame();
+}
+
+void PaletteShowDialog::on_pathComboBox_activated(int index)
+{
+    const QList<QString> &options = this->images.keys();
+    this->updatePathComboBoxOptions(options, options[index]);
     // update the view
     this->displayFrame();
 }

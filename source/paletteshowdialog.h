@@ -30,6 +30,8 @@ private:
 private slots:
     void on_openPushButtonClicked();
     void on_closePushButtonClicked();
+    void on_pathComboBox_activated(int index);
+
     void on_closeButton_clicked();
 
     // this event is called, when a new translator is loaded or the system language is changed
