@@ -74,7 +74,7 @@ void PaletteShowDialog::displayFrame()
             }
         }
         if (pos == -1) {
-            dProgressWarn() << tr("Non opaque pixels are ignored. Width %1 Height %2 alpha %3").arg(baseImage->width()).arg(baseImage->height()).arg(qAlpha(bits[baseImage->width() * baseImage->height() / 2 + baseImage->width() / 2]);
+            dProgressWarn() << tr("Non opaque pixels are ignored. Width %1 Height %2 alpha %3").arg(baseImage->width()).arg(baseImage->height()).arg(qAlpha(bits[baseImage->width() * baseImage->height() / 2 + baseImage->width() / 2]));
             break; // only non-opaque pixels -> skip
         }
         palFrame.bits()[pos] = color.rgba();
