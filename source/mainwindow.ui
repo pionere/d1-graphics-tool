@@ -305,6 +305,7 @@
     <addaction name="menuTrnSet"/>
     <addaction name="separator"/>
     <addaction name="actionRemap_Colors"/>
+    <addaction name="actionDisplay_Colors"/>
    </widget>
    <widget class="QMenu" name="menuTasks">
     <property name="toolTipsVisible">
@@ -1145,6 +1146,14 @@
    </property>
    <property name="toolTip">
     <string>Replace colors of the graphics with another colors from the palette or with transparent pixels</string>
+   </property>
+  </action>
+  <action name="actionDisplay_Colors">
+   <property name="text">
+    <string>Display Colors</string>
+   </property>
+   <property name="toolTip">
+    <string>Show palette colors on a chart</string>
    </property>
   </action>
   <action name="actionGenTrns_Colors">

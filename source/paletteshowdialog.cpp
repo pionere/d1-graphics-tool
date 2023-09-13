@@ -1,0 +1,186 @@
+#include "paletteshowdialog.h"
+
+#include "mainwindow.h"
+#include "progressdialog.h"
+#include "pushbuttonwidget.h"
+#include "ui_paletteshowdialog.h"
+
+PaletteShowDialog::PaletteShowDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::PaletteShowDialog())
+{
+    this->ui->setupUi(this);
+    this->ui->palGraphicsView->setScene(&this->palScene);
+
+
+    QLayout *layout = this->ui->imageHBoxLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteShowDialog::on_openPushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteShowDialog::on_closePushButtonClicked);
+
+    this->images[PaletteShowDialog::WHEEL_PATH] = new QImage(PaletteShowDialog::WHEEL_PATH);
+    this->images[PaletteShowDialog::CIE_PATH] = new QImage(PaletteShowDialog::CIE_PATH);
+    this->images[PaletteShowDialog::CIEXY_PATH] = new QImage(PaletteShowDialog::CIEXY_PATH);
+
+    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::WHEEL_PATH);
+}
+
+PaletteShowDialog::~PaletteShowDialog()
+{
+    delete ui;
+    qDeleteAll(this->images);
+    this->images.clear();
+}
+
+void PaletteShowDialog::initialize(D1Pal *p)
+{
+    this->pal = p;
+
+    this->displayFrame();
+}
+
+int getColorDistance(QColor colorA, QColor colorB)
+{
+    int currR = colorA.red() - colorB.red();
+    int currG = colorA.green() - colorB.green();
+    int currB = colorA.blue() - colorB.blue();
+    return currR * currR + currG * currG + currB * currB;
+}
+
+void PaletteShowDialog::displayFrame()
+{
+    QString path = this->ui->pathComboBox->currentData().value<QString>();
+    QImage palFrame = *this->images[path];
+
+    // select pixels
+    QColor color = pal->getUndefinedColor();
+    for (int i = 0; i < NUM_COLORS; i++) {
+        QColor palColor = pal->getColor(i);
+        if (palColor == color) {
+            continue;
+        }
+        int pos = -1;
+        int dist = 0;
+        QRgb *bits = reinterpret_cast<QRgb *>(image.bits());
+        for (int n = 0; i < image.width() * image.height(); i++) {
+            if (qAlpha(bits[n]) != 255) {
+                continue; // ignore non-opaque pixels
+            }
+            int cd = getColorDistance(palColor, QColor(bits[n]));
+            if (pos == -1 || cd < dist) {
+                pos = n;
+                dist = cd;
+            }
+        }
+        if (pos == -1) {
+            dProgressWarn() << tr("Non opaque pixels are ignored.");
+            break; // only non-opaque pixels -> skip
+        }
+        bits[pos] = color;
+    }
+
+    this->palScene.setBackgroundBrush(QColor(Qt::transparent));
+
+    // Resize the scene rectangle to include some padding around the CEL frame
+    this->palScene.setSceneRect(0, 0,
+        CEL_SCENE_MARGIN + palFrame.width() + CEL_SCENE_MARGIN,
+        CEL_SCENE_MARGIN + palFrame.height() + CEL_SCENE_MARGIN);
+    // ui->palGraphicsView->adjustSize();
+
+    this->palScene.addPixmap(QPixmap::fromImage(palFrame))
+        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+}
+
+void PaletteShowDialog::updatePathComboBoxOptions(const QList<QString> &options, const QString &selectedOption)
+{
+    QComboBox *pcb = this->ui->pathComboBox;
+
+    pcb->clear();
+    int idx = 0;
+    // add built-in options
+    for (const QString &option : options) {
+        if (!MainWindow::isResourcePath(option))
+            continue;
+        QString name;
+        if (option == PaletteShowDialog::WHEEL_PATH) {
+            name = tr("RGB Wheel");
+        } else if (option ==  PaletteShowDialog::CIE_PATH) {
+            name = tr("CIE Chromaticity");
+        } else {
+            name = tr("CIExy Chromaticity"); // TODO: check if PaletteShowDialog::CIEXY_PATH?
+        }
+        pcb->addItem(name, option);
+        if (selectedOption == option) {
+            pcb->setCurrentIndex(idx);
+            pcb->setToolTip(option);
+        }
+        idx++;
+    }
+    // add user-specific options
+    for (const QString &option : options) {
+        if (MainWindow::isResourcePath(option))
+            continue;
+        QFileInfo fileInfo(option);
+        QString name = fileInfo.fileName();
+        pcb->addItem(name, option);
+        if (selectedOption == option) {
+            pcb->setCurrentIndex(idx);
+            pcb->setToolTip(option);
+        }
+        idx++;
+    }
+}
+
+void PaletteShowDialog::on_openPushButtonClicked()
+{
+    QStringList allSupportedFormats;
+    MainWindow::supportedImageFormats(allSupportedFormats);
+
+    QString filter = tr("Image files (%1)").arg(allSupportedFormats.join(' '));
+    QString imageFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Image File"), filter.toLatin1().data());
+
+    if (imageFilePath.isEmpty()) {
+        return;
+    }
+
+    QImage *image = new QImage(imageFilePath);
+    if (image->isNull()) {
+        dProgressErr() << tr("Failed loading image file: %1.").arg(QDir::toNativeSeparators(imageFilePath));
+        return;
+    }
+    if (this->images.contains(imageFilePath)) {
+        QImage *prevImage = this->images.take(imageFilePath);
+        delete prevImage;
+    }
+    this->images[imageFilePath] = image;
+    this->updatePathComboBoxOptions(this->images.keys(), imageFilePath);
+    // update the view
+    this->displayFrame();
+}
+
+void PaletteShowDialog::on_closePushButtonClicked()
+{
+    QString path = this->ui->pathComboBox->currentData().value<QString>();
+    if (MainWindow::isResourcePath(path)) {
+        return;
+    }
+
+    QImage *image = this->images.take(path);
+    delete image;
+
+    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::WHEEL_PATH);
+    // update the view
+    this->displayFrame();
+}
+
+void PaletteShowDialog::on_closeButton_clicked()
+{
+    this->close();
+}
+
+void PaletteShowDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+    }
+    QDialog::changeEvent(event);
+}
