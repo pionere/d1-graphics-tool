@@ -61,7 +61,7 @@ void PaletteShowDialog::displayFrame()
         }
         int pos = -1;
         int dist = 0;
-        const QRgb *bits = reinterpret_cast<QRgb *>(baseImage->bits());
+        const QRgb *bits = reinterpret_cast<const QRgb *>(baseImage->bits());
         for (int n = 0; i < baseImage->width() * baseImage->height(); i++) {
             if (qAlpha(bits[n]) != 255) {
                 continue; // ignore non-opaque pixels
