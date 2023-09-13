@@ -24,11 +24,40 @@ CelScene::CelScene(QWidget *v)
 {
 }
 
+void CelScene::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
+        this->panning = true;
+        this->views()[0]->setDragMode(QGraphicsView::ScrollHandDrag);
+        return;
+    }
+    QGraphicsScene::keyPressEvent(event);
+}
+
+void CelScene::keyReleaseEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
+        this->panning = false;
+        this->views()[0]->setDragMode(QGraphicsView::NoDrag);
+        return;
+    }
+    QGraphicsScene::keyReleaseEvent(event);
+}
+
 void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
 {
     if (!(event->buttons() & Qt::LeftButton)) {
         return;
     }
+
+    if (this->panning) {
+        if (!(flags & DOUBLE_CLICK)) {
+            QGraphicsScene::mousePressEvent(event);
+        }
+        return;
+    }
+
+    this->leftMousePressed = true;
 
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());
@@ -65,6 +94,18 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     this->mouseEvent(event, FIRST_CLICK);
 }
 
+void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        this->leftMousePressed = false;
+        if (this->panning) {
+            this->panning = (event->modifiers() & Qt::ControlModifier) != 0;
+            this->views()[0]->setDragMode(this->panning ? QGraphicsView::ScrollHandDrag : QGraphicsView::NoDrag);
+        }
+    }
+    QGraphicsScene::mouseReleaseEvent(event);
+}
+
 void CelScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     this->mouseEvent(event, FIRST_CLICK | DOUBLE_CLICK);
@@ -95,6 +136,10 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (this->panning) {
+        QGraphicsScene::mouseMoveEvent(event);
+        return;
+    }
     if (event->buttons() != Qt::NoButton) {
         this->mouseEvent(event, false);
     }
