@@ -5,6 +5,13 @@
 #include "pushbuttonwidget.h"
 #include "ui_paletteshowdialog.h"
 
+static QImage *loadImageARGB32(const QString &path)
+{
+    QImage *image = new QImage(path);
+    image->convertTo(QImage::Format_ARGB32_Premultiplied);
+    return image;
+}
+
 PaletteShowDialog::PaletteShowDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::PaletteShowDialog())
@@ -18,9 +25,9 @@ PaletteShowDialog::PaletteShowDialog(QWidget *parent)
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteShowDialog::on_closePushButtonClicked);
     layout->addSpacerItem(new QSpacerItem(0, 0));
 
-    this->images[PaletteShowDialog::WHEEL_PATH] = new QImage(PaletteShowDialog::WHEEL_PATH);
-    this->images[PaletteShowDialog::CIE_PATH] = new QImage(PaletteShowDialog::CIE_PATH);
-    this->images[PaletteShowDialog::CIEXY_PATH] = new QImage(PaletteShowDialog::CIEXY_PATH);
+    this->images[PaletteShowDialog::WHEEL_PATH] = loadImageARGB32(PaletteShowDialog::WHEEL_PATH);
+    this->images[PaletteShowDialog::CIE_PATH] = loadImageARGB32(PaletteShowDialog::CIE_PATH);
+    this->images[PaletteShowDialog::CIEXY_PATH] = loadImageARGB32(PaletteShowDialog::CIEXY_PATH);
 
     this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::WHEEL_PATH);
 }
@@ -78,7 +85,7 @@ void PaletteShowDialog::displayFrame()
         if (pos == -1) {
 			QColor c0 = baseImage->pixelColor(baseImage->width() / 2, baseImage->height() / 2);
 			QColor c1 = QColor(bits[baseImage->width() * baseImage->height() / 2 + baseImage->width() / 2]);
-            dProgressWarn() << tr("Non opaque pixels are ignored. Width %1 Height %2. Alpha %3 vs %4 name: %5 vs %6").arg(baseImage->width()).arg(baseImage->height()).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name()));
+            dProgressWarn() << tr("Non opaque pixels are ignored. Width %1 Height %2. Alpha %3 vs %4 name: %5 vs %6").arg(baseImage->width()).arg(baseImage->height()).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name());
             break; // only non-opaque pixels -> skip
         }
         palFrame.bits()[pos] = color.rgba();
@@ -148,7 +155,7 @@ void PaletteShowDialog::on_openPushButtonClicked()
         return;
     }
 
-    QImage *image = new QImage(imageFilePath);
+    QImage *image = loadImageARGB32(imageFilePath);
     if (image->isNull()) {
         dProgressErr() << tr("Failed loading image file: %1.").arg(QDir::toNativeSeparators(imageFilePath));
         return;
