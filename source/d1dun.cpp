@@ -2445,10 +2445,6 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QS
             return;
         }
     }
-    if (result.monGfx->getGroupCount() <= dir) {
-        result.monGfx = nullptr;
-        return;
-    }
     result.monDir = dir;
     if (!uniqueTrnFilePath.isEmpty()) {
         D1Trn *trn = new D1Trn();
@@ -5220,9 +5216,14 @@ bool D1Dun::addResource(const AddResourceParam &params)
         openParams.celWidth = params.width;
         D1Cl2::load(*monGfx, cl2FilePath, openParams);
         bool result = monGfx->getFrameCount() != 0;
+        bool resGroup = monGfx->getGroupCount() > params.frameGroup;
         delete monGfx;
         if (!result) {
             dProgressFail() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
+            return false;
+        }
+        if (!resGroup) {
+            dProgressFail() << tr("Not enough frame groups in the CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
             return false;
         }
         // check if the TRNs can be loaded

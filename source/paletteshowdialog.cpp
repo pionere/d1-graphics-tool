@@ -26,11 +26,12 @@ PaletteShowDialog::PaletteShowDialog(QWidget *parent)
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteShowDialog::on_closePushButtonClicked);
     layout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding));
 
+    this->images[PaletteShowDialog::SQUARE_PATH] = loadImageARGB32(PaletteShowDialog::SQUARE_PATH);
     this->images[PaletteShowDialog::WHEEL_PATH] = loadImageARGB32(PaletteShowDialog::WHEEL_PATH);
     this->images[PaletteShowDialog::CIE_PATH] = loadImageARGB32(PaletteShowDialog::CIE_PATH);
     this->images[PaletteShowDialog::CIEXY_PATH] = loadImageARGB32(PaletteShowDialog::CIEXY_PATH);
 
-    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::WHEEL_PATH);
+    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::SQUARE_PATH);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
@@ -87,19 +88,12 @@ void PaletteShowDialog::displayFrame()
             }
         }
         if (pos == -1) {
-			QColor c0 = baseImage->pixelColor(baseImage->width() / 2, baseImage->height() / 2);
-			QColor c1 = QColor(bits[baseImage->width() * baseImage->height() / 2 + baseImage->width() / 2]);
-            dProgressWarn() << tr("Non opaque pixels are ignored. Width %1 Height %2. Alpha %3 vs %4 name: %5 vs %6").arg(baseImage->width()).arg(baseImage->height()).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name());
+            dProgressWarn() << tr("Non opaque pixels are ignored.");
             break; // only non-opaque pixels -> skip
-        } else {
-			int n = pos;
-			QColor c0 = baseImage->pixelColor(n % baseImage->width(), n / baseImage->width());
-			QColor c1 = QColor(bits[n]);
-            dProgressWarn() << tr("Best dist %1 for %9 at %2 Alpha %3 vs %4 name: %5 vs %6 xy %7:%8").arg(dist).arg(n).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name()).arg(n % baseImage->width()).arg(n / baseImage->width()).arg(i);
         }
+        // palFrame.setPixel(pos % baseImage->width(), pos / baseImage->width(), color);
         QRgb *destBits = reinterpret_cast<QRgb *>(palFrame.bits());
         destBits[pos] = color.rgba();
-        // palFrame.setPixel(pos % baseImage->width(), pos / baseImage->width(), color);
     }
 
     this->palScene.setBackgroundBrush(QColor(Config::getGraphicsTransparentColor()));
@@ -125,7 +119,9 @@ void PaletteShowDialog::updatePathComboBoxOptions(const QList<QString> &options,
         if (!MainWindow::isResourcePath(option))
             continue;
         QString name;
-        if (option == PaletteShowDialog::WHEEL_PATH) {
+        if (option == PaletteShowDialog::SQUARE_PATH) {
+            name = tr("RGB Square");
+        } else if (option ==  PaletteShowDialog::WHEEL_PATH) {
             name = tr("RGB Wheel");
         } else if (option ==  PaletteShowDialog::CIE_PATH) {
             name = tr("CIE Chromaticity");
@@ -191,7 +187,7 @@ void PaletteShowDialog::on_closePushButtonClicked()
     QImage *image = this->images.take(path);
     delete image;
 
-    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::WHEEL_PATH);
+    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::SQUARE_PATH);
     // update the view
     this->displayFrame();
 }

@@ -17,7 +17,7 @@ DungeonResourceDialog::~DungeonResourceDialog()
     delete ui;
 }
 
-void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, D1Dun *d)
+void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, bool unique, D1Dun *d)
 {
     this->dun = d;
 
@@ -66,10 +66,12 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, D1Dun *d)
         this->adjustSize();
     }
 
-    if (this->prevIndex != index) {
+    if (this->prevIndex != index || this->prevUnique != unique) {
         this->prevIndex = index;
+        this->prevUnique = unique;
         if (index != 0) {
             this->ui->indexLineEdit->setText(QString::number(index));
+            this->ui->uniqueMonCheckBox->setChecked(unique);
         }
     }
 }

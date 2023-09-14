@@ -14,6 +14,7 @@ class PaletteShowDialog : public QDialog {
     Q_OBJECT
 
 public:
+    static constexpr const char *SQUARE_PATH = ":/RGBSquare.png";
     static constexpr const char *WHEEL_PATH = ":/RGBWheel.png";
     static constexpr const char *CIE_PATH = ":/CIE1976.png";
     static constexpr const char *CIEXY_PATH = ":/CIExy1931.png";
