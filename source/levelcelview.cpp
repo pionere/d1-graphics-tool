@@ -4421,7 +4421,6 @@ void LevelCelView::setMonsterType(int monsterIndex, bool monsterUnique)
 {
     DunMonsterType monType = { monsterIndex, monsterUnique };
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-
     bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType, mon.mox, mon.moy);
     if (change) {
         // update the view

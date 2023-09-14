@@ -70,7 +70,6 @@ private:
     quint8 currentZoomDenominator = 1;
     bool panning = false;
     bool leftMousePressed = false;
-    QPointF lastPanPos;
     QPoint lastPos;
 };
 

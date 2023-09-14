@@ -3,9 +3,10 @@
         <file>null.trn</file>
         <file>default.pal</file>
         <file>D1GraphicsTool.qss</file>
-        <file>CIE1976.png</file>
-        <file>CIExy1931.png</file>
+        <file>GRBSquare.png</file>
         <file>RGBSquare.png</file>
         <file>RGBWheel.png</file>
+        <file>CIE1976.png</file>
+        <file>CIExy1931.png</file>
     </qresource>
 </RCC>

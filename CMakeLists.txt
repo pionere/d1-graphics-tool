@@ -269,7 +269,7 @@ if(CPACK AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
   find_program(DFI desktop-file-install)
   if(DFI)
-    execute_process(COMMAND ${DFI} --dir=${CMAKE_BINARY_DIR} ${desktop_file})
+    execute_process(COMMAND ${DFI} --dir=${CMAKE_BINARY_DIR} --set-key=Exec --set-value=${BIN_TARGET} ${desktop_file})
     set(desktop_file "${CMAKE_BINARY_DIR}/d1gt.desktop")
   endif()
 

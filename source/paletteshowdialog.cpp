@@ -26,12 +26,13 @@ PaletteShowDialog::PaletteShowDialog(QWidget *parent)
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteShowDialog::on_closePushButtonClicked);
     layout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding));
 
-    this->images[PaletteShowDialog::SQUARE_PATH] = loadImageARGB32(PaletteShowDialog::SQUARE_PATH);
-    this->images[PaletteShowDialog::WHEEL_PATH] = loadImageARGB32(PaletteShowDialog::WHEEL_PATH);
+    this->images[PaletteShowDialog::GRB_SQ_PATH] = loadImageARGB32(PaletteShowDialog::GRB_SQ_PATH);
+    this->images[PaletteShowDialog::RGB_SQ_PATH] = loadImageARGB32(PaletteShowDialog::RGB_SQ_PATH);
+    this->images[PaletteShowDialog::RGB_WH_PATH] = loadImageARGB32(PaletteShowDialog::RGB_WH_PATH);
     this->images[PaletteShowDialog::CIE_PATH] = loadImageARGB32(PaletteShowDialog::CIE_PATH);
     this->images[PaletteShowDialog::CIEXY_PATH] = loadImageARGB32(PaletteShowDialog::CIEXY_PATH);
 
-    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::SQUARE_PATH);
+    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::GRB_SQ_PATH);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
@@ -119,9 +120,11 @@ void PaletteShowDialog::updatePathComboBoxOptions(const QList<QString> &options,
         if (!MainWindow::isResourcePath(option))
             continue;
         QString name;
-        if (option == PaletteShowDialog::SQUARE_PATH) {
+        if (option == PaletteShowDialog::GRB_SQ_PATH) {
+            name = tr("GRB Square");
+        } else if (option ==  PaletteShowDialog::RGB_SQ_PATH) {
             name = tr("RGB Square");
-        } else if (option ==  PaletteShowDialog::WHEEL_PATH) {
+        } else if (option ==  PaletteShowDialog::RGB_WH_PATH) {
             name = tr("RGB Wheel");
         } else if (option ==  PaletteShowDialog::CIE_PATH) {
             name = tr("CIE Chromaticity");
@@ -187,7 +190,7 @@ void PaletteShowDialog::on_closePushButtonClicked()
     QImage *image = this->images.take(path);
     delete image;
 
-    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::SQUARE_PATH);
+    this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::GRB_SQ_PATH);
     // update the view
     this->displayFrame();
 }
