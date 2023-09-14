@@ -97,7 +97,7 @@ void PaletteShowDialog::displayFrame()
 			QColor c1 = QColor(bits[n]);
             dProgressWarn() << tr("Best dist %1 for %9 at %2 Alpha %3 vs %4 name: %5 vs %6 xy %7:%8").arg(dist).arg(n).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name()).arg(n % baseImage->width()).arg(n / baseImage->width()).arg(i);
         }
-        const QRgb *destBits = reinterpret_cast<const QRgb *>(palFrame.bits());
+        QRgb *destBits = reinterpret_cast<QRgb *>(palFrame.bits());
         destBits[pos] = color.rgba();
         // palFrame.setPixel(pos % baseImage->width(), pos / baseImage->width(), color);
     }
