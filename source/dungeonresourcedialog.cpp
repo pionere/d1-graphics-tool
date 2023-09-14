@@ -58,6 +58,7 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, bool unique
         this->ui->uniqueTrnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
 
         this->ui->uniqueMonCheckBox->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->frameGroupLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
 
         this->ui->frameLabel->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
         this->ui->frameLineEdit->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
@@ -136,6 +137,7 @@ void DungeonResourceDialog::on_addButton_clicked()
     }
     params.width = this->ui->widthLineEdit->text().toInt();
     params.frame = this->ui->frameLineEdit->text().toInt();
+    params.frameGroup = this->ui->frameGroupLineEdit->text().toInt();
     params.baseTrnPath = this->ui->baseTrnFileLineEdit->text();
     params.uniqueTrnPath = this->ui->uniqueTrnFileLineEdit->text();
     params.uniqueMon = this->ui->uniqueMonCheckBox->isChecked();

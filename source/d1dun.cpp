@@ -945,10 +945,10 @@ QImage D1Dun::getMonsterImage(DunMonsterType monType, unsigned time)
         monEntry = &this->monsterCache.back();
     }
     if (monEntry->monGfx != nullptr) {
-        std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(0);
-        int frameNum = 1 + (time % (frameIndices.second /*- frameIndices.first*/ + 1));
+        std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(monEntry->monDir);
+        int frameIdx = frameIndices.first + (time % (frameIndices.second - frameIndices.first + 1));
         monEntry->monGfx->setPalette(monEntry->monPal);
-        return monEntry->monGfx->getFrameImage(frameNum - 1);
+        return monEntry->monGfx->getFrameImage(frameIdx);
     } else {
         return QImage();
     }
@@ -2401,7 +2401,7 @@ void D1Dun::loadObject(int objectIndex)
     this->objectCache.push_back(result);
 }
 
-void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
+void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
 {
     // check for existing entry
     unsigned i = 0;
@@ -2429,6 +2429,7 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &ba
             return;
         }
     }
+    result.monDir = dir;
     if (!uniqueTrnFilePath.isEmpty()) {
         D1Trn *trn = new D1Trn();
         if (trn->load(uniqueTrnFilePath, result.monPal)) {
@@ -2471,14 +2472,14 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &ba
 
 void D1Dun::loadMonster(const DunMonsterType &monType)
 {
-    MonsterCacheEntry result = { monType, nullptr, this->pal, nullptr, nullptr };
+    MonsterCacheEntry result = { monType, nullptr, 0, this->pal, nullptr, nullptr };
     // load a custom monster
     unsigned i = 0;
     for (; i < this->customMonsterTypes.size(); i++) {
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
         if (customMonster.type == monType) {
             QString cl2FilePath = customMonster.path;
-            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
+            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.animGroup, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
             break;
         }
     }
@@ -2495,7 +2496,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
                 baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
             }
             QString uniqueTrnFilePath;
-            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
+            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, 0, baseTrnFilePath, uniqueTrnFilePath, result);
         }
         // load unique monster
         unsigned monUniqueType = monType.monIndex - 1;
@@ -2512,7 +2513,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             if (uniqMonData[monUniqueType].mTrnName != nullptr) {
                 uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monUniqueType].mTrnName + ".TRN";
             }
-            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
+            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, 0, baseTrnFilePath, uniqueTrnFilePath, result);
         }
     }
     this->monsterCache.push_back(result);
@@ -5199,9 +5200,14 @@ bool D1Dun::addResource(const AddResourceParam &params)
         openParams.celWidth = params.width;
         D1Cl2::load(*monGfx, cl2FilePath, openParams);
         bool result = monGfx->getFrameCount() != 0;
+        bool resGroup = monGfx->getGroupCount() > params.frameGroup;
         delete monGfx;
         if (!result) {
             dProgressFail() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
+            return false;
+        }
+        if (!resGroup) {
+            dProgressFail() << tr("Not enough frame groups in the CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
             return false;
         }
         // check if the TRNs can be loaded
@@ -5254,6 +5260,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customMonster.baseTrnPath = params.baseTrnPath;
                 customMonster.uniqueTrnPath = params.uniqueTrnPath;
                 customMonster.width = params.width;
+                customMonster.animGroup = params.frameGroup;
                 return true;
             }
         }
@@ -5265,6 +5272,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMonster.baseTrnPath = params.baseTrnPath;
         customMonster.uniqueTrnPath = params.uniqueTrnPath;
         customMonster.width = params.width;
+        customMonster.animGroup = params.frameGroup;
         this->customMonsterTypes.push_back(customMonster);
     } break;
     case DUN_ENTITY_TYPE::ITEM: {
