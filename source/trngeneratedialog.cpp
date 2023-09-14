@@ -16,6 +16,12 @@ PalScene::PalScene(TrnGenerateDialog *v)
 {
 }
 
+void PalScene::initialize(D1Pal *p, D1Trn *t)
+{
+    this->pal = p;
+    this->trn = t;
+}
+
 void PalScene::displayColors()
 {
     // Positions
