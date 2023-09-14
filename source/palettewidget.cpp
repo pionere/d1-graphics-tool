@@ -140,7 +140,7 @@ static int getColorIndexFromCoordinates(QPointF coordinates)
         iy = 0;
     }
     if (iy >= D1PAL_COLORS / PALETTE_COLORS_PER_LINE) {
-        return D1PAL_COLORS / PALETTE_COLORS_PER_LINE - 1;
+        iy = D1PAL_COLORS / PALETTE_COLORS_PER_LINE - 1;
     }
     index = iy * PALETTE_COLORS_PER_LINE + ix;
 

@@ -33,7 +33,7 @@ static bool isPixelFixed(const D1GfxPixel *pixel, const UpscalingParam &params)
     return pixel->getPaletteIndex() >= params.firstfixcolor && pixel->getPaletteIndex() <= params.lastfixcolor;
 }
 
-// TODO: merge with getPalColor in d1image.cpp and in d1trs.cpp ?
+// TODO: merge with getPalColor in d1image.cpp, in paletteshowdialog.cpp and in d1trs.cpp ?
 static D1GfxPixel getPalColor(const UpscalingParam &params, QColor color)
 {
     unsigned res = 0;
