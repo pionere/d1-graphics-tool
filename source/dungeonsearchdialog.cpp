@@ -136,7 +136,7 @@ void DungeonSearchDialog::search(bool next)
                 break;
             case DUN_SEARCH_TYPE::Monster: {
                 DunMonsterType monType = this->dun->getMonsterAt(posx, posy).type;
-                found = monType.first == params.index && monType.second == params.special;
+                found = monType.monIndex == params.index && monType.monUnique == params.special;
             } break;
             case DUN_SEARCH_TYPE::Object:
                 found = this->dun->getObjectAt(posx, posy) == params.index;

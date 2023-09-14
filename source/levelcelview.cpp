@@ -32,8 +32,6 @@
 
 #include "dungeon/all.h"
 
-Q_DECLARE_METATYPE(DunMonsterType);
-
 LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -391,8 +389,8 @@ void LevelCelView::updateFields()
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
         MapMonster mon = this->dun->getMonsterAt(posx, posy);
-        this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.first));
-        this->ui->dungeonMonsterCheckBox->setChecked(mon.type.second);
+        this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.monIndex));
+        this->ui->dungeonMonsterCheckBox->setChecked(mon.type.monUnique);
         this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.type));
         {
             const int limit = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -4418,7 +4416,7 @@ void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
 {
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.first));
+    this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.monIndex));
     this->ui->dungeonMonsterLineEdit->clearFocus();
 }
 
@@ -4436,7 +4434,7 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
     }
     DunMonsterType monType = this->ui->dungeonMonsterComboBox->itemData(index).value<DunMonsterType>();
 
-    this->setMonsterType(monType.first, monType.second);
+    this->setMonsterType(monType.monIndex, monType.monUnique);
 }
 
 void LevelCelView::on_dungeonMonsterAddButton_clicked()

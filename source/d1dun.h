@@ -64,7 +64,18 @@ typedef enum dun_overlay_type {
     DOT_SUBTILE_NUMBERS,
 } dun_overlay_type;
 
-typedef QPair<int, bool> DunMonsterType;
+typedef struct DunMonsterType {
+    int monIndex;
+    bool monUnique;
+
+    bool operator==(const DunMonsterType &rhs) const {
+        return monIndex == rhs.monIndex && monUnique == rhs.monUnique;
+    }
+    bool operator!=(const DunMonsterType &rhs) const {
+        return monIndex != rhs.monIndex || monUnique != rhs.monUnique;
+    }
+} DunMonsterType;
+Q_DECLARE_METATYPE(DunMonsterType);
 
 typedef struct MapMonster {
     DunMonsterType type;

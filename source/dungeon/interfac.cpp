@@ -338,8 +338,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             DunMonsterType monType = { 0, false };
             if (mon != 0) {
                 MonsterStruct *ms = &monsters[mon - 1];
-                monType.second = ms->_muniqtype != 0;
-                if (!monType.second) {
+                monType.monUnique = ms->_muniqtype != 0;
+                if (!monType.monUnique) {
                     mon = ms->_mMTidx;
                     mon += lengthof(DunMonstConvTbl);
                 } else {
@@ -348,7 +348,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
                     mon = ms->_muniqtype;
                 }
                 // mon += lengthof(DunMonstConvTbl);
-                monType.first = mon;
+                monType.monIndex = mon;
             }
             dun->setMonsterAt(x, y, monType, 0, 0);
             int obj = dObject[x][y];
