@@ -3,7 +3,7 @@
  <class>PaletteShowDialog</class>
  <widget class="QDialog">
   <property name="windowTitle">
-   <string>Patch Dungeon</string>
+   <string>Palette Colors</string>
   </property>
   <property name="modal">
    <bool>true</bool>

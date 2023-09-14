@@ -123,10 +123,6 @@ PaletteScene::PaletteScene(PaletteWidget *v)
 
 static int getColorIndexFromCoordinates(QPointF coordinates)
 {
-    // if (position.x() < 0 || position.x() >= PALETTE_WIDTH
-    //    || position.y() < 0 || position.y() >= PALETTE_WIDTH)
-    //    return -1;
-
     int index = 0;
 
     int w = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
@@ -134,6 +130,12 @@ static int getColorIndexFromCoordinates(QPointF coordinates)
     int ix = coordinates.x() / w;
     int iy = coordinates.y() / w;
 
+    if (ix < 0 || iy < 0) {
+        return 0;
+    }
+    if (ix >= PALETTE_COLORS_PER_LINE || iy >= D1PAL_COLORS / PALETTE_COLORS_PER_LINE) {
+        return D1PAL_COLORS - 1;
+    }
     index = iy * PALETTE_COLORS_PER_LINE + ix;
 
     return index;
