@@ -19,6 +19,7 @@ public:
     QString path;
     int width;
     int frame;
+    int frameGroup;
     QString baseTrnPath;
     QString uniqueTrnPath;
     bool uniqueMon;
