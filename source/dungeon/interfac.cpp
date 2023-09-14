@@ -352,7 +352,7 @@ static void LoadDungeon(D1Dun *dun, bool first)
             }
             // load entities
             // DunMonsterType monType = dun->getMonsterAt(baseX + x, baseY + y);
-            // TODO: dMonster[DBORDERX + x][DBORDERX + y] = monType.first;
+            // TODO: dMonster[DBORDERX + x][DBORDERX + y] = monType.monIndex;
             dObject[DBORDERX + x][DBORDERX + y] = dun->getObjectAt(baseX + x, baseY + y);
             dItem[DBORDERX + x][DBORDERX + y] = dun->getItemAt(baseX + x, baseY + y);
             // load subtile
@@ -588,8 +588,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             DunMonsterType monType = { 0, false };
             if (mon != 0) {
                 MonsterStruct *ms = &monsters[mon - 1];
-                monType.second = ms->_muniqtype != 0;
-                if (!monType.second) {
+                monType.monUnique = ms->_muniqtype != 0;
+                if (!monType.monUnique) {
                     mon = ms->_mMTidx;
                     mon += lengthof(DunMonstConvTbl);
                 } else {
@@ -598,7 +598,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
                     mon = ms->_muniqtype;
                 }
                 // mon += lengthof(DunMonstConvTbl);
-                monType.first = mon;
+                monType.monIndex = mon;
             }
             dun->setMonsterAt(x, y, monType, 0, 0);
             int obj = dObject[x][y];

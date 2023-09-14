@@ -75,9 +75,9 @@ void EditDungeonCommand::undo()
             break;
         case BEM_MONSTER: {
             MapMonster mon = this->dun->getMonsterAt(dp.cellX, dp.cellY);
-            currValue = mon.type.first | (mon.type.second ? 1 << 31 : 0);
-            mon.type.first = dp.value & INT32_MAX;
-            mon.type.second = (dp.value & (1 << 31)) != 0;
+            currValue = mon.type.monIndex | (mon.type.monUnique ? 1 << 31 : 0);
+            mon.type.monIndex = dp.value & INT32_MAX;
+            mon.type.monUnique = (dp.value & (1 << 31)) != 0;
             this->dun->setMonsterAt(dp.cellX, dp.cellY, mon.type, dp.metaValue0, dp.metaValue1);
             dp.value = currValue;
             dp.metaValue0 = mon.mox;
@@ -258,8 +258,8 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
         }
         break;
     case BEM_MONSTER:
-        value = this->currentMonsterType.first; // this->ui->monsterLineEdit->text().toInt();
-        value |= this->currentMonsterType.second /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
+        value = this->currentMonsterType.monIndex; // this->ui->monsterLineEdit->text().toInt();
+        value |= this->currentMonsterType.monUnique /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
         if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y()).type) {
             value = 0;
         }
@@ -416,7 +416,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
             }
             break;
         case BEM_MONSTER:
-            if (this->currentMonsterType.first != 0) {
+            if (this->currentMonsterType.monIndex != 0) {
                 image = this->dun->getMonsterImage(this->currentMonsterType, 0);
                 color = QColorConstants::Svg::magenta;
             }
@@ -686,8 +686,8 @@ void BuilderWidget::setObjectIndex(int objectIndex)
 void BuilderWidget::setMonsterType(DunMonsterType monType)
 {
     this->currentMonsterType = monType;
-    this->ui->monsterLineEdit->setText(QString::number(monType.first));
-    this->ui->monsterCheckBox->setChecked(monType.second);
+    this->ui->monsterLineEdit->setText(QString::number(monType.monIndex));
+    this->ui->monsterCheckBox->setChecked(monType.monUnique);
     this->ui->monsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->monsterComboBox, monType));
     this->redrawOverlay(true);
 }
@@ -824,7 +824,7 @@ void BuilderWidget::on_monsterLineEdit_returnPressed()
 
 void BuilderWidget::on_monsterLineEdit_escPressed()
 {
-    this->ui->monsterLineEdit->setText(QString::number(this->currentMonsterType.first));
+    this->ui->monsterLineEdit->setText(QString::number(this->currentMonsterType.monIndex));
     this->ui->monsterLineEdit->clearFocus();
 }
 

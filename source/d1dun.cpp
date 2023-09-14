@@ -2492,7 +2492,7 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QS
 
 void D1Dun::loadMonster(const DunMonsterType &monType)
 {
-    MonsterCacheEntry result = { monType, nullptr, this->pal, nullptr, nullptr };
+    MonsterCacheEntry result = { monType, nullptr, 0, this->pal, nullptr, nullptr };
     // load a custom monster
     unsigned i = 0;
     for (; i < this->customMonsterTypes.size(); i++) {

@@ -57,7 +57,6 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, D1Dun *d)
         this->ui->uniqueTrnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
         this->ui->uniqueTrnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
 
-        this->ui->uniqueMonLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
         this->ui->uniqueMonCheckBox->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
         this->ui->frameGroupLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
 

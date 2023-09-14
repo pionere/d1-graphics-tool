@@ -1,5 +1,6 @@
 #include "paletteshowdialog.h"
 
+#include "config.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "pushbuttonwidget.h"
@@ -99,7 +100,7 @@ void PaletteShowDialog::displayFrame()
         palFrame.bits()[pos] = color.rgba();
     }
 
-    this->palScene.setBackgroundBrush(QColor(Qt::transparent));
+    this->palScene.setBackgroundBrush(QColor(Config::getGraphicsTransparentColor()));
 
     // Resize the scene rectangle to include some padding around the CEL frame
     this->palScene.setSceneRect(0, 0,
