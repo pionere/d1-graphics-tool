@@ -75,6 +75,7 @@ typedef struct DunMonsterType {
         return monIndex != rhs.monIndex || monUnique != rhs.monUnique;
     }
 } DunMonsterType;
+Q_DECLARE_METATYPE(DunMonsterType);
 
 typedef struct MapMonster {
     DunMonsterType type;
