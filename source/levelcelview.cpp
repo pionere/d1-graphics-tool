@@ -32,8 +32,6 @@
 
 #include "dungeon/all.h"
 
-Q_DECLARE_METATYPE(DunMonsterType);
-
 LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -4445,7 +4443,7 @@ void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
 {
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.first));
+    this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.monIndex));
     this->ui->dungeonMonsterLineEdit->clearFocus();
 }
 
