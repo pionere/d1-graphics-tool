@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QButtonGroup>
 #include <QWidget>
 
 class D1Pal;
