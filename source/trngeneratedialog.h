@@ -3,7 +3,8 @@
 #include <vector>
 
 #include <QDialog>
-#include <QList>
+#include <QGraphicsScene>
+#include <QMouseEvent>
 #include <QPointer>
 
 #include "trngeneratecolentrywidget.h"

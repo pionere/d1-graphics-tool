@@ -359,7 +359,7 @@ void TrnGenerateDialog::updatePals()
 
     D1Trn *trn = nullptr;
     if ((unsigned)shadeIdx < this->lightTrns.size()) {
-        trn = this->lightTrns[shadeIdex];
+        trn = this->lightTrns[shadeIdx];
         trn->setPalette(basePal);
         trn->refreshResultingPalette();
     }

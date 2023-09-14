@@ -63,7 +63,7 @@
  </widget>
  <resources/>
  <connections/>
- <!--buttongroups>
+ <buttongroups>
   <buttongroup name="selectButtonGroup"/>
- </buttongroups-->
+ </buttongroups>
 </ui>

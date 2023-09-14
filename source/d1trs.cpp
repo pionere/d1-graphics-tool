@@ -527,7 +527,7 @@ void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal
         }
     }
     shadePalettes = &shadePals;
-    MakeLightTableCustom(params, shadePals);
+    MakeLightTableCustom(params);
 
     QString filePath = QApplication::tr("Light%1.trn");
     for (int i = 0; i <= MAXDARKNESS; i++) {
