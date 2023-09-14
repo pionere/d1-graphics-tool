@@ -82,7 +82,7 @@ public:
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
-    void generateTrn(const GenerateTrnParam &params);
+    void updateTrns(const std::vector<D1Trn *> &newTrns);
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
 

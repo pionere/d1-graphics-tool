@@ -48,6 +48,11 @@ bool TrnGeneratePalEntryWidget::ownsPalette() const
     return this->delPal;
 }
 
+bool TrnGeneratePalEntryWidget::isSelected() const
+{
+    return this->ui->selectRadioButton->isChecked();
+}
+
 void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 {
     // start file-dialog

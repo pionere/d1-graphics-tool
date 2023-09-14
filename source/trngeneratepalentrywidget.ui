@@ -21,6 +21,16 @@
    <item>
     <layout class="QHBoxLayout" name="entryHorizontalLayout">
      <item>
+      <widget class="QRadioButton" name="selectRadioButton">
+       <property name="toolTip">
+        <string>The base palette</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">selectButtonGroup</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
       <widget class="LineEditWidget" name="paletteFileEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -53,4 +63,7 @@
  </widget>
  <resources/>
  <connections/>
+ <!--buttongroups>
+  <buttongroup name="selectButtonGroup"/>
+ </buttongroups-->
 </ui>

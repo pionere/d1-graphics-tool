@@ -9,11 +9,75 @@
 
 #include "dungeon/all.h"
 
+PalScene::PalScene(TrnGenerateDialog *v)
+    : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH, v)
+    , view(v)
+{
+}
+
+void PalScene::displayColors()
+{
+    // Positions
+    int x = 0;
+    int y = 0;
+
+    // X delta
+    int dx = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
+    // Y delta
+    int dy = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
+
+    // Color width
+    int w = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE - 2 * PALETTE_COLOR_SPACING;
+    int bsw = PALETTE_COLOR_SPACING;
+
+    // Removing existing items
+    this->clear();
+
+    // Setting background color
+    this->setBackgroundBrush(Qt::white);
+
+    // Displaying palette colors
+    D1Pal *colorPal = this->trn != nullptr ? this->trn->getResultingPalette() : this->pal;
+    QColor nullColor = QColor(Config::getGraphicsTransparentColor());
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        // Go to next line
+        if (i % PALETTE_COLORS_PER_LINE == 0 && i != 0) {
+            x = 0;
+            y += dy;
+        }
+
+        QColor color = colorPal == nullptr ? nullColor : colorPal->getColor(i);
+        QBrush brush = QBrush(color);
+        QPen pen(Qt::NoPen);
+
+        this->addRect(x + bsw, y + bsw, w, w, pen, brush);
+
+        x += dx;
+    }
+}
+
+void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) override
+{
+
+}
+
+void PalScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override
+{
+
+}
+
+void PalScene::keyPressEvent(QKeyEvent *event) override
+{
+
+}
+
 TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::TrnGenerateDialog())
 {
     this->ui->setupUi(this);
+    this->ui->shadeView->setScene(&this->shadeScene);
+    this->ui->lightView->setScene(&this->lightScene);
 
     QHBoxLayout *layout = this->ui->addRangeButtonLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("Add"), this, &TrnGenerateDialog::on_actionAddRange_triggered);
@@ -30,15 +94,36 @@ TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
 
     this->ui->levelTypeComboBox->setCurrentIndex(DTYPE_NONE);
     this->on_colorDistanceComboBox_activated(0);
+
+    for (int i = 0; i <= MAXDARKNESS; i++) {
+        this->ui->shadeComboBox->addItem(QString::number(i), i);
+    }
 }
 
 TrnGenerateDialog::~TrnGenerateDialog()
 {
     delete ui;
+    this->clearLists();
+}
+
+void TrnGenerateDialog::clearLists()
+{
+    for (auto it = this->shadePals.begin(); it != this->shadePals.end(); it++) {
+        for (auto pit = it->begin(); pit != it->end(); pit++) {
+            delete *pit;
+        }
+    }
+    this->shadePals.clear();
+    for (auto it = this->lightTrns.begin(); it != this->lightTrns.end(); it++) {
+        delete *it;
+    }
+    this->lightTrns.clear();
 }
 
 void TrnGenerateDialog::initialize(D1Pal *p)
 {
+    this->pal = p;
+
     QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->parentWidget()->findChildren<TrnGeneratePalEntryWidget *>();
     if (palWidgets.empty()) {
         TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, p, false);
@@ -50,6 +135,9 @@ void TrnGenerateDialog::initialize(D1Pal *p)
             }
         }
     }
+
+    this->ui->shadeComboBox->setCurrentIndex(0);
+    this->updatePals();
 }
 
 void TrnGenerateDialog::on_actionAddRange_triggered()
@@ -253,6 +341,46 @@ void TrnGenerateDialog::on_colorDistanceComboBox_activated(int index)
     this->ui->lightWeightLineEdit->setVisible(index == 5);
 }
 
+void TrnGenerateDialog::updatePals()
+{
+    int shadeIdx = this->ui->shadeComboBox->currentIndex();
+
+    D1Pal *shadePal = nullptr;
+    D1Pal *basePal = nullptr;
+    QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->parentWidget()->findChildren<TrnGeneratePalEntryWidget *>();
+    for (int i = 0; i < palWidgets.count(); i++) {
+        const TrnGeneratePalEntryWidget *palWidget = palWidgets[i];
+        if (palWidget->isSelected() && (unsigned)i < this->shadePals.size()) {
+            shadePal = this->shadePals[i][shadeIdx];
+            basePal = palWidget->getPalette();
+            break;
+        }
+    }
+
+    D1Trn *trn = nullptr;
+    if ((unsigned)shadeIdx < this->lightTrns.size()) {
+        trn = this->lightTrns[shadeIdex];
+        trn->setPalette(basePal);
+        trn->refreshResultingPalette();
+    }
+
+    this->shadeScene.initialize(shadePal, nullptr);
+    this->lightScene.initialize(basePal, trn);
+
+    this->shadeScene.displayColors();
+    this->lightScene.displayColors();
+}
+
+void TrnGenerateDialog::on_shadeComboBox_activated(int index)
+{
+    this->updatePals();
+}
+
+void TrnGenerateDialog::on_selectButtonGroup_idClicked()
+{
+    this->updatePals();
+}
+
 void TrnGenerateDialog::on_generateButton_clicked()
 {
     GenerateTrnParam params;
@@ -277,9 +405,21 @@ void TrnGenerateDialog::on_generateButton_clicked()
     params.blueWeight = this->ui->blueWeightLineEdit->text().toDouble();
     params.lightWeight = this->ui->lightWeightLineEdit->text().toDouble();
 
+    this->clearLists();
+
+    D1Trs::generateLightTranslations(params, this->pal, this->lightTrns, this->shadePals);
+}
+
+void TrnGenerateDialog::on_doneButton_clicked()
+{
+    std::vector<D1Trn *> trns;
+    trns.swap(this->lightTrns);
+
+    this->clearLists();
+
     this->close();
 
-    dMainWindow().generateTrn(params);
+    dMainWindow().updateTrns(trns);
 }
 
 void TrnGenerateDialog::on_cancelButton_clicked()

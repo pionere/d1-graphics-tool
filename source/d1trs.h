@@ -17,5 +17,5 @@ public:
     static bool load(const QString &trsFilePath, D1Pal *pal, std::vector<D1Trn *> &trns);
     static bool save(const QString &trsFilePath, const std::vector<D1Trn *> &trns);
 
-    static void generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns);
+    static void generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns, std::vector<std::vector<D1Pal *>> &shadePals);
 };

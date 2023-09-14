@@ -2689,7 +2689,7 @@ void MainWindow::on_actionGenTrns_Colors_triggered()
     this->trnGenerateDialog->show();
 }
 
-void MainWindow::generateTrn(const GenerateTrnParam &params)
+void MainWindow::updateTrns(const std::vector<D1Trn *> &newTrns)
 {
     // reset unique translations
     this->on_actionClose_Translation_Unique_triggered();
@@ -2711,14 +2711,16 @@ void MainWindow::generateTrn(const GenerateTrnParam &params)
         MemFree(it.value());
         it = this->baseTrns.erase(it);
     }
-    // generate the TRN files
-    std::vector<D1Trn *> lightTrns;
-    D1Trs::generateLightTranslations(params, this->pal, lightTrns);
+    if (newTrns.empty()) {
+        return;
+    }
     // load the TRN files
-    for (D1Trn *trn : lightTrns) {
+    for (D1Trn *trn : newTrns) {
+        // trn->setPalette(this->pal);
+        // trn->refreshResultingPalette();
         this->uniqueTrns[trn->getFilePath()] = trn;
     }
-    this->setUniqueTrn(lightTrns[0]->getFilePath());
+    this->setUniqueTrn(newTrns[0]->getFilePath());
 }
 
 void MainWindow::on_actionLoadTrns_Colors_triggered()
