@@ -135,7 +135,7 @@ void TrnGenerateDialog::initialize(D1Pal *p)
 
     QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->parentWidget()->findChildren<TrnGeneratePalEntryWidget *>();
     if (palWidgets.empty()) {
-        TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, p, false);
+        TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, this->ui->selectButtonGroup, p, false);		
         this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
         widget->setSelected(true);
     } else {
@@ -175,7 +175,7 @@ void TrnGenerateDialog::on_actionAddPalette_triggered()
             continue;
         }
 
-        TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, newPal, true);
+        TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, this->ui->selectButtonGroup, newPal, true);
         this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
     }
 }

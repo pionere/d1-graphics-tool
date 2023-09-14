@@ -13,7 +13,7 @@ class TrnGeneratePalEntryWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, D1Pal *pal, bool delPal);
+    explicit TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, QButtonGroup *btnGroup, D1Pal *pal, bool delPal);
     ~TrnGeneratePalEntryWidget();
 
     D1Pal *getPalette() const;

@@ -9,7 +9,7 @@
 #include "pushbuttonwidget.h"
 #include "ui_trngeneratepalentrywidget.h"
 
-TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, D1Pal *p, bool dp)
+TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, QButtonGroup *btnGroup, D1Pal *p, bool dp)
     : QWidget(parent)
     , ui(new Ui::TrnGeneratePalEntryWidget())
     , view(parent)
@@ -17,6 +17,7 @@ TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, 
     , delPal(dp)
 {
     ui->setupUi(this);
+    btnGroup->addButton(this->ui->selectRadioButton);
 
     QLayout *layout = this->ui->entryHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarCloseButton, tr("Remove"), this, &TrnGeneratePalEntryWidget::on_deletePushButtonClicked);
@@ -30,6 +31,7 @@ TrnGeneratePalEntryWidget::~TrnGeneratePalEntryWidget()
     if (this->delPal) {
         delete this->pal;
     }
+    this->ui->selectRadioButton->group()->removeButton(this->ui->selectRadioButton);
 }
 
 D1Pal *TrnGeneratePalEntryWidget::getPalette() const
