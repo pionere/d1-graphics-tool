@@ -1477,7 +1477,7 @@ void MainWindow::upscale(const UpscaleParam &params)
     ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW, std::move(func));
 }
 
-static QString imageNameFilter()
+void MainWindow::supportedImageFormats(QStringList &allSupportedImageFormats)
 {
     // get supported image file types
     QStringList mimeTypeFilters;
@@ -1488,17 +1488,23 @@ static QString imageNameFilter()
 
     // compose filter for all supported types
     QMimeDatabase mimeDB;
-    QStringList allSupportedFormats;
     for (const QString &mimeTypeFilter : mimeTypeFilters) {
         QMimeType mimeType = mimeDB.mimeTypeForName(mimeTypeFilter);
         if (mimeType.isValid()) {
             QStringList mimePatterns = mimeType.globPatterns();
             for (int i = 0; i < mimePatterns.count(); i++) {
-                allSupportedFormats.append(mimePatterns[i]);
-                allSupportedFormats.append(mimePatterns[i].toUpper());
+                allSupportedImageFormats.append(mimePatterns[i]);
+                allSupportedImageFormats.append(mimePatterns[i].toUpper());
             }
         }
     }
+}
+
+static QString imageNameFilter()
+{
+    // get supported image file types
+    QStringList allSupportedFormats;
+    MainWindow::supportedImageFormats(allSupportedFormats);
     // add PCX support
     allSupportedFormats.append("*.pcx");
     allSupportedFormats.append("*.PCX");
@@ -2657,6 +2663,16 @@ void MainWindow::on_actionRemap_Colors_triggered()
     }
     this->remapDialog->initialize(this->palWidget);
     this->remapDialog->show();
+}
+
+
+void MainWindow::on_actionDisplay_Colors_triggered()
+{
+    if (this->paletteShowDialog == nullptr) {
+        this->paletteShowDialog = new PaletteShowDialog(this);
+    }
+    this->paletteShowDialog->initialize(this->pal);
+    this->paletteShowDialog->show();
 }
 
 void MainWindow::on_actionGenTrns_Colors_triggered()

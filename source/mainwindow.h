@@ -22,6 +22,7 @@
 #include "levelcelview.h"
 #include "openasdialog.h"
 #include "paintwidget.h"
+#include "paletteshowdialog.h"
 #include "palettewidget.h"
 #include "patchdungeondialog.h"
 #include "patchgfxdialog.h"
@@ -105,6 +106,7 @@ public:
 
     static bool hasImageUrl(const QMimeData *mimeData);
     static bool isResourcePath(const QString &path);
+    static void supportedImageFormats(QStringList &allSupportedImageFormats);
 
 private:
     void failWithError(const QString &error);
@@ -238,6 +240,7 @@ private slots:
     void on_actionPatch_Translation_Base_triggered();
 
     void on_actionRemap_Colors_triggered();
+    void on_actionDisplay_Colors_triggered();
     void on_actionGenTrns_Colors_triggered();
     void on_actionLoadTrns_Colors_triggered();
     void on_actionSaveTrns_Colors_triggered();
@@ -291,6 +294,7 @@ private:
     PatchTilesetDialog *patchTilesetDialog = nullptr;
     TrnGenerateDialog *trnGenerateDialog = nullptr;
     RemapDialog *remapDialog = nullptr;
+    PaletteShowDialog *paletteShowDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
     D1Pal *pal = nullptr;

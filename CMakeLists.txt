@@ -158,6 +158,9 @@ set(PROJECT_SOURCES
         source/paintwidget.cpp
         source/paintwidget.h
         source/paintwidget.ui
+        source/paletteshowdialog.cpp
+        source/paletteshowdialog.h
+        source/paletteshowdialog.ui
         source/palettewidget.cpp
         source/palettewidget.h
         source/palettewidget.ui
