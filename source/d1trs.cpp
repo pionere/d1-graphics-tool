@@ -340,27 +340,27 @@ static void getPalColorWeightedQuad(const std::vector<PaletteColor> &dynColors, 
 }
 static void getPalColorNew(const std::vector<PaletteColor> &dynColors, QColor color, std::array<int, NUM_COLORS> &palOptions)
 {
-    int minC = color.red();
-    if (color.green() < minC) {
-        minC = color.green();
-    }
-    if (color.blue() < minC) {
-        minC = color.blue();
-    }
+    double avgC = redWeight * color.red() + greenWeight * color.green() + blueWeight * color.blue();
     for (const PaletteColor &palColor : dynColors) {
-        int minP = palColor.red();
-        if (palColor.green() < minP) {
-            minP = palColor.green();
+        double avgP = redWeight * palColor.red() + greenWeight * palColor.green() + blueWeight * palColor.blue();
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        double dav = avgC - avgP;
+        double dR = currR * currR;
+        if ((currR < 0) != (dav < 0)) {
+            dR = dR * dR;
         }
-        if (palColor.blue() < minP) {
-            minP = palColor.blue();
+        double dG = currG * currG;
+        if ((currG < 0) != (dav < 0)) {
+            dG = dG * dG;
         }
-        int currR = (color.red() - minC) - (palColor.red() - minP);
-        int currG = (color.green() - minC) - (palColor.green() - minP);
-        int currB = (color.blue() - minC) - (palColor.blue() - minP);
-        int currL = minC - minP;
-        int curr = redWeight * currR * currR + greenWeight * currG * currG + blueWeight * currB * currB + lightWeight * currL * currL;
-        palOptions[palColor.index()] = curr;
+        double dR = currB * currB;
+        if ((currB < 0) != (dav < 0)) {
+            dB = dB * dB;
+        }
+        double curr = redWeight * currR * currR + greenWeight * currG * currG + blueWeight * currB * currB;
+        palOptions[palColor.index()] = sqrt(curr);
     }
 }
 

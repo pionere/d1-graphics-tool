@@ -87,11 +87,11 @@ void PaletteShowDialog::displayFrame()
 			QColor c1 = QColor(bits[baseImage->width() * baseImage->height() / 2 + baseImage->width() / 2]);
             dProgressWarn() << tr("Non opaque pixels are ignored. Width %1 Height %2. Alpha %3 vs %4 name: %5 vs %6").arg(baseImage->width()).arg(baseImage->height()).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name());
             break; // only non-opaque pixels -> skip
-        } else if (i == 1) {
+        } else {
 			int n = pos;
 			QColor c0 = baseImage->pixelColor(n % baseImage->width(), n / baseImage->width());
 			QColor c1 = QColor(bits[n]);
-            dProgressWarn() << tr("Best dist %1 at %2 Alpha %3 vs %4 name: %5 vs %6 xy %7:%8").arg(dist).arg(n).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name()).arg(n % baseImage->width()).arg(n / baseImage->width());
+            dProgressWarn() << tr("Best dist %1 for %9 at %2 Alpha %3 vs %4 name: %5 vs %6 xy %7:%8").arg(dist).arg(n).arg(c0.alpha()).arg(c1.alpha()).arg(c0.name()).arg(c1.name()).arg(n % baseImage->width()).arg(n / baseImage->width()).arg(i);
         }
         palFrame.bits()[pos] = color.rgba();
     }
