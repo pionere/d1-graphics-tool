@@ -18,7 +18,7 @@ PaletteShowDialog::PaletteShowDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->palGraphicsView->setScene(&this->palScene);
-
+    this->on_zoomEdit_escPressed();
 
     QHBoxLayout *layout = this->ui->imageHBoxLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteShowDialog::on_openPushButtonClicked);
@@ -30,6 +30,9 @@ PaletteShowDialog::PaletteShowDialog(QWidget *parent)
     this->images[PaletteShowDialog::CIEXY_PATH] = loadImageARGB32(PaletteShowDialog::CIEXY_PATH);
 
     this->updatePathComboBoxOptions(this->images.keys(), PaletteShowDialog::WHEEL_PATH);
+
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
 }
 
 PaletteShowDialog::~PaletteShowDialog()
@@ -196,6 +199,33 @@ void PaletteShowDialog::on_pathComboBox_activated(int index)
     this->updatePathComboBoxOptions(options, options[index]);
     // update the view
     this->displayFrame();
+}
+
+void PaletteShowDialog::on_zoomOutButton_clicked()
+{
+    this->palScene.zoomOut();
+    this->on_zoomEdit_escPressed();
+}
+
+void PaletteShowDialog::on_zoomInButton_clicked()
+{
+    this->palScene.zoomIn();
+    this->on_zoomEdit_escPressed();
+}
+
+void PaletteShowDialog::on_zoomEdit_returnPressed()
+{
+    QString zoom = this->ui->zoomEdit->text();
+
+    this->palScene.setZoom(zoom);
+
+    this->on_zoomEdit_escPressed();
+}
+
+void PaletteShowDialog::on_zoomEdit_escPressed()
+{
+    this->ui->zoomEdit->setText(this->palScene.zoomText());
+    this->ui->zoomEdit->clearFocus();
 }
 
 void PaletteShowDialog::on_closeButton_clicked()

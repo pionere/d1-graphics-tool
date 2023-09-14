@@ -68,10 +68,10 @@ typedef struct DunMonsterType {
     int monIndex;
     bool monUnique;
 
-    bool operator==(const DunMonsterType &rhs) {
+    bool operator==(const DunMonsterType &rhs) const {
         return monIndex == rhs.monIndex && monUnique == rhs.monUnique;
     }
-    bool operator!=(const DunMonsterType &rhs) {
+    bool operator!=(const DunMonsterType &rhs) const {
         return monIndex != rhs.monIndex || monUnique != rhs.monUnique;
     }
 } DunMonsterType;

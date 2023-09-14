@@ -32,6 +32,11 @@ private slots:
     void on_closePushButtonClicked();
     void on_pathComboBox_activated(int index);
 
+    void on_zoomOutButton_clicked();
+    void on_zoomInButton_clicked();
+    void on_zoomEdit_returnPressed();
+    void on_zoomEdit_escPressed();
+
     void on_closeButton_clicked();
 
     // this event is called, when a new translator is loaded or the system language is changed
