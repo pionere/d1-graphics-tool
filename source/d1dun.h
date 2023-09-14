@@ -67,6 +67,13 @@ typedef enum dun_overlay_type {
 typedef struct DunMonsterType {
     int monIndex;
     bool monUnique;
+
+    bool operator==(const DunMonsterType &rhs) {
+        return monIndex == rhs.monIndex && monUnique == rhs.monUnique;
+    }
+    bool operator!=(const DunMonsterType &rhs) {
+        return monIndex != rhs.monIndex || monUnique != rhs.monUnique;
+    }
 } DunMonsterType;
 
 typedef struct MapMonster {
