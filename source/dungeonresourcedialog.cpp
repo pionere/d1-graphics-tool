@@ -81,20 +81,18 @@ void DungeonResourceDialog::on_celFileBrowsePushButton_clicked()
     QString title = this->type == (int)DUN_ENTITY_TYPE::MONSTER ? tr("Select CL2 file") : tr("Select CEL file");
     QString filter = this->type == (int)DUN_ENTITY_TYPE::MONSTER ? tr("CL2 Files (*.cl2 *.CL2)") : tr("CEL Files (*.cel *.CEL)");
     QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
-
-    if (filePath.isEmpty())
+    if (filePath.isEmpty()) {
         return;
-
+    }
     this->ui->celFileLineEdit->setText(filePath);
 }
 
 void DungeonResourceDialog::on_baseTrnFileBrowsePushButton_clicked()
 {
     QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Base Translation File"), tr("TRN Files (*.trn *.TRN)"));
-
-    if (filePath.isEmpty())
+    if (filePath.isEmpty()) {
         return;
-
+    }
     this->ui->baseTrnFileLineEdit->setText(filePath);
 }
 
@@ -106,10 +104,9 @@ void DungeonResourceDialog::on_baseTrnFileClearPushButton_clicked()
 void DungeonResourceDialog::on_uniqueTrnFileBrowsePushButton_clicked()
 {
     QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Unique Translation File"), tr("TRN Files (*.trn *.TRN)"));
-
-    if (filePath.isEmpty())
+    if (filePath.isEmpty()) {
         return;
-
+    }
     this->ui->uniqueTrnFileLineEdit->setText(filePath);
     this->ui->uniqueMonCheckBox->setChecked(true);
 }
