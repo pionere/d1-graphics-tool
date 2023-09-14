@@ -946,9 +946,9 @@ QImage D1Dun::getMonsterImage(DunMonsterType monType, unsigned time)
     }
     if (monEntry->monGfx != nullptr) {
         std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(monEntry->monDir);
-        int frameNum = 1 + (time % (frameIndices.second /*- frameIndices.first*/ + 1));
+        int frameIdx = frameIndices.first + (time % (frameIndices.second - frameIndices.first + 1));
         monEntry->monGfx->setPalette(monEntry->monPal);
-        return monEntry->monGfx->getFrameImage(frameNum - 1);
+        return monEntry->monGfx->getFrameImage(frameIdx);
     } else {
         return QImage();
     }
