@@ -20,6 +20,7 @@ public:
     void setPalette(D1Pal *pal);
     bool ownsPalette() const;
     bool isSelected() const;
+    void setSelected(bool selected);
 
 private slots:
     void on_deletePushButtonClicked();

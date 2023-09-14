@@ -53,6 +53,11 @@ bool TrnGeneratePalEntryWidget::isSelected() const
     return this->ui->selectRadioButton->isChecked();
 }
 
+void TrnGeneratePalEntryWidget::setSelected(bool selected)
+{
+    this->ui->selectRadioButton->setChecked(selected);
+}
+
 void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 {
     // start file-dialog

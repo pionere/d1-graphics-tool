@@ -2,6 +2,7 @@
 
 #include <QMessageBox>
 
+#include "config.h"
 #include "d1trs.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
@@ -56,17 +57,17 @@ void PalScene::displayColors()
     }
 }
 
-void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) override
+void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
 
 }
 
-void PalScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override
+void PalScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
 
 }
 
-void PalScene::keyPressEvent(QKeyEvent *event) override
+void PalScene::keyPressEvent(QKeyEvent *event)
 {
 
 }
@@ -124,20 +125,23 @@ void TrnGenerateDialog::initialize(D1Pal *p)
 {
     this->pal = p;
 
+    this->ui->shadeComboBox->setCurrentIndex(0);
+
     QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->parentWidget()->findChildren<TrnGeneratePalEntryWidget *>();
     if (palWidgets.empty()) {
         TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, p, false);
         this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
+        widget->setSelected(true);
     } else {
         for (TrnGeneratePalEntryWidget *palWidget : palWidgets) {
             if (!palWidget->ownsPalette()) {
                 palWidget->setPalette(p);
+                palWidget->setSelected(true);
             }
         }
     }
 
-    this->ui->shadeComboBox->setCurrentIndex(0);
-    this->updatePals();
+    this->updatePals(); // should be triggered by setSelected
 }
 
 void TrnGenerateDialog::on_actionAddRange_triggered()
