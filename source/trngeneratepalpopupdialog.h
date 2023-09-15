@@ -1,7 +1,8 @@
 #pragma once
 
-#include <QButtonGroup>
-#include <QWidget>
+#include <QDialog>
+
+#include "trngeneratedialog.h"
 
 class D1Pal;
 class D1Trn;

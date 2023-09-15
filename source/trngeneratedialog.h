@@ -9,10 +9,10 @@
 
 #include "trngeneratecolentrywidget.h"
 #include "trngeneratepalentrywidget.h"
-#include "trngeneratepalpopupwidget.h"
 
 class D1Pal;
 class D1Trn;
+class TrnGeneratePalPopupDialog;
 
 typedef struct GenerateTrnColor {
     int firstcolor;
