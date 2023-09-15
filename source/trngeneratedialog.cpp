@@ -108,12 +108,11 @@ void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     QPointF pos = event->scenePos();
 
     int colorIndex = PaletteScene::getColorIndexFromCoordinates(pos);
-QMessageBox::critical(nullptr, "Error", QString("Mouse click on %1:%2 - %3. %4").arg(colorIndex).arg(this->trn != nullptr).arg((flags & DOUBLE_CLICK) != 0).arg(this->selectedIndex));
 
     // emit this->colorIndexClicked(colorIndex);
     if (flags & DOUBLE_CLICK) {
         this->colorSelected(colorIndex);
-    } else if (this->trn != nullptr && this->selectedIndex != colorIndex) {
+    } else if (/*this->trn != nullptr && */this->selectedIndex != colorIndex) {
         // if (this->selectedIndex == colorIndex) {
         //    colorIndex = COLORIDX_UNSELECTED;
         // }
@@ -171,8 +170,7 @@ void PalScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 void PalScene::keyPressEvent(QKeyEvent *event)
 {
     int keyId = event->key();
-QMessageBox::critical(nullptr, "Error", QString("Keypress %1:%2 - %3").arg(keyId).arg(keyId == Qt::Key_Enter).arg(this->trn != nullptr));
-    if (keyId == Qt::Key_Enter) {
+    if (keyId == Qt::Key_Return || keyId == Qt::Key_Enter) {
         this->colorSelected(this->selectedIndex);
         return;
     }

@@ -14,6 +14,7 @@ TrnGeneratePalPopupDialog::TrnGeneratePalPopupDialog(TrnGenerateDialog *parent)
     , view(parent)
 {
     this->ui->setupUi(this);
+    this->ui->colorPickerView->setMouseTracking(true);
     this->ui->colorPickerView->setScene(&this->popupScene);
 
 }
