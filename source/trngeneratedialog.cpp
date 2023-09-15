@@ -56,7 +56,7 @@ void PalScene::displayColors()
             QBrush brush = QBrush(Qt::NoBrush);
 
             int b = PALETTE_SELECTION_WIDTH / 2;
-            coordinates.adjust(b, b, -b, -b);
+            coordinates.adjust(-b, -b, +b, +b);
 
             this->addRect(coordinates, borderPen, brush);
         }
@@ -109,7 +109,11 @@ void PalScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     } else {
         tooltip = "";
     }
-    this->views()[0]->setToolTip(tooltip);
+    const QList<QGraphicsItem *> items = this->views()[0]->items();
+    if (!items.isEmpty()) {
+        items[0]->setToolTip(tooltip);
+    }
+    // this->views()[0]->setToolTip(tooltip);
 }
 
 void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

@@ -44,6 +44,12 @@
       </item>
       <item row="4" column="1">
        <widget class="QComboBox" name="levelTypeComboBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <item>
          <property name="text">
           <string>Town</string>
@@ -95,6 +101,12 @@
       </item>
       <item row="5" column="1">
        <widget class="QComboBox" name="colorDistanceComboBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <item>
          <property name="text">
           <string>Square</string>
@@ -232,6 +244,13 @@
        <item>
         <widget class="QComboBox" name="shadeComboBox"/>
        </item>
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </item>
      <item>
@@ -253,18 +272,18 @@
            <height>196</height>
           </size>
          </property>
-         <property name="styleSheet">
+         <!--property name="styleSheet">
           <string notr="true">color: rgb(255, 255, 255);</string>
-         </property>
+         </property-->
          <property name="frameShape">
           <enum>QFrame::Box</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
          </property>
-         <property name="lineWidth">
+         <!--property name="lineWidth">
           <number>2</number>
-         </property>
+         </property-->
         </widget>
        </item>
        <item>
