@@ -61,6 +61,7 @@ private:
     TrnGenerateDialog *view;
     D1Pal *pal;
     D1Trn *trn;
+    quint8 selectedIndex;
 };
 
 class TrnGenerateDialog : public QDialog {

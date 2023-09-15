@@ -2,18 +2,25 @@
 
 #include <QMessageBox>
 
+#include "celview.h"
 #include "config.h"
 #include "d1trs.h"
 #include "mainwindow.h"
+#include "palettewidget.h"
 #include "progressdialog.h"
 #include "ui_trngeneratedialog.h"
 
 #include "dungeon/all.h"
 
+#define COLORIDX_UNSELECTED D1PAL_COLORS
+
 PalScene::PalScene(TrnGenerateDialog *v)
     : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH, v)
     , view(v)
+    , selectedIndex(COLORIDX_UNSELECTED)
 {
+    // Setting background color
+    this->setBackgroundBrush(Qt::white);
 }
 
 void PalScene::initialize(D1Pal *p, D1Trn *t)
@@ -24,58 +31,110 @@ void PalScene::initialize(D1Pal *p, D1Trn *t)
 
 void PalScene::displayColors()
 {
-    // Positions
-    int x = 0;
-    int y = 0;
-
-    // X delta
-    int dx = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
-    // Y delta
-    int dy = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
-
-    // Color width
-    int w = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE - 2 * PALETTE_COLOR_SPACING;
-    int bsw = PALETTE_COLOR_SPACING;
-
     // Removing existing items
     this->clear();
 
-    // Setting background color
-    this->setBackgroundBrush(Qt::white);
-
     // Displaying palette colors
     D1Pal *colorPal = this->trn != nullptr ? this->trn->getResultingPalette() : this->pal;
-    QColor nullColor = QColor(Config::getGraphicsTransparentColor());
+    const QColor nullColor = QColor(Config::getGraphicsTransparentColor());
+    const QPen noPen(Qt::NoPen);
     for (int i = 0; i < D1PAL_COLORS; i++) {
         // Go to next line
-        if (i % PALETTE_COLORS_PER_LINE == 0 && i != 0) {
-            x = 0;
-            y += dy;
-        }
+        QRectF coordinates = PaletteScene::getColorCoordinates(i);
+        int a = PALETTE_COLOR_SPACING;
+        coordinates.adjust(a, a, -a, -a);
 
         QColor color = colorPal == nullptr ? nullColor : colorPal->getColor(i);
         QBrush brush = QBrush(color);
-        QPen pen(Qt::NoPen);
 
-        this->addRect(x + bsw, y + bsw, w, w, pen, brush);
+        this->addRect(coordinates, noPen, brush);
 
-        x += dx;
+        if (this->selectedIndex == i) {
+            QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+            QPen borderPen(borderColor);
+            borderPen.setWidth(PALETTE_SELECTION_WIDTH);
+            QBrush brush = QBrush(Qt::NoBrush);
+
+            int b = PALETTE_SELECTION_WIDTH / 2;
+            coordinates.adjust(b, b, -b, -b);
+
+            this->addRect(coordinates, borderPen, brush);
+        }
     }
+}
+
+void PalScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
+{
+    QPointF pos = event->scenePos();
+
+    // Check if selected color has changed
+    int colorIndex = PaletteScene::getColorIndexFromCoordinates(pos);
+
+    // emit this->colorIndexHovered(colorIndex);
+    QString tooltip;
+    if (this->trn != nullptr) {
+        tooltip = QString::number(this->trn->getTranslation(colorIndex));
+    } else if (this->pal != nullptr) {
+        QColor color = this->pal->getColor(colorIndex);
+        if (color != this->pal->getUndefinedColor()) {
+            tooltip = color.name();
+        } else {
+            tooltip = "-";
+        }
+    } else {
+        tooltip = "";
+    }
+    this->views[0]->setToolTip(tooltip);
 }
 
 void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-
+    this->mouseHoverEvent(event);
 }
 
 void PalScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-
+    // this->mouseEvent(event, FIRST_CLICK | DOUBLE_CLICK);
 }
 
 void PalScene::keyPressEvent(QKeyEvent *event)
 {
+    int dir = event->key();
+    if (dir != Qt::Key_Left && dir != Qt::Key_Right && dir != Qt::Key_Up && dir != Qt::Key_Down) {
+        QGraphicsScene::keyPressEvent(event);
+        return;
+    }
+    // emit this->arrowKeyPressed(dir);
+    quint8 newIndex = this->selectedIndex;
+    switch (dir) {
+    case Qt::Key_Left:
+        if ((newIndex % PALETTE_COLORS_PER_LINE) == 0) {
+            return;
+        }
+        newIndex--;
+        break;
+    case Qt::Key_Right:
+        if ((newIndex % PALETTE_COLORS_PER_LINE) == PALETTE_COLORS_PER_LINE - 1) {
+            return;
+        }
+        newIndex++;
+        break;
+    case Qt::Key_Up:
+        if (newIndex < PALETTE_COLORS_PER_LINE) {
+            return;
+        }
+        newIndex -= PALETTE_COLORS_PER_LINE;
+        break;
+    case Qt::Key_Down:
+        if (newIndex >= D1PAL_COLORS - PALETTE_COLORS_PER_LINE) {
+            return;
+        }
+        newIndex += PALETTE_COLORS_PER_LINE;
+        break;
+    }
 
+    this->selectedIndex = newIndex;
+    this->displayColors();
 }
 
 TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
@@ -106,7 +165,7 @@ TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
         this->ui->shadeComboBox->addItem(QString::number(i), i);
     }
 
-    QObject::connect(&this->selectButtonGroup, SIGNAL(idClicked()), this, SLOT(on_selectButtonGroup_idClicked()));
+    QObject::connect(&this->selectButtonGroup, SIGNAL(idClicked(int)), this, SLOT(on_selectButtonGroup_idClicked(int)));
 }
 
 TrnGenerateDialog::~TrnGenerateDialog()
@@ -420,6 +479,8 @@ void TrnGenerateDialog::on_generateButton_clicked()
     this->clearLists();
 
     D1Trs::generateLightTranslations(params, this->pal, this->lightTrns, this->shadePals);
+
+    this->updatePals();
 }
 
 void TrnGenerateDialog::on_doneButton_clicked()
