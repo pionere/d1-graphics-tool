@@ -28,8 +28,8 @@ void TrnGeneratePalPopupDialog::initialize(D1Pal *p, D1Trn *t, int i)
     this->trn = t;
     this->trnIndex = i;
 
-    this->popupScene.initialize(p, t);
-    this->popupScene.setSelectedIndex(i);
+    this->popupScene.initialize(p, nullptr);
+    this->popupScene.setSelectedIndex(t->getTranslation(i));
 
     this->popupScene.displayColors();
 }

@@ -78,6 +78,24 @@ void PalScene::displayColors()
     }
 }
 
+void PalScene::colorSelected(int index)
+{
+    TrnGenerateDialog *trnView = qobject_cast<TrnGenerateDialog *>(this->view);
+    if (trnView != nullptr) {
+        if (this->popup == nullptr) {
+            this->popup = new TrnGeneratePalPopupDialog(trnView);
+        }
+        this->popup->initialize(this->pal, this->trn, index);
+        this->popup->show();
+        return;
+    }
+    TrnGeneratePalPopupDialog *palPopup = qobject_cast<TrnGeneratePalPopupDialog *>(this->view);
+    if (palPopup != nullptr) {
+        palPopup->on_colorDblClicked(index);
+        return;
+    }
+}
+
 void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
 {
     if (event->button() != Qt::LeftButton) {
@@ -91,20 +109,7 @@ void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     // emit this->colorIndexClicked(colorIndex);
     if (this->trn != nullptr) {
         if (flags & DOUBLE_CLICK) {
-            TrnGenerateDialog *trnView = qobject_cast<TrnGenerateDialog *>(this->view);
-            if (trnView != nullptr) {
-                if (this->popup == nullptr) {
-                    this->popup = new TrnGeneratePalPopupDialog(trnView);
-                }
-                this->popup->initialize(this->pal, this->trn, colorIndex);
-                this->popup->show();
-                return;
-            }
-            TrnGeneratePalPopupDialog *palPopup = qobject_cast<TrnGeneratePalPopupDialog *>(this->view);
-            if (palPopup != nullptr) {
-                palPopup->on_colorDblClicked(colorIndex);
-                return;
-            }
+            this->colorSelected(this->selectedIndex);
         } else if (this->selectedIndex != colorIndex) {
             // if (this->selectedIndex == colorIndex) {
             //    colorIndex = COLORIDX_UNSELECTED;
@@ -163,8 +168,12 @@ void PalScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void PalScene::keyPressEvent(QKeyEvent *event)
 {
-    int dir = event->key();
-    if (dir != Qt::Key_Left && dir != Qt::Key_Right && dir != Qt::Key_Up && dir != Qt::Key_Down) {
+    int keyId = event->key();
+    if (keyId == Qt::Key_Enter && this->trn != nullptr) {
+        this->colorSelected(this->selectedIndex);
+        return;
+    }
+    if (keyId != Qt::Key_Left && keyId != Qt::Key_Right && keyId != Qt::Key_Up && keyId != Qt::Key_Down) {
         QGraphicsScene::keyPressEvent(event);
         return;
     }

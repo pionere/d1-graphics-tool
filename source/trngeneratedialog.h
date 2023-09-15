@@ -53,6 +53,7 @@ public:
     void displayColors();
 
 private:
+    void colorSelected(int index);
     void mouseEvent(QGraphicsSceneMouseEvent *event, int flags);
     void mouseHoverEvent(QGraphicsSceneMouseEvent *event);
 
