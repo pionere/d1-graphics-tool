@@ -108,10 +108,11 @@ void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     QPointF pos = event->scenePos();
 
     int colorIndex = PaletteScene::getColorIndexFromCoordinates(pos);
+//QMessageBox::critical(nullptr, "Error", QString("Mouse click on %1:%2").arg(colorIndex).arg(this->trn != nullptr));
 
     // emit this->colorIndexClicked(colorIndex);
     if (flags & DOUBLE_CLICK) {
-        this->colorSelected(this->selectedIndex);
+        this->colorSelected(colorIndex);
     } else if (this->trn != nullptr && this->selectedIndex != colorIndex) {
         // if (this->selectedIndex == colorIndex) {
         //    colorIndex = COLORIDX_UNSELECTED;
@@ -507,8 +508,8 @@ void TrnGenerateDialog::updatePals()
         }
     }
     if (!hasSelected && palWidgets.count() != 0) {
+// QMessageBox::critical(nullptr, "Error", "Pre-Selecting the first pal");
         palWidgets[0]->setSelected(true);
-        return; // should trigger a new updatePals()
     }
     // find the shade-palette and the color-palette of the selected palette-widget
     for (int i = 0; i < palWidgets.count(); i++) {
@@ -526,6 +527,7 @@ void TrnGenerateDialog::updatePals()
         trn->setPalette(basePal);
         trn->refreshResultingPalette();
     }
+// QMessageBox::critical(nullptr, "Error", QString("Scene init with %1:%2 %3").arg(basePal != nullptr).arg(trn != nullptr).arg(shadePal != nullptr));
 
     this->shadeScene.initialize(shadePal, nullptr);
     this->lightScene.initialize(basePal, trn);
