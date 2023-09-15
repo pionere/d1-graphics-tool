@@ -82,6 +82,9 @@ void PalScene::colorSelected(int index)
 {
     TrnGenerateDialog *trnView = qobject_cast<TrnGenerateDialog *>(this->view);
     if (trnView != nullptr) {
+        if (this->trn == nullptr) {
+            return; // disable popup on the shade-scene
+        }
         if (this->popup == nullptr) {
             this->popup = new TrnGeneratePalPopupDialog(trnView);
         }
@@ -107,16 +110,14 @@ void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     int colorIndex = PaletteScene::getColorIndexFromCoordinates(pos);
 
     // emit this->colorIndexClicked(colorIndex);
-    if (this->trn != nullptr) {
-        if (flags & DOUBLE_CLICK) {
-            this->colorSelected(this->selectedIndex);
-        } else if (this->selectedIndex != colorIndex) {
-            // if (this->selectedIndex == colorIndex) {
-            //    colorIndex = COLORIDX_UNSELECTED;
-            // }
-            this->selectedIndex = colorIndex;
-            this->displayColors();
-        }
+    if (flags & DOUBLE_CLICK) {
+        this->colorSelected(this->selectedIndex);
+    } else if (this->trn != nullptr && this->selectedIndex != colorIndex) {
+        // if (this->selectedIndex == colorIndex) {
+        //    colorIndex = COLORIDX_UNSELECTED;
+        // }
+        this->selectedIndex = colorIndex;
+        this->displayColors();
     }
 }
 
@@ -169,7 +170,7 @@ void PalScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 void PalScene::keyPressEvent(QKeyEvent *event)
 {
     int keyId = event->key();
-    if (keyId == Qt::Key_Enter && this->trn != nullptr) {
+    if (keyId == Qt::Key_Enter) {
         this->colorSelected(this->selectedIndex);
         return;
     }
@@ -276,17 +277,15 @@ void TrnGenerateDialog::initialize(D1Pal *p)
     if (palWidgets.empty()) {
         TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, &this->selectButtonGroup, p, false);
         this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
-        widget->setSelected(true);
     } else {
         for (TrnGeneratePalEntryWidget *palWidget : palWidgets) {
             if (!palWidget->ownsPalette()) {
                 palWidget->setPalette(p);
-                palWidget->setSelected(true);
             }
         }
     }
 
-    this->updatePals(); // should be triggered by setSelected
+    this->updatePals();
 }
 
 void TrnGenerateDialog::on_actionAddRange_triggered()
@@ -317,12 +316,14 @@ void TrnGenerateDialog::on_actionAddPalette_triggered()
         TrnGeneratePalEntryWidget *widget = new TrnGeneratePalEntryWidget(this, &this->selectButtonGroup, newPal, true);
         this->ui->palettesVBoxLayout->addWidget(widget, 0, Qt::AlignTop);
     }
+    this->updatePals();
 }
 
 void TrnGenerateDialog::on_actionDelPalette_triggered(TrnGeneratePalEntryWidget *caller)
 {
     this->ui->palettesVBoxLayout->removeWidget(caller);
     caller->deleteLater();
+    this->updatePals();
     this->adjustSize();
 }
 
@@ -497,6 +498,19 @@ void TrnGenerateDialog::updatePals()
     D1Pal *shadePal = nullptr;
     D1Pal *basePal = nullptr;
     QList<TrnGeneratePalEntryWidget *> palWidgets = this->ui->palettesVBoxLayout->parentWidget()->findChildren<TrnGeneratePalEntryWidget *>();
+    // ensure there is at least one selected palette-widget
+    bool hasSelected = false;
+    for (TrnGeneratePalEntryWidget *selectedPalWidget : palWidgets) {
+        if (selectedPalWidget->isSelected()) {
+            hasSelected = true;
+            break;
+        }
+    }
+    if (!hasSelected && palWidgets.count() != 0) {
+        palWidgets[0]->setSelected(true);
+        return; // should trigger a new updatePals()
+    }
+    // find the shade-palette and the color-palette of the selected palette-widget
     for (int i = 0; i < palWidgets.count(); i++) {
         const TrnGeneratePalEntryWidget *palWidget = palWidgets[i];
         if (palWidget->isSelected() && (unsigned)i < this->shadePals.size()) {
@@ -505,7 +519,7 @@ void TrnGenerateDialog::updatePals()
             break;
         }
     }
-
+    // load the shade-palette, the color-palette and the light-trn to the scenes
     D1Trn *trn = nullptr;
     if ((unsigned)shadeIdx < this->lightTrns.size()) {
         trn = this->lightTrns[shadeIdx];

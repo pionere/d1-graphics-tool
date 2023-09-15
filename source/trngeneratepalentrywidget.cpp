@@ -27,10 +27,6 @@ TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, 
 
 TrnGeneratePalEntryWidget::~TrnGeneratePalEntryWidget()
 {
-    QButtonGroup *group = this->ui->selectRadioButton->group();
-    if (group != nullptr) {
-        group->removeButton(this->ui->selectRadioButton);
-    }
     delete ui;
     if (this->delPal) {
         delete this->pal;
@@ -88,5 +84,9 @@ void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 
 void TrnGeneratePalEntryWidget::on_deletePushButtonClicked()
 {
+    QButtonGroup *group = this->ui->selectRadioButton->group();
+    // if (group != nullptr) {
+        group->removeButton(this->ui->selectRadioButton);
+    // }
     this->view->on_actionDelPalette_triggered(this);
 }
