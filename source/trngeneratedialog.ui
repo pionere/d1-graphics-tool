@@ -275,18 +275,18 @@
            <height>196</height>
           </size>
          </property>
-         <property name="styleSheet">
+         <!--property name="styleSheet">
           <string notr="true">color: rgb(255, 255, 255);</string>
-         </property>
+         </property-->
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::NoFrame</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
          </property>
-         <property name="lineWidth">
+         <!--property name="lineWidth">
           <number>2</number>
-         </property>
+         </property-->
         </widget>
        </item>
        <item>
