@@ -182,7 +182,7 @@ void PalScene::keyPressEvent(QKeyEvent *event)
     if (newIndex == COLORIDX_UNSELECTED) {
         return;
     }
-    switch (dir) {
+    switch (keyId) {
     case Qt::Key_Left:
         if ((newIndex % PALETTE_COLORS_PER_LINE) == 0) {
             return;
