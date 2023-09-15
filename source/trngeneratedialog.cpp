@@ -89,7 +89,7 @@ void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
             TrnGenerateDialog *trnView = qobject_cast<TrnGenerateDialog *>(this->view);
             if (trnView != nullptr) {
                 if (this->popup == nullptr) {
-                    this->popup = new TrnGeneratePalPopupDialog(this);
+                    this->popup = new TrnGeneratePalPopupDialog(trnView);
                 }
                 this->popup->initialize(this->pal, this->trn, colorIndex);
                 this->popup->show();
