@@ -109,7 +109,7 @@ void PalScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     } else {
         tooltip = "";
     }
-    this->views[0]->setToolTip(tooltip);
+    this->views()[0]->setToolTip(tooltip);
 }
 
 void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
