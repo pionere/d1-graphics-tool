@@ -84,7 +84,7 @@ private slots:
     void on_actionAddPalette_triggered();
     void on_levelTypeComboBox_activated(int index);
     void on_colorDistanceComboBox_activated(int index);
-    void on_selectButtonGroup_idClicked();
+    void on_selectButtonGroup_idClicked(int index);
 
     void on_shadeComboBox_activated(int index);
 
@@ -94,6 +94,7 @@ private slots:
 
 private:
     Ui::TrnGenerateDialog *ui;
+    QButtonGroup selectButtonGroup = QButtonGroup(this);
     PalScene shadeScene = PalScene(this);
     PalScene lightScene = PalScene(this);
     PalScene popupScene = PalScene(this);

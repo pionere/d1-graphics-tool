@@ -332,7 +332,7 @@
  <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
- <buttongroups>
+ <!--buttongroups>
   <buttongroup name="selectButtonGroup"/>
- </buttongroups>
+ </buttongroups-->
 </ui>
