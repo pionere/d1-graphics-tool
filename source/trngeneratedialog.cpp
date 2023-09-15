@@ -63,6 +63,31 @@ void PalScene::displayColors()
     }
 }
 
+void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
+{
+    if (event->button() != Qt::LeftButton) {
+        return;
+    }
+
+    QPointF pos = event->scenePos();
+
+    int colorIndex = PaletteScene::getColorIndexFromCoordinates(pos);
+
+    // emit this->colorIndexClicked(colorIndex);
+    if (this->trn != nullptr) {
+        if (this->selectedIndex == colorIndex) {
+            colorIndex = COLORIDX_UNSELECTED;
+        }
+        this->selectedIndex = colorIndex;
+        this->displayColors();
+    }
+}
+
+void PalScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    this->mouseEvent(event, FIRST_CLICK);
+}
+
 void PalScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF pos = event->scenePos();
@@ -105,7 +130,10 @@ void PalScene::keyPressEvent(QKeyEvent *event)
         return;
     }
     // emit this->arrowKeyPressed(dir);
-    quint8 newIndex = this->selectedIndex;
+    int newIndex = this->selectedIndex;
+    if (newIndex == COLORIDX_UNSELECTED) {
+        return;
+    }
     switch (dir) {
     case Qt::Key_Left:
         if ((newIndex % PALETTE_COLORS_PER_LINE) == 0) {

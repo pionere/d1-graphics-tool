@@ -27,11 +27,12 @@ TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, 
 
 TrnGeneratePalEntryWidget::~TrnGeneratePalEntryWidget()
 {
+    this->ui->selectRadioButton->group()->removeButton(this->ui->selectRadioButton);
+
     delete ui;
     if (this->delPal) {
         delete this->pal;
     }
-    this->ui->selectRadioButton->group()->removeButton(this->ui->selectRadioButton);
 }
 
 D1Pal *TrnGeneratePalEntryWidget::getPalette() const

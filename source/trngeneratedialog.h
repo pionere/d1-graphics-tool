@@ -49,7 +49,12 @@ public:
     void initialize(D1Pal *pal, D1Trn *trn);
     void displayColors();
 
+private:
+    void mouseEvent(QGraphicsSceneMouseEvent *event, int flags);
+    void mouseHoverEvent(QGraphicsSceneMouseEvent *event);
+
 private slots:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
@@ -61,7 +66,7 @@ private:
     TrnGenerateDialog *view;
     D1Pal *pal;
     D1Trn *trn;
-    quint8 selectedIndex;
+    int selectedIndex;
 };
 
 class TrnGenerateDialog : public QDialog {
