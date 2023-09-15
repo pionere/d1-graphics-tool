@@ -275,9 +275,9 @@
            <height>196</height>
           </size>
          </property>
-         <!--property name="styleSheet">
+         <property name="styleSheet">
           <string notr="true">color: rgb(255, 255, 255);</string>
-         </property-->
+         </property>
          <property name="frameShape">
           <enum>QFrame::Box</enum>
          </property>

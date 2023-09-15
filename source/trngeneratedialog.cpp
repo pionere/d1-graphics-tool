@@ -100,10 +100,10 @@ void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
                 palPopup->on_colorDblClicked(colorIndex);
                 return;
             }
-        } else {
-            if (this->selectedIndex == colorIndex) {
-                colorIndex = COLORIDX_UNSELECTED;
-            }
+        } else if (this->selectedIndex != colorIndex) {
+            // if (this->selectedIndex == colorIndex) {
+            //    colorIndex = COLORIDX_UNSELECTED;
+            // }
             this->selectedIndex = colorIndex;
             this->displayColors();
         }
@@ -140,10 +140,10 @@ void PalScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     // if (!items.isEmpty()) {
     //     items[0]->setToolTip(tooltip);
     // }
-    // this->views()[0]->setToolTip(tooltip);
-    QFontMetrics fm(QToolTip::font());
-    QRect rect = fm.boundingRect(tooltip);
-    QToolTip::showText(QCursor::pos() - rect.bottomRight(), tooltip);
+    this->views()[0]->setToolTip(tooltip);
+    // QFontMetrics fm(QToolTip::font());
+    // QRect rect = fm.boundingRect(tooltip);
+    // QToolTip::showText(QCursor::pos() - rect.bottomRight(), tooltip);
 }
 
 void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -153,7 +153,7 @@ void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void PalScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    // this->mouseEvent(event, FIRST_CLICK | DOUBLE_CLICK);
+    this->mouseEvent(event, FIRST_CLICK | DOUBLE_CLICK);
 }
 
 void PalScene::keyPressEvent(QKeyEvent *event)
@@ -204,7 +204,9 @@ TrnGenerateDialog::TrnGenerateDialog(QWidget *parent)
     , ui(new Ui::TrnGenerateDialog())
 {
     this->ui->setupUi(this);
+    this->ui->shadeView->setMouseTracking(true);
     this->ui->shadeView->setScene(&this->shadeScene);
+    this->ui->lightView->setMouseTracking(true);
     this->ui->lightView->setScene(&this->lightScene);
 
     QHBoxLayout *layout = this->ui->addRangeButtonLayout;
