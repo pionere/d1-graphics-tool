@@ -4,6 +4,7 @@
 #include <QCursor>
 #include <QFontMetrics>
 #include <QMessageBox>
+#include <QToolTip>
 
 #include "celview.h"
 #include "config.h"
@@ -11,6 +12,7 @@
 #include "mainwindow.h"
 #include "palettewidget.h"
 #include "progressdialog.h"
+#include "trngeneratepalpopupdialog.h"
 #include "ui_trngeneratedialog.h"
 
 #include "dungeon/all.h"

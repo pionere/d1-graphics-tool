@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QStyle>
 
+#include "d1trn.h"
 #include "trngeneratedialog.h"
 #include "ui_trngeneratepalpopupdialog.h"
 
