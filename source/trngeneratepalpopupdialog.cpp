@@ -29,6 +29,9 @@ void TrnGeneratePalPopupDialog::initialize(D1Pal *p, D1Trn *t, int i)
     this->trnIndex = i;
 
     this->popupScene.initialize(p, t);
+    this->popupScene.setSelectedIndex(i);
+
+    this->popupScene.displayColors();
 }
 
 void TrnGeneratePalPopupDialog::on_colorDblClicked(int index)
@@ -40,9 +43,9 @@ void TrnGeneratePalPopupDialog::on_colorDblClicked(int index)
     this->close();
 }
 
-void TrnGeneratePalPopupDialog::keyPressEvent(QKeyEvent *event)
+/*void TrnGeneratePalPopupDialog::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
         this->close();
     }
-}
+}*/

@@ -23,7 +23,7 @@ public:
     void on_colorDblClicked(int colorIndex);
 
 private slots:
-    void keyPressEvent(QKeyEvent *event) override;
+    // void keyPressEvent(QKeyEvent *event) override;
 
 private:
     Ui::TrnGeneratePalPopupDialog *ui;

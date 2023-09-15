@@ -49,6 +49,7 @@ public:
     ~PalScene();
 
     void initialize(D1Pal *pal, D1Trn *trn);
+    void setSelectedIndex(int index);
     void displayColors();
 
 private:

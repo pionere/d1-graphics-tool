@@ -39,6 +39,11 @@ void PalScene::initialize(D1Pal *p, D1Trn *t)
     this->trn = t;
 }
 
+void PalScene::setSelectedIndex(int index)
+{
+    this->selectedIndex = index;
+}
+
 void PalScene::displayColors()
 {
     // Removing existing items
