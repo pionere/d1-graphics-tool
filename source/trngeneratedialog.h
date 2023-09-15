@@ -9,6 +9,7 @@
 
 #include "trngeneratecolentrywidget.h"
 #include "trngeneratepalentrywidget.h"
+#include "trngeneratepalpopupwidget.h"
 
 class D1Pal;
 class D1Trn;
@@ -44,7 +45,8 @@ class PalScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
-    PalScene(TrnGenerateDialog *view);
+    explicit PalScene(QWidget *view);
+    ~PalScene();
 
     void initialize(D1Pal *pal, D1Trn *trn);
     void displayColors();
@@ -59,11 +61,13 @@ private slots:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
-signals:
-    void colorClicked(quint8 index);
+//signals:
+//    void colorClicked(quint8 index);
 
 private:
-    TrnGenerateDialog *view;
+    QWidget *view;
+    TrnGeneratePalPopupDialog *popup = nullptr;
+
     D1Pal *pal;
     D1Trn *trn;
     int selectedIndex;
@@ -80,10 +84,10 @@ public:
 
     void on_actionDelRange_triggered(TrnGenerateColEntryWidget *caller);
     void on_actionDelPalette_triggered(TrnGeneratePalEntryWidget *caller);
+    void updatePals();
 
 private:
     void clearLists();
-    void updatePals();
 
 private slots:
     void on_actionAddRange_triggered();
@@ -103,7 +107,6 @@ private:
     QButtonGroup selectButtonGroup = QButtonGroup(this);
     PalScene shadeScene = PalScene(this);
     PalScene lightScene = PalScene(this);
-    PalScene popupScene = PalScene(this);
 
     D1Pal *pal;
     std::vector<std::vector<D1Pal *>> shadePals;

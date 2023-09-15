@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TrnGeneratePalPopupDialog</class>
+ <widget class="QDialog">
+  <property name="windowTitle">
+   <string>Select color</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="QGraphicsView" name="colorPickerView">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed"/>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>196</width>
+       <height>196</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>196</width>
+       <height>196</height>
+      </size>
+     </property>
+     <!--property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
+         </property-->
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>2</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+ <buttongroups/>
+</ui>

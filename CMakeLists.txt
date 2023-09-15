@@ -212,6 +212,9 @@ set(PROJECT_SOURCES
         source/trngeneratepalentrywidget.cpp
         source/trngeneratepalentrywidget.h
         source/trngeneratepalentrywidget.ui
+        source/trngeneratepalpopupdialog.cpp
+        source/trngeneratepalpopupdialog.h
+        source/trngeneratepalpopupdialog.ui
         source/upscaledialog.cpp
         source/upscaledialog.h
         source/upscaledialog.ui

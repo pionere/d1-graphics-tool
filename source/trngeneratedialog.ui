@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>TrnGenerateDialog</class>
  <widget class="QDialog">
+  <property name="windowTitle">
+   <string>Generate Translations</string>
+  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
@@ -281,9 +284,9 @@
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
          </property>
-         <!--property name="lineWidth">
+         <property name="lineWidth">
           <number>2</number>
-         </property-->
+         </property>
         </widget>
        </item>
        <item>

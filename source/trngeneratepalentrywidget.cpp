@@ -17,7 +17,7 @@ TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, 
     , delPal(dp)
 {
     ui->setupUi(this);
-    // btnGroup->addButton(this->ui->selectRadioButton);
+    btnGroup->addButton(this->ui->selectRadioButton);
 
     QLayout *layout = this->ui->entryHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarCloseButton, tr("Remove"), this, &TrnGeneratePalEntryWidget::on_deletePushButtonClicked);
@@ -27,8 +27,10 @@ TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, 
 
 TrnGeneratePalEntryWidget::~TrnGeneratePalEntryWidget()
 {
-    // this->ui->selectRadioButton->group()->removeButton(this->ui->selectRadioButton);
-
+    QButtonGroup *group = this->ui->selectRadioButton->group();
+    if (group != nullptr) {
+        group->removeButton(this->ui->selectRadioButton);
+    }
     delete ui;
     if (this->delPal) {
         delete this->pal;

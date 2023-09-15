@@ -1,5 +1,8 @@
 #include "trngeneratedialog.h"
 
+#include <QApplication>
+#include <QCursor>
+#include <QFontMetrics>
 #include <QMessageBox>
 
 #include "celview.h"
@@ -14,13 +17,18 @@
 
 #define COLORIDX_UNSELECTED D1PAL_COLORS
 
-PalScene::PalScene(TrnGenerateDialog *v)
+PalScene::PalScene(QWidget *v)
     : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH, v)
     , view(v)
     , selectedIndex(COLORIDX_UNSELECTED)
 {
     // Setting background color
     this->setBackgroundBrush(Qt::white);
+}
+
+PalScene::~PalScene()
+{
+    delete this->popup;
 }
 
 void PalScene::initialize(D1Pal *p, D1Trn *t)
@@ -55,8 +63,8 @@ void PalScene::displayColors()
             borderPen.setWidth(PALETTE_SELECTION_WIDTH);
             QBrush brush = QBrush(Qt::NoBrush);
 
-            int b = PALETTE_SELECTION_WIDTH / 2;
-            coordinates.adjust(-b, -b, +b, +b);
+            // int b = PALETTE_SELECTION_WIDTH / 2;
+            // coordinates.adjust(-b, -b, +b, +b);
 
             this->addRect(coordinates, borderPen, brush);
         }
@@ -75,11 +83,28 @@ void PalScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
 
     // emit this->colorIndexClicked(colorIndex);
     if (this->trn != nullptr) {
-        if (this->selectedIndex == colorIndex) {
-            colorIndex = COLORIDX_UNSELECTED;
+        if (flags & DOUBLE_CLICK) {
+            TrnGenerateDialog *trnView = qobject_cast<TrnGenerateDialog *>(this->view);
+            if (trnView != nullptr) {
+                if (this->popup == nullptr) {
+                    this->popup = new TrnGeneratePalPopupDialog(this);
+                }
+                this->popup->initialize(this->pal, this->trn, colorIndex);
+                this->popup->show();
+                return;
+            }
+            TrnGeneratePalPopupDialog *palPopup = qobject_cast<TrnGeneratePalPopupDialog *>(this->view);
+            if (palPopup != nullptr) {
+                palPopup->on_colorDblClicked(colorIndex);
+                return;
+            }
+        } else {
+            if (this->selectedIndex == colorIndex) {
+                colorIndex = COLORIDX_UNSELECTED;
+            }
+            this->selectedIndex = colorIndex;
+            this->displayColors();
         }
-        this->selectedIndex = colorIndex;
-        this->displayColors();
     }
 }
 
@@ -109,11 +134,14 @@ void PalScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     } else {
         tooltip = "";
     }
-    const QList<QGraphicsItem *> items = this->views()[0]->items();
-    if (!items.isEmpty()) {
-        items[0]->setToolTip(tooltip);
-    }
+    // const QList<QGraphicsItem *> items = this->views()[0]->items();
+    // if (!items.isEmpty()) {
+    //     items[0]->setToolTip(tooltip);
+    // }
     // this->views()[0]->setToolTip(tooltip);
+    QFontMetrics fm(QToolTip::font());
+    QRect rect = fm.boundingRect(tooltip);
+    QToolTip::showText(QCursor::pos() - rect.bottomRight(), tooltip);
 }
 
 void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
