@@ -114,6 +114,103 @@
        </property>
       </widget>
      </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout">
+     <item>
+      <layout class="QHBoxLayout">
+       <item>
+        <widget class="QLabel">
+         <property name="text">
+          <string>Shade level:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="shadeComboBox"/>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout">
+       <item>
+        <widget class="QGraphicsView" name="shadeView">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed"/>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>196</width>
+           <height>196</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>196</width>
+           <height>196</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGraphicsView" name="lightView">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed"/>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>196</width>
+           <height>196</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>196</width>
+           <height>196</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="doneButton">
+       <property name="text">
+        <string>Done</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="cancelButton">
        <property name="text">
@@ -128,5 +225,7 @@
  <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
- <buttongroups/>
+ <!--buttongroups>
+  <buttongroup name="selectButtonGroup"/>
+ </buttongroups-->
 </ui>

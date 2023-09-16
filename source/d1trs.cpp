@@ -80,14 +80,17 @@ static void getPalColor(const std::vector<PaletteColor> &dynColors, QColor color
     }
 }
 
+static std::vector<std::vector<D1Pal *>> *shadePalettes;
 static BYTE selectColor(BYTE colorIdx, int shade, double stepsIn, bool deltaSteps, double stepsMpl, const std::array<bool, NUM_COLORS> &dynColors, const std::vector<D1Pal *> &pals)
 {
     std::vector<std::array<int, NUM_COLORS>> options;
 
-    for (const D1Pal *pal : pals) {
+    for (unsigned n = 0; n < pals.size(); n++) {
+        const D1Pal *pal = pals[n];
         QColor color = pal->getColor(colorIdx);
         std::array<int, NUM_COLORS> palOptions = { 0 };
         if (color == pal->getUndefinedColor()) {
+            (*shadePalettes)[n][shade]->setColor(colorIdx, color);
             options.push_back(palOptions);
             continue;
         }
@@ -110,6 +113,8 @@ static BYTE selectColor(BYTE colorIdx, int shade, double stepsIn, bool deltaStep
         } else {
             color = color.darker(100 * steps / (steps - shade));
         }
+
+        (*shadePalettes)[n][shade]->setColor(colorIdx, color);
 
         std::vector<PaletteColor> dynPalColors;
         pal->getValidColors(dynPalColors);
@@ -204,8 +209,15 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
     }
 }
 
-void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns)
+void D1Trs::generateLightTranslations(const GenerateTrnParam &params, D1Pal *pal, std::vector<D1Trn *> &trns, std::vector<std::vector<D1Pal *>> &shadePals)
 {
+    shadePals.resize(params.pals.size());
+    for (unsigned n = 0; n < params.pals.size(); n++) {
+        for (int i = 0; i <= MAXDARKNESS; i++) {
+            shadePals[n].push_back(new D1Pal());
+        }
+    }
+    shadePalettes = &shadePals;
     MakeLightTableCustom(params);
 
     QString filePath = QApplication::tr("Light%1.trn");

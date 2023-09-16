@@ -9,7 +9,7 @@
 #include "pushbuttonwidget.h"
 #include "ui_trngeneratepalentrywidget.h"
 
-TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, D1Pal *p, bool dp)
+TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, QButtonGroup *btnGroup, D1Pal *p, bool dp)
     : QWidget(parent)
     , ui(new Ui::TrnGeneratePalEntryWidget())
     , view(parent)
@@ -17,6 +17,7 @@ TrnGeneratePalEntryWidget::TrnGeneratePalEntryWidget(TrnGenerateDialog *parent, 
     , delPal(dp)
 {
     ui->setupUi(this);
+    btnGroup->addButton(this->ui->selectRadioButton);
 
     QLayout *layout = this->ui->entryHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarCloseButton, tr("Remove"), this, &TrnGeneratePalEntryWidget::on_deletePushButtonClicked);
@@ -48,6 +49,16 @@ bool TrnGeneratePalEntryWidget::ownsPalette() const
     return this->delPal;
 }
 
+bool TrnGeneratePalEntryWidget::isSelected() const
+{
+    return this->ui->selectRadioButton->isChecked();
+}
+
+void TrnGeneratePalEntryWidget::setSelected(bool selected)
+{
+    this->ui->selectRadioButton->setChecked(selected);
+}
+
 void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 {
     // start file-dialog
@@ -73,5 +84,9 @@ void TrnGeneratePalEntryWidget::on_paletteFileBrowseButton_clicked()
 
 void TrnGeneratePalEntryWidget::on_deletePushButtonClicked()
 {
+    QButtonGroup *group = this->ui->selectRadioButton->group();
+    // if (group != nullptr) {
+        group->removeButton(this->ui->selectRadioButton);
+    // }
     this->view->on_actionDelPalette_triggered(this);
 }
