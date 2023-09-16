@@ -119,6 +119,8 @@ PaletteScene::PaletteScene(PaletteWidget *v)
     : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH, v)
     , view(v)
 {
+    // Setting background color
+    this->setBackgroundBrush(Qt::white);
 }
 
 int PaletteScene::getColorIndexFromCoordinates(QPointF coordinates)
@@ -621,37 +623,14 @@ void PaletteWidget::initStopColorPicking()
 
 void PaletteWidget::displayColors()
 {
-    // Positions
-    int x = 0;
-    int y = 0;
-
-    // X delta
-    int dx = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
-    // Y delta
-    int dy = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
-
-    // Color width
-    int w = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE - 2 * PALETTE_COLOR_SPACING;
-    int bsw = PALETTE_COLOR_SPACING;
-
     // Removing existing items
     this->scene.clear();
 
-    // Setting background color
-    this->scene.setBackgroundBrush(Qt::white);
-
     // Displaying palette colors
     D1Pal *colorPal = this->isTrn ? this->trn->getResultingPalette() : this->pal;
+    const QPen noPen(Qt::NoPen);
     for (int i = 0; i < D1PAL_COLORS; i++) {
-        // Go to next line
-        if (i % PALETTE_COLORS_PER_LINE == 0 && i != 0) {
-            x = 0;
-            y += dy;
-        }
-
         QColor color = colorPal->getColor(i);
-        QBrush brush = QBrush(color);
-        QPen pen(Qt::NoPen);
 
         // Check palette display filter
 
@@ -689,10 +668,15 @@ void PaletteWidget::displayColors()
             && this->trn->getTranslation(i) == i)
             displayColor = false;
 
-        if (displayColor)
-            this->scene.addRect(x + bsw, y + bsw, w, w, pen, brush);
+        if (displayColor) {
+            QRectF coordinates = PaletteScene::getColorCoordinates(i);
+            int a = PALETTE_COLOR_SPACING;
+            coordinates.adjust(a, a, -a, -a);
 
-        x += dx;
+            QBrush brush = QBrush(color);
+
+            this->scene.addRect(coordinates, noPen, brush);
+        }
     }
 
     this->displaySelection();
