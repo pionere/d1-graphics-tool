@@ -152,6 +152,34 @@ static BYTE selectColor(BYTE colorIdx, int shade, double stepsIn, bool deltaStep
     return res;
 }
 
+static BYTE selectColor(BYTE colorIdx, int shade, bool shaded, BYTE resCol, const std::vector<D1Pal *> &pals)
+{
+    for (unsigned n = 0; n < pals.size(); n++) {
+        const D1Pal *pal = pals[n];
+        QColor color = pal->getColor(colorIdx);
+        if (color == pal->getUndefinedColor()) {
+            (*shadePalettes)[n][shade]->setColor(colorIdx, color);
+            continue;
+        }
+
+        if (shaded) {
+            // auto v = color.valueF();
+            auto v = color.lightnessF();
+
+            auto steps = v * (MAXDARKNESS + 1);
+            if (steps <= shade) {
+                color = QColorConstants::Black;
+            } else {
+                color = color.darker(100 * steps / (steps - shade));
+            }
+        }
+
+        (*shadePalettes)[n][shade]->setColor(colorIdx, color);
+    }
+
+    return resCol;
+}
+
 static void MakeLightTableCustom(const GenerateTrnParam &params)
 {
     unsigned i, j, k;
@@ -177,7 +205,7 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
                     continue;
                 }
                 if (params.colors[j].shadesteps < 0) {
-                    ColorTrns[i][k] = k;
+                    ColorTrns[i][k] = selectColor(k, i, false, k, params.pals);
                 } else if (params.colors[j].shadesteps == 0 && params.colors[j].shadestepsmpl == 1.0) {
                     int numColors = params.colors[j].lastcolor - params.colors[j].firstcolor + 1;
                     int col = (numColors * i) / (MAXDARKNESS + 1);
@@ -194,7 +222,7 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
                             col = 0;
                         }
                     }
-                    ColorTrns[i][k] = col;
+                    ColorTrns[i][k] = selectColor(k, i, true, col, params.pals);
                 } else {
                     ColorTrns[i][k] = selectColor(k, i, params.colors[j].shadesteps, params.colors[j].deltasteps, params.colors[j].shadestepsmpl, dynColors, params.pals);
                 }
