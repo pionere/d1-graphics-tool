@@ -121,7 +121,7 @@ PaletteScene::PaletteScene(PaletteWidget *v)
 {
 }
 
-static int getColorIndexFromCoordinates(QPointF coordinates)
+int PaletteScene::getColorIndexFromCoordinates(QPointF coordinates)
 {
     int index = 0;
 
@@ -147,6 +147,18 @@ static int getColorIndexFromCoordinates(QPointF coordinates)
     return index;
 }
 
+QRectF PaletteScene::getColorCoordinates(quint8 index)
+{
+    int ix = index % PALETTE_COLORS_PER_LINE;
+    int iy = index / PALETTE_COLORS_PER_LINE;
+
+    int w = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
+
+    QRectF coordinates(ix * w, iy * w, w, w);
+
+    return coordinates;
+}
+
 void PaletteScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() != Qt::LeftButton) {
@@ -158,7 +170,7 @@ void PaletteScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     qDebug() << QStringLiteral("Clicked: %1:%2").arg(pos.x()).arg(pos.y());
 
     // Check if selected color has changed
-    int colorIndex = getColorIndexFromCoordinates(pos);
+    int colorIndex = PaletteScene::getColorIndexFromCoordinates(pos);
 
     // if (colorIndex >= 0)
     this->view->startColorSelection(colorIndex);
@@ -173,7 +185,7 @@ void PaletteScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QPointF pos = event->scenePos();
 
     // Check if selected color has changed
-    int colorIndex = getColorIndexFromCoordinates(pos);
+    int colorIndex = PaletteScene::getColorIndexFromCoordinates(pos);
 
     // if (colorIndex >= 0)
     this->view->changeColorSelection(colorIndex);
@@ -405,18 +417,6 @@ void PaletteWidget::checkTranslationsSelection(const std::vector<quint8> &indexe
     this->undoStack->push(command);
 
     emit this->colorPicking_stopped(); // finish color picking
-}
-
-static QRectF getColorCoordinates(quint8 index)
-{
-    int ix = index % PALETTE_COLORS_PER_LINE;
-    int iy = index / PALETTE_COLORS_PER_LINE;
-
-    int w = PALETTE_WIDTH / PALETTE_COLORS_PER_LINE;
-
-    QRectF coordinates(ix * w, iy * w, w, w);
-
-    return coordinates;
 }
 
 QList<QPair<int, QColor>> clipboardToColors()
@@ -717,7 +717,7 @@ void PaletteWidget::displaySelection()
     pen.setWidth(PALETTE_SELECTION_WIDTH);
 
     for (int i = firstColorIndex; i <= lastColorIndex; i++) {
-        QRectF coordinates = getColorCoordinates(i);
+        QRectF coordinates = PaletteScene::getColorCoordinates(i);
         int a = PALETTE_SELECTION_WIDTH / 2;
         coordinates.adjust(a, a, -a, -a);
 

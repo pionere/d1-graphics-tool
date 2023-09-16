@@ -81,6 +81,9 @@ class PaletteScene : public QGraphicsScene {
 public:
     PaletteScene(PaletteWidget *view);
 
+    static int getColorIndexFromCoordinates(QPointF coordinates);
+    static QRectF getColorCoordinates(quint8 index);
+
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
