@@ -22,9 +22,6 @@ public:
     void initialize(D1Pal *pal, D1Trn *trn, int trnIndex);
     void on_colorDblClicked(int colorIndex);
 
-private slots:
-    // void keyPressEvent(QKeyEvent *event) override;
-
 private:
     Ui::TrnGeneratePalPopupDialog *ui;
     PalScene popupScene = PalScene(this);

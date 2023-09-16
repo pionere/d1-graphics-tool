@@ -43,10 +43,3 @@ void TrnGeneratePalPopupDialog::on_colorDblClicked(int index)
 
     this->close();
 }
-
-/*void TrnGeneratePalPopupDialog::keyPressEvent(QKeyEvent *event)
-{
-    if (event->key() == Qt::Key_Escape) {
-        this->close();
-    }
-}*/
