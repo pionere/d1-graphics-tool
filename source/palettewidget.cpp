@@ -250,9 +250,9 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     , undoStack(us)
     , ui(new Ui::PaletteWidget())
 {
-    ui->setupUi(this);
-    ui->graphicsView->setScene(&this->scene);
-    ui->headerLabel->setText(title);
+    this->ui->setupUi(this);
+    this->ui->graphicsView->setScene(&this->scene);
+    this->ui->headerLabel->setText(title);
 
     // add icon-buttons
     QLayout *layout = this->ui->headerButtonsHorizontalLayout;
