@@ -1,10 +1,7 @@
 #include "trngeneratedialog.h"
 
 #include <QApplication>
-#include <QCursor>
-#include <QFontMetrics>
 #include <QMessageBox>
-#include <QToolTip>
 
 #include "celview.h"
 #include "config.h"
@@ -54,7 +51,6 @@ void PalScene::displayColors()
     const QColor nullColor = QColor(Config::getGraphicsTransparentColor());
     const QPen noPen(Qt::NoPen);
     for (int i = 0; i < D1PAL_COLORS; i++) {
-        // Go to next line
         QRectF coordinates = PaletteScene::getColorCoordinates(i);
         int a = PALETTE_COLOR_SPACING;
         coordinates.adjust(a, a, -a, -a);
@@ -69,9 +65,6 @@ void PalScene::displayColors()
             QPen borderPen(borderColor);
             borderPen.setWidth(PALETTE_SELECTION_WIDTH);
             QBrush brush = QBrush(Qt::NoBrush);
-
-            // int b = PALETTE_SELECTION_WIDTH / 2;
-            // coordinates.adjust(-b, -b, +b, +b);
 
             this->addRect(coordinates, borderPen, brush);
         }
@@ -130,7 +123,6 @@ void PalScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF pos = event->scenePos();
 
-    // Check if selected color has changed
     int colorIndex = PaletteScene::getColorIndexFromCoordinates(pos);
 
     // emit this->colorIndexHovered(colorIndex);
@@ -147,14 +139,7 @@ void PalScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     } else {
         tooltip = "";
     }
-    // const QList<QGraphicsItem *> items = this->views()[0]->items();
-    // if (!items.isEmpty()) {
-    //     items[0]->setToolTip(tooltip);
-    // }
     this->views()[0]->setToolTip(tooltip);
-    // QFontMetrics fm(QToolTip::font());
-    // QRect rect = fm.boundingRect(tooltip);
-    // QToolTip::showText(QCursor::pos() - rect.bottomRight(), tooltip);
 }
 
 void PalScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -507,7 +492,6 @@ void TrnGenerateDialog::updatePals()
         }
     }
     if (!hasSelected && palWidgets.count() != 0) {
-// QMessageBox::critical(nullptr, "Error", "Pre-Selecting the first pal");
         palWidgets[0]->setSelected(true);
     }
     // find the shade-palette and the color-palette of the selected palette-widget
@@ -526,7 +510,6 @@ void TrnGenerateDialog::updatePals()
         trn->setPalette(basePal);
         trn->refreshResultingPalette();
     }
-// QMessageBox::critical(nullptr, "Error", QString("Scene init with %1:%2 %3").arg(basePal != nullptr).arg(trn != nullptr).arg(shadePal != nullptr));
 
     this->shadeScene.initialize(shadePal, nullptr);
     this->lightScene.initialize(basePal, trn);

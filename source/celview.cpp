@@ -100,7 +100,7 @@ void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         this->leftMousePressed = false;
         if (this->panning) {
             this->panning = (event->modifiers() & Qt::ControlModifier) != 0;
-			this->views()[0]->setDragMode(this->panning ? QGraphicsView::ScrollHandDrag : QGraphicsView::NoDrag);
+            this->views()[0]->setDragMode(this->panning ? QGraphicsView::ScrollHandDrag : QGraphicsView::NoDrag);
         }
     }
     QGraphicsScene::mouseReleaseEvent(event);

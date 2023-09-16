@@ -480,6 +480,11 @@ static void MakeLightTableCustom(const GenerateTrnParam &params)
                         }
                     }
                     ColorTrns[i][k] = col;
+
+                    for (unsigned n = 0; n < pals.size(); n++) {
+                        const D1Pal *pal = pals[n];
+                        (*shadePalettes)[n][i]->setColor(k, col);
+                    }
                 } else {
                     ColorTrns[i][k] = selectColor(k, i, params.colors[j].shadesteps, params.colors[j].deltasteps, params.colors[j].shadestepsmpl, dynColors, params.pals);
                 }

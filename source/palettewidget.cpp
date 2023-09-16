@@ -669,7 +669,7 @@ void PaletteWidget::displayColors()
             displayColor = false;
 
         if (displayColor) {
-	        QRectF coordinates = PaletteScene::getColorCoordinates(i);
+            QRectF coordinates = PaletteScene::getColorCoordinates(i);
             int a = PALETTE_COLOR_SPACING;
             coordinates.adjust(a, a, -a, -a);
 
