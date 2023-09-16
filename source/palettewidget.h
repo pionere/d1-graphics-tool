@@ -196,7 +196,7 @@ private:
     LevelCelView *levelCelView;
     GfxsetView *gfxsetView;
 
-    PaletteScene *scene;
+    PaletteScene scene = PaletteScene(this);
 
     int selectedFirstColorIndex = 0;
     int selectedLastColorIndex = 0;

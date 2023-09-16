@@ -249,10 +249,9 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     : QWidget(parent)
     , undoStack(us)
     , ui(new Ui::PaletteWidget())
-    , scene(new PaletteScene(this))
 {
     ui->setupUi(this);
-    ui->graphicsView->setScene(this->scene);
+    ui->graphicsView->setScene(&this->scene);
     ui->headerLabel->setText(title);
 
     // add icon-buttons
@@ -298,7 +297,6 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
 PaletteWidget::~PaletteWidget()
 {
     delete ui;
-    delete scene;
 }
 
 void PaletteWidget::setPal(D1Pal *p)
@@ -637,10 +635,10 @@ void PaletteWidget::displayColors()
     int bsw = PALETTE_COLOR_SPACING;
 
     // Removing existing items
-    this->scene->clear();
+    this->scene.clear();
 
     // Setting background color
-    this->scene->setBackgroundBrush(Qt::white);
+    this->scene.setBackgroundBrush(Qt::white);
 
     // Displaying palette colors
     D1Pal *colorPal = this->isTrn ? this->trn->getResultingPalette() : this->pal;
@@ -692,7 +690,7 @@ void PaletteWidget::displayColors()
             displayColor = false;
 
         if (displayColor)
-            this->scene->addRect(x + bsw, y + bsw, w, w, pen, brush);
+            this->scene.addRect(x + bsw, y + bsw, w, w, pen, brush);
 
         x += dx;
     }
@@ -723,28 +721,28 @@ void PaletteWidget::displaySelection()
 
         // left line
         if (i == firstColorIndex && i + PALETTE_COLORS_PER_LINE <= lastColorIndex)
-            this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y() + PALETTE_SELECTION_WIDTH,
+            this->scene.addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y() + PALETTE_SELECTION_WIDTH,
                 coordinates.topLeft().x(), coordinates.topLeft().y(), pen);
         else if (i == firstColorIndex || i % PALETTE_COLORS_PER_LINE == 0)
-            this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y(),
+            this->scene.addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y(),
                 coordinates.topLeft().x(), coordinates.topLeft().y(), pen);
 
         // right line
         if (i == lastColorIndex && i - PALETTE_COLORS_PER_LINE >= firstColorIndex)
-            this->scene->addLine(coordinates.topRight().x(), coordinates.topRight().y() - PALETTE_SELECTION_WIDTH,
+            this->scene.addLine(coordinates.topRight().x(), coordinates.topRight().y() - PALETTE_SELECTION_WIDTH,
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
         else if (i == lastColorIndex || i % PALETTE_COLORS_PER_LINE == PALETTE_COLORS_PER_LINE - 1)
-            this->scene->addLine(coordinates.topRight().x(), coordinates.topRight().y(),
+            this->scene.addLine(coordinates.topRight().x(), coordinates.topRight().y(),
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
 
         // top line
         if (i - PALETTE_COLORS_PER_LINE < firstColorIndex)
-            this->scene->addLine(coordinates.topLeft().x(), coordinates.topLeft().y(),
+            this->scene.addLine(coordinates.topLeft().x(), coordinates.topLeft().y(),
                 coordinates.topRight().x(), coordinates.topRight().y(), pen);
 
         // bottom line
         if (i + PALETTE_COLORS_PER_LINE > lastColorIndex)
-            this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y(),
+            this->scene.addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y(),
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
     }
 }
