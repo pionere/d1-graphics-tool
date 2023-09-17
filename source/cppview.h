@@ -39,4 +39,6 @@ private slots:
 
 private:
     Ui::CppView *ui;
+
+    D1Cpp *cpp;
 };

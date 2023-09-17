@@ -1222,7 +1222,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         view = this->tblView;
     } else if (fileType == 5) {
-        this->cppView = new TblView(this, this->undoStack);
+        this->cppView = new CppView(this, this->undoStack);
         this->cppView->initialize(this->cpp);
 
         view = this->cppView;

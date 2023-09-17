@@ -53,7 +53,7 @@ void CppView::initialize(D1Cpp *c)
 // Displaying CPP file path information
 void CppView::updateLabel()
 {
-    CppView::setLabelContent(this->ui->cppLabel, this->cpp->getFilePath(), this->cpp->isModified());
+    CelView::setLabelContent(this->ui->cppLabel, this->cpp->getFilePath(), this->cpp->isModified());
 }
 
 void CppView::updateFields()
