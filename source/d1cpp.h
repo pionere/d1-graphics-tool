@@ -44,6 +44,7 @@ class D1CppRow : public QObject {
 
 public:
     D1CppRow() = default;
+    ~D1CppRow();
 
 private:
     QList<QString> entryTexts;
@@ -57,6 +58,7 @@ class D1CppTable : public QObject {
 
 public:
     D1CppTable(const QString &name);
+    ~D1CppTable();
 
 private:
     QString name;
@@ -70,6 +72,7 @@ class D1Cpp : public QObject {
 
 public:
     D1Cpp() = default;
+    ~D1Cpp();
 
     bool load(const QString &filePath);
     bool save(const SaveAsParam &params);

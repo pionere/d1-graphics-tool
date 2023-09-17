@@ -9,6 +9,7 @@
 #include <QTextStream>
 
 #include "config.h"
+#include "mainwindow.h"
 #include "progressdialog.h"
 
 typedef enum Read_State {
@@ -45,6 +46,15 @@ static D1CppRow *currRow = nullptr;
 static D1CppRowEntry *currRowEntry = nullptr;
 static std::pair<int, QString> currState;
 static std::stack<std::pair<int, QString>> states;
+static void cleanup()
+{
+    MemFree(currTable);
+    MemFree(currRow);
+    MemFree(currRowEntry);
+    currState.clear();
+    states = std::stack<std::pair<int, QString>>();
+}
+
 bool D1Cpp::processContent(QString &content, int type)
 {
     switch (currState.first) {
@@ -230,7 +240,7 @@ bool D1Cpp::initTable()
         case READ_TABLE_BASE:
             if (content[idx] == '=') {
                 idx--;
-                tableState = READ_TABLE_BRACKET;
+                tableState = READ_TABLE_BRACKET_END;
                 continue;
             }
             LogMessage(QString("Not a table 1."), LOG_NOTE);
@@ -238,7 +248,7 @@ bool D1Cpp::initTable()
         case READ_TABLE_BRACKET_END:
             if (content[idx] == ']') {
                 idx--;
-                tableState = READ_TABLE_BRACKET;
+                tableState = READ_TABLE_EXPRESSION;
                 continue;
             }
             LogMessage(QString("Not a table 2."), LOG_NOTE);
@@ -756,20 +766,14 @@ bool D1Cpp::load(const QString &filePath)
     while (!txt.atEnd()) {
         content.append(txt.read(1024));
         if (!readContent(content)) {
-            MemFree(currTable);
-            MemFree(currRow);
-            MemFree(currRowEntry);
-            currState.clear();
-            states.clear();
+            cleanup();
+            // qDeleteAll(this->tables);
+            // this->tables.clear();
             return false;
         }
     }
     if (currState.first != READ_BASE || currState.second.isEmpty() || currTable != nullptr || currRow != nullptr || currRowEntry != nullptr) {
-        MemFree(currTable);
-        MemFree(currRow);
-        MemFree(currRowEntry);
-        currState.clear();
-        states.clear();
+        cleanup();
         // qDeleteAll(this->tables);
         // this->tables.clear();
         return false;
