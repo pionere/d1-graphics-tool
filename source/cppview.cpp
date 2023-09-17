@@ -69,7 +69,7 @@ void CppView::updateFields()
     this->updateLabel();
 }
 
-void LevelCelView::ShowContextMenu(const QPoint &pos)
+void CppView::ShowContextMenu(const QPoint &pos)
 {
 	if (this->cppTable == nullptr) {
 		return;

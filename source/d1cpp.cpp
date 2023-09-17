@@ -735,7 +735,7 @@ QString D1CppTable::getName() const
 
 int D1CppTable::getRowCount() const
 {
-    this->rows.count();
+    return this->rows.count();
 }
 
 D1CppRow *D1CppTable::getRow(int index) const
