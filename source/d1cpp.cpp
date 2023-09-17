@@ -9,6 +9,7 @@
 #include <QTextStream>
 
 #include "config.h"
+#include "progressdialog.h"
 
 typedef enum Read_State {
     READ_BASE,
@@ -311,8 +312,8 @@ bool D1Cpp::readContent(QString &content)
         case READ_BASE:
             if (content[0] == '"' || content[0] == '\'') {
                 bool single = content[0] == '\'';
-                content.removeFirst();
-                states.push_back(currState);
+                content.remove(0, 1);
+                states.push(currState);
                 currState.first = single ? READ_QUOTE_SINGLE : READ_QUOTE_DOUBLE;
                 currState.second = "";
                 continue;
@@ -324,16 +325,16 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push_back(currState);
+                    states.push(currState);
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
                     currState.second = "";
                     continue;
                 }
             }
             if (content[0] == '{') {
-                content.removeFirst();
+                content.remove(0, 1);
                 if (initTable()) {
-                    states.push_back(currState);
+                    states.push(currState);
                     currState.first = READ_TABLE;
                     currState.second = "";
                 }
@@ -344,15 +345,15 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
 
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         case READ_QUOTE_SINGLE:
             if (content[0] == '\'') {
-                content.removeFirst();
+                content.remove(0, 1);
                 QString currContent = currState.second;
 
                 currState = states.top();
@@ -367,14 +368,14 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         case READ_QUOTE_DOUBLE:
             if (content[0] == '"') {
-                content.removeFirst();
+                content.remove(0, 1);
                 QString currContent = currState.second;
 
                 currState = states.top();
@@ -389,10 +390,10 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         case READ_COMMENT_SINGLE:
             if (content.startsWith(newLine)) {
@@ -410,10 +411,10 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         case READ_COMMENT_MULTI:
             if (content[0] == '*') {
@@ -436,10 +437,10 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         // case READ_NUMBER:
         case READ_TABLE:
@@ -450,14 +451,14 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push_back(currState);
+                    states.push(currState);
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
                     currState.second = "";
                     continue;
                 }
             }
             if (content[0] == '}') {
-                content.removeFirst();
+                content.remove(0, 1);
                 QString currContent = currState.second;
                 currState = states.top();
                 states.pop();
@@ -467,14 +468,14 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
-                states.push_back(currState);
+                states.push(currState);
                 currState.first = READ_ROW_COMPLEX;
                 currState.second = "";
                 initRow();
                 continue;
             }
             if (!content[0].isSpace()) {
-                states.push_back(currState);
+                states.push(currState);
                 currState.first = READ_ROW_SIMPLE;
                 currState.second = "";
                 initRow();
@@ -485,11 +486,11 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
 
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         case READ_ROW_SIMPLE:
             if (content[0] == '/') {
@@ -499,7 +500,7 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push_back(currState);
+                    states.push(currState);
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
                     currState.second = "";
                     continue;
@@ -515,14 +516,14 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             /*if (content[0] == '{') {
-                content.removeFirst();
-                states.push_back(currState);
+                content.remove(0, 1);
+                states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
                 currState.second = "";
                 continue;
             }*/
             if (!content[0].isSpace()) {
-                states.push_back(currState);
+                states.push(currState);
                 currState.first = READ_ENTRY_SIMPLE;
                 currState.second = "";
                 currRowEntry = new D1CppRowEntry(); // initRowEntry
@@ -533,11 +534,11 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
 
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         case READ_ROW_COMPLEX:
             if (content[0] == '/') {
@@ -547,7 +548,7 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push_back(currState);
+                    states.push(currState);
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
                     currState.second = "";
                     continue;
@@ -563,14 +564,14 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
-                content.removeFirst();
-                states.push_back(currState);
+                content.remove(0, 1);
+                states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
                 currState.second = "";
                 continue;
             }
             if (!content[0].isSpace()) {
-                states.push_back(currState);
+                states.push(currState);
                 currState.first = READ_ENTRY_SIMPLE;
                 currState.second = "";
                 continue;
@@ -580,15 +581,15 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
 
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         case READ_ENTRY_SIMPLE:
             if (content[0].isSpace()) {
-                content.removeFirst();
+                content.remove(0, 1);
                 continue;
             }
             if (content[0] == '/') {
@@ -598,14 +599,14 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push_back(currState);
+                    states.push(currState);
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
                     currState.second = "";
                     continue;
                 }
             }
             if (content[0] == ',') {
-                content.removeFirst();
+                content.remove(0, 1);
 
                 QString currContent = currState.second;
                 currState = states.top();
@@ -629,15 +630,15 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
 
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         case READ_ENTRY_COMPLEX:
             if (content[0].isSpace()) {
-                content.removeFirst();
+                content.remove(0, 1);
                 continue;
             }
             if (content[0] == '/') {
@@ -647,22 +648,22 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push_back(currState);
+                    states.push(currState);
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
                     currState.second = "";
                     continue;
                 }
             }
             if (content[0] == '{') {
-                content.removeFirst();
+                content.remove(0, 1);
 
-                states.push_back(currState);
+                states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
                 currState.second = "";
                 continue;
             }
             if (content[0] == ',') {
-                content.removeFirst();
+                content.remove(0, 1);
 
                 QString currContent = currState.second;
                 currState = states.top();
@@ -686,11 +687,11 @@ bool D1Cpp::readContent(QString &content)
                     return true;
                 }
                 currState.second.append(content[0]);
-                content.removeFirst();
+                content.remove(0, 1);
             }
 
             currState.second.append(content[0]);
-            content.removeFirst();
+            content.remove(0, 1);
             continue;
         }
     }
