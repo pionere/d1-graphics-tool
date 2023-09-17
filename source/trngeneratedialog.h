@@ -63,9 +63,6 @@ private slots:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
-//signals:
-//    void colorClicked(quint8 index);
-
 private:
     QWidget *view;
     TrnGeneratePalPopupDialog *popup = nullptr;

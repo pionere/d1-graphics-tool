@@ -1,0 +1,855 @@
+#include "d1cpp.h"
+
+#include <stack>
+
+#include <QApplication>
+#include <QDataStream>
+#include <QDir>
+#include <QMessageBox>
+#include <QTextStream>
+
+#include "config.h"
+
+typedef enum Read_State {
+    READ_BASE,
+    READ_QUOTE_SINGLE,
+    READ_QUOTE_DOUBLE,
+    READ_COMMENT_SINGLE,
+    READ_COMMENT_MULTI,
+    READ_NUMBER,
+    READ_TABLE,
+    READ_ROW_SIMPLE,
+    READ_ROW_COMPLEX,
+    READ_ENTRY_SIMPLE,
+    READ_ENTRY_COMPLEX,
+} Read_State;
+
+typedef enum LogLevel {
+    LOG_ERROR,
+    LOG_WARN,
+    LOG_NOTE,
+} LogLevel;
+
+#define LOG_LEVEL LOG_NOTE
+#define LogMessage(msg, lvl) \
+if (lvl <= LOG_LEVEL) { \
+    if (lvl == LOG_ERROR) dProgressErr() << msg; \
+    else if (lvl == LOG_WARN) dProgressWarn() << msg; \
+    else dProgress() << msg; \
+}
+
+static QString newLine;
+static D1CppTable *currTable = nullptr;
+static D1CppRow *currRow = nullptr;
+static D1CppRowEntry *currRowEntry = nullptr;
+static std::pair<int, QString> currState;
+static std::stack<std::pair<int, QString>> states;
+bool D1Cpp::processContent(QString &content, int type)
+{
+    switch (currState.first) {
+    case READ_BASE:
+        switch (type) {
+        case READ_QUOTE_SINGLE:
+            content.prepend('\'');
+            content.append('\'');
+            break;
+        case READ_QUOTE_DOUBLE:
+            content.prepend('"');
+            content.append('"');
+            break;
+        case READ_COMMENT_SINGLE:
+            content.prepend("//");
+            content.append(newLine);
+            break;
+        case READ_COMMENT_MULTI:
+            content.prepend("/*");
+            content.append("*/");
+            break;
+        // case READ_NUMBER:
+        case READ_TABLE:
+            LogMessage(QString("Table %1 done.").arg(currTable->name), LOG_NOTE);
+
+            this->texts.push_back(content);
+            this->tables.push_back(currTable);
+            currTable = nullptr;
+            content.clear();
+            return true;
+        // case READ_ROW_SIMPLE:
+        // case READ_ROW_COMPLEX:
+        // case READ_ENTRY_SIMPLE:
+        // case READ_ENTRY_COMPLEX:
+        default:
+            LogMessage(QString("Invalid type (%1) when reading base content.").arg(type), LOG_ERROR);
+            return false;
+        }
+        LogMessage(QString("Skipping comment %1.").arg(content), LOG_NOTE);
+        currState.second.append(content);
+        break;
+    // case READ_QUOTE_SINGLE:
+    // case READ_QUOTE_DOUBLE:
+    // case READ_COMMENT_SINGLE:
+    // case READ_COMMENT_MULTI:
+    // case READ_NUMBER:
+    case READ_TABLE:
+        switch (type) {
+        // case READ_QUOTE_SINGLE:
+        // case READ_QUOTE_DOUBLE:
+        case READ_COMMENT_SINGLE:
+            content.prepend("//");
+            content.append(newLine);
+            break;
+        case READ_COMMENT_MULTI:
+            content.prepend("/*");
+            content.append("*/");
+            break;
+        // case READ_NUMBER:
+        // case READ_TABLE:
+        case READ_ROW_SIMPLE:
+        case READ_ROW_COMPLEX:
+            LogMessage(QString("Row %1 of %2 done.").arg(currTable->rows.size()).arg(currTable->name), LOG_NOTE);
+
+            currTable->rows.push_back(currRow);
+            currTable->rowTexts.push_back(QString());
+            currRow = nullptr;
+            return true;
+        // case READ_ENTRY_SIMPLE:
+        // case READ_ENTRY_COMPLEX:
+        default:
+            LogMessage(QString("Invalid type (%1) when reading table content.").arg(type), LOG_ERROR);
+            return false;
+        }
+        currTable->rowTexts[currTable->rows.count()].append(content);
+        LogMessage(QString("Table comment %1.").arg(content), LOG_NOTE);
+        break;
+    case READ_ROW_SIMPLE:
+    case READ_ROW_COMPLEX:
+        switch (type) {
+        // case READ_QUOTE_SINGLE:
+        // case READ_QUOTE_DOUBLE:
+        case READ_COMMENT_SINGLE:
+            content.prepend("//");
+            content.append(newLine);
+            break;
+        case READ_COMMENT_MULTI:
+            content.prepend("/*");
+            content.append("*/");
+            break;
+        // case READ_NUMBER:
+        // case READ_TABLE:
+        // case READ_ROW_SIMPLE:
+        // case READ_ROW_COMPLEX:
+        case READ_ENTRY_SIMPLE:
+        case READ_ENTRY_COMPLEX:
+            LogMessage(QString("Entry %1 of row %2 of table %3 done.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name), LOG_NOTE);
+
+            currRow->entries.push_back(currRowEntry);
+            currRow->entryTexts.push_back(QString());
+            currRowEntry = nullptr;
+            return true;
+        default:
+            LogMessage(QString("Invalid type (%1) when reading row content.").arg(type), LOG_ERROR);
+            return false;
+        }
+        currRow->entryTexts[currRow->entries.count()].append(content);
+        LogMessage(QString("Row comment %1.").arg(content), LOG_NOTE);
+        break;
+    case READ_ENTRY_SIMPLE:
+    case READ_ENTRY_COMPLEX:
+        switch (type) {
+        // case READ_QUOTE_SINGLE:
+        // case READ_QUOTE_DOUBLE:
+        case READ_COMMENT_SINGLE:
+            content.prepend("//");
+            content.append(newLine);
+            break;
+        case READ_COMMENT_MULTI:
+            content.prepend("/*");
+            content.append("*/");
+            break;
+        // case READ_NUMBER:
+        // case READ_TABLE:
+        // case READ_ROW_SIMPLE:
+        // case READ_ROW_COMPLEX:
+        // case READ_ENTRY_SIMPLE:
+        case READ_ENTRY_COMPLEX:
+            LogMessage(QString("Complex content %4 of entry %1 of row %2 of table %3.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content), LOG_NOTE);
+            if (currState.first == READ_ENTRY_COMPLEX) {
+                if (!currRowEntry->postContent.isEmpty()) {
+                    currRowEntry->content.append(currRowEntry->postContent);
+                    currRowEntry->postContent.clear();
+                }
+                currRowEntry->content.append(content);
+                return true;
+            }
+            // fallthrough
+        default:
+            LogMessage(QString("Invalid type (%1) when reading entry content.").arg(type), LOG_ERROR);
+            return false;
+        }
+        if (currRowEntry->content.isEmpty()) {
+            currRowEntry->preContent.append(content);
+        } else {
+            currRowEntry->postContent.append(content);
+        }
+        LogMessage(QString("Entry comment %1.").arg(content), LOG_NOTE);
+        break;
+    }
+    return true;
+}
+
+typedef enum Read_Table_State {
+    READ_TABLE_BASE,
+    READ_TABLE_BRACKET_END,
+    READ_TABLE_EXPRESSION,
+    // READ_TABLE_BRACKET_BEGIN,
+    READ_TABLE_NAME,
+    READ_TABLE_TYPE,
+    READ_TABLE_PREFIX,
+} Read_Table_State;
+bool D1Cpp::initTable()
+{
+    const QString &content = currState.second;
+
+    LogMessage(QString("Checking for table: \n****%1****\n").arg(content), LOG_NOTE);
+
+    int idx = content.length() - 1;
+    int tableState = READ_TABLE_BASE;
+    QString tableName;
+    while (true) {
+        if (idx < 0 || content[idx] == '\\') {
+            LogMessage(QString("Not a table 0."), LOG_NOTE);
+            return false;
+        }
+        // if (content[idx].isSpace()) {
+        if (content[idx] == ' ') {
+            idx--;
+            continue;
+        }
+        switch (tableState) {
+        case READ_TABLE_BASE:
+            if (content[idx] == '=') {
+                idx--;
+                tableState = READ_TABLE_BRACKET;
+                continue;
+            }
+            LogMessage(QString("Not a table 1."), LOG_NOTE);
+            return false;
+        case READ_TABLE_BRACKET_END:
+            if (content[idx] == ']') {
+                idx--;
+                tableState = READ_TABLE_BRACKET;
+                continue;
+            }
+            LogMessage(QString("Not a table 2."), LOG_NOTE);
+            return false;
+        case READ_TABLE_EXPRESSION:
+            if (content[idx] == '[') {
+                tableState = READ_TABLE_NAME;
+            }
+            idx--;
+            continue;
+        case READ_TABLE_NAME: {
+            int lastIdx = idx;
+            // while (!content[idx].isSpace()) {
+            while (content[idx] != ' ') {
+                idx--;
+                if (idx < 0) {
+                    LogMessage(QString("Not a table 3."), LOG_NOTE);
+                    return false;
+                }
+            }
+            tableName = content.mid(idx + 1, lastIdx - idx);
+            tableState = READ_TABLE_TYPE;
+        } continue;
+        case READ_TABLE_TYPE:
+            while (content[idx] != ' ') {
+                idx--;
+                if (idx < 0) {
+                    LogMessage(QString("Not a table 4."), LOG_NOTE);
+                    return false;
+                }
+            }
+            tableState = READ_TABLE_PREFIX;
+            continue;
+        case READ_TABLE_PREFIX:
+            static char *prefixes[] = { "const", "static", "constexpr" };
+            bool prefixFound = false;
+            for (int i = 0; i < lengthof(prefixes); ) {
+                int len = strlen(prefixes[i]);
+                if (idx >= len - 1 && content.mid(idx - (len - 1), len) == prefixes[i]) {
+                    prefixFound = true;
+                    i = 0;
+                } else {
+                    i++;
+                }
+            }
+            if (!prefixFound) {
+                LogMessage(QString("Not a table 5."), LOG_NOTE);
+                return false;
+            }
+            break;
+        }
+        break;
+    }
+    LogMessage(QString("Found table: %1.").arg(tableName), LOG_NOTE);
+
+    currTable = new D1CppTable(tableName);
+    currTable->rowTexts.push_back(QString());
+    return true;
+}
+
+void D1Cpp::initRow() 
+{
+    currRow = new D1CppRow();
+    currRow->entryTexts.push_back(QString());
+}
+
+bool D1Cpp::readContent(QString &content)
+{
+    while (!content.isEmpty()) {
+        switch (currState.first) {
+        case READ_BASE:
+            if (content[0] == '"' || content[0] == '\'') {
+                bool single = content[0] == '\'';
+                content.removeFirst();
+                states.push_back(currState);
+                currState.first = single ? READ_QUOTE_SINGLE : READ_QUOTE_DOUBLE;
+                currState.second = "";
+                continue;
+            }
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push_back(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content[0] == '{') {
+                content.removeFirst();
+                if (initTable()) {
+                    states.push_back(currState);
+                    currState.first = READ_TABLE;
+                    currState.second = "";
+                }
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        case READ_QUOTE_SINGLE:
+            if (content[0] == '\'') {
+                content.removeFirst();
+                QString currContent = currState.second;
+
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_QUOTE_SINGLE)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        case READ_QUOTE_DOUBLE:
+            if (content[0] == '"') {
+                content.removeFirst();
+                QString currContent = currState.second;
+
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_QUOTE_DOUBLE)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        case READ_COMMENT_SINGLE:
+            if (content.startsWith(newLine)) {
+                content.remove(0, newLine.length());
+                QString currContent = currState.second;
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_COMMENT_SINGLE)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        case READ_COMMENT_MULTI:
+            if (content[0] == '*') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/') {
+                    content.remove(0, 2);
+                    QString currContent = currState.second;
+                    currState = states.top();
+                    states.pop();
+                    if (!processContent(currContent, READ_COMMENT_MULTI)) {
+                        return false;
+                    }
+                    continue;
+                }
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        // case READ_NUMBER:
+        case READ_TABLE:
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push_back(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content[0] == '}') {
+                content.removeFirst();
+                QString currContent = currState.second;
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_TABLE)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '{') {
+                states.push_back(currState);
+                currState.first = READ_ROW_COMPLEX;
+                currState.second = "";
+                initRow();
+                continue;
+            }
+            if (!content[0].isSpace()) {
+                states.push_back(currState);
+                currState.first = READ_ROW_SIMPLE;
+                currState.second = "";
+                initRow();
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        case READ_ROW_SIMPLE:
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push_back(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content[0] == '}') {
+                QString currContent = currState.second;
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_ROW_SIMPLE)) {
+                    return false;
+                }
+                continue;
+            }
+            /*if (content[0] == '{') {
+                content.removeFirst();
+                states.push_back(currState);
+                currState.first = READ_ENTRY_COMPLEX;
+                currState.second = "";
+                continue;
+            }*/
+            if (!content[0].isSpace()) {
+                states.push_back(currState);
+                currState.first = READ_ENTRY_SIMPLE;
+                currState.second = "";
+                currRowEntry = new D1CppRowEntry(); // initRowEntry
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        case READ_ROW_COMPLEX:
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push_back(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content[0] == '}') {
+                QString currContent = currState.second;
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_ROW_COMPLEX)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '{') {
+                content.removeFirst();
+                states.push_back(currState);
+                currState.first = READ_ENTRY_COMPLEX;
+                currState.second = "";
+                continue;
+            }
+            if (!content[0].isSpace()) {
+                states.push_back(currState);
+                currState.first = READ_ENTRY_SIMPLE;
+                currState.second = "";
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        case READ_ENTRY_SIMPLE:
+            if (content[0].isSpace()) {
+                content.removeFirst();
+                continue;
+            }
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push_back(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content[0] == ',') {
+                content.removeFirst();
+
+                QString currContent = currState.second;
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_ENTRY_SIMPLE)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '}') {
+                QString currContent = currState.second;
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_ENTRY_SIMPLE)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        case READ_ENTRY_COMPLEX:
+            if (content[0].isSpace()) {
+                content.removeFirst();
+                continue;
+            }
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push_back(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content[0] == '{') {
+                content.removeFirst();
+
+                states.push_back(currState);
+                currState.first = READ_ENTRY_COMPLEX;
+                currState.second = "";
+                continue;
+            }
+            if (content[0] == ',') {
+                content.removeFirst();
+
+                QString currContent = currState.second;
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_ENTRY_COMPLEX)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '}') {
+                QString currContent = currState.second;
+                currState = states.top();
+                states.pop();
+                if (!processContent(currContent, READ_ENTRY_COMPLEX)) {
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.removeFirst();
+            }
+
+            currState.second.append(content[0]);
+            content.removeFirst();
+            continue;
+        }
+    }
+    return true;
+}
+
+D1CppRow::~D1CppRow()
+{
+    qDeleteAll(this->entries);
+    this->entries.clear();
+}
+
+D1CppTable::D1CppTable(const QString &n)
+    : name(n)
+{
+}
+
+D1CppTable::~D1CppTable()
+{
+    qDeleteAll(this->rows);
+    this->rows.clear();
+}
+
+D1Cpp::~D1Cpp()
+{
+    qDeleteAll(this->tables);
+    this->tables.clear();
+}
+
+bool D1Cpp::load(const QString &filePath)
+{
+    // prepare file data source
+    QFile file;
+    if (!filePath.isEmpty()) {
+        file.setFileName(filePath);
+        if (!file.open(QIODevice::ReadOnly)) {
+            return false;
+        }
+    }
+
+    QTextStream txt(&file);
+    newLine = "\n";
+    while (!txt.atEnd()) {
+        QChar chr;
+        txt >> chr;
+        if (chr == '\r') {
+            txt >> chr;
+            newLine = chr == '\n' ? "\r\n" : "\r";
+            break;
+        } else if (chr == '\n') {
+            // newLine = "\n";
+            break;
+        }
+    }
+    txt.seek(0);
+
+    // int readState = READ_CONTENT;
+    currState.first = READ_BASE;
+    currState.second = "";
+
+    QString content = "";
+    while (!txt.atEnd()) {
+        content.append(txt.read(1024));
+        if (!readContent(content)) {
+            MemFree(currTable);
+            MemFree(currRow);
+            MemFree(currRowEntry);
+            currState.clear();
+            states.clear();
+            return false;
+        }
+    }
+    if (currState.first != READ_BASE || currState.second.isEmpty() || currTable != nullptr || currRow != nullptr || currRowEntry != nullptr) {
+        MemFree(currTable);
+        MemFree(currRow);
+        MemFree(currRowEntry);
+        currState.clear();
+        states.clear();
+        // qDeleteAll(this->tables);
+        // this->tables.clear();
+        return false;
+    }
+
+    this->texts.push_back(currState.second);
+    this->lineEnd = newLine;
+
+    this->cppFilePath = filePath;
+    this->modified = false;
+    return true;
+}
+
+bool D1Cpp::save(const SaveAsParam &params)
+{
+    QString filePath = this->getFilePath();
+    QString targetFilePath = params.celFilePath;
+    if (!targetFilePath.isEmpty()) {
+        filePath = targetFilePath;
+        if (!params.autoOverwrite && QFile::exists(filePath)) {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) {
+                return false;
+            }
+        }
+    } else if (!this->isModified()) {
+        return false;
+    }
+
+    if (filePath.isEmpty()) {
+        return false;
+    }
+
+    QDir().mkpath(QFileInfo(filePath).absolutePath());
+    QFile outFile = QFile(filePath);
+    if (!outFile.open(QIODevice::WriteOnly)) {
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath)));
+        return false;
+    }
+
+    QTextStream out(&outFile);
+
+    int i = 0;
+    for ( ; i < this->tables.count(); i++) {
+        out << this->texts[i];
+
+        int n = 0;
+        for ( ; n < this->tables[i]->rows.count(); n++) {
+            out << this->tables[i]->rowTexts[n];
+
+            int e = 0;
+            for ( ; e < this->tables[i]->rows[n]->entries.count(); e++) {
+                out << this->tables[i]->rows[n]->entryTexts[e];
+
+                out << this->tables[i]->rows[n]->entries[e]->preContent;
+                out << this->tables[i]->rows[n]->entries[e]->content;
+                out << this->tables[i]->rows[n]->entries[e]->postContent;
+            }
+            out << this->tables[i]->rows[n]->entryTexts[e];
+        }
+        out << this->tables[i]->rowTexts[n];
+    }
+    out << this->texts[i];
+
+    this->cppFilePath = filePath;
+    this->modified = false;
+    return true;
+}
+
+bool D1Cpp::isModified() const
+{
+    return this->modified;
+}
+
+QString D1Cpp::getFilePath() const
+{
+    return this->cppFilePath;
+}
+
+void D1Cpp::setFilePath(const QString &path)
+{
+    this->cppFilePath = path;
+}

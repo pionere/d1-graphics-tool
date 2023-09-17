@@ -677,7 +677,7 @@ void MainWindow::on_actionNew_Gfxset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -952,6 +952,8 @@ void MainWindow::openFile(const OpenAsParam &params)
             fileType = 3;
         else if (fileLower.endsWith(".tbl"))
             fileType = 4;
+        else if (fileLower.endsWith(".cpp"))
+            fileType = 5;
         else
             return;
     }
@@ -1162,6 +1164,12 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading TBL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
+    } else if (fileType == 5) { // CPP
+        this->cpp = new D1Cpp();
+        if (!this->cpp->load(gfxFilePath)) {
+            this->failWithError(tr("Failed loading CPP file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
     } else {
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
@@ -1226,7 +1234,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->mainFrameLayout->addWidget(view);
 
     // prepare the paint dialog
-    if (fileType != 4) {
+    if (fileType != 4 && fileType != 5) {
         this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView, this->gfxsetView);
         this->paintWidget->setPalette(this->trnBase->getResultingPalette());
     }
@@ -1298,9 +1306,9 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
-    this->ui->menuView->setEnabled(true);
-    this->ui->menuColors->setEnabled(true);
-    this->ui->actionExport->setEnabled(fileType != 4);
+    this->ui->menuView->setEnabled(fileType != 5);
+    this->ui->menuColors->setEnabled(fileType != 5);
+    this->ui->actionExport->setEnabled(fileType != 4 && fileType != 5);
     this->ui->actionLoad->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
@@ -1425,6 +1433,10 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
     if (this->tableset != nullptr) {
         this->tableset->save(params);
+    }
+
+    if (this->cpp != nullptr) {
+        this->cpp->save(params);
     }
 
     // Clear loading message from status bar
@@ -1609,6 +1621,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->gfxset);
     MemFree(this->dun);
     MemFree(this->tableset);
+    MemFree(this->cpp);
 
     qDeleteAll(this->pals);
     this->pals.clear();

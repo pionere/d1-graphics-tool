@@ -9,6 +9,7 @@
 
 #include "builderwidget.h"
 #include "celview.h"
+#include "d1cpp.h"
 #include "d1dun.h"
 #include "d1gfx.h"
 #include "d1gfxset.h"
@@ -306,6 +307,7 @@ private:
     D1Gfxset *gfxset = nullptr;
     D1Dun *dun = nullptr;
     D1Tableset *tableset = nullptr;
+    D1Cpp *cpp = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation

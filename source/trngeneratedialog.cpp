@@ -1,6 +1,5 @@
 #include "trngeneratedialog.h"
 
-#include <QApplication>
 #include <QMessageBox>
 
 #include "celview.h"
@@ -385,7 +384,7 @@ void TrnGenerateDialog::on_levelTypeComboBox_activated(int index)
 
         colors[18].shadesteps = 0;
         colors[18].deltasteps = false;
-        colors[18].shadestepsmpl = 2.5;
+        colors[18].shadestepsmpl = 2.0;
 
         colors.erase(colors.begin() + 2, colors.begin() + 1 + 8);
         break;

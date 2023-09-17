@@ -66,6 +66,8 @@ set(PROJECT_SOURCES
         source/d1cl2.h
         source/d1cl2frame.cpp
         source/d1cl2frame.h
+        source/d1cpp.cpp
+        source/d1cpp.h
         source/d1dun.cpp
         source/d1dun.h
         source/d1gfx.cpp
