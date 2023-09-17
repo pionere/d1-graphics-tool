@@ -43,4 +43,5 @@ private:
     QUndoStack *undoStack;
 
     D1Cpp *cpp;
+    D1CppTable *cppTable;
 };

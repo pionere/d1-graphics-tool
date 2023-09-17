@@ -733,6 +733,16 @@ QString D1CppTable::getName() const
     return this->name;
 }
 
+int D1CppTable::getRowCount() const
+{
+    this->rows.count();
+}
+
+D1CppRow *D1CppTable::getRow(int index) const
+{
+    return const_cast<D1CppRow *>(this->rows[index]);
+}
+
 D1Cpp::~D1Cpp()
 {
     qDeleteAll(this->tables);

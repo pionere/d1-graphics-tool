@@ -61,6 +61,8 @@ public:
     ~D1CppTable();
 
     QString getName() const;
+    int getRowCount() const;
+    D1CppRow *getRow(int index) const;
 
 private:
     QString name;
