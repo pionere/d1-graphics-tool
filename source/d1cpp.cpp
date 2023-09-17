@@ -12,6 +12,8 @@
 #include "mainwindow.h"
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+
 typedef enum Read_State {
     READ_BASE,
     READ_QUOTE_SINGLE,
@@ -51,7 +53,7 @@ static void cleanup()
     MemFree(currTable);
     MemFree(currRow);
     MemFree(currRowEntry);
-    currState.clear();
+    currState.second.clear();
     states = std::stack<std::pair<int, QString>>();
 }
 
