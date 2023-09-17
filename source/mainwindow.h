@@ -9,6 +9,7 @@
 
 #include "builderwidget.h"
 #include "celview.h"
+#include "cppview.h"
 #include "d1cpp.h"
 #include "d1dun.h"
 #include "d1gfx.h"
@@ -276,6 +277,7 @@ private:
     LevelCelView *levelCelView = nullptr;
     GfxsetView *gfxsetView = nullptr;
     TblView *tblView = nullptr;
+    CppView *cppView = nullptr;
     PaintWidget *paintWidget = nullptr;
     BuilderWidget *builderWidget = nullptr;
 

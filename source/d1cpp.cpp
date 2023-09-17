@@ -35,12 +35,13 @@ typedef enum LogLevel {
 } LogLevel;
 
 #define LOG_LEVEL LOG_NOTE
-#define LogMessage(msg, lvl) \
+/*#define LogMessage(msg, lvl) \
 if (lvl <= LOG_LEVEL) { \
     if (lvl == LOG_ERROR) dProgressErr() << msg; \
     else if (lvl == LOG_WARN) dProgressWarn() << msg; \
     else dProgress() << msg; \
-}
+}*/
+#define LogMessage(msg, lvl) LogErrorF(msg)
 
 static QString newLine;
 static D1CppTable *currTable = nullptr;
@@ -727,6 +728,11 @@ D1CppTable::~D1CppTable()
     this->rows.clear();
 }
 
+QString D1CppTable::getName()
+{
+    return this->name;
+}
+
 D1Cpp::~D1Cpp()
 {
     qDeleteAll(this->tables);
@@ -860,3 +866,14 @@ void D1Cpp::setFilePath(const QString &path)
 {
     this->cppFilePath = path;
 }
+
+int D1Cpp::getTableCount() const
+{
+    return this->tables.count();
+}
+
+D1CppTable *D1Cpp::getTable(int index) const
+{
+    return const_cast<D1CppTable *>(this->tables[index]);
+}
+

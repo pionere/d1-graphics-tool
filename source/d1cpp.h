@@ -60,6 +60,8 @@ public:
     D1CppTable(const QString &name);
     ~D1CppTable();
 
+    QString getName() const;
+
 private:
     QString name;
 
@@ -81,12 +83,14 @@ public:
 
     QString getFilePath() const;
     void setFilePath(const QString &path);
+    int getTableCount() const;
+    D1CppTable *getTable(int index) const;
 
 private:
     bool processContent(QString &content, int type);
     bool readContent(QString &content);
     static void initRow();
-	static bool initTable();
+    static bool initTable();
 
 private:
     QString cppFilePath;

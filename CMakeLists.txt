@@ -52,6 +52,9 @@ set(PROJECT_SOURCES
         source/celview.cpp
         source/celview.h
         source/celview.ui
+        source/cppview.cpp
+        source/cppview.h
+        source/cppview.ui
         source/config.cpp
         source/config.h
         source/d1cel.cpp

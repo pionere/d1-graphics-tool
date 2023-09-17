@@ -248,6 +248,10 @@ void MainWindow::updateWindow()
         // this->tblView->updateFields();
         this->tblView->displayFrame();
     }
+    if (this->cppView != nullptr) {
+        // this->cppView->updateFields();
+        this->cppView->displayFrame();
+    }
 }
 
 bool MainWindow::loadPal(const QString &path)
@@ -1209,7 +1213,20 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
 
         view = this->levelCelView;
-    } else if (fileType != 4) {
+    } else if (fileType == 4) {
+        this->tblView = new TblView(this, this->undoStack);
+        this->tblView->initialize(this->pal, this->tableset, this->bottomPanelHidden);
+
+        // Refresh palette widgets when frame is changed
+        QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+
+        view = this->tblView;
+    } else if (fileType == 5) {
+        this->cppView = new TblView(this, this->undoStack);
+        this->cppView->initialize(this->cpp);
+
+        view = this->cppView;
+    } else {
         // build a CelView
         this->celView = new CelView(this);
         this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
@@ -1221,14 +1238,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
 
         view = this->celView;
-    } else {
-        this->tblView = new TblView(this, this->undoStack);
-        this->tblView->initialize(this->pal, this->tableset, this->bottomPanelHidden);
-
-        // Refresh palette widgets when frame is changed
-        QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
-
-        view = this->tblView;
     }
     // Add the view to the main frame
     this->ui->mainFrameLayout->addWidget(view);
@@ -1613,6 +1622,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->levelCelView);
     MemFree(this->gfxsetView);
     MemFree(this->tblView);
+    MemFree(this->cppView);
     MemFree(this->palWidget);
     MemFree(this->trnUniqueWidget);
     MemFree(this->trnBaseWidget);
