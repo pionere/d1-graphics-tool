@@ -7,6 +7,7 @@
 #include <QPoint>
 #include <QString>
 #include <QStringList>
+#include <QUndoStack>
 #include <QWidget>
 
 #include "d1cpp.h"
@@ -19,7 +20,7 @@ class CppView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit CppView(QWidget *parent);
+    explicit CppView(QWidget *parent, QUndoStack *undoStack);
     ~CppView();
 
     void initialize(D1Cpp *cpp);
@@ -39,6 +40,7 @@ private slots:
 
 private:
     Ui::CppView *ui;
+    QUndoStack *undoStack;
 
     D1Cpp *cpp;
 };

@@ -16,9 +16,10 @@
 #include "pushbuttonwidget.h"
 #include "ui_cppview.h"
 
-CppView::CppView(QWidget *parent)
+CppView::CppView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
     , ui(new Ui::CppView())
+    , undoStack(us)
 {
     this->ui->setupUi(this);
 

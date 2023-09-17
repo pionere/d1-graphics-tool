@@ -728,7 +728,7 @@ D1CppTable::~D1CppTable()
     this->rows.clear();
 }
 
-QString D1CppTable::getName()
+QString D1CppTable::getName() const
 {
     return this->name;
 }
