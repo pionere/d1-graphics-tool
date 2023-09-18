@@ -30,7 +30,7 @@ private:
     D1CppTable *table;
     int rowNum;
     int columnNum;
-}
+};
 
 class CppView : public QWidget {
     Q_OBJECT
