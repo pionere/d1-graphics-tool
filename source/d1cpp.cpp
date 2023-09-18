@@ -82,11 +82,8 @@ bool D1Cpp::processContent(QString &content, int type)
         // case READ_NUMBER:
         case READ_TABLE:
             LogMessage(QString("Table %1 done.").arg(currTable->name), LOG_NOTE);
-
-            this->texts.push_back(content);
             this->tables.push_back(currTable);
             currTable = nullptr;
-            content.clear();
             return true;
         // case READ_ROW_SIMPLE:
         // case READ_ROW_COMPLEX:
@@ -365,6 +362,10 @@ bool D1Cpp::readContent(QString &content)
             if (content[0] == '{') {
                 content.remove(0, 1);
                 if (initTable()) {
+                    this->texts.back().append(currState.second);
+                    this->texts.push_back(QString());
+                    currState.second.clear();
+
                     states.push(currState);
                     currState.first = READ_TABLE;
                     currState.second = "";
@@ -502,17 +503,17 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
+                initRow();
                 states.push(currState);
                 currState.first = READ_ROW_COMPLEX;
                 currState.second = "";
-                initRow();
                 continue;
             }
             if (!content[0].isSpace()) {
+                initRow();
                 states.push(currState);
                 currState.first = READ_ROW_SIMPLE;
                 currState.second = "";
-                initRow();
                 continue;
             }
             if (content[0] == '\\') {
@@ -557,10 +558,10 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }*/
             if (!content[0].isSpace()) {
+                currRowEntry = new D1CppRowEntry(); // initRowEntry
                 states.push(currState);
                 currState.first = READ_ENTRY_SIMPLE;
                 currState.second = "";
-                currRowEntry = new D1CppRowEntry(); // initRowEntry
                 continue;
             }
             if (content[0] == '\\') {
@@ -732,10 +733,20 @@ bool D1Cpp::readContent(QString &content)
     return true;
 }
 
+QString D1CppRowEntry::getContent() const
+{
+    return this->content;
+}
+
 D1CppRow::~D1CppRow()
 {
     qDeleteAll(this->entries);
     this->entries.clear();
+}
+
+D1CppRowEntry *D1CppRow::getEntry(int index) const
+{
+    return const_cast<D1CppRowEntry *>(this->entries[index]);
 }
 
 D1CppTable::D1CppTable(const QString &n)
@@ -759,6 +770,11 @@ int D1CppTable::getRowCount() const
     return this->rows.count();
 }
 
+int D1CppTable::getColumnCount() const
+{
+    return this->rows.isEmpty() ? 0 : this->rows[0]->entries.count();
+}
+
 D1CppRow *D1CppTable::getRow(int index) const
 {
     return const_cast<D1CppRow *>(this->rows[index]);
@@ -768,6 +784,36 @@ D1Cpp::~D1Cpp()
 {
     qDeleteAll(this->tables);
     this->tables.clear();
+}
+
+bool D1Cpp::postProcess()
+{
+    bool change = false;
+    for (D1CppTable *table : this->tables) {
+        int columnNum = 0;
+        bool ch = false;
+        for (int i = 0; i < table->getRowCount(); i++) {
+            D1CppRow *row = table->getRow(i);
+            int cc = row->entries.count();
+            if (i == 0 || columnNum < cc) {
+                columnNum = cc;
+                ch = i != 0;
+            }
+        }
+        if (ch) {
+            change = true;
+            dProgressWarn() << tr("Entries added to unbalanced table %1").arg(table->getName());
+            for (int i = 0; i < table->getRowCount(); i++) {
+                D1CppRow *row = table->getRow(i);
+                while (row->entries.count() < columnNum) {
+                    row->entries.push_back(new D1CppRowEntry());
+                    row->entryTexts.push_back(QString());
+                }
+            }
+        }
+    }
+
+    return change;
 }
 
 bool D1Cpp::load(const QString &filePath)
@@ -802,6 +848,7 @@ bool D1Cpp::load(const QString &filePath)
     currState.second = "";
 
     QString content = "";
+    this->texts.push_back(QString());
     while (!txt.atEnd()) {
         content.append(txt.read(1024));
         if (!readContent(content)) {
@@ -818,8 +865,10 @@ bool D1Cpp::load(const QString &filePath)
         return false;
     }
 
-    this->texts.push_back(currState.second);
+    this->texts.back().append(currState.second);
     this->lineEnd = newLine;
+
+    change = postProcess();
 
     this->cppFilePath = filePath;
     this->modified = false;
@@ -867,7 +916,7 @@ bool D1Cpp::save(const SaveAsParam &params)
             int e = 0;
             for ( ; ; e++) {
                 if (e == 0) {
-                    out << "{";
+                    out << "{ ";
                 }
                 out << this->tables[i]->rows[n]->entryTexts[e];
 

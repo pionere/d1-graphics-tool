@@ -24,7 +24,7 @@
     <widget class="QComboBox" name="tablesComboBox"/>
    </item>
    <item>
-    <widget class="QWidget" name="tablePanel">
+    <widget class="QWidget" name="tableGrid">
      <layout class="QGridLayout"/>
     </widget>
    </item>

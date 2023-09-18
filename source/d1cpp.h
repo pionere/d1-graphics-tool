@@ -28,6 +28,8 @@ public:
     D1CppRowEntry() = default;
     ~D1CppRowEntry() = default;
 
+    QString getContent() const;
+
 private:
     QString preContent;
 
@@ -41,10 +43,13 @@ class D1CppRow : public QObject {
     Q_OBJECT
 
     friend class D1Cpp;
+    friend class D1CppTable;
 
 public:
     D1CppRow() = default;
     ~D1CppRow();
+
+    D1CppRowEntry *getEntry(int index) const;
 
 private:
     QList<QString> entryTexts;
@@ -61,6 +66,7 @@ public:
     ~D1CppTable();
 
     QString getName() const;
+    int getColumnCount() const;
     int getRowCount() const;
     D1CppRow *getRow(int index) const;
 
@@ -91,6 +97,7 @@ public:
 private:
     bool processContent(QString &content, int type);
     bool readContent(QString &content);
+    bool postProcess();
     static void initRow();
     static bool initTable();
 

@@ -16,6 +16,20 @@
 #include "pushbuttonwidget.h"
 #include "ui_cppview.h"
 
+UiCppEntry::UiCppEntry(QWidget *parent)
+    : LineEditWidget(parent)
+{
+}
+
+void UiCppEntry::initialize(D1CppTable *t, int r, int c)
+{
+    this->table = t;
+    this->rowNum = r;
+    this->columnNum = c;
+
+    this->setText(t->getRow(r)->getEntry(c)->getContent());
+}
+
 CppView::CppView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
     , ui(new Ui::CppView())
@@ -47,10 +61,46 @@ void CppView::initialize(D1Cpp *c)
             this->ui->tablesComboBox->addItem(table->getName(), i);
         }
         this->ui->tablesComboBox->setCurrentIndex(0);
-        this->cppTable = c->getTable(0);
+        this->on_tablesComboBox_activated(0);
     }
 
     // this->updateFields();
+}
+
+void CppView::on_tablesComboBox_activated(int index)
+{
+    D1CppTable *table = this->cpp->getTable(index);
+    // eliminate obsolete content
+    for (int y = this->ui->tableGrid->rowCount() - 1; y > table->getRowCount() - 1; y--) {
+        for (int x = this->ui->tableGrid->columnCount() - 1; x >= 0; x--) {
+            QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
+            if (item != nullptr) {
+                this->ui->tableGrid->removeWidget(item->widget());
+            }
+        }
+    }
+    for (int y = 0; y < table->getRowCount(); y++) {
+        for (int x = this->ui->tableGrid->columnCount() - 1; x > table->getColumnCount() - 1; x--) {
+            QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
+            if (item != nullptr) {
+                this->ui->tableGrid->removeWidget(item->widget());
+            }
+        }
+    }
+    // add new items
+    for (int y = 0; y < table->getRowCount(); y++) {
+        for (int x = 0; x < table->getColumnCount(); x++) {
+            QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
+            UiCppEntry *w;
+            if (item == nullptr) {
+                w = new UiCppEntry(this);
+                this->ui->tableGrid->addWidget(w, y, x, 0, 0);
+            } else {
+                w = (UiCppEntry *)item->widget();
+            }
+            w->initialize(table, y, x);
+        }
+    }
 }
 
 void CppView::displayFrame()
@@ -71,8 +121,8 @@ void CppView::updateFields()
 
 void CppView::ShowContextMenu(const QPoint &pos)
 {
-	if (this->cppTable == nullptr) {
-		return;
+    if (this->cppTable == nullptr) {
+        return;
     }
 
     MainWindow *mw = &dMainWindow();
