@@ -41,7 +41,7 @@ if (lvl <= LOG_LEVEL) { \
     else if (lvl == LOG_WARN) dProgressWarn() << msg; \
     else dProgress() << msg; \
 }*/
-#define LogMessage(msg, lvl) LogErrorF(msg.toLatin1().constData())
+#define LogMessage(msg, lvl) LogErrorF((msg).toLatin1().constData())
 
 static QString newLine;
 static D1CppTable *currTable = nullptr;
@@ -292,14 +292,29 @@ bool D1Cpp::initTable()
                 int len = strlen(prefixes[i]);
                 if (idx >= len - 1 && content.mid(idx - (len - 1), len) == prefixes[i]) {
                     prefixFound = true;
+                    idx -= len;
+                    while (idx >= 0 && content[idx] == ' ') {
+                        idx--;
+                    }
+                    if (idx < 0) {
+                        break;
+                    }
                     i = 0;
                 } else {
                     i++;
                 }
             }
             if (!prefixFound) {
-                LogMessage(QString("Not a table 5."), LOG_NOTE);
+                LogMessage(QString("Not a table 5 %1.").arg(content.mid(idx)), LOG_NOTE);
                 return false;
+            }
+            if (idx >= 0) {
+                int len = newLine.length();
+                QString conLine = content.mid(idx - (len - 1), len);
+                if (conLine != newLine) {
+                    LogMessage(QString("Not a table 6 %1.").arg(conLine), LOG_NOTE);
+                    return false;
+                }
             }
             break;
         }
@@ -329,6 +344,7 @@ bool D1Cpp::readContent(QString &content)
                 states.push(currState);
                 currState.first = single ? READ_QUOTE_SINGLE : READ_QUOTE_DOUBLE;
                 currState.second = "";
+                LogMessage(QString("Starting quote %1.").arg(content), LOG_NOTE);
                 continue;
             }
             if (content[0] == '/') {
@@ -341,6 +357,7 @@ bool D1Cpp::readContent(QString &content)
                     states.push(currState);
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
                     currState.second = "";
+                    LogMessage(QString("Starting comment %1.").arg(content), LOG_NOTE);
                     continue;
                 }
             }
@@ -350,6 +367,7 @@ bool D1Cpp::readContent(QString &content)
                     states.push(currState);
                     currState.first = READ_TABLE;
                     currState.second = "";
+                    LogMessage(QString("Starting table %1.").arg(content), LOG_NOTE);
                 }
                 continue;
             }
