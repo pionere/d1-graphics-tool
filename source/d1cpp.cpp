@@ -868,10 +868,10 @@ bool D1Cpp::load(const QString &filePath)
     this->texts.back().append(currState.second);
     this->lineEnd = newLine;
 
-    change = postProcess();
+    bool change = this->postProcess();
 
     this->cppFilePath = filePath;
-    this->modified = false;
+    this->modified = change;
     return true;
 }
 
