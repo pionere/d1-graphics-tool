@@ -154,8 +154,9 @@ bool D1Cpp::processContent(QString &content, int type)
         // case READ_ROW_COMPLEX:
         case READ_ENTRY_SIMPLE:
         case READ_ENTRY_COMPLEX:
-            LogMessage(QString("Entry %1 of row %2 of table %3 done.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name), LOG_NOTE);
+            LogMessage(QString("Entry %1 of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content), LOG_NOTE);
 
+            currRowEntry->content.append(content);
             currRow->entries.push_back(currRowEntry);
             currRow->entryTexts.push_back(QString());
             currRowEntry = nullptr;
@@ -368,6 +369,8 @@ bool D1Cpp::readContent(QString &content)
                     currState.first = READ_TABLE;
                     currState.second = "";
                     LogMessage(QString("Starting table %1.").arg(content), LOG_NOTE);
+                } else {
+                    currState.second.append('{');
                 }
                 continue;
             }
@@ -862,12 +865,21 @@ bool D1Cpp::save(const SaveAsParam &params)
             out << this->tables[i]->rowTexts[n];
 
             int e = 0;
-            for ( ; e < this->tables[i]->rows[n]->entries.count(); e++) {
+            for ( ; ; e++) {
+                if (e == 0) {
+                    out << "{";
+                }
                 out << this->tables[i]->rows[n]->entryTexts[e];
 
                 out << this->tables[i]->rows[n]->entries[e]->preContent;
                 out << this->tables[i]->rows[n]->entries[e]->content;
                 out << this->tables[i]->rows[n]->entries[e]->postContent;
+                if (e == this->tables[i]->rows[n]->entries.count() - 1) {
+                    out << " }";
+                    break;
+                } else {
+                    out << ",";
+                }
             }
             out << this->tables[i]->rows[n]->entryTexts[e];
         }
