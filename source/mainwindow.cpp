@@ -413,12 +413,12 @@ void MainWindow::reloadConfig()
     bool currPalChanged = false;
     for (auto iter = this->pals.cbegin(); iter != this->pals.cend(); ++iter) {
         bool change = iter.value()->reloadConfig();
-        if (iter.value() == this->pal) {
+        if (change && iter.value() == this->pal) {
             currPalChanged = true;
         }
     }
     // refresh the palette widgets and the view
-    if (currPalChanged) {
+    if (currPalChanged && this->palWidget != nullptr) {
         this->palWidget->modify();
     }
 }
@@ -681,7 +681,7 @@ void MainWindow::on_actionNew_Gfxset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -1255,6 +1255,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
     }
 
+    if (fileType != 5) {
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
@@ -1312,7 +1313,9 @@ void MainWindow::openFile(const OpenAsParam &params)
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
-
+    } else {
+        this->cppView->displayFrame();
+    }
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
     this->ui->menuView->setEnabled(fileType != 5);
@@ -1323,10 +1326,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
 
+    this->ui->menuFrame->setEnabled(fileType != 4 && fileType != 5);
     this->ui->menuSubtile->setEnabled(isTileset);
     this->ui->menuTile->setEnabled(isTileset);
     this->ui->actionPatch->setEnabled(this->celView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
+    this->ui->actionUpscale->setEnabled(fileType != 4 && fileType != 5);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
@@ -1608,7 +1613,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx, this->tileset, this->gfxset, this->dun, this->tableset);
+    this->saveAsDialog->initialize(this->gfx, this->tileset, this->gfxset, this->dun, this->tableset, this->cpp);
     this->saveAsDialog->show();
 }
 

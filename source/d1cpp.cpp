@@ -96,7 +96,7 @@ bool D1Cpp::processContent(QString &content, int type)
             LogMessage(QString("Invalid type (%1) when reading base content.").arg(type), LOG_ERROR);
             return false;
         }
-        LogMessage(QString("Skipping comment %1.").arg(content), LOG_NOTE);
+        LogMessage(QString((type == READ_QUOTE_SINGLE || type == READ_QUOTE_DOUBLE) ? "Skipping quote %1." : "Skipping comment %1.").arg(content), LOG_NOTE);
         currState.second.append(content);
         break;
     // case READ_QUOTE_SINGLE:
@@ -224,7 +224,7 @@ bool D1Cpp::initTable()
 {
     const QString &content = currState.second;
 
-    LogMessage(QString("Checking for table: \n****%1****\n").arg(content), LOG_NOTE);
+    LogMessage(QString("Checking for table: \n... %1 ...\n").arg(content), LOG_NOTE);
 
     int idx = content.length() - 1;
     int tableState = READ_TABLE_BASE;

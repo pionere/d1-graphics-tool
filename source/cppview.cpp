@@ -50,7 +50,7 @@ void CppView::initialize(D1Cpp *c)
         this->cppTable = c->getTable(0);
     }
 
-    this->updateFields();
+    // this->updateFields();
 }
 
 void CppView::displayFrame()

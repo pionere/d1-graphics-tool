@@ -4,6 +4,7 @@
 
 #include "ui_saveasdialog.h"
 
+#include "d1cpp.h"
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1sla.h"
@@ -23,19 +24,21 @@ SaveAsDialog::~SaveAsDialog()
     delete ui;
 }
 
-void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1Dun *dun, D1Tableset *tableset)
+void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1Dun *dun, D1Tableset *tableset, D1Cpp *cpp)
 {
     bool isTilesetGfx = tileset != nullptr;
     bool isTableset = tableset != nullptr;
     bool isGfxset = gfxset != nullptr;
+    bool isCpp = cpp != nullptr;
 
     this->gfx = isGfxset ? gfxset->getGfx(0) : g;
     this->isTileset = isTilesetGfx;
     this->isGfxset = isGfxset;
     this->isTableset = isTableset;
+    this->isCpp = isCpp;
 
     // initialize the main file-path
-    QString filePath = isTableset ? tableset->distTbl->getFilePath() : this->gfx->getFilePath();
+    QString filePath = isTableset ? tableset->distTbl->getFilePath() : (isCpp ? cpp->getFilePath() : this->gfx->getFilePath());
     this->ui->outputCelFileEdit->setText(filePath);
     // reset fields
     this->ui->celClippedAutoRadioButton->setChecked(true);
@@ -73,7 +76,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
         }
     }
 
-    this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx && !isTableset && !isGfxset);
+    this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx && !isTableset && !isGfxset && !isCpp);
     this->ui->tilSettingsGroupBox->setEnabled(isTilesetGfx);
     this->ui->tblSettingsGroupBox->setEnabled(isTableset);
 }
@@ -81,8 +84,8 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
 void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
 {
     QString filePath = this->gfx->getFilePath();
-    const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : (this->isTableset ? tr("TBL Files (*.tbl *.TBL)") : (this->isGfxset ? tr("CL2 Files (*.cl2 *.CL2)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)")));
-    const QString title = this->isTableset ? tr("Save Dist TBL as...") : tr("Save Graphics as...");
+    const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : (this->isTableset ? tr("TBL Files (*.tbl *.TBL)") : (this->isGfxset ? tr("CL2 Files (*.cl2 *.CL2)") : (this->isCpp ? tr("CPP Files (*.cpp *.CPP *.c *.C)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"))));
+    const QString title = this->isTableset ? tr("Save Dist TBL as...") : (this->isCpp ? tr("Save Source as...") : tr("Save Graphics as..."));
 
     QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, title, filter);
 
