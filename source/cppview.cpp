@@ -104,7 +104,9 @@ void CppView::on_tablesComboBox_activated(int index)
         }
     }
 
-    this->ui->tableGrid->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding), table->getRowCount(), table->getColumnCount());
+    if (table->getRowCount() != 0) {
+        this->ui->tableGrid->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding), table->getRowCount() - 1, table->getColumnCount());
+    }
     // generally not need to call this...
     // this->update();
 	// LogErrorF("Active Table %d x %d.", this->ui->tableGrid->rowCount(), this->ui->tableGrid->columnCount());
