@@ -20,6 +20,7 @@ typedef enum Read_State {
     READ_QUOTE_DOUBLE,
     READ_COMMENT_SINGLE,
     READ_COMMENT_MULTI,
+	READ_DIRECTIVE,
     READ_NUMBER,
     READ_TABLE,
     READ_ROW_SIMPLE,
@@ -84,6 +85,7 @@ bool D1Cpp::processContent(int type)
             content.prepend("/*");
             content.append("*/");
             break;
+		// case READ_DIRECTIVE:
         // case READ_NUMBER:
         case READ_TABLE:
             LogMessage(QString("Table %1 done.").arg(currTable->name), LOG_NOTE);
@@ -105,6 +107,7 @@ bool D1Cpp::processContent(int type)
     // case READ_QUOTE_DOUBLE:
     // case READ_COMMENT_SINGLE:
     // case READ_COMMENT_MULTI:
+	// case READ_DIRECTIVE:
     // case READ_NUMBER:
     case READ_TABLE:
         switch (type) {
@@ -117,6 +120,9 @@ bool D1Cpp::processContent(int type)
         case READ_COMMENT_MULTI:
             content.prepend("/*");
             content.append("*/");
+            break;
+        case READ_DIRECTIVE:
+			content.prepend("#");
             break;
         // case READ_NUMBER:
         // case READ_TABLE:
@@ -150,6 +156,7 @@ bool D1Cpp::processContent(int type)
             content.prepend("/*");
             content.append("*/");
             break;
+		// case READ_DIRECTIVE:
         // case READ_NUMBER:
         // case READ_TABLE:
         // case READ_ROW_SIMPLE:
@@ -187,6 +194,7 @@ bool D1Cpp::processContent(int type)
             content.prepend("/*");
             content.append("*/");
             break;
+		// case READ_DIRECTIVE:
         // case READ_NUMBER:
         // case READ_TABLE:
         // case READ_ROW_SIMPLE:
@@ -432,9 +440,10 @@ bool D1Cpp::readContent(QString &content)
             content.remove(0, 1);
             continue;
         case READ_COMMENT_SINGLE:
+        case READ_DIRECTIVE:
             if (content.startsWith(newLine)) {
                 content.remove(0, newLine.length());
-                if (!processContent(READ_COMMENT_SINGLE)) {
+                if (!processContent(currState.first)) {
                     return false;
                 }
                 continue;
@@ -486,6 +495,13 @@ bool D1Cpp::readContent(QString &content)
                     currState.second = "";
                     continue;
                 }
+            }
+            if (content[0] == '#') {
+                content.remove(0, 1);
+                states.push(currState);
+                currState.first = READ_DIRECTIVE;
+                currState.second = "";
+                continue;
             }
             if (content[0] == '}') {
                 content.remove(0, 1);
@@ -935,13 +951,15 @@ bool D1Cpp::save(const SaveAsParam &params)
     for ( ; i < this->tables.count(); i++) {
         out << this->texts[i];
 
+        out << "{ ";
+
         int n = 0;
         for ( ; n < this->tables[i]->rows.count(); n++) {
             out << this->tables[i]->rowTexts[n];
 
             int e = 0;
             for ( ; ; e++) {
-                if (e == 0) {
+                if (e == 0) { // && row->isComplex
                     out << "{ ";
                 }
                 out << this->tables[i]->rows[n]->entryTexts[e];
@@ -958,6 +976,7 @@ bool D1Cpp::save(const SaveAsParam &params)
             }
             out << this->tables[i]->rows[n]->entryTexts[e];
         }
+        out << " }";
         out << this->tables[i]->rowTexts[n];
     }
     out << this->texts[i];

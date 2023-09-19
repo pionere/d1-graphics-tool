@@ -35,8 +35,21 @@
     </layout>
    </item>
    <item>
-    <widget class="QWidget">
-     <layout class="QGridLayout" name="tableGrid"/>
+    <widget class="QScrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>180</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="tableGrid"/>
+     </widget>
     </widget>
    </item>
    <item>
