@@ -581,6 +581,7 @@ bool D1Cpp::readContent(QString &content)
                 }
             }
             if (content[0] == '}') {
+                content.remove(0, 1);
                 if (!processContent(READ_ROW_COMPLEX)) {
                     return false;
                 }
