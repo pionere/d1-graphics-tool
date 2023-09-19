@@ -95,7 +95,7 @@ public:
     D1CppTable *getTable(int index) const;
 
 private:
-    bool processContent(QString &content, int type);
+    bool processContent(int type);
     bool readContent(QString &content);
     bool postProcess();
     static void initRow();
