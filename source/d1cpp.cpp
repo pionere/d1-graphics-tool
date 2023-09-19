@@ -24,6 +24,7 @@ typedef enum Read_State {
     READ_TABLE,
     READ_ROW_SIMPLE,
     READ_ROW_COMPLEX,
+	READ_ROW_COMPLEX_POST,
     READ_ENTRY_SIMPLE,
     READ_ENTRY_COMPLEX,
 } Read_State;
@@ -582,9 +583,11 @@ bool D1Cpp::readContent(QString &content)
             }
             if (content[0] == '}') {
                 content.remove(0, 1);
-                if (!processContent(READ_ROW_COMPLEX)) {
+                /*if (!processContent(READ_ROW_COMPLEX)) {
                     return false;
-                }
+                }*/
+                // states.push(currState);
+                currState.first = READ_ROW_COMPLEX_POST;
                 continue;
             }
             if (content[0] == '{') {
@@ -603,6 +606,48 @@ bool D1Cpp::readContent(QString &content)
                 currState.first = READ_ENTRY_SIMPLE;
                 currState.second = "";
                 continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.remove(0, 1);
+            }
+
+            currState.second.append(content[0]);
+            content.remove(0, 1);
+            continue;
+        case READ_ROW_COMPLEX_POST:
+			// LogMessage(QString("Processing complex row %1.").arg(content), LOG_NOTE);
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content[0] == ',') {
+                content.remove(0, 1);
+                if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST?
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '}') {
+                if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST?
+                    return false;
+                }
+                continue;
+            }
+            if (!content[0].isSpace()) {
+                return false;
             }
             if (content[0] == '\\') {
                 if (content.length() < 2) {
