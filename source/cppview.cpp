@@ -96,7 +96,7 @@ void CppView::on_tablesComboBox_activated(int index)
             UiCppEntry *w;
             if (item == nullptr) {
                 w = new UiCppEntry(this);
-                this->ui->tableGrid->addWidget(w, y, x, 0, 0);
+                this->ui->tableGrid->addWidget(w, y, x);
             } else {
                 w = (UiCppEntry *)item->widget();
             }

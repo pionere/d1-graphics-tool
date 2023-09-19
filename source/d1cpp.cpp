@@ -155,15 +155,16 @@ bool D1Cpp::processContent(int type)
         // case READ_ROW_COMPLEX:
         case READ_ENTRY_SIMPLE:
         case READ_ENTRY_COMPLEX:
-            LogMessage(QString("Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
+            LogMessage(QString("Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content.trimmed()).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
 
             currRowEntry->content.append(content.trimmed());
             currRow->entries.push_back(currRowEntry);
             currRow->entryTexts.push_back(QString());
             currRowEntry = nullptr;
-            if (currState.first == READ_ROW_SIMPLE) {
-                processContent(READ_ROW_SIMPLE);
-            }
+            LogMessage(QString("Entry added."), LOG_NOTE);
+            // if (currState.first == READ_ROW_SIMPLE) {
+            //    processContent(READ_ROW_SIMPLE);
+            // }
             return true;
         default:
             LogMessage(QString("Invalid type (%1) when reading row content.").arg(type), LOG_ERROR);
