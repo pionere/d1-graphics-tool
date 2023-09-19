@@ -494,6 +494,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
+				LogMessage(QString("Starting complex row %1.").arg(content), LOG_NOTE);
                 initRow();
                 states.push(currState);
                 currState.first = READ_ROW_COMPLEX;
@@ -501,6 +502,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (!content[0].isSpace()) {
+				LogMessage(QString("Starting simple row %1.").arg(content), LOG_NOTE);
                 initRow();
                 states.push(currState);
                 currState.first = READ_ROW_SIMPLE;
@@ -564,6 +566,7 @@ bool D1Cpp::readContent(QString &content)
             content.remove(0, 1);
             continue;
         case READ_ROW_COMPLEX:
+			// LogMessage(QString("Processing complex row %1.").arg(content), LOG_NOTE);
             if (content[0] == '/') {
                 if (content.length() < 2) {
                     return true;
@@ -585,12 +588,16 @@ bool D1Cpp::readContent(QString &content)
             }
             if (content[0] == '{') {
                 content.remove(0, 1);
+                currRowEntry = new D1CppRowEntry(); // initRowEntry
+
                 states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
                 currState.second = "";
                 continue;
             }
             if (!content[0].isSpace()) {
+                currRowEntry = new D1CppRowEntry(); // initRowEntry
+
                 states.push(currState);
                 currState.first = READ_ENTRY_SIMPLE;
                 currState.second = "";
