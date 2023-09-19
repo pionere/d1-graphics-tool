@@ -101,6 +101,8 @@ void CppView::on_tablesComboBox_activated(int index)
             w->initialize(table, y, x);
         }
     }
+
+    this->ui->tableGrid->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding), table->getRowCount(), table->getColumnCount());
 }
 
 void CppView::displayFrame()

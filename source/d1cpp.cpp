@@ -153,7 +153,7 @@ bool D1Cpp::processContent(QString &content, int type)
         case READ_ENTRY_COMPLEX:
             LogMessage(QString("Entry %1 of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content), LOG_NOTE);
 
-            currRowEntry->content.append(content);
+            currRowEntry->content.append(content.trimmed());
             currRow->entries.push_back(currRowEntry);
             currRow->entryTexts.push_back(QString());
             currRowEntry = nullptr;
@@ -190,7 +190,7 @@ bool D1Cpp::processContent(QString &content, int type)
                     currRowEntry->content.append(currRowEntry->postContent);
                     currRowEntry->postContent.clear();
                 }
-                currRowEntry->content.append(content);
+                currRowEntry->content.append(content.trimmed());
                 return true;
             }
             // fallthrough
@@ -623,10 +623,10 @@ bool D1Cpp::readContent(QString &content)
             content.remove(0, 1);
             continue;
         case READ_ENTRY_SIMPLE:
-            if (content[0].isSpace()) {
+            /*if (content[0].isSpace()) {
                 content.remove(0, 1);
                 continue;
-            }
+            }*/
             if (content[0] == '/') {
                 if (content.length() < 2) {
                     return true;
@@ -672,10 +672,10 @@ bool D1Cpp::readContent(QString &content)
             content.remove(0, 1);
             continue;
         case READ_ENTRY_COMPLEX:
-            if (content[0].isSpace()) {
+            /*if (content[0].isSpace()) {
                 content.remove(0, 1);
                 continue;
-            }
+            }*/
             if (content[0] == '/') {
                 if (content.length() < 2) {
                     return true;
@@ -790,6 +790,7 @@ bool D1Cpp::postProcess()
 {
     bool change = false;
     for (D1CppTable *table : this->tables) {
+		LogMessage(QString("Found table %1: %2 x %3.").arg(table->getName()).arg(table->getRowCount()).arg(table->getColumnCount()), LOG_NOTE);
         int columnNum = 0;
         bool ch = false;
         for (int i = 0; i < table->getRowCount(); i++) {

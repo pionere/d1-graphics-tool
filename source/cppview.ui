@@ -21,7 +21,18 @@
     <widget class="QLabel" name="cppLabel"/>
    </item>
    <item>
-    <widget class="QComboBox" name="tablesComboBox"/>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QComboBox" name="tablesComboBox"/>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QWidget">
