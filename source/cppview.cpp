@@ -85,6 +85,9 @@ LogErrorF("Table cleared %d x %d", this->gridRowCount, this->gridColumnCount);
     // add new items
     for (int y = 0; y < table->getRowCount() + 1; y++) {
         for (int x = 0; x < table->getColumnCount() + 1; x++) {
+            if (x == 0 && y == 0) {
+                continue;
+            }
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             CppViewEntryWidget *w;
             if (item == nullptr) {
