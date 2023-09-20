@@ -61,6 +61,7 @@ void CppView::initialize(D1Cpp *c)
 void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
+LogErrorF("Tablebox activated %d", index);
     // eliminate obsolete content
     for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
@@ -80,6 +81,7 @@ void CppView::on_tablesComboBox_activated(int index)
         }
     }
     this->gridColumnCount = table->getColumnCount() + 1; // std::min(this->gridColumnCount, table->getColumnCount() + 1);
+LogErrorF("Table cleared %d x %d", this->gridRowCount, this->gridColumnCount);
     // add new items
     for (int y = 0; y < table->getRowCount() + 1; y++) {
         for (int x = 0; x < table->getColumnCount() + 1; x++) {
@@ -91,7 +93,9 @@ void CppView::on_tablesComboBox_activated(int index)
             } else {
                 w = (CppViewEntryWidget *)item->widget();
             }
+LogErrorF("Adding item %d x %d", y, x);
             w->initialize(table, y, x);
+LogErrorF("Added item.");
         }
     }
     // this->gridRowCount = table->getRowCount() + 1;

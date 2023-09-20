@@ -878,8 +878,12 @@ bool D1Cpp::postProcess()
                 }
                 if (x > 0) {
                     rowLeader = firstText.mid(x + 1, firstText.length() - (1 + 2 + x + 1));
+        LogMessage(QString("Adding leader field %1 to row %2 rem:%3.").arg(rowLeader).arg(i).arg(x), LOG_NOTE);
                     firstText.chop(x - 1);
                 }
+else
+        LogMessage(QString("No leader field on row %1").arg(i), LOG_NOTE);
+
             }
             table->leader.push_back(rowLeader);
         }
@@ -896,10 +900,12 @@ bool D1Cpp::postProcess()
                     // TODO: check lineEnd?
                 }
                 if (x > 0) {
+        LogMessage(QString("Found header info at %1.").arg(x), LOG_NOTE);
                     QString headerText = firstText.mid(x + 1, firstText.length() - (1 + this->lineEnd.length() + x + 1));
                     headerText = headerText.trimmed();
                     QStringList headerNames = headerText.split(',');
                     if (headerNames.count() > 1) { // TODO: check against ColumnCount
+        LogMessage(QString("Found header names %1.").arg(headerNames.count()), LOG_NOTE);
 
                         firstText.chop(x - 1);
                         for (QString &headerName : headerNames) {
@@ -911,11 +917,13 @@ bool D1Cpp::postProcess()
                     }
                 }
             }
+        LogMessage(QString("Header count %1 columns %2.").arg(table->header.count()).arg(table->getColumnCount()), LOG_NOTE);
             while (table->header.count() < table->getColumnCount()) {
                 table->header.push_back(QString());
             }
         }
     }
+    LogMessage(QString("postProcess done."), LOG_NOTE);
 
     return change;
 }
