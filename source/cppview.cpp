@@ -23,6 +23,8 @@ CppView::CppView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
     , ui(new Ui::CppView())
     , undoStack(us)
+    , gridRowCount(0)
+    , gridColumnCount(0)
 {
     this->ui->setupUi(this);
 
@@ -60,7 +62,7 @@ void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
     // eliminate obsolete content
-    for (int y = this->ui->tableGrid->rowCount() - 1 + 1; y > table->getRowCount() - 1; y--) {
+    for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             if (item != nullptr) {
@@ -68,14 +70,16 @@ void CppView::on_tablesComboBox_activated(int index)
             }
         }
     }
+    this->gridRowCount = table->getRowCount() + 1; // std::min(this->gridRowCount, table->getRowCount() + 1);
     for (int y = 0; y < table->getRowCount() + 1; y++) {
-        for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x > table->getColumnCount() - 1 + 1; x--) {
+        for (int x = this->gridColumnCount - 1 + 1; x > table->getColumnCount() - 1 + 1; x--) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             if (item != nullptr) {
                 this->ui->tableGrid->removeWidget(item->widget());
             }
         }
     }
+    this->gridColumnCount = table->getColumnCount() + 1; // std::min(this->gridColumnCount, table->getColumnCount() + 1);
     // add new items
     for (int y = 0; y < table->getRowCount() + 1; y++) {
         for (int x = 0; x < table->getColumnCount() + 1; x++) {
@@ -90,10 +94,12 @@ void CppView::on_tablesComboBox_activated(int index)
             w->initialize(table, y, x);
         }
     }
+    // this->gridRowCount = table->getRowCount() + 1;
+    // this->gridColumnCount = table->getColumnCount() + 1;
 
-    if (table->getRowCount() != 0) {
-        this->ui->tableGrid->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding), table->getRowCount() - 1, table->getColumnCount());
-    }
+    // if (table->getRowCount() != 0) {
+    //    this->ui->tableGrid->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding), table->getRowCount() - 1, table->getColumnCount());
+    // }
 }
 
 void CppView::displayFrame()

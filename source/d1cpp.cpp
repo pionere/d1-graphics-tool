@@ -821,6 +821,16 @@ D1CppRow *D1CppTable::getRow(int index) const
     return const_cast<D1CppRow *>(this->rows[index]);
 }
 
+QString D1CppTable::getHeader(int index) const
+{
+    return this->header(index);
+}
+
+QString D1CppTable::getLeader(int index) const
+{
+    return this->leader(index);
+}
+
 D1Cpp::~D1Cpp()
 {
     qDeleteAll(this->tables);
@@ -1017,13 +1027,13 @@ bool D1Cpp::save(const SaveAsParam &params)
                     if (h != 0) {
                         out << ", ";
                     }
-                    out << this->leader[h];
+                    out << table->leader[h];
                 }
                 // out << "\n";
             }
             // add leader
             if (table->leader[n].isEmpty()) {
-                out << QString("/*%s*/").arg(this->leader[n]);
+                out << QString("/*%s*/").arg(table->leader[n]);
             }
             int e = 0;
             for ( ; ; e++) {
@@ -1076,14 +1086,4 @@ int D1Cpp::getTableCount() const
 D1CppTable *D1Cpp::getTable(int index) const
 {
     return const_cast<D1CppTable *>(this->tables[index]);
-}
-
-QString D1Cpp::getHeader(int index) const
-{
-    return this->header(index);
-}
-
-QString D1Cpp::getLeader(int index) const
-{
-    return this->leader(index);
 }

@@ -47,4 +47,7 @@ private:
 
     D1Cpp *cpp;
     D1CppTable *cppTable;
+
+    int gridRowCount; // because QGridLayout is lame...
+    int gridColumnCount;
 };

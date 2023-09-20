@@ -28,19 +28,24 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c)
     this->rowNum = r;
     this->columnNum = c;
 
-	this->ui->entryHorizontalLayout->clear();
+    // clear the layout
+    QLayoutItem *child;
+    while ((child = this->ui->entryHorizontalLayout->takeAt(0)) != nullptr) {
+        delete child->widget(); // delete the widget
+        delete child;           // delete the layout item
+    }
 
-	QWidget *w;
-	if (r == 0) {
-		// header
-		w = QLabel(t->getHeader(c - 1));
+    QWidget *w;
+    if (r == 0) {
+        // header
+        w = QLabel(t->getHeader(c - 1));
     } else if (c == 0) {
-		// leader
-		w = QLabel(t->getLeader(r - 1));
+        // leader
+        w = QLabel(t->getLeader(r - 1));
     } else {
-		// standard entry
-		w = new LineEditWidget(this);
+        // standard entry
+        w = new LineEditWidget(this);
         ((LineEditWidget *)w)->setText(t->getRow(r - 1)->getEntry(c - 1)->getContent());
     }
-	this->ui->entryHorizontalLayout->addWidget(w);
+    this->ui->entryHorizontalLayout->addWidget(w);
 }
