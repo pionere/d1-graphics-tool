@@ -871,7 +871,7 @@ bool D1Cpp::postProcess()
                     firstText.chop(x - 1);
                 }
             }
-            this->leader.push_back(rowLeader);
+            table->leader.push_back(rowLeader);
         }
 
         // add header fields
@@ -893,16 +893,16 @@ bool D1Cpp::postProcess()
 
                         firstText.chop(x - 1);
                         for (QString &headerName : headerNames) {
-                            this->header.push_back(headerName.trimmed());
+                            table->header.push_back(headerName.trimmed());
                         }
-                        if (this->header[0].isEmpty()) {
-                            this->header[0] = " ";
+                        if (table->header[0].isEmpty()) {
+                            table->header[0] = " ";
                         }
                     }
                 }
             }
-            while (this->header.count() < table->getColumnCount()) {
-                this->header.push_back(QString());
+            while (table->header.count() < table->getColumnCount()) {
+                table->header.push_back(QString());
             }
         }
     }
@@ -1005,14 +1005,15 @@ bool D1Cpp::save(const SaveAsParam &params)
 
         out << "{ ";
 
+		D1CppTable *table = this->tables[i];
         int n = 0;
-        for ( ; n < this->tables[i]->rows.count(); n++) {
-            out << this->tables[i]->rowTexts[n];
+        for ( ; n < table->rows.count(); n++) {
+            out << table->rowTexts[n];
 
             // add header
-            if (n == 0 && !this->header[0].isEmpty()) {
+            if (n == 0 && !table->header[0].isEmpty()) {
                 out << " // ";
-                for (int h = 0; h < this->header.count(); h++) {
+                for (int h = 0; h < table->header.count(); h++) {
                     if (h != 0) {
                         out << ", ";
                     }
@@ -1021,7 +1022,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                 // out << "\n";
             }
             // add leader
-            if (this->leader[n].isEmpty()) {
+            if (table->leader[n].isEmpty()) {
                 out << QString("/*%s*/").arg(this->leader[n]);
             }
             int e = 0;
@@ -1029,21 +1030,21 @@ bool D1Cpp::save(const SaveAsParam &params)
                 if (e == 0) { // && row->isComplex
                     out << "{ ";
                 }
-                out << this->tables[i]->rows[n]->entryTexts[e];
-                out << this->tables[i]->rows[n]->entries[e]->preContent;
-                out << this->tables[i]->rows[n]->entries[e]->content;
-                out << this->tables[i]->rows[n]->entries[e]->postContent;
-                if (e == this->tables[i]->rows[n]->entries.count() - 1) {
+                out << table->rows[n]->entryTexts[e];
+                out << table->rows[n]->entries[e]->preContent;
+                out << table->rows[n]->entries[e]->content;
+                out << table->rows[n]->entries[e]->postContent;
+                if (e == table->rows[n]->entries.count() - 1) {
                     out << " }";
                     break;
                 } else {
                     out << ",";
                 }
             }
-            out << this->tables[i]->rows[n]->entryTexts[e];
+            out << table->rows[n]->entryTexts[e];
         }
         out << " }";
-        out << this->tables[i]->rowTexts[n];
+        out << table->rowTexts[n];
     }
     out << this->texts[i];
 

@@ -3,6 +3,7 @@
 #include <QWidget>
 
 class CppView;
+class D1CppTable;
 
 namespace Ui {
 class CppViewEntryWidget;

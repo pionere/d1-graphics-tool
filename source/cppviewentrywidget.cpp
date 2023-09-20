@@ -4,6 +4,7 @@
 #include <QStyle>
 
 #include "cppview.h"
+#include "d1cpp.h"
 #include "lineeditwidget.h"
 
 #include "ui_cppviewentrywidget.h"

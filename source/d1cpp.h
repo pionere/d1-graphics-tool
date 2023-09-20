@@ -69,12 +69,16 @@ public:
     int getColumnCount() const;
     int getRowCount() const;
     D1CppRow *getRow(int index) const;
+    QString getHeader(int index) const;
+    QString getLeader(int index) const;
 
 private:
     QString name;
 
     QList<QString> rowTexts;
     QList<D1CppRow *> rows;
+	QList<QString> header;
+	QList<QString> leader;
 };
 
 class D1Cpp : public QObject {
@@ -93,8 +97,6 @@ public:
     void setFilePath(const QString &path);
     int getTableCount() const;
     D1CppTable *getTable(int index) const;
-    QString getHeader(int index) const;
-    QString getLeader(int index) const;
 
 private:
     bool processContent(int type);
@@ -110,6 +112,4 @@ private:
     QString lineEnd;
     QList<QString> texts;
     QList<D1CppTable *> tables;
-	QList<QString> header;
-	QList<QString> leader;
 };
