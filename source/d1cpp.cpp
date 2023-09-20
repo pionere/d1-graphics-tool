@@ -878,11 +878,10 @@ bool D1Cpp::postProcess()
                 }
                 if (x > 0) {
                     rowLeader = firstText.mid(x + 1, firstText.length() - (1 + 2 + x + 1) + 1);
+if (i == 0)
         LogMessage(QString("Adding leader field %1 to row %2 rem:%3.").arg(rowLeader).arg(i).arg(x), LOG_NOTE);
-                    firstText.chop(x - 1);
+                    firstText = firstText.first(x - 1);
                 }
-else
-        LogMessage(QString("No leader field on row %1").arg(i), LOG_NOTE);
 
             }
             table->leader.push_back(rowLeader);
@@ -891,7 +890,7 @@ else
         // add header fields
         if (table->getColumnCount() != 0) {
             QString &firstText = table->rowTexts[0];
-        LogMessage(QString("Checking for header info in %1.").arg(firstText), LOG_NOTE);
+        LogMessage(QString("Checking for header info (len %2) in %1.").arg(firstText).arg(firstText.length()), LOG_NOTE);
             if (firstText.endsWith(this->lineEnd)) {
         LogMessage(QString("LineEnd found."), LOG_NOTE);
                 int x = firstText.length() - (1 + this->lineEnd.length());

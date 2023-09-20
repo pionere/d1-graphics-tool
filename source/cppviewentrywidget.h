@@ -16,7 +16,7 @@ public:
     explicit CppViewEntryWidget(CppView *parent);
     ~CppViewEntryWidget();
 
-    void initialize(D1CppTable *table, int rowNum, int columnNum);
+    void initialize(D1CppTable *table, int rowNum, int columnNum, int width);
 
 private:
     Ui::CppViewEntryWidget *ui;

@@ -58,6 +58,20 @@ void CppView::initialize(D1Cpp *c)
     // this->updateFields();
 }
 
+static QString getTableEntryValue(D1CppTable *table, int row, int column)
+{
+    if (row == 0) {
+        // header
+        return table->getHeader(column - 1);
+    }
+    if (column == 0) {
+        // leader
+        return table->getLeader(row - 1));
+    }
+	// standard entry
+    return table->getRow(row - 1)->getEntry(column - 1)->getContent());
+}
+
 void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
@@ -80,9 +94,25 @@ void CppView::on_tablesComboBox_activated(int index)
         }
     }
     this->gridColumnCount = table->getColumnCount() + 1; // std::min(this->gridColumnCount, table->getColumnCount() + 1);
+    // calculate the column-widths
+    QList<int> columnWidths;
+    for (int x = 0; x < table->getColumnCount() + 1; x++) {
+        int maxWidth = 2;
+        for (int y = 0; y < table->getRowCount() + 1; y++) {
+            if (x == 0 && y == 0) {
+                continue;
+            }
+            QString text = getTableEntryValue(table, y, x);
+            int tw = text.count() + 1;
+            if (tw > maxWidth) {
+                maxWidth = tw;
+            }
+        }
+        columnWidths.push_back(maxWidth);
+    }
     // add new items
-    for (int y = 0; y < table->getRowCount() + 1; y++) {
-        for (int x = 0; x < table->getColumnCount() + 1; x++) {
+    for (int x = 0; x < table->getColumnCount() + 1; x++) {
+        for (int y = 0; y < table->getRowCount() + 1; y++) {
             if (x == 0 && y == 0) {
                 continue;
             }
@@ -94,7 +124,7 @@ void CppView::on_tablesComboBox_activated(int index)
             } else {
                 w = (CppViewEntryWidget *)item->widget();
             }
-            w->initialize(table, y, x);
+            w->initialize(table, y, x, columnWidths[x]);
         }
     }
     // this->gridRowCount = table->getRowCount() + 1;
