@@ -55,6 +55,9 @@ set(PROJECT_SOURCES
         source/cppview.cpp
         source/cppview.h
         source/cppview.ui
+        source/cppviewentrywidget.cpp
+        source/cppviewentrywidget.h
+        source/cppviewentrywidget.ui
         source/config.cpp
         source/config.h
         source/d1cel.cpp

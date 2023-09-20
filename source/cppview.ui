@@ -37,7 +37,7 @@
    <item>
     <widget class="QScrollArea">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>1</horstretch>
        <verstretch>1</verstretch>
       </sizepolicy>

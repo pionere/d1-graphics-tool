@@ -20,12 +20,12 @@ typedef enum Read_State {
     READ_QUOTE_DOUBLE,
     READ_COMMENT_SINGLE,
     READ_COMMENT_MULTI,
-	READ_DIRECTIVE,
+    READ_DIRECTIVE,
     READ_NUMBER,
     READ_TABLE,
     READ_ROW_SIMPLE,
     READ_ROW_COMPLEX,
-	READ_ROW_COMPLEX_POST,
+    READ_ROW_COMPLEX_POST,
     READ_ENTRY_SIMPLE,
     READ_ENTRY_COMPLEX,
 } Read_State;
@@ -85,7 +85,7 @@ bool D1Cpp::processContent(int type)
             content.prepend("/*");
             content.append("*/");
             break;
-		// case READ_DIRECTIVE:
+        // case READ_DIRECTIVE:
         // case READ_NUMBER:
         case READ_TABLE:
             LogMessage(QString("Table %1 done.").arg(currTable->name), LOG_NOTE);
@@ -107,7 +107,7 @@ bool D1Cpp::processContent(int type)
     // case READ_QUOTE_DOUBLE:
     // case READ_COMMENT_SINGLE:
     // case READ_COMMENT_MULTI:
-	// case READ_DIRECTIVE:
+    // case READ_DIRECTIVE:
     // case READ_NUMBER:
     case READ_TABLE:
         switch (type) {
@@ -122,7 +122,7 @@ bool D1Cpp::processContent(int type)
             content.append("*/");
             break;
         case READ_DIRECTIVE:
-			content.prepend("#");
+            content.prepend("#");
             break;
         // case READ_NUMBER:
         // case READ_TABLE:
@@ -156,7 +156,7 @@ bool D1Cpp::processContent(int type)
             content.prepend("/*");
             content.append("*/");
             break;
-		// case READ_DIRECTIVE:
+        // case READ_DIRECTIVE:
         // case READ_NUMBER:
         // case READ_TABLE:
         // case READ_ROW_SIMPLE:
@@ -194,7 +194,7 @@ bool D1Cpp::processContent(int type)
             content.prepend("/*");
             content.append("*/");
             break;
-		// case READ_DIRECTIVE:
+        // case READ_DIRECTIVE:
         // case READ_NUMBER:
         // case READ_TABLE:
         // case READ_ROW_SIMPLE:
@@ -511,7 +511,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
-				LogMessage(QString("Starting complex row %1.").arg(content), LOG_NOTE);
+                LogMessage(QString("Starting complex row %1.").arg(content), LOG_NOTE);
                 initRow();
                 states.push(currState);
                 currState.first = READ_ROW_COMPLEX;
@@ -519,7 +519,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (!content[0].isSpace()) {
-				LogMessage(QString("Starting simple row %1.").arg(content), LOG_NOTE);
+                LogMessage(QString("Starting simple row %1.").arg(content), LOG_NOTE);
                 initRow();
                 states.push(currState);
                 currState.first = READ_ROW_SIMPLE;
@@ -583,7 +583,7 @@ bool D1Cpp::readContent(QString &content)
             content.remove(0, 1);
             continue;
         case READ_ROW_COMPLEX:
-			// LogMessage(QString("Processing complex row %1.").arg(content), LOG_NOTE);
+            // LogMessage(QString("Processing complex row %1.").arg(content), LOG_NOTE);
             if (content[0] == '/') {
                 if (content.length() < 2) {
                     return true;
@@ -635,7 +635,7 @@ bool D1Cpp::readContent(QString &content)
             content.remove(0, 1);
             continue;
         case READ_ROW_COMPLEX_POST:
-			// LogMessage(QString("Processing complex row %1.").arg(content), LOG_NOTE);
+            // LogMessage(QString("Processing complex row %1.").arg(content), LOG_NOTE);
             if (content[0] == '/') {
                 if (content.length() < 2) {
                     return true;
@@ -831,7 +831,8 @@ bool D1Cpp::postProcess()
 {
     bool change = false;
     for (D1CppTable *table : this->tables) {
-		LogMessage(QString("Found table %1: %2 x %3.").arg(table->getName()).arg(table->getRowCount()).arg(table->getColumnCount()), LOG_NOTE);
+        // balance the table
+        LogMessage(QString("Found table %1: %2 x %3.").arg(table->getName()).arg(table->getRowCount()).arg(table->getColumnCount()), LOG_NOTE);
         int columnNum = 0;
         bool ch = false;
         for (int i = 0; i < table->getRowCount(); i++) {
@@ -851,6 +852,57 @@ bool D1Cpp::postProcess()
                     row->entries.push_back(new D1CppRowEntry());
                     row->entryTexts.push_back(QString());
                 }
+            }
+        }
+        // add leader fields
+        for (int i = 0; i < table->getRowCount(); i++) {
+            QString &firstText = table->rowTexts[i];
+            QString rowLeader;
+            if (firstText.endsWith("*/")) {
+                int x = firstText.length() - (1 + 2);
+                for (; x > 0; x--) {
+                    if (firstText[x] == '*' && firstText[x - 1] == '/') {
+                        break;
+                    }
+                    // TODO: check lineEnd?
+                }
+                if (x > 0) {
+                    rowLeader = firstText.mid(x + 1, firstText.length() - (1 + 2 + x + 1));
+                    firstText.chop(x - 1);
+                }
+            }
+            this->leader.push_back(rowLeader);
+        }
+
+        // add header fields
+        if (table->getColumnCount() != 0) {
+            QString &firstText = table->rowTexts[0];
+            if (firstText.endsWith(this->lineEnd)) {
+                int x = firstText.length() - (1 + this->lineEnd.length());
+                for ( ; x > 0; x--) {
+                    if (firstText[x] == '/' && firstText[x - 1] == '/') {
+                        break;
+                    }
+                    // TODO: check lineEnd?
+                }
+                if (x > 0) {
+                    QString headerText = firstText.mid(x + 1, firstText.length() - (1 + this->lineEnd.length() + x + 1));
+                    headerText = headerText.trimmed();
+                    QStringList headerNames = headerText.split(',');
+                    if (headerNames.count() > 1) { // TODO: check against ColumnCount
+
+                        firstText.chop(x - 1);
+                        for (QString &headerName : headerNames) {
+                            this->header.push_back(headerName.trimmed());
+                        }
+                        if (this->header[0].isEmpty()) {
+                            this->header[0] = " ";
+                        }
+                    }
+                }
+            }
+            while (this->header.count() < table->getColumnCount()) {
+                this->header.push_back(QString());
             }
         }
     }
@@ -957,13 +1009,27 @@ bool D1Cpp::save(const SaveAsParam &params)
         for ( ; n < this->tables[i]->rows.count(); n++) {
             out << this->tables[i]->rowTexts[n];
 
+            // add header
+            if (n == 0 && !this->header[0].isEmpty()) {
+                out << " // ";
+                for (int h = 0; h < this->header.count(); h++) {
+                    if (h != 0) {
+                        out << ", ";
+                    }
+                    out << this->leader[h];
+                }
+                // out << "\n";
+            }
+            // add leader
+            if (this->leader[n].isEmpty()) {
+                out << QString("/*%s*/").arg(this->leader[n]);
+            }
             int e = 0;
             for ( ; ; e++) {
                 if (e == 0) { // && row->isComplex
                     out << "{ ";
                 }
                 out << this->tables[i]->rows[n]->entryTexts[e];
-
                 out << this->tables[i]->rows[n]->entries[e]->preContent;
                 out << this->tables[i]->rows[n]->entries[e]->content;
                 out << this->tables[i]->rows[n]->entries[e]->postContent;
@@ -1011,3 +1077,12 @@ D1CppTable *D1Cpp::getTable(int index) const
     return const_cast<D1CppTable *>(this->tables[index]);
 }
 
+QString D1Cpp::getHeader(int index) const
+{
+    return this->header(index);
+}
+
+QString D1Cpp::getLeader(int index) const
+{
+    return this->leader(index);
+}

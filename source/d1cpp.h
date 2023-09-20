@@ -93,6 +93,8 @@ public:
     void setFilePath(const QString &path);
     int getTableCount() const;
     D1CppTable *getTable(int index) const;
+    QString getHeader(int index) const;
+    QString getLeader(int index) const;
 
 private:
     bool processContent(int type);
@@ -108,4 +110,6 @@ private:
     QString lineEnd;
     QList<QString> texts;
     QList<D1CppTable *> tables;
+	QList<QString> header;
+	QList<QString> leader;
 };

@@ -11,26 +11,13 @@
 
 #include "celview.h"
 #include "config.h"
+#include "cppviewentrywidget.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "pushbuttonwidget.h"
 #include "ui_cppview.h"
 
 #include "dungeon/all.h"
-
-UiCppEntry::UiCppEntry(QWidget *parent)
-    : LineEditWidget(parent)
-{
-}
-
-void UiCppEntry::initialize(D1CppTable *t, int r, int c)
-{
-    this->table = t;
-    this->rowNum = r;
-    this->columnNum = c;
-
-    this->setText(t->getRow(r)->getEntry(c)->getContent());
-}
 
 CppView::CppView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
@@ -73,16 +60,16 @@ void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
     // eliminate obsolete content
-    for (int y = this->ui->tableGrid->rowCount() - 1; y > table->getRowCount() - 1; y--) {
-        for (int x = this->ui->tableGrid->columnCount() - 1; x >= 0; x--) {
+    for (int y = this->ui->tableGrid->rowCount() - 1 + 1; y > table->getRowCount() - 1; y--) {
+        for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             if (item != nullptr) {
                 this->ui->tableGrid->removeWidget(item->widget());
             }
         }
     }
-    for (int y = 0; y < table->getRowCount(); y++) {
-        for (int x = this->ui->tableGrid->columnCount() - 1; x > table->getColumnCount() - 1; x--) {
+    for (int y = 0; y < table->getRowCount() + 1; y++) {
+        for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x > table->getColumnCount() - 1 + 1; x--) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             if (item != nullptr) {
                 this->ui->tableGrid->removeWidget(item->widget());
@@ -90,15 +77,15 @@ void CppView::on_tablesComboBox_activated(int index)
         }
     }
     // add new items
-    for (int y = 0; y < table->getRowCount(); y++) {
-        for (int x = 0; x < table->getColumnCount(); x++) {
+    for (int y = 0; y < table->getRowCount() + 1; y++) {
+        for (int x = 0; x < table->getColumnCount() + 1; x++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
-            UiCppEntry *w;
+            CppViewEntryWidget *w;
             if (item == nullptr) {
-                w = new UiCppEntry(this);
+                w = new CppViewEntryWidget(this);
                 this->ui->tableGrid->addWidget(w, y, x);
             } else {
-                w = (UiCppEntry *)item->widget();
+                w = (CppViewEntryWidget *)item->widget();
             }
             w->initialize(table, y, x);
         }
@@ -107,9 +94,6 @@ void CppView::on_tablesComboBox_activated(int index)
     if (table->getRowCount() != 0) {
         this->ui->tableGrid->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding), table->getRowCount() - 1, table->getColumnCount());
     }
-    // generally not need to call this...
-    // this->update();
-	// LogErrorF("Active Table %d x %d.", this->ui->tableGrid->rowCount(), this->ui->tableGrid->columnCount());
 }
 
 void CppView::displayFrame()

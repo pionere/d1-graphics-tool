@@ -17,21 +17,6 @@ namespace Ui {
 class CppView;
 } // namespace Ui
 
-class UiCppEntry : public LineEditWidget {
-    Q_OBJECT
-
-public:
-    explicit UiCppEntry(QWidget *parent);
-    ~UiCppEntry() = default;
-
-    void initialize(D1CppTable *table, int rowNum, int columnNum);
-
-private:
-    D1CppTable *table;
-    int rowNum;
-    int columnNum;
-};
-
 class CppView : public QWidget {
     Q_OBJECT
 
