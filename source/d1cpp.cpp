@@ -823,12 +823,12 @@ D1CppRow *D1CppTable::getRow(int index) const
 
 QString D1CppTable::getHeader(int index) const
 {
-    return this->header(index);
+    return this->header[index];
 }
 
 QString D1CppTable::getLeader(int index) const
 {
-    return this->leader(index);
+    return this->leader[index];
 }
 
 D1Cpp::~D1Cpp()

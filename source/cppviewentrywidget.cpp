@@ -38,10 +38,10 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c)
     QWidget *w;
     if (r == 0) {
         // header
-        w = QLabel(t->getHeader(c - 1));
+        w = new QLabel(t->getHeader(c - 1));
     } else if (c == 0) {
         // leader
-        w = QLabel(t->getLeader(r - 1));
+        w = new QLabel(t->getLeader(r - 1));
     } else {
         // standard entry
         w = new LineEditWidget(this);
