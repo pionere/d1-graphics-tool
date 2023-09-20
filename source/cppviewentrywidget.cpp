@@ -39,16 +39,18 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     QWidget *w;
     if (r == 0) {
         // header
-        w = new LabelWidget(t->getHeader(c - 1));
-		((LabelWidget *)w)->setCharWidth(width);
+        w = new LabelWidget(this);
+        ((LabelWidget *)w)->setCharWidth(width);
+        ((LabelWidget *)w)->setText(t->getHeader(c - 1));
     } else if (c == 0) {
         // leader
-        w = new LabelWidget(t->getLeader(r - 1));
-		((LabelWidget *)w)->setCharWidth(width);
+        w = new LabelWidget(this);
+        ((LabelWidget *)w)->setCharWidth(width);
+        ((LabelWidget *)w)->setText(t->getLeader(r - 1));
     } else {
         // standard entry
         w = new LineEditWidget(this);
-		((LineEditWidget *)w)->setCharWidth(width);
+        ((LineEditWidget *)w)->setCharWidth(width);
         ((LineEditWidget *)w)->setText(t->getRow(r - 1)->getEntry(c - 1)->getContent());
     }
     this->ui->entryHorizontalLayout->addWidget(w);

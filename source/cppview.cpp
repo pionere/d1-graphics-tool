@@ -66,10 +66,10 @@ static QString getTableEntryValue(D1CppTable *table, int row, int column)
     }
     if (column == 0) {
         // leader
-        return table->getLeader(row - 1));
+        return table->getLeader(row - 1);
     }
 	// standard entry
-    return table->getRow(row - 1)->getEntry(column - 1)->getContent());
+    return table->getRow(row - 1)->getEntry(column - 1)->getContent();
 }
 
 void CppView::on_tablesComboBox_activated(int index)
