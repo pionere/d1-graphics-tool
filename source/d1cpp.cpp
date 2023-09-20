@@ -880,7 +880,7 @@ bool D1Cpp::postProcess()
                     rowLeader = firstText.mid(x + 1, firstText.length() - (1 + 2 + x + 1) + 1);
 if (i == 0)
         LogMessage(QString("Adding leader field %1 to row %2 rem:%3.").arg(rowLeader).arg(i).arg(x), LOG_NOTE);
-                    firstText = firstText.first(x - 1);
+                    firstText = firstText.left(x - 1);
                 }
 
             }
