@@ -93,6 +93,7 @@ public:
     bool save(const SaveAsParam &params);
 
     bool isModified() const;
+    void setModified();
 
     QString getFilePath() const;
     void setFilePath(const QString &path);

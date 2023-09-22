@@ -1082,6 +1082,11 @@ bool D1Cpp::isModified() const
     return this->modified;
 }
 
+void D1Cpp::setModified()
+{
+    this->modified = true;
+}
+
 QString D1Cpp::getFilePath() const
 {
     return this->cppFilePath;

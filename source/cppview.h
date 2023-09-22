@@ -28,6 +28,8 @@ public:
 
     void displayFrame();
 
+    void setTableContent(int row, int colum, const QString &text);
+
 private:
     void updateFields();
     void updateLabel();

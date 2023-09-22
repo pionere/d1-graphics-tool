@@ -72,6 +72,14 @@ static QString getTableEntryValue(D1CppTable *table, int row, int column)
     return table->getRow(row - 1)->getEntry(column - 1)->getContent();
 }
 
+void CppView::setTableContent(int row, int column, const QString &text)
+{
+    this->table->getRow(row - 1)->getEntry(column - 1)->setContent(text);
+    this->cpp->setModified();
+
+    this->displayFrame();
+}
+
 void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);

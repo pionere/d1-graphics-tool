@@ -43,7 +43,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
         QString text = t->getHeader(c - 1);
         QFontMetrics fm = this->fontMetrics();
         if (fm.horizontalAdvance(text) > width) {
-            w = PushButtonWidget::addButton(this, QStyle::SP_DialogHelpButton, text, this, CppViewEntryWidget::on_headerButton_clicked);
+            w = PushButtonWidget::addButton(this, QStyle::SP_DialogHelpButton, text, this, &CppViewEntryWidget::on_headerButton_clicked);
         } else {
             w = new LabelWidget(text, this);
             ((LabelWidget *)w)->setFixedWidth(width);
@@ -73,7 +73,7 @@ void CppViewEntryWidget::on_headerButton_clicked()
 void CppViewEntryWidget::on_entryLineEdit_returnPressed()
 {
     QString text = ((LineEditWidget *)this->widget)->text();
-    this->table->getRow(this->rowNum - 1)->getEntry(this->columnNum - 1)->setContent(text);
+    this->view->setTableContent(this->rowNum, this->columnNum, text);
     this->on_entryLineEdit_escPressed();
 }
 
