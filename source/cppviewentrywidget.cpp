@@ -72,7 +72,7 @@ void CppViewEntryWidget::on_headerButton_clicked()
 
 void CppViewEntryWidget::on_entryLineEdit_returnPressed()
 {
-    QString text = ((LineEditWidget *)this->widget)->getText();
+    QString text = ((LineEditWidget *)this->widget)->text();
     this->table->getRow(this->rowNum - 1)->getEntry(this->columnNum - 1)->setContent(text);
     this->on_entryLineEdit_escPressed();
 }
