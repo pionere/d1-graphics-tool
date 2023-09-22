@@ -30,7 +30,7 @@ int CppViewEntryWidget::baseHorizontalMargin()
 {
     if (baseHorizontalMargin == 0) {
         int result = 8;
-        LineEditWidget w;
+        LineEditWidget w = LineEditWidget(nullptr);
         QMargins qm = w.textMargins();
         result += qm.left() + qm.right();
         qm = w.contentsMargins();

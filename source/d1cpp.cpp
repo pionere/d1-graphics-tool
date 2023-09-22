@@ -1050,8 +1050,8 @@ bool D1Cpp::save(const SaveAsParam &params)
                 QString entryContent;
                 entryContent = row->entryTexts[e] + row->entries[e]->preContent + row->entries[e]->content + row->entries[e]->postContent;
                 int len = entryContent.length();
-                if (maxWidth[n + 1] < len) {
-                    maxWidth[n + 1] = len;
+                if (maxWidths[n + 1] < len) {
+                    maxWidths[n + 1] = len;
                 }
                 rowEntryContents.push_back(entryContent);
             }
