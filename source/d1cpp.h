@@ -29,6 +29,7 @@ public:
     ~D1CppRowEntry() = default;
 
     QString getContent() const;
+    void setContent(const QString &text);
 
 private:
     QString preContent;

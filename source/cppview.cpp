@@ -96,14 +96,15 @@ void CppView::on_tablesComboBox_activated(int index)
     this->gridColumnCount = table->getColumnCount() + 1; // std::min(this->gridColumnCount, table->getColumnCount() + 1);
     // calculate the column-widths
     QList<int> columnWidths;
+    QFontMetrics fm = this->fontMetrics();
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         int maxWidth = 2;
-        for (int y = 0; y < table->getRowCount() + 1; y++) {
+        for (int y = 1; y < table->getRowCount() + 1; y++) {
             if (x == 0 && y == 0) {
                 continue;
             }
             QString text = getTableEntryValue(table, y, x);
-            int tw = text.count() + 1;
+            int tw = fm.horizontalAdvance(text);
             if (tw > maxWidth) {
                 maxWidth = tw;
             }

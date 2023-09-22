@@ -10,7 +10,8 @@ class LineEditWidget : public QLineEdit {
     Q_OBJECT
 
 public:
-    explicit LineEditWidget(QWidget *parent);
+    LineEditWidget(QWidget *parent);
+	LineEditWidget(const QString &contents, QWidget *parent);
     ~LineEditWidget() = default;
 
     void setCharWidth(int width);

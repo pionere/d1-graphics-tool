@@ -7,6 +7,11 @@ LabelWidget::LabelWidget(QWidget *parent)
 {
 }
 
+LabelWidget::LabelWidget(const QString &text, QWidget *parent)
+    : QLabel(text, parent)
+{
+}
+
 void LabelWidget::setCharWidth(int value)
 {
     int maxWidth = this->fontMetrics().horizontalAdvance('w');

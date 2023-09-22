@@ -779,6 +779,11 @@ QString D1CppRowEntry::getContent() const
     return this->content;
 }
 
+void D1CppRowEntry::setContent(const QString &text)
+{
+    this->content = text;
+}
+
 D1CppRow::~D1CppRow()
 {
     qDeleteAll(this->entries);

@@ -7,6 +7,7 @@
 #include "d1cpp.h"
 #include "labelwidget.h"
 #include "lineeditwidget.h"
+#include "pushbuttonwidget.h"
 
 #include "ui_cppviewentrywidget.h"
 
@@ -39,19 +40,46 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     QWidget *w;
     if (r == 0) {
         // header
-        w = new LabelWidget(this);
-        ((LabelWidget *)w)->setCharWidth(width);
-        ((LabelWidget *)w)->setText(t->getHeader(c - 1));
+        QString text = t->getHeader(c - 1);
+        QFontMetrics fm = this->fontMetrics();
+        if (fm.horizontalAdvance(text) > width) {
+            w = PushButtonWidget::addButton(this, QStyle::SP_DialogHelpButton, text, this, CppViewEntryWidget::on_headerButton_clicked);
+        } else {
+            w = new LabelWidget(text, this);
+            ((LabelWidget *)w)->setFixedWidth(width);
+        }
     } else if (c == 0) {
         // leader
-        w = new LabelWidget(this);
-        ((LabelWidget *)w)->setCharWidth(width);
-        ((LabelWidget *)w)->setText(t->getLeader(r - 1));
+        w = new LabelWidget(t->getLeader(r - 1),this);
+        ((LabelWidget *)w)->setFixedWidth(width);
     } else {
         // standard entry
-        w = new LineEditWidget(this);
-        ((LineEditWidget *)w)->setCharWidth(width);
-        ((LineEditWidget *)w)->setText(t->getRow(r - 1)->getEntry(c - 1)->getContent());
+        w = new LineEditWidget(t->getRow(r - 1)->getEntry(c - 1)->getContent(), this);
+        ((LineEditWidget *)w)->setMinimumWidth(width);
+        w->setToolTip(QString("%1/%2").arg(t->getLeader(r - 1)).arg(t->getHeader(c - 1)));
+        QObject::connect(w, SIGNAL(returnPressed()), this, SLOT(on_entryLineEdit_returnPressed()));
+        // connect esc events of LineEditWidgets
+        QObject::connect(w, SIGNAL(cancel_signal()), this, SLOT(on_entryLineEdit_escPressed()));
     }
+    this->widget = w;
     this->ui->entryHorizontalLayout->addWidget(w);
+}
+
+void CppViewEntryWidget::on_headerButton_clicked()
+{
+
+}
+
+void CppViewEntryWidget::on_entryLineEdit_returnPressed()
+{
+    QString text = ((LineEditWidget *)this->widget)->getText();
+    this->table->getRow(this->rowNum - 1)->getEntry(this->columnNum - 1)->setContent(text);
+    this->on_entryLineEdit_escPressed();
+}
+
+void CppViewEntryWidget::on_entryLineEdit_escPressed()
+{
+    QString text = this->table->getRow(this->rowNum - 1)->getEntry(this->columnNum - 1)->getContent();
+    ((LineEditWidget *)this->widget)->setText(text);
+    this->widget->clearFocus();
 }

@@ -6,7 +6,8 @@ class LabelWidget : public QLabel {
     Q_OBJECT
 
 public:
-    explicit LabelWidget(QWidget *parent);
+    LabelWidget(QWidget *parent = nullptr);
+    LabelWidget(const QString &text, QWidget *parent = nullptr);
     ~LabelWidget() = default;
 
     void setCharWidth(int width);
