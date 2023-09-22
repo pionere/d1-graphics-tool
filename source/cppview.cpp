@@ -74,7 +74,7 @@ static QString getTableEntryValue(D1CppTable *table, int row, int column)
 
 void CppView::setTableContent(int row, int column, const QString &text)
 {
-    this->table->getRow(row - 1)->getEntry(column - 1)->setContent(text);
+    this->cppTable->getRow(row - 1)->getEntry(column - 1)->setContent(text);
     this->cpp->setModified();
 
     this->displayFrame();
