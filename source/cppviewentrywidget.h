@@ -18,6 +18,8 @@ public:
 
     void initialize(D1CppTable *table, int rowNum, int columnNum, int width);
 
+    static int baseHorizontalMargin();
+
 private slots:
     void on_headerButton_clicked();
 

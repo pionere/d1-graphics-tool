@@ -11,6 +11,8 @@
 
 #include "ui_cppviewentrywidget.h"
 
+static int baseHorizontalMargin = 0;
+
 CppViewEntryWidget::CppViewEntryWidget(CppView *parent)
     : QWidget(parent)
     , ui(new Ui::CppViewEntryWidget())
@@ -22,6 +24,20 @@ CppViewEntryWidget::CppViewEntryWidget(CppView *parent)
 CppViewEntryWidget::~CppViewEntryWidget()
 {
     delete ui;
+}
+
+int CppViewEntryWidget::baseHorizontalMargin()
+{
+    if (baseHorizontalMargin == 0) {
+        int result = 8;
+        LineEditWidget w;
+        QMargins qm = w.textMargins();
+        result += qm.left() + qm.right();
+        qm = w.contentsMargins();
+        result += qm.left() + qm.right();
+        baseHorizontalMargin = result;
+    }
+    return baseHorizontalMargin;
 }
 
 void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)

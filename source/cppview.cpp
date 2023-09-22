@@ -68,7 +68,7 @@ static QString getTableEntryValue(D1CppTable *table, int row, int column)
         // leader
         return table->getLeader(row - 1);
     }
-	// standard entry
+    // standard entry
     return table->getRow(row - 1)->getEntry(column - 1)->getContent();
 }
 
@@ -105,6 +105,7 @@ void CppView::on_tablesComboBox_activated(int index)
     // calculate the column-widths
     QList<int> columnWidths;
     QFontMetrics fm = this->fontMetrics();
+    int entryHorizontalMargin = CppViewEntryWidget::baseHorizontalMargin();
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         int maxWidth = 2;
         for (int y = 1; y < table->getRowCount() + 1; y++) {
@@ -117,7 +118,7 @@ void CppView::on_tablesComboBox_activated(int index)
                 maxWidth = tw;
             }
         }
-        columnWidths.push_back(maxWidth);
+        columnWidths.push_back(maxWidth + entryHorizontalMargin);
     }
     // add new items
     for (int x = 0; x < table->getColumnCount() + 1; x++) {

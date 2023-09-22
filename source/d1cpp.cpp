@@ -1029,42 +1029,86 @@ bool D1Cpp::save(const SaveAsParam &params)
 
         out << "{ ";
 
-		D1CppTable *table = this->tables[i];
+        D1CppTable *table = this->tables[i];
+        int maxLen = 0;
+        for (const QString &leader : table->leader) {
+            int len = leader.length();
+            if (len > maxLen) {
+                maxLen = len;
+            }
+        }
+        QList<int> maxWidths;
+        maxWidths.push_back(maxLen);
+        QList<QList<QString>> entryContents;
+        for (const QString &header : table->header) {
+            maxWidths.push_back(header.length());
+        }
+        for (int n = 0; n < table->rows.count(); n++) {
+            QList<QString> rowEntryContents;
+			const D1CppRow *row = table->rows[n];
+            for (int e = 0; e < row->entries.count(); e++) {
+                QString entryContent;
+                entryContent = row->entryTexts[e] + row->entries[e]->preContent + row->entries[e]->content + row->entries[e]->postContent;
+                int len = entryContent.length();
+                if (maxWidth[n + 1] < len) {
+                    maxWidth[n + 1] = len;
+                }
+                rowEntryContents.push_back(entryContent);
+            }
+            entryContents.push_back(rowEntryContents);
+        }
         int n = 0;
         for ( ; n < table->rows.count(); n++) {
             out << table->rowTexts[n];
 
             // add header
             if (n == 0 && !table->header[0].isEmpty()) {
-                out << " // ";
-                for (int h = 0; h < table->header.count(); h++) {
-                    if (h != 0) {
-                        out << ", ";
+                QString content = "//";
+                content = content.leftJustified(maxWidths[0] + 4 + 1 + 2, ' '); // 2 if row->isComplex
+                out << content;
+                for (int h = 0; ; h++) {
+                    QString content = table->header[h];
+                    bool last = h == table->header.count() - 1;
+                    if (!last) {
+                        content += ", ";
+                        content = content.leftJustified(maxWidths[h + 1] + 2, ' ');
                     }
-                    out << table->leader[h];
+                    out << content;
+                    if (last) {
+                        break;
+                    }
                 }
                 // out << "\n";
             }
             // add leader
-            if (table->leader[n].isEmpty()) {
-                out << QString("/*%s*/").arg(table->leader[n]);
+            if (maxWidths[0] != 0) {
+                QString content = table->leader[n];
+                if (!content.isEmpty()) {
+                    content = QString("/*%s*/ ").arg(content);
+                }
+                content = content.leftJustified(maxWidths[0] + 4 + 1, ' ');
+                out << content;
             }
+            out << "{ "; // if row->isComplex
             int e = 0;
             for ( ; ; e++) {
-                if (e == 0) { // && row->isComplex
-                    out << "{ ";
+                /*out << row->entryTexts[e];
+                out << row->entries[e]->preContent;
+                out << row->entries[e]->content;
+                out << row->entries[e]->postContent;*/
+                QString content = entryContents[n][e];
+                bool last = e == entryContents[n].count() - 1;
+                if (!last) {
+                    content += ", ";
                 }
-                out << table->rows[n]->entryTexts[e];
-                out << table->rows[n]->entries[e]->preContent;
-                out << table->rows[n]->entries[e]->content;
-                out << table->rows[n]->entries[e]->postContent;
-                if (e == table->rows[n]->entries.count() - 1) {
-                    out << " }";
+                content = content.leftJustified(maxWidths[e + 1] + 2, ' ');
+                out << content;
+                if (last) {
                     break;
-                } else {
-                    out << ",";
                 }
             }
+            out << " }"; // if row->isComplex
+            out << ",";
             out << table->rows[n]->entryTexts[e];
         }
         out << " }";
