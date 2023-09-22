@@ -66,7 +66,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
         }
     } else if (c == 0) {
         // leader
-        w = new LabelWidget(t->getLeader(r - 1),this);
+        w = new LabelWidget(this);
         ((LabelWidget *)w)->setFixedWidth(width);
         QString tooltip = t->getRowText(r - 1);
         QString postText = t->getRowText(r);
@@ -76,11 +76,15 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
             }
             tooltip += postText;
         }
+        QString text = t->getLeader(r - 1);
         if (!tooltip.isEmpty()) {
             tooltip.prepend("<html><head/><body><p style='white-space:pre'>");
             tooltip.append("</p></body></html>");
             w->setToolTip(tooltip);
+            text.prepend("<html><head/><body><i>");
+            text.append("</i></body></html>");
         }
+        ((LabelWidget *)w)->setText(text);
     } else {
         // standard entry
         w = new LineEditWidget(t->getRow(r - 1)->getEntry(c - 1)->getContent(), this);

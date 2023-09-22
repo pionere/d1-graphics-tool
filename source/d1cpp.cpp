@@ -1055,8 +1055,8 @@ bool D1Cpp::save(const SaveAsParam &params)
                 QString entryContent;
                 entryContent = row->entryTexts[e] + row->entries[e]->preContent + row->entries[e]->content + row->entries[e]->postContent;
                 int len = entryContent.length();
-                if (maxWidths[n + 1] < len) {
-                    maxWidths[n + 1] = len;
+                if (maxWidths[e + 1] < len) {
+                    maxWidths[e + 1] = len;
                 }
                 rowEntryContents.push_back(entryContent);
             }
@@ -1114,11 +1114,11 @@ bool D1Cpp::save(const SaveAsParam &params)
                 }
             }
             out << " }"; // if row->isComplex
-            out << ",";
+            out << ",\n";
             out << table->rows[n]->entryTexts[e];
         }
-        out << " }";
         out << table->rowTexts[n];
+        out << " }";
     }
     out << this->texts[i];
 
