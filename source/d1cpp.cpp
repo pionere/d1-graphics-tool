@@ -1089,7 +1089,8 @@ bool D1Cpp::save(const SaveAsParam &params)
             if (maxWidths[0] != 0) {
                 QString content = table->leader[n];
                 if (!content.isEmpty()) {
-                    content = QString("/*%s*/ ").arg(content);
+                    content.prepend("/*");
+                    content.append("*/ ");
                 }
                 content = content.leftJustified(maxWidths[0] + 4 + 1, ' ');
                 out << content;

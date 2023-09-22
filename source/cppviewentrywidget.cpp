@@ -72,11 +72,15 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
         QString postText = t->getRowText(r);
         if (!postText.isEmpty()) {
             if (!tooltip.isEmpty()) {
-                tooltip += "\n";
+                tooltip += "</p><p style='white-space:pre'>";
             }
             tooltip += postText;
         }
-        w->setToolTip(tooltip);
+        if (!tooltip.isEmpty()) {
+            tooltip.prepend("<html><head/><body><p style='white-space:pre'>");
+            tooltip.append("</p></body></html>");
+            w->setToolTip(tooltip);
+        }
     } else {
         // standard entry
         w = new LineEditWidget(t->getRow(r - 1)->getEntry(c - 1)->getContent(), this);
