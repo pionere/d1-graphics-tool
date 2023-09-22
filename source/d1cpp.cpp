@@ -826,6 +826,11 @@ D1CppRow *D1CppTable::getRow(int index) const
     return const_cast<D1CppRow *>(this->rows[index]);
 }
 
+QString D1CppTable::getRowText(int index) const
+{
+    return this->rowTexts[index];
+}
+
 QString D1CppTable::getHeader(int index) const
 {
     return this->header[index];

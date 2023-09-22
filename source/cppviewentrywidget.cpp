@@ -11,7 +11,7 @@
 
 #include "ui_cppviewentrywidget.h"
 
-static int baseHorizontalMargin = 0;
+static int entryHorizontalMargin = 0;
 
 CppViewEntryWidget::CppViewEntryWidget(CppView *parent)
     : QWidget(parent)
@@ -28,16 +28,16 @@ CppViewEntryWidget::~CppViewEntryWidget()
 
 int CppViewEntryWidget::baseHorizontalMargin()
 {
-    if (baseHorizontalMargin == 0) {
+    if (entryHorizontalMargin == 0) {
         int result = 8;
         LineEditWidget w = LineEditWidget(nullptr);
         QMargins qm = w.textMargins();
         result += qm.left() + qm.right();
         qm = w.contentsMargins();
         result += qm.left() + qm.right();
-        baseHorizontalMargin = result;
+        entryHorizontalMargin = result;
     }
-    return baseHorizontalMargin;
+    return entryHorizontalMargin;
 }
 
 void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
@@ -68,6 +68,15 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
         // leader
         w = new LabelWidget(t->getLeader(r - 1),this);
         ((LabelWidget *)w)->setFixedWidth(width);
+        QString tooltip = t->getRowText(r - 1);
+        QString postText = t->getRowText(r);
+        if (!postText.isEmpty()) {
+            if (!tooltip.isEmpty()) {
+                tooltip += "\n";
+            }
+            tooltip += postText;
+        }
+        w->setToolTip(tooltip);
     } else {
         // standard entry
         w = new LineEditWidget(t->getRow(r - 1)->getEntry(c - 1)->getContent(), this);

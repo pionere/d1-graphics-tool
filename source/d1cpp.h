@@ -70,6 +70,7 @@ public:
     int getColumnCount() const;
     int getRowCount() const;
     D1CppRow *getRow(int index) const;
+    QString getRowText(int index) const;
     QString getHeader(int index) const;
     QString getLeader(int index) const;
 
