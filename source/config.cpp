@@ -1,16 +1,23 @@
 #include "config.h"
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QLocale>
+#include <QStandardPaths>
 
 static QJsonObject theConfig;
 
 QString Config::getJsonFilePath()
 {
-    return QCoreApplication::applicationDirPath() + Config::FILE_PATH;
+    QString dirPath = QCoreApplication::applicationDirPath();
+    if (!QFileInfo(dirPath).isWritable()) {
+        dirPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+        QDir().mkpath(dirPath);
+    }
+    return dirPath + Config::FILE_PATH;
 }
 
 void Config::loadConfiguration()
