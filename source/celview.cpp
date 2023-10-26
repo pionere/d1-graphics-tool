@@ -887,6 +887,12 @@ void CelView::ShowContextMenu(const QPoint &pos)
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
+    actions[cursor].setText(tr("Create Frame"));
+    actions[cursor].setToolTip(tr("Create new frames"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionCreate_Frame_triggered()));
+    contextMenu.addAction(&actions[cursor]);
+
+    cursor++;
     actions[cursor].setText(tr("Insert Frame"));
     actions[cursor].setToolTip(tr("Add new frames before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
@@ -896,12 +902,6 @@ void CelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setText(tr("Duplicate Frame"));
     actions[cursor].setToolTip(tr("Duplicate the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Frame_triggered()));
-    contextMenu.addAction(&actions[cursor]);
-
-    cursor++;
-    actions[cursor].setText(tr("Append Frame"));
-    actions[cursor].setToolTip(tr("Append new frames at the end"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
