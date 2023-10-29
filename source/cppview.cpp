@@ -109,9 +109,9 @@ void CppView::on_tablesComboBox_activated(int index)
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         int maxWidth = 2;
         for (int y = 1; y < table->getRowCount() + 1; y++) {
-            if (x == 0 && y == 0) {
+            /*if (x == 0 && y == 0) {
                 continue;
-            }
+            }*/
             QString text = getTableEntryValue(table, y, x);
             int tw = fm.horizontalAdvance(text);
             if (tw > maxWidth) {
@@ -123,9 +123,9 @@ void CppView::on_tablesComboBox_activated(int index)
     // add new items
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = 0; y < table->getRowCount() + 1; y++) {
-            if (x == 0 && y == 0) {
+            /*if (x == 0 && y == 0) {
                 continue;
-            }
+            }*/
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             CppViewEntryWidget *w;
             if (item == nullptr) {
@@ -159,6 +159,23 @@ void CppView::updateLabel()
 void CppView::updateFields()
 {
     this->updateLabel();
+}
+
+void CppView::on_toggleInfoButton_clicked()
+{
+    for (int x = 0; x < table->getColumnCount() + 1; x++) {
+        for (int y = 0; y < table->getRowCount() + 1; y++) {
+            /*if (x == 0 && y == 0) {
+                continue;
+            }*/
+            QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
+            CppViewEntryWidget *w;
+            if (item != nullptr) {
+                w = (CppViewEntryWidget *)item->widget();
+                w->on_toggleInfoButton();
+            }
+        }
+    }
 }
 
 void CppView::ShowContextMenu(const QPoint &pos)

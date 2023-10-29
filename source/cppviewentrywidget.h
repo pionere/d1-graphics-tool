@@ -20,8 +20,12 @@ public:
 
     static int baseHorizontalMargin();
 
+public slots:
+    void on_toggleInfoButton();
+
 private slots:
     void on_headerButton_clicked();
+    void on_infoButton_clicked();
 
     void on_entryLineEdit_returnPressed();
     void on_entryLineEdit_escPressed();

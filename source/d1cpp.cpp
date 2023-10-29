@@ -123,6 +123,7 @@ bool D1Cpp::processContent(int type)
             break;
         case READ_DIRECTIVE:
             content.prepend("#");
+            content.append(newLine);
             break;
         // case READ_NUMBER:
         // case READ_TABLE:
@@ -795,6 +796,11 @@ D1CppRowEntry *D1CppRow::getEntry(int index) const
     return const_cast<D1CppRowEntry *>(this->entries[index]);
 }
 
+QString D1CppRow::getEntryText(int index) const
+{
+    return this->entryTexts[index];
+}
+
 D1CppTable::D1CppTable(const QString &n)
     : name(n)
 {
@@ -918,7 +924,7 @@ if (i == 0)
                     if (headerNames.count() > 1) { // TODO: check against ColumnCount
         LogMessage(QString("Found header names %1.").arg(headerNames.count()), LOG_NOTE);
 
-                        firstText.truncate(x);
+                        firstText.truncate(x - 1);
                         for (QString &headerName : headerNames) {
                             table->header.push_back(headerName.trimmed());
                         }
@@ -1046,23 +1052,18 @@ bool D1Cpp::save(const SaveAsParam &params)
         QList<int> maxWidths;
         maxWidths.push_back(maxLen);
         QList<QList<QString>> entryContents;
-int i = maxWidths.size();
         for (const QString &header : table->header) {
-LogMessage(QString("maxWidth[%1] := %2").arg(i).arg(header.length()), LOG_NOTE);
-i++;
             maxWidths.push_back(header.length());
         }
         for (int n = 0; n < table->rows.count(); n++) {
             QList<QString> rowEntryContents;
-			const D1CppRow *row = table->rows[n];
+            const D1CppRow *row = table->rows[n];
             for (int e = 0; e < row->entries.count(); e++) {
                 QString entryContent;
                 entryContent = row->entryTexts[e] + row->entries[e]->preContent + row->entries[e]->content + row->entries[e]->postContent;
                 int len = entryContent.length();
                 if (maxWidths[e + 1] < len) {
                     maxWidths[e + 1] = len;
-LogMessage(QString("new maxWidth[%1] := %2 due to row %3: %4.").arg(e + 1).arg(len).arg(n).arg(entryContent), LOG_NOTE);
-i++;
                 }
                 rowEntryContents.push_back(entryContent);
             }
@@ -1113,7 +1114,7 @@ i++;
                 if (!last) {
                     content += ", ";
                 }
-                content = content.leftJustified(maxWidths[e + 1] + 2, ' ');
+                content = content.leftJustified(maxWidths[e + 1] + (last ? 2 : 0), ' ');
                 out << content;
                 if (last) {
                     break;
@@ -1124,7 +1125,7 @@ i++;
             out << table->rows[n]->entryTexts[e];
         }
         out << table->rowTexts[n];
-        out << " }";
+        out << "}";
     }
     out << this->texts[i];
 

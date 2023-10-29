@@ -51,6 +51,7 @@ public:
     ~D1CppRow();
 
     D1CppRowEntry *getEntry(int index) const;
+    QString getEntryText(int index) const;
 
 private:
     QList<QString> entryTexts;
@@ -79,8 +80,8 @@ private:
 
     QList<QString> rowTexts;
     QList<D1CppRow *> rows;
-	QList<QString> header;
-	QList<QString> leader;
+    QList<QString> header;
+    QList<QString> leader;
 };
 
 class D1Cpp : public QObject {

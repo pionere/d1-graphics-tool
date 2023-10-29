@@ -30,6 +30,9 @@ public:
 
     void setTableContent(int row, int colum, const QString &text);
 
+public slots:
+    void on_toggleInfoButton_clicked();
+
 private:
     void updateFields();
     void updateLabel();
