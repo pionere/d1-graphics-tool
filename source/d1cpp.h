@@ -19,6 +19,28 @@ enum class D1CPP_ENTRY_TYPE {
     QuotedChar,
 };
 
+class D1CppEntryData : public QObject {
+    Q_OBJECT
+
+    friend class D1Cpp;
+    friend class D1CppRowEntry;
+
+public:
+    D1CppEntryData() = default;
+    ~D1CppEntryData() = default;
+
+    QString getContent() const;
+    void setContent(const QString &text);
+
+private:
+    QString preContent;
+
+    QString content;
+    D1CPP_ENTRY_TYPE type;
+
+    QString postContent;
+};
+
 class D1CppRowEntry : public QObject {
     Q_OBJECT
 
@@ -32,12 +54,8 @@ public:
     void setContent(const QString &text);
 
 private:
-    QString preContent;
-
-    QString content;
-    D1CPP_ENTRY_TYPE type;
-
-    QString postContent;
+    QList<QString> dataTexts;
+    QList<D1CppEntryData *> datas;
 };
 
 class D1CppRow : public QObject {
@@ -106,6 +124,7 @@ private:
     bool processContent(int type);
     bool readContent(QString &content);
     bool postProcess();
+    static void initRowEntry();
     static void initRow();
     static bool initTable();
 

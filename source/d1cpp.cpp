@@ -49,6 +49,7 @@ static QString newLine;
 static D1CppTable *currTable = nullptr;
 static D1CppRow *currRow = nullptr;
 static D1CppRowEntry *currRowEntry = nullptr;
+static D1CppEntryData *currEntryData = nullptr;
 static std::pair<int, QString> currState;
 static std::stack<std::pair<int, QString>> states;
 static void cleanup()
@@ -56,6 +57,7 @@ static void cleanup()
     MemFree(currTable);
     MemFree(currRow);
     MemFree(currRowEntry);
+    MemFree(currEntryData);
     currState.second.clear();
     states = std::stack<std::pair<int, QString>>();
 }
@@ -163,10 +165,18 @@ bool D1Cpp::processContent(int type)
         // case READ_ROW_SIMPLE:
         // case READ_ROW_COMPLEX:
         case READ_ENTRY_SIMPLE:
+            currEntryData->content.append(content.trimmed());
+
+            content.clear();
+
+            currRowEntry->datas.push_back(currEntryData);
+            currRowEntry->dataTexts.push_back(QString());
+            currEntryData = nullptr;
+            // fallthrough
         case READ_ENTRY_COMPLEX:
             LogMessage(QString("Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content.trimmed()).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
 
-            currRowEntry->content.append(content.trimmed());
+            currRowEntry->dataTexts.back().append(content.trimmed());
             currRow->entries.push_back(currRowEntry);
             currRow->entryTexts.push_back(QString());
             currRowEntry = nullptr;
@@ -204,11 +214,16 @@ bool D1Cpp::processContent(int type)
         case READ_ENTRY_COMPLEX:
             LogMessage(QString("Complex content %4 of entry %1 of row %2 of table %3.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content), LOG_NOTE);
             if (currState.first == READ_ENTRY_COMPLEX) {
-                if (!currRowEntry->postContent.isEmpty()) {
+                /*if (!currRowEntry->postContent.isEmpty()) {
                     currRowEntry->content.append(currRowEntry->postContent);
                     currRowEntry->postContent.clear();
                 }
-                currRowEntry->content.append(content.trimmed());
+                currRowEntry->content.append(content.trimmed());*/
+                currEntryData->content.append(content.trimmed());
+                currRowEntry->datas.push_back(currEntryData);
+                currRowEntry->dataTexts.push_back(QString());
+                currEntryData = nullptr;
+                LogMessage(QString("Entry added to a complex entry."), LOG_NOTE);
                 return true;
             }
             // fallthrough
@@ -216,10 +231,10 @@ bool D1Cpp::processContent(int type)
             LogMessage(QString("Invalid type (%1) when reading entry content.").arg(type), LOG_ERROR);
             return false;
         }
-        if (currRowEntry->content.isEmpty()) {
-            currRowEntry->preContent.append(content);
+        if (currEntryData->content.isEmpty()) {
+            currEntryData->preContent.append(content);
         } else {
-            currRowEntry->postContent.append(content);
+            currEntryData->postContent.append(content);
         }
         LogMessage(QString("Entry comment %1.").arg(content), LOG_NOTE);
         break;
@@ -347,6 +362,12 @@ void D1Cpp::initRow()
 {
     currRow = new D1CppRow();
     currRow->entryTexts.push_back(QString());
+}
+
+void D1Cpp::initRowEntry() 
+{
+    currRowEntry = new D1CppRowEntry();
+    currRowEntry->dataTexts.push_back(QString());
 }
 
 bool D1Cpp::readContent(QString &content)
@@ -566,7 +587,9 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (!content[0].isSpace()) {
-                currRowEntry = new D1CppRowEntry(); // initRowEntry
+                currRowEntry = initRowEntry();
+                currEntryData = new D1CppEntryData(); // initEntryData
+
                 states.push(currState);
                 currState.first = READ_ENTRY_SIMPLE;
                 currState.second = "";
@@ -610,7 +633,7 @@ bool D1Cpp::readContent(QString &content)
             if (content[0] == '{') {
 LogMessage(QString("Starting complex entry in a complex row %1.").arg(content), LOG_NOTE);
                 content.remove(0, 1);
-                currRowEntry = new D1CppRowEntry(); // initRowEntry
+                currRowEntry = initRowEntry();
 
                 states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
@@ -619,7 +642,8 @@ LogMessage(QString("Starting complex entry in a complex row %1.").arg(content), 
             }
             if (!content[0].isSpace()) {
 LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), LOG_NOTE);
-                currRowEntry = new D1CppRowEntry(); // initRowEntry
+                currRowEntry = initRowEntry();
+                currEntryData = new D1CppEntryData(); // initEntryData
 
                 states.push(currState);
                 currState.first = READ_ENTRY_SIMPLE;
@@ -739,7 +763,7 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                     continue;
                 }
             }
-            if (content[0] == '{') {
+            /*if (content[0] == '{') {
                 content.remove(0, 1);
 
                 states.push(currState);
@@ -754,11 +778,29 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                     return false;
                 }
                 continue;
-            }
+            }*/
             if (content[0] == '}') {
                 if (!processContent(READ_ENTRY_COMPLEX)) {
                     return false;
                 }
+                continue;
+            }
+            /*if (content[0] == '{') {
+                content.remove(0, 1);
+                currRowEntry = initRowEntry();
+
+                states.push(currState);
+                currState.first = READ_ENTRY_COMPLEX;
+                currState.second = "";
+                continue;
+            }*/
+            if (!content[0].isSpace()) {
+LogMessage(QString("Starting simple entry in a complex entry %1.").arg(content), LOG_NOTE);
+                currEntryData = new D1CppEntryData(); // initEntryData
+
+                states.push(currState);
+                currState.first = READ_ENTRY_SIMPLE;
+                currState.second = "";
                 continue;
             }
             if (content[0] == '\\') {
@@ -777,14 +819,24 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
     return true;
 }
 
-QString D1CppRowEntry::getContent() const
+QString D1CppEntryData::getContent() const
 {
     return this->content;
 }
 
-void D1CppRowEntry::setContent(const QString &text)
+void D1CppEntryData::setContent(const QString &text)
 {
     this->content = text;
+}
+
+QString D1CppRowEntry::getContent() const
+{
+    return this->datas.empty() ? "" : this->datas[0]->getContent(text);
+}
+
+void D1CppRowEntry::setContent(const QString &text)
+{
+    this->datas[0]->setContent(text);
 }
 
 D1CppRow::~D1CppRow()
@@ -990,7 +1042,7 @@ bool D1Cpp::load(const QString &filePath)
             return false;
         }
     }
-    if (currState.first != READ_BASE || currState.second.isEmpty() || currTable != nullptr || currRow != nullptr || currRowEntry != nullptr) {
+    if (currState.first != READ_BASE || currState.second.isEmpty() || currTable != nullptr || currRow != nullptr || currRowEntry != nullptr || currEntryData != nullptr) {
         cleanup();
         // qDeleteAll(this->tables);
         // this->tables.clear();
@@ -1060,14 +1112,26 @@ bool D1Cpp::save(const SaveAsParam &params)
         for (int n = 0; n < table->rows.count(); n++) {
             QList<QString> rowEntryContents;
             const D1CppRow *row = table->rows[n];
-            for (int e = 0; e < row->entries.count(); e++) {
-                QString entryContent;
-                entryContent = row->entryTexts[e] + row->entries[e]->preContent + row->entries[e]->content + row->entries[e]->postContent;
-                int len = entryContent.length();
-                if (maxWidths[e + 1] < len) {
-                    maxWidths[e + 1] = len;
+            int w = 0;
+            for (D1CppRowEntry *entry : row->entries) {
+                // TODO: handle row->entryTexts[e]
+                for (D1CppEntryData *data : entry->datas) {
+                    w++;
+
+                    QString dataContent;
+                    /*if (w == 1 && entry->isComplex) {
+                        dataContent = "{ ";
+                    }*/
+                    dataContent = data->preContent + data->content + data->postContent;
+                    int len = dataContent.length();
+                    if (maxWidths[w] < len) {
+                        maxWidths[w] = len;
+                    }
+                    rowEntryContents.push_back(dataContent);
                 }
-                rowEntryContents.push_back(entryContent);
+                /*if (entry->isComplex) {
+                    rowEntryContents.back().append(" }");
+                }*/
             }
             entryContents.push_back(rowEntryContents);
         }
