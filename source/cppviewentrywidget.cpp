@@ -124,21 +124,18 @@ void CppViewEntryWidget::on_infoButton_clicked()
 
 void CppViewEntryWidget::on_toggleInfoButton()
 {
-    QObjectList &children = this->ui->entryHorizontalLayout->children();
+    QList<QWidget *> children = this->ui->entryHorizontalLayout->findChildren<QWidget *>();
     if (children.count() == 2) {
-        QWidget *w = qobject_cast<QWidget *>(children[1]);
-        if (w != nullptr) {
-            w->setVisible(!w->isVisible());
-        }
+        QWidget *w = children[1];
+        w->setVisible(!w->isVisible());
     }
     if (this->rowNum == 0 && this->columnNum == 0) {
-        QWidget *w = qobject_cast<QWidget *>(children[0]);
-        PushButtonWidget *pbw = (PushButtonWidget*)w;
+        PushButtonWidget *w = (PushButtonWidget *)children[0];
         QString showText = tr("Show info");
-        if (pbw->text() == showText) {
+        if (w->text() == showText) {
             showText = tr("Hide info");
         }
-        pbw->setText(showText);
+        w->setText(showText);
     }
 }
 

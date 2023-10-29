@@ -83,6 +83,8 @@ void CppView::setTableContent(int row, int column, const QString &text)
 void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
+    this->cppTable = table;
+
     // eliminate obsolete content
     for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
@@ -163,6 +165,8 @@ void CppView::updateFields()
 
 void CppView::on_toggleInfoButton_clicked()
 {
+    D1CppTable *table = this->cppTable;
+
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = 0; y < table->getRowCount() + 1; y++) {
             /*if (x == 0 && y == 0) {
