@@ -138,7 +138,7 @@ void CppViewEntryWidget::on_toggleInfoButton()
             if (w->toolTip() == showTooltip) {
                 showTooltip = tr("Hide info");
             }
-            w->setToolTip(showText);
+            w->setToolTip(showTooltip);
             } else {
                 QMessageBox::critical(nullptr, "Error", tr("No button in %1:%2").arg(this->rowNum).arg(this->columnNum));
             }
