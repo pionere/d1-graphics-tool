@@ -28,6 +28,7 @@ typedef enum Read_State {
     READ_ROW_COMPLEX_POST,
     READ_ENTRY_SIMPLE,
     READ_ENTRY_COMPLEX,
+    READ_ENTRY_COMPLEX_POST,
 } Read_State;
 
 typedef enum LogLevel {
@@ -175,7 +176,7 @@ bool D1Cpp::processContent(int type)
             currEntryData = nullptr;
             // fallthrough
         case READ_ENTRY_COMPLEX:
-			if (type == READ_ENTRY_COMPLEX)
+            if (type == READ_ENTRY_COMPLEX)
             LogMessage(QString("Complex-Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content.trimmed()).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
 
             currRowEntry->dataTexts.back().append(content.trimmed());
@@ -535,7 +536,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
-				content.remove(0, 1); // TODO: or complex entry?
+                content.remove(0, 1); // TODO: or complex entry?
                 LogMessage(QString("Starting complex row %1.").arg(content), LOG_NOTE);
                 initRow();
                 states.push(currState);
@@ -783,9 +784,12 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 continue;
             }*/
             if (content[0] == '}') {
-                if (!processContent(READ_ENTRY_COMPLEX)) {
+                content.remove(0, 1);
+                /*if (!processContent(READ_ROW_COMPLEX)) {
                     return false;
-                }
+                }*/
+                // states.push(currState);
+                currState.first = READ_ENTRY_COMPLEX_POST;
                 continue;
             }
             /*if (content[0] == '{') {
@@ -805,6 +809,48 @@ LogMessage(QString("Starting simple entry in a complex entry %1.").arg(content),
                 currState.first = READ_ENTRY_SIMPLE;
                 currState.second = "";
                 continue;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.remove(0, 1);
+            }
+
+            currState.second.append(content[0]);
+            content.remove(0, 1);
+            continue;
+        case READ_ENTRY_COMPLEX_POST:
+            // LogMessage(QString("Processing complex entry %1.").arg(content), LOG_NOTE);
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content[0] == ',') {
+                content.remove(0, 1);
+                if (!processContent(READ_ENTRY_COMPLEX)) { // READ_ENTRY_COMPLEX_POST?
+                    return false;
+                }
+                continue;
+            }
+            if (content[0] == '}') {
+                if (!processContent(READ_ENTRY_COMPLEX)) { // READ_ENTRY_COMPLEX_POST?
+                    return false;
+                }
+                continue;
+            }
+            if (!content[0].isSpace()) {
+                return false;
             }
             if (content[0] == '\\') {
                 if (content.length() < 2) {
@@ -916,6 +962,40 @@ bool D1Cpp::postProcess()
     for (D1CppTable *table : this->tables) {
         // balance the table
         LogMessage(QString("Found table %1: %2 x %3.").arg(table->getName()).arg(table->getRowCount()).arg(table->getColumnCount()), LOG_NOTE);
+        // flatten the table
+        for (int i = 0; i < table->getRowCount(); i++) {
+            D1CppRow *row = table->getRow(i);
+            for (int e = 0; e < row->entries.count(); e++) {
+                D1CppRowEntry *entry = row->entries[e];
+                int d = entry->datas.count();
+                if (d == 1) {
+                    continue;
+                }
+                if (d == 0) {
+                    // empty row-data
+                    entry->datas.push_back(new D1CppEntryData());
+                    entry->dataTexts.push_back(QString());
+                    continue;
+                }
+                e++;
+                for (d--; d > 0; d--) {
+                    D1CppEntryData *data = entry->datas.last();
+                    entry->datas.pop_back();
+                    int sn = entry->dataTexts.count() - 2;
+                    QString dataStr = entry->dataTexts[sn];
+                    entry->dataTexts.erase(entry->dataTexts.begin() + sn);
+
+                    D1CppRowEntry *flatEntry = new D1CppRowEntry();
+                    flatEntry->complexFirst = flatEntry == entry;
+                    flatEntry->complexLast = d == 1;
+                    flatEntry->datas.push_back(data);
+                    flatEntry->dataTexts.push_back(dataStr);
+                    flatEntry->dataTexts.push_back(QString());
+                    row->entries.insert(row->entries.begin() + e, flatEntry);
+                }
+            }
+        }
+
         int columnNum = 0;
         bool ch = false;
         for (int i = 0; i < table->getRowCount(); i++) {

@@ -56,6 +56,8 @@ public:
 private:
     QList<QString> dataTexts;
     QList<D1CppEntryData *> datas;
+    bool complexFirst = false;
+    bool complexLast = false;
 };
 
 class D1CppRow : public QObject {

@@ -172,17 +172,14 @@ void CppView::on_toggleInfoButton_clicked()
             /*if (x == 0 && y == 0) {
                 continue;
             }*/
-LogErrorF("on_toggleInfoButton_clicked toggle %d:%d", x , y);
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             CppViewEntryWidget *w;
             if (item != nullptr) {
                 w = (CppViewEntryWidget *)item->widget();
                 w->on_toggleInfoButton();
             }
-LogErrorF("on_toggleInfoButton_clicked toggled %d:%d", x , y);
         }
     }
-LogErrorF("on_toggleInfoButton_clicked done");
 }
 
 void CppView::ShowContextMenu(const QPoint &pos)
