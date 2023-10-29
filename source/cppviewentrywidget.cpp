@@ -132,7 +132,7 @@ void CppViewEntryWidget::on_toggleInfoButton()
             if (layout->count() == 0) {
                 QMessageBox::critical(nullptr, "Error", tr("No item in %1:%2").arg(this->rowNum).arg(this->columnNum));
             }
-            PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(0));
+            PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(0)->widget());
             if (w != nullptr) {
             QString showText = tr("Show info");
             if (w->text() == showText) {
@@ -146,7 +146,7 @@ void CppViewEntryWidget::on_toggleInfoButton()
     } else if (this->columnNum != 0) {
         // standard entry
         if (layout->count() == 2) {
-            PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(1));
+            PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(1)->widget());
             if (w != nullptr) {
             w->setVisible(!w->isVisible());
             } else {
