@@ -587,7 +587,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (!content[0].isSpace()) {
-                currRowEntry = initRowEntry();
+                initRowEntry();
                 currEntryData = new D1CppEntryData(); // initEntryData
 
                 states.push(currState);
@@ -633,7 +633,7 @@ bool D1Cpp::readContent(QString &content)
             if (content[0] == '{') {
 LogMessage(QString("Starting complex entry in a complex row %1.").arg(content), LOG_NOTE);
                 content.remove(0, 1);
-                currRowEntry = initRowEntry();
+                initRowEntry();
 
                 states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
@@ -642,7 +642,7 @@ LogMessage(QString("Starting complex entry in a complex row %1.").arg(content), 
             }
             if (!content[0].isSpace()) {
 LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), LOG_NOTE);
-                currRowEntry = initRowEntry();
+                initRowEntry();
                 currEntryData = new D1CppEntryData(); // initEntryData
 
                 states.push(currState);
@@ -787,7 +787,7 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
             }
             /*if (content[0] == '{') {
                 content.remove(0, 1);
-                currRowEntry = initRowEntry();
+                initRowEntry();
 
                 states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
@@ -831,7 +831,7 @@ void D1CppEntryData::setContent(const QString &text)
 
 QString D1CppRowEntry::getContent() const
 {
-    return this->datas.empty() ? "" : this->datas[0]->getContent(text);
+    return this->datas.empty() ? "" : this->datas[0]->getContent();
 }
 
 void D1CppRowEntry::setContent(const QString &text)
