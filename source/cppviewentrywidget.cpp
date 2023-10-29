@@ -1,6 +1,7 @@
 #include "cppviewentrywidget.h"
 
 #include <QApplication>
+#include <QMessageBox>
 #include <QStyle>
 
 #include "cppview.h"
@@ -124,22 +125,25 @@ void CppViewEntryWidget::on_infoButton_clicked()
 
 void CppViewEntryWidget::on_toggleInfoButton()
 {
-    QList<QWidget *> children = this->ui->entryHorizontalLayout->findChildren<QWidget *>();
+    QList<PushButtonWidget *> children = this->ui->entryHorizontalLayout->findChildren<PushButtonWidget *>();
     if (children.count() == 0) {
-        QMessageBox::critical("Error", "No widget found");
+        if (this->rowNum == 0 && this->columnNum == 0)
+        QMessageBox::critical("Error", "No button found");
         return;
     }
-    if (children.count() == 2) {
-        QWidget *w = children[1];
-        w->setVisible(!w->isVisible());
-    }
-    if (this->rowNum == 0 && this->columnNum == 0) {
-        PushButtonWidget *w = (PushButtonWidget *)children[0];
-        QString showText = tr("Show info");
-        if (w->text() == showText) {
-            showText = tr("Hide info");
+    PushButtonWidget *w = children[0];
+    if (this->rowNum == 0) {
+        // header
+        if (this->columnNum == 0) {
+            QString showText = tr("Show info");
+            if (w->text() == showText) {
+                showText = tr("Hide info");
+            }
+            w->setText(showText);
         }
-        w->setText(showText);
+    } else if (this->columnNum != 0) {
+        // standard entry
+        w->setVisible(!w->isVisible());
     }
 }
 
