@@ -533,6 +533,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
+				content.remove(0, 1); // TODO: or complex entry?
                 LogMessage(QString("Starting complex row %1.").arg(content), LOG_NOTE);
                 initRow();
                 states.push(currState);
