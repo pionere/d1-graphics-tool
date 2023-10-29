@@ -296,7 +296,15 @@ if(CPACK AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
   # -G DEB
   set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} https://github.com/pionere/d1-graphics-tool")
+  set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/pionere/d1-graphics-tool")
+  set(CPACK_PACKAGE_DESCRIPTION "Diablo 1 Graphics Tool to manipulate asset files (CEL/CL2/DUN etc.) of Diablo 1.")
+  #set(CPACK_DEBIAN_PACKAGE_SECTION "graphics")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+  #if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+  #  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6widgets6 (>= 6.2.4), qt6-qpa-plugins (>= 6.2.4)")
+  #else()
+  #  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5widgets5 (>= 5.15.0)")
+  #endif()
   set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
   # -G RPM

@@ -912,13 +912,13 @@ if (i == 0)
                 }
                 if (x > 0) {
         LogMessage(QString("Found header info at %1.").arg(x), LOG_NOTE);
-                    QString headerText = firstText.mid(x + 1, firstText.length() - (1 + this->lineEnd.length() + x + 1));
+                    QString headerText = firstText.mid(x + 1, firstText.length() - (this->lineEnd.length() + x + 1));
                     headerText = headerText.trimmed();
                     QStringList headerNames = headerText.split(',');
                     if (headerNames.count() > 1) { // TODO: check against ColumnCount
         LogMessage(QString("Found header names %1.").arg(headerNames.count()), LOG_NOTE);
 
-                        firstText.chop(x - 1);
+                        firstText.truncate(x);
                         for (QString &headerName : headerNames) {
                             table->header.push_back(headerName.trimmed());
                         }
@@ -927,6 +927,7 @@ if (i == 0)
                         }
                     }
                 }
+        LogMessage(QString("Resulting firstText %1.").arg(table->rowTexts[0]), LOG_NOTE);
             }
         LogMessage(QString("Header count %1 columns %2.").arg(table->header.count()).arg(table->getColumnCount()), LOG_NOTE);
             while (table->header.count() < table->getColumnCount()) {
@@ -1032,7 +1033,7 @@ bool D1Cpp::save(const SaveAsParam &params)
     for ( ; i < this->tables.count(); i++) {
         out << this->texts[i];
 
-        out << "{ ";
+        out << "{\n";
 
         D1CppTable *table = this->tables[i];
         int maxLen = 0;
@@ -1045,7 +1046,10 @@ bool D1Cpp::save(const SaveAsParam &params)
         QList<int> maxWidths;
         maxWidths.push_back(maxLen);
         QList<QList<QString>> entryContents;
+int i = maxWidths.size();
         for (const QString &header : table->header) {
+LogMessage(QString("maxWidth[%1] := %2").arg(i).arg(header.length()), LOG_NOTE);
+i++;
             maxWidths.push_back(header.length());
         }
         for (int n = 0; n < table->rows.count(); n++) {
@@ -1057,6 +1061,8 @@ bool D1Cpp::save(const SaveAsParam &params)
                 int len = entryContent.length();
                 if (maxWidths[e + 1] < len) {
                     maxWidths[e + 1] = len;
+LogMessage(QString("new maxWidth[%1] := %2 due to row %3: %4.").arg(e + 1).arg(len).arg(n).arg(entryContent), LOG_NOTE);
+i++;
                 }
                 rowEntryContents.push_back(entryContent);
             }
@@ -1083,7 +1089,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                         break;
                     }
                 }
-                // out << "\n";
+                out << "\n";
             }
             // add leader
             if (maxWidths[0] != 0) {

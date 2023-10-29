@@ -1,18 +1,32 @@
 #include "config.h"
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QLocale>
+#include <QStandardPaths>
 
 static QJsonObject theConfig;
 
 QString Config::getJsonFilePath()
 {
-    return QCoreApplication::applicationDirPath() + Config::FILE_PATH;
+    QString dirPath = QCoreApplication::applicationDirPath();
+    if (!QFileInfo(dirPath).isWritable()) {
+        dirPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+        QDir().mkpath(dirPath);
+    }
+    return dirPath + Config::FILE_PATH;
 }
 
+/**
+ * @brief Loads current configuration from the config .json file
+ *
+ *  This function loads current configuration from the config .json file.
+ *  It inserts specific values mapping them to keys, and creates path for the
+ *  config if user has deleted it, or runs app for the first time.
+ */
 void Config::loadConfiguration()
 {
     QString jsonFilePath = Config::getJsonFilePath();
@@ -56,6 +70,11 @@ void Config::loadConfiguration()
     }
 }
 
+/**
+ * @brief Stores current configuration in the config .json file
+ *
+ * @return whether the config file could be written.
+ */
 bool Config::storeConfiguration()
 {
     QString jsonFilePath = Config::getJsonFilePath();
@@ -69,11 +88,26 @@ bool Config::storeConfiguration()
     return true;
 }
 
+/**
+ * @brief Retrieves value from .json config file
+ *
+ * This function retrieves value from .json config file by the value
+ * specified by name parameter.
+ *
+ * @return Returns QJsonValue containing value of the parameter specified
+ * by "name" key, otherwise if not found - returns QJsonValue::Undefined
+ */
 QJsonValue Config::value(const QString &name)
 {
     return theConfig.value(name);
 }
 
+/**
+ * @brief Inserts value in .json config file
+ *
+ * This function inserts value into .json config file, mapping it with
+ * the key specified in parameters.
+ */
 void Config::insert(const QString &key, const QJsonValue &value)
 {
     theConfig.insert(key, value);
