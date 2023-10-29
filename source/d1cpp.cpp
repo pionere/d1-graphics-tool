@@ -608,6 +608,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
+LogMessage(QString("Starting complex entry in a complex row %1.").arg(content), LOG_NOTE);
                 content.remove(0, 1);
                 currRowEntry = new D1CppRowEntry(); // initRowEntry
 
@@ -617,6 +618,7 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (!content[0].isSpace()) {
+LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), LOG_NOTE);
                 currRowEntry = new D1CppRowEntry(); // initRowEntry
 
                 states.push(currState);

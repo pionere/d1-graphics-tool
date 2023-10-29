@@ -125,16 +125,11 @@ void CppViewEntryWidget::on_infoButton_clicked()
 
 void CppViewEntryWidget::on_toggleInfoButton()
 {
-    QList<PushButtonWidget *> children = this->ui->entryHorizontalLayout->findChildren<PushButtonWidget *>();
-    if (children.count() == 0) {
-        if (this->rowNum == 0 && this->columnNum == 0)
-        QMessageBox::critical(this, "Error", "No button found");
-        return;
-    }
-    PushButtonWidget *w = children[0];
+    auto layout = this->ui->entryHorizontalLayout;
     if (this->rowNum == 0) {
         // header
         if (this->columnNum == 0) {
+            PushButtonWidget *w = (PushButtonWidget *)layout->itemAt(0);
             QString showText = tr("Show info");
             if (w->text() == showText) {
                 showText = tr("Hide info");
@@ -143,7 +138,10 @@ void CppViewEntryWidget::on_toggleInfoButton()
         }
     } else if (this->columnNum != 0) {
         // standard entry
-        w->setVisible(!w->isVisible());
+        if (layout->count() == 2) {
+            PushButtonWidget *w = (PushButtonWidget *)layout->itemAt(1);
+            w->setVisible(!w->isVisible());
+        }
     }
 }
 
