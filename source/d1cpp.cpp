@@ -165,6 +165,7 @@ bool D1Cpp::processContent(int type)
         // case READ_ROW_SIMPLE:
         // case READ_ROW_COMPLEX:
         case READ_ENTRY_SIMPLE:
+            LogMessage(QString("Simple-Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content.trimmed()).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
             currEntryData->content.append(content.trimmed());
 
             content.clear();
@@ -174,7 +175,8 @@ bool D1Cpp::processContent(int type)
             currEntryData = nullptr;
             // fallthrough
         case READ_ENTRY_COMPLEX:
-            LogMessage(QString("Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content.trimmed()).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
+			if (type == READ_ENTRY_COMPLEX)
+            LogMessage(QString("Complex-Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content.trimmed()).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
 
             currRowEntry->dataTexts.back().append(content.trimmed());
             currRow->entries.push_back(currRowEntry);
@@ -210,8 +212,8 @@ bool D1Cpp::processContent(int type)
         // case READ_TABLE:
         // case READ_ROW_SIMPLE:
         // case READ_ROW_COMPLEX:
-        // case READ_ENTRY_SIMPLE:
-        case READ_ENTRY_COMPLEX:
+        case READ_ENTRY_SIMPLE:
+        //case READ_ENTRY_COMPLEX:
             LogMessage(QString("Complex content %4 of entry %1 of row %2 of table %3.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content), LOG_NOTE);
             if (currState.first == READ_ENTRY_COMPLEX) {
                 /*if (!currRowEntry->postContent.isEmpty()) {
@@ -228,7 +230,7 @@ bool D1Cpp::processContent(int type)
             }
             // fallthrough
         default:
-            LogMessage(QString("Invalid type (%1) when reading entry content.").arg(type), LOG_ERROR);
+            LogMessage(QString("Invalid type (%1) when reading entry content in state %2.").arg(type).arg(currState.first), LOG_ERROR);
             return false;
         }
         if (currEntryData->content.isEmpty()) {

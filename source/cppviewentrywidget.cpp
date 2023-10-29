@@ -134,11 +134,11 @@ void CppViewEntryWidget::on_toggleInfoButton()
             }
             PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(0)->widget());
             if (w != nullptr) {
-            QString showText = tr("Show info");
-            if (w->text() == showText) {
-                showText = tr("Hide info");
+            QString showTooltip = tr("Show info");
+            if (w->toolTip() == showTooltip) {
+                showTooltip = tr("Hide info");
             }
-            w->setText(showText);
+            w->setToolTip(showText);
             } else {
                 QMessageBox::critical(nullptr, "Error", tr("No button in %1:%2").arg(this->rowNum).arg(this->columnNum));
             }
