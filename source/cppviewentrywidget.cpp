@@ -128,7 +128,7 @@ void CppViewEntryWidget::on_toggleInfoButton()
     QList<PushButtonWidget *> children = this->ui->entryHorizontalLayout->findChildren<PushButtonWidget *>();
     if (children.count() == 0) {
         if (this->rowNum == 0 && this->columnNum == 0)
-        QMessageBox::critical("Error", "No button found");
+        QMessageBox::critical(this, "Error", "No button found");
         return;
     }
     PushButtonWidget *w = children[0];
