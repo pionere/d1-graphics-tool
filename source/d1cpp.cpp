@@ -558,13 +558,13 @@ bool D1Cpp::readContent(QString &content)
                 }
                 continue;
             }
-            /*if (content[0] == '{') {
+            if (content[0] == '{') {
                 content.remove(0, 1);
                 states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
                 currState.second = "";
                 continue;
-            }*/
+            }
             if (!content[0].isSpace()) {
                 currRowEntry = new D1CppRowEntry(); // initRowEntry
                 states.push(currState);
@@ -1114,7 +1114,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                 if (!last) {
                     content += ", ";
                 }
-                content = content.leftJustified(maxWidths[e + 1] + (last ? 2 : 0), ' ');
+                content = content.leftJustified(maxWidths[e + 1] + (last ? 0 : 2), ' ');
                 out << content;
                 if (last) {
                     break;

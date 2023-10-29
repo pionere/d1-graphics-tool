@@ -125,6 +125,10 @@ void CppViewEntryWidget::on_infoButton_clicked()
 void CppViewEntryWidget::on_toggleInfoButton()
 {
     QList<QWidget *> children = this->ui->entryHorizontalLayout->findChildren<QWidget *>();
+    if (children.count() == 0) {
+        QMessageBox::critical("Error", "No widget found");
+        return;
+    }
     if (children.count() == 2) {
         QWidget *w = children[1];
         w->setVisible(!w->isVisible());
