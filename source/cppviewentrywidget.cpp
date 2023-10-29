@@ -103,7 +103,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     this->widget = w;
     this->ui->entryHorizontalLayout->addWidget(w);
 
-    if (r == 0 && c != 0) {
+    if (r != 0 && c != 0) {
         // standard entry
         QString text = t->getRow(r - 1)->getEntryText(c - 1);
         w = PushButtonWidget::addButton(this, QStyle::SP_MessageBoxInformation, text, this, &CppViewEntryWidget::on_infoButton_clicked);
