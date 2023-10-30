@@ -272,7 +272,7 @@ void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
 	contextMenu->setAttribute(Qt::WA_DeleteOnClose);
 	// contextMenu.popup(area->viewport()->mapToGlobal(pos));
 	// contextMenu->popup(mapToGlobal(pos));
-	QMessageBox::error(this, "Error", tr("cursor at %1:%2 pos %3:%4 gpos %5:%6").arg(QCursor::pos().x()).arg(QCursor::pos().y()).arg(pos.x()).arg(pos.y()).arg(mapToGlobal(pos).x()).arg(mapToGlobal(pos).y()));
+	QMessageBox::critical(this, "Error", tr("cursor at %1:%2 pos %3:%4 gpos %5:%6").arg(QCursor::pos().x()).arg(QCursor::pos().y()).arg(pos.x()).arg(pos.y()).arg(mapToGlobal(pos).x()).arg(mapToGlobal(pos).y()));
 	contextMenu->popup(mapToGlobal(pos));
 }
 
