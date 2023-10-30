@@ -80,6 +80,30 @@ void CppView::setTableContent(int row, int column, const QString &text)
     this->displayFrame();
 }
 
+void CppView::insertColumn(int column)
+{
+}
+
+void CppView::delColumn(int column)
+{
+}
+
+void CppView::hideColumn(int column)
+{
+}
+
+void CppView::insertRow(int row)
+{
+}
+
+void CppView::delRow(int row)
+{
+}
+
+void CppView::hideRow(int row)
+{
+}
+
 void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);

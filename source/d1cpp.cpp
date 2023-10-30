@@ -44,11 +44,11 @@ if (lvl <= LOG_LEVEL) {                               \
     else if (lvl == LOG_WARN) dProgressWarn() << msg; \
     else dProgress() << msg;                          \
 }*/
-/*#define LogMessage(msg, lvl)                \
+#define LogMessage(msg, lvl)                \
 if (lvl <= LOG_LEVEL) {                     \
     LogErrorF((msg).toLatin1().constData()) \
-}*/
-#define LogMessage(msg, lvl) LogErrorF((msg).toLatin1().constData())
+}
+//#define LogMessage(msg, lvl) LogErrorF((msg).toLatin1().constData())
 
 static QString newLine;
 static D1CppTable *currTable = nullptr;

@@ -28,7 +28,13 @@ public:
 
     void displayFrame();
 
-    void setTableContent(int row, int colum, const QString &text);
+    void setTableContent(int row, int column, const QString &text);
+    void insertColumn(int column);
+    void delColumn(int column);
+    void hideColumn(int column);
+    void insertRow(int row);
+    void delRow(int row);
+    void hideRow(int row);
 
 public slots:
     void on_toggleInfoButton_clicked();

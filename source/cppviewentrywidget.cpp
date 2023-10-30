@@ -67,14 +67,15 @@ LogErrorF("Init Entry r:%d c:%d", r, c);
             if (fm.horizontalAdvance(text) > width) {
                 w = PushButtonWidget::addButton(this, QStyle::SP_DialogHelpButton, text, this, &CppViewEntryWidget::on_headerButton_clicked);
             } else {
-                w = new LabelWidget(text, this);
-                ((LabelWidget *)w)->setFixedWidth(width);
+                w = new QPushButton(text, this);
+                ((QPushButton *)w)->setFixedWidth(width);
+		        QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowHeaderContextMenu(const QPoint &)));
             }
         }
     } else if (c == 0) {
         // leader
-        w = new LabelWidget(this);
-        ((LabelWidget *)w)->setFixedWidth(width);
+        w = new QPushButton(this);
+        ((QPushButton *)w)->setFixedWidth(width);
         QString tooltip = t->getRowText(r);
         /*QString tooltip = t->getRowText(r - 1);
         QString postText = t->getRowText(r);
@@ -92,11 +93,17 @@ LogErrorF("Init Entry r:%d c:%d", r, c);
             text.prepend("<html><head/><body><i>");
             text.append("</i></body></html>");
         }
-        ((LabelWidget *)w)->setText(text);
+        ((QPushButton *)w)->setText(text);
+        QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowRowContextMenu(const QPoint &)));
     } else {
         // standard entry
+LogErrorF("Init Entry row:%1", t->getRow(r - 1) != nullptr);
+LogErrorF("Init Entry entry:%1", t->getRow(r - 1)->getEntry(c - 1) != nullptr);
+LogErrorF("Init Entry content:%1", t->getRow(r - 1)->getEntry(c - 1)->getContent());
         w = new LineEditWidget(t->getRow(r - 1)->getEntry(c - 1)->getContent(), this);
         ((LineEditWidget *)w)->setMinimumWidth(width);
+LogErrorF("Init Entry leader:%1", t->getLeader(r - 1));
+LogErrorF("Init Entry header:%1", t->getHeader(c - 1));
         w->setToolTip(QString("%1/%2").arg(t->getLeader(r - 1)).arg(t->getHeader(c - 1)));
         QObject::connect(w, SIGNAL(returnPressed()), this, SLOT(on_entryLineEdit_returnPressed()));
         // connect esc events of LineEditWidgets
@@ -156,6 +163,98 @@ void CppViewEntryWidget::on_toggleInfoButton()
             }
         }
     }
+}
+
+void CppViewEntryWidget::ShowHeaderContextMenu(const QPoint &pos)
+{
+    QAction actions[3];
+    QMenu contextMenu(this);
+
+    QMenu columnMenu(tr("Column"), this);
+    columnMenu.setToolTipsVisible(true);
+
+    int cursor = 0;
+    actions[cursor].setText(tr("Insert"));
+    actions[cursor].setToolTip(tr("Add new column before this one"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsertColumn_triggered()));
+    columnMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Delete"));
+    actions[cursor].setToolTip(tr("Delete this column"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDelColumn_triggered()));
+    columnMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Hide"));
+    actions[cursor].setToolTip(tr("Hide this column"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionHideColumn_triggered()));
+    columnMenu.addAction(&actions[cursor]);
+
+    contextMenu.addMenu(&columnMenu);
+
+    contextMenu.exec(mapToGlobal(pos));
+}
+
+void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
+{
+    QAction actions[3];
+    QMenu contextMenu(this);
+
+    QMenu rowMenu(tr("Row"), this);
+    rowMenu.setToolTipsVisible(true);
+
+    int cursor = 0;
+    actions[cursor].setText(tr("Insert"));
+    actions[cursor].setToolTip(tr("Add new row before this one"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
+    rowMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Delete"));
+    actions[cursor].setToolTip(tr("Delete this row"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDelRow_triggered()));
+    rowMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Hide"));
+    actions[cursor].setToolTip(tr("Hide this row"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionHideRow_triggered()));
+    rowMenu.addAction(&actions[cursor]);
+
+    contextMenu.addMenu(&rowMenu);
+
+    contextMenu.exec(mapToGlobal(pos));
+}
+
+void CppViewEntryWidget::on_actionInsertColumn_triggered()
+{
+    this->view->insertColumn(this->columnNum);
+}
+
+void CppViewEntryWidget::on_actionDelColumn_triggered()
+{
+    this->view->delColumn(this->columnNum);
+}
+
+void CppViewEntryWidget::on_actionHideColumn_triggered()
+{
+    this->view->hideColumn(this->columnNum);
+}
+
+void CppViewEntryWidget::on_actionInsertRow_triggered()
+{
+    this->view->insertRow(this->rowNum);
+}
+
+void CppViewEntryWidget::on_actionDelRow_triggered()
+{
+    this->view->delRow(this->rowNum);
+}
+
+void CppViewEntryWidget::on_actionHideRow_triggered()
+{
+    this->view->hideRow(this->rowNum);
 }
 
 void CppViewEntryWidget::on_entryLineEdit_returnPressed()
