@@ -74,7 +74,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
                 w = new QPushButton(text, this);
                 ((QPushButton *)w)->setFixedWidth(width);
 				((QPushButton *)w)->setFlat(true);
-		        QObject::connect(w, SIGNAL(released()), this, SLOT(ShowHeaderContextMenu(const QPoint &)));
+		        QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowHeaderContextMenu()));
             }
 
 			if (t->getRowCount() != 0) {
@@ -109,7 +109,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
 			((QPushButton *)w)->setStyleSheet("QPushButton { font: italic; }");
         }
         ((QPushButton *)w)->setText(text);
-        QObject::connect(w, SIGNAL(released()), this, SLOT(ShowRowContextMenu(const QPoint &)));
+        QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowRowContextMenu()));
     } else {
         // standard entry
 		D1CppRowEntry *entry = t->getRow(r - 1)->getEntry(c - 1);
@@ -188,7 +188,7 @@ void CppViewEntryWidget::on_toggleInfoButton()
     }
 }
 
-void CppViewEntryWidget::ShowHeaderContextMenu(const QPoint &pos)
+void CppViewEntryWidget::ShowHeaderContextMenu()
 {
     //QAction actions[3];
 	QAction *action;
@@ -228,7 +228,8 @@ void CppViewEntryWidget::ShowHeaderContextMenu(const QPoint &pos)
     // contextMenu.exec(mapToGlobal(pos));
 	contextMenu->setAttribute(Qt::WA_DeleteOnClose);
 	// contextMenu.popup(area->viewport()->mapToGlobal(pos));
-	contextMenu->popup(mapToGlobal(pos));
+	QPoint pos = QCursor::pos();
+	contextMenu->popup(pos); // mapToGlobal(pos));
 }
 
 void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
@@ -272,8 +273,9 @@ void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
 	contextMenu->setAttribute(Qt::WA_DeleteOnClose);
 	// contextMenu.popup(area->viewport()->mapToGlobal(pos));
 	// contextMenu->popup(mapToGlobal(pos));
-	QMessageBox::critical(this, "Error", tr("cursor at %1:%2 pos %3:%4 gpos %5:%6").arg(QCursor::pos().x()).arg(QCursor::pos().y()).arg(pos.x()).arg(pos.y()).arg(mapToGlobal(pos).x()).arg(mapToGlobal(pos).y()));
-	contextMenu->popup(mapToGlobal(pos));
+	QPoint pos = QCursor::pos();
+	//QMessageBox::critical(this, "Error", tr("cursor at %1:%2 pos %3:%4 gpos %5:%6").arg(QCursor::pos().x()).arg(QCursor::pos().y()).arg(pos.x()).arg(pos.y()).arg(mapToGlobal(pos).x()).arg(mapToGlobal(pos).y()));
+	contextMenu->popup(pos); // mapToGlobal(pos));
 }
 
 void CppViewEntryWidget::on_actionInsertColumn_triggered()

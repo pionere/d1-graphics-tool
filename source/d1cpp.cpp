@@ -1122,13 +1122,13 @@ if (i == 0)
 				// TODO: handle unbalanced splits?
 				if (i == 0) {
 					// add empty headers if there is space
-					if (headerNames.count() != 0 && headerNames.count() + d - 1 <= row->entries.count()) {
-        LogMessage(QString("HeaderNames inserted %1 from entry %2 of %3 with %4 data-entries.").arg(headerNames.count()).arg(e).arg(row->entries.count()).arg(d), LOG_ERROR);
+					if (headerNames.count() != 0 && headerNames.count() <= row->entries.count()) {
+        LogMessage(QString("HeaderNames inserted %1 from entry %2 of %3 with %4 data-entries %5.").arg(headerNames.count()).arg(e).arg(row->entries.count()).arg(d).arg(table->getName()), LOG_ERROR);
 						for (int h = 0; h < d - 1; h++) {
 							headerNames.insert(headerNames.begin() + e + 1, QString());
                         }
                     } else {
-        LogMessage(QString("HeaderNames untouched %1 from entry %2 of %3 with %4 data-entries.").arg(headerNames.count()).arg(e).arg(row->entries.count()).arg(d), LOG_ERROR);
+        LogMessage(QString("HeaderNames untouched %1 from entry %2 of %3 with %4 data-entries in %5.").arg(headerNames.count()).arg(e).arg(row->entries.count()).arg(d).arg(table->getName()), LOG_ERROR);
                     }
                 }
 
