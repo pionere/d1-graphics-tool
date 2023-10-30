@@ -251,16 +251,16 @@ void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
 	action = new QAction();
     action->setText(tr("Insert"));
     action->setToolTip(tr("Add new row before this one"));
-    QObject::connect(&action, SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
-    rowMenu.addAction(&action);
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
+    rowMenu.addAction(action);
 
     cursor++;
 	//action = &actions[cursor];
 	action = new QAction();
     action->setText(tr("Delete"));
     action->setToolTip(tr("Delete this row"));
-    QObject::connect(&action, SIGNAL(triggered()), this, SLOT(on_actionDelRow_triggered()));
-    rowMenu.addAction(&action);
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionDelRow_triggered()));
+    rowMenu.addAction(action);
 
     cursor++;
 	//action = &actions[cursor];
