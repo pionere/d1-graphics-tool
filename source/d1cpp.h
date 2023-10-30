@@ -72,6 +72,7 @@ public:
 
     D1CppRowEntry *getEntry(int index) const;
     QString getEntryText(int index) const;
+	void insertEntry(int column);
 	void delEntry(int column);
 
 private:
@@ -95,6 +96,8 @@ public:
     QString getRowText(int index) const;
     QString getHeader(int index) const;
     QString getLeader(int index) const;
+	void insertRow(int row);
+	void insertColumn(int column);
 	void delRow(int row);
 	void delColumn(int column);
 

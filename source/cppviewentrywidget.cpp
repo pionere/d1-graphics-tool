@@ -71,7 +71,7 @@ LogErrorF("Init Entry r:%d c:%d", r, c);
             } else {
                 w = new QPushButton(text, this);
                 ((QPushButton *)w)->setFixedWidth(width);
-				((QPushButton *)w->isFlat(true);
+				((QPushButton *)w)->isFlat(true);
 		        QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowHeaderContextMenu(const QPoint &)));
             }
         }
@@ -79,7 +79,7 @@ LogErrorF("Init Entry r:%d c:%d", r, c);
         // leader
         w = new QPushButton(this);
         ((QPushButton *)w)->setFixedWidth(width);
-		((QPushButton *)w->isFlat(true);
+		((QPushButton *)w)->isFlat(true);
         QString tooltip = t->getRowText(r);
         /*QString tooltip = t->getRowText(r - 1);
         QString postText = t->getRowText(r);
@@ -124,6 +124,16 @@ LogErrorF("Init Entry header:%1", t->getHeader(c - 1));
         this->ui->entryHorizontalLayout->addWidget(w);
     }
 LogErrorF("Init Entry done");
+}
+
+CppViewEntryWidget::adjustRowNum(int delta)
+{
+	this->rowNum += delta;
+}
+
+CppViewEntryWidget::adjustColumnNum(int delta)
+{
+	this->columnNum += delta;
 }
 
 void CppViewEntryWidget::on_headerButton_clicked()

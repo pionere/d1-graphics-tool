@@ -17,6 +17,8 @@ public:
     ~CppViewEntryWidget();
 
     void initialize(D1CppTable *table, int rowNum, int columnNum, int width);
+	void adjustRowNum(int delta);
+	void adjustColumnNum(int delta);
 
     static int baseHorizontalMargin();
 

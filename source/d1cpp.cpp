@@ -920,6 +920,12 @@ QString D1CppRow::getEntryText(int index) const
     return this->entryTexts[index];
 }
 
+void D1CppRow::insertEntry(int index)
+{
+    this->entries.insert(this->entries.begin() + index, new D1CppRowEntry());
+    this->entryTexts.insert(this->entryTexts.begin() + index, QString());
+}
+
 void D1CppRow::delEntry(int index)
 {
     QString text = this->entryTexts.takeAt(index);
@@ -976,6 +982,19 @@ QString D1CppTable::getHeader(int index) const
 QString D1CppTable::getLeader(int index) const
 {
     return this->leader[index];
+}
+
+void D1CppTable::insertRow(int index)
+{
+    this->rows.insert(this->rows.begin() + index, new D1CppRow());
+    this->rowTexts.insert(this->rowTexts.begin() + index, QString());
+}
+
+void D1CppTable::insertColumn(int index)
+{
+    for (D1CppRow *row : this->rows) {
+        row->insertEntry(column);
+    }
 }
 
 void D1CppTable::delRow(int index)

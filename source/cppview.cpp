@@ -80,34 +80,41 @@ void CppView::setTableContent(int row, int column, const QString &text)
     this->displayFrame();
 }
 
-void CppView::insertColumn(int column)
+void CppView::insertColumn(int index)
 {
+	this->cppTable->insertColumn(index);
+
+	this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 }
 
-void CppView::delColumn(int column)
+void CppView::delColumn(int index)
 {
-    for (int y = 0; y < this->cppTable->getRowCount() + 1; y++) {
-	    for (int x = column; x < this->cppTable->getColumnCount(); x++) {
+    /*for (int y = 0; y < this->cppTable->getRowCount() + 1; y++) {
+	    for (int x = index; x < this->cppTable->getColumnCount(); x++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
 			QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y, x + 1);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
-			if (x == column) {
+			if (x == index) {
 				this->ui->tableGrid->removeItem(item);
 				item->widget()->deleteLater();
 				delete item;
             }
 			this->ui->tableGrid->removeItem(nextItem);
 			delete nextItem;
+
+			w->adjustColumnNum(-1);
 			this->ui->tableGrid->addWidget(w, y, x);
         }
-    }
-	this->cppTable->delColumn(column);
+    }*/
+	this->cppTable->delColumn(index);
+
+	this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 }
 
-void CppView::hideColumn(int column)
+void CppView::hideColumn(int index)
 {
     for (int y = 0; y < this->cppTable->getRowCount() + 1; y++) {
-        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, column);
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
         if (item != nullptr) {
             CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
             w->setVisible(false);
@@ -115,39 +122,45 @@ void CppView::hideColumn(int column)
     }
 }
 
-void CppView::insertRow(int row)
+void CppView::insertRow(int index)
 {
+	this->cppTable->insertRow(index);
+
+    this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 }
 
-void CppView::delRow(int row)
+void CppView::delRow(int index)
 {
-    for (int x = 0; x < this->cppTable->getColumnCount() + 1; x++) {
-        for (int y = row; y < this->cppTable->getRowCount(); y++) {
+    /*for (int x = 0; x < this->cppTable->getColumnCount() + 1; x++) {
+        for (int y = index; y < this->cppTable->getRowCount(); y++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
 			QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y + 1, x);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
-			if (y == row) {
+			if (y == index) {
 				this->ui->tableGrid->removeItem(item);
 				delete item;
             }
 			this->ui->tableGrid->removeItem(nextItem);
 			delete nextItem;
+
+			w->adjustRowNum(-1);
 			this->ui->tableGrid->addWidget(w, y, x);
         }
-    }
-	this->cppTable->delRow(row);
+    }*/
+	this->cppTable->delRow(index);
+
+	this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 }
 
-void CppView::hideRow(int row)
+void CppView::hideRow(int index)
 {
     for (int x = 0; x < this->cppTable->getColumnCount() + 1; x++) {
-        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(row, x);
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, x);
         if (item != nullptr) {
             CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
             w->setVisible(false);
         }
     }
-}
 }
 
 void CppView::on_tablesComboBox_activated(int index)
@@ -160,7 +173,9 @@ LogErrorF("on_tablesComboBox_activated %d. rows:%d columns:%d", index, table->ge
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             if (item != nullptr) {
-                this->ui->tableGrid->removeWidget(item->widget());
+				QWidget *w = item->widget();
+                this->ui->tableGrid->removeWidget(w);
+				w->deleteLater();
             }
         }
     }
@@ -169,7 +184,9 @@ LogErrorF("on_tablesComboBox_activated %d. rows:%d columns:%d", index, table->ge
         for (int x = this->gridColumnCount - 1 + 1; x > table->getColumnCount() - 1 + 1; x--) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             if (item != nullptr) {
-                this->ui->tableGrid->removeWidget(item->widget());
+				QWidget *w = item->widget();
+                this->ui->tableGrid->removeWidget(w);
+				w->deleteLater();
             }
         }
     }
@@ -199,12 +216,13 @@ LogErrorF("on_tablesComboBox_activated %d. rows:%d columns:%d", index, table->ge
                 continue;
             }*/
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
-            CppViewEntryWidget *w;
-            if (item == nullptr) {
+            CppViewEntryWidget *w = nullptr;
+			if (item != nullptr) {
+				w = (CppViewEntryWidget *)item->widget();
+            }
+            if (w == nullptr) {
                 w = new CppViewEntryWidget(this);
                 this->ui->tableGrid->addWidget(w, y, x);
-            } else {
-                w = (CppViewEntryWidget *)item->widget();
             }
             w->initialize(table, y, x, columnWidths[x]);
         }
