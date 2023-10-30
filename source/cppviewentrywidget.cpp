@@ -190,7 +190,8 @@ void CppViewEntryWidget::on_toggleInfoButton()
 
 void CppViewEntryWidget::ShowHeaderContextMenu(const QPoint &pos)
 {
-    QAction actions[3];
+    //QAction actions[3];
+	QAction *action;
     // QMenu contextMenu(this);
 	QMenu *mm = new QMenu(this);
 	QMenu &contextMenu = *mm;
@@ -201,22 +202,28 @@ void CppViewEntryWidget::ShowHeaderContextMenu(const QPoint &pos)
     columnMenu.setToolTipsVisible(true);
 
     int cursor = 0;
-    actions[cursor].setText(tr("Insert"));
-    actions[cursor].setToolTip(tr("Add new column before this one"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsertColumn_triggered()));
-    columnMenu.addAction(&actions[cursor]);
+	//action = &actions[cursor];
+	action = new QAction();
+    action->setText(tr("Insert"));
+    action->setToolTip(tr("Add new column before this one"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertColumn_triggered()));
+    columnMenu.addAction(action);
 
     cursor++;
-    actions[cursor].setText(tr("Delete"));
-    actions[cursor].setToolTip(tr("Delete this column"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDelColumn_triggered()));
-    columnMenu.addAction(&actions[cursor]);
+	//action = &actions[cursor];
+	action = new QAction();
+    action->setText(tr("Delete"));
+    action->setToolTip(tr("Delete this column"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionDelColumn_triggered()));
+    columnMenu.addAction(action);
 
     cursor++;
-    actions[cursor].setText(tr("Hide"));
-    actions[cursor].setToolTip(tr("Hide this column"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionHideColumn_triggered()));
-    columnMenu.addAction(&actions[cursor]);
+	//action = &actions[cursor];
+	action = new QAction();
+    action->setText(tr("Hide"));
+    action->setToolTip(tr("Hide this column"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionHideColumn_triggered()));
+    columnMenu.addAction(action);
 
     contextMenu.addMenu(&columnMenu);
 
@@ -228,7 +235,8 @@ void CppViewEntryWidget::ShowHeaderContextMenu(const QPoint &pos)
 
 void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
 {
-    QAction actions[3];
+    // QAction actions[3];
+	QAction *action;
     // QMenu contextMenu(this);
 	QMenu *mm = new QMenu(this);
 	QMenu &contextMenu = *mm;
@@ -239,22 +247,28 @@ void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
     rowMenu.setToolTipsVisible(true);
 
     int cursor = 0;
-    actions[cursor].setText(tr("Insert"));
-    actions[cursor].setToolTip(tr("Add new row before this one"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
-    rowMenu.addAction(&actions[cursor]);
+	//action = &actions[cursor];
+	action = new QAction();
+    action->setText(tr("Insert"));
+    action->setToolTip(tr("Add new row before this one"));
+    QObject::connect(&action, SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
+    rowMenu.addAction(&action);
 
     cursor++;
-    actions[cursor].setText(tr("Delete"));
-    actions[cursor].setToolTip(tr("Delete this row"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDelRow_triggered()));
-    rowMenu.addAction(&actions[cursor]);
+	//action = &actions[cursor];
+	action = new QAction();
+    action->setText(tr("Delete"));
+    action->setToolTip(tr("Delete this row"));
+    QObject::connect(&action, SIGNAL(triggered()), this, SLOT(on_actionDelRow_triggered()));
+    rowMenu.addAction(&action);
 
     cursor++;
-    actions[cursor].setText(tr("Hide"));
-    actions[cursor].setToolTip(tr("Hide this row"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionHideRow_triggered()));
-    rowMenu.addAction(&actions[cursor]);
+	//action = &actions[cursor];
+	action = new QAction();
+    action->setText(tr("Hide"));
+    action->setToolTip(tr("Hide this row"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionHideRow_triggered()));
+    rowMenu.addAction(action);
 
     contextMenu.addMenu(&rowMenu);
 

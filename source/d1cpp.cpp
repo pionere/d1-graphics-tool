@@ -1040,8 +1040,69 @@ bool D1Cpp::postProcess()
 {
     bool change = false;
     for (D1CppTable *table : this->tables) {
-        // balance the table
         LogMessage(QString("Found table %1: %2 x %3.").arg(table->getName()).arg(table->getRowCount()).arg(table->getColumnCount()), LOG_NOTE);
+        // split leader fields
+        for (int i = 0; i < table->getRowCount(); i++) {
+            QString &firstText = table->rowTexts[i];
+            QString rowLeader;
+            if (firstText.endsWith("*/")) {
+                int x = firstText.length() - (1 + 2);
+                for (; x > 0; x--) {
+                    if (firstText[x] == '*' && firstText[x - 1] == '/') {
+                        break;
+                    }
+                    // TODO: check lineEnd?
+                }
+                if (x > 0) {
+                    rowLeader = firstText.mid(x + 1, firstText.length() - (1 + 2 + x + 1) + 1);
+if (i == 0)
+        LogMessage(QString("Adding leader field %1 to row %2 rem:%3.").arg(rowLeader).arg(i).arg(x), LOG_NOTE);
+                    firstText = firstText.left(x - 1);
+                }
+
+            }
+            table->leader.push_back(rowLeader);
+        }
+		// prepare headers
+		QStringList headerNames;
+        if (!table->rowTexts.isEmpty()) {
+            QString &firstText = table->rowTexts[0];
+        LogMessage(QString("Checking for header info (len %2) in %1.").arg(firstText).arg(firstText.length()), LOG_NOTE);
+            if (firstText.endsWith(this->lineEnd)) {
+        LogMessage(QString("LineEnd found."), LOG_NOTE);
+                int x = firstText.length() - (1 + this->lineEnd.length());
+                for ( ; x > 0; x--) {
+                    if (firstText[x] == '/' && firstText[x - 1] == '/') {
+                        break;
+                    }
+                    // TODO: check lineEnd?
+                }
+                if (x > 0) {
+        LogMessage(QString("Found header info at %1.").arg(x), LOG_NOTE);
+                    QString headerText = firstText.mid(x + 1, firstText.length() - (this->lineEnd.length() + x + 1));
+                    headerText = headerText.trimmed();
+                    headerNames = headerText.split(',');
+                    if (headerNames.count() > 1) { // TODO: check against ColumnCount
+        LogMessage(QString("Found header names %1.").arg(headerNames.count()), LOG_NOTE);
+
+                        firstText.truncate(x - 1);
+                        /*for (QString &headerName : headerNames) {
+                            table->header.push_back(headerName.trimmed());
+                        }
+                        if (table->header[0].isEmpty()) {
+                            table->header[0] = " ";
+                        }*/
+                    } else {
+						headerNames.clear();
+                    }
+                }
+        LogMessage(QString("Resulting firstText %1.").arg(table->rowTexts[0]), LOG_NOTE);
+            }
+        /*LogMessage(QString("Header count %1 columns %2.").arg(table->header.count()).arg(table->getColumnCount()), LOG_NOTE);
+            while (table->header.count() < table->getColumnCount()) {
+                table->header.push_back(QString());
+            }*/
+        }
         // flatten the table
         for (int i = 0; i < table->getRowCount(); i++) {
             D1CppRow *row = table->getRow(i);
@@ -1058,6 +1119,16 @@ bool D1Cpp::postProcess()
                     continue;
                 }
         LogMessage(QString("Splitting colum %1 of row %2 with %3 data-entries.").arg(e).arg(i).arg(d), LOG_NOTE);
+				// TODO: handle unbalanced splits?
+				if (i == 0) {
+					// add empty headers if there is space
+					if (headerNames.count() != 0 && headerNames.count() + d - 1 <= row->entries.count()) {
+						for (int h = 0; h < d - 1; h++) {
+							headerNames.insert(headerNames.begin() + e + 1, QString());
+                        }
+                    }
+                }
+
 				entry->complexFirst = true;
                 e++;
 				bool complexLast = true;
@@ -1081,6 +1152,7 @@ bool D1Cpp::postProcess()
             }
         }
         LogMessage(QString("Flat tablesize %1 x %2.").arg(table->getRowCount()).arg(table->getColumnCount()), LOG_NOTE);
+        // balance the table
         int columnNum = 0;
         bool ch = false;
         for (int i = 0; i < table->getRowCount(); i++) {
@@ -1104,11 +1176,11 @@ bool D1Cpp::postProcess()
                 }
             }
         }
-        // add leader fields
+        /*// add leader fields
         for (int i = 0; i < table->getRowCount(); i++) {
             QString &firstText = table->rowTexts[i];
             QString rowLeader;
-            if (firstText.endsWith("*/")) {
+            if (firstText.endsWith("*\/")) {
                 int x = firstText.length() - (1 + 2);
                 for (; x > 0; x--) {
                     if (firstText[x] == '*' && firstText[x - 1] == '/') {
@@ -1128,7 +1200,7 @@ if (i == 0)
         }
 
         // add header fields
-        if (table->getColumnCount() != 0) {
+        if (!table->rowTexts.isEmpty()) {
             QString &firstText = table->rowTexts[0];
         LogMessage(QString("Checking for header info (len %2) in %1.").arg(firstText).arg(firstText.length()), LOG_NOTE);
             if (firstText.endsWith(this->lineEnd)) {
@@ -1163,6 +1235,20 @@ if (i == 0)
             while (table->header.count() < table->getColumnCount()) {
                 table->header.push_back(QString());
             }
+        }*/
+		// add headers
+		if (!headerNames.isEmpty()) {
+			for (QString &headerName : headerNames) {
+                table->header.push_back(headerName.trimmed());
+            }
+            if (table->header[0].isEmpty()) {
+                table->header[0] = " ";
+            }
+        }
+		// balance headers with the content content
+		LogMessage(QString("Header count %1 columns %2.").arg(table->header.count()).arg(table->getColumnCount()), LOG_NOTE);
+        while (table->header.count() < table->getColumnCount()) {
+            table->header.push_back(QString());
         }
     }
     LogMessage(QString("postProcess done."), LOG_NOTE);
@@ -1293,7 +1379,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                     if (w == 1 && entry->isComplexFirst()) {
                         dataContent = "{ ";
                     }
-                    dataContent = data->preContent + data->content + data->postContent;
+                    dataContent += data->preContent + data->content + data->postContent;
                     int len = dataContent.length();
                     if (maxWidths[w] < len) {
                         maxWidths[w] = len;
