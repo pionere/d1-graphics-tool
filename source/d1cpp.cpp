@@ -44,9 +44,10 @@ if (lvl <= LOG_LEVEL) {                               \
     else if (lvl == LOG_WARN) dProgressWarn() << msg; \
     else dProgress() << msg;                          \
 }*/
-#define LogMessage(msg, lvl)                \
-if (lvl <= LOG_LEVEL) {                     \
-    LogErrorF((msg).toLatin1().constData()) \
+
+#define LogMessage(msg, lvl)                 \
+if (lvl <= LOG_LEVEL) {                      \
+    LogErrorF((msg).toLatin1().constData()); \
 }
 //#define LogMessage(msg, lvl) LogErrorF((msg).toLatin1().constData())
 
@@ -882,6 +883,12 @@ void D1CppEntryData::setContent(const QString &text)
     this->content = text;
 }
 
+D1CppRowEntry::~D1CppRowEntry()
+{
+    qDeleteAll(this->datas);
+    this->datas.clear();
+}
+
 QString D1CppRowEntry::getContent() const
 {
     return this->datas.empty() ? "" : this->datas[0]->getContent();
@@ -911,6 +918,18 @@ dProgressErr() << tr("Missing entry %1").arg(index);
 QString D1CppRow::getEntryText(int index) const
 {
     return this->entryTexts[index];
+}
+
+void D1CppRow::delEntry(int index)
+{
+    QString text = this->entryTexts.takeAt(index);
+    D1CppRowEntry *entry = this->entries.takeAt(index);
+
+    delete entry;
+	/*if (!this->entryTexts[index].isEmpty()) {
+		this->entryTexts[index].prepend(lineEnd);
+    }*/
+    this->entryTexts[index].prepend(text);
 }
 
 D1CppTable::D1CppTable(const QString &n)
@@ -957,6 +976,25 @@ QString D1CppTable::getHeader(int index) const
 QString D1CppTable::getLeader(int index) const
 {
     return this->leader[index];
+}
+
+void D1CppTable::delRow(int index)
+{
+    QString text = this->rowTexts.takeAt(index);
+    D1CppRow *row = this->rows.takeAt(index);
+
+    delete row;
+	/*if (!this->rowTexts[index].isEmpty()) {
+		this->rowTexts[index].prepend(lineEnd);
+    }*/
+    this->rowTexts[index].prepend(text);
+}
+
+void D1CppTable::delColumn(int column)
+{
+    for (D1CppRow *row : this->rows) {
+        row->delEntry(column);
+    }
 }
 
 D1Cpp::~D1Cpp()
@@ -1188,7 +1226,8 @@ bool D1Cpp::save(const SaveAsParam &params)
     for ( ; i < this->tables.count(); i++) {
         out << this->texts[i];
 
-        out << "{\n";
+        out << "{";
+		out << this->lineEnd;
 
         D1CppTable *table = this->tables[i];
         int maxLen = 0;
@@ -1251,7 +1290,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                         break;
                     }
                 }
-                out << "\n";
+                out << this->lineEnd;
             }
             // add leader
             if (maxWidths[0] != 0) {
@@ -1282,7 +1321,8 @@ bool D1Cpp::save(const SaveAsParam &params)
                 }
             }
             out << " }"; // if row->isComplex
-            out << ",\n";
+            out << ",";
+			out << this->lineEnd;
             out << table->rows[n]->entryTexts[e];
         }
         out << table->rowTexts[n];
@@ -1324,3 +1364,4 @@ D1CppTable *D1Cpp::getTable(int index) const
 {
     return const_cast<D1CppTable *>(this->tables[index]);
 }
+

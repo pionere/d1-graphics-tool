@@ -86,10 +86,33 @@ void CppView::insertColumn(int column)
 
 void CppView::delColumn(int column)
 {
+    for (int y = 0; y < this->cppTable->getRowCount() + 1; y++) {
+	    for (int x = column; x < this->cppTable->getColumnCount(); x++) {
+            QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
+			QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y, x + 1);
+			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
+			if (x == column) {
+				this->ui->tableGrid->removeItem(item);
+				item->widget()->deleteLater();
+				delete item;
+            }
+			this->ui->tableGrid->removeItem(nextItem);
+			delete nextItem;
+			this->ui->tableGrid->addWidget(w, y, x);
+        }
+    }
+	this->cppTable->delColumn(column);
 }
 
 void CppView::hideColumn(int column)
 {
+    for (int y = 0; y < this->cppTable->getRowCount() + 1; y++) {
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, column);
+        if (item != nullptr) {
+            CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+            w->setVisible(false);
+        }
+    }
 }
 
 void CppView::insertRow(int row)
@@ -98,10 +121,33 @@ void CppView::insertRow(int row)
 
 void CppView::delRow(int row)
 {
+    for (int x = 0; x < this->cppTable->getColumnCount() + 1; x++) {
+        for (int y = row; y < this->cppTable->getRowCount(); y++) {
+            QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
+			QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y + 1, x);
+			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
+			if (y == row) {
+				this->ui->tableGrid->removeItem(item);
+				delete item;
+            }
+			this->ui->tableGrid->removeItem(nextItem);
+			delete nextItem;
+			this->ui->tableGrid->addWidget(w, y, x);
+        }
+    }
+	this->cppTable->delRow(row);
 }
 
 void CppView::hideRow(int row)
 {
+    for (int x = 0; x < this->cppTable->getColumnCount() + 1; x++) {
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(row, x);
+        if (item != nullptr) {
+            CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+            w->setVisible(false);
+        }
+    }
+}
 }
 
 void CppView::on_tablesComboBox_activated(int index)

@@ -48,7 +48,7 @@ class D1CppRowEntry : public QObject {
 
 public:
     D1CppRowEntry() = default;
-    ~D1CppRowEntry() = default;
+    ~D1CppRowEntry();
 
     QString getContent() const;
     void setContent(const QString &text);
@@ -72,6 +72,7 @@ public:
 
     D1CppRowEntry *getEntry(int index) const;
     QString getEntryText(int index) const;
+	void delEntry(int column);
 
 private:
     QList<QString> entryTexts;
@@ -94,6 +95,8 @@ public:
     QString getRowText(int index) const;
     QString getHeader(int index) const;
     QString getLeader(int index) const;
+	void delRow(int row);
+	void delColumn(int column);
 
 private:
     QString name;
