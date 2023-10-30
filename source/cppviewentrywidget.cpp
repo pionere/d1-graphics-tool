@@ -191,9 +191,13 @@ void CppViewEntryWidget::on_toggleInfoButton()
 void CppViewEntryWidget::ShowHeaderContextMenu(const QPoint &pos)
 {
     QAction actions[3];
-    QMenu contextMenu(this);
+    // QMenu contextMenu(this);
+	QMenu *mm = new QMenu(this);
+	QMenu &contextMenu = *mm;
 
-    QMenu columnMenu(tr("Column"), this);
+    // QMenu columnMenu(tr("Column"), this);
+	QMenu *cm = new QMenu(tr("Column"), this);
+	QMenu &columnMenu = *cm;
     columnMenu.setToolTipsVisible(true);
 
     int cursor = 0;
@@ -216,15 +220,22 @@ void CppViewEntryWidget::ShowHeaderContextMenu(const QPoint &pos)
 
     contextMenu.addMenu(&columnMenu);
 
-    contextMenu.exec(mapToGlobal(pos));
+    // contextMenu.exec(mapToGlobal(pos));
+	contextMenu.setAttribute(Qt::WA_DeleteOnClose);
+	// contextMenu.popup(area->viewport()->mapToGlobal(pos));
+	contextMenu.popup(mapToGlobal(pos));
 }
 
 void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
 {
     QAction actions[3];
-    QMenu contextMenu(this);
+    // QMenu contextMenu(this);
+	QMenu *mm = new QMenu(this);
+	QMenu &contextMenu = *mm;
 
-    QMenu rowMenu(tr("Row"), this);
+    //QMenu rowMenu(tr("Row"), this);
+	QMenu *cm = new QMenu(tr("Row"), this);
+	QMenu &rowMenu = *cm;
     rowMenu.setToolTipsVisible(true);
 
     int cursor = 0;
@@ -247,7 +258,10 @@ void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
 
     contextMenu.addMenu(&rowMenu);
 
-    contextMenu.exec(mapToGlobal(pos));
+    // contextMenu.exec(mapToGlobal(pos));
+	contextMenu.setAttribute(Qt::WA_DeleteOnClose);
+	// contextMenu.popup(area->viewport()->mapToGlobal(pos));
+	contextMenu.popup(mapToGlobal(pos));
 }
 
 void CppViewEntryWidget::on_actionInsertColumn_triggered()

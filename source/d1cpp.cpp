@@ -1058,7 +1058,9 @@ bool D1Cpp::postProcess()
                     continue;
                 }
         LogMessage(QString("Splitting colum %1 of row %2 with %3 data-entries.").arg(e).arg(i).arg(d), LOG_NOTE);
+				entry->complexFirst = true;
                 e++;
+				bool complexLast = true;
                 for (d--; d > 0; d--) {
                     D1CppEntryData *data = entry->datas.last();
                     entry->datas.pop_back();
@@ -1067,13 +1069,14 @@ bool D1Cpp::postProcess()
                     entry->dataTexts.erase(entry->dataTexts.begin() + sn);
 
                     D1CppRowEntry *flatEntry = new D1CppRowEntry();
-                    flatEntry->complexFirst = flatEntry == entry;
-                    flatEntry->complexLast = d == 1;
+                    flatEntry->complexLast = complexLast;
                     flatEntry->datas.push_back(data);
                     flatEntry->dataTexts.push_back(dataStr);
                     flatEntry->dataTexts.push_back(QString());
                     row->entries.insert(row->entries.begin() + e, flatEntry);
 					row->entryTexts.insert(row->entryTexts.begin() + e, QString());
+
+					complexLast = false;
                 }
             }
         }
@@ -1287,9 +1290,9 @@ bool D1Cpp::save(const SaveAsParam &params)
                     w++;
 
                     QString dataContent;
-                    /*if (w == 1 && entry->isComplex) {
+                    if (w == 1 && entry->isComplexFirst()) {
                         dataContent = "{ ";
-                    }*/
+                    }
                     dataContent = data->preContent + data->content + data->postContent;
                     int len = dataContent.length();
                     if (maxWidths[w] < len) {
@@ -1297,9 +1300,10 @@ bool D1Cpp::save(const SaveAsParam &params)
                     }
                     rowEntryContents.push_back(dataContent);
                 }
-                /*if (entry->isComplex) {
+                if (entry->isComplexLast()) {
                     rowEntryContents.back().append(" }");
-                }*/
+					maxWidths[w] += 2;
+                }
             }
             entryContents.push_back(rowEntryContents);
         }

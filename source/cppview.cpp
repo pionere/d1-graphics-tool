@@ -244,7 +244,7 @@ void CppView::on_tablesComboBox_activated(int index)
             w->initialize(table, y, x, columnWidths[x]);
         }
     }
-LogErrorF("on_tablesComboBox_activated done");
+
     // this->gridRowCount = table->getRowCount() + 1;
     // this->gridColumnCount = table->getColumnCount() + 1;
 
