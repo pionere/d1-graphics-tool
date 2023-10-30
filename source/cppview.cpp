@@ -58,18 +58,36 @@ void CppView::initialize(D1Cpp *c)
     // this->updateFields();
 }
 
-static QString getTableEntryValue(D1CppTable *table, int row, int column)
+static int getTableEntryLength(D1CppTable *table, int row, int column, QFontMetrics &fm)
 {
-    if (row == 0) {
-        // header
-        return table->getHeader(column - 1);
-    }
+	/*int result;
+	// assert(row != 0);
     if (column == 0) {
         // leader
-        return table->getLeader(row - 1);
+        result = fm.horizontalAdvance(table->getLeader(row - 1));
+    } else {
+		// standard entry
+		D1CppRowEntry *entry = table->getRow(row - 1)->getEntry(column - 1);
+		result = fm.horizontalAdvance(entry->getContent());
+   		if (entry->isComplexFirst()) {
+			result += fm.horizontalAdvance("{");
+		}
+   		if (entry->isComplexLast()) {
+			result += fm.horizontalAdvance("}");
+		}
     }
-    // standard entry
-    return table->getRow(row - 1)->getEntry(column - 1)->getContent();
+	return result;*/
+	int result;
+	// assert(row != 0);
+    if (column == 0) {
+        // leader
+        result = fm.horizontalAdvance(table->getLeader(row - 1));
+    } else {
+		// standard entry
+		D1CppRowEntry *entry = table->getRow(row - 1)->getEntry(column - 1);
+		result = fm.horizontalAdvance(entry->getContent());
+	}
+	return result;
 }
 
 void CppView::setTableContent(int row, int column, const QString &text)
@@ -167,7 +185,7 @@ void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
     this->cppTable = table;
-LogErrorF("on_tablesComboBox_activated %d. rows:%d columns:%d", index, table->getRowCount(), table->getColumnCount());
+
     // eliminate obsolete content
     for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
@@ -201,8 +219,7 @@ LogErrorF("on_tablesComboBox_activated %d. rows:%d columns:%d", index, table->ge
             /*if (x == 0 && y == 0) {
                 continue;
             }*/
-            QString text = getTableEntryValue(table, y, x);
-            int tw = fm.horizontalAdvance(text);
+            int tw = getTableEntryLength(table, y, x, fm);
             if (tw > maxWidth) {
                 maxWidth = tw;
             }

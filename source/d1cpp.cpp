@@ -899,6 +899,16 @@ void D1CppRowEntry::setContent(const QString &text)
     this->datas[0]->setContent(text);
 }
 
+bool D1CppRowEntry::isComplexFirst() const
+{
+	return this->complexFirst;
+}
+
+bool D1CppRowEntry::isComplexLast() const
+{
+	return this->complexLast;
+}
+
 D1CppRow::~D1CppRow()
 {
     qDeleteAll(this->entries);

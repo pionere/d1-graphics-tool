@@ -49,7 +49,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     this->table = t;
     this->rowNum = r;
     this->columnNum = c;
-LogErrorF("Init Entry r:%d c:%d", r, c);
+
     // clear the layout
     QLayoutItem *child;
     while ((child = this->ui->entryHorizontalLayout->takeAt(0)) != nullptr) {
@@ -58,6 +58,8 @@ LogErrorF("Init Entry r:%d c:%d", r, c);
     }
 
     QWidget *w;
+    bool complexFirst = false;
+    bool complexLast = false;
     if (r == 0) {
         // header
         if (c == 0) {
@@ -72,7 +74,15 @@ LogErrorF("Init Entry r:%d c:%d", r, c);
                 w = new QPushButton(text, this);
                 ((QPushButton *)w)->setFixedWidth(width);
 				((QPushButton *)w)->setFlat(true);
-		        QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowHeaderContextMenu(const QPoint &)));
+		        QObject::connect(w, SIGNAL(released()), this, SLOT(ShowHeaderContextMenu(const QPoint &)));
+            }
+
+			if (t->getRowCount() != 0) {
+				D1CppRowEntry *entry = t->getRow(0)->getEntry(c - 1);
+                complexFirst = entry->isComplexFirst();
+                complexLast = entry->isComplexLast();
+            } else {
+				// FIXME: store complexFirst/Last in the header
             }
         }
     } else if (c == 0) {
@@ -94,38 +104,45 @@ LogErrorF("Init Entry r:%d c:%d", r, c);
             tooltip.prepend("<html><head/><body><p style='white-space:pre'>");
             tooltip.append("</p></body></html>");
             w->setToolTip(tooltip);
-            text.prepend("<html><head/><body><i>");
-            text.append("</i></body></html>");
+            // text.prepend("<html><head/><body><i>");
+            // text.append("</i></body></html>");
+			((QPushButton *)w)->setStyleSheet('QPushButton { font: italic; }');
         }
         ((QPushButton *)w)->setText(text);
-        QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowRowContextMenu(const QPoint &)));
+        QObject::connect(w, SIGNAL(released()), this, SLOT(ShowRowContextMenu(const QPoint &)));
     } else {
         // standard entry
-LogErrorF("Init Entry row:%d", t->getRow(r - 1) != nullptr);
-LogErrorF("Init Entry entry:%d", t->getRow(r - 1)->getEntry(c - 1) != nullptr);
-LogErrorF("Init Entry content:%s", t->getRow(r - 1)->getEntry(c - 1)->getContent());
-        w = new LineEditWidget(t->getRow(r - 1)->getEntry(c - 1)->getContent(), this);
+		D1CppRowEntry *entry = t->getRow(r - 1)->getEntry(c - 1);
+        w = new LineEditWidget(entry->getContent(), this);
         ((LineEditWidget *)w)->setMinimumWidth(width);
-LogErrorF("Init Entry leader:%s", t->getLeader(r - 1));
-LogErrorF("Init Entry header:%s", t->getHeader(c - 1));
         w->setToolTip(QString("%1/%2").arg(t->getLeader(r - 1)).arg(t->getHeader(c - 1)));
         QObject::connect(w, SIGNAL(returnPressed()), this, SLOT(on_entryLineEdit_returnPressed()));
         // connect esc events of LineEditWidgets
         QObject::connect(w, SIGNAL(cancel_signal()), this, SLOT(on_entryLineEdit_escPressed()));
+        complexFirst = entry->isComplexFirst();
+        complexLast = entry->isComplexLast();
     }
     this->widget = w;
+
+	if (complexFirst) {
+		QLabel label = new QLabel("{");
+		this->ui->entryHorizontalLayout->addWidget(label);
+    }
+
     this->ui->entryHorizontalLayout->addWidget(w);
 
     if (r != 0 && c != 0) {
         // standard entry
-LogErrorF("Init Entry row info:%d", t->getRow(r - 1) != nullptr);
-LogErrorF("Init Entry header info:%s", t->getHeader(c - 1));
         QString text = t->getRow(r - 1)->getEntryText(c - 1);
         w = PushButtonWidget::addButton(this, QStyle::SP_MessageBoxInformation, text, this, &CppViewEntryWidget::on_infoButton_clicked);
         w->setVisible(false);
         this->ui->entryHorizontalLayout->addWidget(w);
     }
-LogErrorF("Init Entry done");
+
+	if (complexLast) {
+		QLabel label = new QLabel("}");
+		this->ui->entryHorizontalLayout->addWidget(label);
+    }
 }
 
 void CppViewEntryWidget::adjustRowNum(int delta)
@@ -150,33 +167,23 @@ void CppViewEntryWidget::on_infoButton_clicked()
 
 void CppViewEntryWidget::on_toggleInfoButton()
 {
-    auto layout = this->ui->entryHorizontalLayout;
+    PushButtonWidget *w = this->ui->entryHorizontalLayout->parentWidget()->findChild<PushButtonWidget *>();
     if (this->rowNum == 0) {
         // header
         if (this->columnNum == 0) {
-            if (layout->count() == 0) {
-                QMessageBox::critical(nullptr, "Error", tr("No item in %1:%2").arg(this->rowNum).arg(this->columnNum));
-            }
-            PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(0)->widget());
-            if (w != nullptr) {
+            //PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(0)->widget());
             QString showTooltip = tr("Show info");
             if (w->toolTip() == showTooltip) {
                 showTooltip = tr("Hide info");
             }
             w->setToolTip(showTooltip);
-            } else {
-                QMessageBox::critical(nullptr, "Error", tr("No button in %1:%2").arg(this->rowNum).arg(this->columnNum));
-            }
         }
     } else if (this->columnNum != 0) {
         // standard entry
-        if (layout->count() == 2) {
-            PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(1)->widget());
-            if (w != nullptr) {
+        // if (layout->count() == 2) {
+		if (w != nullptr) {
+            // PushButtonWidget *w = qobject_cast<PushButtonWidget *>(layout->itemAt(1)->widget());
             w->setVisible(!w->isVisible());
-            } else {
-                QMessageBox::critical(nullptr, "Error", tr("No button in %1:%2").arg(this->rowNum).arg(this->columnNum));
-            }
         }
     }
 }

@@ -52,6 +52,8 @@ public:
 
     QString getContent() const;
     void setContent(const QString &text);
+    bool isComplexFirst() const;
+    bool isComplexLast() const;
 
 private:
     QList<QString> dataTexts;
