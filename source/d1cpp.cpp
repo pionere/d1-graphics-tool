@@ -993,7 +993,7 @@ void D1CppTable::insertRow(int index)
 void D1CppTable::insertColumn(int index)
 {
     for (D1CppRow *row : this->rows) {
-        row->insertEntry(column);
+        row->insertEntry(index);
     }
 }
 
