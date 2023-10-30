@@ -917,6 +917,10 @@ dProgressErr() << tr("Missing entry %1").arg(index);
 
 QString D1CppRow::getEntryText(int index) const
 {
+if (index >= this->entryTexts.count()) {
+dProgressErr() << tr("Missing entry text %1").arg(index);
+	return QString();
+}
     return this->entryTexts[index];
 }
 
@@ -1059,6 +1063,7 @@ bool D1Cpp::postProcess()
                     flatEntry->dataTexts.push_back(dataStr);
                     flatEntry->dataTexts.push_back(QString());
                     row->entries.insert(row->entries.begin() + e, flatEntry);
+					row->entryTexts.insert(row->entries.begin() + e, QString());
                 }
             }
         }

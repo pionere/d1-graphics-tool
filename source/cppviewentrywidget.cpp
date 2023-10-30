@@ -101,13 +101,13 @@ LogErrorF("Init Entry r:%d c:%d", r, c);
         QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowRowContextMenu(const QPoint &)));
     } else {
         // standard entry
-LogErrorF("Init Entry row:%1", t->getRow(r - 1) != nullptr);
-LogErrorF("Init Entry entry:%1", t->getRow(r - 1)->getEntry(c - 1) != nullptr);
-LogErrorF("Init Entry content:%1", t->getRow(r - 1)->getEntry(c - 1)->getContent());
+LogErrorF("Init Entry row:%d", t->getRow(r - 1) != nullptr);
+LogErrorF("Init Entry entry:%d", t->getRow(r - 1)->getEntry(c - 1) != nullptr);
+LogErrorF("Init Entry content:%s", t->getRow(r - 1)->getEntry(c - 1)->getContent());
         w = new LineEditWidget(t->getRow(r - 1)->getEntry(c - 1)->getContent(), this);
         ((LineEditWidget *)w)->setMinimumWidth(width);
-LogErrorF("Init Entry leader:%1", t->getLeader(r - 1));
-LogErrorF("Init Entry header:%1", t->getHeader(c - 1));
+LogErrorF("Init Entry leader:%s", t->getLeader(r - 1));
+LogErrorF("Init Entry header:%s", t->getHeader(c - 1));
         w->setToolTip(QString("%1/%2").arg(t->getLeader(r - 1)).arg(t->getHeader(c - 1)));
         QObject::connect(w, SIGNAL(returnPressed()), this, SLOT(on_entryLineEdit_returnPressed()));
         // connect esc events of LineEditWidgets
@@ -118,6 +118,8 @@ LogErrorF("Init Entry header:%1", t->getHeader(c - 1));
 
     if (r != 0 && c != 0) {
         // standard entry
+LogErrorF("Init Entry row info:%d", t->getRow(r - 1) != nullptr);
+LogErrorF("Init Entry header info:%s", t->getHeader(c - 1));
         QString text = t->getRow(r - 1)->getEntryText(c - 1);
         w = PushButtonWidget::addButton(this, QStyle::SP_MessageBoxInformation, text, this, &CppViewEntryWidget::on_infoButton_clicked);
         w->setVisible(false);
