@@ -38,11 +38,15 @@ typedef enum LogLevel {
 } LogLevel;
 
 #define LOG_LEVEL LOG_ERROR
-/*#define LogMessage(msg, lvl) \
-if (lvl <= LOG_LEVEL) { \
-    if (lvl == LOG_ERROR) dProgressErr() << msg; \
+/*#define LogMessage(msg, lvl)                        \
+if (lvl <= LOG_LEVEL) {                               \
+    if (lvl == LOG_ERROR) dProgressErr() << msg;      \
     else if (lvl == LOG_WARN) dProgressWarn() << msg; \
-    else dProgress() << msg; \
+    else dProgress() << msg;                          \
+}*/
+/*#define LogMessage(msg, lvl)                \
+if (lvl <= LOG_LEVEL) {                     \
+    LogErrorF((msg).toLatin1().constData()) \
 }*/
 #define LogMessage(msg, lvl) LogErrorF((msg).toLatin1().constData())
 
@@ -896,6 +900,11 @@ D1CppRow::~D1CppRow()
 
 D1CppRowEntry *D1CppRow::getEntry(int index) const
 {
+// REMOVEME
+if (index >= this->entries.count()) {
+dProgressErr() << tr("Missing entry %1").arg(index);
+	return new D1CppRowEntry();
+}
     return const_cast<D1CppRowEntry *>(this->entries[index]);
 }
 
@@ -977,6 +986,7 @@ bool D1Cpp::postProcess()
                     entry->dataTexts.push_back(QString());
                     continue;
                 }
+        LogMessage(QString("Splitting colum %1 of row %2 with %3 data-entries.").arg(e).arg(i).arg(d), LOG_NOTE);
                 e++;
                 for (d--; d > 0; d--) {
                     D1CppEntryData *data = entry->datas.last();
@@ -995,13 +1005,15 @@ bool D1Cpp::postProcess()
                 }
             }
         }
-
+        LogMessage(QString("Flat tablesize %1 x %2.").arg(table->getRowCount()).arg(table->getColumnCount()), LOG_NOTE);
         int columnNum = 0;
         bool ch = false;
         for (int i = 0; i < table->getRowCount(); i++) {
             D1CppRow *row = table->getRow(i);
             int cc = row->entries.count();
             if (i == 0 || columnNum < cc) {
+		if (i != 0)
+        LogMessage(QString("Unbalanced table row %1: %2 vs. %3.").arg(i).arg(cc).arg(columnNum), LOG_NOTE);
                 columnNum = cc;
                 ch = i != 0;
             }
