@@ -1063,7 +1063,7 @@ bool D1Cpp::postProcess()
                     flatEntry->dataTexts.push_back(dataStr);
                     flatEntry->dataTexts.push_back(QString());
                     row->entries.insert(row->entries.begin() + e, flatEntry);
-					row->entryTexts.insert(row->entries.begin() + e, QString());
+					row->entryTexts.insert(row->entryTexts.begin() + e, QString());
                 }
             }
         }
