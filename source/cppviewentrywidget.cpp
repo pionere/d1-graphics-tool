@@ -46,7 +46,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     this->table = t;
     this->rowNum = r;
     this->columnNum = c;
-
+LogErrorF("Init Entry r:%d c:%d", r, c);
     // clear the layout
     QLayoutItem *child;
     while ((child = this->ui->entryHorizontalLayout->takeAt(0)) != nullptr) {
@@ -111,6 +111,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
         w->setVisible(false);
         this->ui->entryHorizontalLayout->addWidget(w);
     }
+LogErrorF("Init Entry done");
 }
 
 void CppViewEntryWidget::on_headerButton_clicked()

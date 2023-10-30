@@ -37,7 +37,7 @@ typedef enum LogLevel {
     LOG_NOTE,
 } LogLevel;
 
-#define LOG_LEVEL LOG_NOTE
+#define LOG_LEVEL LOG_ERROR
 /*#define LogMessage(msg, lvl) \
 if (lvl <= LOG_LEVEL) { \
     if (lvl == LOG_ERROR) dProgressErr() << msg; \

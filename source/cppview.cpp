@@ -84,7 +84,7 @@ void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
     this->cppTable = table;
-
+LogErrorF("on_tablesComboBox_activated %d. rows:%d columns:%d", index, table->getRowCount(), table->getColumnCount());
     // eliminate obsolete content
     for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
@@ -139,6 +139,7 @@ void CppView::on_tablesComboBox_activated(int index)
             w->initialize(table, y, x, columnWidths[x]);
         }
     }
+LogErrorF("on_tablesComboBox_activated done");
     // this->gridRowCount = table->getRowCount() + 1;
     // this->gridColumnCount = table->getColumnCount() + 1;
 
