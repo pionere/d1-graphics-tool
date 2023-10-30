@@ -9,8 +9,9 @@
 #include "labelwidget.h"
 #include "lineeditwidget.h"
 #include "pushbuttonwidget.h"
-
 #include "ui_cppviewentrywidget.h"
+
+#include "dungeon/all.h"
 
 static int entryHorizontalMargin = 0;
 
