@@ -106,7 +106,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
             w->setToolTip(tooltip);
             // text.prepend("<html><head/><body><i>");
             // text.append("</i></body></html>");
-			((QPushButton *)w)->setStyleSheet('QPushButton { font: italic; }');
+			((QPushButton *)w)->setStyleSheet("QPushButton { font: italic; }");
         }
         ((QPushButton *)w)->setText(text);
         QObject::connect(w, SIGNAL(released()), this, SLOT(ShowRowContextMenu(const QPoint &)));
@@ -125,7 +125,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     this->widget = w;
 
 	if (complexFirst) {
-		QLabel label = new QLabel("{");
+		QLabel *label = new QLabel("{");
 		this->ui->entryHorizontalLayout->addWidget(label);
     }
 
@@ -140,7 +140,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     }
 
 	if (complexLast) {
-		QLabel label = new QLabel("}");
+		QLabel *label = new QLabel("}");
 		this->ui->entryHorizontalLayout->addWidget(label);
     }
 }
