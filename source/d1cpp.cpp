@@ -878,9 +878,13 @@ QString D1CppEntryData::getContent() const
     return this->content;
 }
 
-void D1CppEntryData::setContent(const QString &text)
+bool D1CppEntryData::setContent(const QString &text)
 {
+	if (this->content == text) {
+		return false;
+    }
     this->content = text;
+	return true;
 }
 
 D1CppRowEntry::~D1CppRowEntry()
@@ -894,9 +898,9 @@ QString D1CppRowEntry::getContent() const
     return this->datas.empty() ? "" : this->datas[0]->getContent();
 }
 
-void D1CppRowEntry::setContent(const QString &text)
+bool D1CppRowEntry::setContent(const QString &text)
 {
-    this->datas[0]->setContent(text);
+    return this->datas[0]->setContent(text);
 }
 
 bool D1CppRowEntry::isComplexFirst() const

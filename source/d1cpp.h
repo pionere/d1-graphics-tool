@@ -30,7 +30,7 @@ public:
     ~D1CppEntryData() = default;
 
     QString getContent() const;
-    void setContent(const QString &text);
+    bool setContent(const QString &text);
 
 private:
     QString preContent;
@@ -51,7 +51,7 @@ public:
     ~D1CppRowEntry();
 
     QString getContent() const;
-    void setContent(const QString &text);
+    bool setContent(const QString &text);
     bool isComplexFirst() const;
     void setComplexFirst(bool complex);
     bool isComplexLast() const;

@@ -208,92 +208,74 @@ void CppViewEntryWidget::on_toggleInfoButton()
 
 void CppViewEntryWidget::ShowHeaderContextMenu()
 {
-    //QAction actions[3];
 	QAction *action;
-    // QMenu contextMenu(this);
-	QMenu *contextMenu = new QMenu(this);
+    QMenu contextMenu(this);
+	QMenu *menu = &contextMenu;
 
-    // QMenu columnMenu(tr("Column"), this);
-	QMenu *columnMenu = new QMenu(tr("Column"), this);
-    columnMenu->setToolTipsVisible(true);
+    menu->setToolTipsVisible(true);
+	QString leader = ((QPushButton *)this->widget)->text();
+    if (!leader.isEmpty()) {
+        QLabel* label = new QLabel(tr("<u>%1</u>").arg(leader), this);
+        label->setAlignment(Qt::AlignCenter);
+        QWidgetAction* a = new QWidgetAction(menu);
+        a->setDefaultWidget(label);
+    }
 
-    int cursor = 0;
-	//action = &actions[cursor];
-	action = new QAction();
-    action->setText(tr("Insert"));
+	action = new QAction(tr("Insert"));
     action->setToolTip(tr("Add new column before this one"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertColumn_triggered()));
-    columnMenu->addAction(action);
+    menu->addAction(action);
 
-    cursor++;
-	//action = &actions[cursor];
-	action = new QAction();
-    action->setText(tr("Delete"));
+	action = new QAction(tr("Delete"));
     action->setToolTip(tr("Delete this column"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionDelColumn_triggered()));
-    columnMenu->addAction(action);
+    menu->addAction(action);
 
-    cursor++;
-	//action = &actions[cursor];
-	action = new QAction();
-    action->setText(tr("Hide"));
+	action = new QAction(tr("Hide"));
     action->setToolTip(tr("Hide this column"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionHideColumn_triggered()));
-    columnMenu->addAction(action);
+    menu->addAction(action);
 
-    contextMenu->addMenu(columnMenu);
-
-    // contextMenu.exec(mapToGlobal(pos));
-	contextMenu->setAttribute(Qt::WA_DeleteOnClose);
-	// contextMenu.popup(area->viewport()->mapToGlobal(pos));
 	QPoint pos = QCursor::pos();
-	contextMenu->popup(pos); // mapToGlobal(pos));
+	menu->exec(pos);
+	// contextMenu->setAttribute(Qt::WA_DeleteOnClose);
+	// menu->popup(pos); // area->viewport()->mapToGlobal(pos);
 }
 
 void CppViewEntryWidget::ShowRowContextMenu()
 {
-    // QAction actions[3];
 	QAction *action;
-    // QMenu contextMenu(this);
-	QMenu *contextMenu = new QMenu(this);
+    QMenu contextMenu(this);
+	QMenu *menu = &contextMenu;
 
-    //QMenu rowMenu(tr("Row"), this);
-	QMenu *rowMenu = new QMenu(tr("Row"), this);
-    rowMenu->setToolTipsVisible(true);
+    menu->setToolTipsVisible(true);
+	QString leader = ((QPushButton *)this->widget)->text();
+    if (!leader.isEmpty()) {
+        QLabel* label = new QLabel(tr("<u>%1</u>").arg(leader), this);
+        label->setAlignment(Qt::AlignCenter);
+        QWidgetAction* a = new QWidgetAction(menu);
+        a->setDefaultWidget(label);
+    }
 
-    int cursor = 0;
-	//action = &actions[cursor];
-	action = new QAction();
-    action->setText(tr("Insert"));
+	action = new QAction(tr("Insert"));
     action->setToolTip(tr("Add new row before this one"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
-    rowMenu->addAction(action);
+    menu->addAction(action);
 
-    cursor++;
-	//action = &actions[cursor];
-	action = new QAction();
-    action->setText(tr("Delete"));
+	action = new QAction(tr("Delete"));
     action->setToolTip(tr("Delete this row"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionDelRow_triggered()));
-    rowMenu->addAction(action);
+    menu->addAction(action);
 
-    cursor++;
-	//action = &actions[cursor];
-	action = new QAction();
-    action->setText(tr("Hide"));
+	action = new QAction(tr("Hide"));
     action->setToolTip(tr("Hide this row"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionHideRow_triggered()));
-    rowMenu->addAction(action);
+    menu->addAction(action);
 
-    contextMenu->addMenu(rowMenu);
-
-    // contextMenu.exec(mapToGlobal(pos));
-	contextMenu->setAttribute(Qt::WA_DeleteOnClose);
-	// contextMenu.popup(area->viewport()->mapToGlobal(pos));
-	// contextMenu->popup(mapToGlobal(pos));
 	QPoint pos = QCursor::pos();
-	//QMessageBox::critical(this, "Error", tr("cursor at %1:%2 pos %3:%4 gpos %5:%6").arg(QCursor::pos().x()).arg(QCursor::pos().y()).arg(pos.x()).arg(pos.y()).arg(mapToGlobal(pos).x()).arg(mapToGlobal(pos).y()));
-	contextMenu->popup(pos); // mapToGlobal(pos));
+	menu->exec(pos);
+	// contextMenu->setAttribute(Qt::WA_DeleteOnClose);
+	// menu->popup(pos); // area->viewport()->mapToGlobal(pos);
 }
 
 void CppViewEntryWidget::on_actionInsertColumn_triggered()
