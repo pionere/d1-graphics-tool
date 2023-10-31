@@ -904,9 +904,19 @@ bool D1CppRowEntry::isComplexFirst() const
 	return this->complexFirst;
 }
 
+void D1CppRowEntry::setComplexFirst(bool complex)
+{
+	this->complexFirst = complex;
+}
+
 bool D1CppRowEntry::isComplexLast() const
 {
 	return this->complexLast;
+}
+
+void D1CppRowEntry::setComplexLast(bool complex)
+{
+	this->complexLast = complex;
 }
 
 D1CppRow::~D1CppRow()
@@ -944,6 +954,20 @@ void D1CppRow::delEntry(int index)
 {
     QString text = this->entryTexts.takeAt(index);
     D1CppRowEntry *entry = this->entries.takeAt(index);
+
+	if (entry->isComplexFirst()) {
+		if (entry->isComplexLast()) {
+			; // do nothing
+        } else if (this->entries.count() > index) {
+			D1CppRowEntry *nextEntry = this->entries[index];
+			nextEntry->setComplexFirst(true);
+        }
+    } else if (entry->isComplexLast()) {
+        if (index != 0) {
+			D1CppRowEntry *prevEntry = this->entries[index - 1];
+			prevEntry->setComplexLast(true);
+        }
+    }
 
     delete entry;
 	/*if (!this->entryTexts[index].isEmpty()) {

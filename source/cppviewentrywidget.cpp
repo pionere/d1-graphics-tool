@@ -73,7 +73,8 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
             } else {
                 w = new QPushButton(text, this);
                 ((QPushButton *)w)->setFixedWidth(width);
-				((QPushButton *)w)->setFlat(true);
+				//((QPushButton *)w)->setFlat(true);
+				((QPushButton *)w)->setStyleSheet("border: 0;");
 		        QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowHeaderContextMenu()));
             }
 
@@ -89,7 +90,7 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
         // leader
         w = new QPushButton(this);
         ((QPushButton *)w)->setFixedWidth(width);
-		((QPushButton *)w)->setFlat(true);
+		//((QPushButton *)w)->setFlat(true);
         QString tooltip = t->getRowText(r);
         /*QString tooltip = t->getRowText(r - 1);
         QString postText = t->getRowText(r);
@@ -100,15 +101,18 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
             tooltip += postText;
         }*/
         QString text = t->getLeader(r - 1);
+		QString style = "border: 0;";
         if (!tooltip.isEmpty()) {
             tooltip.prepend("<html><head/><body><p style='white-space:pre'>");
             tooltip.append("</p></body></html>");
             w->setToolTip(tooltip);
             // text.prepend("<html><head/><body><i>");
             // text.append("</i></body></html>");
-			((QPushButton *)w)->setStyleSheet("QPushButton { font: italic; }");
+			//((QPushButton *)w)->setStyleSheet("QPushButton { font: italic; }");
+			style.append("font: italic;");
         }
         ((QPushButton *)w)->setText(text);
+		((QPushButton *)w)->setStyleSheet(style);
         QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowRowContextMenu()));
     } else {
         // standard entry
@@ -157,7 +161,21 @@ void CppViewEntryWidget::adjustColumnNum(int delta)
 
 void CppViewEntryWidget::on_headerButton_clicked()
 {
+	int c = this->columnNum;
+	D1CppTable *t = this->table;
 
+	QString text = t->getHeader(c - 1);
+	QFontMetrics fm = this->fontMetrics();
+	int width = fm.horizontalAdvance(text);
+    QWidget w = new QPushButton(text, this);
+    ((QPushButton *)w)->setFixedWidth(width);
+    //((QPushButton *)w)->setFlat(true);
+	((QPushButton *)w)->setStyleSheet("border: 0;");
+    QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowHeaderContextMenu()));
+
+    this->ui->entryHorizontalLayout->replaceWidget(this->wigdet, w);
+    this->wigdet->deleteLater();
+    this->wigdet = w;
 }
 
 void CppViewEntryWidget::on_infoButton_clicked()
