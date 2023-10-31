@@ -216,11 +216,11 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
     menu->setToolTipsVisible(true);
 	QString header = ((QPushButton *)this->widget)->text();
     if (!header.isEmpty()) {
-        /*QLabel *label = new QLabel(tr("<u>%1</u>").arg(header), this);
+        QLabel *label = new QLabel(tr("<u>%1</u>").arg(header), this);
         label->setAlignment(Qt::AlignCenter);
-        QWidgetAction *a = new QWidgetAction(menu);
-        a->setDefaultWidget(label);*/
-		menu->addSection(tr("<u>%1</u>").arg(header));
+        QWidgetAction *a = new QWidgetAction();
+        a->setDefaultWidget(label);
+		menu->addAction(a);
     }
 
 	action = new QAction(tr("Insert"));
@@ -253,11 +253,11 @@ void CppViewEntryWidget::ShowRowContextMenu()
     menu->setToolTipsVisible(true);
 	QString leader = ((QPushButton *)this->widget)->text();
     if (!leader.isEmpty()) {
-        /*QLabel *label = new QLabel(tr("<u>%1</u>").arg(leader), this);
+        QLabel *label = new QLabel(tr("<u>%1</u>").arg(leader), this);
         label->setAlignment(Qt::AlignCenter);
         QWidgetAction *a = new QWidgetAction(menu);
-        a->setDefaultWidget(label);*/
-		menu->addSection(tr("<u>%1</u>").arg(leader));
+        a->setDefaultWidget(label);
+		menu->addAction(a);
     }
 
 	action = new QAction(tr("Insert"));
