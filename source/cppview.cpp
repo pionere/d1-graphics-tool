@@ -103,7 +103,7 @@ void CppView::setTableContent(int row, int column, const QString &text)
 
 void CppView::insertColumn(int index)
 {
-	CppTable *t = this->cppTable;
+	D1CppTable *t = this->cppTable;
 
 	t->insertColumn(index - 1);
 	this->cpp->setModified();
@@ -131,7 +131,7 @@ void CppView::insertColumn(int index)
 
 void CppView::delColumn(int index)
 {
-	CppTable *t = this->cppTable;
+	D1CppTable *t = this->cppTable;
 
 	t->delColumn(index - 1);
 	this->cpp->setModified();
@@ -172,7 +172,7 @@ void CppView::hideColumn(int index)
 
 void CppView::insertRow(int index)
 {
-	CppTable *t = this->cppTable;
+	D1CppTable *t = this->cppTable;
 
 	t->insertRow(index - 1);
 	this->cpp->setModified();
@@ -197,7 +197,7 @@ void CppView::insertRow(int index)
 
 void CppView::delRow(int index)
 {
-	CppTable *t = this->cppTable;
+	D1CppTable *t = this->cppTable;
 
 	t->delRow(index - 1);
 	this->cpp->setModified();
