@@ -141,17 +141,18 @@ void CppView::delColumn(int index)
 	// this->displayFrame();
 	this->columnWidths.erase(this->columnWidths.begin() + index);
     for (int y = 0; y < table->getRowCount() + 1; y++) {
-	    for (int x = index; x < table->getColumnCount(); x++) {
+	    for (int x = index; x < table->getColumnCount() + 1; x++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
 			QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y, x + 1);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
 			if (x == index) {
 				item->widget()->deleteLater();
-				this->ui->tableGrid->removeItem(item);
-				delete item;
+				// this->ui->tableGrid->removeItem(item);
+				// delete item;
             }
-			this->ui->tableGrid->removeItem(nextItem);
-			delete nextItem;
+			// this->ui->tableGrid->removeItem(nextItem);
+			// delete nextItem;
+			this->ui->tableGrid->removeWidget(w);
 
 			w->adjustColumnNum(-1);
 			this->ui->tableGrid->addWidget(w, y, x);
@@ -207,7 +208,7 @@ void CppView::delRow(int index)
 	// this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
-        for (int y = index; y < table->getRowCount(); y++) {
+        for (int y = index; y < table->getRowCount() + 1; y++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
 			QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y + 1, x);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
