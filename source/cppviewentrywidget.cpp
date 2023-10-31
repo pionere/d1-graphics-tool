@@ -215,7 +215,7 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
 
     menu->setToolTipsVisible(true);
 	QString header = ((QPushButton *)this->widget)->text();
-    if (!header.isEmpty()) {
+    //if (!header.isEmpty()) {
         QLabel *label = new QLabel(QString("<u>%1</u>").arg(header), this);
         label->setAlignment(Qt::AlignCenter);
         QWidgetAction *a = new QWidgetAction(menu);
@@ -223,7 +223,7 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
 		menu->addAction(a);
 		// action = menu->addAction(QString("<u>%1</u>").arg(header));
 		// action->setEnabled(false);
-    }
+    //}
 
 	action = new QAction(tr("Insert"));
     action->setToolTip(tr("Add new column before this one"));
@@ -254,7 +254,7 @@ void CppViewEntryWidget::ShowRowContextMenu()
 
     menu->setToolTipsVisible(true);
 	QString leader = ((QPushButton *)this->widget)->text();
-    if (!leader.isEmpty()) {
+    //if (!leader.isEmpty()) {
         QLabel *label = new QLabel(QString("<u>%1</u>").arg(leader), this);
         label->setAlignment(Qt::AlignCenter);
         QWidgetAction *a = new QWidgetAction(menu);
@@ -262,7 +262,7 @@ void CppViewEntryWidget::ShowRowContextMenu()
 		menu->addAction(a);
 		// action = menu->addAction(QString("<u>%1</u>").arg(leader));
 		// action->setEnabled(false);
-    }
+    //}
 
 	action = new QAction(tr("Insert"));
     action->setToolTip(tr("Add new row before this one"));
