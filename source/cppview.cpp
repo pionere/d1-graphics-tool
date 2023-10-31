@@ -124,7 +124,7 @@ void CppView::insertColumn(int index)
 
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
         this->ui->tableGrid->addWidget(w, y, index);
-        w->initialize(table, index, x, this->columnWidths[index]);
+        w->initialize(table, index, index, this->columnWidths[index]);
     }
 	this->updateFields();
 }
@@ -189,7 +189,7 @@ void CppView::insertRow(int index)
         }
 
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
-        this->ui->tableGrid->addWidget(w, y, x);
+        this->ui->tableGrid->addWidget(w, index, x);
         w->initialize(table, index, x, this->columnWidths[x]);
     }
 	this->updateFields();
