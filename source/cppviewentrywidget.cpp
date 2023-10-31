@@ -167,15 +167,15 @@ void CppViewEntryWidget::on_headerButton_clicked()
 	QString text = t->getHeader(c - 1);
 	QFontMetrics fm = this->fontMetrics();
 	int width = fm.horizontalAdvance(text);
-    QWidget w = new QPushButton(text, this);
+    QWidget *w = new QPushButton(text, this);
     ((QPushButton *)w)->setFixedWidth(width);
     //((QPushButton *)w)->setFlat(true);
 	((QPushButton *)w)->setStyleSheet("border: 0;");
     QObject::connect(w, SIGNAL(clicked()), this, SLOT(ShowHeaderContextMenu()));
 
-    this->ui->entryHorizontalLayout->replaceWidget(this->wigdet, w);
-    this->wigdet->deleteLater();
-    this->wigdet = w;
+    this->ui->entryHorizontalLayout->replaceWidget(this->widget, w);
+    this->widget->deleteLater();
+    this->widget = w;
 }
 
 void CppViewEntryWidget::on_infoButton_clicked()
