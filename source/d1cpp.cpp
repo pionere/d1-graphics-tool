@@ -887,6 +887,15 @@ bool D1CppEntryData::setContent(const QString &text)
 	return true;
 }
 
+D1CppRowEntry::D1CppRowEntry(const QString &text)
+{
+	D1CppEntryData *data = new D1CppEntryData();
+	data->setContent(text);
+	this->datas.push_back(data);
+	this->dataTexts.push_back(QString());
+	this->dataTexts.push_back(QString());
+}
+
 D1CppRowEntry::~D1CppRowEntry()
 {
     qDeleteAll(this->datas);
@@ -895,7 +904,12 @@ D1CppRowEntry::~D1CppRowEntry()
 
 QString D1CppRowEntry::getContent() const
 {
-    return this->datas.empty() ? "" : this->datas[0]->getContent();
+// REMOVEME
+if (this->datas.empty()) {
+dProgressErr() << tr("Missing entry data.");
+	return "";
+}
+    return this->datas[0]->getContent();
 }
 
 bool D1CppRowEntry::setContent(const QString &text)
@@ -950,7 +964,7 @@ dProgressErr() << tr("Missing entry text %1").arg(index);
 
 void D1CppRow::insertEntry(int index)
 {
-    this->entries.insert(this->entries.begin() + index, new D1CppRowEntry());
+    this->entries.insert(this->entries.begin() + index, new D1CppRowEntry(""));
     this->entryTexts.insert(this->entryTexts.begin() + index, QString());
 }
 
@@ -1003,7 +1017,7 @@ int D1CppTable::getRowCount() const
 
 int D1CppTable::getColumnCount() const
 {
-    return this->rows.isEmpty() ? 0 : this->rows[0]->entries.count();
+    return this->rows.isEmpty() ? this->header.count() : this->rows[0]->entries.count();
 }
 
 D1CppRow *D1CppTable::getRow(int index) const
@@ -1028,7 +1042,13 @@ QString D1CppTable::getLeader(int index) const
 
 void D1CppTable::insertRow(int index)
 {
-    this->rows.insert(this->rows.begin() + index, new D1CppRow());
+	D1CppRow *row = new D1CppRow();
+	int entries = this->getColumnCount();
+	for (int i = 0; i < entries; i++) {
+		row->insertEntry(0);
+    }
+
+    this->rows.insert(this->rows.begin() + index, row);
     this->rowTexts.insert(this->rowTexts.begin() + index, QString());
 }
 

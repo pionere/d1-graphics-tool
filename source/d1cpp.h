@@ -48,6 +48,7 @@ class D1CppRowEntry : public QObject {
 
 public:
     D1CppRowEntry() = default;
+	D1CppRowEntry(const QString &text);
     ~D1CppRowEntry();
 
     QString getContent() const;

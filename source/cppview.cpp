@@ -238,7 +238,7 @@ LogErrorF("on_tablesComboBox_activated 2");
         }
         columnWidths.push_back(maxWidth + entryHorizontalMargin);
     }
-LogErrorF("on_tablesComboBox_activated 3");
+LogErrorF("on_tablesComboBox_activated 3: %d x %d", table->getRowCount(), table->getColumnCount());
     // add new items
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = 0; y < table->getRowCount() + 1; y++) {
@@ -254,7 +254,9 @@ LogErrorF("on_tablesComboBox_activated 3");
                 w = new CppViewEntryWidget(this);
                 this->ui->tableGrid->addWidget(w, y, x);
             }
+LogErrorF("on_tablesComboBox_activated 3a: %d;%d", y, x);
             w->initialize(table, y, x, columnWidths[x]);
+LogErrorF("on_tablesComboBox_activated 3b: %d;%d", y, x);
         }
     }
 LogErrorF("on_tablesComboBox_activated 4");
