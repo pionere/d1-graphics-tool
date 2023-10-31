@@ -105,6 +105,7 @@ void CppView::insertColumn(int index)
 	this->cpp->setModified();
 
 	this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+	this->displayFrame();
 }
 
 void CppView::delColumn(int index)
@@ -130,6 +131,7 @@ void CppView::delColumn(int index)
 	this->cpp->setModified();
 
     this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+	this->displayFrame();
 }
 
 void CppView::hideColumn(int index)
@@ -149,6 +151,7 @@ void CppView::insertRow(int index)
 	this->cpp->setModified();
 
     this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+	this->displayFrame();
 }
 
 void CppView::delRow(int index)
@@ -173,6 +176,7 @@ void CppView::delRow(int index)
 	this->cpp->setModified();
 
 	this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+	this->displayFrame();
 }
 
 void CppView::hideRow(int index)

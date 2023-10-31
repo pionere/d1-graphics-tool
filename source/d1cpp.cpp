@@ -1065,6 +1065,7 @@ void D1CppTable::delRow(int index)
 {
     QString text = this->rowTexts.takeAt(index);
     D1CppRow *row = this->rows.takeAt(index);
+	this->leader.takeAt(index);
 
     delete row;
 	/*if (!this->rowTexts[index].isEmpty()) {
@@ -1073,11 +1074,12 @@ void D1CppTable::delRow(int index)
     this->rowTexts[index].prepend(text);
 }
 
-void D1CppTable::delColumn(int column)
+void D1CppTable::delColumn(int index)
 {
     for (D1CppRow *row : this->rows) {
-        row->delEntry(column);
+        row->delEntry(index);
     }
+	this->header.takeAt(index);
 }
 
 D1Cpp::~D1Cpp()
