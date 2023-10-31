@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QStyle>
+#include <QWidgetAction>
 
 #include "cppview.h"
 #include "d1cpp.h"
@@ -215,9 +216,9 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
     menu->setToolTipsVisible(true);
 	QString leader = ((QPushButton *)this->widget)->text();
     if (!leader.isEmpty()) {
-        QLabel* label = new QLabel(tr("<u>%1</u>").arg(leader), this);
+        QLabel *label = new QLabel(tr("<u>%1</u>").arg(leader), this);
         label->setAlignment(Qt::AlignCenter);
-        QWidgetAction* a = new QWidgetAction(menu);
+        QWidgetAction *a = new QWidgetAction(menu);
         a->setDefaultWidget(label);
     }
 
@@ -251,9 +252,9 @@ void CppViewEntryWidget::ShowRowContextMenu()
     menu->setToolTipsVisible(true);
 	QString leader = ((QPushButton *)this->widget)->text();
     if (!leader.isEmpty()) {
-        QLabel* label = new QLabel(tr("<u>%1</u>").arg(leader), this);
+        QLabel *label = new QLabel(tr("<u>%1</u>").arg(leader), this);
         label->setAlignment(Qt::AlignCenter);
-        QWidgetAction* a = new QWidgetAction(menu);
+        QWidgetAction *a = new QWidgetAction(menu);
         a->setDefaultWidget(label);
     }
 
