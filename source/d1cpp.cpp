@@ -1050,6 +1050,7 @@ void D1CppTable::insertRow(int index)
 
     this->rows.insert(this->rows.begin() + index, row);
     this->rowTexts.insert(this->rowTexts.begin() + index, QString());
+	this->leader.insert(this->leader.begin() + index, QString());
 }
 
 void D1CppTable::insertColumn(int index)
@@ -1057,6 +1058,7 @@ void D1CppTable::insertColumn(int index)
     for (D1CppRow *row : this->rows) {
         row->insertEntry(index);
     }
+	this->header.insert(this->header.begin() + index, QString());
 }
 
 void D1CppTable::delRow(int index)
