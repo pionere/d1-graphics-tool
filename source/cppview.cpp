@@ -103,9 +103,9 @@ void CppView::setTableContent(int row, int column, const QString &text)
 
 void CppView::insertColumn(int index)
 {
-	D1CppTable *t = this->cppTable;
+	D1CppTable *table = this->cppTable;
 
-	t->insertColumn(index - 1);
+	table->insertColumn(index - 1);
 	this->cpp->setModified();
 
 	// this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
@@ -113,8 +113,8 @@ void CppView::insertColumn(int index)
 	int cw = BASE_COLUMN_WIDTH + CppViewEntryWidget::baseHorizontalMargin();
 	this->columnWidths.insert(this->columnWidths.begin() + index, cw);
 
-    for (int y = 0; y < t->getRowCount() + 1; y++) {
-	    for (int x = t->getColumnCount(); x > index; x++) {
+    for (int y = 0; y < table->getRowCount() + 1; y++) {
+	    for (int x = table->getColumnCount(); x > index; x++) {
 			QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y, x - 1);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)prevItem->widget();
 
@@ -131,16 +131,16 @@ void CppView::insertColumn(int index)
 
 void CppView::delColumn(int index)
 {
-	D1CppTable *t = this->cppTable;
+	D1CppTable *table = this->cppTable;
 
-	t->delColumn(index - 1);
+	table->delColumn(index - 1);
 	this->cpp->setModified();
 
     // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
 	this->columnWidths.erase(this->columnWidths.begin() + index);
-    for (int y = 0; y < t->getRowCount() + 1; y++) {
-	    for (int x = index; x < t->getColumnCount(); x++) {
+    for (int y = 0; y < table->getRowCount() + 1; y++) {
+	    for (int x = index; x < table->getColumnCount(); x++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
 			QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y, x + 1);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
@@ -172,15 +172,15 @@ void CppView::hideColumn(int index)
 
 void CppView::insertRow(int index)
 {
-	D1CppTable *t = this->cppTable;
+	D1CppTable *table = this->cppTable;
 
-	t->insertRow(index - 1);
+	table->insertRow(index - 1);
 	this->cpp->setModified();
 
     // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
-    for (int x = 0; x < t->getColumnCount() + 1; x++) {
-        for (int y = t->getRowCount(); y > index; y++) {
+    for (int x = 0; x < table->getColumnCount() + 1; x++) {
+        for (int y = table->getRowCount(); y > index; y++) {
 			QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y - 1, x);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)prevItem->widget();
 
@@ -197,15 +197,15 @@ void CppView::insertRow(int index)
 
 void CppView::delRow(int index)
 {
-	D1CppTable *t = this->cppTable;
+	D1CppTable *table = this->cppTable;
 
-	t->delRow(index - 1);
+	table->delRow(index - 1);
 	this->cpp->setModified();
 
 	// this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
-    for (int x = 0; x < t->getColumnCount() + 1; x++) {
-        for (int y = index; y < t->getRowCount(); y++) {
+    for (int x = 0; x < table->getColumnCount() + 1; x++) {
+        for (int y = index; y < table->getRowCount(); y++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
 			QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y + 1, x);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
