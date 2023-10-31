@@ -232,7 +232,7 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
 	contextMenu->popup(pos); // mapToGlobal(pos));
 }
 
-void CppViewEntryWidget::ShowRowContextMenu(const QPoint &pos)
+void CppViewEntryWidget::ShowRowContextMenu()
 {
     // QAction actions[3];
 	QAction *action;
