@@ -114,17 +114,18 @@ void CppView::insertColumn(int index)
 	this->columnWidths.insert(this->columnWidths.begin() + index, cw);
 
     for (int y = 0; y < table->getRowCount() + 1; y++) {
-	    for (int x = table->getColumnCount(); x > index; x++) {
+	    for (int x = table->getColumnCount(); x > index; x--) {
 			QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y, x - 1);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)prevItem->widget();
 
+			// this->ui->tableGrid->removeWidget(w);
 			w->adjustColumnNum(1);
 			this->ui->tableGrid->addWidget(w, y, x);
         }
 
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
         this->ui->tableGrid->addWidget(w, y, index);
-        w->initialize(table, index, index, this->columnWidths[index]);
+        w->initialize(table, y, index, this->columnWidths[index]);
     }
 	this->updateFields();
 }
@@ -180,10 +181,11 @@ void CppView::insertRow(int index)
     // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
-        for (int y = table->getRowCount(); y > index; y++) {
+        for (int y = table->getRowCount(); y > index; y--) {
 			QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y - 1, x);
 			CppViewEntryWidget *w = (CppViewEntryWidget *)prevItem->widget();
 
+			// this->ui->tableGrid->removeWidget(w);
 			w->adjustRowNum(1);
 			this->ui->tableGrid->addWidget(w, y, x);
         }
@@ -211,11 +213,12 @@ void CppView::delRow(int index)
 			CppViewEntryWidget *w = (CppViewEntryWidget *)nextItem->widget();
 			if (y == index) {
 				item->widget()->deleteLater();
-				this->ui->tableGrid->removeItem(item);
-				delete item;
+				// this->ui->tableGrid->removeItem(item);
+				// delete item;
             }
-			this->ui->tableGrid->removeItem(nextItem);
-			delete nextItem;
+			// this->ui->tableGrid->removeItem(nextItem);
+			// delete nextItem;
+			this->ui->tableGrid->removeWidget(w);
 
 			w->adjustRowNum(-1);
 			this->ui->tableGrid->addWidget(w, y, x);
