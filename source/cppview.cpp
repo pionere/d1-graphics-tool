@@ -101,10 +101,8 @@ void CppView::setTableContent(int row, int column, const QString &text)
 
 void CppView::insertColumn(int index)
 {
-LogErrorF("insertColumn 0");
-	this->cppTable->insertColumn(index);
+	this->cppTable->insertColumn(index - 1);
 	this->cpp->setModified();
-LogErrorF("insertColumn done");
 
 	this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 }
@@ -128,11 +126,10 @@ void CppView::delColumn(int index)
 			this->ui->tableGrid->addWidget(w, y, x);
         }
     }*/
-LogErrorF("delColumn 0");
-	this->cppTable->delColumn(index);
+	this->cppTable->delColumn(index - 1);
 	this->cpp->setModified();
-LogErrorF("delColumn done");
-	this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+
+    this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 }
 
 void CppView::hideColumn(int index)
@@ -148,10 +145,9 @@ void CppView::hideColumn(int index)
 
 void CppView::insertRow(int index)
 {
-LogErrorF("insertRow 0");
-	this->cppTable->insertRow(index);
+	this->cppTable->insertRow(index - 1);
 	this->cpp->setModified();
-LogErrorF("insertRow done");
+
     this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 }
 
@@ -173,10 +169,9 @@ void CppView::delRow(int index)
 			this->ui->tableGrid->addWidget(w, y, x);
         }
     }*/
-LogErrorF("delRow 0");
-	this->cppTable->delRow(index);
+	this->cppTable->delRow(index - 1);
 	this->cpp->setModified();
-LogErrorF("delRow done");
+
 	this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 }
 
@@ -195,7 +190,6 @@ void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
     this->cppTable = table;
-LogErrorF("on_tablesComboBox_activated 0");
     // eliminate obsolete content
     for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
@@ -207,7 +201,6 @@ LogErrorF("on_tablesComboBox_activated 0");
             }
         }
     }
-LogErrorF("on_tablesComboBox_activated 1");
     this->gridRowCount = table->getRowCount() + 1; // std::min(this->gridRowCount, table->getRowCount() + 1);
     for (int y = 0; y < table->getRowCount() + 1; y++) {
         for (int x = this->gridColumnCount - 1 + 1; x > table->getColumnCount() - 1 + 1; x--) {
@@ -220,7 +213,6 @@ LogErrorF("on_tablesComboBox_activated 1");
         }
     }
     this->gridColumnCount = table->getColumnCount() + 1; // std::min(this->gridColumnCount, table->getColumnCount() + 1);
-LogErrorF("on_tablesComboBox_activated 2");
     // calculate the column-widths
     QList<int> columnWidths;
     QFontMetrics fm = this->fontMetrics();
@@ -238,7 +230,6 @@ LogErrorF("on_tablesComboBox_activated 2");
         }
         columnWidths.push_back(maxWidth + entryHorizontalMargin);
     }
-LogErrorF("on_tablesComboBox_activated 3: %d x %d", table->getRowCount(), table->getColumnCount());
     // add new items
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = 0; y < table->getRowCount() + 1; y++) {
@@ -254,12 +245,9 @@ LogErrorF("on_tablesComboBox_activated 3: %d x %d", table->getRowCount(), table-
                 w = new CppViewEntryWidget(this);
                 this->ui->tableGrid->addWidget(w, y, x);
             }
-LogErrorF("on_tablesComboBox_activated 3a: %d;%d", y, x);
             w->initialize(table, y, x, columnWidths[x]);
-LogErrorF("on_tablesComboBox_activated 3b: %d;%d", y, x);
         }
     }
-LogErrorF("on_tablesComboBox_activated 4");
     // this->gridRowCount = table->getRowCount() + 1;
     // this->gridColumnCount = table->getColumnCount() + 1;
 
