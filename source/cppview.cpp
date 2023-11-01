@@ -175,8 +175,8 @@ void CppView::delColumn(int index)
     // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
 	this->gridColumnCount--;
-	if (this->currentColumIndex > index || this->currentColumIndex > this->gridColumnCount) {
-		this->currentColumIndex--;
+	if (this->currentColumnIndex > index || this->currentColumnIndex > this->gridColumnCount) {
+		this->currentColumnIndex--;
     }
 	this->columnWidths.erase(this->columnWidths.begin() + index);
     for (int y = 0; y < table->getRowCount() + 1; y++) {
