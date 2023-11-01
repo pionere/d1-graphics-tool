@@ -22,6 +22,7 @@ CppViewEntryWidget::CppViewEntryWidget(CppView *parent)
     : QWidget(parent)
     , ui(new Ui::CppViewEntryWidget())
     , view(parent)
+    , widget(nullptr)
 {
     ui->setupUi(this);
 }
@@ -52,18 +53,31 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     this->columnNum = c;
 
     // clear the layout
-    QLayoutItem *child;
-    while ((child = this->ui->entryHorizontalLayout->takeAt(0)) != nullptr) {
-        delete child->widget(); // delete the widget
+	QHBoxLayout *layout = this->ui->entryHorizontalLayout;
+    /*QLayoutItem *child;
+    while ((child = layout->takeAt(0)) != nullptr) {
+        child->widget()->deleteLater(); // delete the widget
         delete child;           // delete the layout item
+    }*/
+	for (int i = layout->count() - 1; i >= 0; i--) {
+		QWidget *w = layout->itemAt(i)->widget();
+		if (w != nullptr) {
+			w->deleteLater();
+        }
     }
 
-    QWidget *w;
+    /*QWidget *w = this->widget;
+	if (w != nullptr) {
+
+    }*/
+	QWidget *w;
+
     bool complexFirst = false;
     bool complexLast = false;
     if (r == 0) {
         // header
         if (c == 0) {
+			// if (w == nullptr)
             w = PushButtonWidget::addButton(this, QStyle::SP_FileDialogInfoView, tr("Show info"), view, &CppView::on_toggleInfoButton_clicked);
         } else {
             // standard header
@@ -131,24 +145,29 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
     }
     this->widget = w;
 
-	if (complexFirst) {
-		QLabel *label = new QLabel("{");
-		this->ui->entryHorizontalLayout->addWidget(label);
-    }
-
-    this->ui->entryHorizontalLayout->addWidget(w);
+    layout->addWidget(w);
 
     if (r != 0 && c != 0) {
         // standard entry
         QString text = t->getRow(r - 1)->getEntryText(c - 1);
         w = PushButtonWidget::addButton(this, QStyle::SP_MessageBoxInformation, text, this, &CppViewEntryWidget::on_infoButton_clicked);
         w->setVisible(false);
-        this->ui->entryHorizontalLayout->addWidget(w);
+        layout->addWidget(w);
     }
 
-	if (complexLast) {
-		QLabel *label = new QLabel("}");
-		this->ui->entryHorizontalLayout->addWidget(label);
+	if (complexFirst || complexLast) {
+		QFontMetrics fm = this->fontMetrics();
+		int width = fm.horizontalAdvance("{");
+		if (complexFirst) {
+			QLabel *label = new QLabel("{");
+			label->setFixedWidth(width);
+			layout->insertWidget(0, label);
+		}
+		if (complexLast) {
+			QLabel *label = new QLabel("}");
+			label->setFixedWidth(width);
+			layout->addWidget(label);
+        }
     }
 }
 
