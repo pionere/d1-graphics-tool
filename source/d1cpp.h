@@ -100,6 +100,7 @@ public:
     D1CppRow *getRow(int index) const;
     QString getRowText(int index) const;
     QString getHeader(int index) const;
+	bool setHeader(int index, const QString &text);
     QString getLeader(int index) const;
 	void insertRow(int row);
 	void insertColumn(int column);

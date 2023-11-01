@@ -112,6 +112,22 @@ void CppView::setTableContent(int row, int column, const QString &text)
     }
 }
 
+void CppView::setColumnName(int column, const QString &text)
+{
+    if (this->currentTable->setHeader(column - 1, text)) {
+		this->cpp->setModified();
+
+		this->displayFrame();
+    }
+}
+
+void CppView::renameColumn(int index)
+{
+	this->renameDialog.initialize(index);
+	this->renameDialog.show();
+}
+
+
 void CppView::insertColumn(int index)
 {
 	D1CppTable *table = this->currentTable;
@@ -340,12 +356,10 @@ void CppView::on_tablesComboBox_activated(int index)
             }
         }
     }
+
     // this->gridRowCount = table->getRowCount() + 1;
     // this->gridColumnCount = table->getColumnCount() + 1;
-
-    // if (table->getRowCount() != 0) {
-    //    this->ui->tableGrid->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding), table->getRowCount() - 1, table->getColumnCount());
-    // }
+	dMainWindow().updateWindow();
 }
 
 void CppView::displayFrame()
@@ -409,6 +423,18 @@ void CppView::on_actionHideColumn_triggered()
     }
 }
 
+void CppView::on_actionDelColumns_triggered()
+{
+	editDialog.initialize(CPP_EDIT_MODE::COLUMN_DEL, this->currentColumnIndex);
+	editDialog.show();
+}
+
+void CppView::on_actionHideColumns_triggered()
+{
+	editDialog.initialize(CPP_EDIT_MODE::COLUMN_HIDE, this->currentColumnIndex);
+	editDialog.show();
+}
+
 void CppView::on_actionAddRow_triggered()
 {
 	this->insertRow(this->gridRowCount); // this->currentTable->getRowCount() + 1
@@ -433,6 +459,18 @@ void CppView::on_actionHideRow_triggered()
 	if (this->currentRowIndex > 0) {
 		this->hideRow(this->currentRowIndex);
     }
+}
+
+void CppView::on_actionDelRows_triggered()
+{
+	editDialog.initialize(CPP_EDIT_MODE::ROW_DEL, this->currentRowIndex);
+	editDialog.show();
+}
+
+void CppView::on_actionHideRows_triggered()
+{
+	editDialog.initialize(CPP_EDIT_MODE::ROW_HIDE, this->currentRowIndex);
+	editDialog.show();
 }
 
 void CppView::ShowContextMenu(const QPoint &pos)

@@ -1035,6 +1035,15 @@ QString D1CppTable::getHeader(int index) const
     return this->header[index];
 }
 
+bool D1CppTable:setHeader(int index, const QString &text)
+{
+	if (this->header[index] == text) {
+		return false;
+    }
+	this->header[index] = text;
+	return true;
+}
+
 QString D1CppTable::getLeader(int index) const
 {
     return this->leader[index];

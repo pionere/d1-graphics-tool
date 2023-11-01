@@ -52,6 +52,12 @@ set(PROJECT_SOURCES
         source/celview.cpp
         source/celview.h
         source/celview.ui
+        source/cppdataeditdialog.cpp
+        source/cppdataeditdialog.h
+        source/cppdataeditdialog.ui
+        source/cppcolumnrenamedialog.cpp
+        source/cppcolumnrenamedialog.h
+        source/cppcolumnrenamedialog.ui
         source/cppview.cpp
         source/cppview.h
         source/cppview.ui

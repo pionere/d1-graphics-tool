@@ -227,6 +227,11 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
 		// action->setEnabled(false);
     //}
 
+	action = new QAction(tr("Rename"));
+    action->setToolTip(tr("Rename this column"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionRenameColumn_triggered()));
+    menu->addAction(action);
+
 	action = new QAction(tr("Insert"));
     action->setToolTip(tr("Add new column before this one"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertColumn_triggered()));
@@ -285,6 +290,11 @@ void CppViewEntryWidget::ShowRowContextMenu()
 	menu->exec(pos);
 	// contextMenu->setAttribute(Qt::WA_DeleteOnClose);
 	// menu->popup(pos); // area->viewport()->mapToGlobal(pos);
+}
+
+void CppViewEntryWidget::on_actionRenameColumn_triggered()
+{
+    this->view->renameColumn(this->columnNum);
 }
 
 void CppViewEntryWidget::on_actionInsertColumn_triggered()
