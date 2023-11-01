@@ -17,13 +17,45 @@ CppDataEditDialog::~CppDataEditDialog()
 
 void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
 {
+	QComboBox *fromComboBox = this->ui->fromComboBox;
+	QComboBox *toComboBox = this->ui->toComboBox;
+	// setup the options
+	D1CppTable *table = qobject_cast<CppView *>(this->parentWidget())->getCurrentTable();
+	comboBox->clear();
+        switch (t) {
+        case CPP_EDIT_MODE::COLUMN_HIDE:
+        case CPP_EDIT_MODE::COLUMN_DEL:
+			for (int i = 0; i < table->getColumnCount(); i++) {
+				QString header = table->getHeader(i);
+				if (header.isEmpty()) {
+					header = QString("<u>%1.</u>").arg(i + 1);
+                }
+				fromComboBox->addItem(header);
+				toComboBox->addItem(header);
+            }
+            break;
+        case CPP_EDIT_MODE::ROW_HIDE:
+        case CPP_EDIT_MODE::ROW_DEL:
+			for (int i = 0; i < table->getRowCount(); i++) {
+				QString leader = table->getLeader(i);
+				if (leader.isEmpty()) {
+					leader = QString("<u>%1.</u>").arg(i + 1);
+                }
+				fromComboBox->addItem(leader);
+				toComboBox->addItem(leader);
+            }
+            break;
+        }
+		if (index <= 0) {
+			index = 1;
+        }
+		index--;
+		fromComboBox->setCurrentIndex(index);
+		toComboBox->setCurrentIndex(index);
+
+
     // if (this->type != (int)t) {
         this->type = (int)t;
-        // reset the fields
-		if (index != -1) {
-			this->ui->fromLineEdit->setText(QString::number(index));
-			this->ui->toLineEdit->setText(QString::number(index));
-        }
         // select window title
         QString title;
         switch (t) {
@@ -48,15 +80,14 @@ void CppDataEditDialog::on_startButton_clicked()
 {
 	CPP_EDIT_MODE t = (CPP_EDIT_MODE)this->type;
 
-	int fromIndex = this->ui->fromLineEdit->text().toInt();
-	int toIndex = this->ui->toLineEdit->text().toInt();
+	int fromIndex = this->ui->fromComboBox->currentIndex();
+	int toIndex = this->ui->toComboBox->currentIndex();
 
     this->close();
 
     CppView *view = qobject_cast<CppView *>(this->parentWidget());
-	if (fromIndex <= 0) {
-		fromIndex = 1;
-    }
+	fromIndex++;
+	toIndex++;
 	int maxIndex = 0;
 	D1CppTable *table = view->getCurrentTable();
     switch (t) {

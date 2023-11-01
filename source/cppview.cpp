@@ -175,8 +175,8 @@ void CppView::delColumn(int index)
     // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
 	this->gridColumnCount--;
-	if (this->gridColumnCount > index) {
-		this->gridColumnCount--;
+	if (this->currentColumIndex > index || this->currentColumIndex > this->gridColumnCount) {
+		this->currentColumIndex--;
     }
 	this->columnWidths.erase(this->columnWidths.begin() + index);
     for (int y = 0; y < table->getRowCount() + 1; y++) {
@@ -253,7 +253,7 @@ void CppView::delRow(int index)
 	// this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
 	this->gridRowCount--;
-	if (this->currentRowIndex > index) {
+	if (this->currentRowIndex > index || this->currentRowIndex > this->gridRowCount) {
 		this->currentRowIndex--;
     }
     for (int x = 0; x < table->getColumnCount() + 1; x++) {

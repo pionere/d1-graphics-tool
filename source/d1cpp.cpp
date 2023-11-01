@@ -1104,9 +1104,9 @@ static int arrayLen(QString &header)
     int pos = header.lastIndexOf('[');
     if (pos == -1)
         return -1;
-LogMessage(QString("Checking arrayLen from %1 in %2: %3.").arg(pos).arg(header).arg(header.mid(pos + 1, header.length() - 2)), LOG_ERROR);
+LogMessage(QString("Checking arrayLen from %1 in %2: %3.").arg(pos).arg(header).arg(header.mid(pos + 1, header.length() - (pos + 1 + 1))), LOG_ERROR);
     bool ok;
-    int num = header.mid(pos + 1, header.length() - 2).toInt(&ok);
+    int num = header.mid(pos + 1, header.length() - (pos + 1 + 1)).toInt(&ok);
     if (!ok || num == 0)
         return -1;
 LogMessage(QString("Found arrayLen of %1 in %2.").arg(num).arg(header), LOG_ERROR);
