@@ -45,7 +45,7 @@ CppView::~CppView()
 void CppView::initialize(D1Cpp *c)
 {
     this->cpp = c;
-    this->cppTable = nullptr;
+    this->currentTable = nullptr;
 
     int n = c->getTableCount();
     if (n != 0) {
@@ -92,9 +92,20 @@ static int getTableEntryLength(D1CppTable *table, int row, int column, QFontMetr
 	return result;
 }
 
+D1CppTable *CppView::getCurrentTable() const
+{
+	return const_cast<D1CppTable *>(this->currentTable);
+}
+
+void CppView::setCurrent(int row, int column)
+{
+	this->currentRow = row;
+	this->currentColumn = column;
+}
+
 void CppView::setTableContent(int row, int column, const QString &text)
 {
-    if (this->cppTable->getRow(row - 1)->getEntry(column - 1)->setContent(text)) {
+    if (this->currentTable->getRow(row - 1)->getEntry(column - 1)->setContent(text)) {
 		this->cpp->setModified();
 
 		this->displayFrame();
@@ -103,15 +114,19 @@ void CppView::setTableContent(int row, int column, const QString &text)
 
 void CppView::insertColumn(int index)
 {
-	D1CppTable *table = this->cppTable;
+	D1CppTable *table = this->currentTable;
 
 	table->insertColumn(index - 1);
 	this->cpp->setModified();
 
 	// this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
+	this->gridColumnCount++;
 	int cw = BASE_COLUMN_WIDTH + CppViewEntryWidget::baseHorizontalMargin();
 	this->columnWidths.insert(this->columnWidths.begin() + index, cw);
+	if (this->currentColumn >= index) {
+		this->currentColumn++;
+    }
 
     for (int y = 0; y < table->getRowCount() + 1; y++) {
 	    for (int x = table->getColumnCount(); x > index; x--) {
@@ -127,18 +142,23 @@ void CppView::insertColumn(int index)
         this->ui->tableGrid->addWidget(w, y, index);
         w->initialize(table, y, index, this->columnWidths[index]);
     }
-	this->updateFields();
+	// this->updateFields();
+	dMainWindow().updateWindow();
 }
 
 void CppView::delColumn(int index)
 {
-	D1CppTable *table = this->cppTable;
+	D1CppTable *table = this->currentTable;
 
 	table->delColumn(index - 1);
 	this->cpp->setModified();
 
     // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
+	this->gridColumnCount--;
+	if (this->gridColumnCount > index) {
+		this->gridColumnCount--;
+    }
 	this->columnWidths.erase(this->columnWidths.begin() + index);
     for (int y = 0; y < table->getRowCount() + 1; y++) {
 	    for (int x = index; x < table->getColumnCount() + 1; x++) {
@@ -158,12 +178,13 @@ void CppView::delColumn(int index)
 			this->ui->tableGrid->addWidget(w, y, x);
         }
     }
-	this->updateFields();
+	// this->updateFields();
+	dMainWindow().updateWindow();
 }
 
 void CppView::hideColumn(int index)
 {
-    for (int y = 0; y < this->cppTable->getRowCount() + 1; y++) {
+    for (int y = 0; y < this->currentTable->getRowCount() + 1; y++) {
         QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
         if (item != nullptr) {
             CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
@@ -174,13 +195,17 @@ void CppView::hideColumn(int index)
 
 void CppView::insertRow(int index)
 {
-	D1CppTable *table = this->cppTable;
+	D1CppTable *table = this->currentTable;
 
 	table->insertRow(index - 1);
 	this->cpp->setModified();
 
     // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
+	this->gridRowCount++;
+	if (this->currentRow >= index) {
+		this->currentRow++;
+    }
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = table->getRowCount(); y > index; y--) {
 			QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y - 1, x);
@@ -195,18 +220,23 @@ void CppView::insertRow(int index)
         this->ui->tableGrid->addWidget(w, index, x);
         w->initialize(table, index, x, this->columnWidths[x]);
     }
-	this->updateFields();
+	// this->updateFields();
+	dMainWindow().updateWindow();
 }
 
 void CppView::delRow(int index)
 {
-	D1CppTable *table = this->cppTable;
+	D1CppTable *table = this->currentTable;
 
 	table->delRow(index - 1);
 	this->cpp->setModified();
 
 	// this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
+	this->gridRowCount--;
+	if (this->currentRow > index) {
+		this->currentRow--;
+    }
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = index; y < table->getRowCount() + 1; y++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
@@ -225,12 +255,14 @@ void CppView::delRow(int index)
 			this->ui->tableGrid->addWidget(w, y, x);
         }
     }
-	this->updateFields();
+	// this->updateFields();
+	dMainWindow().updateWindow();
+
 }
 
 void CppView::hideRow(int index)
 {
-    for (int x = 0; x < this->cppTable->getColumnCount() + 1; x++) {
+    for (int x = 0; x < this->currentTable->getColumnCount() + 1; x++) {
         QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, x);
         if (item != nullptr) {
             CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
@@ -242,7 +274,7 @@ void CppView::hideRow(int index)
 void CppView::on_tablesComboBox_activated(int index)
 {
     D1CppTable *table = this->cpp->getTable(index);
-    this->cppTable = table;
+    this->currentTable = table;
     // eliminate obsolete content
     for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
@@ -302,6 +334,10 @@ void CppView::on_tablesComboBox_activated(int index)
 				w->setVisible(true);
             }
             w->initialize(table, y, x, this->columnWidths[x]);
+			// focus on the first entry
+			if (x == 1 && y == 1) {
+				w->setFocus();
+            }
         }
     }
     // this->gridRowCount = table->getRowCount() + 1;
@@ -330,7 +366,7 @@ void CppView::updateFields()
 
 void CppView::on_toggleInfoButton_clicked()
 {
-    D1CppTable *table = this->cppTable;
+    D1CppTable *table = this->currentTable;
 
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = 0; y < table->getRowCount() + 1; y++) {
@@ -347,77 +383,150 @@ void CppView::on_toggleInfoButton_clicked()
     }
 }
 
+void CppView::on_actionAddColumn_triggered()
+{
+	this->insertColumn(this->gridColumnCount); // this->currentTable->getColumnCount() + 1
+}
+
+void CppView::on_actionInsertColumn_triggered()
+{
+	if (this->currentColumnIndex > 0) {
+		this->insertColumn(this->currentColumnIndex);
+    }
+}
+
+void CppView::on_actionDelColumn_triggered()
+{
+	if (this->currentColumnIndex > 0) {
+		this->delColumn(this->currentColumnIndex);
+    }
+}
+
+void CppView::on_actionHideColumn_triggered()
+{
+	if (this->currentColumnIndex > 0) {
+		this->hideColumn(this->currentColumnIndex);
+    }
+}
+
+void CppView::on_actionAddRow_triggered()
+{
+	this->insertRow(this->gridRowCount); // this->currentTable->getRowCount() + 1
+}
+
+void CppView::on_actionInsertRow_triggered()
+{
+	if (this->currentRowIndex > 0) {
+		this->insertRow(this->currentRowIndex);
+    }
+}
+
+void CppView::on_actionDelRow_triggered()
+{
+	if (this->currentRowIndex > 0) {
+		this->delRow(this->currentRowIndex);
+    }
+}
+
+void CppView::on_actionHideRow_triggered()
+{
+	if (this->currentRowIndex > 0) {
+		this->hideRow(this->currentRowIndex);
+    }
+}
+
 void CppView::ShowContextMenu(const QPoint &pos)
 {
-    if (this->cppTable == nullptr) {
+    if (this->currentTable == nullptr) {
         return;
     }
 
     MainWindow *mw = &dMainWindow();
-    QAction actions[8];
+	QAction *action;
+	QMenu *menu;
     QMenu contextMenu(this);
 
-    QMenu rowMenu(tr("Row"), this);
-    rowMenu.setToolTipsVisible(true);
+    menu = new QMenu(tr("Rows"), this);
+    menu->setToolTipsVisible(true);
 
-    /*int cursor = 0;
-    actions[cursor].setText(tr("Add"));
-    actions[cursor].setToolTip(tr("Add row to the end of the table"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddRow_Table_triggered()));
-    rowMenu.addAction(&actions[cursor]);
+	action = new QAction(tr("Add"));
+    action->setToolTip(tr("Add row to the end of the table"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionAddRow_Table_triggered()));
+    menu->addAction(action);
 
-    cursor++;
-    actions[cursor].setText(tr("Insert"));
-    actions[cursor].setToolTip(tr("Add new row before the current one"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsertRow_Table_triggered()));
-    rowMenu.addAction(&actions[cursor]);
+	action = new QAction(tr("Insert"));
+    action->setToolTip(tr("Add new row before the current one"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionInsertRow_Table_triggered()));
+    menu->addAction(action);
 
-    cursor++;
-    actions[cursor].setText(tr("Delete"));
-    actions[cursor].setToolTip(tr("Delete the current row"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDelRow_Table_triggered()));
-    actions[cursor].setEnabled(this->cppTable->getRowCount() != 0);
-    rowMenu.addAction(&actions[cursor]);
+	action = new QAction(tr("Delete"));
+    action->setToolTip(tr("Delete the current row"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelRow_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
 
-    cursor++;
-    actions[cursor].setText(tr("Hide"));
-    actions[cursor].setToolTip(tr("Hide the current row"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDelRow_Table_triggered()));
-    actions[cursor].setEnabled(this->cppTable->getRowCount() != 0);
-    rowMenu.addAction(&actions[cursor]);*/
+	action = new QAction(tr("Hide"));
+    action->setToolTip(tr("Hide the current row"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideRow_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
 
-    contextMenu.addMenu(&rowMenu);
+	menu->addSeparator();
 
-    QMenu columnMenu(tr("Column"), this);
-    columnMenu.setToolTipsVisible(true);
+	action = new QAction(tr("Delete..."));
+    action->setToolTip(tr("Delete rows"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelRows_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
 
-    /*cursor++;
-    actions[cursor].setText(tr("Add"));
-    actions[cursor].setToolTip(tr("Add column to the end of the table"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddColumn_Table_triggered()));
-    columnMenu.addAction(&actions[cursor]);
+	action = new QAction(tr("Hide..."));
+    action->setToolTip(tr("Hide rows"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideRows_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
 
-    cursor++;
-    actions[cursor].setText(tr("Insert"));
-    actions[cursor].setToolTip(tr("Add new column before the current one"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsertColumn_Table_triggered()));
-    columnMenu.addAction(&actions[cursor]);
+    contextMenu.addMenu(menu);
 
-    cursor++;
-    actions[cursor].setText(tr("Delete"));
-    actions[cursor].setToolTip(tr("Delete the current column"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDelColumn_Table_triggered()));
-    actions[cursor].setEnabled(this->cppTable->getColumnCount() != 0);
-    columnMenu.addAction(&actions[cursor]);
+    menu = new QMenu(tr("Columns"), this);
+    menu->setToolTipsVisible(true);
 
-    cursor++;
-    actions[cursor].setText(tr("Hide"));
-    actions[cursor].setToolTip(tr("Hide the current column"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDelColumn_Table_triggered()));
-    actions[cursor].setEnabled(this->cppTable->getColumnCount() != 0);
-    columnMenu.addAction(&actions[cursor]);*/
+	action = new QAction(tr("Add"));
+    action->setToolTip(tr("Add column to the end of the table"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionAddColumn_Table_triggered()));
+    menu->addAction(action);
 
-    contextMenu.addMenu(&columnMenu);
+	action = new QAction(tr("Insert"));
+    action->setToolTip(tr("Add new column before the current one"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionInsertColumn_Table_triggered()));
+    menu->addAction(action);
+
+	action = new QAction(tr("Delete"));
+    action->setToolTip(tr("Delete columns"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelColumn_Table_triggered()));
+    action->setEnabled(this->currentTable->getColumnCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction(tr("Hide"));
+    action->setToolTip(tr("Hide columns"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideColumn_Table_triggered()));
+    action->setEnabled(this->currentTable->getColumnCount() != 0);
+    menu->addAction(action);
+
+	menu->addSeparator();
+
+	action = new QAction(tr("Delete..."));
+    action->setToolTip(tr("Delete columns"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelColumns_Table_triggered()));
+    action->setEnabled(this->currentTable->getColumnCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction(tr("Hide..."));
+    action->setToolTip(tr("Hide columns"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideColumns_Table_triggered()));
+    action->setEnabled(this->currentTable->getColumnCount() != 0);
+    menu->addAction(action);
+
+    contextMenu.addMenu(menu);
 
     contextMenu.exec(mapToGlobal(pos));
 }

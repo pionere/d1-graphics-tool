@@ -307,6 +307,43 @@
     <addaction name="actionRemap_Colors"/>
     <addaction name="actionDisplay_Colors"/>
    </widget>
+   <widget class="QMenu" name="menuColumns">
+    <property name="title">
+     <string>Columns</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionAddColumn_Table"/>
+    <addaction name="actionInsertColumn_Table"/>
+    <addaction name="actionDelColumn_Table"/>
+    <addaction name="actionHideColumn_Table"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelColumns_Table"/>
+    <addaction name="actionHideColumns_Table"/>
+   </widget>
+   <widget class="QMenu" name="menuRows">
+    <property name="title">
+     <string>Rows</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionAddRow_Table"/>
+    <addaction name="actionInsertRow_Table"/>
+    <addaction name="actionDelRow_Table"/>
+    <addaction name="actionHideRow_Table"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelRows_Table"/>
+    <addaction name="actionHideRows_Table"/>
+   </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="menuColumns"/>
+    <addaction name="menuRows"/>
+   </widget>
    <widget class="QMenu" name="menuTasks">
     <property name="toolTipsVisible">
      <bool>true</bool>
@@ -1178,6 +1215,102 @@
    </property>
    <property name="toolTip">
     <string>Save the current unique translations as a translation set</string>
+   </property>
+  </action>
+  <action name="actionAddColumn_Table">
+   <property name="text">
+    <string>Add</string>
+   </property>
+   <property name="toolTip">
+    <string>Add column to the end of the table</string>
+   </property>
+  </action>
+  <action name="actionInsertColumn_Table">
+   <property name="text">
+    <string>Insert</string>
+   </property>
+   <property name="toolTip">
+    <string>Add new column before the current one</string>
+   </property>
+  </action>
+  <action name="actionDelColumn_Table">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete the current column</string>
+   </property>
+  </action>
+  <action name="actionHideColumn_Table">
+   <property name="text">
+    <string>Hide</string>
+   </property>
+   <property name="toolTip">
+    <string>Hide the current column</string>
+   </property>
+  </action>
+  <action name="actionDelColumns_Table">
+   <property name="text">
+    <string>Delete...</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete columns</string>
+   </property>
+  </action>
+  <action name="actionHideColumns_Table">
+   <property name="text">
+    <string>Hide...</string>
+   </property>
+   <property name="toolTip">
+    <string>Hide columns</string>
+   </property>
+  </action>
+  <action name="actionAddRow_Table">
+   <property name="text">
+    <string>Add</string>
+   </property>
+   <property name="toolTip">
+    <string>Add row to the end of the table</string>
+   </property>
+  </action>
+  <action name="actionInsertRow_Table">
+   <property name="text">
+    <string>Insert</string>
+   </property>
+   <property name="toolTip">
+    <string>Add new row before the current one</string>
+   </property>
+  </action>
+  <action name="actionDelRow_Table">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete the current row</string>
+   </property>
+  </action>
+  <action name="actionHideRow_Table">
+   <property name="text">
+    <string>Hide</string>
+   </property>
+   <property name="toolTip">
+    <string>Hide the current row</string>
+   </property>
+  </action>
+  <action name="actionDelRows_Table">
+   <property name="text">
+    <string>Delete...</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete rows</string>
+   </property>
+  </action>
+  <action name="actionHideRows_Table">
+   <property name="text">
+    <string>Hide...</string>
+   </property>
+   <property name="toolTip">
+    <string>Hide rows</string>
    </property>
   </action>
  </widget>

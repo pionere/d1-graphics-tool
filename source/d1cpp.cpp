@@ -1095,6 +1095,7 @@ static int arrayLen(QString &header)
     int pos = header.lastIndexOf('[');
     if (pos == -1)
         return -1;
+LogMessage(QString("array found in %1: %2 (%3 of %4).").arg(header).arg(header.mid(pos + 1, header.length() - 1)).arg(pos).arg(header.length()), LOG_ERROR);
     bool ok;
     int num = header.mid(pos + 1, header.length() - 1).toInt(&ok);
     if (!ok || num == 0)

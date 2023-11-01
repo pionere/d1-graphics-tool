@@ -248,6 +248,19 @@ private slots:
     void on_actionLoadTrns_Colors_triggered();
     void on_actionSaveTrns_Colors_triggered();
 
+    void on_actionAddColumn_Table_triggered();
+    void on_actionInsertColumn_Table_triggered();
+    void on_actionDelColumn_Table_triggered();
+    void on_actionHideColumn_Table_triggered();
+    void on_actionDelColumns_Table_triggered();
+    void on_actionHideColumns_Table_triggered();
+    void on_actionAddRow_Table_triggered();
+    void on_actionInsertRow_Table_triggered();
+    void on_actionDelRow_Table_triggered();
+    void on_actionHideRow_Table_triggered();
+    void on_actionDelRows_Table_triggered();
+    void on_actionHideRows_Table_triggered();
+
     void on_actionUpscaleTask_triggered();
 
     void on_actionAbout_triggered();

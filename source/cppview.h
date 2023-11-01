@@ -28,6 +28,8 @@ public:
 
     void displayFrame();
 
+	D1CppTable *getCurrentTable() const;
+	void setCurrent(int row, int column);
     void setTableContent(int row, int column, const QString &text);
     void insertColumn(int column);
     void delColumn(int column);
@@ -38,6 +40,15 @@ public:
 
 public slots:
     void on_toggleInfoButton_clicked();
+
+    void on_actionAddColumn_triggered();
+    void on_actionInsertColumn_triggered();
+    void on_actionDelColumn_triggered();
+    void on_actionHideColumn_triggered();
+    void on_actionAddRow_triggered();
+    void on_actionInsertRow_triggered();
+    void on_actionDelRow_triggered();
+    void on_actionHideRow_triggered();
 
 private:
     void updateFields();
@@ -57,7 +68,9 @@ private:
     QUndoStack *undoStack;
 
     D1Cpp *cpp;
-    D1CppTable *cppTable;
+    D1CppTable *currentTable;
+	int currentColumnIndex;
+	int currentRowIndex;
 
 	QList<int> columnWidths;
     int gridRowCount; // because QGridLayout is lame...

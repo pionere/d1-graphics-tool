@@ -124,6 +124,8 @@ void CppViewEntryWidget::initialize(D1CppTable *t, int r, int c, int width)
         QObject::connect(w, SIGNAL(returnPressed()), this, SLOT(on_entryLineEdit_returnPressed()));
         // connect esc events of LineEditWidgets
         QObject::connect(w, SIGNAL(cancel_signal()), this, SLOT(on_entryLineEdit_escPressed()));
+        QObject::connect(w, SIGNAL(focus_gain_signal()), this, SLOT(on_entryLineEdit_focusGain()));
+        QObject::connect(w, SIGNAL(focus_lost_signal()), this, SLOT(on_entryLineEdit_focusLost()));
         complexFirst = entry->isComplexFirst();
         complexLast = entry->isComplexLast();
     }
@@ -327,4 +329,14 @@ void CppViewEntryWidget::on_entryLineEdit_escPressed()
     QString text = this->table->getRow(this->rowNum - 1)->getEntry(this->columnNum - 1)->getContent();
     ((LineEditWidget *)this->widget)->setText(text);
     this->widget->clearFocus();
+}
+
+void CppViewEntryWidget::on_entryLineEdit_focusGain()
+{
+	this->view->setCurrent(this->rowNum, this->columnNum);
+}
+
+void CppViewEntryWidget::on_entryLineEdit_focusLost()
+{
+	this->view->setCurrent(-1, -1);
 }

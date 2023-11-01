@@ -230,6 +230,16 @@ void MainWindow::updateWindow()
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
+	bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
+    this->ui->actionDelColumn_Table->setEnabled(hasColumn);
+    this->ui->actionHideColumn_Table->setEnabled(hasColumn);
+    this->ui->actionDelColumns_Table->setEnabled(hasColumn);
+    this->ui->actionHideColumns_Table->setEnabled(hasColumn);
+	bool hasRow = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getRowCount() != 0;
+    this->ui->actionDelRow_Table->setEnabled(hasRow);
+    this->ui->actionHideRow_Table->setEnabled(hasRow);
+    this->ui->actionDelRows_Table->setEnabled(hasRow);
+    this->ui->actionHideRows_Table->setEnabled(hasRow);
 
     // update the view
     if (this->celView != nullptr) {
@@ -1322,6 +1332,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuEdit->setEnabled(fileType != 4);
     this->ui->menuView->setEnabled(fileType != 5);
     this->ui->menuColors->setEnabled(fileType != 5);
+	this->ui->menuData->setEnabled(fileType == 5);
     this->ui->actionExport->setEnabled(fileType != 4 && fileType != 5);
     this->ui->actionLoad->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionSave->setEnabled(true);
@@ -1658,6 +1669,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuTileset->setEnabled(false);
     this->ui->menuDungeon->setEnabled(false);
     this->ui->menuColors->setEnabled(false);
+	this->ui->menuData->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
     this->ui->actionLoad->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
@@ -2808,6 +2820,63 @@ void MainWindow::on_actionSaveTrns_Colors_triggered()
     if (!trsFilePath.isEmpty()) {
         D1Trs::save(trsFilePath, trns);
     }
+}
+
+void MainWindow::on_actionAddColumn_Table_triggered()
+{
+	this->cppView->on_actionAddColumn_triggered();
+	// this->updateWindow(); -- done by cppView
+}
+
+void MainWindow::on_actionInsertColumn_Table_triggered()
+{
+	this->cppView->on_actionInsertColumn_triggered();
+}
+
+void MainWindow::on_actionDelColumn_Table_triggered()
+{
+	this->cppView->on_actionDelColumn_triggered();
+}
+
+void MainWindow::on_actionHideColumn_Table_triggered()
+{
+	this->cppView->on_actionHideColumn_triggered();
+}
+
+void MainWindow::on_actionDelColumns_Table_triggered()
+{
+}
+
+void MainWindow::on_actionHideColumns_Table_triggered()
+{
+}
+
+void MainWindow::on_actionAddRow_Table_triggered()
+{
+	this->cppView->on_actionAddRow_triggered();
+}
+
+void MainWindow::on_actionInsertRow_Table_triggered()
+{
+	this->cppView->on_actionInsertRow_triggered();
+}
+
+void MainWindow::on_actionDelRow_Table_triggered()
+{
+	this->cppView->on_actionDelRow_triggered();
+}
+
+void MainWindow::on_actionHideRow_Table_triggered()
+{
+	this->cppView->on_actionHideRow_triggered();
+}
+
+void MainWindow::on_actionDelRows_Table_triggered()
+{
+}
+
+void MainWindow::on_actionHideRows_Table_triggered()
+{
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()

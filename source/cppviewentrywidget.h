@@ -40,6 +40,8 @@ private slots:
 
     void on_entryLineEdit_returnPressed();
     void on_entryLineEdit_escPressed();
+	void on_entryLineEdit_focusGain();
+	void on_entryLineEdit_focusLost();
 
 private:
     Ui::CppViewEntryWidget *ui;

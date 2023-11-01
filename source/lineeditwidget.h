@@ -21,8 +21,11 @@ public:
 
 signals:
     void cancel_signal();
+    void focus_gain_signal();
+    void focus_lost_signal();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;
 };
