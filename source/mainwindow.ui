@@ -415,6 +415,7 @@
    <addaction name="menuTileset"/>
    <addaction name="menuDungeon"/>
    <addaction name="menuColors"/>
+   <addaction name="menuData"/>
    <addaction name="menuTasks"/>
    <addaction name="menuHelp"/>
   </widget>

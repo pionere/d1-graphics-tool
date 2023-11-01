@@ -31,8 +31,8 @@ CppView::CppView(QWidget *parent, QUndoStack *us)
     this->ui->setupUi(this);
 
     // setup context menu
-    // this->setContextMenuPolicy(Qt::CustomContextMenu);
-    // QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
 
     setAcceptDrops(true);
 }
