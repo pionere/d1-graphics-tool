@@ -99,8 +99,8 @@ D1CppTable *CppView::getCurrentTable() const
 
 void CppView::setCurrent(int row, int column)
 {
-	this->currentRow = row;
-	this->currentColumn = column;
+	this->currentRowIndex = row;
+	this->currentColumnIndex = column;
 }
 
 void CppView::setTableContent(int row, int column, const QString &text)
@@ -124,8 +124,8 @@ void CppView::insertColumn(int index)
 	this->gridColumnCount++;
 	int cw = BASE_COLUMN_WIDTH + CppViewEntryWidget::baseHorizontalMargin();
 	this->columnWidths.insert(this->columnWidths.begin() + index, cw);
-	if (this->currentColumn >= index) {
-		this->currentColumn++;
+	if (this->currentColumnIndex >= index) {
+		this->currentColumnIndex++;
     }
 
     for (int y = 0; y < table->getRowCount() + 1; y++) {
@@ -203,8 +203,8 @@ void CppView::insertRow(int index)
     // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
 	this->gridRowCount++;
-	if (this->currentRow >= index) {
-		this->currentRow++;
+	if (this->currentRowIndex >= index) {
+		this->currentRowIndex++;
     }
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = table->getRowCount(); y > index; y--) {
@@ -234,8 +234,8 @@ void CppView::delRow(int index)
 	// this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
 	// this->displayFrame();
 	this->gridRowCount--;
-	if (this->currentRow > index) {
-		this->currentRow--;
+	if (this->currentRowIndex > index) {
+		this->currentRowIndex--;
     }
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = index; y < table->getRowCount() + 1; y++) {
