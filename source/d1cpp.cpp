@@ -1035,7 +1035,7 @@ QString D1CppTable::getHeader(int index) const
     return this->header[index];
 }
 
-bool D1CppTable:setHeader(int index, const QString &text)
+bool D1CppTable::setHeader(int index, const QString &text)
 {
 	if (this->header[index] == text) {
 		return false;
@@ -1247,6 +1247,12 @@ if (i == 0)
 		int num = table->getColumnCount() - table->header.count();
         for (int i = 0; i < num; i++) {
             table->header.push_back(QString());
+        }
+		for (int i = 0; i < -num; i++) {
+			QString lastHeader = table->header.back();
+			table->header.pop_back();
+			lastHeader.prepend(", ");
+			table->header.back().append(lastHeader);
         }
     }
     LogMessage(QString("postProcess done."), LOG_NOTE);

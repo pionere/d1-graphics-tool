@@ -21,8 +21,8 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
         this->type = (int)t;
         // reset the fields
 		if (index != -1) {
-			this->ui->fromLineEdit->setText(Qstring::number(index));
-			this->ui->toLineEdit->setText(Qstring::number(index));
+			this->ui->fromLineEdit->setText(QString::number(index));
+			this->ui->toLineEdit->setText(QString::number(index));
         }
         // select window title
         QString title;
