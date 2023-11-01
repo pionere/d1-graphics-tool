@@ -406,7 +406,10 @@ void CppView::on_tablesComboBox_activated(int index)
                 maxWidth = tw;
             }
         }
-        this->columnWidths.push_back(maxWidth + entryHorizontalMargin);
+		maxWidth += entryHorizontalMargin;
+        this->columnWidths.push_back(maxWidth);
+		// try to minimize the required calculations in the QGridLayout
+		this->ui->tableGrid->setColumnMinimumWidth(maxWidth);
     }
     // add new items
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
