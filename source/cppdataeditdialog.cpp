@@ -77,6 +77,22 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
     // }
 }
 
+void CppDataEditDialog::on_fromComboBox_activated(int index)
+{
+	int toIndex = this->ui->toComboBox->currentIndex();
+	if (toIndex < index) {
+		this->ui->toComboBox->setCurrentIndex(index);
+    }
+}
+
+void CppDataEditDialog::on_toComboBox_activated(int index)
+{
+	int fromIndex = this->ui->fromComboBox->currentIndex();
+	if (fromIndex > index) {
+		this->ui->fromComboBox->setCurrentIndex(index);
+    }
+}
+
 void CppDataEditDialog::on_startButton_clicked()
 {
 	CPP_EDIT_MODE t = (CPP_EDIT_MODE)this->type;

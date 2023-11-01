@@ -205,10 +205,44 @@ void CppView::hideColumn(int index)
 {
     for (int y = 0; y < this->currentTable->getRowCount() + 1; y++) {
         QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
-        if (item != nullptr) {
+        // if (item != nullptr) {
             CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
             w->setVisible(false);
+        // }
+    }
+	if (this->currentColumnIndex == index) {
+		// find the next visible column
+		while (true) {
+			index++;
+
+			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, index);
+			if (item == nullptr) {
+				index = this->currentColumnIndex;
+				break;
+			}
+			CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+			if (w == nullptr) {
+				index = this->currentColumnIndex;
+				break;
+            }
+			if (w->isVisible()) {
+				break;
+            }
         }
+		// find the previous visible column
+		if (this->currentColumnIndex == index) {
+			index--;
+			if (index <= 0) {
+				index = -1;
+				break;
+            }
+			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, index);
+			CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+			if (w->isVisible()) {
+				break;
+            }
+        }
+		this->currentColumnIndex = index;
     }
 }
 
@@ -287,6 +321,40 @@ void CppView::hideRow(int index)
             CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
             w->setVisible(false);
         }
+    }
+	if (this->currentRowIndex == index) {
+		// find the next visible row
+		while (true) {
+			index++;
+
+			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, 0);
+			if (item == nullptr) {
+				index = this->currentRowIndex;
+				break;
+			}
+			CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+			if (w == nullptr) {
+				index = this->currentRowIndex;
+				break;
+            }
+			if (w->isVisible()) {
+				break;
+            }
+        }
+		// find the previous visible row
+		if (this->currentRowIndex == index) {
+			index--;
+			if (index <= 0) {
+				index = -1;
+				break;
+            }
+			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, 0);
+			CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+			if (w->isVisible()) {
+				break;
+            }
+        }
+		this->currentRowIndex = index;
     }
 }
 
