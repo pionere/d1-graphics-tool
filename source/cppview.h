@@ -74,8 +74,8 @@ private slots:
 private:
     Ui::CppView *ui;
     QUndoStack *undoStack;
-	CppColumnRenameDialog renameDialog(this);
-	CppDataEditDialog editDialog(this);
+	CppColumnRenameDialog renameDialog = CppColumnRenameDialog(this);
+	CppDataEditDialog editDialog = CppDataEditDialog(this);
 
     D1Cpp *cpp;
     D1CppTable *currentTable;
