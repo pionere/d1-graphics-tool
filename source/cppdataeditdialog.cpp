@@ -17,7 +17,7 @@ CppDataEditDialog::~CppDataEditDialog()
 
 void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
 {
-    if (this->type != (int)t) {
+    // if (this->type != (int)t) {
         this->type = (int)t;
         // reset the fields
 		if (index != -1) {
@@ -41,7 +41,7 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
             break;
         }
         this->setWindowTitle(title);
-    }
+    // }
 }
 
 void CppDataEditDialog::on_startButton_clicked()
@@ -87,13 +87,13 @@ void CppDataEditDialog::on_startButton_clicked()
 	for (int i = fromIndex; i <= toIndex; i++) {
 		switch (t) {
 		case CPP_EDIT_MODE::COLUMN_HIDE:
-			view->hideColumn(fromIndex);
+			view->hideColumn(i);
 			break;
 		case CPP_EDIT_MODE::COLUMN_DEL:
 			view->delColumn(fromIndex);
 			break;
 		case CPP_EDIT_MODE::ROW_HIDE:
-			view->hideRow(fromIndex);
+			view->hideRow(i);
 			break;
 		case CPP_EDIT_MODE::ROW_DEL:
 			view->delRow(fromIndex);

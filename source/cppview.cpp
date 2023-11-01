@@ -117,6 +117,9 @@ void CppView::setColumnName(int column, const QString &text)
     if (this->currentTable->setHeader(column - 1, text)) {
 		this->cpp->setModified();
 
+		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, column);
+		CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+		w->initialize(this->currentTable, 0, column, this->columnWidths[column]);
 		this->displayFrame();
     }
 }
