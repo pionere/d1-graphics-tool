@@ -1,5 +1,7 @@
 #include "cppdataeditdialog.h"
 
+#include <QMessageBox>
+
 #include "cppview.h"
 #include "ui_cppdataeditdialog.h"
 
@@ -29,7 +31,7 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
         for (int i = 0; i < table->getColumnCount(); i++) {
             QString header = table->getHeader(i);
             if (header.isEmpty()) {
-                header = QString("<u>%1.</u>").arg(i + 1);
+                header = tr("--%1.column--").arg(i + 1);
             }
             fromComboBox->addItem(header);
             toComboBox->addItem(header);
@@ -40,13 +42,14 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
         for (int i = 0; i < table->getRowCount(); i++) {
             QString leader = table->getLeader(i);
             if (leader.isEmpty()) {
-                leader = QString("<u>%1.</u>").arg(i + 1);
+                leader = tr("--%1.row").arg(i + 1);
             }
             fromComboBox->addItem(leader);
             toComboBox->addItem(leader);
         }
         break;
     }
+QMessageBox::critical(nullptr, "Error", tr("Init index %1").arg(index));
     if (index <= 0) {
         index = 1;
     }
