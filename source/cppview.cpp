@@ -374,7 +374,7 @@ void CppView::on_tablesComboBox_activated(int index)
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             if (item != nullptr) {
 				QWidget *w = item->widget();
-                this->ui->tableGrid->removeWidget(w);
+                // this->ui->tableGrid->removeWidget(w);
 				w->deleteLater();
             }
         }
@@ -385,7 +385,7 @@ void CppView::on_tablesComboBox_activated(int index)
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
             if (item != nullptr) {
 				QWidget *w = item->widget();
-                this->ui->tableGrid->removeWidget(w);
+                // this->ui->tableGrid->removeWidget(w);
 				w->deleteLater();
             }
         }
