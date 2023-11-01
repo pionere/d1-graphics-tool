@@ -231,15 +231,17 @@ void CppView::hideColumn(int index)
         }
 		// find the previous visible column
 		if (this->currentColumnIndex == index) {
-			index--;
-			if (index <= 0) {
-				index = -1;
-				break;
-            }
-			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, index);
-			CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
-			if (w->isVisible()) {
-				break;
+			while (true) {
+				index--;
+				if (index <= 0) {
+					index = -1;
+					break;
+				}
+				QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, index);
+				CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+				if (w->isVisible()) {
+					break;
+				}
             }
         }
 		this->currentColumnIndex = index;
@@ -343,15 +345,17 @@ void CppView::hideRow(int index)
         }
 		// find the previous visible row
 		if (this->currentRowIndex == index) {
-			index--;
-			if (index <= 0) {
-				index = -1;
-				break;
-            }
-			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, 0);
-			CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
-			if (w->isVisible()) {
-				break;
+			while (true) {
+				index--;
+				if (index <= 0) {
+					index = -1;
+					break;
+				}
+				QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, 0);
+				CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+				if (w->isVisible()) {
+					break;
+				}
             }
         }
 		this->currentRowIndex = index;
