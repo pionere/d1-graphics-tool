@@ -88,7 +88,7 @@ bool D1Cpp::processContent(int type)
             break;
         case READ_COMMENT_SINGLE:
             content.prepend("//");
-            content.append(newLine);
+            // content.append(newLine);
             break;
         case READ_COMMENT_MULTI:
             content.prepend("/*");
@@ -160,7 +160,7 @@ bool D1Cpp::processContent(int type)
         // case READ_QUOTE_DOUBLE:
         case READ_COMMENT_SINGLE:
             content.prepend("//");
-            content.append(newLine);
+            // content.append(newLine);
             break;
         case READ_COMMENT_MULTI:
             content.prepend("/*");
@@ -208,7 +208,7 @@ bool D1Cpp::processContent(int type)
         // case READ_QUOTE_DOUBLE:
         case READ_COMMENT_SINGLE:
             content.prepend("//");
-            content.append(newLine);
+            // content.append(newLine);
             break;
         case READ_COMMENT_MULTI:
             content.prepend("/*");
@@ -227,7 +227,7 @@ bool D1Cpp::processContent(int type)
         // case READ_QUOTE_DOUBLE:
         case READ_COMMENT_SINGLE:
             content.prepend("//");
-            content.append(newLine);
+            // content.append(newLine);
             break;
         case READ_COMMENT_MULTI:
             content.prepend("/*");
@@ -247,7 +247,7 @@ bool D1Cpp::processContent(int type)
         // case READ_QUOTE_DOUBLE:
         case READ_COMMENT_SINGLE:
             content.prepend("//");
-            content.append(newLine);
+            // content.append(newLine);
             break;
         case READ_COMMENT_MULTI:
             content.prepend("/*");

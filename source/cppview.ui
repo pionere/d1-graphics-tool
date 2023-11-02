@@ -28,7 +28,13 @@
     </widget>
    </item>
    <item>
-    <!--layout class="QHBoxLayout">
+    <layout class="QHBoxLayout">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <!--horstretch>1</horstretch>
+       <verstretch>1</verstretch-->
+      </sizepolicy>
+     </property>
      <item>
       <widget class="QComboBox" name="tablesComboBox"/>
      </item>
@@ -39,17 +45,17 @@
        </property>
       </spacer>
      </item>
-    </layout-->
-    <widget class="QComboBox" name="tablesComboBox">
+    </layout>
+    <!--widget class="QComboBox" name="tablesComboBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <!--horstretch>1</horstretch>
-       <verstretch>1</verstretch-->
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
       </sizepolicy>
      </property>
-    </widget>
+    </widget-->
    </item>
-   <item>
+   <item alignment="Qt::AlignTop">
     <widget class="QScrollArea">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -73,13 +79,13 @@
      </widget>
     </widget>
    </item>
-   <item>
+   <!--item>
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
     </spacer>
-   </item>
+   </item-->
   </layout>
  </widget>
  <layoutdefault spacing="4" margin="4"/>
