@@ -62,12 +62,12 @@
       <bool>true</bool>
      </property>
      <widget class="QWidget">
-      <property name="sizePolicy">
+      <!--property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>1</horstretch>
         <verstretch>1</verstretch>
        </sizepolicy>
-      </property>
+      </property-->
       <property name="geometry">
        <rect>
         <x>0</x>
