@@ -543,6 +543,7 @@ void CppView::on_tablesComboBox_activated(int index)
             }
         }
     }
+	this->adjustSize();
 	this->show();
 
     // this->gridRowCount = table->getRowCount() + 1;
