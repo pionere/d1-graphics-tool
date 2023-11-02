@@ -221,6 +221,25 @@ bool D1Cpp::processContent(int type)
         currRow->entryTexts.back().append(content);
 		LogMessage(QString("Row post-comment %1.").arg(content), LOG_NOTE);
 		break;
+    case READ_ROW_COMPLEX_POST_COMMENT:
+        switch (type) {
+        // case READ_QUOTE_SINGLE:
+        // case READ_QUOTE_DOUBLE:
+        case READ_COMMENT_SINGLE:
+            content.prepend("//");
+            content.append(newLine);
+            break;
+        case READ_COMMENT_MULTI:
+            content.prepend("/*");
+            content.append("*/");
+            break;
+        default:
+            LogMessage(QString("Invalid type (%1) when reading entry content in state %2.").arg(type).arg(currState.first), LOG_ERROR);
+            return false;
+        }
+        currRow->entryTexts.back().append(content); // TODO: better solution? same as READ_ROW_COMPLEX_POST
+		LogMessage(QString("Row post-comment++ %1.").arg(content), LOG_NOTE);
+		break;
     case READ_ENTRY_SIMPLE:
     case READ_ENTRY_COMPLEX:
         switch (type) {
@@ -285,25 +304,6 @@ bool D1Cpp::processContent(int type)
         }
         currRowEntry->dataTexts.back().append(content);
 		LogMessage(QString("Entry post-comment %1.").arg(content), LOG_NOTE);
-		break;
-    case READ_ROW_COMPLEX_POST_COMMENT:
-        switch (type) {
-        // case READ_QUOTE_SINGLE:
-        // case READ_QUOTE_DOUBLE:
-        case READ_COMMENT_SINGLE:
-            content.prepend("//");
-            content.append(newLine);
-            break;
-        case READ_COMMENT_MULTI:
-            content.prepend("/*");
-            content.append("*/");
-            break;
-        default:
-            LogMessage(QString("Invalid type (%1) when reading entry content in state %2.").arg(type).arg(currState.first), LOG_ERROR);
-            return false;
-        }
-        currRowEntry->dataTexts.back().append(content); // TODO: better solution? same as READ_ENTRY_COMPLEX_POST
-		LogMessage(QString("Entry post-comment++ %1.").arg(content), LOG_NOTE);
 		break;
     default:
         LogMessage(QString("Unhandled entry content in %2 (type: %1).").arg(type).arg(currState.first), LOG_ERROR);
@@ -791,7 +791,7 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 }
             }
             if (content.startsWith(newLine)) {
-                // content.remove(0, newLine.length());
+                content.remove(0, newLine.length());
                 if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST_COMMENT?
                     return false;
                 }
