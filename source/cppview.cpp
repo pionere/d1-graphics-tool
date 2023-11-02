@@ -147,6 +147,8 @@ void CppView::insertColumn(int index)
 		this->currentColumnIndex++;
     }
 
+	this->hide();
+
     for (int y = 0; y < table->getRowCount() + 1; y++) {
 	    for (int x = table->getColumnCount(); x > index; x--) {
 			QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y, x - 1);
@@ -161,6 +163,9 @@ void CppView::insertColumn(int index)
         this->ui->tableGrid->addWidget(w, y, index);
         w->initialize(table, y, index, this->columnWidths[index]);
     }
+
+	this->show();
+
 	// this->updateFields();
 	dMainWindow().updateWindow();
 }
@@ -272,6 +277,7 @@ void CppView::insertRow(int index)
 	if (this->currentRowIndex >= index) {
 		this->currentRowIndex++;
     }
+	this->hide();
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = table->getRowCount(); y > index; y--) {
 			QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y - 1, x);
@@ -286,6 +292,7 @@ void CppView::insertRow(int index)
         this->ui->tableGrid->addWidget(w, index, x);
         w->initialize(table, index, x, this->columnWidths[x]);
     }
+	this->show();
 	// this->updateFields();
 	dMainWindow().updateWindow();
 }
@@ -382,6 +389,72 @@ void CppView::showRow(int index)
             w->setVisible(true);
         }
     }
+}
+
+void CppView::delColumns(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->delColumn(fromIndex);
+    }
+
+	this->show();
+}
+
+void CppView::hideColumns(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->hideColumn(i);
+    }
+
+	this->show();
+}
+
+void CppView::showColumns(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->showColumn(i);
+    }
+
+	this->show();
+}
+
+void CppView::delRows(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->delRow(fromIndex);
+    }
+
+	this->show();
+}
+
+void CppView::hideRows(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->hideRow(i);
+    }
+
+	this->show();
+}
+
+void CppView::showRows(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->showRow(i);
+    }
+
+	this->show();
 }
 
 void CppView::on_tablesComboBox_activated(int index)
@@ -523,22 +596,28 @@ void CppView::on_actionAddColumn_triggered()
 
 void CppView::on_actionInsertColumn_triggered()
 {
-	if (this->currentColumnIndex > 0) {
-		this->insertColumn(this->currentColumnIndex);
+	int index = this->currentColumnIndex;
+
+	if (index > 0) {
+		this->insertColumn(index);
     }
 }
 
 void CppView::on_actionDelColumn_triggered()
 {
-	if (this->currentColumnIndex > 0) {
-		this->delColumn(this->currentColumnIndex);
+	int index = this->currentColumnIndex;
+
+	if (index > 0) {
+		this->delColumns(index, index);
     }
 }
 
 void CppView::on_actionHideColumn_triggered()
 {
-	if (this->currentColumnIndex > 0) {
-		this->hideColumn(this->currentColumnIndex);
+	int index = this->currentColumnIndex;
+
+	if (index > 0) {
+		this->hideColumns(index, index);
     }
 }
 
@@ -567,22 +646,28 @@ void CppView::on_actionAddRow_triggered()
 
 void CppView::on_actionInsertRow_triggered()
 {
-	if (this->currentRowIndex > 0) {
-		this->insertRow(this->currentRowIndex);
+	int index = this->currentRowIndex;
+
+	if (index > 0) {
+		this->insertRow(index);
     }
 }
 
 void CppView::on_actionDelRow_triggered()
 {
-	if (this->currentRowIndex > 0) {
-		this->delRow(this->currentRowIndex);
+	int index = this->currentRowIndex;
+
+	if (index > 0) {
+		this->delRows(index, index);
     }
 }
 
 void CppView::on_actionHideRow_triggered()
 {
-	if (this->currentRowIndex > 0) {
-		this->hideRow(this->currentRowIndex);
+	int index = this->currentRowIndex;
+
+	if (index > 0) {
+		this->hideRows(index, index);
     }
 }
 

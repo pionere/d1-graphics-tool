@@ -145,27 +145,25 @@ void CppDataEditDialog::on_startButton_clicked()
 		toIndex = maxIndex;
     }
 
-	for (int i = fromIndex; i <= toIndex; i++) {
-		switch (t) {
-		case CPP_EDIT_MODE::COLUMN_HIDE:
-			view->hideColumn(i);
-			break;
-		case CPP_EDIT_MODE::COLUMN_SHOW:
-			view->showColumn(i);
-			break;
-		case CPP_EDIT_MODE::COLUMN_DEL:
-			view->delColumn(fromIndex);
-			break;
-		case CPP_EDIT_MODE::ROW_HIDE:
-			view->hideRow(i);
-			break;
-		case CPP_EDIT_MODE::ROW_SHOW:
-			view->showRow(i);
-			break;
-		case CPP_EDIT_MODE::ROW_DEL:
-			view->delRow(fromIndex);
-			break;
-		}
+    switch (t) {
+    case CPP_EDIT_MODE::COLUMN_HIDE:
+        view->hideColumns(fromIndex, toIndex);
+        break;
+    case CPP_EDIT_MODE::COLUMN_SHOW:
+        view->showColumns(fromIndex, toIndex);
+        break;
+    case CPP_EDIT_MODE::COLUMN_DEL:
+        view->delColumns(fromIndex, toIndex);
+        break;
+    case CPP_EDIT_MODE::ROW_HIDE:
+        view->hideRows(fromIndex, toIndex);
+        break;
+    case CPP_EDIT_MODE::ROW_SHOW:
+        view->showRows(fromIndex, toIndex);
+        break;
+    case CPP_EDIT_MODE::ROW_DEL:
+        view->delRows(fromIndex, toIndex);
+        break;
     }
 }
 

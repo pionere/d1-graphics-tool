@@ -37,7 +37,7 @@ typedef enum LogLevel {
     LOG_NOTE,
 } LogLevel;
 
-#define LOG_LEVEL LOG_ERROR
+#define LOG_LEVEL LOG_NOTE
 /*#define LogMessage(msg, lvl)                        \
 if (lvl <= LOG_LEVEL) {                               \
     if (lvl == LOG_ERROR) dProgressErr() << msg;      \
@@ -1429,33 +1429,37 @@ bool D1Cpp::save(const SaveAsParam &params)
         }
         QList<int> maxWidths;
         maxWidths.push_back(maxLen);
-        QList<QList<QString>> entryContents;
+        QList<QList<QPair<QString, bool>>> entryContents;
         for (const QString &header : table->header) {
             maxWidths.push_back(0);
         }
         for (int n = 0; n < table->rows.count(); n++) {
-            QList<QString> rowEntryContents;
+            QList<QPair<QString, bool>> rowEntryContents;
             const D1CppRow *row = table->rows[n];
             int w = 0;
             for (D1CppRowEntry *entry : row->entries) {
                 // TODO: handle row->entryTexts[e]
-                for (D1CppEntryData *data : entry->datas) {
+                QString entryContent;
+                if (entry->isComplexFirst()) {
+                    entryContent = "{ ";
+	LogMessage(QString("Complex first entry %1.").arg(data->content), LOG_NOTE);
+} else if (entry->isComplexFirst()) {
+	LogMessage(QString("Complex first entry %1 but w: %2.").arg(data->content).arg(w), LOG_ERROR);                    
+                    }
+				for (int a = 0; a < entry->datas.count(); a++) {
+					D1CppEntryData *data = entry->datas[a];
                     w++;
 
-                    QString dataContent;
-                    if (w == 1 && entry->isComplexFirst()) {
-                        dataContent = "{ ";
-                    }
-                    dataContent += data->preContent + data->content + data->postContent;
-                    int len = dataContent.length();
-                    if (maxWidths[w] < len) {
-                        maxWidths[w] = len;
-                    }
-                    rowEntryContents.push_back(dataContent);
+                    entryContent += data->preContent + data->content + data->postContent;
                 }
-                if (entry->isComplexLast()) {
-                    rowEntryContents.back().append(" }");
-					maxWidths[w] += 2;
+                int len = entryContent.length();
+				bool isComplexLast = entry->isComplexLast();
+				rowEntryContents.push_back(QPair<QString, bool>(entryContent, isComplexLast));
+				if (isComplexLast) {
+					len += 2;
+                }
+                if (maxWidths[w] < len) {
+                    maxWidths[w] = len;
                 }
             }
             entryContents.push_back(rowEntryContents);
@@ -1468,11 +1472,13 @@ bool D1Cpp::save(const SaveAsParam &params)
 
 			int len = header.length();
 			if (headerWidths.count() <= w) {
+	LogMessage(QString("Missing content for header %1.").arg(w), LOG_NOTE);
 				headerWidths.push_back(len);
 				continue;
             }
 			int num = arrayLen(header);
 			if (num < 0) {
+	LogMessage(QString("Standard header %1 with %2 vs %3.").arg(header).arg(len).arg(maxWidths[w]), LOG_NOTE);
 				if (maxWidths[w] < len) {
 					maxWidths[w] = len;
 					headerWidths[w] = len;
@@ -1487,9 +1493,11 @@ bool D1Cpp::save(const SaveAsParam &params)
 						mw -= 2;
                     }
                 }
+	LogMessage(QString("Array header %1 with %2 vs %3 (%4).").arg(header).arg(len).arg(mw).arg(num), LOG_NOTE);
 				if (mw < len) {
 					// raise content width (if there is)
 					if (maxWidths.count() > w + num - 1) {
+	LogMessage(QString("Raised content %1 with %2.").arg(w + num - 1).arg(len - mw), LOG_NOTE);
 						maxWidths[w + num - 1] += len - mw;
                     }
 
@@ -1499,6 +1507,7 @@ bool D1Cpp::save(const SaveAsParam &params)
 				headerWidths.push_back(mw);
 				// reset the followup headers
 				for (int n = 1; n < num; n++) {
+	LogMessage(QString("Array header marked for skipping %1.").arg(w + n), LOG_NOTE);
 					if (headerWidths.count() > w + n) {
 						headerWidths[w + n] = -1;
                     } else {
@@ -1525,6 +1534,8 @@ bool D1Cpp::save(const SaveAsParam &params)
                     if (!last && headerWidths[h + 1] != -1) {
                         content += ", ";
                         content = content.leftJustified(headerWidths[h + 1] + 2, ' ');
+} else if (headerWidths[h + 1] == -1) {
+		LogMessage(QString("Array header skipping %1.").arg(h + 1), LOG_NOTE);
                     }
                     out << content;
                     if (last) {
@@ -1550,12 +1561,20 @@ bool D1Cpp::save(const SaveAsParam &params)
                 out << row->entries[e]->preContent;
                 out << row->entries[e]->content;
                 out << row->entries[e]->postContent;*/
-                QString content = entryContents[n][e];
+                QPair<QString, bool> &entry = entryContents[n][e];
+				QString &content = entry.first;
+				bool isComplexLast = entry.second;
                 bool last = e == entryContents[n].count() - 1;
-                if (!last) {
+                if (!last && !isComplexLast) {
                     content += ", ";
                 }
-                content = content.leftJustified(maxWidths[e + 1] + (last ? 0 : 2), ' ');
+                content = content.leftJustified(maxWidths[e + 1] + (last ? 0 : 2) + (isComplexLast ? -2 : 0), ' ');
+				if (isComplexLast) {
+					content += " }";
+					if (!last) {
+						content += ", ";
+                    }
+                }
                 out << content;
                 if (last) {
                     break;

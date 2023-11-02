@@ -36,13 +36,13 @@ public:
 	void setColumnName(int column, const QString &text);
 	void renameColumn(int column);
     void insertColumn(int column);
-    void delColumn(int column);
-    void hideColumn(int column);
-    void showColumn(int column);
     void insertRow(int row);
-    void delRow(int row);
-    void hideRow(int row);
-    void showRow(int row);
+    void delColumns(int fromIndex, int toIndex);
+    void hideColumns(int fromIndex, int toIndex);
+    void showColumns(int fromIndex, int toIndex);
+    void delRows(int fromIndex, int toIndex);
+    void hideRows(int fromIndex, int toIndex);
+    void showRows(int fromIndex, int toIndex);
 
 public slots:
     void on_toggleInfoButton_clicked();
@@ -65,6 +65,13 @@ public slots:
 private:
     void updateFields();
     void updateLabel();
+
+    void delRow(int row);
+    void hideRow(int row);
+    void showRow(int row);
+    void delColumn(int column);
+    void hideColumn(int column);
+    void showColumn(int column);
 
 private slots:
     void on_tablesComboBox_activated(int index);
