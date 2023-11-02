@@ -534,7 +534,7 @@ bool D1Cpp::readContent(QString &content)
         case READ_COMMENT_SINGLE:
         case READ_DIRECTIVE:
             if (content.startsWith(newLine)) {
-                content.remove(0, newLine.length());
+                // content.remove(0, newLine.length());
                 if (!processContent(currState.first)) {
                     return false;
                 }
@@ -791,7 +791,7 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 }
             }
             if (content.startsWith(newLine)) {
-                content.remove(0, newLine.length());
+                // content.remove(0, newLine.length());
                 if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST_COMMENT?
                     return false;
                 }
