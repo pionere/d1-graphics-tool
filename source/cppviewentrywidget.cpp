@@ -323,12 +323,12 @@ void CppViewEntryWidget::on_actionInsertColumn_triggered()
 
 void CppViewEntryWidget::on_actionDelColumn_triggered()
 {
-    this->view->delColumn(this->columnNum);
+    this->view->delColumns(this->columnNum, this->columnNum);
 }
 
 void CppViewEntryWidget::on_actionHideColumn_triggered()
 {
-    this->view->hideColumn(this->columnNum);
+    this->view->hideColumns(this->columnNum, this->columnNum);
 }
 
 void CppViewEntryWidget::on_actionInsertRow_triggered()
@@ -338,12 +338,12 @@ void CppViewEntryWidget::on_actionInsertRow_triggered()
 
 void CppViewEntryWidget::on_actionDelRow_triggered()
 {
-    this->view->delRow(this->rowNum);
+    this->view->delRows(this->rowNum, this->rowNum);
 }
 
 void CppViewEntryWidget::on_actionHideRow_triggered()
 {
-    this->view->hideRow(this->rowNum);
+    this->view->hideRows(this->rowNum, this->rowNum);
 }
 
 void CppViewEntryWidget::on_entryLineEdit_returnPressed()

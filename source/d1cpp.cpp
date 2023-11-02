@@ -1442,10 +1442,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                 QString entryContent;
                 if (entry->isComplexFirst()) {
                     entryContent = "{ ";
-	LogMessage(QString("Complex first entry %1.").arg(data->content), LOG_NOTE);
-} else if (entry->isComplexFirst()) {
-	LogMessage(QString("Complex first entry %1 but w: %2.").arg(data->content).arg(w), LOG_ERROR);                    
-                    }
+                }
 				for (int a = 0; a < entry->datas.count(); a++) {
 					D1CppEntryData *data = entry->datas[a];
                     w++;
