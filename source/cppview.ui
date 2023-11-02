@@ -67,7 +67,7 @@
         <horstretch>1</horstretch>
         <verstretch>1</verstretch>
        </sizepolicy>
-      </property-->
+      </property>
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -75,7 +75,7 @@
         <width>180</width>
         <height>80</height>
        </rect>
-      </property>
+      </property-->
       <layout class="QGridLayout" name="tableGrid"/>
      </widget>
     </widget>
