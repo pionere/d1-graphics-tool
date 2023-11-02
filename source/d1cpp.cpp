@@ -26,6 +26,7 @@ typedef enum Read_State {
     READ_ROW_SIMPLE,
     READ_ROW_COMPLEX,
     READ_ROW_COMPLEX_POST,
+	READ_ROW_COMPLEX_POST_COMMENT,
     READ_ENTRY_SIMPLE,
     READ_ENTRY_COMPLEX,
     READ_ENTRY_COMPLEX_POST,
@@ -197,8 +198,9 @@ bool D1Cpp::processContent(int type)
             LogMessage(QString("Invalid type (%1) when reading row content.").arg(type), LOG_ERROR);
             return false;
         }
-        currRow->entryTexts[currRow->entries.count()].append(content);
-        LogMessage(QString("Row comment %1 at %2 vs %3.").arg(content).arg(currRow->entries.count()).arg(currRow->entryTexts.count()), LOG_NOTE);
+        // currRow->entryTexts[currRow->entries.count()].append(content);
+		currRow->entryTexts.back().append(content);
+        LogMessage(QString("Row comment %1 at %2.").arg(content).arg(currRow->entryTexts.count()), LOG_NOTE);
         break;
     case READ_ROW_COMPLEX_POST:
         switch (type) {
@@ -283,6 +285,25 @@ bool D1Cpp::processContent(int type)
         }
         currRowEntry->dataTexts.back().append(content);
 		LogMessage(QString("Entry post-comment %1.").arg(content), LOG_NOTE);
+		break;
+    case READ_ROW_COMPLEX_POST_COMMENT:
+        switch (type) {
+        // case READ_QUOTE_SINGLE:
+        // case READ_QUOTE_DOUBLE:
+        case READ_COMMENT_SINGLE:
+            content.prepend("//");
+            content.append(newLine);
+            break;
+        case READ_COMMENT_MULTI:
+            content.prepend("/*");
+            content.append("*/");
+            break;
+        default:
+            LogMessage(QString("Invalid type (%1) when reading entry content in state %2.").arg(type).arg(currState.first), LOG_ERROR);
+            return false;
+        }
+        currRowEntry->dataTexts.back().append(content); // TODO: better solution? same as READ_ENTRY_COMPLEX_POST
+		LogMessage(QString("Entry post-comment++ %1.").arg(content), LOG_NOTE);
 		break;
     default:
         LogMessage(QString("Unhandled entry content in %2 (type: %1).").arg(type).arg(currState.first), LOG_ERROR);
@@ -728,13 +749,56 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
             }
             if (content[0] == ',') {
                 content.remove(0, 1);
+                /*if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST?
+                    return false;
+                }*/
+				currState.first = READ_ROW_COMPLEX_POST_COMMENT;
+                continue;
+            }
+            if (content[0] == '}') {
                 if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST?
                     return false;
                 }
                 continue;
             }
+            if (!content[0].isSpace()) {
+                return false;
+            }
+            if (content[0] == '\\') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                currState.second.append(content[0]);
+                content.remove(0, 1);
+            }
+
+            currState.second.append(content[0]);
+            content.remove(0, 1);
+            continue;
+        case READ_ROW_COMPLEX_POST_COMMENT:
+			// TODO: better solution?
+            if (content[0] == '/') {
+                if (content.length() < 2) {
+                    return true;
+                }
+                if (content[1] == '/' || content[1] == '*') {
+                    bool single = content[1] == '/';
+                    content.remove(0, 2);
+                    states.push(currState);
+                    currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
+                    currState.second = "";
+                    continue;
+                }
+            }
+            if (content.startsWith(newLine)) {
+                content.remove(0, newLine.length());
+                if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST_COMMENT?
+                    return false;
+                }
+                continue;
+            }
             if (content[0] == '}') {
-                if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST?
+                if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST_COMMENT?
                     return false;
                 }
                 continue;
@@ -1516,6 +1580,7 @@ bool D1Cpp::save(const SaveAsParam &params)
 				w += num - 1;
             }            
         }
+		// TODO: if (table->header.count() != 0) {
         int n = 0;
         for ( ; n < table->rows.count(); n++) {
             out << table->rowTexts[n];
@@ -1553,7 +1618,7 @@ bool D1Cpp::save(const SaveAsParam &params)
             }
             out << "{ "; // if row->isComplex
             int e = 0;
-            for ( ; ; e++) {
+            while (true) {
                 /*out << row->entryTexts[e];
                 out << row->entries[e]->preContent;
                 out << row->entries[e]->content;
@@ -1573,6 +1638,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                     }
                 }
                 out << content;
+				e++;
                 if (last) {
                     break;
                 }
