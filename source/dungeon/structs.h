@@ -223,7 +223,6 @@ typedef struct MonsterData {
 	BYTE mEvasion;    // evasion: used against magic-projectile
 	uint16_t mMagicRes;  // resistances in normal and nightmare difficulties (_monster_resistance)
 	uint16_t mMagicRes2; // resistances in hell difficulty (_monster_resistance)
-	uint16_t mTreasure;  // unique drops of monsters + no-drop flag (unique_item_indexes + _monster_treasure)
 	uint16_t mExp;
 } MonsterData;
 
@@ -261,7 +260,7 @@ typedef struct MapMonData {
 	BYTE cmArmorClass; // AC+evasion: used against physical-hit (melee+projectile)
 	BYTE cmEvasion;    // evasion: used against magic-projectile
 	uint16_t cmMagicRes;  // resistances of the monster
-	uint16_t cmTreasure;  // unique drops of monsters + no-drop flag
+	uint16_t cmAlign_1; // unused
 	unsigned cmExp;
 	int cmWidth;
 	int cmXOffset;

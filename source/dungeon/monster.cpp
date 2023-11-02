@@ -161,7 +161,6 @@ static void InitMonsterStats(int midx)
 	cmon->cmArmorClass = mdata->mArmorClass;
 	cmon->cmEvasion = mdata->mEvasion;
 	cmon->cmMagicRes = mdata->mMagicRes;
-	cmon->cmTreasure = mdata->mTreasure;
 	cmon->cmExp = mdata->mExp;
 	cmon->cmMinHP = mdata->mMinHP;
 	cmon->cmMaxHP = mdata->mMaxHP;
