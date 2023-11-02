@@ -248,6 +248,17 @@ void CppView::hideColumn(int index)
     }
 }
 
+void CppView::showColumn(int index)
+{
+    for (int y = 0; y < this->currentTable->getRowCount() + 1; y++) {
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
+        // if (item != nullptr) {
+            CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+            w->setVisible(true);
+        // }
+    }
+}
+
 void CppView::insertRow(int index)
 {
 	D1CppTable *table = this->currentTable;
@@ -362,8 +373,21 @@ void CppView::hideRow(int index)
     }
 }
 
+void CppView::showRow(int index)
+{
+    for (int x = 0; x < this->currentTable->getColumnCount() + 1; x++) {
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, x);
+        if (item != nullptr) {
+            CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+            w->setVisible(true);
+        }
+    }
+}
+
 void CppView::on_tablesComboBox_activated(int index)
 {
+	this->hide();
+
     D1CppTable *table = this->cpp->getTable(index);
     this->currentTable = table;
 	this->currentColumnIndex = -1;
@@ -450,6 +474,7 @@ void CppView::on_tablesComboBox_activated(int index)
             }
         }
     }
+	this->show();
 
     // this->gridRowCount = table->getRowCount() + 1;
     // this->gridColumnCount = table->getColumnCount() + 1;
@@ -529,6 +554,12 @@ void CppView::on_actionHideColumns_triggered()
 	editDialog.show();
 }
 
+void CppView::on_actionShowColumns_triggered()
+{
+	editDialog.initialize(CPP_EDIT_MODE::COLUMN_SHOW, 0);
+	editDialog.show();
+}
+
 void CppView::on_actionAddRow_triggered()
 {
 	this->insertRow(this->gridRowCount); // this->currentTable->getRowCount() + 1
@@ -564,6 +595,12 @@ void CppView::on_actionDelRows_triggered()
 void CppView::on_actionHideRows_triggered()
 {
 	editDialog.initialize(CPP_EDIT_MODE::ROW_HIDE, this->currentRowIndex);
+	editDialog.show();
+}
+
+void CppView::on_actionShowRows_triggered()
+{
+	editDialog.initialize(CPP_EDIT_MODE::ROW_SHOW, 0);
 	editDialog.show();
 }
 
@@ -617,6 +654,12 @@ void CppView::ShowContextMenu(const QPoint &pos)
     action->setEnabled(this->currentTable->getRowCount() != 0);
     menu->addAction(action);
 
+	action = new QAction(tr("Show..."));
+    action->setToolTip(tr("Show rows"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionShowRows_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
     contextMenu.addMenu(menu);
 
     menu = new QMenu(tr("Columns"), this);
@@ -655,6 +698,12 @@ void CppView::ShowContextMenu(const QPoint &pos)
 	action = new QAction(tr("Hide..."));
     action->setToolTip(tr("Hide columns"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideColumns_Table_triggered()));
+    action->setEnabled(this->currentTable->getColumnCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction(tr("Show..."));
+    action->setToolTip(tr("Show columns"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionShowColumns_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
 

@@ -38,9 +38,11 @@ public:
     void insertColumn(int column);
     void delColumn(int column);
     void hideColumn(int column);
+    void showColumn(int column);
     void insertRow(int row);
     void delRow(int row);
     void hideRow(int row);
+    void showRow(int row);
 
 public slots:
     void on_toggleInfoButton_clicked();
@@ -51,12 +53,14 @@ public slots:
     void on_actionHideColumn_triggered();
     void on_actionDelColumns_triggered();
     void on_actionHideColumns_triggered();
+    void on_actionShowColumns_triggered();
     void on_actionAddRow_triggered();
     void on_actionInsertRow_triggered();
     void on_actionDelRow_triggered();
     void on_actionHideRow_triggered();
     void on_actionDelRows_triggered();
     void on_actionHideRows_triggered();
+    void on_actionShowRows_triggered();
 
 private:
     void updateFields();

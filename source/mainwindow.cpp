@@ -2853,6 +2853,11 @@ void MainWindow::on_actionHideColumns_Table_triggered()
 	this->cppView->on_actionHideColumns_triggered();
 }
 
+void MainWindow::on_actionShowColumns_Table_triggered()
+{
+	this->cppView->on_actionShowColumns_triggered();
+}
+
 void MainWindow::on_actionAddRow_Table_triggered()
 {
 	this->cppView->on_actionAddRow_triggered();
@@ -2881,6 +2886,11 @@ void MainWindow::on_actionDelRows_Table_triggered()
 void MainWindow::on_actionHideRows_Table_triggered()
 {
 	this->cppView->on_actionHideRows_triggered();
+}
+
+void MainWindow::on_actionShowRows_Table_triggered()
+{
+	this->cppView->on_actionShowRows_triggered();
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()

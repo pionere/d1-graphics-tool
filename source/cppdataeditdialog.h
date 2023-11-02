@@ -6,8 +6,10 @@ class D1Dun;
 
 enum class CPP_EDIT_MODE {
     COLUMN_HIDE,
+    COLUMN_SHOW,
     COLUMN_DEL,
     ROW_HIDE,
+    ROW_SHOW,
     ROW_DEL,
 };
 

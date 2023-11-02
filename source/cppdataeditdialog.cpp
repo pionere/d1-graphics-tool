@@ -27,6 +27,7 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
     D1CppTable *table = qobject_cast<CppView *>(this->parentWidget())->getCurrentTable();
     switch (t) {
     case CPP_EDIT_MODE::COLUMN_HIDE:
+    case CPP_EDIT_MODE::COLUMN_SHOW:
     case CPP_EDIT_MODE::COLUMN_DEL:
         for (int i = 0; i < table->getColumnCount(); i++) {
             QString header = table->getHeader(i);
@@ -38,6 +39,7 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
         }
         break;
     case CPP_EDIT_MODE::ROW_HIDE:
+    case CPP_EDIT_MODE::ROW_SHOW:
     case CPP_EDIT_MODE::ROW_DEL:
         for (int i = 0; i < table->getRowCount(); i++) {
             QString leader = table->getLeader(i);
@@ -66,11 +68,17 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
         case CPP_EDIT_MODE::COLUMN_HIDE:
             title = tr("Hide Columns");
             break;
+        case CPP_EDIT_MODE::COLUMN_SHOW:
+            title = tr("Show Columns");
+            break;
         case CPP_EDIT_MODE::COLUMN_DEL:
             title = tr("Delete Columns");
             break;
         case CPP_EDIT_MODE::ROW_HIDE:
             title = tr("Hide Rows");
+            break;
+        case CPP_EDIT_MODE::ROW_SHOW:
+            title = tr("Show Rows");
             break;
         case CPP_EDIT_MODE::ROW_DEL:
             title = tr("Delete Rows");
@@ -112,10 +120,12 @@ void CppDataEditDialog::on_startButton_clicked()
 	D1CppTable *table = view->getCurrentTable();
     switch (t) {
     case CPP_EDIT_MODE::COLUMN_HIDE:
+    case CPP_EDIT_MODE::COLUMN_SHOW:
     case CPP_EDIT_MODE::COLUMN_DEL:
 		maxIndex = table->getColumnCount();
         break;
     case CPP_EDIT_MODE::ROW_HIDE:
+    case CPP_EDIT_MODE::ROW_SHOW:
     case CPP_EDIT_MODE::ROW_DEL:
 		maxIndex = table->getRowCount();
         break;
@@ -140,11 +150,17 @@ void CppDataEditDialog::on_startButton_clicked()
 		case CPP_EDIT_MODE::COLUMN_HIDE:
 			view->hideColumn(i);
 			break;
+		case CPP_EDIT_MODE::COLUMN_SHOW:
+			view->showColumn(i);
+			break;
 		case CPP_EDIT_MODE::COLUMN_DEL:
 			view->delColumn(fromIndex);
 			break;
 		case CPP_EDIT_MODE::ROW_HIDE:
 			view->hideRow(i);
+			break;
+		case CPP_EDIT_MODE::ROW_SHOW:
+			view->showRow(i);
 			break;
 		case CPP_EDIT_MODE::ROW_DEL:
 			view->delRow(fromIndex);

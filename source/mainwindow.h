@@ -254,12 +254,14 @@ private slots:
     void on_actionHideColumn_Table_triggered();
     void on_actionDelColumns_Table_triggered();
     void on_actionHideColumns_Table_triggered();
+    void on_actionShowColumns_Table_triggered();
     void on_actionAddRow_Table_triggered();
     void on_actionInsertRow_Table_triggered();
     void on_actionDelRow_Table_triggered();
     void on_actionHideRow_Table_triggered();
     void on_actionDelRows_Table_triggered();
     void on_actionHideRows_Table_triggered();
+    void on_actionShowRows_Table_triggered();
 
     void on_actionUpscaleTask_triggered();
 

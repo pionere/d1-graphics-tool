@@ -321,6 +321,7 @@
     <addaction name="separator"/>
     <addaction name="actionDelColumns_Table"/>
     <addaction name="actionHideColumns_Table"/>
+    <addaction name="actionShowColumns_Table"/>
    </widget>
    <widget class="QMenu" name="menuRows">
     <property name="title">
@@ -336,6 +337,7 @@
     <addaction name="separator"/>
     <addaction name="actionDelRows_Table"/>
     <addaction name="actionHideRows_Table"/>
+    <addaction name="actionShowRows_Table"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
@@ -1266,6 +1268,14 @@
     <string>Hide columns</string>
    </property>
   </action>
+  <action name="actionShowColumns_Table">
+   <property name="text">
+    <string>Show...</string>
+   </property>
+   <property name="toolTip">
+    <string>Show columns</string>
+   </property>
+  </action>
   <action name="actionAddRow_Table">
    <property name="text">
     <string>Add</string>
@@ -1312,6 +1322,14 @@
    </property>
    <property name="toolTip">
     <string>Hide rows</string>
+   </property>
+  </action>
+  <action name="actionShowRows_Table">
+   <property name="text">
+    <string>Show...</string>
+   </property>
+   <property name="toolTip">
+    <string>Show rows</string>
    </property>
   </action>
  </widget>
