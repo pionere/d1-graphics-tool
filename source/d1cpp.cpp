@@ -188,7 +188,7 @@ bool D1Cpp::processContent(int type)
             currRow->entries.push_back(currRowEntry);
             currRow->entryTexts.push_back(QString());
             currRowEntry = nullptr;
-            LogMessage(QString("Entry added."), LOG_NOTE);
+            LogMessage(QString("Entry %1. added.").arg(currRow->entries.count()), LOG_NOTE);
             // if (currState.first == READ_ROW_SIMPLE) {
             //    processContent(READ_ROW_SIMPLE);
             // }
@@ -198,7 +198,7 @@ bool D1Cpp::processContent(int type)
             return false;
         }
         currRow->entryTexts[currRow->entries.count()].append(content);
-        LogMessage(QString("Row comment %1.").arg(content), LOG_NOTE);
+        LogMessage(QString("Row comment %1 at %2 vs %3.").arg(content).arg(currRow->entries.count()).arg(currRow->entryTexts.count()), LOG_NOTE);
         break;
     case READ_ROW_COMPLEX_POST:
         switch (type) {
@@ -1501,7 +1501,7 @@ bool D1Cpp::save(const SaveAsParam &params)
 					mw = len;
                 }
 				// set the width of the first header
-				headerWidths.push_back(mw);
+				headerWidths[w] = mw;
 				// reset the followup headers
 				for (int n = 1; n < num; n++) {
 	LogMessage(QString("Array header marked for skipping %1.").arg(w + n), LOG_NOTE);
@@ -1565,7 +1565,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                 if (!last && !isComplexLast) {
                     content += ", ";
                 }
-                content = content.leftJustified(maxWidths[e + 1] + (last ? 0 : 2) + (isComplexLast ? -2 : 0), ' ');
+                content = content.leftJustified(maxWidths[e + 1] + (last ? 0 : 2) + (isComplexLast ? -4 : 0), ' ');
 				if (isComplexLast) {
 					content += " }";
 					if (!last) {

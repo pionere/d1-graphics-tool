@@ -206,53 +206,6 @@ void CppView::delColumn(int index)
 	dMainWindow().updateWindow();
 }
 
-void CppView::hideColumn(int index)
-{
-    for (int y = 0; y < this->currentTable->getRowCount() + 1; y++) {
-        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
-        // if (item != nullptr) {
-            CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
-            w->setVisible(false);
-        // }
-    }
-	if (this->currentColumnIndex == index) {
-		// find the next visible column
-		while (true) {
-			index++;
-
-			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, index);
-			if (item == nullptr) {
-				index = this->currentColumnIndex;
-				break;
-			}
-			CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
-			if (w == nullptr) {
-				index = this->currentColumnIndex;
-				break;
-            }
-			if (w->isVisible()) {
-				break;
-            }
-        }
-		// find the previous visible column
-		if (this->currentColumnIndex == index) {
-			while (true) {
-				index--;
-				if (index <= 0) {
-					index = -1;
-					break;
-				}
-				QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, index);
-				CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
-				if (w->isVisible()) {
-					break;
-				}
-            }
-        }
-		this->currentColumnIndex = index;
-    }
-}
-
 void CppView::showColumn(int index)
 {
     for (int y = 0; y < this->currentTable->getRowCount() + 1; y++) {
@@ -333,16 +286,125 @@ void CppView::delRow(int index)
 
 }
 
-void CppView::hideRow(int index)
+void CppView::showRow(int index)
 {
     for (int x = 0; x < this->currentTable->getColumnCount() + 1; x++) {
         QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, x);
         if (item != nullptr) {
             CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
-            w->setVisible(false);
+            w->setVisible(true);
         }
     }
-	if (this->currentRowIndex == index) {
+}
+
+void CppView::delColumns(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->delColumn(fromIndex);
+    }
+
+	this->show();
+}
+
+void CppView::hideColumns(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	// hide the given columns
+	for (int i = fromIndex; i <= toIndex; i++) {
+		for (int y = 0; y < this->currentTable->getRowCount() + 1; y++) {
+			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, i);
+			// if (item != nullptr) {
+				CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+				w->setVisible(false);
+			// }
+		}
+    }
+
+	this->show();
+
+	int index = this->currentColumnIndex;
+	if (index >= fromIndex && index <= toIndex) {
+		// find the next visible column
+		while (true) {
+			index++;
+
+			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, index);
+			if (item == nullptr) {
+				index = this->currentColumnIndex;
+				break;
+			}
+			CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+			if (w == nullptr) {
+				index = this->currentColumnIndex;
+				break;
+            }
+			if (w->isVisible()) {
+				break;
+            }
+        }
+		// find the previous visible column
+		if (this->currentColumnIndex == index) {
+			while (true) {
+				index--;
+				if (index <= 0) {
+					index = -1;
+					break;
+				}
+				QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, index);
+				CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+				if (w->isVisible()) {
+					break;
+				}
+            }
+        }
+		this->currentColumnIndex = index;
+    }
+}
+
+void CppView::showColumns(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->showColumn(i);
+    }
+
+	this->show();
+}
+
+void CppView::delRows(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	for (int i = fromIndex; i <= toIndex; i++) {
+		this->delRow(fromIndex);
+    }
+
+	this->show();
+}
+
+void CppView::hideRows(int fromIndex, int toIndex)
+{
+	this->hide();
+
+	// hide the given rows
+	for (int i = fromIndex; i <= toIndex; i++) {
+		for (int x = 0; x < this->currentTable->getColumnCount() + 1; x++) {
+			QLayoutItem *item = this->ui->tableGrid->itemAtPosition(i, x);
+			if (item != nullptr) {
+				CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+				w->setVisible(false);
+			}
+		}
+    }
+
+	this->show();
+
+	int index = this->currentRowIndex;
+	if (index >= fromIndex && index <= toIndex) {
 		// find the next visible row
 		while (true) {
 			index++;
@@ -378,72 +440,6 @@ void CppView::hideRow(int index)
         }
 		this->currentRowIndex = index;
     }
-}
-
-void CppView::showRow(int index)
-{
-    for (int x = 0; x < this->currentTable->getColumnCount() + 1; x++) {
-        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, x);
-        if (item != nullptr) {
-            CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
-            w->setVisible(true);
-        }
-    }
-}
-
-void CppView::delColumns(int fromIndex, int toIndex)
-{
-	this->hide();
-
-	for (int i = fromIndex; i <= toIndex; i++) {
-		this->delColumn(fromIndex);
-    }
-
-	this->show();
-}
-
-void CppView::hideColumns(int fromIndex, int toIndex)
-{
-	this->hide();
-
-	for (int i = fromIndex; i <= toIndex; i++) {
-		this->hideColumn(i);
-    }
-
-	this->show();
-}
-
-void CppView::showColumns(int fromIndex, int toIndex)
-{
-	this->hide();
-
-	for (int i = fromIndex; i <= toIndex; i++) {
-		this->showColumn(i);
-    }
-
-	this->show();
-}
-
-void CppView::delRows(int fromIndex, int toIndex)
-{
-	this->hide();
-
-	for (int i = fromIndex; i <= toIndex; i++) {
-		this->delRow(fromIndex);
-    }
-
-	this->show();
-}
-
-void CppView::hideRows(int fromIndex, int toIndex)
-{
-	this->hide();
-
-	for (int i = fromIndex; i <= toIndex; i++) {
-		this->hideRow(i);
-    }
-
-	this->show();
 }
 
 void CppView::showRows(int fromIndex, int toIndex)
