@@ -20,7 +20,7 @@
    </property>
    <item>
     <layout class="QHBoxLayout" name="entryHorizontalLayout">
-     <property name="spacing">
+     <!--property name="spacing">
       <number>0</number>
      </property>
      <property name="leftMargin">
@@ -34,7 +34,7 @@
      </property>
      <property name="bottomMargin">
       <number>0</number>
-     </property>
+     </property-->
     </layout>
    </item>
   </layout>

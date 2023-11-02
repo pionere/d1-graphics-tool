@@ -434,7 +434,7 @@ void CppView::on_tablesComboBox_activated(int index)
 		maxWidth += entryHorizontalMargin;
         this->columnWidths.push_back(maxWidth);
 		// try to minimize the required calculations in the QGridLayout
-        if (x != 0 && table->getRowCount() != 0) {
+        /*if (x != 0 && table->getRowCount() != 0) {
             D1CppRowEntry *entry = table->getRow(0)->getEntry(x - 1);
             if (entry->isComplexFirst()) {
                 maxWidth += entryComplexWidth;
@@ -445,7 +445,7 @@ void CppView::on_tablesComboBox_activated(int index)
         } else {
             // FIXME: store complexFirst/Last in the header
         }
-		this->ui->tableGrid->setColumnMinimumWidth(x, maxWidth);
+		this->ui->tableGrid->setColumnMinimumWidth(x, maxWidth);*/
     }
     // add new items
     // for (int x = 0; x < table->getColumnCount() + 1; x++) {
