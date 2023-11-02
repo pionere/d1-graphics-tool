@@ -1645,8 +1645,11 @@ bool D1Cpp::save(const SaveAsParam &params)
             }
             out << " }"; // if row->isComplex
             out << ",";
+			if (!table->rows[n]->entryTexts[e].isEmpty()) {
+	            out << " ";
+	            out << table->rows[n]->entryTexts[e];
+            }
 			out << this->lineEnd;
-            out << table->rows[n]->entryTexts[e];
         }
         out << table->rowTexts[n];
         out << "}";

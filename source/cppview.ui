@@ -18,10 +18,17 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QLabel" name="cppLabel"/>
+    <widget class="QLabel" name="cppLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <!--horstretch>1</horstretch>
+       <verstretch>1</verstretch-->
+      </sizepolicy>
+     </property>
+    </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout">
+    <!--layout class="QHBoxLayout">
      <item>
       <widget class="QComboBox" name="tablesComboBox"/>
      </item>
@@ -32,7 +39,17 @@
        </property>
       </spacer>
      </item>
-    </layout>
+    </layout-->
+    <item>
+     <widget class="QComboBox" name="tablesComboBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <!--horstretch>1</horstretch>
+       <verstretch>1</verstretch-->
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
    </item>
    <item>
     <widget class="QScrollArea">
