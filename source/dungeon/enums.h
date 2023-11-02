@@ -2420,6 +2420,7 @@ typedef enum _uniq_monsterid {
 	UMT_WARLORD,
 	UMT_BUTCHER,
 	UMT_DIABLO,
+	UMT_ZAMPHIR,
 #ifdef HELLFIRE
 	UMT_HORKDMN,
 	UMT_DEFILER,

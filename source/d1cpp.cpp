@@ -200,6 +200,25 @@ bool D1Cpp::processContent(int type)
         currRow->entryTexts[currRow->entries.count()].append(content);
         LogMessage(QString("Row comment %1.").arg(content), LOG_NOTE);
         break;
+    case READ_ROW_COMPLEX_POST:
+        switch (type) {
+        // case READ_QUOTE_SINGLE:
+        // case READ_QUOTE_DOUBLE:
+        case READ_COMMENT_SINGLE:
+            content.prepend("//");
+            content.append(newLine);
+            break;
+        case READ_COMMENT_MULTI:
+            content.prepend("/*");
+            content.append("*/");
+            break;
+        default:
+            LogMessage(QString("Invalid type (%1) when reading entry content in state %2.").arg(type).arg(currState.first), LOG_ERROR);
+            return false;
+        }
+        currRow->entryTexts.back().append(content);
+		LogMessage(QString("Row post-comment %1.").arg(content), LOG_NOTE);
+		break;
     case READ_ENTRY_SIMPLE:
     case READ_ENTRY_COMPLEX:
         switch (type) {
@@ -246,6 +265,28 @@ bool D1Cpp::processContent(int type)
         }
         LogMessage(QString("Entry comment %1.").arg(content), LOG_NOTE);
         break;
+    case READ_ENTRY_COMPLEX_POST:
+        switch (type) {
+        // case READ_QUOTE_SINGLE:
+        // case READ_QUOTE_DOUBLE:
+        case READ_COMMENT_SINGLE:
+            content.prepend("//");
+            content.append(newLine);
+            break;
+        case READ_COMMENT_MULTI:
+            content.prepend("/*");
+            content.append("*/");
+            break;
+        default:
+            LogMessage(QString("Invalid type (%1) when reading entry content in state %2.").arg(type).arg(currState.first), LOG_ERROR);
+            return false;
+        }
+        currRowEntry->dataTexts.back().append(content);
+		LogMessage(QString("Entry post-comment %1.").arg(content), LOG_NOTE);
+		break;
+    default:
+        LogMessage(QString("Unhandled entry content in %2 (type: %1).").arg(type).arg(currState.first), LOG_ERROR);
+        return false;
     }
     return true;
 }
