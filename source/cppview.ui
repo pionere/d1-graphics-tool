@@ -56,8 +56,8 @@
      </property>
     </widget-->
    </item>
-   <!--item-->
-   <item alignment="Qt::AlignTop">
+   <item>
+   <!--item alignment="Qt::AlignTop"-->
     <widget class="QScrollArea">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -83,7 +83,11 @@
         <height>80</height>
        </rect>
       </property-->
-      <layout class="QGridLayout" name="tableGrid"/>
+      <layout class="QGridLayout" name="tableGrid">
+       <property name="verticalSpacing">
+        <number>0</number>
+       </property>
+      </layout>
      </widget>
     </widget>
    </item>
