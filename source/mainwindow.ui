@@ -318,6 +318,8 @@
     <addaction name="actionInsertColumn_Table"/>
     <addaction name="actionDelColumn_Table"/>
     <addaction name="actionHideColumn_Table"/>
+    <addaction name="actionMoveLeftColumn_Table"/>
+    <addaction name="actionMoveRightColumn_Table"/>
     <addaction name="separator"/>
     <addaction name="actionDelColumns_Table"/>
     <addaction name="actionHideColumns_Table"/>
@@ -334,6 +336,8 @@
     <addaction name="actionInsertRow_Table"/>
     <addaction name="actionDelRow_Table"/>
     <addaction name="actionHideRow_Table"/>
+    <addaction name="actionMoveUpRow_Table"/>
+    <addaction name="actionMoveDownRow_Table"/>
     <addaction name="separator"/>
     <addaction name="actionDelRows_Table"/>
     <addaction name="actionHideRows_Table"/>
@@ -1252,6 +1256,22 @@
     <string>Hide the current column</string>
    </property>
   </action>
+  <action name="actionMoveLeftColumn_Table">
+   <property name="text">
+    <string notr="true">&lt;&lt;--</string>
+   </property>
+   <property name="toolTip">
+    <string>Move the current column to the left</string>
+   </property>
+  </action>
+  <action name="actionMoveRightColumn_Table">
+   <property name="text">
+    <string notr="true">--&gt;&gt;</string>
+   </property>
+   <property name="toolTip">
+    <string>Move the current column to the right</string>
+   </property>
+  </action>
   <action name="actionDelColumns_Table">
    <property name="text">
     <string>Delete...</string>
@@ -1306,6 +1326,22 @@
    </property>
    <property name="toolTip">
     <string>Hide the current row</string>
+   </property>
+  </action>
+  <action name="actionMoveUpRow_Table">
+   <property name="text">
+    <string notr="true">^^ ^^</string>
+   </property>
+   <property name="toolTip">
+    <string>Move the current row up</string>
+   </property>
+  </action>
+  <action name="actionMoveDownRow_Table">
+   <property name="text">
+    <string notr="true">ˇˇ ˇˇ</string>
+   </property>
+   <property name="toolTip">
+    <string>Move the current row down</string>
    </property>
   </action>
   <action name="actionDelRows_Table">

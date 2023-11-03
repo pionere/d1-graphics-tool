@@ -156,16 +156,72 @@ void CppView::insertColumn(int index)
 
 			// this->ui->tableGrid->removeWidget(w);
 			w->adjustColumnNum(1);
-			this->ui->tableGrid->addWidget(w, y, x);
+			this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
         }
 
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
-        this->ui->tableGrid->addWidget(w, y, index);
+        this->ui->tableGrid->addWidget(w, y, index, Qt::AlignTop);
         w->initialize(table, y, index, this->columnWidths[index]);
     }
 
 	this->show();
 
+	// this->updateFields();
+	dMainWindow().updateWindow();
+}
+
+void CppView::moveColumnLeft(int index)
+{
+	D1CppTable *table = this->currentTable;
+
+	table->moveColumnLeft(index - 1, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
+	this->cpp->setModified();
+
+    // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+	// this->displayFrame();
+	if (this->currentColumnIndex == index) {
+		this->currentColumnIndex--;
+    }
+	this->hide();
+    for (int y = 0; y < table->getRowCount() + 1; y++) {
+		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
+		CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+
+		QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y, index - 1);
+		CppViewEntryWidget *pw = (CppViewEntryWidget *)prevItem->widget();
+
+		this->ui->tableGrid->addWidget(w, y, index - 1, Qt::AlignTop);
+		this->ui->tableGrid->addWidget(pw, y, index, Qt::AlignTop);
+    }
+	this->show();
+	// this->updateFields();
+	dMainWindow().updateWindow();
+}
+
+void CppView::moveColumnRight(int index)
+{
+	D1CppTable *table = this->currentTable;
+
+	table->moveColumnRight(index - 1, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
+	this->cpp->setModified();
+
+    // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+	// this->displayFrame();
+	if (this->currentColumnIndex == index) {
+		this->currentColumnIndex++;
+    }
+	this->hide();
+    for (int y = 0; y < table->getRowCount() + 1; y++) {
+		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
+		CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+
+		QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y, index + 1);
+		CppViewEntryWidget *pw = (CppViewEntryWidget *)nextItem->widget();
+
+		this->ui->tableGrid->addWidget(w, y, index + 1, Qt::AlignTop);
+		this->ui->tableGrid->addWidget(nw, y, index, Qt::AlignTop);
+    }
+	this->show();
 	// this->updateFields();
 	dMainWindow().updateWindow();
 }
@@ -199,7 +255,7 @@ void CppView::delColumn(int index)
 			this->ui->tableGrid->removeWidget(w);
 
 			w->adjustColumnNum(-1);
-			this->ui->tableGrid->addWidget(w, y, x);
+			this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
         }
     }
 	// this->updateFields();
@@ -238,12 +294,68 @@ void CppView::insertRow(int index)
 
 			// this->ui->tableGrid->removeWidget(w);
 			w->adjustRowNum(1);
-			this->ui->tableGrid->addWidget(w, y, x);
+			this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
         }
 
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
-        this->ui->tableGrid->addWidget(w, index, x);
+        this->ui->tableGrid->addWidget(w, index, x, Qt::AlignTop);
         w->initialize(table, index, x, this->columnWidths[x]);
+    }
+	this->show();
+	// this->updateFields();
+	dMainWindow().updateWindow();
+}
+
+void CppView::moveRowUp(int index)
+{
+	D1CppTable *table = this->currentTable;
+
+	table->moveRowUp(index - 1, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
+	this->cpp->setModified();
+
+    // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+	// this->displayFrame();
+	if (this->currentRowIndex == index) {
+		this->currentRowIndex--;
+    }
+	this->hide();
+    for (int x = 0; x < table->getColumnCount() + 1; x++) {
+		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, x);
+		CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+
+		QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(index - 1, x);
+		CppViewEntryWidget *pw = (CppViewEntryWidget *)prevItem->widget();
+
+		this->ui->tableGrid->addWidget(w, index - 1, x, Qt::AlignTop);
+		this->ui->tableGrid->addWidget(pw, index, x, Qt::AlignTop);
+    }
+	this->show();
+	// this->updateFields();
+	dMainWindow().updateWindow();
+}
+
+void CppView::moveRowDown(int index)
+{
+	D1CppTable *table = this->currentTable;
+
+	table->moveRowDown(index - 1, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
+	this->cpp->setModified();
+
+    // this->on_tablesComboBox_activated(this->ui->tablesComboBox->currentIndex());
+	// this->displayFrame();
+	if (this->currentRowIndex == index) {
+		this->currentRowIndex++;
+    }
+	this->hide();
+    for (int x = 0; x < table->getColumnCount() + 1; x++) {
+		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(index, x);
+		CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+
+		QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(index + 1, x);
+		CppViewEntryWidget *nw = (CppViewEntryWidget *)nextItem->widget();
+
+		this->ui->tableGrid->addWidget(w, index + 1, x, Qt::AlignTop);
+		this->ui->tableGrid->addWidget(nw, index, x, Qt::AlignTop);
     }
 	this->show();
 	// this->updateFields();
@@ -278,7 +390,7 @@ void CppView::delRow(int index)
 			this->ui->tableGrid->removeWidget(w);
 
 			w->adjustRowNum(-1);
-			this->ui->tableGrid->addWidget(w, y, x);
+			this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
         }
     }
 	// this->updateFields();
@@ -531,7 +643,7 @@ void CppView::on_tablesComboBox_activated(int index)
             }
             if (w == nullptr) {
                 w = new CppViewEntryWidget(this);
-                this->ui->tableGrid->addWidget(w, y, x);
+                this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
             } else {
 				// restore visiblity
 				w->setVisible(true);
@@ -615,6 +727,42 @@ void CppView::on_actionHideColumn_triggered()
 
 	if (index > 0) {
 		this->hideColumns(index, index);
+    }
+}
+
+void CppView::on_actionMoveLeftColumn_triggered()
+{
+	int index = this->currentColumnIndex;
+
+	if (index > 1) {
+		this->moveColumnLeft(index);
+    }
+}
+
+void CppView::on_actionMoveRightColumn_triggered()
+{
+	int index = this->currentColumnIndex;
+
+	if (index > 0 && index < this->gridColumnCount - 1) {
+		this->moveColumnRight(index);
+    }
+}
+
+void CppView::on_actionMoveUpRow_triggered()
+{
+	int index = this->currentRowIndex;
+
+	if (index > 1) {
+		this->moveRowUp(index);
+    }
+}
+
+void CppView::on_actionMoveDownRow_triggered()
+{
+	int index = this->currentRowIndex;
+
+	if (index > 0 && index < this->gridRowCount - 1) {
+		this->moveRowDown(index);
     }
 }
 
@@ -722,6 +870,18 @@ void CppView::ShowContextMenu(const QPoint &pos)
     action->setEnabled(this->currentTable->getRowCount() != 0);
     menu->addAction(action);
 
+	action = new QAction("^^ ^^");
+    action->setToolTip(tr("Move the current row up"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveUpRow_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction("¡¡ ¡¡");
+    action->setToolTip(tr("Move the current row down"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveDownRow_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
 	menu->addSeparator();
 
 	action = new QAction(tr("Delete..."));
@@ -766,6 +926,18 @@ void CppView::ShowContextMenu(const QPoint &pos)
 	action = new QAction(tr("Hide"));
     action->setToolTip(tr("Hide columns"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideColumn_Table_triggered()));
+    action->setEnabled(this->currentTable->getColumnCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction("<<--");
+    action->setToolTip(tr("Move the current column to the left"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveLeftColumn_Table_triggered()));
+    action->setEnabled(this->currentTable->getColumnCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction("-->>");
+    action->setToolTip(tr("Move the current column to the right"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveRightColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
 

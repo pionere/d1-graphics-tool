@@ -233,11 +233,15 @@ void MainWindow::updateWindow()
 	bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
     this->ui->actionDelColumn_Table->setEnabled(hasColumn);
     this->ui->actionHideColumn_Table->setEnabled(hasColumn);
+    this->ui->actionMoveLeftColumn_Table->setEnabled(hasColumn);
+    this->ui->actionMoveRightColumn_Table->setEnabled(hasColumn);
     this->ui->actionDelColumns_Table->setEnabled(hasColumn);
     this->ui->actionHideColumns_Table->setEnabled(hasColumn);
 	bool hasRow = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getRowCount() != 0;
     this->ui->actionDelRow_Table->setEnabled(hasRow);
     this->ui->actionHideRow_Table->setEnabled(hasRow);
+    this->ui->actionMoveUpRow_Table->setEnabled(hasRow);
+    this->ui->actionMoveDownRow_Table->setEnabled(hasRow);
     this->ui->actionDelRows_Table->setEnabled(hasRow);
     this->ui->actionHideRows_Table->setEnabled(hasRow);
 
@@ -2843,6 +2847,16 @@ void MainWindow::on_actionHideColumn_Table_triggered()
 	this->cppView->on_actionHideColumn_triggered();
 }
 
+void MainWindow::on_actionMoveLeftColumn_Table_triggered()
+{
+	this->cppView->on_actionMoveLeftColumn_triggered();
+}
+
+void MainWindow::on_actionMoveRightColumn_Table_triggered()
+{
+	this->cppView->on_actionMoveRightColumn_triggered();
+}
+
 void MainWindow::on_actionDelColumns_Table_triggered()
 {
 	this->cppView->on_actionDelColumns_triggered();
@@ -2876,6 +2890,16 @@ void MainWindow::on_actionDelRow_Table_triggered()
 void MainWindow::on_actionHideRow_Table_triggered()
 {
 	this->cppView->on_actionHideRow_triggered();
+}
+
+void MainWindow::on_actionMoveUpRow_Table_triggered()
+{
+	this->cppView->on_actionMoveUpRow_triggered();
+}
+
+void MainWindow::on_actionMoveDownRow_Table_triggered()
+{
+	this->cppView->on_actionMoveDownRow_triggered();
 }
 
 void MainWindow::on_actionDelRows_Table_triggered()

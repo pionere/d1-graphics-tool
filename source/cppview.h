@@ -36,7 +36,11 @@ public:
 	void setColumnName(int column, const QString &text);
 	void renameColumn(int column);
     void insertColumn(int column);
+	void moveColumnLeft(int column);
+	void moveColumnRight(int column);
     void insertRow(int row);
+    void moveRowUp(int row);
+    void moveRowDown(int row);
     void delColumns(int fromIndex, int toIndex);
     void hideColumns(int fromIndex, int toIndex);
     void showColumns(int fromIndex, int toIndex);
@@ -51,6 +55,8 @@ public slots:
     void on_actionInsertColumn_triggered();
     void on_actionDelColumn_triggered();
     void on_actionHideColumn_triggered();
+    void on_actionMoveLeftColumn_triggered();
+    void on_actionMoveRightColumn_triggered();
     void on_actionDelColumns_triggered();
     void on_actionHideColumns_triggered();
     void on_actionShowColumns_triggered();
@@ -58,6 +64,8 @@ public slots:
     void on_actionInsertRow_triggered();
     void on_actionDelRow_triggered();
     void on_actionHideRow_triggered();
+    void on_actionMoveUpRow_triggered();
+    void on_actionMoveDownRow_triggered();
     void on_actionDelRows_triggered();
     void on_actionHideRows_triggered();
     void on_actionShowRows_triggered();
@@ -67,10 +75,8 @@ private:
     void updateLabel();
 
     void delRow(int row);
-    void hideRow(int row);
     void showRow(int row);
     void delColumn(int column);
-    void hideColumn(int column);
     void showColumn(int column);
 
 private slots:

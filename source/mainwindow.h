@@ -252,6 +252,8 @@ private slots:
     void on_actionInsertColumn_Table_triggered();
     void on_actionDelColumn_Table_triggered();
     void on_actionHideColumn_Table_triggered();
+    void on_actionMoveLeftColumn_Table_triggered();
+    void on_actionMoveRightColumn_Table_triggered();
     void on_actionDelColumns_Table_triggered();
     void on_actionHideColumns_Table_triggered();
     void on_actionShowColumns_Table_triggered();
@@ -259,6 +261,8 @@ private slots:
     void on_actionInsertRow_Table_triggered();
     void on_actionDelRow_Table_triggered();
     void on_actionHideRow_Table_triggered();
+    void on_actionMoveUpRow_Table_triggered();
+    void on_actionMoveDownRow_Table_triggered();
     void on_actionDelRows_Table_triggered();
     void on_actionHideRows_Table_triggered();
     void on_actionShowRows_Table_triggered();

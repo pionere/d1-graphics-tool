@@ -79,6 +79,8 @@ public:
     QString getEntryText(int index) const;
 	void insertEntry(int column);
 	void delEntry(int column);
+	void moveColumnLeft(int column, bool complete);
+	void moveColumnRight(int column, bool complete);
 
 private:
     QList<QString> entryTexts;
@@ -103,7 +105,11 @@ public:
 	bool setHeader(int index, const QString &text);
     QString getLeader(int index) const;
 	void insertRow(int row);
+    void moveRowUp(int row, bool complete);
+    void moveRowDown(int row, bool complete);
 	void insertColumn(int column);
+	void moveColumnLeft(int column, bool complete);
+	void moveColumnRight(int column, bool complete);
 	void delRow(int row);
 	void delColumn(int column);
 

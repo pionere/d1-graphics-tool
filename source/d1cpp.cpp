@@ -1099,6 +1099,22 @@ void D1CppRow::delEntry(int index)
     this->entryTexts[index].prepend(text);
 }
 
+void D1CppRow::moveColumnLeft(int column, bool complete)
+{
+	std::swap(this->entries[index], this->entries[index - 1]);
+	if (complete) {
+		std::swap(this->entryTexts[index], this->entryTexts[index - 1]);
+    }
+}
+
+void D1CppRow::moveColumnRight(int column, bool complete)
+{
+	std::swap(this->entries[index], this->entries[index + 1]);
+	if (complete) {
+		std::swap(this->entryTexts[index], this->entryTexts[index + 1]);
+    }
+}
+
 D1CppTable::D1CppTable(const QString &n)
     : name(n)
 {
@@ -1165,6 +1181,40 @@ void D1CppTable::insertRow(int index)
     this->rows.insert(this->rows.begin() + index, row);
     this->rowTexts.insert(this->rowTexts.begin() + index, QString());
 	this->leader.insert(this->leader.begin() + index, QString());
+}
+
+void D1CppTable::moveRowUp(int index, bool complete)
+{
+	std::swap(this->rows[index], this->rows[index - 1]);
+	std::swap(this->leader[index], this->leader[index - 1]);
+	if (complete) {
+		std::swap(this->rowTexts[index], this->rowTexts[index - 1]);
+    }
+}
+
+void D1CppTable::moveRowDown(int index, bool complete)
+{
+	std::swap(this->rows[index], this->rows[index + 1]);
+	std::swap(this->leader[index], this->leader[index + 1]);
+	if (complete) {
+		std::swap(this->rowTexts[index], this->rowTexts[index + 1]);
+    }
+}
+
+void D1CppTable::moveColumnLeft(int index, bool complete)
+{
+    for (D1CppRow *row : this->rows) {
+        row->moveColumnLeft(index, complete);
+    }
+	std::swap(this->header[index], this->header[index - 1]);
+}
+
+void D1CppTable::moveColumnRight(int index, bool complete)
+{
+    for (D1CppRow *row : this->rows) {
+        row->moveColumnRight(index, complete);
+    }
+	std::swap(this->header[index], this->header[index + 1]);
 }
 
 void D1CppTable::insertColumn(int index)

@@ -56,7 +56,8 @@
      </property>
     </widget-->
    </item>
-   <item alignment="Qt::AlignTop">
+   <!--item alignment="Qt::AlignTop"-->
+   <item>
     <widget class="QScrollArea">
      <property name="widgetResizable">
       <bool>true</bool>
