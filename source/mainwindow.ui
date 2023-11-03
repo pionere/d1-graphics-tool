@@ -1338,7 +1338,7 @@
   </action>
   <action name="actionMoveDownRow_Table">
    <property name="text">
-    <string notr="true">ˇˇ ˇˇ</string>
+    <string notr="true">vv vv</string>
    </property>
    <property name="toolTip">
     <string>Move the current row down</string>

@@ -266,6 +266,18 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionHideColumn_triggered()));
     menu->addAction(action);
 
+	action = new QAction("<<--");
+    action->setToolTip(tr("Move this column to the left"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionMoveLeftColumn_triggered()));
+    action->setEnabled(this->columnNum > 1);
+    menu->addAction(action);
+
+	action = new QAction("-->>");
+    action->setToolTip(tr("Move this column to the right"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionMoveRightColumn_triggered()));
+    action->setEnabled(this->columnNum < this->table->getColumnCount());
+    menu->addAction(action);
+
 	QPoint pos = QCursor::pos();
 	menu->exec(pos);
 	// contextMenu->setAttribute(Qt::WA_DeleteOnClose);
@@ -305,6 +317,18 @@ void CppViewEntryWidget::ShowRowContextMenu()
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionHideRow_triggered()));
     menu->addAction(action);
 
+	action = new QAction(tr("^^ ^^"));
+    action->setToolTip(tr("Move this row up"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionMoveUpRow_triggered()));
+    action->setEnabled(this->rowNum > 1);
+    menu->addAction(action);
+
+	action = new QAction(tr("vv vv"));
+    action->setToolTip(tr("Move this row down"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionMoveDownRow_triggered()));
+    action->setEnabled(this->rowNum < this->table->getRowCount());
+    menu->addAction(action);
+
 	QPoint pos = QCursor::pos();
 	menu->exec(pos);
 	// contextMenu->setAttribute(Qt::WA_DeleteOnClose);
@@ -331,6 +355,16 @@ void CppViewEntryWidget::on_actionHideColumn_triggered()
     this->view->hideColumns(this->columnNum, this->columnNum);
 }
 
+void CppViewEntryWidget::on_actionMoveLeftColumn_triggered()
+{
+	this->view->moveColumnLeft(this->columnNum);
+}
+
+void CppViewEntryWidget::on_actionMoveRightColumn_triggered()
+{
+	this->view->moveColumnRight(this->columnNum);
+}
+
 void CppViewEntryWidget::on_actionInsertRow_triggered()
 {
     this->view->insertRow(this->rowNum);
@@ -344,6 +378,16 @@ void CppViewEntryWidget::on_actionDelRow_triggered()
 void CppViewEntryWidget::on_actionHideRow_triggered()
 {
     this->view->hideRows(this->rowNum, this->rowNum);
+}
+
+void CppViewEntryWidget::on_actionMoveUpRow_triggered()
+{
+    this->view->moveRowUp(this->rowNum);
+}
+
+void CppViewEntryWidget::on_actionMoveDownRow_triggered();
+{
+    this->view->moveRowDown(this->rowNum);
 }
 
 void CppViewEntryWidget::on_entryLineEdit_returnPressed()

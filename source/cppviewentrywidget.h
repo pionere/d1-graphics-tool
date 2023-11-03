@@ -35,9 +35,13 @@ private slots:
     void on_actionInsertColumn_triggered();
     void on_actionDelColumn_triggered();
     void on_actionHideColumn_triggered();
+    void on_actionMoveLeftColumn_triggered();
+    void on_actionMoveRightColumn_triggered();
     void on_actionInsertRow_triggered();
     void on_actionDelRow_triggered();
     void on_actionHideRow_triggered();
+	void on_actionMoveUpRow_triggered();
+	void on_actionMoveDownRow_triggered();
 
     void on_entryLineEdit_returnPressed();
     void on_entryLineEdit_escPressed();

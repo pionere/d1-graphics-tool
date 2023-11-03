@@ -845,65 +845,6 @@ void CppView::ShowContextMenu(const QPoint &pos)
 	QMenu *menu;
     QMenu contextMenu(this);
 
-    menu = new QMenu(tr("Rows"), this);
-    menu->setToolTipsVisible(true);
-
-	action = new QAction(tr("Add"));
-    action->setToolTip(tr("Add row to the end of the table"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionAddRow_Table_triggered()));
-    menu->addAction(action);
-
-	action = new QAction(tr("Insert"));
-    action->setToolTip(tr("Add new row before the current one"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionInsertRow_Table_triggered()));
-    menu->addAction(action);
-
-	action = new QAction(tr("Delete"));
-    action->setToolTip(tr("Delete the current row"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelRow_Table_triggered()));
-    action->setEnabled(this->currentTable->getRowCount() != 0);
-    menu->addAction(action);
-
-	action = new QAction(tr("Hide"));
-    action->setToolTip(tr("Hide the current row"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideRow_Table_triggered()));
-    action->setEnabled(this->currentTable->getRowCount() != 0);
-    menu->addAction(action);
-
-	action = new QAction("^^ ^^");
-    action->setToolTip(tr("Move the current row up"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveUpRow_Table_triggered()));
-    action->setEnabled(this->currentTable->getRowCount() != 0);
-    menu->addAction(action);
-
-	action = new QAction("¡¡ ¡¡");
-    action->setToolTip(tr("Move the current row down"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveDownRow_Table_triggered()));
-    action->setEnabled(this->currentTable->getRowCount() != 0);
-    menu->addAction(action);
-
-	menu->addSeparator();
-
-	action = new QAction(tr("Delete..."));
-    action->setToolTip(tr("Delete rows"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelRows_Table_triggered()));
-    action->setEnabled(this->currentTable->getRowCount() != 0);
-    menu->addAction(action);
-
-	action = new QAction(tr("Hide..."));
-    action->setToolTip(tr("Hide rows"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideRows_Table_triggered()));
-    action->setEnabled(this->currentTable->getRowCount() != 0);
-    menu->addAction(action);
-
-	action = new QAction(tr("Show..."));
-    action->setToolTip(tr("Show rows"));
-    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionShowRows_Table_triggered()));
-    action->setEnabled(this->currentTable->getRowCount() != 0);
-    menu->addAction(action);
-
-    contextMenu.addMenu(menu);
-
     menu = new QMenu(tr("Columns"), this);
     menu->setToolTipsVisible(true);
 
@@ -959,6 +900,65 @@ void CppView::ShowContextMenu(const QPoint &pos)
     action->setToolTip(tr("Show columns"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionShowColumns_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
+    menu->addAction(action);
+
+    contextMenu.addMenu(menu);
+
+    menu = new QMenu(tr("Rows"), this);
+    menu->setToolTipsVisible(true);
+
+	action = new QAction(tr("Add"));
+    action->setToolTip(tr("Add row to the end of the table"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionAddRow_Table_triggered()));
+    menu->addAction(action);
+
+	action = new QAction(tr("Insert"));
+    action->setToolTip(tr("Add new row before the current one"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionInsertRow_Table_triggered()));
+    menu->addAction(action);
+
+	action = new QAction(tr("Delete"));
+    action->setToolTip(tr("Delete the current row"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelRow_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction(tr("Hide"));
+    action->setToolTip(tr("Hide the current row"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideRow_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction("^^ ^^");
+    action->setToolTip(tr("Move the current row up"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveUpRow_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction("vv vv");
+    action->setToolTip(tr("Move the current row down"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveDownRow_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
+	menu->addSeparator();
+
+	action = new QAction(tr("Delete..."));
+    action->setToolTip(tr("Delete rows"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelRows_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction(tr("Hide..."));
+    action->setToolTip(tr("Hide rows"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideRows_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
+    menu->addAction(action);
+
+	action = new QAction(tr("Show..."));
+    action->setToolTip(tr("Show rows"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionShowRows_Table_triggered()));
+    action->setEnabled(this->currentTable->getRowCount() != 0);
     menu->addAction(action);
 
     contextMenu.addMenu(menu);
