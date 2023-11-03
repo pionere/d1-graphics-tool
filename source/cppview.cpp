@@ -29,7 +29,6 @@ CppView::CppView(QWidget *parent, QUndoStack *us)
     , gridColumnCount(0)
 {
     this->ui->setupUi(this);
-	this->ui->lameQt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);

@@ -56,9 +56,15 @@
      </property>
     </widget-->
    </item>
-   <!--item alignment="Qt::AlignTop"-->
-   <item>
+   <!--item-->
+   <item alignment="Qt::AlignTop">
     <widget class="QScrollArea">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -79,16 +85,6 @@
       </property-->
       <layout class="QGridLayout" name="tableGrid"/>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QWidget" name="lameQt">
-     <!--property>
-      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property-->
     </widget>
    </item>
    <!--item>
