@@ -385,7 +385,7 @@ void CppViewEntryWidget::on_actionMoveUpRow_triggered()
     this->view->moveRowUp(this->rowNum);
 }
 
-void CppViewEntryWidget::on_actionMoveDownRow_triggered();
+void CppViewEntryWidget::on_actionMoveDownRow_triggered()
 {
     this->view->moveRowDown(this->rowNum);
 }
