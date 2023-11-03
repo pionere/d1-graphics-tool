@@ -216,7 +216,7 @@ void CppView::moveColumnRight(int index)
 		CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
 
 		QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y, index + 1);
-		CppViewEntryWidget *pw = (CppViewEntryWidget *)nextItem->widget();
+		CppViewEntryWidget *nw = (CppViewEntryWidget *)nextItem->widget();
 
 		this->ui->tableGrid->addWidget(w, y, index + 1, Qt::AlignTop);
 		this->ui->tableGrid->addWidget(nw, y, index, Qt::AlignTop);
