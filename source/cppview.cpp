@@ -29,6 +29,7 @@ CppView::CppView(QWidget *parent, QUndoStack *us)
     , gridColumnCount(0)
 {
     this->ui->setupUi(this);
+	this->ui->lameQt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -190,6 +191,9 @@ void CppView::moveColumnLeft(int index)
 		QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y, index - 1);
 		CppViewEntryWidget *pw = (CppViewEntryWidget *)prevItem->widget();
 
+		w->adjustColumnNum(-1);
+		pw->adjustColumnNum(+1);
+
 		this->ui->tableGrid->addWidget(w, y, index - 1, Qt::AlignTop);
 		this->ui->tableGrid->addWidget(pw, y, index, Qt::AlignTop);
     }
@@ -217,6 +221,9 @@ void CppView::moveColumnRight(int index)
 
 		QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y, index + 1);
 		CppViewEntryWidget *nw = (CppViewEntryWidget *)nextItem->widget();
+
+		w->adjustColumnNum(+1);
+		nw->adjustColumnNum(-1);
 
 		this->ui->tableGrid->addWidget(w, y, index + 1, Qt::AlignTop);
 		this->ui->tableGrid->addWidget(nw, y, index, Qt::AlignTop);
@@ -326,6 +333,9 @@ void CppView::moveRowUp(int index)
 		QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(index - 1, x);
 		CppViewEntryWidget *pw = (CppViewEntryWidget *)prevItem->widget();
 
+		w->adjustRowNum(-1);
+		pw->adjustRowNum(+1);
+
 		this->ui->tableGrid->addWidget(w, index - 1, x, Qt::AlignTop);
 		this->ui->tableGrid->addWidget(pw, index, x, Qt::AlignTop);
     }
@@ -353,6 +363,9 @@ void CppView::moveRowDown(int index)
 
 		QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(index + 1, x);
 		CppViewEntryWidget *nw = (CppViewEntryWidget *)nextItem->widget();
+
+		w->adjustRowNum(+1);
+		nw->adjustRowNum(-1);
 
 		this->ui->tableGrid->addWidget(w, index + 1, x, Qt::AlignTop);
 		this->ui->tableGrid->addWidget(nw, index, x, Qt::AlignTop);
