@@ -17,8 +17,8 @@ public:
     ~CppViewEntryWidget();
 
     void initialize(D1CppTable *table, int rowNum, int columnNum, int width);
-	void adjustRowNum(int delta);
-	void adjustColumnNum(int delta);
+    void adjustRowNum(int delta);
+    void adjustColumnNum(int delta);
 
     static int baseHorizontalMargin();
 
@@ -31,7 +31,7 @@ private slots:
     void ShowHeaderContextMenu();
     void ShowRowContextMenu();
 
-	void on_actionRenameColumn_triggered();
+    void on_actionRenameColumn_triggered();
     void on_actionInsertColumn_triggered();
     void on_actionDelColumn_triggered();
     void on_actionHideColumn_triggered();
@@ -40,13 +40,13 @@ private slots:
     void on_actionInsertRow_triggered();
     void on_actionDelRow_triggered();
     void on_actionHideRow_triggered();
-	void on_actionMoveUpRow_triggered();
-	void on_actionMoveDownRow_triggered();
+    void on_actionMoveUpRow_triggered();
+    void on_actionMoveDownRow_triggered();
 
     void on_entryLineEdit_returnPressed();
     void on_entryLineEdit_escPressed();
-	void on_entryLineEdit_focusGain();
-	void on_entryLineEdit_focusLost();
+    void on_entryLineEdit_focusGain();
+    void on_entryLineEdit_focusLost();
 
 private:
     Ui::CppViewEntryWidget *ui;

@@ -30,14 +30,14 @@ public:
 
     void displayFrame();
 
-	D1CppTable *getCurrentTable() const;
-	void setCurrent(int row, int column);
+    D1CppTable *getCurrentTable() const;
+    void setCurrent(int row, int column);
     void setTableContent(int row, int column, const QString &text);
-	void setColumnName(int column, const QString &text);
-	void renameColumn(int column);
+    void setColumnName(int column, const QString &text);
+    void renameColumn(int column);
     void insertColumn(int column);
-	void moveColumnLeft(int column);
-	void moveColumnRight(int column);
+    void moveColumnLeft(int column);
+    void moveColumnRight(int column);
     void insertRow(int row);
     void moveRowUp(int row);
     void moveRowDown(int row);
@@ -91,15 +91,15 @@ private slots:
 private:
     Ui::CppView *ui;
     QUndoStack *undoStack;
-	CppColumnRenameDialog renameDialog = CppColumnRenameDialog(this);
-	CppDataEditDialog editDialog = CppDataEditDialog(this);
+    CppColumnRenameDialog renameDialog = CppColumnRenameDialog(this);
+    CppDataEditDialog editDialog = CppDataEditDialog(this);
 
     D1Cpp *cpp;
     D1CppTable *currentTable;
-	int currentColumnIndex;
-	int currentRowIndex;
+    int currentColumnIndex;
+    int currentRowIndex;
 
-	QList<int> columnWidths;
+    QList<int> columnWidths;
     int gridRowCount; // because QGridLayout is lame...
     int gridColumnCount;
 };

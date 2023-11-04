@@ -26,7 +26,7 @@ typedef enum Read_State {
     READ_ROW_SIMPLE,
     READ_ROW_COMPLEX,
     READ_ROW_COMPLEX_POST,
-	READ_ROW_COMPLEX_POST_COMMENT,
+    READ_ROW_COMPLEX_POST_COMMENT,
     READ_ENTRY_SIMPLE,
     READ_ENTRY_COMPLEX,
     READ_ENTRY_COMPLEX_POST,
@@ -199,7 +199,7 @@ bool D1Cpp::processContent(int type)
             return false;
         }
         // currRow->entryTexts[currRow->entries.count()].append(content);
-		currRow->entryTexts.back().append(content);
+        currRow->entryTexts.back().append(content);
         LogMessage(QString("Row comment %1 at %2.").arg(content).arg(currRow->entryTexts.count()), LOG_NOTE);
         break;
     case READ_ROW_COMPLEX_POST:
@@ -219,8 +219,8 @@ bool D1Cpp::processContent(int type)
             return false;
         }
         currRow->entryTexts.back().append(content);
-		LogMessage(QString("Row post-comment %1.").arg(content), LOG_NOTE);
-		break;
+        LogMessage(QString("Row post-comment %1.").arg(content), LOG_NOTE);
+        break;
     case READ_ROW_COMPLEX_POST_COMMENT:
         switch (type) {
         // case READ_QUOTE_SINGLE:
@@ -238,8 +238,8 @@ bool D1Cpp::processContent(int type)
             return false;
         }
         currRow->entryTexts.back().append(content); // TODO: better solution? same as READ_ROW_COMPLEX_POST
-		LogMessage(QString("Row post-comment++ %1.").arg(content), LOG_NOTE);
-		break;
+        LogMessage(QString("Row post-comment++ %1.").arg(content), LOG_NOTE);
+        break;
     case READ_ENTRY_SIMPLE:
     case READ_ENTRY_COMPLEX:
         switch (type) {
@@ -303,8 +303,8 @@ bool D1Cpp::processContent(int type)
             return false;
         }
         currRowEntry->dataTexts.back().append(content);
-		LogMessage(QString("Entry post-comment %1.").arg(content), LOG_NOTE);
-		break;
+        LogMessage(QString("Entry post-comment %1.").arg(content), LOG_NOTE);
+        break;
     default:
         LogMessage(QString("Unhandled entry content in %2 (type: %1).").arg(type).arg(currState.first), LOG_ERROR);
         return false;
@@ -752,7 +752,7 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 /*if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST?
                     return false;
                 }*/
-				currState.first = READ_ROW_COMPLEX_POST_COMMENT;
+                currState.first = READ_ROW_COMPLEX_POST_COMMENT;
                 continue;
             }
             if (content[0] == '}') {
@@ -776,7 +776,7 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
             content.remove(0, 1);
             continue;
         case READ_ROW_COMPLEX_POST_COMMENT:
-			// TODO: better solution?
+            // TODO: better solution?
             if (content[0] == '/') {
                 if (content.length() < 2) {
                     return true;
@@ -985,20 +985,20 @@ QString D1CppEntryData::getContent() const
 
 bool D1CppEntryData::setContent(const QString &text)
 {
-	if (this->content == text) {
-		return false;
+    if (this->content == text) {
+        return false;
     }
     this->content = text;
-	return true;
+    return true;
 }
 
 D1CppRowEntry::D1CppRowEntry(const QString &text)
 {
-	D1CppEntryData *data = new D1CppEntryData();
-	data->setContent(text);
-	this->datas.push_back(data);
-	this->dataTexts.push_back(QString());
-	this->dataTexts.push_back(QString());
+    D1CppEntryData *data = new D1CppEntryData();
+    data->setContent(text);
+    this->datas.push_back(data);
+    this->dataTexts.push_back(QString());
+    this->dataTexts.push_back(QString());
 }
 
 D1CppRowEntry::~D1CppRowEntry()
@@ -1012,7 +1012,7 @@ QString D1CppRowEntry::getContent() const
 // REMOVEME
 if (this->datas.empty()) {
 dProgressErr() << tr("Missing entry data.");
-	return "";
+    return "";
 }
     return this->datas[0]->getContent();
 }
@@ -1024,22 +1024,22 @@ bool D1CppRowEntry::setContent(const QString &text)
 
 bool D1CppRowEntry::isComplexFirst() const
 {
-	return this->complexFirst;
+    return this->complexFirst;
 }
 
 void D1CppRowEntry::setComplexFirst(bool complex)
 {
-	this->complexFirst = complex;
+    this->complexFirst = complex;
 }
 
 bool D1CppRowEntry::isComplexLast() const
 {
-	return this->complexLast;
+    return this->complexLast;
 }
 
 void D1CppRowEntry::setComplexLast(bool complex)
 {
-	this->complexLast = complex;
+    this->complexLast = complex;
 }
 
 D1CppRow::~D1CppRow()
@@ -1053,7 +1053,7 @@ D1CppRowEntry *D1CppRow::getEntry(int index) const
 // REMOVEME
 if (index >= this->entries.count()) {
 dProgressErr() << tr("Missing entry %1").arg(index);
-	return new D1CppRowEntry();
+    return new D1CppRowEntry();
 }
     return const_cast<D1CppRowEntry *>(this->entries[index]);
 }
@@ -1062,7 +1062,7 @@ QString D1CppRow::getEntryText(int index) const
 {
 if (index >= this->entryTexts.count()) {
 dProgressErr() << tr("Missing entry text %1").arg(index);
-	return QString();
+    return QString();
 }
     return this->entryTexts[index];
 }
@@ -1078,40 +1078,40 @@ void D1CppRow::delEntry(int index)
     QString text = this->entryTexts.takeAt(index);
     D1CppRowEntry *entry = this->entries.takeAt(index);
 
-	if (entry->isComplexFirst()) {
-		if (entry->isComplexLast()) {
-			; // do nothing
+    if (entry->isComplexFirst()) {
+        if (entry->isComplexLast()) {
+            ; // do nothing
         } else if (this->entries.count() > index) {
-			D1CppRowEntry *nextEntry = this->entries[index];
-			nextEntry->setComplexFirst(true);
+            D1CppRowEntry *nextEntry = this->entries[index];
+            nextEntry->setComplexFirst(true);
         }
     } else if (entry->isComplexLast()) {
         if (index != 0) {
-			D1CppRowEntry *prevEntry = this->entries[index - 1];
-			prevEntry->setComplexLast(true);
+            D1CppRowEntry *prevEntry = this->entries[index - 1];
+            prevEntry->setComplexLast(true);
         }
     }
 
     delete entry;
-	/*if (!this->entryTexts[index].isEmpty()) {
-		this->entryTexts[index].prepend(lineEnd);
+    /*if (!this->entryTexts[index].isEmpty()) {
+        this->entryTexts[index].prepend(lineEnd);
     }*/
     this->entryTexts[index].prepend(text);
 }
 
 void D1CppRow::moveColumnLeft(int index, bool complete)
 {
-	this->entries.swapItemsAt(index, index - 1);
-	if (complete) {
-		this->entryTexts.swapItemsAt(index, index - 1);
+    this->entries.swapItemsAt(index, index - 1);
+    if (complete) {
+        this->entryTexts.swapItemsAt(index, index - 1);
     }
 }
 
 void D1CppRow::moveColumnRight(int index, bool complete)
 {
-	this->entries.swapItemsAt(index, index + 1);
-	if (complete) {
-		this->entryTexts.swapItemsAt(index, index + 1);
+    this->entries.swapItemsAt(index, index + 1);
+    if (complete) {
+        this->entryTexts.swapItemsAt(index, index + 1);
     }
 }
 
@@ -1158,11 +1158,11 @@ QString D1CppTable::getHeader(int index) const
 
 bool D1CppTable::setHeader(int index, const QString &text)
 {
-	if (this->header[index] == text) {
-		return false;
+    if (this->header[index] == text) {
+        return false;
     }
-	this->header[index] = text;
-	return true;
+    this->header[index] = text;
+    return true;
 }
 
 QString D1CppTable::getLeader(int index) const
@@ -1172,32 +1172,32 @@ QString D1CppTable::getLeader(int index) const
 
 void D1CppTable::insertRow(int index)
 {
-	D1CppRow *row = new D1CppRow();
-	int entries = this->getColumnCount();
-	for (int i = 0; i < entries; i++) {
-		row->insertEntry(0);
+    D1CppRow *row = new D1CppRow();
+    int entries = this->getColumnCount();
+    for (int i = 0; i < entries; i++) {
+        row->insertEntry(0);
     }
 
     this->rows.insert(this->rows.begin() + index, row);
     this->rowTexts.insert(this->rowTexts.begin() + index, QString());
-	this->leader.insert(this->leader.begin() + index, QString());
+    this->leader.insert(this->leader.begin() + index, QString());
 }
 
 void D1CppTable::moveRowUp(int index, bool complete)
 {
-	this->rows.swapItemsAt(index, index - 1);
-	this->leader.swapItemsAt(index, index - 1);
-	if (complete) {
-		this->rowTexts.swapItemsAt(index, index - 1);
+    this->rows.swapItemsAt(index, index - 1);
+    this->leader.swapItemsAt(index, index - 1);
+    if (complete) {
+        this->rowTexts.swapItemsAt(index, index - 1);
     }
 }
 
 void D1CppTable::moveRowDown(int index, bool complete)
 {
-	this->rows.swapItemsAt(index, index + 1);
-	this->leader.swapItemsAt(index, index + 1);
-	if (complete) {
-		this->rowTexts.swapItemsAt(index, index + 1);
+    this->rows.swapItemsAt(index, index + 1);
+    this->leader.swapItemsAt(index, index + 1);
+    if (complete) {
+        this->rowTexts.swapItemsAt(index, index + 1);
     }
 }
 
@@ -1206,7 +1206,7 @@ void D1CppTable::moveColumnLeft(int index, bool complete)
     for (D1CppRow *row : this->rows) {
         row->moveColumnLeft(index, complete);
     }
-	this->header.swapItemsAt(index, index - 1);
+    this->header.swapItemsAt(index, index - 1);
 }
 
 void D1CppTable::moveColumnRight(int index, bool complete)
@@ -1214,7 +1214,7 @@ void D1CppTable::moveColumnRight(int index, bool complete)
     for (D1CppRow *row : this->rows) {
         row->moveColumnRight(index, complete);
     }
-	this->header.swapItemsAt(index, index + 1);
+    this->header.swapItemsAt(index, index + 1);
 }
 
 void D1CppTable::insertColumn(int index)
@@ -1222,18 +1222,18 @@ void D1CppTable::insertColumn(int index)
     for (D1CppRow *row : this->rows) {
         row->insertEntry(index);
     }
-	this->header.insert(this->header.begin() + index, QString());
+    this->header.insert(this->header.begin() + index, QString());
 }
 
 void D1CppTable::delRow(int index)
 {
     QString text = this->rowTexts.takeAt(index);
     D1CppRow *row = this->rows.takeAt(index);
-	this->leader.takeAt(index);
+    this->leader.takeAt(index);
 
     delete row;
-	/*if (!this->rowTexts[index].isEmpty()) {
-		this->rowTexts[index].prepend(lineEnd);
+    /*if (!this->rowTexts[index].isEmpty()) {
+        this->rowTexts[index].prepend(lineEnd);
     }*/
     this->rowTexts[index].prepend(text);
 }
@@ -1243,7 +1243,7 @@ void D1CppTable::delColumn(int index)
     for (D1CppRow *row : this->rows) {
         row->delEntry(index);
     }
-	this->header.takeAt(index);
+    this->header.takeAt(index);
 }
 
 D1Cpp::~D1Cpp()
@@ -1263,7 +1263,7 @@ static int arrayLen(QString &header)
     int num = header.mid(pos + 1, header.length() - (pos + 1 + 1)).toInt(&ok);
     if (!ok || num == 0)
         return -1;
-	return num;
+    return num;
 }
 
 bool D1Cpp::postProcess()
@@ -1287,9 +1287,9 @@ bool D1Cpp::postProcess()
                     continue;
                 }
         LogMessage(QString("Splitting colum %1 of row %2 with %3 data-entries.").arg(e).arg(i).arg(d), LOG_NOTE);
-				entry->complexFirst = true;
+                entry->complexFirst = true;
                 e++;
-				bool complexLast = true;
+                bool complexLast = true;
                 for (d--; d > 0; d--) {
                     D1CppEntryData *data = entry->datas.last();
                     entry->datas.pop_back();
@@ -1303,9 +1303,9 @@ bool D1Cpp::postProcess()
                     flatEntry->dataTexts.push_back(dataStr);
                     flatEntry->dataTexts.push_back(QString());
                     row->entries.insert(row->entries.begin() + e, flatEntry);
-					row->entryTexts.insert(row->entryTexts.begin() + e, QString());
+                    row->entryTexts.insert(row->entryTexts.begin() + e, QString());
 
-					complexLast = false;
+                    complexLast = false;
                 }
             }
         }
@@ -1317,7 +1317,7 @@ bool D1Cpp::postProcess()
             D1CppRow *row = table->getRow(i);
             int cc = row->entries.count();
             if (i == 0 || columnNum < cc) {
-		if (i != 0)
+        if (i != 0)
         LogMessage(QString("Unbalanced table row %1: %2 vs. %3.").arg(i).arg(cc).arg(columnNum), LOG_NOTE);
                 columnNum = cc;
                 ch = i != 0;
@@ -1357,7 +1357,7 @@ if (i == 0)
             }
             table->leader.push_back(rowLeader);
         }
-		// add header fields
+        // add header fields
         if (!table->rowTexts.isEmpty()) {
             QString &firstText = table->rowTexts[0];
         LogMessage(QString("Checking for header info (len %2) in %1.").arg(firstText).arg(firstText.length()), LOG_NOTE);
@@ -1380,13 +1380,13 @@ if (i == 0)
 
                         firstText.truncate(x - 1);
                         for (QString &headerName : headerNames) {
-							QString header = headerName.trimmed();
+                            QString header = headerName.trimmed();
                             table->header.push_back(header);
 
-							// add header to arrays
-							int num = arrayLen(header);
-							for (int i = 0; i < num - 1; i++) {
-								table->header.push_back(QString());
+                            // add header to arrays
+                            int num = arrayLen(header);
+                            for (int i = 0; i < num - 1; i++) {
+                                table->header.push_back(QString());
                             }
                         }
                         if (table->header[0].isEmpty()) {
@@ -1397,17 +1397,17 @@ if (i == 0)
         LogMessage(QString("Resulting firstText %1.").arg(table->rowTexts[0]), LOG_NOTE);
             }
         }
-		// balance headers with the content content
-		LogMessage(QString("Header count %1 columns %2.").arg(table->header.count()).arg(table->getColumnCount()), LOG_NOTE);
-		int num = table->getColumnCount() - table->header.count();
+        // balance headers with the content content
+        LogMessage(QString("Header count %1 columns %2.").arg(table->header.count()).arg(table->getColumnCount()), LOG_NOTE);
+        int num = table->getColumnCount() - table->header.count();
         for (int i = 0; i < num; i++) {
             table->header.push_back(QString());
         }
-		for (int i = 0; i < -num; i++) {
-			QString lastHeader = table->header.back();
-			table->header.pop_back();
-			lastHeader.prepend(", ");
-			table->header.back().append(lastHeader);
+        for (int i = 0; i < -num; i++) {
+            QString lastHeader = table->header.back();
+            table->header.pop_back();
+            lastHeader.prepend(", ");
+            table->header.back().append(lastHeader);
         }
     }
     LogMessage(QString("postProcess done."), LOG_NOTE);
@@ -1495,28 +1495,28 @@ bool D1Cpp::save(const SaveAsParam &params)
         return false;
     }
 
-	// validate the content
+    // validate the content
     for (D1CppTable *table : this->tables) {
-		for (int n = 0; n < table->header.count(); n++) {
-			QString &header = table->header[n];
-			int num = arrayLen(header);
-			/*if (num < 0) {
-				continue;
+        for (int n = 0; n < table->header.count(); n++) {
+            QString &header = table->header[n];
+            int num = arrayLen(header);
+            /*if (num < 0) {
+                continue;
             }
-			if (table->header.count() < n + num) {
-				dProgressErr() << tr("Invalid header '%1' in table %2. (Not enough headers)").arg(header).arg(table->getName());
-				return false;
+            if (table->header.count() < n + num) {
+                dProgressErr() << tr("Invalid header '%1' in table %2. (Not enough headers)").arg(header).arg(table->getName());
+                return false;
             }*/
-			for (int i = 1; i < num; i++) {
-				if (table->header.count() > n + i && !table->header[n + i].isEmpty()) {
-					dProgressErr() << tr("Invalid header '%1' in table %2. (Followup headers are not empty)").arg(header).arg(table->getName());
-					return false;
+            for (int i = 1; i < num; i++) {
+                if (table->header.count() > n + i && !table->header[n + i].isEmpty()) {
+                    dProgressErr() << tr("Invalid header '%1' in table %2. (Followup headers are not empty)").arg(header).arg(table->getName());
+                    return false;
                 }
             }
         }
     }
 
-	// open the file for write
+    // open the file for write
     QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly)) {
@@ -1525,13 +1525,13 @@ bool D1Cpp::save(const SaveAsParam &params)
     }
 
     QTextStream out(&outFile);
-	// write the file
+    // write the file
     int i = 0;
     for ( ; i < this->tables.count(); i++) {
         out << this->texts[i];
 
         out << "{";
-		out << this->lineEnd;
+        out << this->lineEnd;
 
         D1CppTable *table = this->tables[i];
         int maxLen = 0;
@@ -1557,17 +1557,17 @@ bool D1Cpp::save(const SaveAsParam &params)
                 if (entry->isComplexFirst()) {
                     entryContent = "{ ";
                 }
-				for (int a = 0; a < entry->datas.count(); a++) {
-					D1CppEntryData *data = entry->datas[a];
+                for (int a = 0; a < entry->datas.count(); a++) {
+                    D1CppEntryData *data = entry->datas[a];
                     w++;
 
                     entryContent += data->preContent + data->content + data->postContent;
                 }
                 int len = entryContent.length();
-				bool isComplexLast = entry->isComplexLast();
-				rowEntryContents.push_back(QPair<QString, bool>(entryContent, isComplexLast));
-				if (isComplexLast) {
-					len += 2;
+                bool isComplexLast = entry->isComplexLast();
+                rowEntryContents.push_back(QPair<QString, bool>(entryContent, isComplexLast));
+                if (isComplexLast) {
+                    len += 2;
                 }
                 if (maxWidths[w] < len) {
                     maxWidths[w] = len;
@@ -1575,62 +1575,62 @@ bool D1Cpp::save(const SaveAsParam &params)
             }
             entryContents.push_back(rowEntryContents);
         }
-		QList<int> headerWidths = maxWidths;
-		int w = 0;
+        QList<int> headerWidths = maxWidths;
+        int w = 0;
         for (int h = 0; h < table->header.count(); h++) {
             QString &header = table->header[h];
-			w++;
+            w++;
 
-			int len = header.length();
-			if (headerWidths.count() <= w) {
-	LogMessage(QString("Missing content for header %1.").arg(w), LOG_NOTE);
-				headerWidths.push_back(len);
-				continue;
+            int len = header.length();
+            if (headerWidths.count() <= w) {
+    LogMessage(QString("Missing content for header %1.").arg(w), LOG_NOTE);
+                headerWidths.push_back(len);
+                continue;
             }
-			int num = arrayLen(header);
-			if (num < 0) {
-	LogMessage(QString("Standard header %1 with %2 vs %3.").arg(header).arg(len).arg(maxWidths[w]), LOG_NOTE);
-				if (maxWidths[w] < len) {
-					maxWidths[w] = len;
-					headerWidths[w] = len;
+            int num = arrayLen(header);
+            if (num < 0) {
+    LogMessage(QString("Standard header %1 with %2 vs %3.").arg(header).arg(len).arg(maxWidths[w]), LOG_NOTE);
+                if (maxWidths[w] < len) {
+                    maxWidths[w] = len;
+                    headerWidths[w] = len;
                 }
             } else {
-				// calculate the width of the content
-				int mw = 2 * (num - 1);
-				for (int n = 0; n < num; n++) {
-					if (maxWidths.count() > w + n) {
-						mw += maxWidths[w + n];
+                // calculate the width of the content
+                int mw = 2 * (num - 1);
+                for (int n = 0; n < num; n++) {
+                    if (maxWidths.count() > w + n) {
+                        mw += maxWidths[w + n];
                     } else {
-						mw -= 2;
+                        mw -= 2;
                     }
                 }
-	LogMessage(QString("Array header %1 with %2 vs %3 (%4).").arg(header).arg(len).arg(mw).arg(num), LOG_NOTE);
-				if (mw < len) {
-					// raise content width (if there is)
-					if (maxWidths.count() > w + num - 1) {
-	LogMessage(QString("Raised content %1 with %2.").arg(w + num - 1).arg(len - mw), LOG_NOTE);
-						maxWidths[w + num - 1] += len - mw;
+    LogMessage(QString("Array header %1 with %2 vs %3 (%4).").arg(header).arg(len).arg(mw).arg(num), LOG_NOTE);
+                if (mw < len) {
+                    // raise content width (if there is)
+                    if (maxWidths.count() > w + num - 1) {
+    LogMessage(QString("Raised content %1 with %2.").arg(w + num - 1).arg(len - mw), LOG_NOTE);
+                        maxWidths[w + num - 1] += len - mw;
                     }
 
-					mw = len;
+                    mw = len;
                 }
-				// set the width of the first header
-				headerWidths[w] = mw;
-				// reset the followup headers
-				for (int n = 1; n < num; n++) {
-	LogMessage(QString("Array header marked for skipping %1.").arg(w + n), LOG_NOTE);
-					if (headerWidths.count() > w + n) {
-						headerWidths[w + n] = -1;
+                // set the width of the first header
+                headerWidths[w] = mw;
+                // reset the followup headers
+                for (int n = 1; n < num; n++) {
+    LogMessage(QString("Array header marked for skipping %1.").arg(w + n), LOG_NOTE);
+                    if (headerWidths.count() > w + n) {
+                        headerWidths[w + n] = -1;
                     } else {
-						headerWidths.push_back(-1);
+                        headerWidths.push_back(-1);
                     }
                 }
-				// skip the followup headers
-				h += num - 1;
-				w += num - 1;
+                // skip the followup headers
+                h += num - 1;
+                w += num - 1;
             }            
         }
-		// TODO: if (table->header.count() != 0) {
+        // TODO: if (table->header.count() != 0) {
         int n = 0;
         for ( ; n < table->rows.count(); n++) {
             out << table->rowTexts[n];
@@ -1647,7 +1647,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                         content += ", ";
                         content = content.leftJustified(headerWidths[h + 1] + 2, ' ');
 } else if (headerWidths[h + 1] == -1) {
-		LogMessage(QString("Array header skipping %1.").arg(h + 1), LOG_NOTE);
+        LogMessage(QString("Array header skipping %1.").arg(h + 1), LOG_NOTE);
                     }
                     out << content;
                     if (last) {
@@ -1674,32 +1674,32 @@ bool D1Cpp::save(const SaveAsParam &params)
                 out << row->entries[e]->content;
                 out << row->entries[e]->postContent;*/
                 QPair<QString, bool> &entry = entryContents[n][e];
-				QString &content = entry.first;
-				bool isComplexLast = entry.second;
+                QString &content = entry.first;
+                bool isComplexLast = entry.second;
                 bool last = e == entryContents[n].count() - 1;
                 if (!last && !isComplexLast) {
                     content += ", ";
                 }
                 content = content.leftJustified(maxWidths[e + 1] + (last ? 0 : 2) + (isComplexLast ? -4 : 0), ' ');
-				if (isComplexLast) {
-					content += " }";
-					if (!last) {
-						content += ", ";
+                if (isComplexLast) {
+                    content += " }";
+                    if (!last) {
+                        content += ", ";
                     }
                 }
                 out << content;
-				e++;
+                e++;
                 if (last) {
                     break;
                 }
             }
             out << " }"; // if row->isComplex
             out << ",";
-			if (!table->rows[n]->entryTexts[e].isEmpty()) {
-	            out << " ";
-	            out << table->rows[n]->entryTexts[e];
+            if (!table->rows[n]->entryTexts[e].isEmpty()) {
+                out << " ";
+                out << table->rows[n]->entryTexts[e];
             }
-			out << this->lineEnd;
+            out << this->lineEnd;
         }
         out << table->rowTexts[n];
         out << "}";

@@ -17,9 +17,9 @@ CppColumnRenameDialog::~CppColumnRenameDialog()
 
 void CppColumnRenameDialog::initialize(int idx)
 {
-	this->index = idx;
+    this->index = idx;
 
-	CppView *view = qobject_cast<CppView *>(this->parentWidget());
+    CppView *view = qobject_cast<CppView *>(this->parentWidget());
     this->ui->nameLineEdit->setText(view->getCurrentTable()->getHeader(idx - 1));
 }
 
@@ -30,7 +30,7 @@ void CppColumnRenameDialog::on_doneButton_clicked()
     this->close();
 
     CppView *view = qobject_cast<CppView *>(this->parentWidget());
-	view->setColumnName(this->index, name);
+    view->setColumnName(this->index, name);
 }
 
 void CppColumnRenameDialog::on_cancelButton_clicked()

@@ -27,8 +27,8 @@ public:
     void initialize(CPP_EDIT_MODE type, int index);
 
 private slots:
-	void on_fromComboBox_activated(int index);
-	void on_toComboBox_activated(int index);
+    void on_fromComboBox_activated(int index);
+    void on_toComboBox_activated(int index);
 
     void on_startButton_clicked();
     void on_cancelButton_clicked();
