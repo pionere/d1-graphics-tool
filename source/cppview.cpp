@@ -667,6 +667,9 @@ void CppView::on_tablesComboBox_activated(int index)
             }
         }
     }
+	/*QMessageBox::critical(nullptr, "Error", tr("Vertical spacing before %1").arg(this->ui->tableGrid->verticalSpacing()));
+	this->ui->tableGrid->setVerticalSpacing(0);
+	QMessageBox::critical(nullptr, "Error", tr("Vertical spacing now %1").arg(this->ui->tableGrid->verticalSpacing()));*/
 	this->ui->tableGrid->parentWidget()->adjustSize();
 	this->ui->tableScrollArea->adjustSize();
 	this->adjustSize();

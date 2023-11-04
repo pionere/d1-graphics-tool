@@ -91,13 +91,13 @@
      </widget>
     </widget>
    </item>
-   <item>
+   <!--item>
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
     </spacer>
-   </item>
+   </item-->
   </layout>
  </widget>
  <layoutdefault spacing="4" margin="4"/>
