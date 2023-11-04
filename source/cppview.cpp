@@ -667,7 +667,6 @@ void CppView::on_tablesComboBox_activated(int index)
             }
         }
     }
-	this->ui->tableGrid->adjustSize();
 	this->ui->tableGrid->parentWidget()->adjustSize();
 	this->ui->tableScrollArea->adjustSize();
 	this->adjustSize();
