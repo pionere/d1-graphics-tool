@@ -205,7 +205,8 @@ void CppViewEntryWidget::on_toggleInfoButton()
         // standard entry
         // if (layout->count() == 2) {
         if (w != nullptr) {
-            w->setVisible(!w->isVisible());
+            // w->setVisible(!w->isVisible());
+            w->setVisible(w->effectiveWinId() == 0);
         }
     }
 }
