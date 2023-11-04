@@ -58,7 +58,7 @@
    </item>
    <item>
    <!--item alignment="Qt::AlignTop"-->
-    <widget class="QScrollArea">
+    <widget class="QScrollArea" name="tableScrollArea">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>1</horstretch>

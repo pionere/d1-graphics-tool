@@ -667,9 +667,11 @@ void CppView::on_tablesComboBox_activated(int index)
             }
         }
     }
-	// this->adjustSize();
-	this->show();
+	this->ui->tableGrid->adjustSize();
 	this->ui->tableGrid->parentWidget()->adjustSize();
+	this->ui->tableScrollArea->adjustSize();
+	this->adjustSize();
+	this->show();
 
     // this->gridRowCount = table->getRowCount() + 1;
     // this->gridColumnCount = table->getColumnCount() + 1;
