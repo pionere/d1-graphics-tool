@@ -569,6 +569,7 @@ void CppView::on_tablesComboBox_activated(int index)
     this->currentTable = table;
     this->currentColumnIndex = -1;
     this->currentRowIndex = -1;
+    this->infoVisible = false;
     // eliminate obsolete content
     for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
@@ -664,6 +665,8 @@ void CppView::updateFields()
 void CppView::on_toggleInfoButton_clicked()
 {
     D1CppTable *table = this->currentTable;
+    this->infoVisible = !this->infoVisible;
+    bool ivis = this->infoVisible;
 
     this->hide();
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
@@ -675,7 +678,7 @@ void CppView::on_toggleInfoButton_clicked()
             CppViewEntryWidget *w;
             if (item != nullptr) {
                 w = (CppViewEntryWidget *)item->widget();
-                w->on_toggleInfoButton();
+                w->on_toggleInfoButton(ivis);
             }
         }
     }

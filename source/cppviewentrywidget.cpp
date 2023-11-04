@@ -189,16 +189,17 @@ void CppViewEntryWidget::on_infoButton_clicked()
 
 }
 
-void CppViewEntryWidget::on_toggleInfoButton()
+void CppViewEntryWidget::on_toggleInfoButton(bool visible)
 {
     PushButtonWidget *w = this->ui->entryHorizontalLayout->parentWidget()->findChild<PushButtonWidget *>();
     if (this->rowNum == 0) {
         // header
         if (this->columnNum == 0) {
-            QString showTooltip = tr("Show info");
+            /*QString showTooltip = tr("Show info");
             if (w->toolTip() == showTooltip) {
                 showTooltip = tr("Hide info");
-            }
+            }*/
+            QString showTooltip = visible ? tr("Show info") : tr("Hide info");
             w->setToolTip(showTooltip);
         }
     } else if (this->columnNum != 0) {
@@ -206,7 +207,7 @@ void CppViewEntryWidget::on_toggleInfoButton()
         // if (layout->count() == 2) {
         if (w != nullptr) {
             // w->setVisible(!w->isVisible());
-            w->setVisible(w->effectiveWinId() == 0);
+            w->setVisible(visible);
         }
     }
 }

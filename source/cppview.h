@@ -102,4 +102,5 @@ private:
     QList<int> columnWidths;
     int gridRowCount; // because QGridLayout is lame...
     int gridColumnCount;
+    bool infoVisible;
 };

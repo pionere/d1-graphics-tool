@@ -23,7 +23,7 @@ public:
     static int baseHorizontalMargin();
 
 public slots:
-    void on_toggleInfoButton();
+    void on_toggleInfoButton(bool visible);
 
 private slots:
     void on_headerButton_clicked();
