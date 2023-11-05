@@ -697,6 +697,7 @@ LogMessage(QString("Starting complex entry in a simple row %1.").arg(content), L
                 }
             }
             if (content[0] == '}') {
+LogMessage(QString("Starting finishing a complex entry %1.").arg(content), LOG_NOTE);
                 content.remove(0, 1);
                 /*if (!processContent(READ_ROW_COMPLEX)) {
                     return false;
@@ -751,6 +752,7 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 }
             }
             if (content[0] == ',') {
+LogMessage(QString("Starting post comment of a complex entry %1.").arg(content), LOG_NOTE);
                 content.remove(0, 1);
                 /*if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST?
                     return false;
