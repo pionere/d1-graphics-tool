@@ -1426,27 +1426,19 @@ if (i == 0)
             // trim content
             bool isNumber = true;
             bool isReal = true;
-            bool isOneWord = true;
             bool isQoutedString = true;
             for (D1CppRow *row : table->rows) {
                 D1CppRowEntry *entry = row->entries[i];
                 QString content = entry->datas[0]->content.trimmed();
-                isOneWord &= content.indexOf(' ') == -1;
-                if (!isOneWord) {
-                    isReal = false;
-                    isNumber = false;
-                    isQoutedString = false;
-                    break;
-                }
+                isQoutedString &= content.startsWith('"') && content.endsWith('"');
                 if (isNumber) {
                     content.toInt(&isNumber);
                 }
                 if (isReal) {
                     content.toDouble(&isReal);
                 }
-                isQoutedString &= content.startsWith('"') && content.endsWith('"');
             }
-LogMessage(QString("Column %1 (%6 of %7): num: %2 real: %3 isOneWord: %4 isQoutedString: %5.").arg(i).arg(table->header[i]).arg(table->getName()).arg(isNumber).arg(isReal).arg(isOneWord).arg(isQoutedString), LOG_ERROR);
+LogMessage(QString("Column %1 (%6 of %7): num: %2 real: %3 isQoutedString: %5.").arg(i).arg(table->header[i]).arg(table->getName()).arg(isNumber).arg(isReal).arg(false).arg(isQoutedString), LOG_ERROR);
             D1CPP_ENTRY_TYPE type = D1CPP_ENTRY_TYPE::String;
             if (isNumber) {
                 type = D1CPP_ENTRY_TYPE::Integer;
