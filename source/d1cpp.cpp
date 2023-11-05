@@ -1641,20 +1641,17 @@ bool D1Cpp::save(const SaveAsParam &params)
         }
         QList<int> maxWidths;
         maxWidths.push_back(maxLen);
-        QList<QList<QPair<QString, bool>>> entryContents;
+        QList<QList<QPair<QString, int>>> entryContents;
         for (const QString &header : table->header) {
             maxWidths.push_back(0);
         }
         for (int n = 0; n < table->rows.count(); n++) {
-            QList<QPair<QString, bool>> rowEntryContents;
+            QList<QPair<QString, int>> rowEntryContents;
             const D1CppRow *row = table->rows[n];
             int w = 0;
             for (D1CppRowEntry *entry : row->entries) {
                 // TODO: handle row->entryTexts[e]
                 QString entryContent;
-                if (entry->isComplexFirst()) {
-                    entryContent = "{ ";
-                }
                 for (int a = 0; a < entry->datas.count(); a++) {
                     D1CppEntryData *data = entry->datas[a];
                     w++;
@@ -1662,11 +1659,16 @@ bool D1Cpp::save(const SaveAsParam &params)
                     entryContent += data->preContent + data->content + data->postContent;
                 }
                 int len = entryContent.length();
-                bool isComplexLast = entry->isComplexLast();
-                rowEntryContents.push_back(QPair<QString, bool>(entryContent, isComplexLast));
-                if (isComplexLast) {
+                int complex = 0;
+                if (entry->isComplexFirst()) {
+                    complex |= 1;
                     len += 2;
                 }
+                if (entry->isComplexLast()) {
+                    len += 2;
+                    complex |= 2;
+                }
+                rowEntryContents.push_back(QPair<QString, int>(entryContent, complex));
                 if (maxWidths[w] < len) {
                     maxWidths[w] = len;
                 }
@@ -1776,18 +1778,22 @@ bool D1Cpp::save(const SaveAsParam &params)
                 out << row->entries[e]->preContent;
                 out << row->entries[e]->content;
                 out << row->entries[e]->postContent;*/
-                QPair<QString, bool> &entry = entryContents[n][e];
+                QPair<QString, int> &entry = entryContents[n][e];
                 QString &content = entry.first;
-                bool isComplexLast = entry.second;
+                bool isComplexFirst = (entry.second & 1) != 0;
+                bool isComplexLast = (entry.second & 2) != 0;
                 bool last = e == entryContents[n].count() - 1;
                 if (!last && !isComplexLast) {
                     content += ", ";
                 }
-                int width = maxWidths[e + 1] + (last ? 0 : 2) + (isComplexLast ? -4 : 0);
+                int width = maxWidths[e + 1] + (last ? 0 : 2) + (isComplexLast ? -4 : 0) + (isComplexFirst ? -2 : 0);
                 if (table->columnType[e] == D1CPP_ENTRY_TYPE::Integer || table->columnType[e] == D1CPP_ENTRY_TYPE::Real) {
                     content = content.rightJustified(width, ' ');
                 } else {
                     content = content.leftJustified(width, ' ');
+                }
+                if (isComplexFirst) {
+                    content.prepend("{ ");
                 }
                 if (isComplexLast) {
                     content += " }";
