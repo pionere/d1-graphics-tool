@@ -652,7 +652,9 @@ bool D1Cpp::readContent(QString &content)
                 continue;
             }
             if (content[0] == '{') {
+LogMessage(QString("Starting complex entry in a simple row %1.").arg(content), LOG_NOTE);
                 content.remove(0, 1);
+                initRowEntry();
 
                 states.push(std::pair<int, QString>(READ_ROW_SIMPLE, "")); // currState.first
                 currState.first = READ_ENTRY_COMPLEX;
