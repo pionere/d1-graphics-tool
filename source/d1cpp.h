@@ -117,9 +117,11 @@ public:
 private:
     QString name;
 
+    QList<QString> header;
+    QList<D1CPP_ENTRY_TYPE> columnType;
+
     QList<QString> rowTexts;
     QList<D1CppRow *> rows;
-    QList<QString> header;
     QList<QString> leader;
 };
 

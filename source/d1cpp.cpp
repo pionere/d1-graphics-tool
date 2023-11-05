@@ -1213,6 +1213,7 @@ void D1CppTable::moveColumnLeft(int index, bool complete)
         row->moveColumnLeft(index, complete);
     }
     this->header.swapItemsAt(index, index - 1);
+    this->columnType.swapItemsAt(index, index - 1);
 }
 
 void D1CppTable::moveColumnRight(int index, bool complete)
@@ -1221,6 +1222,7 @@ void D1CppTable::moveColumnRight(int index, bool complete)
         row->moveColumnRight(index, complete);
     }
     this->header.swapItemsAt(index, index + 1);
+    this->columnType.swapItemsAt(index, index + 1);
 }
 
 void D1CppTable::insertColumn(int index)
@@ -1229,6 +1231,7 @@ void D1CppTable::insertColumn(int index)
         row->insertEntry(index);
     }
     this->header.insert(this->header.begin() + index, QString());
+    this->columnType.insert(this->columnType.begin() + index, D1CPP_ENTRY_TYPE::String);
 }
 
 void D1CppTable::trimColumn(int index)
@@ -1257,6 +1260,7 @@ void D1CppTable::delColumn(int index)
         row->delEntry(index);
     }
     this->header.takeAt(index);
+    this->columnType.takeAt(index);
 }
 
 D1Cpp::~D1Cpp()
@@ -1422,6 +1426,9 @@ if (i == 0)
             lastHeader.prepend(", ");
             table->header.back().append(lastHeader);
         }
+        for (int i = 0; i < table->getColumnCount(); i++) {
+            table->columnType.push_back(D1CPP_ENTRY_TYPE::String);
+        }
         // trim content + set types
         for (int i = table->getColumnCount() - 1; i >= 0; i--) {
             // trim content
@@ -1450,6 +1457,7 @@ LogMessage(QString("Column %1 (%2 of %3): num: %4 real: %5 isQoutedString: %6 is
             } else if (isQoutedString) {
                 type = D1CPP_ENTRY_TYPE::QuotedString;
             }
+            table->columnType[i] = type;
             int leadingSpaces = INT_MAX, trailingSpaces = INT_MAX;
             for (D1CppRow *row : table->rows) {
                 D1CppEntryData *data = row->entries[i]->datas[0];
@@ -1730,7 +1738,12 @@ bool D1Cpp::save(const SaveAsParam &params)
                     bool last = h == table->header.count() - 1;
                     if (!last && headerWidths[h + 1] != -1) {
                         content += ", ";
-                        content = content.leftJustified(headerWidths[h + 1] + 2, ' ');
+                        int width = headerWidths[h + 1] + 2;
+                        if (table->columnType[h] == D1CPP_ENTRY_TYPE::Integer || table->columnType[h] == D1CPP_ENTRY_TYPE::Real) {
+                            content = content.rightJustified(width, ' ');
+                        } else {
+                            content = content.leftJustified(width, ' ');
+                        }
 } else if (headerWidths[h + 1] == -1) {
         LogMessage(QString("Array header skipping %1.").arg(h + 1), LOG_NOTE);
                     }
@@ -1765,7 +1778,12 @@ bool D1Cpp::save(const SaveAsParam &params)
                 if (!last && !isComplexLast) {
                     content += ", ";
                 }
-                content = content.leftJustified(maxWidths[e + 1] + (last ? 0 : 2) + (isComplexLast ? -4 : 0), ' ');
+                int width = maxWidths[e + 1] + (last ? 0 : 2) + (isComplexLast ? -4 : 0);
+                if (table->columnType[e] == D1CPP_ENTRY_TYPE::Integer || table->columnType[e] == D1CPP_ENTRY_TYPE::Real) {
+                    content = content.rightJustified(width, ' ');
+                } else {
+                    content = content.leftJustified(width, ' ');
+                }
                 if (isComplexLast) {
                     content += " }";
                     if (!last) {
