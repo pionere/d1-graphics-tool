@@ -1435,6 +1435,7 @@ if (i == 0)
                 if (!isOneWord) {
                     isReal = false;
                     isNumber = false;
+                    isQoutedString = false;
                     break;
                 }
                 if (isNumber) {
@@ -1445,6 +1446,7 @@ if (i == 0)
                 }
                 isQoutedString &= content.startsWith('"') && content.endsWith('"');
             }
+LogMessage(QString("Column %1 (%6 of %7): num: %2 real: %3 isOneWord: %4 isQoutedString: %5.").arg(i).arg(table->header[i]).arg(table->getName()).arg(isNumber).arg(isReal).arg(isOneWord).arg(isQoutedString), LOG_ERROR);
             D1CPP_ENTRY_TYPE type = D1CPP_ENTRY_TYPE::String;
             if (isNumber) {
                 type = D1CPP_ENTRY_TYPE::Integer;
@@ -1484,6 +1486,7 @@ if (i == 0)
             if (type != D1CPP_ENTRY_TYPE::String) {
                 continue;
             }
+LogMessage(QString("Column %1 (%6 of %7): type: %2 leadingspaces: %3 trailingSpaces: %4 isQoutedString: %5.").arg(i).arg(table->header[i]).arg(table->getName()).arg(type).arg(leadingSpaces).arg(trailingSpaces), LOG_ERROR);
             // trim common spaces based on the rows
             for (D1CppRow *row : table->rows) {
                 D1CppEntryData *data = row->entries[i]->datas[0];
