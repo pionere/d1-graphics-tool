@@ -38,7 +38,7 @@ typedef enum LogLevel {
     LOG_NOTE,
 } LogLevel;
 
-#define LOG_LEVEL LOG_ERROR
+#define LOG_LEVEL LOG_NOTE
 /*#define LogMessage(msg, lvl)                        \
 if (lvl <= LOG_LEVEL) {                               \
     if (lvl == LOG_ERROR) dProgressErr() << msg;      \
@@ -1748,7 +1748,7 @@ bool D1Cpp::save(const SaveAsParam &params)
                     if (!last && headerWidths[h + 1] != -1) {
                         content += ", ";
                         int width = headerWidths[h + 1] + 2;
-                        if (table->columnType[h] == D1CPP_ENTRY_TYPE::Integer || table->columnType[h] == D1CPP_ENTRY_TYPE::Real) {
+                        if ((table->columnType[h] == D1CPP_ENTRY_TYPE::Integer || table->columnType[h] == D1CPP_ENTRY_TYPE::Real) && headerWidths[h + 2] != -1) {
                             content = content.rightJustified(width, ' ');
                         } else {
                             content = content.leftJustified(width, ' ');
