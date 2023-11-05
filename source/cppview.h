@@ -38,6 +38,7 @@ public:
     void insertColumn(int column);
     void moveColumnLeft(int column);
     void moveColumnRight(int column);
+    void trimColumn(int column);
     void insertRow(int row);
     void moveRowUp(int row);
     void moveRowDown(int row);

@@ -230,6 +230,11 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
         // action->setEnabled(false);
     //}
 
+    action = new QAction(tr("Trim"));
+    action->setToolTip(tr("Trim the content in this column"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionTrimColumn_triggered()));
+    menu->addAction(action);
+
     action = new QAction(tr("Rename"));
     action->setToolTip(tr("Rename this column"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionRenameColumn_triggered()));
@@ -317,6 +322,11 @@ void CppViewEntryWidget::ShowRowContextMenu()
     menu->exec(pos);
     // contextMenu->setAttribute(Qt::WA_DeleteOnClose);
     // menu->popup(pos); // area->viewport()->mapToGlobal(pos);
+}
+
+void CppViewEntryWidget::on_actionTrimColumn_triggered()
+{
+    this->view->trimColumn(this->columnNum);
 }
 
 void CppViewEntryWidget::on_actionRenameColumn_triggered()

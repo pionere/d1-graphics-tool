@@ -1072,6 +1072,12 @@ void D1CppRow::insertEntry(int index)
     this->entryTexts.insert(this->entryTexts.begin() + index, QString());
 }
 
+void D1CppRow::trimEntry(int index)
+{
+    QString content = this->entries[index]->getContent();
+    this->entries[index]->setContent(content.trimmed());
+}
+
 void D1CppRow::delEntry(int index)
 {
     QString text = this->entryTexts.takeAt(index);
@@ -1222,6 +1228,13 @@ void D1CppTable::insertColumn(int index)
         row->insertEntry(index);
     }
     this->header.insert(this->header.begin() + index, QString());
+}
+
+void D1CppTable::trimColumn(int index)
+{
+    for (D1CppRow *row : this->rows) {
+        row->trimEntry(index);
+    }
 }
 
 void D1CppTable::delRow(int index)
@@ -1409,16 +1422,16 @@ if (i == 0)
             table->header.back().append(lastHeader);
         }
         // trim content + set types
-        for (int i = 0; i < table->getColumnCount(); i++) {
+        for (int i = table->getColumnCount() - 1; i >= 0; i--) {
             // trim content
             bool isNumber = true;
             bool isReal = true;
             bool isOneWord = true;
             bool isQoutedString = true;
-            for (D1CppRow *row : this->rows) {
+            for (D1CppRow *row : table->rows) {
                 D1CppRowEntry *entry = row->entries[i];
                 QString content = entry->datas[0]->content.trimmed();
-                isOneWord &= content.indexof(' ') == -1;
+                isOneWord &= content.indexOf(' ') == -1;
                 if (!isOneWord) {
                     isReal = false;
                     isNumber = false;
@@ -1440,13 +1453,48 @@ if (i == 0)
             } else if (isQoutedString) {
                 type = D1CPP_ENTRY_TYPE::QuotedString;
             }
-            for (D1CppRow *row : this->rows) {
+            int leadingSpaces = INT_MAX, trailingSpaces = INT_MAX;
+            for (D1CppRow *row : table->rows) {
                 D1CppEntryData *data = row->entries[i]->datas[0];
                 data->type = type;
                 if (type != D1CPP_ENTRY_TYPE::String) {
                     data->content = data->content.trimmed();
+                } else {
+                    int ls = 0;
+                    for ( ; ls < data->content.length(); ls++) {
+                        if (data->content[0] != ' ') {
+                            break;
+                        }
+                    }
+                    if (ls < leadingSpaces) {
+                        leadingSpaces = ls;
+                    }
+                    int ts = data->content.length();
+                    for ( ; ts > 0; ts--) {
+                        if (data->content[ts - 1] != ' ') {
+                            break;
+                        }
+                    }
+                    ts = data->content.length() - ts;
+                    if (ts < trailingSpaces) {
+                        trailingSpaces = ts;
+                    }
                 }
             }
+            if (type != D1CPP_ENTRY_TYPE::String) {
+                continue;
+            }
+            // trim common spaces based on the rows
+            for (D1CppRow *row : table->rows) {
+                D1CppEntryData *data = row->entries[i]->datas[0];
+                if (leadingSpaces != 0) {
+                    data->content = data->content.mid(leadingSpaces);
+                }
+                if (trailingSpaces != 0) {
+                    data->content.chop(trailingSpaces);
+                }
+            }
+            // TODO: trim spaces based on the previous column?
         }
     }
     LogMessage(QString("postProcess done."), LOG_NOTE);

@@ -77,6 +77,7 @@ public:
     D1CppRowEntry *getEntry(int index) const;
     QString getEntryText(int index) const;
     void insertEntry(int column);
+    void trimEntry(int column);
     void delEntry(int column);
     void moveColumnLeft(int column, bool complete);
     void moveColumnRight(int column, bool complete);
@@ -107,6 +108,7 @@ public:
     void moveRowUp(int row, bool complete);
     void moveRowDown(int row, bool complete);
     void insertColumn(int column);
+    void trimColumn(int column);
     void moveColumnLeft(int column, bool complete);
     void moveColumnRight(int column, bool complete);
     void delRow(int row);

@@ -226,6 +226,45 @@ void CppView::moveColumnRight(int index)
     dMainWindow().updateWindow();
 }
 
+void CppView::trimColumn(int index)
+{
+    D1CppTable *table = this->currentTable;
+
+    table->trimColumn(index - 1);
+    this->cpp->setModified();
+
+    int columnWidth;
+    QFontMetrics fm = this->fontMetrics();
+    int entryHorizontalMargin = CppViewEntryWidget::baseHorizontalMargin();
+    {
+        int maxWidth = BASE_COLUMN_WIDTH;
+        for (int y = 1; y < table->getRowCount() + 1; y++) {
+            /*if (x == 0 && y == 0) {
+                continue;
+            }*/
+            int tw = getTableEntryLength(table, y, index, fm);
+            if (tw > maxWidth) {
+                maxWidth = tw;
+            }
+        }
+        maxWidth += entryHorizontalMargin;
+        this->columnWidths[index] = maxWidth;
+        columnWidth = maxWidth;
+    }
+
+    this->hide();
+    for (int y = 0; y < table->getRowCount() + 1; y++) {
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
+        CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+
+        w->initialize(table, y, index, columnWidth);
+        w->on_toggleInfoButton(this->infoVisible);
+    }
+    this->show();
+    // this->updateFields();
+    dMainWindow().updateWindow();
+}
+
 void CppView::delColumn(int index)
 {
     D1CppTable *table = this->currentTable;
@@ -296,6 +335,7 @@ void CppView::insertRow(int index)
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
         this->ui->tableGrid->addWidget(w, index, x);
         w->initialize(table, index, x, this->columnWidths[x]);
+        w->on_toggleInfoButton(this->infoVisible);
     }
     this->show();
     // this->updateFields();
@@ -597,7 +637,6 @@ void CppView::on_tablesComboBox_activated(int index)
     this->columnWidths.clear();
     QFontMetrics fm = this->fontMetrics();
     int entryHorizontalMargin = CppViewEntryWidget::baseHorizontalMargin();
-    int entryComplexWidth = fm.horizontalAdvance("{");
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         int maxWidth = BASE_COLUMN_WIDTH;
         for (int y = 1; y < table->getRowCount() + 1; y++) {
