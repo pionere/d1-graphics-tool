@@ -710,6 +710,7 @@ LogMessage(QString("Starting complex entry in a complex row %1.").arg(content), 
 
                 states.push(std::pair<int, QString>(READ_ROW_COMPLEX, "")); // currState.first
                 currState.first = READ_ENTRY_COMPLEX;
+                currState.second.clear(); // TODO: store the spaces?
                 continue;
             }
             if (!content[0].isSpace()) {
@@ -1427,10 +1428,12 @@ if (i == 0)
             bool isNumber = true;
             bool isReal = true;
             bool isQoutedString = true;
+            bool isOneWord = true;
             for (D1CppRow *row : table->rows) {
                 D1CppRowEntry *entry = row->entries[i];
                 QString content = entry->datas[0]->content.trimmed();
                 isQoutedString &= content.startsWith('"') && content.endsWith('"');
+                isOneWord &= content.indexOf(' ') == -1;
                 if (isNumber) {
                     content.toInt(&isNumber);
                 }
@@ -1438,7 +1441,7 @@ if (i == 0)
                     content.toDouble(&isReal);
                 }
             }
-LogMessage(QString("Column %1 (%2 of %3): num: %4 real: %5 isQoutedString: %6.").arg(i).arg(table->header[i]).arg(table->getName()).arg(isNumber).arg(isReal).arg(isQoutedString), LOG_ERROR);
+LogMessage(QString("Column %1 (%2 of %3): num: %4 real: %5 isQoutedString: %6 isOneWord: %7.").arg(i).arg(table->header[i]).arg(table->getName()).arg(isNumber).arg(isReal).arg(isQoutedString).arg(isOneWord), LOG_ERROR);
             D1CPP_ENTRY_TYPE type = D1CPP_ENTRY_TYPE::String;
             if (isNumber) {
                 type = D1CPP_ENTRY_TYPE::Integer;
@@ -1451,7 +1454,7 @@ LogMessage(QString("Column %1 (%2 of %3): num: %4 real: %5 isQoutedString: %6.")
             for (D1CppRow *row : table->rows) {
                 D1CppEntryData *data = row->entries[i]->datas[0];
                 data->type = type;
-                if (type != D1CPP_ENTRY_TYPE::String) {
+                if (type != D1CPP_ENTRY_TYPE::String || isOneWord) {
                     data->content = data->content.trimmed();
                 } else {
                     int ls = 0;
@@ -1475,7 +1478,7 @@ LogMessage(QString("Column %1 (%2 of %3): num: %4 real: %5 isQoutedString: %6.")
                     }
                 }
             }
-            if (type != D1CPP_ENTRY_TYPE::String) {
+            if (type != D1CPP_ENTRY_TYPE::String || isOneWord) {
                 continue;
             }
 LogMessage(QString("Column %1 (%2 of %3): type: %4 leadingspaces: %5 trailingSpaces: %6 isQoutedString: %7.").arg(i).arg(table->header[i]).arg(table->getName()).arg((int)type).arg(leadingSpaces).arg(trailingSpaces), LOG_ERROR);
