@@ -610,6 +610,8 @@ void CppView::on_tablesComboBox_activated(int index)
     this->currentColumnIndex = -1;
     this->currentRowIndex = -1;
     this->infoVisible = false;
+    this->ui->tableScrollArea->horizontalScrollBar()->setValue(0);
+    this->ui->tableScrollArea->verticalScrollBar()->setValue(0);
     // eliminate obsolete content
     for (int y = this->gridRowCount - 1 + 1; y > table->getRowCount() - 1 + 1; y--) {
         for (int x = this->ui->tableGrid->columnCount() - 1 + 1; x >= 0; x--) {
