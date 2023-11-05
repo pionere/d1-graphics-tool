@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QScrollBar>
 
 #include "celview.h"
 #include "config.h"
