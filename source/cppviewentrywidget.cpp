@@ -225,13 +225,13 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
         label = new QLabel(header, this);
         label->setAlignment(Qt::AlignCenter);
         action = new QWidgetAction(menu);
-        action->setDefaultWidget(label);
+        ((QWidgetAction *)action)->setDefaultWidget(label);
         menu->addAction(action);
         // action = menu->addAction(QString("<u>%1</u>").arg(header));
         // action->setEnabled(false);
     //}
     QString type;
-    switch (this->table->getColumnType()) {
+    switch (this->table->getColumnType(this->columnNum - 1)) {
     case D1CPP_ENTRY_TYPE::String:       type = tr("string");  break;
     case D1CPP_ENTRY_TYPE::QuotedString: type = tr("text");    break;
     case D1CPP_ENTRY_TYPE::Integer:      type = tr("integer"); break;
@@ -240,7 +240,7 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
     label = new QLabel(QString("<u><i>(%1)</i></u>").arg(type), this);
     label->setAlignment(Qt::AlignCenter);
     action = new QWidgetAction(menu);
-    action->setDefaultWidget(label);
+    ((QWidgetAction *)action)->setDefaultWidget(label);
     menu->addAction(action);
 
     action = new QAction(tr("Trim"));
@@ -299,7 +299,7 @@ void CppViewEntryWidget::ShowRowContextMenu()
         label = new QLabel(QString("<u>%1</u>").arg(leader), this);
         label->setAlignment(Qt::AlignCenter);
         action = new QWidgetAction(menu);
-        action->setDefaultWidget(label);
+        ((QWidgetAction *)action)->setDefaultWidget(label);
         menu->addAction(action);
         // action = menu->addAction(QString("<u>%1</u>").arg(leader));
         // action->setEnabled(false);
