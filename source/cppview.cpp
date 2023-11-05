@@ -154,11 +154,11 @@ void CppView::insertColumn(int index)
 
             // this->ui->tableGrid->removeWidget(w);
             w->adjustColumnNum(1);
-            this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
+            this->ui->tableGrid->addWidget(w, y, x);
         }
 
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
-        this->ui->tableGrid->addWidget(w, y, index, Qt::AlignTop);
+        this->ui->tableGrid->addWidget(w, y, index);
         w->initialize(table, y, index, this->columnWidths[index]);
     }
 
@@ -189,8 +189,8 @@ void CppView::moveColumnLeft(int index)
         w->adjustColumnNum(-1);
         pw->adjustColumnNum(+1);
 
-        this->ui->tableGrid->addWidget(w, y, index - 1, Qt::AlignTop);
-        this->ui->tableGrid->addWidget(pw, y, index, Qt::AlignTop);
+        this->ui->tableGrid->addWidget(w, y, index - 1);
+        this->ui->tableGrid->addWidget(pw, y, index);
     }
     this->show();
     // this->updateFields();
@@ -218,8 +218,8 @@ void CppView::moveColumnRight(int index)
         w->adjustColumnNum(+1);
         nw->adjustColumnNum(-1);
 
-        this->ui->tableGrid->addWidget(w, y, index + 1, Qt::AlignTop);
-        this->ui->tableGrid->addWidget(nw, y, index, Qt::AlignTop);
+        this->ui->tableGrid->addWidget(w, y, index + 1);
+        this->ui->tableGrid->addWidget(nw, y, index);
     }
     this->show();
     // this->updateFields();
@@ -253,7 +253,7 @@ void CppView::delColumn(int index)
             this->ui->tableGrid->removeWidget(w);
 
             w->adjustColumnNum(-1);
-            this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
+            this->ui->tableGrid->addWidget(w, y, x);
         }
     }
     // this->updateFields();
@@ -290,11 +290,11 @@ void CppView::insertRow(int index)
 
             // this->ui->tableGrid->removeWidget(w);
             w->adjustRowNum(1);
-            this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
+            this->ui->tableGrid->addWidget(w, y, x);
         }
 
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
-        this->ui->tableGrid->addWidget(w, index, x, Qt::AlignTop);
+        this->ui->tableGrid->addWidget(w, index, x);
         w->initialize(table, index, x, this->columnWidths[x]);
     }
     this->show();
@@ -323,8 +323,8 @@ void CppView::moveRowUp(int index)
         w->adjustRowNum(-1);
         pw->adjustRowNum(+1);
 
-        this->ui->tableGrid->addWidget(w, index - 1, x, Qt::AlignTop);
-        this->ui->tableGrid->addWidget(pw, index, x, Qt::AlignTop);
+        this->ui->tableGrid->addWidget(w, index - 1, x);
+        this->ui->tableGrid->addWidget(pw, index, x);
     }
     this->show();
     // this->updateFields();
@@ -352,8 +352,8 @@ void CppView::moveRowDown(int index)
         w->adjustRowNum(+1);
         nw->adjustRowNum(-1);
 
-        this->ui->tableGrid->addWidget(w, index + 1, x, Qt::AlignTop);
-        this->ui->tableGrid->addWidget(nw, index, x, Qt::AlignTop);
+        this->ui->tableGrid->addWidget(w, index + 1, x);
+        this->ui->tableGrid->addWidget(nw, index, x);
     }
     this->show();
     // this->updateFields();
@@ -386,7 +386,7 @@ void CppView::delRow(int index)
             this->ui->tableGrid->removeWidget(w);
 
             w->adjustRowNum(-1);
-            this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
+            this->ui->tableGrid->addWidget(w, y, x);
         }
     }
     // this->updateFields();
@@ -627,7 +627,7 @@ void CppView::on_tablesComboBox_activated(int index)
             }
             if (w == nullptr) {
                 w = new CppViewEntryWidget(this);
-                this->ui->tableGrid->addWidget(w, y, x, Qt::AlignTop);
+                this->ui->tableGrid->addWidget(w, y, x);
             } else {
                 // restore visiblity
                 w->setVisible(true);

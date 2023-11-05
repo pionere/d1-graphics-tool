@@ -9,14 +9,13 @@
 #include "saveasdialog.h"
 
 enum class D1CPP_ENTRY_TYPE {
-    Header,
-    Enum,
-    Integer,
-    Real,
     String,
     QuotedString,
-    Char,
-    QuotedChar,
+    // Char,
+    // QuotedChar,
+    // Enum,
+    Integer,
+    Real,
 };
 
 class D1CppEntryData : public QObject {

@@ -172,8 +172,8 @@ bool D1Cpp::processContent(int type)
         // case READ_ROW_SIMPLE:
         // case READ_ROW_COMPLEX:
         case READ_ENTRY_SIMPLE:
-            LogMessage(QString("Simple-Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content.trimmed()).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
-            currEntryData->content.append(content.trimmed());
+            LogMessage(QString("Simple-Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
+            currEntryData->content.append(content);
 
             content.clear();
 
@@ -183,9 +183,9 @@ bool D1Cpp::processContent(int type)
             // fallthrough
         case READ_ENTRY_COMPLEX:
             if (type == READ_ENTRY_COMPLEX)
-            LogMessage(QString("Complex-Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content.trimmed()).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
+            LogMessage(QString("Complex-Entry %1 (%5) of row %2 of table %3 done with content %4.").arg(currRow->entries.size()).arg(currTable->rows.size()).arg(currTable->name).arg(content).arg(type == READ_ENTRY_COMPLEX), LOG_NOTE);
 
-            currRowEntry->dataTexts.back().append(content.trimmed());
+            currRowEntry->dataTexts.back().append(content);
             currRow->entries.push_back(currRowEntry);
             currRow->entryTexts.push_back(QString());
             currRowEntry = nullptr;
@@ -266,8 +266,8 @@ bool D1Cpp::processContent(int type)
                     currRowEntry->content.append(currRowEntry->postContent);
                     currRowEntry->postContent.clear();
                 }
-                currRowEntry->content.append(content.trimmed());*/
-                currEntryData->content.append(content.trimmed());
+                currRowEntry->content.append(content);*/
+                currEntryData->content.append(content);
                 currRowEntry->datas.push_back(currEntryData);
                 currRowEntry->dataTexts.push_back(QString());
                 currEntryData = nullptr;
@@ -582,17 +582,17 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push(currState);
+                    states.push(std::pair<int, QString>(READ_TABLE, "")); // currState.first
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
-                    currState.second = "";
+                    currState.second.clear(); // TODO: store the spaces?
                     continue;
                 }
             }
             if (content[0] == '#') {
                 content.remove(0, 1);
-                states.push(currState);
+                states.push(std::pair<int, QString>(READ_TABLE, "")); // currState.first
                 currState.first = READ_DIRECTIVE;
-                currState.second = "";
+                currState.second.clear(); // TODO: store the spaces?
                 continue;
             }
             if (content[0] == '}') {
@@ -606,9 +606,9 @@ bool D1Cpp::readContent(QString &content)
                 content.remove(0, 1); // TODO: or complex entry?
                 LogMessage(QString("Starting complex row %1.").arg(content), LOG_NOTE);
                 initRow();
-                states.push(currState);
+                states.push(std::pair<int, QString>(READ_TABLE, "")); // currState.first
                 currState.first = READ_ROW_COMPLEX;
-                currState.second = "";
+                currState.second.clear(); // TODO: store the spaces?
                 continue;
             }
             if (!content[0].isSpace()) {
@@ -638,9 +638,10 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push(currState);
+
+                    states.push(std::pair<int, QString>(READ_ROW_SIMPLE, "")); // currState.first
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
-                    currState.second = "";
+                    currState.second.clear(); // TODO: store the spaces?
                     continue;
                 }
             }
@@ -652,18 +653,18 @@ bool D1Cpp::readContent(QString &content)
             }
             if (content[0] == '{') {
                 content.remove(0, 1);
-                states.push(currState);
+
+                states.push(std::pair<int, QString>(READ_ROW_SIMPLE, "")); // currState.first
                 currState.first = READ_ENTRY_COMPLEX;
-                currState.second = "";
+                currState.second.clear(); // TODO: store the spaces?
                 continue;
             }
             if (!content[0].isSpace()) {
                 initRowEntry();
                 currEntryData = new D1CppEntryData(); // initEntryData
 
-                states.push(currState);
+                states.push(std::pair<int, QString>(READ_ROW_SIMPLE, "")); // currState.first
                 currState.first = READ_ENTRY_SIMPLE;
-                currState.second = "";
                 continue;
             }
             if (content[0] == '\\') {
@@ -686,9 +687,10 @@ bool D1Cpp::readContent(QString &content)
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push(currState);
+
+                    states.push(std::pair<int, QString>(READ_ROW_COMPLEX, "")); // currState.first
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
-                    currState.second = "";
+                    currState.second.clear(); // TODO: store the spaces?
                     continue;
                 }
             }
@@ -706,9 +708,8 @@ LogMessage(QString("Starting complex entry in a complex row %1.").arg(content), 
                 content.remove(0, 1);
                 initRowEntry();
 
-                states.push(currState);
+                states.push(std::pair<int, QString>(READ_ROW_COMPLEX, "")); // currState.first
                 currState.first = READ_ENTRY_COMPLEX;
-                currState.second = "";
                 continue;
             }
             if (!content[0].isSpace()) {
@@ -716,9 +717,8 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 initRowEntry();
                 currEntryData = new D1CppEntryData(); // initEntryData
 
-                states.push(currState);
+                states.push(std::pair<int, QString>(READ_ROW_COMPLEX, "")); // currState.first
                 currState.first = READ_ENTRY_SIMPLE;
-                currState.second = "";
                 continue;
             }
             if (content[0] == '\\') {
@@ -741,9 +741,9 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push(currState);
+                    states.push(std::pair<int, QString>(READ_ROW_COMPLEX_POST, "")); // currState.first
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
-                    currState.second = "";
+                    currState.second.clear(); // TODO: store the spaces?
                     continue;
                 }
             }
@@ -784,9 +784,9 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push(currState);
+                    states.push(std::pair<int, QString>(READ_ROW_COMPLEX_POST_COMMENT, "")); // currState.first
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
-                    currState.second = "";
+                    currState.second.clear(); // TODO: store the spaces?
                     continue;
                 }
             }
@@ -829,9 +829,9 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push(currState);
+                    states.push(std::pair<int, QString>(READ_ENTRY_SIMPLE, "")); // currState.first
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
-                    currState.second = "";
+                    currState.second.clear(); // TODO: store the spaces?
                     continue;
                 }
             }
@@ -871,9 +871,9 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push(currState);
+                    states.push(std::pair<int, QString>(READ_ENTRY_COMPLEX, "")); // currState.first
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
-                    currState.second = "";
+                    currState.second.clear(); // TODO: store the spaces?
                     continue;
                 }
             }
@@ -915,9 +915,8 @@ LogMessage(QString("Starting simple entry in a complex row %1.").arg(content), L
 LogMessage(QString("Starting simple entry in a complex entry %1.").arg(content), LOG_NOTE);
                 currEntryData = new D1CppEntryData(); // initEntryData
 
-                states.push(currState);
+                states.push(std::pair<int, QString>(READ_ENTRY_COMPLEX, "")); // currState.first
                 currState.first = READ_ENTRY_SIMPLE;
-                currState.second = "";
                 continue;
             }
             if (content[0] == '\\') {
@@ -940,9 +939,9 @@ LogMessage(QString("Starting simple entry in a complex entry %1.").arg(content),
                 if (content[1] == '/' || content[1] == '*') {
                     bool single = content[1] == '/';
                     content.remove(0, 2);
-                    states.push(currState);
+                    states.push(std::pair<int, QString>(READ_ENTRY_COMPLEX_POST, "")); // currState.first
                     currState.first = single ? READ_COMMENT_SINGLE : READ_COMMENT_MULTI;
-                    currState.second = "";
+                    currState.second.clear(); // TODO: store the spaces?
                     continue;
                 }
             }
@@ -1408,6 +1407,46 @@ if (i == 0)
             table->header.pop_back();
             lastHeader.prepend(", ");
             table->header.back().append(lastHeader);
+        }
+        // trim content + set types
+        for (int i = 0; i < table->getColumnCount(); i++) {
+            // trim content
+            bool isNumber = true;
+            bool isReal = true;
+            bool isOneWord = true;
+            bool isQoutedString = true;
+            for (D1CppRow *row : this->rows) {
+                D1CppRowEntry *entry = row->entries[i];
+                QString content = entry->datas[0]->content.trimmed();
+                isOneWord &= content.indexof(' ') == -1;
+                if (!isOneWord) {
+                    isReal = false;
+                    isNumber = false;
+                    break;
+                }
+                if (isNumber) {
+                    content.toInt(&isNumber);
+                }
+                if (isReal) {
+                    content.toDouble(&isReal);
+                }
+                isQoutedString &= content.startsWith('"') && content.endsWith('"');
+            }
+            D1CPP_ENTRY_TYPE type = D1CPP_ENTRY_TYPE::String;
+            if (isNumber) {
+                type = D1CPP_ENTRY_TYPE::Integer;
+            } else if (isReal) {
+                type = D1CPP_ENTRY_TYPE::Real;
+            } else if (isQoutedString) {
+                type = D1CPP_ENTRY_TYPE::QuotedString;
+            }
+            for (D1CppRow *row : this->rows) {
+                D1CppEntryData *data = row->entries[i]->datas[0];
+                data->type = type;
+                if (type != D1CPP_ENTRY_TYPE::String) {
+                    data->content = data->content.trimmed();
+                }
+            }
         }
     }
     LogMessage(QString("postProcess done."), LOG_NOTE);
