@@ -243,8 +243,18 @@ bool D1Cpp::processContent(int type)
     case READ_ENTRY_SIMPLE:
     case READ_ENTRY_COMPLEX:
         switch (type) {
-        // case READ_QUOTE_SINGLE:
-        // case READ_QUOTE_DOUBLE:
+        case READ_QUOTE_SINGLE:
+            content.prepend('\'');
+            content.append('\'');
+            currEntryData->content.append(content);
+            LogMessage(QString("Content %1 added to the entry.").arg(content), LOG_NOTE);
+            return true;
+        case READ_QUOTE_DOUBLE:
+            content.prepend('"');
+            content.append('"');
+            currEntryData->content.append(content);
+            LogMessage(QString("Content %1 added to the entry.").arg(content), LOG_NOTE);
+            return true;
         case READ_COMMENT_SINGLE:
             content.prepend("//");
             // content.append(newLine);
@@ -835,6 +845,15 @@ LogMessage(QString("Starting post comment of a complex entry %1.").arg(content),
                 content.remove(0, 1);
                 continue;
             }*/
+            if (content[0] == '"' || content[0] == '\'') {
+                bool single = content[0] == '\'';
+                content.remove(0, 1);
+                states.push(currState);
+                currState.first = single ? READ_QUOTE_SINGLE : READ_QUOTE_DOUBLE;
+                currState.second = "";
+                LogMessage(QString("Starting entry in quote %1.").arg(content), LOG_NOTE);
+                continue;
+            }
             if (content[0] == '/') {
                 if (content.length() < 2) {
                     return true;
@@ -1459,7 +1478,7 @@ if (i == 0)
             bool isReal = true;
             bool isQoutedString = true;
             bool isOneWord = true;
-			int idx = 0;
+            int idx = 0;
             for (D1CppRow *row : table->rows) {
         LogMessage(QString("Checking row column %1 with %2 entries.").arg(idx++).arg(row->entries.count()), LOG_NOTE);
                 D1CppRowEntry *entry = row->entries[i];
