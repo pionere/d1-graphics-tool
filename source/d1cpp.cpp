@@ -1438,7 +1438,7 @@ if (i == 0)
                     content.toDouble(&isReal);
                 }
             }
-LogMessage(QString("Column %1 (%6 of %7): num: %2 real: %3 isQoutedString: %5.").arg(i).arg(table->header[i]).arg(table->getName()).arg(isNumber).arg(isReal).arg(false).arg(isQoutedString), LOG_ERROR);
+LogMessage(QString("Column %1 (%2 of %3): num: %4 real: %5 isQoutedString: %6.").arg(i).arg(table->header[i]).arg(table->getName()).arg(isNumber).arg(isReal).arg(isQoutedString), LOG_ERROR);
             D1CPP_ENTRY_TYPE type = D1CPP_ENTRY_TYPE::String;
             if (isNumber) {
                 type = D1CPP_ENTRY_TYPE::Integer;
@@ -1456,7 +1456,7 @@ LogMessage(QString("Column %1 (%6 of %7): num: %2 real: %3 isQoutedString: %5.")
                 } else {
                     int ls = 0;
                     for ( ; ls < data->content.length(); ls++) {
-                        if (data->content[0] != ' ') {
+                        if (data->content[ls] != ' ') {
                             break;
                         }
                     }
@@ -1478,7 +1478,7 @@ LogMessage(QString("Column %1 (%6 of %7): num: %2 real: %3 isQoutedString: %5.")
             if (type != D1CPP_ENTRY_TYPE::String) {
                 continue;
             }
-LogMessage(QString("Column %1 (%6 of %7): type: %2 leadingspaces: %3 trailingSpaces: %4 isQoutedString: %5.").arg(i).arg(table->header[i]).arg(table->getName()).arg((int)type).arg(leadingSpaces).arg(trailingSpaces), LOG_ERROR);
+LogMessage(QString("Column %1 (%2 of %3): type: %4 leadingspaces: %5 trailingSpaces: %6 isQoutedString: %7.").arg(i).arg(table->header[i]).arg(table->getName()).arg((int)type).arg(leadingSpaces).arg(trailingSpaces), LOG_ERROR);
             // trim common spaces based on the rows
             for (D1CppRow *row : table->rows) {
                 D1CppEntryData *data = row->entries[i]->datas[0];
