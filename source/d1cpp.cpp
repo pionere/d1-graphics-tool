@@ -1478,7 +1478,7 @@ LogMessage(QString("Column %1 (%6 of %7): num: %2 real: %3 isQoutedString: %5.")
             if (type != D1CPP_ENTRY_TYPE::String) {
                 continue;
             }
-LogMessage(QString("Column %1 (%6 of %7): type: %2 leadingspaces: %3 trailingSpaces: %4 isQoutedString: %5.").arg(i).arg(table->header[i]).arg(table->getName()).arg(type).arg(leadingSpaces).arg(trailingSpaces), LOG_ERROR);
+LogMessage(QString("Column %1 (%6 of %7): type: %2 leadingspaces: %3 trailingSpaces: %4 isQoutedString: %5.").arg(i).arg(table->header[i]).arg(table->getName()).arg((int)type).arg(leadingSpaces).arg(trailingSpaces), LOG_ERROR);
             // trim common spaces based on the rows
             for (D1CppRow *row : table->rows) {
                 D1CppEntryData *data = row->entries[i]->datas[0];
