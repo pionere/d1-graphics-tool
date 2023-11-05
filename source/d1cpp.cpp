@@ -540,6 +540,9 @@ bool D1Cpp::readContent(QString &content)
                 }
                 continue;
             }
+            if (content.length() < 2 && newLine.length() >= 2) {
+                return true;
+            }
             if (content[0] == '\\') {
                 if (content.length() < 2) {
                     return true;
@@ -704,6 +707,7 @@ LogMessage(QString("Starting finishing a complex entry %1.").arg(content), LOG_N
                 }*/
                 // states.push(currState);
                 currState.first = READ_ROW_COMPLEX_POST;
+                currState.second.clear(); // TODO: store the spaces?
                 continue;
             }
             if (content[0] == '{') {
@@ -758,6 +762,7 @@ LogMessage(QString("Starting post comment of a complex entry %1.").arg(content),
                     return false;
                 }*/
                 currState.first = READ_ROW_COMPLEX_POST_COMMENT;
+                currState.second.clear(); // TODO: store the spaces?
                 continue;
             }
             if (content[0] == '}') {
@@ -801,6 +806,9 @@ LogMessage(QString("Starting post comment of a complex entry %1.").arg(content),
                     return false;
                 }
                 continue;
+            }
+            if (content.length() < 2 && newLine.length() >= 2) {
+                return true;
             }
             if (content[0] == '}') {
                 if (!processContent(READ_ROW_COMPLEX)) { // READ_ROW_COMPLEX_POST_COMMENT?
