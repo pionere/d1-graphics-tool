@@ -38,7 +38,7 @@ typedef enum LogLevel {
     LOG_NOTE,
 } LogLevel;
 
-#define LOG_LEVEL LOG_ERROR
+#define LOG_LEVEL LOG_NOTE
 /*#define LogMessage(msg, lvl)                        \
 if (lvl <= LOG_LEVEL) {                               \
     if (lvl == LOG_ERROR) dProgressErr() << msg;      \
@@ -1363,7 +1363,7 @@ bool D1Cpp::postProcess()
             for (int i = 0; i < table->getRowCount(); i++) {
                 D1CppRow *row = table->getRow(i);
                 while (row->entries.count() < columnNum) {
-                    row->entries.push_back(new D1CppRowEntry());
+                    row->entries.push_back(new D1CppRowEntry(""));
                     row->entryTexts.push_back(QString());
                 }
             }
@@ -1441,20 +1441,29 @@ if (i == 0)
             QString lastHeader = table->header.back();
             table->header.pop_back();
             lastHeader.prepend(", ");
-            table->header.back().append(lastHeader);
+            if (!table->header.isEmpty()) {
+                table->header.back().append(lastHeader);
+            } else {
+                LogMessage(QString("Restored row-text '%1' due to missing columns.").arg(lastHeader), LOG_NOTE);
+                table->rowTexts[0].prepend(lastHeader);
+            }
         }
         for (int i = 0; i < table->getColumnCount(); i++) {
             table->columnType.push_back(D1CPP_ENTRY_TYPE::String);
         }
         // trim content + set types
         for (int i = table->getColumnCount() - 1; i >= 0; i--) {
+        LogMessage(QString("Trimming column %1.").arg(i).arg(table->getColumnCount()), LOG_NOTE);
             // trim content
             bool isNumber = true;
             bool isReal = true;
             bool isQoutedString = true;
             bool isOneWord = true;
+			int idx = 0;
             for (D1CppRow *row : table->rows) {
+        LogMessage(QString("Checking row column %1 with %2 entries.").arg(idx++).arg(row->entries.count()), LOG_NOTE);
                 D1CppRowEntry *entry = row->entries[i];
+        LogMessage(QString("Checking entry data %1.").arg(entry->datas.count()), LOG_NOTE);
                 QString content = entry->datas[0]->content.trimmed();
                 isQoutedString &= content.startsWith('"') && content.endsWith('"');
                 isOneWord &= content.indexOf(' ') == -1;
