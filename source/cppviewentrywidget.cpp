@@ -215,20 +215,33 @@ void CppViewEntryWidget::on_toggleInfoButton(bool visible)
 void CppViewEntryWidget::ShowHeaderContextMenu()
 {
     QAction *action;
+    QLabel *label;
     QMenu contextMenu(this);
     QMenu *menu = &contextMenu;
 
     menu->setToolTipsVisible(true);
     QString header = ((QPushButton *)this->widget)->text();
     //if (!header.isEmpty()) {
-        QLabel *label = new QLabel(QString("<u>%1</u>").arg(header), this);
+        label = new QLabel(header, this);
         label->setAlignment(Qt::AlignCenter);
-        QWidgetAction *a = new QWidgetAction(menu);
-        a->setDefaultWidget(label);
-        menu->addAction(a);
+        action = new QWidgetAction(menu);
+        action->setDefaultWidget(label);
+        menu->addAction(action);
         // action = menu->addAction(QString("<u>%1</u>").arg(header));
         // action->setEnabled(false);
     //}
+    QString type;
+    switch (this->table->getColumnType()) {
+    case D1CPP_ENTRY_TYPE::String:       type = tr("string");  break;
+    case D1CPP_ENTRY_TYPE::QuotedString: type = tr("text");    break;
+    case D1CPP_ENTRY_TYPE::Integer:      type = tr("integer"); break;
+    case D1CPP_ENTRY_TYPE::Real:         type = tr("real");    break;
+    };
+    label = new QLabel(QString("<u><i>(%1)</i></u>").arg(type), this);
+    label->setAlignment(Qt::AlignCenter);
+    action = new QWidgetAction(menu);
+    action->setDefaultWidget(label);
+    menu->addAction(action);
 
     action = new QAction(tr("Trim"));
     action->setToolTip(tr("Trim the content in this column"));
@@ -276,17 +289,18 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
 void CppViewEntryWidget::ShowRowContextMenu()
 {
     QAction *action;
+    QLabel *label;
     QMenu contextMenu(this);
     QMenu *menu = &contextMenu;
 
     menu->setToolTipsVisible(true);
     QString leader = ((QPushButton *)this->widget)->text();
     //if (!leader.isEmpty()) {
-        QLabel *label = new QLabel(QString("<u>%1</u>").arg(leader), this);
+        label = new QLabel(QString("<u>%1</u>").arg(leader), this);
         label->setAlignment(Qt::AlignCenter);
-        QWidgetAction *a = new QWidgetAction(menu);
-        a->setDefaultWidget(label);
-        menu->addAction(a);
+        action = new QWidgetAction(menu);
+        action->setDefaultWidget(label);
+        menu->addAction(action);
         // action = menu->addAction(QString("<u>%1</u>").arg(leader));
         // action->setEnabled(false);
     //}

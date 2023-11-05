@@ -1171,6 +1171,11 @@ bool D1CppTable::setHeader(int index, const QString &text)
     return true;
 }
 
+D1CPP_ENTRY_TYPE D1CppTable::getColumnType(int index) const
+{
+    return this->columnType[index];
+}
+
 QString D1CppTable::getLeader(int index) const
 {
     return this->leader[index];

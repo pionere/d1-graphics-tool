@@ -103,6 +103,7 @@ public:
     QString getRowText(int index) const;
     QString getHeader(int index) const;
     bool setHeader(int index, const QString &text);
+    D1CPP_ENTRY_TYPE getColumnType(int index) const;
     QString getLeader(int index) const;
     void insertRow(int row);
     void moveRowUp(int row, bool complete);
