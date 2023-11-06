@@ -11,9 +11,6 @@
 enum class D1CPP_ENTRY_TYPE {
     String,
     QuotedString,
-    // Char,
-    // QuotedChar,
-    // Enum,
     Integer,
     Real,
 };

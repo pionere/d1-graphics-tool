@@ -841,10 +841,6 @@ LogMessage(QString("Starting post comment of a complex entry %1.").arg(content),
             content.remove(0, 1);
             continue;
         case READ_ENTRY_SIMPLE:
-            /*if (content[0].isSpace()) {
-                content.remove(0, 1);
-                continue;
-            }*/
             if (content[0] == '"' || content[0] == '\'') {
                 bool single = content[0] == '\'';
                 content.remove(0, 1);
@@ -892,10 +888,6 @@ LogMessage(QString("Starting post comment of a complex entry %1.").arg(content),
             content.remove(0, 1);
             continue;
         case READ_ENTRY_COMPLEX:
-            /*if (content[0].isSpace()) {
-                content.remove(0, 1);
-                continue;
-            }*/
             if (content[0] == '/') {
                 if (content.length() < 2) {
                     return true;
@@ -911,6 +903,7 @@ LogMessage(QString("Starting post comment of a complex entry %1.").arg(content),
             }
             /*if (content[0] == '{') {
                 content.remove(0, 1);
+                initRowEntry();
 
                 states.push(currState);
                 currState.first = READ_ENTRY_COMPLEX;
@@ -934,15 +927,6 @@ LogMessage(QString("Starting post comment of a complex entry %1.").arg(content),
                 currState.first = READ_ENTRY_COMPLEX_POST;
                 continue;
             }
-            /*if (content[0] == '{') {
-                content.remove(0, 1);
-                initRowEntry();
-
-                states.push(currState);
-                currState.first = READ_ENTRY_COMPLEX;
-                currState.second = "";
-                continue;
-            }*/
             if (!content[0].isSpace()) {
 LogMessage(QString("Starting simple entry in a complex entry %1.").arg(content), LOG_NOTE);
                 currEntryData = new D1CppEntryData(); // initEntryData
@@ -1040,11 +1024,6 @@ D1CppRowEntry::~D1CppRowEntry()
 
 QString D1CppRowEntry::getContent() const
 {
-// REMOVEME
-if (this->datas.empty()) {
-dProgressErr() << tr("Missing entry data.");
-    return "";
-}
     return this->datas[0]->getContent();
 }
 
@@ -1081,20 +1060,11 @@ D1CppRow::~D1CppRow()
 
 D1CppRowEntry *D1CppRow::getEntry(int index) const
 {
-// REMOVEME
-if (index >= this->entries.count()) {
-dProgressErr() << tr("Missing entry %1").arg(index);
-    return new D1CppRowEntry();
-}
     return const_cast<D1CppRowEntry *>(this->entries[index]);
 }
 
 QString D1CppRow::getEntryText(int index) const
 {
-if (index >= this->entryTexts.count()) {
-dProgressErr() << tr("Missing entry text %1").arg(index);
-    return QString();
-}
     return this->entryTexts[index];
 }
 
