@@ -409,7 +409,7 @@ void MainWindow::reloadConfig()
     bool currPalChanged = false;
     for (auto iter = this->pals.cbegin(); iter != this->pals.cend(); ++iter) {
         bool change = iter.value()->reloadConfig();
-        if (iter.value() == this->pal) {
+        if (change && iter.value() == this->pal) {
             currPalChanged = true;
         }
     }
