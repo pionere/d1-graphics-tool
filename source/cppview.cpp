@@ -128,12 +128,50 @@ void CppView::setColumnNameType(int column, const QString &text, D1CPP_ENTRY_TYP
     }
 }
 
-void CppView::renameColumn(int index)
+void CppView::changeColumn(int index)
 {
-    this->renameDialog.initialize(index);
-    this->renameDialog.show();
+    this->changeDialog.initialize(index);
+    this->changeDialog.show();
 }
 
+void CppView::trimColumn(int index)
+{
+    D1CppTable *table = this->currentTable;
+
+    table->trimColumn(index - 1);
+    this->cpp->setModified();
+
+    int columnWidth;
+    QFontMetrics fm = this->fontMetrics();
+    int entryHorizontalMargin = CppViewEntryWidget::baseHorizontalMargin();
+    {
+        int maxWidth = BASE_COLUMN_WIDTH;
+        for (int y = 1; y < table->getRowCount() + 1; y++) {
+            /*if (x == 0 && y == 0) {
+                continue;
+            }*/
+            int tw = getTableEntryLength(table, y, index, fm);
+            if (tw > maxWidth) {
+                maxWidth = tw;
+            }
+        }
+        maxWidth += entryHorizontalMargin;
+        this->columnWidths[index] = maxWidth;
+        columnWidth = maxWidth;
+    }
+
+    this->hide();
+    for (int y = 0; y < table->getRowCount() + 1; y++) {
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
+        CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+
+        w->initialize(table, y, index, columnWidth);
+        w->on_toggleInfoButton(this->infoVisible);
+    }
+    this->show();
+    // this->updateFields();
+    dMainWindow().updateWindow();
+}
 
 void CppView::insertColumn(int index)
 {
@@ -224,45 +262,6 @@ void CppView::moveColumnRight(int index)
 
         this->ui->tableGrid->addWidget(w, y, index + 1);
         this->ui->tableGrid->addWidget(nw, y, index);
-    }
-    this->show();
-    // this->updateFields();
-    dMainWindow().updateWindow();
-}
-
-void CppView::trimColumn(int index)
-{
-    D1CppTable *table = this->currentTable;
-
-    table->trimColumn(index - 1);
-    this->cpp->setModified();
-
-    int columnWidth;
-    QFontMetrics fm = this->fontMetrics();
-    int entryHorizontalMargin = CppViewEntryWidget::baseHorizontalMargin();
-    {
-        int maxWidth = BASE_COLUMN_WIDTH;
-        for (int y = 1; y < table->getRowCount() + 1; y++) {
-            /*if (x == 0 && y == 0) {
-                continue;
-            }*/
-            int tw = getTableEntryLength(table, y, index, fm);
-            if (tw > maxWidth) {
-                maxWidth = tw;
-            }
-        }
-        maxWidth += entryHorizontalMargin;
-        this->columnWidths[index] = maxWidth;
-        columnWidth = maxWidth;
-    }
-
-    this->hide();
-    for (int y = 0; y < table->getRowCount() + 1; y++) {
-        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
-        CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
-
-        w->initialize(table, y, index, columnWidth);
-        w->on_toggleInfoButton(this->infoVisible);
     }
     this->show();
     // this->updateFields();
