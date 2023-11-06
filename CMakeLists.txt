@@ -52,6 +52,18 @@ set(PROJECT_SOURCES
         source/celview.cpp
         source/celview.h
         source/celview.ui
+        source/cppdataeditdialog.cpp
+        source/cppdataeditdialog.h
+        source/cppdataeditdialog.ui
+        source/cppcolumnchangedialog.cpp
+        source/cppcolumnchangedialog.h
+        source/cppcolumnchangedialog.ui
+        source/cppview.cpp
+        source/cppview.h
+        source/cppview.ui
+        source/cppviewentrywidget.cpp
+        source/cppviewentrywidget.h
+        source/cppviewentrywidget.ui
         source/config.cpp
         source/config.h
         source/d1cel.cpp
@@ -66,6 +78,8 @@ set(PROJECT_SOURCES
         source/d1cl2.h
         source/d1cl2frame.cpp
         source/d1cl2frame.h
+        source/d1cpp.cpp
+        source/d1cpp.h
         source/d1dun.cpp
         source/d1dun.h
         source/d1gfx.cpp

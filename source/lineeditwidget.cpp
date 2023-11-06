@@ -7,6 +7,11 @@ LineEditWidget::LineEditWidget(QWidget *parent)
 {
 }
 
+LineEditWidget::LineEditWidget(const QString &contents, QWidget *parent)
+    : QLineEdit(contents, parent)
+{
+}
+
 void LineEditWidget::setCharWidth(int value)
 {
     int maxWidth = this->fontMetrics().horizontalAdvance('w');
@@ -64,6 +69,13 @@ void LineEditWidget::keyPressEvent(QKeyEvent *event)
     QLineEdit::keyPressEvent(event);
 }
 
+void LineEditWidget::focusInEvent(QFocusEvent *event)
+{
+    emit focus_gain_signal();
+
+    QLineEdit::focusInEvent(event);
+}
+
 void LineEditWidget::focusOutEvent(QFocusEvent *event)
 {
     if (event->reason() == Qt::TabFocusReason || event->reason() == Qt::BacktabFocusReason /*|| event->reason() == Qt::ShortcutFocusReason*/) {
@@ -73,6 +85,8 @@ void LineEditWidget::focusOutEvent(QFocusEvent *event)
         // cancel otherwise
         emit cancel_signal();
     }
+
+    emit focus_lost_signal();
 
     QLineEdit::focusOutEvent(event);
 }

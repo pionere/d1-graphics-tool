@@ -9,6 +9,8 @@
 
 #include "builderwidget.h"
 #include "celview.h"
+#include "cppview.h"
+#include "d1cpp.h"
 #include "d1dun.h"
 #include "d1gfx.h"
 #include "d1gfxset.h"
@@ -245,6 +247,25 @@ private slots:
     void on_actionLoadTrns_Colors_triggered();
     void on_actionSaveTrns_Colors_triggered();
 
+    void on_actionAddColumn_Table_triggered();
+    void on_actionInsertColumn_Table_triggered();
+    void on_actionDelColumn_Table_triggered();
+    void on_actionHideColumn_Table_triggered();
+    void on_actionMoveLeftColumn_Table_triggered();
+    void on_actionMoveRightColumn_Table_triggered();
+    void on_actionDelColumns_Table_triggered();
+    void on_actionHideColumns_Table_triggered();
+    void on_actionShowColumns_Table_triggered();
+    void on_actionAddRow_Table_triggered();
+    void on_actionInsertRow_Table_triggered();
+    void on_actionDelRow_Table_triggered();
+    void on_actionHideRow_Table_triggered();
+    void on_actionMoveUpRow_Table_triggered();
+    void on_actionMoveDownRow_Table_triggered();
+    void on_actionDelRows_Table_triggered();
+    void on_actionHideRows_Table_triggered();
+    void on_actionShowRows_Table_triggered();
+
     void on_actionUpscaleTask_triggered();
 
     void on_actionAbout_triggered();
@@ -274,6 +295,7 @@ private:
     LevelCelView *levelCelView = nullptr;
     GfxsetView *gfxsetView = nullptr;
     TblView *tblView = nullptr;
+    CppView *cppView = nullptr;
     PaintWidget *paintWidget = nullptr;
     BuilderWidget *builderWidget = nullptr;
 
@@ -305,6 +327,7 @@ private:
     D1Gfxset *gfxset = nullptr;
     D1Dun *dun = nullptr;
     D1Tableset *tableset = nullptr;
+    D1Cpp *cpp = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation

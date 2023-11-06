@@ -230,6 +230,20 @@ void MainWindow::updateWindow()
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
+    bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
+    this->ui->actionDelColumn_Table->setEnabled(hasColumn);
+    this->ui->actionHideColumn_Table->setEnabled(hasColumn);
+    this->ui->actionMoveLeftColumn_Table->setEnabled(hasColumn);
+    this->ui->actionMoveRightColumn_Table->setEnabled(hasColumn);
+    this->ui->actionDelColumns_Table->setEnabled(hasColumn);
+    this->ui->actionHideColumns_Table->setEnabled(hasColumn);
+    bool hasRow = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getRowCount() != 0;
+    this->ui->actionDelRow_Table->setEnabled(hasRow);
+    this->ui->actionHideRow_Table->setEnabled(hasRow);
+    this->ui->actionMoveUpRow_Table->setEnabled(hasRow);
+    this->ui->actionMoveDownRow_Table->setEnabled(hasRow);
+    this->ui->actionDelRows_Table->setEnabled(hasRow);
+    this->ui->actionHideRows_Table->setEnabled(hasRow);
 
     // update the view
     if (this->celView != nullptr) {
@@ -247,6 +261,10 @@ void MainWindow::updateWindow()
     if (this->tblView != nullptr) {
         // this->tblView->updateFields();
         this->tblView->displayFrame();
+    }
+    if (this->cppView != nullptr) {
+        // this->cppView->updateFields();
+        this->cppView->displayFrame();
     }
 }
 
@@ -414,7 +432,7 @@ void MainWindow::reloadConfig()
         }
     }
     // refresh the palette widgets and the view
-    if (currPalChanged) {
+    if (currPalChanged && this->palWidget != nullptr) {
         this->palWidget->modify();
     }
 }
@@ -677,7 +695,7 @@ void MainWindow::on_actionNew_Gfxset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -952,6 +970,8 @@ void MainWindow::openFile(const OpenAsParam &params)
             fileType = 3;
         else if (fileLower.endsWith(".tbl"))
             fileType = 4;
+        else if (fileLower.endsWith(".cpp"))
+            fileType = 5;
         else
             return;
     }
@@ -1162,11 +1182,18 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading TBL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
+    } else if (fileType == 5) { // CPP
+        this->cpp = new D1Cpp();
+        if (!this->cpp->load(gfxFilePath)) {
+            this->failWithError(tr("Failed loading CPP file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
     } else {
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
     }
 
+    if (fileType != 5) {
     // Add palette widgets for PAL and TRNs
     this->palWidget = new PaletteWidget(this, this->undoStack, tr("Palette"));
     this->trnUniqueWidget = new PaletteWidget(this, this->undoStack, tr("Unique translation"));
@@ -1175,6 +1202,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     palLayout->addWidget(this->palWidget);
     palLayout->addWidget(this->trnUniqueWidget);
     palLayout->addWidget(this->trnBaseWidget);
+    }
 
     QWidget *view;
     if (isGfxset) {
@@ -1201,7 +1229,20 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
 
         view = this->levelCelView;
-    } else if (fileType != 4) {
+    } else if (fileType == 4) {
+        this->tblView = new TblView(this, this->undoStack);
+        this->tblView->initialize(this->pal, this->tableset, this->bottomPanelHidden);
+
+        // Refresh palette widgets when frame is changed
+        QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+
+        view = this->tblView;
+    } else if (fileType == 5) {
+        this->cppView = new CppView(this, this->undoStack);
+        this->cppView->initialize(this->cpp);
+
+        view = this->cppView;
+    } else {
         // build a CelView
         this->celView = new CelView(this);
         this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
@@ -1213,20 +1254,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
 
         view = this->celView;
-    } else {
-        this->tblView = new TblView(this, this->undoStack);
-        this->tblView->initialize(this->pal, this->tableset, this->bottomPanelHidden);
-
-        // Refresh palette widgets when frame is changed
-        QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
-
-        view = this->tblView;
     }
     // Add the view to the main frame
     this->ui->mainFrameLayout->addWidget(view);
 
     // prepare the paint dialog
-    if (fileType != 4) {
+    if (fileType != 4 && fileType != 5) {
         this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView, this->gfxsetView);
         this->paintWidget->setPalette(this->trnBase->getResultingPalette());
     }
@@ -1238,6 +1271,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
     }
 
+    if (fileType != 5) {
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
@@ -1295,23 +1329,26 @@ void MainWindow::openFile(const OpenAsParam &params)
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
-
+    } else {
+        this->cppView->displayFrame();
+    }
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
-    this->ui->menuView->setEnabled(true);
-    this->ui->menuColors->setEnabled(true);
-    this->ui->actionExport->setEnabled(fileType != 4);
+    this->ui->menuView->setEnabled(fileType != 5);
+    this->ui->menuColors->setEnabled(fileType != 5);
+    this->ui->menuData->setEnabled(fileType == 5);
+    this->ui->actionExport->setEnabled(fileType != 4 && fileType != 5);
     this->ui->actionLoad->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
 
-    this->ui->menuFrame->setEnabled(fileType != 4);
+    this->ui->menuFrame->setEnabled(fileType != 4 && fileType != 5);
     this->ui->menuSubtile->setEnabled(isTileset);
     this->ui->menuTile->setEnabled(isTileset);
     this->ui->actionPatch->setEnabled(this->celView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
-    this->ui->actionUpscale->setEnabled(fileType != 4);
+    this->ui->actionUpscale->setEnabled(fileType != 4 && fileType != 5);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
@@ -1386,7 +1423,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
-    if (!filePath.isEmpty() && this->tableset == nullptr && this->gfxset == nullptr) {
+    if (!filePath.isEmpty() && this->tableset == nullptr && this->gfxset == nullptr && this->cpp == nullptr) {
         QString fileLower = filePath.toLower();
         if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             if (!fileLower.endsWith(".cel")) {
@@ -1427,6 +1464,10 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
     if (this->tableset != nullptr) {
         this->tableset->save(params);
+    }
+
+    if (this->cpp != nullptr) {
+        this->cpp->save(params);
     }
 
     // Clear loading message from status bar
@@ -1576,7 +1617,8 @@ void MainWindow::on_actionSave_triggered()
 {
     if (this->gfx->getFilePath().isEmpty()
         && (this->dun == nullptr || this->dun->getFilePath().isEmpty())
-        && (this->tableset == nullptr || this->tableset->distTbl->getFilePath().isEmpty() || this->tableset->darkTbl->getFilePath().isEmpty())) {
+        && (this->tableset == nullptr || this->tableset->distTbl->getFilePath().isEmpty() || this->tableset->darkTbl->getFilePath().isEmpty())
+        && (this->cpp == nullptr || this->cpp->getFilePath().isEmpty())) {
         this->on_actionSaveAs_triggered();
         return;
     }
@@ -1589,7 +1631,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx, this->tileset, this->gfxset, this->dun, this->tableset);
+    this->saveAsDialog->initialize(this->gfx, this->tileset, this->gfxset, this->dun, this->tableset, this->cpp);
     this->saveAsDialog->show();
 }
 
@@ -1603,6 +1645,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->levelCelView);
     MemFree(this->gfxsetView);
     MemFree(this->tblView);
+    MemFree(this->cppView);
     MemFree(this->palWidget);
     MemFree(this->trnUniqueWidget);
     MemFree(this->trnBaseWidget);
@@ -1611,6 +1654,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->gfxset);
     MemFree(this->dun);
     MemFree(this->tableset);
+    MemFree(this->cpp);
 
     qDeleteAll(this->pals);
     this->pals.clear();
@@ -1629,6 +1673,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuTileset->setEnabled(false);
     this->ui->menuDungeon->setEnabled(false);
     this->ui->menuColors->setEnabled(false);
+    this->ui->menuData->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
     this->ui->actionLoad->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
@@ -2774,6 +2819,97 @@ void MainWindow::on_actionSaveTrns_Colors_triggered()
     if (!trsFilePath.isEmpty()) {
         D1Trs::save(trsFilePath, trns);
     }
+}
+
+void MainWindow::on_actionAddColumn_Table_triggered()
+{
+    this->cppView->on_actionAddColumn_triggered();
+    // this->updateWindow(); -- done by cppView
+}
+
+void MainWindow::on_actionInsertColumn_Table_triggered()
+{
+    this->cppView->on_actionInsertColumn_triggered();
+}
+
+void MainWindow::on_actionDelColumn_Table_triggered()
+{
+    this->cppView->on_actionDelColumn_triggered();
+}
+
+void MainWindow::on_actionHideColumn_Table_triggered()
+{
+    this->cppView->on_actionHideColumn_triggered();
+}
+
+void MainWindow::on_actionMoveLeftColumn_Table_triggered()
+{
+    this->cppView->on_actionMoveLeftColumn_triggered();
+}
+
+void MainWindow::on_actionMoveRightColumn_Table_triggered()
+{
+    this->cppView->on_actionMoveRightColumn_triggered();
+}
+
+void MainWindow::on_actionDelColumns_Table_triggered()
+{
+    this->cppView->on_actionDelColumns_triggered();
+}
+
+void MainWindow::on_actionHideColumns_Table_triggered()
+{
+    this->cppView->on_actionHideColumns_triggered();
+}
+
+void MainWindow::on_actionShowColumns_Table_triggered()
+{
+    this->cppView->on_actionShowColumns_triggered();
+}
+
+void MainWindow::on_actionAddRow_Table_triggered()
+{
+    this->cppView->on_actionAddRow_triggered();
+}
+
+void MainWindow::on_actionInsertRow_Table_triggered()
+{
+    this->cppView->on_actionInsertRow_triggered();
+}
+
+void MainWindow::on_actionDelRow_Table_triggered()
+{
+    this->cppView->on_actionDelRow_triggered();
+}
+
+void MainWindow::on_actionHideRow_Table_triggered()
+{
+    this->cppView->on_actionHideRow_triggered();
+}
+
+void MainWindow::on_actionMoveUpRow_Table_triggered()
+{
+    this->cppView->on_actionMoveUpRow_triggered();
+}
+
+void MainWindow::on_actionMoveDownRow_Table_triggered()
+{
+    this->cppView->on_actionMoveDownRow_triggered();
+}
+
+void MainWindow::on_actionDelRows_Table_triggered()
+{
+    this->cppView->on_actionDelRows_triggered();
+}
+
+void MainWindow::on_actionHideRows_Table_triggered()
+{
+    this->cppView->on_actionHideRows_triggered();
+}
+
+void MainWindow::on_actionShowRows_Table_triggered()
+{
+    this->cppView->on_actionShowRows_triggered();
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()
