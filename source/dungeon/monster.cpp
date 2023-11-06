@@ -323,6 +323,8 @@ void GetLevelMTypes()
 			AddMonsterType(uniqMonData[UMT_GARBUD].mtype, FALSE);
 		if (lvl == uniqMonData[UMT_ZHAR].muLevelIdx && quests[Q_ZHAR]._qactive != QUEST_NOTAVAIL)
 			AddMonsterType(uniqMonData[UMT_ZHAR].mtype, FALSE);
+		if (lvl == uniqMonData[UMT_ZAMPHIR].muLevelIdx && quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL)
+			AddMonsterType(uniqMonData[UMT_ZAMPHIR].mtype, FALSE);
 		//if (QuestStatus(Q_BANNER)) {
 		//	AddMonsterType(uniqMonData[UMT_SNOTSPIL].mtype, FALSE);
 		//	// AddMonsterType(MT_NFAT, FALSE);
