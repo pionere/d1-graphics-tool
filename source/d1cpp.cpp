@@ -38,7 +38,7 @@ typedef enum LogLevel {
     LOG_NOTE,
 } LogLevel;
 
-#define LOG_LEVEL LOG_NOTE
+#define LOG_LEVEL LOG_ERROR
 /*#define LogMessage(msg, lvl)                        \
 if (lvl <= LOG_LEVEL) {                               \
     if (lvl == LOG_ERROR) dProgressErr() << msg;      \
@@ -1402,8 +1402,6 @@ bool D1Cpp::postProcess()
                 }
                 if (x > 0) {
                     rowLeader = firstText.mid(x + 1, firstText.length() - (1 + 2 + x + 1) + 1);
-if (i == 0)
-        LogMessage(QString("Adding leader field %1 to row %2 rem:%3.").arg(rowLeader).arg(i).arg(x), LOG_NOTE);
                     firstText = firstText.left(x - 1);
                 }
 
@@ -1472,17 +1470,13 @@ if (i == 0)
         }
         // trim content + set types
         for (int i = table->getColumnCount() - 1; i >= 0; i--) {
-        LogMessage(QString("Trimming column %1.").arg(i).arg(table->getColumnCount()), LOG_NOTE);
             // trim content
             bool isNumber = true;
             bool isReal = true;
             bool isQoutedString = true;
             bool isOneWord = true;
-            int idx = 0;
             for (D1CppRow *row : table->rows) {
-        LogMessage(QString("Checking row column %1 with %2 entries.").arg(idx++).arg(row->entries.count()), LOG_NOTE);
                 D1CppRowEntry *entry = row->entries[i];
-        LogMessage(QString("Checking entry data %1.").arg(entry->datas.count()), LOG_NOTE);
                 QString content = entry->datas[0]->content.trimmed();
                 isQoutedString &= content.startsWith('"') && content.endsWith('"');
                 isOneWord &= content.indexOf(' ') == -1;
