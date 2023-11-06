@@ -293,6 +293,11 @@ void CppViewEntryWidget::ShowRowContextMenu()
         menu->addAction(action);
     //}
 
+    action = new QAction(tr("Change..."));
+    action->setToolTip(tr("Change the leader text of this row"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionChangeRow_triggered()));
+    menu->addAction(action);
+
     action = new QAction(tr("Insert"));
     action->setToolTip(tr("Add new row before this one"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
@@ -357,6 +362,11 @@ void CppViewEntryWidget::on_actionMoveLeftColumn_triggered()
 void CppViewEntryWidget::on_actionMoveRightColumn_triggered()
 {
     this->view->moveColumnRight(this->columnNum);
+}
+
+void CppViewEntryWidget::on_actionChangeRow_triggered()
+{
+    this->view->changeRow(this->rowNum);
 }
 
 void CppViewEntryWidget::on_actionInsertRow_triggered()

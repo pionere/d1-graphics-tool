@@ -1186,6 +1186,15 @@ QString D1CppTable::getLeader(int index) const
     return this->leader[index];
 }
 
+bool D1CppTable::setLeader(int index, const QString &text)
+{
+    if (this->leader[index] == text) {
+        return false;
+    }
+    this->leader[index] = text;
+    return true;
+}
+
 void D1CppTable::insertRow(int index)
 {
     D1CppRow *row = new D1CppRow();

@@ -128,10 +128,22 @@ void CppView::setColumnNameType(int column, const QString &text, D1CPP_ENTRY_TYP
     }
 }
 
+void CppView::setRowLeader(int row, const QString &text)
+{
+    if (this->currentTable->setLeader(row - 1, text)) {
+        this->cpp->setModified();
+
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(row, 0);
+        CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+        w->initialize(this->currentTable, row, 0, this->columnWidths[0]);
+        this->displayFrame();
+    }
+}
+
 void CppView::changeColumn(int index)
 {
-    this->changeDialog.initialize(index);
-    this->changeDialog.show();
+    this->changeColumnDialog.initialize(index);
+    this->changeColumnDialog.show();
 }
 
 void CppView::trimColumn(int index)
@@ -311,6 +323,12 @@ void CppView::showColumn(int index)
             w->setVisible(true);
         // }
     }
+}
+
+void CppView::changeRow(int index)
+{
+    this->changeRowDialog.initialize(index);
+    this->changeRowDialog.show();
 }
 
 void CppView::insertRow(int index)

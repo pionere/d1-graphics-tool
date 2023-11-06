@@ -58,6 +58,9 @@ set(PROJECT_SOURCES
         source/cppcolumnchangedialog.cpp
         source/cppcolumnchangedialog.h
         source/cppcolumnchangedialog.ui
+        source/cpprowchangedialog.cpp
+        source/cpprowchangedialog.h
+        source/cpprowchangedialog.ui
         source/cppview.cpp
         source/cppview.h
         source/cppview.ui

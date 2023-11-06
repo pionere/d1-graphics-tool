@@ -12,6 +12,7 @@
 
 #include "cppcolumnchangedialog.h"
 #include "cppdataeditdialog.h"
+#include "cpprowchangedialog.h"
 #include "d1cpp.h"
 #include "lineeditwidget.h"
 
@@ -34,11 +35,13 @@ public:
     void setCurrent(int row, int column);
     void setTableContent(int row, int column, const QString &text);
     void setColumnNameType(int column, const QString &text, D1CPP_ENTRY_TYPE type);
+    void setRowLeader(int row, const QString &text);
     void changeColumn(int column);
     void trimColumn(int column);
     void insertColumn(int column);
     void moveColumnLeft(int column);
     void moveColumnRight(int column);
+    void changeRow(int row);
     void insertRow(int row);
     void moveRowUp(int row);
     void moveRowDown(int row);
@@ -92,7 +95,8 @@ private slots:
 private:
     Ui::CppView *ui;
     QUndoStack *undoStack;
-    CppColumnChangeDialog changeDialog = CppColumnChangeDialog(this);
+    CppColumnChangeDialog changeColumnDialog = CppColumnChangeDialog(this);
+    CppRowChangeDialog changeRowDialog = CppRowChangeDialog(this);
     CppDataEditDialog editDialog = CppDataEditDialog(this);
 
     D1Cpp *cpp;
