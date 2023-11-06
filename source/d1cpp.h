@@ -104,6 +104,7 @@ public:
     QString getHeader(int index) const;
     bool setHeader(int index, const QString &text);
     D1CPP_ENTRY_TYPE getColumnType(int index) const;
+    bool setColumnType(int index, D1CPP_ENTRY_TYPE type);
     QString getLeader(int index) const;
     void insertRow(int row);
     void moveRowUp(int row, bool complete);

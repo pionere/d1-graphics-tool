@@ -1207,6 +1207,16 @@ D1CPP_ENTRY_TYPE D1CppTable::getColumnType(int index) const
     return this->columnType[index];
 }
 
+bool D1CppTable::setColumnType(int index, D1CPP_ENTRY_TYPE type)
+{
+    if (this->columnType[index] == type) {
+        return false;
+    }
+    this->columnType[index] = type;
+    // TODO: set/check type of the D1CppEntryData?
+    return true;
+}
+
 QString D1CppTable::getLeader(int index) const
 {
     return this->leader[index];

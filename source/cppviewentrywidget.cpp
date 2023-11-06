@@ -243,14 +243,14 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
     ((QWidgetAction *)action)->setDefaultWidget(label);
     menu->addAction(action);
 
+    action = new QAction(tr("Change"));
+    action->setToolTip(tr("Change the name or the type of this column"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionChangeColumn_triggered()));
+    menu->addAction(action);
+
     action = new QAction(tr("Trim"));
     action->setToolTip(tr("Trim the content in this column"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionTrimColumn_triggered()));
-    menu->addAction(action);
-
-    action = new QAction(tr("Rename"));
-    action->setToolTip(tr("Rename this column"));
-    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionRenameColumn_triggered()));
     menu->addAction(action);
 
     action = new QAction(tr("Insert"));
@@ -338,14 +338,14 @@ void CppViewEntryWidget::ShowRowContextMenu()
     // menu->popup(pos); // area->viewport()->mapToGlobal(pos);
 }
 
+void CppViewEntryWidget::on_actionChangeColumn_triggered()
+{
+    this->view->changeColumn(this->columnNum);
+}
+
 void CppViewEntryWidget::on_actionTrimColumn_triggered()
 {
     this->view->trimColumn(this->columnNum);
-}
-
-void CppViewEntryWidget::on_actionRenameColumn_triggered()
-{
-    this->view->renameColumn(this->columnNum);
 }
 
 void CppViewEntryWidget::on_actionInsertColumn_triggered()

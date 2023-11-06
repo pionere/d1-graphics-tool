@@ -31,8 +31,8 @@ private slots:
     void ShowHeaderContextMenu();
     void ShowRowContextMenu();
 
+    void on_actionChangeColumn_triggered();
     void on_actionTrimColumn_triggered();
-    void on_actionRenameColumn_triggered();
     void on_actionInsertColumn_triggered();
     void on_actionDelColumn_triggered();
     void on_actionHideColumn_triggered();

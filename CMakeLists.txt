@@ -55,9 +55,9 @@ set(PROJECT_SOURCES
         source/cppdataeditdialog.cpp
         source/cppdataeditdialog.h
         source/cppdataeditdialog.ui
-        source/cppcolumnrenamedialog.cpp
-        source/cppcolumnrenamedialog.h
-        source/cppcolumnrenamedialog.ui
+        source/cppcolumnchangedialog.cpp
+        source/cppcolumnchangedialog.h
+        source/cppcolumnchangedialog.ui
         source/cppview.cpp
         source/cppview.h
         source/cppview.ui

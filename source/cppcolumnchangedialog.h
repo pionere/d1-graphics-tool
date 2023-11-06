@@ -3,15 +3,15 @@
 #include <QDialog>
 
 namespace Ui {
-class CppColumnRenameDialog;
+class CppColumnChangeDialog;
 }
 
-class CppColumnRenameDialog : public QDialog {
+class CppColumnChangeDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit CppColumnRenameDialog(QWidget *view);
-    ~CppColumnRenameDialog();
+    explicit CppColumnChangeDialog(QWidget *view);
+    ~CppColumnChangeDialog();
 
     void initialize(int index);
 
@@ -20,7 +20,7 @@ private slots:
     void on_cancelButton_clicked();
 
 private:
-    Ui::CppColumnRenameDialog *ui;
+    Ui::CppColumnChangeDialog *ui;
 
     int index;
 };

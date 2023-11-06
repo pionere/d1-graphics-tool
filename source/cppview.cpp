@@ -113,9 +113,12 @@ void CppView::setTableContent(int row, int column, const QString &text)
     }
 }
 
-void CppView::setColumnName(int column, const QString &text)
+void CppView::setColumnNameType(int column, const QString &text, D1CPP_ENTRY_TYPE type)
 {
-    if (this->currentTable->setHeader(column - 1, text)) {
+    bool ch = this->currentTable->setHeader(column - 1, text);
+
+    ch |= this->currentTable->setColumnType(column - 1, type);
+    if (ch) {
         this->cpp->setModified();
 
         QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, column);
