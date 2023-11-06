@@ -151,7 +151,7 @@ bool D1Cpp::processContent(int type)
             return false;
         }
         currTable->rowTexts[currTable->rows.count()].append(content);
-        LogMessage(QString("Table comment %1.").arg(content), LOG_NOTE);
+        LogMessage(QString(type == READ_DIRECTIVE ? "Table directive %1." : "Table comment %1.").arg(content), LOG_NOTE);
         break;
     case READ_ROW_SIMPLE:
     case READ_ROW_COMPLEX:
@@ -710,7 +710,7 @@ LogMessage(QString("Starting complex entry in a simple row %1.").arg(content), L
                 }
             }
             if (content[0] == '}') {
-LogMessage(QString("Starting finishing a complex entry %1.").arg(content), LOG_NOTE);
+LogMessage(QString("Finishing a complex entry %1.").arg(content), LOG_NOTE);
                 content.remove(0, 1);
                 /*if (!processContent(READ_ROW_COMPLEX)) {
                     return false;
@@ -1364,15 +1364,17 @@ bool D1Cpp::postProcess()
         }
         LogMessage(QString("Flat tablesize %1 x %2.").arg(table->getRowCount()).arg(table->getColumnCount()), LOG_NOTE);
         // balance the table
-        int columnNum = 0;
+        int maxColumnNum = 0;
         bool ch = false;
         for (int i = 0; i < table->getRowCount(); i++) {
             D1CppRow *row = table->getRow(i);
             int cc = row->entries.count();
-            if (i == 0 || columnNum < cc) {
+            if (i == 0 || maxColumnNum != cc) {
         if (i != 0)
-        LogMessage(QString("Unbalanced table row %1: %2 vs. %3.").arg(i).arg(cc).arg(columnNum), LOG_NOTE);
-                columnNum = cc;
+        LogMessage(QString("Unbalanced table row %1: %2 vs. %3.").arg(i).arg(cc).arg(maxColumnNum), LOG_NOTE);
+                if (maxColumnNum < cc) {
+                    maxColumnNum = cc;
+                }
                 ch = i != 0;
             }
         }
@@ -1381,7 +1383,7 @@ bool D1Cpp::postProcess()
             dProgressWarn() << tr("Entries added to unbalanced table %1").arg(table->getName());
             for (int i = 0; i < table->getRowCount(); i++) {
                 D1CppRow *row = table->getRow(i);
-                while (row->entries.count() < columnNum) {
+                while (row->entries.count() < maxColumnNum) {
                     row->entries.push_back(new D1CppRowEntry(""));
                     row->entryTexts.push_back(QString());
                 }
