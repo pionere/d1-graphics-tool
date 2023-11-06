@@ -106,6 +106,7 @@ public:
     D1CPP_ENTRY_TYPE getColumnType(int index) const;
     bool setColumnType(int index, D1CPP_ENTRY_TYPE type);
     QString getLeader(int index) const;
+    bool setLeader(int index, const QString &text);
     void insertRow(int row);
     void moveRowUp(int row, bool complete);
     void moveRowDown(int row, bool complete);

@@ -128,10 +128,19 @@ void CppView::setColumnNameType(int column, const QString &text, D1CPP_ENTRY_TYP
     }
 }
 
+void CppView::setRowLeader(int index, const QString &text)
+{
+    if (this->currentTable->setLeader(index - 1, text)) {
+        this->cpp->setModified();
+
+        this->displayFrame();
+    }
+}
+
 void CppView::changeColumn(int index)
 {
-    this->changeDialog.initialize(index);
-    this->changeDialog.show();
+    this->changeColumnDialog.initialize(index);
+    this->changeColumnDialog.show();
 }
 
 void CppView::trimColumn(int index)
@@ -311,6 +320,12 @@ void CppView::showColumn(int index)
             w->setVisible(true);
         // }
     }
+}
+
+void CppView::changeRow(int index)
+{
+    this->changeRowDialog.initialize(index);
+    this->changeRowDialog.show();
 }
 
 void CppView::insertRow(int index)

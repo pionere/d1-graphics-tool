@@ -397,7 +397,7 @@ bool D1Cpp::initTable()
             tableState = READ_TABLE_PREFIX;
             continue;
         case READ_TABLE_PREFIX:
-            static char *prefixes[] = { "const", "static", "constexpr" };
+            static const char *prefixes[] = { "const", "static", "constexpr" };
             bool prefixFound = false;
             for (int i = 0; i < lengthof(prefixes); ) {
                 int len = strlen(prefixes[i]);
@@ -1220,6 +1220,15 @@ bool D1CppTable::setColumnType(int index, D1CPP_ENTRY_TYPE type)
 QString D1CppTable::getLeader(int index) const
 {
     return this->leader[index];
+}
+
+bool D1CppTable::setLeader(int index, const QString &text)
+{
+    if (this->leader[index] == text) {
+        return false;
+    }
+    this->leader[index] = text;
+    return true;
 }
 
 void D1CppTable::insertRow(int index)
