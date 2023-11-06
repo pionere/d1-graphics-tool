@@ -128,11 +128,14 @@ void CppView::setColumnNameType(int column, const QString &text, D1CPP_ENTRY_TYP
     }
 }
 
-void CppView::setRowLeader(int index, const QString &text)
+void CppView::setRowLeader(int row, const QString &text)
 {
-    if (this->currentTable->setLeader(index - 1, text)) {
+    if (this->currentTable->setLeader(row - 1, text)) {
         this->cpp->setModified();
 
+        QLayoutItem *item = this->ui->tableGrid->itemAtPosition(row, 0);
+        CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+        w->initialize(this->currentTable, row, 0, this->columnWidths[0]);
         this->displayFrame();
     }
 }
