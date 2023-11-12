@@ -224,13 +224,31 @@ void CppView::insertColumn(int index)
 
 void CppView::moveColumnLeft(int index)
 {
+    // assert(index > 1);
+	// calculate the number of columns to shift (skip hidden columns)
+	int dn = 0;
+	for (int x = index - 1; x > 1; x++) {
+		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, x);
+        CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+
+		dn++;
+		if (w->isVisible()) {
+			break;
+        }
+    }
+	if (dn == index - 1) {
+		return;
+    }
+
     D1CppTable *table = this->currentTable;
 
-    table->moveColumnLeft(index - 1, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
+	for (int i = 0; i < dn; i++) {
+		table->moveColumnLeft(index - 1 - i, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
+    }
     this->cpp->setModified();
 
     if (this->currentColumnIndex == index) {
-        this->currentColumnIndex--;
+        this->currentColumnIndex -= dn;
     }
     this->hide();
     for (int y = 0; y < table->getRowCount() + 1; y++) {
@@ -240,8 +258,8 @@ void CppView::moveColumnLeft(int index)
         QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y, index - 1);
         CppViewEntryWidget *pw = (CppViewEntryWidget *)prevItem->widget();
 
-        w->adjustColumnNum(-1);
-        pw->adjustColumnNum(+1);
+        w->adjustColumnNum(-dn);
+        pw->adjustColumnNum(+dn);
 
         this->ui->tableGrid->addWidget(w, y, index - 1);
         this->ui->tableGrid->addWidget(pw, y, index);
@@ -255,11 +273,29 @@ void CppView::moveColumnRight(int index)
 {
     D1CppTable *table = this->currentTable;
 
-    table->moveColumnRight(index - 1, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
+    // assert(index > 1);
+	// calculate the number of columns to shift (skip hidden columns)
+	int dn = 0;
+	for (int x = index + 1; x <= table->getColumnCount(); x++) {
+		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, x);
+        CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
+
+		dn++;
+		if (w->isVisible()) {
+			break;
+        }
+    }
+	if (dn == table->getColumnCount() - index - 1) {
+		return;
+    }
+
+	for (int i = 0; i < dn; i++) {
+		table->moveColumnRight(index - 1 + n, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
+    }
     this->cpp->setModified();
 
     if (this->currentColumnIndex == index) {
-        this->currentColumnIndex++;
+        this->currentColumnIndex += dn;
     }
     this->hide();
     for (int y = 0; y < table->getRowCount() + 1; y++) {
@@ -269,8 +305,8 @@ void CppView::moveColumnRight(int index)
         QLayoutItem *nextItem = this->ui->tableGrid->itemAtPosition(y, index + 1);
         CppViewEntryWidget *nw = (CppViewEntryWidget *)nextItem->widget();
 
-        w->adjustColumnNum(+1);
-        nw->adjustColumnNum(-1);
+        w->adjustColumnNum(+dn);
+        nw->adjustColumnNum(-dn);
 
         this->ui->tableGrid->addWidget(w, y, index + 1);
         this->ui->tableGrid->addWidget(nw, y, index);
