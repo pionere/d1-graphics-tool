@@ -78,7 +78,7 @@ public:
     void delEntry(int column);
     void moveColumnLeft(int column, bool complete);
     void moveColumnRight(int column, bool complete);
-    void swapColumns(int column1, int column2 bool complete);
+    void swapColumns(int column1, int column2, bool complete);
 
 private:
     QList<QString> entryTexts;
@@ -112,7 +112,7 @@ public:
     void trimColumn(int column);
     void moveColumnLeft(int column, bool complete);
     void moveColumnRight(int column, bool complete);
-    void swapColumns(int column1, int column2 bool complete);
+    void swapColumns(int column1, int column2, bool complete);
     void delRow(int row);
     void delColumn(int column);
 
