@@ -76,8 +76,6 @@ public:
     void insertEntry(int column);
     void trimEntry(int column);
     void delEntry(int column);
-    void moveColumnLeft(int column, bool complete);
-    void moveColumnRight(int column, bool complete);
     void swapColumns(int column1, int column2, bool complete);
 
 private:
@@ -106,12 +104,9 @@ public:
     QString getLeader(int index) const;
     bool setLeader(int index, const QString &text);
     void insertRow(int row);
-    void moveRowUp(int row, bool complete);
-    void moveRowDown(int row, bool complete);
+    void swapRows(int row1, int row2, bool complete);
     void insertColumn(int column);
     void trimColumn(int column);
-    void moveColumnLeft(int column, bool complete);
-    void moveColumnRight(int column, bool complete);
     void swapColumns(int column1, int column2, bool complete);
     void delRow(int row);
     void delColumn(int column);
