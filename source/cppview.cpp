@@ -236,7 +236,7 @@ void CppView::moveColumnLeft(int index)
 			break;
         }
     }
-	if (dn == index - 1) {
+	if (dn == index - 1 - 1) {
 		QMessageBox::critical(nullptr, "Error", tr("Skipping left %1 cc%2 idx%3 reason:%4").arg(dn).arg(this->gridColumnCount).arg(index).arg(index - 1));
 		return;
     }
@@ -244,9 +244,7 @@ void CppView::moveColumnLeft(int index)
 
     D1CppTable *table = this->currentTable;
 
-	for (int i = 0; i < dn; i++) {
-		table->moveColumnLeft(index - 1 - i, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
-    }
+	table->swapColumns(index - 1, index - 1 - dn, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
     this->cpp->setModified();
 
     if (this->currentColumnIndex == index) {
@@ -294,9 +292,7 @@ void CppView::moveColumnRight(int index)
     }
 	QMessageBox::critical(nullptr, "Error", tr("Doing right %1 cc%2 idx%3 reason:%4").arg(dn).arg(this->gridColumnCount).arg(index).arg(this->gridColumnCount - index - 1 - 1));
 
-	for (int i = 0; i < dn; i++) {
-		table->moveColumnRight(index - 1 + i, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
-    }
+	table->swapColumns(index - 1, index - 1 + dn, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
     this->cpp->setModified();
 
     if (this->currentColumnIndex == index) {
