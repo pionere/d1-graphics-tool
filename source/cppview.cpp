@@ -227,7 +227,8 @@ void CppView::moveColumnLeft(int index)
     // assert(index > 1);
 	// calculate the number of columns to shift (skip hidden columns)
 	int dn = 0;
-	for (int x = index - 1; x >= 1; x--) {
+	int x = index - 1;
+	for ( ; x > 0; x--) {
 		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, x);
         CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
 
@@ -236,7 +237,7 @@ void CppView::moveColumnLeft(int index)
 			break;
         }
     }
-	if (dn == index - 1 - 1) {
+	if (x == 0) {
 		QMessageBox::critical(nullptr, "Error", tr("Skipping left %1 cc%2 idx%3 reason:%4").arg(dn).arg(this->gridColumnCount).arg(index).arg(index - 1));
 		return;
     }
@@ -277,7 +278,8 @@ void CppView::moveColumnRight(int index)
     // assert(index < this->gridColumnCount - 1);
 	// calculate the number of columns to shift (skip hidden columns)
 	int dn = 0;
-	for (int x = index + 1; x < this->gridColumnCount; x++) {
+	int x = index + 1;
+	for ( ; x < this->gridColumnCount; x++) {
 		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, x);
         CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
 
@@ -286,7 +288,7 @@ void CppView::moveColumnRight(int index)
 			break;
         }
     }
-	if (dn == this->gridColumnCount - index - 1 - 1) {
+	if (x == this->gridColumnCount) {
 		QMessageBox::critical(nullptr, "Error", tr("Skipping right %1 cc%2 idx%3 reason:%4").arg(dn).arg(this->gridColumnCount).arg(index).arg(this->gridColumnCount - index - 1 - 1));
 		return;
     }
