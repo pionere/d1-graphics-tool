@@ -1100,19 +1100,11 @@ void D1CppRow::delEntry(int index)
     this->entryTexts[index].prepend(text);
 }
 
-void D1CppRow::moveColumnLeft(int index, bool complete)
+void D1CppRow::swapColumns(int index1, int index2, bool complete)
 {
-    this->entries.swapItemsAt(index, index - 1);
+    this->entries.swapItemsAt(index1, index2);
     if (complete) {
-        this->entryTexts.swapItemsAt(index, index - 1);
-    }
-}
-
-void D1CppRow::moveColumnRight(int index, bool complete)
-{
-    this->entries.swapItemsAt(index, index + 1);
-    if (complete) {
-        this->entryTexts.swapItemsAt(index, index + 1);
+        this->entryTexts.swapItemsAt(index1, index2);
     }
 }
 
@@ -1208,40 +1200,22 @@ void D1CppTable::insertRow(int index)
     this->leader.insert(this->leader.begin() + index, QString());
 }
 
-void D1CppTable::moveRowUp(int index, bool complete)
+void D1CppTable::swapRows(int index1, int index2, bool complete)
 {
-    this->rows.swapItemsAt(index, index - 1);
-    this->leader.swapItemsAt(index, index - 1);
+    this->rows.swapItemsAt(index1, index2);
+    this->leader.swapItemsAt(index1, index2);
     if (complete) {
-        this->rowTexts.swapItemsAt(index, index - 1);
+        this->rowTexts.swapItemsAt(index1, index2);
     }
 }
 
-void D1CppTable::moveRowDown(int index, bool complete)
-{
-    this->rows.swapItemsAt(index, index + 1);
-    this->leader.swapItemsAt(index, index + 1);
-    if (complete) {
-        this->rowTexts.swapItemsAt(index, index + 1);
-    }
-}
-
-void D1CppTable::moveColumnLeft(int index, bool complete)
+void D1CppTable::swapColumns(int index1, int index2, bool complete)
 {
     for (D1CppRow *row : this->rows) {
-        row->moveColumnLeft(index, complete);
+        row->swapColumns(index1, index2, complete);
     }
-    this->header.swapItemsAt(index, index - 1);
-    this->columnType.swapItemsAt(index, index - 1);
-}
-
-void D1CppTable::moveColumnRight(int index, bool complete)
-{
-    for (D1CppRow *row : this->rows) {
-        row->moveColumnRight(index, complete);
-    }
-    this->header.swapItemsAt(index, index + 1);
-    this->columnType.swapItemsAt(index, index + 1);
+    this->header.swapItemsAt(index1, index2);
+    this->columnType.swapItemsAt(index1, index2);
 }
 
 void D1CppTable::insertColumn(int index)
