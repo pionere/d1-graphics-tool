@@ -227,7 +227,7 @@ void CppView::moveColumnLeft(int index)
     // assert(index > 1);
 	// calculate the number of columns to shift (skip hidden columns)
 	int dn = 0;
-	for (int x = index - 1; x > 1; x++) {
+	for (int x = index - 1; x > 1; x--) {
 		QLayoutItem *item = this->ui->tableGrid->itemAtPosition(0, x);
         CppViewEntryWidget *w = (CppViewEntryWidget *)item->widget();
 
@@ -237,8 +237,10 @@ void CppView::moveColumnLeft(int index)
         }
     }
 	if (dn == index - 1) {
+		QMessageBox::critical(nullptr, "Error", tr("Skipping left %1 cc%2 idx%3 reason:%4").arg(dn).arg(this->gridColumnCount).arg(index).arg(index - 1));
 		return;
     }
+	QMessageBox::critical(nullptr, "Error", tr("Doing left %1 cc%2 idx%3 reason:%4").arg(dn).arg(this->gridColumnCount).arg(index).arg(index - 1));
 
     D1CppTable *table = this->currentTable;
 
@@ -286,9 +288,11 @@ void CppView::moveColumnRight(int index)
 			break;
         }
     }
-	if (dn == this->gridColumnCount - index - 1) {
+	if (dn == this->gridColumnCount - index - 1 - 1) {
+		QMessageBox::critical(nullptr, "Error", tr("Skipping right %1 cc%2 idx%3 reason:%4").arg(dn).arg(this->gridColumnCount).arg(index).arg(this->gridColumnCount - index - 1 - 1));
 		return;
     }
+	QMessageBox::critical(nullptr, "Error", tr("Doing right %1 cc%2 idx%3 reason:%4").arg(dn).arg(this->gridColumnCount).arg(index).arg(this->gridColumnCount - index - 1 - 1));
 
 	for (int i = 0; i < dn; i++) {
 		table->moveColumnRight(index - 1 + i, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
