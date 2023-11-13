@@ -214,6 +214,11 @@ void CppView::insertColumn(int index)
         CppViewEntryWidget *w = new CppViewEntryWidget(this);
         this->ui->tableGrid->addWidget(w, y, index);
         w->initialize(table, y, index, this->columnWidths[index]);
+        w->on_toggleInfoButton(this->infoVisible);
+
+        if (y == 1) {
+            w->setFocus();
+        }
     }
 
     this->show();
@@ -393,6 +398,10 @@ void CppView::insertRow(int index)
         this->ui->tableGrid->addWidget(w, index, x);
         w->initialize(table, index, x, this->columnWidths[x]);
         w->on_toggleInfoButton(this->infoVisible);
+
+        if (x == 1) {
+            w->setFocus();
+        }
     }
     this->show();
     // this->updateFields();
@@ -822,6 +831,9 @@ void CppView::on_toggleInfoButton_clicked()
 void CppView::on_actionAddColumn_triggered()
 {
     this->insertColumn(this->gridColumnCount); // this->currentTable->getColumnCount() + 1
+
+    QScrollBar *scrollbar = this->ui->tableScrollArea->horizontalScrollBar();
+    scrollbar->setValue(scrollbar->maximum());
 }
 
 void CppView::on_actionInsertColumn_triggered()
@@ -908,6 +920,9 @@ void CppView::on_actionShowColumns_triggered()
 void CppView::on_actionAddRow_triggered()
 {
     this->insertRow(this->gridRowCount); // this->currentTable->getRowCount() + 1
+
+    QScrollBar *scrollbar = this->ui->tableScrollArea->verticalScrollBar();
+    scrollbar->setValue(scrollbar->maximum());
 }
 
 void CppView::on_actionInsertRow_triggered()
