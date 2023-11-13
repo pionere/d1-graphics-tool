@@ -206,6 +206,15 @@ void CppViewEntryWidget::on_toggleInfoButton(bool visible)
     }
 }
 
+void CppViewEntryWidget::setFocus()
+{
+    QWidget::setFocus();
+
+    if (this->columnNum != 0 && this->rowNum != 0) {
+        this->widget->setFocus();
+    }
+}
+
 void CppViewEntryWidget::ShowHeaderContextMenu()
 {
     QAction *action;
