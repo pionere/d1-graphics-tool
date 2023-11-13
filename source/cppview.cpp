@@ -831,12 +831,15 @@ void CppView::on_toggleInfoButton_clicked()
 
 void CppView::on_actionAddColumn_triggered()
 {
+    QScrollBar *scrollbar;
+
     this->insertColumn(this->gridColumnCount); // this->currentTable->getColumnCount() + 1
 
-    QScrollBar *scrollbar = this->ui->tableScrollArea->horizontalScrollBar();
-	qApp->processEvents();
-    // scrollbar->setValue(scrollbar->maximum());
-	scrollbar->triggerAction(QAbstractSlider::SliderToMaximum);
+    qApp->processEvents();
+    scrollbar = this->ui->tableScrollArea->horizontalScrollBar();
+    scrollbar->triggerAction(QAbstractSlider::SliderToMaximum);
+    scrollbar = this->ui->tableScrollArea->verticalScrollBar();
+    scrollbar->triggerAction(QAbstractSlider::SliderToMinimum);
 }
 
 void CppView::on_actionInsertColumn_triggered()
@@ -922,13 +925,14 @@ void CppView::on_actionShowColumns_triggered()
 
 void CppView::on_actionAddRow_triggered()
 {
+    QScrollBar *scrollbar;
     this->insertRow(this->gridRowCount); // this->currentTable->getRowCount() + 1
 
-    QScrollBar *scrollbar = this->ui->tableScrollArea->verticalScrollBar();
-	qApp->processEvents();
-    // scrollbar->setValue(scrollbar->maximum());
-	scrollbar->triggerAction(QAbstractSlider::SliderToMaximum);
-}
+    qApp->processEvents();
+    scrollbar = this->ui->tableScrollArea->verticalScrollBar();
+    scrollbar->triggerAction(QAbstractSlider::SliderToMaximum);
+    scrollbar = this->ui->tableScrollArea->horizontalScrollBar();
+    scrollbar->triggerAction(QAbstractSlider::SliderToMinimum);}
 
 void CppView::on_actionInsertRow_triggered()
 {
