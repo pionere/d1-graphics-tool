@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include <QAction>
+#include <QApplication>
 #include <QDebug>
 #include <QFileInfo>
 #include <QMenu>
@@ -833,7 +834,7 @@ void CppView::on_actionAddColumn_triggered()
     this->insertColumn(this->gridColumnCount); // this->currentTable->getColumnCount() + 1
 
     QScrollBar *scrollbar = this->ui->tableScrollArea->horizontalScrollBar();
-	scrollbar->adjustSize();
+	qApp->processEvents();
     // scrollbar->setValue(scrollbar->maximum());
 	scrollbar->triggerAction(QAbstractSlider::SliderToMaximum);
 }
@@ -924,7 +925,7 @@ void CppView::on_actionAddRow_triggered()
     this->insertRow(this->gridRowCount); // this->currentTable->getRowCount() + 1
 
     QScrollBar *scrollbar = this->ui->tableScrollArea->verticalScrollBar();
-	scrollbar->adjustSize();
+	qApp->processEvents();
     // scrollbar->setValue(scrollbar->maximum());
 	scrollbar->triggerAction(QAbstractSlider::SliderToMaximum);
 }
