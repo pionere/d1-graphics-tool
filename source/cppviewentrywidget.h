@@ -24,7 +24,7 @@ public:
 
 public slots:
     void on_toggleInfoButton(bool visible);
-    void setFocus() override;
+    void setFocus(); // override;
 
 private slots:
     void on_headerButton_clicked();

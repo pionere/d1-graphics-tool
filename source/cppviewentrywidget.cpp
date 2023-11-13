@@ -215,7 +215,7 @@ void CppViewEntryWidget::setFocus()
 {
     QWidget::setFocus();
 
-    if (this->columnNum != 0 && this->rowNow != 0) {
+    if (this->columnNum != 0 && this->rowNum != 0) {
         this->widget->setFocus();
     }
 }
