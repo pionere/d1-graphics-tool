@@ -87,7 +87,7 @@ MainWindow::~MainWindow()
     delete this->exportDialog;
     delete this->resizeDialog;
     delete this->upscaleDialog;
-    delete this->mergeDialog;
+    delete this->mergeFramesDialog;
     delete this->patchDungeonDialog;
     delete this->patchGfxDialog;
     delete this->patchTilesetDialog;
@@ -1979,6 +1979,7 @@ void MainWindow::on_actionMerge_triggered()
     D1Gfx *gfx = nullptr;
     for (const QString &filePath : gfxFilePaths) {
         // load the gfx
+        OpenAsParam params = OpenAsParam();
         QString fileLower = filePath.toLower();
         delete gfx;
         gfx = new D1Gfx();

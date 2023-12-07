@@ -44,7 +44,7 @@ bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
     return lhs.transparent != rhs.transparent || lhs.paletteIndex != rhs.paletteIndex;
 }
 
-D1GfxFrame::D1GfxFrame(D1GfxFrame &o)
+D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
 {
     this->width = o.width;
     this->height = o.height;
@@ -452,7 +452,7 @@ void D1Gfx::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
 void D1Gfx::mergeFrames(unsigned frameIndex0, unsigned frameIndex1)
 {
     // assert(frameIndex0 >= 0 && frameIndex0 < frameIndex1 && frameIndex1 < getFrameCount());
-    for (int frameIdx = frameIndex0 + 1; frameIdx <= frameIndex1; frameIdx++) {
+    for (unsigned frameIdx = frameIndex0 + 1; frameIdx <= frameIndex1; frameIdx++) {
         D1GfxFrame* currFrame = getFrame(frameIndex0 + 1);
         addToFrame(frameIndex0, *currFrame);
         removeFrame(frameIndex0 + 1, false);

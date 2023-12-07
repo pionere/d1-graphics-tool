@@ -1,5 +1,7 @@
 #include "mergeframesdialog.h"
 
+#include <QMessageBox>
+
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_mergeframesdialog.h"
