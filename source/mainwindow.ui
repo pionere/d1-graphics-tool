@@ -415,6 +415,7 @@
     <addaction name="actionPatch"/>
     <addaction name="actionResize"/>
     <addaction name="actionUpscale"/>
+    <addaction name="actionMerge"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -725,6 +726,14 @@
    </property>
    <property name="toolTip">
     <string>Upscale the current graphics</string>
+   </property>
+  </action>
+  <action name="actionMerge">
+   <property name="text">
+    <string>Merge</string>
+   </property>
+   <property name="toolTip">
+    <string>Add frames from an other graphics</string>
    </property>
   </action>
   <action name="actionTogglePalTrn">

@@ -448,6 +448,46 @@ void D1Gfx::mergeFrames(unsigned frameIndex0, unsigned frameIndex1)
     }
 }
 
+void D1Gfx::addGfx(D1Gfx *gfx)
+{
+    int numNewFrames = gfx->getFrameCount();
+    if (numNewFrames == 0) {
+        return;
+    }
+    bool clipped;
+    if (!this->frames.isEmpty()) {
+        clipped = this->frames[0]->isClipped();
+    } else {
+        clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    }
+    for (int i = 0; i < numNewFrames; i++) {
+        const D1GfxFrame* frame = gfx->getFrame(i);
+        D1GfxFrame* newFrame = new D1GfxFrame(*frame);
+        newFrame->clipped = clipped;
+        // if (this->type != D1CEL_TYPE::V1_LEVEL) {
+        //    newFrame->frameType = D1CEL_FRAME_TYPE::TransparentSquare;
+        // }
+        this->frames.append(newFrame);
+    }
+    const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    if (multiGroup) {
+        int lastFrameIdx = 0;
+        if (!this->groupFrameIndices.empty()) {
+            lastFrameIdx = this->groupFrameIndices.back().second;
+        }        
+        for (auto git = gfx->groupFrameIndices.begin(); git != gfx->groupFrameIndices.end(); git++) {
+            this->groupFrameIndices.push_back(std::pair<int, int>(git->first + lastFrameIdx, git->second + lastFrameIdx));
+        }
+    } else {
+        if (this->groupFrameIndices.empty()) {
+            this->groupFrameIndices.push_back(std::pair<int, int>(0, numNewFrames - 1));
+        } else {
+            this->groupFrameIndices.back().second += numNewFrames;
+        }
+    }
+    this->modified = true;
+}
+
 D1CEL_TYPE D1Gfx::getType() const
 {
     return this->type;

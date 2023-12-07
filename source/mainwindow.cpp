@@ -1350,6 +1350,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionPatch->setEnabled(this->celView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(fileType != 4 && fileType != 5);
+    this->ui->actionMerge->setEnabled(fileType != 4 && fileType != 5);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
@@ -1969,6 +1970,36 @@ void MainWindow::on_actionUpscale_triggered()
     }
     this->upscaleDialog->initialize(this->gfx);
     this->upscaleDialog->show();
+}
+
+void MainWindow::on_actionMerge_triggered()
+{
+    QStringList gfxFilePaths = this->filesDialog(tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
+
+    D1Gfx *gfx = nullptr;
+    for (const QString &filePath : gfxFilePaths) {
+        // load the gfx
+        OpenAsParam params = OpenAsParam();
+        QString fileLower = filePath.toLower();
+        delete gfx;
+        gfx = new D1Gfx();
+        gfx->setPalette(this->trnBase->getResultingPalette());
+        if (fileLower.endsWith(".cel")) {
+            if (!D1Cel::load(*gfx, filePath, params)) {
+                dProgressErr() << tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(filePath));
+                continue;
+            }
+        } else { // CL2 (?)
+            if (!D1Cl2::load(*gfx, filePath, params)) {
+                dProgressErr() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(filePath));
+                continue;
+            }
+        }
+        // merge with the current content
+        this->gfx->addGfx(gfx);
+    }
+    delete gfx;
+    this->updateWindow();
 }
 
 void MainWindow::on_actionReportUse_Tileset_triggered()
