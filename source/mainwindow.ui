@@ -365,7 +365,9 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionMerge_Frame"/>
     <addaction name="actionAddTo_Frame"/>
+    <addaction name="separator"/>
     <addaction name="actionCreate_Frame"/>
     <addaction name="actionInsert_Frame"/>
     <addaction name="actionDuplicate_Frame"/>
@@ -563,6 +565,14 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionMerge_Frame">
+   <property name="text">
+    <string>Merge</string>
+   </property>
+   <property name="toolTip">
+    <string>Merge frames of the current graphics</string>
    </property>
   </action>
   <action name="actionAddTo_Frame">

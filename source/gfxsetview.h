@@ -46,6 +46,7 @@ public:
     void duplicateCurrentFrame(bool wholeGroup);
     void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame(bool wholeGroup);
+    void mergeFrames(const MergeFramesParam &params);
 
     QImage copyCurrent() const;
     void pasteCurrent(const QImage &image);

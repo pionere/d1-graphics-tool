@@ -438,6 +438,16 @@ void D1Gfx::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
     this->modified = true;
 }
 
+void D1Gfx::mergeFrames(unsigned frameIndex0, unsigned frameIndex1)
+{
+    // assert(frameIndex0 >= 0 && frameIndex0 < frameIndex1 && frameIndex1 < getFrameCount());
+    for (unsigned frameIdx = frameIndex0 + 1; frameIdx <= frameIndex1; frameIdx++) {
+        D1GfxFrame* currFrame = getFrame(frameIndex0 + 1);
+        addToFrame(frameIndex0, *currFrame);
+        removeFrame(frameIndex0 + 1, false);
+    }
+}
+
 D1CEL_TYPE D1Gfx::getType() const
 {
     return this->type;

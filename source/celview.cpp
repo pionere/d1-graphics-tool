@@ -575,6 +575,24 @@ void CelView::removeCurrentFrame(bool wholeGroup)
     // this->displayFrame();
 }
 
+void CelView::mergeFrames(const MergeFramesParam &params)
+{
+    int firstFrameIdx = params.rangeFrom;
+    int lastFrameIdx = params.rangeTo;
+    // assert(firstFrameIdx >= 0 && firstFrameIdx < lastFrameIdx && lastFrameIdx < this->gfx->getFrameCount());
+    this->gfx->mergeFrames(firstFrameIdx, lastFrameIdx);
+    if (this->currentFrameIndex > firstFrameIdx) {
+        if (this->currentFrameIndex <= lastFrameIdx) {
+            this->currentFrameIndex = firstFrameIdx;
+        } else {
+            this->currentFrameIndex -= lastFrameIdx - firstFrameIdx;
+        }
+    }
+    this->updateGroupIndex();
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
 QImage CelView::copyCurrent() const
 {
     if (this->gfx->getFrameCount() == 0) {

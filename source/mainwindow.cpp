@@ -87,6 +87,7 @@ MainWindow::~MainWindow()
     delete this->exportDialog;
     delete this->resizeDialog;
     delete this->upscaleDialog;
+    delete this->mergeFramesDialog;
     delete this->patchDungeonDialog;
     delete this->patchGfxDialog;
     delete this->patchTilesetDialog;
@@ -1520,6 +1521,20 @@ void MainWindow::upscale(const UpscaleParam &params)
     ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW, std::move(func));
 }
 
+void MainWindow::mergeFrames(const MergeFramesParam &params)
+{
+    if (this->celView != nullptr) {
+        this->celView->mergeFrames(params);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->mergeFrames(params);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->mergeFrames(params);
+    }
+    this->updateWindow();
+}
+
 void MainWindow::supportedImageFormats(QStringList &allSupportedImageFormats)
 {
     // get supported image file types
@@ -1702,6 +1717,15 @@ void MainWindow::on_actionExport_triggered()
 void MainWindow::on_actionQuit_triggered()
 {
     qApp->quit();
+}
+
+void MainWindow::on_actionMerge_Frame_triggered()
+{
+    if (this->mergeFramesDialog == nullptr) {
+        this->mergeFramesDialog = new MergeFramesDialog(this);
+    }
+    this->mergeFramesDialog->initialize(this->gfx);
+    this->mergeFramesDialog->show();
 }
 
 void MainWindow::on_actionAddTo_Frame_triggered()

@@ -65,6 +65,7 @@ public:
     void duplicateCurrentFrame(bool wholeGroup);
     void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame(bool wholeGroup);
+    void mergeFrames(const MergeFramesParam &params);
 
     void createSubtile(bool append);
     void duplicateCurrentSubtile(bool deepCopy);
