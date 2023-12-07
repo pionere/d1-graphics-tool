@@ -29,7 +29,6 @@
 #include "leveltabtilewidget.h"
 #include "pushbuttonwidget.h"
 #include "tilesetlightdialog.h"
-#include "upscaledialog.h"
 
 namespace Ui {
 class LevelCelView;
