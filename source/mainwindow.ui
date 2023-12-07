@@ -366,7 +366,9 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionMerge_Frame"/>
     <addaction name="actionAddTo_Frame"/>
+    <addaction name="separator"/>
     <addaction name="actionCreate_Frame"/>
     <addaction name="actionInsert_Frame"/>
     <addaction name="actionDuplicate_Frame"/>
@@ -414,6 +416,7 @@
     <addaction name="actionPatch"/>
     <addaction name="actionResize"/>
     <addaction name="actionUpscale"/>
+    <addaction name="actionMerge"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -566,6 +569,14 @@
     <string>Settings</string>
    </property>
   </action>
+  <action name="actionMerge_Frame">
+   <property name="text">
+    <string>Merge</string>
+   </property>
+   <property name="toolTip">
+    <string>Merge frames of the current graphics</string>
+   </property>
+  </action>
   <action name="actionAddTo_Frame">
    <property name="text">
     <string>Add Layer</string>
@@ -579,7 +590,7 @@
     <string>Create</string>
    </property>
    <property name="toolTip">
-    <string>Create new frames</string>
+    <string>Create a new (empty) frame (or multiple frames from images with SHIFT)</string>
    </property>
   </action>
   <action name="actionInsert_Frame">
@@ -587,7 +598,7 @@
     <string>Insert</string>
    </property>
    <property name="toolTip">
-    <string>Add new frames before the current one</string>
+    <string>Add a new frame before the current one (or multiple frames from images with SHIFT)</string>
    </property>
   </action>
   <action name="actionDuplicate_Frame">
@@ -716,6 +727,14 @@
    </property>
    <property name="toolTip">
     <string>Upscale the current graphics</string>
+   </property>
+  </action>
+  <action name="actionMerge">
+   <property name="text">
+    <string>Merge</string>
+   </property>
+   <property name="toolTip">
+    <string>Add frames from an other graphics</string>
    </property>
   </action>
   <action name="actionTogglePalTrn">

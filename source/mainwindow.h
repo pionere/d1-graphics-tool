@@ -22,6 +22,7 @@
 #include "exportdialog.h"
 #include "gfxsetview.h"
 #include "levelcelview.h"
+#include "mergeframesdialog.h"
 #include "openasdialog.h"
 #include "paintwidget.h"
 #include "paletteshowdialog.h"
@@ -87,6 +88,7 @@ public:
     void updateTrns(const std::vector<D1Trn *> &newTrns);
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
+    void mergeFrames(const MergeFramesParam &params);
 
     void gfxChanged(D1Gfx *gfx);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
@@ -127,6 +129,7 @@ private:
     void addTiles(bool append);
 
 public slots:
+    void on_actionMerge_Frame_triggered();
     void on_actionAddTo_Frame_triggered();
     void on_actionCreate_Frame_triggered();
     void on_actionInsert_Frame_triggered();
@@ -173,6 +176,7 @@ private slots:
     void on_actionPatch_triggered();
     void on_actionResize_triggered();
     void on_actionUpscale_triggered();
+    void on_actionMerge_triggered();
 
     void on_actionReportUse_Tileset_triggered();
     void on_actionReportActiveSubtiles_Tileset_triggered();
@@ -312,6 +316,7 @@ private:
     ExportDialog *exportDialog = nullptr;
     ResizeDialog *resizeDialog = nullptr;
     UpscaleDialog *upscaleDialog = nullptr;
+    MergeFramesDialog *mergeFramesDialog = nullptr;
     PatchDungeonDialog *patchDungeonDialog = nullptr;
     PatchGfxDialog *patchGfxDialog = nullptr;
     PatchTilesetDialog *patchTilesetDialog = nullptr;

@@ -145,6 +145,8 @@ public:
     void removeFrame(int frameIndex, bool wholeGroup);
     void remapFrames(const std::map<unsigned, unsigned> &remap);
     void swapFrames(unsigned frameIndex0, unsigned frameIndex1);
+    void mergeFrames(unsigned frameIndex0, unsigned frameIndex1);
+    void addGfx(D1Gfx *gfx);
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);

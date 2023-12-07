@@ -189,19 +189,18 @@ void CppView::trimColumn(int index)
 void CppView::insertColumn(int index)
 {
     D1CppTable *table = this->currentTable;
-
+    // adjust the 'backend'-data
     table->insertColumn(index - 1);
     this->cpp->setModified();
-
+    // adjust the view-data
     this->gridColumnCount++;
     int cw = BASE_COLUMN_WIDTH + CppViewEntryWidget::baseHorizontalMargin();
     this->columnWidths.insert(this->columnWidths.begin() + index, cw);
     if (this->currentColumnIndex >= index) {
         this->currentColumnIndex++;
     }
-
+    // adjust the widgets
     this->hide();
-
     for (int y = 0; y < table->getRowCount() + 1; y++) {
         for (int x = table->getColumnCount(); x > index; x--) {
             QLayoutItem *prevItem = this->ui->tableGrid->itemAtPosition(y, x - 1);
@@ -216,14 +215,12 @@ void CppView::insertColumn(int index)
         this->ui->tableGrid->addWidget(w, y, index);
         w->initialize(table, y, index, this->columnWidths[index]);
         w->on_toggleInfoButton(this->infoVisible);
-
+        // focus on the first new entry field
         if (y == 1) {
             w->setFocus();
         }
     }
-
     this->show();
-
     // this->updateFields();
     dMainWindow().updateWindow();
 }
@@ -376,14 +373,15 @@ void CppView::changeRow(int index)
 void CppView::insertRow(int index)
 {
     D1CppTable *table = this->currentTable;
-
+    // adjust the 'backend'-data
     table->insertRow(index - 1);
     this->cpp->setModified();
-
+    // adjust the view-data
     this->gridRowCount++;
     if (this->currentRowIndex >= index) {
         this->currentRowIndex++;
     }
+    // adjust the widgets
     this->hide();
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = table->getRowCount(); y > index; y--) {
@@ -399,7 +397,7 @@ void CppView::insertRow(int index)
         this->ui->tableGrid->addWidget(w, index, x);
         w->initialize(table, index, x, this->columnWidths[x]);
         w->on_toggleInfoButton(this->infoVisible);
-
+        // focus on the first new entry field
         if (x == 1) {
             w->setFocus();
         }
