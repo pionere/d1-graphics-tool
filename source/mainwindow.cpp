@@ -1991,8 +1991,8 @@ void MainWindow::on_actionMerge_triggered()
             }
         } else { // CL2 (?)
             if (!D1Cl2::load(*gfx, filePath, params)) {
-                dProgressErr() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(filePath)));
-                continue;;
+                dProgressErr() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(filePath));
+                continue;
             }
         }
         // merge with the current content
