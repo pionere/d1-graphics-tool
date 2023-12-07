@@ -578,7 +578,7 @@
     <string>Create</string>
    </property>
    <property name="toolTip">
-    <string>Create new frames</string>
+    <string>Create a new (empty) frame (or multiple frames from images with SHIFT)</string>
    </property>
   </action>
   <action name="actionInsert_Frame">
@@ -586,7 +586,7 @@
     <string>Insert</string>
    </property>
    <property name="toolTip">
-    <string>Add new frames before the current one</string>
+    <string>Add a new frame before the current one (or multiple frames from images with SHIFT)</string>
    </property>
   </action>
   <action name="actionDuplicate_Frame">
