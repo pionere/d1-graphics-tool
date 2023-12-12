@@ -4002,7 +4002,8 @@ void D1Dun::patch(int dunFileIndex)
         // useless tiles
         for (int y = 8; y < 16; y++) {
             for (int x = 0; x < 10; x++) {
-                change |= this->changeTileAt(x, y, 0);
+                if (x != 5 || y != 8)
+                    change |= this->changeTileAt(x, y, 0);
             }
         }
         // place pieces with closed doors
