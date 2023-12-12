@@ -4018,7 +4018,8 @@ void D1Dun::patch(int dunFileIndex)
         // useless tiles
         for (int y = 8; y < 16; y++) {
             for (int x = 0; x < 10; x++) {
-                change |= this->changeTileAt(x, y, 0);
+                if (x != 5 || y != 8)
+                    change |= this->changeTileAt(x, y, 0);
             }
         }
         // place pieces with closed doors
@@ -4057,7 +4058,7 @@ void D1Dun::patch(int dunFileIndex)
             }
         }
         change |= this->changeSubtileProtectionAt(2 * 2 + 1, 2 * 3 + 0, 3);
-        change |= this->changeSubtileProtectionAt(2 * 3 + 1, 2 * 3 + 1, 3);
+        change |= this->changeSubtileProtectionAt(2 * 3 + 0, 2 * 3 + 0, 3);
         change |= this->changeSubtileProtectionAt(2 * 3 + 0, 2 * 3 + 1, 3);
         change |= this->changeSubtileProtectionAt(2 * 6 + 0, 2 * 3 + 0, 3);
         change |= this->changeSubtileProtectionAt(2 * 6 + 1, 2 * 3 + 0, 3);
