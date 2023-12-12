@@ -209,7 +209,7 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
     // calculate the value (reset value if it is the same as before)
     const QPoint cell = this->lastPos;
     int value = 0, v;
-    if (cell.x() >= 0 && cell.x() < this->dun->getWidth() && cell.y() >= 0 && cell.y() >= this->dun->getHeight()) {
+    if (cell.x() >= 0 && cell.x() < this->dun->getWidth() && cell.y() >= 0 && cell.y() < this->dun->getHeight()) {
     switch (this->mode) {
     case BEM_TILE:
         value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
@@ -270,7 +270,7 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
     // filter the positions
     for (auto it = modValues.begin(); it != modValues.end(); ) {
         const DunPos &dp = *it;
-        if (dp.cellX >= 0 && dp.cellX < this->dun->getWidth() && dp.cellY >= 0 && dp.cellY >= this->dun->getHeight()) {
+        if (dp.cellX >= 0 && dp.cellX < this->dun->getWidth() && dp.cellY >= 0 && dp.cellY < this->dun->getHeight()) {
             it++;
         } else {
             it = modValues.erase(it);
