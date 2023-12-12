@@ -4056,6 +4056,18 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
+        change |= this->changeSubtileProtectionAt(2 * 2 + 1, 2 * 3 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 3 + 1, 2 * 3 + 1, 3);
+        change |= this->changeSubtileProtectionAt(2 * 3 + 0, 2 * 3 + 1, 3);
+        change |= this->changeSubtileProtectionAt(2 * 6 + 0, 2 * 3 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 6 + 1, 2 * 3 + 0, 3);
+        change |= this->changeSubtileProtectionAt(2 * 6 + 0, 2 * 3 + 1, 3);
+        for (int y = 4; y < 7; y++) {
+            change |= this->changeSubtileProtectionAt(2 * 3 + 0, 2 * y + 0, 3);
+            change |= this->changeSubtileProtectionAt(2 * 3 + 0, 2 * y + 1, 3);
+            change |= this->changeSubtileProtectionAt(2 * 6 + 0, 2 * y + 0, 3);
+            change |= this->changeSubtileProtectionAt(2 * 6 + 0, 2 * y + 1, 3);
+        }
         break;
     case DUN_BLOOD_AFT: // Blood1.DUN
         // eliminate invisible 'fancy' tile to leave space for shadow
