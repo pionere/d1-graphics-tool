@@ -67,7 +67,7 @@ jobs:
         directory: 'dist'
 
     - name: Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Windows-x64.zip
@@ -112,7 +112,7 @@ jobs:
         directory: 'dist'
 
     - name: Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Windows-x86.zip
@@ -143,7 +143,7 @@ jobs:
         zip -j -q D1GraphicsTool.zip build/D1GraphicsTool build/D1GraphicsTool-Linux-x64.deb
 
     - name: Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Linux-x64.zip
@@ -156,20 +156,20 @@ jobs:
     steps:
     # x86 builds
     - name: Download Win D1GraphicsTool artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: D1GraphicsTool-Windows-x86.zip
     - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Windows-x86.zip
 
     # x64 builds
     - name: Download Win D1GraphicsTool artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: D1GraphicsTool-Windows-x64.zip
     - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Windows-x64.zip
 
     - name: Download Linux D1GraphicsTool artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: D1GraphicsTool-Linux-x64.zip
     - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Linux-x64.zip
