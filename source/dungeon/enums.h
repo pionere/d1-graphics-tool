@@ -11,14 +11,14 @@ typedef enum _bool_value {
 } _bool_value;
 
 typedef enum window_messages {
-	DVL_DWM_NEXTLVL, //  = 0x402, // dungeon -> next level  WM_USER+2
-	DVL_DWM_PREVLVL, //  = 0x403, // dungeon -> previous level
-	DVL_DWM_RTNLVL,  //   = 0x404, // setlevel -> dungeon
-	DVL_DWM_SETLVL,  //   = 0x405, // dungeon -> setlevel
-	DVL_DWM_TWARPDN, //  = 0x407, // town -> dungeon
-	DVL_DWM_TWARPUP, //  = 0x408, // dungeon -> town
-	DVL_DWM_WARPLVL, //  = 0x406, // portal
-	DVL_DWM_RETOWN,  //   = 0x409, // restart in town
+	DVL_DWM_NEXTLVL, // dungeon -> next level
+	DVL_DWM_PREVLVL, // dungeon -> previous level
+	DVL_DWM_SETLVL,  // dungeon -> setlevel
+	DVL_DWM_RTNLVL,  // setlevel -> dungeon
+	DVL_DWM_PORTLVL, // portal (town <-> dungeon)
+	DVL_DWM_TWARPDN, // town -> dungeon
+	DVL_DWM_TWARPUP, // dungeon -> town
+	DVL_DWM_RETOWN,  // restart in town
 } window_messages;
 
 typedef enum item_indexes {
@@ -2466,7 +2466,7 @@ typedef enum _monster_goal {
 	MGOAL_RETREAT,
 	MGOAL_HEALING,
 	MGOAL_MOVE,
-	MGOAL_ATTACK2,
+	MGOAL_ATTACK,
 	MGOAL_TALKING,
 } _monster_goal;
 
@@ -3543,6 +3543,7 @@ typedef enum theme_id {
 typedef enum event_type {
 	EVENT_TYPE_JOIN_ACCEPTED,
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
+	EVENT_TYPE_PLAYER_INFO,
 	NUM_EVT_TYPES,
 } event_type;
 
@@ -3550,7 +3551,7 @@ typedef enum player_status {
 	PCS_CONNECTED    = 0x01, // was 0x10000 - player sent a packet recently 
 	PCS_TURN_ARRIVED = 0x02, // was 0x20000 - the next turn of the player has arrived
 	PCS_ACTIVE       = 0x04, // was 0x40000 - a future turn (next or later) of the player has arrived
-	PCS_JOINED       = 0x08, //             - the player just joined (sent an initial turn)
+	PCS_DESYNC       = 0x08, //             - the player is not in sync
 } player_status;
 
 typedef enum turn_status {
@@ -3559,12 +3560,6 @@ typedef enum turn_status {
 	TS_TIMEOUT,	// turn is due, but not all turns arrived
 	TS_DESYNC,	// turn is not necessary due, but a higher than current turn arrived
 } turn_status;
-
-typedef enum leave_reason {
-	LEAVE_NONE,
-	LEAVE_NORMAL,
-	LEAVE_DROP,   // was 0x40000006
-} leave_reason;
 
 typedef enum text_color {
 	COL_WHITE,
@@ -3764,11 +3759,11 @@ typedef enum lvl_entry {
 	ENTRY_PREV,
 	ENTRY_SETLVL,
 	ENTRY_RTNLVL,
-	ENTRY_LOAD,
 	ENTRY_WARPLVL,
 	ENTRY_TWARPDN,
 	ENTRY_TWARPUP,
 	ENTRY_RETOWN,
+	ENTRY_LOAD,
 } lvl_entry;
 
 /*typedef enum game_info {
@@ -3853,7 +3848,6 @@ typedef enum spell_id {
 } spell_id;
 
 typedef enum _msg_id {
-	NMSG_SEND_GAME_DELTA,
 	NMSG_PLRINFO,
 	NMSG_DLEVEL_DATA,
 	NMSG_DLEVEL_JUNK,
@@ -3862,7 +3856,6 @@ typedef enum _msg_id {
 	NMSG_LVL_DELTA,
 	NMSG_LVL_DELTA_END,
 	NMSG_STRING,
-	NMSG_PLRDROP, // internal use only (supposedly)
 } _msg_id;
 
 typedef enum _cmd_id {
@@ -3914,10 +3907,11 @@ typedef enum _cmd_id {
 	CMD_TELEKINOID,
 	CMD_ACTIVATEPORTAL,
 	CMD_NEWLVL,
-	CMD_TWARP,
+	CMD_USEPORTAL,
 	CMD_RETOWN,
 	CMD_JOINLEVEL,
 	CMD_DISCONNECT,
+	CMD_REQDELTA,
 	CMD_INVITE,
 	CMD_ACK_INVITE,
 	CMD_DEC_INVITE,
@@ -3937,9 +3931,6 @@ typedef enum _cmd_id {
 	CMD_DO_PLRCHECK,       // DEV_MODE
 	CMD_REQUEST_ITEMCHECK, // DEV_MODE
 	CMD_DO_ITEMCHECK,      // DEV_MODE
-	CMD_CHEAT_EXPERIENCE,  // DEBUG_MODE
-	CMD_CHEAT_SPELL_LEVEL, // DEBUG_MODE
-	CMD_DEBUG,             // DEBUG_MODE
 } _cmd_id;
 
 typedef enum _dcmd_item {
@@ -4024,24 +4015,25 @@ typedef enum _mainmenu_selections {
 } _mainmenu_selections;
 
 typedef enum _selhero_selections {
-	SELHERO_NEW_DUNGEON = 1,
-	SELHERO_CONTINUE    = 2,
-	SELHERO_PREVIOUS    = 3
+	SELHERO_NONE,
+	SELHERO_CONTINUE,
+	SELHERO_PREVIOUS
 } _selhero_selections;
 
 typedef enum _selgame_selections {
 	SELGAME_CREATE,
 	SELGAME_JOIN,
+	SELGAME_LOAD,
 	SELGAME_PREVIOUS
 } _selgame_selections;
 
 typedef enum conn_type {
-	SELCONN_ZT,       // zerotier (p2p)
+	SELCONN_LOOPBACK, // local
 	SELCONN_TCP,      // tcp/ip server-client
 	SELCONN_TCPD,     // tcp/ip server-client + p2p
 	SELCONN_TCPS,     // tcp/ip server
 	SELCONN_TCPDS,    // tcp/ip server + p2p
-	SELCONN_LOOPBACK, // local
+	SELCONN_ZT,       // zerotier (p2p)
 } conn_type;
 
 typedef enum _create_hero {
@@ -4557,226 +4549,3 @@ typedef enum drlg_flag {
 	DRLG_FROZEN     = 0x80,
 } drlg_flag;
 
-typedef enum movie_flag {
-	MOV_SKIP       = 1 << 0, // Makes the video skippable by mouse-button or keypress (not just ESC).
-	MOV_LOOP       = 1 << 1, // Playback in loop.
-} movie_flag;
-
-typedef enum movie_playback_result {
-	MPR_DONE,   // the movie is finished
-	MPR_CANCEL, // the movie is cancelled
-	MPR_QUIT,   // the user wants to leave the game
-} movie_playback_result;
-
-typedef enum _artfonts {
-	AF_SMALL,
-	AF_SMALLGRAY,
-	AF_MED,
-	AF_MEDGRAY,
-	AF_BIG,
-	AF_BIGGRAY,
-	AF_HUGE,
-	AF_HUGEGRAY,
-} _artfonts;
-
-typedef enum _gmenu_flags {
-	GMF_SLIDER  = 1 << 0,
-	GMF_ENABLED = 1 << 1,
-} _gmenu_flags;
-
-typedef enum mpq_files {
-#if ASSET_MPL != 1
-	MPQ_DEVILHD,
-#endif
-	MPQ_DEVILX,
-#ifdef HELLFIRE
-	MPQ_HF_OPT2,
-	MPQ_HF_OPT1,
-	MPQ_HF_VOICE,
-	MPQ_HF_MUSIC,
-	MPQ_HF_BARB,
-	MPQ_HF_BARD,
-	MPQ_HF_MONK,
-	MPQ_HELLFIRE,
-#endif
-	MPQ_PATCH_RT,
-	MPQ_DIABDAT,
-	NUM_MPQS
-} mpq_files;
-
-typedef enum game_logic_progress {
-	GLP_NONE,
-	GLP_PLAYERS_DONE,
-	GLP_MONSTERS_DONE,
-	//GLP_TOWNERS_DONE,
-	//GLP_OBJECTS_DONE,
-	//GLP_MISSILES_DONE,
-	//GLP_ITEMS_DONE,
-} game_logic_progress; 
-
-typedef enum redraw_flags {
-	REDRAW_HP_FLASK      = 1 << 0,
-	REDRAW_MANA_FLASK    = 1 << 1,
-	REDRAW_SPELL_ICON    = 1 << 2,
-	REDRAW_CTRL_BUTTONS  = 1 << 3,
-	REDRAW_SPEED_BAR     = 1 << 4,
-	REDRAW_CTRL_PANEL    = 1 << 5,
-	REDRAW_ALL = REDRAW_HP_FLASK | REDRAW_MANA_FLASK | REDRAW_SPELL_ICON
-               | REDRAW_CTRL_BUTTONS | REDRAW_SPEED_BAR | REDRAW_CTRL_PANEL,
-} redraw_flags;
-
-typedef enum input_key {
-	ACT_NONE,
-	ACT_ACT,    // base action (LMB)
-	ACT_ALTACT, // alt action (RMB)
-	ACT_SKL0,   // skill selection
-	ACT_SKL1,
-	ACT_SKL2,
-	ACT_SKL3,
-	ACT_SKL4,
-	ACT_SKL5,
-	ACT_SKL6,
-	ACT_SKL7,
-	ACT_SWAP,    // skill-set swap
-	ACT_TGT,     // change target mode
-	ACT_INV,     // toggle inventory
-	ACT_CHAR,    // toggle character sheet
-	ACT_SKLBOOK, // toggle skill book
-	ACT_SKLLIST, // toggle skill list
-	ACT_ITEM0, // use item
-	ACT_ITEM1,
-	ACT_ITEM2,
-	ACT_ITEM3,
-	ACT_ITEM4,
-	ACT_ITEM5,
-	ACT_ITEM6,
-	ACT_ITEM7,
-	ACT_AUTOMAP,   // toggle automap
-	ACT_MAPZ_IN,   // zoom in the automap
-	ACT_MAPZ_OUT,  // zoom out the automap
-	ACT_CLEARUI,   // close the 'windows'
-	ACT_UP,    // navigate in the current context
-	ACT_DOWN,
-	ACT_LEFT,
-	ACT_RIGHT,
-	ACT_PGUP,
-	ACT_PGDOWN,
-	ACT_RETURN,
-	ACT_TEAM,   // toggle team book
-	ACT_QUESTS, // toggle quest book
-	ACT_MSG0, // send quick message
-	ACT_MSG1,
-	ACT_MSG2,
-	ACT_MSG3,
-	ACT_GAMMA_DEC, // decrease the gamma
-	ACT_GAMMA_INC, // increase the gamma
-	ACT_ZOOM,  // toggle the zoom
-	ACT_VER,   // print the game version
-	ACT_HELP,  // open the help text
-	ACT_PAUSE, // pause the game
-	ACT_ESCAPE,
-	ACT_TOOLTIP, // toggle the permanency of the tooltips
-	NUM_ACTS
-} input_key;
-
-typedef enum application_error {
-	ERR_APP_FRAME_BUFSIZE,
-	ERR_APP_LOOPBACK_JOIN,
-	ERR_APP_LOOPBACK_SENDMSG,
-	ERR_APP_LOOPBACK_QUEUE_SIZE,
-	ERR_APP_LOOPBACK_POLLTURN,
-	ERR_APP_LOOPBACK_LASTTURN,
-	ERR_APP_LOOPBACK_DROPPLR,
-	ERR_APP_LOOPBACK_TRANSIT,
-	ERR_APP_PACKET_ENCRYPT,
-	ERR_APP_PACKET_SETUP,
-	ERR_APP_PACKET_PASSWD,
-	ERR_APP_SETMAP,
-} application_error;
-
-typedef enum app_sdl_error {
-	ERR_SDL_ART_COLOR,
-	ERR_SDL_ART_BLIT,
-	ERR_SDL_CREDIT_BLIT,
-	ERR_SDL_CREDIT_PRE_SURFACE,
-	ERR_SDL_CREDIT_PRE_TEXT,
-	ERR_SDL_CREDIT_PRE_TEXT_COLOR,
-	ERR_SDL_CREDIT_PRE_SHADOW,
-	ERR_SDL_CREDIT_PRE_SHADOW_COLOR,
-	ERR_SDL_UI_CURSOR_DISABLE,
-	ERR_SDL_TDRAW_TEXT,
-	ERR_SDL_TDRAW_SHADOW,
-	ERR_SDL_DX_FLIP,
-	ERR_SDL_DX_RENDER_SURFACE,
-	ERR_SDL_DX_RENDER_COPY,
-	ERR_SDL_FULLSCREEN_SDL1,
-	ERR_SDL_FULLSCREEN_SDL2,
-	ERR_SDL_PALETTE_UPDATE,
-	ERR_SDL_DX_BLIT_SDL1,
-	ERR_SDL_DX_BLIT_SDL2,
-	ERR_SDL_DX_BLIT_SCALE,
-	ERR_SDL_DX_BLIT_STRETCH,
-	ERR_SDL_DX_BLIT_CONVERTED,
-	ERR_SDL_DX_UPDATE_TEXTURE,
-	ERR_SDL_DX_DRAW_COLOR,
-	ERR_SDL_DX_RENDER_CLEAR,
-	ERR_SDL_BACK_PALETTE_ALLOC,
-	ERR_SDL_BACK_PALETTE_SET,
-	ERR_SDL_TEXTURE_CREATE,
-	ERR_SDL_SURFACE_CHECK,
-	ERR_SDL_BACK_PALETTE_CREATE,
-	ERR_SDL_MUSIC_FILE,
-	ERR_SDL_SOUND_FILE,
-	ERR_SDL_VIDEO_BLIT_SCALED,
-	ERR_SDL_VIDEO_BLIT_B,
-	ERR_SDL_VIDEO_BLIT_A,
-	ERR_SDL_VIDEO_AUDIO,
-	ERR_SDL_VIDEO_CREATE,
-	ERR_SDL_VIDEO_PALETTE,
-	ERR_SDL_VIDEO_SURFACE,
-	ERR_SDL_AUDIO_DEVICE_SDL1,
-	ERR_SDL_AUDIO_DEVICE_SDL2,
-	ERR_SDL_DISPLAY_MODE_SET,
-	ERR_SDL_DISPLAY_MODE_GET,
-	ERR_SDL_INIT,
-	ERR_SDL_WINDOW_CREATE,
-	ERR_SDL_RENDERER_CREATE,
-	ERR_SDL_RENDERER_TEXTURE,
-	ERR_SDL_RENDERER_SCALE,
-	ERR_SDL_RENDERER_SIZE,
-	ERR_SDL_WINDOW_STRETCH,
-	ERR_SDL_THREAD_CREATE,
-	ERR_SDL_MUTEX_CREATE,
-	ERR_SDL_MUTEX_LOCK,
-	ERR_SDL_MUTEX_UNLOCK,
-	ERR_SDL_COND_CREATE,
-	ERR_SDL_EVENT_SET,
-	ERR_SDL_EVENT_RESET,
-	ERR_SDL_EVENT_LOCK,
-	ERR_SDL_EVENT_WAIT,
-	ERR_SDL_TTF_INIT,
-	ERR_SDL_TTF_FONT,
-} app_sdl_error;
-
-typedef enum SDL_LogCategory {
-    SDL_LOG_CATEGORY_APPLICATION,
-    SDL_LOG_CATEGORY_ERROR,
-    SDL_LOG_CATEGORY_ASSERT,
-    SDL_LOG_CATEGORY_SYSTEM,
-    SDL_LOG_CATEGORY_AUDIO,
-    SDL_LOG_CATEGORY_VIDEO,
-    SDL_LOG_CATEGORY_RENDER,
-    SDL_LOG_CATEGORY_INPUT,
-    SDL_LOG_CATEGORY_TEST,
-} SDL_LogCategory;
-
-typedef enum SDL_LogPriority
-{
-    SDL_LOG_PRIORITY_VERBOSE = 1,
-    SDL_LOG_PRIORITY_DEBUG,
-    SDL_LOG_PRIORITY_INFO,
-    SDL_LOG_PRIORITY_WARN,
-    SDL_LOG_PRIORITY_ERROR,
-    SDL_LOG_PRIORITY_CRITICAL,
-    SDL_NUM_LOG_PRIORITIES
-} SDL_LogPriority;
