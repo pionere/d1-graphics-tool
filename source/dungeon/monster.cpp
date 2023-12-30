@@ -158,7 +158,6 @@ static void InitMonsterStats(int midx)
 	cmon->cmMinDamage2 = mdata->mMinDamage2;
 	cmon->cmMaxDamage2 = mdata->mMaxDamage2;
 	cmon->cmMagic = mdata->mMagic;
-	cmon->cmMagic2 = mdata->mMagic2;
 	cmon->cmArmorClass = mdata->mArmorClass;
 	cmon->cmEvasion = mdata->mEvasion;
 	cmon->cmMagicRes = mdata->mMagicRes;
@@ -166,7 +165,12 @@ static void InitMonsterStats(int midx)
 	cmon->cmMinHP = mdata->mMinHP;
 	cmon->cmMaxHP = mdata->mMaxHP;
 
-	lvlBonus = currLvl._dLevelBonus;
+	lvlBonus = 0;
+	if (gnDifficulty == DIFF_NIGHTMARE) {
+		lvlBonus = NIGHTMARE_LEVEL_BONUS;
+	} else if (gnDifficulty == DIFF_HELL) {
+		lvlBonus = HELL_LEVEL_BONUS;
+	}
 	cmon->cmAI.aiInt += lvlBonus / 16;
 
 	cmon->cmHit += lvlBonus * 5 / 2;
@@ -558,7 +562,12 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 //	mon->_mEvasion += uniqm->mUnqEva;
 //	mon->_mArmorClass += uniqm->mUnqAC;
 
-	lvlBonus = currLvl._dLevelBonus;
+	lvlBonus = 0;
+	if (gnDifficulty == DIFF_NIGHTMARE) {
+		lvlBonus = NIGHTMARE_LEVEL_BONUS;
+	} else if (gnDifficulty == DIFF_HELL) {
+		lvlBonus = HELL_LEVEL_BONUS;
+	}
 	mon->_mAI.aiInt += lvlBonus / 16;
 
 	/*mon->_mHit += lvlBonus * 5 / 2;

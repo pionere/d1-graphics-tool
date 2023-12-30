@@ -295,6 +295,17 @@ typedef struct MonsterStruct {
 	BYTE _mSelFlag;
 	MonsterAI _mAI;
 	unsigned _mFlags;    // _monster_flag
+	int _mHit;           // hit chance (melee+projectile)
+	int _mMinDamage;
+	int _mMaxDamage;
+	int _mHit2;          // hit chance of special melee attacks
+	int _mMinDamage2;
+	int _mMaxDamage2;
+	int _mMagic;         // hit chance of magic-projectile
+	int _mArmorClass;    // AC+evasion: used against physical-hit (melee+projectile)
+	int _mEvasion;       // evasion: used against magic-projectile
+	unsigned _mMagicRes; // resistances of the monster (_monster_resistance)
+	unsigned _mExp;
 } MonsterStruct;
 
 typedef struct UniqMonData {
