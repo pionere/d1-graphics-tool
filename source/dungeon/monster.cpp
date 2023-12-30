@@ -40,7 +40,7 @@ static_assert(MAXMONSTERS <= UCHAR_MAX, "Leader of monsters are stored in a BYTE
 #define MON_NO_LEADER MAXMONSTERS
 
 /** Light radius of unique monsters */
-#define MON_LIGHTRAD 3
+#define MON_LIGHTRAD 7
 
 /** Maximum distance of the pack-monster from its leader. */
 #define MON_PACK_DISTANCE 3
@@ -102,8 +102,8 @@ static void InitMonsterGFX(int midx)
 	mfdata = &monfiledata[cmon->cmFileNum];
 //	cmon->cmWidth = mfdata->moWidth * ASSET_MPL;
 //	cmon->cmXOffset = (cmon->cmWidth - TILE_WIDTH) >> 1;
-	cmon->cmAFNum = mfdata->moAFNum;
-	cmon->cmAFNum2 = mfdata->moAFNum2;
+//	cmon->cmAFNum = mfdata->moAFNum;
+//	cmon->cmAFNum2 = mfdata->moAFNum2;
 
 	mtype = cmon->cmType;
 	auto& monAnims = cmon->cmAnims;
@@ -139,6 +139,7 @@ static void InitMonsterStats(int midx)
 {
 	MapMonData* cmon;
 	const MonsterData* mdata;
+	unsigned baseLvl, lvlBonus, monLvl;
 
 	cmon = &mapMonTypes[midx];
 
@@ -147,57 +148,28 @@ static void InitMonsterStats(int midx)
 	cmon->cmName = mdata->mName;
 	cmon->cmFileNum = mdata->moFileNum;
 	cmon->cmLevel = mdata->mLevel;
-	cmon->cmSelFlag = mdata->mSelFlag;
-	cmon->cmAI = mdata->mAI;
-	cmon->cmFlags = mdata->mFlags;
-	cmon->cmHit = mdata->mHit;
-	cmon->cmMinDamage = mdata->mMinDamage;
-	cmon->cmMaxDamage = mdata->mMaxDamage;
-	cmon->cmHit2 = mdata->mHit2;
-	cmon->cmMinDamage2 = mdata->mMinDamage2;
-	cmon->cmMaxDamage2 = mdata->mMaxDamage2;
-	cmon->cmMagic = mdata->mMagic;
-	cmon->cmMagic2 = mdata->mMagic2;
-	cmon->cmArmorClass = mdata->mArmorClass;
-	cmon->cmEvasion = mdata->mEvasion;
-	cmon->cmMagicRes = mdata->mMagicRes;
-	cmon->cmExp = mdata->mExp;
 	cmon->cmMinHP = mdata->mMinHP;
 	cmon->cmMaxHP = mdata->mMaxHP;
 
-	cmon->cmAI.aiInt += gnDifficulty;
+	lvlBonus = 0;
 	if (gnDifficulty == DIFF_NIGHTMARE) {
-		cmon->cmMinHP = 2 * cmon->cmMinHP + 100;
-		cmon->cmMaxHP = 2 * cmon->cmMaxHP + 100;
-		cmon->cmLevel += NIGHTMARE_LEVEL_BONUS;
-		cmon->cmExp = 2 * (cmon->cmExp + DIFFICULTY_EXP_BONUS);
-		cmon->cmHit += NIGHTMARE_TO_HIT_BONUS;
-		cmon->cmMagic += NIGHTMARE_MAGIC_BONUS;
-		cmon->cmMinDamage = 2 * (cmon->cmMinDamage + 2);
-		cmon->cmMaxDamage = 2 * (cmon->cmMaxDamage + 2);
-		cmon->cmHit2 += NIGHTMARE_TO_HIT_BONUS;
-		//cmon->cmMagic2 += NIGHTMARE_MAGIC_BONUS;
-		cmon->cmMinDamage2 = 2 * (cmon->cmMinDamage2 + 2);
-		cmon->cmMaxDamage2 = 2 * (cmon->cmMaxDamage2 + 2);
-		cmon->cmArmorClass += NIGHTMARE_AC_BONUS;
-		cmon->cmEvasion += NIGHTMARE_EVASION_BONUS;
+		lvlBonus = NIGHTMARE_LEVEL_BONUS;
 	} else if (gnDifficulty == DIFF_HELL) {
-		cmon->cmMinHP = 4 * cmon->cmMinHP + 200;
-		cmon->cmMaxHP = 4 * cmon->cmMaxHP + 200;
-		cmon->cmLevel += HELL_LEVEL_BONUS;
-		cmon->cmExp = 4 * (cmon->cmExp + DIFFICULTY_EXP_BONUS);
-		cmon->cmHit += HELL_TO_HIT_BONUS;
-		cmon->cmMagic += HELL_MAGIC_BONUS;
-		cmon->cmMinDamage = 4 * cmon->cmMinDamage + 6;
-		cmon->cmMaxDamage = 4 * cmon->cmMaxDamage + 6;
-		cmon->cmHit2 += HELL_TO_HIT_BONUS;
-		//cmon->cmMagic2 += HELL_MAGIC_BONUS;
-		cmon->cmMinDamage2 = 4 * cmon->cmMinDamage2 + 6;
-		cmon->cmMaxDamage2 = 4 * cmon->cmMaxDamage2 + 6;
-		cmon->cmArmorClass += HELL_AC_BONUS;
-		cmon->cmEvasion += HELL_EVASION_BONUS;
-		cmon->cmMagicRes = monsterdata[cmon->cmType].mMagicRes2;
+		lvlBonus = HELL_LEVEL_BONUS;
 	}
+
+	baseLvl = cmon->cmLevel;
+	monLvl = baseLvl + lvlBonus;
+	cmon->cmLevel = monLvl;
+	cmon->cmMinHP = monLvl * cmon->cmMinHP / baseLvl;
+	cmon->cmMaxHP = monLvl * cmon->cmMaxHP / baseLvl;
+
+
+	int mpl = currLvl._dLevelPlyrs;
+	// assert(mpl != 0);
+	mpl++;
+	cmon->cmMinHP = (cmon->cmMinHP * mpl) >> 1;
+	cmon->cmMaxHP = (cmon->cmMaxHP * mpl) >> 1;
 }
 
 static bool IsSkel(int mt)
@@ -262,16 +234,11 @@ void InitLvlMonsters()
 		// reset _mMTidx value to simplify SyncMonsterAnim (loadsave.cpp)
 		monsters[i]._mMTidx = 0;
 		// reset _muniqtype value to simplify SyncMonsterAnim (loadsave.cpp)
-		// reset _mlid value to simplify SyncMonsterLight, DeltaLoadLevel, SummonMonster and InitTownerInfo
+		// reset _mlid value to simplify SyncMonstersLight, DeltaLoadLevel, SummonMonster and InitTownerInfo
 		monsters[i]._muniqtype = 0;
 		monsters[i]._muniqtrans = 0;
 		monsters[i]._mNameColor = COL_WHITE;
 		monsters[i]._mlid = NO_LIGHT;
-		// reset _mleaderflag value to simplify GroupUnity
-		monsters[i]._mleader = MON_NO_LEADER;
-		monsters[i]._mleaderflag = MLEADER_NONE;
-		monsters[i]._mpacksize = 0;
-		monsters[i]._mvid = NO_VISION;
 	}
 	// reserve minions
 	nummonsters = MAX_MINIONS;
@@ -357,13 +324,6 @@ void GetLevelMTypes()
 			montypes[nt] = mtype;
 		}
 
-#if DEBUG_MODE
-		if (monstdebug) {
-			for (i = 0; i < debugmonsttypes; i++)
-				AddMonsterType(DebugMonsters[i], TRUE);
-			return;
-		}
-#endif
 		while (monstimgtot > 0/* && nummtypes < MAX_LVLMTYPES*/) { // nummtypes test is pointless, because PlaceSetMapMonsters can break it anyway...
 			for (i = 0; i < nt; ) {
 				if (monfiledata[monsterdata[montypes[i]].moFileNum].moImage > monstimgtot) {
@@ -401,7 +361,6 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_mx = x;
 	mon->_my = y;
 	mon->_mdir = dir;
-	mon->_mType = cmon->cmType;
 	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP);
 	mon->_mAnimFrameLen = cmon->cmAnims[MA_STAND].maFrameLen;
 	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
@@ -413,11 +372,6 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_muniqtrans = 0;
 	mon->_mNameColor = COL_WHITE;
 	mon->_mlid = NO_LIGHT;
-
-	mon->_mleader = MON_NO_LEADER;
-	mon->_mleaderflag = MLEADER_NONE;
-	mon->_mpacksize = 0;
-	mon->_mvid = NO_VISION;
 }
 
 /**
@@ -427,9 +381,7 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
  */
 static bool MonstPlace(int xp, int yp)
 {
-	static_assert(DBORDERX >= MON_PACK_DISTANCE, "MonstPlace does not check IN_DUNGEON_AREA but expects a large enough border I.");
-	static_assert(DBORDERY >= MON_PACK_DISTANCE, "MonstPlace does not check IN_DUNGEON_AREA but expects a large enough border II.");
-	return (dMonster[xp][yp]/* | /*dPlayer[xp][yp] | dObject[xp][yp]*/
+	return (dMonster[xp][yp]/* | dPlayer[xp][yp] | dObject[xp][yp]*/
 		 | nSolidTable[dPiece[xp][yp]] | (dFlags[xp][yp] & (BFLAG_ALERT | BFLAG_MON_PROTECT))) == 0;
 }
 
@@ -467,10 +419,12 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 		while (placed != 0) {
 			nummonsters--;
 			placed--;
+			// monsters[nummonsters]._mmode = MM_UNUSED; -- unnecessary assuming these are going to be overwritten...
 			dMonster[monsters[nummonsters]._mx][monsters[nummonsters]._my] = 0;
 		}
 
-		if (leaderf & UMF_GROUP) {
+		if (leaderf) {
+			// assert(leaderf & UMF_GROUP);
 			x1 = monsters[leader]._mx;
 			y1 = monsters[leader]._my;
 		} else {
@@ -480,11 +434,6 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 			} while (!MonstPlace(x1, y1));
 		}
 
-		if (dTransVal[x1][y1] == 0) {
-			dProgressErr() << QApplication::tr("Missing room-ID for possible monster-placement at %1:%2 leader%3 lf:%4 lt:%5 curr%6").arg(x1).arg(y1).arg(leader).arg(leaderf).arg(monsters[leader]._mType).arg(nummonsters);
-			continue;
-		}
-		//assert(dTransVal[x1][y1] != 0);
 		static_assert(DBORDERX >= 1, "PlaceGroup expects a large enough border I.");
 		static_assert(DBORDERY >= 1, "PlaceGroup expects a large enough border II.");
 		xp = x1; yp = y1;
@@ -493,18 +442,25 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 			x2 = xp + offset_x[offset];
 			y2 = yp + offset_y[offset];
 			assert((unsigned)x2 < MAXDUNX);
-			assert((unsigned)y2 < MAXDUNX);
-			if (dTransVal[x2][y2] != dTransVal[x1][y1]
-			 || ((leaderf & UMF_LEADER) && ((abs(x2 - x1) > MON_PACK_DISTANCE) || (abs(y2 - y1) > MON_PACK_DISTANCE)))) {
+			assert((unsigned)y2 < MAXDUNY);
+			if ((leaderf & UMF_LEADER) && ((abs(x2 - x1) > MON_PACK_DISTANCE) || (abs(y2 - y1) > MON_PACK_DISTANCE))) {
+				continue;
+			}
+			if (!MonstPlace(x2, y2)) {
+				if (dMonster[x2][y2] != 0) {
+					xp = x2;
+					yp = y2;
+				}
 				continue;
 			}
 			xp = x2;
 			yp = y2;
-			if ((!MonstPlace(xp, yp)) || random_(0, 2) != 0)
+			if (random_(0, 2) != 0)
 				continue;
 			// assert(nummonsters < MAXMONSTERS);
 			mnum = PlaceMonster(mtidx, xp, yp);
-			if (leaderf & UMF_GROUP) {
+			if (leaderf) {
+				// assert(leaderf & UMF_GROUP);
 				monsters[mnum]._mNameColor = COL_BLUE;
 				monsters[mnum]._mmaxhp *= 2;
 				monsters[mnum]._mAI.aiInt = monsters[leader]._mAI.aiInt;
@@ -529,11 +485,12 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 	}
 }
 
-static void InitUniqueMonster(int mnum, int uniqindex)
+static unsigned InitUniqueMonster(int mnum, int uniqindex)
 {
 //	char filestr[DATA_ARCHIVE_MAX_PATH];
 	const UniqMonData* uniqm;
 	MonsterStruct* mon;
+	unsigned baseLvl, lvlBonus, monLvl;
 
 #ifdef HELLFIRE
     if (uniqindex == UMT_NAKRUL && mnum != MAX_MINIONS) {
@@ -554,22 +511,13 @@ static void InitUniqueMonster(int mnum, int uniqindex)
 	/*mon->_mMinDamage = uniqm->mMinDamage;
 	mon->_mMaxDamage = uniqm->mMaxDamage;
 	mon->_mMinDamage2 = uniqm->mMinDamage2;
-	mon->_mMaxDamage2 = uniqm->mMaxDamage2;*/
+	mon->_mMaxDamage2 = uniqm->mMaxDamage2;
+	mon->_mMagicRes = uniqm->mMagicRes;*/
 
 	if (uniqm->mTrnName != NULL) {
 		/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
-		LoadFileWithMem(filestr, ColorTrns[uniquetrans]);
-		// patch TRN for 'Blighthorn Steelmace' - BHSM.TRN
-		if (uniqindex == UMT_STEELMACE) {
-			// assert(ColorTrns[uniquetrans][188] == 255);
-			ColorTrns[uniquetrans][188] = 0;
-		}
-		// patch TRN for 'Baron Sludge' - BSM.TRN
-		if (uniqindex == UMT_BARON) {
-			// assert(ColorTrns[uniquetrans][241] == 255);
-			ColorTrns[uniquetrans][241] = 0;
-		}*/
-
+		LoadFileWithMem(filestr, ColorTrns[uniquetrans]);*/
+		static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
 		mon->_muniqtrans = uniquetrans++;
 	}
 
@@ -578,40 +526,64 @@ static void InitUniqueMonster(int mnum, int uniqindex)
 //	mon->_mMagic += uniqm->mUnqMag;
 //	mon->_mEvasion += uniqm->mUnqEva;
 //	mon->_mArmorClass += uniqm->mUnqAC;
-	mon->_mAI.aiInt += gnDifficulty;
 
+	lvlBonus = 0;
 	if (gnDifficulty == DIFF_NIGHTMARE) {
-		mon->_mmaxhp = 2 * mon->_mmaxhp + 100;
-		mon->_mLevel += NIGHTMARE_LEVEL_BONUS;
-//		mon->_mMinDamage = 2 * (mon->_mMinDamage + 2);
-//		mon->_mMaxDamage = 2 * (mon->_mMaxDamage + 2);
-//		mon->_mMinDamage2 = 2 * (mon->_mMinDamage2 + 2);
-//		mon->_mMaxDamage2 = 2 * (mon->_mMaxDamage2 + 2);
+		lvlBonus = NIGHTMARE_LEVEL_BONUS;
 	} else if (gnDifficulty == DIFF_HELL) {
-		mon->_mmaxhp = 4 * mon->_mmaxhp + 200;
-		mon->_mLevel += HELL_LEVEL_BONUS;
-//		mon->_mMinDamage = 4 * mon->_mMinDamage + 6;
-//		mon->_mMaxDamage = 4 * mon->_mMaxDamage + 6;
-//		mon->_mMinDamage2 = 4 * mon->_mMinDamage2 + 6;
-//		mon->_mMaxDamage2 = 4 * mon->_mMaxDamage2 + 6;
-//		mon->_mMagicRes = uniqm->mMagicRes2;
+		lvlBonus = HELL_LEVEL_BONUS;
 	}
+//	mon->_mAI.aiInt += lvlBonus / 16;
+
+	/*mon->_mHit += lvlBonus * 5 / 2;
+	mon->_mHit2 += lvlBonus * 5 / 2;
+	mon->_mMagic += lvlBonus * 5 / 2;
+	mon->_mEvasion += lvlBonus * 5 / 2;
+	mon->_mArmorClass += lvlBonus * 5 / 2;*/
+
+	baseLvl = mon->_mLevel;
+	monLvl = baseLvl + lvlBonus;
+	mon->_mLevel = monLvl;
+	mon->_mmaxhp = monLvl * mon->_mmaxhp / baseLvl;
+	// mon->_mExp = monLvl * mon->_mExp / baseLvl;
+//	mon->_mMinDamage = monLvl * mon->_mMinDamage / baseLvl;
+//	mon->_mMaxDamage = monLvl * mon->_mMaxDamage / baseLvl;
+//	mon->_mMinDamage2 = monLvl * mon->_mMinDamage2 / baseLvl;
+//	mon->_mMaxDamage2 = monLvl * mon->_mMaxDamage2 / baseLvl;
+
+//	if (gnDifficulty == DIFF_HELL) {
+//		mon->_mMagicRes = uniqm->mMagicRes2;
+//	}
+
+	int mpl = currLvl._dLevelPlyrs;
+	// assert(mpl != 0);
+	mpl++;
+	/*mon->_mmaxhp = (mon->_mmaxhp * mpl) >> 1;
+	// mon->_mExp = (mon->_mExp * mpl) >> 1;
+
+	mon->_mmaxhp <<= 6;*/
+	mon->_mmaxhp = (mon->_mmaxhp * mpl) << (6 - 1);
+
+	unsigned flags = uniqm->mUnqFlags;
+	if (flags & UMF_NODROP)
+		mon->_mFlags |= MFLAG_NODROP;
+	static_assert(MAX_LIGHT_RAD >= MON_LIGHTRAD, "Light-radius of unique monsters are too high.");
+	if (flags & UMF_LIGHT) {
+		mon->_mlid = AddLight(mon->_mx, mon->_my, MON_LIGHTRAD);
+	}
+	return flags;
 }
 
-static bool PlaceUniqueMonst(int uniqindex, int mtidx)
+static void PlaceUniqueMonst(int uniqindex, int mtidx)
 {
 	int xp, yp, x, y;
 	int count2;
 	int mnum, count;
-	static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
-	if (uniquetrans >= NUM_COLOR_TRNS) {
-		return false;
-	}
 
 	switch (uniqindex) {
 	case UMT_ZHAR:
 		if (zharlib == -1)
-			return false;
+			return;
 		xp = themes[zharlib]._tsx1 + 4;
 		yp = themes[zharlib]._tsy1 + 4;
 		break;
@@ -621,6 +593,8 @@ static bool PlaceUniqueMonst(int uniqindex, int mtidx)
 			xp = random_(91, DSIZEX) + DBORDERX;
 			yp = random_(91, DSIZEY) + DBORDERY;
 			count2 = 0;
+			static_assert(DBORDERX >= MON_PACK_DISTANCE, "PlaceUniqueMonst does not check IN_DUNGEON_AREA but expects a large enough border I.");
+			static_assert(DBORDERY >= MON_PACK_DISTANCE, "PlaceUniqueMonst does not check IN_DUNGEON_AREA but expects a large enough border II.");
 			for (x = xp - MON_PACK_DISTANCE; x <= xp + MON_PACK_DISTANCE; x++) {
 				for (y = yp - MON_PACK_DISTANCE; y <= yp + MON_PACK_DISTANCE; y++) {
 					if (MonstPlace(x, y)) {
@@ -643,8 +617,10 @@ static bool PlaceUniqueMonst(int uniqindex, int mtidx)
 	}
 	// assert(nummonsters < MAXMONSTERS);
 	mnum = PlaceMonster(mtidx, xp, yp);
-	InitUniqueMonster(mnum, uniqindex);
-	return true;
+	unsigned flags = InitUniqueMonster(mnum, uniqindex);
+	if (flags & UMF_GROUP) {
+		PlaceGroup(mtidx, MON_PACK_SIZE - 1, flags, mnum);
+	}
 }
 
 static void PlaceUniques()
@@ -652,6 +628,8 @@ static void PlaceUniques()
 	int u, mt;
 
 	for (u = 0; uniqMonData[u].mtype != MT_INVALID; u++) {
+		if (uniquetrans >= NUM_COLOR_TRNS)
+			continue;
 		if (uniqMonData[u].muLevelIdx != currLvl._dLevelIdx)
 			continue;
 		if (uniqMonData[u].mQuestId != Q_INVALID
@@ -659,10 +637,7 @@ static void PlaceUniques()
 			continue;
 		for (mt = 0; mt < nummtypes; mt++) {
 			if (mapMonTypes[mt].cmType == uniqMonData[u].mtype) {
-				if (PlaceUniqueMonst(u, mt) && uniqMonData[u].mUnqFlags & UMF_GROUP) {
-					// assert(mnum == nummonsters - 1);
-					PlaceGroup(mt, MON_PACK_SIZE - 1, uniqMonData[u].mUnqFlags, nummonsters - 1);
-				}
+				PlaceUniqueMonst(u, mt);
 				break;
 			}
 		}
@@ -713,7 +688,8 @@ static void SetMapMonsters(int idx)
 				if (!posOk) {
 					dMonster[i][j] = 0;
 					monsters[mnum]._mmode = MM_RESERVED;
-					// ChangeLightRadius(monsters[mnum]._mlid, 0);
+					// assert(monsters[mnum]._mlid == NO_LIGHT);
+					//ChangeLightRadius(monsters[mnum]._mlid, 0);
 				}
 			}
 			lm++;

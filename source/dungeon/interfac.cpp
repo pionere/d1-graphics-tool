@@ -269,6 +269,7 @@ static void EnterLevel(int lvl)
         currLvl._dLevel += NIGHTMARE_LEVEL_BONUS;
     else if (gnDifficulty == DIFF_HELL)
         currLvl._dLevel += HELL_LEVEL_BONUS;
+    currLvl._dLevelPlyrs = IsMultiGame ? 2 : 1;
 }
 
 static void ResetGameLevel(D1Dun *dun, const DecorateDunParam &params)
