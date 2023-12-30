@@ -148,22 +148,43 @@ static void InitMonsterStats(int midx)
 	cmon->cmName = mdata->mName;
 	cmon->cmFileNum = mdata->moFileNum;
 	cmon->cmLevel = mdata->mLevel;
+	cmon->cmSelFlag = mdata->mSelFlag;
+	cmon->cmAI = mdata->mAI;
+	cmon->cmFlags = mdata->mFlags;
+	cmon->cmHit = mdata->mHit;
+	cmon->cmMinDamage = mdata->mMinDamage;
+	cmon->cmMaxDamage = mdata->mMaxDamage;
+	cmon->cmHit2 = mdata->mHit2;
+	cmon->cmMinDamage2 = mdata->mMinDamage2;
+	cmon->cmMaxDamage2 = mdata->mMaxDamage2;
+	cmon->cmMagic = mdata->mMagic;
+	cmon->cmMagic2 = mdata->mMagic2;
+	cmon->cmArmorClass = mdata->mArmorClass;
+	cmon->cmEvasion = mdata->mEvasion;
+	cmon->cmMagicRes = mdata->mMagicRes;
+	cmon->cmExp = mdata->mExp;
 	cmon->cmMinHP = mdata->mMinHP;
 	cmon->cmMaxHP = mdata->mMaxHP;
 
-	lvlBonus = 0;
-	if (gnDifficulty == DIFF_NIGHTMARE) {
-		lvlBonus = NIGHTMARE_LEVEL_BONUS;
-	} else if (gnDifficulty == DIFF_HELL) {
-		lvlBonus = HELL_LEVEL_BONUS;
-	}
+	lvlBonus = currLvl._dLevelBonus;
+	cmon->cmAI.aiInt += lvlBonus / 16;
+
+	cmon->cmHit += lvlBonus * 5 / 2;
+	cmon->cmHit2 += lvlBonus * 5 / 2;
+	cmon->cmMagic += lvlBonus * 5 / 2;
+	cmon->cmEvasion += lvlBonus * 5 / 2;
+	cmon->cmArmorClass += lvlBonus * 5 / 2;
 
 	baseLvl = cmon->cmLevel;
 	monLvl = baseLvl + lvlBonus;
 	cmon->cmLevel = monLvl;
 	cmon->cmMinHP = monLvl * cmon->cmMinHP / baseLvl;
 	cmon->cmMaxHP = monLvl * cmon->cmMaxHP / baseLvl;
-
+	cmon->cmExp = monLvl * cmon->cmExp / baseLvl;
+	cmon->cmMinDamage = monLvl * cmon->cmMinDamage / baseLvl;
+	cmon->cmMaxDamage = monLvl * cmon->cmMaxDamage / baseLvl;
+	cmon->cmMinDamage2 = monLvl * cmon->cmMinDamage2 / baseLvl;
+	cmon->cmMaxDamage2 = monLvl * cmon->cmMaxDamage2 / baseLvl;
 
 	int mpl = currLvl._dLevelPlyrs;
 	// assert(mpl != 0);
@@ -239,6 +260,11 @@ void InitLvlMonsters()
 		monsters[i]._muniqtrans = 0;
 		monsters[i]._mNameColor = COL_WHITE;
 		monsters[i]._mlid = NO_LIGHT;
+		// reset _mleaderflag value to simplify GroupUnity
+		monsters[i]._mleader = MON_NO_LEADER;
+		monsters[i]._mleaderflag = MLEADER_NONE;
+		monsters[i]._mpacksize = 0;
+		monsters[i]._mvid = NO_VISION;
 	}
 	// reserve minions
 	nummonsters = MAX_MINIONS;
@@ -372,6 +398,11 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_muniqtrans = 0;
 	mon->_mNameColor = COL_WHITE;
 	mon->_mlid = NO_LIGHT;
+
+	mon->_mleader = MON_NO_LEADER;
+	mon->_mleaderflag = MLEADER_NONE;
+	mon->_mpacksize = 0;
+	mon->_mvid = NO_VISION;
 }
 
 /**
@@ -527,13 +558,8 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 //	mon->_mEvasion += uniqm->mUnqEva;
 //	mon->_mArmorClass += uniqm->mUnqAC;
 
-	lvlBonus = 0;
-	if (gnDifficulty == DIFF_NIGHTMARE) {
-		lvlBonus = NIGHTMARE_LEVEL_BONUS;
-	} else if (gnDifficulty == DIFF_HELL) {
-		lvlBonus = HELL_LEVEL_BONUS;
-	}
-//	mon->_mAI.aiInt += lvlBonus / 16;
+	lvlBonus = currLvl._dLevelBonus;
+	mon->_mAI.aiInt += lvlBonus / 16;
 
 	/*mon->_mHit += lvlBonus * 5 / 2;
 	mon->_mHit2 += lvlBonus * 5 / 2;
@@ -546,14 +572,14 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	mon->_mLevel = monLvl;
 	mon->_mmaxhp = monLvl * mon->_mmaxhp / baseLvl;
 	// mon->_mExp = monLvl * mon->_mExp / baseLvl;
-//	mon->_mMinDamage = monLvl * mon->_mMinDamage / baseLvl;
-//	mon->_mMaxDamage = monLvl * mon->_mMaxDamage / baseLvl;
-//	mon->_mMinDamage2 = monLvl * mon->_mMinDamage2 / baseLvl;
-//	mon->_mMaxDamage2 = monLvl * mon->_mMaxDamage2 / baseLvl;
+	mon->_mMinDamage = monLvl * mon->_mMinDamage / baseLvl;
+	mon->_mMaxDamage = monLvl * mon->_mMaxDamage / baseLvl;
+	mon->_mMinDamage2 = monLvl * mon->_mMinDamage2 / baseLvl;
+	mon->_mMaxDamage2 = monLvl * mon->_mMaxDamage2 / baseLvl;
 
-//	if (gnDifficulty == DIFF_HELL) {
-//		mon->_mMagicRes = uniqm->mMagicRes2;
-//	}
+	if (gnDifficulty == DIFF_HELL) {
+		mon->_mMagicRes = uniqm->mMagicRes2;
+	}
 
 	int mpl = currLvl._dLevelPlyrs;
 	// assert(mpl != 0);
@@ -567,10 +593,10 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	unsigned flags = uniqm->mUnqFlags;
 	if (flags & UMF_NODROP)
 		mon->_mFlags |= MFLAG_NODROP;
-	static_assert(MAX_LIGHT_RAD >= MON_LIGHTRAD, "Light-radius of unique monsters are too high.");
-	if (flags & UMF_LIGHT) {
-		mon->_mlid = AddLight(mon->_mx, mon->_my, MON_LIGHTRAD);
-	}
+//	static_assert(MAX_LIGHT_RAD >= MON_LIGHTRAD, "Light-radius of unique monsters are too high.");
+//	if (flags & UMF_LIGHT) {
+//		mon->_mlid = AddLight(mon->_mx, mon->_my, MON_LIGHTRAD);
+//	}
 	return flags;
 }
 

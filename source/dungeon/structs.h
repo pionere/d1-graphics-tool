@@ -246,6 +246,20 @@ typedef struct MapMonData {
 	const char* cmName;
 	uint16_t cmFileNum;
 	BYTE cmLevel;
+	BYTE cmSelFlag;
+	MonsterAI cmAI;
+	unsigned cmFlags;    // _monster_flag
+	int cmHit;           // hit chance (melee+projectile)
+	int cmMinDamage;
+	int cmMaxDamage;
+	int cmHit2;          // hit chance of special melee attacks
+	int cmMinDamage2;
+	int cmMaxDamage2;
+	int cmMagic;         // hit chance of magic-projectile
+	int cmArmorClass;    // AC+evasion: used against physical-hit (melee+projectile)
+	int cmEvasion;       // evasion: used against magic-projectile
+	unsigned cmMagicRes; // resistances of the monster (_monster_resistance)
+	unsigned cmExp;
 	// int cmWidth;
 	// int cmXOffset;
 	// BYTE cmAFNum;
@@ -272,7 +286,15 @@ typedef struct MonsterStruct {
 	BYTE _muniqtrans;
 	BYTE _mNameColor;  // color of the tooltip. white: normal, blue: pack; gold: unique. (text_color)
 	BYTE _mlid;        // light id of the monster
+	BYTE _mleader;     // the leader of the monster
+	BYTE _mleaderflag; // the status of the monster's leader
+	BYTE _mpacksize;   // the number of 'pack'-monsters close to their leader
+	BYTE _mvid;        // vision id of the monster (for minions only)
 	const char* _mName;
+	BYTE _mLevel;
+	BYTE _mSelFlag;
+	MonsterAI _mAI;
+	unsigned _mFlags;    // _monster_flag
 } MonsterStruct;
 
 typedef struct UniqMonData {
