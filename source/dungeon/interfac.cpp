@@ -490,10 +490,10 @@ static void StoreDungeon(D1Dun *dun)
 
 void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const DecorateDunParam &params)
 {
+    ddLevelPlrs = params.numPlayers;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
-    ddLevelPlrs = params.numPlayers;
     assetPath = dun->getAssetPath();
     HasTileset = params.useTileset && tileset != nullptr;
 
@@ -518,6 +518,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
+    ddLevelPlrs = params.numPlayers;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;

@@ -55,6 +55,8 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     GenerateDunParam params;
     params.level = this->ui->levelComboBox->currentIndex() + 1;
     params.difficulty = this->ui->difficultyComboBox->currentIndex();
+    int numPlayers = this->ui->plrCountLineEdit->text().toUShort();
+    params.numPlayers = numPlayers == 0 ? 1 : numPlayers;
     params.isMulti = this->ui->multiCheckBox->isChecked();
     params.isHellfire = this->ui->hellfireCheckBox->isChecked();
     params.useTileset = this->ui->tilesetCheckBox->isChecked();
