@@ -23,6 +23,7 @@
 #include "d1tileset.h"
 #include "dungeondecoratedialog.h"
 #include "dungeongeneratedialog.h"
+#include "dungeonmonsterwidget.h"
 #include "dungeonresourcedialog.h"
 #include "dungeonsearchdialog.h"
 #include "leveltabframewidget.h"
@@ -283,6 +284,7 @@ private slots:
     void on_dungeonMonsterComboBox_activated(int index);
     void on_dungeonMonsterXOffSpinBox_valueChanged(int value);
     void on_dungeonMonsterYOffSpinBox_valueChanged(int value);
+    void on_dungeonMonsterProperties_clicked();
     void on_dungeonMonsterAddButton_clicked();
     void on_dungeonItemLineEdit_returnPressed();
     void on_dungeonItemLineEdit_escPressed();
@@ -320,6 +322,7 @@ private:
     LevelTabTileWidget tabTileWidget = LevelTabTileWidget(this);
     LevelTabSubtileWidget tabSubtileWidget = LevelTabSubtileWidget(this);
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
+    DungeonMonsterWidget dungeonMonsterWidget = DungeonMonsterWidget(this);
     PushButtonWidget *viewBtn;
 
     TilesetLightDialog tilesetLightDialog = TilesetLightDialog(this);

@@ -63,6 +63,8 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     QGridLayout *gridLayout = this->ui->dungeonLayout;
     btn = PushButtonWidget::addButton(this, gridLayout, 3, 10, QStyle::SP_DialogOkButton, tr("Center Dungeon"), this, &LevelCelView::scrollToCurrent);
     setTabOrder(this->ui->moveDownButton, btn);
+    PushButtonWidget *monBtn = PushButtonWidget::addButton(this, gridLayout, 3, 11, QStyle::SP_FileDialogInfoView, tr("Show Monster Properties"), this, &LevelCelView::on_dungeonMonsterProperties_clicked);
+    setTabOrder(btn, monBtn);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
@@ -676,6 +678,9 @@ void LevelCelView::scrollToCurrent()
     cX += cellX;
     cY += cellY;
     this->ui->celGraphicsView->centerOn(cX, cY);
+    if (!this->dungeonMonsterWidget.isHidden()) {
+        this->on_dungeonMonsterProperties_clicked();
+    }
 }
 
 void LevelCelView::selectPos(const QPoint &cell, int flags)
@@ -4556,6 +4561,13 @@ void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value)
     }
     mon.moy = value;
     this->setMonsterOffset(mon);
+}
+
+void LevelCelView::on_dungeonMonsterProperties_clicked()
+{
+    MonsterStruct *mon = GetMonsterAt(this->currentDunPosX, this->currentDunPosY);
+    this->dungeonMonsterWidget.initialize(mon);
+    this->dungeonMonsterWidget.show();
 }
 
 void LevelCelView::on_dungeonItemLineEdit_returnPressed()

@@ -704,3 +704,15 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 
     view->scrollTo(ViewX, ViewY);
 }
+
+MonsterStruct* GetMonsterAt(int x, int y)
+{
+    MonsterStruct *result = NULL;
+    if ((unsigned)x < MAXDUNX && (unsigned)y < MAXDUNY) {
+        int mnum = dMonster[x][y];
+        if (mnum != 0) {
+            result = &monsters[mnum - 1];
+        }
+    }
+    return result;
+}
