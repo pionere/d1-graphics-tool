@@ -10,6 +10,7 @@ class DecorateDunParam {
 public:
     int level;      // dungeon_level / _setlevels
     int difficulty; // _difficulty
+    int numPlayers;
     bool isMulti;
     bool isHellfire;
     bool useTileset;

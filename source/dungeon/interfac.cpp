@@ -19,6 +19,7 @@ bool IsMultiGame;
 bool IsHellfireGame;
 bool HasTileset;
 bool PatchDunFiles;
+int ddLevelPlrs;
 QString assetPath;
 char infostr[256];
 
@@ -262,7 +263,7 @@ static void EnterLevel(int lvl)
 {
 	int lvlBonus;
 
-	currLvl._dLevelPlyrs = IsMultiGame ? 2 : 1;
+	currLvl._dLevelPlyrs = IsMultiGame ? ddLevelPlrs : 1;
 	currLvl._dLevelIdx = lvl;
 	currLvl._dLevel = AllLevels[lvl].dLevel;
 	currLvl._dSetLvl = AllLevels[lvl].dSetLvl;
@@ -492,6 +493,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
+    ddLevelPlrs = params.numPlayers;
     assetPath = dun->getAssetPath();
     HasTileset = params.useTileset && tileset != nullptr;
 
@@ -543,28 +545,28 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     EnterLevel(params.level);
     IncProgress();
 
-	int32_t questSeed = params.seedQuest;
-	int extraRounds = params.extraRounds;
-	quint64 started = QDateTime::currentMSecsSinceEpoch();
-	SetRndSeed(params.seed);
-	while (true) {
-		extern int32_t sglGameSeed;
-		//LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
-		dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(questSeed).arg(params.entryMode);
-		LoadGameLevel(params.entryMode, dun);
-		FreeLvlDungeon();
-		if (--extraRounds < 0) {
-			break;
-		}
-		if (params.extraQuestRnd) {
-			// QRandomGenerator *gen = QRandomGenerator::global();
-			// questSeed = (int)gen->generate();
-			questSeed = NextRndSeed();
-			InitQuests(questSeed);
-		}
-	}
-	quint64 now = QDateTime::currentMSecsSinceEpoch();
-	dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms.").arg(params.extraRounds + 1).arg(now - started);
+    int32_t questSeed = params.seedQuest;
+    int extraRounds = params.extraRounds;
+    quint64 started = QDateTime::currentMSecsSinceEpoch();
+    SetRndSeed(params.seed);
+    while (true) {
+        extern int32_t sglGameSeed;
+        //LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
+        dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(questSeed).arg(params.entryMode);
+        LoadGameLevel(params.entryMode, dun);
+        FreeLvlDungeon();
+        if (--extraRounds < 0) {
+            break;
+        }
+        if (params.extraQuestRnd) {
+            // QRandomGenerator *gen = QRandomGenerator::global();
+            // questSeed = (int)gen->generate();
+            questSeed = NextRndSeed();
+            InitQuests(questSeed);
+        }
+    }
+    quint64 now = QDateTime::currentMSecsSinceEpoch();
+    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms.").arg(params.extraRounds + 1).arg(now - started);
 
     dun->setLevelType(currLvl._dType);
 
