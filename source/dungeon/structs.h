@@ -210,7 +210,7 @@ typedef struct MonsterData {
 	MonsterAI mAI;
 	uint16_t mMinHP;
 	uint16_t mMaxHP;
-	int mFlags;       // _monster_flag
+	unsigned mFlags;  // _monster_flag
 	uint16_t mHit;    // hit chance (melee+projectile)
 	BYTE mMinDamage;
 	BYTE mMaxDamage;
@@ -248,36 +248,34 @@ typedef struct MapMonData {
 	BYTE cmLevel;
 	BYTE cmSelFlag;
 	MonsterAI cmAI;
-	int cmFlags;
-	uint16_t cmHit;    // hit chance (melee+projectile)
-	BYTE cmMinDamage;
-	BYTE cmMaxDamage;
-	uint16_t cmHit2;   // hit chance of special melee attacks
-	BYTE cmMinDamage2;
-	BYTE cmMaxDamage2;
-	BYTE cmMagic;      // hit chance of magic-projectile
-	BYTE cmMagic2;     // unused
-	BYTE cmArmorClass; // AC+evasion: used against physical-hit (melee+projectile)
-	BYTE cmEvasion;    // evasion: used against magic-projectile
-	uint16_t cmMagicRes;  // resistances of the monster
-	uint16_t cmAlign_1; // unused
+	unsigned cmFlags;    // _monster_flag
+	int cmHit;           // hit chance (melee+projectile)
+	int cmMinDamage;
+	int cmMaxDamage;
+	int cmHit2;          // hit chance of special melee attacks
+	int cmMinDamage2;
+	int cmMaxDamage2;
+	int cmMagic;         // hit chance of magic-projectile
+	int cmArmorClass;    // AC+evasion: used against physical-hit (melee+projectile)
+	int cmEvasion;       // evasion: used against magic-projectile
+	unsigned cmMagicRes; // resistances of the monster (_monster_resistance)
 	unsigned cmExp;
-	int cmWidth;
-	int cmXOffset;
-	BYTE cmAFNum;
-	BYTE cmAFNum2;
-	uint16_t cmAlign_0; // unused
-	uint16_t cmMinHP;
-	uint16_t cmMaxHP;
+	// int cmWidth;
+	// int cmXOffset;
+	// BYTE cmAFNum;
+	// BYTE cmAFNum2;
+	// uint16_t cmAlign_0; // unused
+	int cmMinHP;
+	int cmMaxHP;
 } MapMonData;
 
 #pragma pack(pop)
 typedef struct MonsterStruct {
-	int _mmode; /* MON_MODE */
+	int _mmode; // MON_MODE
 	BYTE _mMTidx;
-	int _mx;                // Tile X-position of monster
-	int _my;                // Tile Y-position of monster
-	int _mdir;              // Direction faced by monster (direction enum)
+	int _mx;           // Tile X-position where the monster should be drawn
+	int _my;           // Tile Y-position where the monster should be drawn
+	int _mdir;         // Direction faced by monster (direction enum)
 	int _mAnimFrameLen; // Tick length of each frame in the current animation
 	int _mAnimCnt;   // Increases by one each game tick, counting how close we are to _mAnimFrameLen
 	int _mAnimLen;   // Number of frames in current animation
@@ -286,18 +284,28 @@ typedef struct MonsterStruct {
 	int _mRndSeed;
 	BYTE _muniqtype;
 	BYTE _muniqtrans;
-	BYTE _mNameColor; // color of the tooltip. white: normal, blue: pack; gold: unique. (text_color)
-	BYTE _mlid; // light id of the monster
-	BYTE _mleader; // the leader of the monster
+	BYTE _mNameColor;  // color of the tooltip. white: normal, blue: pack; gold: unique. (text_color)
+	BYTE _mlid;        // light id of the monster
+	BYTE _mleader;     // the leader of the monster
 	BYTE _mleaderflag; // the status of the monster's leader
-	BYTE _mpacksize; // the number of 'pack'-monsters close to their leader
-	BYTE _mvid; // vision id of the monster (for minions only)
+	BYTE _mpacksize;   // the number of 'pack'-monsters close to their leader
+	BYTE _mvid;        // vision id of the monster (for minions only)
 	const char* _mName;
 	BYTE _mLevel;
+	BYTE _mSelFlag;
 	MonsterAI _mAI;
-	int _mFlags;       // _monster_flag
-	int _mType; // _monster_id
-	MonAnimStruct* _mAnims;
+	unsigned _mFlags;    // _monster_flag
+	int _mHit;           // hit chance (melee+projectile)
+	int _mMinDamage;
+	int _mMaxDamage;
+	int _mHit2;          // hit chance of special melee attacks
+	int _mMinDamage2;
+	int _mMaxDamage2;
+	int _mMagic;         // hit chance of magic-projectile
+	int _mArmorClass;    // AC+evasion: used against physical-hit (melee+projectile)
+	int _mEvasion;       // evasion: used against magic-projectile
+	unsigned _mMagicRes; // resistances of the monster (_monster_resistance)
+	unsigned _mExp;
 } MonsterStruct;
 
 typedef struct UniqMonData {
@@ -312,8 +320,8 @@ typedef struct UniqMonData {
 	BYTE mMaxDamage;
 	BYTE mMinDamage2;
 	BYTE mMaxDamage2;
-	uint16_t mMagicRes;  // _monster_resistance
-	uint16_t mMagicRes2; // _monster_resistance
+	uint16_t mMagicRes;  // resistances in normal and nightmare difficulties (_monster_resistance)
+	uint16_t mMagicRes2; // resistances in hell difficulty (_monster_resistance)
 	BYTE mUnqFlags;// _uniq_monster_flag
 	BYTE mUnqHit;  // to-hit (melee+projectile) bonus
 	BYTE mUnqHit2; // to-hit (special melee attacks) bonus
@@ -402,11 +410,13 @@ typedef struct ObjectStruct {
 //////////////////////////////////////////////////
 
 typedef struct LevelStruct {
-	BYTE _dLevelIdx;  // index in AllLevels
-	BOOLEAN _dSetLvl; // cached flag if the level is a set-level
-	BYTE _dLevel;     // cached difficulty value of the level
-	BYTE _dType;      // cached type of the level
-	BYTE _dDunType;   // cached type of the dungeon
+	int _dLevelIdx;   // index in AllLevels (dungeon_level)
+	bool _dSetLvl;    // cached flag if the level is a set-level
+	int _dLevel;      // cached difficulty value of the level
+	int _dType;       // cached type of the level (dungeon_type)
+	int _dDunType;    // cached type of the dungeon (dungeon_gen_type)
+	int _dLevelPlyrs; // cached number of players when the level was 'initialized'
+	int _dLevelBonus; // cached level bonus
 } LevelStruct;
 
 typedef struct LevelFileData {
@@ -467,7 +477,7 @@ typedef struct SetPieceData {
 //////////////////////////////////////////////////
 
 typedef struct QuestStruct {
-	BYTE _qactive;
+	BYTE _qactive; // quest_state
 	BYTE _qvar1; // quest parameter which is synchronized with the other players
 	BYTE _qvar2; // quest parameter which is NOT synchronized with the other players
 	BOOLEAN _qlog;

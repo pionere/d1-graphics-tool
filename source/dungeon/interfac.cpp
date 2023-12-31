@@ -231,15 +231,22 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 
 static void EnterLevel(int lvl)
 {
-    currLvl._dLevelIdx = lvl;
-    currLvl._dLevel = AllLevels[lvl].dLevel;
-    currLvl._dSetLvl = AllLevels[lvl].dSetLvl;
-    currLvl._dType = AllLevels[lvl].dType;
-    currLvl._dDunType = AllLevels[lvl].dDunType;
-    if (gnDifficulty == DIFF_NIGHTMARE)
-        currLvl._dLevel += NIGHTMARE_LEVEL_BONUS;
-    else if (gnDifficulty == DIFF_HELL)
-        currLvl._dLevel += HELL_LEVEL_BONUS;
+	int lvlBonus;
+
+	currLvl._dLevelPlyrs = IsMultiGame ? 2 : 1;
+	currLvl._dLevelIdx = lvl;
+	currLvl._dLevel = AllLevels[lvl].dLevel;
+	currLvl._dSetLvl = AllLevels[lvl].dSetLvl;
+	currLvl._dType = AllLevels[lvl].dType;
+	currLvl._dDunType = AllLevels[lvl].dDunType;
+	lvlBonus = 0;
+	if (gnDifficulty == DIFF_NIGHTMARE) {
+		lvlBonus += NIGHTMARE_LEVEL_BONUS;
+	} else if (gnDifficulty == DIFF_HELL) {
+		lvlBonus += HELL_LEVEL_BONUS;
+	}
+	currLvl._dLevelBonus = lvlBonus;
+	currLvl._dLevel += lvlBonus;
 }
 
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
