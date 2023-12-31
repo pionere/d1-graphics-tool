@@ -17,6 +17,7 @@ bool IsMultiGame;
 bool IsHellfireGame;
 bool HasTileset;
 bool PatchDunFiles;
+int ddLevelPlrs;
 QString assetPath;
 char infostr[256];
 
@@ -233,7 +234,7 @@ static void EnterLevel(int lvl)
 {
 	int lvlBonus;
 
-	currLvl._dLevelPlyrs = IsMultiGame ? 2 : 1;
+	currLvl._dLevelPlyrs = IsMultiGame ? ddLevelPlrs : 1;
 	currLvl._dLevelIdx = lvl;
 	currLvl._dLevel = AllLevels[lvl].dLevel;
 	currLvl._dSetLvl = AllLevels[lvl].dSetLvl;
@@ -251,6 +252,7 @@ static void EnterLevel(int lvl)
 
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
+    ddLevelPlrs = params.numPlayers;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
