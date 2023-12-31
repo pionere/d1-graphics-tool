@@ -165,12 +165,7 @@ static void InitMonsterStats(int midx)
 	cmon->cmMinHP = mdata->mMinHP;
 	cmon->cmMaxHP = mdata->mMaxHP;
 
-	lvlBonus = 0;
-	if (gnDifficulty == DIFF_NIGHTMARE) {
-		lvlBonus = NIGHTMARE_LEVEL_BONUS;
-	} else if (gnDifficulty == DIFF_HELL) {
-		lvlBonus = HELL_LEVEL_BONUS;
-	}
+	lvlBonus = currLvl._dLevelBonus;
 	cmon->cmAI.aiInt += lvlBonus / 16;
 
 	cmon->cmHit += lvlBonus * 5 / 2;
@@ -562,12 +557,7 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 //	mon->_mEvasion += uniqm->mUnqEva;
 //	mon->_mArmorClass += uniqm->mUnqAC;
 
-	lvlBonus = 0;
-	if (gnDifficulty == DIFF_NIGHTMARE) {
-		lvlBonus = NIGHTMARE_LEVEL_BONUS;
-	} else if (gnDifficulty == DIFF_HELL) {
-		lvlBonus = HELL_LEVEL_BONUS;
-	}
+	lvlBonus = currLvl._dLevelBonus;
 	mon->_mAI.aiInt += lvlBonus / 16;
 
 	/*mon->_mHit += lvlBonus * 5 / 2;
@@ -609,6 +599,30 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	return flags;
 }
 
+#define MON_PACK_AREA (1 + 2 * MON_PACK_DISTANCE)
+#define MON_PACK_SPACE 8
+static_assert(MON_PACK_AREA <= MON_PACK_SPACE, "Not enough space to search for monster placement.");
+static int MonPackSpace(int dx, int dy, int px, int py, bool (&visited)[MON_PACK_SPACE][MON_PACK_SPACE])
+{
+	int result = 0;
+
+	if (!visited[px][py]) {
+		visited[px][py] = true;
+		if (MonstPlace(dx, dy)) {
+			result = 1;
+			if (px != 0)
+				result += MonPackSpace(dx - 1, dy, px - 1, py, visited);
+			if (px != MON_PACK_AREA - 1)
+				result += MonPackSpace(dx + 1, dy, px + 1, py, visited);
+			if (py != 0)
+				result += MonPackSpace(dx, dy - 1, px, py - 1, visited);
+			if (py != MON_PACK_AREA - 1)
+				result += MonPackSpace(dx, dy + 1, px, py + 1, visited);
+		}
+	}
+	return result;
+}
+
 static void PlaceUniqueMonst(int uniqindex, int mtidx)
 {
 	int xp, yp, x, y;
@@ -623,31 +637,20 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 		yp = themes[zharlib]._tsy1 + 4;
 		break;
 	default:
-		count = 0;
+		count = 1000;
 		while (TRUE) {
 			xp = random_(91, DSIZEX) + DBORDERX;
 			yp = random_(91, DSIZEY) + DBORDERY;
-			count2 = 0;
 			static_assert(DBORDERX >= MON_PACK_DISTANCE, "PlaceUniqueMonst does not check IN_DUNGEON_AREA but expects a large enough border I.");
 			static_assert(DBORDERY >= MON_PACK_DISTANCE, "PlaceUniqueMonst does not check IN_DUNGEON_AREA but expects a large enough border II.");
-			for (x = xp - MON_PACK_DISTANCE; x <= xp + MON_PACK_DISTANCE; x++) {
-				for (y = yp - MON_PACK_DISTANCE; y <= yp + MON_PACK_DISTANCE; y++) {
-					if (MonstPlace(x, y)) {
-						count2++;
-					}
-				}
-			}
-
+			bool visited[MON_PACK_SPACE][MON_PACK_SPACE] = { 0 };
+			count2 = MonPackSpace(xp, yp, MON_PACK_DISTANCE, MON_PACK_DISTANCE, visited);
 			if (count2 < 2 * MON_PACK_SIZE) {
-				count++;
-				if (count < 1000) {
+				if (count2 == 0 || --count != 0) {
 					continue;
 				}
 			}
-
-			if (MonstPlace(xp, yp)) {
-				break;
-			}
+			break;
 		}
 	}
 	// assert(nummonsters < MAXMONSTERS);
