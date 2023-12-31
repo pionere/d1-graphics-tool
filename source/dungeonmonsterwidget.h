@@ -15,7 +15,7 @@ namespace Ui {
 class DungeonMonsterWidget;
 } // namespace Ui
 
-class MonsterStruct;
+struct MonsterStruct;
 
 class DungeonMonsterWidget : public QFrame {
     Q_OBJECT
@@ -42,5 +42,9 @@ private slots:
 
 private:
     Ui::DungeonMonsterWidget *ui;
+    QGraphicsView *graphView;
+    bool moving = false;
+    bool moved = false;
+    QPoint lastPos;
     MonsterStruct *mon;
 };

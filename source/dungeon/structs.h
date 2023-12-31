@@ -306,7 +306,7 @@ typedef struct MonsterStruct {
 	int _mEvasion;       // evasion: used against magic-projectile
 	unsigned _mMagicRes; // resistances of the monster (_monster_resistance)
 	unsigned _mExp;
-	int cmType;
+	int _mType;
 } MonsterStruct;
 
 typedef struct UniqMonData {
