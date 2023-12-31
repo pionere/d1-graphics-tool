@@ -9,12 +9,11 @@
 #include <QPointer>
 #include <QUndoCommand>
 
-#include "levelcelview.h"
-
 namespace Ui {
 class DungeonMonsterWidget;
 } // namespace Ui
 
+class LevelCelView;
 struct MonsterStruct;
 
 class DungeonMonsterWidget : public QFrame {

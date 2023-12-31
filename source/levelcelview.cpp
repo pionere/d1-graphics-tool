@@ -4566,7 +4566,7 @@ void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value)
 void LevelCelView::on_dungeonMonsterProperties_clicked()
 {
     MonsterStruct *mon = GetMonsterAt(this->currentDunPosX, this->currentDunPosY);
-    this->dungeonMonsterWidget.initialize(mon);
+    this->dungeonMonsterWidget.setMonster(mon);
     this->dungeonMonsterWidget.show();
 }
 

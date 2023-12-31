@@ -8,6 +8,7 @@
 #include <QString>
 
 #include "config.h"
+#include "levelcelview.h"
 #include "ui_dungeonmonsterwidget.h"
 
 DungeonMonsterWidget::DungeonMonsterWidget(LevelCelView *parent)

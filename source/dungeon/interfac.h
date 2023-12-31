@@ -13,6 +13,7 @@ class D1Tileset;
 class DecorateDunParam;
 class GenerateDunParam;
 class LevelCelView;
+struct MonsterStruct;
 
 extern int ViewX;
 extern int ViewY;
