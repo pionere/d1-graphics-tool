@@ -64,6 +64,7 @@ class D1GfxFrame : public QObject {
     friend class D1Gfx;
     friend class D1ImageFrame;
     friend class D1Pcx;
+    friend class D1Smk;
     friend class Upscaler;
 
 public:
@@ -124,6 +125,7 @@ class D1Gfx : public QObject {
     friend class D1CelTileset;
     friend class D1Min;
     friend class D1Pcx;
+	friend class D1Smk;
     friend class Upscaler;
 
 public:

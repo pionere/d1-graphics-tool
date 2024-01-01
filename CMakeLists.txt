@@ -101,6 +101,8 @@ set(PROJECT_SOURCES
         source/d1pcx.h
         source/d1sla.cpp
         source/d1sla.h
+        source/d1smk.cpp
+        source/d1smk.h
         source/d1tableset.cpp
         source/d1tableset.h
         source/d1tbl.cpp
@@ -266,6 +268,12 @@ else()
         ${PROJECT_SOURCES}
     )
 endif()
+
+add_library(smacker STATIC
+  3rdParty/libsmacker/smacker.c)
+target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
+
+target_link_libraries(${BIN_TARGET} PRIVATE smacker)
 
 target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
 
