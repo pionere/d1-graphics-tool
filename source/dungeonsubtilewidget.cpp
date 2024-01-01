@@ -121,7 +121,7 @@ void DungeonSubtileWidget::dungeonModified()
             color = "blue";
         else if (mon->_mNameColor == COL_GOLD)
             color = "orange";
-        this->ui->monsterName->setText(QString("<font color='%1'>%2</font>").arg(color).arg(mon->_mName));
+        this->ui->monsterName->setText(QString("<u><font color='%1'>%2</font></u>").arg(color).arg(mon->_mName));
         this->ui->monsterLevel->setText(tr("(Level %1)").arg(mon->_mLevel));
         this->ui->monsterExp->setText(QString::number(mon->_mExp));
         this->ui->monsterStatus->setText(MonLeaderText(mon->_mleaderflag, mon->_mpacksize));

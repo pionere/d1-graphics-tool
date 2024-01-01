@@ -57,37 +57,27 @@
       <item row="1" column="0" colspan="2" alignment="Qt::AlignCenter">
        <widget class="QLabel" name="monsterLevel"/>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Status:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QLabel" name="monsterStatus"/>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;AI-Int:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QLabel" name="monsterInt"/>
       </item>
 
-      <item row="3" column="0">
-       <widget class="QLabel">
-        <property name="text">
-         <string>&lt;b&gt;To Hit:&lt;/b&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="monsterHit"/>
-      </item>
       <item row="4" column="0">
        <widget class="QLabel">
         <property name="text">
@@ -98,79 +88,89 @@
       <item row="4" column="1">
        <widget class="QLabel" name="monsterDamage"/>
       </item>
-
-      <item row="5" column="0">
+      <item row="4" column="2">
        <widget class="QLabel">
         <property name="text">
-         <string>&lt;b&gt;To Hit2:&lt;/b&gt;</string>
+         <string>&lt;b&gt;To Hit:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
-       <widget class="QLabel" name="monsterHit2"/>
+      <item row="4" column="3">
+       <widget class="QLabel" name="monsterHit"/>
       </item>
-      <item row="6" column="0">
+
+      <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Damage2:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="5" column="1">
        <widget class="QLabel" name="monsterDamage2"/>
       </item>
+      <item row="5" column="2">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;To Hit2:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QLabel" name="monsterHit2"/>
+      </item>
 
-      <item row="7" column="0">
+      <item row="6" column="2">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Magic Hit:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="6" column="3">
        <widget class="QLabel" name="monsterMagic"/>
       </item>
 
 
-      <item row="8" column="0">
+      <item row="7" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Hit Points:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
+      <item row="7" column="1">
        <widget class="QLabel" name="monsterHp"/>
       </item>
-      <item row="9" column="0">
+      <item row="8" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Armor:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
+      <item row="8" column="1">
        <widget class="QLabel" name="monsterArmorClass"/>
       </item>
-      <item row="10" column="0">
+      <item row="8" column="2">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Evasion:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="10" column="1">
+      <item row="8" column="3">
        <widget class="QLabel" name="monsterEvasion"/>
       </item>
 
-      <item row="11" column="0">
+      <item row="9" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Phy. Res.:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="11" column="1">
+      <item row="9" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QLabel" name="monsterResSlash">
@@ -202,14 +202,14 @@
         </item>
        </layout>
       </item>
-      <item row="12" column="0">
+      <item row="10" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Mag. Res:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="12" column="1">
+      <item row="10" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QLabel" name="monsterResFire">
@@ -248,14 +248,14 @@
         </item>
        </layout>
       </item>
-      <item row="13" column="0">
+      <item row="11" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Flags:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="13" column="1">
+      <item row="11" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QCheckBox" name="monsterHiddenCheckBox">
@@ -357,14 +357,14 @@
        </layout>
       </item>
 
-      <item row="14" column="0">
+      <item row="12" column="0" colspan="2">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Xp Reward:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="14" column="1">
+      <item row="12" column="2">
        <widget class="QLabel" name="monsterExp"/>
       </item>
      </layout>
