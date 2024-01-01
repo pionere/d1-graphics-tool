@@ -171,6 +171,7 @@ set(PROJECT_SOURCES
         source/leveltabtilewidget.cpp
         source/leveltabtilewidget.h
         source/leveltabtilewidget.ui
+        source/libsmacker/smacker.cpp
         source/lineeditwidget.cpp
         source/lineeditwidget.h
         source/main.cpp
@@ -254,6 +255,9 @@ qt_add_resources(RESOURCES
         resources/d1files.qrc
         ${TRANSLATIONS_QRC})
 
+#set(PROJECT_SOURCES 3rdParty/libsmacker/smacker.c ${PROJECT_SOURCES})
+#set(PROJECT_SOURCES source/libsmacker/smacker.c ${PROJECT_SOURCES})
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${BIN_TARGET}
         resources/D1GraphicsTool.rc
@@ -269,13 +273,11 @@ else()
     )
 endif()
 
-add_library(smacker STATIC
-  3rdParty/libsmacker/smacker.c)
-target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
+#add_library(smacker STATIC
+#  3rdParty/libsmacker/smacker.c)
+#target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
-add_library(smacker::smacker ALIAS smacker)
-
-target_link_libraries(${BIN_TARGET} PRIVATE smacker::smacker)
+#target_link_libraries(${BIN_TARGET} PRIVATE smacker)
 
 target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
 

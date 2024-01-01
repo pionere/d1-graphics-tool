@@ -10,7 +10,9 @@
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
-#include <smacker.h>
+//#include <smacker.h>
+//#include "../3rdParty/libsmacker/smacker.h"
+#include "libsmacker/smacker.h"
 
 #define D1SMK_COLORS 256
 
@@ -19,12 +21,17 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
     QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(filePath));
+        dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
         return false;
     }
 
     const quint64 fileSize = file.size();
     unsigned char *SVidBuffer = (unsigned char *)malloc(fileSize);
+    if (file.read(SVidBuffer, fileSize) != fileSize) {
+        MemFreeDbg(SVidBuffer);
+        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(filePath));
+        return false;
+    }
 
     smk SVidSMK = smk_open_memory(SVidBuffer, fileSize);
     if (SVidSMK == NULL) {
@@ -36,7 +43,7 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
     unsigned long SVidWidth, SVidHeight;
     smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
     smk_enable_video(SVidSMK, true);
-	// Decode first frame
+    // Decode first frame
     char result = smk_first(SVidSMK);
     if (SMK_ERR(result)) {
         MemFreeDbg(SVidBuffer);

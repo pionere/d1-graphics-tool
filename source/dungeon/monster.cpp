@@ -413,7 +413,7 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	// mon->_mAFNum = cmon->cmAFNum;
 	// mon->_mAFNum2 = cmon->cmAFNum2;
 	// mon->_mAlign_0 = cmon->cmAlign_0;
-	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP);
+	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP) << 6;
 	mon->_mAnimFrameLen = cmon->cmAnims[MA_STAND].maFrameLen;
 	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
 	mon->_mAnimLen = cmon->cmAnims[MA_STAND].maFrames;
