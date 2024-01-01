@@ -52,7 +52,7 @@ void DungeonSubtileWidget::show()
 
     this->setFocus(); // otherwise the widget does not receive keypress events...
     // update the view
-    this->monsterModified();
+    this->dungeonModified();
 }
 
 void DungeonSubtileWidget::hide()
@@ -162,8 +162,7 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterName->setText("");
         this->ui->monsterLevel->setText("");
         this->ui->monsterExp->setText("");
-        this->ui->monsterLeader->setText("");
-        this->ui->monsterPacksize->setText("");
+        this->ui->monsterStatus->setText("");
 
         this->ui->monsterInt->setText("");
 

@@ -411,8 +411,8 @@ void LevelCelView::updateFields()
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         this->ui->dungeonRoomLineEdit->setText(QString::number(this->dun->getRoomAt(posx, posy)));
         // update modal window
-        if (!this->dungeonMonsterWidget.isHidden()) {
-            this->showSubtileInfo();
+        if (this->dungeonSubtileWidget != nullptr) {
+            this->dungeonSubtileWidget->initialize(posx, posy);
         }
     } else {
         // Set current and maximum frame text
@@ -688,9 +688,6 @@ void LevelCelView::scrollToCurrent()
     cX += cellX;
     cY += cellY;
     this->ui->celGraphicsView->centerOn(cX, cY);
-    if (!this->dungeonMonsterWidget.isHidden()) {
-        this->showSubtileInfo();
-    }
 }
 
 void LevelCelView::selectPos(const QPoint &cell, int flags)
