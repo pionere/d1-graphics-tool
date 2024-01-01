@@ -1,29 +1,25 @@
 #pragma once
 
-#include <vector>
-
 #include <QFrame>
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include <QPoint>
 #include <QPointer>
-#include <QUndoCommand>
 
 namespace Ui {
-class DungeonMonsterWidget;
+class DungeonSubtileWidget;
 } // namespace Ui
 
 class LevelCelView;
-struct MonsterStruct;
 
-class DungeonMonsterWidget : public QFrame {
+class DungeonSubtileWidget : public QFrame {
     Q_OBJECT
 
 public:
-    explicit DungeonMonsterWidget(LevelCelView *parent);
-    ~DungeonMonsterWidget();
+    explicit DungeonSubtileWidget(LevelCelView *parent);
+    ~DungeonSubtileWidget();
 
-    void setMonster(MonsterStruct *mon);
+    void initialize(int x, int y);
 
     void show(); // override;
     void hide(); // override;
@@ -31,6 +27,7 @@ public:
 private:
     void resetPos();
     void stopMove();
+    void dungeonModified();
 
 private slots:
     void on_closePushButtonClicked();
@@ -40,10 +37,11 @@ private slots:
     void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
-    Ui::DungeonMonsterWidget *ui;
+    Ui::DungeonSubtileWidget *ui;
     QGraphicsView *graphView;
     bool moving = false;
     bool moved = false;
     QPoint lastPos;
-    MonsterStruct *mon;
+	int dunX;
+	int dunY;
 };

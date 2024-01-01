@@ -142,9 +142,9 @@ set(PROJECT_SOURCES
         source/dungeongeneratedialog.cpp
         source/dungeongeneratedialog.h
         source/dungeongeneratedialog.ui
-        source/dungeonmonsterwidget.cpp
-        source/dungeonmonsterwidget.h
-        source/dungeonmonsterwidget.ui
+        source/dungeonsubtilewidget.cpp
+        source/dungeonsubtilewidget.h
+        source/dungeonsubtilewidget.ui
         source/dungeonresourcedialog.cpp
         source/dungeonresourcedialog.h
         source/dungeonresourcedialog.ui
