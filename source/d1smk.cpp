@@ -81,7 +81,7 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
             for (unsigned x = 0; x < SVidWidth; x++, smkFrameCursor++) {
                 pixelLine.push_back(D1GfxPixel::colorPixel(*smkFrameCursor));
             }
-            frame->addPixelLine(pixelLine);
+            frame->addPixelLine(std::move(pixelLine));
         }
 
         gfx.frames.append(frame);

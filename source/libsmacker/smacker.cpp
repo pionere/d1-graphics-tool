@@ -963,12 +963,13 @@ smk smk_open_memory(const unsigned char * buffer, const unsigned long size)
 	/* set up the read union for Memory mode */
 	fp.ram = (unsigned char *)buffer;
 
-	if (!(s = smk_open_generic(0, fp, size, SMK_MODE_MEMORY)))
+	if (!(s = smk_open_generic(0, fp, size, SMK_MODE_MEMORY))) {
 #ifdef FULL
 		fprintf(stderr, "libsmacker::smk_open_memory(buffer,%lu) - ERROR: Fatal error in smk_open_generic, returning NULL.\n", size);
 #else
 		LogError("libsmacker::smk_open_memory(buffer,%lu) - ERROR: Fatal error in smk_open_generic, returning NULL.\n", size);
 #endif
+	}
 	return s;
 }
 
