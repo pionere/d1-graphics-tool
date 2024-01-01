@@ -25,8 +25,6 @@ DungeonSubtileWidget::DungeonSubtileWidget(LevelCelView *parent)
     layout = this->ui->rightButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &DungeonSubtileWidget::on_closePushButtonClicked);
 
-    this->adjustSize(); // not sure why this is necessary...
-
     // cache the active graphics view
     QList<QGraphicsView *> views = parent->getCelScene()->views();
     this->graphView = views[0];
@@ -158,6 +156,8 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterBleedCheckBox->setChecked((flags & MFLAG_CAN_BLEED) != 0);
         this->ui->monsterNoDropCheckBox->setChecked((flags & MFLAG_NODROP) != 0);
         this->ui->monsterKnockbackCheckBox->setChecked((flags & MFLAG_KNOCKBACK) != 0);
+
+        this->adjustSize(); // not sure why this is necessary...
     } else {
         this->ui->monsterName->setText("");
         this->ui->monsterLevel->setText("");

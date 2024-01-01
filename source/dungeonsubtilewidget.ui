@@ -51,10 +51,10 @@
       </sizepolicy>
      </property>
      <layout class="QGridLayout">
-      <item row="0" column="0" colspan="2" alignment="Qt::AlignCenter">
+      <item row="0" column="0" colspan="4" alignment="Qt::AlignCenter">
        <widget class="QLabel" name="monsterName"/>
       </item>
-      <item row="1" column="0" colspan="2" alignment="Qt::AlignCenter">
+      <item row="1" column="0" colspan="4" alignment="Qt::AlignCenter">
        <widget class="QLabel" name="monsterLevel"/>
       </item>
       <item row="2" column="0">
