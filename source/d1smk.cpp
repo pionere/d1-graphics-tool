@@ -24,7 +24,7 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
     }
 
     const quint64 fileSize = file.size();
-    const unsigned char *SVidBuffer = (const unsigned char *)malloc(fileSize);
+    unsigned char *SVidBuffer = (unsigned char *)malloc(fileSize);
 
     smk SVidSMK = smk_open_memory(SVidBuffer, fileSize);
     if (SVidSMK == NULL) {

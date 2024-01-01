@@ -5,7 +5,7 @@
 #include "d1gfx.h"
 #include "d1pal.h"
 // #include "exportdialog.h"
-// #include "openasdialog.h"
+#include "openasdialog.h"
 
 class D1Smk {
 public:
