@@ -471,8 +471,11 @@ const QComboBox *LevelCelView::getMonsters() const
 
 void LevelCelView::showSubtileInfo()
 {
-    this->dungeonSubtileWidget.initialize(this->currentDunPosX, this->currentDunPosY);
-    this->dungeonSubtileWidget.show();
+    if (this->dungeonSubtileWidget == nullptr) {
+        this->dungeonSubtileWidget = new DungeonSubtileWidget(this);
+        this->dungeonSubtileWidget->initialize(this->currentDunPosX, this->currentDunPosY);
+    }
+    this->dungeonSubtileWidget->show();
 }
 
 QPoint LevelCelView::getCellPos(const QPoint &pos) const

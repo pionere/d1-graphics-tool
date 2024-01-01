@@ -322,7 +322,7 @@ private:
     LevelTabTileWidget tabTileWidget = LevelTabTileWidget(this);
     LevelTabSubtileWidget tabSubtileWidget = LevelTabSubtileWidget(this);
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
-    DungeonSubtileWidget dungeonSubtileWidget = DungeonSubtileWidget(this);
+    DungeonSubtileWidget *dungeonSubtileWidget = nullptr;
     PushButtonWidget *viewBtn;
 
     TilesetLightDialog tilesetLightDialog = TilesetLightDialog(this);
