@@ -27,7 +27,7 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
 
     const quint64 fileSize = file.size();
     unsigned char *SVidBuffer = (unsigned char *)malloc(fileSize);
-    if (file.read(SVidBuffer, fileSize) != fileSize) {
+    if (file.read((char *)SVidBuffer, fileSize) != fileSize) {
         MemFreeDbg(SVidBuffer);
         dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(filePath));
         return false;
