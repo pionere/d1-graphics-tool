@@ -273,7 +273,9 @@ add_library(smacker STATIC
   3rdParty/libsmacker/smacker.c)
 target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
-target_link_libraries(${BIN_TARGET} PRIVATE smacker)
+add_library(smacker::smacker ALIAS smacker)
+
+target_link_libraries(${BIN_TARGET} PRIVATE smacker::smacker)
 
 target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
 
