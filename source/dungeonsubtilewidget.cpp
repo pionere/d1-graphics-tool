@@ -76,7 +76,8 @@ static QString MonLeaderText(BYTE flag, BYTE packsize)
         result = QApplication::tr("Lost");
         break;
     case MLEADER_SELF:
-        result = QApplication::tr("Leader of %1").arg(packsize);
+        // result = QApplication::tr("Leader(%1)").arg(packsize);
+        result = QApplication::tr("Leader");
         break;
     default:
         result = "???";

@@ -562,15 +562,16 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	uniqm = &uniqMonData[uniqindex];
 	mon->_mLevel = uniqm->muLevel;
 
+	mon->_mExp *= 2;
 	mon->_mName = uniqm->mName;
 	mon->_mmaxhp = uniqm->mmaxhp;
 
 	mon->_mAI = uniqm->mAI;
-	/*mon->_mMinDamage = uniqm->mMinDamage;
+	mon->_mMinDamage = uniqm->mMinDamage;
 	mon->_mMaxDamage = uniqm->mMaxDamage;
 	mon->_mMinDamage2 = uniqm->mMinDamage2;
 	mon->_mMaxDamage2 = uniqm->mMaxDamage2;
-	mon->_mMagicRes = uniqm->mMagicRes;*/
+	mon->_mMagicRes = uniqm->mMagicRes;
 
 	if (uniqm->mTrnName != NULL) {
 		/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
@@ -579,11 +580,11 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 		mon->_muniqtrans = uniquetrans++;
 	}
 
-//	mon->_mHit += uniqm->mUnqHit;
-//	mon->_mHit2 += uniqm->mUnqHit2;
-//	mon->_mMagic += uniqm->mUnqMag;
-//	mon->_mEvasion += uniqm->mUnqEva;
-//	mon->_mArmorClass += uniqm->mUnqAC;
+	mon->_mHit += uniqm->mUnqHit;
+	mon->_mHit2 += uniqm->mUnqHit2;
+	mon->_mMagic += uniqm->mUnqMag;
+	mon->_mEvasion += uniqm->mUnqEva;
+	mon->_mArmorClass += uniqm->mUnqAC;
 
 	lvlBonus = currLvl._dLevelBonus;
 	mon->_mAI.aiInt += lvlBonus / 16;

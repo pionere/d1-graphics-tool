@@ -17,6 +17,12 @@
   <property name="windowOpacity">
    <number>0.5</number>
   </property-->
+  <property name="minimumWidth">
+   <number>128</number>
+  </property>
+  <property name="maximumWidth">
+   <number>128</number>
+  </property>
   <layout class="QVBoxLayout">
    <item>
     <layout class="QHBoxLayout">
@@ -57,24 +63,25 @@
       <item row="1" column="0" colspan="4" alignment="Qt::AlignCenter">
        <widget class="QLabel" name="monsterLevel"/>
       </item>
-      <item row="2" column="0">
+
+      <item row="3" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;Status:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QLabel" name="monsterStatus"/>
       </item>
-      <item row="3" column="0">
+      <item row="3" column="2">
        <widget class="QLabel">
         <property name="text">
          <string>&lt;b&gt;AI-Int:&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="3" column="3">
        <widget class="QLabel" name="monsterInt"/>
       </item>
 

@@ -1193,10 +1193,12 @@ void MainWindow::openFile(const OpenAsParam &params)
             return;
         }
     } else if (fileType == 6) { // SMK
-        if (!D1Smk::load(*this->gfx, this->pal, gfxFilePath, params)) {
+        if (!D1Smk::load(*this->gfx, this->pals, gfxFilePath, params)) {
             this->failWithError(tr("Failed loading SMK file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
+        // add paths in palWidget
+        // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath()); -- should be called later
     } else {
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
@@ -1323,7 +1325,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     // Look for all palettes in the same folder as the CEL/CL2 file
-    QString firstPaletteFound = (fileType == 3 || fileType == 6) ? D1Pal::DEFAULT_PATH : "";
+    QString firstPaletteFound;
+    if (fileType == 3) {
+        firstPaletteFound = D1Pal::DEFAULT_PATH;
+    } else if (fileType == 6 && this->pals.size() > 1) {
+        firstPaletteFound = (this->pals.begin() + 1).key();
+    }
     if (!baseDir.isEmpty()) {
         QDirIterator it(baseDir, QStringList("*.pal"), QDir::Files | QDir::Readable);
         while (it.hasNext()) {

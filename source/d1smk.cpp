@@ -16,7 +16,25 @@
 
 #define D1SMK_COLORS 256
 
-bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsParam &params)
+static D1Pal* LoadPalette(smk SVidSMK)
+{
+    D1Pal *pal = new D1Pal();
+
+    const unsigned char *smkPal = smk_get_palette(SVidSMK);
+    for (int i = 0; i < D1SMK_COLORS; i++) {
+        pal->setColor(i, QColor(smkPal[i * 3 + 0], smkPal[i * 3 + 1], smkPal[i * 3 + 2]));
+    }
+    return pal;
+}
+
+static void RegisterPalette(D1Pal *pal, QMap<QString, D1Pal *> &pals)
+{
+    QString palPath = QString("Frame %1-%2").arg(prevPalFrame).arg(frameNum);
+    pal->setFilePath(palPath);
+    pals[palPath] = pal;
+}
+
+bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePath, const OpenAsParam &params)
 {
     QFile file = QFile(filePath);
 
@@ -32,19 +50,17 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
         dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(filePath));
         return false;
     }
-    LogErrorF("D1Smk::load %d", fileSize);
+
     smk SVidSMK = smk_open_memory(SVidBuffer, fileSize);
     if (SVidSMK == NULL) {
         MemFreeDbg(SVidBuffer);
         dProgressErr() << QApplication::tr("Invalid SMK file.");
         return false;
     }
-    LogErrorF("D1Smk::in memory");
+
     unsigned long SVidWidth, SVidHeight;
     smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
-    LogErrorF("D1Smk::info %dx%d", SVidWidth, SVidHeight);
     smk_enable_video(SVidSMK, true);
-    LogErrorF("D1Smk::enabled");
     // Decode first frame
     char result = smk_first(SVidSMK);
     if (SMK_ERR(result)) {
@@ -52,13 +68,8 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
         dProgressErr() << QApplication::tr("Empty SMK file.");
         return false;
     }
-    LogErrorF("D1Smk::first frame loaded");
     // load the first palette
-    const unsigned char *smkPal = smk_get_palette(SVidSMK);
-    for (int i = 0; i < D1SMK_COLORS; i++) {
-        pal->setColor(i, QColor(smkPal[i * 3 + 0], smkPal[i * 3 + 1], smkPal[i * 3 + 2]));
-    }
-    LogErrorF("D1Smk::palette loaded");
+    D1Pal *pal = LoadPalette(SVidSMK);
     // load the frames
     // gfx.frames.clear();
     if (params.celWidth != 0) {
@@ -66,13 +77,16 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
     }
     const bool clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
     unsigned frameNum = 0;
+    unsigned prevPalFrame = 0;
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
     do {
-        LogErrorF("D1Smk::creating frame %d (%d)", frameNum + 1, result, smkFrame != nullptr);
-        if (smk_palette_updated(SVidSMK) && frameNum != 0)
-            dProgressWarn() << QApplication::tr("Palette changed in the %1.frame.").arg(frameNum + 1);
+        if (smk_palette_updated(SVidSMK)) {
+            RegisterPalette(pal, prevPalFrame, frameNum, pals);
+            prevPalFrame = frameNum;
+            // load the new palette
+            pal = LoadPalette(SVidSMK);
+        }
         // create a new frame
-        LogErrorF("D1Smk::creating frame instance");
         D1GfxFrame *frame = new D1GfxFrame();
         frame->clipped = clipped;
         const unsigned char *smkFrameCursor = smkFrame;
@@ -86,12 +100,12 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
 
         gfx.frames.append(frame);
         frameNum++;
-        LogErrorF("D1Smk::frame created %d", frameNum);
     } while ((result = smk_next(SVidSMK)) == SMK_MORE);
-    LogErrorF("D1Smk::read done %d", frameNum);
+
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
     }
+    RegisterPalette(pal, prevPalFrame, frameNum, pals);
 
     gfx.groupFrameIndices.clear();
     gfx.groupFrameIndices.push_back(std::pair<int, int>(0, frameNum - 1));
@@ -105,6 +119,5 @@ bool D1Smk::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
 
     gfx.gfxFilePath = celPath;
     gfx.modified = true;
-    LogErrorF("D1Smk::load done %d");
     return true;
 }
