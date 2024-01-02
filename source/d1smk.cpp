@@ -27,9 +27,9 @@ static D1Pal* LoadPalette(smk SVidSMK)
     return pal;
 }
 
-static void RegisterPalette(D1Pal *pal, QMap<QString, D1Pal *> &pals)
+static void RegisterPalette(D1Pal *pal, unsigned frameFrom, unsigned frameTo, QMap<QString, D1Pal *> &pals)
 {
-    QString palPath = QString("Frame %1-%2").arg(prevPalFrame).arg(frameNum);
+    QString palPath = QString("Frame%1-%2").arg(frameFrom, 4, 10, '0').arg(frameTo, 4, 10, '0');
     pal->setFilePath(palPath);
     pals[palPath] = pal;
 }
