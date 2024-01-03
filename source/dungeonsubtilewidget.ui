@@ -18,35 +18,43 @@
    <number>0.5</number>
   </property-->
   <property name="minimumWidth">
-   <number>224</number>
+   <number>228</number>
   </property>
   <property name="maximumWidth">
-   <number>224</number>
+   <number>228</number>
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <layout class="QHBoxLayout">
-     <item>
+    <widget class="QWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout">
+      <!--item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </spacer>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="centerButtonsHorizontalLayout"/>
-     </item>
-     <item>
+     </item-->
+      <item alignment="Qt::AlignCenter">
+       <layout class="QHBoxLayout" name="centerButtonsHorizontalLayout"/>
+      </item>
+      <!--item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </spacer>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="rightButtonsHorizontalLayout"/>
-     </item>
-    </layout>
+     </item-->
+      <item alignment="Qt::AlignRight">
+       <layout class="QHBoxLayout" name="rightButtonsHorizontalLayout"/>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="QWidget">
