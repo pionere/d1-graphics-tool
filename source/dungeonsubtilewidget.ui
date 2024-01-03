@@ -18,10 +18,10 @@
    <number>0.5</number>
   </property-->
   <property name="minimumWidth">
-   <number>128</number>
+   <number>196</number>
   </property>
   <property name="maximumWidth">
-   <number>128</number>
+   <number>196</number>
   </property>
   <layout class="QVBoxLayout">
    <item>

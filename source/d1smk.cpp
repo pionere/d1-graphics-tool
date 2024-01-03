@@ -80,7 +80,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     unsigned prevPalFrame = 0;
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
     do {
-        if (smk_palette_updated(SVidSMK)) {
+        if (smk_palette_updated(SVidSMK) && frameNum != 0) {
             RegisterPalette(pal, prevPalFrame, frameNum, pals);
             prevPalFrame = frameNum;
             // load the new palette
