@@ -114,7 +114,7 @@ static void MonResistText(unsigned resist, unsigned idx, QProgressBar *label)
         tooltip = "Immune to %1 damage";
         break;
     default:
-        text = "???";
+        // text = "???";
         tooltip = "???";
         break;
     }
@@ -201,13 +201,20 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterArmorClass->setText("");
         this->ui->monsterEvasion->setText("");
 
-        this->ui->monsterResSlash->setText("");
+        /*this->ui->monsterResSlash->setText("");
         this->ui->monsterResBlunt->setText("");
         this->ui->monsterResPunct->setText("");
         this->ui->monsterResFire->setText("");
         this->ui->monsterResLight->setText("");
         this->ui->monsterResMagic->setText("");
-        this->ui->monsterResAcid->setText("");
+        this->ui->monsterResAcid->setText("");*/
+        this->ui->monsterResSlash->setValue(0);
+        this->ui->monsterResBlunt->setValue(0);
+        this->ui->monsterResPunct->setValue(0);
+        this->ui->monsterResFire->setValue(0);
+        this->ui->monsterResLight->setValue(0);
+        this->ui->monsterResMagic->setValue(0);
+        this->ui->monsterResAcid->setValue(0);
 
         this->ui->monsterHiddenCheckBox->setChecked(false);
         this->ui->monsterGargCheckBox->setChecked(false);
