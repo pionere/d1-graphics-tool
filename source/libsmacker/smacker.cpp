@@ -19,6 +19,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <cstdarg>
+
 /* logging replacements */
 #ifdef FULL
 #define PrintError(msg)    perror(msg);

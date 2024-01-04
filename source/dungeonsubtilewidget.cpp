@@ -86,27 +86,44 @@ static QString MonLeaderText(BYTE flag, BYTE packsize)
     return result;
 }
 
-static const char* MonResistText(unsigned resist, unsigned idx)
+static void MonResistText(unsigned resist, unsigned idx, QLabel *label)
 {
-    const char* result;
+    const char* text;
+    QString tooltip;
     switch ((resist >> idx) & 3) {
     case MORT_NONE:
-        result = "-";
+        text = "ooo";
+        tooltip = "Vulnerable to %1 damage";
         break;
     case MORT_PROTECTED:
-        result = "Protected";
+        text = "xoo";
+        tooltip = "Protected against %1 damage";
         break;
     case MORT_RESIST:
-        result = "Resist";
+        text = "xxo";
+        tooltip = "Resists %1 damage";
         break;
     case MORT_IMMUNE:
-        result = "Immune";
+        text = "xxx";
+        tooltip = "Immune to %1 damage";
         break;
     default:
-        result = "???";
+        text = "???";
+        tooltip = "???";
         break;
     }
-    return result;
+    const char *type;
+    switch (idx) {
+    case MORS_IDX_SLASH:     type = "slash";     break;
+    case MORS_IDX_BLUNT:     type = "blunt";     break;
+    case MORS_IDX_PUNCTURE:  type = "puncture";  break;
+    case MORS_IDX_FIRE:      type = "fire";      break;
+    case MORS_IDX_LIGHTNING: type = "lightning"; break;
+    case MORS_IDX_MAGIC:     type = "magic";     break;
+    case MORS_IDX_ACID:      type = "acid";      break;
+    }
+    label->setText(text);
+    label->setToolTip(tooltip.arg(type));
 }
 
 void DungeonSubtileWidget::dungeonModified()
@@ -139,13 +156,13 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterEvasion->setText(QString::number(mon->_mEvasion));
 
         unsigned res = mon->_mMagicRes;
-        this->ui->monsterResSlash->setText(MonResistText(res, MORS_IDX_SLASH));
-        this->ui->monsterResBlunt->setText(MonResistText(res, MORS_IDX_BLUNT));
-        this->ui->monsterResPunct->setText(MonResistText(res, MORS_IDX_PUNCTURE));
-        this->ui->monsterResFire->setText(MonResistText(res, MORS_IDX_FIRE));
-        this->ui->monsterResLight->setText(MonResistText(res, MORS_IDX_LIGHTNING));
-        this->ui->monsterResMagic->setText(MonResistText(res, MORS_IDX_MAGIC));
-        this->ui->monsterResAcid->setText(MonResistText(res, MORS_IDX_ACID));
+        MonResistText(res, MORS_IDX_SLASH, this->ui->monsterResSlash);
+        MonResistText(res, MORS_IDX_BLUNT, this->ui->monsterResBlunt);
+        MonResistText(res, MORS_IDX_PUNCTURE, this->ui->monsterResPunct);
+        MonResistText(res, MORS_IDX_FIRE, this->ui->monsterResFire);
+        MonResistText(res, MORS_IDX_LIGHTNING, this->ui->monsterResLight);
+        MonResistText(res, MORS_IDX_MAGIC, this->ui->monsterResMagic);
+        MonResistText(res, MORS_IDX_ACID, this->ui->monsterResAcid);
 
         unsigned flags = mon->_mFlags;
         this->ui->monsterHiddenCheckBox->setChecked((flags & MFLAG_HIDDEN) != 0);
