@@ -461,6 +461,34 @@ error:
 /* Look up a 16-bit value from a large huff tree.
 	Return -1 on error.
 	Note that this also updates the recently-used-values cache. */
+static bool deepDebug = false;
+static void LogErrorFF(const char* msg, ...)
+{
+	char tmp[256];
+	char tmsg[256];
+	va_list va;
+
+	va_start(va, msg);
+
+	vsnprintf(tmsg, sizeof(tmsg), msg, va);
+
+	va_end(va);
+
+	// dProgressErr() << QString(tmsg);
+	
+	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
+	FILE* f0 = fopen(tmp, "a+");
+	if (f0 == NULL)
+		return;
+
+	fputs(tmsg, f0);
+
+	fputc('\n', f0);
+
+	fclose(f0);
+}
+
+
 static int smk_huff16_lookup(struct smk_huff16_t * const t, struct smk_bit_t * const bs)
 {
 	int bit, value, index = 0;
@@ -473,7 +501,8 @@ static int smk_huff16_lookup(struct smk_huff16_t * const t, struct smk_bit_t * c
 			LogErrorMsg("libsmacker::smk_huff16_lookup() - ERROR: get_bit returned -1\n");
 			return -1;
 		}
-
+if (deepDebug)
+LogErrorFF("smk_huff16_lookup idx %d value%d bit%d", index, t->tree[index], bit);
 		if (bit) {
 			/* take the right branch */
 			index = t->tree[index] & SMK_HUFF16_LEAF_MASK;
@@ -485,6 +514,8 @@ static int smk_huff16_lookup(struct smk_huff16_t * const t, struct smk_bit_t * c
 
 	/* Get the value at this point */
 	value = t->tree[index];
+if (deepDebug)
+LogErrorFF("smk_huff16_lookup value %d cache%d(%d:%d:%d)", value, (value & SMK_HUFF16_CACHE) != 0, t->cache[0], t->cache[1], t->cache[2]);
 
 	if (value & SMK_HUFF16_CACHE) {
 		/* uses cached value instead of actual value */
@@ -720,32 +751,6 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 		((unsigned long) buf[2] << 16) | \
 		((unsigned long) buf[1] << 8) | \
 		((unsigned long) buf[0]); \
-}
-
-static void LogErrorFF(const char* msg, ...)
-{
-	char tmp[256];
-	char tmsg[256];
-	va_list va;
-
-	va_start(va, msg);
-
-	vsnprintf(tmsg, sizeof(tmsg), msg, va);
-
-	va_end(va);
-
-	// dProgressErr() << QString(tmsg);
-	
-	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
-	FILE* f0 = fopen(tmp, "a+");
-	if (f0 == NULL)
-		return;
-
-	fputs(tmsg, f0);
-
-	fputc('\n', f0);
-
-	fclose(f0);
 }
 
 /* PUBLIC FUNCTIONS */
@@ -1526,7 +1531,7 @@ unsigned firstRow = row;
 unsigned firstCol = col;
 		for (j = 0; (j < sizetable[blocklen]) && (row < s->h); j ++) {
 if (doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116)
-	LogErrorFF("smk_render_video row%d col%d type%d blocklen%d data%d version%d (%d) firstRow%d Col%d bit%d", row, col, type, blocklen, typedata, s->v, s->v == '4', firstRow, firstCol, bs.bit_num);
+	LogErrorFF("smk_render_video row%d col%d type%d blocklen%d data%d version%d (%d) firstRow%d Col%d bit%d tree%d b%d", row, col, type, blocklen, typedata, s->v, s->v == '4', firstRow, firstCol, bs.bit_num, s->tree[SMK_TREE_FULL].tree[0], (s->tree[SMK_TREE_FULL].tree[0] & SMK_HUFF16_BRANCH) != 0, (s->tree[SMK_TREE_FULL].tree[0] & SMK_HUFF16_CACHE) != 0);
 
 			skip = (row * s->w) + col;
 
@@ -1572,6 +1577,7 @@ if (doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116)
 				break;
 
 			case 1: /* FULL BLOCK */
+deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 				for (k = 0; k < 4; k ++) {
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
 						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
@@ -1580,7 +1586,8 @@ if (doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116)
 
 					t[skip + 3] = ((unpack & 0xFF00) >> 8);
 					t[skip + 2] = (unpack & 0x00FF);
-
+if (deepDebug)
+LogErrorFF("Full block %d:0 value%d pair%d:%d", k, unpack, t[skip + 3], t[skip + 2]);
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
 						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
 						return -1;
@@ -1588,9 +1595,11 @@ if (doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116)
 
 					t[skip + 1] = ((unpack & 0xFF00) >> 8);
 					t[skip] = (unpack & 0x00FF);
+if (deepDebug)
+LogErrorFF("Full block %d:1 value%d pair%d:%d", k, unpack, t[skip + 1], t[skip]);
 					skip += s->w;
 				}
-
+deepDebug = false;
 				break;
 
 			case 2: /* VOID BLOCK */

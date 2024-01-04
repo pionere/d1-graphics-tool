@@ -194,23 +194,62 @@
       <item row="9" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <item>
-         <widget class="QLabel" name="monsterResSlash">
-          <property name="toolTip">
-           <string>Slash resistance</string>
+         <!--widget class="QLabel" name="monsterResSlash"/-->
+         <widget class="QProgressBar" name="monsterResSlash">
+          <property name="fixedWidth">
+           <number>50</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="monsterResBlunt">
-          <property name="toolTip">
-           <string>Blunt resistance</string>
+         <!--widget class="QLabel" name="monsterResBlunt"/-->
+         <widget class="QProgressBar" name="monsterResBlunt">
+          <property name="fixedWidth">
+           <number>50</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="monsterResPunct">
-          <property name="toolTip">
-           <string>Puncture resistance</string>
+         <!--widget class="QLabel" name="monsterResPunct"/-->
+         <widget class="QProgressBar" name="monsterResPunct">
+          <property name="fixedWidth">
+           <number>50</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
@@ -233,30 +272,82 @@
       <item row="10" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <item>
-         <widget class="QLabel" name="monsterResFire">
-          <property name="toolTip">
-           <string>Fire resistance</string>
+         <!--widget class="QLabel" name="monsterResFire"/-->
+         <widget class="QProgressBar" name="monsterResFire">
+          <property name="fixedWidth">
+           <number>40</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="monsterResLight">
-          <property name="toolTip">
-           <string>Lightning resistance</string>
+         <!--widget class="QLabel" name="monsterResLight"/-->
+         <widget class="QProgressBar" name="monsterResLight">
+          <property name="fixedWidth">
+           <number>40</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="monsterResMagic">
-          <property name="toolTip">
-           <string>Magic resistance</string>
+         <!--widget class="QLabel" name="monsterResMagic"/-->
+         <widget class="QProgressBar" name="monsterResMagic">
+          <property name="fixedWidth">
+           <number>40</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="monsterResAcid">
-          <property name="toolTip">
-           <string>Acid resistance</string>
+         <!--widget class="QLabel" name="monsterResAcid"/-->
+         <widget class="QProgressBar" name="monsterResAcid">
+          <property name="fixedWidth">
+           <number>40</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
