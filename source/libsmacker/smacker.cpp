@@ -775,7 +775,7 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 #define smk_read_ul(p) \
 { \
 	smk_read(buf,4); \
-	smk_swap_32(p, buf);
+	smk_swap_32(p, buf); \
 }
 #endif
 
