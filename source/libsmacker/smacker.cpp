@@ -865,7 +865,6 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		Y scale / Y interlace go in the Video flags.
 		The user should scale appropriately. */
 	smk_read_ul(temp_u);
-LogErrorFF("smk_open_generic %dx%d f%d fl%d flags%d", s->video.w, s->video.h, s->total_frames, (int)s->usf, temp_u);
 #ifdef FULL
 	if (temp_u & 0x01) {
 		s->ring_frame = 1;
@@ -896,11 +895,10 @@ LogErrorFF("smk_open_generic %dx%d f%d fl%d flags%d", s->video.w, s->video.h, s-
 #else
 		smk_read_ul(temp_u);
 		if (temp_u < 12 || temp_u % 4) {
-LogErrorFF("libsmacker::smk_open_generic - ERROR: illegal value %u for tree_size[%d]\n", temp_u, temp_l);
 			LogError("libsmacker::smk_open_generic - ERROR: illegal value %u for tree_size[%d]\n", temp_u, temp_l);
 			goto error;
 		}
-		video_tree_size[temp_l] = temp_u;
+		video_tree_size[temp_l] = (temp_u - 12) / 4;
 #endif
 	}
 
