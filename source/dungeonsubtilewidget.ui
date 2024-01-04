@@ -197,7 +197,7 @@
          <!--widget class="QLabel" name="monsterResSlash"/-->
          <widget class="QProgressBar" name="monsterResSlash">
           <property name="fixedWidth">
-           <number>50</number>
+           <number>52</number>
           </property>
           <property name="minimum">
            <number>0</number>
@@ -217,7 +217,7 @@
          <!--widget class="QLabel" name="monsterResBlunt"/-->
          <widget class="QProgressBar" name="monsterResBlunt">
           <property name="fixedWidth">
-           <number>50</number>
+           <number>52</number>
           </property>
           <property name="minimum">
            <number>0</number>
@@ -237,7 +237,7 @@
          <!--widget class="QLabel" name="monsterResPunct"/-->
          <widget class="QProgressBar" name="monsterResPunct">
           <property name="fixedWidth">
-           <number>50</number>
+           <number>52</number>
           </property>
           <property name="minimum">
            <number>0</number>
@@ -275,7 +275,7 @@
          <!--widget class="QLabel" name="monsterResFire"/-->
          <widget class="QProgressBar" name="monsterResFire">
           <property name="fixedWidth">
-           <number>40</number>
+           <number>38</number>
           </property>
           <property name="minimum">
            <number>0</number>
@@ -295,7 +295,7 @@
          <!--widget class="QLabel" name="monsterResLight"/-->
          <widget class="QProgressBar" name="monsterResLight">
           <property name="fixedWidth">
-           <number>40</number>
+           <number>38</number>
           </property>
           <property name="minimum">
            <number>0</number>
@@ -315,7 +315,7 @@
          <!--widget class="QLabel" name="monsterResMagic"/-->
          <widget class="QProgressBar" name="monsterResMagic">
           <property name="fixedWidth">
-           <number>40</number>
+           <number>38</number>
           </property>
           <property name="minimum">
            <number>0</number>
@@ -335,7 +335,7 @@
          <!--widget class="QLabel" name="monsterResAcid"/-->
          <widget class="QProgressBar" name="monsterResAcid">
           <property name="fixedWidth">
-           <number>40</number>
+           <number>38</number>
           </property>
           <property name="minimum">
            <number>0</number>

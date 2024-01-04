@@ -77,11 +77,12 @@ smk smk_open_memory(const unsigned char* buffer, const unsigned long size);
 void smk_close(smk object);
 
 /* GET FILE INFO OPERATIONS */
+#ifdef FULL
 char smk_info_all(const smk object, unsigned long * frame, unsigned long * frame_count, double * usf);
 char smk_info_video(const smk object, unsigned long * w, unsigned long * h, unsigned char * y_scale_mode);
-#ifdef FULL
 char smk_info_audio(const smk object, unsigned char * track_mask, unsigned char channels[7], unsigned char bitdepth[7], unsigned long audio_rate[7]);
 #else
+char smk_info_all(const smk object, unsigned long * w, unsigned long * h, double * usf);
 void smk_info_audio(const smk object, unsigned char * channels, unsigned char * bitdepth, unsigned long * audio_rate);
 #endif
 

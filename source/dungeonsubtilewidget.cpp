@@ -209,12 +209,19 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterResMagic->setText("");
         this->ui->monsterResAcid->setText("");*/
         this->ui->monsterResSlash->setValue(0);
+        this->ui->monsterResSlash->setToolTip("");
         this->ui->monsterResBlunt->setValue(0);
+        this->ui->monsterResBlunt->setToolTip("");
         this->ui->monsterResPunct->setValue(0);
+        this->ui->monsterResPunct->setToolTip("");
         this->ui->monsterResFire->setValue(0);
+        this->ui->monsterResFire->setToolTip("");
         this->ui->monsterResLight->setValue(0);
+        this->ui->monsterResLight->setToolTip("");
         this->ui->monsterResMagic->setValue(0);
+        this->ui->monsterResMagic->setToolTip("");
         this->ui->monsterResAcid->setValue(0);
+        this->ui->monsterResAcid->setToolTip("");
 
         this->ui->monsterHiddenCheckBox->setChecked(false);
         this->ui->monsterGargCheckBox->setChecked(false);
