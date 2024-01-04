@@ -23,6 +23,7 @@
 #include <errno.h>
 #include <string.h>
 
+#ifdef FULL
 /**
 	Safe free: attempts to prevent double-free by setting pointer to NULL.
 		Optionally warns on attempts to free a NULL pointer.
@@ -33,7 +34,13 @@
 	free(p); \
 	p = NULL; \
 }
-
+#else
+#define smk_free(p) \
+{ \
+	free(p); \
+	p = NULL; \
+}
+#endif
 /**
 	//Safe calloc: exits if calloc() returns NULL.
 		Also initializes blocks to 0.

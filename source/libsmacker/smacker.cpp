@@ -720,6 +720,32 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 		((unsigned long) buf[0]); \
 }
 
+static void LogErrorFF(const char* msg, ...)
+{
+	char tmp[256];
+	char tmsg[256];
+	va_list va;
+
+	va_start(va, msg);
+
+	vsnprintf(tmsg, sizeof(tmsg), msg, va);
+
+	va_end(va);
+
+	// dProgressErr() << QString(tmsg);
+	
+	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
+	FILE* f0 = fopen(tmp, "a+");
+	if (f0 == NULL)
+		return;
+
+	fputs(tmsg, f0);
+
+	fputc('\n', f0);
+
+	fclose(f0);
+}
+
 /* PUBLIC FUNCTIONS */
 /* open an smk (from a generic Source) */
 static smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned long size, const unsigned char process_mode)
@@ -780,7 +806,7 @@ static smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned
 	/* frames per second calculation */
 	smk_read_ul(temp_u);
 	temp_l = (int)temp_u;
-
+LogErrorFF("smk_open_generic version %d framelen %d", s->video.v, temp_l);
 	if (temp_l > 0) {
 		/* millisec per frame */
 		s->usf = temp_l * 1000;
@@ -1049,7 +1075,9 @@ void smk_close(smk s)
 
 	/* free audio sub-components */
 	for (u = 0; u < 7; u++) {
+#ifdef FULL
 		if (s->audio[u].buffer)
+#endif
 			smk_free(s->audio[u].buffer);
 	}
 
@@ -1068,17 +1096,17 @@ void smk_close(smk s)
 
 		smk_free(s->source.file.chunk_offset);
 	} else {
-#endif
 		/* mem-mode */
 		if (s->source.chunk_data != NULL) {
+#endif
 #ifdef FULL_ORIG
 			for (u = 0; u < (s->f + s->ring_frame); u++)
 				smk_free(s->source.chunk_data[u]);
 #endif
 
 			smk_free(s->source.chunk_data);
-		}
 #ifdef FULL
+		}
 	}
 #endif
 	smk_free(s->chunk_size);
@@ -1428,12 +1456,14 @@ error:
 		The new palette probably has errors but is preferrable to a black screen */
 	return -1;
 }
-
+static int frameCount = 0;
 static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, unsigned int size)
 {
 	unsigned char * t = s->frame;
 	unsigned char s1, s2;
+#ifdef FULL
 	unsigned short temp;
+#endif
 	unsigned long i, j, k, row, col, skip;
 	/* used for video decoding */
 	struct smk_bit_t bs;
@@ -1454,6 +1484,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 		49,	50,	51,	52,	53,	54,	55,	56,
 		57,	58,	59,	128,	256,	512,	1024,	2048
 	};
+bool doDebug = ++frameCount == 174;
 	/* null check */
 	assert(s);
 	assert(p);
@@ -1489,8 +1520,12 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 					type = 5;
 			}
 		}
-
+unsigned firstRow = row;
+unsigned firstCol = col;
 		for (j = 0; (j < sizetable[blocklen]) && (row < s->h); j ++) {
+if (doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116)
+	LogErrorFF("smk_render_video row%d col%d type%d blocklen%d data%d version%d (%d) firstRow%d Col%d bit%d", row, col, type, blocklen, typedata, s->v, s->v == '4', firstRow, firstCol, bs.bit_num);
+
 			skip = (row * s->w) + col;
 
 			switch (type) {
@@ -1507,17 +1542,26 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 					LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from MMAP tree.\n");
 					return -1;
 				}
-
+#ifdef FULL
 				temp = 0x01;
-
+#endif
 				for (k = 0; k < 4; k ++) {
 					for (i = 0; i < 4; i ++) {
+#ifdef FULL
 						if (unpack & temp)
 							t[skip + i] = s1;
 						else
 							t[skip + i] = s2;
 
 						temp = temp << 1;
+#else
+						if (unpack & 0x01)
+							t[skip + i] = s1;
+						else
+							t[skip + i] = s2;
+
+						unpack = (unsigned)unpack >> 1;
+#endif
 					}
 
 					skip += s->w;
@@ -1908,10 +1952,10 @@ static char smk_render(smk s)
 
 		/* If video rendering enabled, kick this off for decode. */
 		if (s->video.enable)
-			smk_render_palette(&(s->video), p + 1, size - 1);
+			smk_render_palette(&(s->video), p + 1, size - 1); // -- prevent underflow?
 
 		p += size;
-		i -= size;
+		i -= size; // -- prevent underflow?
 	}
 
 	/* Unpack audio chunks */
@@ -1932,10 +1976,10 @@ static char smk_render(smk s)
 
 			/* If audio rendering enabled, kick this off for decode. */
 			if (s->audio[track].enable)
-				smk_render_audio(&s->audio[track], p + 4, size - 4);
+				smk_render_audio(&s->audio[track], p + 4, size - 4); // -- prevent underflow?
 
 			p += size;
-			i -= size;
+			i -= size; // -- prevent underflow?
 		} else
 			s->audio[track].buffer_size = 0;
 	}
