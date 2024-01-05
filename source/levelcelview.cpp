@@ -63,6 +63,8 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     QGridLayout *gridLayout = this->ui->dungeonLayout;
     btn = PushButtonWidget::addButton(this, gridLayout, 3, 10, QStyle::SP_DialogOkButton, tr("Center Dungeon"), this, &LevelCelView::scrollToCurrent);
     setTabOrder(this->ui->moveDownButton, btn);
+    PushButtonWidget *monBtn = PushButtonWidget::addButton(this, gridLayout, 3, 11, QStyle::SP_FileDialogInfoView, tr("Show Subtile Info"), this, &LevelCelView::showSubtileInfo);
+    setTabOrder(btn, monBtn);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
@@ -408,6 +410,10 @@ void LevelCelView::updateFields()
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         this->ui->dungeonRoomLineEdit->setText(QString::number(this->dun->getRoomAt(posx, posy)));
+        // update modal window
+        if (this->dungeonSubtileWidget != nullptr) {
+            this->dungeonSubtileWidget->initialize(posx, posy);
+        }
     } else {
         // Set current and maximum frame text
         count = this->gfx->getFrameCount();
@@ -461,6 +467,15 @@ const QComboBox *LevelCelView::getObjects() const
 const QComboBox *LevelCelView::getMonsters() const
 {
     return this->ui->dungeonMonsterComboBox;
+}
+
+void LevelCelView::showSubtileInfo()
+{
+    if (this->dungeonSubtileWidget == nullptr) {
+        this->dungeonSubtileWidget = new DungeonSubtileWidget(this);
+        this->dungeonSubtileWidget->initialize(this->currentDunPosX, this->currentDunPosY);
+    }
+    this->dungeonSubtileWidget->show();
 }
 
 QPoint LevelCelView::getCellPos(const QPoint &pos) const

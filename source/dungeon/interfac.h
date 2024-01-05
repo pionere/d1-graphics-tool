@@ -12,6 +12,7 @@ class D1Dun;
 class D1Tileset;
 class GenerateDunParam;
 class LevelCelView;
+struct MonsterStruct;
 
 extern int ViewX;
 extern int ViewY;
@@ -23,5 +24,6 @@ extern QString assetPath;
 extern char infostr[256];
 
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params);
+MonsterStruct* GetMonsterAt(int x, int y);
 
 #endif /* __INTERFAC_H__ */

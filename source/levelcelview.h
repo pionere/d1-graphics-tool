@@ -24,6 +24,7 @@
 #include "dungeongeneratedialog.h"
 #include "dungeonresourcedialog.h"
 #include "dungeonsearchdialog.h"
+#include "dungeonsubtilewidget.h"
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
@@ -188,6 +189,7 @@ private:
     void setPosition(int posx, int posy);
     void shiftPosition(int dx, int dy);
     QPoint getCellPos(const QPoint &pos) const;
+    void showSubtileInfo();
 
 signals:
     void frameRefreshed();
@@ -318,6 +320,7 @@ private:
     LevelTabTileWidget tabTileWidget = LevelTabTileWidget(this);
     LevelTabSubtileWidget tabSubtileWidget = LevelTabSubtileWidget(this);
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
+    DungeonSubtileWidget *dungeonSubtileWidget = nullptr;
     PushButtonWidget *viewBtn;
 
     TilesetLightDialog tilesetLightDialog = TilesetLightDialog(this);

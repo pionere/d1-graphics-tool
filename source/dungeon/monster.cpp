@@ -386,11 +386,39 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_mx = x;
 	mon->_my = y;
 	mon->_mdir = dir;
-	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP);
+
+	mon->_mName = cmon->cmName;
+	// mon->_mFileNum = cmon->cmFileNum;
+	mon->_mLevel = cmon->cmLevel;
+	mon->_mSelFlag = cmon->cmSelFlag;
+	mon->_mAI.aiType = cmon->cmAI.aiType;
+	mon->_mAI.aiInt = cmon->cmAI.aiInt;
+	mon->_mAI.aiParam1 = cmon->cmAI.aiParam1;
+	mon->_mAI.aiParam2 = cmon->cmAI.aiParam2;
+	mon->_mFlags = cmon->cmFlags;
+	mon->_mHit = cmon->cmHit;
+	mon->_mMinDamage = cmon->cmMinDamage;
+	mon->_mMaxDamage = cmon->cmMaxDamage;
+	mon->_mHit2 = cmon->cmHit2;
+	mon->_mMinDamage2 = cmon->cmMinDamage2;
+	mon->_mMaxDamage2 = cmon->cmMaxDamage2;
+	mon->_mMagic = cmon->cmMagic;
+	mon->_mArmorClass = cmon->cmArmorClass;
+	mon->_mEvasion = cmon->cmEvasion;
+	mon->_mMagicRes = cmon->cmMagicRes;
+	// mon->_mAlign_1 = cmon->cmAlign_1;
+	mon->_mExp = cmon->cmExp;
+	// mon->_mAnimWidth = cmon->cmWidth;
+	// mon->_mAnimXOffset = cmon->cmXOffset;
+	// mon->_mAFNum = cmon->cmAFNum;
+	// mon->_mAFNum2 = cmon->cmAFNum2;
+	// mon->_mAlign_0 = cmon->cmAlign_0;
+	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP) << 6;
 	mon->_mAnimFrameLen = cmon->cmAnims[MA_STAND].maFrameLen;
 	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
 	mon->_mAnimLen = cmon->cmAnims[MA_STAND].maFrames;
 	mon->_mAnimFrame = mon->_mAnimLen == 0 ? 1 : RandRangeLow(1, mon->_mAnimLen);
+	mon->_mmode = MM_STAND;
 	mon->_mRndSeed = NextRndSeed();
 
 	mon->_muniqtype = 0;
@@ -534,15 +562,16 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	uniqm = &uniqMonData[uniqindex];
 	mon->_mLevel = uniqm->muLevel;
 
+	mon->_mExp *= 2;
 	mon->_mName = uniqm->mName;
 	mon->_mmaxhp = uniqm->mmaxhp;
 
 	mon->_mAI = uniqm->mAI;
-	/*mon->_mMinDamage = uniqm->mMinDamage;
+	mon->_mMinDamage = uniqm->mMinDamage;
 	mon->_mMaxDamage = uniqm->mMaxDamage;
 	mon->_mMinDamage2 = uniqm->mMinDamage2;
 	mon->_mMaxDamage2 = uniqm->mMaxDamage2;
-	mon->_mMagicRes = uniqm->mMagicRes;*/
+	mon->_mMagicRes = uniqm->mMagicRes;
 
 	if (uniqm->mTrnName != NULL) {
 		/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
@@ -551,11 +580,11 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 		mon->_muniqtrans = uniquetrans++;
 	}
 
-//	mon->_mHit += uniqm->mUnqHit;
-//	mon->_mHit2 += uniqm->mUnqHit2;
-//	mon->_mMagic += uniqm->mUnqMag;
-//	mon->_mEvasion += uniqm->mUnqEva;
-//	mon->_mArmorClass += uniqm->mUnqAC;
+	mon->_mHit += uniqm->mUnqHit;
+	mon->_mHit2 += uniqm->mUnqHit2;
+	mon->_mMagic += uniqm->mUnqMag;
+	mon->_mEvasion += uniqm->mUnqEva;
+	mon->_mArmorClass += uniqm->mUnqAC;
 
 	lvlBonus = currLvl._dLevelBonus;
 	mon->_mAI.aiInt += lvlBonus / 16;
@@ -625,7 +654,7 @@ static int MonPackSpace(int dx, int dy, int px, int py, bool (&visited)[MON_PACK
 
 static void PlaceUniqueMonst(int uniqindex, int mtidx)
 {
-	int xp, yp, x, y;
+	int xp, yp;
 	int count2;
 	int mnum, count;
 

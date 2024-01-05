@@ -189,7 +189,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitLvlItems();    // reset items
 	IncProgress();
 
-	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
+	SetRndSeed(gameSeed); // restore seed after InitLvlMonsters
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
@@ -452,4 +452,16 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     view->updateEntityOptions();
 
     view->scrollTo(ViewX, ViewY);
+}
+
+MonsterStruct* GetMonsterAt(int x, int y)
+{
+    MonsterStruct *result = NULL;
+    if ((unsigned)x < MAXDUNX && (unsigned)y < MAXDUNY) {
+        int mnum = dMonster[x][y];
+        if (mnum != 0) {
+            result = &monsters[mnum - 1];
+        }
+    }
+    return result;
 }
