@@ -138,7 +138,7 @@ void MainWindow::changeColors(const RemapParam &params)
     ProgressDialog::done();
 }
 
-void MainWindow::setPal(const D1Pal* pal)
+void MainWindow::updatePalette(const D1Pal* pal)
 {
     const QString &path = pal->getFilePath();
     if (this->pals.contains(path)) {

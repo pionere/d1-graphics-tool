@@ -1169,7 +1169,7 @@ void CelView::timerEvent(QTimerEvent *event)
     if (this->gfx->getFrameCount() != 0) {
         QPointer<D1Pal>& pal = this->gfx->getFrame(this->currentFrameIndex)->getFramePal();
         if (!pal.isNull()) {
-            dMainWindow().setPal(pal.data());
+            dMainWindow().updatePalette(pal.data());
         }
     }
     int cycleType = this->ui->playComboBox->currentIndex();
