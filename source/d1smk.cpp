@@ -81,7 +81,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     unsigned prevPalFrame = 0;
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
     do {
-		bool palUpdate = smk_palette_updated(SVidSMK);
+        bool palUpdate = smk_palette_updated(SVidSMK);
         if (palUpdate && frameNum != 0) {
             RegisterPalette(pal, prevPalFrame, frameNum, pals);
             prevPalFrame = frameNum;
@@ -91,7 +91,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
         // create a new frame
         D1GfxFrame *frame = new D1GfxFrame();
         frame->clipped = clipped;
-		frame->framePal = palUpdate ? pal : nullptr;
+        frame->framePal = palUpdate ? pal : nullptr;
         const unsigned char *smkFrameCursor = smkFrame;
         for (unsigned y = 0; y < SVidHeight; y++) {
             std::vector<D1GfxPixel> pixelLine;
@@ -122,6 +122,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
 bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 {
-	dProgressErr() << tr("Saving SMK files are not supported at the moment.");
-	return false;
+    dProgressErr() << QApplication::tr("Saving SMK files are not supported at the moment.");
+    return false;
 }
