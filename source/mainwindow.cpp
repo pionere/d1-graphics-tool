@@ -1442,7 +1442,18 @@ void MainWindow::saveFile(const SaveAsParam &params)
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
     if (!filePath.isEmpty() && this->tableset == nullptr && this->gfxset == nullptr && this->cpp == nullptr) {
         QString fileLower = filePath.toLower();
-        if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
+        if (this->gfx->getType() == D1CEL_TYPE::SMK) {
+			if (!fileLower.endsWith(".smk")) {
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::Yes) {
+                    // Clear loading message from status bar
+                    ProgressDialog::done();
+                    return;
+                }
+            }
+            D1Smk::save(*this->gfx, params);
+        } else if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             if (!fileLower.endsWith(".cel")) {
                 QMessageBox::StandardButton reply;
                 reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);

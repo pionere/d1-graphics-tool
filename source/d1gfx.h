@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QImage>
+#include <QPointer>
 #include <QtEndian>
 
 #include "d1pal.h"
@@ -86,6 +87,9 @@ public:
     void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
     void replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements);
 
+    // functions for smk-frames
+    QPointer<D1Pal>& getFramePal();
+
 protected:
     int width = 0;
     int height = 0;
@@ -94,6 +98,8 @@ protected:
     bool clipped = false;
     // fields of tileset-frames
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
+    // fields of smk-frames
+    QPointer<D1Pal> framePal = nullptr;
 };
 
 typedef enum gfx_file_index {
@@ -115,6 +121,7 @@ enum class D1CEL_TYPE {
     V1_LEVEL,
     V2_MONO_GROUP,
     V2_MULTIPLE_GROUPS,
+    SMK,
 };
 
 class D1Gfx : public QObject {
@@ -125,7 +132,7 @@ class D1Gfx : public QObject {
     friend class D1CelTileset;
     friend class D1Min;
     friend class D1Pcx;
-	friend class D1Smk;
+    friend class D1Smk;
     friend class Upscaler;
 
 public:

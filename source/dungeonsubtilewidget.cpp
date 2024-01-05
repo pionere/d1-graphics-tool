@@ -86,35 +86,28 @@ static QString MonLeaderText(BYTE flag, BYTE packsize)
     return result;
 }
 
-// static void MonResistText(unsigned resist, unsigned idx, QLabel *label)
 static void MonResistText(unsigned resist, unsigned idx, QProgressBar *label)
 {
-    // const char* text;
     int value = 0;
     QString tooltip;
     switch ((resist >> idx) & 3) {
     case MORT_NONE:
         value = 0;
-        // text = "ooo";
         tooltip = "Vulnerable to %1 damage";
         break;
     case MORT_PROTECTED:
-        // text = "xoo";
         value = 50 - 50 / 4;
         tooltip = "Protected against %1 damage";
         break;
     case MORT_RESIST:
-        // text = "xxo";
         value = 75;
         tooltip = "Resists %1 damage";
         break;
     case MORT_IMMUNE:
         value = 100;
-        // text = "xxx";
         tooltip = "Immune to %1 damage";
         break;
     default:
-        // text = "???";
         tooltip = "???";
         break;
     }
@@ -128,7 +121,6 @@ static void MonResistText(unsigned resist, unsigned idx, QProgressBar *label)
     case MORS_IDX_MAGIC:     type = "magic";     break;
     case MORS_IDX_ACID:      type = "acid";      break;
     }
-    // label->setText(text);
     label->setValue(value);
     label->setToolTip(tooltip.arg(type));
 }
@@ -182,7 +174,7 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterNoDropCheckBox->setChecked((flags & MFLAG_NODROP) != 0);
         this->ui->monsterKnockbackCheckBox->setChecked((flags & MFLAG_KNOCKBACK) != 0);
 
-        this->adjustSize(); // not sure why this is necessary...
+        // this->adjustSize(); // not sure why this is necessary...
     } else {
         this->ui->monsterName->setText("");
         this->ui->monsterLevel->setText("");

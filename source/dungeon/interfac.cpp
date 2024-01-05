@@ -218,7 +218,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitLvlItems();    // reset items
 	IncProgress();
 
-	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
+	SetRndSeed(gameSeed); // restore seed after InitLvlMonsters
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
@@ -556,6 +556,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(questSeed).arg(params.entryMode);
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
+        dProgress() << QApplication::tr("Done. The dungeon contains %1 monsters (%2 types), %3 objects and %4 items.").arg(nummonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems);
         if (--extraRounds < 0) {
             break;
         }

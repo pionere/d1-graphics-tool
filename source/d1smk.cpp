@@ -81,7 +81,8 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     unsigned prevPalFrame = 0;
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
     do {
-        if (smk_palette_updated(SVidSMK) && frameNum != 0) {
+		bool palUpdate = smk_palette_updated(SVidSMK);
+        if (palUpdate && frameNum != 0) {
             RegisterPalette(pal, prevPalFrame, frameNum, pals);
             prevPalFrame = frameNum;
             // load the new palette
@@ -90,6 +91,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
         // create a new frame
         D1GfxFrame *frame = new D1GfxFrame();
         frame->clipped = clipped;
+		frame->framePal = palUpdate ? pal : nullptr;
         const unsigned char *smkFrameCursor = smkFrame;
         for (unsigned y = 0; y < SVidHeight; y++) {
             std::vector<D1GfxPixel> pixelLine;
@@ -111,14 +113,15 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     gfx.groupFrameIndices.clear();
     gfx.groupFrameIndices.push_back(std::pair<int, int>(0, frameNum - 1));
 
-    QString celPath = filePath;
-    // assert(filePath.toLower().endsWith(".smk"));
-    celPath.chop(4);
-    celPath += ".cel";
+    gfx.type = D1CEL_TYPE::SMK;
 
-    gfx.type = D1CEL_TYPE::V1_REGULAR;
-
-    gfx.gfxFilePath = celPath;
+    gfx.gfxFilePath = filePath;
     gfx.modified = true;
     return true;
+}
+
+bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
+{
+	dProgressErr() << tr("Saving SMK files are not supported at the moment.");
+	return false;
 }

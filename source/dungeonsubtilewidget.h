@@ -42,6 +42,6 @@ private:
     bool moving = false;
     bool moved = false;
     QPoint lastPos;
-	int dunX;
-	int dunY;
+    int dunX;
+    int dunY;
 };

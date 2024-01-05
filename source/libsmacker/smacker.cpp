@@ -309,7 +309,7 @@ struct smk_huff16_t {
 /* HUFF16 Functions */
 /* ************************************************************************* */
 /* Recursive sub-func for building a tree into an array. */
-static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t * const bs, const struct smk_huff8_t * const low8, const struct smk_huff8_t * const hi8, const size_t limit)
+static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t * const bs, const struct smk_huff8_t * const low8, const struct smk_huff8_t * const hi8, const size_t limit, int depth)
 {
 	int bit, value;
 	assert(t);
@@ -335,7 +335,7 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 		value = t->size ++;
 
 		/* go build the left branch */
-		if (! _smk_huff16_build_rec(t, bs, low8, hi8, limit)) {
+		if (! _smk_huff16_build_rec(t, bs, low8, hi8, limit, depth + 1)) {
 			LogErrorMsg("libsmacker::_smk_huff16_build_rec() - ERROR: failed to build left sub-tree\n");
 			return 0;
 		}
@@ -345,7 +345,7 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 		t->tree[value] = SMK_HUFF16_BRANCH | t->size;
 
 		/* continue building the right side */
-		if (! _smk_huff16_build_rec(t, bs, low8, hi8, limit)) {
+		if (! _smk_huff16_build_rec(t, bs, low8, hi8, limit, depth + 1)) {
 			LogErrorMsg("libsmacker::_smk_huff16_build_rec() - ERROR: failed to build right sub-tree\n");
 			return 0;
 		}
@@ -369,7 +369,7 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 		t->tree[t->size] |= (value << 8);
 
 if (deepDebug)
-LogErrorFF("smk_huff16_build leaf[%d]=%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
+LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
 		/* Last: when building the tree, some Values may correspond to cache positions.
 			Identify these values and set the Escape code byte accordingly. */
 		if (t->tree[t->size] == t->cache[0])
@@ -456,7 +456,7 @@ LogErrorFF("smk_huff16_build tree size:%d", limit);
 		}
 
 		/* Finally, call recursive function to retrieve the Bigtree. */
-		if (! _smk_huff16_build_rec(t, bs, &low8, &hi8, limit)) {
+		if (! _smk_huff16_build_rec(t, bs, &low8, &hi8, limit, 0)) {
 			LogErrorMsg("libsmacker::smk_huff16_build() - ERROR: failed to build huff16 tree\n");
 			goto error;
 		}
