@@ -11,6 +11,32 @@
 #include "d1celframe.h"
 #include "progressdialog.h"
 
+static void LogErrorFFF(const char* msg, ...)
+{
+	char tmp[256];
+	char tmsg[256];
+	va_list va;
+
+	va_start(va, msg);
+
+	vsnprintf(tmsg, sizeof(tmsg), msg, va);
+
+	va_end(va);
+
+	// dProgressErr() << QString(tmsg);
+	
+	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
+	FILE* f0 = fopen(tmp, "a+");
+	if (f0 == NULL)
+		return;
+
+	fputs(tmsg, f0);
+
+	fputc('\n', f0);
+
+	fclose(f0);
+}
+
 bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
@@ -148,6 +174,14 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
         }
+		if (gfx.frames.size() == 173) {
+			for (int y = 136; y < 140; y++) {
+				for (int x = 30; x < 116; x += 2) {
+					LogErrorFFF("%d,%d:%d (%d,%d)->", x, x+1, y, frame->getPixel(x, y).getPaletteIndex(), frame->getPixel(x + 1, y).getPaletteIndex());
+                }
+            }
+        }
+
         gfx.frames.append(frame);
     }
 

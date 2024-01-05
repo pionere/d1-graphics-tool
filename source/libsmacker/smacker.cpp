@@ -1547,7 +1547,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 		49,	50,	51,	52,	53,	54,	55,	56,
 		57,	58,	59,	128,	256,	512,	1024,	2048
 	};
-bool doDebug = frameCount == 174 || frameCount == 173;
+bool doDebug = false; // frameCount == 174 || frameCount == 173;
 	/* null check */
 	assert(s);
 	assert(p);
