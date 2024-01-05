@@ -969,7 +969,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 	/* create some tables */
 	for (temp_u = 0; temp_u < 4; temp_u ++) {
-deepDebug = temp_u == SMK_TREE_FULL;
+// deepDebug = temp_u == SMK_TREE_FULL;
 #ifdef FULL
 		if (! smk_huff16_build(&s->video.tree[temp_u], &bs, s->video.tree_size[temp_u])) {
 #else
