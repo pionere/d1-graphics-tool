@@ -168,6 +168,11 @@ void D1GfxFrame::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixe
     }
 }
 
+QPointer<D1Pal>& D1GfxFrame::getFramePal()
+{
+    return this->framePal;
+}
+
 D1Gfx::~D1Gfx()
 {
     this->clear();
