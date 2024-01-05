@@ -138,6 +138,14 @@ void MainWindow::changeColors(const RemapParam &params)
     ProgressDialog::done();
 }
 
+void MainWindow::setPal(const D1Pal* pal)
+{
+    const QString &path = pal->getFilePath();
+    if (this->pals.contains(path)) {
+        this->setPal(path);
+    }
+}
+
 void MainWindow::setPal(const QString &path)
 {
     D1Pal *pal = this->pals[path];
@@ -1443,7 +1451,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (!filePath.isEmpty() && this->tableset == nullptr && this->gfxset == nullptr && this->cpp == nullptr) {
         QString fileLower = filePath.toLower();
         if (this->gfx->getType() == D1CEL_TYPE::SMK) {
-			if (!fileLower.endsWith(".smk")) {
+            if (!fileLower.endsWith(".smk")) {
                 QMessageBox::StandardButton reply;
                 reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
                 if (reply != QMessageBox::Yes) {

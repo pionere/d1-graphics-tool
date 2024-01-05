@@ -92,7 +92,7 @@ public:
 
     void gfxChanged(D1Gfx *gfx);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
-    void setPal(const QString &palFilePath);
+    void setPal(const D1Pal* pal);
     void changeColors(const RemapParam &params);
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);
@@ -116,6 +116,7 @@ public:
 private:
     void failWithError(const QString &error);
 
+    void setPal(const QString &palFilePath);
     void setUniqueTrn(const QString &trnfilePath);
     void setBaseTrn(const QString &trnfilePath);
 
