@@ -122,6 +122,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
 bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 {
-    dProgressErr() << QApplication::tr("Saving SMK files are not supported at the moment.");
+    dProgressErr() << QApplication::tr("Not supported.");
     return false;
 }

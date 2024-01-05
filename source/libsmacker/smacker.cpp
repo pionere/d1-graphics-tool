@@ -115,6 +115,7 @@ static int smk_bs_read_8(struct smk_bit_t * const bs)
 }
 
 static bool deepDebug = false;
+static unsigned char *bufMem;
 static void LogErrorFF(const char* msg, ...)
 {
 	char tmp[256];
@@ -803,6 +804,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	struct smk_bit_t bs;
 #ifndef FULL
 	unsigned long video_tree_size[4];
+bufMem = fp.ram;
 #endif
 	/** **/
 	/* safe malloc the structure */
@@ -1545,7 +1547,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 		49,	50,	51,	52,	53,	54,	55,	56,
 		57,	58,	59,	128,	256,	512,	1024,	2048
 	};
-bool doDebug = false; // ++frameCount == 174;
+bool doDebug = frameCount == 174 || frameCount == 173;
 	/* null check */
 	assert(s);
 	assert(p);
@@ -1585,8 +1587,8 @@ bool doDebug = false; // ++frameCount == 174;
 unsigned firstRow = row;
 unsigned firstCol = col;
 		for (j = 0; (j < sizetable[blocklen]) && (row < s->h); j ++) {
-if (doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116)
-	LogErrorFF("smk_render_video row%d col%d type%d blocklen%d data%d firstRow%d Col%d bit%d tree%d b%d", row, col, type, blocklen, typedata, firstRow, firstCol, bs.bit_num, s->tree[SMK_TREE_FULL].tree[0], (s->tree[SMK_TREE_FULL].tree[0] & SMK_HUFF16_BRANCH) != 0, (s->tree[SMK_TREE_FULL].tree[0] & SMK_HUFF16_CACHE) != 0);
+if (doDebug && row >= 136 && row < 140 /*&& col >= 28 && col <= 116*/)
+	LogErrorFF("smk_render_video row%d col%d type%d blocklen%d data%d firstRow%d Col%d offset%d=%x (%d=%x) bit%d", row, col, type, blocklen, typedata, firstRow, firstCol, (size_t)bs.buffer - (size_t)p, (size_t)bs.buffer - (size_t)p, (size_t)bs.buffer - (size_t)bufMem, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num);
 
 			skip = (row * s->w) + col;
 
@@ -1973,7 +1975,7 @@ static char smk_render(smk s)
 		LogError("libsmacker::smk_render(s) - Warning: frame %lu: chunk_size is 0.\n", s->cur_frame);
 		goto error;
 	}
-
+	++frameCount;
 #ifdef FULL
 	if (s->mode == SMK_MODE_DISK) {
 		/* Skip to frame in file */
@@ -2057,7 +2059,8 @@ static char smk_render(smk s)
 		} else
 			s->audio[track].buffer_size = 0;
 	}
-
+if (frameCount == 173 || frameCount == 174)
+LogErrorFF("smk_render frame %d from %d", frameCount, (size_t)p - (size_t)bufMem);
 	/* Unpack video chunk */
 	if (s->video.enable) {
 		if (smk_render_video(&(s->video), p, i) < 0) {
