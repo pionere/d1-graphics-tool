@@ -1591,7 +1591,7 @@ if (doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116)
 			skip = (row * s->w) + col;
 
 			switch (type) {
-			case 0:
+			case 0: /* 2COLOR BLOCK */
 				if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_MCLR], &bs)) < 0) {
 					LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from MCLR tree.\n");
 					return -1;

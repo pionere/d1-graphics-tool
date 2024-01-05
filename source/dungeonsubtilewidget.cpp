@@ -174,7 +174,7 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterNoDropCheckBox->setChecked((flags & MFLAG_NODROP) != 0);
         this->ui->monsterKnockbackCheckBox->setChecked((flags & MFLAG_KNOCKBACK) != 0);
 
-        // this->adjustSize(); // not sure why this is necessary...
+        this->adjustSize(); // not sure why this is necessary...
     } else {
         this->ui->monsterName->setText("");
         this->ui->monsterLevel->setText("");
