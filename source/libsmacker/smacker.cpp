@@ -590,7 +590,7 @@ int depth = 0;
 		value = t->cache[value & SMK_HUFF16_LEAF_MASK];
 	}
 if (deepDebug)
-LogErrorFF("smk_huff16_lookup mem (%d:%d) value (%d,%d) depth%d ", (size_t)bs->buffer - (size_t)bufMem - depth / 8, bs->bitnum, value & 0xFF, (value >> 8) & 0xFF, depth);
+LogErrorFF("smk_huff16_lookup mem (%d:%d) value (%d,%d) depth%d ", (size_t)bs->buffer - (size_t)bufMem - depth / 8, bs->bit_num, value & 0xFF, (value >> 8) & 0xFF, depth);
 	if (t->cache[0] != value) {
 		/* Update the cache, by moving val to the front of the queue,
 			if it isn't already there. */
