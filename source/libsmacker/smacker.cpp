@@ -839,7 +839,12 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 }
 #endif
 
-static void smk_bw_init(struct smk_bit_t * const bs, const unsigned char * const b, const size_t size)
+struct smk_bitw_t {
+	unsigned char * buffer, * end;
+	unsigned int bit_num;
+};
+
+static void smk_bw_init(struct smk_bitw_t * const bs, const unsigned char * const b, const size_t size)
 {
 	/* null check */
 	assert(bs);
@@ -850,7 +855,7 @@ static void smk_bw_init(struct smk_bit_t * const bs, const unsigned char * const
 	bs->bit_num = 0;
 }
 
-static void smk_bw_skip(struct smk_bit_t * const bs, const size_t size)
+static void smk_bw_skip(struct smk_bitw_t * const bs, const size_t size)
 {
 	bs->buffer += size / 8;
 	bs->bit_num += size % 8;
@@ -860,7 +865,7 @@ static void smk_bw_skip(struct smk_bit_t * const bs, const size_t size)
     }
 }
 
-static void smk_bw_write(struct smk_bit_t * bs, size_t value, const size_t size)
+static void smk_bw_write(struct smk_bitw_t * bs, size_t value, const size_t size)
 {
 	for (unsigned i = 0; i < size; i++) {
 		unsigned char v = *bs->buffer;
@@ -886,8 +891,7 @@ if (*bs->buffer & v) {
 
 static void patchFile()
 {
-	// bufMem;
-	smk_bit_t bw;
+	smk_bitw_t bw;
 
 	smk_bw_init(&bw, bufMem, bufSize);
 
