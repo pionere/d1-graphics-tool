@@ -590,7 +590,7 @@ int depth = 0;
 		value = t->cache[value & SMK_HUFF16_LEAF_MASK];
 	}
 if (deepDebug)
-LogErrorFF("smk_huff16_lookup value (%d,%d) depth%d ", value & 0xFF, (value >> 8) 0xFF, depth);
+LogErrorFF("smk_huff16_lookup value (%d,%d) depth%d ", value & 0xFF, (value >> 8) & 0xFF, depth);
 	if (t->cache[0] != value) {
 		/* Update the cache, by moving val to the front of the queue,
 			if it isn't already there. */
@@ -860,7 +860,7 @@ static void smk_bw_skip(struct smk_bit_t * const bs, const size_t size)
     }
 }
 
-static void smk_bw_write(struct smk_bit_t * const bs, size_t value, const size_t size)
+static void smk_bw_write(struct smk_bit_t * bs, size_t value, const size_t size)
 {
 	for (unsigned i = 0; i < size; i++) {
 		unsigned char v = *bs->buffer;
@@ -894,17 +894,17 @@ static void patchFile()
 	bw.buffer += 9100;
 	bw.bit_num = 4;
 	// 30,31 136
-	smk_bw_skip(&bs, 6);
+	smk_bw_skip(&bw, 6);
 	// 28,29 136
-	smk_bw_skip(&bs, 5);
+	smk_bw_skip(&bw, 5);
 	// 30,31 137
-	// smk_bw_write(&bs, 228704, 20); // 0,217 20
-	smk_bw_write(&bs, 858611, 20);
+	// smk_bw_write(&bw, 228704, 20); // 0,217 20
+	smk_bw_write(&bw, 858611, 20);
 	// 28,29 137
-	smk_bw_skip(&bs, 4);
+	smk_bw_skip(&bw, 4);
 
-	/*smk_bw_skip(&bs, 19);
-	smk_bw_skip(&bs, 4);*/
+	/*smk_bw_skip(&bw, 19);
+	smk_bw_skip(&bw, 4);*/
 }
 
 /* PUBLIC FUNCTIONS */
