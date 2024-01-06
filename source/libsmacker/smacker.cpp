@@ -116,6 +116,7 @@ static int smk_bs_read_8(struct smk_bit_t * const bs)
 
 static bool deepDebug = false;
 static unsigned char *bufMem;
+static size_t bufSize;
 static bool treeValue[48];
 static unsigned short fullLeafs[] = {
 	(22 | 99 << 8),
@@ -562,14 +563,15 @@ static int smk_huff16_lookup(struct smk_huff16_t * const t, struct smk_bit_t * c
 	/* null check */
 	assert(t);
 	assert(bs);
-
+int depth = 0;
 	while (t->tree[index] & SMK_HUFF16_BRANCH) {
 		if ((bit = smk_bs_read_1(bs)) < 0) {
 			LogErrorMsg("libsmacker::smk_huff16_lookup() - ERROR: get_bit returned -1\n");
 			return -1;
 		}
-if (deepDebug)
-LogErrorFF("smk_huff16_lookup idx %d value%d bit%d", index, t->tree[index], bit);
+		depth++;
+//if (deepDebug)
+//LogErrorFF("smk_huff16_lookup idx %d value%d bit%d", index, t->tree[index], bit);
 		if (bit) {
 			/* take the right branch */
 			index = t->tree[index] & SMK_HUFF16_LEAF_MASK;
@@ -581,14 +583,14 @@ LogErrorFF("smk_huff16_lookup idx %d value%d bit%d", index, t->tree[index], bit)
 
 	/* Get the value at this point */
 	value = t->tree[index];
-if (deepDebug)
-LogErrorFF("smk_huff16_lookup value %d cache%d(%d:%d:%d)", value, (value & SMK_HUFF16_CACHE) != 0, t->cache[0], t->cache[1], t->cache[2]);
-
+//if (deepDebug)
+//LogErrorFF("smk_huff16_lookup value %d cache%d depth%d ", value, (value & SMK_HUFF16_CACHE) != 0, depth);
 	if (value & SMK_HUFF16_CACHE) {
 		/* uses cached value instead of actual value */
 		value = t->cache[value & SMK_HUFF16_LEAF_MASK];
 	}
-
+if (deepDebug)
+LogErrorFF("smk_huff16_lookup value (%d,%d) depth%d ", value & 0xFF, (value >> 8) 0xFF, depth);
 	if (t->cache[0] != value) {
 		/* Update the cache, by moving val to the front of the queue,
 			if it isn't already there. */
@@ -837,6 +839,74 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 }
 #endif
 
+static void smk_bw_init(struct smk_bit_t * const bs, const unsigned char * const b, const size_t size)
+{
+	/* null check */
+	assert(bs);
+	assert(b);
+	/* set up the pointer to bitstream start and end, and set the bit pointer to 0 */
+	bs->buffer = b;
+	bs->end = b + size;
+	bs->bit_num = 0;
+}
+
+static void smk_bw_skip(struct smk_bit_t * const bs, const size_t size)
+{
+	bs->buffer += size / 8;
+	bs->bit_num += size % 8;
+	if (bs->bit_num >= 8) {
+		bs->bit_num -= 8;
+		bs->buffer++;
+    }
+}
+
+static void smk_bw_write(struct smk_bit_t * const bs, size_t value, const size_t size)
+{
+	for (unsigned i = 0; i < size; i++) {
+		unsigned char v = *bs->buffer;
+		v = 1 << bs->bit_num;
+		if (value & (1 << i)) {
+if ((*bs->buffer & v) != v) {
+	LogErrorFF("smk_bw_write 0 %d vs %d, i%d bit%d", *bs->buffer, v, i, bs->bit_num);
+}
+			*bs->buffer |= v;
+        } else {
+if (*bs->buffer & v) {
+	LogErrorFF("smk_bw_write 1 %d vs %d, i%d bit%d", *bs->buffer, v, i, bs->bit_num);
+}
+			*bs->buffer &= ~v;
+        }
+		bs->bit_num++;
+		if (bs->bit_num >= 8) {
+			bs->bit_num -= 8;
+			bs->buffer++;
+		}
+    }
+}
+
+static void patchFile()
+{
+	// bufMem;
+	smk_bit_t bw;
+
+	smk_bw_init(&bw, bufMem, bufSize);
+
+	bw.buffer += 9100;
+	bw.bit_num = 4;
+	// 30,31 136
+	smk_bw_skip(&bs, 6);
+	// 28,29 136
+	smk_bw_skip(&bs, 5);
+	// 30,31 137
+	// smk_bw_write(&bs, 228704, 20); // 0,217 20
+	smk_bw_write(&bs, 858611, 20);
+	// 28,29 137
+	smk_bw_skip(&bs, 4);
+
+	/*smk_bw_skip(&bs, 19);
+	smk_bw_skip(&bs, 4);*/
+}
+
 /* PUBLIC FUNCTIONS */
 /* open an smk (from a generic Source) */
 #ifdef FULL
@@ -862,6 +932,8 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 #ifndef FULL
 	unsigned long video_tree_size[4];
 bufMem = fp.ram;
+bufSize = size;
+patchFile();
 #endif
 	/** **/
 	/* safe malloc the structure */
@@ -1028,7 +1100,7 @@ bufMem = fp.ram;
 
 	/* create some tables */
 	for (temp_u = 0; temp_u < 4; temp_u ++) {
-deepDebug = temp_u == SMK_TREE_FULL;
+// deepDebug = temp_u == SMK_TREE_FULL;
 #ifdef FULL
 		if (! smk_huff16_build(&s->video.tree[temp_u], &bs, s->video.tree_size[temp_u])) {
 #else
@@ -1604,7 +1676,8 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 		49,	50,	51,	52,	53,	54,	55,	56,
 		57,	58,	59,	128,	256,	512,	1024,	2048
 	};
-bool doDebug = false; // frameCount == 174 || frameCount == 173;
+//bool doDebug = false; // frameCount == 174 || frameCount == 173;
+bool doDebug = frameCount == 174;
 	/* null check */
 	assert(s);
 	assert(p);
@@ -1644,8 +1717,8 @@ bool doDebug = false; // frameCount == 174 || frameCount == 173;
 unsigned firstRow = row;
 unsigned firstCol = col;
 		for (j = 0; (j < sizetable[blocklen]) && (row < s->h); j ++) {
-if (doDebug && row >= 136 && row < 140 /*&& col >= 28 && col <= 116*/)
-	LogErrorFF("smk_render_video row%d col%d type%d blocklen%d data%d firstRow%d Col%d offset%d=%x (%d=%x) bit%d", row, col, type, blocklen, typedata, firstRow, firstCol, (size_t)bs.buffer - (size_t)p, (size_t)bs.buffer - (size_t)p, (size_t)bs.buffer - (size_t)bufMem, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num);
+//if (doDebug && row >= 136 && row < 140 /*&& col >= 28 && col <= 116*/)
+//	LogErrorFF("smk_render_video row%d col%d type%d blocklen%d data%d firstRow%d Col%d offset%d=%x (%d=%x) bit%d", row, col, type, blocklen, typedata, firstRow, firstCol, (size_t)bs.buffer - (size_t)p, (size_t)bs.buffer - (size_t)p, (size_t)bs.buffer - (size_t)bufMem, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num);
 
 			skip = (row * s->w) + col;
 
@@ -1691,6 +1764,7 @@ if (doDebug && row >= 136 && row < 140 /*&& col >= 28 && col <= 116*/)
 				break;
 
 			case 1: /* FULL BLOCK */
+{
 deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 				for (k = 0; k < 4; k ++) {
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
@@ -1701,7 +1775,7 @@ deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 					t[skip + 3] = ((unpack & 0xFF00) >> 8);
 					t[skip + 2] = (unpack & 0x00FF);
 if (deepDebug)
-LogErrorFF("Full block %d:0 value%d pair%d:%d", k, unpack, t[skip + 3], t[skip + 2]);
+LogErrorFF("Full block %d:0 value%d %d,%d:%d (%d:%d) = %d", k, unpack, col + 2, col + 3, row + k, t[skip + 2], t[skip + 3], *(uint16_t*)&t[skip + 2]);
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
 						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
 						return -1;
@@ -1710,10 +1784,11 @@ LogErrorFF("Full block %d:0 value%d pair%d:%d", k, unpack, t[skip + 3], t[skip +
 					t[skip + 1] = ((unpack & 0xFF00) >> 8);
 					t[skip] = (unpack & 0x00FF);
 if (deepDebug)
-LogErrorFF("Full block %d:1 value%d pair%d:%d", k, unpack, t[skip + 1], t[skip]);
+LogErrorFF("Full block %d:1 value%d %d,%d:%d (%d:%d) = %d", k, unpack, col, col + 1, row + k, t[skip + 0], t[skip + 1], *(uint16_t*)&t[skip + 0]);
 					skip += s->w;
 				}
 deepDebug = false;
+}
 				break;
 
 			case 2: /* VOID BLOCK */
@@ -1730,7 +1805,8 @@ deepDebug = false;
 				} */
 				break;
 
-			case 3: /* SOLID BLOCK */
+			case 3: /* SOLID BLOCK */ {
+#ifdef FULL
 				memset(&t[skip], typedata, 4);
 				skip += s->w;
 				memset(&t[skip], typedata, 4);
@@ -1738,7 +1814,18 @@ deepDebug = false;
 				memset(&t[skip], typedata, 4);
 				skip += s->w;
 				memset(&t[skip], typedata, 4);
-				break;
+#else
+                uint32_t value;
+                memset(&value, typedata, 4);
+                *(uint32_t*)&t[skip] = value;
+                skip += s->w;
+                *(uint32_t*)&t[skip] = value;
+                skip += s->w;
+                *(uint32_t*)&t[skip] = value;
+                skip += s->w;
+                *(uint32_t*)&t[skip] = value;
+#endif
+            } break;
 #ifdef FULL
 			case 4: /* V4 DOUBLE BLOCK */
 				for (k = 0; k < 2; k ++) {
