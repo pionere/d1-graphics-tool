@@ -871,15 +871,15 @@ static void smk_bw_write(struct smk_bitw_t * bs, size_t value, const size_t size
 		unsigned char v = *bs->buffer;
 		v = 1 << bs->bit_num;
 		if (value & 1) {
-if ((*bs->buffer & v) != v) {
-	LogErrorFF("smk_bw_write 0 %d vs %d, i%d bit%d", *bs->buffer, v, i, bs->bit_num);
+if ((*bs->buffer & v) == 0) {
+	LogErrorFF("smk_bw_write 0 %d vs %d, i%d offset%d bit%d", *bs->buffer, v, i, (size_t)bs->buffer - (size_t)bufMem, bs->bit_num);
 }
-			*bs->buffer |= v;
+//			*bs->buffer |= v;
         } else {
-if (*bs->buffer & v) {
-	LogErrorFF("smk_bw_write 1 %d vs %d, i%d bit%d", *bs->buffer, v, i, bs->bit_num);
+if ((*bs->buffer & v) != 0) {
+	LogErrorFF("smk_bw_write 1 %d vs %d, i%d offset%d bit%d", *bs->buffer, v, i, (size_t)bs->buffer - (size_t)bufMem, bs->bit_num);
 }
-			*bs->buffer &= ~v;
+//			*bs->buffer &= ~v;
         }
 		bs->bit_num++;
 		if (bs->bit_num >= 8) {
@@ -1780,7 +1780,7 @@ deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 					t[skip + 3] = ((unpack & 0xFF00) >> 8);
 					t[skip + 2] = (unpack & 0x00FF);
 if (deepDebug)
-LogErrorFF("Full block %d:0 value%d %d,%d:%d (%d:%d) = %d", k, unpack, col + 2, col + 3, row + k, t[skip + 2], t[skip + 3], *(uint16_t*)&t[skip + 2]);
+LogErrorFF("Full block %d:0 value%d (offsetend%d bitend%d) %d,%d:%d (%d:%d) = %d", k, unpack, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num, col + 2, col + 3, row + k, t[skip + 2], t[skip + 3], *(uint16_t*)&t[skip + 2]);
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
 						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
 						return -1;
@@ -1789,7 +1789,7 @@ LogErrorFF("Full block %d:0 value%d %d,%d:%d (%d:%d) = %d", k, unpack, col + 2, 
 					t[skip + 1] = ((unpack & 0xFF00) >> 8);
 					t[skip] = (unpack & 0x00FF);
 if (deepDebug)
-LogErrorFF("Full block %d:1 value%d %d,%d:%d (%d:%d) = %d", k, unpack, col, col + 1, row + k, t[skip + 0], t[skip + 1], *(uint16_t*)&t[skip + 0]);
+LogErrorFF("Full block %d:1 value%d (offsetend%d bitend%d) %d,%d:%d (%d:%d) = %d", k, unpack, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num, col, col + 1, row + k, t[skip + 0], t[skip + 1], *(uint16_t*)&t[skip + 0]);
 					skip += s->w;
 				}
 deepDebug = false;
