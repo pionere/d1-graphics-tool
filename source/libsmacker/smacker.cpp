@@ -3160,7 +3160,7 @@ static char smk_render_audio(struct smk_t::smk_audio_t * s, unsigned char * p, u
 			((uint8_t *)cur_buf)[0] = unpack;
 
 		cur_buf += offset;
-uint8* bufStart = cur_buf;
+uint8_t* bufStart = cur_buf;
 		/* All set: let's read some DATA! */
 		end_buf = cur_buf - offset + s->buffer_size;
 		while (cur_buf < end_buf) {
@@ -3188,6 +3188,7 @@ uint8* bufStart = cur_buf;
 		}
 bool doDebug = frameCount >= 173 && frameCount <= 175;
 if (doDebug) {
+	char tmp[256];
 	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", 0, frameCount);
 	FILE* f0 = fopen(tmp, "a+");
 	if (f0 == NULL)
