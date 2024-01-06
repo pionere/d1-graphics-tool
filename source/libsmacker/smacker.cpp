@@ -844,7 +844,7 @@ struct smk_bitw_t {
 	unsigned int bit_num;
 };
 
-static void smk_bw_init(struct smk_bitw_t * const bs, const unsigned char * const b, const size_t size)
+static void smk_bw_init(struct smk_bitw_t * bs, unsigned char * b, const size_t size)
 {
 	/* null check */
 	assert(bs);
@@ -855,7 +855,7 @@ static void smk_bw_init(struct smk_bitw_t * const bs, const unsigned char * cons
 	bs->bit_num = 0;
 }
 
-static void smk_bw_skip(struct smk_bitw_t * const bs, const size_t size)
+static void smk_bw_skip(struct smk_bitw_t * bs, const size_t size)
 {
 	bs->buffer += size / 8;
 	bs->bit_num += size % 8;
@@ -870,7 +870,7 @@ static void smk_bw_write(struct smk_bitw_t * bs, size_t value, const size_t size
 	for (unsigned i = 0; i < size; i++) {
 		unsigned char v = *bs->buffer;
 		v = 1 << bs->bit_num;
-		if (value & (1 << i)) {
+		if (value & 1) {
 if ((*bs->buffer & v) != v) {
 	LogErrorFF("smk_bw_write 0 %d vs %d, i%d bit%d", *bs->buffer, v, i, bs->bit_num);
 }
@@ -886,6 +886,7 @@ if (*bs->buffer & v) {
 			bs->bit_num -= 8;
 			bs->buffer++;
 		}
+		value >>= 1;
     }
 }
 
