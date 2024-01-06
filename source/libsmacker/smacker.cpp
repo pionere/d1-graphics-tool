@@ -116,6 +116,48 @@ static int smk_bs_read_8(struct smk_bit_t * const bs)
 
 static bool deepDebug = false;
 static unsigned char *bufMem;
+static bool treeValue[48];
+static unsigned short fullLeafs[] = {
+	(22 | 99 << 8),
+	(0  | 217 << 8),
+	(20 | 236 << 8),
+    (21 | 236 << 8),
+    (0  | 210 << 8),
+    (205| 236 << 8),
+	(29 | 33 << 8),
+    (19 | 35 << 8),
+	(48 | 43 << 8),
+	(36 | 36 << 8),
+	(35 | 23 << 8),
+	(40 | 18 << 8),
+    (35 | 19 << 8),
+	(33 | 13 << 8),
+	(27 | 16 << 8),
+	(38 | 29 << 8),
+    (19 | 38 << 8),
+    (33 | 35 << 8),
+	(22 | 22 << 8),
+    (26 | 26 << 8),
+    (13 | 10 << 8),
+    (15 | 11 << 8),
+    (16 | 17 << 8),
+    (14 | 17 << 8),
+    (16 | 10 << 8),
+    (20 | 20 << 8),
+    (10 | 15 << 8),
+    (14 | 19 << 8),
+	(28 | 30 << 8),
+    (29 | 22 << 8),
+    (22 | 36 << 8),
+    (19 | 35 << 8),
+	(35 | 25 << 8),
+    (36 | 39 << 8),
+    (29 | 33 << 8),
+	(20 | 18 << 8),
+    (19 | 18 << 8),
+	(20 | 182 << 8)
+};
+
 static void LogErrorFF(const char* msg, ...)
 {
 	char tmp[256];
@@ -210,8 +252,8 @@ static int _smk_huff8_build_rec(struct smk_huff8_t * const t, struct smk_bit_t *
 			return 0;
 		}
 
-if (deepDebug)
-LogErrorFF("smk_huff8_build leaf[%d]=%d (%d:%d:%d)", t->size, value);
+//if (deepDebug)
+//LogErrorFF("smk_huff8_build leaf[%d]=%d (%d:%d:%d)", t->size, value);
 		/* store to tree */
 		t->tree[t->size ++] = value;
 	}
@@ -344,12 +386,13 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 		/* now go back to our current location, and
 			mark our location as a "jump" */
 		t->tree[value] = SMK_HUFF16_BRANCH | t->size;
-
+		treeValue[depth] = true;
 		/* continue building the right side */
 		if (! _smk_huff16_build_rec(t, bs, low8, hi8, limit, depth + 1)) {
 			LogErrorMsg("libsmacker::_smk_huff16_build_rec() - ERROR: failed to build right sub-tree\n");
 			return 0;
 		}
+		treeValue[depth] = false;
 	} else {
 		/* Bit unset signifies a Leaf node. */
 		/* Attempt to read LOW value */
@@ -369,8 +412,22 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 		/* Looks OK: we got low and hi values. Return a new LEAF */
 		t->tree[t->size] |= (value << 8);
 
-if (deepDebug)
-LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
+if (deepDebug) {
+// LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
+	int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
+	for ( ; i >= 0, i--) {
+		if (fullLeafs[i] == t->tree[t->size])
+			break;
+    }
+	if (i >= 0) {
+        unsigned char bytes[4] = { 0 };
+		for (int n = 0; n < depth; n++) {
+			if (treeValue[n])
+				bytes[n / 8] |= 1 << (n % 8);
+        }
+		LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) %d bits%d (%x)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, *(unsigned*)(&bytes[0]), *(unsigned*)(&bytes[0]));
+    }
+}
 		/* Last: when building the tree, some Values may correspond to cache positions.
 			Identify these values and set the Escape code byte accordingly. */
 		if (t->tree[t->size] == t->cache[0])
@@ -971,7 +1028,7 @@ bufMem = fp.ram;
 
 	/* create some tables */
 	for (temp_u = 0; temp_u < 4; temp_u ++) {
-// deepDebug = temp_u == SMK_TREE_FULL;
+deepDebug = temp_u == SMK_TREE_FULL;
 #ifdef FULL
 		if (! smk_huff16_build(&s->video.tree[temp_u], &bs, s->video.tree_size[temp_u])) {
 #else

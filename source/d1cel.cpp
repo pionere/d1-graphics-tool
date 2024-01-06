@@ -174,13 +174,13 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
         }
-		if (gfx.frames.size() == 173) {
+		/*if (gfx.frames.size() == 173) {
 			for (int y = 136; y < 140; y++) {
 				for (int x = 30; x < 116; x += 2) {
 					LogErrorFFF("%d,%d:%d (%d,%d)->", x, x+1, y, frame->getPixel(x, y).getPaletteIndex(), frame->getPixel(x + 1, y).getPaletteIndex());
                 }
             }
-        }
+        }*/
 
         gfx.frames.append(frame);
     }
