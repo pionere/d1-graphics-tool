@@ -415,7 +415,7 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 if (deepDebug) {
 // LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
 	int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
-	for ( ; i >= 0, i--) {
+	for ( ; i >= 0; i--) {
 		if (fullLeafs[i] == t->tree[t->size])
 			break;
     }
