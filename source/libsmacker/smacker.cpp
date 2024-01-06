@@ -898,7 +898,7 @@ static void patchFile()
 
 	bw.buffer += 2365112;
 	bw.bit_num = 4;
-	// 30,31 136
+	/* 30,31 136
 	smk_bw_skip(&bw, 6);
 	// 28,29 136
 	smk_bw_skip(&bw, 5);
@@ -906,13 +906,13 @@ static void patchFile()
 	// smk_bw_write(&bw, 858611, 20);
 	smk_bw_write(&bw, 228704, 20); // 0,217
 	// 28,29 137
-	smk_bw_skip(&bw, 4);
+	smk_bw_skip(&bw, 4);*/
 
 smk_bw_skip(&bw, 6); // (0,0)
 // Full block 0:0 value0 (offsetend2365113 bitend2) 30,31:136 (0:0) = 0
 smk_bw_skip(&bw, 5); // (0,0)
 // Full block 0:1 value0 (offsetend2365113 bitend7) 28,29:136 (0:0) = 0
-smk_bw_skip(&bw, 20); // (22,99)
+smk_bw_write(&bw, 858611, 20); // (22,99)
 // Full block 1:0 value25366 (offsetend2365116 bitend3) 30,31:137 (22:99) = 25366
 smk_bw_skip(&bw, 4); // (0,0)
 // Full block 1:1 value0 (offsetend2365116 bitend7) 28,29:137 (0:0) = 0
