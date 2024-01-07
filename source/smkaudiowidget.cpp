@@ -142,9 +142,9 @@ void SmkAudioWidget::frameModified()
     // update combobox
     this->ui->channelComboBox->clear();
     for (unsigned i = 0; i < channels; i++) {
-        this->ui->displayComboBox->addItem(tr("Channel %1").arg(i + 1), i);
+        this->ui->channelComboBox->addItem(tr("Channel %1").arg(i + 1), i);
     }
-    this->ui->setCurrentIndex(channel);
+    this->ui->channelComboBox->setCurrentIndex(channel);
 
     // update bitRate
     this->ui->bitRateLineEdit->setReadOnly(audioData == nullptr);
