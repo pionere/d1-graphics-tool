@@ -28,6 +28,9 @@ SmkAudioWidget::SmkAudioWidget(CelView *parent)
     layout = this->ui->rightButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &SmkAudioWidget::on_closePushButtonClicked);
 
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->bitRateLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_bitRateLineEdit_escPressed()));
+
     // cache the active graphics view
     QList<QGraphicsView *> views = parent->getCelScene()->views();
     this->graphView = views[0];
@@ -78,25 +81,32 @@ void SmkAudioWidget::frameModified()
     D1SmkAudioData *frameAudio;
     unsigned long len;
     uint8_t *audioData;
-    unsigned depth, width, height;
+    unsigned depth, channels, width, height;
 
     if (this->isHidden())
         return;
 
     this->audioScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
+    unsigned channel = this->currentChannel;
     frameAudio = this->gfx->getFrame(this->currentFrameIndex)->getFrameAudio();
     if (frameAudio != nullptr) {
         audioData = frameAudio->getAudio(this->currentTrack, &len);
-        depth = frameAudio->getDepth();
+        depth = frameAudio->getBitDepth();
         if (depth == 16)
             len /= 2;
+        channels = frameAudio->getChannels();
+        if (channel >= channels) {
+            channel = 0;
+        }
     } else {
         len = 512;
         audioData = nullptr;
         depth = 8;
+        channels = 1;
+        channel = 0;
     }
-    width = len;
+    width = len / channels;
     height = (256 * depth / 8);
 
     // Resize the scene rectangle to include some padding around the CEL frame
@@ -111,11 +121,15 @@ void SmkAudioWidget::frameModified()
         QPainter audioPainter(&audioFrame);
         audioPainter.setPen(QColor(Config::getPaletteUndefinedColor())); // getPaletteSelectionBorderColor?
 
-        for (unsigned long i = 0; i < width; i++) {
-            audioPainter.drawLine(i, 256 - audioData[0], i, 256);
+        for (unsigned long i = 0; i < width * channels; i++) {
+            if ((i % channels) == channel) {
+                audioPainter.drawLine(i, 256 - audioData[0], i, 256);
+            }
             audioData++;
             if (depth == 16) {
-                audioPainter.drawLine(i, 256, i, 256 + audioData[0]);
+                if ((i % channels) == channel) {
+                    audioPainter.drawLine(i, 256, i, 256 + audioData[0]);
+                }
                 audioData++;
             }
         }
@@ -125,6 +139,21 @@ void SmkAudioWidget::frameModified()
     this->audioScene.addPixmap(QPixmap::fromImage(audioFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
 
+    // update combobox
+    this->ui->channelComboBox->clear();
+    for (unsigned i = 0; i < channels; i++) {
+        this->ui->displayComboBox->addItem(tr("Channel %1").arg(i + 1), i);
+    }
+    this->ui->setCurrentIndex(channel);
+
+    // update bitRate
+    this->ui->bitRateLineEdit->setReadOnly(audioData == nullptr);
+    if (audioData != nullptr) {
+        this->ui->bitRateLineEdit->setText(QString::number(frameAudio->getBitRate()));
+    } else {
+        this->ui->bitRateLineEdit->setText("");
+    }
+
     this->adjustSize();
 }
 
@@ -133,6 +162,34 @@ void SmkAudioWidget::on_trackComboBox_activated(int index)
     this->currentTrack = index;
 
     this->frameModified();
+}
+
+void SmkAudioWidget::on_channelComboBox_activated(int index)
+{
+    this->currentChannel = index;
+
+    this->frameModified();
+}
+
+void SmkAudioWidget::on_bitRateLineEdit_returnPressed()
+{
+    unsigned bitRate = this->ui->bitRateLineEdit->text().toUInt();
+
+    D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
+    D1SmkAudioData *frameAudio = frame->getFrameAudio();
+
+    if (frameAudio != nullptr && frameAudio->setBitRate(bitRate)) {
+        this->gfx->setModified();
+    }
+
+    this->on_bitRateLineEdit_escPressed();
+}
+
+void SmkAudioWidget::on_bitRateLineEdit_escPressed()
+{
+    // update frameIndexEdit
+    this->frameModified();
+    this->ui->bitRateLineEdit->clearFocus();
 }
 
 void SmkAudioWidget::on_closePushButtonClicked()

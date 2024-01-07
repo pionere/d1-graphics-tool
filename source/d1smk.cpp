@@ -16,10 +16,10 @@
 
 #define D1SMK_COLORS 256
 
-D1SmkAudioData::D1SmkAudioData(unsigned ch, unsigned d, unsigned long r)
-    : channel(ch)
-    , depth(d)
-    , rate(r)
+D1SmkAudioData::D1SmkAudioData(unsigned ch, unsigned bd, unsigned long br)
+    : channels(ch)
+    , bitDepth(bd)
+    , bitRate(br)
 {
 }
 
@@ -28,6 +28,30 @@ D1SmkAudioData::~D1SmkAudioData()
     for (int i = 0; i < D1SMK_TRACKS; i++) {
         mem_free_dbg(this->audio[i]);
     }
+}
+
+unsigned D1SmkAudioData::getChannels() const
+{
+    return this->channels;
+}
+
+unsigned D1SmkAudioData::getBitDepth() const
+{
+    return this->bitDepth;
+}
+
+bool D1SmkAudioData::setBitRate(unsigned br)
+{
+    if (this->bitRate == br) {
+        return false;
+    }
+    this->bitRate = br;
+    return true;
+}
+
+unsigned D1SmkAudioData::getBitRate() const
+{
+    return this->bitRate;
 }
 
 void D1SmkAudioData::setAudio(unsigned track, uint8_t* data, unsigned long len)

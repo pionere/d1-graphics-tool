@@ -59,43 +59,70 @@
     </layout>
    </item>
    <item>
-    <widget class="QComboBox" name="trackComboBox">
+    <layout class="QHBoxLayout">
      <item>
-      <property name="text">
-       <string>Track 0</string>
-      </property>
+      <widget class="QComboBox" name="trackComboBox">
+       <item>
+        <property name="text">
+         <string>Track 0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Track 1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Track 2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Track 3</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Track 4</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Track 5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Track 6</string>
+        </property>
+       </item>
+      </widget>
      </item>
      <item>
-      <property name="text">
-       <string>Track 1</string>
-      </property>
+      <widget class="QComboBox" name="channelComboBox"/>
      </item>
      <item>
-      <property name="text">
-       <string>Track 2</string>
-      </property>
+      <widget class="QLabel">
+       <property name="text">
+        <string>BitRate:</string>
+       </property>
+      </widget>
      </item>
      <item>
-      <property name="text">
-       <string>Track 3</string>
-      </property>
+      <widget class="LineEditWidget" name="bitRateLineEdit">
+       <property name="charWidth">
+        <number>6</number>
+       </property>
+       <property name="alignment">
+        <enum>Qt::AlignRight</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
-     <item>
-      <property name="text">
-       <string>Track 4</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Track 5</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Track 6</string>
-      </property>
-     </item>
-    </widget>
+    </layout>
    </item>
    <item>
     <widget class="QGraphicsView" name="audioGraphicsView"/>

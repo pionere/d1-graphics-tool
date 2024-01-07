@@ -34,6 +34,9 @@ private:
 
 private slots:
     void on_trackComboBox_activated(int index);
+    void on_channelComboBox_activated(int index);
+    void on_bitRateLineEdit_returnPressed();
+    void on_bitRateLineEdit_escPressed();
 
     void on_closePushButtonClicked();
     void on_movePushButtonClicked();
@@ -51,4 +54,5 @@ private:
     D1Gfx *gfx;
     int currentFrameIndex;
     unsigned currentTrack = 0;
+    unsigned currentChannel = 0;
 };

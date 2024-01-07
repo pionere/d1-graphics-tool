@@ -9,6 +9,7 @@
 #include "saveasdialog.h"
 
 #define D1SMK_TRACKS 7
+#define D1SMK_CHANNELS 2
 
 class D1SmkAudioData : public QObject {
     Q_OBJECT
@@ -16,17 +17,20 @@ class D1SmkAudioData : public QObject {
     friend class D1Smk;
 
 public:
-    D1SmkAudioData(unsigned channel, unsigned depth, unsigned long rate);
+    D1SmkAudioData(unsigned channels, unsigned bitDepth, unsigned long bitRate);
     ~D1SmkAudioData();
 
-    unsigned getDepth();
+    unsigned getChannels() const;
+    unsigned getBitDepth() const;
+    bool setBitRate(unsigned bitRate);
+    unsigned getBitRate() const;
     void setAudio(unsigned track, uint8_t* audio, unsigned long len);
     uint8_t* getAudio(unsigned track, unsigned long *len);
 
 private:
-    unsigned channel;
-    unsigned depth;
-    unsigned long rate;
+    unsigned channels;
+    unsigned bitDepth;
+    unsigned long bitRate;
     uint8_t* audio[D1SMK_TRACKS] = { nullptr };
     unsigned long len[D1SMK_TRACKS] = { 0 };
 };
