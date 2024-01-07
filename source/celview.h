@@ -15,6 +15,7 @@
 
 #include "d1gfx.h"
 #include "mergeframesdialog.h"
+#include "pushbuttonwidget.h"
 #include "resizedialog.h"
 #include "smkaudiowidget.h"
 #include "upscaledialog.h"
