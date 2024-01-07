@@ -541,12 +541,12 @@ void D1Gfx::setUpscaled(bool upscaled)
     this->modified = true;
 }
 
-double D1Gfx::getFrameLen() const
+unsigned D1Gfx::getFrameLen() const
 {
     return this->frameLen;
 }
 
-void D1Gfx::setFrameLen(double frameLen)
+void D1Gfx::setFrameLen(unsigned frameLen)
 {
     this->frameLen = frameLen;
     this->modified = true;

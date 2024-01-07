@@ -15,7 +15,6 @@
 
 #include "d1gfx.h"
 #include "mergeframesdialog.h"
-#include "pushbuttonwidget.h"
 #include "resizedialog.h"
 #include "smkaudiowidget.h"
 #include "upscaledialog.h"
@@ -168,6 +167,6 @@ private:
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     int origFrameIndex = 0;
-    quint16 currentPlayDelay = 50; // millisec
+    unsigned currentPlayDelay = 50; // millisec
     int playTimer = 0;
 };

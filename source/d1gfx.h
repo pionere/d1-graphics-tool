@@ -165,8 +165,8 @@ public:
     void setType(D1CEL_TYPE type);
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
-    double getFrameLen() const;
-    void setFrameLen(double frameLen);
+    unsigned getFrameLen() const;
+    void setFrameLen(unsigned frameLen);
     QString getFilePath() const;
     void setFilePath(const QString &filePath);
     bool isModified() const;
@@ -206,5 +206,5 @@ protected:
     // fields of tilesets
     bool upscaled = false;
     // fields of smk
-    double frameLen; // microsec
+    unsigned frameLen; // microsec
 };

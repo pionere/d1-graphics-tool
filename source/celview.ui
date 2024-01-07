@@ -108,7 +108,7 @@
          <number>5</number>
         </property>
         <property name="toolTip">
-         <string>Current playback delay</string>
+         <string>Current playback delay (milliseconds)</string>
         </property>
         <property name="alignment">
          <enum>Qt::AlignCenter</enum>

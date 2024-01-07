@@ -15,6 +15,7 @@
 #include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
+#include "pushbuttonwidget.h"
 #include "ui_celview.h"
 #include "upscaler.h"
 
@@ -301,7 +302,7 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
     this->audioBtn->setVisible(smkGfx);
     if (smkGfx) {
-        this->currentPlayDelay = g->frameLen / 1000.0;
+        this->currentPlayDelay = g->getFrameLen() / 1000;
     }
 
     this->updateFields();
@@ -323,7 +324,7 @@ void CelView::setGfx(D1Gfx *g)
     bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
     this->audioBtn->setVisible(smkGfx);
     if (smkGfx) {
-        this->currentPlayDelay = g->frameLen / 1000.0;
+        this->currentPlayDelay = g->getFrameLen() / 1000;
     }
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
