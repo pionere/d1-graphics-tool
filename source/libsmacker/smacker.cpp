@@ -2026,7 +2026,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	unsigned long video_tree_size[4];
 bufMem = fp.ram;
 bufSize = size;
-patchFile();
+// patchFile();
 #endif
 	/** **/
 	/* safe malloc the structure */
@@ -3159,7 +3159,7 @@ bool doDebug = frameCount >= 173 && frameCount <= 175;
 				unpack2 = smk_bs_read_8(&bs);
 				((uint16_t *)cur_buf)[1] = unpack2 | ((uint16_t)unpack << 8);
 if (doDebug)
-LogErrorFF("Audio %d 16bit2ch %d,%d (%d,%d)", frameCount, unpack2, unpack, ((uint8_t *)cur_buf)[1], ((uint8_t *)cur_buf)[2]);
+LogErrorFF("Audio %d 16bit2ch %d,%d (%d,%d)", frameCount, unpack2, unpack, cur_buf[1], cur_buf[2]);
 			} else {
 				((uint8_t *)cur_buf)[1] = unpack;
 if (doDebug)
@@ -3174,7 +3174,7 @@ LogErrorFF("Audio %d 8bit2ch %d", frameCount, unpack);
 			unpack2 = smk_bs_read_8(&bs);
 			((uint16_t *)cur_buf)[0] = unpack2 | ((uint16_t)unpack << 8);
 if (doDebug)
-LogErrorFF("Audio %d 16bit1ch %d,%d (%d,%d)", frameCount, unpack2, unpack, ((uint8_t *)cur_buf)[1], ((uint8_t *)cur_buf)[2]);
+LogErrorFF("Audio %d 16bit1ch %d,%d (%d,%d)", frameCount, unpack2, unpack, cur_buf[1], cur_buf[2]);
 		} else {
 			((uint8_t *)cur_buf)[0] = unpack;
 if (doDebug)
