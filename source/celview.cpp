@@ -298,7 +298,11 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     this->gfx = g;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
-    this->audioBtn->setVisible(g->getType() == D1CEL_TYPE::SMK);
+    bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
+    this->audioBtn->setVisible(smkGfx);
+    if (smkGfx) {
+        this->currentPlayDelay = g->frameLen / 1000.0;
+    }
 
     this->updateFields();
 }
@@ -316,7 +320,11 @@ void CelView::setGfx(D1Gfx *g)
     }
 
     this->gfx = g;
-    this->audioBtn->setVisible(g->getType() == D1CEL_TYPE::SMK);
+    bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
+    this->audioBtn->setVisible(smkGfx);
+    if (smkGfx) {
+        this->currentPlayDelay = g->frameLen / 1000.0;
+    }
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
         this->currentFrameIndex = 0;

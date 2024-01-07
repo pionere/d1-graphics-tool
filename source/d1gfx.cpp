@@ -541,6 +541,17 @@ void D1Gfx::setUpscaled(bool upscaled)
     this->modified = true;
 }
 
+double D1Gfx::getFrameLen() const
+{
+    return this->frameLen;
+}
+
+void D1Gfx::setFrameLen(double frameLen)
+{
+    this->frameLen = frameLen;
+    this->modified = true;
+}
+
 QString D1Gfx::getFilePath() const
 {
     return this->gfxFilePath;

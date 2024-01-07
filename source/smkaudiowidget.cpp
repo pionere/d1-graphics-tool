@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QCursor>
+#include <QGraphicsPixmapItem>
 #include <QGraphicsView>
 #include <QImage>
 #include <QList>
@@ -86,7 +87,7 @@ void SmkAudioWidget::frameModified()
 
     frameAudio = this->gfx->getFrame(this->currentFrameIndex)->getFrameAudio();
     if (frameAudio != nullptr) {
-        audioData = frameAudio->getAudio(this->currentTrack, &len) : nullptr;
+        audioData = frameAudio->getAudio(this->currentTrack, &len);
         depth = frameAudio->getDepth();
         if (depth == 16)
             len /= 2;

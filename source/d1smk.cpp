@@ -158,6 +158,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     gfx.groupFrameIndices.push_back(std::pair<int, int>(0, frameNum - 1));
 
     gfx.type = D1CEL_TYPE::SMK;
+    gfx.frameLen = SVidFrameLength;
 
     gfx.gfxFilePath = filePath;
     gfx.modified = true;
