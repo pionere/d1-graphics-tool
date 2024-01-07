@@ -3317,9 +3317,11 @@ static char smk_render(smk s)
 #else
 			smk_swap_le32(size, p);
 #endif
+			LogErrorFF("smk_render_audio %d:%d %d", frameCount, track, size);
 			/* If audio rendering enabled, kick this off for decode. */
 			if (s->audio[track].enable)
 				smk_render_audio(&s->audio[track], p + 4, size - 4); // -- prevent underflow?
+			LogErrorFF("smk_render_audio done");
 
 			p += size;
 			i -= size; // -- prevent underflow?
@@ -3330,10 +3332,12 @@ if (frameCount == 173 || frameCount == 174)
 LogErrorFF("smk_render frame %d from %d", frameCount, (size_t)p - (size_t)bufMem);
 	/* Unpack video chunk */
 	if (s->video.enable) {
+		LogErrorFF("smk_render_audio %d", frameCount);
 		if (smk_render_video(&(s->video), p, i) < 0) {
 			LogError("libsmacker::smk_render(s) - ERROR: frame %lu: failed to render video.\n", s->cur_frame);
 			goto error;
 		}
+		LogErrorFF("smk_render_video done");
 	}
 
 #ifdef FULL
