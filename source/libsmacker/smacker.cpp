@@ -2026,7 +2026,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	unsigned long video_tree_size[4];
 bufMem = fp.ram;
 bufSize = size;
-// patchFile();
+ patchFile();
 #endif
 	/** **/
 	/* safe malloc the structure */
@@ -2865,7 +2865,7 @@ deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 						return -1;
 					}
 
-#ifndef FULL
+#ifdef FULL
 					t[skip + 3] = ((unpack & 0xFF00) >> 8);
 					t[skip + 2] = (unpack & 0x00FF);
 #else
@@ -2877,7 +2877,7 @@ LogErrorFF("Full block %d:0 value%d (offsetend%d bitend%d) %d,%d:%d (%d:%d) = %d
 						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
 						return -1;
 					}
-#ifndef FULL
+#ifdef FULL
 					t[skip + 1] = ((unpack & 0xFF00) >> 8);
 					t[skip] = (unpack & 0x00FF);
 #else
@@ -3149,7 +3149,7 @@ static char smk_render_audio(struct smk_t::smk_audio_t * s, unsigned char * p, u
 
 		cur_buf = (uint8_t*)s->buffer;
 		/* read initial sound level */
-bool doDebug = frameCount >= 173 && frameCount <= 175;
+bool doDebug = false; // frameCount >= 173 && frameCount <= 175;
 		offset = 1;
 		if (channels == 2) {
 			offset = 2;
@@ -3174,7 +3174,7 @@ LogErrorFF("Audio %d 8bit2ch %d", frameCount, unpack);
 			unpack2 = smk_bs_read_8(&bs);
 			((uint16_t *)cur_buf)[0] = unpack2 | ((uint16_t)unpack << 8);
 if (doDebug)
-LogErrorFF("Audio %d 16bit1ch %d,%d (%d,%d)", frameCount, unpack2, unpack, cur_buf[1], cur_buf[2]);
+LogErrorFF("Audio %d 16bit1ch %d,%d (%d,%d)", frameCount, unpack2, unpack, cur_buf[0], cur_buf[1]);
 		} else {
 			((uint8_t *)cur_buf)[0] = unpack;
 if (doDebug)
@@ -3208,7 +3208,7 @@ uint8_t* bufStart = cur_buf;
 				}
 			}
 		}
-//bool doDebug = frameCount >= 173 && frameCount <= 175;
+bool doDebug = false; // frameCount >= 173 && frameCount <= 175;
 if (doDebug) {
 	char tmp[256];
 	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", 0, frameCount);
@@ -3317,11 +3317,9 @@ static char smk_render(smk s)
 #else
 			smk_swap_le32(size, p);
 #endif
-			LogErrorFF("smk_render_audio %d:%d %d", frameCount, track, size);
 			/* If audio rendering enabled, kick this off for decode. */
 			if (s->audio[track].enable)
 				smk_render_audio(&s->audio[track], p + 4, size - 4); // -- prevent underflow?
-			LogErrorFF("smk_render_audio done");
 
 			p += size;
 			i -= size; // -- prevent underflow?
@@ -3332,12 +3330,10 @@ if (frameCount == 173 || frameCount == 174)
 LogErrorFF("smk_render frame %d from %d", frameCount, (size_t)p - (size_t)bufMem);
 	/* Unpack video chunk */
 	if (s->video.enable) {
-		LogErrorFF("smk_render_audio %d", frameCount);
 		if (smk_render_video(&(s->video), p, i) < 0) {
 			LogError("libsmacker::smk_render(s) - ERROR: frame %lu: failed to render video.\n", s->cur_frame);
 			goto error;
 		}
-		LogErrorFF("smk_render_video done");
 	}
 
 #ifdef FULL

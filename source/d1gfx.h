@@ -73,7 +73,7 @@ class D1GfxFrame : public QObject {
 public:
     D1GfxFrame() = default;
     D1GfxFrame(const D1GfxFrame &o);
-    ~D1GfxFrame() = default;
+    ~D1GfxFrame();
 
     int getWidth() const;
     void setWidth(int width);

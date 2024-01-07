@@ -127,6 +127,9 @@
    <item>
     <widget class="QGraphicsView" name="audioGraphicsView"/>
    </item>
+   <item>
+    <widget class="QSizeGrip"/>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="4" margin="4"/>

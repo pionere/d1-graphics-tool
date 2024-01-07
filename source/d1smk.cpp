@@ -168,6 +168,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
             }
             audio->setAudio(i, ct, len);
         }
+        frame->frameAudio = audio;
 
         gfx.frames.append(frame);
         frameNum++;

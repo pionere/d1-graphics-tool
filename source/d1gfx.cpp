@@ -53,6 +53,11 @@ D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
     this->frameType = o.frameType;
 }
 
+D1GfxFrame::~D1GfxFrame()
+{
+    delete this->frameAudio;
+}
+
 int D1GfxFrame::getWidth() const
 {
     return this->width;
