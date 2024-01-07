@@ -3208,7 +3208,7 @@ uint8_t* bufStart = cur_buf;
 				}
 			}
 		}
-bool doDebug = frameCount >= 173 && frameCount <= 175;
+//bool doDebug = frameCount >= 173 && frameCount <= 175;
 if (doDebug) {
 	char tmp[256];
 	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", 0, frameCount);

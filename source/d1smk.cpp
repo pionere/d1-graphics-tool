@@ -62,7 +62,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     double SVidFrameLength;
     smk_info_all(SVidSMK, &SVidWidth, &SVidHeight, &SVidFrameLength);
     smk_enable_video(SVidSMK, true);
-	smk_enable_audio(SVidSMK, true);
+    smk_enable_audio(SVidSMK, true);
     // Decode first frame
     char result = smk_first(SVidSMK);
     if (SMK_ERR(result)) {
