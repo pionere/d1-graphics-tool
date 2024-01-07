@@ -2193,7 +2193,7 @@ patchFile();
 
 	/* create some tables */
 	for (temp_u = 0; temp_u < 4; temp_u ++) {
-deepDebug = temp_u == SMK_TREE_FULL;
+// deepDebug = temp_u == SMK_TREE_FULL;
 #ifdef FULL
 		if (! smk_huff16_build(&s->video.tree[temp_u], &bs, s->video.tree_size[temp_u])) {
 #else
@@ -2865,7 +2865,7 @@ deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 						return -1;
 					}
 
-#ifdef FULL
+#ifndef FULL
 					t[skip + 3] = ((unpack & 0xFF00) >> 8);
 					t[skip + 2] = (unpack & 0x00FF);
 #else
@@ -2877,7 +2877,7 @@ LogErrorFF("Full block %d:0 value%d (offsetend%d bitend%d) %d,%d:%d (%d:%d) = %d
 						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
 						return -1;
 					}
-#ifdef FULL
+#ifndef FULL
 					t[skip + 1] = ((unpack & 0xFF00) >> 8);
 					t[skip] = (unpack & 0x00FF);
 #else
