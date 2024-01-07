@@ -175,6 +175,9 @@ static unsigned short fullLeafs[] = {
 	(18 | 98 << 8),
 	(10 | 100 << 8),
 	(96 | 14 << 8),
+
+	// (222,11)
+	// (21,11) (38,30)
 };
 
 static void LogErrorFF(const char* msg, ...)
@@ -433,19 +436,19 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 
 if (deepDebug) {
 // LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
-	int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
+	/*int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
 	for ( ; i >= 0; i--) {
 		if (fullLeafs[i] == t->tree[t->size])
 			break;
     }
-	if (i >= 0) {
+	if (i >= 0) {*/
         unsigned char bytes[4] = { 0 };
 		for (int n = 0; n < depth; n++) {
 			if (treeValue[n])
 				bytes[n / 8] |= 1 << (n % 8);
         }
-		LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) %d bits%d (%x)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, *(unsigned*)(&bytes[0]), *(unsigned*)(&bytes[0]));
-    }
+		LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d %d", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, *(unsigned*)(&bytes[0]));
+    // }
 }
 		/* Last: when building the tree, some Values may correspond to cache positions.
 			Identify these values and set the Escape code byte accordingly. */
@@ -846,14 +849,15 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 		((unsigned long) buf[0]); \
 }
 #else
-#define smk_swap_32(dest, src) \
+#define smk_swap_le16(X)
+#define smk_swap_le32(dest, src) \
 { \
 	dest = *(uint32_t*)&src[0]; \
 }
 #define smk_read_ul(p) \
 { \
 	smk_read(buf,4); \
-	smk_swap_32(p, buf); \
+	smk_swap_le32(p, buf); \
 }
 #endif
 
@@ -948,7 +952,7 @@ smk_bw_skip(&bw, 5);  // (0,0)
 // Full block 0:1 value0 (offsetend2365122 bitend2) 32,33:136 (0:0) = 0
 smk_bw_write(&bw, 135625, 19); //  (89,236)
 // Full block 1:0 value60505 (offsetend2365124 bitend5) 34,35:137 (89:236) = 60505
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 1:1 value60652 (offsetend2365126 bitend0) 32,33:137 (236:236) = 60652
 smk_bw_write(&bw, 135625, 19); //  (236,82) 
 // Full block 2:0 value21228 (offsetend2365128 bitend3) 34,35:138 (236:82) = 21228
@@ -994,7 +998,7 @@ smk_bw_skip(&bw, 6); //  (0,0)
 // Full block 0:0 value0 (offsetend2365160 bitend1) 46,47:136 (0:0) = 0
 smk_bw_skip(&bw, 11); //  (14,11)
 // Full block 0:1 value2830 (offsetend2365161 bitend4) 44,45:136 (14:11) = 2830
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 1:0 value60652 (offsetend2365162 bitend7) 46,47:137 (236:236) = 60652
 smk_bw_write(&bw, 171884, 19); //  (236,128)
 // Full block 1:1 value33004 (offsetend2365165 bitend2) 44,45:137 (236:128) = 33004
@@ -1014,7 +1018,7 @@ smk_bw_write(&bw, 228704, 20); //  (236,89)
 // Full block 1:0 value23020 (offsetend2365177 bitend1) 50,51:137 (236:89) = 23020
 smk_bw_write(&bw, 135625, 19); //  (89,236)
 // Full block 1:1 value60505 (offsetend2365179 bitend4) 48,49:137 (89:236) = 60505
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 2:0 value60652 (offsetend2365180 bitend7) 50,51:138 (236:236) = 60652
 smk_bw_write(&bw, 135625, 19); //  (236,82) 
 // Full block 2:1 value21228 (offsetend2365183 bitend2) 48,49:138 (236:82) = 21228
@@ -1042,7 +1046,7 @@ smk_bw_skip(&bw, 6); //  (0,0)
 // Full block 0:0 value0 (offsetend2365201 bitend3) 58,59:136 (0:0) = 0
 smk_bw_skip(&bw, 5);  //  (0,0)
 // Full block 0:1 value0 (offsetend2365202 bitend0) 56,57:136 (0:0) = 0
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 1:0 value60652 (offsetend2365203 bitend3) 58,59:137 (236:236) = 60652
 smk_bw_write(&bw, 228704, 20); //  (236,89)
 // Full block 1:1 value23020 (offsetend2365205 bitend7) 56,57:137 (236:89) = 23020
@@ -1062,7 +1066,7 @@ smk_bw_write(&bw, 228704, 20); //  (236,89)
 // Full block 1:0 value23020 (offsetend2365216 bitend7) 62,63:137 (236:89) = 23020
 smk_bw_write(&bw, 135625, 19); //  (89,236)
 // Full block 1:1 value60505 (offsetend2365219 bitend2) 60,61:137 (89:236) = 60505
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 2:0 value60652 (offsetend2365220 bitend5) 62,63:138 (236:236) = 60652
 smk_bw_write(&bw, 135625, 19); //  (236,82)
 // Full block 2:1 value21228 (offsetend2365223 bitend0) 60,61:138 (236:82) = 21228
@@ -1076,7 +1080,7 @@ smk_bw_skip(&bw, 5); //  (0,0)
 // Full block 0:1 value0 (offsetend2365228 bitend0) 64,65:136 (0:0) = 0
 smk_bw_write(&bw, 135625, 19); //  (89,236)
 // Full block 1:0 value60505 (offsetend2365230 bitend3) 66,67:137 (89:236) = 60505
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 1:1 value60652 (offsetend2365231 bitend6) 64,65:137 (236:236) = 60652
 smk_bw_write(&bw, 135625, 19); //  (236,82) 
 // Full block 2:0 value21228 (offsetend2365234 bitend1) 66,67:138 (236:82) = 21228
@@ -1096,7 +1100,7 @@ smk_bw_write(&bw, 228704, 20); //  (236,89)
 // Full block 1:1 value23020 (offsetend2365247 bitend0) 68,69:137 (236:89) = 23020
 smk_bw_write(&bw, 2079468, 21); //  (128,236)
 // Full block 2:0 value60544 (offsetend2365249 bitend5) 70,71:138 (128:236) = 60544
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 2:1 value60652 (offsetend2365251 bitend0) 68,69:138 (236:236) = 60652
 smk_bw_skip(&bw, 14); //  (11,18)
 // Full block 3:0 value4619 (offsetend2365252 bitend6) 70,71:139 (11:18) = 4619
@@ -1112,7 +1116,7 @@ smk_bw_skip(&bw, 5); //  (236,128)
 // Full block 1:1 value33004 (offsetend2365259 bitend1) 72,73:137 (236:128) = 33004
 smk_bw_skip(&bw, 5); //  (236,128)
 // Full block 2:0 value33004 (offsetend2365259 bitend6) 74,75:138 (236:128) = 33004
-smk_bw_skip(&bw, 11); //  (128,128)
+smk_bw_write(&bw, 61, 11); //  (128,128)
 // Full block 2:1 value32896 (offsetend2365261 bitend1) 72,73:138 (128:128) = 32896
 smk_bw_skip(&bw, 13); //  (25,18) 
 // Full block 3:0 value4633 (offsetend2365262 bitend6) 74,75:139 (25:18) = 4633
@@ -1128,7 +1132,7 @@ smk_bw_skip(&bw, 5); //  (236,128)
 // Full block 1:1 value33004 (offsetend2365269 bitend3) 76,77:137 (236:128) = 33004
 smk_bw_skip(&bw, 5); //  (236,128)
 // Full block 2:0 value33004 (offsetend2365270 bitend0) 78,79:138 (236:128) = 33004
-smk_bw_skip(&bw, 11); //  (128,128)
+smk_bw_write(&bw, 61, 11); //  (128,128)
 // Full block 2:1 value32896 (offsetend2365271 bitend3) 76,77:138 (128:128) = 32896
 smk_bw_skip(&bw, 12); //  (25,14)  
 // Full block 3:0 value3609 (offsetend2365272 bitend7) 78,79:139 (25:14) = 3609
@@ -1138,7 +1142,7 @@ smk_bw_skip(&bw, 8); //  (10,0)
 // Full block 0:0 value10 (offsetend2365275 bitend0) 82,83:136 (10:0) = 10
 smk_bw_skip(&bw, 10); //  (14,14)  
 // Full block 0:1 value3598 (offsetend2365276 bitend2) 80,81:136 (14:14) = 3598
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 1:0 value60652 (offsetend2365277 bitend5) 82,83:137 (236:236) = 60652
 smk_bw_write(&bw, 119272, 19); //  (236,128)
 // Full block 1:1 value33004 (offsetend2365280 bitend0) 80,81:137 (236:128) = 33004
@@ -1158,7 +1162,7 @@ smk_bw_write(&bw, 228704, 20); //  (236,89)
 // Full block 1:0 value23020 (offsetend2365291 bitend7) 86,87:137 (236:89) = 23020
 smk_bw_write(&bw, 135625, 19); //  (89,236)
 // Full block 1:1 value60505 (offsetend2365294 bitend2) 84,85:137 (89:236) = 60505
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 2:0 value60652 (offsetend2365295 bitend5) 86,87:138 (236:236) = 60652
 smk_bw_write(&bw, 135625, 19); //  (236,82)  
 // Full block 2:1 value21228 (offsetend2365298 bitend0) 84,85:138 (236:82) = 21228
@@ -1172,7 +1176,7 @@ smk_bw_skip(&bw, 5);
 // Full block 0:1 value0 (offsetend2365303 bitend0) 88,89:136 (0:0) = 0
 smk_bw_write(&bw, 135625, 19); //  (89,236)
 // Full block 1:0 value60505 (offsetend2365305 bitend3) 90,91:137 (89:236) = 60505
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 1:1 value60652 (offsetend2365306 bitend6) 88,89:137 (236:236) = 60652
 smk_bw_write(&bw, 135625, 19); //  (236,82)  
 // Full block 2:0 value21228 (offsetend2365309 bitend1) 90,91:138 (236:82) = 21228
@@ -1192,7 +1196,7 @@ smk_bw_write(&bw, 228704, 20); //  (236,89)
 // Full block 1:1 value23020 (offsetend2365324 bitend3) 92,93:137 (236:89) = 23020
 smk_bw_write(&bw, 5107, 20); //  (128,182)
 // Full block 2:0 value46720 (offsetend2365326 bitend7) 94,95:138 (128:182) = 46720
-smk_bw_skip(&bw, 11); //  (236,236)
+smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 2:1 value60652 (offsetend2365328 bitend2) 92,93:138 (236:236) = 60652
 smk_bw_skip(&bw, 21); //  (222,99)
 // Full block 3:0 value25566 (offsetend2365330 bitend7) 94,95:139 (222:99) = 25566
@@ -2861,17 +2865,24 @@ deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 						return -1;
 					}
 
+#ifdef FULL
 					t[skip + 3] = ((unpack & 0xFF00) >> 8);
 					t[skip + 2] = (unpack & 0x00FF);
+#else
+					*(uint16_t*)&t[skip + 2] = smk_swap_le16(unpack);
+#endif
 if (deepDebug)
 LogErrorFF("Full block %d:0 value%d (offsetend%d bitend%d) %d,%d:%d (%d:%d) = %d", k, unpack, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num, col + 2, col + 3, row + k, t[skip + 2], t[skip + 3], *(uint16_t*)&t[skip + 2]);
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
 						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
 						return -1;
 					}
-
+#ifdef FULL
 					t[skip + 1] = ((unpack & 0xFF00) >> 8);
 					t[skip] = (unpack & 0x00FF);
+#else
+					*(uint16_t*)&t[skip] = smk_swap_le16(unpack);
+#endif
 if (deepDebug)
 LogErrorFF("Full block %d:1 value%d (offsetend%d bitend%d) %d,%d:%d (%d:%d) = %d", k, unpack, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num, col, col + 1, row + k, t[skip + 0], t[skip + 1], *(uint16_t*)&t[skip + 0]);
 					skip += s->w;
@@ -3012,7 +3023,7 @@ static char smk_render_audio(struct smk_t::smk_audio_t * s, unsigned char * p, u
 			((unsigned int) p[1] << 8) |
 			((unsigned int) p[0]);
 #else
-		smk_swap_32(s->buffer_size, p);
+		smk_swap_le32(s->buffer_size, p);
 #endif
 		p += 4;
 		size -= 4;
@@ -3138,6 +3149,7 @@ static char smk_render_audio(struct smk_t::smk_audio_t * s, unsigned char * p, u
 
 		cur_buf = (uint8_t*)s->buffer;
 		/* read initial sound level */
+bool doDebug = frameCount >= 173 && frameCount <= 175;
 		offset = 1;
 		if (channels == 2) {
 			offset = 2;
@@ -3146,8 +3158,13 @@ static char smk_render_audio(struct smk_t::smk_audio_t * s, unsigned char * p, u
 			if (bitdepth == 16) {
 				unpack2 = smk_bs_read_8(&bs);
 				((uint16_t *)cur_buf)[1] = unpack2 | ((uint16_t)unpack << 8);
-			} else
+if (doDebug)
+LogErrorFF("Audio %d 16bit2ch %d,%d (%d,%d)", frameCount, unpack2, unpack, ((uint8_t *)cur_buf)[1], ((uint8_t *)cur_buf)[2]);
+			} else {
 				((uint8_t *)cur_buf)[1] = unpack;
+if (doDebug)
+LogErrorFF("Audio %d 8bit2ch %d", frameCount, unpack);
+            }
 		}
 
 		unpack = smk_bs_read_8(&bs);
@@ -3156,8 +3173,13 @@ static char smk_render_audio(struct smk_t::smk_audio_t * s, unsigned char * p, u
 
 			unpack2 = smk_bs_read_8(&bs);
 			((uint16_t *)cur_buf)[0] = unpack2 | ((uint16_t)unpack << 8);
-		} else
+if (doDebug)
+LogErrorFF("Audio %d 16bit1ch %d,%d (%d,%d)", frameCount, unpack2, unpack, ((uint8_t *)cur_buf)[1], ((uint8_t *)cur_buf)[2]);
+		} else {
 			((uint8_t *)cur_buf)[0] = unpack;
+if (doDebug)
+LogErrorFF("Audio %d 8bit1ch %d", frameCount, unpack);
+        }
 
 		cur_buf += offset;
 uint8_t* bufStart = cur_buf;
@@ -3186,7 +3208,7 @@ uint8_t* bufStart = cur_buf;
 				}
 			}
 		}
-bool doDebug = frameCount >= 173 && frameCount <= 175;
+/*bool doDebug = frameCount >= 173 && frameCount <= 175;
 if (doDebug) {
 	char tmp[256];
 	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", 0, frameCount);
@@ -3197,7 +3219,7 @@ if (doDebug) {
 	fwrite(bufStart, 1, (size_t)cur_buf - (size_t)bufStart, f0);
 
 	fclose(f0);
-}
+}*/
 #endif // FULL
 	}
 
@@ -3293,7 +3315,7 @@ static char smk_render(smk s)
 					((unsigned int) p[1] << 8) |
 					((unsigned int) p[0]));
 #else
-			smk_swap_32(size, p);
+			smk_swap_le32(size, p);
 #endif
 			/* If audio rendering enabled, kick this off for decode. */
 			if (s->audio[track].enable)
