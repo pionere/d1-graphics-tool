@@ -100,7 +100,7 @@ void SmkAudioWidget::frameModified()
             channel = 0;
         }
     } else {
-        len = 512;
+        len = 0;
         audioData = nullptr;
         depth = 8;
         channels = 1;
@@ -115,7 +115,7 @@ void SmkAudioWidget::frameModified()
         CEL_SCENE_MARGIN + height  + CEL_SCENE_MARGIN);
 
     // Building background of the width/height of the CEL frame
-    QImage audioFrame = QImage(width, height, QImage::Format_ARGB32);
+    QImage audioFrame = QImage(width < 512 ? 512 : width, height, QImage::Format_ARGB32);
 
     if (audioData != nullptr) {
         QPainter audioPainter(&audioFrame);

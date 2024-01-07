@@ -160,9 +160,12 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
         D1SmkAudioData *audio = new D1SmkAudioData(channels, depth, rate);
         for (unsigned i = 0; i < D1SMK_TRACKS; i++) {
             unsigned long len = smk_get_audio_size(SVidSMK, i);
-            unsigned char* track = smk_get_audio(SVidSMK, i);
-            unsigned char* ct = (unsigned char *)malloc(fileSize);
-            memcpy(ct, track, len);
+            unsigned char* ct = nullptr;
+            if (len != 0) {
+                unsigned char* track = smk_get_audio(SVidSMK, i);
+                ct = (unsigned char *)malloc(len);
+                memcpy(ct, track, len);
+            }
             audio->setAudio(i, ct, len);
         }
 
