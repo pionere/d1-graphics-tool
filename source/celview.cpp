@@ -15,7 +15,6 @@
 #include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
-#include "pushbuttonwidget.h"
 #include "ui_celview.h"
 #include "upscaler.h"
 
@@ -264,9 +263,9 @@ CelView::CelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
-    audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::::showAudioInfo);
-    layout->setAlignment(audioBtn, Qt::AlignLeft);
-    audioBtn->setVisible(false);
+    this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::::showAudioInfo);
+    layout->setAlignment(this->audioBtn, Qt::AlignLeft);
+    this->audioBtn->setVisible(false);
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
@@ -911,7 +910,7 @@ void CelView::setGroupIndex(int groupIndex)
 void CelView::showAudioInfo()
 {
     if (this->smkAudioWidget == nullptr) {
-        this->smkAudioWidget = new DungeonSubtileWidget(this);
+        this->smkAudioWidget = new SmkAudioWidget(this);
         this->smkAudioWidget->setGfx(this->gfx);
     }
     this->smkAudioWidget->initialize(this->currentFrameIndex);

@@ -11,6 +11,8 @@
 
 #include "config.h"
 #include "celview.h"
+#include "d1smk.h"
+#include "pushbuttonwidget.h"
 #include "ui_smkaudiowidget.h"
 
 SmkAudioWidget::SmkAudioWidget(CelView *parent)
