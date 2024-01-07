@@ -849,7 +849,7 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 		((unsigned long) buf[0]); \
 }
 #else
-#define smk_swap_le16(X)
+#define smk_swap_le16(X) (X)
 #define smk_swap_le32(dest, src) \
 { \
 	dest = *(uint32_t*)&src[0]; \
@@ -3208,7 +3208,7 @@ uint8_t* bufStart = cur_buf;
 				}
 			}
 		}
-/*bool doDebug = frameCount >= 173 && frameCount <= 175;
+bool doDebug = frameCount >= 173 && frameCount <= 175;
 if (doDebug) {
 	char tmp[256];
 	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", 0, frameCount);
@@ -3219,7 +3219,7 @@ if (doDebug) {
 	fwrite(bufStart, 1, (size_t)cur_buf - (size_t)bufStart, f0);
 
 	fclose(f0);
-}*/
+}
 #endif // FULL
 	}
 
