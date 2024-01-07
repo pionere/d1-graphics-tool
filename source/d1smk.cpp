@@ -16,6 +16,32 @@
 
 #define D1SMK_COLORS 256
 
+D1SmkAudioData::D1SmkAudioData(unsigned ch, unsigned d, unsigned long r)
+    : channel(ch)
+    , depth(d)
+    , rate(r)
+{
+}
+
+D1SmkAudioData::~D1SmkAudioData()
+{
+    for (int i = 0; i < D1SMK_TRACKS; i++) {
+        mem_free_dbg(this->audio[i]);
+    }
+}
+
+void D1SmkAudioData::setAudio(unsigned track, uint8_t* data, unsigned long len)
+{
+    this->audio[track] = data;
+    this->len[track] = len;
+}
+
+uint8_t* D1SmkAudioData::getAudio(unsigned track, unsigned long *len)
+{
+    *len = this->len[track];
+    return this->audio[track];
+}
+
 static D1Pal* LoadPalette(smk SVidSMK)
 {
     D1Pal *pal = new D1Pal();
@@ -61,8 +87,13 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     unsigned long SVidWidth, SVidHeight;
     double SVidFrameLength;
     smk_info_all(SVidSMK, &SVidWidth, &SVidHeight, &SVidFrameLength);
+    unsigned char channels, depth;
+    unsigned long rate;
+    smk_info_audio(SVidSMK, &channels, &depth, &rate);
     smk_enable_video(SVidSMK, true);
-    smk_enable_audio(SVidSMK, true);
+    for (int i = 0; i < D1SMK_TRACKS; i++) {
+        smk_enable_audio(SVidSMK, i, true);
+    }
     // Decode first frame
     char result = smk_first(SVidSMK);
     if (SMK_ERR(result)) {
@@ -102,6 +133,15 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
             frame->addPixelLine(std::move(pixelLine));
         }
 
+        D1SmkAudioData *audio = new D1SmkAudioData(channels, depth, rate);
+        for (unsigned i = 0; i < D1SMK_TRACKS; i++) {
+            unsigned long len = smk_get_audio_size(SVidSMK, i);
+            unsigned char* track = smk_get_audio(SVidSMK, i);
+            unsigned char* ct = (unsigned char *)malloc(fileSize);
+            memcpy(ct, track, len);
+            audio->setAudio(i, ct, len);
+        }
+
         gfx.frames.append(frame);
         frameNum++;
     } while ((result = smk_next(SVidSMK)) == SMK_MORE);
@@ -110,6 +150,9 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
     }
     RegisterPalette(pal, prevPalFrame, frameNum, pals);
+
+    smk_close(SVidSMK);
+    MemFreeDbg(SVidBuffer);
 
     gfx.groupFrameIndices.clear();
     gfx.groupFrameIndices.push_back(std::pair<int, int>(0, frameNum - 1));

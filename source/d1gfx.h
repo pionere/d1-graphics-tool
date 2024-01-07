@@ -16,6 +16,8 @@
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
 
+class D1SmkAudioData;
+
 class D1GfxPixel {
 public:
     static D1GfxPixel transparentPixel();
@@ -89,6 +91,7 @@ public:
 
     // functions for smk-frames
     QPointer<D1Pal>& getFramePal();
+    D1SmkAudioData *getFrameAudio();
 
 protected:
     int width = 0;
@@ -100,6 +103,9 @@ protected:
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
     // fields of smk-frames
     QPointer<D1Pal> framePal = nullptr;
+    D1SmkAudioData *frameAudio = nullptr;
+    uint8_t *frameAudio = nullptr;
+    uint8_ audioDepth;
 };
 
 typedef enum gfx_file_index {

@@ -264,6 +264,9 @@ CelView::CelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
+    audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::::showAudioInfo);
+    layout->setAlignment(audioBtn, Qt::AlignLeft);
+    audioBtn->setVisible(false);
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
@@ -286,6 +289,7 @@ CelView::CelView(QWidget *parent)
 
 CelView::~CelView()
 {
+    delete smkAudioWidget;
     delete ui;
 }
 
@@ -295,6 +299,7 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     this->gfx = g;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
+    this->audioBtn->setVisible(g->getType() == D1CEL_TYPE::SMK);
 
     this->updateFields();
 }
@@ -312,11 +317,17 @@ void CelView::setGfx(D1Gfx *g)
     }
 
     this->gfx = g;
+    this->audioBtn->setVisible(g->getType() == D1CEL_TYPE::SMK);
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
         this->currentFrameIndex = 0;
     }
     this->updateGroupIndex();
+
+    // notify the audio-popup that the gfx changed
+    if (this->smkAudioWidget != nullptr) {
+        this->smkAudioWidget->setGfx(this->gfx);
+    }
 }
 
 void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
@@ -827,6 +838,11 @@ void CelView::displayFrame()
 
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
+
+    // notify the audio-popup that the frame changed
+    if (this->smkAudioWidget != nullptr) {
+        this->smkAudioWidget->initialize(this->currentFrameIndex);
+    }
 }
 
 void CelView::toggleBottomPanel()
@@ -890,6 +906,16 @@ void CelView::setGroupIndex(int groupIndex)
     this->currentFrameIndex = std::min(newGroupFrameIndices.first + frameIndex, newGroupFrameIndices.second);
 
     this->displayFrame();
+}
+
+void CelView::showAudioInfo()
+{
+    if (this->smkAudioWidget == nullptr) {
+        this->smkAudioWidget = new DungeonSubtileWidget(this);
+        this->smkAudioWidget->setGfx(this->gfx);
+    }
+    this->smkAudioWidget->initialize(this->currentFrameIndex);
+    this->smkAudioWidget->show();
 }
 
 void CelView::ShowContextMenu(const QPoint &pos)

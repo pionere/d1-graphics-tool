@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SmkAudioWidget</class>
+ <widget class="QFrame">
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
+  <!--property name="styleSheet">
+   <string notr="true">QFrame { background-color: palette(window); }</string>
+  </property>
+  <property name="windowOpacity">
+   <number>0.5</number>
+  </property-->
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="QComboBox" name="trackComboBox">
+     <item>
+      <property name="text">
+       <string>Track 0</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Track 1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Track 2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Track 3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Track 4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Track 5</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Track 6</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="audioGraphicsView"/>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="4" margin="4"/>
+ <resources/>
+ <connections/>
+ <buttongroups/>
+</ui>

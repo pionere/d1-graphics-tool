@@ -220,6 +220,9 @@ set(PROJECT_SOURCES
         source/settingsdialog.cpp
         source/settingsdialog.h
         source/settingsdialog.ui
+        source/smkaudiowidget.cpp
+        source/smkaudiowidget.h
+        source/smkaudiowidget.ui
         source/tblview.cpp
         source/tblview.h
         source/tblview.ui
