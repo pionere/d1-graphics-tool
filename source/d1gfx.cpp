@@ -5,6 +5,7 @@
 
 #include "d1image.h"
 #include "d1cl2.h"
+#include "d1smk.h"
 #include "openasdialog.h"
 #include "progressdialog.h"
 
