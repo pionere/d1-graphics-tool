@@ -104,8 +104,6 @@ protected:
     // fields of smk-frames
     QPointer<D1Pal> framePal = nullptr;
     D1SmkAudioData *frameAudio = nullptr;
-    uint8_t *frameAudio = nullptr;
-    uint8_ audioDepth;
 };
 
 typedef enum gfx_file_index {
