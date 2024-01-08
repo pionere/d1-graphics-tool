@@ -8,7 +8,7 @@
   <property name="sizeGripEnabled">
    <bool>true</bool>
   </property>
-  <property name="sizeHint">
+  <property name="minimumSize">
    <size>
     <width>256</width>
     <height>256</height>

@@ -1722,7 +1722,7 @@ smk_bw_skip(&bw, 4); // mem (2303719:5) value (222,223)
 
 	LogErrorFF("Patchlen(1) %d", (size_t)bw.buffer - (size_t)bufMem);
 
-	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2303427) / 4 - 1; i++) {
+	for (size_t i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2303427) / 4 - 1; i++) {
 		LogErrorFF("Patched mem: *(uint32_t*)&bufMem[2303427 + %d] = %d;", i, *(uint32_t*)&bufMem[2303427 + i]);
 	}
 
@@ -2088,7 +2088,7 @@ smk_bw_skip(&bw, 4); // mem (2313814:0) value (222,223)
 
 	LogErrorFF("Patchlen(2) %d", (size_t)bw.buffer - (size_t)bufMem);
 
-	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2313522) / 4 - 1; i++) {
+	for (size_t i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2313522) / 4 - 1; i++) {
 		LogErrorFF("Patched mem: *(uint32_t*)&bufMem[2313522 + %d] = %d;", i, *(uint32_t*)&bufMem[2313522 + i]);
 	}
 
