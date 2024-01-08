@@ -261,7 +261,7 @@ CelView::CelView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->on_zoomEdit_escPressed();
-    this->on_playDelayEdit_escPressed();
+    // this->on_playDelayEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
     layout->setAlignment(this->audioBtn, Qt::AlignLeft);
