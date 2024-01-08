@@ -301,7 +301,7 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
     this->audioBtn->setVisible(smkGfx);
     if (smkGfx) {
-        this->currentPlayDelay = g->getFrameLen() / 1000;
+        this->currentPlayDelay = g->getFrameLen();
     }
 
     this->updateFields();
@@ -323,7 +323,7 @@ void CelView::setGfx(D1Gfx *g)
     bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
     this->audioBtn->setVisible(smkGfx);
     if (smkGfx) {
-        this->currentPlayDelay = g->getFrameLen() / 1000;
+        this->currentPlayDelay = g->getFrameLen();
     }
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
@@ -360,6 +360,8 @@ void CelView::updateFields()
     int count;
 
     this->updateLabel();
+    // set play-delay text
+    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
 
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
@@ -1132,7 +1134,7 @@ void CelView::on_zoomEdit_escPressed()
 
 void CelView::on_playDelayEdit_returnPressed()
 {
-    quint16 playDelay = this->ui->playDelayEdit->text().toUInt();
+    unsigned playDelay = this->ui->playDelayEdit->text().toUInt();
 
     if (playDelay != 0)
         this->currentPlayDelay = playDelay;
@@ -1142,7 +1144,8 @@ void CelView::on_playDelayEdit_returnPressed()
 
 void CelView::on_playDelayEdit_escPressed()
 {
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    // update playDelayEdit
+    this->updateFields();
     this->ui->playDelayEdit->clearFocus();
 }
 
@@ -1173,7 +1176,7 @@ void CelView::on_playStopButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer = this->startTimer(this->currentPlayDelay);
+    this->playTimer = this->startTimer(this->currentPlayDelay / 1000);
 }
 
 void CelView::timerEvent(QTimerEvent *event)

@@ -60,7 +60,7 @@ void SmkAudioWidget::setGfx(D1Gfx *g)
 void SmkAudioWidget::show()
 {
     this->resetPos();
-    QFrame::show();
+    QDialog::show();
 
     this->setFocus(); // otherwise the widget does not receive keypress events...
     // update the view
@@ -73,7 +73,7 @@ void SmkAudioWidget::hide()
         this->stopMove();
     }
 
-    QFrame::hide();
+    QDialog::hide();
 }
 
 void SmkAudioWidget::frameModified()
@@ -269,7 +269,7 @@ void SmkAudioWidget::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    QFrame::keyPressEvent(event);
+    QDialog::keyPressEvent(event);
 }
 
 void SmkAudioWidget::mousePressEvent(QMouseEvent *event)
@@ -279,7 +279,7 @@ void SmkAudioWidget::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    QFrame::mouseMoveEvent(event);
+    QDialog::mouseMoveEvent(event);
 }
 
 void SmkAudioWidget::mouseMoveEvent(QMouseEvent *event)
@@ -293,5 +293,5 @@ void SmkAudioWidget::mouseMoveEvent(QMouseEvent *event)
         // return;
     }
 
-    QFrame::mouseMoveEvent(event);
+    QDialog::mouseMoveEvent(event);
 }

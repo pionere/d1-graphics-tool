@@ -168,6 +168,6 @@ private:
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     int origFrameIndex = 0;
-    unsigned currentPlayDelay = 50; // millisec
+    unsigned currentPlayDelay = 50000; // microsec
     int playTimer = 0;
 };
