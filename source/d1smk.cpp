@@ -137,7 +137,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     unsigned prevPalFrame = 0;
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
     do {
-	LogErrorF("Smk load %d", frameNum);
+//	LogErrorF("Smk load %d", frameNum);
         bool palUpdate = smk_palette_updated(SVidSMK);
         if (palUpdate && frameNum != 0) {
             RegisterPalette(pal, prevPalFrame, frameNum, pals);
@@ -173,7 +173,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-	LogErrorF("Smk load %d..", frameNum);
+//	LogErrorF("Smk load %d..", frameNum);
     } while ((result = smk_next(SVidSMK)) == SMK_MORE);
 
     if (SMK_ERR(result)) {
@@ -192,7 +192,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
-	LogErrorF("Smk load done");
+//	LogErrorF("Smk load done");
     return true;
 }
 

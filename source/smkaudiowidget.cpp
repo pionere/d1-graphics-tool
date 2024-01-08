@@ -101,9 +101,9 @@ void SmkAudioWidget::frameModified()
         }
         channels = frameAudio->getChannels();
         bitWidth = frameAudio->getBitDepth() / 8;
-		LogErrorF("frameModified getAudio %d", track);
+//		LogErrorF("frameModified getAudio %d", track);
         audioData = frameAudio->getAudio(track, &audioLen);
-		LogErrorF("frameModified gotAudio %d len %d", audioData != nullptr, audioLen);
+//		LogErrorF("frameModified gotAudio %d len %d", audioData != nullptr, audioLen);
         audioLen /= bitWidth;
     } else {
         // track = -1;
@@ -123,24 +123,24 @@ void SmkAudioWidget::frameModified()
     this->ui->channelComboBox->setEnabled(hasAudio);
     this->ui->bitRateLineEdit->setEnabled(hasAudio);
     if (hasAudio) {
-		LogErrorF("frameModified hasAudio 0");
+//		LogErrorF("frameModified hasAudio 0");
         // - tracks
         for (int i = 0; i < D1SMK_TRACKS; i++) {
             unsigned long trackLen;
             frameAudio->getAudio(i, &trackLen);
-            QString label = trackLen != 0 ? tr("Track %1") : tr("<i>Track %1</i>");
+            QString label = trackLen != 0 ? tr("Track %1") : tr("- Track %1 -");
             this->ui->trackComboBox->addItem(label.arg(i + 1), i);
         }
         this->ui->trackComboBox->setCurrentIndex(track);
-		LogErrorF("frameModified hasAudio 1 %d", track);
+//		LogErrorF("frameModified hasAudio 1 %d", track);
 
         // - channels
         for (unsigned i = 0; i < D1SMK_CHANNELS; i++) {
-            QString label = channels > i ? tr("Channel %1") : tr("<i>Channel %1</i>");
+            QString label = channels > i ? tr("Channel %1") : tr("- Channel %1 -");
             this->ui->channelComboBox->addItem(label.arg(i + 1), i);
         }
         this->ui->channelComboBox->setCurrentIndex(channel);
-		LogErrorF("frameModified hasAudio 2 %d", channel);
+//		LogErrorF("frameModified hasAudio 2 %d", channel);
 
         // - bitRate
         this->ui->bitRateLineEdit->setText(QString::number(frameAudio->getBitRate()));
@@ -155,7 +155,7 @@ void SmkAudioWidget::frameModified()
         width = 512;
     }
     height = 256; // (256 * bitWidth);
-	LogErrorF("frameModified updatescene 2 %d", channel);
+//	LogErrorF("frameModified updatescene 2 %d", channel);
 
     // Resize the scene rectangle to include some padding around the CEL frame
     this->audioScene.setSceneRect(0, 0,
@@ -164,6 +164,7 @@ void SmkAudioWidget::frameModified()
 
     // Building background of the width/height of the CEL frame
     QImage audioFrame = QImage(width, height, QImage::Format_ARGB32);
+    audioFrame.fill(QColor(Config::getGraphicsTransparentColor()));
 
     if (audioData != nullptr) {
         QPainter audioPainter(&audioFrame);

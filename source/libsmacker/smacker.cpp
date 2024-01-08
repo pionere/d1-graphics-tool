@@ -1245,11 +1245,11 @@ smk_bw_skip(&bw, 19); //  (169,21)
 // Full block 0:0 value5545 (offsetend2365380 bitend7) 110,111:136 (169:21) = 5545
 smk_bw_skip(&bw, 16); //  (108,142) 
 // Full block 0:1 value36460 (offsetend2365382 bitend7) 108,109:136 (108:142) = 36460
-smk_bw_skip(&bw, 20); //  (169,236) 
+smk_bw_write(&bw, 680672, 20); //  (169,236) 
 // Full block 1:0 value60585 (offsetend2365385 bitend3) 110,111:137 (169:236) = 60585
 smk_bw_skip(&bw, 17); //  (142,181) 
 // Full block 1:1 value46478 (offsetend2365387 bitend4) 108,109:137 (142:181) = 46478
-smk_bw_skip(&bw, 19); //  (236,82) 
+smk_bw_write(&bw, 56808, 19); //  (236,82) 
 // Full block 2:0 value21228 (offsetend2365389 bitend7) 110,111:138 (236:82) = 21228
 smk_bw_skip(&bw, 20); //  (161,194) 
 // Full block 2:1 value49825 (offsetend2365392 bitend3) 108,109:138 (161:194) = 49825
@@ -1267,7 +1267,7 @@ smk_bw_write(&bw, 487912, 19); //  (89,236)
 // Full block 1:1 value60505 (offsetend2365402 bitend6) 112,113:137 (89:236) = 60505
 smk_bw_skip(&bw, 4); //  (236,74) 
 // Full block 2:0 value19180 (offsetend2365403 bitend2) 114,115:138 (236:74) = 19180
-smk_bw_skip(&bw, 19); //  (236,82)
+smk_bw_write(&bw, 487912, 19); //  (236,82)
 // Full block 2:1 value21228 (offsetend2365405 bitend5) 112,113:138 (236:82) = 21228
 smk_bw_skip(&bw, 14); //  (222,223)
 // Full block 3:0 value57310 (offsetend2365407 bitend3) 114,115:139 (222:223) = 57310
@@ -3317,8 +3317,8 @@ static char smk_render(smk s)
 		} else
 			s->audio[track].buffer_size = 0;
 	}
-if (frameCount == 173 || frameCount == 174)
-LogErrorFF("smk_render frame %d from %d", frameCount, (size_t)p - (size_t)bufMem);
+//if (frameCount == 173 || frameCount == 174)
+//LogErrorFF("smk_render frame %d from %d", frameCount, (size_t)p - (size_t)bufMem);
 	/* Unpack video chunk */
 	if (s->video.enable) {
 		if (smk_render_video(&(s->video), p, i) < 0) {
