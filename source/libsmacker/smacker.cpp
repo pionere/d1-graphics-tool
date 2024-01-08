@@ -918,7 +918,7 @@ static void patchFile()
 
 	smk_bw_init(&bw, bufMem, bufSize);
 
-	bw.buffer += 2365112;
+/*	bw.buffer += 2365112;
 	bw.bit_num = 4;
 
 smk_bw_skip(&bw, 6); // (0,0)
@@ -1274,13 +1274,87 @@ smk_bw_skip(&bw, 14); //  (222,223)
 smk_bw_skip(&bw, 5); //  (222,223) 
 // Full block 3:1 value57310 (offsetend2365408 bitend0) 112,113:139 (222:223) = 57310
 
-LogErrorFF("Patchlen %d", (size_t)bw.buffer - (size_t)bufMem);
+	LogErrorFF("Patchlen %d", (size_t)bw.buffer - (size_t)bufMem);
 
-for (int i = ((size_t)bw.buffer - (size_t)bufMem - 2365112) / 4 - 1; i >= 0; i--) {
-	if (*(uint32_t*)&bufMem[2365112 + i] != 0) {
+	for (int i = ((size_t)bw.buffer - (size_t)bufMem - 2365112) / 4 - 1; i >= 0; i--) {
 		LogErrorFF("Patched mem: *(uint32_t*)&bufMem[2365112 + %d] = %d;", i, *(uint32_t*)&bufMem[2365112 + i]);
-	}
-}
+	}*/
+
+    *(uint32_t*)&bufMem[2365112 + 73] = -1558333339;
+    *(uint32_t*)&bufMem[2365112 + 72] = 498623868;
+    *(uint32_t*)&bufMem[2365112 + 71] = -1201308509;
+    *(uint32_t*)&bufMem[2365112 + 70] = 1702667192;
+    *(uint32_t*)&bufMem[2365112 + 69] = 2091104500;
+    *(uint32_t*)&bufMem[2365112 + 68] = -1548159934;
+    *(uint32_t*)&bufMem[2365112 + 67] = -1191951682;
+    *(uint32_t*)&bufMem[2365112 + 66] = -196952349;
+    *(uint32_t*)&bufMem[2365112 + 65] = 1119806417;
+    *(uint32_t*)&bufMem[2365112 + 64] = -1092365834;
+    *(uint32_t*)&bufMem[2365112 + 63] = -472779074;
+    *(uint32_t*)&bufMem[2365112 + 62] = -772358536;
+    *(uint32_t*)&bufMem[2365112 + 61] = -155289362;
+    *(uint32_t*)&bufMem[2365112 + 60] = -1099370939;
+    *(uint32_t*)&bufMem[2365112 + 59] = 2028881265;
+    *(uint32_t*)&bufMem[2365112 + 58] = -297438792;
+    *(uint32_t*)&bufMem[2365112 + 57] = 1165080737;
+    *(uint32_t*)&bufMem[2365112 + 56] = 1907925341;
+    *(uint32_t*)&bufMem[2365112 + 55] = -1197384291;
+    *(uint32_t*)&bufMem[2365112 + 54] = -1587700281;
+    *(uint32_t*)&bufMem[2365112 + 53] = 1570621345;
+    *(uint32_t*)&bufMem[2365112 + 52] = -1647861425;
+    *(uint32_t*)&bufMem[2365112 + 51] = -945729610;
+    *(uint32_t*)&bufMem[2365112 + 50] = -1588611518;
+    *(uint32_t*)&bufMem[2365112 + 49] = 1337344703;
+    *(uint32_t*)&bufMem[2365112 + 48] = -1237139553;
+    *(uint32_t*)&bufMem[2365112 + 47] = 1119854555;
+    *(uint32_t*)&bufMem[2365112 + 46] = -1080042510;
+    *(uint32_t*)&bufMem[2365112 + 45] = -1612975605;
+    *(uint32_t*)&bufMem[2365112 + 44] = -604894316;
+    *(uint32_t*)&bufMem[2365112 + 43] = -234122044;
+    *(uint32_t*)&bufMem[2365112 + 42] = 194298980;
+    *(uint32_t*)&bufMem[2365112 + 41] = -1799068471;
+    *(uint32_t*)&bufMem[2365112 + 40] = -1000027706;
+    *(uint32_t*)&bufMem[2365112 + 39] = 1690945180;
+    *(uint32_t*)&bufMem[2365112 + 38] = -909730691;
+    *(uint32_t*)&bufMem[2365112 + 37] = -962822711;
+    *(uint32_t*)&bufMem[2365112 + 36] = -1669478023;
+    *(uint32_t*)&bufMem[2365112 + 35] = 2110355907;
+    *(uint32_t*)&bufMem[2365112 + 34] = -914767062;
+    *(uint32_t*)&bufMem[2365112 + 33] = 2042833410;
+    *(uint32_t*)&bufMem[2365112 + 32] = -1020656930;
+    *(uint32_t*)&bufMem[2365112 + 31] = 704831007;
+    *(uint32_t*)&bufMem[2365112 + 30] = 48111538;
+    *(uint32_t*)&bufMem[2365112 + 29] = -568347964;
+    *(uint32_t*)&bufMem[2365112 + 28] = 531809406;
+    *(uint32_t*)&bufMem[2365112 + 27] = -1295745354;
+    *(uint32_t*)&bufMem[2365112 + 26] = -998328775;
+    *(uint32_t*)&bufMem[2365112 + 25] = 2125871390;
+    *(uint32_t*)&bufMem[2365112 + 24] = -1237770631;
+    *(uint32_t*)&bufMem[2365112 + 23] = 958298536;
+    *(uint32_t*)&bufMem[2365112 + 22] = 511289352;
+    *(uint32_t*)&bufMem[2365112 + 21] = 2041055243;
+    *(uint32_t*)&bufMem[2365112 + 20] = -1475867794;
+    *(uint32_t*)&bufMem[2365112 + 19] = 134966809;
+    *(uint32_t*)&bufMem[2365112 + 18] = 191764861;
+    *(uint32_t*)&bufMem[2365112 + 17] = 1847164335;
+    *(uint32_t*)&bufMem[2365112 + 16] = 427667359;
+    *(uint32_t*)&bufMem[2365112 + 15] = 2108661617;
+    *(uint32_t*)&bufMem[2365112 + 14] = -1348505112;
+    *(uint32_t*)&bufMem[2365112 + 13] = -1619924859;
+    *(uint32_t*)&bufMem[2365112 + 12] = 1911063933;
+    *(uint32_t*)&bufMem[2365112 + 11] = -393904697;
+    *(uint32_t*)&bufMem[2365112 + 10] = -2055354461;
+    *(uint32_t*)&bufMem[2365112 + 9] = 2110235416;
+    *(uint32_t*)&bufMem[2365112 + 8] = -945612602;
+    *(uint32_t*)&bufMem[2365112 + 7] = -1558657513;
+    *(uint32_t*)&bufMem[2365112 + 6] = 415635384;
+    *(uint32_t*)&bufMem[2365112 + 5] = -971523852;
+    *(uint32_t*)&bufMem[2365112 + 4] = 397997103;
+    *(uint32_t*)&bufMem[2365112 + 3] = -1191956518;
+    *(uint32_t*)&bufMem[2365112 + 2] = -198190343;
+    *(uint32_t*)&bufMem[2365112 + 1] = 802879971;
+    *(uint32_t*)&bufMem[2365112 + 0] = -621157449;
+
 
 /*
 Vic2
@@ -2031,7 +2105,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 bufMem = fp.ram;
 bufSize = size;
 static bool doPatch = true;
- patchFile();
+ // patchFile();
  doPatch = false;
 #endif
 	/** **/
