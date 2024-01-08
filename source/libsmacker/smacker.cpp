@@ -1181,11 +1181,11 @@ smk_bw_skip(&bw, 17); //  (185,192)
 // Full block 0:0 value49337 (offsetend2365317 bitend4) 94,95:136 (185:192) = 49337
 smk_bw_skip(&bw, 16); //  (0,99)
 // Full block 0:1 value25344 (offsetend2365319 bitend4) 92,93:136 (0:99) = 25344
-smk_bw_skip(&bw, 19); //  (239,203)
+smk_bw_write(&bw, 406020, 19); //  (239,203)
 // Full block 1:0 value52207 (offsetend2365321 bitend7) 94,95:137 (239:203) = 52207
 smk_bw_write(&bw, 1029619, 20); //  (236,89)
 // Full block 1:1 value23020 (offsetend2365324 bitend3) 92,93:137 (236:89) = 23020
-smk_bw_write(&bw, 5107, 20); //  (128,182)
+smk_bw_write(&bw, 873824, 20); //  (128,182)
 // Full block 2:0 value46720 (offsetend2365326 bitend7) 94,95:138 (128:182) = 46720
 smk_bw_write(&bw, 1067, 11); //  (236,236)
 // Full block 2:1 value60652 (offsetend2365328 bitend2) 92,93:138 (236:236) = 60652
@@ -1199,11 +1199,11 @@ smk_bw_skip(&bw, 19); //  (192,177)
 // Full block 0:1 value45504 (offsetend2365336 bitend0) 96,97:136 (192:177) = 45504
 smk_bw_skip(&bw, 11 ); //  (160,160)
 // Full block 1:0 value41120 (offsetend2365337 bitend3) 98,99:137 (160:160) = 41120
-smk_bw_skip(&bw, 17); //  (194,174)
+smk_bw_write(&bw, 91584, 17); //  (194,174)
 // Full block 1:1 value44738 (offsetend2365339 bitend4) 96,97:137 (194:174) = 44738
-smk_bw_skip(&bw, 13); //  (174,182) 
+smk_bw_write(&bw, 2753, 13); //  (174,182) 
 // Full block 2:0 value46766 (offsetend2365341 bitend1) 98,99:138 (174:182) = 46766
-smk_bw_skip(&bw, 19); //  (203,181)
+smk_bw_write(&bw, 440672, 19); //  (203,181)
 // Full block 2:1 value46539 (offsetend2365343 bitend4) 96,97:138 (203:181) = 46539
 smk_bw_skip(&bw, 20); //  (181,238)
 // Full block 3:0 value61109 (offsetend2365346 bitend0) 98,99:139 (181:238) = 61109
@@ -1213,13 +1213,13 @@ smk_bw_skip(&bw, 12); //  (238,238)
 // Full block 0:0 value61166 (offsetend2365349 bitend5) 102,103:136 (238:238) = 61166
 smk_bw_skip(&bw, 19); //  (185,239)  
 // Full block 0:1 value61369 (offsetend2365352 bitend0) 100,101:136 (185:239) = 61369
-smk_bw_skip(&bw, 12); //  (239,239) 
+smk_bw_write(&bw, 726, 12); //  (239,239) 
 // Full block 1:0 value61423 (offsetend2365353 bitend4) 102,103:137 (239:239) = 61423
-smk_bw_skip(&bw, 19); //  (182,241) 
+smk_bw_write(&bw, 394422, 19); //  (182,241) 
 // Full block 1:1 value61878 (offsetend2365355 bitend7) 100,101:137 (182:241) = 61878
-smk_bw_skip(&bw, 15); //  (239,240) 
+smk_bw_write(&bw, 24532, 15); //  (239,240) 
 // Full block 2:0 value61679 (offsetend2365357 bitend6) 102,103:138 (239:240) = 61679
-smk_bw_skip(&bw, 15); //  (241,239) 
+smk_bw_write(&bw, 4768, 15); //  (241,239) 
 // Full block 2:1 value61425 (offsetend2365359 bitend5) 100,101:138 (241:239) = 61425
 smk_bw_skip(&bw, 12); //  (239,239) 
 // Full block 3:0 value61423 (offsetend2365361 bitend1) 102,103:139 (239:239) = 61423
@@ -1231,7 +1231,7 @@ smk_bw_skip(&bw, 15); //  (237,239)
 // Full block 0:1 value61421 (offsetend2365365 bitend7) 104,105:136 (237:239) = 61421
 smk_bw_skip(&bw, 20); //  (238,142) 
 // Full block 1:0 value36590 (offsetend2365368 bitend3) 106,107:137 (238:142) = 36590
-smk_bw_skip(&bw, 12); //  (239,239) 
+smk_bw_write(&bw, 726, 12); //  (239,239) 
 // Full block 1:1 value61423 (offsetend2365369 bitend7) 104,105:137 (239:239) = 61423
 smk_bw_skip(&bw, 20); //  (241,237) 
 // Full block 2:0 value60913 (offsetend2365372 bitend3) 106,107:138 (241:237) = 60913
