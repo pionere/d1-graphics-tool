@@ -1275,6 +1275,13 @@ smk_bw_skip(&bw, 5); //  (222,223)
 // Full block 3:1 value57310 (offsetend2365408 bitend0) 112,113:139 (222:223) = 57310
 
 LogErrorFF("Patchlen %d", (size_t)bw.buffer - (size_t)bufMem);
+
+for (int i = ((size_t)bw.buffer - (size_t)bufMem - 2365112) / 4 - 1; i >= 0; i--) {
+	if (*(uint32_t*)&bufMem[2365112 + i] != 0) {
+		LogErrorFF("Patched mem: *(uint32_t*)&bufMem[2365112 + %d] = %d;", i, *(uint32_t*)&bufMem[2365112 + i]);
+	}
+}
+
 /*
 Vic2
 	bw.buffer += 2303427;
