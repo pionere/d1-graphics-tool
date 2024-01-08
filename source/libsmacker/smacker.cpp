@@ -922,7 +922,7 @@ static void patchFile()
 if (patchCounter == 0) {
 	patchCounter++;
 
-/*	bw.buffer += 2365112;
+	bw.buffer += 2365112;
 	bw.bit_num = 4;
 
 smk_bw_skip(&bw, 6); // (0,0)
@@ -1279,12 +1279,12 @@ smk_bw_skip(&bw, 5); //  (222,223)
 // Full block 3:1 value57310 (offsetend2365408 bitend0) 112,113:139 (222:223) = 57310
 
 	LogErrorFF("Patchlen %d", (size_t)bw.buffer - (size_t)bufMem);
+	uint32_t *cur = (uint32_t*)&bufMem[2365112];
+	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2365112) / 4; i++) {
+		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);
+	}
 
-	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2365112) / 4 - 1; i++) {
-		LogErrorFF("Patched mem: *(uint32_t*)&bufMem[2365112 + %d] = %d;", i, *(uint32_t*)&bufMem[2365112 + i]);
-	}*/
-
-    *(uint32_t*)&bufMem[2365112 + 73] = -1558333339;
+/*    *(uint32_t*)&bufMem[2365112 + 73] = -1558333339;
     *(uint32_t*)&bufMem[2365112 + 72] = 498623868;
     *(uint32_t*)&bufMem[2365112 + 71] = -1201308509;
     *(uint32_t*)&bufMem[2365112 + 70] = 1702667192;
@@ -1357,7 +1357,7 @@ smk_bw_skip(&bw, 5); //  (222,223)
     *(uint32_t*)&bufMem[2365112 + 3] = -1191956518;
     *(uint32_t*)&bufMem[2365112 + 2] = -198190343;
     *(uint32_t*)&bufMem[2365112 + 1] = 802879971;
-    *(uint32_t*)&bufMem[2365112 + 0] = -621157449;
+    *(uint32_t*)&bufMem[2365112 + 0] = -621157449;*/
 
 
 } else if (patchCounter == 1) {
@@ -1721,9 +1721,9 @@ smk_bw_skip(&bw, 4); // mem (2303719:5) value (222,223)
 // Full block 3:1 value57310 (offsetend2303719 bitend5) 112,113:139 (222:223) = 57310
 
 	LogErrorFF("Patchlen(1) %d", (size_t)bw.buffer - (size_t)bufMem);
-
-	for (size_t i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2303427) / 4 - 1; i++) {
-		LogErrorFF("Patched mem: *(uint32_t*)&bufMem[2303427 + %d] = %d;", i, *(uint32_t*)&bufMem[2303427 + i]);
+	uint32_t *cur = (uint32_t*)&bufMem[2303424];
+	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2303427 + 3) / 4; i++) {
+		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);
 	}
 
 } else {
@@ -2087,11 +2087,10 @@ smk_bw_skip(&bw, 4); // mem (2313814:0) value (222,223)
 
 
 	LogErrorFF("Patchlen(2) %d", (size_t)bw.buffer - (size_t)bufMem);
-
-	for (size_t i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2313522) / 4 - 1; i++) {
-		LogErrorFF("Patched mem: *(uint32_t*)&bufMem[2313522 + %d] = %d;", i, *(uint32_t*)&bufMem[2313522 + i]);
+	uint32_t *cur = (uint32_t*)&bufMem[2313520];
+	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2313522 + 3) / 4; i++) {
+		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);
 	}
-
 }
 
 }
@@ -2866,7 +2865,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 		57,	58,	59,	128,	256,	512,	1024,	2048
 	};
 //bool doDebug = false; // frameCount == 174 || frameCount == 173;
-bool doDebug = frameCount == 174;
+bool doDebug = false; // frameCount == 174;
 	/* null check */
 	assert(s);
 	assert(p);
