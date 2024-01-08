@@ -7,7 +7,19 @@
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
-  </property>  
+  </property>
+  <property name="sizeHint">
+   <size>
+    <width>256</width>
+    <height>256</height>
+   </size>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property> 
   <!--widget class="QFrame">
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
