@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDialog>
 #include <QFrame>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -14,7 +15,7 @@ class SmkAudioWidget;
 class D1Gfx;
 class CelView;
 
-class SmkAudioWidget : public QFrame {
+class SmkAudioWidget : public QDialog {
     Q_OBJECT
 
 public:
@@ -53,6 +54,6 @@ private:
     QPoint lastPos;
     D1Gfx *gfx;
     int currentFrameIndex;
-    unsigned currentTrack = 0;
-    unsigned currentChannel = 0;
+    int currentTrack = -1;
+    int currentChannel = -1;
 };

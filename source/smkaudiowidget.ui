@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SmkAudioWidget</class>
- <widget class="QFrame">
+ <widget class="QDialog">
+  <property name="modal">
+   <bool>false</bool>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>  
+  <!--widget class="QFrame">
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
   </property>
@@ -10,7 +17,7 @@
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
-  </property>
+  </property-->
   <!--property name="styleSheet">
    <string notr="true">QFrame { background-color: palette(window); }</string>
   </property>
@@ -61,43 +68,7 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
-      <widget class="QComboBox" name="trackComboBox">
-       <item>
-        <property name="text">
-         <string>Track 0</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Track 1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Track 2</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Track 3</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Track 4</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Track 5</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Track 6</string>
-        </property>
-       </item>
-      </widget>
+      <widget class="QComboBox" name="trackComboBox"/>
      </item>
      <item>
       <widget class="QComboBox" name="channelComboBox"/>
@@ -127,9 +98,9 @@
    <item>
     <widget class="QGraphicsView" name="audioGraphicsView"/>
    </item>
-   <item>
+   <!--item>
     <widget class="QSizeGrip"/>
-   </item>
+   </item-->
   </layout>
  </widget>
  <layoutdefault spacing="4" margin="4"/>

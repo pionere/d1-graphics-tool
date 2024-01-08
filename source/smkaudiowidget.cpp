@@ -17,7 +17,7 @@
 #include "ui_smkaudiowidget.h"
 
 SmkAudioWidget::SmkAudioWidget(CelView *parent)
-    : QFrame(parent)
+    : QDialog(parent)
     , ui(new Ui::SmkAudioWidget())
 {
     this->ui->setupUi(this);
@@ -79,35 +79,75 @@ void SmkAudioWidget::hide()
 void SmkAudioWidget::frameModified()
 {
     D1SmkAudioData *frameAudio;
-    unsigned long len;
+    unsigned long audioLen;
     uint8_t *audioData;
-    unsigned depth, channels, width, height;
+    unsigned bitWidth, channels, width, height;
+    int track, channel;
 
     if (this->isHidden())
         return;
 
-    this->audioScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
-
-    unsigned channel = this->currentChannel;
     frameAudio = this->gfx->getFrame(this->currentFrameIndex)->getFrameAudio();
+    track = this->currentTrack;
+    channel = this->currentChannel;
     if (frameAudio != nullptr) {
-        audioData = frameAudio->getAudio(this->currentTrack, &len);
-        depth = frameAudio->getBitDepth();
-        if (depth == 16)
-            len /= 2;
-        channels = frameAudio->getChannels();
-        if (channel >= channels) {
+        if ((unsigned)track >= D1SMK_TRACKS) {
+            track = 0;
+        }
+        if ((unsigned)channel >= D1SMK_CHANNELS) {
             channel = 0;
         }
+        channels = frameAudio->getChannels();
+        bitWidth = frameAudio->getBitDepth() / 8;
+        audioData = frameAudio->getAudio(track, &audioLen);
+        audioLen /= bitWidth;
     } else {
-        len = 0;
-        audioData = nullptr;
-        depth = 8;
+        // track = -1;
+        // channel = -1;
         channels = 1;
-        channel = 0;
+        bitWidth = 1;
+        audioData = nullptr;
+        audioLen = 0;
     }
-    width = len / channels;
-    height = (256 * depth / 8);
+
+    // update fields
+    bool hasAudio = audioData != nullptr;
+    this->ui->trackComboBox->clear();
+    this->ui->channelComboBox->clear();
+    this->ui->bitRateLineEdit->setText("");
+    this->ui->trackComboBox->setEnabled(hasAudio);
+    this->ui->channelComboBox->setEnabled(hasAudio);
+    this->ui->bitRateLineEdit->setEnabled(hasAudio);
+    if (hasAudio) {
+        // - tracks
+        for (int i = 0; i < D1SMK_TRACKS; i++) {
+            unsigned long trackLen;
+            frameAudio->getAudio(i, &trackLen);
+            QString label = trackLen != 0 ? tr("Track %1") : tr("<i>Track %1</i>");
+            this->ui->trackComboBox->addItem(label.arg(i + 1), i);
+        }
+        this->ui->trackComboBox->setCurrentIndex(track);
+
+        // - channels
+        for (unsigned i = 0; i < D1SMK_CHANNELS; i++) {
+            QString label = channels > i ? tr("Channel %1") : tr("<i>Channel %1</i>");
+            this->ui->channelComboBox->addItem(label.arg(i + 1), i);
+        }
+        this->ui->channelComboBox->setCurrentIndex(channel);
+
+        // - bitRate
+        this->ui->bitRateLineEdit->setText(QString::number(frameAudio->getBitRate()));
+    }
+
+    // update the scene
+    this->audioScene.clear();
+    this->audioScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
+
+    width = audioLen / channels;
+    if (width < 512) {
+        width = 512;
+    }
+    height = 256; // (256 * bitWidth);
 
     // Resize the scene rectangle to include some padding around the CEL frame
     this->audioScene.setSceneRect(0, 0,
@@ -115,44 +155,29 @@ void SmkAudioWidget::frameModified()
         CEL_SCENE_MARGIN + height  + CEL_SCENE_MARGIN);
 
     // Building background of the width/height of the CEL frame
-    QImage audioFrame = QImage(width < 512 ? 512 : width, height, QImage::Format_ARGB32);
+    QImage audioFrame = QImage(width, height, QImage::Format_ARGB32);
 
     if (audioData != nullptr) {
         QPainter audioPainter(&audioFrame);
         audioPainter.setPen(QColor(Config::getPaletteUndefinedColor())); // getPaletteSelectionBorderColor?
 
-        for (unsigned long i = 0; i < width * channels; i++) {
+        for (unsigned long i = 0; i < audioLen; i++) {
             if ((i % channels) == channel) {
-                audioPainter.drawLine(i, 256 - audioData[0], i, 256);
-            }
-            audioData++;
-            if (depth == 16) {
-                if ((i % channels) == channel) {
-                    audioPainter.drawLine(i, 256, i, 256 + audioData[0]);
+                int value;
+                if (bitWidth == 1) {
+                    value = (INT8_MAX + 1 + *(int8_t*)&audioData[0]) * height / (UINT8_MAX  + 1);
+                } else {
+                    value = (INT16_MAX + 1 + *(int16_t*)&audioData[0]) * height / (UINT16_MAX  + 1);
                 }
-                audioData++;
+                audioPainter.drawLine(i, height - value, i, height);
             }
+            audioData += bitWidth;
         }
     }
 
     // Add the backgrond and CEL frame while aligning it in the center
     this->audioScene.addPixmap(QPixmap::fromImage(audioFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-
-    // update combobox
-    this->ui->channelComboBox->clear();
-    for (unsigned i = 0; i < channels; i++) {
-        this->ui->channelComboBox->addItem(tr("Channel %1").arg(i + 1), i);
-    }
-    this->ui->channelComboBox->setCurrentIndex(channel);
-
-    // update bitRate
-    this->ui->bitRateLineEdit->setReadOnly(audioData == nullptr);
-    if (audioData != nullptr) {
-        this->ui->bitRateLineEdit->setText(QString::number(frameAudio->getBitRate()));
-    } else {
-        this->ui->bitRateLineEdit->setText("");
-    }
 
     this->adjustSize();
 }
