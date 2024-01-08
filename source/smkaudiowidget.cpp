@@ -16,6 +16,8 @@
 #include "pushbuttonwidget.h"
 #include "ui_smkaudiowidget.h"
 
+#include "dungeon/all.h"
+
 SmkAudioWidget::SmkAudioWidget(CelView *parent)
     : QDialog(parent)
     , ui(new Ui::SmkAudioWidget())
@@ -99,7 +101,9 @@ void SmkAudioWidget::frameModified()
         }
         channels = frameAudio->getChannels();
         bitWidth = frameAudio->getBitDepth() / 8;
+		LogErrorF("frameModified getAudio %d", track);
         audioData = frameAudio->getAudio(track, &audioLen);
+		LogErrorF("frameModified gotAudio %d len %d", audioData != nullptr, audioLen);
         audioLen /= bitWidth;
     } else {
         // track = -1;
@@ -119,6 +123,7 @@ void SmkAudioWidget::frameModified()
     this->ui->channelComboBox->setEnabled(hasAudio);
     this->ui->bitRateLineEdit->setEnabled(hasAudio);
     if (hasAudio) {
+		LogErrorF("frameModified hasAudio 0");
         // - tracks
         for (int i = 0; i < D1SMK_TRACKS; i++) {
             unsigned long trackLen;
@@ -127,6 +132,7 @@ void SmkAudioWidget::frameModified()
             this->ui->trackComboBox->addItem(label.arg(i + 1), i);
         }
         this->ui->trackComboBox->setCurrentIndex(track);
+		LogErrorF("frameModified hasAudio 1 %d", track);
 
         // - channels
         for (unsigned i = 0; i < D1SMK_CHANNELS; i++) {
@@ -134,6 +140,7 @@ void SmkAudioWidget::frameModified()
             this->ui->channelComboBox->addItem(label.arg(i + 1), i);
         }
         this->ui->channelComboBox->setCurrentIndex(channel);
+		LogErrorF("frameModified hasAudio 2 %d", channel);
 
         // - bitRate
         this->ui->bitRateLineEdit->setText(QString::number(frameAudio->getBitRate()));
@@ -148,6 +155,7 @@ void SmkAudioWidget::frameModified()
         width = 512;
     }
     height = 256; // (256 * bitWidth);
+	LogErrorF("frameModified updatescene 2 %d", channel);
 
     // Resize the scene rectangle to include some padding around the CEL frame
     this->audioScene.setSceneRect(0, 0,
