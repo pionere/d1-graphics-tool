@@ -81,9 +81,9 @@ void SmkAudioWidget::hide()
 void SmkAudioWidget::frameModified()
 {
     D1SmkAudioData *frameAudio;
-    unsigned long audioLen;
+    unsigned long audioDataLen, audioLen;
     uint8_t *audioData;
-    unsigned bitWidth, channels, width, height;
+    unsigned bitWidth, channels, bitRate, width, height;
     int track, channel;
 
     if (this->isHidden())
@@ -102,23 +102,25 @@ void SmkAudioWidget::frameModified()
         channels = frameAudio->getChannels();
         bitWidth = frameAudio->getBitDepth() / 8;
 //		LogErrorF("frameModified getAudio %d", track);
-        audioData = frameAudio->getAudio(track, &audioLen);
-//		LogErrorF("frameModified gotAudio %d len %d", audioData != nullptr, audioLen);
-        audioLen /= bitWidth;
+        audioData = frameAudio->getAudio(track, &audioDataLen);
+//		LogErrorF("frameModified gotAudio %d len %d", audioData != nullptr, audioDataLen);
     } else {
         // track = -1;
         // channel = -1;
         channels = 1;
         bitWidth = 1;
         audioData = nullptr;
-        audioLen = 0;
+        audioDataLen = 0;
     }
+    audioLen = (channels == 0 || bitWidth == 0) ? audioDataLen : (audioDataLen / (channels * bitWidth));
 
     // update fields
     bool hasAudio = audioData != nullptr;
     this->ui->trackComboBox->clear();
     this->ui->channelComboBox->clear();
     this->ui->bitRateLineEdit->setText("");
+    this->ui->audioLenLineEdit->setText("");
+    this->ui->audioLenLabel->setText("");
     this->ui->trackComboBox->setEnabled(hasAudio);
     this->ui->channelComboBox->setEnabled(hasAudio);
     this->ui->bitRateLineEdit->setEnabled(hasAudio);
@@ -143,14 +145,19 @@ void SmkAudioWidget::frameModified()
 //		LogErrorF("frameModified hasAudio 2 %d", channel);
 
         // - bitRate
-        this->ui->bitRateLineEdit->setText(QString::number(frameAudio->getBitRate()));
+        bitRate = frameAudio->getBitRate();
+        this->ui->bitRateLineEdit->setText(QString::number(bitRate));
+
+        // - audio length
+        this->ui->audioLenLineEdit->setText(QString::number(audioLen));
+        this->ui->audioLenLabel->setText(bitRate == 0 ? tr("N/A") : tr("%1us").arg((uint64_t)audioLen * 1000000 / bitRate));
     }
 
     // update the scene
     this->audioScene.clear();
     this->audioScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
-    width = audioLen / channels;
+    width = audioLen;
     if (width < 512) {
         width = 512;
     }
@@ -170,7 +177,7 @@ void SmkAudioWidget::frameModified()
         QPainter audioPainter(&audioFrame);
         audioPainter.setPen(QColor(Config::getPaletteUndefinedColor())); // getPaletteSelectionBorderColor?
 
-        for (unsigned long i = 0; i < audioLen; i++) {
+        for (unsigned long i = 0; i < audioDataLen / bitWidth; i++) {
             if ((i % channels) == channel) {
                 int value;
                 if (bitWidth == 1) {
