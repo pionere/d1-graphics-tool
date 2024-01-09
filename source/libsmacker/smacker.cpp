@@ -1211,7 +1211,7 @@ smk_bw_write(&bw, 69387, 19); //  (203,181)
 // Full block 2:1 value46539 (offsetend2365343 bitend4) 96,97:138 (203:181) = 46539
 smk_bw_skip(&bw, 20); //  (181,238)
 // Full block 3:0 value61109 (offsetend2365346 bitend0) 98,99:139 (181:238) = 61109
-smk_bw_skip(&bw, 17); //  (181,199)
+smk_bw_write(&bw, 91715, 17); //  (181,199)
 // Full block 3:1 value51125 (offsetend2365348 bitend1) 96,97:139 (181:199) = 51125
 smk_bw_skip(&bw, 12); //  (238,238)  
 // Full block 0:0 value61166 (offsetend2365349 bitend5) 102,103:136 (238:238) = 61166
@@ -1627,11 +1627,11 @@ smk_bw_skip(&bw, 17); // mem (2303627:3) value (185,192)
 // Full block 0:0 value49337 (offsetend2303629 bitend3) 94,95:136 (185:192) = 49337
 smk_bw_skip(&bw, 16); // mem (2303629:3) value (0,99)
 // Full block 0:1 value25344 (offsetend2303631 bitend3) 92,93:136 (0:99) = 25344
-smk_bw_write(&bw, 465700, 19); // mem (2303631:6) value (239,203)
+smk_bw_write(&bw, 277284, 19); // mem (2303631:6) value (239,203)
 // Full block 1:0 value52207 (offsetend2303633 bitend6) 94,95:137 (239:203) = 52207
 smk_bw_write(&bw, 51869, 20); // mem (2303634:2) value (236,89)
 // Full block 1:1 value23020 (offsetend2303636 bitend2) 92,93:137 (236:89) = 23020
-smk_bw_write(&bw, 992896, 20); // mem (2303636:6) value (128,182)
+smk_bw_write(&bw, 426660, 20); // mem (2303636:6) value (128,182)
 // Full block 2:0 value46720 (offsetend2303638 bitend6) 94,95:138 (128:182) = 46720
 smk_bw_write(&bw, 1509, 11); // mem (2303639:1) value (236,236)
 // Full block 2:1 value60652 (offsetend2303640 bitend1) 92,93:138 (236:236) = 60652

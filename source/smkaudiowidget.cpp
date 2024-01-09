@@ -1,11 +1,13 @@
 #include "smkaudiowidget.h"
 
 #include <QApplication>
+#include <QBuffer>
 #include <QCursor>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsView>
 #include <QImage>
 #include <QList>
+// #include <QMediaPlayer>
 #include <QMessageBox>
 #include <QPainter>
 #include <QString>
@@ -22,6 +24,8 @@ SmkAudioWidget::SmkAudioWidget(CelView *parent)
     : QDialog(parent)
     , ui(new Ui::SmkAudioWidget())
 {
+    this->setWindowFlags((this->windowFlags() & ~(Qt::WindowTitleHint | Qt::WindowCloseButtonHint)) | Qt::FramelessWindowHint);
+
     this->ui->setupUi(this);
     this->ui->audioGraphicsView->setScene(&this->audioScene);
 
@@ -232,6 +236,34 @@ void SmkAudioWidget::on_bitRateLineEdit_escPressed()
     this->frameModified();
     this->ui->bitRateLineEdit->clearFocus();
 }
+
+/*void SmkAudioWidget::on_playPushButtonClicked()
+{
+    D1SmkAudioData *frameAudio;
+    unsigned long audioDataLen, audioLen;
+    uint8_t *audioData;
+    unsigned bitWidth, channels, bitRate, width, height;
+    int track, channel;
+
+    frameAudio = this->gfx->getFrame(this->currentFrameIndex)->getFrameAudio();
+    track = this->currentTrack;
+    channel = this->currentChannel;
+    if (frameAudio != nullptr && (unsigned)track < D1SMK_TRACKS && (unsigned)channel < D1SMK_CHANNELS) {
+        channels = frameAudio->getChannels();
+        bitWidth = frameAudio->getBitDepth() / 8;
+        audioData = frameAudio->getAudio(track, &audioDataLen);
+		QByteArray arr = QByteArray((char *)audioData, audioDataLen);
+
+		QMediaPlayer *player = new QMediaPlayer(this);
+		QBuffer *buffer = new QBuffer(player);
+
+		buffer->setData(arr);
+		buffer->open(QIODevice::ReadOnly);
+
+		player->setMedia(QMediaContent(), buffer);
+		player->play();
+    }
+}*/
 
 void SmkAudioWidget::on_closePushButtonClicked()
 {
