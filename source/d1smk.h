@@ -39,4 +39,6 @@ class D1Smk {
 public:
     static bool load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &smkFilePath, const OpenAsParam &params);
     static bool save(D1Gfx &gfx, const SaveAsParam &params);
+
+    static void playAudio(D1GfxFrame &gfxFrame, int track = -1, int channel = -1);
 };

@@ -124,9 +124,9 @@ void SmkAudioWidget::frameModified()
         }
         channels = frameAudio->getChannels();
         bitWidth = frameAudio->getBitDepth() / 8;
-//		LogErrorF("frameModified getAudio %d", track);
+//        LogErrorF("frameModified getAudio %d", track);
         audioData = frameAudio->getAudio(track, &audioDataLen);
-//		LogErrorF("frameModified gotAudio %d len %d", audioData != nullptr, audioDataLen);
+//        LogErrorF("frameModified gotAudio %d len %d", audioData != nullptr, audioDataLen);
     } else {
         // track = -1;
         // channel = -1;
@@ -148,7 +148,7 @@ void SmkAudioWidget::frameModified()
     this->ui->channelComboBox->setEnabled(hasAudio);
     this->ui->bitRateLineEdit->setEnabled(hasAudio);
     if (hasAudio) {
-//		LogErrorF("frameModified hasAudio 0");
+//        LogErrorF("frameModified hasAudio 0");
         // - tracks
         for (int i = 0; i < D1SMK_TRACKS; i++) {
             unsigned long trackLen;
@@ -157,7 +157,7 @@ void SmkAudioWidget::frameModified()
             this->ui->trackComboBox->addItem(label.arg(i + 1), i);
         }
         this->ui->trackComboBox->setCurrentIndex(track);
-//		LogErrorF("frameModified hasAudio 1 %d", track);
+//        LogErrorF("frameModified hasAudio 1 %d", track);
 
         // - channels
         for (unsigned i = 0; i < D1SMK_CHANNELS; i++) {
@@ -165,7 +165,7 @@ void SmkAudioWidget::frameModified()
             this->ui->channelComboBox->addItem(label.arg(i + 1), i);
         }
         this->ui->channelComboBox->setCurrentIndex(channel);
-//		LogErrorF("frameModified hasAudio 2 %d", channel);
+//        LogErrorF("frameModified hasAudio 2 %d", channel);
 
         // - bitRate
         bitRate = frameAudio->getBitRate();
@@ -185,7 +185,7 @@ void SmkAudioWidget::frameModified()
         width = 512;
     }
     height = 256; // (256 * bitWidth);
-//	LogErrorF("frameModified updatescene 2 %d", channel);
+//    LogErrorF("frameModified updatescene 2 %d", channel);
 
     // Resize the scene rectangle to include some padding around the CEL frame
     this->audioScene.setSceneRect(0, 0,
@@ -258,18 +258,23 @@ void SmkAudioWidget::on_bitRateLineEdit_escPressed()
 
 void SmkAudioWidget::on_playPushButtonClicked()
 {
-    D1SmkAudioData *frameAudio;
+    /*D1SmkAudioData *frameAudio;
     unsigned long audioDataLen, audioLen;
     uint8_t *audioData;
-    unsigned bitDepth, channels, bitRate, width, height;
+    unsigned bitDepth, channels, bitRate, width, height;*/
     int frame, track, channel;
 
     frame = this->currentFrameIndex;
     if (frame >= 0) {
-        frameAudio = this->gfx->getFrame(frame)->getFrameAudio();
+        // frameAudio = this->gfx->getFrame(frame)->getFrameAudio();
         track = this->currentTrack;
         channel = this->currentChannel;
-        if (frameAudio != nullptr && (unsigned)track < D1SMK_TRACKS && (unsigned)channel < D1SMK_CHANNELS) {
+
+        if (track != -1 && channel != -1) {
+            D1Smk::playAudio(*this->gfx->getFrame(frame), track, channel);
+        }
+
+        /*if (frameAudio != nullptr && (unsigned)track < D1SMK_TRACKS && (unsigned)channel < D1SMK_CHANNELS) {
             channels = frameAudio->getChannels();
             bitDepth = frameAudio->getBitDepth();
             bitRate = frameAudio->getBitRate();
@@ -279,7 +284,7 @@ void SmkAudioWidget::on_playPushButtonClicked()
             QBuffer *input = new QBuffer(arr);
             input->setBuffer(arr);
             input->open(QIODevice::ReadOnly);
-			// QMessageBox::critical(this, "Error", tr("Playing audio rate%1 cha%2 ss%3").arg(bitRate).arg(channels).arg(bitDepth));
+            // QMessageBox::critical(this, "Error", tr("Playing audio rate%1 cha%2 ss%3").arg(bitRate).arg(channels).arg(bitDepth));
             QAudioFormat m_audioFormat = QAudioFormat();
             m_audioFormat.setSampleRate(bitRate);
             m_audioFormat.setChannelCount(channels);
@@ -300,12 +305,12 @@ void SmkAudioWidget::on_playPushButtonClicked()
                     delete input;
                     delete arr;
                 }
-				QMessageBox::critical(nullptr, "Error", tr("Play state %1 idle%2 active%3 ss%4 sus%5").arg(newState).arg(newState == QAudio::IdleState).arg(newState == QAudio::ActiveState).arg(newState == QAudio::StoppedState).arg(newState == QAudio::SuspendedState));
+                QMessageBox::critical(nullptr, "Error", tr("Play state %1 idle%2 active%3 ss%4 sus%5").arg(newState).arg(newState == QAudio::IdleState).arg(newState == QAudio::ActiveState).arg(newState == QAudio::StoppedState).arg(newState == QAudio::SuspendedState));
             });
 
             // start the audio (i.e., play sound from the QAudioOutput object that we just created)
             audio->start(input);
-        }
+        }*/
     }
 }
 

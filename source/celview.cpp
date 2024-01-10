@@ -1215,12 +1215,14 @@ void CelView::timerEvent(QTimerEvent *event)
             nextFrameIndex = this->origFrameIndex;
     }
     this->currentFrameIndex = nextFrameIndex;
-    if (this->gfx->getFrameCount() != 0) {
-        QPointer<D1Pal>& pal = this->gfx->getFrame(this->currentFrameIndex)->getFramePal();
+    // if (this->gfx->getFrameCount() != 0) {
+        D1GfxFrame *frame = this->gfx->getFrame(nextFrameIndex);
+        D1Smk::playAudio(*frame);
+        QPointer<D1Pal>& pal = frame->getFramePal();
         if (!pal.isNull()) {
             dMainWindow().updatePalette(pal.data());
         }
-    }
+    // }
     int cycleType = this->ui->playComboBox->currentIndex();
     if (cycleType == 0) {
         // normal playback

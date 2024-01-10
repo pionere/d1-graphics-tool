@@ -1,6 +1,9 @@
 #include "d1smk.h"
 
 #include <QApplication>
+#include <QAudioFormat>
+#include <QAudioOutput>
+#include <QBuffer>
 #include <QByteArray>
 #include <QDir>
 #include <QFile>
@@ -137,7 +140,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     unsigned prevPalFrame = 0;
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
     do {
-//	LogErrorF("Smk load %d", frameNum);
+//    LogErrorF("Smk load %d", frameNum);
         bool palUpdate = smk_palette_updated(SVidSMK);
         if (palUpdate && frameNum != 0) {
             RegisterPalette(pal, prevPalFrame, frameNum, pals);
@@ -173,7 +176,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-//	LogErrorF("Smk load %d..", frameNum);
+//    LogErrorF("Smk load %d..", frameNum);
     } while ((result = smk_next(SVidSMK)) == SMK_MORE);
 
     if (SMK_ERR(result)) {
@@ -192,7 +195,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
-//	LogErrorF("Smk load done");
+//    LogErrorF("Smk load done");
     return true;
 }
 
@@ -200,4 +203,53 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 {
     dProgressErr() << QApplication::tr("Not supported.");
     return false;
+}
+
+void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
+{
+    D1SmkAudioData *frameAudio;
+    unsigned long audioDataLen, audioLen;
+    uint8_t *audioData;
+    unsigned bitDepth, channels, bitRate;
+
+    frameAudio = gfxFrame.getFrameAudio();
+    if (track == -1)
+        track = 0;
+    if (channel == -1)
+        channel = 0;
+    if (frameAudio != nullptr && (unsigned)track < D1SMK_TRACKS && (unsigned)channel < D1SMK_CHANNELS) {
+        channels = frameAudio->getChannels();
+        bitDepth = frameAudio->getBitDepth();
+        bitRate = frameAudio->getBitRate();
+
+        audioData = frameAudio->getAudio(track, &audioDataLen);
+        QByteArray* arr = new QByteArray((char *)audioData, audioDataLen);
+        QBuffer *input = new QBuffer(arr);
+        input->setBuffer(arr);
+        input->open(QIODevice::ReadOnly);
+        QAudioFormat m_audioFormat = QAudioFormat();
+        m_audioFormat.setSampleRate(bitRate);
+        m_audioFormat.setChannelCount(channels);
+        m_audioFormat.setSampleSize(bitDepth);
+        m_audioFormat.setCodec("audio/pcm");
+        m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
+        m_audioFormat.setSampleType(QAudioFormat::SignedInt);
+
+        QAudioOutput *audio = new QAudioOutput(m_audioFormat); // , this);
+
+        // connect up signal stateChanged to a lambda to get feedback
+        connect(audio, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
+        {
+            if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
+                // qWarning() << "finished playing sound";
+                audio->stop();
+                delete audio;
+                delete input;
+                delete arr;
+            }
+        });
+
+        // start the audio (i.e., play sound from the QAudioOutput object that we just created)
+        audio->start(input);
+    }
 }

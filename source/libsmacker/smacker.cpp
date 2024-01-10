@@ -433,7 +433,7 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 
 		/* Looks OK: we got low and hi values. Return a new LEAF */
 		t->tree[t->size] |= (value << 8);
-
+bool deepDebug = t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2];
 if (deepDebug) {
 // LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
 	/*int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
@@ -447,7 +447,7 @@ if (deepDebug) {
 			if (treeValue[n])
 				bytes[n / 8] |= 1 << (n % 8);
         }
-		LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d %d", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, *(unsigned*)(&bytes[0]));
+		LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d %d c%d:%d:%d", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, *(unsigned*)(&bytes[0]), t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
     // }
 }
 		/* Last: when building the tree, some Values may correspond to cache positions.
