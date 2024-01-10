@@ -282,7 +282,7 @@ endif()
 
 #target_link_libraries(${BIN_TARGET} PRIVATE smacker)
 
-target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 
 set_target_properties(${BIN_TARGET} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER d1-graphics-tool.pionere.net
