@@ -300,12 +300,12 @@ void SmkAudioWidget::on_playPushButtonClicked()
             // connect up signal stateChanged to a lambda to get feedback
             connect(audio, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
             {
-                if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
+                /*if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
                     // qWarning() << "finished playing sound";
                     delete audio;
                     delete input;
                     delete arr;
-                }
+                }*/
 				QMessageBox::critical(nullptr, "Error", tr("Play state %1 idle%2 active%3 ss%4 sus%5").arg(newState).arg(newState == QAudio::IdleState).arg(newState == QAudio::ActiveState).arg(newState == QAudio::StoppedState).arg(newState == QAudio::SuspendedState));
             });
 
