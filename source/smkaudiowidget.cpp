@@ -304,7 +304,11 @@ void SmkAudioWidget::on_playPushButtonClicked()
 				auto error = audio->error();
 				QMessageBox::critical(this, "Error", tr("Startup failed io%1 op%2 fe%3").arg(error == QAudio::IOError).arg(error == QAudio::OpenError).arg(error == QAudio::FatalError));
             }
+        } else {
+			QMessageBox::critical(this, "Error", tr("Not Playing audio data%1 track%2 ch%3").arg(frameAudio != nullptr).arg(track).arg(channel));
         }
+    } else {
+        QMessageBox::critical(this, "Error", tr("Not Playing audio frame%1").arg(frame));
     }
 }
 
