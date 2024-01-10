@@ -270,13 +270,6 @@ void SmkAudioWidget::on_playPushButtonClicked()
         track = this->currentTrack;
         channel = this->currentChannel;
         if (frameAudio != nullptr && (unsigned)track < D1SMK_TRACKS && (unsigned)channel < D1SMK_CHANNELS) {
-            /*channels = frameAudio->getChannels();
-            bitWidth = frameAudio->getBitDepth() / 8;
-
-            QMediaPlayer *player = new QMediaPlayer(this);
-
-            player->setMedia(QMediaContent(), buffer);
-            player->play();*/
             channels = frameAudio->getChannels();
             bitDepth = frameAudio->getBitDepth();
             bitRate = frameAudio->getBitRate();
@@ -300,30 +293,19 @@ void SmkAudioWidget::on_playPushButtonClicked()
             // connect up signal stateChanged to a lambda to get feedback
             connect(audio, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
             {
-                /*if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
+                if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
                     // qWarning() << "finished playing sound";
+                    audio->stop();
                     delete audio;
                     delete input;
                     delete arr;
-                }*/
+                }
 				QMessageBox::critical(nullptr, "Error", tr("Play state %1 idle%2 active%3 ss%4 sus%5").arg(newState).arg(newState == QAudio::IdleState).arg(newState == QAudio::ActiveState).arg(newState == QAudio::StoppedState).arg(newState == QAudio::SuspendedState));
             });
 
             // start the audio (i.e., play sound from the QAudioOutput object that we just created)
             audio->start(input);
-
-			auto state = audio->state();
-			/*if (state == QAudio::ActiveState) {
-				QMessageBox::critical(this, "Error", tr("Startup succcess"));
-            } else {
-				auto error = audio->error();
-				QMessageBox::critical(this, "Error", tr("Startup failed io%1 op%2 fe%3 s%4 e%5").arg(error == QAudio::IOError).arg(error == QAudio::OpenError).arg(error == QAudio::FatalError).arg(state).arg(error));
-            }*/
-        } else {
-			// QMessageBox::critical(this, "Error", tr("Not Playing audio data%1 track%2 ch%3").arg(frameAudio != nullptr).arg(track).arg(channel));
         }
-    } else {
-        // QMessageBox::critical(this, "Error", tr("Not Playing audio frame%1").arg(frame));
     }
 }
 
