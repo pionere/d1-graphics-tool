@@ -279,7 +279,7 @@ void SmkAudioWidget::on_playPushButtonClicked()
             player->play();*/
             channels = frameAudio->getChannels();
             bitDepth = frameAudio->getBitDepth();
-
+            bitRate = frameAudio->getBitRate();
 
             audioData = frameAudio->getAudio(track, &audioDataLen);
             QByteArray* arr = new QByteArray((char *)audioData, audioDataLen);

@@ -314,9 +314,11 @@ void CelView::setPal(D1Pal *p)
     if (this->gfx->getType() == D1CEL_TYPE::SMK) {
         for (int i = this->currentFrameIndex; i >= 0; i--) {
             QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-            if (!fp.isNull() && fp.data() != p) {
-                this->gfx->getFrame(this->currentFrameIndex)->setFramePal(p);
-                this->gfx->setModified();
+            if (!fp.isNull()) {
+                if (fp.data() != p) {
+                    this->gfx->getFrame(this->currentFrameIndex)->setFramePal(p);
+                    this->gfx->setModified();
+                }
                 break;
             }
         }

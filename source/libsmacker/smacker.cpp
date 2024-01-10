@@ -1123,7 +1123,7 @@ smk_bw_skip(&bw, 9); //  (18,18)
 // Full block 0:1 value4626 (offsetend2365266 bitend3) 76,77:136 (18:18) = 4626
 smk_bw_write(&bw, 86880, 19); //  (236,128)
 // Full block 1:0 value33004 (offsetend2365268 bitend6) 78,79:137 (236:128) = 33004
-smk_bw_skip(&bw, 5); //  (236,128)
+/*smk_bw_skip(&bw, 5); //  (236,128)
 // Full block 1:1 value33004 (offsetend2365269 bitend3) 76,77:137 (236:128) = 33004
 smk_bw_skip(&bw, 5); //  (236,128)
 // Full block 2:0 value33004 (offsetend2365270 bitend0) 78,79:138 (236:128) = 33004
