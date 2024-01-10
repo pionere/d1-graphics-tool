@@ -269,7 +269,7 @@ void SmkAudioWidget::on_playPushButtonClicked()
             audioData = frameAudio->getAudio(track, &audioDataLen);
             QByteArray* arr = new QByteArray((char *)audioData, audioDataLen);
             QBuffer *input = new QBuffer(arr);
-            input->setData(arr);
+            input->setBuffer(arr);
             input->open(QIODevice::ReadOnly);
 
             QAudioFormat m_audioFormat = QAudioFormat();
