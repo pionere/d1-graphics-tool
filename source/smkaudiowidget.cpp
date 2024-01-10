@@ -53,7 +53,22 @@ SmkAudioWidget::~SmkAudioWidget()
 
 void SmkAudioWidget::initialize(int frameIndex)
 {
+    D1SmkAudioData *frameAudio;
+    unsigned long audioDataLen;
+
     this->currentFrameIndex = frameIndex;
+
+    if (frameIndex >= 0) {
+        frameAudio = this->gfx->getFrame(frameIndex)->getFrameAudio();
+        if (frameAudio != nullptr) {
+            if (this->currentTrack == -1 && frameAudio->getAudio(0, &audioDataLen) != nullptr) {
+                this->currentTrack = 0;
+            }
+            if (this->currentChannel == -1 && frameAudio->getChannels() != 0) {
+                this->currentChannel = 0;
+            }
+        }
+    }
 
     this->frameModified();
 }
@@ -115,7 +130,7 @@ void SmkAudioWidget::frameModified()
     } else {
         // track = -1;
         // channel = -1;
-        channels = 1;
+        channels = 0;
         bitWidth = 1;
         audioData = nullptr;
         audioDataLen = 0;
@@ -123,7 +138,7 @@ void SmkAudioWidget::frameModified()
     audioLen = (channels == 0 || bitWidth == 0) ? audioDataLen : (audioDataLen / (channels * bitWidth));
 
     // update fields
-    bool hasAudio = audioData != nullptr;
+    bool hasAudio = frameAudio != nullptr;
     this->ui->trackComboBox->clear();
     this->ui->channelComboBox->clear();
     this->ui->bitRateLineEdit->setText("");
