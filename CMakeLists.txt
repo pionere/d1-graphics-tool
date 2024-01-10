@@ -14,8 +14,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(CPACK "Configure CPack" ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Concurrent Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Widgets LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Concurrent Widgets Multimedia LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Widgets Multimedia LinguistTools)
 
 # Translation files
 SET(DGT_TS_FILES

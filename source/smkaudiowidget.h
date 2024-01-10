@@ -39,6 +39,8 @@ private slots:
     void on_bitRateLineEdit_returnPressed();
     void on_bitRateLineEdit_escPressed();
 
+    void on_playPushButtonClicked();
+
     void on_closePushButtonClicked();
     void on_movePushButtonClicked();
     void keyPressEvent(QKeyEvent *event) override;

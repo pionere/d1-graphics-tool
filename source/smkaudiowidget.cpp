@@ -31,7 +31,9 @@ SmkAudioWidget::SmkAudioWidget(CelView *parent)
     this->ui->setupUi(this);
     this->ui->audioGraphicsView->setScene(&this->audioScene);
 
-    QLayout *layout = this->ui->centerButtonsHorizontalLayout;
+    QLayout *layout = this->ui->leftButtonsHorizontalLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_MediaPlay, tr("Play"), this, &SmkAudioWidget::on_playPushButtonClicked);
+    layout = this->ui->centerButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &SmkAudioWidget::on_movePushButtonClicked);
     layout = this->ui->rightButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &SmkAudioWidget::on_closePushButtonClicked);
