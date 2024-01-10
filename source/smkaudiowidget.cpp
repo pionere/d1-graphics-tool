@@ -199,7 +199,7 @@ void SmkAudioWidget::frameModified()
     this->audioScene.addPixmap(QPixmap::fromImage(audioFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
 
-    this->adjustSize();
+    // this->adjustSize();
 }
 
 void SmkAudioWidget::on_trackComboBox_activated(int index)

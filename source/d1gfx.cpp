@@ -179,6 +179,11 @@ QPointer<D1Pal>& D1GfxFrame::getFramePal()
     return this->framePal;
 }
 
+void D1GfxFrame::setFramePal(D1Pal *pal)
+{
+    return this->framePal = pal;
+}
+
 D1SmkAudioData *D1GfxFrame::getFrameAudio()
 {
     return this->frameAudio;

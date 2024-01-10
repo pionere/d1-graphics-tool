@@ -91,6 +91,7 @@ public:
 
     // functions for smk-frames
     QPointer<D1Pal>& getFramePal();
+    void setFramePal(D1Pal *pal);
     D1SmkAudioData *getFrameAudio();
 
 protected:
