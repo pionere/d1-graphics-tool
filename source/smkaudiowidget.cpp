@@ -1,13 +1,15 @@
 #include "smkaudiowidget.h"
 
 #include <QApplication>
+#include <QAudioFormat>
+#include <QAudioOutput>
 #include <QBuffer>
+#include <QByteArray>
 #include <QCursor>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsView>
 #include <QImage>
 #include <QList>
-// #include <QMediaPlayer>
 #include <QMessageBox>
 #include <QPainter>
 #include <QString>
@@ -237,33 +239,63 @@ void SmkAudioWidget::on_bitRateLineEdit_escPressed()
     this->ui->bitRateLineEdit->clearFocus();
 }
 
-/*void SmkAudioWidget::on_playPushButtonClicked()
+void SmkAudioWidget::on_playPushButtonClicked()
 {
     D1SmkAudioData *frameAudio;
     unsigned long audioDataLen, audioLen;
     uint8_t *audioData;
-    unsigned bitWidth, channels, bitRate, width, height;
-    int track, channel;
+    unsigned bitDepth, channels, bitRate, width, height;
+    int frame, track, channel;
 
-    frameAudio = this->gfx->getFrame(this->currentFrameIndex)->getFrameAudio();
-    track = this->currentTrack;
-    channel = this->currentChannel;
-    if (frameAudio != nullptr && (unsigned)track < D1SMK_TRACKS && (unsigned)channel < D1SMK_CHANNELS) {
-        channels = frameAudio->getChannels();
-        bitWidth = frameAudio->getBitDepth() / 8;
-        audioData = frameAudio->getAudio(track, &audioDataLen);
-		QByteArray arr = QByteArray((char *)audioData, audioDataLen);
+    frame = this->currentFrameIndex;
+    if (frame >= 0) {
+        frameAudio = this->gfx->getFrame(frame)->getFrameAudio();
+        track = this->currentTrack;
+        channel = this->currentChannel;
+        if (frameAudio != nullptr && (unsigned)track < D1SMK_TRACKS && (unsigned)channel < D1SMK_CHANNELS) {
+            /*channels = frameAudio->getChannels();
+            bitWidth = frameAudio->getBitDepth() / 8;
 
-		QMediaPlayer *player = new QMediaPlayer(this);
-		QBuffer *buffer = new QBuffer(player);
+            QMediaPlayer *player = new QMediaPlayer(this);
 
-		buffer->setData(arr);
-		buffer->open(QIODevice::ReadOnly);
+            player->setMedia(QMediaContent(), buffer);
+            player->play();*/
+            channels = frameAudio->getChannels();
+            bitDepth = frameAudio->getBitDepth();
 
-		player->setMedia(QMediaContent(), buffer);
-		player->play();
+
+            audioData = frameAudio->getAudio(track, &audioDataLen);
+            QByteArray* arr = new QByteArray((char *)audioData, audioDataLen);
+            QBuffer *input = new QBuffer(arr);
+            input->setData(arr);
+            input->open(QIODevice::ReadOnly);
+
+            QAudioFormat m_audioFormat = QAudioFormat();
+            m_audioFormat.setSampleRate(bitRate);
+            m_audioFormat.setChannelCount(channels);
+            m_audioFormat.setSampleSize(bitDepth);
+            m_audioFormat.setCodec("audio/pcm");
+            m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
+            m_audioFormat.setSampleType(QAudioFormat::SignedInt);
+
+            QAudioOutput *audio = new QAudioOutput(m_audioFormat, this);
+
+            // connect up signal stateChanged to a lambda to get feedback
+            connect(audio, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
+            {
+                if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
+                    // qWarning() << "finished playing sound";
+                    delete audio;
+                    delete input;
+                    delete arr;
+                }
+            });
+
+            // start the audio (i.e., play sound from the QAudioOutput object that we just created)
+            audio->start(input);
+        }
     }
-}*/
+}
 
 void SmkAudioWidget::on_closePushButtonClicked()
 {
