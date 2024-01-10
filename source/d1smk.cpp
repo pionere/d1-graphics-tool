@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QFile>
 #include <QList>
+#include <QObject>
 
 #include "config.h"
 #include "progressdialog.h"
@@ -238,7 +239,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         QAudioOutput *audio = new QAudioOutput(m_audioFormat); // , this);
 
         // connect up signal stateChanged to a lambda to get feedback
-        connect(audio, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
+        QObject::connect(audio, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
         {
             if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
                 // qWarning() << "finished playing sound";
