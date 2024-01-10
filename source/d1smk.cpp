@@ -209,7 +209,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
 {
     D1SmkAudioData *frameAudio;
-    unsigned long audioDataLen, audioLen;
+    unsigned long audioDataLen;
     uint8_t *audioData;
     unsigned bitDepth, channels, bitRate;
 
