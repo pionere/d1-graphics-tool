@@ -1099,7 +1099,7 @@ smk_bw_write(&bw, 1658, 11); //  (236,236) -> 225:225
 // Full block 2:1 value60652 (offsetend2365251 bitend0) 68,69:138 (236:236) = 60652
 smk_bw_write(&bw, 4315, 14); //  (11,18) -> 27:30
 // Full block 3:0 value4619 (offsetend2365252 bitend6) 70,71:139 (11:18) = 4619
-smk_bw_skip(&bw, 8); //  (0,10)
+/*smk_bw_skip(&bw, 8); //  (0,10)
 // Full block 3:1 value2560 (offsetend2365253 bitend6) 68,69:139 (0:10) = 2560
 smk_bw_skip(&bw, 9); //  (18,18) 
 // Full block 0:0 value4626 (offsetend2365254 bitend7) 74,75:136 (18:18) = 4626
@@ -1276,9 +1276,9 @@ smk_bw_write(&bw, 407051, 19); //  (236,82) -> 225:12
 smk_bw_write(&bw, 91, 14); //  (222,223) -> (222,0)
 // Full block 3:0 value57310 (offsetend2365407 bitend3) 114,115:139 (222:223) = 57310
 smk_bw_skip(&bw, 5); //  (222,223) 
-// Full block 3:1 value57310 (offsetend2365408 bitend0) 112,113:139 (222:223) = 57310
+// Full block 3:1 value57310 (offsetend2365408 bitend0) 112,113:139 (222:223) = 57310*/
 
-	LogErrorFF("Patchlen %d", (size_t)bw.buffer - (size_t)bufMem);
+	LogErrorFF("Patchlen %d", (size_t)bw.buffer - (size_t)bufMem - 2365112);
 	uint32_t *cur = (uint32_t*)&bufMem[2365112];
 	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2365112) / 4; i++) {
 		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);
@@ -1720,7 +1720,7 @@ smk_bw_skip(&bw, 14); // mem (2303718:1) value (222,223)
 smk_bw_skip(&bw, 4); // mem (2303719:5) value (222,223)
 // Full block 3:1 value57310 (offsetend2303719 bitend5) 112,113:139 (222:223) = 57310
 
-	LogErrorFF("Patchlen(1) %d", (size_t)bw.buffer - (size_t)bufMem);
+	LogErrorFF("Patchlen(1) %d", (size_t)bw.buffer - (size_t)bufMem - 2303427);
 	uint32_t *cur = (uint32_t*)&bufMem[2303424];
 	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2303427 + 3) / 4; i++) {
 		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);
@@ -2086,7 +2086,7 @@ smk_bw_skip(&bw, 4); // mem (2313814:0) value (222,223)
 // Full block 3:1 value57310 (offsetend2313814 bitend0) 112,113:139 (222:223) = 57310
 
 
-	LogErrorFF("Patchlen(2) %d", (size_t)bw.buffer - (size_t)bufMem);
+	LogErrorFF("Patchlen(2) %d", (size_t)bw.buffer - (size_t)bufMem - 2313522);
 	uint32_t *cur = (uint32_t*)&bufMem[2313520];
 	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2313522 + 3) / 4; i++) {
 		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);

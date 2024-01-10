@@ -271,7 +271,7 @@ void SmkAudioWidget::on_playPushButtonClicked()
             QBuffer *input = new QBuffer(arr);
             input->setBuffer(arr);
             input->open(QIODevice::ReadOnly);
-
+			QMessageBox::critical(this, "Error", tr("Playing audio rate%1 cha%2 ss%3").arg(bitRate).arg(channels).arg(bitDepth));
             QAudioFormat m_audioFormat = QAudioFormat();
             m_audioFormat.setSampleRate(bitRate);
             m_audioFormat.setChannelCount(channels);
@@ -291,10 +291,19 @@ void SmkAudioWidget::on_playPushButtonClicked()
                     delete input;
                     delete arr;
                 }
+				QMessageBox::critical(nullptr, "Error", tr("Play state %1 idle%2 active%3 ss%4 sus%5").arg(newState).arg(newState == QAudio::IdleState).arg(newState == QAudio::ActiveState).arg(newState == QAudio::StoppedState).arg(newState == QAudio::SuspendedState));
             });
 
             // start the audio (i.e., play sound from the QAudioOutput object that we just created)
             audio->start(input);
+
+			auto state = audio->state();
+			if (state == QAudio::ActiveState) {
+				QMessageBox::critical(this, "Error", tr("Startup succcess"));
+            } else {
+				auto error = audio->error();
+				QMessageBox::critical(this, "Error", tr("Startup failed io%1 op%2 fe%3").arg(error == QAudio::IOError).arg(error == QAudio::OpenError).arg(error == QAudio::FatalError));
+            }
         }
     }
 }
