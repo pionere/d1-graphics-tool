@@ -433,7 +433,7 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 
 		/* Looks OK: we got low and hi values. Return a new LEAF */
 		t->tree[t->size] |= (value << 8);
-bool deepDebug = t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2];
+// bool deepDebug = t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2];
 if (deepDebug) {
 // LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
 	/*int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
@@ -1109,7 +1109,7 @@ smk_bw_write(&bw, 1949, 11); // *19*); //  (236,128)   -> 30:30                 
 // Full block 1:0 value33004 (offsetend2365258 bitend4) 74,75:137 (236:128) = 33004
 smk_bw_write(&bw, 1949, 11); // *5*); //  (236,128) -> 30:30
 // Full block 1:1 value33004 (offsetend2365259 bitend1) 72,73:137 (236:128) = 33004
-smk_bw_skip(&bw, 5); //  (236,128)
+smk_bw_write(&bw, 21, 5); //  (236,128)
 // Full block 2:0 value33004 (offsetend2365259 bitend6) 74,75:138 (236:128) = 33004
 smk_bw_write(&bw, 338, 10); // *11*); //  (128,128) -> 25:25
 // Full block 2:1 value32896 (offsetend2365261 bitend1) 72,73:138 (128:128) = 32896
