@@ -19,12 +19,18 @@
 //#include "../3rdParty/libsmacker/smacker.h"
 #include "libsmacker/smacker.h"
 
-typedef struct SmkAudioPlayer {
+/*typedef struct SmkAudioPlayer {
     QAudioOutput *output;
     QBuffer audioBuffer;
     QByteArray audioData;
 } SmkAudioPlayer;
-static QList<SmkAudioPlayer *> audioPlayers;
+static QList<SmkAudioPlayer *> audioPlayers;*/
+
+static bool audioSemaphore = false;
+static QAudioOutput *audioOutput = nullptr;
+static QByteArray *audioBytes = nullptr;
+static QBuffer *audioBuffer = nullptr;
+static QList<QPair<uint8_t *, unsigned long>> audioQueue;
 
 #define D1SMK_COLORS 256
 
@@ -214,6 +220,21 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     return false;
 }
 
+static void audioCallback(QAudio::State newState)
+{
+    if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
+        // qWarning() << "finished playing sound";
+        if (!audioQueue.isEmpty() && !audioSemaphore) {
+            audioSemaphore = true;
+            QPair<uint8_t *, unsigned long> audioData = audioQueue[0];
+            audioQueue.pop_front();
+            audioBytes->setRawData(audioData.first, audioData.second);
+            audioOutput->start(audioBuffer);
+            audioSemaphore = false;
+        }
+    }
+}
+
 void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
 {
     D1SmkAudioData *frameAudio;
@@ -260,43 +281,91 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
 
         // start the audio (i.e., play sound from the QAudioOutput object that we just created)
         audio->start(input);*/
-        auto ait = audioPlayers.begin();
+        /*auto ait = audioPlayers.begin();
         for ( ; ait != audioPlayers.end(); ait++) {
             if ((*ait)->output->state() != QAudio::IdleState) {
-				continue;
+                continue;
             }
-			QAudioFormat& m_audioFormat = (*ait)->output->format();
+            QAudioFormat& m_audioFormat = (*ait)->output->format();
             if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
-				continue;
+                continue;
             }
             break;
         }
         if (ait == audioPlayers.end()) {
             ait = audioPlayers.insert(ait, new SmkAudioPlayer());
 
-			QAudioFormat m_audioFormat = QAudioFormat();
-			m_audioFormat.setSampleRate(bitRate);
-			m_audioFormat.setChannelCount(channels);
-			m_audioFormat.setSampleSize(bitDepth);
-			m_audioFormat.setCodec("audio/pcm");
-			m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-			m_audioFormat.setSampleType(QAudioFormat::SignedInt);
+            QAudioFormat m_audioFormat = QAudioFormat();
+            m_audioFormat.setSampleRate(bitRate);
+            m_audioFormat.setChannelCount(channels);
+            m_audioFormat.setSampleSize(bitDepth);
+            m_audioFormat.setCodec("audio/pcm");
+            m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
+            m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
-			(*ait)->output = new QAudioOutput(m_audioFormat); // , this);
+            (*ait)->output = new QAudioOutput(m_audioFormat); // , this);
         } else {
-	        (*ait)->audioBuffer.close();
+            (*ait)->audioBuffer.close();
         }
 
         (*ait)->audioData.setRawData((char *)audioData, audioDataLen);
         (*ait)->audioBuffer.setBuffer(&(*ait)->audioData);
         if (!(*ait)->audioBuffer.open(QIODevice::ReadOnly)) {
-			QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
+            QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
         }
 
         (*ait)->output->start(&(*ait)->audioBuffer);
-		auto state = (*ait)->output->state();
-		if (state != QAudio::ActiveState) {
-			QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
+        auto state = (*ait)->output->state();
+        if (state != QAudio::ActiveState) {
+            QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
+        }*/
+        audioQueue.push_back(QPair<uint8_t *, unsigned long>(audioData, audioDataLen));
+
+        if (audioOutput != nullptr) {
+            QAudioFormat& m_audioFormat = audioOutput->format();
+            if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
+                audioOutput->close();
+                delete audioOutput;
+                audioOutput = nullptr;
+            }
+        }
+        if (audioOutput == nullptr) {
+            QAudioFormat m_audioFormat = QAudioFormat();
+            m_audioFormat.setSampleRate(bitRate);
+            m_audioFormat.setChannelCount(channels);
+            m_audioFormat.setSampleSize(bitDepth);
+            m_audioFormat.setCodec("audio/pcm");
+            m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
+            m_audioFormat.setSampleType(QAudioFormat::SignedInt);
+
+            audioOutput = new QAudioOutput(m_audioFormat); // , this);
+            // connect up signal stateChanged to a lambda to get feedback
+            QObject::connect(audioOutput, &QAudioOutput::stateChanged, &audioCallback);
+            /*QObject::connect(audioOutput, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
+            {
+                if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
+                    // qWarning() << "finished playing sound";
+                    audio->stop();
+                    delete audio;
+                    delete input;
+                    delete arr;
+                }
+            });*/
+
+            if (audioBuffer == nullptr) {
+                audioBytes = new QByteArray((char *)audioData, audioDataLen);
+                audioBuffer = new QBuffer(audioBytes);
+                if (!audioBuffer->open(QIODevice::ReadOnly)) {
+                    QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
+                }
+            }
+        }
+        QAudio::State state = audioOutput->state();
+        if (state != QAudio::ActiveState) {
+            audioCallback(QAudio::IdleState);
+            if (state != QAudio::IdleState && state != QAudio::StoppedState) {
+                QMessageBox::critical(nullptr, "Error", QApplication::tr("First state %1").arg(state));
+            }
         }
     }
 }
