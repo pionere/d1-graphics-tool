@@ -229,7 +229,12 @@ static void audioCallback(QAudio::State newState)
             QPair<uint8_t *, unsigned long> audioData = audioQueue[0];
             audioQueue.pop_front();
             audioBytes->setRawData((char *)audioData.first, audioData.second);
+			audioBuffer->seek(0);
             audioOutput->start(audioBuffer);
+			auto state = audioOutput->state();
+			if (state != QAudio::ActiveState) {
+				QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
+			}
             audioSemaphore = false;
         }
     }
