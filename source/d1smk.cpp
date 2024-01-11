@@ -19,13 +19,11 @@
 #include "libsmacker/smacker.h"
 
 typedef struct SmkAudioPlayer {
-    SmkAudioPlayer() { };
-
     QAudioOutput output;
     QBuffer audioBuffer;
     QByteArray audioData;
 } SmkAudioPlayer;
-static QList<SmkAudioPlayer> audioPlayers;
+static QList<SmkAudioPlayer *> audioPlayers;
 
 #define D1SMK_COLORS 256
 
@@ -268,9 +266,9 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
             }
         }
         if (ait == audioPlayers.end()) {
-            ait = audioPlayers.insert(ait, SmkAudioPlayer());
+            ait = audioPlayers.insert(ait, new SmkAudioPlayer());
         }
-        QAudioFormat& m_audioFormat = ait->output.format();
+        QAudioFormat& m_audioFormat = (*ait)->output.format();
         m_audioFormat.setSampleRate(bitRate);
         m_audioFormat.setChannelCount(channels);
         m_audioFormat.setSampleSize(bitDepth);
@@ -278,11 +276,11 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
         m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
-        ait->audioData.setRawData((char *)audioData, audioDataLen);
-        ait->audioBuffer.close();
-        ait->audioBuffer.setBuffer(&ait->audioData);
-        ait->audioBuffer.open(QIODevice::ReadOnly);
+        (*ait)->audioData.setRawData((char *)audioData, audioDataLen);
+        (*ait)->audioBuffer.close();
+        (*ait)->audioBuffer.setBuffer(&(*ait)->audioData);
+        (*ait)->audioBuffer.open(QIODevice::ReadOnly);
 
-        ait->output.start(&ait->audioBuffer);
+        (*ait)->output.start(&(*ait)->audioBuffer);
     }
 }
