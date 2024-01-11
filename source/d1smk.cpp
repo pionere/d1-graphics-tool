@@ -58,8 +58,7 @@ public:
     bool	waitForBytesWritten(int msecs) override;
     bool	waitForReadyRead(int msecs) override;
 	qint64	readData(char *data, qint64 maxSize) override;
-	qint64	writeData(char *data, qint64 maxSize) override;
-
+	qint64	writeData(const char *data, qint64 maxSize) override;
     void	enqueue(uint8_t *audioData, unsigned long audioLen);
 
 private:
@@ -228,7 +227,7 @@ qint64 AudioBuffer::readData(char *data, qint64 maxSize)
     return read(data, maxSize);
 }*/
 
-qint64	AudioBuffer::writeData(char *data, qint64 maxSize)
+qint64	AudioBuffer::writeData(const char *data, qint64 maxSize)
 {
     return 0;
 }
