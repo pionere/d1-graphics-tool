@@ -261,7 +261,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         audio->start(input);*/
         auto ait = audioPlayers.begin();
         for ( ; ait != audioPlayers.end(); ait++) {
-            if (ait->output.state() == QAudio::IdleState) {
+            if ((*ait)->output.state() == QAudio::IdleState) {
                 break;
             }
         }
