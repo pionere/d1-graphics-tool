@@ -261,14 +261,14 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         audio->start(input);*/
         auto ait = audioPlayers.begin();
         for ( ; ait != audioPlayers.end(); ait++) {
-            if (ait->second.output.state() == QAudio::IdleState) {
+            if (ait->output.state() == QAudio::IdleState) {
                 break;
             }
         }
         if (ait == audioPlayers.end()) {
             ait = audioPlayers.insert(ait, SmkAudioPlayer());
         }
-        QAudioFormat& m_audioFormat = ait->second.output.format();
+        QAudioFormat& m_audioFormat = ait->output.format();
         m_audioFormat.setSampleRate(bitRate);
         m_audioFormat.setChannelCount(channels);
         m_audioFormat.setSampleSize(bitDepth);
@@ -276,11 +276,11 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
         m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
-        ait->second.audioData.setRawData((char *)audioData, audioDataLen);
-        ait->second.audioBuffer.close();
-        ait->second.audioBuffer.setBuffer(&ait->second.audioData);
-        ait->second.audioBuffer.open(QIODevice::ReadOnly);
+        ait->audioData.setRawData((char *)audioData, audioDataLen);
+        ait->audioBuffer.close();
+        ait->audioBuffer.setBuffer(&ait->audioData);
+        ait->audioBuffer.open(QIODevice::ReadOnly);
 
-        ait->second.output.start(&ait->second.audioBuffer);
+        ait->output.start(&ait->audioBuffer);
     }
 }
