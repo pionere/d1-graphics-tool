@@ -267,6 +267,8 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         }
         if (ait == audioPlayers.end()) {
             ait = audioPlayers.insert(ait, new SmkAudioPlayer());
+        } else {
+	        (*ait)->audioBuffer.close();
         }
         QAudioFormat& m_audioFormat = (*ait)->output.format();
         m_audioFormat.setSampleRate(bitRate);
@@ -277,10 +279,15 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
         (*ait)->audioData.setRawData((char *)audioData, audioDataLen);
-        (*ait)->audioBuffer.close();
         (*ait)->audioBuffer.setBuffer(&(*ait)->audioData);
-        (*ait)->audioBuffer.open(QIODevice::ReadOnly);
+        if (!(*ait)->audioBuffer.open(QIODevice::ReadOnly)) {
+			QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
+        }
 
         (*ait)->output.start(&(*ait)->audioBuffer);
+		auto state = (*ait)->output.state();
+		if (state != QAudio::ActiveState) {
+			QMessageBox::critical(nullptr, "Error", "playAudio failed-state %1", state);
+        }
     }
 }

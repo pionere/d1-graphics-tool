@@ -1124,11 +1124,11 @@ smk_bw_write(&bw, 338, 10); //  (14,14)  -> 25:25
 // Full block 0:0 value3598 (offsetend2365265 bitend2) 78,79:136 (14:14) = 3598
 smk_bw_skip(&bw, 9); //  (18,18) 
 // Full block 0:1 value4626 (offsetend2365266 bitend3) 76,77:136 (18:18) = 4626
-smk_bw_write(&bw, 86880, 19); //  (236,128)
+smk_bw_write(&bw, 338, 10); // *19*); //  (236,128)														(18,18) d9 36 (25,25) d10 338
 // Full block 1:0 value33004 (offsetend2365268 bitend6) 78,79:137 (236:128) = 33004
-smk_bw_skip(&bw, 5); //  (236,128)
+smk_bw_write(&bw, 24, 5); //  (236,128)
 // Full block 1:1 value33004 (offsetend2365269 bitend3) 76,77:137 (236:128) = 33004
-smk_bw_skip(&bw, 5); //  (236,128)
+smk_bw_write(&bw, 24, 5); //  (236,128)
 // Full block 2:0 value33004 (offsetend2365270 bitend0) 78,79:138 (236:128) = 33004
 smk_bw_write(&bw, 1949, 11); //  (128,128) -> 30:30
 // Full block 2:1 value32896 (offsetend2365271 bitend3) 76,77:138 (128:128) = 32896
@@ -1136,7 +1136,7 @@ smk_bw_write(&bw, 1949, 11); // *12*); //  (25,14)  -> 30:30									(30,30) d11
 // Full block 3:0 value3609 (offsetend2365272 bitend7) 78,79:139 (25:14) = 3609
 smk_bw_write(&bw, 1794, 11); // *9*); //  (16,16)  -> 43:43
 // Full block 3:1 value4112 (offsetend2365274 bitend0) 76,77:139 (16:16) = 4112
-smk_bw_write(&bw, 338, 10); // *8*); //  (10,0) -> 25:25													(25,18) d13 7452 30,18) d14 8202 (30,25) d11 606 (25,30) d11 1773
+smk_bw_write(&bw, 42, 8); // *8*); //  (10,0) -> 25:25										(10,10) d8 145 (10,18) d13 3983 (18,18) d9 36 (18,10) d13 3284 (0,10) d8 138 (10,0) d8 42
 // Full block 0:0 value10 (offsetend2365275 bitend0) 82,83:136 (10:0) = 10
 smk_bw_write(&bw, 338, 10); //  (14,14)  -> 25:25
 // Full block 0:1 value3598 (offsetend2365276 bitend2) 80,81:136 (14:14) = 3598
@@ -1152,9 +1152,9 @@ smk_bw_write(&bw, 59, 6); // *14*); //  (222,223) -> (0,0)
 // Full block 3:0 value57310 (offsetend2365286 bitend1) 82,83:139 (222:223) = 57310
 smk_bw_write(&bw, 1963, 14); // *15*); //  (19,231) -> 31:25
 // Full block 3:1 value59155 (offsetend2365288 bitend0) 80,81:139 (19:231) = 59155
-smk_bw_write(&bw, 24495, 15); // *6*); //  (0,0) -> 18:20
+smk_bw_write(&bw, 24495, 15); // *6*); //  (0,0) -> 18:20										(18,25) d13 2566
 // Full block 0:0 value0 (offsetend2365288 bitend6) 86,87:136 (0:0) = 0
-smk_bw_skip(&bw, 5); 
+smk_bw_write(&bw, 32548, 16); // *5*);  //														(20,20) d11 513   (25,20) d16 32548
 // Full block 0:1 value0 (offsetend2365289 bitend3) 84,85:136 (0:0) = 0
 smk_bw_write(&bw, 1029619, 20); //  (236,89) -> 222:11
 // Full block 1:0 value23020 (offsetend2365291 bitend7) 86,87:137 (236:89) = 23020
@@ -1278,12 +1278,12 @@ smk_bw_write(&bw, 81772, 19); //  (236,82) -> 228:10
 // Full block 2:1 value21228 (offsetend2365405 bitend5) 112,113:138 (236:82) = 21228
 smk_bw_write(&bw, 91, 14); //  (222,223) -> (222,0)
 // Full block 3:0 value57310 (offsetend2365407 bitend3) 114,115:139 (222:223) = 57310
-smk_bw_skip(&bw, 5); //  (222,223) 
+// smk_bw_skip(&bw, 5); //  (222,223) 
 // Full block 3:1 value57310 (offsetend2365408 bitend0) 112,113:139 (222:223) = 57310*/
 
 	LogErrorFF("Patchlen %d", (size_t)bw.buffer - (size_t)bufMem - 2365112);
 	uint32_t *cur = (uint32_t*)&bufMem[2365112];
-	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2365112) / 4; i++) {
+	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2365112 + 3) / 4; i++) {
 		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);
 	}
 
@@ -1723,9 +1723,9 @@ smk_bw_skip(&bw, 14); // mem (2303718:1) value (222,223)
 smk_bw_skip(&bw, 4); // mem (2303719:5) value (222,223)
 // Full block 3:1 value57310 (offsetend2303719 bitend5) 112,113:139 (222:223) = 57310
 
-	LogErrorFF("Patchlen(1) %d", (size_t)bw.buffer - (size_t)bufMem - 2303427);
+	LogErrorFF("Patchlen(1) %d", (size_t)bw.buffer - (size_t)bufMem - 2303424);
 	uint32_t *cur = (uint32_t*)&bufMem[2303424];
-	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2303427 + 3) / 4; i++) {
+	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2303424 + 3) / 4; i++) {
 		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);
 	}
 
@@ -2089,9 +2089,9 @@ smk_bw_skip(&bw, 4); // mem (2313814:0) value (222,223)
 // Full block 3:1 value57310 (offsetend2313814 bitend0) 112,113:139 (222:223) = 57310
 
 
-	LogErrorFF("Patchlen(2) %d", (size_t)bw.buffer - (size_t)bufMem - 2313522);
+	LogErrorFF("Patchlen(2) %d", (size_t)bw.buffer - (size_t)bufMem - 2313520);
 	uint32_t *cur = (uint32_t*)&bufMem[2313520];
-	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2313522 + 3) / 4; i++) {
+	for (int i = 0; i < ((size_t)bw.buffer - (size_t)bufMem - 2313520 + 3) / 4; i++) {
 		LogErrorFF("Patched mem: *cur[%d] = %d;", i, cur[i]);
 	}
 }
