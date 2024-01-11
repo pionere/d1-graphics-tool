@@ -19,6 +19,8 @@
 #include "libsmacker/smacker.h"
 
 typedef struct SmkAudioPlayer {
+    SmkAudioPlayer() { };
+
     QAudioOutput output;
     QBuffer audioBuffer;
     QByteArray audioData;
@@ -266,7 +268,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
             }
         }
         if (ait == audioPlayers.end()) {
-            ait = audioPlayers.insert(ait, { QAudioOutput(), QBuffer(), QByteArray() } );
+            ait = audioPlayers.insert(ait, SmkAudioPlayer());
         }
         QAudioFormat& m_audioFormat = ait->output.format();
         m_audioFormat.setSampleRate(bitRate);
