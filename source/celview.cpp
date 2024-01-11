@@ -1168,6 +1168,7 @@ void CelView::on_playStopButton_clicked()
     if (this->playTimer != 0) {
         this->killTimer(this->playTimer);
         this->playTimer = 0;
+        D1Smk::stopAudio();
 
         // restore the currentFrameIndex
         this->currentFrameIndex = this->origFrameIndex;

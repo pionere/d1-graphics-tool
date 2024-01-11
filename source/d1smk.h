@@ -41,4 +41,5 @@ public:
     static bool save(D1Gfx &gfx, const SaveAsParam &params);
 
     static void playAudio(D1GfxFrame &gfxFrame, int track = -1, int channel = -1);
+    static void stopAudio();
 };
