@@ -43,7 +43,7 @@ public:
     bool	isReadable() const;
 	QIODevice::OpenMode	openMode() const;
     qint64	peek(char *data, qint64 maxSize);
-    qint64	read(char *data, qint64 maxSize);
+    // qint64	read(char *data, qint64 maxSize);
     bool	atEnd() const override;
     qint64	bytesAvailable() const override;
     qint64	bytesToWrite() const override;
@@ -57,6 +57,8 @@ public:
     qint64	size() const override;
     bool	waitForBytesWritten(int msecs) override;
     bool	waitForReadyRead(int msecs) override;
+	qint64	readData(char *data, qint64 maxSize) override;
+	qint64	writeData(char *data, qint64 maxSize) override;
 
     void	enqueue(uint8_t *audioData, unsigned long audioLen);
 
@@ -181,7 +183,8 @@ qint64 AudioBuffer::peek(char *data, qint64 maxSize)
     return result;
 }
 
-qint64 AudioBuffer::read(char *data, qint64 maxSize)
+// qint64 AudioBuffer::read(char *data, qint64 maxSize)
+qint64 AudioBuffer::readData(char *data, qint64 maxSize)
 {
     qint64 result = peek(data, maxSize);
 
@@ -220,9 +223,20 @@ qint64 AudioBuffer::read(char *data, qint64 maxSize)
     return result;
 }
 
+/*qint64	AudioBuffer::readData(char *data, qint64 maxSize)
+{
+    return read(data, maxSize);
+}*/
+
+qint64	AudioBuffer::writeData(char *data, qint64 maxSize)
+{
+    return 0;
+}
+
 void AudioBuffer::enqueue(uint8_t *audioData, unsigned long audioLen)
 {
     audioQueue.push_back(QPair<uint8_t *, unsigned long>(audioData, audioLen));
+    availableBytes += audioLen;
 }
 
 /*void	commitTransaction()
