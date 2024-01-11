@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QFile>
 #include <QList>
+#include <QMessageBox>
 #include <QObject>
 
 #include "config.h"
