@@ -20,7 +20,7 @@
 #include "libsmacker/smacker.h"
 
 typedef struct SmkAudioPlayer {
-    QAudioOutput output;
+    QAudioOutput *output;
     QBuffer audioBuffer;
     QByteArray audioData;
 } SmkAudioPlayer;
@@ -262,22 +262,30 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         audio->start(input);*/
         auto ait = audioPlayers.begin();
         for ( ; ait != audioPlayers.end(); ait++) {
-            if ((*ait)->output.state() == QAudio::IdleState) {
-                break;
+            if ((*ait)->output.state() != QAudio::IdleState) {
+				continue;
             }
+			QAudioFormat& m_audioFormat = (*ait)->output->format();
+            if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
+				continue;
+            }
+            break;
         }
         if (ait == audioPlayers.end()) {
             ait = audioPlayers.insert(ait, new SmkAudioPlayer());
+
+			QAudioFormat m_audioFormat = QAudioFormat();
+			m_audioFormat.setSampleRate(bitRate);
+			m_audioFormat.setChannelCount(channels);
+			m_audioFormat.setSampleSize(bitDepth);
+			m_audioFormat.setCodec("audio/pcm");
+			m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
+			m_audioFormat.setSampleType(QAudioFormat::SignedInt);
+
+			(*ait)->output = new QAudioOutput(m_audioFormat); // , this);
         } else {
 	        (*ait)->audioBuffer.close();
         }
-        QAudioFormat& m_audioFormat = (*ait)->output.format();
-        m_audioFormat.setSampleRate(bitRate);
-        m_audioFormat.setChannelCount(channels);
-        m_audioFormat.setSampleSize(bitDepth);
-        m_audioFormat.setCodec("audio/pcm");
-        m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-        m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
         (*ait)->audioData.setRawData((char *)audioData, audioDataLen);
         (*ait)->audioBuffer.setBuffer(&(*ait)->audioData);
@@ -285,8 +293,8 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
 			QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
         }
 
-        (*ait)->output.start(&(*ait)->audioBuffer);
-		auto state = (*ait)->output.state();
+        (*ait)->output->start(&(*ait)->audioBuffer);
+		auto state = (*ait)->output->state();
 		if (state != QAudio::ActiveState) {
 			QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
         }
