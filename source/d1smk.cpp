@@ -266,7 +266,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
             }
         }
         if (ait == audioPlayers.end()) {
-            ait = audioPlayers.insert(ait, SmkAudioPlayer());
+            ait = audioPlayers.insert(ait, { QAudioOutput(), QBuffer(), QByteArray() } );
         }
         QAudioFormat& m_audioFormat = ait->output.format();
         m_audioFormat.setSampleRate(bitRate);

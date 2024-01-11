@@ -102,16 +102,19 @@ static int smk_bs_read_8(struct smk_bit_t * const bs)
 		LogErrorMsg("libsmacker::smk_bs_read_8(): ERROR: bitstream exhausted.\n");
 		return -1;
 	}
-
+#ifdef FULL
 	if (bs->bit_num) {
 		/* unaligned read */
+#endif
 		int ret = *bs->buffer >> bs->bit_num;
 		bs->buffer ++;
 		return ret | (*bs->buffer << (8 - bs->bit_num) & 0xFF);
+#ifdef FULL
 	}
 
 	/* aligned read */
 	return *bs->buffer++;
+#endif
 }
 
 static bool deepDebug = false;
