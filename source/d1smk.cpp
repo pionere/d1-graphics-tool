@@ -228,7 +228,7 @@ static void audioCallback(QAudio::State newState)
             audioSemaphore = true;
             QPair<uint8_t *, unsigned long> audioData = audioQueue[0];
             audioQueue.pop_front();
-            audioBytes->setRawData(audioData.first, audioData.second);
+            audioBytes->setRawData((char *)audioData.first, audioData.second);
             audioOutput->start(audioBuffer);
             audioSemaphore = false;
         }
@@ -324,7 +324,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         if (audioOutput != nullptr) {
             QAudioFormat& m_audioFormat = audioOutput->format();
             if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
-                audioOutput->close();
+                audioOutput->stop();
                 delete audioOutput;
                 audioOutput = nullptr;
             }
