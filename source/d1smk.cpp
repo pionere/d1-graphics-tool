@@ -25,6 +25,7 @@
     QByteArray audioData;
 } SmkAudioPlayer;
 static QList<SmkAudioPlayer *> audioPlayers;*/
+class AudioBuffer;
 
 static bool audioSemaphore = false;
 static QAudioOutput *audioOutput = nullptr;
