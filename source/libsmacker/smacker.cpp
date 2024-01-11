@@ -434,7 +434,7 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 		/* Looks OK: we got low and hi values. Return a new LEAF */
 		t->tree[t->size] |= (value << 8);
 // bool deepDebug = t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2];
-if (deepDebug && (t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2])) {
+if (deepDebug) {
 // LogErrorFF("smk_huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
 	/*int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
 	for ( ; i >= 0; i--) {
@@ -989,7 +989,7 @@ smk_bw_write(&bw, 7060, 13); //  (37,14) -> 43:37
 // Full block 3:0 value3621 (offsetend2365157 bitend5) 42,43:139 (37:14) = 3621
 smk_bw_skip(&bw, 14); //  (55,37)
 // Full block 3:1 value9527 (offsetend2365159 bitend3) 40,41:139 (55:37) = 9527
-smk_bw_skip(&bw, 6); //  (0,0)
+smk_bw_write(&bw, 57824, 16); // *6*); //  (0,0) -> 20:18										(20,18) d16 57824
 // Full block 0:0 value0 (offsetend2365160 bitend1) 46,47:136 (0:0) = 0
 smk_bw_write(&bw, 606, 11); //  (14,11) -> 30:25
 // Full block 0:1 value2830 (offsetend2365161 bitend4) 44,45:136 (14:11) = 2830
@@ -997,11 +997,11 @@ smk_bw_write(&bw, 8710, 14); // *11*); //  (236,236) -> 18:11
 // Full block 1:0 value60652 (offsetend2365162 bitend7) 46,47:137 (236:236) = 60652
 smk_bw_write(&bw, 57824, 16); // *19*); //  (236,128) -> 20:18
 // Full block 1:1 value33004 (offsetend2365165 bitend2) 44,45:137 (236:128) = 33004
-smk_bw_write(&bw, 166838, 19); //  (89,236) -> 22:223
+smk_bw_write(&bw, 57824, 16); // *19*); //  (89,236) -> 20:18									(20,18) d16 57824	(20,0) d11 1795				
 // Full block 2:0 value60505 (offsetend2365167 bitend5) 46,47:138 (89:236) = 60505
-smk_bw_write(&bw, 125676, 21); //  (128,236) -> 50:20
+smk_bw_write(&bw, 46810, 16); // *21*); //  (128,236) -> 43:20									(43,20) d16 46810
 // Full block 2:1 value60544 (offsetend2365170 bitend2) 44,45:138 (128:236) = 60544
-smk_bw_write(&bw, 1379, 13); // *16*); //  (223,0) -> 18:223
+smk_bw_write(&bw, 1795, 11); // *16*); //  (223,0) -> 20:0							(18,0) d12 2759		(18,222) d20 1035251
 // Full block 3:0 value223 (offsetend2365172 bitend2) 46,47:139 (223:0) = 223
 smk_bw_write(&bw, 1006, 11); // *8*); //  (10,10) -> 37:37
 // Full block 3:1 value2570 (offsetend2365173 bitend2) 44,45:139 (10:10) = 2570
@@ -1127,23 +1127,23 @@ smk_bw_skip(&bw, 5); //  (236,128)
 // Full block 1:1 value33004 (offsetend2365269 bitend3) 76,77:137 (236:128) = 33004
 smk_bw_skip(&bw, 5); //  (236,128)
 // Full block 2:0 value33004 (offsetend2365270 bitend0) 78,79:138 (236:128) = 33004
-smk_bw_write(&bw, 61, 11); //  (128,128)
+smk_bw_write(&bw, 1949, 11); //  (128,128) -> 30:30
 // Full block 2:1 value32896 (offsetend2365271 bitend3) 76,77:138 (128:128) = 32896
-smk_bw_write(&bw, 603, 10); // *12*); //  (25,14)  -> 31:31
+smk_bw_write(&bw, 1949, 11); // *12*); //  (25,14)  -> 30:30									(30,30) d11 1949
 // Full block 3:0 value3609 (offsetend2365272 bitend7) 78,79:139 (25:14) = 3609
 smk_bw_write(&bw, 1794, 11); // *9*); //  (16,16)  -> 43:43
 // Full block 3:1 value4112 (offsetend2365274 bitend0) 76,77:139 (16:16) = 4112
-smk_bw_skip(&bw, 8); //  (10,0)  
+smk_bw_write(&bw, 338, 10); // *8*); //  (10,0) -> 25:25													(25,18) d13 7452 30,18) d14 8202 (30,25) d11 606 (25,30) d11 1773
 // Full block 0:0 value10 (offsetend2365275 bitend0) 82,83:136 (10:0) = 10
 smk_bw_write(&bw, 338, 10); //  (14,14)  -> 25:25
 // Full block 0:1 value3598 (offsetend2365276 bitend2) 80,81:136 (14:14) = 3598
-smk_bw_write(&bw, 982368, 20); // *11*); //  (236,236) -> 12:222
+smk_bw_write(&bw, 1033142, 20); // *11*); //  (236,236) -> 12:222								(25,0) d12 2088 (25,10) d12 1536 (25,222) d20 1033142 (30,222) d21 1853676
 // Full block 1:0 value60652 (offsetend2365277 bitend5) 82,83:137 (236:236) = 60652
-smk_bw_write(&bw, 996, 14); // *19); //  (236,128) -> 43:25
+smk_bw_write(&bw, 606, 11); // *19); //  (236,128) -> 30:25										+(30,25) d11 606
 // Full block 1:1 value33004 (offsetend2365280 bitend0) 80,81:137 (236:128) = 33004
-smk_bw_write(&bw, 106300, 17); // *19*); //  (236,82) -> 27:11
+smk_bw_write(&bw, 1033142, 20); // *19*); //  (236,82) -> 27:11									+(25,0) d12 2088 (25,10) d12 1536 (25,222) d20 1033142
 // Full block 2:0 value21228 (offsetend2365282 bitend3) 82,83:138 (236:82) = 21228
-smk_bw_write(&bw, 996, 14); // *16); //  (128,89) -> 43:25
+smk_bw_write(&bw, 606, 11); // *16); //  (128,89) -> 30:25										(30,25) d11 606
 // Full block 2:1 value22912 (offsetend2365284 bitend3) 80,81:138 (128:89) = 22912
 smk_bw_write(&bw, 59, 6); // *14*); //  (222,223) -> (0,0)
 // Full block 3:0 value57310 (offsetend2365286 bitend1) 82,83:139 (222:223) = 57310
@@ -1165,11 +1165,11 @@ smk_bw_skip(&bw, 15); //  (0,222)
 // Full block 3:0 value56832 (offsetend2365299 bitend7) 86,87:139 (0:222) = 56832
 smk_bw_write(&bw, 59, 6); // *14*); //  (222,223) -> (0,0)
 // Full block 3:1 value57310 (offsetend2365301 bitend5) 84,85:139 (222:223) = 57310
-smk_bw_write(&bw, 8096, 14); // *6*); //  (0,0) -> (22,18)
+smk_bw_write(&bw, 57824, 16); // *6*); //  (0,0) -> (22,18)								(20,18) d16 57824 (25,18) d13 7452
 // Full block 0:0 value0 (offsetend2365302 bitend3) 90,91:136 (0:0) = 0
-smk_bw_skip(&bw, 5); 
+smk_bw_write(&bw, 24, 5);
 // Full block 0:1 value0 (offsetend2365303 bitend0) 88,89:136 (0:0) = 0
-smk_bw_write(&bw, 88777, 17); // *19*); //  (89,236) -> 222:10
+smk_bw_write(&bw, 24360, 15); // *19*); //  (89,236) -> 0:222
 // Full block 1:0 value60505 (offsetend2365305 bitend3) 90,91:137 (89:236) = 60505
 smk_bw_write(&bw, 24360, 15); // *11*); //  (236,236) -> 0:222
 // Full block 1:1 value60652 (offsetend2365306 bitend6) 88,89:137 (236:236) = 60652
@@ -2288,7 +2288,7 @@ bufSize = size;
 
 	/* create some tables */
 	for (temp_u = 0; temp_u < 4; temp_u ++) {
- deepDebug = temp_u == SMK_TREE_FULL;
+// deepDebug = temp_u == SMK_TREE_FULL;
 #ifdef FULL
 		if (! smk_huff16_build(&s->video.tree[temp_u], &bs, s->video.tree_size[temp_u])) {
 #else

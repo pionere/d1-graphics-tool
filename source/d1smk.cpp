@@ -18,6 +18,13 @@
 //#include "../3rdParty/libsmacker/smacker.h"
 #include "libsmacker/smacker.h"
 
+typedef struct SmkAudioPlayer {
+    QAudioOutput output;
+    QBuffer audioBuffer;
+    QByteArray audioData;
+} SmkAudioPlayer;
+static QList<SmkAudioPlayer> audioPlayers;
+
 #define D1SMK_COLORS 256
 
 D1SmkAudioData::D1SmkAudioData(unsigned ch, unsigned bd, unsigned long br)
@@ -224,7 +231,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         bitRate = frameAudio->getBitRate();
 
         audioData = frameAudio->getAudio(track, &audioDataLen);
-        QByteArray* arr = new QByteArray((char *)audioData, audioDataLen);
+        /*QByteArray* arr = new QByteArray((char *)audioData, audioDataLen);
         QBuffer *input = new QBuffer(arr);
         input->setBuffer(arr);
         input->open(QIODevice::ReadOnly);
@@ -251,6 +258,29 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         });
 
         // start the audio (i.e., play sound from the QAudioOutput object that we just created)
-        audio->start(input);
+        audio->start(input);*/
+        auto ait = audioPlayers.begin();
+        for ( ; ait != audioPlayers.end(); ait++) {
+            if (ait->second.output.state() == QAudio::IdleState) {
+                break;
+            }
+        }
+        if (ait == audioPlayers.end()) {
+            ait = audioPlayers.insert(ait, SmkAudioPlayer());
+        }
+        QAudioFormat& m_audioFormat = ait->second.output.format();
+        m_audioFormat.setSampleRate(bitRate);
+        m_audioFormat.setChannelCount(channels);
+        m_audioFormat.setSampleSize(bitDepth);
+        m_audioFormat.setCodec("audio/pcm");
+        m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
+        m_audioFormat.setSampleType(QAudioFormat::SignedInt);
+
+        ait->second.audioData.setRawData((char *)audioData, audioDataLen);
+        ait->second.audioBuffer.close();
+        ait->second.audioBuffer.setBuffer(&ait->second.audioData);
+        ait->second.audioBuffer.open(QIODevice::ReadOnly);
+
+        ait->second.output.start(&ait->second.audioBuffer);
     }
 }
