@@ -288,7 +288,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
         (*ait)->output.start(&(*ait)->audioBuffer);
 		auto state = (*ait)->output.state();
 		if (state != QAudio::ActiveState) {
-			QMessageBox::critical(nullptr, "Error", "playAudio failed-state %1", state);
+			QMessageBox::critical(nullptr, "Error", tr("playAudio failed-state %1").arg(state));
         }
     }
 }
