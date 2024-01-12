@@ -45,13 +45,13 @@ public:
 	QIODevice::OpenMode	openMode() const;*/
     qint64	peek(char *data, qint64 maxSize);
     /*// qint64	read(char *data, qint64 maxSize);
-    bool	atEnd() const override;
+    bool	atEnd() const override;*/
     qint64	bytesAvailable() const override;
-    qint64	bytesToWrite() const override;
+    /*qint64	bytesToWrite() const override;
     bool	canReadLine() const override;
-    void	close() override;
+    void	close() override;*/
     bool	isSequential() const override;
-    bool	open(QIODevice::OpenMode mode) override;
+    /*bool	open(QIODevice::OpenMode mode) override;
     qint64	pos() const override;
     bool	reset() override;
     bool	seek(qint64 pos) override;
@@ -95,13 +95,13 @@ bool AudioBuffer::atEnd() const
 LogErrorF("atEnd %d", availableBytes);
     return availableBytes == 0;
 }
-
+*/
 qint64 AudioBuffer::bytesAvailable() const
 {
 LogErrorF("bytesAvailable %d", availableBytes);
     return availableBytes;
 }
-
+/*
 qint64 AudioBuffer::bytesToWrite() const
 {
     return 0;
@@ -118,12 +118,12 @@ void AudioBuffer::close()
     audioQueue.clear();
     availableBytes = 0;
 }
-
+*/
 bool AudioBuffer::isSequential() const
 {
     return true;
 }
-
+/*
 bool AudioBuffer::open(QIODevice::OpenMode mode)
 {
     return true;
@@ -486,6 +486,8 @@ LogErrorF("start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
             }
             audioSemaphore[track] = false;
+        } else {
+LogErrorF("no start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
         }
     }
 }
