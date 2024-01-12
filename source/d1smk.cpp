@@ -55,8 +55,8 @@ public:
     bool	reset() override;
     bool	seek(qint64 pos) override;
     qint64	size() const override;
-    bool	waitForBytesWritten(int msecs) override;
-    bool	waitForReadyRead(int msecs) override;
+    // bool	waitForBytesWritten(int msecs) override;
+    // bool	waitForReadyRead(int msecs) override;
 	qint64	readData(char *data, qint64 maxSize) override;
 	qint64	writeData(const char *data, qint64 maxSize) override;
     void	enqueue(uint8_t *audioData, unsigned long audioLen);
@@ -79,7 +79,7 @@ bool AudioBuffer::isOpen() const
 
 bool AudioBuffer::isReadable() const
 {
-LogErrorF("isReadable %d", maxSize, result, availableBytes);
+LogErrorF("isReadable %d", availableBytes);
     return availableBytes != 0;
 }
 
@@ -90,13 +90,13 @@ QIODevice::OpenMode	AudioBuffer::openMode() const
 
 bool AudioBuffer::atEnd() const
 {
-LogErrorF("atEnd %d", maxSize, result, availableBytes);
+LogErrorF("atEnd %d", availableBytes);
     return availableBytes == 0;
 }
 
 qint64 AudioBuffer::bytesAvailable() const
 {
-LogErrorF("bytesAvailable %d", maxSize, result, availableBytes);
+LogErrorF("bytesAvailable %d", availableBytes);
     return availableBytes;
 }
 
@@ -146,15 +146,15 @@ qint64 AudioBuffer::size() const
     return availableBytes + currPos;
 }
 
-bool AudioBuffer::waitForBytesWritten(int msecs)
+/*bool AudioBuffer::waitForBytesWritten(int msecs)
 {
     return false;
 }
 
 bool AudioBuffer::waitForReadyRead(int msecs)
 {
-    return currPos;
-}
+    return availableBytes != 0;
+}*/
 
 qint64 AudioBuffer::peek(char *data, qint64 maxSize)
 {
@@ -195,24 +195,25 @@ LogErrorF("readData %d -> %d (%d @ %d)", maxSize, result, availableBytes, currPo
         availableBytes -= result;
 
         qint64 rem = result;
+		qint64 cp = currPos;
         int i = 0;
         for (; ; i++) {
             QPair<uint8_t *, unsigned long> &data = audioQueue[i];
             qint64 len = data.second;
-            len -= currPos;
+            len -= cp;
             if (len > rem) {
-                currPos += rem;
+                cp += rem;
                 break;
             } else {
                 rem -= len;
-                currPos = 0;
+                cp = 0;
                 if (rem == 0) {
                     i++;
                     break;
                 }
             }
         }
-
+		currPos = cp;
         if (i != 0) {
             audioQueue.erase(audioQueue.begin(), audioQueue.begin() + i);
         }
@@ -470,7 +471,7 @@ static void audioCallback(int track, QAudio::State newState)
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
             }*/
             audioOutput[track]->start(smkAudioBuffer[track]);
-LogErrorF("start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable);
+LogErrorF("start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
             auto state = audioOutput[track]->state();
             if (state != QAudio::ActiveState) {
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
