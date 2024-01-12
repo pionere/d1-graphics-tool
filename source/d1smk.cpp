@@ -34,7 +34,7 @@ static QAudioOutput *audioOutput[D1SMK_TRACKS] = { nullptr };
 static AudioBuffer *smkAudioBuffer[D1SMK_TRACKS] = { nullptr };
 
 class AudioBuffer : public QIODevice {
-	Q_OBJECT
+//	Q_OBJECT
 
 public:
     AudioBuffer();
