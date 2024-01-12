@@ -42,9 +42,9 @@ public:
 
     /*bool	isOpen() const;
     bool	isReadable() const;
-	QIODevice::OpenMode	openMode() const;
+	QIODevice::OpenMode	openMode() const;*/
     qint64	peek(char *data, qint64 maxSize);
-    // qint64	read(char *data, qint64 maxSize);
+    /*// qint64	read(char *data, qint64 maxSize);
     bool	atEnd() const override;
     qint64	bytesAvailable() const override;
     qint64	bytesToWrite() const override;
