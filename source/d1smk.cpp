@@ -509,7 +509,7 @@ static void audioCallback6(QAudio::State newState)
 {
 	audioCallback(6, newState);
 }
-static void (*cbfunc[D1SMK_TRACKS])(QAudio::State) = { audioCallback0, audioCallback1, audioCallback2, audioCallback3, audioCallback4, audioCallback5, audioCallback6 };
+static void (*cbfunc[D1SMK_TRACKS])(QAudio::State) = { &audioCallback0, &audioCallback1, &audioCallback2, &audioCallback3, &audioCallback4, &audioCallback5, &audioCallback6 };
 
 void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 {
@@ -667,7 +667,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 
             audioOutput[track] = new QAudioOutput(m_audioFormat); // , this);
             // connect up signal stateChanged to a lambda to get feedback
-            QObject::connect(audioOutput, &QAudioOutput::stateChanged, cbfunc[track]);
+            QObject::connect(audioOutput[track], &QAudioOutput::stateChanged, cbfunc[track]);
 			/*QObject::connect(audioOutput, &QAudioOutput::stateChanged, [track](QAudio::State newState)
             {
 				if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
