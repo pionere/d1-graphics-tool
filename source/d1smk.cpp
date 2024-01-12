@@ -79,6 +79,7 @@ bool AudioBuffer::isOpen() const
 
 bool AudioBuffer::isReadable() const
 {
+LogErrorF("isReadable %d", maxSize, result, availableBytes);
     return availableBytes != 0;
 }
 
@@ -89,11 +90,13 @@ QIODevice::OpenMode	AudioBuffer::openMode() const
 
 bool AudioBuffer::atEnd() const
 {
+LogErrorF("atEnd %d", maxSize, result, availableBytes);
     return availableBytes == 0;
 }
 
 qint64 AudioBuffer::bytesAvailable() const
 {
+LogErrorF("bytesAvailable %d", maxSize, result, availableBytes);
     return availableBytes;
 }
 
@@ -186,6 +189,7 @@ qint64 AudioBuffer::peek(char *data, qint64 maxSize)
 qint64 AudioBuffer::readData(char *data, qint64 maxSize)
 {
     qint64 result = peek(data, maxSize);
+LogErrorF("readData %d -> %d (%d @ %d)", maxSize, result, availableBytes, currPos);
 
     if (result != 0) {
         availableBytes -= result;
@@ -195,20 +199,14 @@ qint64 AudioBuffer::readData(char *data, qint64 maxSize)
         for (; ; i++) {
             QPair<uint8_t *, unsigned long> &data = audioQueue[i];
             qint64 len = data.second;
-            if (i == 0) {
-                len -= currPos;
-            }
+            len -= currPos;
             if (len > rem) {
-                if (i == 0) {
-                    currPos += rem;
-                } else {
-                    currPos = rem;
-                }
+                currPos += rem;
                 break;
             } else {
                 rem -= len;
+                currPos = 0;
                 if (rem == 0) {
-                    currPos = 0;
                     i++;
                     break;
                 }
@@ -472,6 +470,7 @@ static void audioCallback(int track, QAudio::State newState)
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
             }*/
             audioOutput[track]->start(smkAudioBuffer[track]);
+LogErrorF("start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable);
             auto state = audioOutput[track]->state();
             if (state != QAudio::ActiveState) {
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
@@ -698,7 +697,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
                 smkAudioBuffer[track] = new AudioBuffer();
             }
         }
-
+		LogErrorF("Enqueue %d:%d", track, audioDataLen);
         smkAudioBuffer[track]->enqueue(audioData, audioDataLen);
 
         QAudio::State state = audioOutput[track]->state();
