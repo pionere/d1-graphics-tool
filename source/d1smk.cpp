@@ -234,7 +234,10 @@ LogErrorF("readData %d -> %d (%d @ %d)", maxSize, result, availableBytes, currPo
 
 qint64	AudioBuffer::writeData(const char *data, qint64 maxSize)
 {
-    return 0;
+LogErrorF("writeData %d:%d", data, maxSize);
+    audioQueue.push_back(QPair<uint8_t *, unsigned long>((<uint8_t *)data, (unsigned long)maxSize));
+    availableBytes += maxSize;
+    return maxSize;
 }
 
 void AudioBuffer::enqueue(uint8_t *audioData, unsigned long audioLen)
@@ -707,8 +710,9 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
                 }
             }
         }
-		LogErrorF("Enqueue %d:%d", track, audioDataLen);
-        smkAudioBuffer[track]->enqueue(audioData, audioDataLen);
+		LogErrorF("Enqueue %d %d:%d", track, audioData, audioDataLen);
+        // smkAudioBuffer[track]->enqueue(audioData, audioDataLen);
+		smkAudioBuffer[track]->write((char *)audioData, audioDataLen);
 
         QAudio::State state = audioOutput[track]->state();
         if (state != QAudio::ActiveState) {
