@@ -94,32 +94,45 @@
       <widget class="QComboBox" name="trackComboBox"/>
      </item>
      <item>
-      <widget class="QComboBox" name="channelComboBox"/>
-     </item>
-     <item>
       <widget class="QLabel">
        <property name="text">
-        <string>BitRate:</string>
+        <string>&lt;b&gt;Ch:&lt;/b&gt;</string>
+       </property>
+       <property name="toolTip">
+        <string>Number of channels</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="LineEditWidget" name="bitRateLineEdit">
-       <property name="charWidth">
-        <number>6</number>
-       </property>
-       <property name="alignment">
-        <enum>Qt::AlignRight</enum>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
+      <widget class="QLabel" name="channelsLabel"/>
      </item>
      <item>
       <widget class="QLabel">
        <property name="text">
-        <string>Length:</string>
+        <string>&lt;b&gt;W:&lt;/b&gt;</string>
+       </property>
+       <property name="toolTip">
+        <string>Sample size</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="bitWidthLabel"/>
+     </item>
+     <item>
+      <widget class="QLabel">
+       <property name="text">
+        <string>&lt;b&gt;BitRate:&lt;/b&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="bitRateLabel"/>
+     </item>
+     <item>
+      <widget class="QLabel">
+       <property name="text">
+        <string>&lt;b&gt;Length:&lt;/b&gt;</string>
        </property>
       </widget>
      </item>

@@ -27,11 +27,11 @@
 static QList<SmkAudioPlayer *> audioPlayers;*/
 class AudioBuffer;
 
-static bool audioSemaphore = false;
-static QAudioOutput *audioOutput = nullptr;
+static bool audioSemaphore[D1SMK_TRACKS] = { false };
+static QAudioOutput *audioOutput[D1SMK_TRACKS] = { nullptr };
 // static QByteArray *audioBytes = nullptr;
 // static QBuffer *audioBuffer = nullptr;
-static AudioBuffer *smkAudioBuffer = nullptr;
+static AudioBuffer *smkAudioBuffer[D1SMK_TRACKS] = { nullptr };
 
 class AudioBuffer : public QIODevice {
 
@@ -216,7 +216,7 @@ qint64 AudioBuffer::readData(char *data, qint64 maxSize)
         }
 
         if (i != 0) {
-            audioQueue.erase(audioQueue.begin(), audioQueue.begin() + i - 1);
+            audioQueue.erase(audioQueue.begin(), audioQueue.begin() + i);
         }
     }
     return result;
@@ -455,13 +455,13 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     return false;
 }
 
-static void audioCallback(QAudio::State newState)
+static void audioCallback(int track, QAudio::State newState)
 {
     if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
         // qWarning() << "finished playing sound";
         // if (!audioQueue.isEmpty() && !audioSemaphore) {
-        if (!smkAudioBuffer->atEnd() && !audioSemaphore) {
-            audioSemaphore = true;
+        if (!smkAudioBuffer[track]->atEnd() && !audioSemaphore[track]) {
+            audioSemaphore[track] = true;
             /*QPair<uint8_t *, unsigned long> audioData = audioQueue[0];
             audioQueue.pop_front();
             audioBytes->setRawData((char *)audioData.first, audioData.second);
@@ -471,17 +471,47 @@ static void audioCallback(QAudio::State newState)
             if (state != QAudio::ActiveState) {
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
             }*/
-            audioOutput->start(smkAudioBuffer);
-            auto state = audioOutput->state();
+            audioOutput[track]->start(smkAudioBuffer[track]);
+            auto state = audioOutput[track]->state();
             if (state != QAudio::ActiveState) {
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
             }
-            audioSemaphore = false;
+            audioSemaphore[track] = false;
         }
     }
 }
 
-void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
+static void audioCallback0(QAudio::State newState)
+{
+	audioCallback(0, newState);
+}
+static void audioCallback1(QAudio::State newState)
+{
+	audioCallback(1, newState);
+}
+static void audioCallback2(QAudio::State newState)
+{
+	audioCallback(2, newState);
+}
+static void audioCallback3(QAudio::State newState)
+{
+	audioCallback(3, newState);
+}
+static void audioCallback4(QAudio::State newState)
+{
+	audioCallback(4, newState);
+}
+static void audioCallback5(QAudio::State newState)
+{
+	audioCallback(5, newState);
+}
+static void audioCallback6(QAudio::State newState)
+{
+	audioCallback(6, newState);
+}
+static void (*cbfunc[D1SMK_TRACKS])(QAudio::State) = { audioCallback0, audioCallback1, audioCallback2, audioCallback3, audioCallback4, audioCallback5, audioCallback6 };
+
+void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 {
     D1SmkAudioData *frameAudio;
     unsigned long audioDataLen;
@@ -489,16 +519,19 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
     unsigned bitDepth, channels, bitRate;
 
     frameAudio = gfxFrame.getFrameAudio();
-    if (track == -1)
-        track = 0;
-    if (channel == -1)
-        channel = 0;
-    if (frameAudio != nullptr && (unsigned)track < D1SMK_TRACKS && (unsigned)channel < D1SMK_CHANNELS) {
+    if (frameAudio != nullptr) {
         channels = frameAudio->getChannels();
         bitDepth = frameAudio->getBitDepth();
         bitRate = frameAudio->getBitRate();
+		for (int track = 0; track < D1SMK_TRACKS; track++) {
+			if (trackIdx >= 0 && track != trackIdx) {
+				continue;
+            }
 
-        audioData = frameAudio->getAudio(track, &audioDataLen);
+        audioData = frameAudio->getAudio(i, &audioDataLen);
+		if (audioDataLen == 0) {
+			continue;
+        }
         /*QByteArray* arr = new QByteArray((char *)audioData, audioDataLen);
         QBuffer *input = new QBuffer(arr);
         input->setBuffer(arr);
@@ -614,16 +647,16 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
             }
         }*/
 
-        if (audioOutput != nullptr) {
-            QAudioFormat& m_audioFormat = audioOutput->format();
+        if (audioOutput[track] != nullptr) {
+            QAudioFormat& m_audioFormat = audioOutput[track]->format();
             if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
-                audioOutput->stop();
-                delete audioOutput;
-                audioOutput = nullptr;
-                smkAudioBuffer->close();
+                audioOutput[track]->stop();
+                delete audioOutput[track];
+                audioOutput[track] = nullptr;
+                smkAudioBuffer[track]->close();
             }
         }
-        if (audioOutput == nullptr) {
+        if (audioOutput[track] == nullptr) {
             QAudioFormat m_audioFormat = QAudioFormat();
             m_audioFormat.setSampleRate(bitRate);
             m_audioFormat.setChannelCount(channels);
@@ -632,33 +665,61 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int track, int channel)
             m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
             m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
-            audioOutput = new QAudioOutput(m_audioFormat); // , this);
+            audioOutput[track] = new QAudioOutput(m_audioFormat); // , this);
             // connect up signal stateChanged to a lambda to get feedback
-            QObject::connect(audioOutput, &QAudioOutput::stateChanged, &audioCallback);
+            QObject::connect(audioOutput, &QAudioOutput::stateChanged, &cbfunc[track]);
+			/*QObject::connect(audioOutput, &QAudioOutput::stateChanged, [track](QAudio::State newState)
+            {
+				if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
+					// qWarning() << "finished playing sound";
+					// if (!audioQueue.isEmpty() && !audioSemaphore) {
+					if (!smkAudioBuffer[track]->atEnd() && !audioSemaphore[track]) {
+						audioSemaphore[track] = true;
+						/ *QPair<uint8_t *, unsigned long> audioData = audioQueue[0];
+						audioQueue.pop_front();
+						audioBytes->setRawData((char *)audioData.first, audioData.second);
+						audioBuffer->seek(0);
+						audioOutput->start(audioBuffer);
+						auto state = audioOutput->state();
+						if (state != QAudio::ActiveState) {
+							QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
+						}* /
+						audioOutput[track]->start(smkAudioBuffer[track]);
+						auto state = audioOutput[track]->state();
+						if (state != QAudio::ActiveState) {
+							QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
+						}
+						audioSemaphore[track] = false;
+					}
+				}
+            });*/
 
-            if (smkAudioBuffer == nullptr) {
-                smkAudioBuffer = new AudioBuffer();
+            if (smkAudioBuffer[track] == nullptr) {
+                smkAudioBuffer[track] = new AudioBuffer();
             }
         }
 
-        smkAudioBuffer->enqueue(audioData, audioDataLen);
+        smkAudioBuffer[track]->enqueue(audioData, audioDataLen);
 
-        QAudio::State state = audioOutput->state();
+        QAudio::State state = audioOutput[track]->state();
         if (state != QAudio::ActiveState) {
             audioCallback(QAudio::IdleState);
             if (state != QAudio::IdleState && state != QAudio::StoppedState) {
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("First state %1").arg(state));
             }
         }
+        }
     }
 }
 
 void D1Smk::stopAudio()
 {
-    if (audioOutput != nullptr) {
-        audioOutput->stop();
+	for (int track = 0; track < D1SMK_TRACKS; track++) {
+    if (audioOutput[track] != nullptr) {
+        audioOutput[track]->stop();
     }
-    if (smkAudioBuffer != nullptr) {
-        smkAudioBuffer->close();
+    if (smkAudioBuffer[track] != nullptr) {
+        smkAudioBuffer[track]->close();
+    }
     }
 }
