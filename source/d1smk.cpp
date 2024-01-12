@@ -705,7 +705,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 
             if (smkAudioBuffer[track] == nullptr) {
                 smkAudioBuffer[track] = new AudioBuffer();
-                if (!smkAudioBuffer[track]->open(QIODeviceBase::ReadWrite)) {
+                if (!smkAudioBuffer[track]->open(QIODevice::ReadWrite)) {
                     QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
                 }
             }
