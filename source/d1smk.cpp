@@ -34,12 +34,13 @@ static QAudioOutput *audioOutput[D1SMK_TRACKS] = { nullptr };
 static AudioBuffer *smkAudioBuffer[D1SMK_TRACKS] = { nullptr };
 
 class AudioBuffer : public QIODevice {
+	Q_OBJECT
 
 public:
     AudioBuffer();
     ~AudioBuffer() = default;
 
-    bool	isOpen() const;
+    /*bool	isOpen() const;
     bool	isReadable() const;
 	QIODevice::OpenMode	openMode() const;
     qint64	peek(char *data, qint64 maxSize);
@@ -54,7 +55,7 @@ public:
     qint64	pos() const override;
     bool	reset() override;
     bool	seek(qint64 pos) override;
-    qint64	size() const override;
+    qint64	size() const override;*/
     // bool	waitForBytesWritten(int msecs) override;
     // bool	waitForReadyRead(int msecs) override;
 	qint64	readData(char *data, qint64 maxSize) override;
@@ -73,7 +74,7 @@ AudioBuffer::AudioBuffer()
 {
 }
 
-bool AudioBuffer::isOpen() const
+/*bool AudioBuffer::isOpen() const
 {
     return true;
 }
@@ -701,6 +702,9 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 
             if (smkAudioBuffer[track] == nullptr) {
                 smkAudioBuffer[track] = new AudioBuffer();
+                if (!smkAudioBuffer[track]->open(QIODevice::ReadOnly)) {
+                    QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
+                }
             }
         }
 		LogErrorF("Enqueue %d:%d", track, audioDataLen);
