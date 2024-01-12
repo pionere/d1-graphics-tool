@@ -235,7 +235,7 @@ LogErrorF("readData %d -> %d (%d @ %d)", maxSize, result, availableBytes, currPo
 qint64	AudioBuffer::writeData(const char *data, qint64 maxSize)
 {
 LogErrorF("writeData %d:%d", data, maxSize);
-    audioQueue.push_back(QPair<uint8_t *, unsigned long>((<uint8_t *)data, (unsigned long)maxSize));
+    audioQueue.push_back(QPair<uint8_t *, unsigned long>((uint8_t *)data, (unsigned long)maxSize));
     availableBytes += maxSize;
     return maxSize;
 }
