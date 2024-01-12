@@ -59,6 +59,7 @@ public:
     // bool	waitForReadyRead(int msecs) override;
 	qint64	readData(char *data, qint64 maxSize) override;
 	qint64	writeData(const char *data, qint64 maxSize) override;
+
     void	enqueue(uint8_t *audioData, unsigned long audioLen);
 
 private:
@@ -107,7 +108,8 @@ qint64 AudioBuffer::bytesToWrite() const
 
 bool AudioBuffer::canReadLine() const
 {
-    return false;
+LogErrorF("canReadLine %d", availableBytes);
+     return false;
 }
 
 void AudioBuffer::close()
@@ -138,11 +140,13 @@ bool AudioBuffer::reset()
 
 bool AudioBuffer::seek(qint64 pos)
 {
+LogErrorF("seek %d", availableBytes);
     return false;
 }
 
 qint64 AudioBuffer::size() const
 {
+LogErrorF("size %d", availableBytes);
     return availableBytes + currPos;
 }
 
@@ -182,6 +186,7 @@ qint64 AudioBuffer::peek(char *data, qint64 maxSize)
         if (rem == 0)
             break;
     }
+LogErrorF("peek a%d m%d r%d", availableBytes, maxSize, result);
     return result;
 }
 
