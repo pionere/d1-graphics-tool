@@ -528,7 +528,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 				continue;
             }
 
-        audioData = frameAudio->getAudio(i, &audioDataLen);
+        audioData = frameAudio->getAudio(track, &audioDataLen);
 		if (audioDataLen == 0) {
 			continue;
         }
@@ -667,7 +667,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 
             audioOutput[track] = new QAudioOutput(m_audioFormat); // , this);
             // connect up signal stateChanged to a lambda to get feedback
-            QObject::connect(audioOutput, &QAudioOutput::stateChanged, &cbfunc[track]);
+            QObject::connect(audioOutput, &QAudioOutput::stateChanged, cbfunc[track]);
 			/*QObject::connect(audioOutput, &QAudioOutput::stateChanged, [track](QAudio::State newState)
             {
 				if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
@@ -703,7 +703,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 
         QAudio::State state = audioOutput[track]->state();
         if (state != QAudio::ActiveState) {
-            audioCallback(QAudio::IdleState);
+            audioCallback(track, QAudio::IdleState);
             if (state != QAudio::IdleState && state != QAudio::StoppedState) {
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("First state %1").arg(state));
             }
