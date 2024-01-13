@@ -841,12 +841,21 @@ void MainWindow::openFiles(const QStringList &filePaths)
 static int keyCombinationMatchesSequence(int kc, const QKeySequence &ks, int modifier = 0)
 {
     for (int i = 0; i < ks.count(); i++) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         if (ks[i].toCombined() == kc) {
             return 1;
         }
         if ((ks[i].toCombined() | modifier) == kc) {
             return -1;
         }
+#else
+        if (ks[i] == kc) {
+            return 1;
+        }
+        if ((ks[i] | modifier) == kc) {
+            return -1;
+        }
+#endif
     }
     return 0;
 }
