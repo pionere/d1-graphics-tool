@@ -863,7 +863,7 @@ static int keyCombinationMatchesSequence(int kc, const QKeySequence &ks, int mod
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     int match;
-    const int kc = QKeyCombination(event->modifiers(), event->key()).toCombined();
+    const int kc = event->key() | event->modifiers();
     if (keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->hide();
