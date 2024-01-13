@@ -838,10 +838,24 @@ void MainWindow::openFiles(const QStringList &filePaths)
     }
 }
 
+static int keyCombinationMatchesSequence(int kc, const QKeySequence &ks, int modifier = 0)
+{
+    for (int i = 0; i < ks.count(); i++) {
+        if (ks[i].toCombined() == kc) {
+            return 1;
+        }
+        if ((ks[i].toCombined() | modifier) == kc) {
+            return -1;
+        }
+    }
+    return 0;
+}
+
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    QKeySequence ks = (QKeySequence)(event->key() | event->modifiers());
-    if (ks == QKeySequence::Cancel) { // event->matches(QKeySequence::Cancel)) {
+    int match;
+    const int kc = QKeyCombination(event->modifiers(), event->key()).toCombined();
+    if (keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->hide();
         }
@@ -850,14 +864,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
-    if (ks == QKeySequence::New) { // event->matches(QKeySequence::New)) {
+    if (keyCombinationMatchesSequence(kc, QKeySequence::New)) { // event->matches(QKeySequence::New)) {
         this->ui->mainMenu->setActiveAction(this->ui->mainMenu->actions()[0]);
         this->ui->menuFile->setActiveAction(this->ui->menuFile->actions()[0]);
         this->ui->menuNew->setActiveAction(this->ui->menuNew->actions()[0]);
         return;
     }
-    if (ks == QKeySequence::Copy || ks == (QKeySequence::Copy | Qt::AltModifier)) { // event->matches(QKeySequence::Copy)) {
-        if ((int)ks & Qt::AltModifier) { // event->modifiers() & Qt::AltModifier) {
+    match = keyCombinationMatchesSequence(kc, QKeySequence::Copy, Qt::AltModifier);
+    if (match != 0) { // event->matches(QKeySequence::Copy)) {
+        if (match < 0) { // event->modifiers() & Qt::AltModifier) {
             QString pixels;
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             pixels = this->paintWidget->copyCurrentPixels();
@@ -891,9 +906,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         LogErrorF("Copy event mods %d shift %d", event->modifiers(), Qt::AltModifier);
         return;
     }
-    if (ks == QKeySequence::Cut || ks == (QKeySequence::Cut | Qt::AltModifier)) { // event->matches(QKeySequence::Cut)) {
+    match = keyCombinationMatchesSequence(kc, QKeySequence::Cut, Qt::AltModifier);
+    if (match != 0) { // event->matches(QKeySequence::Cut)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            if ((int)ks & Qt::AltModifier) { // event->modifiers() & Qt::AltModifier) {
+            if (match < 0) { // event->modifiers() & Qt::AltModifier) {
                 QString pixels = this->paintWidget->copyCurrentPixels();
             if (!pixels.isEmpty()) {
                 this->paintWidget->deleteCurrent();
@@ -911,13 +927,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
-    if (ks == QKeySequence::Delete) { // event->matches(QKeySequence::Delete)) {
+    if (keyCombinationMatchesSequence(kc, QKeySequence::Delete)) { // event->matches(QKeySequence::Delete)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->deleteCurrent();
         }
         return;
     }
-    if (ks == QKeySequence::Paste) { // event->matches(QKeySequence::Paste)) {
+    if (keyCombinationMatchesSequence(kc, QKeySequence::Paste)) { // event->matches(QKeySequence::Paste)) {
         QClipboard *clipboard = QGuiApplication::clipboard();
         QImage image = clipboard->image();
         if (!image.isNull()) {
