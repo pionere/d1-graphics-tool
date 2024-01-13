@@ -168,7 +168,7 @@ static QRect getArea(const QPoint &pos1, const QPoint &pos2)
     return QRect(pos1, pos2).normalized();
 }
 
-D1GfxFrame *PaintWidget::getCurrentFrame()
+D1GfxFrame *PaintWidget::getCurrentFrame() const
 {
     int frameIndex = 0;
     if (this->levelCelView != nullptr) {
@@ -203,7 +203,7 @@ QRect PaintWidget::getSelectArea(const D1GfxFrame *frame) const
 void PaintWidget::pasteCurrentFrame(const D1GfxFrame &srcFrame)
 {
     // select frame
-    const D1GfxFrame *frame = this->getCurrentFrame();
+    D1GfxFrame *frame = this->getCurrentFrame();
     if (frame == nullptr) {
         return;
     }
@@ -256,7 +256,7 @@ QString PaintWidget::copyCurrentPixels() const
     if (this->rubberBand == nullptr || frame == nullptr) {
         return QString();
     }
-    QRect rect = this->getSelectArea(frame);
+    QRect area = this->getSelectArea(frame);
     QString pixels;
     for (int y = area.top(); y <= area.bottom(); y++) {
         for (int x = area.left(); x <= area.right(); x++) {
@@ -286,14 +286,14 @@ QImage PaintWidget::copyCurrentImage() const
 {
     D1GfxFrame *frame = this->getCurrentFrame();
     if (this->rubberBand == nullptr || frame == nullptr) {
-        return QString();
+        return QImage();
     }
-    QRect rect = this->getSelectArea(frame);
+    QRect area = this->getSelectArea(frame);
     QImage image = QImage(area.size(), QImage::Format_ARGB32);
     QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
-    for (int y = 0; y < area.height(); y++) {
-        for (int x = 0; x < area.width(); x++, destBits++) {
-            D1GfxPixel d1pix = frame->getPixel(x + area.left(), area.top() + y);
+    for (int y = area.top(); y <= area.bottom(); y++) {
+        for (int x = area.left(); x <= area.right(); x++, destBits++) {
+            D1GfxPixel d1pix = frame->getPixel(x, y);
 
             QColor color;
             if (d1pix.isTransparent())

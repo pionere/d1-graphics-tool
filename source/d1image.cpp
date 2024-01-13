@@ -58,7 +58,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, co
 
 bool D1ImageFrame::load(D1GfxFrame &frame, const QString &pixels, const D1Pal *pal)
 {
-    QStringList rows = pixels.split('\');
+    QStringList rows = pixels.split('\n');
     int width = 0;
     QList<QStringList> pixValues;
     for (const QString &row : rows) {
