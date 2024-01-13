@@ -879,7 +879,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         this->ui->menuNew->setActiveAction(this->ui->menuNew->actions()[0]);
         return;
     }
-    match = keyCombinationMatchesSequence(kc, QKeySequence::Copy, Qt::AltModifier);
+    match = keyCombinationMatchesSequence(kc, QKeySequence::Copy, Qt::ShiftModifier);
     if (match != 0) { // event->matches(QKeySequence::Copy)) {
         if (match < 0) { // event->modifiers() & Qt::AltModifier) {
             QString pixels;
@@ -914,7 +914,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         LogErrorF("Copy event mods %d alt %d", event->modifiers(), Qt::AltModifier);
         return;
-    } else if (event->modifiers() & Qt::AltModifier) {
+    } else if (event->modifiers() & Qt::ShiftModifier) {
 		LogErrorF("Copy event key %d mods %d c %d alt %d", event->key(), event->modifiers(), Qt::Key_C, Qt::AltModifier);
     }
     match = keyCombinationMatchesSequence(kc, QKeySequence::Cut, Qt::AltModifier);
