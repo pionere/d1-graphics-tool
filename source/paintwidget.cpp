@@ -825,7 +825,7 @@ void PaintWidget::on_movePushButtonClicked()
 
 void PaintWidget::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape) {
+    if (event->matches(QKeySequence::Cancel)) {
         if (this->moving) {
             this->stopMove();
         } else {

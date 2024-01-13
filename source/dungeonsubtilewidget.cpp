@@ -270,7 +270,7 @@ void DungeonSubtileWidget::on_movePushButtonClicked()
 
 void DungeonSubtileWidget::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape) {
+    if (event->matches(QKeySequence::Cancel)) {
         if (this->moving) {
             this->stopMove();
         } else {

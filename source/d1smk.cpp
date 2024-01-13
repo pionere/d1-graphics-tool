@@ -58,10 +58,11 @@ public:
     qint64	size() const override;*/
     // bool	waitForBytesWritten(int msecs) override;
     // bool	waitForReadyRead(int msecs) override;
-	qint64	readData(char *data, qint64 maxSize) override;
-	qint64	writeData(const char *data, qint64 maxSize) override;
+    qint64	readData(char *data, qint64 maxSize) override;
+    qint64	writeData(const char *data, qint64 maxSize) override;
 
     void	enqueue(uint8_t *audioData, unsigned long audioLen);
+    void	clear();
 
 private:
     QList<QPair<uint8_t *, unsigned long>> audioQueue;
@@ -244,6 +245,12 @@ void AudioBuffer::enqueue(uint8_t *audioData, unsigned long audioLen)
 {
     audioQueue.push_back(QPair<uint8_t *, unsigned long>(audioData, audioLen));
     availableBytes += audioLen;
+}
+
+void AudioBuffer::clear()
+{
+    audioQueue.clear();
+    availableBytes = 0;
 }
 
 /*void	commitTransaction()
@@ -664,7 +671,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
                 audioOutput[track]->stop();
                 delete audioOutput[track];
                 audioOutput[track] = nullptr;
-                smkAudioBuffer[track]->close();
+                smkAudioBuffer[track]->clear();
             }
         }
         if (audioOutput[track] == nullptr) {
@@ -707,7 +714,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 
             if (smkAudioBuffer[track] == nullptr) {
                 smkAudioBuffer[track] = new AudioBuffer();
-                if (!smkAudioBuffer[track]->open(QIODevice::ReadWrite)) {
+                if (!smkAudioBuffer[track]->open(QIODevice::ReadWrite | QIODevice::Unbuffered)) {
                     QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
                 }
             }
@@ -729,12 +736,12 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
 
 void D1Smk::stopAudio()
 {
-	for (int track = 0; track < D1SMK_TRACKS; track++) {
-    if (audioOutput[track] != nullptr) {
-        audioOutput[track]->stop();
-    }
-    if (smkAudioBuffer[track] != nullptr) {
-        smkAudioBuffer[track]->close();
-    }
+    for (int track = 0; track < D1SMK_TRACKS; track++) {
+        if (audioOutput[track] != nullptr) {
+            audioOutput[track]->stop();
+        }
+        if (smkAudioBuffer[track] != nullptr) {
+            smkAudioBuffer[track]->clear();
+        }
     }
 }
