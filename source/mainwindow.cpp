@@ -32,6 +32,8 @@
 #include "d1trs.h"
 #include "ui_mainwindow.h"
 
+#include "dungeon/all.h"
+
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
@@ -854,7 +856,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (event->matches(QKeySequence::Copy)) {
-        if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        if (event->modifiers() & Qt::ShiftModifier) {
             QString pixels;
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             pixels = this->paintWidget->copyCurrentPixels();
@@ -885,11 +887,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             clipboard->setImage(image);
         }
         }
+		LogErrorF("Copy event mods %d shift %d", event->modifiers(), Qt::ShiftModifier);
         return;
     }
     if (event->matches(QKeySequence::Cut)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+            if (event->modifiers() & Qt::ShiftModifier) {
                 QString pixels = this->paintWidget->copyCurrentPixels();
             if (!pixels.isEmpty()) {
                 this->paintWidget->deleteCurrent();
