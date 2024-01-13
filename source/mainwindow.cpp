@@ -838,7 +838,7 @@ void MainWindow::openFiles(const QStringList &filePaths)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape) {
+    if (event->matches(QKeySequence::Cancel)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->hide();
         }
@@ -854,35 +854,61 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (event->matches(QKeySequence::Copy)) {
+        if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+            QString pixels;
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            pixels = this->paintWidget->copyCurrentPixels();
+        } else if (this->celView != nullptr) {
+            pixels = this->celView->copyCurrentPixels();
+        } else if (this->levelCelView != nullptr) {
+            pixels = this->levelCelView->copyCurrentPixels();
+        } else if (this->gfxsetView != nullptr) {
+            pixels = this->gfxsetView->copyCurrentPixels();
+        }
+        if (!pixels.isEmpty()) {
+            QClipboard *clipboard = QGuiApplication::clipboard();
+            clipboard->setText(pixels);
+        }
+        } else {
         QImage image;
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            image = this->paintWidget->copyCurrent();
+            image = this->paintWidget->copyCurrentImage();
         } else if (this->celView != nullptr) {
-            image = this->celView->copyCurrent();
+            image = this->celView->copyCurrentImage();
         } else if (this->levelCelView != nullptr) {
-            image = this->levelCelView->copyCurrent();
+            image = this->levelCelView->copyCurrentImage();
         } else if (this->gfxsetView != nullptr) {
-            image = this->gfxsetView->copyCurrent();
+            image = this->gfxsetView->copyCurrentImage();
         }
         if (!image.isNull()) {
             QClipboard *clipboard = QGuiApplication::clipboard();
             clipboard->setImage(image);
         }
+        }
         return;
     }
     if (event->matches(QKeySequence::Cut)) {
-        if (this->paintWidget != nullptr) {
-            QImage image = this->paintWidget->copyCurrent();
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+                QString pixels = this->paintWidget->copyCurrentPixels();
+            if (!pixels.isEmpty()) {
+                this->paintWidget->deleteCurrent();
+                QClipboard *clipboard = QGuiApplication::clipboard();
+                clipboard->setText(pixels);
+            }
+            } else {
+            QImage image = this->paintWidget->copyCurrentImage();
             if (!image.isNull()) {
                 this->paintWidget->deleteCurrent();
                 QClipboard *clipboard = QGuiApplication::clipboard();
                 clipboard->setImage(image);
             }
+            }
         }
         return;
     }
     if (event->matches(QKeySequence::Delete)) {
-        if (this->paintWidget != nullptr) {
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->deleteCurrent();
         }
         return;
@@ -894,13 +920,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
 
             if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-                this->paintWidget->pasteCurrent(image);
+                this->paintWidget->pasteCurrentImage(image);
             } else if (this->celView != nullptr) {
-                this->celView->pasteCurrent(image);
+                this->celView->pasteCurrentImage(image);
             } else if (this->levelCelView != nullptr) {
-                this->levelCelView->pasteCurrent(image);
+                this->levelCelView->pasteCurrentImage(image);
             } else if (this->gfxsetView != nullptr) {
-                this->gfxsetView->pasteCurrent(image);
+                this->gfxsetView->pasteCurrentImage(image);
             }
 
             // Clear loading message from status bar
@@ -915,6 +941,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 }
             };
             ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW, std::move(func));*/
+        } else if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            QString pixels = clipboard->text();
+            if (!pixels.isEmpty()) {
+                this->paintWidget->pasteCurrentPixels(pixels);
+            }
         }
         return;
     }

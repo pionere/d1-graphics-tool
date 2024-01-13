@@ -48,8 +48,9 @@ public:
     void removeCurrentFrame(bool wholeGroup);
     void mergeFrames(const MergeFramesParam &params);
 
-    QImage copyCurrent() const;
-    void pasteCurrent(const QImage &image);
+    QString copyCurrentPixels() const;
+    QImage copyCurrentImage() const;
+    void pasteCurrentImage(const QImage &image);
 
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);

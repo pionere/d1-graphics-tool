@@ -98,7 +98,7 @@ LogErrorF("atEnd %d", availableBytes);
 */
 qint64 AudioBuffer::bytesAvailable() const
 {
-LogErrorF("bytesAvailable %d", availableBytes);
+// LogErrorF("bytesAvailable %d", availableBytes);
     return availableBytes;
 }
 /*
@@ -187,7 +187,7 @@ qint64 AudioBuffer::peek(char *data, qint64 maxSize)
         if (rem == 0)
             break;
     }
-LogErrorF("peek a%d m%d r%d", availableBytes, maxSize, result);
+// LogErrorF("peek a%d m%d r%d", availableBytes, maxSize, result);
     return result;
 }
 
@@ -195,7 +195,7 @@ LogErrorF("peek a%d m%d r%d", availableBytes, maxSize, result);
 qint64 AudioBuffer::readData(char *data, qint64 maxSize)
 {
     qint64 result = peek(data, maxSize);
-LogErrorF("readData %d -> %d (%d @ %d)", maxSize, result, availableBytes, currPos);
+// LogErrorF("readData %d -> %d (%d @ %d)", maxSize, result, availableBytes, currPos);
 
     if (result != 0) {
         availableBytes -= result;
@@ -234,7 +234,7 @@ LogErrorF("readData %d -> %d (%d @ %d)", maxSize, result, availableBytes, currPo
 
 qint64	AudioBuffer::writeData(const char *data, qint64 maxSize)
 {
-LogErrorF("writeData %d:%d", data, maxSize);
+// LogErrorF("writeData %d:%d", data, maxSize);
     audioQueue.push_back(QPair<uint8_t *, unsigned long>((uint8_t *)data, (unsigned long)maxSize));
     availableBytes += maxSize;
     return maxSize;
@@ -480,14 +480,14 @@ static void audioCallback(int track, QAudio::State newState)
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
             }*/
             audioOutput[track]->start(smkAudioBuffer[track]);
-LogErrorF("start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
+// LogErrorF("start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
             auto state = audioOutput[track]->state();
             if (state != QAudio::ActiveState) {
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
             }
             audioSemaphore[track] = false;
-        } else {
-LogErrorF("no start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
+//        } else {
+//LogErrorF("no start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
         }
     }
 }
@@ -712,7 +712,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
                 }
             }
         }
-		LogErrorF("Enqueue %d %d:%d", track, audioData, audioDataLen);
+		// LogErrorF("Enqueue %d %d:%d", track, audioData, audioDataLen);
         // smkAudioBuffer[track]->enqueue(audioData, audioDataLen);
 		smkAudioBuffer[track]->write((char *)audioData, audioDataLen);
 

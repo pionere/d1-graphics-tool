@@ -56,6 +56,46 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, co
     return true;
 }
 
+bool D1ImageFrame::load(D1GfxFrame &frame, const QString &pixels, const D1Pal *pal)
+{
+    QStringList rows = pixelsStr.split('\');
+    int width = 0;
+    QList<QStringList> pixValues;
+    for (const QString &row : rows) {
+        QStringList pixels = row.split(';');
+        pixValues.push_back(pixels);
+        if (pixels.count() > width) {
+            width = pixels.count();
+        }
+    }
+
+    std::vector<PaletteColor> colors;
+    pal->getValidColors(colors);
+
+    for (const QStringList &row : pixValues) {
+        std::vector<D1GfxPixel> pixelLine;
+        for (QString pixel : row) {
+            pixel = pixel.trimmed();
+            if (pixel.isEmpty()) {
+                pixelLine.append(D1GfxPixel::transparentPixel());
+            } else {
+                bool valid;
+                quint8 color = pixel.toInt(&valid);
+                if (!valid) {
+                    color = getPalColor(colors, QColor(pixel));
+                }
+                pixelLine.append(D1GfxPixel::colorPixel(color));
+            }
+        }
+        for (int i = pixelLine.size() - width; i > 0; i--) {
+            pixelLine.append(D1GfxPixel::transparentPixel());
+        }
+        frame.addPixelLine(std::move(pixelLine));
+    }
+
+    return true;
+}
+
 QSize D1PixelImage::getImageSize(const std::vector<std::vector<D1GfxPixel>> &pixels)
 {
     int width = 0;

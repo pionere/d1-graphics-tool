@@ -925,7 +925,7 @@ static void patchFile()
 if (patchCounter == 0) {
 	patchCounter++;
 
-/*	bw.buffer += 2365112;
+	bw.buffer += 2365112;
 	bw.bit_num = 4;
 
 smk_bw_skip(&bw, 6); // (0,0)
@@ -1286,7 +1286,7 @@ smk_bw_write(&bw, 91, 14); //  (222,223) -> 222:0
 	for (int i = 0; i < ((size_t)bw.buffer + (bw.bit_num != 0 ? 1 : 0) - (size_t)bufMem - 2365112 + 3) / 4; i++) {
 		LogErrorFF("	cur[%d] = %d;", i, cur[i]);
 	}
-*/
+/*
   
 uint32_t *cur = (uint32_t*)&bufMem[2365112];
 cur[0] = -550965321;
@@ -1362,7 +1362,7 @@ cur[69] = -1445261858;
 cur[70] = -1978268966;
 cur[71] = 23432931;
 cur[72] = -1320551578;
-cur[73] = -1072995075;
+cur[73] = -1072995075;*/
 
 } else if (patchCounter == 1) {
 	patchCounter++;

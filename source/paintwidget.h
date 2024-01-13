@@ -49,12 +49,17 @@ public:
     void show(); // override;
     void hide(); // override;
 
-    QImage copyCurrent() const;
-    void pasteCurrent(const QImage &image);
+    QString copyCurrentPixels() const;
+    void pasteCurrentPixels(const QString &pixels);
+    QImage copyCurrentImage() const;
+    void pasteCurrentImage(const QImage &image);
     void deleteCurrent();
 
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
+    D1GfxFrame *getCurrentFrame();
+    QRect getSelectArea(const D1GfxFrame *frame);
+    void pasteCurrentFrame(const D1GfxFrame &srcFrame);
     void stopMove();
     void collectPixels(const D1GfxFrame *frame, const QPoint &startPos, std::vector<FramePixel> &pixels);
     void collectPixelsSquare(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);

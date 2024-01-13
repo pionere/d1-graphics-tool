@@ -223,6 +223,33 @@ bool D1Gfx::isFrameSizeConstant() const
     return true;
 }
 
+// builds QString from a D1CelFrame of given index
+QString D1Gfx::getFramePixels(int frameIndex) const
+{
+    if (frameIndex < 0 || frameIndex >= this->frames.count()) {
+#ifdef QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Image of an invalid frame %1 requested. Frame count: %2, palette: %3").arg(frameIndex).arg(this->frames.count()).arg(this->palette != nullptr));
+#endif
+        return QString();
+    }
+
+    QString pixels;
+    D1GfxFrame *frame = this->frames[frameIndex];
+    for (int y = 0; y < frame->getHeight(); y++) {
+        for (int x = 0; x < frame->getWidth(); x++, destBits++) {
+            D1GfxPixel d1pix = frame->getPixel(x, y);
+
+            if (d1pix.isTransparent())
+                pixels.append("   ;");
+            else
+                pixels.append(QString("%1;").arg(d1pix.getPaletteIndex(), 3));
+        }
+        pixels.append('\n');
+    }
+    pixels = pixels.trimmed();
+    return pixels;
+}
+
 // builds QImage from a D1CelFrame of given index
 QImage D1Gfx::getFrameImage(int frameIndex) const
 {

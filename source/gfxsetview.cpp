@@ -531,7 +531,15 @@ void GfxsetView::mergeFrames(const MergeFramesParam &params)
     // this->displayFrame();
 }
 
-QImage GfxsetView::copyCurrent() const
+QString GfxsetView::copyCurrentPixels() const
+{
+    if (this->gfx->getFrameCount() == 0) {
+        return QImage();
+    }
+    return this->gfx->getFramePixels(this->currentFrameIndex);
+}
+
+QImage GfxsetView::copyCurrentImage() const
 {
     if (this->gfx->getFrameCount() == 0) {
         return QImage();
@@ -539,7 +547,7 @@ QImage GfxsetView::copyCurrent() const
     return this->gfx->getFrameImage(this->currentFrameIndex);
 }
 
-void GfxsetView::pasteCurrent(const QImage &image)
+void GfxsetView::pasteCurrentImage(const QImage &image)
 {
     if (this->gfx->getFrameCount() != 0) {
         this->gfx->replaceFrame(this->currentFrameIndex, image);
