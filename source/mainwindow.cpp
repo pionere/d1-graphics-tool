@@ -912,8 +912,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             clipboard->setImage(image);
         }
         }
-        LogErrorF("Copy event mods %d shift %d", event->modifiers(), Qt::AltModifier);
+        LogErrorF("Copy event mods %d alt %d", event->modifiers(), Qt::AltModifier);
         return;
+    } else if (event->modifiers() & Qt::AltModifier) {
+		LogErrorF("Copy event key %d mods %d c %d alt %d", event->key(), event->modifiers(), Qt::Key_C, Qt::AltModifier);
     }
     match = keyCombinationMatchesSequence(kc, QKeySequence::Cut, Qt::AltModifier);
     if (match != 0) { // event->matches(QKeySequence::Cut)) {
