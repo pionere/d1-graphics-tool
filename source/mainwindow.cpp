@@ -840,7 +840,7 @@ void MainWindow::openFiles(const QStringList &filePaths)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    QKeySequence ks = (QKeySequence)((int)event->key() | (int)event->modifiers());
+    QKeySequence ks = (QKeySequence)(event->key() | event->modifiers());
     if (ks == QKeySequence::Cancel) { // event->matches(QKeySequence::Cancel)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->hide();
@@ -857,7 +857,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (ks == QKeySequence::Copy || ks == (QKeySequence::Copy | Qt::AltModifier)) { // event->matches(QKeySequence::Copy)) {
-        if (ks & Qt::AltModifier) { // event->modifiers() & Qt::AltModifier) {
+        if ((int)ks & Qt::AltModifier) { // event->modifiers() & Qt::AltModifier) {
             QString pixels;
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             pixels = this->paintWidget->copyCurrentPixels();
@@ -893,7 +893,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
     if (ks == QKeySequence::Cut || ks == (QKeySequence::Cut | Qt::AltModifier)) { // event->matches(QKeySequence::Cut)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            if (ks & Qt::AltModifier) { // event->modifiers() & Qt::AltModifier) {
+            if ((int)ks & Qt::AltModifier) { // event->modifiers() & Qt::AltModifier) {
                 QString pixels = this->paintWidget->copyCurrentPixels();
             if (!pixels.isEmpty()) {
                 this->paintWidget->deleteCurrent();
