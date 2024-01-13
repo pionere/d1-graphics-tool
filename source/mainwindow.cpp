@@ -840,7 +840,7 @@ void MainWindow::openFiles(const QStringList &filePaths)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    QKeySequence ks = (QKeySequence)(event->key() | event->modifiers());
+    QKeySequence ks = (QKeySequence)((int)event->key() | (int)event->modifiers());
     if (ks == QKeySequence::Cancel) { // event->matches(QKeySequence::Cancel)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->hide();
