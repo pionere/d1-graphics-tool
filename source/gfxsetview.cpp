@@ -534,7 +534,7 @@ void GfxsetView::mergeFrames(const MergeFramesParam &params)
 QString GfxsetView::copyCurrentPixels() const
 {
     if (this->gfx->getFrameCount() == 0) {
-        return QImage();
+        return QString();
     }
     return this->gfx->getFramePixels(this->currentFrameIndex);
 }

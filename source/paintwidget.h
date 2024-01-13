@@ -57,8 +57,8 @@ public:
 
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
-    D1GfxFrame *getCurrentFrame();
-    QRect getSelectArea(const D1GfxFrame *frame);
+    D1GfxFrame *getCurrentFrame() const;
+    QRect getSelectArea(const D1GfxFrame *frame)  const;
     void pasteCurrentFrame(const D1GfxFrame &srcFrame);
     void stopMove();
     void collectPixels(const D1GfxFrame *frame, const QPoint &startPos, std::vector<FramePixel> &pixels);

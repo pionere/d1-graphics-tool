@@ -236,7 +236,7 @@ QString D1Gfx::getFramePixels(int frameIndex) const
     QString pixels;
     D1GfxFrame *frame = this->frames[frameIndex];
     for (int y = 0; y < frame->getHeight(); y++) {
-        for (int x = 0; x < frame->getWidth(); x++, destBits++) {
+        for (int x = 0; x < frame->getWidth(); x++) {
             D1GfxPixel d1pix = frame->getPixel(x, y);
 
             if (d1pix.isTransparent())

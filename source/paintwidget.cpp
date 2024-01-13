@@ -178,11 +178,11 @@ D1GfxFrame *PaintWidget::getCurrentFrame()
     } else if (this->gfxsetView != nullptr) {
         frameIndex = this->gfxsetView->getCurrentFrameIndex();
     }
-    return this->gfx->getFrameCount() > frameIndex ? this->gfx->getFrame(frameIndex) : nullptr;
+    return this->gfx->getFrameCount() > frameIndex ? const_cast<D1GfxFrame *>(this->gfx->getFrame(frameIndex)) : nullptr;
 
 }
 
-QRect PaintWidget::getSelectArea(const D1GfxFrame *frame)
+QRect PaintWidget::getSelectArea(const D1GfxFrame *frame) const
 {
     QRect area = getArea(this->currPos, this->lastPos);
     if (area.left() < 0) {
@@ -203,7 +203,7 @@ QRect PaintWidget::getSelectArea(const D1GfxFrame *frame)
 void PaintWidget::pasteCurrentFrame(const D1GfxFrame &srcFrame)
 {
     // select frame
-    D1GfxFrame *frame = this->getCurrentFrame();
+    const D1GfxFrame *frame = this->getCurrentFrame();
     if (frame == nullptr) {
         return;
     }
@@ -252,7 +252,7 @@ void PaintWidget::pasteCurrentFrame(const D1GfxFrame &srcFrame)
 
 QString PaintWidget::copyCurrentPixels() const
 {
-    D1GfxFrame *frame = this->getCurrentFrame();
+    const D1GfxFrame *frame = this->getCurrentFrame();
     if (this->rubberBand == nullptr || frame == nullptr) {
         return QString();
     }

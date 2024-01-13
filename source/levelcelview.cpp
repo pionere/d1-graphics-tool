@@ -1849,7 +1849,7 @@ void LevelCelView::removeCurrentTile()
 QString LevelCelView::copyCurrentPixels() const
 {
     if (this->gfx->getFrameCount() == 0) {
-        return QImage();
+        return QString();
     }
     return this->gfx->getFramePixels(this->currentFrameIndex);
 }

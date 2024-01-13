@@ -58,14 +58,14 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, co
 
 bool D1ImageFrame::load(D1GfxFrame &frame, const QString &pixels, const D1Pal *pal)
 {
-    QStringList rows = pixelsStr.split('\');
+    QStringList rows = pixels.split('\');
     int width = 0;
     QList<QStringList> pixValues;
     for (const QString &row : rows) {
-        QStringList pixels = row.split(';');
-        pixValues.push_back(pixels);
-        if (pixels.count() > width) {
-            width = pixels.count();
+        QStringList colors = row.split(';');
+        pixValues.push_back(colors);
+        if (colors.count() > width) {
+            width = colors.count();
         }
     }
 
@@ -77,18 +77,18 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QString &pixels, const D1Pal *p
         for (QString pixel : row) {
             pixel = pixel.trimmed();
             if (pixel.isEmpty()) {
-                pixelLine.append(D1GfxPixel::transparentPixel());
+                pixelLine.push_back(D1GfxPixel::transparentPixel());
             } else {
                 bool valid;
                 quint8 color = pixel.toInt(&valid);
                 if (!valid) {
-                    color = getPalColor(colors, QColor(pixel));
+                    color = getPalColor(colors, QColor(pixel.right(7)));
                 }
-                pixelLine.append(D1GfxPixel::colorPixel(color));
+                pixelLine.push_back(D1GfxPixel::colorPixel(color));
             }
         }
         for (int i = pixelLine.size() - width; i > 0; i--) {
-            pixelLine.append(D1GfxPixel::transparentPixel());
+            pixelLine.push_back(D1GfxPixel::transparentPixel());
         }
         frame.addPixelLine(std::move(pixelLine));
     }
