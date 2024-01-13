@@ -553,7 +553,7 @@
     <string>Export</string>
    </property>
    <property name="shortcut">
-    <string notr="true">Ctrl+E</string>
+    <string notr="true">Ctrl+P</string>
    </property>
   </action>
   <action name="actionUpscaleTask">

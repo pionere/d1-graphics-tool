@@ -487,7 +487,7 @@ static void audioCallback(int track, QAudio::State newState)
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
             }*/
             audioOutput[track]->start(smkAudioBuffer[track]);
-// LogErrorF("start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
+ LogErrorF("start %d (%d) buffer %d", track, smkAudioBuffer[track]->bytesAvailable(), audioOutput[track]->bufferSize());
             auto state = audioOutput[track]->state();
             if (state != QAudio::ActiveState) {
                 QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
@@ -684,6 +684,9 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
             m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
             audioOutput[track] = new QAudioOutput(m_audioFormat); // , this);
+			LogErrorF("QAudioOutput buffer orig %d", audioOutput[track]->bufferSize());
+			audioOutput[track]->setBufferSize(2048);
+			LogErrorF("QAudioOutput buffer set %d", audioOutput[track]->bufferSize());
             // connect up signal stateChanged to a lambda to get feedback
             QObject::connect(audioOutput[track], &QAudioOutput::stateChanged, cbfunc[track]);
 			/*QObject::connect(audioOutput, &QAudioOutput::stateChanged, [track](QAudio::State newState)
