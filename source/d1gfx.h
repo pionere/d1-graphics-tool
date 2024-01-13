@@ -27,7 +27,7 @@ public:
 
     bool isTransparent() const;
     quint8 getPaletteIndex() const;
-    QString colorText() const;
+    QString colorText(D1Pal *pal) const;
 
     friend bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs);
     friend bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs);

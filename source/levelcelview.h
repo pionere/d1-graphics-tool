@@ -51,7 +51,7 @@ public:
     void setDungeon(D1Dun *dun);
 
     CelScene *getCelScene() const;
-    int getCurrentFrameIndex(bool values) const;
+    int getCurrentFrameIndex() const;
     int getCurrentSubtileIndex() const;
     int getCurrentTileIndex() const;
     const QComboBox *getObjects() const;
@@ -79,7 +79,7 @@ public:
     void replaceCurrentTile(const QString &imagefilePath);
     void removeCurrentTile();
 
-    QString copyCurrentPixels() const;
+    QString copyCurrentPixels(bool values) const;
     QImage copyCurrentImage() const;
     void pasteCurrentImage(const QImage &image);
 

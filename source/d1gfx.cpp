@@ -39,7 +39,7 @@ QString D1GfxPixel::colorText(D1Pal *pal) const
 {
     QString colorTxt;
     if (!this->transparent) {
-        quint8 color = d1pix.getPaletteIndex();
+        quint8 color = this->paletteIndex;
         if (pal == nullptr) {
             colorTxt = QString::number(color);
         } else {
@@ -249,7 +249,7 @@ QString D1Gfx::getFramePixels(int frameIndex, bool values) const
 
     QString pixels;
     D1GfxFrame *frame = this->frames[frameIndex];
-    D1Pal *pal = value ? nullptr : this->palette;
+    D1Pal *pal = values ? nullptr : this->palette;
     for (int y = 0; y < frame->getHeight(); y++) {
         for (int x = 0; x < frame->getWidth(); x++) {
             D1GfxPixel d1pix = frame->getPixel(x, y);
