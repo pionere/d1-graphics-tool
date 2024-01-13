@@ -49,7 +49,7 @@ public:
     void show(); // override;
     void hide(); // override;
 
-    QString copyCurrentPixels() const;
+    QString copyCurrentPixels(bool values) const;
     void pasteCurrentPixels(const QString &pixels);
     QImage copyCurrentImage() const;
     void pasteCurrentImage(const QImage &image);

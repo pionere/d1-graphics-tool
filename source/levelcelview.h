@@ -51,7 +51,7 @@ public:
     void setDungeon(D1Dun *dun);
 
     CelScene *getCelScene() const;
-    int getCurrentFrameIndex() const;
+    int getCurrentFrameIndex(bool values) const;
     int getCurrentSubtileIndex() const;
     int getCurrentTileIndex() const;
     const QComboBox *getObjects() const;

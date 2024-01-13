@@ -250,7 +250,7 @@ void PaintWidget::pasteCurrentFrame(const D1GfxFrame &srcFrame)
     }
 }
 
-QString PaintWidget::copyCurrentPixels() const
+QString PaintWidget::copyCurrentPixels(bool values) const
 {
     const D1GfxFrame *frame = this->getCurrentFrame();
     if (this->rubberBand == nullptr || frame == nullptr) {
@@ -258,14 +258,13 @@ QString PaintWidget::copyCurrentPixels() const
     }
     QRect area = this->getSelectArea(frame);
     QString pixels;
+    D1Pal *pal = values ? nullptr : this->pal;
     for (int y = area.top(); y <= area.bottom(); y++) {
         for (int x = area.left(); x <= area.right(); x++) {
             D1GfxPixel d1pix = frame->getPixel(x, y);
 
-            if (d1pix.isTransparent())
-                pixels.append("   ;");
-            else
-                pixels.append(QString("%1;").arg(d1pix.getPaletteIndex(), 3));
+            QString colorTxt = d1pix.colorText(pal);
+            pixels.append(colorTxt);
         }
         pixels.append('\n');
     }

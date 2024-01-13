@@ -531,12 +531,12 @@ void GfxsetView::mergeFrames(const MergeFramesParam &params)
     // this->displayFrame();
 }
 
-QString GfxsetView::copyCurrentPixels() const
+QString GfxsetView::copyCurrentPixels(bool values) const
 {
     if (this->gfx->getFrameCount() == 0) {
         return QString();
     }
-    return this->gfx->getFramePixels(this->currentFrameIndex);
+    return this->gfx->getFramePixels(this->currentFrameIndex, values);
 }
 
 QImage GfxsetView::copyCurrentImage() const

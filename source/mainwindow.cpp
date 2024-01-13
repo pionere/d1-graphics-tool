@@ -838,31 +838,24 @@ void MainWindow::openFiles(const QStringList &filePaths)
     }
 }
 
-static int keyCombinationMatchesSequence(int kc, const QKeySequence &ks, int modifier = 0)
+static bool keyCombinationMatchesSequence(int kc, const QKeySequence &ks)
 {
     for (int i = 0; i < ks.count(); i++) {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         if (ks[i].toCombined() == kc) {
-            return 1;
-        }
-        if ((ks[i].toCombined() | modifier) == kc) {
-            return -1;
+            return true;
         }
 #else
         if (ks[i] == kc) {
-            return 1;
-        }
-        if ((ks[i] | modifier) == kc) {
-            return -1;
+            return true;
         }
 #endif
     }
-    return 0;
+    return false;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    int match;
     const int kc = event->key() | event->modifiers();
     if (keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
@@ -879,24 +872,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         this->ui->menuNew->setActiveAction(this->ui->menuNew->actions()[0]);
         return;
     }
-    match = keyCombinationMatchesSequence(kc, QKeySequence::Copy, Qt::ShiftModifier);
-    if (match != 0) { // event->matches(QKeySequence::Copy)) {
-        if (match < 0) { // event->modifiers() & Qt::AltModifier) {
-            QString pixels;
-        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            pixels = this->paintWidget->copyCurrentPixels();
-        } else if (this->celView != nullptr) {
-            pixels = this->celView->copyCurrentPixels();
-        } else if (this->levelCelView != nullptr) {
-            pixels = this->levelCelView->copyCurrentPixels();
-        } else if (this->gfxsetView != nullptr) {
-            pixels = this->gfxsetView->copyCurrentPixels();
-        }
-        if (!pixels.isEmpty()) {
-            QClipboard *clipboard = QGuiApplication::clipboard();
-            clipboard->setText(pixels);
-        }
-        } else {
+    if (keyCombinationMatchesSequence(kc, QKeySequence::Copy)) { // event->matches(QKeySequence::Copy)) {
         QImage image;
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             image = this->paintWidget->copyCurrentImage();
@@ -911,29 +887,33 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             QClipboard *clipboard = QGuiApplication::clipboard();
             clipboard->setImage(image);
         }
-        }
-        LogErrorF("Copy event mods %d alt %d", event->modifiers(), Qt::AltModifier);
         return;
-    } else if (event->modifiers() & Qt::ShiftModifier) {
-		LogErrorF("Copy event key %d mods %d c %d alt %d", event->key(), event->modifiers(), Qt::Key_C, Qt::AltModifier);
     }
-    match = keyCombinationMatchesSequence(kc, QKeySequence::Cut, Qt::AltModifier);
-    if (match != 0) { // event->matches(QKeySequence::Cut)) {
+    if (kc == (Qt::CTRL | Qt::Key_E) || kc == (Qt::CTRL | Qt::Key_E | Qt::ShiftModifier)) {
+        bool shift = (kc & Qt::ShiftModifier) != 0;
+        QString pixels;
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            if (match < 0) { // event->modifiers() & Qt::AltModifier) {
-                QString pixels = this->paintWidget->copyCurrentPixels();
-            if (!pixels.isEmpty()) {
-                this->paintWidget->deleteCurrent();
-                QClipboard *clipboard = QGuiApplication::clipboard();
-                clipboard->setText(pixels);
-            }
-            } else {
+            pixels = this->paintWidget->copyCurrentPixels(shift);
+        } else if (this->celView != nullptr) {
+            pixels = this->celView->copyCurrentPixels(shift);
+        } else if (this->levelCelView != nullptr) {
+            pixels = this->levelCelView->copyCurrentPixels(shift);
+        } else if (this->gfxsetView != nullptr) {
+            pixels = this->gfxsetView->copyCurrentPixels(shift);
+        }
+        if (!pixels.isEmpty()) {
+            QClipboard *clipboard = QGuiApplication::clipboard();
+            clipboard->setText(pixels);
+        }
+        return;
+    }
+    if (keyCombinationMatchesSequence(kc, QKeySequence::Cut)) { // event->matches(QKeySequence::Cut)) {
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             QImage image = this->paintWidget->copyCurrentImage();
             if (!image.isNull()) {
                 this->paintWidget->deleteCurrent();
                 QClipboard *clipboard = QGuiApplication::clipboard();
                 clipboard->setImage(image);
-            }
             }
         }
         return;

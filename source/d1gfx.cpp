@@ -35,6 +35,20 @@ quint8 D1GfxPixel::getPaletteIndex() const
     return this->paletteIndex;
 }
 
+QString D1GfxPixel::colorText(D1Pal *pal) const
+{
+    QString colorTxt;
+    if (!this->transparent) {
+        quint8 color = d1pix.getPaletteIndex();
+        if (pal == nullptr) {
+            colorTxt = QString::number(color);
+        } else {
+            colorTxt = pal->getColor(color).name();
+        }
+    }
+    return QString("%1;").arg(colorTxt, (pal == nullptr ? 3 : 7));
+}
+
 bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
 {
     return lhs.transparent == rhs.transparent && lhs.paletteIndex == rhs.paletteIndex;
@@ -224,7 +238,7 @@ bool D1Gfx::isFrameSizeConstant() const
 }
 
 // builds QString from a D1CelFrame of given index
-QString D1Gfx::getFramePixels(int frameIndex) const
+QString D1Gfx::getFramePixels(int frameIndex, bool values) const
 {
     if (frameIndex < 0 || frameIndex >= this->frames.count()) {
 #ifdef QT_DEBUG
@@ -235,14 +249,13 @@ QString D1Gfx::getFramePixels(int frameIndex) const
 
     QString pixels;
     D1GfxFrame *frame = this->frames[frameIndex];
+    D1Pal *pal = value ? nullptr : this->palette;
     for (int y = 0; y < frame->getHeight(); y++) {
         for (int x = 0; x < frame->getWidth(); x++) {
             D1GfxPixel d1pix = frame->getPixel(x, y);
 
-            if (d1pix.isTransparent())
-                pixels.append("   ;");
-            else
-                pixels.append(QString("%1;").arg(d1pix.getPaletteIndex(), 3));
+            QString colorTxt = d1pix.colorText(pal);
+            pixels.append(colorTxt);
         }
         pixels.append('\n');
     }

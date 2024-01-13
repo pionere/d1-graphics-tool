@@ -48,7 +48,7 @@ public:
     void removeCurrentFrame(bool wholeGroup);
     void mergeFrames(const MergeFramesParam &params);
 
-    QString copyCurrentPixels() const;
+    QString copyCurrentPixels(bool values) const;
     QImage copyCurrentImage() const;
     void pasteCurrentImage(const QImage &image);
 

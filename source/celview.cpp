@@ -630,12 +630,12 @@ void CelView::mergeFrames(const MergeFramesParam &params)
     // this->displayFrame();
 }
 
-QString CelView::copyCurrentPixels() const
+QString CelView::copyCurrentPixels(bool values) const
 {
     if (this->gfx->getFrameCount() == 0) {
         return QString();
     }
-    return this->gfx->getFramePixels(this->currentFrameIndex);
+    return this->gfx->getFramePixels(this->currentFrameIndex, values);
 }
 
 QImage CelView::copyCurrentImage() const
