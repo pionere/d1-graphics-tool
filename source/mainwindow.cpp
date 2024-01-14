@@ -71,10 +71,10 @@ MainWindow::MainWindow()
     this->reloadConfig();
 
     for (const QAction *ac : this->findChildren<QAction*>()) {
-           LogErrorF("Main ac:%s", ac->text());
+           LogErrorF("Main ac:%s tt:%s", ac->text(), ac->toolTip());
         QList<QKeySequence> sc = ac->shortcuts();
         for (const QKeySequence &ks : sc) {
-            LogErrorF("Main seq:%s", ks.toString());
+            LogErrorF("Main seq:%s", ks.toString(QKeySequence::PortableText));
             if (ks == QKeySequence::Cancel || ks == QKeySequence::New || ks == QKeySequence::Copy || ks == QKeySequence::Cut || ks == QKeySequence::Delete || ks == QKeySequence::Paste) {
                 qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
             }
