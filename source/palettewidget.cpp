@@ -423,6 +423,7 @@ QList<QPair<int, QColor>> clipboardToColors()
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString text = clipboard->text();
+    text.remove('\n'); // support copy/paste from image-frames
     QStringList parts = text.split(';');
     QList<QPair<int, QColor>> result;
     for (QString part : parts) {

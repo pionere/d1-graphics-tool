@@ -24,6 +24,7 @@ public:
 
     bool isTransparent() const;
     quint8 getPaletteIndex() const;
+    QString colorText(D1Pal *pal) const;
 
     friend bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs);
     friend bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs);
@@ -133,13 +134,16 @@ public:
     void clear();
 
     bool isFrameSizeConstant() const;
+    QString getFramePixels(int frameIndex, bool values) const;
     QImage getFrameImage(int frameIndex) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
     void insertFrame(int frameIndex, int width, int height);
     D1GfxFrame *insertFrame(int frameIndex);
+    D1GfxFrame *insertFrame(int frameIndex, const QString &pixels);
     D1GfxFrame *insertFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const D1GfxFrame &frame);
+    D1GfxFrame *replaceFrame(int frameIndex, const QString &pixels);
     D1GfxFrame *replaceFrame(int frameIndex, const QImage &image);
     int duplicateFrame(int frameIndex, bool wholeGroup);
     void removeFrame(int frameIndex, bool wholeGroup);

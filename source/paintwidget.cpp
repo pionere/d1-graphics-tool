@@ -199,35 +199,7 @@ QRect PaintWidget::getSelectArea(const D1GfxFrame *frame) const
     return area;
 }
 
-QImage PaintWidget::copyCurrent() const
-{
-    // select frame
-    D1GfxFrame *frame = this->getCurrentFrame();
-    if (frame == nullptr) {
-        return QImage();
-    }
-
-    QRect area = this->getSelectArea(frame);
-
-    QImage image = QImage(area.size(), QImage::Format_ARGB32);
-    QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
-    for (int y = 0; y < area.height(); y++) {
-        for (int x = 0; x < area.width(); x++, destBits++) {
-            D1GfxPixel d1pix = frame->getPixel(x + area.left(), area.top() + y);
-
-            QColor color;
-            if (d1pix.isTransparent())
-                color = QColor(Qt::transparent);
-            else
-                color = this->pal->getColor(d1pix.getPaletteIndex());
-
-            *destBits = color.rgba();
-        }
-    }
-    return image;
-}
-
-void PaintWidget::pasteCurrent(const QImage &image)
+void PaintWidget::pasteCurrentFrame(const D1GfxFrame &srcFrame)
 {
     // select frame
     D1GfxFrame *frame = this->getCurrentFrame();
@@ -243,19 +215,17 @@ void PaintWidget::pasteCurrent(const QImage &image)
         this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
     }
     this->currPos = destPos;
-    QRect area = QRect(destPos, QSize(image.size()));
+    const int width = srcFrame.getWidth();
+    const int height = srcFrame.getHeight();
+    QRect area = QRect(destPos, QSize(width, height));
     this->lastPos = area.bottomRight();
     this->selectArea(area);
     this->selectionMoveMode = 0;
 
-    // load the image
-    D1GfxFrame srcFrame;
-    D1ImageFrame::load(srcFrame, image, false, this->pal);
-
     // copy to the destination
     std::vector<FramePixel> pixels;
-    for (int y = 0; y < srcFrame.getHeight(); y++) {
-        for (int x = 0; x < srcFrame.getWidth(); x++) {
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
             D1GfxPixel pixel = srcFrame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 continue;
@@ -277,6 +247,71 @@ void PaintWidget::pasteCurrent(const QImage &image)
 
         this->undoStack->push(command);
     }
+}
+
+QString PaintWidget::copyCurrentPixels(bool values) const
+{
+    const D1GfxFrame *frame = this->getCurrentFrame();
+    if (this->rubberBand == nullptr || frame == nullptr) {
+        return QString();
+    }
+    QRect area = this->getSelectArea(frame);
+    QString pixels;
+    D1Pal *pal = values ? nullptr : this->pal;
+    for (int y = area.top(); y <= area.bottom(); y++) {
+        for (int x = area.left(); x <= area.right(); x++) {
+            D1GfxPixel d1pix = frame->getPixel(x, y);
+
+            QString colorTxt = d1pix.colorText(pal);
+            pixels.append(colorTxt);
+        }
+        pixels.append('\n');
+    }
+    pixels = pixels.trimmed();
+    return pixels;
+}
+
+void PaintWidget::pasteCurrentPixels(const QString &pixels)
+{
+    // load the image
+    D1GfxFrame srcFrame;
+    D1ImageFrame::load(srcFrame, pixels, false, this->pal);
+
+    this->pasteCurrentFrame(srcFrame);
+}
+
+QImage PaintWidget::copyCurrentImage() const
+{
+    D1GfxFrame *frame = this->getCurrentFrame();
+    if (this->rubberBand == nullptr || frame == nullptr) {
+        return QImage();
+    }
+    QRect area = this->getSelectArea(frame);
+    QImage image = QImage(area.size(), QImage::Format_ARGB32);
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
+    for (int y = area.top(); y <= area.bottom(); y++) {
+        for (int x = area.left(); x <= area.right(); x++, destBits++) {
+            D1GfxPixel d1pix = frame->getPixel(x, y);
+
+            QColor color;
+            if (d1pix.isTransparent())
+                color = QColor(Qt::transparent);
+            else
+                color = this->pal->getColor(d1pix.getPaletteIndex());
+
+            *destBits = color.rgba();
+        }
+    }
+    return image;
+}
+
+void PaintWidget::pasteCurrentImage(const QImage &image)
+{
+    // load the image
+    D1GfxFrame srcFrame;
+    D1ImageFrame::load(srcFrame, image, false, this->pal);
+
+    this->pasteCurrentFrame(srcFrame);
 }
 
 void PaintWidget::deleteCurrent()

@@ -593,7 +593,26 @@ void CelView::mergeFrames(const MergeFramesParam &params)
     // this->displayFrame();
 }
 
-QImage CelView::copyCurrent() const
+QString CelView::copyCurrentPixels(bool values) const
+{
+    if (this->gfx->getFrameCount() == 0) {
+        return QString();
+    }
+    return this->gfx->getFramePixels(this->currentFrameIndex, values);
+}
+
+void CelView::pasteCurrentPixels(const QString &pixels)
+{
+    if (this->gfx->getFrameCount() != 0) {
+        this->gfx->replaceFrame(this->currentFrameIndex, pixels);
+    } else {
+        this->gfx->insertFrame(this->currentFrameIndex, pixels);
+    }
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+QImage CelView::copyCurrentImage() const
 {
     if (this->gfx->getFrameCount() == 0) {
         return QImage();
@@ -601,7 +620,7 @@ QImage CelView::copyCurrent() const
     return this->gfx->getFrameImage(this->currentFrameIndex);
 }
 
-void CelView::pasteCurrent(const QImage &image)
+void CelView::pasteCurrentImage(const QImage &image)
 {
     if (this->gfx->getFrameCount() != 0) {
         this->gfx->replaceFrame(this->currentFrameIndex, image);

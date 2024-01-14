@@ -78,8 +78,10 @@ public:
     void replaceCurrentTile(const QString &imagefilePath);
     void removeCurrentTile();
 
-    QImage copyCurrent() const;
-    void pasteCurrent(const QImage &image);
+    QString copyCurrentPixels(bool values) const;
+    void pasteCurrentPixels(const QString &pixels);
+    QImage copyCurrentImage() const;
+    void pasteCurrentImage(const QImage &image);
 
     void reportUsage() const;
     void activeSubtiles() const;

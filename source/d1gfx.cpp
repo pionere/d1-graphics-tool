@@ -33,6 +33,20 @@ quint8 D1GfxPixel::getPaletteIndex() const
     return this->paletteIndex;
 }
 
+QString D1GfxPixel::colorText(D1Pal *pal) const
+{
+    QString colorTxt;
+    if (!this->transparent) {
+        quint8 color = this->paletteIndex;
+        if (pal == nullptr) {
+            colorTxt = QString::number(color);
+        } else {
+            colorTxt = pal->getColor(color).name();
+        }
+    }
+    return QString("%1;").arg(colorTxt, (pal == nullptr ? 3 : 7));
+}
+
 bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
 {
     return lhs.transparent == rhs.transparent && lhs.paletteIndex == rhs.paletteIndex;
@@ -195,6 +209,29 @@ bool D1Gfx::isFrameSizeConstant() const
     return true;
 }
 
+// builds QString from a D1CelFrame of given index
+QString D1Gfx::getFramePixels(int frameIndex, bool values) const
+{
+    if (frameIndex < 0 || frameIndex >= this->frames.count()) {
+        return QString();
+    }
+
+    QString pixels;
+    D1GfxFrame *frame = this->frames[frameIndex];
+    D1Pal *pal = values ? nullptr : this->palette;
+    for (int y = 0; y < frame->getHeight(); y++) {
+        for (int x = 0; x < frame->getWidth(); x++) {
+            D1GfxPixel d1pix = frame->getPixel(x, y);
+
+            QString colorTxt = d1pix.colorText(pal);
+            pixels.append(colorTxt);
+        }
+        pixels.append('\n');
+    }
+    pixels = pixels.trimmed();
+    return pixels;
+}
+
 // builds QImage from a D1CelFrame of given index
 QImage D1Gfx::getFrameImage(int frameIndex) const
 {
@@ -278,6 +315,15 @@ D1GfxFrame *D1Gfx::insertFrame(int idx)
     return newFrame;
 }
 
+D1GfxFrame *D1Gfx::insertFrame(int idx, const QString &pixels)
+{
+    D1GfxFrame *frame = this->insertFrame(idx);
+    D1ImageFrame::load(*frame, pixels, frame->isClipped(), this->palette);
+    // this->modified = true;
+
+    return this->frames[idx];
+}
+
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 {
     D1GfxFrame *frame = this->insertFrame(idx);
@@ -304,6 +350,17 @@ D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
     D1ImageFrame::load(frame, image, clipped, this->palette);
 
     return this->addToFrame(idx, frame);
+}
+
+D1GfxFrame *D1Gfx::replaceFrame(int idx, const QString &pixels)
+{
+    bool clipped = this->frames[idx]->isClipped();
+
+    D1GfxFrame *frame = new D1GfxFrame();
+    D1ImageFrame::load(*frame, pixels, clipped, this->palette);
+    this->setFrame(idx, frame);
+
+    return this->frames[idx];
 }
 
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)

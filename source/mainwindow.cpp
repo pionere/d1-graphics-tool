@@ -864,13 +864,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if (keyCombinationMatchesSequence(kc, QKeySequence::Copy)) { // event->matches(QKeySequence::Copy)) {
         QImage image;
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            image = this->paintWidget->copyCurrent();
+            image = this->paintWidget->copyCurrentImage();
         } else if (this->celView != nullptr) {
-            image = this->celView->copyCurrent();
+            image = this->celView->copyCurrentImage();
         } else if (this->levelCelView != nullptr) {
-            image = this->levelCelView->copyCurrent();
+            image = this->levelCelView->copyCurrentImage();
         } else if (this->gfxsetView != nullptr) {
-            image = this->gfxsetView->copyCurrent();
+            image = this->gfxsetView->copyCurrentImage();
         }
         if (!image.isNull()) {
             QClipboard *clipboard = QGuiApplication::clipboard();
@@ -878,9 +878,27 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
+    if (kc == (Qt::CTRL | Qt::Key_E) || kc == (Qt::CTRL | Qt::Key_E | Qt::ShiftModifier)) {
+        bool shift = (kc & Qt::ShiftModifier) != 0;
+        QString pixels;
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            pixels = this->paintWidget->copyCurrentPixels(shift);
+        } else if (this->celView != nullptr) {
+            pixels = this->celView->copyCurrentPixels(shift);
+        } else if (this->levelCelView != nullptr) {
+            pixels = this->levelCelView->copyCurrentPixels(shift);
+        } else if (this->gfxsetView != nullptr) {
+            pixels = this->gfxsetView->copyCurrentPixels(shift);
+        }
+        if (!pixels.isEmpty()) {
+            QClipboard *clipboard = QGuiApplication::clipboard();
+            clipboard->setText(pixels);
+        }
+        return;
+    }
     if (keyCombinationMatchesSequence(kc, QKeySequence::Cut)) { // event->matches(QKeySequence::Cut)) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            QImage image = this->paintWidget->copyCurrent();
+            QImage image = this->paintWidget->copyCurrentImage();
             if (!image.isNull()) {
                 this->paintWidget->deleteCurrent();
                 QClipboard *clipboard = QGuiApplication::clipboard();
@@ -902,13 +920,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
 
             if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-                this->paintWidget->pasteCurrent(image);
+                this->paintWidget->pasteCurrentImage(image);
             } else if (this->celView != nullptr) {
-                this->celView->pasteCurrent(image);
+                this->celView->pasteCurrentImage(image);
             } else if (this->levelCelView != nullptr) {
-                this->levelCelView->pasteCurrent(image);
+                this->levelCelView->pasteCurrentImage(image);
             } else if (this->gfxsetView != nullptr) {
-                this->gfxsetView->pasteCurrent(image);
+                this->gfxsetView->pasteCurrentImage(image);
             }
 
             // Clear loading message from status bar
@@ -923,6 +941,22 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 }
             };
             ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW, std::move(func));*/
+        }
+        return;
+    }
+    if (kc == (Qt::CTRL | Qt::Key_R)) {
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        QString pixels = clipboard->text();
+        if (!pixels.isEmpty()) {
+            if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+                this->paintWidget->pasteCurrentPixels(pixels);
+            } else if (this->celView != nullptr) {
+                this->celView->pasteCurrentPixels(pixels);
+            } else if (this->levelCelView != nullptr) {
+                this->levelCelView->pasteCurrentPixels(pixels);
+            } else if (this->gfxsetView != nullptr) {
+                this->gfxsetView->pasteCurrentPixels(pixels);
+            }
         }
         return;
     }

@@ -1846,7 +1846,26 @@ void LevelCelView::removeCurrentTile()
     // this->displayFrame();
 }
 
-QImage LevelCelView::copyCurrent() const
+QString LevelCelView::copyCurrentPixels(bool values) const
+{
+    if (this->gfx->getFrameCount() == 0) {
+        return QString();
+    }
+    return this->gfx->getFramePixels(this->currentFrameIndex, values);
+}
+
+void LevelCelView::pasteCurrentPixels(const QString &pixels)
+{
+    if (this->gfx->getFrameCount() != 0) {
+        this->gfx->replaceFrame(this->currentFrameIndex, pixels);
+    } else {
+        this->gfx->insertFrame(this->currentFrameIndex, pixels);
+    }
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+QImage LevelCelView::copyCurrentImage() const
 {
     /*if (this->ui->tilesTabs->currentIndex() == 1)
         return this->min->getSubtileImage(this->currentSubtileIndex);*/
@@ -1856,7 +1875,7 @@ QImage LevelCelView::copyCurrent() const
     return this->gfx->getFrameImage(this->currentFrameIndex);
 }
 
-void LevelCelView::pasteCurrent(const QImage &image)
+void LevelCelView::pasteCurrentImage(const QImage &image)
 {
     unsigned imageWidth = image.width();
     unsigned imageHeight = image.height();
