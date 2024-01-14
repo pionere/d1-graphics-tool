@@ -43,14 +43,14 @@ jobs:
 
     - name: Upload
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: D1GraphicsTool-Windows-x86
         path: dist
 
     - name: Upload-translations
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: D1GraphicsTool-Translations
         path: languages
@@ -85,14 +85,14 @@ jobs:
 
     - name: Upload
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: D1GraphicsTool-Windows-x86-Release
         path: dist
 
     - name: Upload bin
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: D1GraphicsTool.exe
         path: build\Release\D1GraphicsTool.exe

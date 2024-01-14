@@ -117,9 +117,7 @@ void SmkAudioWidget::frameModified()
         }
         channels = frameAudio->getChannels();
         bitWidth = frameAudio->getBitDepth() / 8;
-//        LogErrorF("frameModified getAudio %d", track);
         audioData = frameAudio->getAudio(track, &audioDataLen);
-//        LogErrorF("frameModified gotAudio %d len %d", audioData != nullptr, audioDataLen);
     } else {
         // track = -1;
         channels = 0;
@@ -139,7 +137,6 @@ void SmkAudioWidget::frameModified()
     this->ui->audioLenLabel->setText("");
     this->ui->trackComboBox->setEnabled(hasAudio);
     if (hasAudio) {
-//        LogErrorF("frameModified hasAudio 0");
         // - tracks
         for (int i = 0; i < D1SMK_TRACKS; i++) {
             unsigned long trackLen;
@@ -148,7 +145,6 @@ void SmkAudioWidget::frameModified()
             this->ui->trackComboBox->addItem(label.arg(i + 1), i);
         }
         this->ui->trackComboBox->setCurrentIndex(track);
-//        LogErrorF("frameModified hasAudio 1 %d", track);
 
         // - channels
 		this->ui->channelsLabel->setText(QString::number(channels));		
@@ -181,11 +177,11 @@ void SmkAudioWidget::frameModified()
     QImage audioFrame = QImage(width, height, QImage::Format_ARGB32);
     audioFrame.fill(QColor(Config::getGraphicsTransparentColor()));
 
-    if (audioData != nullptr) {
+    if (audioData != nullptr && bitWidth != 0 && channels != 0) {
         QPainter audioPainter(&audioFrame);
         audioPainter.setPen(QColor(Config::getPaletteUndefinedColor())); // getPaletteSelectionBorderColor?
 
-        for (unsigned long i = 0; i < audioDataLen / bitWidth; i++) {
+        for (unsigned long i = 0; i < audioDataLen / (bitWidth * channels); i++) {
 			for (unsigned ch = 0; ch < channels; ch++) {
                 int value;
                 if (bitWidth == 1) {

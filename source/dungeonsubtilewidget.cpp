@@ -193,13 +193,6 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterArmorClass->setText("");
         this->ui->monsterEvasion->setText("");
 
-        /*this->ui->monsterResSlash->setText("");
-        this->ui->monsterResBlunt->setText("");
-        this->ui->monsterResPunct->setText("");
-        this->ui->monsterResFire->setText("");
-        this->ui->monsterResLight->setText("");
-        this->ui->monsterResMagic->setText("");
-        this->ui->monsterResAcid->setText("");*/
         this->ui->monsterResSlash->setValue(0);
         this->ui->monsterResSlash->setToolTip("");
         this->ui->monsterResBlunt->setValue(0);

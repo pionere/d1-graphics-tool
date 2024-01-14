@@ -1,8 +1,48 @@
 # Changelog
-All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## Nightly
+### Added
+- animation with configurable playback speed
+- animation with palette cycling of diablo1
+- save menu option to store the current graphics
+- save as menu option to convert between cel/cl2, add new groups or store to a different location
+- open as menu option to open files with parameters
+  1. use width 96 to open wlbat.cl2, whbat.cl2 and wmbat.cl2 graphics of the warrior
+  2. use height of 8 to open the hellfire town tileset
+- new menu option to open a clean cel, cl2, tileset graphics or to create a new dungeon
+- open file from command line arguments
+- drag and drop support for image files to insert frames, tiles or subtiles
+- edit fields to modify subtiles of tiles, frames of subtiles, frame-types
+- width/height of subtiles are editable
+- button to apply trn-adjustments of the game (done to normal monster-trns)
+- context menu + menu option to add, insert, delete or replace frames
+- context menu + menu option to create, add, insert, delete or replace tiles and subtiles
+- icon buttons to reset flags of tiles and subtiles or to delete the current tile, subtile or frame (tileset only)
+- drag and drop support for palette and color translation files
+- context menu to undo/redo the modifications of the palette/translation
+- icon buttons to create/load/save palette/translation in place
+- file dialogs start from the last used folder/file (even after restart)
+- export to any kind of image format which are supported by Qt (JPEG, WEBP, etc...)
+- option to limit the range of the exported items
+- support SMK files (animation + sound)
+- support DUN and RDUN files
+- support TMI metadata
+- support upscaling of assets
+- added basic drawing feature
+- added usage report for frames and subtiles of tilesets
+- added usage report for entities of dungeons
+- added option to patch tilesets and dungeons of the original game (Diablo 1)
+- added option to generate dungeons
+- added consistency checks for AMP, SOL and TMI flags
+- added consistency checks for DUN entities
+- support 'merging' of DUN contents
+- added jobs to cleanup tilesets and dungeons
+- language is selectable in the options menu
+- background (+ transparent color) of the main view is configurable
+
+### Fixed
+- memory leaks
+- bunch of bugfixes
 
 ## 0.5.0 - 2021-08-12
 ### Added
