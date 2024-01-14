@@ -550,7 +550,7 @@ void BuilderWidget::on_movePushButtonClicked()
 
 void BuilderWidget::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape) {
+    if (event->matches(QKeySequence::Cancel)) {
         if (this->moving) {
             this->stopMove();
         } else {
