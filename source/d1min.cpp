@@ -228,8 +228,9 @@ void D1Min::clear()
 
 QImage D1Min::getSubtileImage(int subtileIndex) const
 {
-    if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size())
+    if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size()) {
         return QImage();
+    }
 
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
     unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;

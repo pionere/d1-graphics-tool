@@ -23,7 +23,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>CEL/CL2 File:</string>
+         <string>File:</string>
         </property>
        </widget>
       </item>

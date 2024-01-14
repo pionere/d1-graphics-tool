@@ -123,8 +123,9 @@ void D1Til::clear()
 
 QImage D1Til::getTileImage(int tileIndex) const
 {
-    if (tileIndex < 0 || (unsigned)tileIndex >= this->subtileIndices.size())
+    if (tileIndex < 0 || (unsigned)tileIndex >= this->subtileIndices.size()) {
         return QImage();
+    }
 
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
@@ -152,8 +153,9 @@ QImage D1Til::getTileImage(int tileIndex) const
 
 QImage D1Til::getFlatTileImage(int tileIndex) const
 {
-    if (tileIndex < 0 || (unsigned)tileIndex >= this->subtileIndices.size())
+    if (tileIndex < 0 || (unsigned)tileIndex >= this->subtileIndices.size()) {
         return QImage();
+    }
 
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;

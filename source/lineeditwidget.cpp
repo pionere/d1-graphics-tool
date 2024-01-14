@@ -57,11 +57,12 @@ std::pair<int, int> LineEditWidget::nonNegRange() const
 
 void LineEditWidget::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape) {
+    int key = event->key();
+    if (key == Qt::Key_Escape) {
         emit cancel_signal();
         return;
     }
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+    if (key == Qt::Key_Return || key == Qt::Key_Enter) {
         emit returnPressed();
         return;
     }

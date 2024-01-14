@@ -198,8 +198,9 @@ bool D1Gfx::isFrameSizeConstant() const
 // builds QImage from a D1CelFrame of given index
 QImage D1Gfx::getFrameImage(int frameIndex) const
 {
-    if (this->palette == nullptr || frameIndex >= this->frames.count())
+    if (this->palette == nullptr || frameIndex < 0 || frameIndex >= this->frames.count()) {
         return QImage();
+    }
 
     D1GfxFrame *frame = this->frames[frameIndex];
 
@@ -548,8 +549,9 @@ int D1Gfx::getGroupCount() const
 
 std::pair<int, int> D1Gfx::getGroupFrameIndices(int groupIndex) const
 {
-    if (groupIndex < 0 || (unsigned)groupIndex >= this->groupFrameIndices.size())
+    if (groupIndex < 0 || (unsigned)groupIndex >= this->groupFrameIndices.size()) {
         return std::pair<int, int>(0, 0);
+    }
 
     return this->groupFrameIndices[groupIndex];
 }
@@ -561,8 +563,9 @@ int D1Gfx::getFrameCount() const
 
 D1GfxFrame *D1Gfx::getFrame(int frameIndex) const
 {
-    if (frameIndex < 0 || frameIndex >= this->frames.count())
+    if (frameIndex < 0 || frameIndex >= this->frames.count()) {
         return nullptr;
+    }
 
     return const_cast<D1GfxFrame *>(this->frames[frameIndex]);
 }
@@ -576,16 +579,18 @@ void D1Gfx::setFrame(int frameIndex, D1GfxFrame *frame)
 
 int D1Gfx::getFrameWidth(int frameIndex) const
 {
-    if (frameIndex < 0 || frameIndex >= this->frames.count())
+    if (frameIndex < 0 || frameIndex >= this->frames.count()) {
         return 0;
+    }
 
     return this->frames[frameIndex]->getWidth();
 }
 
 int D1Gfx::getFrameHeight(int frameIndex) const
 {
-    if (frameIndex < 0 || frameIndex >= this->frames.count())
+    if (frameIndex < 0 || frameIndex >= this->frames.count()) {
         return 0;
+    }
 
     return this->frames[frameIndex]->getHeight();
 }
