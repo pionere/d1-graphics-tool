@@ -69,6 +69,29 @@ MainWindow::MainWindow()
 
     // initialize the translators
     this->reloadConfig();
+
+    QList<QKeySequence> sc = this->shortcuts();
+    for (const QKeySequence &ks : sc) {
+        LogErrorF("Main seq:%s", ks.toString());
+        if (ks == QKeySequence::Cancel || ks == QKeySequence::New || ks == QKeySequence::Copy || ks == QKeySequence::Cut || ks == QKeySequence::Delete || ks == QKeySequence::Paste) {
+            qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
+        }
+        for (int i = 0; i < ks.count(); i++) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            int kc = ks[i].toCombined();
+#else
+            int kc = ks[i];
+#endif
+            const int kcs[2] = { (Qt::CTRL | Qt::Key_E), (Qt::CTRL | Qt::Key_R) };
+            for (int n = 0; n < 2; n++) {
+                if (kcs[n] == kc) {
+                    qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
+                    i = INT_MAX;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 MainWindow::~MainWindow()
@@ -952,10 +975,21 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 }
             };
             ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW, std::move(func));*/
-        } else if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
-            QString pixels = clipboard->text();
-            if (!pixels.isEmpty()) {
+        }
+        return;
+    }
+    if (kc == (Qt::CTRL | Qt::Key_R)) {
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        QString pixels = clipboard->text();
+        if (!pixels.isEmpty()) {
+            if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
                 this->paintWidget->pasteCurrentPixels(pixels);
+            } else if (this->celView != nullptr) {
+                this->celView->pasteCurrentPixels(pixels);
+            } else if (this->levelCelView != nullptr) {
+                this->levelCelView->pasteCurrentPixels(pixels);
+            } else if (this->gfxsetView != nullptr) {
+                this->gfxsetView->pasteCurrentPixels(pixels);
             }
         }
         return;

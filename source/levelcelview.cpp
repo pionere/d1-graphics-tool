@@ -1854,6 +1854,17 @@ QString LevelCelView::copyCurrentPixels(bool values) const
     return this->gfx->getFramePixels(this->currentFrameIndex, values);
 }
 
+void LevelCelView::pasteCurrentPixels(const QString &pixels)
+{
+    if (this->gfx->getFrameCount() != 0) {
+        this->gfx->replaceFrame(this->currentFrameIndex, pixels);
+    } else {
+        this->gfx->insertFrame(this->currentFrameIndex, pixels);
+    }
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
 QImage LevelCelView::copyCurrentImage() const
 {
     /*if (this->ui->tilesTabs->currentIndex() == 1)

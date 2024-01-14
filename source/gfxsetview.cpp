@@ -539,6 +539,17 @@ QString GfxsetView::copyCurrentPixels(bool values) const
     return this->gfx->getFramePixels(this->currentFrameIndex, values);
 }
 
+void GfxsetView::pasteCurrentPixels(const QString &pixels)
+{
+    if (this->gfx->getFrameCount() != 0) {
+        this->gfx->replaceFrame(this->currentFrameIndex, pixels);
+    } else {
+        this->gfx->insertFrame(this->currentFrameIndex, pixels);
+    }
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
 QImage GfxsetView::copyCurrentImage() const
 {
     if (this->gfx->getFrameCount() == 0) {

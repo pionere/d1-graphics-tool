@@ -80,6 +80,7 @@ public:
     void removeCurrentTile();
 
     QString copyCurrentPixels(bool values) const;
+    void pasteCurrentPixels(const QString &pixels);
     QImage copyCurrentImage() const;
     void pasteCurrentImage(const QImage &image);
 

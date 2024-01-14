@@ -349,6 +349,15 @@ D1GfxFrame *D1Gfx::insertFrame(int idx)
     return newFrame;
 }
 
+D1GfxFrame *D1Gfx::insertFrame(int idx, const QString &pixels)
+{
+    D1GfxFrame *frame = this->insertFrame(idx);
+    D1ImageFrame::load(*frame, pixels, frame->isClipped(), this->palette);
+    // this->modified = true;
+
+    return this->frames[idx];
+}
+
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 {
     D1GfxFrame *frame = this->insertFrame(idx);
@@ -375,6 +384,17 @@ D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
     D1ImageFrame::load(frame, image, clipped, this->palette);
 
     return this->addToFrame(idx, frame);
+}
+
+D1GfxFrame *D1Gfx::replaceFrame(int idx, const QString &pixels)
+{
+    bool clipped = this->frames[idx]->isClipped();
+
+    D1GfxFrame *frame = new D1GfxFrame();
+    D1ImageFrame::load(*frame, pixels, clipped, this->palette);
+    this->setFrame(idx, frame);
+
+    return this->frames[idx];
 }
 
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
