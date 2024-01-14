@@ -84,7 +84,7 @@ MainWindow::MainWindow()
 #else
                 int kc = ks[i];
 #endif
-                const int kcs[2] = { (Qt::CTRL | Qt::Key_E), (Qt::CTRL | Qt::Key_R) };
+                const int kcs[2] = { (Qt::CTRL | Qt::Key_E), (Qt::CTRL | Qt::Key_P) };
                 for (int n = 0; n < 2; n++) {
                     if (kcs[n] == kc) {
                         qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());

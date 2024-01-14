@@ -179,7 +179,6 @@ D1GfxFrame *PaintWidget::getCurrentFrame() const
         frameIndex = this->gfxsetView->getCurrentFrameIndex();
     }
     return this->gfx->getFrameCount() > frameIndex ? const_cast<D1GfxFrame *>(this->gfx->getFrame(frameIndex)) : nullptr;
-
 }
 
 QRect PaintWidget::getSelectArea(const D1GfxFrame *frame) const
