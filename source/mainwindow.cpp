@@ -1495,9 +1495,9 @@ void MainWindow::saveFile(const SaveAsParam &params)
             } else if (fileLower.endsWith(".cl2")) {
                 D1Cl2::save(*this->gfx, params);
             } else {
-                QMessageBox::critical(this, tr("Error"), tr("Not supported."));
                 // Clear loading message from status bar
                 ProgressDialog::done();
+                QMessageBox::critical(this, tr("Error"), tr("Not supported."));
                 return;
             }
         }
