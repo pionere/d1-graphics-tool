@@ -76,7 +76,8 @@ MainWindow::MainWindow()
         for (const QKeySequence &ks : sc) {
             LogErrorF("Main seq:%s", ks.toString(QKeySequence::PortableText));
             if (ks == QKeySequence::Cancel || ks == QKeySequence::New || ks == QKeySequence::Copy || ks == QKeySequence::Cut || ks == QKeySequence::Delete || ks == QKeySequence::Paste) {
-                qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
+                // qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
+				LogErrorF("Conflicing shortcut in the main menu (%s).", ks.toString(QKeySequence::PortableText));
             }
             for (int i = 0; i < ks.count(); i++) {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -87,7 +88,8 @@ MainWindow::MainWindow()
                 const int kcs[2] = { (Qt::CTRL | Qt::Key_E), (Qt::CTRL | Qt::Key_P) };
                 for (int n = 0; n < 2; n++) {
                     if (kcs[n] == kc) {
-                        qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
+						LogErrorF("Conflicing shortcut in the main menu (%1).", ks.toString(QKeySequence::PortableText));
+                        // qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
                         i = INT_MAX;
                         break;
                     }
