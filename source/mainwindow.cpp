@@ -70,7 +70,7 @@ MainWindow::MainWindow()
     // initialize the translators
     this->reloadConfig();
 
-    for (const QAction *ac : this->findChildren<QAction*>()) {
+    /*for (const QAction *ac : this->findChildren<QAction*>()) {
            LogErrorF("Main ac:%s tt:%s", ac->text(), ac->toolTip());
         QList<QKeySequence> sc = ac->shortcuts();
         for (const QKeySequence &ks : sc) {
@@ -88,7 +88,7 @@ MainWindow::MainWindow()
                 const int kcs[2] = { (Qt::CTRL | Qt::Key_E), (Qt::CTRL | Qt::Key_P) };
                 for (int n = 0; n < 2; n++) {
                     if (kcs[n] == kc) {
-						LogErrorF("Conflicing shortcut in the main menu (%1).", ks.toString(QKeySequence::PortableText));
+						LogErrorF("Conflicing shortcut in the main menu (%s).", ks.toString(QKeySequence::PortableText));
                         // qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
                         i = INT_MAX;
                         break;
@@ -96,7 +96,7 @@ MainWindow::MainWindow()
                 }
             }
         }
-    }
+    }*/
 }
 
 MainWindow::~MainWindow()
