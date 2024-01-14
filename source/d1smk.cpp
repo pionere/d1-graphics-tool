@@ -2,7 +2,13 @@
 
 #include <QApplication>
 #include <QAudioFormat>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QAudioSink>
+typedef QAudioSink SmkAudioOutput;
+#else
 #include <QAudioOutput>
+typedef QAudioOutput SmkAudioOutput;
+#endif
 #include <QBuffer>
 #include <QByteArray>
 #include <QDir>
@@ -19,50 +25,26 @@
 //#include "../3rdParty/libsmacker/smacker.h"
 #include "libsmacker/smacker.h"
 
-/*typedef struct SmkAudioPlayer {
-    QAudioOutput *output;
-    QBuffer audioBuffer;
-    QByteArray audioData;
-} SmkAudioPlayer;
-static QList<SmkAudioPlayer *> audioPlayers;*/
 class AudioBuffer;
 
 static bool audioSemaphore[D1SMK_TRACKS] = { false };
-static QAudioOutput *audioOutput[D1SMK_TRACKS] = { nullptr };
-// static QByteArray *audioBytes = nullptr;
-// static QBuffer *audioBuffer = nullptr;
+static SmkAudioOutput *audioOutput[D1SMK_TRACKS] = { nullptr };
 static AudioBuffer *smkAudioBuffer[D1SMK_TRACKS] = { nullptr };
 
 class AudioBuffer : public QIODevice {
-//	Q_OBJECT
+//    Q_OBJECT
 
 public:
     AudioBuffer();
     ~AudioBuffer() = default;
 
-    /*bool	isOpen() const;
-    bool	isReadable() const;
-	QIODevice::OpenMode	openMode() const;*/
-    qint64	peek(char *data, qint64 maxSize);
-    /*// qint64	read(char *data, qint64 maxSize);
-    bool	atEnd() const override;*/
-    qint64	bytesAvailable() const override;
-    /*qint64	bytesToWrite() const override;
-    bool	canReadLine() const override;
-    void	close() override;*/
-    bool	isSequential() const override;
-    /*bool	open(QIODevice::OpenMode mode) override;
-    qint64	pos() const override;
-    bool	reset() override;
-    bool	seek(qint64 pos) override;
-    qint64	size() const override;*/
-    // bool	waitForBytesWritten(int msecs) override;
-    // bool	waitForReadyRead(int msecs) override;
-    qint64	readData(char *data, qint64 maxSize) override;
-    qint64	writeData(const char *data, qint64 maxSize) override;
+    qint64 peek(char *data, qint64 maxSize);
+    qint64 bytesAvailable() const override;
+    bool   isSequential() const override;
+    qint64 readData(char *data, qint64 maxSize) override;
+    qint64 writeData(const char *data, qint64 maxSize) override;
 
-    void	enqueue(uint8_t *audioData, unsigned long audioLen);
-    void	clear();
+    void clear();
 
 private:
     QList<QPair<uint8_t *, unsigned long>> audioQueue;
@@ -75,92 +57,15 @@ AudioBuffer::AudioBuffer()
 {
 }
 
-/*bool AudioBuffer::isOpen() const
-{
-    return true;
-}
-
-bool AudioBuffer::isReadable() const
-{
-LogErrorF("isReadable %d", availableBytes);
-    return availableBytes != 0;
-}
-
-QIODevice::OpenMode	AudioBuffer::openMode() const
-{
-    return QIODevice::ReadOnly;
-}
-
-bool AudioBuffer::atEnd() const
-{
-LogErrorF("atEnd %d", availableBytes);
-    return availableBytes == 0;
-}
-*/
 qint64 AudioBuffer::bytesAvailable() const
 {
-// LogErrorF("bytesAvailable %d", availableBytes);
     return availableBytes;
 }
-/*
-qint64 AudioBuffer::bytesToWrite() const
-{
-    return 0;
-}
 
-bool AudioBuffer::canReadLine() const
-{
-LogErrorF("canReadLine %d", availableBytes);
-     return false;
-}
-
-void AudioBuffer::close()
-{
-    audioQueue.clear();
-    availableBytes = 0;
-}
-*/
 bool AudioBuffer::isSequential() const
 {
     return true;
 }
-/*
-bool AudioBuffer::open(QIODevice::OpenMode mode)
-{
-    return true;
-}
-
-qint64 AudioBuffer::pos() const
-{
-    return 0;
-}
-
-bool AudioBuffer::reset()
-{
-    return false;
-}
-
-bool AudioBuffer::seek(qint64 pos)
-{
-LogErrorF("seek %d", availableBytes);
-    return false;
-}
-
-qint64 AudioBuffer::size() const
-{
-LogErrorF("size %d", availableBytes);
-    return availableBytes + currPos;
-}
-
-/*bool AudioBuffer::waitForBytesWritten(int msecs)
-{
-    return false;
-}
-
-bool AudioBuffer::waitForReadyRead(int msecs)
-{
-    return availableBytes != 0;
-}*/
 
 qint64 AudioBuffer::peek(char *data, qint64 maxSize)
 {
@@ -188,21 +93,18 @@ qint64 AudioBuffer::peek(char *data, qint64 maxSize)
         if (rem == 0)
             break;
     }
-// LogErrorF("peek a%d m%d r%d", availableBytes, maxSize, result);
     return result;
 }
 
-// qint64 AudioBuffer::read(char *data, qint64 maxSize)
 qint64 AudioBuffer::readData(char *data, qint64 maxSize)
 {
     qint64 result = peek(data, maxSize);
-// LogErrorF("readData %d -> %d (%d @ %d)", maxSize, result, availableBytes, currPos);
 
     if (result != 0) {
         availableBytes -= result;
 
         qint64 rem = result;
-		qint64 cp = currPos;
+        qint64 cp = currPos;
         int i = 0;
         for (; ; i++) {
             QPair<uint8_t *, unsigned long> &data = audioQueue[i];
@@ -220,7 +122,7 @@ qint64 AudioBuffer::readData(char *data, qint64 maxSize)
                 }
             }
         }
-		currPos = cp;
+        currPos = cp;
         if (i != 0) {
             audioQueue.erase(audioQueue.begin(), audioQueue.begin() + i);
         }
@@ -228,23 +130,11 @@ qint64 AudioBuffer::readData(char *data, qint64 maxSize)
     return result;
 }
 
-/*qint64	AudioBuffer::readData(char *data, qint64 maxSize)
+qint64 AudioBuffer::writeData(const char *data, qint64 maxSize)
 {
-    return read(data, maxSize);
-}*/
-
-qint64	AudioBuffer::writeData(const char *data, qint64 maxSize)
-{
-// LogErrorF("writeData %d:%d", data, maxSize);
     audioQueue.push_back(QPair<uint8_t *, unsigned long>((uint8_t *)data, (unsigned long)maxSize));
     availableBytes += maxSize;
     return maxSize;
-}
-
-void AudioBuffer::enqueue(uint8_t *audioData, unsigned long audioLen)
-{
-    audioQueue.push_back(QPair<uint8_t *, unsigned long>(audioData, audioLen));
-    availableBytes += audioLen;
 }
 
 void AudioBuffer::clear()
@@ -252,35 +142,6 @@ void AudioBuffer::clear()
     audioQueue.clear();
     availableBytes = 0;
 }
-
-/*void	commitTransaction()
-int	currentReadChannel() const
-int	currentWriteChannel() const
-QString	errorString() const
-bool	getChar(char *c)
-bool	isTextModeEnabled() const
-bool	isTransactionStarted() const
-bool	isWritable() const
-QIODevice::OpenMode	openMode() const
-QByteArray	peek(qint64 maxSize)
-bool	putChar(char c)
-QByteArray	read(qint64 maxSize)
-QByteArray	readAll()
-int	readChannelCount() const
-qint64	readLine(char *data, qint64 maxSize)
-QByteArray	readLine(qint64 maxSize = 0)
-void	rollbackTransaction()
-void	setCurrentReadChannel(int channel)
-void	setCurrentWriteChannel(int channel)
-void	setTextModeEnabled(bool enabled)
-qint64	skip(qint64 maxSize)
-void	startTransaction()
-void	ungetChar(char c)
-qint64	write(const char *data, qint64 maxSize)
-qint64	write(const char *data)
-qint64	write(const QByteArray &byteArray)
-int	writeChannelCount() const*/
-
 
 #define D1SMK_COLORS 256
 
@@ -405,7 +266,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     unsigned prevPalFrame = 0;
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
     do {
-//    LogErrorF("Smk load %d", frameNum);
         bool palUpdate = smk_palette_updated(SVidSMK);
         if (palUpdate && frameNum != 0) {
             RegisterPalette(pal, prevPalFrame, frameNum, pals);
@@ -441,7 +301,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-//    LogErrorF("Smk load %d..", frameNum);
     } while ((result = smk_next(SVidSMK)) == SMK_MORE);
 
     if (SMK_ERR(result)) {
@@ -460,7 +319,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
-//    LogErrorF("Smk load done");
     return true;
 }
 
@@ -473,59 +331,41 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 static void audioCallback(int track, QAudio::State newState)
 {
     if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
-        // qWarning() << "finished playing sound";
-        // if (!audioQueue.isEmpty() && !audioSemaphore) {
         if (!smkAudioBuffer[track]->atEnd() && !audioSemaphore[track]) {
             audioSemaphore[track] = true;
-            /*QPair<uint8_t *, unsigned long> audioData = audioQueue[0];
-            audioQueue.pop_front();
-            audioBytes->setRawData((char *)audioData.first, audioData.second);
-            audioBuffer->seek(0);
-            audioOutput->start(audioBuffer);
-            auto state = audioOutput->state();
-            if (state != QAudio::ActiveState) {
-                QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
-            }*/
             audioOutput[track]->start(smkAudioBuffer[track]);
-// LogErrorF("start %d (%d) buffer %d", track, smkAudioBuffer[track]->bytesAvailable(), audioOutput[track]->bufferSize());
-            auto state = audioOutput[track]->state();
-            if (state != QAudio::ActiveState) {
-                QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
-            }
             audioSemaphore[track] = false;
-//        } else {
-//LogErrorF("no start %d (%d)", track, smkAudioBuffer[track]->bytesAvailable());
         }
     }
 }
 
 static void audioCallback0(QAudio::State newState)
 {
-	audioCallback(0, newState);
+    audioCallback(0, newState);
 }
 static void audioCallback1(QAudio::State newState)
 {
-	audioCallback(1, newState);
+    audioCallback(1, newState);
 }
 static void audioCallback2(QAudio::State newState)
 {
-	audioCallback(2, newState);
+    audioCallback(2, newState);
 }
 static void audioCallback3(QAudio::State newState)
 {
-	audioCallback(3, newState);
+    audioCallback(3, newState);
 }
 static void audioCallback4(QAudio::State newState)
 {
-	audioCallback(4, newState);
+    audioCallback(4, newState);
 }
 static void audioCallback5(QAudio::State newState)
 {
-	audioCallback(5, newState);
+    audioCallback(5, newState);
 }
 static void audioCallback6(QAudio::State newState)
 {
-	audioCallback(6, newState);
+    audioCallback(6, newState);
 }
 static void (*cbfunc[D1SMK_TRACKS])(QAudio::State) = { &audioCallback0, &audioCallback1, &audioCallback2, &audioCallback3, &audioCallback4, &audioCallback5, &audioCallback6 };
 
@@ -535,204 +375,92 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
     unsigned long audioDataLen;
     uint8_t *audioData;
     unsigned bitDepth, channels, bitRate;
-
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QAudioFormat::SampleFormat sampleFormat;
+#endif
     frameAudio = gfxFrame.getFrameAudio();
     if (frameAudio != nullptr) {
         channels = frameAudio->getChannels();
         bitDepth = frameAudio->getBitDepth();
         bitRate = frameAudio->getBitRate();
-		for (int track = 0; track < D1SMK_TRACKS; track++) {
-			if (trackIdx >= 0 && track != trackIdx) {
-				continue;
-            }
-
-        audioData = frameAudio->getAudio(track, &audioDataLen);
-		if (audioDataLen == 0) {
-			continue;
-        }
-        /*QByteArray* arr = new QByteArray((char *)audioData, audioDataLen);
-        QBuffer *input = new QBuffer(arr);
-        input->setBuffer(arr);
-        input->open(QIODevice::ReadOnly);
-        QAudioFormat m_audioFormat = QAudioFormat();
-        m_audioFormat.setSampleRate(bitRate);
-        m_audioFormat.setChannelCount(channels);
-        m_audioFormat.setSampleSize(bitDepth);
-        m_audioFormat.setCodec("audio/pcm");
-        m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-        m_audioFormat.setSampleType(QAudioFormat::SignedInt);
-
-        QAudioOutput *audio = new QAudioOutput(m_audioFormat); // , this);
-
-        // connect up signal stateChanged to a lambda to get feedback
-        QObject::connect(audio, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
-        {
-            if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
-                // qWarning() << "finished playing sound";
-                audio->stop();
-                delete audio;
-                delete input;
-                delete arr;
-            }
-        });
-
-        // start the audio (i.e., play sound from the QAudioOutput object that we just created)
-        audio->start(input);*/
-        /*auto ait = audioPlayers.begin();
-        for ( ; ait != audioPlayers.end(); ait++) {
-            if ((*ait)->output->state() != QAudio::IdleState) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        sampleFormat = bitDepth == 16 ? QAudioFormat::Int16 : QAudioFormat::UInt8;
+#endif
+        for (int track = 0; track < D1SMK_TRACKS; track++) {
+            if (trackIdx >= 0 && track != trackIdx) {
                 continue;
             }
-            QAudioFormat& m_audioFormat = (*ait)->output->format();
-            if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
+            audioData = frameAudio->getAudio(track, &audioDataLen);
+            if (audioDataLen == 0) {
                 continue;
             }
-            break;
-        }
-        if (ait == audioPlayers.end()) {
-            ait = audioPlayers.insert(ait, new SmkAudioPlayer());
-
-            QAudioFormat m_audioFormat = QAudioFormat();
-            m_audioFormat.setSampleRate(bitRate);
-            m_audioFormat.setChannelCount(channels);
-            m_audioFormat.setSampleSize(bitDepth);
-            m_audioFormat.setCodec("audio/pcm");
-            m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-            m_audioFormat.setSampleType(QAudioFormat::SignedInt);
-
-            (*ait)->output = new QAudioOutput(m_audioFormat); // , this);
-        } else {
-            (*ait)->audioBuffer.close();
-        }
-
-        (*ait)->audioData.setRawData((char *)audioData, audioDataLen);
-        (*ait)->audioBuffer.setBuffer(&(*ait)->audioData);
-        if (!(*ait)->audioBuffer.open(QIODevice::ReadOnly)) {
-            QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
-        }
-
-        (*ait)->output->start(&(*ait)->audioBuffer);
-        auto state = (*ait)->output->state();
-        if (state != QAudio::ActiveState) {
-            QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
-        }*/
-        /*audioQueue.push_back(QPair<uint8_t *, unsigned long>(audioData, audioDataLen));
-
-        if (audioOutput != nullptr) {
-            QAudioFormat& m_audioFormat = audioOutput->format();
-            if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
-                audioOutput->stop();
-                delete audioOutput;
-                audioOutput = nullptr;
-            }
-        }
-        if (audioOutput == nullptr) {
-            QAudioFormat m_audioFormat = QAudioFormat();
-            m_audioFormat.setSampleRate(bitRate);
-            m_audioFormat.setChannelCount(channels);
-            m_audioFormat.setSampleSize(bitDepth);
-            m_audioFormat.setCodec("audio/pcm");
-            m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-            m_audioFormat.setSampleType(QAudioFormat::SignedInt);
-
-            audioOutput = new QAudioOutput(m_audioFormat); // , this);
-            // connect up signal stateChanged to a lambda to get feedback
-            QObject::connect(audioOutput, &QAudioOutput::stateChanged, &audioCallback);
-            /*QObject::connect(audioOutput, &QAudioOutput::stateChanged, [audio, input, arr](QAudio::State newState)
-            {
-                if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
-                    // qWarning() << "finished playing sound";
-                    audio->stop();
-                    delete audio;
-                    delete input;
-                    delete arr;
-                }
-            });* /
-
-            if (audioBuffer == nullptr) {
-                audioBytes = new QByteArray((char *)audioData, audioDataLen);
-                audioBuffer = new QBuffer(audioBytes);
-                if (!audioBuffer->open(QIODevice::ReadOnly)) {
-                    QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
+            if (audioOutput[track] != nullptr) {
+                QAudioFormat& m_audioFormat = audioOutput[track]->format();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleFormat() != sampleFormat || m_audioFormat.channelCount() != channels) {
+#else
+                if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
+#endif
+                    audioOutput[track]->stop();
+                    delete audioOutput[track];
+                    audioOutput[track] = nullptr;
+                    smkAudioBuffer[track]->clear();
                 }
             }
-        }
-        QAudio::State state = audioOutput->state();
-        if (state != QAudio::ActiveState) {
-            audioCallback(QAudio::IdleState);
-            if (state != QAudio::IdleState && state != QAudio::StoppedState) {
-                QMessageBox::critical(nullptr, "Error", QApplication::tr("First state %1").arg(state));
-            }
-        }*/
+            if (audioOutput[track] == nullptr) {
+                QAudioFormat m_audioFormat = QAudioFormat();
+                m_audioFormat.setSampleRate(bitRate);
+                m_audioFormat.setChannelCount(channels);
+                m_audioFormat.setSampleSize(bitDepth);
+                m_audioFormat.setCodec("audio/pcm");
+                m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
+                m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
-        if (audioOutput[track] != nullptr) {
-            QAudioFormat& m_audioFormat = audioOutput[track]->format();
-            if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleSize() != bitDepth || m_audioFormat.channelCount() != channels) {
-                audioOutput[track]->stop();
-                delete audioOutput[track];
-                audioOutput[track] = nullptr;
-                smkAudioBuffer[track]->clear();
-            }
-        }
-        if (audioOutput[track] == nullptr) {
-            QAudioFormat m_audioFormat = QAudioFormat();
-            m_audioFormat.setSampleRate(bitRate);
-            m_audioFormat.setChannelCount(channels);
-            m_audioFormat.setSampleSize(bitDepth);
-            m_audioFormat.setCodec("audio/pcm");
-            m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-            m_audioFormat.setSampleType(QAudioFormat::SignedInt);
+                audioOutput[track] = new SmkAudioOutput(m_audioFormat); // , this);
+                //audioOutput[track]->setBufferSize(2048);
+                // connect up signal stateChanged to a lambda to get feedback
+                QObject::connect(audioOutput[track], &SmkAudioOutput::stateChanged, cbfunc[track]);
+                /*QObject::connect(audioOutput, &QAudioOutput::stateChanged, [track](QAudio::State newState)
+                {
+                    if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
+                        // qWarning() << "finished playing sound";
+                        // if (!audioQueue.isEmpty() && !audioSemaphore) {
+                        if (!smkAudioBuffer[track]->atEnd() && !audioSemaphore[track]) {
+                            audioSemaphore[track] = true;
+                            / *QPair<uint8_t *, unsigned long> audioData = audioQueue[0];
+                            audioQueue.pop_front();
+                            audioBytes->setRawData((char *)audioData.first, audioData.second);
+                            audioBuffer->seek(0);
+                            audioOutput->start(audioBuffer);
+                            auto state = audioOutput->state();
+                            if (state != QAudio::ActiveState) {
+                                QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
+                            }* /
+                            audioOutput[track]->start(smkAudioBuffer[track]);
+                            auto state = audioOutput[track]->state();
+                            if (state != QAudio::ActiveState) {
+                                QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
+                            }
+                            audioSemaphore[track] = false;
+                        }
+                    }
+                });*/
 
-            audioOutput[track] = new QAudioOutput(m_audioFormat); // , this);
-			//LogErrorF("QAudioOutput buffer orig %d", audioOutput[track]->bufferSize());
-			//audioOutput[track]->setBufferSize(2048);
-			//LogErrorF("QAudioOutput buffer set %d", audioOutput[track]->bufferSize());
-            // connect up signal stateChanged to a lambda to get feedback
-            QObject::connect(audioOutput[track], &QAudioOutput::stateChanged, cbfunc[track]);
-			/*QObject::connect(audioOutput, &QAudioOutput::stateChanged, [track](QAudio::State newState)
-            {
-				if (newState == QAudio::IdleState) {   // finished playing (i.e., no more data)
-					// qWarning() << "finished playing sound";
-					// if (!audioQueue.isEmpty() && !audioSemaphore) {
-					if (!smkAudioBuffer[track]->atEnd() && !audioSemaphore[track]) {
-						audioSemaphore[track] = true;
-						/ *QPair<uint8_t *, unsigned long> audioData = audioQueue[0];
-						audioQueue.pop_front();
-						audioBytes->setRawData((char *)audioData.first, audioData.second);
-						audioBuffer->seek(0);
-						audioOutput->start(audioBuffer);
-						auto state = audioOutput->state();
-						if (state != QAudio::ActiveState) {
-							QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
-						}* /
-						audioOutput[track]->start(smkAudioBuffer[track]);
-						auto state = audioOutput[track]->state();
-						if (state != QAudio::ActiveState) {
-							QMessageBox::critical(nullptr, "Error", QApplication::tr("playAudio failed-state %1").arg(state));
-						}
-						audioSemaphore[track] = false;
-					}
-				}
-            });*/
-
-            if (smkAudioBuffer[track] == nullptr) {
-                smkAudioBuffer[track] = new AudioBuffer();
-                if (!smkAudioBuffer[track]->open(QIODevice::ReadWrite | QIODevice::Unbuffered)) {
-                    QMessageBox::critical(nullptr, "Error", "Failed to open buffer");
+                if (smkAudioBuffer[track] == nullptr) {
+                    smkAudioBuffer[track] = new AudioBuffer();
+                    smkAudioBuffer[track]->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
                 }
             }
-        }
-		// LogErrorF("Enqueue %d %d:%d", track, audioData, audioDataLen);
-        // smkAudioBuffer[track]->enqueue(audioData, audioDataLen);
-		smkAudioBuffer[track]->write((char *)audioData, audioDataLen);
+            // LogErrorF("Enqueue %d %d:%d", track, audioData, audioDataLen);
+            smkAudioBuffer[track]->write((char *)audioData, audioDataLen);
 
-        QAudio::State state = audioOutput[track]->state();
-        if (state != QAudio::ActiveState) {
-            audioCallback(track, QAudio::IdleState);
-            if (state != QAudio::IdleState && state != QAudio::StoppedState) {
-                QMessageBox::critical(nullptr, "Error", QApplication::tr("First state %1").arg(state));
+            QAudio::State state = audioOutput[track]->state();
+            if (state != QAudio::ActiveState) {
+                audioCallback(track, QAudio::IdleState);
+                if (state != QAudio::IdleState && state != QAudio::StoppedState) {
+                    QMessageBox::critical(nullptr, "Error", QApplication::tr("First state %1").arg(state));
+                }
             }
-        }
         }
     }
 }
