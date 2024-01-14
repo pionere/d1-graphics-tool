@@ -395,7 +395,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
                 continue;
             }
             if (audioOutput[track] != nullptr) {
-                QAudioFormat& m_audioFormat = audioOutput[track]->format();
+                QAudioFormat m_audioFormat = audioOutput[track]->format();
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
                 if (m_audioFormat.sampleRate() != bitRate || m_audioFormat.sampleFormat() != sampleFormat || m_audioFormat.channelCount() != channels) {
 #else
