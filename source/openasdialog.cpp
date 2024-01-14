@@ -63,7 +63,7 @@ void OpenAsDialog::updateFields()
 
 void OpenAsDialog::on_inputFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;TBL Files (*.tbl *.TBL)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;TBL Files (*.tbl *.TBL)"));
 
     if (openFilePath.isEmpty())
         return;

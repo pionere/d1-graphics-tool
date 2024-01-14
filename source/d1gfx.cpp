@@ -4,6 +4,7 @@
 
 #include "d1image.h"
 #include "d1cl2.h"
+#include "d1smk.h"
 #include "openasdialog.h"
 #include "progressdialog.h"
 
@@ -64,6 +65,11 @@ D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
     this->pixels = o.pixels;
     this->clipped = o.clipped;
     this->frameType = o.frameType;
+}
+
+D1GfxFrame::~D1GfxFrame()
+{
+    delete this->frameAudio;
 }
 
 int D1GfxFrame::getWidth() const
@@ -173,6 +179,21 @@ void D1GfxFrame::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixe
             }
         }
     }
+}
+
+QPointer<D1Pal>& D1GfxFrame::getFramePal()
+{
+    return this->framePal;
+}
+
+void D1GfxFrame::setFramePal(D1Pal *pal)
+{
+    this->framePal = pal;
+}
+
+D1SmkAudioData *D1GfxFrame::getFrameAudio()
+{
+    return this->frameAudio;
 }
 
 D1Gfx::~D1Gfx()
@@ -575,6 +596,17 @@ bool D1Gfx::isUpscaled() const
 void D1Gfx::setUpscaled(bool upscaled)
 {
     this->upscaled = upscaled;
+    this->modified = true;
+}
+
+unsigned D1Gfx::getFrameLen() const
+{
+    return this->frameLen;
+}
+
+void D1Gfx::setFrameLen(unsigned frameLen)
+{
+    this->frameLen = frameLen;
     this->modified = true;
 }
 

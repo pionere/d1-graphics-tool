@@ -74,4 +74,5 @@ private:
     bool isGfxset;
     bool isTableset;
     bool isCpp;
+    bool isSmk;
 };

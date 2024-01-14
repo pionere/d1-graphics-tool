@@ -8,7 +8,7 @@
 [![Linux](https://github.com/pionere/d1-graphics-tool/actions/workflows/linux.yml/badge.svg)](https://github.com/pionere/d1-graphics-tool/actions/workflows/linux.yml)
 -->
 
-Diablo 1 Graphics Tool can display and edit non-standard assets of Diablo 1 (CEL/CL2 graphics files, DUN/RDUN dungeon files and PAL/TRN/TIL/MIN/SOL/AMP/TMI metadata).
+Diablo 1 Graphics Tool can display and edit non-standard assets of Diablo 1 (CEL/CL2/SMK graphics files, DUN/RDUN dungeon files and PAL/TRN/TIL/MIN/SOL/AMP/TMI metadata).
 
 ![Screenshot 1](/resources/demo001.gif)
 
@@ -19,6 +19,7 @@ Go to the [releases page](https://github.com/pionere/d1-graphics-tool/releases) 
 - Regular, level and compiled CEL support with animation.
 - Mono and multi-group CL2 support with animation.
 - DUN support with option to generate in-game dungeons.
+- SMK support with animation and sound.
 - PAL/TRN support.
 - Palette hits and color translation hits display.
 - Exporting to (multiple) image files (PNG, BMP, JPG, WEBP, etc...).

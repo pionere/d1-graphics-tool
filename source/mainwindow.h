@@ -92,6 +92,7 @@ public:
 
     void gfxChanged(D1Gfx *gfx);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
+    void updatePalette(const D1Pal* pal);
     void changeColors(const RemapParam &params);
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);

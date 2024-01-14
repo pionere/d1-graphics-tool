@@ -13,9 +13,9 @@
 
 #include "config.h"
 #include "d1pcx.h"
+#include "d1smk.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
-#include "pushbuttonwidget.h"
 #include "ui_celview.h"
 #include "upscaler.h"
 
@@ -259,8 +259,11 @@ CelView::CelView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->on_zoomEdit_escPressed();
-    this->on_playDelayEdit_escPressed();
+    // this->on_playDelayEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
+    this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
+    layout->setAlignment(this->audioBtn, Qt::AlignLeft);
+    this->audioBtn->setVisible(false);
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
@@ -283,6 +286,7 @@ CelView::CelView(QWidget *parent)
 
 CelView::~CelView()
 {
+    delete smkAudioWidget;
     delete ui;
 }
 
@@ -292,6 +296,11 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     this->gfx = g;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
+    bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
+    this->audioBtn->setVisible(smkGfx);
+    if (smkGfx) {
+        this->currentPlayDelay = g->getFrameLen();
+    }
 
     this->updateFields();
 }
@@ -299,6 +308,19 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
 void CelView::setPal(D1Pal *p)
 {
     this->pal = p;
+
+    if (this->gfx->getType() == D1CEL_TYPE::SMK) {
+        for (int i = this->currentFrameIndex; i >= 0; i--) {
+            QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
+            if (!fp.isNull()) {
+                if (fp.data() != p) {
+                    this->gfx->getFrame(this->currentFrameIndex)->setFramePal(p);
+                    this->gfx->setModified();
+                }
+                break;
+            }
+        }
+    }
 }
 
 void CelView::setGfx(D1Gfx *g)
@@ -309,11 +331,21 @@ void CelView::setGfx(D1Gfx *g)
     }
 
     this->gfx = g;
+    bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
+    this->audioBtn->setVisible(smkGfx);
+    if (smkGfx) {
+        this->currentPlayDelay = g->getFrameLen();
+    }
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
         this->currentFrameIndex = 0;
     }
     this->updateGroupIndex();
+
+    // notify the audio-popup that the gfx changed
+    if (this->smkAudioWidget != nullptr) {
+        this->smkAudioWidget->setGfx(this->gfx);
+    }
 }
 
 void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
@@ -339,6 +371,8 @@ void CelView::updateFields()
     int count;
 
     this->updateLabel();
+    // set play-delay text
+    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
 
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
@@ -843,6 +877,11 @@ void CelView::displayFrame()
 
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
+
+    // notify the audio-popup that the frame changed
+    if (this->smkAudioWidget != nullptr) {
+        this->smkAudioWidget->initialize(this->currentFrameIndex);
+    }
 }
 
 void CelView::toggleBottomPanel()
@@ -906,6 +945,16 @@ void CelView::setGroupIndex(int groupIndex)
     this->currentFrameIndex = std::min(newGroupFrameIndices.first + frameIndex, newGroupFrameIndices.second);
 
     this->displayFrame();
+}
+
+void CelView::showAudioInfo()
+{
+    if (this->smkAudioWidget == nullptr) {
+        this->smkAudioWidget = new SmkAudioWidget(this);
+        this->smkAudioWidget->setGfx(this->gfx);
+    }
+    this->smkAudioWidget->initialize(this->currentFrameIndex);
+    this->smkAudioWidget->show();
 }
 
 void CelView::ShowContextMenu(const QPoint &pos)
@@ -1115,7 +1164,7 @@ void CelView::on_zoomEdit_escPressed()
 
 void CelView::on_playDelayEdit_returnPressed()
 {
-    quint16 playDelay = this->ui->playDelayEdit->text().toUInt();
+    unsigned playDelay = this->ui->playDelayEdit->text().toUInt();
 
     if (playDelay != 0)
         this->currentPlayDelay = playDelay;
@@ -1125,7 +1174,8 @@ void CelView::on_playDelayEdit_returnPressed()
 
 void CelView::on_playDelayEdit_escPressed()
 {
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    // update playDelayEdit
+    this->updateFields();
     this->ui->playDelayEdit->clearFocus();
 }
 
@@ -1134,6 +1184,7 @@ void CelView::on_playStopButton_clicked()
     if (this->playTimer != 0) {
         this->killTimer(this->playTimer);
         this->playTimer = 0;
+        D1Smk::stopAudio();
 
         // restore the currentFrameIndex
         this->currentFrameIndex = this->origFrameIndex;
@@ -1156,7 +1207,7 @@ void CelView::on_playStopButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer = this->startTimer(this->currentPlayDelay);
+    this->playTimer = this->startTimer(this->currentPlayDelay / 1000);
 }
 
 void CelView::timerEvent(QTimerEvent *event)
@@ -1182,6 +1233,14 @@ void CelView::timerEvent(QTimerEvent *event)
             nextFrameIndex = this->origFrameIndex;
     }
     this->currentFrameIndex = nextFrameIndex;
+    if (this->gfx->getType() == D1CEL_TYPE::SMK) {
+        D1GfxFrame *frame = this->gfx->getFrame(nextFrameIndex);
+        D1Smk::playAudio(*frame);
+        QPointer<D1Pal>& pal = frame->getFramePal();
+        if (!pal.isNull()) {
+            dMainWindow().updatePalette(pal.data());
+        }
+    }
     int cycleType = this->ui->playComboBox->currentIndex();
     if (cycleType == 0) {
         // normal playback

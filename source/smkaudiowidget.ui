@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SmkAudioWidget</class>
+ <widget class="QDialog">
+  <property name="modal">
+   <bool>false</bool>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>330</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property> 
+  <layout class="QVBoxLayout">
+   <item>
+    <layout class="QHBoxLayout">
+     <!--item>
+      <widget class="QLabel" name="imageLabel">
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+      </widget>
+     </item-->
+     <item>
+      <layout class="QHBoxLayout" name="leftButtonsHorizontalLayout"/>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="centerButtonsHorizontalLayout"/>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="rightButtonsHorizontalLayout"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QComboBox" name="trackComboBox"/>
+     </item>
+     <item>
+      <widget class="QLabel">
+       <property name="text">
+        <string>&lt;b&gt;Ch:&lt;/b&gt;</string>
+       </property>
+       <property name="toolTip">
+        <string>Number of channels</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="channelsLabel"/>
+     </item>
+     <item>
+      <widget class="QLabel">
+       <property name="text">
+        <string>&lt;b&gt;W:&lt;/b&gt;</string>
+       </property>
+       <property name="toolTip">
+        <string>Sample size</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="bitWidthLabel"/>
+     </item>
+     <item>
+      <widget class="QLabel">
+       <property name="text">
+        <string>&lt;b&gt;BitRate:&lt;/b&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="bitRateLabel"/>
+     </item>
+     <item>
+      <widget class="QLabel">
+       <property name="text">
+        <string>&lt;b&gt;Length:&lt;/b&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="LineEditWidget" name="audioLenLineEdit">
+       <property name="charWidth">
+        <number>6</number>
+       </property>
+       <property name="alignment">
+        <enum>Qt::AlignRight</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="audioLenLabel"/>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="audioGraphicsView"/>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="4" margin="4"/>
+ <resources/>
+ <connections/>
+ <buttongroups/>
+</ui>

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QImage>
+#include <QPointer>
 #include <QtEndian>
 
 #include "d1pal.h"
@@ -14,6 +15,8 @@
 
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
+
+class D1SmkAudioData;
 
 class D1GfxPixel {
 public:
@@ -65,12 +68,13 @@ class D1GfxFrame : public QObject {
     friend class D1Gfx;
     friend class D1ImageFrame;
     friend class D1Pcx;
+    friend class D1Smk;
     friend class Upscaler;
 
 public:
     D1GfxFrame() = default;
     D1GfxFrame(const D1GfxFrame &o);
-    ~D1GfxFrame() = default;
+    ~D1GfxFrame();
 
     int getWidth() const;
     void setWidth(int width);
@@ -86,6 +90,11 @@ public:
     void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
     void replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements);
 
+    // functions for smk-frames
+    QPointer<D1Pal>& getFramePal();
+    void setFramePal(D1Pal *pal);
+    D1SmkAudioData *getFrameAudio();
+
 protected:
     int width = 0;
     int height = 0;
@@ -94,6 +103,9 @@ protected:
     bool clipped = false;
     // fields of tileset-frames
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
+    // fields of smk-frames
+    QPointer<D1Pal> framePal = nullptr;
+    D1SmkAudioData *frameAudio = nullptr;
 };
 
 typedef enum gfx_file_index {
@@ -115,6 +127,7 @@ enum class D1CEL_TYPE {
     V1_LEVEL,
     V2_MONO_GROUP,
     V2_MULTIPLE_GROUPS,
+    SMK,
 };
 
 class D1Gfx : public QObject {
@@ -125,6 +138,7 @@ class D1Gfx : public QObject {
     friend class D1CelTileset;
     friend class D1Min;
     friend class D1Pcx;
+    friend class D1Smk;
     friend class Upscaler;
 
 public:
@@ -156,6 +170,8 @@ public:
     void setType(D1CEL_TYPE type);
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
+    unsigned getFrameLen() const;
+    void setFrameLen(unsigned frameLen);
     QString getFilePath() const;
     void setFilePath(const QString &filePath);
     bool isModified() const;
@@ -194,4 +210,6 @@ protected:
     QList<D1GfxFrame *> frames;
     // fields of tilesets
     bool upscaled = false;
+    // fields of smk
+    unsigned frameLen; // microsec
 };

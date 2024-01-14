@@ -108,7 +108,7 @@
          <number>5</number>
         </property>
         <property name="toolTip">
-         <string>Current playback delay</string>
+         <string>Current playback delay (microseconds)</string>
         </property>
         <property name="alignment">
          <enum>Qt::AlignCenter</enum>
@@ -118,7 +118,7 @@
       <item row="0" column="11">
        <widget class="QLabel">
         <property name="text">
-         <string>ms</string>
+         <string>us</string>
         </property>
        </widget>
       </item>

@@ -28,6 +28,7 @@
 #include "d1celtileset.h"
 #include "d1cl2.h"
 #include "d1pcx.h"
+#include "d1smk.h"
 #include "d1trs.h"
 #include "ui_mainwindow.h"
 
@@ -135,6 +136,14 @@ void MainWindow::changeColors(const RemapParam &params)
 
     // Clear loading message from status bar
     ProgressDialog::done();
+}
+
+void MainWindow::updatePalette(const D1Pal* pal)
+{
+    const QString &path = pal->getFilePath();
+    if (this->pals.contains(path)) {
+        this->setPal(path);
+    }
 }
 
 void MainWindow::setPal(const QString &path)
@@ -696,7 +705,7 @@ void MainWindow::on_actionNew_Gfxset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -784,7 +793,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 
     for (const QUrl &url : event->mimeData()->urls()) {
         QString fileLower = url.toLocalFile().toLower();
-        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || fileLower.endsWith(".rdun") || fileLower.endsWith(".tbl") || (unloaded && fileLower.endsWith(".pcx"))) {
+        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || fileLower.endsWith(".rdun") || fileLower.endsWith(".tbl") || (unloaded && (fileLower.endsWith(".pcx") || fileLower.endsWith(".smk")))) {
             event->acceptProposedAction();
             return;
         }
@@ -1024,6 +1033,8 @@ void MainWindow::openFile(const OpenAsParam &params)
             fileType = 4;
         else if (fileLower.endsWith(".cpp"))
             fileType = 5;
+        else if (fileLower.endsWith(".smk"))
+            fileType = 6;
         else
             return;
     }
@@ -1240,6 +1251,13 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading CPP file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
+    } else if (fileType == 6) { // SMK
+        if (!D1Smk::load(*this->gfx, this->pals, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading SMK file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+        // add paths in palWidget
+        // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath()); -- should be called later
     } else {
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
@@ -1366,7 +1384,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     // Look for all palettes in the same folder as the CEL/CL2 file
-    QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
+    QString firstPaletteFound;
+    if (fileType == 3) {
+        firstPaletteFound = D1Pal::DEFAULT_PATH;
+    } else if (fileType == 6 && this->pals.size() > 1) {
+        firstPaletteFound = (this->pals.begin() + 1).key();
+    }
     if (!baseDir.isEmpty()) {
         QDirIterator it(baseDir, QStringList("*.pal"), QDir::Files | QDir::Readable);
         while (it.hasNext()) {
@@ -1494,6 +1517,8 @@ void MainWindow::saveFile(const SaveAsParam &params)
                 D1Cel::save(*this->gfx, params);
             } else if (fileLower.endsWith(".cl2")) {
                 D1Cl2::save(*this->gfx, params);
+            } else if (fileLower.endsWith(".smk")) {
+                D1Smk::save(*this->gfx, params);
             } else {
                 // Clear loading message from status bar
                 ProgressDialog::done();

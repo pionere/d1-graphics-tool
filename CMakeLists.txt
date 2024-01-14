@@ -14,8 +14,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(CPACK "Configure CPack" ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Concurrent Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Widgets LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Concurrent Widgets Multimedia LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Widgets Multimedia LinguistTools)
 
 # Translation files
 SET(DGT_TS_FILES
@@ -101,6 +101,8 @@ set(PROJECT_SOURCES
         source/d1pcx.h
         source/d1sla.cpp
         source/d1sla.h
+        source/d1smk.cpp
+        source/d1smk.h
         source/d1tableset.cpp
         source/d1tableset.h
         source/d1tbl.cpp
@@ -166,6 +168,7 @@ set(PROJECT_SOURCES
         source/leveltabtilewidget.cpp
         source/leveltabtilewidget.h
         source/leveltabtilewidget.ui
+        source/libsmacker/smacker.cpp
         source/lineeditwidget.cpp
         source/lineeditwidget.h
         source/main.cpp
@@ -214,6 +217,9 @@ set(PROJECT_SOURCES
         source/settingsdialog.cpp
         source/settingsdialog.h
         source/settingsdialog.ui
+        source/smkaudiowidget.cpp
+        source/smkaudiowidget.h
+        source/smkaudiowidget.ui
         source/tblview.cpp
         source/tblview.h
         source/tblview.ui
@@ -264,7 +270,7 @@ else()
     )
 endif()
 
-target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 
 set_target_properties(${BIN_TARGET} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER d1-graphics-tool.pionere.net

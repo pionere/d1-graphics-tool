@@ -15,7 +15,9 @@
 
 #include "d1gfx.h"
 #include "mergeframesdialog.h"
+#include "pushbuttonwidget.h"
 #include "resizedialog.h"
+#include "smkaudiowidget.h"
 #include "upscaledialog.h"
 
 #define ZOOM_LIMIT 10
@@ -118,6 +120,7 @@ private:
     void setFrameIndex(int frameIndex);
     void updateGroupIndex();
     void setGroupIndex(int groupIndex);
+    void showAudioInfo();
 
 signals:
     void frameRefreshed();
@@ -159,12 +162,14 @@ private slots:
 private:
     Ui::CelView *ui;
     CelScene celScene = CelScene(this);
+    SmkAudioWidget *smkAudioWidget = nullptr;
+    PushButtonWidget *audioBtn;
 
     D1Pal *pal;
     D1Gfx *gfx;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     int origFrameIndex = 0;
-    quint16 currentPlayDelay = 50;
+    unsigned currentPlayDelay = 50000; // microsec
     int playTimer = 0;
 };

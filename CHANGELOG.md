@@ -24,6 +24,7 @@
 - file dialogs start from the last used folder/file (even after restart)
 - export to any kind of image format which are supported by Qt (JPEG, WEBP, etc...)
 - option to limit the range of the exported items
+- support SMK files (animation + sound)
 - support DUN and RDUN files
 - support TMI metadata
 - support upscaling of assets
