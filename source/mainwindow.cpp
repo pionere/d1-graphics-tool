@@ -70,7 +70,8 @@ MainWindow::MainWindow()
     // initialize the translators
     this->reloadConfig();
 
-    for (const QAction *ac : this->actions()) {
+    for (const QAction *ac : this->findChildren<QAction*>()) {
+           LogErrorF("Main ac:%s", ac->text());
         QList<QKeySequence> sc = ac->shortcuts();
         for (const QKeySequence &ks : sc) {
             LogErrorF("Main seq:%s", ks.toString());
