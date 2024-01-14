@@ -879,7 +879,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (keyCombinationMatchesSequence(kc, QKeySequence::Cut)) { // event->matches(QKeySequence::Cut)) {
-        if (this->paintWidget != nullptr) {
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             QImage image = this->paintWidget->copyCurrent();
             if (!image.isNull()) {
                 this->paintWidget->deleteCurrent();
@@ -890,7 +890,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (keyCombinationMatchesSequence(kc, QKeySequence::Delete)) { // event->matches(QKeySequence::Delete)) {
-        if (this->paintWidget != nullptr) {
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->deleteCurrent();
         }
         return;
