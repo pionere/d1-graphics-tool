@@ -280,24 +280,24 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     EnterLevel(params.level);
     IncProgress();
 
-	int32_t questSeed = params.seedQuest;
-	int extraRounds = params.extraRounds;
-	SetRndSeed(params.seed);
-	while (true) {
-		extern int32_t sglGameSeed;
-		LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, questSeed, params.entryMode);
-		LoadGameLevel(params.entryMode, dun);
-		FreeLvlDungeon();
-		if (--extraRounds < 0) {
-			break;
-		}
-		if (params.extraQuestRnd) {
-			// QRandomGenerator *gen = QRandomGenerator::global();
-			// questSeed = (int)gen->generate();
-			questSeed = NextRndSeed();
-			InitQuests(questSeed);
-		}
-	}
+    int32_t questSeed = params.seedQuest;
+    int extraRounds = params.extraRounds;
+    SetRndSeed(params.seed);
+    while (true) {
+        extern int32_t sglGameSeed;
+        LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, questSeed, params.entryMode);
+        LoadGameLevel(params.entryMode, dun);
+        FreeLvlDungeon();
+        if (--extraRounds < 0) {
+            break;
+        }
+        if (params.extraQuestRnd) {
+            // QRandomGenerator *gen = QRandomGenerator::global();
+            // questSeed = (int)gen->generate();
+            questSeed = NextRndSeed();
+            InitQuests(questSeed);
+        }
+    }
 
     dun->setLevelType(currLvl._dType);
 
