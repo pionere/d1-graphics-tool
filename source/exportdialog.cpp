@@ -13,6 +13,8 @@
 
 #include "d1image.h"
 #include "d1pcx.h"
+#include "d1smk.h"
+#include "d1wav.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_exportdialog.h"
@@ -39,6 +41,8 @@ ExportDialog::ExportDialog(QWidget *parent)
         defaultIndex = 0;
     this->ui->formatComboBox->addItems(formatTxts);
     this->ui->formatComboBox->setCurrentIndex(defaultIndex);
+    // 'disable' WAV by default
+    this->hasWavFormat = false;
 }
 
 ExportDialog::~ExportDialog()
@@ -50,6 +54,20 @@ void ExportDialog::initialize(D1Gfx *g, D1Tileset *ts)
 {
     this->gfx = g;
     this->tileset = ts;
+    bool isSmk = g->getType() == D1CEL_TYPE::SMK;
+
+    // initialize format
+    if (isSmk) {
+        if (!this->hasWavFormat) {
+            this->hasWavFormat = true;
+            this->ui->formatComboBox->addItem("WAV");
+        }
+    } else {
+        if (this->hasWavFormat) {
+            this->hasWavFormat = false;
+            this->ui->formatComboBox->removeItem(this->ui->formatComboBox->count() - 1);
+        }
+    }
 
     // initialize files count
     /*this->ui->filesCountComboBox->setEnabled(multiFrame);
@@ -69,6 +87,24 @@ void ExportDialog::initialize(D1Gfx *g, D1Tileset *ts)
     if (!multiFrame) {
         this->ui->contentPlacementComboBox->setCurrentIndex(0);
     }*/
+
+    // ensure the format is preselected and the depending fields are enabled/disabled
+    int idx = this->ui->formatComboBox->currentIndex();
+    this->on_formatComboBox_activated(idx == -1 ? 0 : idx);
+}
+
+void ExportDialog::on_formatComboBox_activated(int index)
+{
+    bool wavFormat = false;
+    if (this->hasWavFormat) {
+        wavFormat = index == this->ui->formatComboBox->count() - 1;
+
+        this->ui->contentPlacementComboBox->setEnabled(!wavFormat);
+        this->ui->contentCanvasIndexLineEdit->setEnabled(!wavFormat);
+        this->ui->contentCanvasColorLineEdit->setEnabled(!wavFormat);
+        this->ui->contentCanvasColorPushButton->setEnabled(!wavFormat);
+    }
+    this->ui->contentTypeComboBox->setItemText(0, wavFormat ? "Audio" : "Frame")
 }
 
 void ExportDialog::on_contentCanvasColorPushButton_clicked()
@@ -648,6 +684,123 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     saveImage(tempOutputPixels, gfx->getPalette(), outputFileName, params);
 }
 
+static void saveAudio(D1SmkAudioData *tempAudioData, const QString &fileName, const ExportParam &params)
+{
+    unsigned long len;
+    for (int n = 0; n < D1SMK_TRACKS; n++) {
+        if (tempAudioData->getAudio(n, &len) != nullptr) {
+            QString path = params.outFolder + "/" + fileName + QApplication::tr("track%1").arg(n + 1) + params.outFileExtension;
+            // if (path.endsWith(".wav")) {
+                if (D1Wav::save(tempAudioData, n, path, params))
+                    dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
+                else
+                    dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));
+            //  return;
+            // }
+        }
+    }
+}
+
+void ExportDialog::exportAudio(const D1Gfx *gfx, const ExportParam &params)
+{
+    QString fileNameBase = QFileInfo(gfx->getFilePath()).fileName();
+
+    fileNameBase.replace(".", "_");
+
+    int count = gfx->getFrameCount();
+    int frameFrom = params.rangeFrom;
+    if (frameFrom != 0) {
+        frameFrom--;
+    }
+    int frameTo = params.rangeTo;
+    if (frameTo == 0 || frameTo > count) {
+        frameTo = count;
+    }
+    frameTo--;
+    int amount = frameTo - frameFrom + 1;
+    // nothing to export
+    if (amount <= 0) {
+        return;
+    }
+    ProgressDialog::incBar(tr("Exporting audio..."), amount);
+    // single frame
+    if (amount == 1 && frameFrom == 0) {
+        // one file for the only frame (not indexed)
+        QString &outputFileName = fileNameBase;
+        saveAudio(gfx->getFrame(0)->getFrameAudio(), outputFileName, params);
+        return;
+    }
+    // multiple frames
+    if (amount == 1 || params.multi) {
+        // one file for each frame (indexed)
+        for (int i = frameFrom; i <= frameTo; i++) {
+            // if (ProgressDialog::wasCanceled()) {
+            //    return;
+            // }
+            QString outputFileName = fileNameBase + "_frame" + QString("%1").arg(i, 4, 10, QChar('0'));
+            saveAudio(gfx->getFrame(i)->getFrameAudio(), outputFileName, params);
+            if (!ProgressDialog::incValue()) {
+                return;
+            }
+        }
+        return;
+    }
+    // one file for all frames
+    D1SmkAudioData *tempAudioData = nullptr;
+    unsigned long lengths[D1SMK_TRACKS] = { 0 };
+    for (int i = frameFrom; i <= frameTo; i++) {
+        D1SmkAudioData *frameAudio = gfx->getFrame(i)->getFrameAudio();
+        if (tempAudioData != nullptr) {
+            if (frameAudio->getChannels() != tempAudioData->getChannels() || frameAudio->getBitDepth() != tempAudioData->getBitDepth() || frameAudio->getBitRate() != tempAudioData->getBitRate()) {
+                delete tempAudioData;
+                dProgressFail() << QApplication::tr("Mismatching audio formats (ch%1,w%2,%3 vs. ch%1,w%2,%3).").arg(frameAudio->getChannels()).arg(frameAudio->getBitDepth()).arg(frameAudio->getBitRate()).arg(tempAudioData->getChannels()).arg(tempAudioData->getBitDepth()).arg(tempAudioData->getBitRate());
+                return;
+            }
+        } else {
+            tempAudioData = new D1SmkAudioData(frameAudio->getChannels(), frameAudio->getBitDepth(), frameAudio->getBitRate());
+        }
+        for (int n = 0; n < D1SMK_TRACKS; n++) {
+            unsigned long len;
+            frameAudio->getAudio(n, &len);
+            lengths[n] += len;
+        }
+    }
+
+    for (int n = 0; n < D1SMK_TRACKS; n++) {
+        if (lengths[n] == 0) {
+            continue;
+        }
+        if (ProgressDialog::wasCanceled()) {
+            delete tempAudioData;
+            return;
+        }
+        uint8_t* audioMem = (uint8_t*)malloc(lengths[n]);
+        unsigned long cursor = 0;
+        for (int i = frameFrom; i <= frameTo; i++) {
+            D1SmkAudioData *frameAudio = gfx->getFrame(i)->getFrameAudio();
+            unsigned long len;
+            uint8_t* trackAudio = frameAudio->getAudio(n, &len);
+            if (len != 0) {
+                memcpy(&audioMem[cursor], trackAudio, len);
+                cursor += len;
+            }
+        }
+        tempAudioData->setAudio(n, audioMem, cursor);
+        if (!ProgressDialog::incValue()) {
+            delete tempAudioData;
+            return;
+        }
+    }
+
+    if (frameFrom != 0 || frameTo < count - 1) {
+        fileNameBase += QString::number(frameFrom + 1) + "_" + QString::number(frameTo + 1);
+    }
+    QString &outputFileName = fileNameBase;
+    saveAudio(tempAudioData, outputFileName, params);
+
+    delete tempAudioData;
+}
+
 void ExportDialog::on_exportButton_clicked()
 {
     ExportParam params;
@@ -672,6 +825,9 @@ void ExportDialog::on_exportButton_clicked()
     params.placement = this->ui->contentPlacementComboBox->currentIndex();
     params.multi = this->ui->filesCountComboBox->currentIndex() != 0;
     int type = this->ui->contentTypeComboBox->currentIndex();
+    if (this->ui->contentTypeComboBox->currentText() == "Audio") {
+        type = 4;
+    }
 
     this->hide();
 
@@ -686,8 +842,11 @@ void ExportDialog::on_exportButton_clicked()
         case 2:
             ExportDialog::exportLevelTiles(this->tileset->til, this->gfx, params);
             break;
-        default: // case 3:
+        case 3:
             ExportDialog::exportLevelTiles25D(this->tileset->til, this->gfx, params);
+            break;
+        default: // case 4:
+            ExportDialog::exportAudio(this->gfx, params);
             break;
         }
     };
