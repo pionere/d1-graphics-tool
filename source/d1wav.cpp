@@ -245,8 +245,8 @@ bool D1Wav::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
 
 bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &filePath, const ExportParam &params)
 {
-	unsigned long len;
-	uint8_t* data = audioData->getAudio(track, &len);
+    unsigned long len;
+    uint8_t* data = audioData->getAudio(track, &len);
 
     /*if (len == 0) {
         dProgressFail() << QApplication::tr("WAV format can not store the image due to its dimensions: %1x%2.").arg(imageSize.width()).arg(imageSize.height());
@@ -266,10 +266,10 @@ bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &file
 
     // - header
     WAVHEADER header = { 0 };
-	header.RiffMarker = SwapLE32(*((uint32_t*)"RIFF");
+    header.RiffMarker = SwapLE32(*((uint32_t*)"RIFF"));
     header.FileSize = SwapLE32(len + sizeof(header));
-    header.WaveMarker = SwapLE32(*((uint32_t*)"WAVE");
-    header.FmtMarker = SwapLE32(*((uint32_t*)"fmt ");
+    header.WaveMarker = SwapLE32(*((uint32_t*)"WAVE"));
+    header.FmtMarker = SwapLE32(*((uint32_t*)"fmt "));
     header.HeaderLength = SwapLE32(16);
     header.FormatType = SwapLE16(1);
     header.ChannelCount = SwapLE16(audioData->getChannels());
@@ -283,7 +283,7 @@ bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &file
     out.writeRawData((char *)&header, sizeof(header));
 
     // - data
-	out.writeRawData((char *)data, len);
+    out.writeRawData((char *)data, len);
 
     return true;
 }
