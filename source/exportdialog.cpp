@@ -104,7 +104,7 @@ void ExportDialog::on_formatComboBox_activated(int index)
         this->ui->contentCanvasColorLineEdit->setEnabled(!wavFormat);
         this->ui->contentCanvasColorPushButton->setEnabled(!wavFormat);
     }
-    this->ui->contentTypeComboBox->setItemText(0, wavFormat ? "Audio" : "Frame")
+    this->ui->contentTypeComboBox->setItemText(0, wavFormat ? "Audio" : "Frame");
 }
 
 void ExportDialog::on_contentCanvasColorPushButton_clicked()

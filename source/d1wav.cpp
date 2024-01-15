@@ -6,6 +6,7 @@
 #include <QFile>
 
 #include "config.h"
+#include "d1smk.h"
 #include "progressdialog.h"
 
 typedef struct _WavHeader {
