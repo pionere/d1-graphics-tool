@@ -1282,9 +1282,9 @@ smk_bw_write(&bw, 91, 14); // *5); // (222,223) -> 222:0
 // Full block 3:1 value57310 (offsetend2365408 bitend0) 112,113:139 (222:223) = 57310
 
 	LogErrorFF("Patchlen %d", (size_t)bw.buffer - (size_t)bufMem - 2365112);
-	uint32_t *cur = (uint32_t*)&bufMem[2365112];
+	uint32_t *lm = (uint32_t*)&bufMem[2365112];
 	for (int i = 0; i < ((size_t)bw.buffer + (bw.bit_num != 0 ? 1 : 0) - (size_t)bufMem - 2365112 + 3) / 4; i++) {
-		LogErrorFF("	cur[%d] = %d;", i, cur[i]);
+		LogErrorFF("	lm[%d] = SwapLE32(%d);", i, lm[i]);
 	}
 */
 uint32_t *cur = (uint32_t*)&bufMem[2365112];
@@ -1723,9 +1723,9 @@ smk_bw_write(&bw, 7, 4); // mem (2303719:5) value (222,223)
 // Full block 3:1 value57310 (offsetend2303719 bitend5) 112,113:139 (222:223) = 57310
 
 	LogErrorFF("Patchlen(1) %d", (size_t)bw.buffer - (size_t)bufMem - 2303424);
-	uint32_t *cur = (uint32_t*)&bufMem[2303424];
+	uint32_t *lm = (uint32_t*)&bufMem[2303424];
 	for (int i = 0; i < ((size_t)bw.buffer + (bw.bit_num != 0 ? 1 : 0) - (size_t)bufMem - 2303424 + 3) / 4; i++) {
-		LogErrorFF("	cur[%d] = %d;", i, cur[i]);
+		LogErrorFF("	lm[%d] = SwapLE32(%d);", i, lm[i]);
 	}
 
 */
@@ -2164,9 +2164,9 @@ smk_bw_write(&bw, 3, 4); // mem (2313814:0) value (222,223)
 // Full block 3:1 value57310 (offsetend2313814 bitend0) 112,113:139 (222:223) = 57310
 
 	LogErrorFF("Patchlen(2) %d", (size_t)bw.buffer - (size_t)bufMem - 2313520);
-	uint32_t *cur = (uint32_t*)&bufMem[2313520];
+	uint32_t *lm = (uint32_t*)&bufMem[2313520];
 	for (int i = 0; i < ((size_t)bw.buffer + (bw.bit_num != 0 ? 1 : 0) - (size_t)bufMem - 2313520 + 3) / 4; i++) {
-		LogErrorFF("	cur[%d] = %d;", i, cur[i]);
+		LogErrorFF("	lm[%d] = SwapLE32(%d);", i, lm[i]);
 	}
 
 */

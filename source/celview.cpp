@@ -1208,7 +1208,7 @@ void CelView::on_playStopButton_clicked()
             for (int i = this->currentFrameIndex; i >= 0; i--) {
                 QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
                 if (!fp.isNull()) {
-                    dMainWindow().updatePalette(pal.data());
+                    dMainWindow().updatePalette(fp.data());
                     break;
                 }
             }
