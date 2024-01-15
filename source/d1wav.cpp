@@ -266,19 +266,19 @@ bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &file
 
     // - header
     WAVHEADER header = { 0 };
-	header.RiffMarker = SwapLE32("RIFF");
+	header.RiffMarker = SwapLE32(*((uint32_t*)"RIFF");
     header.FileSize = SwapLE32(len + sizeof(header));
-    quint32 WaveMarker = SwapLE32("WAVE");
-    quint32 FmtMarker = SwapLE32("fmt ");
-    quint32 HeaderLength = SwapLE32(16);
-    quint16 FormatType = SwapLE16(1);
-    quint16 ChannelCount = SwapLE16(audioData->getChannels());
-    quint32 SampleRate = SwapLE32(audioData->getBitRate());
-    quint32 SampleRateBytesChannels = SwapLE32(audioData->getBitRate() * audioData->getChannels() * audioData->getBitDepth() / 8);
-    quint16 BytesChannels = SwapLE16(audioData->getChannels() * audioData->getBitDepth() / 8);
-    quint16 BitsPerSample = SwapLE16(audioData->getBitDepth());
-    quint32 DataMarker = SwapLE32("data");
-    quint32 DataSize = SwapLE32(len  + 8);
+    header.WaveMarker = SwapLE32(*((uint32_t*)"WAVE");
+    header.FmtMarker = SwapLE32(*((uint32_t*)"fmt ");
+    header.HeaderLength = SwapLE32(16);
+    header.FormatType = SwapLE16(1);
+    header.ChannelCount = SwapLE16(audioData->getChannels());
+    header.SampleRate = SwapLE32(audioData->getBitRate());
+    header.SampleRateBytesChannels = SwapLE32(audioData->getBitRate() * audioData->getChannels() * audioData->getBitDepth() / 8);
+    header.BytesChannels = SwapLE16(audioData->getChannels() * audioData->getBitDepth() / 8);
+    header.BitsPerSample = SwapLE16(audioData->getBitDepth());
+    header.DataMarker = SwapLE32("data");
+    header.DataSize = SwapLE32(len  + 8);
 
     out.writeRawData((char *)&header, sizeof(header));
 
