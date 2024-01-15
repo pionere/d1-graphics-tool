@@ -189,10 +189,10 @@ void D1SmkAudioData::setAudio(unsigned track, uint8_t* data, unsigned long len)
     this->len[track] = len;
 }
 
-uint8_t* D1SmkAudioData::getAudio(unsigned track, unsigned long *len)
+uint8_t* D1SmkAudioData::getAudio(unsigned track, unsigned long *len) const
 {
     *len = this->len[track];
-    return this->audio[track];
+    return const_cast<uint8_t*>(this->audio[track]);
 }
 
 static D1Pal* LoadPalette(smk SVidSMK)

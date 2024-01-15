@@ -273,10 +273,10 @@ bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &file
     quint32 HeaderLength = SwapLE32(16);
     quint16 FormatType = SwapLE16(1);
     quint16 ChannelCount = SwapLE16(audioData->getChannels());
-    quint32 SampleRate = SwapLE32(audioData->setBitRate());
-    quint32 SampleRateBytesChannels = SwapLE32(audioData->setBitRate() * audioData->getChannels() * audioData->getBitWidth() / 8);
-    quint16 BytesChannels = SwapLE16(audioData->getChannels() * audioData->getBitWidth() / 8);
-    quint16 BitsPerSample = SwapLE16(audioData->getBitWidth());
+    quint32 SampleRate = SwapLE32(audioData->getBitRate());
+    quint32 SampleRateBytesChannels = SwapLE32(audioData->getBitRate() * audioData->getChannels() * audioData->getBitDepth() / 8);
+    quint16 BytesChannels = SwapLE16(audioData->getChannels() * audioData->getBitDepth() / 8);
+    quint16 BitsPerSample = SwapLE16(audioData->getBitDepth());
     quint32 DataMarker = SwapLE32("data");
     quint32 DataSize = SwapLE32(len  + 8);
 
