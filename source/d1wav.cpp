@@ -277,7 +277,7 @@ bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &file
     header.SampleRateBytesChannels = SwapLE32(audioData->getBitRate() * audioData->getChannels() * audioData->getBitDepth() / 8);
     header.BytesChannels = SwapLE16(audioData->getChannels() * audioData->getBitDepth() / 8);
     header.BitsPerSample = SwapLE16(audioData->getBitDepth());
-    header.DataMarker = SwapLE32("data");
+    header.DataMarker = SwapLE32(*((uint32_t*)"data"));
     header.DataSize = SwapLE32(len  + 8);
 
     out.writeRawData((char *)&header, sizeof(header));

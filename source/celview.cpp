@@ -1204,6 +1204,15 @@ void CelView::on_playStopButton_clicked()
         // restore the currentFrameIndex
         this->currentFrameIndex = this->origFrameIndex;
         // restore palette
+        if (this->gfx->getType() == D1CEL_TYPE::SMK) {
+            for (int i = this->currentFrameIndex; i >= 0; i--) {
+                QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
+                if (!fp.isNull()) {
+                    dMainWindow().updatePalette(pal.data());
+                    break;
+                }
+            }
+        }
         dMainWindow().resetPaletteCycle();
         // change the label of the button
         this->ui->playStopButton->setText(tr("Play"));
@@ -1248,14 +1257,14 @@ void CelView::timerEvent(QTimerEvent *event)
             nextFrameIndex = this->origFrameIndex;
     }
     this->currentFrameIndex = nextFrameIndex;
-    // if (this->gfx->getFrameCount() != 0) {
+    if (this->gfx->getType() == D1CEL_TYPE::SMK) {
         D1GfxFrame *frame = this->gfx->getFrame(nextFrameIndex);
         D1Smk::playAudio(*frame);
         QPointer<D1Pal>& pal = frame->getFramePal();
         if (!pal.isNull()) {
             dMainWindow().updatePalette(pal.data());
         }
-    // }
+    }
     int cycleType = this->ui->playComboBox->currentIndex();
     if (cycleType == 0) {
         // normal playback
