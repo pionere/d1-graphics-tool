@@ -1204,14 +1204,8 @@ void CelView::on_playStopButton_clicked()
         // restore the currentFrameIndex
         this->currentFrameIndex = this->origFrameIndex;
         // restore palette
-        if (this->gfx->getType() == D1CEL_TYPE::SMK) {
-            for (int i = this->currentFrameIndex; i >= 0; i--) {
-                QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-                if (!fp.isNull()) {
-                    dMainWindow().updatePalette(fp.data());
-                    break;
-                }
-            }
+        if (!this->origPal.isNull()) {
+            dMainWindow().updatePalette(this->origPal.data());
         }
         dMainWindow().resetPaletteCycle();
         // change the label of the button
@@ -1229,9 +1223,10 @@ void CelView::on_playStopButton_clicked()
     // preserve the currentFrameIndex
     this->origFrameIndex = this->currentFrameIndex;
     // preserve the palette
+    this->origPal = this->pal;
     dMainWindow().initPaletteCycle();
 
-    this->playTimer = this->startTimer(this->currentPlayDelay / 1000);
+    this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
 }
 
 void CelView::timerEvent(QTimerEvent *event)
