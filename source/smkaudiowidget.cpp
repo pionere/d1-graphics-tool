@@ -36,6 +36,7 @@ SmkAudioWidget::SmkAudioWidget(CelView *parent)
     layout = this->ui->centerButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &SmkAudioWidget::on_movePushButtonClicked);
     layout = this->ui->rightButtonsHorizontalLayout;
+    this->muteBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Mute"), this, &SmkAudioWidget::on_mutePushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &SmkAudioWidget::on_closePushButtonClicked);
 
     // cache the active graphics view
@@ -219,6 +220,12 @@ void SmkAudioWidget::on_playPushButtonClicked()
     if (frame >= 0 && track != -1) {
         D1Smk::playAudio(*this->gfx->getFrame(frame), track);
     }
+}
+
+void SmkAudioWidget::on_mutePushButtonClicked()
+{
+    bool muted = ((CelView *)this->parent())->toggleMute();
+    this->muteBtn->setIcon(QApplication::style()->standardIcon(muted ? QStyle::SP_MediaVolumeMuted : QStyle::SP_MediaVolume));
 }
 
 void SmkAudioWidget::on_closePushButtonClicked()

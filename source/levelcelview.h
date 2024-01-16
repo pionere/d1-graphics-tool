@@ -349,8 +349,8 @@ private:
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;
-    quint16 tilesetPlayDelay = 50;
-    quint16 dunviewPlayDelay = 50;
+    unsigned tilesetPlayDelay = 50000; // microsec
+    unsigned dunviewPlayDelay = 50000; // microsec
     int currentDunPosX = 0;
     int currentDunPosY = 0;
     int playTimer = 0;

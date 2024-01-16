@@ -14,6 +14,7 @@ class SmkAudioWidget;
 
 class D1Gfx;
 class CelView;
+class PushButtonWidget;
 
 class SmkAudioWidget : public QDialog {
     Q_OBJECT
@@ -37,6 +38,7 @@ private slots:
     void on_trackComboBox_activated(int index);
 
     void on_playPushButtonClicked();
+    void on_mutePushButtonClicked();
 
     void on_closePushButtonClicked();
     void on_movePushButtonClicked();
@@ -46,6 +48,7 @@ private slots:
 
 private:
     Ui::SmkAudioWidget *ui;
+    PushButtonWidget *muteBtn;
     QGraphicsScene audioScene = QGraphicsScene(this);
     QGraphicsView *graphView;
     bool moving = false;

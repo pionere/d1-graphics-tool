@@ -112,7 +112,7 @@ private:
     int currentXOffset = 0;
     int currentYOffset = 0;
     quint8 currentColor = 0;
-    quint16 currentPlayDelay = 50;
+    unsigned currentPlayDelay = 50000; // microsec
     int playTimer = 0;
     QPoint lastPos;
     QPoint firstPos;
