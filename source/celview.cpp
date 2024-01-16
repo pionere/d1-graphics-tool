@@ -1201,6 +1201,9 @@ void CelView::on_playStopButton_clicked()
         // restore the currentFrameIndex
         this->currentFrameIndex = this->origFrameIndex;
         // restore palette
+        if (!this->origPal.isNull()) {
+            dMainWindow().updatePalette(this->origPal.data());
+        }
         dMainWindow().resetPaletteCycle();
         // change the label of the button
         this->ui->playStopButton->setText(tr("Play"));
@@ -1217,6 +1220,7 @@ void CelView::on_playStopButton_clicked()
     // preserve the currentFrameIndex
     this->origFrameIndex = this->currentFrameIndex;
     // preserve the palette
+    this->origPal = this->pal;
     dMainWindow().initPaletteCycle();
 
     this->playTimer = this->startTimer(this->currentPlayDelay / 1000);
