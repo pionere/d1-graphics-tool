@@ -147,7 +147,7 @@ void SmkAudioWidget::frameModified()
         this->ui->trackComboBox->setCurrentIndex(track);
 
         // - channels
-		this->ui->channelsLabel->setText(QString::number(channels));		
+        this->ui->channelsLabel->setText(QString::number(channels));
 
         // - bitWidth
         this->ui->bitWidthLabel->setText(tr("%1bit").arg(bitWidth * 8));
@@ -177,12 +177,12 @@ void SmkAudioWidget::frameModified()
     QImage audioFrame = QImage(width, height, QImage::Format_ARGB32);
     audioFrame.fill(QColor(Config::getGraphicsTransparentColor()));
 
-    if (audioData != nullptr && bitWidth != 0 && channels != 0) {
+    if (audioData != nullptr && channels != 0 && bitWidth != 0) {
         QPainter audioPainter(&audioFrame);
         audioPainter.setPen(QColor(Config::getPaletteUndefinedColor())); // getPaletteSelectionBorderColor?
 
         for (unsigned long i = 0; i < audioDataLen / (bitWidth * channels); i++) {
-			for (unsigned ch = 0; ch < channels; ch++) {
+            for (unsigned ch = 0; ch < channels; ch++) {
                 int value;
                 if (bitWidth == 1) {
                     value = (INT8_MAX + 1 + *(int8_t*)&audioData[0]) * height / (UINT8_MAX  + 1);
@@ -191,7 +191,7 @@ void SmkAudioWidget::frameModified()
                 }
                 audioPainter.drawLine(i, height - value + ch * SMK_AUDIO_HEIGHT, i, height + ch * SMK_AUDIO_HEIGHT);
 
-	            audioData += bitWidth;
+                audioData += bitWidth;
             }
         }
     }

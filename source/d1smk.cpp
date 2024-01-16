@@ -268,7 +268,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     do {
         bool palUpdate = smk_palette_updated(SVidSMK);
         if (palUpdate && frameNum != 0) {
-            RegisterPalette(pal, prevPalFrame, frameNum, pals);
+            RegisterPalette(pal, prevPalFrame, frameNum - 1, pals);
             prevPalFrame = frameNum;
             // load the new palette
             pal = LoadPalette(SVidSMK);
@@ -306,7 +306,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
     }
-    RegisterPalette(pal, prevPalFrame, frameNum, pals);
+    RegisterPalette(pal, prevPalFrame, frameNum - 1, pals);
 
     smk_close(SVidSMK);
     MemFreeDbg(SVidBuffer);
@@ -374,7 +374,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
     D1SmkAudioData *frameAudio;
     unsigned long audioDataLen;
     uint8_t *audioData;
-    unsigned bitDepth, channels, bitRate;
+    unsigned channels, bitDepth, bitRate;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QAudioFormat::SampleFormat sampleFormat;
 #endif
@@ -410,12 +410,15 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
             if (audioOutput[track] == nullptr) {
                 QAudioFormat m_audioFormat = QAudioFormat();
                 m_audioFormat.setSampleRate(bitRate);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                m_audioFormat.setSampleFormat(sampleFormat);
+#else
                 m_audioFormat.setChannelCount(channels);
                 m_audioFormat.setSampleSize(bitDepth);
-                m_audioFormat.setCodec("audio/pcm");
                 m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
                 m_audioFormat.setSampleType(QAudioFormat::SignedInt);
-
+                m_audioFormat.setCodec("audio/pcm");
+#endif
                 audioOutput[track] = new SmkAudioOutput(m_audioFormat); // , this);
                 //audioOutput[track]->setBufferSize(2048);
                 // connect up signal stateChanged to a lambda to get feedback
