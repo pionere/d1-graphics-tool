@@ -25,7 +25,7 @@ public:
     bool setBitRate(unsigned bitRate);
     unsigned getBitRate() const;
     void setAudio(unsigned track, uint8_t* audio, unsigned long len);
-    uint8_t* getAudio(unsigned track, unsigned long *len);
+    uint8_t* getAudio(unsigned track, unsigned long *len) const;
 
 private:
     unsigned channels;

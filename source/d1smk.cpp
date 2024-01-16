@@ -89,7 +89,6 @@ qint64 AudioBuffer::peek(char *data, qint64 maxSize)
         if (rem == 0)
             break;
     }
-
     return result;
 }
 
@@ -186,10 +185,10 @@ void D1SmkAudioData::setAudio(unsigned track, uint8_t* data, unsigned long len)
     this->len[track] = len;
 }
 
-uint8_t* D1SmkAudioData::getAudio(unsigned track, unsigned long *len)
+uint8_t* D1SmkAudioData::getAudio(unsigned track, unsigned long *len) const
 {
     *len = this->len[track];
-    return this->audio[track];
+    return const_cast<uint8_t*>(this->audio[track]);
 }
 
 static D1Pal* LoadPalette(smk SVidSMK)
@@ -205,7 +204,7 @@ static D1Pal* LoadPalette(smk SVidSMK)
 
 static void RegisterPalette(D1Pal *pal, unsigned frameFrom, unsigned frameTo, QMap<QString, D1Pal *> &pals)
 {
-    QString palPath = QString("Frame%1-%2").arg(frameFrom, 4, 10, QChar('0')).arg((int)frameTo, 4, 10, QChar('0'));
+    QString palPath = QString("Frame%1-%2").arg(frameFrom + 1, 4, 10, QChar('0')).arg(frameTo + 1, 4, 10, QChar('0'));
     pal->setFilePath(palPath);
     pals[palPath] = pal;
 }
@@ -265,7 +264,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     do {
         bool palUpdate = smk_palette_updated(SVidSMK);
         if (palUpdate && frameNum != 0) {
-            RegisterPalette(pal, prevPalFrame, frameNum, pals);
+            RegisterPalette(pal, prevPalFrame, frameNum - 1, pals);
             prevPalFrame = frameNum;
             // load the new palette
             pal = LoadPalette(SVidSMK);
@@ -303,7 +302,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
     }
-    RegisterPalette(pal, prevPalFrame, frameNum, pals);
+    RegisterPalette(pal, prevPalFrame, frameNum - 1, pals);
 
     smk_close(SVidSMK);
     MemFreeDbg(SVidBuffer);
@@ -371,7 +370,7 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
     D1SmkAudioData *frameAudio;
     unsigned long audioDataLen;
     uint8_t *audioData;
-    unsigned channels, bitRate, bitDepth;
+    unsigned channels, bitDepth, bitRate;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QAudioFormat::SampleFormat sampleFormat;
 #endif
@@ -387,12 +386,10 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
             if (trackIdx >= 0 && track != trackIdx) {
                 continue;
             }
-
             audioData = frameAudio->getAudio(track, &audioDataLen);
             if (audioDataLen == 0) {
                 continue;
             }
-
             if (audioOutput[track] != nullptr) {
                 QAudioFormat m_audioFormat = audioOutput[track]->format();
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
