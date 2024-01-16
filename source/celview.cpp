@@ -1235,10 +1235,6 @@ void CelView::on_playStopButton_clicked()
     dMainWindow().initPaletteCycle();
 
     this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
-
-	this->timer.start();
-	qint64 nextTickNS = timer.nsecsElapsed() + this->currentPlayDelay * 1000;
-	QTimer::singleShot(this->currentPlayDelay / 1000, Qt::PreciseTimer, this, &CelView::timerEvent);
 }
 
 void CelView::timerEvent(QTimerEvent *event)
@@ -1281,15 +1277,6 @@ void CelView::timerEvent(QTimerEvent *event)
     } else {
         dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
         // this->displayFrame();
-    }
-
-	nextTickNS += this->currentPlayDelay * 1000;
-	qint64 now = timer.nsecsElapsed();
-	int delta = (nextTick - now) / (1000 * 1000);
-	if (delta > 0) {
-		QTimer::singleShot(delta, Qt::PreciseTimer, this, &CelView::timerEvent);
-    } else {
-		this->timerEvent();
     }
 }
 
