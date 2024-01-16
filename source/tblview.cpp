@@ -610,7 +610,7 @@ void TblView::on_playStopButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer = this->startTimer(this->currentPlayDelay);
+    this->playTimer = this->startTimer(this->currentPlayDelay, Qt::PreciseTimer);
 }
 
 void TblView::timerEvent(QTimerEvent *event)

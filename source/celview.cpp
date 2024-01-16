@@ -1223,7 +1223,7 @@ void CelView::on_playStopButton_clicked()
     this->origPal = this->pal;
     dMainWindow().initPaletteCycle();
 
-    this->playTimer = this->startTimer(this->currentPlayDelay / 1000);
+    this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
 }
 
 void CelView::timerEvent(QTimerEvent *event)

@@ -3918,7 +3918,7 @@ void LevelCelView::on_playStopButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer = this->startTimer(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
+    this->playTimer = this->startTimer(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay, Qt::PreciseTimer);
 }
 
 void LevelCelView::timerEvent(QTimerEvent *event)
