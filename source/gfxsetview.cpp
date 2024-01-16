@@ -1334,7 +1334,7 @@ void GfxsetView::on_playStopButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer = this->startTimer(this->currentPlayDelay, Qt::PreciseTimer);
+    this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
 }
 
 void GfxsetView::timerEvent(QTimerEvent *event)
