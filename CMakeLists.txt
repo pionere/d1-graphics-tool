@@ -117,6 +117,8 @@ set(PROJECT_SOURCES
         source/d1trn.h
         source/d1trs.cpp
         source/d1trs.h
+        source/d1wav.cpp
+        source/d1wav.h
         source/dungeon/automap.cpp
         source/dungeon/drlg_l1.cpp
         source/dungeon/drlg_l2.cpp
