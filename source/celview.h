@@ -111,6 +111,7 @@ public:
 
     void displayFrame();
     void toggleBottomPanel();
+    bool toggleMute();
 
     static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 
@@ -165,6 +166,7 @@ private:
     CelScene celScene = CelScene(this);
     SmkAudioWidget *smkAudioWidget = nullptr;
     PushButtonWidget *audioBtn;
+    bool audioMuted;
 
     D1Pal *pal;
     D1Gfx *gfx;

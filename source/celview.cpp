@@ -264,6 +264,7 @@ CelView::CelView(QWidget *parent)
     this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
     layout->setAlignment(this->audioBtn, Qt::AlignLeft);
     this->audioBtn->setVisible(false);
+    this->audioMuted = false;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
@@ -901,6 +902,13 @@ void CelView::toggleBottomPanel()
     this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
 }
 
+bool CelView::toggleMute()
+{
+    this->audioMuted = !this->audioMuted;
+    this->audioBtn->setIcon(QApplication::style()->standardIcon(this->audioMuted ? QStyle::SP_MediaVolumeMuted : QStyle::SP_MediaVolume));
+    return this->audioMuted;
+}
+
 void CelView::updateGroupIndex()
 {
     int i = 0;
@@ -1251,7 +1259,9 @@ void CelView::timerEvent(QTimerEvent *event)
     this->currentFrameIndex = nextFrameIndex;
     if (this->gfx->getType() == D1CEL_TYPE::SMK) {
         D1GfxFrame *frame = this->gfx->getFrame(nextFrameIndex);
-        D1Smk::playAudio(*frame);
+        if (!this->audioMuted) {
+            D1Smk::playAudio(*frame);
+        }
         QPointer<D1Pal>& pal = frame->getFramePal();
         if (!pal.isNull()) {
             dMainWindow().updatePalette(pal.data());
