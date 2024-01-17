@@ -173,7 +173,7 @@ private:
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     int origFrameIndex = 0;
-	QPointer<D1Pal> origPal;
+    QPointer<D1Pal> origPal;
     unsigned currentPlayDelay = 50000; // microsec
     int playTimer = 0;
 };

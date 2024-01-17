@@ -38,6 +38,8 @@ private slots:
     void on_trackComboBox_activated(int index);
 
     void on_playPushButtonClicked();
+    void on_loadChunkPushButtonClicked();
+    void on_loadTrackPushButtonClicked();
     void on_mutePushButtonClicked();
 
     void on_closePushButtonClicked();

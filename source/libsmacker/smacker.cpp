@@ -2273,9 +2273,9 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	struct smk_bit_t bs;
 #ifndef FULL
 	unsigned long video_tree_size[4];
-bufMem = fp.ram;
-bufSize = size;
- patchFile();
+ bufMem = fp.ram;
+ bufSize = size;
+// patchFile();
 #endif
 	/** **/
 	/* safe malloc the structure */

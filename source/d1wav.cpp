@@ -9,6 +9,8 @@
 #include "d1smk.h"
 #include "progressdialog.h"
 
+#include "dungeon/engine.h"
+
 typedef struct _WavHeader {
     quint32 RiffMarker;
     quint32 FileSize;
@@ -25,43 +27,17 @@ typedef struct _WavHeader {
     quint32 DataSize;
 } WAVHEADER;
 
-/*bool D1Wav::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsParam &params)
+typedef struct _AudioData {
+    unsigned channels;     // 1/2 channel
+    unsigned bitDepth;     // 8/16 bit
+    unsigned long bitRate; // Hz
+    uint8_t* audio;
+    unsigned long len;     // length of the (audio) data
+} WAVAudioData;
+
+bool D1Wav::load(WAVAudioData &audioData, const QString &filePath)
 {
-    QString celPath = filePath;
-
-    // assert(filePath.toLower().endsWith(".pcx"));
-    celPath.chop(4);
-    celPath += ".cel";
-
-    if (params.celWidth != 0) {
-        dProgressWarn() << QApplication::tr("Width setting is ignored when a PCX file is loaded.");
-    }
-    bool clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
-
-    QColor undefColor = pal->getUndefinedColor();
-    for (int i = 0; i < D1PAL_COLORS; i++) {
-        pal->setColor(i, undefColor);
-    }
-
-    gfx.groupFrameIndices.clear();
-    gfx.groupFrameIndices.push_back(std::pair<int, int>(0, 0));
-
-    gfx.type = D1CEL_TYPE::V1_REGULAR;
-
-    // gfx.frames.clear();
-    D1GfxFrame *frame = new D1GfxFrame();
-    gfx.frames.append(frame);
-
-    gfx.gfxFilePath = celPath;
-    gfx.modified = true;
-
-    bool dummy;
-    return D1Wav::load(*frame, filePath, clipped, pal, nullptr, &dummy);
-}
-
-bool D1Wav::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
-{
-    // Opening PCX file
+    // Opening WAV file
     QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
@@ -70,178 +46,216 @@ bool D1Wav::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
     }
 
     const quint64 fileSize = file.size();
-    PCXHEADER pcxhdr;
-    PCXPALETTE pPalette;
+    WAVHEADER wavhdr;
 
-    if (fileSize < sizeof(pcxhdr)) {
-        dProgressErr() << QApplication::tr("Invalid PCX file.");
+    if (fileSize < sizeof(wavhdr)) {
+        dProgressErr() << QApplication::tr("Invalid WAV file.");
         return false;
     }
+    fileSize -= sizeof(wavhdr);
 
     // process the header
-    file.read((char *)&pcxhdr, sizeof(pcxhdr));
-    if (pcxhdr.Manufacturer != 0x0A) {
-        dProgressErr() << QApplication::tr("Invalid PCX header.");
-        return false;
-    }
-    if (pcxhdr.BitsPerPixel != 8) {
-        dProgressErr() << QApplication::tr("Unsupported PCX format (number of bits per pixel).");
-        return false;
-    }
-    if (pcxhdr.NPlanes != 1) {
-        dProgressErr() << QApplication::tr("Unsupported PCX format (number of planes).");
+    file.read((char *)&wavhdr, sizeof(wavhdr));
+    if (wavhdr.FmtMarker != SwapLE32(*((uint32_t*)"fmt "))) {
+        dProgressErr() << QApplication::tr("Invalid WAV header.");
         return false;
     }
 
-    // read the palette
-    *palMod = false;
-    D1Pal *pcxPal = nullptr;
-    int pcxPalState = 0; // 0: invalid; 1: valid and matches pal; 2: valid but does not match the pal
-    if (fileSize >= sizeof(pcxhdr) + sizeof(pPalette)) {
-        file.seek(fileSize - sizeof(pPalette));
-        file.read((char *)&pPalette, sizeof(pPalette));
-
-        pcxPalState = pPalette.prefix == 0x0C ? 1 : 0;
-        if (pcxPalState == 1) {
-            pcxPal = new D1Pal();
-            static_assert(D1PAL_COLORS == D1PCX_COLORS, "D1Wav::load uses D1Pal to store the palette of a PCX file.");
-            for (int i = 0; i < D1PCX_COLORS; i++) {
-                pcxPal->setColor(i, QColor(pPalette.data[i][0], pPalette.data[i][1], pPalette.data[i][2]));
-            }
-
-            for (int i = 0; i < D1PCX_COLORS; i++) {
-                QColor col = basePal->getColor(i);
-                if (col == basePal->getUndefinedColor()) {
-                    continue; // color of the graphics-palette is undefined -> ignore
-                }
-                QColor pcxCol = pcxPal->getColor(i);
-                if (pcxCol == basePal->getUndefinedColor()) {
-                    continue; // color of the PCX-palette is undefined -> ignore
-                }
-                if (col != pcxCol) {
-                    pcxPalState = 2;
-                    break;
-                }
-            }
-        }
-        file.seek(sizeof(pcxhdr));
+    unsigned channels = SwapLE16(wavhdr.ChannelCount);
+    if (channels > D1SMK_CHANNELS) {
+        dProgressErr() << QApplication::tr("Unsupported number of channels (%1. Max. 2).").arg(channels);
+        return false;
     }
 
-    if (resPal == nullptr) {
-        // loading a complete file
-        pcxPalState = 1;
-        if (pcxPal == nullptr) {
-            pcxPal = basePal;
-        }
+    unsigned bitDepth = SwapLE16(wavhdr.BitsPerSample);
+    if (bitDepth != 8 && bitDepth != 16) {
+        dProgressErr() << QApplication::tr("Unsupported number of channels (%1. Max. 2).").arg(channels);
+        return false;
     }
 
-    // prepare D1GfxFrame
-    frame.width = SwapLE16(pcxhdr.Xmax) - SwapLE16(pcxhdr.Xmin) + 1;
-    frame.height = SwapLE16(pcxhdr.Ymax) - SwapLE16(pcxhdr.Ymin) + 1;
-    frame.clipped = clipped;
-    frame.pixels.clear();
+    unsigned long bitRate = SwapLE32(wavhdr.SampleRate);
 
-    // read data
-    QByteArray fileData = file.read(fileSize - sizeof(PCXHEADER));
+    uint32_t dataMarker = wavhdr.DataMarker;
+    uint32_t dataSize = SwapLE32(wavhdr.DataSize);
+    while (true) {
+        if (dataSize < 8) {
+            dProgressErr() << QApplication::tr("Invalid chunk length in the WAV file (%1. Min 8).").arg(dataSize);
+            return false;
+        }
+        dataSize -= 8;
+        if (dataSize > fileSize) {
+            dProgressErr() << QApplication::tr("Invalid chunk in the WAV header.");
+            return false;
+        }
+        fileSize -= dataSize;
+        if (dataMarker == SwapLE32(*((uint32_t*)"data"))) {
+            if (fileSize != 0) {
+                dProgressWarn() << QApplication::tr("Unrecognized content in the WAV file (length: %1).").arg(fileSize);
+            }
+            break;
+        }
+        uint64_t chunkName = dataMarker;
+        dProgressWarn() << QApplication::tr("Ignored chunk '%1' in the WAV header.").arg(chunkName);
+        file.skip(dataSize);
 
-    const quint16 srcSkip = SwapLE16(pcxhdr.BytesPerLine) - frame.width;
-    auto dataPtr = fileData.cbegin();
-    quint8 byte;
-    if (pcxPalState == 1) {
-        // read using the given palette
-        QSet<quint8> usedColors;
-        for (int y = 0; y < frame.height; y++) {
-            std::vector<D1GfxPixel> pixelLine;
-            for (int x = 0; x < frame.width; dataPtr++) {
-                byte = *dataPtr;
-                if (byte <= PCX_MAX_SINGLE_PIXEL) {
-                    if (pcxPal->getColor(byte) != basePal->getUndefinedColor()) {
-                        pixelLine.push_back(D1GfxPixel::colorPixel(byte));
-                        usedColors.insert(byte);
-                    } else {
-                        pixelLine.push_back(D1GfxPixel::transparentPixel()); // color of the PCX-palette is undefined -> transparent
-                    }
-                    x++;
-                    continue;
-                }
-                byte &= PCX_RUNLENGTH_MASK;
-                dataPtr++;
-                quint8 col = *dataPtr;
-                D1GfxPixel pCol = D1GfxPixel::transparentPixel(); // color of the PCX-palette is undefined -> transparent
-                if (pcxPal->getColor(col) != basePal->getUndefinedColor()) {
-                    pCol = D1GfxPixel::colorPixel(col);
-                    usedColors.insert(col);
-                }
-                for (int i = 0; i < byte; i++) {
-                    pixelLine.push_back(pCol);
-                }
-                x += byte;
-            }
-            frame.pixels.push_back(std::move(pixelLine));
-            dataPtr += srcSkip;
-        }
-
-        // update the undefined colors of the palette
-        for (int i = 0; i < D1PCX_COLORS; i++) {
-            QColor col = basePal->getColor(i);
-            // if (col != undefColor) {
-            //     continue; // skip colors if already defined
-            // }
-            if (resPal != nullptr && usedColors.find(i) == usedColors.end()) {
-                continue; // ignore unused colors if not loading a complete file
-            }
-            QColor pcxCol = pcxPal->getColor(i);
-            if (pcxCol == col) {
-                continue; // same as before
-            }
-            basePal->setColor(i, pcxCol);
-            *palMod = true;
-        }
-    } else {
-        // read as a standard image
-        if (pcxPal == nullptr) {
-            pcxPal = resPal;
-        }
-        QImage image = QImage(frame.width, frame.height, QImage::Format_ARGB32);
-        QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
-        for (int y = 0; y < frame.height; y++) {
-            for (int x = 0; x < frame.width; dataPtr++) {
-                byte = *dataPtr;
-                if (byte <= PCX_MAX_SINGLE_PIXEL) {
-                    QColor color = pcxPal->getColor(byte);
-                    if (color == resPal->getUndefinedColor()) {
-                        color = Qt::transparent;
-                    }
-                    // image.setPixelColor(x, y, color);
-                    *destBits = color.rgba();
-                    x++;
-                    destBits++;
-                    continue;
-                }
-                byte &= PCX_RUNLENGTH_MASK;
-                dataPtr++;
-                quint8 col = *dataPtr;
-                QColor color = pcxPal->getColor(col);
-                if (color == resPal->getUndefinedColor()) {
-                    color = Qt::transparent;
-                }
-                for (int i = 0; i < byte; i++, destBits++) {
-                    // image.setPixelColor(x + i, y, color);
-                    *destBits = color.rgba();
-                }
-                x += byte;
-            }
-            dataPtr += srcSkip;
-        }
-
-        D1ImageFrame::load(frame, image, frame.clipped, resPal);
+        file.read((char *)&dataMarker, sizeof(dataMarker));
+        file.read((char *)&dataSize, sizeof(dataSize));
+        dataSize = SwapLE32(dataSize);
     }
 
-    if (pcxPal != resPal && pcxPal != basePal) {
-        delete pcxPal;
+    unsigned long len = dataSize;
+    unsigned extraBits = len % (channels * bitDepth / 8);
+    if (extraBits != 0) {
+        dProgressWarn() << QApplication::tr("Mismatching content in the WAV file (length: %1).").arg(extraBits);
+        len -= extraBits;
+    }
+    uint8_t *data = nullptr;
+    if (len != 0) {
+        data = (uint8_t *)malloc(len);
+        if (data == nullptr) {
+            dProgressErr() << QApplication::tr("Failed to allocate memory (%1).").arg(len);
+            return false;
+        }
+        file.read((char *)data, len);
+    }
+
+    audioData.bitRate = bitRate;
+    audioData.channels = channels;
+    audioData.bitDepth = bitDepth;
+    audioData.len = len;
+    audioData.audio = data;
+    return true;
+}
+
+bool D1Wav::checkAudio(const D1SmkAudioData *audio, const WAVAudioData &wavAudioData, int track)
+{
+    for (int i = 0; i < D1SMK_TRACKS; i++) {
+        if (i != track && audio->len[i] != 0) {
+            if (audio->channels != wavAudioData.channels) {
+                dProgressErr() << QApplication::tr("Mismatching audio channels (%1 vs %2).").arg(audio->channels).arg(wavAudioData.channels);
+            } else if (audio-> != wavAudioData.bitDepth) {
+                dProgressErr() << QApplication::tr("Mismatching audio bit-depth (%1 vs %2).").arg(audio->bitDepth).arg(wavAudioData.bitDepth);
+            } else if (audio->bitRate != wavAudioData.bitRate) {
+                dProgressErr() << QApplication::tr("Mismatching audio bit-rate (%1 vs %2).").arg(audio->bitRate).arg(wavAudioData.bitRate);
+            } else {
+                continue;
+            }
+            return false;
+        }
     }
     return true;
-}*/
+}
+
+bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
+{
+    WAVAudioData wavAudioData;
+    if (!D1Wav::load(wavAudioData, filePath)) {
+        return false;
+    }
+    // TODO: D1SMK::load?
+    // validate existing audio
+    for (int i = 0; i < frameCount; i++) {
+        D1GfxFrame *gfxFrame = gfx.getFrame(i);
+        D1SmkAudioData *audio = gfxFrame->frameAudio;
+        if (audio != nullptr && !checkAudio(audio, wavAudioData, track)) {
+            free(wavAudioData.audio);
+            return false;
+        }
+    }
+    // clear track
+    for (int i = 0; i < frameCount; i++) {
+        D1GfxFrame *gfxFrame = gfx.getFrame(i);
+        D1SmkAudioData *audio = gfxFrame->frameAudio;
+        if (audio != nullptr) {
+            audio->channels = wavAudioData.channels;
+            audio->bitDepth = wavAudioData.bitDepth;
+            audio->bitRate = wavAudioData.bitRate;
+        } else {
+            audio = new D1SmkAudioData(wavAudioData.channels, wavAudioData.bitDepth, wavAudioData.bitRate);
+            gfxFrame->frameAudio = audio;
+        }
+        if (audio->audio[track] != nullptr) {
+            MemFreeDbg(audio->audio[track]);
+            audio->len[track] = 0;
+        }
+    }
+    // add the new track
+    unsigned long audioLen = wavAudioData.len;
+    if (audioLen != 0) {
+        unsigned sampleSize = wavAudioData.channels * wavAudioData.bitDepth / 8;
+        unsigned long bitRate = wavAudioData.bitRate;
+        // assert((audioLen % sampleSize) == 0);
+        unsigned sampleCount = audioLen / sampleSize;
+        unsigned frameLen = gfx.frameLen; // us
+        if (frameLen == 0) {
+            // assert(frameCount != 0);
+            frameLen = ((uint64_t)sampleCount * 1000000 + frameCount * bitRate - 1) / (frameCount * bitRate);
+            gfx.frameLen = frameLen;
+        }
+        unsigned samplePerFrame = ((uint64_t)bitRate * frameLen + 999999999) / 1000000000;
+        unsigned leadingSamples = bitRate * 10;
+        if (leadingSamples < samplePerFrame) {
+            leadingSamples = samplePerFrame;
+        }
+        unsigned long cursor = 0;
+        for (int i = 0; i < frameCount; i++) {
+            D1GfxFrame *gfxFrame = gfx.getFrame(i);
+            D1SmkAudioData *audio = gfxFrame->frameAudio;
+            unsigned frameSamples = i == 0 ? leadingSamples : samplePerFrame;
+            if (frameSamples > sampleCount) {
+                frameSamples = sampleCount;
+                sampleCount = 0;
+            } else {
+                sampleCount -= frameSamples;
+            }
+            if (frameSamples == 0) {
+                break;
+            }
+            unsigned frameAudioLen = frameSamples * sampleSize;
+            audio->audio[track] = malloc(frameAudioLen);
+            if (audio->audio[track] != nullptr) {
+                audio->len = frameAudioLen;
+                memcpy(audio->audio[track], &wavAudioData.audio[cursor], frameAudioLen);
+                cursor += frameAudioLen;
+            } else {
+                dProgressErr() << QApplication::tr("Out of memory.");
+            }
+        }
+    }
+    free(wavAudioData.audio);
+    return true;
+}
+
+bool D1Wav::load(D1GfxFrame &gfxFrame, int track, const QString &filePath)
+{
+    WAVAudioData wavAudioData;
+    if (!D1Wav::load(wavAudioData, filePath)) {
+        return false;
+    }
+    // TODO: D1SMK::load?
+    // validate existing audio
+    D1SmkAudioData *audio = gfxFrame.frameAudio;
+    if (audio != nullptr && !checkAudio(audio, wavAudioData, D1SMK_TRACKS)) {
+        free(wavAudioData.audio);
+        return false;
+    }
+    // clear track(-chunk)
+    if (audio != nullptr) {
+        audio->channels = wavAudioData.channels;
+        audio->bitDepth = wavAudioData.bitDepth;
+        audio->bitRate = wavAudioData.bitRate;
+    } else {
+        audio = new D1SmkAudioData(wavAudioData.channels, wavAudioData.bitDepth, wavAudioData.bitRate);
+        gfxFrame.frameAudio = audio;
+    }
+    if (audio->audio[track] != nullptr) {
+        free(audio->audio[track]);
+    }
+    // add the new track(-chunk)
+    audio->audio[track] = wavAudioData.audio;
+    audio->len[track] = wavAudioData.len;
+    return true;
+}
 
 bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &filePath, const ExportParam &params)
 {
