@@ -123,7 +123,7 @@ bool D1Wav::checkAudio(const D1SmkAudioData *audio, const WAVAudioData &wavAudio
         if (i != track && audio->len[i] != 0) {
             if (audio->channels != wavAudioData.channels) {
                 dProgressErr() << QApplication::tr("Mismatching audio channels (%1 vs %2).").arg(audio->channels).arg(wavAudioData.channels);
-            } else if (audio-> != wavAudioData.bitDepth) {
+            } else if (audio->bitDepth != wavAudioData.bitDepth) {
                 dProgressErr() << QApplication::tr("Mismatching audio bit-depth (%1 vs %2).").arg(audio->bitDepth).arg(wavAudioData.bitDepth);
             } else if (audio->bitRate != wavAudioData.bitRate) {
                 dProgressErr() << QApplication::tr("Mismatching audio bit-rate (%1 vs %2).").arg(audio->bitRate).arg(wavAudioData.bitRate);
