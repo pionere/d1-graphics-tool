@@ -25,6 +25,230 @@ typedef struct _WavHeader {
     quint32 DataSize;
 } WAVHEADER;
 
+bool D1Wav::load(WAVAudioData &audioData, const QString &filePath)
+{
+    // Opening WAV file
+    QFile file = QFile(filePath);
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(filePath));
+        return false;
+    }
+
+    quint64 fileSize = file.size();
+    WAVHEADER wavhdr;
+
+    if (fileSize < sizeof(wavhdr)) {
+        dProgressErr() << QApplication::tr("Invalid WAV file.");
+        return false;
+    }
+    fileSize -= sizeof(wavhdr);
+
+    // process the header
+    file.read((char *)&wavhdr, sizeof(wavhdr));
+    if (wavhdr.FmtMarker != SwapLE32(*((uint32_t*)"fmt "))) {
+        dProgressErr() << QApplication::tr("Invalid WAV header.");
+        return false;
+    }
+
+    unsigned channels = SwapLE16(wavhdr.ChannelCount);
+    if (channels > D1SMK_CHANNELS) {
+        dProgressErr() << QApplication::tr("Unsupported number of channels (%1. Max. 2).").arg(channels);
+        return false;
+    }
+
+    unsigned bitDepth = SwapLE16(wavhdr.BitsPerSample);
+    if (bitDepth != 8 && bitDepth != 16) {
+        dProgressErr() << QApplication::tr("Unsupported number of channels (%1. Max. 2).").arg(channels);
+        return false;
+    }
+
+    unsigned long bitRate = SwapLE32(wavhdr.SampleRate);
+
+    uint32_t dataMarker = wavhdr.DataMarker;
+    uint32_t dataSize = SwapLE32(wavhdr.DataSize);
+    while (true) {
+        if (dataSize < 8) {
+            dProgressErr() << QApplication::tr("Invalid chunk length in the WAV file (%1. Min 8).").arg(dataSize);
+            return false;
+        }
+        dataSize -= 8;
+        if (dataSize > fileSize) {
+            dProgressErr() << QApplication::tr("Invalid chunk in the WAV header.");
+            return false;
+        }
+        fileSize -= dataSize;
+        if (dataMarker == SwapLE32(*((uint32_t*)"data"))) {
+            if (fileSize != 0) {
+                dProgressWarn() << QApplication::tr("Unrecognized content in the WAV file (length: %1).").arg(fileSize);
+            }
+            break;
+        }
+        uint64_t chunkName = dataMarker;
+        dProgressWarn() << QApplication::tr("Ignored chunk '%1' in the WAV header.").arg(chunkName);
+        file.skip(dataSize);
+
+        file.read((char *)&dataMarker, sizeof(dataMarker));
+        file.read((char *)&dataSize, sizeof(dataSize));
+        dataSize = SwapLE32(dataSize);
+    }
+
+    unsigned long len = dataSize;
+    unsigned extraBits = len % (channels * bitDepth / 8);
+    if (extraBits != 0) {
+        dProgressWarn() << QApplication::tr("Mismatching content in the WAV file (length: %1).").arg(extraBits);
+        len -= extraBits;
+    }
+    uint8_t *data = nullptr;
+    if (len != 0) {
+        data = (uint8_t *)malloc(len);
+        if (data == nullptr) {
+            dProgressErr() << QApplication::tr("Failed to allocate memory (%1).").arg(len);
+            return false;
+        }
+        file.read((char *)data, len);
+    }
+
+    audioData.bitRate = bitRate;
+    audioData.channels = channels;
+    audioData.bitDepth = bitDepth;
+    audioData.len = len;
+    audioData.audio = data;
+    return true;
+}
+
+bool D1Wav::checkAudio(const D1SmkAudioData *audio, const WAVAudioData &wavAudioData, int track)
+{
+    for (int i = 0; i < D1SMK_TRACKS; i++) {
+        if (i != track && audio->len[i] != 0) {
+            if (audio->channels != wavAudioData.channels) {
+                dProgressErr() << QApplication::tr("Mismatching audio channels (%1 vs %2).").arg(audio->channels).arg(wavAudioData.channels);
+            } else if (audio->bitDepth != wavAudioData.bitDepth) {
+                dProgressErr() << QApplication::tr("Mismatching audio bit-depth (%1 vs %2).").arg(audio->bitDepth).arg(wavAudioData.bitDepth);
+            } else if (audio->bitRate != wavAudioData.bitRate) {
+                dProgressErr() << QApplication::tr("Mismatching audio bit-rate (%1 vs %2).").arg(audio->bitRate).arg(wavAudioData.bitRate);
+            } else {
+                continue;
+            }
+            return false;
+        }
+    }
+    return true;
+}
+
+bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
+{
+    WAVAudioData wavAudioData;
+    if (!D1Wav::load(wavAudioData, filePath)) {
+        return false;
+    }
+    const int frameCount = gfx.getFrameCount();
+    // TODO: D1SMK::load?
+    // validate existing audio
+    for (int i = 0; i < frameCount; i++) {
+        D1GfxFrame *gfxFrame = gfx.getFrame(i);
+        D1SmkAudioData *audio = gfxFrame->frameAudio;
+        if (audio != nullptr && !checkAudio(audio, wavAudioData, track)) {
+            free(wavAudioData.audio);
+            return false;
+        }
+    }
+    // clear track
+    for (int i = 0; i < frameCount; i++) {
+        D1GfxFrame *gfxFrame = gfx.getFrame(i);
+        D1SmkAudioData *audio = gfxFrame->frameAudio;
+        if (audio != nullptr) {
+            audio->channels = wavAudioData.channels;
+            audio->bitDepth = wavAudioData.bitDepth;
+            audio->bitRate = wavAudioData.bitRate;
+        } else {
+            audio = new D1SmkAudioData(wavAudioData.channels, wavAudioData.bitDepth, wavAudioData.bitRate);
+            gfxFrame->frameAudio = audio;
+        }
+        if (audio->audio[track] != nullptr) {
+            free(audio->audio[track]);
+            audio->audio[track] = nullptr;
+            audio->len[track] = 0;
+        }
+    }
+    // add the new track
+    unsigned long audioLen = wavAudioData.len;
+    if (audioLen != 0) {
+        unsigned sampleSize = wavAudioData.channels * wavAudioData.bitDepth / 8;
+        unsigned long bitRate = wavAudioData.bitRate;
+        // assert((audioLen % sampleSize) == 0);
+        unsigned sampleCount = audioLen / sampleSize;
+        unsigned frameLen = gfx.frameLen;
+        if (frameLen == 0) {
+            // assert(frameCount != 0);
+            frameLen = ((uint64_t)sampleCount * 1000000 + frameCount * bitRate - 1) / (frameCount * bitRate);
+            gfx.frameLen = frameLen;
+        }
+        unsigned samplePerFrame = ((uint64_t)bitRate * frameLen + 999999) / 1000000;
+        unsigned leadingSamples = bitRate * 1; // TODO: make this configurable?
+        if (leadingSamples < samplePerFrame) {
+            leadingSamples = samplePerFrame;
+        }
+        unsigned long cursor = 0;
+        for (int i = 0; i < frameCount; i++) {
+            D1GfxFrame *gfxFrame = gfx.getFrame(i);
+            D1SmkAudioData *audio = gfxFrame->frameAudio;
+            unsigned frameSamples = i == 0 ? leadingSamples : samplePerFrame;
+            if (frameSamples > sampleCount) {
+                frameSamples = sampleCount;
+                sampleCount = 0;
+            } else {
+                sampleCount -= frameSamples;
+            }
+            if (frameSamples == 0) {
+                break;
+            }
+            unsigned frameAudioLen = frameSamples * sampleSize;
+            audio->audio[track] = (uint8_t *)malloc(frameAudioLen);
+            if (audio->audio[track] != nullptr) {
+                audio->len[track] = frameAudioLen;
+                memcpy(audio->audio[track], &wavAudioData.audio[cursor], frameAudioLen);
+                cursor += frameAudioLen;
+            } else {
+                dProgressErr() << QApplication::tr("Out of memory.");
+            }
+        }
+    }
+    free(wavAudioData.audio);
+    return true;
+}
+
+bool D1Wav::load(D1GfxFrame &gfxFrame, int track, const QString &filePath)
+{
+    WAVAudioData wavAudioData;
+    if (!D1Wav::load(wavAudioData, filePath)) {
+        return false;
+    }
+    // TODO: D1SMK::load?
+    // validate existing audio
+    D1SmkAudioData *audio = gfxFrame.frameAudio;
+    if (audio != nullptr && !checkAudio(audio, wavAudioData, D1SMK_TRACKS)) {
+        free(wavAudioData.audio);
+        return false;
+    }
+    // clear track(-chunk)
+    if (audio != nullptr) {
+        audio->channels = wavAudioData.channels;
+        audio->bitDepth = wavAudioData.bitDepth;
+        audio->bitRate = wavAudioData.bitRate;
+    } else {
+        audio = new D1SmkAudioData(wavAudioData.channels, wavAudioData.bitDepth, wavAudioData.bitRate);
+        gfxFrame.frameAudio = audio;
+    }
+    if (audio->audio[track] != nullptr) {
+        free(audio->audio[track]);
+    }
+    // add the new track(-chunk)
+    audio->audio[track] = wavAudioData.audio;
+    audio->len[track] = wavAudioData.len;
+    return true;
+}
+
 bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &filePath)
 {
     unsigned long len;

@@ -15,6 +15,7 @@ class D1SmkAudioData : public QObject {
     Q_OBJECT
 
     friend class D1Smk;
+    friend class D1Wav;
 
 public:
     D1SmkAudioData(unsigned channels, unsigned bitDepth, unsigned long bitRate);
