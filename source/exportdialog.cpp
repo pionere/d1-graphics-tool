@@ -691,7 +691,7 @@ static void saveAudio(D1SmkAudioData *tempAudioData, const QString &fileName, co
         if (tempAudioData->getAudio(n, &len) != nullptr) {
             QString path = params.outFolder + "/" + fileName + QApplication::tr("track%1").arg(n + 1) + params.outFileExtension;
             // if (path.endsWith(".wav")) {
-                if (D1Wav::save(tempAudioData, n, path, params))
+                if (D1Wav::save(tempAudioData, n, path))
                     dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
                 else
                     dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));

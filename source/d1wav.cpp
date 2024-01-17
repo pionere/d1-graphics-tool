@@ -180,7 +180,6 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
         unsigned long bitRate = wavAudioData.bitRate;
         // assert((audioLen % sampleSize) == 0);
         unsigned sampleCount = audioLen / sampleSize;
-		LogErrorF("sampleCount:%d", sampleCount);
         unsigned frameLen = gfx.frameLen; // us
         if (frameLen == 0) {
             // assert(frameCount != 0);
@@ -188,7 +187,6 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
             gfx.frameLen = frameLen;
         }
         unsigned samplePerFrame = ((uint64_t)bitRate * frameLen + 999999) / 1000000;
-		LogErrorF("samplePerFrame:%d size%d bitRate%d frameLen%d", samplePerFrame, sampleSize, bitRate, frameLen);
         unsigned leadingSamples = bitRate * 1;
         if (leadingSamples < samplePerFrame) {
             leadingSamples = samplePerFrame;
@@ -253,15 +251,10 @@ bool D1Wav::load(D1GfxFrame &gfxFrame, int track, const QString &filePath)
     return true;
 }
 
-bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &filePath, const ExportParam &params)
+bool D1Wav::save(const D1SmkAudioData *audioData, int track, const QString &filePath)
 {
     unsigned long len;
     uint8_t* data = audioData->getAudio(track, &len);
-
-    /*if (len == 0) {
-        dProgressFail() << QApplication::tr("WAV format can not store the image due to its dimensions: %1x%2.").arg(imageSize.width()).arg(imageSize.height());
-        return false;
-    }*/
 
     QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);

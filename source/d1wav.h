@@ -19,7 +19,7 @@ class D1Wav {
 public:
     static bool load(D1Gfx &gfx, int track, const QString &wavFilePath);
     static bool load(D1GfxFrame &gfxFrame, int track, const QString &wavFilePath);
-    static bool save(const D1SmkAudioData *audioData, int track, const QString &wavFilePath, const ExportParam &params);
+    static bool save(const D1SmkAudioData *audioData, int track, const QString &wavFilePath);
 
     // static bool load(D1GfxFrame &frame, const QString &pcxFilePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod);
 private:

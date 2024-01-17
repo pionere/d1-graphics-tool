@@ -166,7 +166,7 @@ private:
     CelScene celScene = CelScene(this);
     SmkAudioWidget *smkAudioWidget = nullptr;
     PushButtonWidget *audioBtn;
-	bool audioMuted;
+    bool audioMuted;
 
     D1Pal *pal;
     D1Gfx *gfx;

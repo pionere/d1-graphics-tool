@@ -410,10 +410,10 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
             if (audioOutput[track] == nullptr) {
                 QAudioFormat m_audioFormat = QAudioFormat();
                 m_audioFormat.setSampleRate(bitRate);
+                m_audioFormat.setChannelCount(channels);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
                 m_audioFormat.setSampleFormat(sampleFormat);
 #else
-                m_audioFormat.setChannelCount(channels);
                 m_audioFormat.setSampleSize(bitDepth);
                 m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
                 m_audioFormat.setSampleType(QAudioFormat::SignedInt);
