@@ -60,6 +60,8 @@ void SmkAudioWidget::initialize(int frameIndex)
                 this->currentTrack = 0;
             }
         }
+    } else {
+        this->hide();
     }
 
     this->frameModified();

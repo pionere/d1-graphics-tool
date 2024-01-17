@@ -344,9 +344,7 @@ void CelView::setGfx(D1Gfx *g)
     }
 
     this->gfx = g;
-    bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
-    this->audioBtn->setVisible(smkGfx);
-    if (smkGfx) {
+    if (g->getType() == D1CEL_TYPE::SMK) {
         this->currentPlayDelay = g->getFrameLen();
     }
 
@@ -386,6 +384,8 @@ void CelView::updateFields()
     this->updateLabel();
     // set play-delay text
     this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    // update visiblity of the audio icon
+    this->audioBtn->setVisible(this->gfx->getType() == D1CEL_TYPE::SMK && this->gfx->getFrameCount() != 0);
 
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
