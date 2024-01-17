@@ -6,7 +6,14 @@
 #include "exportdialog.h"
 
 class D1SmkAudioData;
-struct WAVAudioData;
+
+typedef struct _AudioData {
+    unsigned channels;     // 1/2 channel
+    unsigned bitDepth;     // 8/16 bit
+    unsigned long bitRate; // Hz
+    uint8_t* audio;
+    unsigned long len;     // length of the (audio) data
+} WAVAudioData;
 
 class D1Wav {
 public:

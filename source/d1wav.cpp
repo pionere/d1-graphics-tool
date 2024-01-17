@@ -9,8 +9,6 @@
 #include "d1smk.h"
 #include "progressdialog.h"
 
-#include "dungeon/engine.h"
-
 typedef struct _WavHeader {
     quint32 RiffMarker;
     quint32 FileSize;
@@ -27,14 +25,6 @@ typedef struct _WavHeader {
     quint32 DataSize;
 } WAVHEADER;
 
-typedef struct _AudioData {
-    unsigned channels;     // 1/2 channel
-    unsigned bitDepth;     // 8/16 bit
-    unsigned long bitRate; // Hz
-    uint8_t* audio;
-    unsigned long len;     // length of the (audio) data
-} WAVAudioData;
-
 bool D1Wav::load(WAVAudioData &audioData, const QString &filePath)
 {
     // Opening WAV file
@@ -45,7 +35,7 @@ bool D1Wav::load(WAVAudioData &audioData, const QString &filePath)
         return false;
     }
 
-    const quint64 fileSize = file.size();
+    quint64 fileSize = file.size();
     WAVHEADER wavhdr;
 
     if (fileSize < sizeof(wavhdr)) {
@@ -152,6 +142,7 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
     if (!D1Wav::load(wavAudioData, filePath)) {
         return false;
     }
+    const int frameCount = gfx.getFrameCount();
     // TODO: D1SMK::load?
     // validate existing audio
     for (int i = 0; i < frameCount; i++) {
@@ -175,7 +166,8 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
             gfxFrame->frameAudio = audio;
         }
         if (audio->audio[track] != nullptr) {
-            MemFreeDbg(audio->audio[track]);
+            free(audio->audio[track]);
+            audio->audio[track] = nullptr;
             audio->len[track] = 0;
         }
     }
@@ -212,9 +204,9 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
                 break;
             }
             unsigned frameAudioLen = frameSamples * sampleSize;
-            audio->audio[track] = malloc(frameAudioLen);
+            audio->audio[track] = (uint8_t *)malloc(frameAudioLen);
             if (audio->audio[track] != nullptr) {
-                audio->len = frameAudioLen;
+                audio->len[track] = frameAudioLen;
                 memcpy(audio->audio[track], &wavAudioData.audio[cursor], frameAudioLen);
                 cursor += frameAudioLen;
             } else {

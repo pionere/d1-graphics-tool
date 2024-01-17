@@ -17,6 +17,7 @@
 #include "config.h"
 #include "celview.h"
 #include "d1smk.h"
+#include "d1wav.h"
 #include "mainwindow.h"
 #include "pushbuttonwidget.h"
 #include "ui_smkaudiowidget.h"
@@ -244,7 +245,7 @@ void SmkAudioWidget::on_loadChunkPushButtonClicked()
         }
         if (D1Wav::load(*this->gfx->getFrame(frame), track, filePath)) {
             this->currentTrack = track;
-            this->gfx->setModfied();
+            this->gfx->setModified();
             // update the window
             this->frameModified();
             // update the main view
@@ -260,7 +261,7 @@ void SmkAudioWidget::on_loadTrackPushButtonClicked()
     track = this->currentTrack;
     int frameCount = this->gfx->getFrameCount();
     if (frameCount > 0) {
-        QStringList filePaths = dMainWindow().filesDialog(FILE_DIALOG_MODE::OPEN, tr("Select Audio"), tr("WAV Files (*.wav *.WAV)"));
+        QStringList filePaths = dMainWindow().filesDialog(tr("Select Audio"), tr("WAV Files (*.wav *.WAV)"));
 
         int fileCount = filePaths.count();
         bool wavLoaded = false;
@@ -277,7 +278,7 @@ void SmkAudioWidget::on_loadTrackPushButtonClicked()
         }
         if (wavLoaded) {
             this->currentTrack = track;
-            this->gfx->setModfied();
+            this->gfx->setModified();
             // update the window
             this->frameModified();
             // update the main view
