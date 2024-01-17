@@ -9,6 +9,8 @@
 #include "d1smk.h"
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+
 typedef struct _WavHeader {
     quint32 RiffMarker;
     quint32 FileSize;
@@ -178,14 +180,16 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
         unsigned long bitRate = wavAudioData.bitRate;
         // assert((audioLen % sampleSize) == 0);
         unsigned sampleCount = audioLen / sampleSize;
+		LogErrorF("sampleCount:%d", sampleCount);
         unsigned frameLen = gfx.frameLen; // us
         if (frameLen == 0) {
             // assert(frameCount != 0);
             frameLen = ((uint64_t)sampleCount * 1000000 + frameCount * bitRate - 1) / (frameCount * bitRate);
             gfx.frameLen = frameLen;
         }
-        unsigned samplePerFrame = ((uint64_t)bitRate * frameLen + 999999999) / 1000000000;
-        unsigned leadingSamples = bitRate * 10;
+        unsigned samplePerFrame = ((uint64_t)bitRate * frameLen + 999999) / 1000000;
+		LogErrorF("samplePerFrame:%d size%d bitRate%d frameLen%d", samplePerFrame, sampleSize, bitRate, frameLen);
+        unsigned leadingSamples = bitRate * 1;
         if (leadingSamples < samplePerFrame) {
             leadingSamples = samplePerFrame;
         }
