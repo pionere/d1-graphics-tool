@@ -186,26 +186,46 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
             frameLen = ((uint64_t)sampleCount * 1000000 + frameCount * bitRate - 1) / (frameCount * bitRate);
             gfx.frameLen = frameLen;
         }
-        unsigned samplePerFrame = ((uint64_t)bitRate * frameLen + 999999) / 1000000;
-        unsigned leadingSamples = bitRate * 1;
-        if (leadingSamples < samplePerFrame) {
-            leadingSamples = samplePerFrame;
+        uint64_t tmp = (uint64_t)bitRate * frameLen;
+        unsigned samplePerFrame = tmp / 1000000;
+        unsigned remPerFrame = tmp % 1000000;
+        if (remPerFrame != 0) {
+            samplePerFrame++;
+            remPerFrame = 1000000 - remPerFrame;
         }
+        // TODO: use 4-byte aligned samplePerFrame (with sampleSize) if uncompressed?
+        unsigned leadingSamples = bitRate * 1; // TODO: make this configurable?
         unsigned long cursor = 0;
+        uint64_t remContent = 0;
         for (int i = 0; i < frameCount; i++) {
-            D1GfxFrame *gfxFrame = gfx.getFrame(i);
-            D1SmkAudioData *audio = gfxFrame->frameAudio;
-            unsigned frameSamples = i == 0 ? leadingSamples : samplePerFrame;
-            if (frameSamples > sampleCount) {
+            unsigned frameSamples = samplePerFrame;
+            frameSamples += leadingSamples;
+            // limit the samples and update sampleCount
+            if (frameSamples >= sampleCount) {
                 frameSamples = sampleCount;
                 sampleCount = 0;
             } else {
+                // skip frames periodically to avoid accumulation due to rounding
+                remContent += remPerFrame;
+                if (remContent > tmp) {
+                    remContent -= tmp;
+                    continue;
+                }
                 sampleCount -= frameSamples;
+                // split the content of last frame if it is too small
+                if (sampleCount < frameSamples / 2 && i != frameCount - 1/* && i != 0*/) {
+                    sampleCount += frameSamples;
+                    frameSamples = (sampleCount + 1) / 2;
+                    sampleCount -= frameSamples;
+                }
             }
             if (frameSamples == 0) {
                 break;
             }
+            // copy the audio chunk to the frame
             unsigned frameAudioLen = frameSamples * sampleSize;
+            D1GfxFrame *gfxFrame = gfx.getFrame(i);
+            D1SmkAudioData *audio = gfxFrame->frameAudio;
             audio->audio[track] = (uint8_t *)malloc(frameAudioLen);
             if (audio->audio[track] != nullptr) {
                 audio->len[track] = frameAudioLen;
@@ -214,6 +234,8 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
             } else {
                 dProgressErr() << QApplication::tr("Out of memory.");
             }
+            // reset for subsequent frames
+            leadingSamples = 0;
         }
     }
     free(wavAudioData.audio);
