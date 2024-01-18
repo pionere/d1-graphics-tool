@@ -3017,9 +3017,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 	unsigned char type;
 	unsigned char blocklen;
 	unsigned char typedata;
-#ifdef FULL
 	char bit;
-#endif
 	const unsigned short sizetable[64] = {
 		1,	 2,	3,	4,	5,	6,	7,	8,
 		9,	10,	11,	12,	13,	14,	15,	16,
