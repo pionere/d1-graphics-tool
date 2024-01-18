@@ -243,7 +243,7 @@ void SmkAudioWidget::on_loadChunkPushButtonClicked()
     int frameCount = this->gfx->getFrameCount();
     if (frameCount > 0) {
         QStringList filePaths = dMainWindow().filesDialog(tr("Select Audio"), tr("WAV Files (*.wav *.WAV)"));
-
+        ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE);
         int fileCount = filePaths.count();
         bool wavLoaded = false;
         for (int i = 0; i < fileCount; i++) {
@@ -253,6 +253,7 @@ void SmkAudioWidget::on_loadChunkPushButtonClicked()
             }
             wavLoaded |= D1Wav::load(*this->gfx->getFrame(frame + i), track, filePaths[i]);
         }
+        ProgressDialog::done();
         if (wavLoaded) {
             this->currentTrack = track;
             this->gfx->setModified();
@@ -275,7 +276,7 @@ void SmkAudioWidget::on_loadTrackPushButtonClicked()
     int frameCount = this->gfx->getFrameCount();
     if (frameCount > 0) {
         QStringList filePaths = dMainWindow().filesDialog(tr("Select Audio"), tr("WAV Files (*.wav *.WAV)"));
-
+        ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE);
         int fileCount = filePaths.count();
         bool wavLoaded = false;
         for (int i = 0; i < fileCount; i++) {
@@ -285,6 +286,7 @@ void SmkAudioWidget::on_loadTrackPushButtonClicked()
             }
             wavLoaded |= D1Wav::load(*this->gfx, track + i, filePaths[i]);
         }
+        ProgressDialog::done();
         if (wavLoaded) {
             this->currentTrack = track;
             this->gfx->setModified();
