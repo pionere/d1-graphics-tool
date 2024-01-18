@@ -36,7 +36,7 @@
 #define LogErrorMsg(msg)   fputs(msg, stderr);
 #define LogError(msg, ...) fprintf(stderr, msg, __VA_ARGS__);
 #else
-static void LogErrorSF(const char* msg, ...)
+static void LogErrorSF(QString msg, ...)
 {
 	char tmp[256];
 
@@ -44,7 +44,7 @@ static void LogErrorSF(const char* msg, ...)
 
 	va_start(va, msg);
 
-	vsnprintf(tmp, sizeof(tmp), msg, va);
+	vsnprintf(tmp, sizeof(tmp), msg.data(), va);
 
 	va_end(va);
 
