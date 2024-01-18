@@ -21,25 +21,48 @@
 
 #include <cstdarg>
 
+#include <QApplication>
 #include "progressdialog.h"
 #include "../dungeon/interfac.h"
 
-/* logging replacements */
 #ifdef FULL
-#define PrintError(msg)    perror(msg);
-#define LogErrorMsg(msg)   fputs(msg, stderr);
-#define LogError(msg, ...) fprintf(stderr, msg, __VA_ARGS__);
-#else
-#if DEBUG_MODE || DEV_MODE
-#define PrintError(msg)    perror(msg);
-#define LogErrorMsg(msg)   fputs(msg, stderr);
-#define LogError(msg, ...) fprintf(stderr, msg, __VA_ARGS__);
-#else
-#define PrintError(msg)    dProgressErr() << msg;
-#define LogErrorMsg(msg)   dProgressErr() << msg;
-#define LogError(msg, ...) LogErrorF(msg, __VA_ARGS__);
+#undef DEBUG_MODE
+#define DEBUG_MODE 1
 #endif
-#endif /* FULL */
+
+/* logging replacements */
+#if DEBUG_MODE
+#define PrintError(msg)    perror(msg);
+#define LogErrorMsg(msg)   fputs(msg, stderr);
+#define LogError(msg, ...) fprintf(stderr, msg, __VA_ARGS__);
+#else
+static void LogErrorSF(const char* msg, ...)
+{
+	char tmp[256];
+
+	va_list va;
+
+	va_start(va, msg);
+
+	vsnprintf(tmp, sizeof(tmp), msg, va);
+
+	va_end(va);
+
+	dProgressErr() << QString(tmp);
+}
+#define PrintError(msg) \
+{ \
+	dProgressErr() << QApplication::tr(msg); \
+}
+#define LogErrorMsg(msg) \
+{ \
+	dProgressErr() << QApplication::tr(msg); \
+}
+#define LogError(msg) \
+{ \
+	LogErrorSF(QApplication::tr(msg)); \
+}
+#endif // DEBUG_MODE
 
 /* ************************************************************************* */
 /* BITSTREAM Structure */
