@@ -58,9 +58,9 @@ static void LogErrorSF(const char* msg, ...)
 { \
 	dProgressErr() << QApplication::tr(msg); \
 }
-#define LogError(msg) \
+#define LogError(msg, ...) \
 { \
-	LogErrorSF(QApplication::tr(msg)); \
+	LogErrorSF(QApplication::tr(msg), __VA_ARGS__); \
 }
 #endif // DEBUG_MODE
 
@@ -789,8 +789,8 @@ static char smk_read_file(void * buf, const size_t size, FILE * fp)
 	size_t bytesRead = fread(buf, 1, size, fp);
 
 	if (bytesRead != size) {
-		fprintf(stderr, "libsmacker::smk_read_file(buf,%lu,fp) - ERROR: Short read, %lu bytes returned\n", (unsigned long)size, (unsigned long)bytesRead);
-		perror("\tReason");
+		LogError("libsmacker::smk_read_file(buf,%lu,fp) - ERROR: Short read, %lu bytes returned\n", (unsigned long)size, (unsigned long)bytesRead);
+		PrintError("\tReason");
 		return -1;
 	}
 
@@ -840,7 +840,7 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 	} \
 	if (r < 0) \
 	{ \
-		fprintf(stderr,"libsmacker::smk_read(...) - Errors encountered on read, bailing out (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
+		LogError("libsmacker::smk_read(...) - Errors encountered on read, bailing out (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
 		goto error; \
 	} \
 }
@@ -2310,7 +2310,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	/* safe malloc the structure */
 #ifdef FULL
 	if ((s = calloc(1, sizeof(struct smk_t))) == NULL) {
-		perror("libsmacker::smk_open_generic() - ERROR: failed to malloc() smk structure");
+		PrintError("libsmacker::smk_open_generic() - ERROR: failed to malloc() smk structure");
 		return NULL;
 	}
 #else
@@ -2379,7 +2379,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 	if (temp_u & 0x04) {
 		if (s->video.y_scale_mode == SMK_FLAG_Y_DOUBLE)
-			fputs("libsmacker::smk_open_generic - Warning: SMK file specifies both Y-Double AND Y-Interlace.\n", stderr);
+			LogErrorMsg("libsmacker::smk_open_generic - Warning: SMK file specifies both Y-Double AND Y-Interlace.\n");
 
 		s->video.y_scale_mode = SMK_FLAG_Y_INTERLACE;
 	}
@@ -2429,7 +2429,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 			s->audio[temp_l].channels = ((temp_u & 0x10000000) ? 2 : 1);
 #ifdef FULL
 			if (temp_u & 0x0c000000) {
-				fprintf(stderr, "libsmacker::smk_open_generic - Warning: audio track %ld is compressed with Bink (perceptual) Audio Codec: this is currently unsupported by libsmacker\n", temp_l);
+				LogError("libsmacker::smk_open_generic - Warning: audio track %ld is compressed with Bink (perceptual) Audio Codec: this is currently unsupported by libsmacker\n", temp_l);
 				s->audio[temp_l].compress = 2;
 			}
 #endif
@@ -2522,8 +2522,8 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 			s->source.file.chunk_offset[temp_u] = ftell(fp.file);
 
 			if (fseek(fp.file, s->chunk_size[temp_u], SEEK_CUR)) {
-				fprintf(stderr, "libsmacker::smk_open - ERROR: fseek to frame %lu not OK.\n", temp_u);
-				perror("\tError reported was");
+				LogError("libsmacker::smk_open - ERROR: fseek to frame %lu not OK.\n", temp_u);
+				PrintError("\tError reported was");
 				goto error;
 			}
 		}
@@ -2545,7 +2545,7 @@ smk smk_open_memory(const unsigned char * buffer, const unsigned long size)
 
 #ifdef FULL
 	if (buffer == NULL) {
-		fputs("libsmacker::smk_open_memory() - ERROR: buffer pointer is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_open_memory() - ERROR: buffer pointer is NULL\n");
 		return NULL;
 	}
 #else
@@ -2557,7 +2557,6 @@ smk smk_open_memory(const unsigned char * buffer, const unsigned long size)
 
 #ifdef FULL
 	if (!(s = smk_open_generic(0, fp, size, SMK_MODE_MEMORY))) {
-		fprintf(stderr, "libsmacker::smk_open_memory(buffer,%lu) - ERROR: Fatal error in smk_open_generic, returning NULL.\n", size);
 		LogError("libsmacker::smk_open_memory(buffer,%lu) - ERROR: Fatal error in smk_open_generic, returning NULL.\n", size);
 	}
 #else
@@ -2576,7 +2575,7 @@ smk smk_open_filepointer(FILE * file, const unsigned char mode)
 	union smk_read_t fp;
 
 	if (file == NULL) {
-		fputs("libsmacker::smk_open_filepointer() - ERROR: file pointer is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_open_filepointer() - ERROR: file pointer is NULL\n");
 		return NULL;
 	}
 
@@ -2584,7 +2583,7 @@ smk smk_open_filepointer(FILE * file, const unsigned char mode)
 	fp.file = file;
 
 	if (!(s = smk_open_generic(1, fp, 0, mode))) {
-		fprintf(stderr, "libsmacker::smk_open_filepointer(file,%u) - ERROR: Fatal error in smk_open_generic, returning NULL.\n", mode);
+		LogError("libsmacker::smk_open_filepointer(file,%u) - ERROR: Fatal error in smk_open_generic, returning NULL.\n", mode);
 		fclose(fp.file);
 		goto error;
 	}
@@ -2605,13 +2604,13 @@ smk smk_open_file(const char * filename, const unsigned char mode)
 	FILE * fp;
 
 	if (filename == NULL) {
-		fputs("libsmacker::smk_open_file() - ERROR: filename is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_open_file() - ERROR: filename is NULL\n");
 		return NULL;
 	}
 
 	if (!(fp = fopen(filename, "rb"))) {
-		fprintf(stderr, "libsmacker::smk_open_file(%s,%u) - ERROR: could not open file\n", filename, mode);
-		perror("\tError reported was");
+		LogError("libsmacker::smk_open_file(%s,%u) - ERROR: could not open file\n", filename, mode);
+		PrintError("\tError reported was");
 		goto error;
 	}
 
@@ -2630,7 +2629,7 @@ void smk_close(smk s)
 
 	if (s == NULL) {
 #ifdef FULL
-		fputs("libsmacker::smk_close() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_close() - ERROR: smk is NULL\n");
 #endif
 		return;
 	}
@@ -2688,12 +2687,12 @@ char smk_info_all(const smk object, unsigned long * frame, unsigned long * frame
 {
 	/* null check */
 	if (object == NULL) {
-		fputs("libsmacker::smk_info_all() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_info_all() - ERROR: smk is NULL\n");
 		return -1;
 	}
 
 	if (!frame && !frame_count && !usf) {
-		fputs("libsmacker::smk_info_all(object,frame,frame_count,usf) - ERROR: Request for info with all-NULL return references\n", stderr);
+		LogErrorMsg("libsmacker::smk_info_all(object,frame,frame_count,usf) - ERROR: Request for info with all-NULL return references\n");
 		goto error;
 	}
 
@@ -2716,12 +2715,12 @@ char smk_info_video(const smk object, unsigned long * w, unsigned long * h, unsi
 {
 	/* null check */
 	if (object == NULL) {
-		fputs("libsmacker::smk_info_video() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_info_video() - ERROR: smk is NULL\n");
 		return -1;
 	}
 
 	if (!w && !h && !y_scale_mode) {
-		fputs("libsmacker::smk_info_all(object,w,h,y_scale_mode) - ERROR: Request for info with all-NULL return references\n", stderr);
+		LogErrorMsg("libsmacker::smk_info_all(object,w,h,y_scale_mode) - ERROR: Request for info with all-NULL return references\n");
 		return -1;
 	}
 
@@ -2743,12 +2742,12 @@ char smk_info_audio(const smk object, unsigned char * track_mask, unsigned char 
 
 	/* null check */
 	if (object == NULL) {
-		fputs("libsmacker::smk_info_audio() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_info_audio() - ERROR: smk is NULL\n");
 		return -1;
 	}
 
 	if (!track_mask && !channels && !bitdepth && !audio_rate) {
-		fputs("libsmacker::smk_info_audio(object,track_mask,channels,bitdepth,audio_rate) - ERROR: Request for info with all-NULL return references\n", stderr);
+		LogErrorMsg("libsmacker::smk_info_audio(object,track_mask,channels,bitdepth,audio_rate) - ERROR: Request for info with all-NULL return references\n");
 		return -1;
 	}
 
@@ -2811,7 +2810,7 @@ char smk_enable_all(smk object, const unsigned char mask)
 
 	/* null check */
 	if (object == NULL) {
-		fputs("libsmacker::smk_enable_all() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_enable_all() - ERROR: smk is NULL\n");
 		return -1;
 	}
 
@@ -2831,7 +2830,7 @@ char smk_enable_video(smk object, const unsigned char enable)
 	/* null check */
 #ifdef FULL
 	if (object == NULL) {
-		fputs("libsmacker::smk_enable_video() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_enable_video() - ERROR: smk is NULL\n");
 		return -1;
 	}
 #else
@@ -2847,7 +2846,7 @@ char smk_enable_audio(smk object, const unsigned char track, const unsigned char
 	/* null check */
 #ifdef FULL
 	if (object == NULL) {
-		fputs("libsmacker::smk_enable_audio() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_enable_audio() - ERROR: smk is NULL\n");
 		return -1;
 	}
 #else
@@ -2863,7 +2862,7 @@ const unsigned char * smk_get_palette(const smk object)
 	/* null check */
 #ifdef FULL
 	if (object == NULL) {
-		fputs("libsmacker::smk_get_palette() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_get_palette() - ERROR: smk is NULL\n");
 		return NULL;
 	}
 #else
@@ -2877,7 +2876,7 @@ const unsigned char * smk_get_video(const smk object)
 	/* null check */
 #ifdef FULL
 	if (object == NULL) {
-		fputs("libsmacker::smk_get_video() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_get_video() - ERROR: smk is NULL\n");
 		return NULL;
 	}
 #else
@@ -2895,7 +2894,7 @@ unsigned char * smk_get_audio(const smk object, const unsigned char t)
 	/* null check */
 #ifdef FULL
 	if (object == NULL) {
-		fputs("libsmacker::smk_get_audio() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_get_audio() - ERROR: smk is NULL\n");
 		return NULL;
 	}
 #else
@@ -2909,7 +2908,7 @@ unsigned long smk_get_audio_size(const smk object, const unsigned char t)
 	/* null check */
 #ifdef FULL
 	if (object == NULL) {
-		fputs("libsmacker::smk_get_audio_size() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_get_audio_size() - ERROR: smk is NULL\n");
 		return 0;
 	}
 #else
@@ -3529,20 +3528,20 @@ static char smk_render(smk s)
 	if (s->mode == SMK_MODE_DISK) {
 		/* Skip to frame in file */
 		if (fseek(s->source.file.fp, s->source.file.chunk_offset[s->cur_frame], SEEK_SET)) {
-			fprintf(stderr, "libsmacker::smk_render(s) - ERROR: fseek to frame %lu (offset %lu) failed.\n", s->cur_frame, s->source.file.chunk_offset[s->cur_frame]);
-			perror("\tError reported was");
+			LogError("libsmacker::smk_render(s) - ERROR: fseek to frame %lu (offset %lu) failed.\n", s->cur_frame, s->source.file.chunk_offset[s->cur_frame]);
+			PrintError("\tError reported was");
 			goto error;
 		}
 
 		/* In disk-streaming mode: make way for our incoming chunk buffer */
 		if ((buffer = malloc(i)) == NULL) {
-			perror("libsmacker::smk_render() - ERROR: failed to malloc() buffer");
+			PrintError("libsmacker::smk_render() - ERROR: failed to malloc() buffer");
 			return -1;
 		}
 
 		/* Read into buffer */
 		if (smk_read_file(buffer, i/*s->chunk_size[s->cur_frame]*/, s->source.file.fp) < 0) {
-			fprintf(stderr, "libsmacker::smk_render(s) - ERROR: frame %lu (offset %lu): smk_read had errors.\n", s->cur_frame, s->source.file.chunk_offset[s->cur_frame]);
+			LogError("libsmacker::smk_render(s) - ERROR: frame %lu (offset %lu): smk_read had errors.\n", s->cur_frame, s->source.file.chunk_offset[s->cur_frame]);
 			goto error;
 		}
 	} else {
@@ -3644,14 +3643,14 @@ char smk_first(smk s)
 #ifdef FULL
 	/* null check */
 	if (s == NULL) {
-		fputs("libsmacker::smk_first() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_first() - ERROR: smk is NULL\n");
 		return -1;
 	}
 
 	s->cur_frame = 0;
 
 	if (smk_render(s) < 0) {
-		fprintf(stderr, "libsmacker::smk_first(s) - Warning: frame %lu: smk_render returned errors.\n", s->cur_frame);
+		LogError("libsmacker::smk_first(s) - Warning: frame %lu: smk_render returned errors.\n", s->cur_frame);
 		return -1;
 	}
 
@@ -3679,7 +3678,7 @@ char smk_next(smk s)
 #ifdef FULL
 	/* null check */
 	if (s == NULL) {
-		fputs("libsmacker::smk_next() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_next() - ERROR: smk is NULL\n");
 		return -1;
 	}
 
@@ -3687,7 +3686,7 @@ char smk_next(smk s)
 		s->cur_frame ++;
 
 		if (smk_render(s) < 0) {
-			fprintf(stderr, "libsmacker::smk_next(s) - Warning: frame %lu: smk_render returned errors.\n", s->cur_frame);
+			LogError("libsmacker::smk_next(s) - Warning: frame %lu: smk_render returned errors.\n", s->cur_frame);
 			return -1;
 		}
 
@@ -3699,7 +3698,7 @@ char smk_next(smk s)
 		s->cur_frame = 1;
 
 		if (smk_render(s) < 0) {
-			fprintf(stderr, "libsmacker::smk_next(s) - Warning: frame %lu: smk_render returned errors.\n", s->cur_frame);
+			LogError("libsmacker::smk_next(s) - Warning: frame %lu: smk_render returned errors.\n", s->cur_frame);
 			return -1;
 		}
 
@@ -3734,7 +3733,7 @@ char smk_seek_keyframe(smk s, unsigned long f)
 {
 	/* null check */
 	if (s == NULL) {
-		fputs("libsmacker::smk_seek_keyframe() - ERROR: smk is NULL\n", stderr);
+		LogErrorMsg("libsmacker::smk_seek_keyframe() - ERROR: smk is NULL\n");
 		return -1;
 	}
 
@@ -3747,7 +3746,7 @@ char smk_seek_keyframe(smk s, unsigned long f)
 
 	/* render the frame: we're ready */
 	if (smk_render(s) < 0) {
-		fprintf(stderr, "libsmacker::smk_seek_keyframe(s,%lu) - Warning: frame %lu: smk_render returned errors.\n", f, s->cur_frame);
+		LogError("libsmacker::smk_seek_keyframe(s,%lu) - Warning: frame %lu: smk_render returned errors.\n", f, s->cur_frame);
 		return -1;
 	}
 
