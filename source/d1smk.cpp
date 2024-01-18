@@ -460,9 +460,6 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
             QAudio::State state = audioOutput[track]->state();
             if (state != QAudio::ActiveState) {
                 audioCallback(track, QAudio::IdleState);
-                if (state != QAudio::IdleState && state != QAudio::StoppedState) {
-                    QMessageBox::critical(nullptr, "Error", QApplication::tr("First state %1").arg(state));
-                }
             }
         }
     }

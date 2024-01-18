@@ -193,8 +193,17 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
             samplePerFrame++;
             remPerFrame = 1000000 - remPerFrame;
         }
-        // TODO: use 4-byte aligned samplePerFrame (with sampleSize) if uncompressed?
-        unsigned leadingSamples = bitRate * 1; // TODO: make this configurable?
+        // use 4-byte aligned samplePerFrame
+        if ((samplePerFrame * sampleSize) % 4) {
+            unsigned align = 1;
+            if (sampleSize & 1) {
+                align = 4 - (samplePerFrame & 3);
+            }
+            samplePerFrame += align;
+            remPerFrame += 1000000 * align;
+        }
+        // add extra content to the first frame  TODO: make this configurable?
+        unsigned leadingSamples = bitRate * 1;
         unsigned long cursor = 0;
         uint64_t remContent = 0;
         for (int i = 0; i < frameCount; i++) {

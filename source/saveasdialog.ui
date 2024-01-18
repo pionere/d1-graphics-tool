@@ -189,7 +189,7 @@
       <item row="1" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>CLS File:</string>
+         <string>Cls File:</string>
         </property>
         <property name="toolTip">
          <string>Path of the special-CEL File</string>

@@ -3593,7 +3593,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     cursor++;
     actions[cursor].setText(tr("Create"));
-    actions[cursor].setToolTip(tr("Create a new subtiles"));
+    actions[cursor].setToolTip(tr("Create new subtiles"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionCreate_Subtile_triggered()));
     subtileMenu.addAction(&actions[cursor]);
 
@@ -3630,7 +3630,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     cursor++;
     actions[cursor].setText(tr("Create"));
-    actions[cursor].setToolTip(tr("Create a new tiles"));
+    actions[cursor].setToolTip(tr("Create new tiles"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionCreate_Tile_triggered()));
     actions[cursor].setEnabled(this->min->getSubtileCount() != 0);
     tileMenu.addAction(&actions[cursor]);

@@ -173,7 +173,7 @@ void OpenAsDialog::on_minFileBrowseButton_clicked()
 
 void OpenAsDialog::on_slaFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select SLA file"), tr("SOL Files (*.sla *.SLA)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select SLA file"), tr("SLA Files (*.sla *.SLA)"));
 
     if (openFilePath.isEmpty())
         return;
