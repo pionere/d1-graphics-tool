@@ -118,7 +118,7 @@ void InitLvlDungeon()
 		{   // .TIL
 			BYTE* tilData = LoadFileInMem(lfd->dMegaTiles, &dwSubtiles);
 			if (dwSubtiles > sizeof(pTiles) - sizeof(pTiles[0])) {
-				dProgressErr() << QApplication::tr("TIL file is too large. (%1 bytes. Limit %2").arg(dwSubtiles).arg(sizeof(pTiles) - sizeof(pTiles[0]));
+				dProgressErr() << QApplication::tr("TIL file is too large. (%1 bytes. Limit %2)").arg(dwSubtiles).arg(sizeof(pTiles) - sizeof(pTiles[0]));
 				dwSubtiles = sizeof(pTiles) - sizeof(pTiles[0]);
 			}
 			memcpy((BYTE*)&pTiles[1][0], tilData, dwSubtiles);
@@ -141,7 +141,7 @@ void InitLvlDungeon()
 		{   // .TLA
 			BYTE* tlaData = LoadFileInMem(lfd->dTileFlags, &dwSubtiles);
 			if (dwSubtiles > sizeof(nTrnShadowTable)) {
-				dProgressErr() << QApplication::tr("TLA file is too large. (%1 bytes. Limit %2").arg(dwSubtiles).arg(sizeof(nTrnShadowTable));
+				dProgressErr() << QApplication::tr("TLA file is too large. (%1 bytes. Limit %2)").arg(dwSubtiles).arg(sizeof(nTrnShadowTable));
 				dwSubtiles = sizeof(nTrnShadowTable);
 			}
 			memcpy(nTrnShadowTable, tlaData, dwSubtiles);
