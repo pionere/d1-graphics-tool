@@ -176,6 +176,7 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
     // add the new track
     unsigned long audioLen = wavAudioData.len;
     if (audioLen != 0) {
+		LogErrorF("D1Wav::load 0: %d", audioLen);
         unsigned sampleSize = wavAudioData.channels * wavAudioData.bitDepth / 8;
         unsigned long bitRate = wavAudioData.bitRate;
         // assert((audioLen % sampleSize) == 0);
@@ -204,6 +205,7 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
         }
         // add extra content to the first frame  TODO: make this configurable?
         unsigned leadingSamples = bitRate * 1;
+		LogErrorF("D1Wav::load 1: spf%d ls%d fc%d sc%d ss%d", samplePerFrame, leadingSamples, frameCount, sampleCount, sampleSize);
         unsigned long cursor = 0;
         uint64_t remContent = 0;
         for (int i = 0; i < frameCount; i++) {
@@ -228,6 +230,7 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
                     sampleCount -= frameSamples;
                 }
             }
+		LogErrorF("D1Wav::load 2: fs%d ss%d idx%d track%d", frameSamples, sampleSize, i, track);
             if (frameSamples == 0) {
                 break;
             }
@@ -247,6 +250,7 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
             leadingSamples = 0;
         }
     }
+	LogErrorF("D1Wav::load 3: done");
     free(wavAudioData.audio);
     return true;
 }
