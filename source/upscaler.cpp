@@ -3133,7 +3133,7 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
     gfx->modified = true;
 
     qDeleteAll(newFrames);
-    progress.second = QString(QApplication::tr("Upscaled %n frame(s).", "", amount)).arg(amount);
+    progress.second = QApplication::tr("Upscaled %n frame(s).", "", amount);
     dProgress() << progress;
 
     ProgressDialog::decBar();
@@ -3292,7 +3292,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     min->modified = true;
 
     qDeleteAll(newFrames);
-    progress.second = QString(QApplication::tr("Upscaled %n subtile(s).", "", amount)).arg(amount);
+    progress.second = QApplication::tr("Upscaled %n subtile(s).", "", amount);
     dProgress() << progress;
     if (padding != 0) {
         dProgressWarn() << paddingMsg;

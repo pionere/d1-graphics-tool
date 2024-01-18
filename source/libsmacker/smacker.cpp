@@ -21,6 +21,9 @@
 
 #include <cstdarg>
 
+#include "progressdialog.h"
+#include "../dungeon/interfac.h"
+
 /* logging replacements */
 #ifdef FULL
 #define PrintError(msg)    perror(msg);
@@ -32,9 +35,9 @@
 #define LogErrorMsg(msg)   fputs(msg, stderr);
 #define LogError(msg, ...) fprintf(stderr, msg, __VA_ARGS__);
 #else
-#define PrintError(msg)
-#define LogErrorMsg(msg)
-#define LogError(msg, ...)
+#define PrintError(msg)    dProgressErr() << msg;
+#define LogErrorMsg(msg)   dProgressErr() << msg;
+#define LogError(msg, ...) LogErrorF(msg, __VA_ARGS__);
 #endif
 #endif /* FULL */
 
@@ -704,6 +707,9 @@ struct smk_t {
 
 		/* Huffman trees */
 		unsigned long tree_size[4];
+#else
+		/* version ('2' or '4') */
+		unsigned char	v;
 #endif
 		struct smk_huff16_t tree[4];
 
@@ -2310,12 +2316,12 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 		LogError("\tProcessing will continue as type %c\n", buf[3]);
 	}
-	s->video.v = buf[3];
 #else
 	if (buf[3] != '2') {
-		LogError("libsmacker::smk_open_generic - Warning: invalid SMK version %c (expected: 2)\n", buf[3]);
+		LogError("libsmacker::smk_open_generic - Warning: SMK version %c is not supported by the game.\n", buf[3]);
 	}
 #endif
+	s->video.v = buf[3];
 
 	/* width, height, total num frames */
 	smk_read_ul(s->video.w);
@@ -2353,6 +2359,11 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 			fputs("libsmacker::smk_open_generic - Warning: SMK file specifies both Y-Double AND Y-Interlace.\n", stderr);
 
 		s->video.y_scale_mode = SMK_FLAG_Y_INTERLACE;
+	}
+#else
+	if (temp_u & 0x01) {
+		LogErrorMsg("libsmacker::smk_open_generic - Warning: ring_frames are no supported by the game.\n");
+		s->total_frames++;
 	}
 #endif
 	/* Max buffer size for each audio track - used to pre-allocate buffers */
@@ -3042,7 +3053,7 @@ bool doDebug = false; // frameCount == 174;
 		type = ((unpack & 0x0003));
 		blocklen = ((unpack & 0x00FC) >> 2);
 		typedata = ((unpack & 0xFF00) >> 8);
-#ifdef FULL
+
 		/* support for v4 full-blocks */
 		if (type == 1 && s->v == '4') {
 			bit = smk_bs_read_1(&bs);
@@ -3056,7 +3067,7 @@ bool doDebug = false; // frameCount == 174;
 					type = 5;
 			}
 		}
-#endif
+
 unsigned firstRow = row;
 unsigned firstCol = col;
 		for (j = 0; (j < sizetable[blocklen]) && (row < s->h); j ++) {

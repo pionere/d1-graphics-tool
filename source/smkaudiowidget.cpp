@@ -35,8 +35,8 @@ SmkAudioWidget::SmkAudioWidget(CelView *parent)
 
     QLayout *layout = this->ui->leftButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_MediaPlay, tr("Play"), this, &SmkAudioWidget::on_playPushButtonClicked);
-    PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarMaxButton, tr("Load chunk"), this, &SmkAudioWidget::on_loadChunkPushButtonClicked);
-    PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarNormalButton, tr("Load track"), this, &SmkAudioWidget::on_loadTrackPushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarNormalButton, tr("Load chunk"), this, &SmkAudioWidget::on_loadChunkPushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarMaxButton, tr("Load track"), this, &SmkAudioWidget::on_loadTrackPushButtonClicked);
     layout = this->ui->centerButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &SmkAudioWidget::on_movePushButtonClicked);
     layout = this->ui->rightButtonsHorizontalLayout;
@@ -233,17 +233,27 @@ void SmkAudioWidget::on_loadChunkPushButtonClicked()
     int frame, track;
 
     frame = this->currentFrameIndex;
+    if (frame < 0) {
+        frame = 0;
+    }
     track = this->currentTrack;
-    if (frame >= 0) {
-        QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Audio"), tr("WAV Files (*.wav *.WAV)"));
+    if (track < 0) {
+        track = 0;
+    }
+    int frameCount = this->gfx->getFrameCount();
+    if (frameCount > 0) {
+        QStringList filePaths = dMainWindow().filesDialog(tr("Select Audio"), tr("WAV Files (*.wav *.WAV)"));
 
-        if (filePath.isEmpty())
-            return;
-
-        if (track == -1) {
-            track = 0;
+        int fileCount = filePaths.count();
+        bool wavLoaded = false;
+        for (int i = 0; i < fileCount; i++, frame++) {
+            if (frame >= frameCount) {
+                dProgressWarn() << QApplication::tr("Not enough frames for the audio files. The last %n audio file(s) are ignored.", "", fileCount - i);
+                break;
+            }
+            wavLoaded |= D1Wav::load(*this->gfx->getFrame(frame), track, filePaths[i]);
         }
-        if (D1Wav::load(*this->gfx->getFrame(frame), track, filePath)) {
+        if (wavLoaded) {
             this->currentTrack = track;
             this->gfx->setModified();
             // update the window
@@ -259,22 +269,21 @@ void SmkAudioWidget::on_loadTrackPushButtonClicked()
     int track;
 
     track = this->currentTrack;
+    if (track < 0) {
+        track = 0;
+    }
     int frameCount = this->gfx->getFrameCount();
     if (frameCount > 0) {
         QStringList filePaths = dMainWindow().filesDialog(tr("Select Audio"), tr("WAV Files (*.wav *.WAV)"));
 
         int fileCount = filePaths.count();
         bool wavLoaded = false;
-        if (fileCount == 1) {
-            wavLoaded = D1Wav::load(*this->gfx, track, filePaths[0]);
-        } else {
-            if (fileCount > frameCount) {
-                dProgressWarn() << QApplication::tr("There are only %1 frames for %2 audio files. The last %3 audio files are ignored.").arg(frameCount).arg(fileCount).arg(fileCount - frameCount);
-                fileCount = frameCount;
+        for (int i = 0; i < fileCount; i++, track++) {
+            if (track >= D1SMK_TRACKS) {
+                dProgressWarn() << QApplication::tr("Not enough tracks for the audio files. The last %n audio file(s) are ignored.", "", fileCount - i);
+                break;
             }
-            for (int i = 0; i < fileCount; i++) {
-                wavLoaded |= D1Wav::load(*this->gfx->getFrame(i), track, filePaths[i]);
-            }
+            wavLoaded |= D1Wav::load(*this->gfx, track, filePaths[i]);
         }
         if (wavLoaded) {
             this->currentTrack = track;

@@ -2066,7 +2066,7 @@ void LevelCelView::activeSubtiles() const
             const std::vector<std::vector<D1GfxPixel>> pixelImage = this->min->getSubtilePixelImage(i);
             int numPixels = countCycledPixels(pixelImage, cycleColors);
             if (numPixels != 0) {
-                QString msg = tr("Subtile %1 has %2 affected pixels.", "", numPixels).arg(i + 1).arg(numPixels);
+                QString msg = tr("Subtile %1 has %n affected pixels.", "", numPixels).arg(i + 1);
                 if (this->sla->getLightRadius(i) == 0) {
                     dProgressWarn() << msg.append(tr(" The subtile is not lit."));
                 } else {
@@ -2131,7 +2131,7 @@ void LevelCelView::activeTiles() const
             const std::vector<std::vector<D1GfxPixel>> pixelImage = this->til->getTilePixelImage(i);
             int numPixels = countCycledPixels(pixelImage, cycleColors);
             if (numPixels != 0) {
-                dProgress() << tr("Tile %1 has %2 affected pixels.", "", numPixels).arg(i + 1).arg(numPixels);
+                dProgress() << tr("Tile %1 has %n affected pixels.", "", numPixels).arg(i + 1);
                 result = true;
             }
         }
@@ -2195,7 +2195,7 @@ void LevelCelView::inefficientFrames() const
             const D1GfxFrame *frame2 = this->gfx->getFrame(j);
             if (D1CelTilesetFrame::altFrame(frame1, frame2, &diff)) {
                 diff = limit - diff;
-                dProgress() << tr("The difference between Frame %1 and Frame %2 is only %n pixel(s).", "", diff).arg(i + 1).arg(j + 1).arg(diff);
+                dProgress() << tr("The difference between Frame %1 and Frame %2 is only %n pixel(s).", "", diff).arg(i + 1).arg(j + 1);
                 result = true;
             }
         }
@@ -3041,11 +3041,11 @@ void LevelCelView::reportDungeonUsage() const
     std::pair<int, int> space = this->dun->collectSpace();
 
     if (space.first != 0) {
-        dProgress() << tr("There are %1 subtiles in the dungeon for monsters.", "", space.first).arg(space.first);
+        dProgress() << tr("There are %n subtiles in the dungeon for monsters.", "", space.first);
         dProgress() << "\n";
     }
     if (space.second != 0) {
-        dProgress() << tr("There are %1 subtiles in the dungeon for objects.", "", space.first).arg(space.first);
+        dProgress() << tr("There are %n subtiles in the dungeon for objects.", "", space.first);
         dProgress() << "\n";
     }
     if (space.first == 0 && space.second == 0) {

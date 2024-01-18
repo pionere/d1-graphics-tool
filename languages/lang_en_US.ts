@@ -2945,10 +2945,10 @@
     </message>
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="1887"/>
-        <source>Subtile %1 has %2 affected pixels.</source>
+        <source>Subtile %1 has %n affected pixels.</source>
         <translation>
-            <numerusform>Subtile %1 has %2 affected pixel.</numerusform>
-            <numerusform>Subtile %1 has %2 affected pixels.</numerusform>
+            <numerusform>Subtile %1 has %n affected pixel.</numerusform>
+            <numerusform>Subtile %1 has %n affected pixels.</numerusform>
         </translation>
     </message>
     <message>
@@ -3108,18 +3108,18 @@
     </message>
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="2783"/>
-        <source>There are %1 subtiles in the dungeon for monsters.</source>
+        <source>There are %n subtiles in the dungeon for monsters.</source>
         <translation>
-            <numerusform>There is %1 subtile in the dungeon for monsters.</numerusform>
-            <numerusform>There are %1 subtiles in the dungeon for monsters.</numerusform>
+            <numerusform>There is %n subtile in the dungeon for monsters.</numerusform>
+            <numerusform>There are %n subtiles in the dungeon for monsters.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="2787"/>
-        <source>There are %1 subtiles in the dungeon for objects.</source>
+        <source>There are %n subtiles in the dungeon for objects.</source>
         <translation>
-            <numerusform>There is %1 subtile in the dungeon for objects.</numerusform>
-            <numerusform>There are %1 subtiles in the dungeon for objects.</numerusform>
+            <numerusform>There is %n subtile in the dungeon for objects.</numerusform>
+            <numerusform>There are %n subtiles in the dungeon for objects.</numerusform>
         </translation>
     </message>
     <message>
