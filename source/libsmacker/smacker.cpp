@@ -583,6 +583,9 @@ struct smk_t {
 
 		/* Huffman trees */
 		unsigned long tree_size[4];
+#else
+		/* version ('2' or '4') */
+		unsigned char	v;
 #endif
 		struct smk_huff16_t tree[4];
 
@@ -788,12 +791,12 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 		LogError("\tProcessing will continue as type %c\n", buf[3]);
 	}
-	s->video.v = buf[3];
 #else
 	if (buf[3] != '2') {
-		LogError("libsmacker::smk_open_generic - Warning: invalid SMK version %c (expected: 2)\n", buf[3]);
+		LogError("libsmacker::smk_open_generic - Warning: SMK version %c is not supported by the game.\n", buf[3]);
 	}
 #endif
+	s->video.v = buf[3];
 
 	/* width, height, total num frames */
 	smk_read_ul(s->video.w);
@@ -1487,9 +1490,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 	unsigned char type;
 	unsigned char blocklen;
 	unsigned char typedata;
-#ifdef FULL
 	char bit;
-#endif
 	const unsigned short sizetable[64] = {
 		1,	 2,	3,	4,	5,	6,	7,	8,
 		9,	10,	11,	12,	13,	14,	15,	16,
@@ -1521,7 +1522,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 		type = ((unpack & 0x0003));
 		blocklen = ((unpack & 0x00FC) >> 2);
 		typedata = ((unpack & 0xFF00) >> 8);
-#ifdef FULL
+
 		/* support for v4 full-blocks */
 		if (type == 1 && s->v == '4') {
 			bit = smk_bs_read_1(&bs);
@@ -1535,7 +1536,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 					type = 5;
 			}
 		}
-#endif
+
 		for (j = 0; (j < sizetable[blocklen]) && (row < s->h); j ++) {
 			skip = (row * s->w) + col;
 
@@ -1637,7 +1638,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 				*(uint32_t*)&t[skip] = value;
 #endif
 			} break;
-#ifdef FULL
+
 			case 4: /* V4 DOUBLE BLOCK */
 				for (k = 0; k < 2; k ++) {
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
@@ -1679,7 +1680,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 				}
 
 				break;
-#endif
+
 			}
 
 			col += 4;
