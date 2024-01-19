@@ -21,6 +21,11 @@
 
 #include <cstdarg>
 
+#include <QApplication>
+#include <QByteArray>
+#include "progressdialog.h"
+#include "../dungeon/interfac.h"
+
 #ifdef FULL
 #undef DEBUG_MODE
 #define DEBUG_MODE 1
@@ -32,9 +37,32 @@
 #define LogErrorMsg(msg)   fputs(msg, stderr);
 #define LogError(msg, ...) fprintf(stderr, msg, __VA_ARGS__);
 #else
-#define PrintError(msg)
-#define LogErrorMsg(msg)
-#define LogError(msg, ...)
+static void LogErrorSF(const QString msg, ...)
+{
+	char tmp[256];
+	QByteArray ba = msg.toLocal8Bit();
+	va_list va;
+
+	va_start(va, msg);
+
+	vsnprintf(tmp, sizeof(tmp), ba.data(), va);
+
+	va_end(va);
+
+	dProgressErr() << QString(tmp);
+}
+#define PrintError(msg) \
+{ \
+	dProgressErr() << QApplication::tr(msg); \
+}
+#define LogErrorMsg(msg) \
+{ \
+	dProgressErr() << QApplication::tr(msg); \
+}
+#define LogError(msg, ...) \
+{ \
+	LogErrorSF(QApplication::tr(msg), __VA_ARGS__); \
+}
 #endif // DEBUG_MODE
 
 /* ************************************************************************* */
