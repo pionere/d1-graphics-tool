@@ -101,7 +101,7 @@ MainWindow &dMainWindow()
     return *theMainWindow;
 }
 
-void MainWindow::changeColors(const RemapParam &params)
+void MainWindow::remapColors(const RemapParam &params)
 {
     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
     int index = params.colorTo.first;
@@ -114,6 +114,14 @@ void MainWindow::changeColors(const RemapParam &params)
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
+    this->changeColors(replacements, params);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
+{
     if (this->gfxset != nullptr) {
         this->gfxset->replacePixels(replacements, params);
     } else {
@@ -134,9 +142,6 @@ void MainWindow::changeColors(const RemapParam &params)
             }
         }
     }
-
-    // Clear loading message from status bar
-    ProgressDialog::done();
 }
 
 void MainWindow::updatePalette(const D1Pal* pal)
@@ -2835,6 +2840,15 @@ void MainWindow::on_actionPatch_Translation_Base_triggered()
     this->trnBaseWidget->patchTrn();
 }
 
+void MainWindow::on_actionDisplay_Colors_triggered()
+{
+    if (this->paletteShowDialog == nullptr) {
+        this->paletteShowDialog = new PaletteShowDialog(this);
+    }
+    this->paletteShowDialog->initialize(this->pal);
+    this->paletteShowDialog->show();
+}
+
 void MainWindow::on_actionRemap_Colors_triggered()
 {
     if (this->remapDialog == nullptr) {
@@ -2844,14 +2858,43 @@ void MainWindow::on_actionRemap_Colors_triggered()
     this->remapDialog->show();
 }
 
-
-void MainWindow::on_actionDisplay_Colors_triggered()
+void MainWindow::on_actionSmack_Colors_triggered()
 {
-    if (this->paletteShowDialog == nullptr) {
-        this->paletteShowDialog = new PaletteShowDialog(this);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+
+    QList<quint8> colors;
+    D1Smk::fixColors(this->pal, colors);
+
+    if (!colors.isEmpty()) {
+        // find possible replacement for the modified colors
+        QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+        for (quint8 colIdx : colors) {
+            QColor col = this->pal->getColor(colIdx);
+            for (unsigned i = 0; i < D1PAL_COLORS; i++) {
+                if (this->pal->getColor(i) != col/* || i == colIdx*/) {
+                    continue;
+                    
+                }
+                auto it = colors.begin();
+                for ( ; it != colors.end(); it++) {
+                    if (*it == i) {
+                        break;
+                    }
+                }
+                if (it == colors.end()) {
+                    replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(colIdx), D1GfxPixel::colorPixel(i)));
+                    break;
+                }
+            }
+        }
+        RemapParam params;
+        params.frames.first = 0;
+        params.frames.second = 0;
+        this->changeColors(replacements, params);
     }
-    this->paletteShowDialog->initialize(this->pal);
-    this->paletteShowDialog->show();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionGenTrns_Colors_triggered()

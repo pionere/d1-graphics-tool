@@ -1400,6 +1400,16 @@ unsigned long smk_get_audio_size(const smk object, const unsigned char t)
 	return object->audio[t].buffer_size;
 }
 
+const unsigned char palmap[64] = {
+    0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
+    0x20, 0x24, 0x28, 0x2C, 0x30, 0x34, 0x38, 0x3C,
+    0x41, 0x45, 0x49, 0x4D, 0x51, 0x55, 0x59, 0x5D,
+    0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
+    0x82, 0x86, 0x8A, 0x8E, 0x92, 0x96, 0x9A, 0x9E,
+    0xA2, 0xA6, 0xAA, 0xAE, 0xB2, 0xB6, 0xBA, 0xBE,
+    0xC3, 0xC7, 0xCB, 0xCF, 0xD3, 0xD7, 0xDB, 0xDF,
+    0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF
+};
 /* Decompresses a palette-frame. */
 static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p, unsigned long size)
 {
@@ -1408,6 +1418,7 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 	/* Helper variables */
 	unsigned short count, src;
 	static unsigned char oldPalette[256][3];
+#ifdef FULL
 	/* Smacker palette map: smk colors are 6-bit, this table expands them to 8. */
 	const unsigned char palmap[64] = {
 		0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
@@ -1419,6 +1430,7 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 		0xC3, 0xC7, 0xCB, 0xCF, 0xD3, 0xD7, 0xDB, 0xDF,
 		0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF
 	};
+#endif
 	/* null check */
 	assert(s);
 	assert(p);
@@ -1504,7 +1516,16 @@ error:
 		The new palette probably has errors but is preferrable to a black screen */
 	return -1;
 }
-
+const unsigned short sizetable[64] = {
+    1,	 2,	3,	4,	5,	6,	7,	8,
+    9,	10,	11,	12,	13,	14,	15,	16,
+    17,	18,	19,	20,	21,	22,	23,	24,
+    25,	26,	27,	28,	29,	30,	31,	32,
+    33,	34,	35,	36,	37,	38,	39,	40,
+    41,	42,	43,	44,	45,	46,	47,	48,
+    49,	50,	51,	52,	53,	54,	55,	56,
+    57,	58,	59,	128,	256,	512,	1024,	2048
+};
 static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, unsigned int size)
 {
 	unsigned char * t = s->frame;
@@ -1522,6 +1543,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 	unsigned char blocklen;
 	unsigned char typedata;
 	char bit;
+#ifdef FULL
 	const unsigned short sizetable[64] = {
 		1,	 2,	3,	4,	5,	6,	7,	8,
 		9,	10,	11,	12,	13,	14,	15,	16,
@@ -1532,6 +1554,7 @@ static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, u
 		49,	50,	51,	52,	53,	54,	55,	56,
 		57,	58,	59,	128,	256,	512,	1024,	2048
 	};
+#endif
 	/* null check */
 	assert(s);
 	assert(p);
@@ -1867,9 +1890,9 @@ static char smk_render_audio(struct smk_t::smk_audio_t * s, unsigned char * p, u
 			}
 		}
 #else
-		if (!bit)
+		if (!bit) {
 			LogErrorMsg("libsmacker::smk_render_audio() - ERROR: initial get_bit returned 0\n");
-
+		}
 		if ((bit = smk_bs_read_1(&bs)) < 0) {
 			LogErrorMsg("libsmacker::smk_render_audio() - ERROR: channels_bit returned -1\n");
 			goto error;
@@ -2059,6 +2082,7 @@ static char smk_render(smk s)
 				LogError("libsmacker::smk_render() - ERROR: frame %lu: insufficient data for audio[%u] content.\n", s->cur_frame, track);
 				goto error;
 			}
+
 			/* If audio rendering enabled, kick this off for decode. */
 			if (s->audio[track].enable) {
 				if (size < 4) {

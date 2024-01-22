@@ -13,7 +13,6 @@ typedef QAudioOutput SmkAudioOutput;
 #include <QByteArray>
 #include <QDir>
 #include <QFile>
-#include <QList>
 #include <QObject>
 
 #include "config.h"
@@ -415,7 +414,6 @@ void D1Smk::playAudio(D1GfxFrame &gfxFrame, int trackIdx)
                 m_audioFormat.setSampleType(QAudioFormat::SignedInt);
                 m_audioFormat.setCodec("audio/pcm");
 #endif
-
                 audioOutput[track] = new SmkAudioOutput(m_audioFormat); // , this);
                 // connect up signal stateChanged to a lambda to get feedback
                 QObject::connect(audioOutput[track], &SmkAudioOutput::stateChanged, cbfunc[track]);
@@ -444,5 +442,74 @@ void D1Smk::stopAudio()
         if (smkAudioBuffer[track] != nullptr) {
             smkAudioBuffer[track]->clear();
         }
+    }
+}
+
+void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
+{
+    QColor undefColor = pal->getUndefinedColor();
+    QList<quint8> ignored;
+    for (unsigned i = 0; i < D1PAL_COLORS; i++) {
+        QColor col = pal->getColor(i);
+        if (col == undefColor) {
+            ignored.push_back(i);
+            continue;
+        }
+        unsigned char smkColor[3];
+        smkColor[0] = col.red();
+        smkColor[1] = col.green();
+        smkColor[2] = col.blue();
+        for (int n = 0; n < 3; n++) {
+            unsigned char cv = smkColor[n];
+            const unsigned char *p = &palmap[0];
+            for ( ; /*p < lengthof(palmap)*/; p++) {
+                if (cv <= p[0]) {
+                    if (cv != p[0]) {
+                        if (p[0] - cv > cv - p[-1]) {
+                            p--;
+                        }
+                        const char *compontent[3] = { "red", "green", "blue" };
+                        dProgress() << QApplication::tr("The %1 component of color %2 is adjusted (Using %4 instead of %5).").arg(compontent[n]).arg(i).arg(*p).arg(cv);
+                        if (n == 0) {
+                            col.setRed(*p);
+                        }
+                        if (n == 1) {
+                            col.setGreen(*p);
+                        }
+                        if (n == 2) {
+                            col.setBlue(*p);
+                        }
+                        pal->setColor(i, col);
+                        if (colors.isEmpty() || colors.back() != i) {
+                            colors.push_back(i);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    QString ignoredColors;
+    const int numIgnored = ignored.count();
+    for (int n = 0; n < numIgnored; n++) {
+        quint8 c0 = ignored[n];
+        int i = n + 1;
+        for ( ; i < ignored.count(); i++) {
+            if (ignored[i] != c0 + i - n) {
+                break;
+            }
+        }
+        if (i >= n + 3) {
+            ignoredColors.append(QString("%1-%2, ").arg(c0).arg(ignored[i - 1]));
+            n = i - 1;
+        } else {
+            ignoredColors.append(QString("%1, ").arg(c0));
+        }
+    }
+    if (numIgnored != 0) {
+        ignoredColors.chop(2);
+        dProgressWarn() << QApplication::tr("Ignored the %1 undefined color(s).", "", numIgnored).arg(ignoredColors);
+    } else if (colors.isEmpty()) {
+        dProgress() << QApplication::tr("The palette is SMK compliant.");
     }
 }

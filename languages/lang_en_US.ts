@@ -8053,6 +8053,14 @@
         <source>Not supported.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message numerus="yes">
+        <location filename="../source/d1smk.cpp" line="511"/>
+        <source>Ignored the %1 undefined color(s).</source>
+        <translation>
+            <numerusform>Ignored undefined color %1.</numerusform>
+            <numerusform>Ignored the %1 undefined colors.</numerusform>
+        </translation>
+    </message>    
     <message>
         <location filename="../source/d1trs.cpp" line="559"/>
         <source>Light%1.trn</source>

@@ -1,8 +1,10 @@
 #pragma once
 
+#include <QList>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMimeData>
+#include <QPair>
 #include <QStringList>
 #include <QTranslator>
 #include <QUndoCommand>
@@ -93,7 +95,7 @@ public:
     void gfxChanged(D1Gfx *gfx);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void updatePalette(const D1Pal* pal);
-    void changeColors(const RemapParam &params);
+    void remapColors(const RemapParam &params);
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);
     void dunClicked(const QPoint &cell, int flags);
@@ -128,6 +130,8 @@ private:
     void addFrames(bool append);
     void addSubtiles(bool append);
     void addTiles(bool append);
+
+    void changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params);
 
 public slots:
     void on_actionMerge_Frame_triggered();
@@ -246,8 +250,9 @@ private slots:
     void on_actionClose_Translation_Base_triggered();
     void on_actionPatch_Translation_Base_triggered();
 
-    void on_actionRemap_Colors_triggered();
     void on_actionDisplay_Colors_triggered();
+    void on_actionRemap_Colors_triggered();
+    void on_actionSmack_Colors_triggered();
     void on_actionGenTrns_Colors_triggered();
     void on_actionLoadTrns_Colors_triggered();
     void on_actionSaveTrns_Colors_triggered();
