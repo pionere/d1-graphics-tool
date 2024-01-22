@@ -103,13 +103,13 @@ MainWindow &dMainWindow()
 
 void MainWindow::changeColors(const RemapParam &params)
 {
-    std::vector<std::pair<D1GfxPixel, D1GfxPixel>> replacements;
+    QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
     int index = params.colorTo.first;
     const int dc = params.colorTo.first == params.colorTo.second ? 0 : (params.colorTo.first < params.colorTo.second ? 1 : -1);
     for (int i = params.colorFrom.first; i <= params.colorFrom.second; i++, index += dc) {
         D1GfxPixel source = (i == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(i);
         D1GfxPixel replacement = (index == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
-        replacements.push_back(std::pair<D1GfxPixel, D1GfxPixel>(source, replacement));
+        replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(source, replacement));
     }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);

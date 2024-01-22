@@ -2,6 +2,9 @@
 
 #include <vector>
 
+#include <QList>
+#include <QPair>
+
 #include "d1gfx.h"
 #include "openasdialog.h"
 #include "remapdialog.h"
@@ -61,7 +64,7 @@ public:
     void setGfx(D1Gfx *gfx); // set base gfx
     D1Gfx *getGfx(int i) const;
     D1Gfx *getBaseGfx() const;
-    void replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params);
+    void replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params);
     void frameModified(D1GfxFrame *frame);
     void setPalette(D1Pal *pal);
 
