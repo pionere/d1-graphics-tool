@@ -505,6 +505,7 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
 {
     // reduce inflated cache frequencies
     for (int i = 0; i < 3; i++) {
+LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
             for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
@@ -522,7 +523,9 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
         }
     }
     // convert cache values to normal values
+	bool hasEntries = !tree.treeStat.isEmpty();
     for (int i = 0; i < 3; i++) {
+		hasEntries |= tree.cacheCount[i] != 0;
         unsigned n = 0;
         for ( ; n < UINT16_MAX; n++) {
             auto it = tree.treeStat.begin();
@@ -532,6 +535,7 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
                 }
             }
             if (it == tree.treeStat.end()) {
+LogErrorF("D1Smk::prepareVideoTree cache normal i%d n%d cc%d", i, n, tree.cacheCount[i]);
                 tree.treeStat.push_back(QPair<unsigned, unsigned>(n, tree.cacheCount[i]));
                 tree.cacheCount[i] = n; // replace cache-count with the 'fake' leaf value
                 break;
@@ -547,10 +551,8 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
             dProgressFail() << QApplication::tr("Congratulation, you managed to break SMK.");
         }
     }
-    // sort treeStat
-    std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second; });
 
-    if (tree.treeStat.count() == 0) {
+    if (!hasEntries) {
 LogErrorF("D1Smk::prepareVideoTree empty tree c%d as%d bn%d", cursor, allocSize, bitNum);
         // empty tree
         if (cursor >= allocSize || (bitNum == 7 && cursor + 1 == allocSize)) {
@@ -571,6 +573,8 @@ LogErrorF("D1Smk::prepareVideoTree writing %d", cursor);
 LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
         return treeData;
     }
+    // sort treeStat
+    std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second || (e1.second == e2.second && e1.first < e2.first); });
     // prepare the sub-trees
     QList<QPair<unsigned, unsigned>> lowByteLeafs, hiByteLeafs;
     for (QPair<unsigned, unsigned> &leaf : tree.treeStat) {
