@@ -463,13 +463,13 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
         } else {
             for (auto it = leafPaths[0].begin(); it != leafPaths[0].end(); it++) {
                 if (it->first == (leaf & 0xFF)) {
-                    cursor = writeNBits(it->second.second, it->second.first, cursor, bitNum);
+                    cursor = writeNBits(it->second, it->first, cursor, bitNum);
                     break;
                 }
             }
             for (auto it = leafPaths[1].begin(); it != leafPaths[1].end(); it++) {
                 if (it->first == ((leaf >> 8) & 0xFF)) {
-                    cursor = writeNBits(it->second.second, it->second.first, cursor, bitNum);
+                    cursor = writeNBits(it->second, it->first, cursor, bitNum);
                     break;
                 }
             }
@@ -671,7 +671,7 @@ static uint8_t *writeTreeValue(unsigned value, const SmkTreeInfo &videoTree, uns
     auto it = videoTree.paths.find(v);
     assert(it != videoTree.paths.end());
 
-    return writeNBits(it->second.second, it->second.first, cursor, bitNum);
+    return writeNBits(it->second, it->second, cursor, bitNum);
 }
 
 static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen, const SmkTreeInfo (&videoTree)[SMK_TREE_COUNT], 
@@ -816,6 +816,7 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
         for (int i = 0; i < D1PAL_COLORS; i++) {
             int direct = palStat[i].directMatch;
             int best = palStat[i].bestMatch;
+            int bestIdx = palStat[i].bestIdx;
             if (direct != 0) {
                 if (direct > 64    // - the range is long for copy block
                  || best <= direct // - the copy block is not longer than the skip block
@@ -905,7 +906,7 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
     return result;
 }
 
-bool D1Smk::save(D1Gfx &gfx, D1Pal *pal, const SaveAsParam &params)
+bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 {
     // validate the content
     int width = 0, height = 0;
@@ -1204,14 +1205,14 @@ bool D1Smk::save(D1Gfx &gfx, D1Pal *pal, const SaveAsParam &params)
     }
 
 
-    outFile.writeData((const char*)&header, sizeof(header));
+    outFile.write((const char*)&header, sizeof(header));
     for (int i = 0; i < frameCount; i++) {
-        outFile.writeData((const char*)&header.Dummy, 4);
+        outFile.write((const char*)&header.Dummy, 4);
     }
     for (int i = 0; i < frameCount; i++) {
-        outFile.writeData((const char*)&frameInfo[i].FrameType, 1);
+        outFile.write((const char*)&frameInfo[i].FrameType, 1);
     }
-    outFile.writeData((const char*)videoTreeData, videoTreeDataSize);
+    outFile.write((const char*)videoTreeData, videoTreeDataSize);
 
     /*D1GfxFrame **/ prevFrame = nullptr;
     uint8_t *frameData = (uint8_t*)malloc(256 * 3 + maxAudioLength + 4 * width * height);
@@ -1224,7 +1225,7 @@ bool D1Smk::save(D1Gfx &gfx, D1Pal *pal, const SaveAsParam &params)
         D1Pal *framePal = frame->getFramePal().data();
         if (framePal == nullptr && n == 0) {
             dProgressWarn() << QApplication::tr("The palette is not set in the first frame. Defaulting to the current palette.");
-            framePal = pal;
+            framePal = gfx.getPalette();
         }
         if (framePal != nullptr) {
             unsigned len = encodePalette(framePal, n, frameData + cursor + 4);
@@ -1318,7 +1319,7 @@ bool D1Smk::save(D1Gfx &gfx, D1Pal *pal, const SaveAsParam &params)
         if (bitNum != 0) {
             cursor++;
         }
-        outFile.writeData((const char*)frameData, cursor);
+        outFile.write((const char*)frameData, cursor);
         frameLengths.push_back(cursor);
 
         prevFrame = frame;
