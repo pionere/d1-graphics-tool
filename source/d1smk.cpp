@@ -426,7 +426,8 @@ static void addTreeTypeValue(int type, int typelen, SmkTreeInfo &tree, unsigned 
 static uint8_t* writeNBits(unsigned value, unsigned length, uint8_t *cursor, unsigned &bitNum)
 {
     for (unsigned i = 0; i < length; i++) {
-        *cursor |= ((value >> (length - i - 1)) & 1) << bitNum;
+        // *cursor |= ((value >> (length - i - 1)) & 1) << bitNum;
+		*cursor |= ((value >> i) & 1) << bitNum;
         bitNum++;
         if (bitNum == 8) {
             bitNum = 0;
@@ -550,9 +551,11 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
     std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second; });
 
     if (tree.treeStat.count() == 0) {
+LogErrorF("D1Smk::prepareVideoTree empty tree c%d as%d bn%d", cursor, allocSize, bitNum);
         // empty tree
-        if (cursor >= allocSize) {
+        if (cursor >= allocSize || (bitNum == 7 && cursor + 1 == allocSize)) {
             allocSize += 1;
+LogErrorF("D1Smk::prepareVideoTree realloc tree %d", allocSize);
             uint8_t *treeDataNext = (uint8_t *)realloc(treeData, allocSize);
             if (treeDataNext == nullptr) {
                 free(treeData);
@@ -562,8 +565,10 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
         }
         // add open/close bits
         uint8_t* res = &treeData[cursor];
+LogErrorF("D1Smk::prepareVideoTree writing %d", cursor);
         res = writeNBits(0, 2, res, bitNum);
         cursor = (size_t)res - (size_t)treeData;
+LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
         return treeData;
     }
     // prepare the sub-trees
