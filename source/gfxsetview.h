@@ -5,6 +5,8 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QLabel>
+#include <QList>
+#include <QPair>
 #include <QPoint>
 #include <QPushButton>
 #include <QString>
@@ -58,7 +60,7 @@ public:
 
     void displayFrame();
     void toggleBottomPanel();
-    void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
+    void changeColor(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
 
 private:
     void updateFields();

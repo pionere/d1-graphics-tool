@@ -819,7 +819,7 @@ void GfxsetView::toggleBottomPanel()
     this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
 }
 
-void GfxsetView::changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all)
+void GfxsetView::changeColor(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, bool all)
 {
     if (all) {
         for (int n = 0; n < this->gfxset->getGfxCount(); n++) {
