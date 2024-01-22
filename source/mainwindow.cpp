@@ -142,12 +142,16 @@ void MainWindow::remapColors(const RemapParam &params)
         replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(source, replacement));
     }
 
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+
     this->changeColors(replacements, params);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     if (this->gfxset != nullptr) {
         this->gfxset->replacePixels(replacements, params);
@@ -169,9 +173,6 @@ void MainWindow::changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements
             }
         }
     }
-
-    // Clear loading message from status bar
-    ProgressDialog::done();
 }
 
 void MainWindow::updatePalette(const D1Pal* pal)
@@ -2895,6 +2896,8 @@ void MainWindow::on_actionRemap_Colors_triggered()
 
 void MainWindow::on_actionSmack_Colors_triggered()
 {
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+
     QList<quint8> colors;
     D1Smk::fixColors(this->pal, colors);
 
@@ -2914,6 +2917,9 @@ void MainWindow::on_actionSmack_Colors_triggered()
         params.frames.second = 0;
         this->changeColors(replacements, params);
     }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionGenTrns_Colors_triggered()

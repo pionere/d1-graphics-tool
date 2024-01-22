@@ -514,5 +514,7 @@ void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
     if (numIgnored != 0) {
         ignoredColors.chop(2);
         dProgressWarn() << QApplication::tr("Ignored the %1 undefined color(s).", "", numIgnored).arg(ignoredColors);
+    } else if (colors.isEmpty()) {
+        dProgress() << QApplication::tr("The palette is SMK compliant.");
     }
 }
