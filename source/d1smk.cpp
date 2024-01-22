@@ -933,8 +933,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
             }
         }
     }
-
-
+LogErrorF("D1Smk::save 0 %dx%d %d", width, height, frameCount);
     QList<SmkFrameInfo> frameInfo;
     for (int n = 0; n < frameCount; n++) {
         uint8_t frameType = 0;
@@ -959,7 +958,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
         fi.FrameSize = 0;
         frameInfo.push_back(fi);
     }
-
+LogErrorF("D1Smk::save 1 %d", frameInfo.count());
     SmkAudioInfo audioInfo[D1SMK_TRACKS];
     for (int i = 0; i < D1SMK_TRACKS; i++) {
         unsigned bitRate = 0;
@@ -1040,7 +1039,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
         }
         frameLen = - (frameLen / 10);
     }
-
+LogErrorF("D1Smk::save 2 fl%d br%d bd%d c%d cmp%d len%d... %d", frameLen, audioInfo[0].bitRate, audioInfo[0].bitDepth, audioInfo[0].channels, audioInfo[0].compress, audioInfo[0].maxChunkLength, audioInfo[1].maxChunkLength);
     QString filePath = gfx.gfxFilePath;
     if (!params.celFilePath.isEmpty()) {
         filePath = params.celFilePath;
@@ -1157,17 +1156,21 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     uint8_t *videoTreeData = (uint8_t *)malloc(1);
     size_t allocSize = 1, cursor = 0; unsigned bitNum = 0;
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
+LogErrorF("D1Smk::save 4:%d as%d c%d bn%d ts%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum,
+		videoTree[i].treeStat.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
         videoTreeData = prepareVideoTree(videoTree[i], videoTreeData, allocSize, cursor, bitNum);
         if (videoTreeData == nullptr) {
             dProgressFail() << QApplication::tr("Out of memory");
             return false;
         }
+LogErrorF("D1Smk::save 5:%d as%d c%d bn%d jc%d pc%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum, videoTree[i].treeJointCount,
+		videoTree[i].paths.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
     }
     unsigned videoTreeDataSize = cursor;
     if (bitNum != 0) {
         videoTreeDataSize++;
     }
-
+LogErrorF("D1Smk::save 6:%d", videoTreeDataSize);
     SMKHEADER header;
     header.SmkMarker = SwapLE32(*((uint32_t*)"SMK2"));
     header.VideoWidth = SwapLE32(width);

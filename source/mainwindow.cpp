@@ -152,7 +152,6 @@ void MainWindow::remapColors(const RemapParam &params)
 
 void MainWindow::changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
 {
-
     if (this->gfxset != nullptr) {
         this->gfxset->replacePixels(replacements, params);
     } else {
