@@ -2902,11 +2902,22 @@ void MainWindow::on_actionSmack_Colors_triggered()
     D1Smk::fixColors(this->pal, colors);
 
     if (!colors.isEmpty()) {
+        // find possible replacement for the modified colors
         QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
         for (quint8 colIdx : colors) {
             QColor col = this->pal->getColor(colIdx);
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                if (this->pal->getColor(i) == col && i != colIdx) {
+            for (unsigned i = 0; i < D1PAL_COLORS; i++) {
+                if (this->pal->getColor(i) != col/* || i == colIdx*/) {
+                    continue;
+                    
+                }
+                auto it = colors.begin();
+                for ( ; it != colors.end(); it++) {
+                    if (*it == i) {
+                        break;
+                    }
+                }
+                if (it == colors.end()) {
                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(colIdx), D1GfxPixel::colorPixel(i)));
                     break;
                 }
