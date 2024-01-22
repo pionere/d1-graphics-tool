@@ -320,7 +320,7 @@ D1Gfx *D1Gfxset::getBaseGfx() const
     return this->baseGfx;
 }
 
-void D1Gfxset::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
+void D1Gfxset::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
 {
     for (D1Gfx *gfx : this->gfxList) {
         int rangeFrom = params.frames.first;
@@ -335,9 +335,10 @@ void D1Gfxset::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>
 
         for (int i = rangeFrom; i <= rangeTo; i++) {
             D1GfxFrame *frame = gfx->getFrame(i);
-            frame->replacePixels(replacements);
+            if (frame->replacePixels(replacements)) {
+                gfx->setModified();
+            }
         }
-        gfx->setModified();
     }
 }
 

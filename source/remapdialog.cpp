@@ -85,7 +85,7 @@ void RemapDialog::on_remapButton_clicked()
 
     this->close();
 
-    dMainWindow().changeColors(params);
+    dMainWindow().remapColors(params);
 }
 
 void RemapDialog::on_remapCancelButton_clicked()

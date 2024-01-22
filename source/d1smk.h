@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QList>
 #include <QMap>
 #include <QString>
 
@@ -43,4 +44,6 @@ public:
 
     static void playAudio(D1GfxFrame &gfxFrame, int track = -1);
     static void stopAudio();
+
+    static void fixColors(D1Pal *pal, QList<quint8> &colors);
 };

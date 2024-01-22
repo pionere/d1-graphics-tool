@@ -4,6 +4,8 @@
 #include <vector>
 
 #include <QImage>
+#include <QList>
+#include <QPair>
 #include <QPointer>
 #include <QtEndian>
 
@@ -89,7 +91,7 @@ public:
     void setFrameType(D1CEL_FRAME_TYPE type);
     bool addTo(const D1GfxFrame &frame);
     void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
-    void replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements);
+    bool replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements);
 
     // functions for smk-frames
     QPointer<D1Pal>& getFramePal();

@@ -77,7 +77,7 @@ MainWindow::MainWindow()
             LogErrorF("Main seq:%s", ks.toString(QKeySequence::PortableText));
             if (ks == QKeySequence::Cancel || ks == QKeySequence::New || ks == QKeySequence::Copy || ks == QKeySequence::Cut || ks == QKeySequence::Delete || ks == QKeySequence::Paste) {
                 // qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
-				LogErrorF("Conflicing shortcut in the main menu (%s).", ks.toString(QKeySequence::PortableText));
+                LogErrorF("Conflicing shortcut in the main menu (%s).", ks.toString(QKeySequence::PortableText));
             }
             for (int i = 0; i < ks.count(); i++) {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -88,7 +88,7 @@ MainWindow::MainWindow()
                 const int kcs[2] = { (Qt::CTRL | Qt::Key_E), (Qt::CTRL | Qt::Key_P) };
                 for (int n = 0; n < 2; n++) {
                     if (kcs[n] == kc) {
-						LogErrorF("Conflicing shortcut in the main menu (%s).", ks.toString(QKeySequence::PortableText));
+                        LogErrorF("Conflicing shortcut in the main menu (%s).", ks.toString(QKeySequence::PortableText));
                         // qDebug() << tr("Conflicing shortcut in the main menu (%1).").arg(ks.toString());
                         i = INT_MAX;
                         break;
@@ -131,9 +131,9 @@ MainWindow &dMainWindow()
     return *theMainWindow;
 }
 
-void MainWindow::changeColors(const RemapParam &params)
+void MainWindow::remapColors(const RemapParam &params)
 {
-    std::vector<std::pair<D1GfxPixel, D1GfxPixel>> replacements;
+    QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
     int index = params.colorTo.first;
     const int dc = params.colorTo.first == params.colorTo.second ? 0 : (params.colorTo.first < params.colorTo.second ? 1 : -1);
     for (int i = params.colorFrom.first; i <= params.colorFrom.second; i++, index += dc) {
@@ -142,6 +142,11 @@ void MainWindow::changeColors(const RemapParam &params)
         replacements.push_back(std::pair<D1GfxPixel, D1GfxPixel>(source, replacement));
     }
 
+    this->changeColors(replacements, params;
+}
+
+void MainWindow::changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
+{
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     if (this->gfxset != nullptr) {
@@ -159,9 +164,10 @@ void MainWindow::changeColors(const RemapParam &params)
 
         for (int i = rangeFrom; i <= rangeTo; i++) {
             D1GfxFrame *frame = this->gfx->getFrame(i);
-            frame->replacePixels(replacements);
+            if (frame->replacePixels(replacements)) {
+                this->gfx->setModified();
+            }
         }
-        this->gfx->setModified();
     }
 
     // Clear loading message from status bar
@@ -2869,6 +2875,15 @@ void MainWindow::on_actionPatch_Translation_Base_triggered()
     this->trnBaseWidget->patchTrn();
 }
 
+void MainWindow::on_actionDisplay_Colors_triggered()
+{
+    if (this->paletteShowDialog == nullptr) {
+        this->paletteShowDialog = new PaletteShowDialog(this);
+    }
+    this->paletteShowDialog->initialize(this->pal);
+    this->paletteShowDialog->show();
+}
+
 void MainWindow::on_actionRemap_Colors_triggered()
 {
     if (this->remapDialog == nullptr) {
@@ -2878,14 +2893,27 @@ void MainWindow::on_actionRemap_Colors_triggered()
     this->remapDialog->show();
 }
 
-
-void MainWindow::on_actionDisplay_Colors_triggered()
+void MainWindow::on_actionSmack_Colors_triggered()
 {
-    if (this->paletteShowDialog == nullptr) {
-        this->paletteShowDialog = new PaletteShowDialog(this);
+    QList<quint8> colors;
+    D1Smk::fixColors(this->pal, colors);
+
+    if (!colors.isEmpty()) {
+        QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+        for (quint8 colIdx : colors) {
+            QColor col = this->pal->getColor(colIdx);
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                if (this->pal->getColor(i) == col && i != colIdx) {
+                    replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(colIdx), D1GfxPixel::colorPixel(i)));
+                    break;
+                }
+            }
+        }
+        RemapParam params;
+        params.frames.first = 0;
+        params.frames.second = 0;
+        this->changeColors(replacements, params);
     }
-    this->paletteShowDialog->initialize(this->pal);
-    this->paletteShowDialog->show();
 }
 
 void MainWindow::on_actionGenTrns_Colors_triggered()

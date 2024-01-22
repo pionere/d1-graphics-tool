@@ -304,8 +304,9 @@
     <addaction name="menuTrnUnique"/>
     <addaction name="menuTrnSet"/>
     <addaction name="separator"/>
-    <addaction name="actionRemap_Colors"/>
     <addaction name="actionDisplay_Colors"/>
+    <addaction name="actionRemap_Colors"/>
+    <addaction name="actionSmack_Colors"/>
    </widget>
    <widget class="QMenu" name="menuColumns">
     <property name="title">
@@ -1203,6 +1204,14 @@
     <string>Replace translation values of 255 with 0</string>
    </property>
   </action>
+  <action name="actionDisplay_Colors">
+   <property name="text">
+    <string>Display Colors</string>
+   </property>
+   <property name="toolTip">
+    <string>Show palette colors on a chart</string>
+   </property>
+  </action>
   <action name="actionRemap_Colors">
    <property name="text">
     <string>Remap Colors</string>
@@ -1211,12 +1220,12 @@
     <string>Replace colors of the graphics with another colors from the palette or with transparent pixels</string>
    </property>
   </action>
-  <action name="actionDisplay_Colors">
+  <action name="actionSmack_Colors">
    <property name="text">
-    <string>Display Colors</string>
+    <string>Smack Colors</string>
    </property>
    <property name="toolTip">
-    <string>Show palette colors on a chart</string>
+    <string>Ensure the palette colors are SMK compliant</string>
    </property>
   </action>
   <action name="actionGenTrns_Colors">

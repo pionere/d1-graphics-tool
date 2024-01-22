@@ -62,6 +62,10 @@ typedef struct smk_t * smk;
 extern "C" {
 #endif
 
+#ifndef FULL
+extern const unsigned char palmap[64];
+extern const unsigned short sizetable[64];
+#endif
 /* OPEN OPERATIONS */
 #ifdef FULL
 /** open an smk (from a file) */
