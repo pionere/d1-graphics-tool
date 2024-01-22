@@ -476,13 +476,13 @@ void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
                         const char *compontent[3] = { "red", "green", "blue" };
                         dProgress() << QApplication::tr("The %1 component of color %2 is adjusted (Using %4 instead of %5).").arg(compontent[n]).arg(i).arg(*p).arg(cv);
                         if (n == 0) {
-                            col->setRed(*p);
+                            col.setRed(*p);
                         }
                         if (n == 1) {
-                            col->setGreen(*p);
+                            col.setGreen(*p);
                         }
                         if (n == 2) {
-                            col->setBlue(*p);
+                            col.setBlue(*p);
                         }
                         pal->setColor(i, col);
                         if (colors.isEmpty() || colors.back() != i) {

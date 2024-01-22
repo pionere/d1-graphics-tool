@@ -142,7 +142,7 @@ void MainWindow::remapColors(const RemapParam &params)
         replacements.push_back(std::pair<D1GfxPixel, D1GfxPixel>(source, replacement));
     }
 
-    this->changeColors(replacements, params;
+    this->changeColors(replacements, params);
 }
 
 void MainWindow::changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
