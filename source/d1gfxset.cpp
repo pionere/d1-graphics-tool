@@ -335,9 +335,10 @@ void D1Gfxset::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>
 
         for (int i = rangeFrom; i <= rangeTo; i++) {
             D1GfxFrame *frame = gfx->getFrame(i);
-            frame->replacePixels(replacements);
+            if (frame->replacePixels(replacements)) {
+                gfx->setModified();
+            }
         }
-        gfx->setModified();
     }
 }
 

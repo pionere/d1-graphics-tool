@@ -166,8 +166,9 @@ void D1GfxFrame::addPixelLine(std::vector<D1GfxPixel> &&pixelLine)
     this->height++;
 }
 
-void D1GfxFrame::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements)
+bool D1GfxFrame::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements)
 {
+    bool result = false;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
@@ -175,10 +176,12 @@ void D1GfxFrame::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixe
             for (const std::pair<D1GfxPixel, D1GfxPixel> &replacement : replacements) {
                 if (d1pix == replacement.first) {
                     this->pixels[y][x] = replacement.second;
+                    result = true;
                 }
             }
         }
     }
+    return result;
 }
 
 QPointer<D1Pal>& D1GfxFrame::getFramePal()

@@ -129,9 +129,10 @@ void MainWindow::changeColors(const RemapParam &params)
 
         for (int i = rangeFrom; i <= rangeTo; i++) {
             D1GfxFrame *frame = this->gfx->getFrame(i);
-            frame->replacePixels(replacements);
+            if (frame->replacePixels(replacements)) {
+                this->gfx->setModified();
+            }
         }
-        this->gfx->setModified();
     }
 
     // Clear loading message from status bar
