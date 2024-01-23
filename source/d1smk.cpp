@@ -450,7 +450,8 @@ static uint8_t* writeBit(unsigned value, uint8_t *cursor, unsigned &bitNum)
 }
 
 static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
-    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> (&leafPaths)[2])
+//    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> (&leafPaths)[2])
+    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
 {
     joints++;
 
@@ -467,10 +468,8 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                 if (it == leafPaths[0].end()) {
                     LogErrorF("Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
-					QPair<unsigned, uint32_t> theEntryPair = it.value();
-					unsigned thisFuckerShouldBeUnsigned = theEntryPair.first;
-					uint32_t thisFuckerShouldBeUnInt32 = theEntryPair.second;
-                    cursor = writeNBits(thisFuckerShouldBeUnInt32, thisFuckerShouldBeUnsigned, cursor, bitNum);
+                    QPair<unsigned, uint32_t> &theEntryPair = it.value();
+                    cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
             }
             {
@@ -478,10 +477,8 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                 if (it == leafPaths[1].end()) {
                     LogErrorF("Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
                 } else {
-					QPair<unsigned, uint32_t> theEntryPair = it.value();
-					unsigned thisFuckerShouldBeUnsigned = theEntryPair.first;
-					uint32_t thisFuckerShouldBeUnInt32 = theEntryPair.second;
-                    cursor = writeNBits(thisFuckerShouldBeUnsigned, thisFuckerShouldBeUnsigned, cursor, bitNum);
+                    QPair<unsigned, uint32_t> theEntryPair = it.value();
+                    cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
             }
             /*for (auto it = leafPaths[0].begin(); it != leafPaths[0].end(); it++) {
