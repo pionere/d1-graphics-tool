@@ -450,7 +450,7 @@ static uint8_t* writeBit(unsigned value, uint8_t *cursor, unsigned &bitNum)
 }
 
 static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
-    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
+    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> (&leafPaths[2]))
 {
     joints++;
 
@@ -467,8 +467,9 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                 if (it == leafPaths[0].end()) {
                     LogErrorF("Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
-					unsigned thisFuckerShouldBeUnsigned = it->second.first;
-					uint32_t thisFuckerShouldBeUnInt32 = it->second.second;
+					QPair<unsigned, uint32_t> theEntryPair = it->second;
+					unsigned thisFuckerShouldBeUnsigned = theEntryPair.first;
+					uint32_t thisFuckerShouldBeUnInt32 = theEntryPair.second;
                     cursor = writeNBits(thisFuckerShouldBeUnInt32, thisFuckerShouldBeUnsigned, cursor, bitNum);
                 }
             }
