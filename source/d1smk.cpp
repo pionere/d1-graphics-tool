@@ -469,6 +469,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                     LogErrorF("Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
                     QPair<unsigned, uint32_t> &theEntryPair = it.value();
+                    LogErrorF("TreeData writeNBits value %d length %d for lo-leaf %d", theEntryPair.second, theEntryPair.first, leaf & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
             }
@@ -478,6 +479,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                     LogErrorF("Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
                 } else {
                     QPair<unsigned, uint32_t> theEntryPair = it.value();
+                    LogErrorF("TreeData writeNBits value %d length %d for hi-leaf %d", theEntryPair.second, theEntryPair.first, (leaf >> 8) & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
             }
