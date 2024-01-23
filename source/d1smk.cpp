@@ -448,7 +448,7 @@ static uint8_t* writeBit(unsigned value, uint8_t *cursor, unsigned &bitNum)
     }
     return cursor;
 }
-
+static bool deepDeb = false;
 static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
 //    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> (&leafPaths)[2])
     unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
@@ -463,6 +463,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
         if (leafPaths == nullptr) {
             cursor = writeNBits(leaf, 8, cursor, bitNum);
         } else {
+LogErrorF("TreeData leafPaths access");
             {
                 auto it = leafPaths[0].find(leaf & 0xFF);
                 if (it == leafPaths[0].end()) {
@@ -512,6 +513,8 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
             it = leafs.erase(it);
         }
     }
+    if (deepDeb)
+        LogErrorF("TreeData joint %d depth %d value %d length %d / %d", joints, depth, branch, leafs.count(), rightLeafs.count());
     branch <<= 1;
     cursor = buildTreeData(leafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
@@ -672,6 +675,7 @@ LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)tree
         }
     }
 LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d", (size_t)res - (size_t)treeData, bitNum);
+deepDeb = true;
     {
         // add the main tree
         joints = 0;
@@ -679,6 +683,7 @@ LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d", (size_t)res - (size_t)t
         // close the main tree
         res = writeBit(0, res, bitNum);
     }
+deepDeb = false;
 LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d", (size_t)res - (size_t)treeData, bitNum, joints);
     tree.treeJointCount = joints;
 
@@ -1604,6 +1609,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
     }
 
     for (D1Gfx *gfx : gfxs) {
+        // adjust colors of the palette(s)
         D1SmkColorFix cf;
         cf.pal = p;
         cf.gfx = gfx;
@@ -1625,6 +1631,30 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
         if (fixPalColors(cf, verbose)) {
             frameColorMods.push_back(cf);
             // cf.colors.clear();
+        }
+        // eliminate matching palettes
+        D1Pal *pal = nullptr;
+        for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
+            QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
+            if (!fp.isNull()) {
+                D1Pal *cp = fp.data();
+                if (pal != nullptr) {
+                    int n = 0;
+                    for ( ; n < D1PAL_COLORS; n++) {
+                        if (pal->getColor(n) != cp->getColor(n)) {
+                            break;
+                        }
+                    }
+                    if (n >= D1PAL_COLORS) {
+                        *fp = nullptr;
+                        cf.gfx->setModfied();
+                        dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
+                        cp = pal;
+                    }
+                }
+                pal = cp;
+            }
+            
         }
     }
 }
