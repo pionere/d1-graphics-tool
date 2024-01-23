@@ -467,7 +467,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                 if (it == leafPaths[0].end()) {
                     LogErrorF("Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
-					QPair<unsigned, uint32_t> theEntryPair = it.value;
+					QPair<unsigned, uint32_t> theEntryPair = it.value();
 					unsigned thisFuckerShouldBeUnsigned = theEntryPair.first;
 					uint32_t thisFuckerShouldBeUnInt32 = theEntryPair.second;
                     cursor = writeNBits(thisFuckerShouldBeUnInt32, thisFuckerShouldBeUnsigned, cursor, bitNum);
@@ -478,7 +478,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                 if (it == leafPaths[1].end()) {
                     LogErrorF("Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
                 } else {
-					QPair<unsigned, uint32_t> theEntryPair = it.value;
+					QPair<unsigned, uint32_t> theEntryPair = it.value();
 					unsigned thisFuckerShouldBeUnsigned = theEntryPair.first;
 					uint32_t thisFuckerShouldBeUnInt32 = theEntryPair.second;
                     cursor = writeNBits(thisFuckerShouldBeUnsigned, thisFuckerShouldBeUnsigned, cursor, bitNum);
