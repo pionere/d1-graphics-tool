@@ -462,9 +462,25 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
         if (leafPaths == nullptr) {
             cursor = writeNBits(leaf, 8, cursor, bitNum);
         } else {
-            for (auto it = leafPaths[0].begin(); it != leafPaths[0].end(); it++) {
+            {
+                auto it = leafPaths[0].find(leaf & 0xFF);
+                if (it == leafPaths[0].end()) {
+                    LogErrorF("Missing entry for leaf %d in the low paths.", leaf & 0xFF);
+                } else {
+                    cursor = writeNBits(it->second.second, it->second.first, cursor, bitNum);
+                }
+            }
+            {
+                auto it = leafPaths[1].find((leaf >> 8) & 0xFF);
+                if (it == leafPaths[1].end()) {
+                    LogErrorF("Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
+                } else {
+                    cursor = writeNBits(it->second.second, it->second.first, cursor, bitNum);
+                }
+            }
+            /*for (auto it = leafPaths[0].begin(); it != leafPaths[0].end(); it++) {
                 if (it->first == (leaf & 0xFF)) {
-                    cursor = writeNBits(it->second, it->first, cursor, bitNum);
+                    cursor = writeNBits(it->second.second, it->second.first, cursor, bitNum);
                     break;
                 }
             }
@@ -473,7 +489,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                     cursor = writeNBits(it->second, it->first, cursor, bitNum);
                     break;
                 }
-            }
+            }*/
         }
         return cursor;
     }
