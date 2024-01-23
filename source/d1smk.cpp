@@ -1570,7 +1570,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
     int verbose;
     if (gfxSet != nullptr) {
         verbose = 1;
-        gfxs.append(gfsSet->getGfxList());
+        gfxs.append(gfxSet->getGfxList());
     } else {
         verbose = 0;
         gfxs.append(g);

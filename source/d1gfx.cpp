@@ -598,7 +598,7 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
 
     if (verbose != 0) {
         QString msg = tr("Replacing ");
-        for (QPair<D1GfxPixel, D1GfxPixel> &replacement : replacements) {
+        for (const QPair<D1GfxPixel, D1GfxPixel> &replacement : replacements) {
             msg.append(tr(" color %1 with %2,").arg(replacement.first.getPaletteIndex()).arg(replacement.second.getPaletteIndex()));
         }
         msg.chop(1);
