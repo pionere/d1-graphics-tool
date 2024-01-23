@@ -1786,7 +1786,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
     }
     // read Fallgn.CL2 from the same folder
     QString stdPath = baseFilePath;
-    atkPath[stdPath.length() - 5] = QChar('N');
+    stdPath[stdPath.length() - 5] = QChar('N');
 
     if (!QFileInfo::exists(stdPath)) {
         dProgressErr() << tr("Could not find %1 to be used as a template file").arg(QDir::toNativeSeparators(stdPath));
@@ -1829,13 +1829,13 @@ bool D1Gfx::patchFallGWalk(bool silent)
     for (int i = 0; i < frameCount; i++) {
         D1GfxFrame* frame = this->getFrame(this->getGroupFrameIndices(DIR_E).first + i);
         if (frame->getWidth() != width || frame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' (east) does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             return result;
         }
         // mirror the image
-		D1GfxFrame* walkWestFrame = this->getFrame(this->getGroupFrameIndices(DIR_W).first + i);
+        D1GfxFrame* walkWestFrame = this->getFrame(this->getGroupFrameIndices(DIR_W).first + i);
         if (walkWestFrame->getWidth() != width || walkWestFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' (west) does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
             return result;
         }
         for (int y = 0; y < height; y++) {
