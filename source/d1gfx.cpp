@@ -1777,6 +1777,70 @@ bool D1Gfx::patchWarriorStand(bool silent)
     return result;
 }
 
+bool D1Gfx::patchFallGWalk(bool silent)
+{
+    QString baseFilePath = this->getFilePath();
+    if (baseFilePath.length() < 10) {
+        dProgressErr() << tr("Unrecognized file-path. Expected *Fallgw.CL2");
+        return false;
+    }
+    // read Fallgn.CL2 from the same folder
+    QString stdPath = baseFilePath;
+    atkPath[stdPath.length() - 5] = QChar('N');
+
+    if (!QFileInfo::exists(stdPath)) {
+        dProgressErr() << tr("Could not find %1 to be used as a template file").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+
+    OpenAsParam opParams = OpenAsParam();
+    D1Gfx stdGfx;
+    stdGfx.setPalette(this->palette);
+    if (!D1Cl2::load(stdGfx, stdPath, opParams)) {
+        dProgressErr() << (tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(stdPath)));
+        return false;
+    }
+
+    constexpr int frameCount = 8;
+    constexpr int height = 128;
+    constexpr int width = 128;
+
+    if (this->getGroupCount() <= DIR_E) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to East.");
+        return false;
+    }
+    if (stdGfx.getGroupCount() <= DIR_E) {
+        dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) < 4) {
+        dProgressErr() << tr("Not enough frames in the frame group to East in '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+    bool result = false;
+    for (int i = this->getGroupFrameIndices(DIR_E).first; i <= this->getGroupFrameIndices(DIR_E).second; i++) {
+        D1GfxFrame* frame = this->getFrame(i);
+        if (frame->getWidth() != width || frame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            return result;
+        }
+        // mirror the image
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                D1GfxPixel leftPixel = frame->getPixel(x, y);
+                D1GfxPixel rightPixel = frame->getPixel(width - x - 1, y);
+                result |= frame->setPixel(x, y, rightPixel);
+                result |= frame->setPixel(width - x - 1, y, leftPixel);
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchSplIcons(bool silent)
 {
     int frameCount = this->getFrameCount();
@@ -1833,6 +1897,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
+    case GFX_MON_FALLGW: // patch Fallgw.CL2
+        change = this->patchFallGWalk(silent);
+        break;
     case GFX_SPL_ICONS: // patch SpelIcon.CEL
         change = this->patchSplIcons(silent);
         break;
@@ -1840,4 +1907,41 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     if (!change && !silent) {
         dProgress() << tr("No change was necessary.");
     }
+}
+
+int D1Gfx::getPatchFileIndex(QString &filePath)
+{
+    int fileIndex = -1;
+    QString baseName = QFileInfo(filePath).completeBaseName().toLower();
+    if (baseName == "l1doors") {
+        fileIndex = GFX_OBJ_L1DOORS;
+    }
+    if (baseName == "l2doors") {
+        fileIndex = GFX_OBJ_L2DOORS;
+    }
+    if (baseName == "l3doors") {
+        fileIndex = GFX_OBJ_L3DOORS;
+    }
+    if (baseName == "mcirl") {
+        fileIndex = GFX_OBJ_MCIRL;
+    }
+    if (baseName == "candle2") {
+        fileIndex = GFX_OBJ_CANDLE2;
+    }
+    if (baseName == "lshrineg") {
+        fileIndex = GFX_OBJ_LSHR;
+    }
+    if (baseName == "rshrineg") {
+        fileIndex = GFX_OBJ_RSHR;
+    }
+    if (baseName == "l5light") {
+        fileIndex = GFX_OBJ_L5LIGHT;
+    }
+    if (baseName == "spelicon") {
+        fileIndex = GFX_SPL_ICONS;
+    }
+    if (baseName == "fallgw") {
+        fileIndex = GFX_MON_FALLGW;
+    }
+	return fileIndex;
 }
