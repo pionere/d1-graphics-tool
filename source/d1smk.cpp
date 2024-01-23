@@ -1468,12 +1468,12 @@ void D1Smk::stopAudio()
 static QString addDetails(QString &msg, int verbose, D1SmkColorFix &fix)
 {
     if (fix.frameFrom != 0 || fix.frameTo != fix.gfx->getFrameCount()) {
-        msg = msg.append(" for frame(s) %1-%2", "", fix.frameTo - fix.frameFrom + 1).arg(fix.frameFrom + 1).arg(fix.frameTo + 1);
+        msg = msg.append(QApplication::tr(" for frame(s) %1-%2", "", fix.frameTo - fix.frameFrom + 1).arg(fix.frameFrom + 1).arg(fix.frameTo + 1));
     }
     if (verbose) {
         QFileInfo fileInfo(fix.gfx->getFilePath());
         QString labelText = fileInfo.fileName();
-        msg = msg.append(" of %1").arg(labelText);
+        msg = msg.append(QApplication::tr(" of %1").arg(labelText));
     }
     msg.append(".");
     return msg;
@@ -1509,7 +1509,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                         const char *compontent[3] = { "red", "green", "blue" };
                         QString msg = QApplication::tr("The %1 component of color %2 is adjusted in the palette").arg(compontent[n]).arg(i);
                         msg = addDetails(msg, verbose, fix);
-                        msg = msg.append(" (Using %1 instead of %2)").arg(*p).arg(cv);
+                        msg = msg.append(QApplication::tr(" (Using %1 instead of %2)").arg(*p).arg(cv));
                         dProgress() << msg;
                         if (n == 0) {
                             col.setRed(*p);
@@ -1557,14 +1557,14 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         QString msg = QApplication::tr("The palette");
         msg = addDetails(msg, verbose, fix);
         msg.chop(1);
-        msg.append(" is SMK compliant");
+        msg.append(QApplication::tr(" is SMK compliant"));
         dProgress() << msg;
         return false;
     }
     return true;
 }
 
-void D1Smk::fixColors(D1GfxSet *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix> &frameColorMods)
+void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix> &frameColorMods)
 {
     QList<D1Gfx *> gfxs;
     int verbose;

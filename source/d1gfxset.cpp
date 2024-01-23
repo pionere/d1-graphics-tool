@@ -321,7 +321,7 @@ D1Gfx *D1Gfxset::getBaseGfx() const
 
 QList<D1Gfx *> &D1Gfxset::getGfxList() const
 {
-    return const_cast<QList<D1Gfx *>>(this->gfxList);
+    return const_cast<QList<D1Gfx *> &>(this->gfxList);
 }
 
 void D1Gfxset::frameModified(D1GfxFrame *frame)

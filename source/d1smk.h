@@ -54,5 +54,5 @@ public:
     static void playAudio(D1GfxFrame &gfxFrame, int track = -1);
     static void stopAudio();
 
-    static void fixColors(D1GfxSet *gfxSet, D1Gfx *gfx, D1Pal *pal, QList<D1SmkColorFix> &frameColorMods);
+    static void fixColors(D1Gfxset *gfxSet, D1Gfx *gfx, D1Pal *pal, QList<D1SmkColorFix> &frameColorMods);
 };
