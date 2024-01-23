@@ -5,12 +5,21 @@
 #include <QString>
 
 #include "d1gfx.h"
+#include "d1gfxset.h"
 #include "d1pal.h"
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
 #define D1SMK_TRACKS 7
 #define D1SMK_CHANNELS 2
+
+typedef struct D1SmkColorFix {
+    D1Pal *pal;
+    D1Gfx *gfx;
+    int frameFrom;
+    int frameTo;
+    QList<quint8> colors;
+} D1SmkColorFix;
 
 class D1SmkAudioData : public QObject {
     Q_OBJECT
@@ -45,5 +54,5 @@ public:
     static void playAudio(D1GfxFrame &gfxFrame, int track = -1);
     static void stopAudio();
 
-    static void fixColors(D1Pal *pal, QList<quint8> &colors);
+    static void fixColors(D1GfxSet *gfxSet, D1Gfx *gfx, D1Pal *pal, QList<D1SmkColorFix> &frameColorMods);
 };

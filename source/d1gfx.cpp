@@ -8,6 +8,7 @@
 #include "d1smk.h"
 #include "openasdialog.h"
 #include "progressdialog.h"
+#include "remapdialog.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
 {
@@ -581,6 +582,37 @@ void D1Gfx::addGfx(D1Gfx *gfx)
         }
     }
     this->modified = true;
+}
+
+void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params, int verbose)
+{
+    int rangeFrom = params.frames.first;
+    if (rangeFrom != 0) {
+        rangeFrom--;
+    }
+    int rangeTo = params.frames.second;
+    if (rangeTo == 0 || rangeTo >= this->getFrameCount()) {
+        rangeTo = this->getFrameCount();
+    }
+    rangeTo--;
+
+    if (verbose != 0) {
+        QString msg = tr("Using color %1 instead of %2 in frame(s) %3-%4", "", rangeTo - rangeFrom + 1).arg(i).arg(colIdx).arg(rangeFrom + 1).arg(rangeTo + 1);
+        if (verbose != 1) {
+            QFileInfo fileInfo(this->gfxFilePath);
+            QString labelText = fileInfo.fileName();
+            msg = msg.append(" of %1").arg(labelText);
+        }
+        msg.append(".");
+        dProgress() << msg;
+    }
+
+    for (int i = rangeFrom; i <= rangeTo; i++) {
+        D1GfxFrame *frame = this->getFrame(i);
+        if (frame->replacePixels(replacements)) {
+            this->setModified();
+        }
+    }
 }
 
 D1CEL_TYPE D1Gfx::getType() const

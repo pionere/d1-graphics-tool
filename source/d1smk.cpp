@@ -427,7 +427,7 @@ static uint8_t* writeNBits(unsigned value, unsigned length, uint8_t *cursor, uns
 {
     for (unsigned i = 0; i < length; i++) {
         // *cursor |= ((value >> (length - i - 1)) & 1) << bitNum;
-		*cursor |= ((value >> i) & 1) << bitNum;
+        *cursor |= ((value >> i) & 1) << bitNum;
         bitNum++;
         if (bitNum == 8) {
             bitNum = 0;
@@ -503,6 +503,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
 
 static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &allocSize, size_t &cursor, unsigned &bitNum)
 {
+LogErrorF("D1Smk::prepareVideoTree 0");
     // reduce inflated cache frequencies
     for (int i = 0; i < 3; i++) {
 LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
@@ -522,10 +523,11 @@ LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat
             }
         }
     }
+LogErrorF("D1Smk::prepareVideoTree 1");
     // convert cache values to normal values
-	bool hasEntries = !tree.treeStat.isEmpty();
+    bool hasEntries = !tree.treeStat.isEmpty();
     for (int i = 0; i < 3; i++) {
-		hasEntries |= tree.cacheCount[i] != 0;
+        hasEntries |= tree.cacheCount[i] != 0;
         unsigned n = 0;
         for ( ; n < UINT16_MAX; n++) {
             auto it = tree.treeStat.begin();
@@ -1166,14 +1168,14 @@ LogErrorF("D1Smk::save 2 fl%d br%d bd%d c%d cmp%d len%d... %d", frameLen, audioI
     size_t allocSize = 1, cursor = 0; unsigned bitNum = 0;
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
 LogErrorF("D1Smk::save 4:%d as%d c%d bn%d ts%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum,
-		videoTree[i].treeStat.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
+        videoTree[i].treeStat.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
         videoTreeData = prepareVideoTree(videoTree[i], videoTreeData, allocSize, cursor, bitNum);
         if (videoTreeData == nullptr) {
             dProgressFail() << QApplication::tr("Out of memory");
             return false;
         }
 LogErrorF("D1Smk::save 5:%d as%d c%d bn%d jc%d pc%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum, videoTree[i].treeJointCount,
-		videoTree[i].paths.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
+        videoTree[i].paths.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
     }
     unsigned videoTreeDataSize = cursor;
     if (bitNum != 0) {
@@ -1463,8 +1465,26 @@ void D1Smk::stopAudio()
     }
 }
 
-void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
+static QString addDetails(QString &msg, int verbose, D1SmkColorFix &fix)
 {
+    if (fix.frameFrom != 0 || fix.frameTo != fix.gfx->getFrameCount()) {
+        msg = msg.append(" for frame(s) %1-%2", "", fix.frameTo - fix.frameFrom + 1).arg(fix.frameFrom + 1).arg(fix.frameTo + 1);
+    }
+    if (verbose) {
+        QFileInfo fileInfo(fix.gfx->getFilePath());
+        QString labelText = fileInfo.fileName();
+        msg = msg.append(" of %1").arg(labelText);
+    }
+    msg.append(".");
+    return msg;
+}
+
+static bool fixPalColors(D1SmkColorFix &fix, int verbose)
+{
+    if (fix.frameFrom == fix.frameTo) {
+        return false;
+    }
+    D1Pal *pal = fix.pal;
     QColor undefColor = pal->getUndefinedColor();
     QList<quint8> ignored;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
@@ -1487,7 +1507,10 @@ void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
                             p--;
                         }
                         const char *compontent[3] = { "red", "green", "blue" };
-                        dProgress() << QApplication::tr("The %1 component of color %2 is adjusted (Using %4 instead of %5).").arg(compontent[n]).arg(i).arg(*p).arg(cv);
+                        QString msg = QApplication::tr("The %1 component of color %2 is adjusted in the palette").arg(compontent[n]).arg(i);
+                        msg = addDetails(msg, verbose, fix);
+                        msg = msg.append(" (Using %1 instead of %2)").arg(*p).arg(cv);
+                        dProgress() << msg;
                         if (n == 0) {
                             col.setRed(*p);
                         }
@@ -1498,8 +1521,8 @@ void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
                             col.setBlue(*p);
                         }
                         pal->setColor(i, col);
-                        if (colors.isEmpty() || colors.back() != i) {
-                            colors.push_back(i);
+                        if (fix.colors.isEmpty() || fix.colors.back() != i) {
+                            fix.colors.push_back(i);
                         }
                     }
                     break;
@@ -1526,8 +1549,55 @@ void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
     }
     if (numIgnored != 0) {
         ignoredColors.chop(2);
-        dProgressWarn() << QApplication::tr("Ignored the %1 undefined color(s).", "", numIgnored).arg(ignoredColors);
-    } else if (colors.isEmpty()) {
-        dProgress() << QApplication::tr("The palette is SMK compliant.");
+        QString msg = QApplication::tr("Ignored the %1 undefined color(s) in the palette", "", numIgnored).arg(ignoredColors);
+        msg = addDetails(msg, verbose, fix);
+        dProgressWarn() << msg;
+    }
+    if (fix.colors.isEmpty()) {
+        QString msg = QApplication::tr("The palette");
+        msg = addDetails(msg, verbose, fix);
+        msg.chop(1);
+        msg.append(" is SMK compliant");
+        dProgress() << msg;
+        return false;
+    }
+    return true;
+}
+
+void D1Smk::fixColors(D1GfxSet *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix> &frameColorMods)
+{
+    QList<D1Gfx *> gfxs;
+    int verbose;
+    if (gfxSet != nullptr) {
+        verbose = 1;
+        gfxs.append(gfsSet->getGfxList());
+    } else {
+        verbose = 0;
+        gfxs.append(g);
+    }
+
+    for (D1Gfx *gfx : gfxs) {
+        D1SmkColorFix cf;
+        cf.pal = p;
+        cf.gfx = gfx;
+        cf.frameFrom = 0;
+        int i = 0;
+        for ( ; i < cf.gfx->getFrameCount(); i++) {
+            QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
+            if (!fp.isNull()) {
+                cf.frameTo = i;
+                if (fixPalColors(cf, verbose)) {
+                    frameColorMods.push_back(cf);
+                    cf.colors.clear();
+                }
+                cf.frameFrom = i;
+                cf.pal = fp.data();
+            }
+        }
+        cf.frameTo = i;
+        if (fixPalColors(cf, verbose)) {
+            frameColorMods.push_back(cf);
+            // cf.colors.clear();
+        }
     }
 }
