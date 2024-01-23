@@ -576,7 +576,9 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
         return treeData;
     }
     // sort treeStat
+LogErrorF("D1Smk::prepareVideoTree sort %d", tree.treeStat.count());
     std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second || (e1.second == e2.second && e1.first < e2.first); });
+LogErrorF("D1Smk::prepareVideoTree sorted %d", tree.treeStat.count());
     // prepare the sub-trees
     QList<QPair<unsigned, unsigned>> lowByteLeafs, hiByteLeafs;
     for (QPair<unsigned, unsigned> &leaf : tree.treeStat) {
@@ -603,10 +605,10 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
             hiByteLeafs.push_back(QPair<unsigned, unsigned>(hiByte, 1));
         }
     }
-
+LogErrorF("D1Smk::prepareVideoTree subtrees %d and %d", lowByteLeafs.count(), hiByteLeafs.count());
     size_t maxSize = 1 + (1 + lowByteLeafs.count() * sizeof(uint8_t) * 2 * 8 + 1) + (1 + hiByteLeafs.count() * sizeof(uint8_t) * 2 * 8 + 1) + lengthof(tree.cacheCount) * sizeof(uint16_t) * 8 + (tree.treeStat.count() * sizeof(uint16_t) * 2 * 8) + 1;
     maxSize = (maxSize + 7) / 8;
-
+LogErrorF("D1Smk::prepareVideoTree new maxis %d and %d, c%d bn%d", maxSize, allocSize + maxSize, cursor, bitNum);
     allocSize += maxSize;
 
     uint8_t *treeDataNext = (uint8_t *)realloc(treeData, allocSize);
@@ -631,6 +633,7 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
         // close the low-sub-tree
         res = writeBit(0, res, bitNum);
     }
+LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)treeData, bitNum);
     {
         // start the hi sub-tree
         res = writeBit(1, res, bitNum);
@@ -640,12 +643,14 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
         // close the hi-sub-tree
         res = writeBit(0, res, bitNum);
     }
+LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)treeData, bitNum);
     {
         // add the cache values
         for (int i = 0; i < 3; i++) {
             res = writeNBits(SwapLE16(tree.cacheCount[i]), 16, res, bitNum);
         }
     }
+LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d", (size_t)res - (size_t)treeData, bitNum);
     {
         // add the main tree
         joints = 0;
@@ -653,7 +658,7 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
         // close the main tree
         res = writeBit(0, res, bitNum);
     }
-
+LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d", (size_t)res - (size_t)treeData, bitNum, joints);
     tree.treeJointCount = joints;
 
     cursor = (size_t)res - (size_t)treeData;
@@ -1099,13 +1104,13 @@ LogErrorF("D1Smk::save 2 fl%d br%d bd%d c%d cmp%d len%d... %d", frameLen, audioI
                             }
                         }
                     }
-                    if (yy != 10) {
+                    if (yy != 10 + 1) {
                         ctype = 2; // VOID BLOCK -> skip
                     }
                 }
                 if (ctype == 1) {
                     unsigned numColors = 0, color1 = 256, color2 = 256, colors = 0;
-                    for (int yy = 4 - 1; yy >= 0 && numColors < 3; yy--) {
+                    for (int yy = 4 - 1; yy >= 0 && numColors <= 2; yy--) {
                         for (int xx = 4 - 1; xx >= 0; xx--) {
                             colors <<= 1;
                             unsigned color = frame->getPixel(x + xx, y + yy).getPaletteIndex();
@@ -1119,6 +1124,7 @@ LogErrorF("D1Smk::save 2 fl%d br%d bd%d c%d cmp%d len%d... %d", frameLen, audioI
                             ++numColors;
                             if (numColors == 1) {
                                 color1 = color;
+                                colors |= 1;
                                 continue;
                             }
                             if (numColors == 2) {
