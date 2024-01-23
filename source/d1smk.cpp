@@ -1646,8 +1646,8 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                         }
                     }
                     if (n >= D1PAL_COLORS) {
-                        *fp = nullptr;
-                        cf.gfx->setModfied();
+                        fp.reset();
+                        cf.gfx->setModified();
                         dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
                         cp = pal;
                     }
