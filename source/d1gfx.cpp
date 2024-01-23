@@ -1805,12 +1805,16 @@ bool D1Gfx::patchFallGWalk(bool silent)
     constexpr int height = 128;
     constexpr int width = 128;
 
-    if (this->getGroupCount() <= DIR_E) {
+    if (this->getGroupCount() <= DIR_E || this->getGroupCount() <= DIR_W) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) != frameCount) {
         dProgressErr() << tr("Not enough frames in the frame group to East.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_W).second - this->getGroupFrameIndices(DIR_W).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to West.");
         return false;
     }
     if (stdGfx.getGroupCount() <= DIR_E) {
@@ -1822,19 +1826,22 @@ bool D1Gfx::patchFallGWalk(bool silent)
         return false;
     }
     bool result = false;
-    for (int i = this->getGroupFrameIndices(DIR_E).first; i <= this->getGroupFrameIndices(DIR_E).second; i++) {
-        D1GfxFrame* frame = this->getFrame(i);
+    for (int i = 0; i < frameCount; i++) {
+        D1GfxFrame* frame = this->getFrame(this->getGroupFrameIndices(DIR_E).first + i);
         if (frame->getWidth() != width || frame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Frame size of '%1' (east) does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             return result;
         }
         // mirror the image
+		D1GfxFrame* walkWestFrame = this->getFrame(this->getGroupFrameIndices(DIR_W).first + i);
+        if (walkWestFrame->getWidth() != width || walkWestFrame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' (west) does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            return result;
+        }
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                D1GfxPixel leftPixel = frame->getPixel(x, y);
-                D1GfxPixel rightPixel = frame->getPixel(width - x - 1, y);
-                result |= frame->setPixel(x, y, rightPixel);
-                result |= frame->setPixel(width - x - 1, y, leftPixel);
+                D1GfxPixel wPixel = walkWestFrame->getPixel(width - x - 1, y);
+                result |= frame->setPixel(x, y, wPixel);
             }
         }
     }

@@ -195,6 +195,7 @@ public:
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
     void patch(int gfxFileIndex, bool silent); // gfx_file_index
+    static int getPatchFileIndex(QString &filePath);
 
 private:
     bool patchCathedralDoors(bool silent);
@@ -208,8 +209,6 @@ private:
     bool patchWarriorStand(bool silent);
     bool patchFallGWalk(bool silent);
     bool patchSplIcons(bool silent);
-
-    static int getPatchFileIndex(QString &filePath);
 
 protected:
     D1CEL_TYPE type = D1CEL_TYPE::V1_REGULAR;
