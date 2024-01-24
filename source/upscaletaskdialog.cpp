@@ -197,36 +197,8 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
     }
     // Patch CEL if requested
     if (params.patchGraphics) {
-        int fileIndex = -1;
-        QString baseName = QFileInfo(celFilePath).completeBaseName().toLower();
-        if (baseName == "l1doors") {
-            fileIndex = GFX_OBJ_L1DOORS;
-        }
-        if (baseName == "l2doors") {
-            fileIndex = GFX_OBJ_L2DOORS;
-        }
-        if (baseName == "l3doors") {
-            fileIndex = GFX_OBJ_L3DOORS;
-        }
-        if (baseName == "mcirl") {
-            fileIndex = GFX_OBJ_MCIRL;
-        }
-        if (baseName == "candle2") {
-            fileIndex = GFX_OBJ_CANDLE2;
-        }
-        if (baseName == "lshrineg") {
-            fileIndex = GFX_OBJ_LSHR;
-        }
-        if (baseName == "rshrineg") {
-            fileIndex = GFX_OBJ_RSHR;
-        }
-        if (baseName == "l5light") {
-            fileIndex = GFX_OBJ_L5LIGHT;
-        }
-        if (baseName == "spelicon") {
-            fileIndex = GFX_SPL_ICONS;
-        }
-        if (fileIndex != -1) {
+        int fileIndex = D1Gfx::getPatchFileIndex(celFilePath);
+        if (fileIndex >= 0) {
             gfx.patch(fileIndex, true);
         }
     }
@@ -252,12 +224,8 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
     }
     // Patch CL2 if requested
     if (params.patchGraphics) {
-        int fileIndex = -1;
-        QString baseName = QFileInfo(cl2FilePath).completeBaseName().toLower();
-        if (baseName == "wmhas") {
-            fileIndex = GFX_PLR_WMHAS;
-        }
-        if (fileIndex != -1) {
+        int fileIndex = D1Gfx::getPatchFileIndex(cl2FilePath);
+        if (fileIndex >= 0) {
             gfx.patch(fileIndex, true);
         }
     }

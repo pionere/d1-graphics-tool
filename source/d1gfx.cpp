@@ -1777,3 +1777,42 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
         dProgress() << tr("No change was necessary.");
     }
 }
+
+int D1Gfx::getPatchFileIndex(QString &filePath)
+{
+    int fileIndex = -1;
+    QString baseName = QFileInfo(filePath).completeBaseName().toLower();
+    // cel files
+    if (baseName == "l1doors") {
+        fileIndex = GFX_OBJ_L1DOORS;
+    }
+    if (baseName == "l2doors") {
+        fileIndex = GFX_OBJ_L2DOORS;
+    }
+    if (baseName == "l3doors") {
+        fileIndex = GFX_OBJ_L3DOORS;
+    }
+    if (baseName == "mcirl") {
+        fileIndex = GFX_OBJ_MCIRL;
+    }
+    if (baseName == "candle2") {
+        fileIndex = GFX_OBJ_CANDLE2;
+    }
+    if (baseName == "lshrineg") {
+        fileIndex = GFX_OBJ_LSHR;
+    }
+    if (baseName == "rshrineg") {
+        fileIndex = GFX_OBJ_RSHR;
+    }
+    if (baseName == "l5light") {
+        fileIndex = GFX_OBJ_L5LIGHT;
+    }
+    if (baseName == "spelicon") {
+        fileIndex = GFX_SPL_ICONS;
+    }
+    // cl2 files
+    if (baseName == "wmhas") {
+        fileIndex = GFX_PLR_WMHAS;
+    }
+    return fileIndex;
+}
