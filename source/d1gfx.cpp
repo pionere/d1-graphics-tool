@@ -8,6 +8,8 @@
 #include "openasdialog.h"
 #include "progressdialog.h"
 
+#include "dungeon/enums.h"
+
 D1GfxPixel D1GfxPixel::transparentPixel()
 {
     D1GfxPixel pixel;
@@ -1581,53 +1583,53 @@ bool D1Gfx::patchWarriorStand(bool silent)
     constexpr int height = 96;
     constexpr int width = 96;
 
-    if (this->getGroupCount() < 2) {
+    if (this->getGroupCount() <= DIR_SW) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
-    if (this->getGroupFrameIndices(1).first != frameCount && this->getGroupFrameIndices(1).second != 2 * frameCount - 1) {
+    if (this->getGroupFrameIndices(DIR_SW).first != frameCount && this->getGroupFrameIndices(DIR_SW).second != 2 * frameCount - 1) {
         dProgressErr() << tr("Not enough frames in the first frame group.");
         return false;
     }
-    if (stdGfx.getGroupCount() < 2) {
+    if (stdGfx.getGroupCount() <= DIR_SW) {
         dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
-    if (stdGfx.getGroupFrameIndices(1).first != frameCount && stdGfx.getGroupFrameIndices(1).second != 2 * frameCount - 1) {
+    if (stdGfx.getGroupFrameIndices(DIR_SW).first != frameCount && stdGfx.getGroupFrameIndices(DIR_SW).second != 2 * frameCount - 1) {
         dProgressErr() << tr("Not enough frames in the first frame group of '%1'.").arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
-    if (atkGfx.getGroupCount() < 2) {
+    if (atkGfx.getGroupCount() <= DIR_SW) {
         dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(atkPath));
+        return false;
+    }
+    constexpr int atkWidth = 128;
+    const D1GfxFrame* frameSrcAtk = atkGfx.getFrame(atkGfx.getGroupFrameIndices(DIR_SW).first);
+    if (frameSrcAtk->getWidth() != atkWidth || frameSrcAtk->getHeight() != height) {
+        dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(atkPath)).arg(atkWidth).arg(height);
         return false;
     }
 
     bool result = false;
-    for (int n = 1; n < frameCount + 1; n++) {
-        D1GfxFrame* frameSrcStd = stdGfx.getFrame(stdGfx.getGroupFrameIndices(1).first + n - 1);
+    for (int n = 0; n < frameCount; n++) {
+        D1GfxFrame* frameSrcStd = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_SW).first + n);
         if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
-            return false;
-        }
-        constexpr int atkWidth = 128;
-        D1GfxFrame* frameSrcAtk = atkGfx.getFrame(atkGfx.getGroupFrameIndices(1).first);
-        if (frameSrcAtk->getWidth() != atkWidth || frameSrcAtk->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(atkPath)).arg(atkWidth).arg(height);
             return false;
         }
         // copy the shield to the stand frame
         int dy = 0;
         switch (n) {
-        case 1: dy = 0; break;
-        case 2: dy = 1; break;
+        case 0: dy = 0; break;
+        case 1: dy = 1; break;
+        case 2: dy = 2; break;
         case 3: dy = 2; break;
-        case 4: dy = 2; break;
+        case 4: dy = 3; break;
         case 5: dy = 3; break;
         case 6: dy = 3; break;
-        case 7: dy = 3; break;
+        case 7: dy = 2; break;
         case 8: dy = 2; break;
-        case 9: dy = 2; break;
-        case 10: dy = 1; break;
+        case 9: dy = 1; break;
         }
         for (int y = 38; y < 66; y++) {
             for (int x = 19; x < 32; x++) {
@@ -1655,9 +1657,9 @@ bool D1Gfx::patchWarriorStand(bool silent)
             }
         }
         // -  sink effect on the top-left side
-        //if (n > 2 && n < 10) {
+        //if (n > 1 && n < 9) {
         if (dy > 1) {
-            // if (n >= 5 && n <= 7) {
+            // if (n >= 4 && n <= 6) {
             if (dy == 3) {
                 frameSrcStd->setPixel(17, 75, D1GfxPixel::colorPixel(0));
             }
@@ -1666,30 +1668,30 @@ bool D1Gfx::patchWarriorStand(bool silent)
             }
         }
         // - sink effect on the top-right side
-        // if (n > 2 && n < 10) {
+        // if (n > 1 && n < 9) {
         if (dy > 1) {
             frameSrcStd->setPixel(27, 75, D1GfxPixel::colorPixel(0));
-            // if (n > 4 && n < 8) {
+            // if (n > 3 && n < 7) {
             if (dy == 3) {
                 frameSrcStd->setPixel(26, 74, D1GfxPixel::colorPixel(0));
             }
         }
         // - sink effect on the bottom
-        // if (n > 1) {
+        // if (n > 0) {
         if (dy != 0) {
             frameSrcStd->setPixel(28, 80, D1GfxPixel::colorPixel(0));
         }
-        // if (n > 2 && n < 6) {
+        // if (n > 1 && n < 5) {
         if (dy > 1) {
             frameSrcStd->setPixel(29, 80, D1GfxPixel::colorPixel(0));
         }
-        // if (n > 4 && n < 8) {
+        // if (n > 3 && n < 7) {
         if (dy == 3) {
             frameSrcStd->setPixel(27, 80, D1GfxPixel::colorPixel(0));
         }
 
         // copy the result to the active graphics
-        D1GfxFrame* frame = this->getFrame(this->getGroupFrameIndices(1).first + n - 1);
+        D1GfxFrame* frame = this->getFrame(this->getGroupFrameIndices(DIR_SW).first + n);
         if (frame->getWidth() != width || frame->getHeight() != height) {
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             return result;
@@ -1704,7 +1706,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         if (change) {
             result = true;
             if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of group 2 is modified.").arg(n);
+                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_SW + 1);
             }
         }
     }
