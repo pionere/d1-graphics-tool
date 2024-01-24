@@ -62,7 +62,7 @@ public:
     void setGfx(D1Gfx *gfx); // set base gfx
     D1Gfx *getGfx(int i) const;
     D1Gfx *getBaseGfx() const;
-    void replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params);
+    QList<D1Gfx *> &getGfxList() const;
     void frameModified(D1GfxFrame *frame);
     void setPalette(D1Pal *pal);
 

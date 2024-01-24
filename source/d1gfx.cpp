@@ -7,6 +7,7 @@
 #include "d1smk.h"
 #include "openasdialog.h"
 #include "progressdialog.h"
+#include "remapdialog.h"
 
 #include "dungeon/enums.h"
 
@@ -570,6 +571,46 @@ void D1Gfx::addGfx(D1Gfx *gfx)
         }
     }
     this->modified = true;
+}
+
+void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params, int verbose)
+{
+    int rangeFrom = params.frames.first;
+    if (rangeFrom != 0) {
+        rangeFrom--;
+    }
+    int rangeTo = params.frames.second;
+    if (rangeTo == 0 || rangeTo >= this->getFrameCount()) {
+        rangeTo = this->getFrameCount();
+    }
+    rangeTo--;
+
+    if (verbose != 0) {
+        QString msg = tr("Replacing ");
+        for (const QPair<D1GfxPixel, D1GfxPixel> &replacement : replacements) {
+            msg.append(tr(" color %1 with %2,").arg(replacement.first.getPaletteIndex()).arg(replacement.second.getPaletteIndex()));
+        }
+        msg.chop(1);
+        bool ofTxt = false;
+        if (rangeFrom != 0 || rangeTo != this->getFrameCount()) {
+            msg.append(tr(" in frame(s) %3-%4", "", rangeTo - rangeFrom + 1).arg(rangeFrom + 1).arg(rangeTo + 1));
+            ofTxt = true;
+        }
+        if (verbose != 1) {
+            QFileInfo fileInfo(this->gfxFilePath);
+            QString labelText = ofTxt ? tr(" of %1") : tr(" in %1");
+            msg = msg.append(labelText.arg(fileInfo.fileName()));
+        }
+        msg.append(".");
+        dProgress() << msg;
+    }
+
+    for (int i = rangeFrom; i <= rangeTo; i++) {
+        D1GfxFrame *frame = this->getFrame(i);
+        if (frame->replacePixels(replacements)) {
+            this->setModified();
+        }
+    }
 }
 
 D1CEL_TYPE D1Gfx::getType() const

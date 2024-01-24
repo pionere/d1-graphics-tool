@@ -114,34 +114,17 @@ void MainWindow::remapColors(const RemapParam &params)
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    this->changeColors(replacements, params);
+    if (this->gfxset != nullptr) {
+        QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
+        for (D1Gfx *gfx : gfxs) {
+            gfx->replacePixels(replacements, params, 0);
+        }
+    } else {
+        this->gfx->replacePixels(replacements, params, 0);
+    }
 
     // Clear loading message from status bar
     ProgressDialog::done();
-}
-
-void MainWindow::changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
-{
-    if (this->gfxset != nullptr) {
-        this->gfxset->replacePixels(replacements, params);
-    } else {
-        int rangeFrom = params.frames.first;
-        if (rangeFrom != 0) {
-            rangeFrom--;
-        }
-        int rangeTo = params.frames.second;
-        if (rangeTo == 0 || rangeTo >= this->gfx->getFrameCount()) {
-            rangeTo = this->gfx->getFrameCount();
-        }
-        rangeTo--;
-
-        for (int i = rangeFrom; i <= rangeTo; i++) {
-            D1GfxFrame *frame = this->gfx->getFrame(i);
-            if (frame->replacePixels(replacements)) {
-                this->gfx->setModified();
-            }
-        }
-    }
 }
 
 void MainWindow::updatePalette(const D1Pal* pal)
@@ -2862,35 +2845,54 @@ void MainWindow::on_actionSmack_Colors_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    QList<quint8> colors;
-    D1Smk::fixColors(this->pal, colors);
+    QList<D1SmkColorFix> frameColorMods;
+    D1Smk::fixColors(this->gfxset, this->gfx, this->pal, frameColorMods);
 
-    if (!colors.isEmpty()) {
+    if (!frameColorMods.isEmpty()) {
         // find possible replacement for the modified colors
-        QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
-        for (quint8 colIdx : colors) {
-            QColor col = this->pal->getColor(colIdx);
-            for (unsigned i = 0; i < D1PAL_COLORS; i++) {
-                if (this->pal->getColor(i) != col/* || i == colIdx*/) {
-                    continue;
-                    
-                }
-                auto it = colors.begin();
-                for ( ; it != colors.end(); it++) {
-                    if (*it == i) {
+        for (D1SmkColorFix &frameColorMod : frameColorMods) {
+            QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+            D1Pal *pal = frameColorMod.pal;
+            for (quint8 colIdx : frameColorMod.colors) {
+                QColor col = pal->getColor(colIdx);
+                unsigned i = 0; unsigned n = D1PAL_COLORS;
+                for ( ; i < D1PAL_COLORS; i++) {
+                    if (pal->getColor(i) != col/* || i == colIdx*/) {
+                        continue;
+                    }
+                    auto it = frameColorMod.colors.begin();
+                    for (; it != frameColorMod.colors.end(); it++) {
+                        if (*it == i) {
+                            break;
+                        }
+                    }
+                    if (it == frameColorMod.colors.end()) {
                         break;
+                    } else if (i < n) {
+                        n = i;
                     }
                 }
-                if (it == colors.end()) {
-                    replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(colIdx), D1GfxPixel::colorPixel(i)));
-                    break;
+                if (i == D1PAL_COLORS) {
+                    /*if (n == D1PAL_COLORS) {
+                        // the color is still unique
+                        continue;
+                    }*/
+                    // multiple colors were changed to the same new one -> use the lowest
+                    if (n == colIdx) {
+                        // no change -> skip
+                        continue;
+                    }
+                    i = n;
                 }
+                replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(colIdx), D1GfxPixel::colorPixel(i)));
+            }
+            if (!replacements.isEmpty()) {
+                RemapParam params;
+                params.frames.first = frameColorMod.frameFrom;
+                params.frames.second = frameColorMod.frameTo;
+                frameColorMod.gfx->replacePixels(replacements, params, this->gfxset != nullptr ? 2 : 1);
             }
         }
-        RemapParam params;
-        params.frames.first = 0;
-        params.frames.second = 0;
-        this->changeColors(replacements, params);
     }
 
     // Clear loading message from status bar

@@ -319,26 +319,9 @@ D1Gfx *D1Gfxset::getBaseGfx() const
     return this->baseGfx;
 }
 
-void D1Gfxset::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
+QList<D1Gfx *> &D1Gfxset::getGfxList() const
 {
-    for (D1Gfx *gfx : this->gfxList) {
-        int rangeFrom = params.frames.first;
-        if (rangeFrom != 0) {
-            rangeFrom--;
-        }
-        int rangeTo = params.frames.second;
-        if (rangeTo == 0 || rangeTo >= gfx->getFrameCount()) {
-            rangeTo = gfx->getFrameCount();
-        }
-        rangeTo--;
-
-        for (int i = rangeFrom; i <= rangeTo; i++) {
-            D1GfxFrame *frame = gfx->getFrame(i);
-            if (frame->replacePixels(replacements)) {
-                gfx->setModified();
-            }
-        }
-    }
+    return const_cast<QList<D1Gfx *> &>(this->gfxList);
 }
 
 void D1Gfxset::frameModified(D1GfxFrame *frame)

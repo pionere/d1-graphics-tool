@@ -445,8 +445,26 @@ void D1Smk::stopAudio()
     }
 }
 
-void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
+static QString addDetails(QString &msg, int verbose, D1SmkColorFix &fix)
 {
+    if (fix.frameFrom != 0 || fix.frameTo != fix.gfx->getFrameCount()) {
+        msg = msg.append(QApplication::tr(" for frame(s) %1-%2", "", fix.frameTo - fix.frameFrom + 1).arg(fix.frameFrom + 1).arg(fix.frameTo + 1));
+    }
+    if (verbose) {
+        QFileInfo fileInfo(fix.gfx->getFilePath());
+        QString labelText = fileInfo.fileName();
+        msg = msg.append(QApplication::tr(" of %1").arg(labelText));
+    }
+    msg.append(".");
+    return msg;
+}
+
+static bool fixPalColors(D1SmkColorFix &fix, int verbose)
+{
+    if (fix.frameFrom == fix.frameTo) {
+        return false;
+    }
+    D1Pal *pal = fix.pal;
     QColor undefColor = pal->getUndefinedColor();
     QList<quint8> ignored;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
@@ -469,7 +487,10 @@ void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
                             p--;
                         }
                         const char *compontent[3] = { "red", "green", "blue" };
-                        dProgress() << QApplication::tr("The %1 component of color %2 is adjusted (Using %4 instead of %5).").arg(compontent[n]).arg(i).arg(*p).arg(cv);
+                        QString msg = QApplication::tr("The %1 component of color %2 is adjusted in the palette").arg(compontent[n]).arg(i);
+                        msg = addDetails(msg, verbose, fix);
+                        msg = msg.append(QApplication::tr(" (Using %1 instead of %2)").arg(*p).arg(cv));
+                        dProgress() << msg;
                         if (n == 0) {
                             col.setRed(*p);
                         }
@@ -480,8 +501,8 @@ void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
                             col.setBlue(*p);
                         }
                         pal->setColor(i, col);
-                        if (colors.isEmpty() || colors.back() != i) {
-                            colors.push_back(i);
+                        if (fix.colors.isEmpty() || fix.colors.back() != i) {
+                            fix.colors.push_back(i);
                         }
                     }
                     break;
@@ -508,8 +529,79 @@ void D1Smk::fixColors(D1Pal *pal, QList<quint8> &colors)
     }
     if (numIgnored != 0) {
         ignoredColors.chop(2);
-        dProgressWarn() << QApplication::tr("Ignored the %1 undefined color(s).", "", numIgnored).arg(ignoredColors);
-    } else if (colors.isEmpty()) {
-        dProgress() << QApplication::tr("The palette is SMK compliant.");
+        QString msg = QApplication::tr("Ignored the %1 undefined color(s) in the palette", "", numIgnored).arg(ignoredColors);
+        msg = addDetails(msg, verbose, fix);
+        dProgressWarn() << msg;
+    }
+    if (fix.colors.isEmpty()) {
+        QString msg = QApplication::tr("The palette");
+        msg = addDetails(msg, verbose, fix);
+        msg.chop(1);
+        msg.append(QApplication::tr(" is SMK compliant"));
+        dProgress() << msg;
+        return false;
+    }
+    return true;
+}
+
+void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix> &frameColorMods)
+{
+    QList<D1Gfx *> gfxs;
+    int verbose;
+    if (gfxSet != nullptr) {
+        verbose = 1;
+        gfxs.append(gfxSet->getGfxList());
+    } else {
+        verbose = 0;
+        gfxs.append(g);
+    }
+
+    for (D1Gfx *gfx : gfxs) {
+        // adjust colors of the palette(s)
+        D1SmkColorFix cf;
+        cf.pal = p;
+        cf.gfx = gfx;
+        cf.frameFrom = 0;
+        int i = 0;
+        for ( ; i < cf.gfx->getFrameCount(); i++) {
+            QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
+            if (!fp.isNull()) {
+                cf.frameTo = i;
+                if (fixPalColors(cf, verbose)) {
+                    frameColorMods.push_back(cf);
+                    cf.colors.clear();
+                }
+                cf.frameFrom = i;
+                cf.pal = fp.data();
+            }
+        }
+        cf.frameTo = i;
+        if (fixPalColors(cf, verbose)) {
+            frameColorMods.push_back(cf);
+            // cf.colors.clear();
+        }
+        // eliminate matching palettes
+        D1Pal *pal = nullptr;
+        for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
+            QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
+            if (!fp.isNull()) {
+                D1Pal *cp = fp.data();
+                if (pal != nullptr) {
+                    int n = 0;
+                    for ( ; n < D1PAL_COLORS; n++) {
+                        if (pal->getColor(n) != cp->getColor(n)) {
+                            break;
+                        }
+                    }
+                    if (n >= D1PAL_COLORS) {
+                        fp.clear();
+                        cf.gfx->setModified();
+                        dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
+                        cp = pal;
+                    }
+                }
+                pal = cp;
+            }
+        }
     }
 }

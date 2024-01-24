@@ -131,8 +131,6 @@ private:
     void addSubtiles(bool append);
     void addTiles(bool append);
 
-    void changeColors(QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params);
-
 public slots:
     void on_actionMerge_Frame_triggered();
     void on_actionAddTo_Frame_triggered();
