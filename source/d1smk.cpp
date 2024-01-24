@@ -1227,9 +1227,10 @@ LogErrorF("D1Smk::save 6:%d", videoTreeDataSize);
     header.Dummy = 0;
 
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
+LogErrorF("D1Smk::save 7[%d]:%d", i, videoTree[i].treeJointCount);
         header.VideoTreeSize[i] = SwapLE32(videoTree[i].treeJointCount);
     }
-
+LogErrorF("D1Smk::save 7e");
     unsigned maxAudioLength = 0;
     for (int i = 0; i < D1SMK_TRACKS; i++) {
         unsigned maxChunkLength = audioInfo[i].maxChunkLength;
@@ -1251,8 +1252,7 @@ LogErrorF("D1Smk::save 6:%d", videoTreeDataSize);
         header.AudioMaxChunkLength[i] = SwapLE32(maxChunkLength);
         header.AudioType[i] = SwapLE32(audioFlags);
     }
-
-
+LogErrorF("D1Smk::save 8:%d", maxAudioLength);
     outFile.write((const char*)&header, sizeof(header));
     for (int i = 0; i < frameCount; i++) {
         outFile.write((const char*)&header.Dummy, 4);
@@ -1260,12 +1260,14 @@ LogErrorF("D1Smk::save 6:%d", videoTreeDataSize);
     for (int i = 0; i < frameCount; i++) {
         outFile.write((const char*)&frameInfo[i].FrameType, 1);
     }
+LogErrorF("D1Smk::save 9:%d", videoTreeDataSize);
     outFile.write((const char*)videoTreeData, videoTreeDataSize);
-
+LogErrorF("D1Smk::save 10:%d", 256 * 3 + maxAudioLength + 4 * width * height);
     /*D1GfxFrame **/ prevFrame = nullptr;
     uint8_t *frameData = (uint8_t*)malloc(256 * 3 + maxAudioLength + 4 * width * height);
     QList<unsigned> frameLengths;
     for (int n = 0; n < frameCount; n++) {
+LogErrorF("D1Smk::save frame %d", n);
         D1GfxFrame *frame = gfx.getFrame(n);
         // reset pointers of the work-buffer
         size_t cursor = 0; unsigned bitNum = 0;
@@ -1276,7 +1278,9 @@ LogErrorF("D1Smk::save 6:%d", videoTreeDataSize);
             framePal = gfx.getPalette();
         }
         if (framePal != nullptr) {
+LogErrorF("D1Smk::save encode palette:%d at %d", n, cursor);
             unsigned len = encodePalette(framePal, n, frameData + cursor + 4);
+LogErrorF("D1Smk::save encoded palette len %d", len);
             len += 4;
             *(uint32_t*)&frameData[cursor] = SwapLE32(len);
             cursor += len;
@@ -1289,14 +1293,16 @@ LogErrorF("D1Smk::save 6:%d", videoTreeDataSize);
                 uint8_t *data = audioData->getAudio(i, &length);
                 if (length != 0) {
                     // assert(frameInfo[i].FrameType & (0x02 << track));
+LogErrorF("D1Smk::save encode audio:%d;%d at %d", n, i, cursor);
                     size_t len = encodeAudio(data, length, audioInfo[i], frameData + cursor + 4);
+LogErrorF("D1Smk::save encoded len:%d", len);
                     len += 4;
                     *(uint32_t*)&frameData[cursor] = SwapLE32(len);
                     cursor += len;
                 }
             }
         }
-
+        // add the pixels
         unsigned cacheValues[SMK_TREE_COUNT][3] = { 0 };
         int type = -1; unsigned typelen = 0;
         for (int y = 0; y < height; y += 4) {
@@ -1355,15 +1361,18 @@ LogErrorF("D1Smk::save 6:%d", videoTreeDataSize);
                     // ctype = 1;
                 }
                 if (type != ctype) {
+LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", x, y, type, typelen, cursor, bitNum);
                     encodePixels(x, y, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
+LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
                     type = ctype;
                     typelen = 0;
                 }
                 typelen++;
             }
         }
+LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", width, height - 4, type, typelen, cursor, bitNum);
         encodePixels(width, height - 4, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
-
+LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
         if (bitNum != 0) {
             cursor++;
         }

@@ -10,6 +10,8 @@
 #include "progressdialog.h"
 #include "remapdialog.h"
 
+#include "dungeon/enums.h"
+
 D1GfxPixel D1GfxPixel::transparentPixel()
 {
     D1GfxPixel pixel;
@@ -1821,7 +1823,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
-    if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) < 4) {
+    if ((stdGfx.getGroupFrameIndices(DIR_E).second - stdGfx.getGroupFrameIndices(DIR_E).first + 1) < 10) {
         dProgressErr() << tr("Not enough frames in the frame group to East in '%1'.").arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
@@ -1836,7 +1838,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         // mirror the image
         D1GfxFrame* walkWestFrame = this->getFrame(this->getGroupFrameIndices(DIR_W).first + i);
         if (walkWestFrame->getWidth() != width || walkWestFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             return result;
         }
         bool change = false;
@@ -1938,6 +1940,48 @@ bool D1Gfx::patchFallGWalk(bool silent)
                     }
                 }
                 change |= frame->setPixel(x, y, wPixel);
+            }
+        }
+
+        // copy the shield from the stand frame
+        int fn = 0;
+        switch (n) {
+        case 0: fn = 9; break;
+        case 1: fn = 8; break;
+        case 2: fn = 7; break;
+        case 3: fn = 8; break;
+        case 4: fn = 9; break;
+        case 5: fn = 9; break;
+        case 6: fn = 8; break;
+        case 7: fn = 7; break;
+        case 8: fn = 8; break;
+        case 9: fn = 9; break;
+        }
+
+        D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
+        if (stdEastFrame->getWidth() != width || stdEastFrame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            return result;
+        }
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                D1GfxPixel sPixel = stdEastFrame->getPixel(x, y);
+                quint8 color = sPixel.getPaletteIndex();
+                switch (fn) {
+                case 7:
+                    if (x < 60 || y < 88 || y > 111 || (color != 0 && !(color >= 170 && color <= 175) && !(color >= 188 && color < 205) && color != 223 && color != 251 && color != 252))
+                        continue;
+                    break;
+                case 8:
+                case 9:
+                    if (x < 80 || y < 86 || y > 109 || (color != 0 && !(color >= 170 && color <= 175) && !(color >= 188 && color < 205) && color != 223 && color != 251 && color != 252))
+                        continue;
+                    break;
+                }
+                if (frame->getPixel(x, y).isTransparent()) {
+                    change |= frame->setPixel(x, y, sPixel);
+                }
             }
         }
 
@@ -2054,7 +2098,7 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     // cl2 files
     if (baseName == "wmhas") {
         fileIndex = GFX_PLR_WMHAS;
-    }	
+    }    
     if (baseName == "fallgw") {
         fileIndex = GFX_MON_FALLGW;
     }
