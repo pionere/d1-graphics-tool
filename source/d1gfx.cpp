@@ -1946,16 +1946,14 @@ bool D1Gfx::patchFallGWalk(bool silent)
         // copy the shield from the stand frame
         int fn, dx, dy;
         switch (i) {
-        case 0: fn = 9; dx = -3; dy = 11; break;
-        case 1: fn = 9; dx = -8; dy = 13; break;
-        case 2: fn = 8; dx = -8; dy = 11; break;
-        case 3: fn = 8; dx = -8; dy = 11; break;
-        case 4: fn = 9; dx = -8; dy = 15; break;
-        case 5: fn = 9; dx = -8; dy = 14; break;
-        case 6: fn = 8; dx = -8; dy = 11; break;
-        case 7: fn = 9; dx = -8; dy = 13; break;
-        case 8: fn = 8; dx = -8; dy = 11; break;
-        case 9: fn = 9; dx = -3; dy = 11; break;
+        case 0: fn = 9; dx = -11; dy = 11; break;
+        case 1: fn = 9; dx =  -7; dy = 10; break;
+        case 2: fn = 9; dx =  -4; dy = 10; break;
+        case 3: fn = 8; dx =  -4; dy =  8; break;
+        case 4: fn = 8; dx =  -4; dy =  8; break;
+        case 5: fn = 9; dx =  -5; dy = 10; break;
+        case 6: fn = 9; dx =  -8; dy = 10; break;
+        case 7: fn = 9; dx = -10; dy = 11; break;
         }
 
         D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
@@ -2099,7 +2097,7 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     // cl2 files
     if (baseName == "wmhas") {
         fileIndex = GFX_PLR_WMHAS;
-    }    
+    }
     if (baseName == "fallgw") {
         fileIndex = GFX_MON_FALLGW;
     }

@@ -793,9 +793,9 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
     }
 }
 
+static unsigned char oldPalette[D1SMK_COLORS][3];
 static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
 {
-    static unsigned char oldPalette[D1SMK_COLORS][3];
     // convert pal to smk-palette
     unsigned char newPalette[D1SMK_COLORS][3];
     static_assert(D1PAL_COLORS == D1SMK_COLORS, "encodePalette conversion from D1PAL to SMK_PAL must be adjusted.");
