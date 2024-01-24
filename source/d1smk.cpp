@@ -1286,11 +1286,11 @@ LogErrorF("D1Smk::save frame %d dp%d", n, frameData);
         }
         if (framePal != nullptr) {
 LogErrorF("D1Smk::save encode palette:%d at %d to %d", n, cursor, frameData + cursor + 4);
-            unsigned len = encodePalette(framePal, n, frameData + cursor + 4);
-LogErrorF("D1Smk::save encoded palette len %d", len);
-            len += 4;
-            *(uint32_t*)&frameData[cursor] = SwapLE32(len);
-            cursor += len;
+            unsigned pallen = encodePalette(framePal, n, frameData + cursor + 4);
+LogErrorF("D1Smk::save encoded palette len %d", pallen);
+            pallen += 4;
+            *(uint32_t*)&frameData[cursor] = SwapLE32(pallen);
+            cursor += pallen;
         }
         // add optional audio
         D1SmkAudioData *audioData = frame->getFrameAudio();
@@ -1301,11 +1301,11 @@ LogErrorF("D1Smk::save encoded palette len %d", len);
                 if (length != 0) {
                     // assert(frameInfo[i].FrameType & (0x02 << track));
 LogErrorF("D1Smk::save encode audio:%d;%d at %d", n, i, cursor);
-                    size_t len = encodeAudio(data, length, audioInfo[i], frameData + cursor + 4);
-LogErrorF("D1Smk::save encoded len:%d", len);
-                    len += 4;
-                    *(uint32_t*)&frameData[cursor] = SwapLE32(len);
-                    cursor += len;
+                    size_t audiolen = encodeAudio(data, length, audioInfo[i], frameData + cursor + 4);
+LogErrorF("D1Smk::save encoded len:%d", audiolen);
+                    audiolen += 4;
+                    *(uint32_t*)&frameData[cursor] = SwapLE32(audiolen);
+                    cursor += audiolen;
                 }
             }
         }
