@@ -927,9 +927,11 @@ LogErrorF("D1Smk::save first palette %d to %d", len, dest);
         memcpy(dest, newPalette, len);
 LogErrorF("D1Smk::saved first palette");
     }
-LogErrorF("D1Smk::saving keepsake palette 0");
+LogErrorF("D1Smk::saving keepsake palette 0 %d", len);
     memcpy(oldPalette, newPalette, sizeof(newPalette));
-LogErrorF("D1Smk::saved keepsake palette 1");
+LogErrorF("D1Smk::saved keepsake palette 1 %d", len);
+LogErrorF("D1Smk::save - 1 encoded palette len %d", len);
+LogErrorF("D1Smk::save - 2 encoded palette len %d", len);
     return len;
 }
 
