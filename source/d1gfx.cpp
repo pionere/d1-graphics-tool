@@ -1945,7 +1945,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
 
         // copy the shield from the stand frame
         int fn = 0;
-        switch (n) {
+        switch (i) {
         case 0: fn = 9; break;
         case 1: fn = 8; break;
         case 2: fn = 7; break;
@@ -1979,8 +1979,8 @@ bool D1Gfx::patchFallGWalk(bool silent)
                         continue;
                     break;
                 }
-                if (frame->getPixel(x, y).isTransparent()) {
-                    change |= frame->setPixel(x, y, sPixel);
+                if (frame->getPixel(x, y + 7).isTransparent()) {
+                    change |= frame->setPixel(x, y + 7, sPixel);
                 }
             }
         }

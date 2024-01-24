@@ -811,6 +811,7 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
             for ( ; /*p < lengthof(palmap)*/; p++) {
                 if (cv <= p[0]) {
                     if (cv != p[0]) {
+LogErrorF("D1Smk::save non-matching palette %d vs %d", cv, p[0]);
                         if (p[0] - cv > cv - p[-1]) {
                             p--;
                         }
@@ -820,7 +821,8 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
                     break;
                 }
             }
-            newPalette[i][n] = (size_t)*p - (size_t)&palmap[0];
+LogErrorF("D1Smk::save palette value for %d:%d is %d vs. %d at %d", i, n, cv, p[0], (size_t)p - (size_t)&palmap[0]);
+            newPalette[i][n] = (size_t)p - (size_t)&palmap[0];
         }
     }
 
@@ -921,6 +923,7 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
         }
     } else {
         len = sizeof(newPalette);
+LogErrorF("D1Smk::save first palette %d", len);
         memcpy(dest, newPalette, len);
     }
 
