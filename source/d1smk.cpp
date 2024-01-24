@@ -923,11 +923,13 @@ LogErrorF("D1Smk::save palette value for %d:%d is %d vs. %d at %d", i, n, cv, p[
         }
     } else {
         len = sizeof(newPalette);
-LogErrorF("D1Smk::save first palette %d", len);
+LogErrorF("D1Smk::save first palette %d to %d", len, dest);
         memcpy(dest, newPalette, len);
+LogErrorF("D1Smk::saved first palette");
     }
-
+LogErrorF("D1Smk::saving keepsake palette 0");
     memcpy(oldPalette, newPalette, sizeof(newPalette));
+LogErrorF("D1Smk::saved keepsake palette 1");
     return len;
 }
 
@@ -1270,7 +1272,7 @@ LogErrorF("D1Smk::save 10:%d", 256 * 3 + maxAudioLength + 4 * width * height);
     uint8_t *frameData = (uint8_t*)malloc(256 * 3 + maxAudioLength + 4 * width * height);
     QList<unsigned> frameLengths;
     for (int n = 0; n < frameCount; n++) {
-LogErrorF("D1Smk::save frame %d", n);
+LogErrorF("D1Smk::save frame %d dp%d", n, frameData);
         D1GfxFrame *frame = gfx.getFrame(n);
         // reset pointers of the work-buffer
         size_t cursor = 0; unsigned bitNum = 0;
@@ -1281,7 +1283,7 @@ LogErrorF("D1Smk::save frame %d", n);
             framePal = gfx.getPalette();
         }
         if (framePal != nullptr) {
-LogErrorF("D1Smk::save encode palette:%d at %d", n, cursor);
+LogErrorF("D1Smk::save encode palette:%d at %d to %d", n, cursor, frameData + cursor + 4);
             unsigned len = encodePalette(framePal, n, frameData + cursor + 4);
 LogErrorF("D1Smk::save encoded palette len %d", len);
             len += 4;

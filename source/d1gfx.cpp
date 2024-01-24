@@ -1944,18 +1944,18 @@ bool D1Gfx::patchFallGWalk(bool silent)
         }
 
         // copy the shield from the stand frame
-        int fn = 0;
+        int fn, dx, dy;
         switch (i) {
-        case 0: fn = 9; break;
-        case 1: fn = 8; break;
-        case 2: fn = 7; break;
-        case 3: fn = 8; break;
-        case 4: fn = 9; break;
-        case 5: fn = 9; break;
-        case 6: fn = 8; break;
-        case 7: fn = 7; break;
-        case 8: fn = 8; break;
-        case 9: fn = 9; break;
+        case 0: fn = 9; dx = -3; dy = 11; break;
+        case 1: fn = 9; dx = -8; dy = 13; break;
+        case 2: fn = 8; dx = -8; dy = 11; break;
+        case 3: fn = 8; dx = -8; dy = 11; break;
+        case 4: fn = 9; dx = -8; dy = 15; break;
+        case 5: fn = 9; dx = -8; dy = 14; break;
+        case 6: fn = 8; dx = -8; dy = 11; break;
+        case 7: fn = 9; dx = -8; dy = 13; break;
+        case 8: fn = 8; dx = -8; dy = 11; break;
+        case 9: fn = 9; dx = -3; dy = 11; break;
         }
 
         D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
@@ -1979,8 +1979,9 @@ bool D1Gfx::patchFallGWalk(bool silent)
                         continue;
                     break;
                 }
-                if (frame->getPixel(x, y + 7).isTransparent()) {
-                    change |= frame->setPixel(x, y + 7, sPixel);
+
+                if (frame->getPixel(x + dx, y + dy).isTransparent()) {
+                    change |= frame->setPixel(x + dx, y + dy, sPixel);
                 }
             }
         }
