@@ -463,14 +463,14 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
         if (leafPaths == nullptr) {
             cursor = writeNBits(leaf, 8, cursor, bitNum);
         } else {
-LogErrorF("TreeData leafPaths access");
+// LogErrorF("TreeData leafPaths access");
             {
                 auto it = leafPaths[0].find(leaf & 0xFF);
                 if (it == leafPaths[0].end()) {
                     LogErrorF("Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
                     QPair<unsigned, uint32_t> &theEntryPair = it.value();
-                    LogErrorF("TreeData writeNBits value %d length %d for lo-leaf %d", theEntryPair.second, theEntryPair.first, leaf & 0xFF);
+//                    LogErrorF("TreeData writeNBits value %d length %d for lo-leaf %d", theEntryPair.second, theEntryPair.first, leaf & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
             }
@@ -480,7 +480,7 @@ LogErrorF("TreeData leafPaths access");
                     LogErrorF("Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
                 } else {
                     QPair<unsigned, uint32_t> theEntryPair = it.value();
-                    LogErrorF("TreeData writeNBits value %d length %d for hi-leaf %d", theEntryPair.second, theEntryPair.first, (leaf >> 8) & 0xFF);
+//                    LogErrorF("TreeData writeNBits value %d length %d for hi-leaf %d", theEntryPair.second, theEntryPair.first, (leaf >> 8) & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
             }
@@ -513,8 +513,8 @@ LogErrorF("TreeData leafPaths access");
             it = leafs.erase(it);
         }
     }
-    if (deepDeb)
-        LogErrorF("TreeData joint %d depth %d value %d length %d / %d", joints, depth, branch, leafs.count(), rightLeafs.count());
+//    if (deepDeb)
+//        LogErrorF("TreeData joint %d depth %d value %d length %d / %d", joints, depth, branch, leafs.count(), rightLeafs.count());
     branch <<= 1;
     cursor = buildTreeData(leafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 

@@ -1846,30 +1846,95 @@ bool D1Gfx::patchFallGWalk(bool silent)
                 quint8 color = wPixel.getPaletteIndex();
                 if (!wPixel.isTransparent()) {
                     if ((color >= 170 && color <= 175) || (color >= 190 && color <= 205) || color >= 251) {
-                        /*if (i == 0) {
-                            if (x >= 77 && y >= 99 && y <= 111) {
+                        if (i == 0) {
+                            if (x >= 71 && y >= 99 && y <= 112) {
                                 continue;
                             }
                         }
                         if (i == 1) {
-                            if (x >= 72 && y >= 99 && y <= 111) {
+                            if (x >= 67 && y >= 101 && y <= 110) {
                                 continue;
                             }
-                        }*/
-                        if (x >= 62 && y >= 99 && y <= 121) {
-                            continue;
                         }
+                        if (i == 2) {
+                            if (x >= 62 && y >= 105 && y <= 114) {
+                                continue;
+                            }
+                        }
+                        if (i == 3) {
+                            if (x >= 58 && y >= 109 && y <= 118) {
+                                continue;
+                            }
+                        }
+                        if (i == 4) {
+                            if (x >= 57 && y >= 110 && y <= 121) {
+                                continue;
+                            }
+                        }
+                        if (i == 5) {
+                            if (x >= 58 && y >= 110 && y <= 119) {
+                                continue;
+                            }
+                        }
+                        if (i == 6) {
+                            if (x >= 62 && y >= 106 && y <= 114) {
+                                continue;
+                            }
+                        }
+                        if (i == 7) {
+                            if (x >= 66 && y >= 96 && y <= 112) {
+                                continue;
+                            }
+                        }
+                        /*if (x >= 62 && y >= 99 && y <= 121) {
+                            continue;
+                        }*/
                     }
                     if (color == 0) {
-                        /*if (i == 0) {
-                            if (x >= 87 || (x >= 81 && y >= 118 + 10 - x / 8)) {
+                        if (i == 0) {
+                            if (/*x >= 87 || */(x >= 81 && y >= 118 + 10 - x / 8)) {
                                 // wPixel = D1GfxPixel::transparentPixel();
-                                continue;
+                                wPixel = D1GfxPixel::transparentPixel();
                             }
-                        }*/
-                        if (x >= 65 && y >= 115 && y <= 122) {
-                            continue;
                         }
+                        if (i == 1) {
+                            if (/*x >= 87 || */(x >= 79 && y >= 118 + 10 - x / 8)) {
+                                wPixel = D1GfxPixel::transparentPixel();
+                            }
+                        }
+                        if (i == 2) {
+                            if (/*x >= 87 || */(x >= 75 && y >= 118 + 10 - x / 8)) {
+                                wPixel = D1GfxPixel::transparentPixel();
+                            }
+                        }
+                        if (i == 3) {
+                            if (/*x >= 87 || */(x >= 70 && y >= 118)) {
+                                wPixel = D1GfxPixel::transparentPixel();
+                            }
+                        }
+                        if (i == 4) {
+                            if (/*x >= 87 || */(x >= 67 && y >= 119)) {
+                                wPixel = D1GfxPixel::transparentPixel();
+                            }
+                        }
+                        if (i == 5) {
+                            if (/*x >= 87 || */(x >= 71 && y >= 119)) {
+                                wPixel = D1GfxPixel::transparentPixel();
+                            }
+                        }
+                        if (i == 6) {
+                            if (/*x >= 87 || */(x >= 72 && y >= 117 && y >= 120 + 72 - x)) {
+                                wPixel = D1GfxPixel::transparentPixel();
+                            }
+                        }
+                        if (i == 7) {
+                            if (/*x >= 87 || */(x >= 85 && y <= 118 && y >= 118 + 85 - x)) {
+                                wPixel = D1GfxPixel::transparentPixel();
+                            }
+                        }
+                        /*if (x >= 65 && y >= 115 && y <= 122) {
+                            continue;
+                        }*/
                     }
                 }
                 change |= frame->setPixel(x, y, wPixel);
