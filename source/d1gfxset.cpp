@@ -54,8 +54,7 @@ D1Gfxset::D1Gfxset(D1Gfx *g)
 
 D1Gfxset::~D1Gfxset()
 {
-    for (unsigned i = 0; i < this->gfxList.size(); i++) {
-        D1Gfx *gfx = this->gfxList[i];
+    for (D1Gfx *gfx : this->gfxList) {
         if (gfx != this->baseGfx) {
             mem_free_dbg(gfx);
         }
@@ -250,7 +249,7 @@ void D1Gfxset::save(const SaveAsParam &params)
                 filePath.chop(2);
         }
     }
-    for (unsigned i = 0; i < this->gfxList.size(); i++) {
+    for (int i = 0; i < this->gfxList.count(); i++) {
         if (!filePath.isEmpty()) {
             QString anim;
             if (this->type == D1GFX_SET_TYPE::Missile) {
@@ -302,7 +301,7 @@ D1GFX_SET_WEAPON_TYPE D1Gfxset::getWeaponType() const
 
 int D1Gfxset::getGfxCount() const
 {
-    return this->gfxList.size();
+    return this->gfxList.count();
 }
 
 void D1Gfxset::setGfx(D1Gfx *gfx)

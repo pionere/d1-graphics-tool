@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include <QList>
 #include <QPair>
 
@@ -74,5 +72,5 @@ private:
     D1GFX_SET_ARMOR_TYPE atype = D1GFX_SET_ARMOR_TYPE::Unknown;
     D1GFX_SET_WEAPON_TYPE wtype = D1GFX_SET_WEAPON_TYPE::Unknown;
     D1Gfx *baseGfx;
-    std::vector<D1Gfx *> gfxList;
+    QList<D1Gfx *> gfxList;
 };
