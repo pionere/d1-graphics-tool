@@ -562,7 +562,9 @@ LogErrorF("D1Smk::prepareVideoTree 1");
             }
             if (it == tree.treeStat.end()) {
 LogErrorF("D1Smk::prepareVideoTree cache normal i%d n%d cc%d", i, n, tree.cacheCount[i]);
-                tree.treeStat.push_back(QPair<unsigned, unsigned>(n, tree.cacheCount[i]));
+                if (tree.cacheCount[i] != 0) {
+                    tree.treeStat.push_back(QPair<unsigned, unsigned>(n, tree.cacheCount[i]));
+                }
                 tree.cacheCount[i] = n; // replace cache-count with the 'fake' leaf value
                 break;
             }
@@ -675,7 +677,7 @@ LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)tree
         }
     }
 LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d", (size_t)res - (size_t)treeData, bitNum);
-deepDeb = true;
+// deepDeb = true;
     {
         // add the main tree
         joints = 0;
@@ -683,7 +685,7 @@ deepDeb = true;
         // close the main tree
         res = writeBit(0, res, bitNum);
     }
-deepDeb = false;
+// deepDeb = false;
 LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d", (size_t)res - (size_t)treeData, bitNum, joints);
     tree.treeJointCount = joints;
 

@@ -8060,10 +8060,10 @@
     </message>
     <message numerus="yes">
         <location filename="../source/d1smk.cpp" line="511"/>
-        <source>Ignored the %1 undefined color(s).</source>
+        <source>Ignored the %1 undefined color(s) in the palette</source>
         <translation>
-            <numerusform>Ignored undefined color %1.</numerusform>
-            <numerusform>Ignored the %1 undefined color(s).</numerusform>
+            <numerusform>Ignored the undefined color %1 in the palette</numerusform>
+            <numerusform>Ignored the %1 undefined colors in the palette</numerusform>
         </translation>
     </message>    
     <message>
