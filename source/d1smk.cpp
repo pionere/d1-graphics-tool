@@ -365,7 +365,7 @@ typedef struct _SmkTreeInfo {
     QList<QPair<unsigned, unsigned>> treeStat;
     QList<QPair<unsigned, unsigned>> cacheStat[3];
     unsigned cacheCount[3];
-    unsigned treeJointCount;
+    unsigned treeLeafCount;
     QMap<unsigned, QPair<unsigned, uint32_t>> paths;
 } SmkTreeInfo;
 
@@ -599,10 +599,13 @@ LogErrorF("D1Smk::prepareVideoTree writing %d", cursor);
         res = writeNBits(0, 2, res, bitNum);
         cursor = (size_t)res - (size_t)treeData;
 LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
+		tree.treeLeafCount = 0;
         return treeData;
     }
     // sort treeStat
 LogErrorF("D1Smk::prepareVideoTree sort %d", tree.treeStat.count());
+    tree.treeLeafCount = (tree.treeStat.count() + 3) * 4;
+
     std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second || (e1.second == e2.second && e1.first < e2.first); });
 LogErrorF("D1Smk::prepareVideoTree sorted %d", tree.treeStat.count());
     // prepare the sub-trees
@@ -687,7 +690,6 @@ LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d", (size_t)res - (size_t)t
     }
 // deepDeb = false;
 LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d", (size_t)res - (size_t)treeData, bitNum, joints);
-    tree.treeJointCount = joints;
 
     cursor = (size_t)res - (size_t)treeData;
     return treeData;
@@ -1220,7 +1222,7 @@ LogErrorF("D1Smk::save 4:%d as%d c%d bn%d ts%d cs%d:%d:%d (tc%d:%d:%d)", i, allo
             dProgressFail() << QApplication::tr("Out of memory");
             return false;
         }
-LogErrorF("D1Smk::save 5:%d as%d c%d bn%d jc%d pc%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum, videoTree[i].treeJointCount,
+LogErrorF("D1Smk::save 5:%d as%d c%d bn%d jc%d pc%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum, videoTree[i].treeLeafCount,
         videoTree[i].paths.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
     }
     unsigned videoTreeDataSize = cursor;
@@ -1239,8 +1241,8 @@ LogErrorF("D1Smk::save 6: siz%d as%d", videoTreeDataSize, allocSize);
     header.Dummy = 0;
 
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
-LogErrorF("D1Smk::save 7[%d]:%d", i, videoTree[i].treeJointCount);
-        header.VideoTreeSize[i] = SwapLE32(videoTree[i].treeJointCount);
+LogErrorF("D1Smk::save 7[%d]:%d", i, videoTree[i].treeLeafCount);
+        header.VideoTreeSize[i] = SwapLE32(videoTree[i].treeLeafCount);
     }
 LogErrorF("D1Smk::save 7e");
     unsigned maxAudioLength = 0;
