@@ -1953,7 +1953,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         case 4: fn = 9; dx =  -4; dy =  9; break;
         case 5: fn = 9; dx =  -5; dy =  8; break;
         case 6: fn = 8; dx =  -2; dy =  5; break;
-        case 7: fn = 9; dx =  -8; dy = 10; break;
+        case 7: fn = 9; dx =  -8; dy =  8; break;
         }
 
         D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
@@ -1977,11 +1977,37 @@ bool D1Gfx::patchFallGWalk(bool silent)
                         continue;
                     break;
                 }
-
-                if (frame->getPixel(x + dx, y + dy).isTransparent()) {
+				D1GfxPixel wPixel = frame->getPixel(x + dx, y + dy);
+				color = wPixel.getPaletteIndex();
+                if (wPixel.isTransparent()
+				 || (i == 0 && color == 0 && x >= 75 + 11)) {
                     change |= frame->setPixel(x + dx, y + dy, sPixel);
                 }
             }
+        }
+
+		// fix artifacts
+        switch (i) {
+        case 0: dx = 91; break;
+        case 1: dx = 92; break;
+        case 2: dx = 93; break;
+        case 3: dx = 95; break;
+        case 4: dx = 96; break;
+        case 5: dx = 95; break;
+        case 6: dx = 94; break;
+        case 7: dx = 93; break;
+        }
+        for (int y = 0; y < height; y++) {
+            for (int x = dx; x < width; x++) {
+                change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+		if (i == 0) {
+			for (int x = 88; x < width; x++) {
+				change |= frame->setPixel(88, 109, D1GfxPixel::transparentPixel());
+            }
+        }
+		if (i == 1) {
         }
 
         if (change) {

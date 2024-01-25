@@ -367,6 +367,7 @@ typedef struct _SmkTreeInfo {
     unsigned cacheCount[3];
     unsigned uncompressedTreeSize;
     QMap<unsigned, QPair<unsigned, uint32_t>> paths;
+unsigned VideoTreeIndex;
 } SmkTreeInfo;
 
 static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValues)[3])
@@ -537,6 +538,7 @@ LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat
                 if (it->first == value) {
                     if (it->second + tree.cacheStat[i][n].second >= tree.cacheCount[i] - tree.cacheStat[i][n].second) {
                         // use the 'normal' leaf instead of the cache
+LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d refs%d cacherefs%d of %d", value, it->second, tree.cacheStat[i][n].second, tree.cacheCount[i]);
                         it->second += tree.cacheStat[i][n].second;
                         tree.cacheCount[i] -= tree.cacheStat[i][n].second;
                         tree.cacheStat[i].removeAt(n);
@@ -714,7 +716,10 @@ static uint8_t *writeTreeValue(unsigned value, const SmkTreeInfo &videoTree, uns
     cacheValues[0] = value;
 
     auto it = videoTree.paths.find(v);
-    assert(it != videoTree.paths.end());
+	if (it == videoTree.paths.end()) {
+		LogErrorF("ERROR: writeTreeValue missing entry %d (%d) in %d", v, value, videoTree.VideoTreeIndex);
+		return cursor;
+    }
 
     return writeNBits(it->second, it->second, cursor, bitNum);
 }
@@ -1125,6 +1130,7 @@ LogErrorF("D1Smk::save 2 fl%d br%d bd%d c%d cmp%d len%d... %d", frameLen, audioI
     // prepare the trees
     SmkTreeInfo videoTree[SMK_TREE_COUNT];
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
+videoTree[i].VideoTreeIndex = i;
         memset(videoTree[i].cacheCount, 0, sizeof(videoTree[i].cacheCount));
     }
     D1GfxFrame *prevFrame = nullptr;
