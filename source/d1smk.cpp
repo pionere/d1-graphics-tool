@@ -365,7 +365,7 @@ typedef struct _SmkTreeInfo {
     QList<QPair<unsigned, unsigned>> treeStat;
     QList<QPair<unsigned, unsigned>> cacheStat[3];
     unsigned cacheCount[3];
-    unsigned treeLeafCount;
+    unsigned uncompressedTreeSize;
     QMap<unsigned, QPair<unsigned, uint32_t>> paths;
 } SmkTreeInfo;
 
@@ -599,13 +599,11 @@ LogErrorF("D1Smk::prepareVideoTree writing %d", cursor);
         res = writeNBits(0, 2, res, bitNum);
         cursor = (size_t)res - (size_t)treeData;
 LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
-		tree.treeLeafCount = 0;
+		tree.uncompressedTreeSize = 0;
         return treeData;
     }
     // sort treeStat
 LogErrorF("D1Smk::prepareVideoTree sort %d", tree.treeStat.count());
-    tree.treeLeafCount = (tree.treeStat.count() + 3) * 4;
-
     std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second || (e1.second == e2.second && e1.first < e2.first); });
 LogErrorF("D1Smk::prepareVideoTree sorted %d", tree.treeStat.count());
     // prepare the sub-trees
@@ -690,6 +688,7 @@ LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d", (size_t)res - (size_t)t
     }
 // deepDeb = false;
 LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d", (size_t)res - (size_t)treeData, bitNum, joints);
+    tree.uncompressedTreeSize = (joints + 3) * 4;
 
     cursor = (size_t)res - (size_t)treeData;
     return treeData;
@@ -823,7 +822,7 @@ LogErrorF("D1Smk::save non-matching palette %d[%d]: %d vs %d", i, n, cv, p[0]);
                     break;
                 }
             }
-LogErrorF("D1Smk::save palette value for %d:%d is %d vs. %d at %d", i, n, cv, p[0], (size_t)p - (size_t)&palmap[0]);
+// LogErrorF("D1Smk::save palette value for %d:%d is %d vs. %d at %d", i, n, cv, p[0], (size_t)p - (size_t)&palmap[0]);
             newPalette[i][n] = (size_t)p - (size_t)&palmap[0];
         }
     }
@@ -925,15 +924,15 @@ LogErrorF("D1Smk::save palette value for %d:%d is %d vs. %d at %d", i, n, cv, p[
         }
     } else {
         len = sizeof(newPalette);
-LogErrorF("D1Smk::save first palette %d to %d", len, dest);
+// LogErrorF("D1Smk::save first palette %d to %d", len, dest);
         memcpy(dest, newPalette, len);
-LogErrorF("D1Smk::saved first palette");
+// LogErrorF("D1Smk::saved first palette");
     }
-LogErrorF("D1Smk::saving keepsake palette 0 %d", len);
+// LogErrorF("D1Smk::saving keepsake palette 0 %d", len);
     memcpy(oldPalette, newPalette, sizeof(newPalette));
-LogErrorF("D1Smk::saved keepsake palette 1 %d", len);
-LogErrorF("D1Smk::save - 1 encoded palette len %d", len);
-LogErrorF("D1Smk::save - 2 encoded palette len %d", len);
+// LogErrorF("D1Smk::saved keepsake palette 1 %d", len);
+// LogErrorF("D1Smk::save - 1 encoded palette len %d", len);
+// LogErrorF("D1Smk::save - 2 encoded palette len %d", len);
     return len;
 }
 
@@ -1222,7 +1221,7 @@ LogErrorF("D1Smk::save 4:%d as%d c%d bn%d ts%d cs%d:%d:%d (tc%d:%d:%d)", i, allo
             dProgressFail() << QApplication::tr("Out of memory");
             return false;
         }
-LogErrorF("D1Smk::save 5:%d as%d c%d bn%d jc%d pc%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum, videoTree[i].treeLeafCount,
+LogErrorF("D1Smk::save 5:%d as%d c%d bn%d jc%d pc%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum, videoTree[i].uncompressedTreeSize,
         videoTree[i].paths.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
     }
     unsigned videoTreeDataSize = cursor;
@@ -1241,8 +1240,8 @@ LogErrorF("D1Smk::save 6: siz%d as%d", videoTreeDataSize, allocSize);
     header.Dummy = 0;
 
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
-LogErrorF("D1Smk::save 7[%d]:%d", i, videoTree[i].treeLeafCount);
-        header.VideoTreeSize[i] = SwapLE32(videoTree[i].treeLeafCount);
+LogErrorF("D1Smk::save 7[%d]:%d", i, videoTree[i].uncompressedTreeSize);
+        header.VideoTreeSize[i] = SwapLE32(videoTree[i].uncompressedTreeSize);
     }
 LogErrorF("D1Smk::save 7e");
     unsigned maxAudioLength = 0;
@@ -1332,7 +1331,7 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
                             }
                         }
                     }
-                    if (yy != 10) {
+                    if (yy != 10 + 1) {
                         ctype = 2; // VOID BLOCK -> skip
                     }
                 }

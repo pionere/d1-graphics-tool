@@ -567,6 +567,7 @@ LogErrorFF("smk_huff16_build cache[%d]:%d", i, t->cache[i]);
 
 		/* check that we completely filled the tree */
 		if (limit != t->size) {
+LogErrorFF("failed to completely decode huff16 tree %d vs %d", limit, t->size);
 			LogErrorMsg("libsmacker::smk_huff16_build() - ERROR: failed to completely decode huff16 tree\n");
 			goto error;
 		}
@@ -2399,8 +2400,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 #ifdef FULL
 		smk_read_ul(s->video.tree_size[temp_l]);
 #else
-		smk_read_ul(temp_u);
-		video_tree_size[temp_l] = temp_u;
+		smk_read_ul(video_tree_size[temp_l]);
 #endif
 	}
 
