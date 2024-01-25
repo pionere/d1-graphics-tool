@@ -237,26 +237,31 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
         dProgressErr() << QApplication::tr("Invalid SMK file.");
         return false;
     }
-
+LogErrorF("D1Smk::load 1 %d", fileSize);
     unsigned long SVidWidth, SVidHeight;
     double SVidFrameLength;
     smk_info_all(SVidSMK, &SVidWidth, &SVidHeight, &SVidFrameLength);
+LogErrorF("D1Smk::load 2 %d %d %d", SVidWidth, SVidHeight, SVidFrameLength);
     unsigned char channels, depth;
     unsigned long rate;
     smk_info_audio(SVidSMK, &channels, &depth, &rate);
+LogErrorF("D1Smk::load 3 %d %d %d", channels, depth, rate);
     smk_enable_video(SVidSMK, true);
     for (int i = 0; i < D1SMK_TRACKS; i++) {
         smk_enable_audio(SVidSMK, i, true);
     }
     // Decode first frame
+LogErrorF("D1Smk::load 4");
     char result = smk_first(SVidSMK);
     if (SMK_ERR(result)) {
         MemFreeDbg(SVidBuffer);
         dProgressErr() << QApplication::tr("Empty SMK file.");
         return false;
     }
+LogErrorF("D1Smk::load 5 %d", result);
     // load the first palette
     D1Pal *pal = LoadPalette(SVidSMK);
+LogErrorF("D1Smk::load 6");
     // load the frames
     // gfx.frames.clear();
     if (params.celWidth != 0) {
@@ -268,6 +273,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
     do {
         bool palUpdate = smk_palette_updated(SVidSMK);
+LogErrorF("D1Smk::load 7 %d: %d", frameNum, palUpdate);
         if (palUpdate && frameNum != 0) {
             RegisterPalette(pal, prevPalFrame, frameNum - 1, pals);
             prevPalFrame = frameNum;
@@ -292,7 +298,9 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
             unsigned long len = smk_get_audio_size(SVidSMK, i);
             unsigned char* ct = nullptr;
             if (len != 0) {
+LogErrorF("D1Smk::load 8 %d: %d", frameNum, i, len);
                 unsigned char* track = smk_get_audio(SVidSMK, i);
+LogErrorF("D1Smk::load 9");
                 ct = (unsigned char *)malloc(len);
                 memcpy(ct, track, len);
             }
@@ -601,7 +609,7 @@ LogErrorF("D1Smk::prepareVideoTree realloc tree %d", allocSize);
         res = writeNBits(0, 2, res, bitNum);
         cursor = (size_t)res - (size_t)treeData;
 LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
-		tree.uncompressedTreeSize = 0;
+        tree.uncompressedTreeSize = 0;
         return treeData;
     }
     // sort treeStat
@@ -716,12 +724,12 @@ static uint8_t *writeTreeValue(unsigned value, const SmkTreeInfo &videoTree, uns
     cacheValues[0] = value;
 
     auto it = videoTree.paths.find(v);
-	if (it == videoTree.paths.end()) {
-		LogErrorF("ERROR: writeTreeValue missing entry %d (%d) in %d", v, value, videoTree.VideoTreeIndex);
-		return cursor;
+    if (it == videoTree.paths.end()) {
+        LogErrorF("ERROR: writeTreeValue missing entry %d (%d) in %d", v, value, videoTree.VideoTreeIndex);
+        return cursor;
     }
 
-	QPair<unsigned, uint32_t> theEntryPair = it.value();
+    QPair<unsigned, uint32_t> theEntryPair = it.value();
     return writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
 }
 
@@ -741,7 +749,7 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
     if (typelen != 0) {
         for (int i = lengthof(sizetable) - 1; /*i >= 0*/; ) {
             if (sizetable[i] <= typelen) {
-//				LogErrorF("D1Smk::encodePixels treetype %d:%d(=%d) offset%d bn%d", type, i, type | i << 2, (size_t)res - (size_t)&frameData[cursor], bitNum);
+//                LogErrorF("D1Smk::encodePixels treetype %d:%d(=%d) offset%d bn%d", type, i, type | i << 2, (size_t)res - (size_t)&frameData[cursor], bitNum);
                 res = writeTreeValue(SwapLE16(type | i << 2), videoTree[SMK_TREE_TYPE], cacheValues[SMK_TREE_TYPE], res, bitNum);
 
                 for (int n = 0; n < sizetable[i]; n++) {
@@ -763,11 +771,11 @@ LogErrorF("ERROR D1Smk::encodePixels not 2color %d:%d vs %d at %d:%d", color1, c
                                 }
                             }
                         }
-//						LogErrorF("D1Smk::encodePixels 2color %d:%d offset%d bn%d", color1, color2, (size_t)res - (size_t)&frameData[cursor], bitNum);
+//                        LogErrorF("D1Smk::encodePixels 2color %d:%d offset%d bn%d", color1, color2, (size_t)res - (size_t)&frameData[cursor], bitNum);
                         res = writeTreeValue(SwapLE16(color1 << 8 | color2), videoTree[SMK_TREE_MCLR], cacheValues[SMK_TREE_MCLR], res, bitNum);
-//						LogErrorF("D1Smk::encodePixels colors%d offset%d bn%d", colors, (size_t)res - (size_t)&frameData[cursor], bitNum);
+//                        LogErrorF("D1Smk::encodePixels colors%d offset%d bn%d", colors, (size_t)res - (size_t)&frameData[cursor], bitNum);
                         res = writeTreeValue(SwapLE16(colors), videoTree[SMK_TREE_MMAP], cacheValues[SMK_TREE_MMAP], res, bitNum);
-//						LogErrorF("D1Smk::encodePixels ok offset%d bn%d", (size_t)res - (size_t)&frameData[cursor], bitNum);
+//                        LogErrorF("D1Smk::encodePixels ok offset%d bn%d", (size_t)res - (size_t)&frameData[cursor], bitNum);
                     } break;
                     case 1: { // FULL BLOCK  SMK_TREE_FULL
                         unsigned color1, color2;
@@ -1158,7 +1166,7 @@ videoTree[i].VideoTreeIndex = i;
                 }
                 if (ctype == 1) {
                     unsigned numColors = 1, color1, color2 = D1PAL_COLORS, colors = 0;
-					color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
+                    color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
                     for (int yy = 4 - 1; yy >= 0 && numColors <= 2; yy--) {
                         for (int xx = 4 - 1; xx >= 0; xx--) {
                             colors <<= 1;
@@ -1222,7 +1230,7 @@ LogErrorF("D1Smk::prepTree 2color %d:%d, %d offset%d bn%d", color1, color2, colo
     allocSize *= 4;
     allocSize = (allocSize + 7) / 8;
     uint8_t *videoTreeData = (uint8_t *)malloc(allocSize);
-	size_t cursor = 0; unsigned bitNum = 0;
+    size_t cursor = 0; unsigned bitNum = 0;
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
 LogErrorF("D1Smk::save 4:%d as%d c%d bn%d ts%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum,
         videoTree[i].treeStat.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
@@ -1347,7 +1355,7 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
                 }
                 if (ctype == 1) {
                     unsigned numColors = 1, color1, color2 = D1PAL_COLORS, colors = 0;
-					color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
+                    color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
                     for (int yy = 4 - 1; yy >= 0 && numColors < 3; yy--) {
                         for (int xx = 4 - 1; xx >= 0; xx--, colors <<= 1) {
                             unsigned color = frame->getPixel(x + xx, y + yy).getPaletteIndex();
@@ -1403,7 +1411,10 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
     }
 
     free(frameData);
-    return false;
+
+    gfx.gfxFilePath = filePath; //  D1Smk::load(gfx, filePath);
+    gfx.modified = false;
+    return true;
 }
 
 static void audioCallback(int track, QAudio::State newState)
