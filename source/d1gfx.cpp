@@ -1968,12 +1968,12 @@ bool D1Gfx::patchFallGWalk(bool silent)
                 quint8 color = sPixel.getPaletteIndex();
                 switch (fn) {
                 case 7:
-                    if (x < 60 || y < 88 || y > 111 || (color != 0 && !(color >= 170 && color <= 175) && !(color >= 188 && color < 205) && color != 223 && color != 251 && color != 252))
+                    if (x < 60 || y < 88 || y > 111 || (color != 0 && !(color >= 170 && color <= 175) && !(color >= 188 && color <= 205) && color != 223 && color != 251 && color != 252))
                         continue;
                     break;
                 case 8:
                 case 9:
-                    if (x < 80 || y < 86 || y > 109 || (color != 0 && !(color >= 170 && color <= 175) && !(color >= 188 && color < 205) && color != 223 && color != 251 && color != 252))
+                    if (x < 80 || y < 86 || y > 109 || (color != 0 && !(color >= 170 && color <= 175) && !(color >= 188 && color <= 205) && color != 223 && color != 251 && color != 252))
                         continue;
                     break;
                 }

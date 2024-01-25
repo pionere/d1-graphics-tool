@@ -721,7 +721,8 @@ static uint8_t *writeTreeValue(unsigned value, const SmkTreeInfo &videoTree, uns
 		return cursor;
     }
 
-    return writeNBits(it->second, it->second, cursor, bitNum);
+	QPair<unsigned, uint32_t> theEntryPair = it.value();
+    return writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
 }
 
 static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen, const SmkTreeInfo (&videoTree)[SMK_TREE_COUNT], 
