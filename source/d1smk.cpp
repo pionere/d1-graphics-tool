@@ -230,7 +230,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
         dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(filePath));
         return false;
     }
-
+LogErrorF("D1Smk::load 0 %d", fileSize);
     smk SVidSMK = smk_open_memory(SVidBuffer, fileSize);
     if (SVidSMK == NULL) {
         MemFreeDbg(SVidBuffer);
