@@ -198,7 +198,7 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
     // Patch CEL if requested
     if (params.patchGraphics) {
         int fileIndex = D1Gfx::getPatchFileIndex(celFilePath);
-        if (fileIndex != -1) {
+        if (fileIndex >= 0) {
             gfx.patch(fileIndex, true);
         }
     }
@@ -225,7 +225,7 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
     // Patch CL2 if requested
     if (params.patchGraphics) {
         int fileIndex = D1Gfx::getPatchFileIndex(cl2FilePath);
-        if (fileIndex != -1) {
+        if (fileIndex >= 0) {
             gfx.patch(fileIndex, true);
         }
     }
