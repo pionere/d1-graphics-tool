@@ -434,7 +434,6 @@ static int smk_huff16_build(struct smk_huff16_t * const t, struct smk_bit_t * co
 
 			t->cache[i] |= (value << 8);
 		}
-#ifdef FULL
 		/* Everything looks OK so far. Time to malloc structure. */
 		if (alloc_size < 12 || alloc_size % 4) {
 			LogError("libsmacker::smk_huff16_build() - ERROR: illegal value %u for alloc_size\n", alloc_size);
@@ -442,9 +441,6 @@ static int smk_huff16_build(struct smk_huff16_t * const t, struct smk_bit_t * co
 		}
 
 		limit = (alloc_size - 12) / 4;
-#else
-		limit = alloc_size;
-#endif
 		if ((t->tree = (unsigned int*)malloc(limit * sizeof(unsigned int))) == NULL) {
 			PrintError("libsmacker::smk_huff16_build() - ERROR: failed to malloc() huff16 tree");
 			return 0;
@@ -884,12 +880,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 #ifdef FULL
 		smk_read_ul(s->video.tree_size[temp_l]);
 #else
-		smk_read_ul(temp_u);
-		if (temp_u < 12 || temp_u % 4) {
-			LogError("libsmacker::smk_open_generic() - ERROR: illegal value %u for tree_size[%d]\n", temp_u, temp_l);
-			goto error;
-		}
-		video_tree_size[temp_l] = (temp_u - 12) / 4;
+		smk_read_ul(video_tree_size[temp_l]);
 #endif
 	}
 
