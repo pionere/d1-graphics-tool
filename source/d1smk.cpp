@@ -528,10 +528,10 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
 
 static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &allocSize, size_t &cursor, unsigned &bitNum)
 {
-LogErrorF("D1Smk::prepareVideoTree 0");
+// LogErrorF("D1Smk::prepareVideoTree 0");
     // reduce inflated cache frequencies
     for (int i = 0; i < 3; i++) {
-LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
+// LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
             for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
@@ -549,7 +549,7 @@ LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d ref
             }
         }
     }
-LogErrorF("D1Smk::prepareVideoTree 1");
+// LogErrorF("D1Smk::prepareVideoTree 1");
     // convert cache values to normal values
     bool hasEntries = !tree.treeStat.isEmpty();
     for (int i = 0; i < 3; i++) {
@@ -597,7 +597,7 @@ LogErrorF("D1Smk::prepareVideoTree realloc tree %d", allocSize);
         }*/
         // add open/close bits
         uint8_t* res = &treeData[cursor];
-LogErrorF("D1Smk::prepareVideoTree writing %d", cursor);
+// LogErrorF("D1Smk::prepareVideoTree writing %d", cursor);
         res = writeNBits(0, 2, res, bitNum);
         cursor = (size_t)res - (size_t)treeData;
 LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
@@ -607,7 +607,7 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
     // sort treeStat
 LogErrorF("D1Smk::prepareVideoTree sort %d", tree.treeStat.count());
     std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second || (e1.second == e2.second && e1.first < e2.first); });
-LogErrorF("D1Smk::prepareVideoTree sorted %d", tree.treeStat.count());
+// LogErrorF("D1Smk::prepareVideoTree sorted %d", tree.treeStat.count());
     // prepare the sub-trees
     QList<QPair<unsigned, unsigned>> lowByteLeafs, hiByteLeafs;
     for (QPair<unsigned, unsigned> &leaf : tree.treeStat) {
@@ -741,7 +741,7 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
     if (typelen != 0) {
         for (int i = lengthof(sizetable) - 1; /*i >= 0*/; ) {
             if (sizetable[i] <= typelen) {
-				LogErrorF("D1Smk::encodePixels treetype %d:%d(=%d) offset%d bn%d", type, i, type | i << 2, (size_t)res - (size_t)&frameData[cursor], bitNum);
+//				LogErrorF("D1Smk::encodePixels treetype %d:%d(=%d) offset%d bn%d", type, i, type | i << 2, (size_t)res - (size_t)&frameData[cursor], bitNum);
                 res = writeTreeValue(SwapLE16(type | i << 2), videoTree[SMK_TREE_TYPE], cacheValues[SMK_TREE_TYPE], res, bitNum);
 
                 for (int n = 0; n < sizetable[i]; n++) {
@@ -757,17 +757,17 @@ color2 = 256;
                                 if (color == color1) {
                                     colors |= 1;
                                 } else {
-if (color2 != 256)
-LogErrorF("D1Smk::encodePixels not 2color %d:%d vs %d at %d:%d", color1, color2, color, x, y);
+if (color2 != 256 && color2 != color)
+LogErrorF("ERROR D1Smk::encodePixels not 2color %d:%d vs %d at %d:%d", color1, color2, color, x, y);
                                     color2 = color;
                                 }
                             }
                         }
-						LogErrorF("D1Smk::encodePixels 2color %d:%d offset%d bn%d", color1, color2, (size_t)res - (size_t)&frameData[cursor], bitNum);
+//						LogErrorF("D1Smk::encodePixels 2color %d:%d offset%d bn%d", color1, color2, (size_t)res - (size_t)&frameData[cursor], bitNum);
                         res = writeTreeValue(SwapLE16(color1 << 8 | color2), videoTree[SMK_TREE_MCLR], cacheValues[SMK_TREE_MCLR], res, bitNum);
-						LogErrorF("D1Smk::encodePixels colors%d offset%d bn%d", colors, (size_t)res - (size_t)&frameData[cursor], bitNum);
+//						LogErrorF("D1Smk::encodePixels colors%d offset%d bn%d", colors, (size_t)res - (size_t)&frameData[cursor], bitNum);
                         res = writeTreeValue(SwapLE16(colors), videoTree[SMK_TREE_MMAP], cacheValues[SMK_TREE_MMAP], res, bitNum);
-						LogErrorF("D1Smk::encodePixels ok offset%d bn%d", (size_t)res - (size_t)&frameData[cursor], bitNum);
+//						LogErrorF("D1Smk::encodePixels ok offset%d bn%d", (size_t)res - (size_t)&frameData[cursor], bitNum);
                     } break;
                     case 1: { // FULL BLOCK  SMK_TREE_FULL
                         unsigned color1, color2;
@@ -823,7 +823,7 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
             for ( ; /*p < lengthof(palmap)*/; p++) {
                 if (cv <= p[0]) {
                     if (cv != p[0]) {
-LogErrorF("D1Smk::save non-matching palette %d[%d]: %d vs %d", i, n, cv, p[0]);
+LogErrorF("ERROR D1Smk::save non-matching palette %d[%d]: %d vs %d", i, n, cv, p[0]);
                         if (p[0] - cv > cv - p[-1]) {
                             p--;
                         }
@@ -1381,18 +1381,18 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
                     // ctype = 1;
                 }
                 if (type != ctype) {
-LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", x, y, type, typelen, cursor, bitNum);
+// LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", x, y, type, typelen, cursor, bitNum);
                     encodePixels(x, y, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
-LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
+// LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
                     type = ctype;
                     typelen = 0;
                 }
                 typelen++;
             }
         }
-LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", width, height - 4, type, typelen, cursor, bitNum);
+// LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", width, height - 4, type, typelen, cursor, bitNum);
         encodePixels(width, height - 4, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
-LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
+// LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
         if (bitNum != 0) {
             cursor++;
         }
