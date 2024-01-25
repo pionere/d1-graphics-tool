@@ -747,7 +747,7 @@ color2 = 256;
                         for (int yy = 4 - 1; yy >= 0; yy--) {
                             for (int xx = 4 - 1; xx >= 0; xx--) {
                                 colors <<= 1;
-                                uint8_t color = frame->getPixel(x + xx, y + yy).getPaletteIndex();
+                                unsigned color = frame->getPixel(x + xx, y + yy).getPaletteIndex();
                                 if (color == color1) {
                                     colors |= 1;
                                 } else {
@@ -1150,7 +1150,8 @@ LogErrorF("D1Smk::save 2 fl%d br%d bd%d c%d cmp%d len%d... %d", frameLen, audioI
                     }
                 }
                 if (ctype == 1) {
-                    unsigned numColors = 0, color1 = 256, color2 = 256, colors = 0;
+                    unsigned numColors = 1, color1, color2 = D1PAL_COLORS, colors = 0;
+					color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
                     for (int yy = 4 - 1; yy >= 0 && numColors <= 2; yy--) {
                         for (int xx = 4 - 1; xx >= 0; xx--) {
                             colors <<= 1;
@@ -1163,11 +1164,6 @@ LogErrorF("D1Smk::save 2 fl%d br%d bd%d c%d cmp%d len%d... %d", frameLen, audioI
                                 continue;
                             }
                             ++numColors;
-                            if (numColors == 1) {
-                                color1 = color;
-                                colors |= 1;
-                                continue;
-                            }
                             if (numColors == 2) {
                                 color2 = color;
                                 continue;
@@ -1284,7 +1280,7 @@ LogErrorF("D1Smk::save 9:%d", videoTreeDataSize);
     outFile.write((const char*)videoTreeData, videoTreeDataSize);
 LogErrorF("D1Smk::save 10:%d", 256 * 3 + maxAudioLength + 4 * width * height);
     /*D1GfxFrame **/ prevFrame = nullptr;
-    uint8_t *frameData = (uint8_t*)malloc(256 * 3 + maxAudioLength + 4 * width * height);
+    uint8_t *frameData = (uint8_t*)malloc(D1SMK_COLORS * 3 + maxAudioLength + 4 * width * height);
     QList<unsigned> frameLengths;
     for (int n = 0; n < frameCount; n++) {
 LogErrorF("D1Smk::save frame %d dp%d", n, frameData);
@@ -1343,7 +1339,8 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
                     }
                 }
                 if (ctype == 1) {
-                    unsigned numColors = 0, color1 = 256, color2 = 256, colors = 0;
+                    unsigned numColors = 1, color1, color2 = D1PAL_COLORS, colors = 0;
+					color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
                     for (int yy = 4 - 1; yy >= 0 && numColors < 3; yy--) {
                         for (int xx = 4 - 1; xx >= 0; xx--, colors <<= 1) {
                             unsigned color = frame->getPixel(x + xx, y + yy).getPaletteIndex();
@@ -1355,10 +1352,6 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
                                 continue;
                             }
                             ++numColors;
-                            if (numColors == 1) {
-                                color1 = color;
-                                continue;
-                            }
                             if (numColors == 2) {
                                 color2 = color;
                                 continue;
