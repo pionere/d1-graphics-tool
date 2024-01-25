@@ -1952,7 +1952,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         case 3: fn = 9; dx =  -5; dy =  9; break;
         case 4: fn = 9; dx =  -4; dy =  9; break;
         case 5: fn = 9; dx =  -5; dy =  8; break;
-        case 6: fn = 8; dx =  -1; dy =  5; break;
+        case 6: fn = 8; dx =  -2; dy =  5; break;
         case 7: fn = 9; dx =  -8; dy = 10; break;
         }
 

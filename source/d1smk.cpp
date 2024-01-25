@@ -735,13 +735,14 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
     if (typelen != 0) {
         for (int i = lengthof(sizetable) - 1; /*i >= 0*/; ) {
             if (sizetable[i] <= typelen) {
-
+				LogErrorF("D1Smk::encodePixels treetype %d:%d(=%d) offset%d bn%d", type, i, type | i << 2, (size_t)res - (size_t)&frameData[cursor], bitNum);
                 res = writeTreeValue(SwapLE16(type | i << 2), videoTree[SMK_TREE_TYPE], cacheValues[SMK_TREE_TYPE], res, bitNum);
 
                 for (int n = 0; n < sizetable[i]; n++) {
                     switch (type) {
                     case 0: { // 2COLOR BLOCK  SMK_TREE_MMAP/SMK_TREE_MCLR
                         unsigned color1, color2, colors = 0;
+color2 = 256;
                         color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
                         for (int yy = 4 - 1; yy >= 0; yy--) {
                             for (int xx = 4 - 1; xx >= 0; xx--) {
@@ -750,13 +751,17 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
                                 if (color == color1) {
                                     colors |= 1;
                                 } else {
+if (color2 != 256)
+LogErrorF("D1Smk::encodePixels not 2color %d:%d vs %d at %d:%d", color1, color2, color, x, y);
                                     color2 = color;
                                 }
                             }
                         }
-
+						LogErrorF("D1Smk::encodePixels 2color %d:%d offset%d bn%d", color1, color2, (size_t)res - (size_t)&frameData[cursor], bitNum);
                         res = writeTreeValue(SwapLE16(color1 << 8 | color2), videoTree[SMK_TREE_MCLR], cacheValues[SMK_TREE_MCLR], res, bitNum);
+						LogErrorF("D1Smk::encodePixels colors%d offset%d bn%d", colors, (size_t)res - (size_t)&frameData[cursor], bitNum);
                         res = writeTreeValue(SwapLE16(colors), videoTree[SMK_TREE_MMAP], cacheValues[SMK_TREE_MMAP], res, bitNum);
+						LogErrorF("D1Smk::encodePixels ok offset%d bn%d", (size_t)res - (size_t)&frameData[cursor], bitNum);
                     } break;
                     case 1: { // FULL BLOCK  SMK_TREE_FULL
                         unsigned color1, color2;
@@ -1173,6 +1178,8 @@ LogErrorF("D1Smk::save 2 fl%d br%d bd%d c%d cmp%d len%d... %d", frameLen, audioI
                     if (numColors <= 2) {
                         if (numColors == 2) {
                             // 2COLOR BLOCK -> SMK_TREE_MMAP/SMK_TREE_MCLR
+if (n == 1)
+LogErrorF("D1Smk::prepTree 2color %d:%d, %d offset%d bn%d", color1, color2, colors);
                             addTreeValue(SwapLE16(color1 << 8 | color2), videoTree[SMK_TREE_MCLR], cacheValues[SMK_TREE_MCLR]);
                             addTreeValue(SwapLE16(colors), videoTree[SMK_TREE_MMAP], cacheValues[SMK_TREE_MMAP]);
                             ctype = 0;
