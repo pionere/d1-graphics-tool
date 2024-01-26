@@ -520,19 +520,19 @@ static int smk_huff16_build(struct smk_huff16_t * const t, struct smk_bit_t * co
 	/* First bit indicates whether a tree is present or not. */
 	/*  Very small or audio-only files may have no tree. */
 	if (bit) {
-LogErrorFF("smk_huff16_build 1 %d", alloc_size);
+// LogErrorFF("smk_huff16_build 1 %d", alloc_size);
 		/* build low-8-bits tree */
 		if (! smk_huff8_build(&low8, bs)) {
 			LogErrorMsg("libsmacker::smk_huff16_build() - ERROR: failed to build LOW tree\n");
 			return 0;
 		}
-LogErrorFF("smk_huff16_build 2");
+// LogErrorFF("smk_huff16_build 2");
 		/* build hi-8-bits tree */
 		if (! smk_huff8_build(&hi8, bs)) {
 			LogErrorMsg("libsmacker::smk_huff16_build() - ERROR: failed to build HIGH tree\n");
 			return 0;
 		}
-LogErrorFF("smk_huff16_build 3");
+// LogErrorFF("smk_huff16_build 3");
 		/* Init the escape code cache. */
 		for (i = 0; i < 3; i ++) {
 			if ((value = smk_bs_read_8(bs)) < 0) {
@@ -549,7 +549,7 @@ LogErrorFF("smk_huff16_build 3");
 			}
 
 			t->cache[i] |= (value << 8);
-//if (deepDebug)
+if (deepDebug)
 LogErrorFF("smk_huff16_build cache[%d]:%d", i, t->cache[i]);
 		}
 		/* Everything looks OK so far. Time to malloc structure. */
@@ -557,7 +557,7 @@ LogErrorFF("smk_huff16_build cache[%d]:%d", i, t->cache[i]);
 			LogError("libsmacker::smk_huff16_build() - ERROR: illegal value %u for alloc_size\n", alloc_size);
 			return 0;
 		}
-LogErrorFF("smk_huff16_build 4");
+// LogErrorFF("smk_huff16_build 4");
 		limit = (alloc_size - 12) / 4;
 		if ((t->tree = (unsigned int*)malloc(limit * sizeof(unsigned int))) == NULL) {
 			PrintError("libsmacker::smk_huff16_build() - ERROR: failed to malloc() huff16 tree");
@@ -569,10 +569,10 @@ LogErrorFF("smk_huff16_build 4");
 			LogErrorMsg("libsmacker::smk_huff16_build() - ERROR: failed to build huff16 tree\n");
 			goto error;
 		}
-LogErrorFF("smk_huff16_build 5");
+// LogErrorFF("smk_huff16_build 5");
 		/* check that we completely filled the tree */
 		if (limit != t->size) {
-LogErrorFF("failed to completely decode huff16 tree %d vs %d", limit, t->size);
+// LogErrorFF("failed to completely decode huff16 tree %d vs %d", limit, t->size);
 			LogErrorMsg("libsmacker::smk_huff16_build() - ERROR: failed to completely decode huff16 tree\n");
 			goto error;
 		}
@@ -2326,7 +2326,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 #endif
 	/* Check for a valid signature */
 	smk_read(buf, 4);
-LogErrorFF("smk_open_generic 0 %d", size);
+// LogErrorFF("smk_open_generic 0 %d", size);
 	if (buf[0] != 'S' || buf[1] != 'M' || buf[2] != 'K') {
 		LogError("libsmacker::smk_open_generic() - ERROR: invalid SMKn signature (got: %s)\n", buf);
 		goto error;
@@ -2352,7 +2352,7 @@ LogErrorFF("smk_open_generic 0 %d", size);
 	}
 #endif
 	s->video.v = buf[3];
-LogErrorFF("smk_open_generic 1 %d", buf[3]);
+// LogErrorFF("smk_open_generic 1 %d", buf[3]);
 	/* width, height, total num frames */
 	smk_read_ul(s->video.w);
 	smk_read_ul(s->video.h);
@@ -2371,7 +2371,7 @@ LogErrorFF("smk_open_generic 1 %d", buf[3]);
 		/* defaults to 10 usf (= 100000 microseconds) */
 		s->usf = 100000;
 	}
-LogErrorFF("smk_open_generic 2 wh%d:%d f%d r%f (%d)", s->video.w, s->video.h, s->total_frames, s->usf, temp_l);
+// LogErrorFF("smk_open_generic 2 wh%d:%d f%d r%f (%d)", s->video.w, s->video.h, s->total_frames, s->usf, temp_l);
 	/* Video flags follow.
 		Ring frame is important to libsmacker.
 		Y scale / Y interlace go in the Video flags.
@@ -2404,7 +2404,7 @@ LogErrorFF("smk_open_generic 2 wh%d:%d f%d r%f (%d)", s->video.w, s->video.h, s-
 
 	/* Read size of "hufftree chunk" - save for later. */
 	smk_read_ul(tree_size);
-LogErrorFF("smk_open_generic 3 trees:%d", tree_size);
+// LogErrorFF("smk_open_generic 3 trees:%d", tree_size);
 	/* "unpacked" sizes of each huff tree */
 	for (temp_l = 0; temp_l < 4; temp_l ++) {
 #ifdef FULL
@@ -2441,10 +2441,10 @@ LogErrorFF("smk_open_generic 3 trees:%d", tree_size);
 			s->audio[temp_l].rate = (temp_u & 0x00FFFFFF);
 		}
 	}
-LogErrorFF("smk_open_generic 4");
+// LogErrorFF("smk_open_generic 4");
 	/* Skip over Dummy field */
 	smk_read_ul(temp_u);
-LogErrorFF("smk_open_generic 5 dummy%d", temp_u);
+// LogErrorFF("smk_open_generic 5 dummy%d", temp_u);
 	/* FrameSizes and Keyframe marker are stored together. */
 #ifdef FULL
 	smk_malloc(s->keyframe, (s->f + s->ring_frame));
@@ -2453,7 +2453,7 @@ LogErrorFF("smk_open_generic 5 dummy%d", temp_u);
 
 	for (temp_u = 0; temp_u < s->total_frames; temp_u ++) {
 		smk_read_ul(s->chunk_size[temp_u]);
-LogErrorFF("smk_open_generic 6 %d. %d", temp_u, s->chunk_size[temp_u]);
+// LogErrorFF("smk_open_generic 6 %d. %d", temp_u, s->chunk_size[temp_u]);
 #ifdef FULL
 		/* Set Keyframe */
 		if (s->chunk_size[temp_u] & 0x01)
@@ -2477,13 +2477,13 @@ LogErrorFF("smk_open_generic 6 %d. %d", temp_u, s->chunk_size[temp_u]);
 		something actually parse-able at run-time */
 	smk_mallocc(hufftree_chunk, tree_size, unsigned char);
 	smk_read(hufftree_chunk, tree_size);
-LogErrorFF("smk_open_generic 7");
+// LogErrorFF("smk_open_generic 7");
 	/* set up a Bitstream */
 	smk_bs_init(&bs, hufftree_chunk, tree_size);
 
 	/* create some tables */
 	for (temp_u = 0; temp_u < 4; temp_u ++) {
-LogErrorFF("smk_open_generic 8 %d: %d", temp_u, video_tree_size[temp_u]);
+// LogErrorFF("smk_open_generic 8 %d: %d", temp_u, video_tree_size[temp_u]);
 		// deepDebug = temp_u == SMK_TREE_FULL;
 #ifdef FULL
 		if (! smk_huff16_build(&s->video.tree[temp_u], &bs, s->video.tree_size[temp_u])) {
@@ -2494,7 +2494,7 @@ LogErrorFF("smk_open_generic 8 %d: %d", temp_u, video_tree_size[temp_u]);
 			goto error;
 		}
 	}
-LogErrorFF("smk_open_generic 9");
+// LogErrorFF("smk_open_generic 9");
 	/* clean up */
 	smk_free(hufftree_chunk);
 	/* Go ahead and malloc storage for the video frame */
@@ -2516,7 +2516,7 @@ LogErrorFF("smk_open_generic 9");
 		}
 #else
 		for (temp_u = 0; temp_u < s->total_frames; temp_u ++) {
-LogErrorFF("smk_open_generic 10 %d. %d", temp_u, s->chunk_size[temp_u]);
+// LogErrorFF("smk_open_generic 10 %d. %d", temp_u, s->chunk_size[temp_u]);
 			smk_read_in(s->source.chunk_data[temp_u], s->chunk_size[temp_u]);
 		}
 #endif
