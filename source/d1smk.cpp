@@ -1296,7 +1296,7 @@ LogErrorF("D1Smk::save 9:%d", videoTreeDataSize);
 LogErrorF("D1Smk::save 10:%d", 256 * 3 + maxAudioLength + 4 * width * height);
     /*D1GfxFrame **/ prevFrame = nullptr;
     uint8_t *frameData = (uint8_t*)malloc(D1SMK_COLORS * 3 + maxAudioLength + 4 * width * height);
-    QList<unsigned> frameLengths;
+    QList<uint32_t> frameLengths;
     for (int n = 0; n < frameCount; n++) {
 LogErrorF("D1Smk::save frame %d dp%d", n, frameData);
         D1GfxFrame *frame = gfx.getFrame(n);
@@ -1411,6 +1411,12 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
     }
 
     free(frameData);
+
+    outFile.seek(sizeof(header));
+    for (uint32_t chunkSize : frameLengths) {
+        chunkSize = SwapLE32(chunkSize);
+        outFile.write((const char*)&chunkSize, 4);
+    }
 
     gfx.gfxFilePath = filePath; //  D1Smk::load(gfx, filePath);
     gfx.modified = false;
