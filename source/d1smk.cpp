@@ -856,7 +856,7 @@ LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)tre
 			LogErrorF("D1Smk::prepareVideoTree huff8_build 0 res leafs %d", leafs);
         }
     }
-*tmpPtr = res; tmpBitNum = bitNum;
+tmpPtr = res; tmpBitNum = bitNum;
     {
         // start the hi sub-tree
         res = writeBit(1, res, bitNum);
