@@ -147,7 +147,7 @@ static int smk_bs_read_8(struct smk_bit_t * const bs)
 static bool deepDebug = false;
 static unsigned char *bufMem;
 static size_t bufSize;
-static bool treeValue[48];
+// static bool treeValue[48];
 static unsigned short fullLeafs[] = {
 	/*(22 | 99 << 8),
 	(0  | 217 << 8),
@@ -442,13 +442,13 @@ static int _smk_huff16_build_rec(struct smk_huff16_t * const t, struct smk_bit_t
 		/* now go back to our current location, and
 			mark our location as a "jump" */
 		t->tree[value] = SMK_HUFF16_BRANCH | t->size;
-		treeValue[depth] = true;
+//		treeValue[depth] = true;
 		/* continue building the right side */
 		if (! _smk_huff16_build_rec(t, bs, low8, hi8, limit, depth + 1)) {
 			LogErrorMsg("libsmacker::_smk_huff16_build_rec() - ERROR: failed to build right sub-tree\n");
 			return 0;
 		}
-		treeValue[depth] = false;
+//		treeValue[depth] = false;
 	} else {
 		/* Bit unset signifies a Leaf node. */
 		/* Attempt to read LOW value */
@@ -2371,7 +2371,7 @@ LogErrorFF("smk_open_generic 1 %d", buf[3]);
 		/* defaults to 10 usf (= 100000 microseconds) */
 		s->usf = 100000;
 	}
-LogErrorFF("smk_open_generic 2 wh%d:%d f%d r%d", s->video.w, s->video.h, s->total_frames, s->usf);
+LogErrorFF("smk_open_generic 2 wh%d:%d f%d r%f (%d)", s->video.w, s->video.h, s->total_frames, s->usf, temp_l);
 	/* Video flags follow.
 		Ring frame is important to libsmacker.
 		Y scale / Y interlace go in the Video flags.
