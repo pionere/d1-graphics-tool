@@ -546,7 +546,7 @@ typedef struct _bit_t {
 	unsigned int bit_num;
 } bit_t;
 #define HUFF8_BRANCH 0x8000
-static int bs_read_1(struct bit_t * const bs)
+static int bs_read_1(bit_t * const bs)
 {
 	int ret;
 	/* null check */
@@ -573,7 +573,7 @@ static int bs_read_1(struct bit_t * const bs)
 }
 /* Reads a byte
 	Returns -1 if error. */
-static int bs_read_8(struct bit_t * const bs)
+static int bs_read_8(bit_t * const bs)
 {
 	/* don't die when running out of bits, but signal */
 	if (bs->buffer + (bs->bit_num > 0) >= bs->end) {
@@ -833,7 +833,7 @@ LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)tre
 		bit_t bt;
 		bt.buffer = tmpPtr;
 		bt.end = res + ((bitNum != 0) ? 1 : 0);
-		bt.bit_num = bitNum;
+		bt.bit_num = tmpBitNum;
 		if (!huff8_build(&testTree, &bt)) {
 			LogErrorF("D1Smk::prepareVideoTree huff8_build 0 failed");
         } else {
@@ -874,7 +874,7 @@ LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)tree
 		bit_t bt;
 		bt.buffer = tmpPtr;
 		bt.end = res + ((bitNum != 0) ? 1 : 0);
-		bt.bit_num = bitNum;
+		bt.bit_num = tmpBitNum;
 		if (!huff8_build(&testTree, &bt)) {
 			LogErrorF("D1Smk::prepareVideoTree huff8_build 1 failed");
         } else {
