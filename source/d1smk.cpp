@@ -877,7 +877,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 		}
 
 		/* Finally, call recursive function to retrieve the Bigtree. */
-		if (! _huff16_build_rec(t, bs, &low8, &hi8, limit, 0)) {
+		if (! huff16_build_rec(t, bs, &low8, &hi8, limit, 0)) {
 			LogErrorF("libsmacker::huff16_build() - ERROR: failed to build huff16 tree\n");
 			goto error;
 		}
