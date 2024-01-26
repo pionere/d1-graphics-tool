@@ -546,6 +546,7 @@ typedef struct _bit_t {
 	unsigned int bit_num;
 } bit_t;
 #define HUFF8_BRANCH 0x8000
+#define HUFF8_LEAF_MASK 0x7FFF
 static int bs_read_1(bit_t * const bs)
 {
 	int ret;
@@ -686,6 +687,35 @@ static int huff8_build(huff8_t * const t, bit_t * const bs)
 	}
 
 	return 1;
+}
+
+/* Look up an 8-bit value from a basic huff tree.
+	Return -1 on error. */
+static int huff8_lookup(const huff8_t * const t, bit_t * const bs)
+{
+	int bit, index = 0;
+
+	while (t->tree[index] & HUFF8_BRANCH) {
+		if ((bit = bs_read_1(bs)) < 0) {
+			LogErrorF("libsmacker::huff8_lookup() - ERROR: get_bit returned -1\n");
+			return -1;
+		}
+		int prevIndex = index;
+		if (bit) {
+			/* take the right branch */
+			index = t->tree[index] & HUFF8_LEAF_MASK;
+		} else {
+			/* take the left branch */
+			index ++;
+		}
+        if (index >= sizeof(t->tree)) {
+            LogErrorF("libsmacker::huff8_lookup() - ERROR: invalid leaf index %d at %d (%d) \n", index, prevIndex, bit);
+            return -1;
+        }
+	}
+
+	/* at leaf node.  return the value at this point. */
+	return t->tree[index];
 }
 
 #define HUFF16_BRANCH    0x80000000
