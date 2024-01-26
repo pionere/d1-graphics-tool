@@ -2316,7 +2316,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 #endif
 	/* Check for a valid signature */
 	smk_read(buf, 4);
-
+LogErrorF("smk_open_generic 0 %d", size);
 	if (buf[0] != 'S' || buf[1] != 'M' || buf[2] != 'K') {
 		LogError("libsmacker::smk_open_generic() - ERROR: invalid SMKn signature (got: %s)\n", buf);
 		goto error;
@@ -2342,7 +2342,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	}
 #endif
 	s->video.v = buf[3];
-
+LogErrorF("smk_open_generic 1 %d", buf[3]);
 	/* width, height, total num frames */
 	smk_read_ul(s->video.w);
 	smk_read_ul(s->video.h);
@@ -2361,7 +2361,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		/* defaults to 10 usf (= 100000 microseconds) */
 		s->usf = 100000;
 	}
-
+LogErrorF("smk_open_generic 2 wh%d:%d f%d r%d", s->video.w, s->video.h, s->total_frames, s->usf);
 	/* Video flags follow.
 		Ring frame is important to libsmacker.
 		Y scale / Y interlace go in the Video flags.
@@ -2394,7 +2394,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 	/* Read size of "hufftree chunk" - save for later. */
 	smk_read_ul(tree_size);
-
+LogErrorF("smk_open_generic 3 trees:%d", tree_size);
 	/* "unpacked" sizes of each huff tree */
 	for (temp_l = 0; temp_l < 4; temp_l ++) {
 #ifdef FULL
@@ -2431,9 +2431,10 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 			s->audio[temp_l].rate = (temp_u & 0x00FFFFFF);
 		}
 	}
-
+LogErrorF("smk_open_generic 4");
 	/* Skip over Dummy field */
 	smk_read_ul(temp_u);
+LogErrorF("smk_open_generic 5 dummy%d", temp_u);
 	/* FrameSizes and Keyframe marker are stored together. */
 #ifdef FULL
 	smk_malloc(s->keyframe, (s->f + s->ring_frame));
@@ -2442,7 +2443,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 	for (temp_u = 0; temp_u < s->total_frames; temp_u ++) {
 		smk_read_ul(s->chunk_size[temp_u]);
-
+LogErrorF("smk_open_generic 6 %d. %d", temp_u, s->chunk_size[temp_u]);
 #ifdef FULL
 		/* Set Keyframe */
 		if (s->chunk_size[temp_u] & 0x01)
@@ -2466,12 +2467,14 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		something actually parse-able at run-time */
 	smk_mallocc(hufftree_chunk, tree_size, unsigned char);
 	smk_read(hufftree_chunk, tree_size);
+LogErrorF("smk_open_generic 7");
 	/* set up a Bitstream */
 	smk_bs_init(&bs, hufftree_chunk, tree_size);
 
 	/* create some tables */
 	for (temp_u = 0; temp_u < 4; temp_u ++) {
-// deepDebug = temp_u == SMK_TREE_FULL;
+LogErrorF("smk_open_generic 8 %d: %d", temp_u, video_tree_size[temp_u]);
+		// deepDebug = temp_u == SMK_TREE_FULL;
 #ifdef FULL
 		if (! smk_huff16_build(&s->video.tree[temp_u], &bs, s->video.tree_size[temp_u])) {
 #else
@@ -2481,7 +2484,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 			goto error;
 		}
 	}
-
+LogErrorF("smk_open_generic 9");
 	/* clean up */
 	smk_free(hufftree_chunk);
 	/* Go ahead and malloc storage for the video frame */
@@ -2503,6 +2506,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		}
 #else
 		for (temp_u = 0; temp_u < s->total_frames; temp_u ++) {
+LogErrorF("smk_open_generic 10 %d. %d", temp_u, s->chunk_size[temp_u]);
 			smk_read_in(s->source.chunk_data[temp_u], s->chunk_size[temp_u]);
 		}
 #endif
