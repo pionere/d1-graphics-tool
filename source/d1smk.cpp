@@ -736,7 +736,7 @@ typedef struct _huff16_t {
 	/* recently-used values cache */
 	unsigned short cache[3];
 } huff16_t;
-static unsigned char *huff16_start;
+static const unsigned char *huff16_start;
 static unsigned huffCounter = 0;
 static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t * const low8, const huff8_t * const hi8, const size_t limit, int depth)
 {
