@@ -467,7 +467,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
     joints++;
 if (mainCounter > 0) {
 	mainCounter--;
-	LogErrorF("buildTreeData - INFO: rec-building %d\n", leafs.count());
+	LogErrorF("buildTreeData - INFO: rec-building %d", leafs.count());
 }
     if (leafs.count() == 1) {
         cursor = writeBit(0, cursor, bitNum);
@@ -1060,6 +1060,7 @@ unsigned startBitNum = bitNum;
     QMap<unsigned, QPair<unsigned, uint32_t>> bytePaths[2];
     unsigned joints;
 uint8_t *tmpPtr = res; unsigned tmpBitNum = bitNum;
+main_start = res;
     {
         // start the low sub-tree
         res = writeBit(1, res, bitNum);
@@ -1083,9 +1084,10 @@ LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)tre
         } else {
 			LogErrorF("D1Smk::prepareVideoTree huff8_build 0 success joints%d leafs %d, treesize%d", joints, bytePaths[0].size(), testTree.size);
 			unsigned leafs = 0;
+			unsigned dbgLeafCount = 10;
 			for (unsigned i = 0; i < testTree.size; i++) {
 				if (testTree.tree[i] & HUFF8_BRANCH) {
-					LogErrorF("D1Smk::prepareVideoTree branch at %d", i);
+					LogErrorF("D1Smk::prepareVideoTree branch at %d to %d", i, testTree.tree[i] & HUFF8_LEAF_MASK);
                 } else {
 					leafs++;
 					LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
@@ -1093,7 +1095,39 @@ LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)tre
 					if (it == bytePaths[0].end()) {
 						LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
                     } else {
-						LogErrorF("D1Smk::prepareVideoTree encoded leaf depth%d value%d", it.value().first, it.value().second);
+						LogErrorF("D1Smk::prepareVideoTree 0 encoded leaf value%d depth%d branch%d", it.key(), it.value().first, it.value().second);
+						if (dbgLeafCount > 0) {
+							dbgLeafCount--;
+							unsigned branch = it.value().second;
+							unsigned *leafPtr = testTree.tree;
+							unsigned char route[256];
+							unsigned depth = it.value().first;
+							route[depth] = '\0';
+							unsigned index = 0;
+							for (unsigned n = 0; n < depth; n++) {
+								if (testTree.tree[index] & HUFF8_BRANCH) {
+									if (branch & 1) {
+										route[n] = 'R';
+										index = testTree.tree[index] & HUFF8_LEAF_MASK;
+									} else {
+										route[n] = 'L';
+										index++;
+									}
+									branch >>= 1;
+									if (index >= testTree.size) {
+										LogErrorF("ERROR D1Smk::prepareVideoTree out of range at %d (step %d)", index, n);
+                                    }
+                                } else {
+									route[n] = 'X';
+									LogErrorF("ERROR D1Smk::prepareVideoTree lost branch at %d", n);
+									break;
+                                }
+							}
+							LogErrorF("D1Smk::prepareVideoTree route %s", route);
+							if (testTree.tree[index] != it.key()) {
+								LogErrorF("ERROR D1Smk::prepareVideoTree wrong value %d (@ %d) vs %d", testTree.tree[index], it.key(), index);
+                            }
+                        }
                     }
                 }
             }
@@ -1129,7 +1163,7 @@ LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)tree
 			unsigned leafs = 0;
 			for (unsigned i = 0; i < testTree.size; i++) {
 				if (testTree.tree[i] & HUFF8_BRANCH) {
-					LogErrorF("D1Smk::prepareVideoTree branch at %d", i);
+					LogErrorF("D1Smk::prepareVideoTree branch at %d to %d", i, testTree.tree[i] & HUFF8_LEAF_MASK);
                 } else {
 					leafs++;
 					LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
@@ -1137,7 +1171,7 @@ LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)tree
 					if (it == bytePaths[1].end()) {
 						LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
                     } else {
-						LogErrorF("D1Smk::prepareVideoTree encoded leaf depth%d value%d", it.value().first, it.value().second);
+						LogErrorF("D1Smk::prepareVideoTree 1 encoded leaf value%d depth%d branch%d", it.key(), it.value().first, it.value().second);
                     }
                 }
             }
@@ -1158,7 +1192,6 @@ LogErrorF("D1Smk::prepareVideoTree INFO: cache %d : %d", i, tree.cacheCount[i]);
 LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d from bn%d [%d,%d,%d,%d,%d]", (size_t)res - (size_t)treeData, bitNum, tmpBitNum, tmpPtr[0], tmpPtr[1], tmpPtr[2], tmpPtr[3], tmpPtr[4]);
 // deepDeb = true;
 tmpPtr = res; tmpBitNum = bitNum;
-main_start = res;
 mainCounter = 40;
     {
         // add the main tree
