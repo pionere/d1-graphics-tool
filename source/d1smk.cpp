@@ -1099,7 +1099,7 @@ LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)tre
 						if (dbgLeafCount > 0) {
 							dbgLeafCount--;
 							unsigned branch = it.value().second;
-							unsigned *leafPtr = testTree.tree;
+							unsigned short *leafPtr = testTree.tree;
 							unsigned char route[256];
 							unsigned depth = it.value().first;
 							route[depth] = '\0';
