@@ -851,6 +851,8 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 		}
 // LogErrorFF("huff16_build 3");
 		/* Init the escape code cache. */
+
+		LogErrorF("libsmacker::huff16_build() - INFO: cache starting bn%d [%d,%d,%d,%d,%d]\n", bs.bit_num, bs.buffer[0], bs.buffer[1], bs.buffer[2], bs.buffer[3], bs.buffer[4]);
 		for (i = 0; i < 3; i ++) {
 			if ((value = bs_read_8(bs)) < 0) {
 				LogErrorF("libsmacker::huff16_build() - ERROR: get LOW value for cache %d returned -1\n", i);
@@ -879,7 +881,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 			LogErrorF("libsmacker::huff16_build() - ERROR: failed to malloc() huff16 tree");
 			return 0;
 		}
-
+		LogErrorF("libsmacker::huff16_build() - INFO: main starting bn%d [%d,%d,%d,%d,%d]\n", bs.bit_num, bs.buffer[0], bs.buffer[1], bs.buffer[2], bs.buffer[3], bs.buffer[4]);
 		/* Finally, call recursive function to retrieve the Bigtree. */
 		if (! huff16_build_rec(t, bs, &low8, &hi8, limit, 0)) {
 			LogErrorF("libsmacker::huff16_build() - ERROR: failed to build huff16 tree\n");
@@ -1135,14 +1137,17 @@ LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)tree
 				LogErrorF("D1Smk::prepareVideoTree huff8_build 1 res leafs %d", leafs);
         }
     }
+tmpPtr = res; tmpBitNum = bitNum;
     {
         // add the cache values
         for (int i = 0; i < 3; i++) {
             res = writeNBits(SwapLE16(tree.cacheCount[i]), 16, res, bitNum);
+LogErrorF("D1Smk::prepareVideoTree INFO: cache %d : %d", i, tree.cacheCount[i]);
         }
     }
-LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d", (size_t)res - (size_t)treeData, bitNum);
+LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d from bn%d [%d,%d,%d,%d,%d]", (size_t)res - (size_t)treeData, bitNum, tmpBitNum, tmpPtr[0], tmpPtr[1], tmpPtr[2], tmpPtr[3], tmpPtr[4]);
 // deepDeb = true;
+tmpPtr = res; tmpBitNum = bitNum;
     {
         // add the main tree
         joints = 0;
@@ -1151,7 +1156,7 @@ LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d", (size_t)res - (size_t)t
         res = writeBit(0, res, bitNum);
     }
 // deepDeb = false;
-LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d", (size_t)res - (size_t)treeData, bitNum, joints);
+LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%d,%d]", (size_t)res - (size_t)treeData, bitNum, joints, tmpBitNum, tmpPtr[0], tmpPtr[1], tmpPtr[2], tmpPtr[3], tmpPtr[4]);
     {
 		huff16_t testTree;
 		memset(&testTree, 0, sizeof(testTree));
@@ -1693,8 +1698,8 @@ videoTree[i].VideoTreeIndex = i;
                     if (numColors <= 2) {
                         if (numColors == 2) {
                             // 2COLOR BLOCK -> SMK_TREE_MMAP/SMK_TREE_MCLR
-if (n == 1)
-LogErrorF("D1Smk::prepTree 2color %d:%d, %d offset%d bn%d", color1, color2, colors);
+//if (n == 1)
+//LogErrorF("D1Smk::prepTree 2color %d:%d, %d offset%d bn%d", color1, color2, colors);
                             addTreeValue(SwapLE16(color1 << 8 | color2), videoTree[SMK_TREE_MCLR], cacheValues[SMK_TREE_MCLR]);
                             addTreeValue(SwapLE16(colors), videoTree[SMK_TREE_MMAP], cacheValues[SMK_TREE_MMAP]);
                             ctype = 0;
