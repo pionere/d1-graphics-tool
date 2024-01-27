@@ -473,10 +473,11 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
             cursor = writeNBits(leaf, 8, cursor, bitNum);
         } else {
 // LogErrorF("TreeData leafPaths access");
+			LogErrorF("buildTreeData - INFO: leaf %d at %d:%d\n", leaf, branch, depth);
             {
                 auto it = leafPaths[0].find(leaf & 0xFF);
                 if (it == leafPaths[0].end()) {
-                    LogErrorF("Missing entry for leaf %d in the low paths.", leaf & 0xFF);
+                    LogErrorF("ERROR: Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
                     QPair<unsigned, uint32_t> &theEntryPair = it.value();
 //                    LogErrorF("TreeData writeNBits value %d length %d for lo-leaf %d", theEntryPair.second, theEntryPair.first, leaf & 0xFF);
@@ -486,7 +487,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
             {
                 auto it = leafPaths[1].find((leaf >> 8) & 0xFF);
                 if (it == leafPaths[1].end()) {
-                    LogErrorF("Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
+                    LogErrorF("ERROR: Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
                 } else {
                     QPair<unsigned, uint32_t> theEntryPair = it.value();
 //                    LogErrorF("TreeData writeNBits value %d length %d for hi-leaf %d", theEntryPair.second, theEntryPair.first, (leaf >> 8) & 0xFF);
@@ -784,6 +785,8 @@ static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t 
 
 		/* Looks OK: we got low and hi values. Return a new LEAF */
 		t->tree[t->size] |= (value << 8);
+
+		LogErrorF("libsmacker::huff16_build_rec() - INFO: leaf %d at %d\n", t->tree[t->size], t->size);
 // bool deepDebug = t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2];
 /*if (deepDebug) {
 // LogErrorFF("huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
@@ -863,6 +866,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 			}
 
 			t->cache[i] |= (value << 8);
+			LogErrorF("libsmacker::huff16_build() - INFO: cache %d : %d\n", i, t->cache[i]);
 		}
 		/* Everything looks OK so far. Time to malloc structure. */
 		if (alloc_size < 12 || alloc_size % 4) {
@@ -885,7 +889,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 		/* check that we completely filled the tree */
 		if (limit != t->size) {
 // LogErrorFF("failed to completely decode huff16 tree %d vs %d", limit, t->size);
-			LogErrorF("libsmacker::huff16_build() - ERROR: failed to completely decode huff16 tree\n");
+			LogErrorF("libsmacker::huff16_build() - ERROR: failed to completely decode huff16 tree (%d vs %d)\n", limit, t->size);
 			goto error;
 		}
 	} else {
@@ -1081,7 +1085,7 @@ LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)tre
                     }
                 }
             }
-			if (leafs != tree.paths.size())
+			if (leafs != bytePaths[0].size())
 				LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 0 res leafs %d vs %d", leafs, bytePaths[0].size());
             else
 				LogErrorF("D1Smk::prepareVideoTree huff8_build 0 res leafs %d", leafs);
@@ -1125,7 +1129,7 @@ LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)tree
                     }
                 }
             }
-			if (leafs != tree.paths.size())
+			if (leafs != bytePaths[1].size())
 				LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build 1 res leafs %d vs %d", leafs, bytePaths[1].size());
             else
 				LogErrorF("D1Smk::prepareVideoTree huff8_build 1 res leafs %d", leafs);
