@@ -852,7 +852,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 // LogErrorFF("huff16_build 3");
 		/* Init the escape code cache. */
 
-		LogErrorF("libsmacker::huff16_build() - INFO: cache starting bn%d [%d,%d,%d,%d,%d]\n", bs.bit_num, bs.buffer[0], bs.buffer[1], bs.buffer[2], bs.buffer[3], bs.buffer[4]);
+		LogErrorF("libsmacker::huff16_build() - INFO: cache starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
 		for (i = 0; i < 3; i ++) {
 			if ((value = bs_read_8(bs)) < 0) {
 				LogErrorF("libsmacker::huff16_build() - ERROR: get LOW value for cache %d returned -1\n", i);
@@ -881,7 +881,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 			LogErrorF("libsmacker::huff16_build() - ERROR: failed to malloc() huff16 tree");
 			return 0;
 		}
-		LogErrorF("libsmacker::huff16_build() - INFO: main starting bn%d [%d,%d,%d,%d,%d]\n", bs.bit_num, bs.buffer[0], bs.buffer[1], bs.buffer[2], bs.buffer[3], bs.buffer[4]);
+		LogErrorF("libsmacker::huff16_build() - INFO: main starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
 		/* Finally, call recursive function to retrieve the Bigtree. */
 		if (! huff16_build_rec(t, bs, &low8, &hi8, limit, 0)) {
 			LogErrorF("libsmacker::huff16_build() - ERROR: failed to build huff16 tree\n");
