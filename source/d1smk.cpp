@@ -779,7 +779,7 @@ if (huffCounter > 0) {
 //		treeValue[depth] = false;
 	} else {
 		/* Bit unset signifies a Leaf node. */
-const unsigned char * tmpBuffer = bs->buffer; unsigned tmpBitNum = bs->bitnum;
+const unsigned char * tmpBuffer = bs->buffer; unsigned tmpBitNum = bs->bit_num;
 		/* Attempt to read LOW value */
 		if ((value = huff8_lookup(low8, bs)) < 0) {
 			LogErrorF("libsmacker::huff16_build_rec() - ERROR: get LOW value returned -1\n");
@@ -796,7 +796,7 @@ const unsigned char * tmpBuffer = bs->buffer; unsigned tmpBitNum = bs->bitnum;
 
 		/* Looks OK: we got low and hi values. Return a new LEAF */
 		t->tree[t->size] |= (value << 8);
-		LogErrorF("libsmacker::huff16_build_rec() - INFO: leaf %d at %d len%d (ebn%d fbn%d) offset%d\n", t->tree[t->size], t->size, ((size_t)bs->buffer - (size_t)tmpBuffer) * 8 + tmpBitNum - bs->bitnum, tmpBitNum, bs->bitnum, (size_t)tmpBuffer - (size_t)huff16_start);
+		LogErrorF("libsmacker::huff16_build_rec() - INFO: leaf %d at %d len%d (ebn%d fbn%d) offset%d\n", t->tree[t->size], t->size, ((size_t)bs->buffer - (size_t)tmpBuffer) * 8 + tmpBitNum - bs->bit_num, tmpBitNum, bs->bit_num, (size_t)tmpBuffer - (size_t)huff16_start);
 // bool deepDebug = t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2];
 /*if (deepDebug) {
 // LogErrorFF("huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
