@@ -458,12 +458,17 @@ static uint8_t* writeBit(unsigned value, uint8_t *cursor, unsigned &bitNum)
     return cursor;
 }
 static bool deepDeb = false;
+static uint8_t *main_start;
+static unsigned mainCounter = 0;
 static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
 //    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> (&leafPaths)[2])
     unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
 {
     joints++;
-
+if (mainCounter > 0) {
+	mainCounter--;
+	LogErrorF("buildTreeData - INFO: rec-building %d\n", leafs.count());
+}
     if (leafs.count() == 1) {
         cursor = writeBit(0, cursor, bitNum);
         unsigned leaf = leafs[0].first;
@@ -732,11 +737,10 @@ typedef struct _huff16_t {
 	unsigned short cache[3];
 } huff16_t;
 static unsigned char *huff16_start;
-static uint8_t *main_start;
+static unsigned huffCounter = 0;
 static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t * const low8, const huff8_t * const hi8, const size_t limit, int depth)
 {
 	int bit, value;
-
 	/* Make sure we aren't running out of bounds */
 	if (t->size >= limit) {
 		LogErrorF("libsmacker::huff16_build_rec() - ERROR: size exceeded\n");
@@ -748,7 +752,10 @@ static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t 
 		LogErrorF("libsmacker::huff16_build_rec() - ERROR: get_bit returned -1\n");
 		return 0;
 	}
-
+if (huffCounter > 0) {
+	huffCounter--;
+	LogErrorF("libsmacker::huff16_build_rec() - INFO: rec-reading %d", bit);
+}
 	if (bit) {
 		/* See tree-in-array explanation for HUFF8 above */
 		/* track the current index */
@@ -772,7 +779,7 @@ static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t 
 //		treeValue[depth] = false;
 	} else {
 		/* Bit unset signifies a Leaf node. */
-unsigned char * tmpBuffer = bs->buffer; unsigned tmpBitNum = bs->bitnum;
+const unsigned char * tmpBuffer = bs->buffer; unsigned tmpBitNum = bs->bitnum;
 		/* Attempt to read LOW value */
 		if ((value = huff8_lookup(low8, bs)) < 0) {
 			LogErrorF("libsmacker::huff16_build_rec() - ERROR: get LOW value returned -1\n");
@@ -1152,6 +1159,7 @@ LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d from bn%d [%d,%d,%d,%d,%d
 // deepDeb = true;
 tmpPtr = res; tmpBitNum = bitNum;
 main_start = res;
+mainCounter = 40;
     {
         // add the main tree
         joints = 0;
@@ -1170,6 +1178,7 @@ LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%
 		bt.bit_num = startBitNum;
 		unsigned alloc_size = (joints + 3) * 4;
 		huff16_start = bt.buffer;
+		huffCounter = 40;
 		if (!huff16_build(&testTree, &bt, alloc_size)) {
 			LogErrorF("D1Smk::prepareVideoTree huff16_build failed");
         } else {
