@@ -474,6 +474,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
         } else {
 // LogErrorF("TreeData leafPaths access");
 			LogErrorF("buildTreeData - INFO: leaf %d at %d:%d\n", leaf, branch, depth);
+uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
             {
                 auto it = leafPaths[0].find(leaf & 0xFF);
                 if (it == leafPaths[0].end()) {
@@ -494,6 +495,7 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
             }
+			LogErrorF("buildTreeData - INFO: leaf %d at %d:%d len%d (ebn%d fbn%d) offset%d", leaf, branch, depth, ((size_t)cursor - (size_t)tmpPtr) * 8 + tmpBitNum - bitNum, tmpBitNum, bitNum, (size_t)tmpPtr - (size_t)main_start);
             /*for (auto it = leafPaths[0].begin(); it != leafPaths[0].end(); it++) {
                 if (it->first == (leaf & 0xFF)) {
                     cursor = writeNBits(it->second.second, it->second.first, cursor, bitNum);
@@ -729,7 +731,8 @@ typedef struct _huff16_t {
 	/* recently-used values cache */
 	unsigned short cache[3];
 } huff16_t;
-
+static unsigned char *huff16_start;
+static uint8_t *main_start;
 static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t * const low8, const huff8_t * const hi8, const size_t limit, int depth)
 {
 	int bit, value;
@@ -769,6 +772,7 @@ static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t 
 //		treeValue[depth] = false;
 	} else {
 		/* Bit unset signifies a Leaf node. */
+unsigned char * tmpBuffer = bs->buffer; unsigned tmpBitNum = bs->bitnum;
 		/* Attempt to read LOW value */
 		if ((value = huff8_lookup(low8, bs)) < 0) {
 			LogErrorF("libsmacker::huff16_build_rec() - ERROR: get LOW value returned -1\n");
@@ -785,8 +789,7 @@ static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t 
 
 		/* Looks OK: we got low and hi values. Return a new LEAF */
 		t->tree[t->size] |= (value << 8);
-
-		LogErrorF("libsmacker::huff16_build_rec() - INFO: leaf %d at %d\n", t->tree[t->size], t->size);
+		LogErrorF("libsmacker::huff16_build_rec() - INFO: leaf %d at %d len%d (ebn%d fbn%d) offset%d\n", t->tree[t->size], t->size, ((size_t)bs->buffer - (size_t)tmpBuffer) * 8 + tmpBitNum - bs->bitnum, tmpBitNum, bs->bitnum, (size_t)tmpBuffer - (size_t)huff16_start);
 // bool deepDebug = t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2];
 /*if (deepDebug) {
 // LogErrorFF("huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
@@ -1148,6 +1151,7 @@ LogErrorF("D1Smk::prepareVideoTree INFO: cache %d : %d", i, tree.cacheCount[i]);
 LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d from bn%d [%d,%d,%d,%d,%d]", (size_t)res - (size_t)treeData, bitNum, tmpBitNum, tmpPtr[0], tmpPtr[1], tmpPtr[2], tmpPtr[3], tmpPtr[4]);
 // deepDeb = true;
 tmpPtr = res; tmpBitNum = bitNum;
+main_start = res;
     {
         // add the main tree
         joints = 0;
@@ -1165,6 +1169,7 @@ LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%
 		bt.end = res + ((bitNum != 0) ? 1 : 0);
 		bt.bit_num = startBitNum;
 		unsigned alloc_size = (joints + 3) * 4;
+		huff16_start = bt.buffer;
 		if (!huff16_build(&testTree, &bt, alloc_size)) {
 			LogErrorF("D1Smk::prepareVideoTree huff16_build failed");
         } else {
