@@ -1093,11 +1093,11 @@ LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)tre
 		bt.end = res + ((bitNum != 0) ? 1 : 0);
 		bt.bit_num = tmpBitNum;
 		if (!huff8_build(&testTree, &bt)) {
-			LogErrorF("D1Smk::prepareVideoTree huff8_build 0 failed");
+			LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 0 failed");
         } else {
 			// LogErrorF("D1Smk::prepareVideoTree huff8_build 0 success joints%d leafs %d, treesize%d", joints, bytePaths[0].size(), testTree.size);
 			unsigned leafs = 0;
-			unsigned dbgLeafCount = 10;
+			unsigned dbgLeafCount = 0;
 			for (unsigned i = 0; i < testTree.size; i++) {
 				if (testTree.tree[i] & HUFF8_BRANCH) {
 					// LogErrorF("D1Smk::prepareVideoTree branch at %d to %d", i, testTree.tree[i] & HUFF8_LEAF_MASK);
@@ -1170,7 +1170,7 @@ LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)tree
 		bt.end = res + ((bitNum != 0) ? 1 : 0);
 		bt.bit_num = tmpBitNum;
 		if (!huff8_build(&testTree, &bt)) {
-			LogErrorF("D1Smk::prepareVideoTree huff8_build 1 failed");
+			LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 1 failed");
         } else {
 			// LogErrorF("D1Smk::prepareVideoTree huff8_build 1 success joints%d leafs %d, treesize%d", joints, bytePaths[1].size(), testTree.size);
 			unsigned leafs = 0;
@@ -1228,17 +1228,17 @@ LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%
 		huffCounter = 40;
 		huffLeafCounter = 10;
 		if (!huff16_build(&testTree, &bt, alloc_size)) {
-			LogErrorF("D1Smk::prepareVideoTree huff16_build failed");
+			LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build failed");
         } else {
-			LogErrorF("D1Smk::prepareVideoTree huff16_build success joints%d leafs %d, treesize%d", joints, tree.paths.size(), testTree.size);
+			// LogErrorF("D1Smk::prepareVideoTree huff16_build success joints%d leafs %d, treesize%d", joints, tree.paths.size(), testTree.size);
 			unsigned leafs = 0;
 			for (unsigned i = 0; i < testTree.size; i++) {
 				if (testTree.tree[i] & HUFF16_BRANCH) {
-					LogErrorF("D1Smk::prepareVideoTree branch at %d", i);
+					// LogErrorF("D1Smk::prepareVideoTree branch at %d", i);
                 } else if (testTree.tree[i] & HUFF16_CACHE) {
 					leafs++;
 					unsigned cacheIdx = testTree.tree[i] & ~HUFF16_CACHE;
-					LogErrorF("D1Smk::prepareVideoTree cache leaf %d (%d) at %d", testTree.tree[i], cacheIdx, i);
+					// LogErrorF("D1Smk::prepareVideoTree cache leaf %d (%d) at %d", testTree.tree[i], cacheIdx, i);
 					if (cacheIdx > 2) {
 						LogErrorF("ERROR D1Smk::prepareVideoTree bad cache index %d", cacheIdx);
                     } else {
@@ -1247,7 +1247,7 @@ LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%
 						if (it == tree.paths.end()) {
 							LogErrorF("ERROR D1Smk::prepareVideoTree cache (%d) not planned", value);
 						} else {
-							LogErrorF("D1Smk::prepareVideoTree encoded cache depth%d value%d", it.value().first, it.value().second);
+							// LogErrorF("D1Smk::prepareVideoTree encoded cache depth%d value%d", it.value().first, it.value().second);
 						}
                     }
                 } else {
@@ -1257,14 +1257,14 @@ LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%
 					if (it == tree.paths.end()) {
 						LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
                     } else {
-						LogErrorF("D1Smk::prepareVideoTree encoded leaf depth%d value%d", it.value().first, it.value().second);
+						// LogErrorF("D1Smk::prepareVideoTree encoded leaf depth%d value%d", it.value().first, it.value().second);
                     }
                 }
             }
 			if (leafs != tree.paths.size())
 				LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build res leafs %d vs %d", leafs, tree.paths.size());
             else
-				LogErrorF("D1Smk::prepareVideoTree huff16_build res leafs %d", leafs);
+				; // LogErrorF("D1Smk::prepareVideoTree huff16_build res leafs %d", leafs);
         }
 		free(testTree.tree);
     }
