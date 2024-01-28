@@ -3106,8 +3106,10 @@ bool doDebug = false; // frameCount == 174;
 		type = ((unpack & 0x0003));
 		blocklen = ((unpack & 0x00FC) >> 2);
 		typedata = ((unpack & 0xFF00) >> 8);
-if (ss->cur_frame == 0)
+if (ss->cur_frame == 0) {
+			unsigned char * pp = ss->source.chunk_data[ss->cur_frame];
 LogError("libsmacker::smk_render_video() - INFO: lookup from TYPE tree %d (ty%d len %d=%d data%d) bn%d (frame=%d, row=%d, chunk offset%d size%d [%d;%d;%d;%d;%d]).\n", unpack, type, blocklen, sizetable[blocklen], typedata, bs.bit_num, ss->cur_frame, row, p - pp, ss->chunk_size[ss->cur_frame], pp[0], pp[1], pp[2], pp[3], pp[4]);
+}
 
 		/* support for v4 full-blocks */
 		if (type == 1 && s->v == '4') {
