@@ -3098,7 +3098,8 @@ bool doDebug = false; // frameCount == 174;
 
 	while (row < s->h) {
 		if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_TYPE], &bs)) < 0) {
-			LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from TYPE tree.\n");
+			unsigned char * pp = s->source.chunk_data[s->cur_frame];
+			LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from TYPE tree (frame=%d, row=%d, chunk offset%d size%d [%d;%d;%d;%d;%d]).\n", s->frame, row, p - pp, s->chunk_size[s->cur_frame], pp[0], pp[1], pp[2], pp[3], pp[4]);
 			return -1;
 		}
 
