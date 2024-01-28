@@ -518,6 +518,9 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
     }
     cursor = writeBit(1, cursor, bitNum);
     depth++;
+	if (depth > 32) {
+		LogErrorF("buildTreeData ERROR: depth %d too much.", depth);
+    }
     QList<QPair<unsigned, unsigned>> rightLeafs;
     unsigned leftCount = 0, rightCount = 0;
     for (auto it = leafs.begin(); it != leafs.end(); ) {
@@ -532,10 +535,10 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
     }
 //    if (deepDeb)
 //        LogErrorF("TreeData joint %d depth %d value %d length %d / %d", joints, depth, branch, leafs.count(), rightLeafs.count());
-    branch <<= 1;
+    // branch <<= 1;
     cursor = buildTreeData(leafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
-    branch |= 1;
+    branch |= (1 << (depth - 1);
     cursor = buildTreeData(rightLeafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
     return cursor;
@@ -1957,6 +1960,7 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
 // LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", width, height - 4, type, typelen, cursor, bitNum);
         encodePixels(width, height - 4, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
 // LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
+		LogErrorF("D1Smk::saved frame %d cu%d bn%d", n, cursor, bitNum);
         if (bitNum != 0) {
             cursor++;
         }
