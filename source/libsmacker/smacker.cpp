@@ -3032,7 +3032,7 @@ unsigned long origSize = size;
 	}
 
 	if (i < 256) {
-		LogError("libsmacker::smk_render_palette() - ERROR: did not completely fill palette (idx=%u; frame=%u; size=%u)\n", i, s->frame, origSize);
+		LogError("libsmacker::smk_render_palette() - ERROR: did not completely fill palette (idx=%u; size=%u)\n", i, origSize);
 		goto error;
 	}
 
@@ -3053,7 +3053,7 @@ const unsigned short sizetable[64] = {
     49,	50,	51,	52,	53,	54,	55,	56,
     57,	58,	59,	128,	256,	512,	1024,	2048
 };
-static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, unsigned int size)
+static char smk_render_video(struct smk_t::smk_video_t * s, unsigned char * p, unsigned int size, smk ss)
 {
 	unsigned char * t = s->frame;
 	unsigned char s1, s2;
@@ -3098,8 +3098,8 @@ bool doDebug = false; // frameCount == 174;
 
 	while (row < s->h) {
 		if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_TYPE], &bs)) < 0) {
-			unsigned char * pp = s->source.chunk_data[s->cur_frame];
-			LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from TYPE tree (frame=%d, row=%d, chunk offset%d size%d [%d;%d;%d;%d;%d]).\n", s->frame, row, p - pp, s->chunk_size[s->cur_frame], pp[0], pp[1], pp[2], pp[3], pp[4]);
+			unsigned char * pp = ss->source.chunk_data[ss->cur_frame];
+			LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from TYPE tree (frame=%d, row=%d, chunk offset%d size%d [%d;%d;%d;%d;%d]).\n", ss->cur_frame, row, p - pp, ss->chunk_size[ss->cur_frame], pp[0], pp[1], pp[2], pp[3], pp[4]);
 			return -1;
 		}
 
@@ -3678,7 +3678,7 @@ LogError("libsmacker::smk_render() -frame %lu: palette size %d.\n", s->cur_frame
 //LogErrorFF("smk_render frame %d from %d", frameCount, (size_t)p - (size_t)bufMem);
 	/* Unpack video chunk */
 	if (s->video.enable) {
-		if (smk_render_video(&(s->video), p, i) < 0) {
+		if (smk_render_video(&(s->video), p, i, s) < 0) {
 			LogError("libsmacker::smk_render() - ERROR: frame %lu: failed to render video.\n", s->cur_frame);
 			goto error;
 		}
