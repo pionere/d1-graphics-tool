@@ -1880,12 +1880,12 @@ LogErrorF("D1Smk::save frame %d dp%d", n, frameData);
             framePal = gfx.getPalette();
         }
         if (framePal != nullptr) {
-LogErrorF("D1Smk::save encode palette:%d at %d to %d", n, cursor, frameData + cursor + 4);
-            unsigned pallen = encodePalette(framePal, n, frameData + cursor + 4);
+LogErrorF("D1Smk::save encode palette:%d at %d to %d offset %d", n, cursor, outFile.pos(), cursor + 1);
+            unsigned pallen = encodePalette(framePal, n, frameData + cursor + 1);
 LogErrorF("D1Smk::save encoded palette len %d", pallen);
-            pallen += 4;
-            *(uint32_t*)&frameData[cursor] = SwapLE32(pallen);
-            cursor += pallen;
+			pallen = (pallen + 1 + 3) / 4;
+            *&frameData[cursor] = pallen;
+            cursor += pallen * 4;
         }
         // add optional audio
         D1SmkAudioData *audioData = frame->getFrameAudio();
@@ -1895,7 +1895,7 @@ LogErrorF("D1Smk::save encoded palette len %d", pallen);
                 uint8_t *data = audioData->getAudio(i, &length);
                 if (length != 0) {
                     // assert(frameInfo[i].FrameType & (0x02 << track));
-LogErrorF("D1Smk::save encode audio:%d;%d at %d", n, i, cursor);
+LogErrorF("D1Smk::save encode audio:%d;%d to %d offset %d", n, i, outFile.pos(), cursor + 4);
                     size_t audiolen = encodeAudio(data, length, audioInfo[i], frameData + cursor + 4);
 LogErrorF("D1Smk::save encoded len:%d", audiolen);
                     audiolen += 4;

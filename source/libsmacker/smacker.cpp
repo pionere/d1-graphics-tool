@@ -2962,7 +2962,7 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 	assert(p);
 	/* Copy palette to old palette */
 	memcpy(oldPalette, s->palette, 256 * 3);
-
+unsigned long origSize = size;
 	/* Loop until palette is complete, or we are out of bytes to process */
 	while ((i < 256) && (size > 0)) {
 		if ((*p) & 0x80) {
@@ -3032,7 +3032,7 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 	}
 
 	if (i < 256) {
-		LogError("libsmacker::smk_render_palette() - ERROR: did not completely fill palette (idx=%u)\n", i);
+		LogError("libsmacker::smk_render_palette() - ERROR: did not completely fill palette (idx=%u; frame=%u; size=%u)\n", i, s->frame, origSize);
 		goto error;
 	}
 
@@ -3613,6 +3613,7 @@ static char smk_render(smk s)
 		/* Byte 1 in block, times 4, tells how many
 			subsequent bytes are present */
 		size = 4 * (*p);
+LogError("libsmacker::smk_render() -frame %lu: palette size %d.\n", s->cur_frame, size);
 
 		if (i < size) {
 			LogError("libsmacker::smk_render() - ERROR: frame %lu: insufficient data for a palette content.\n", s->cur_frame);
