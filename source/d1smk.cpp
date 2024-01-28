@@ -1382,6 +1382,7 @@ LogErrorF("ERROR D1Smk::encodePixels not 2color %d:%d vs %d at %d:%d", color1, c
             }
         }
     }
+	cursor = (size_t)res - (size_t)frameData;
 }
 
 static unsigned char oldPalette[D1SMK_COLORS][3];
@@ -1869,7 +1870,7 @@ LogErrorF("D1Smk::save 10:%d", 256 * 3 + maxAudioLength + 4 * width * height);
     uint8_t *frameData = (uint8_t*)malloc(D1SMK_COLORS * 3 + maxAudioLength + 4 * width * height);
     QList<uint32_t> frameLengths;
     for (int n = 0; n < frameCount; n++) {
-LogErrorF("D1Smk::save frame %d dp%d", n, frameData);
+LogErrorF("D1Smk::save frame %d dp%d to %d", n, frameData, outFile.pos());
         D1GfxFrame *frame = gfx.getFrame(n);
         // reset pointers of the work-buffer
         size_t cursor = 0; unsigned bitNum = 0;
@@ -1880,7 +1881,7 @@ LogErrorF("D1Smk::save frame %d dp%d", n, frameData);
             framePal = gfx.getPalette();
         }
         if (framePal != nullptr) {
-LogErrorF("D1Smk::save encode palette:%d at %d to %d offset %d", n, cursor, outFile.pos(), cursor + 1);
+LogErrorF("D1Smk::save encode palette of frame %d offset %d", n, cursor + 1);
             unsigned pallen = encodePalette(framePal, n, frameData + cursor + 1);
 LogErrorF("D1Smk::save encoded palette len %d", pallen);
 			pallen = (pallen + 1 + 3) / 4;
@@ -1895,7 +1896,7 @@ LogErrorF("D1Smk::save encoded palette len %d", pallen);
                 uint8_t *data = audioData->getAudio(i, &length);
                 if (length != 0) {
                     // assert(frameInfo[i].FrameType & (0x02 << track));
-LogErrorF("D1Smk::save encode audio:%d;%d to %d offset %d", n, i, outFile.pos(), cursor + 4);
+LogErrorF("D1Smk::save encode audio:%d[%d] offset %d", n, i, cursor + 4);
                     size_t audiolen = encodeAudio(data, length, audioInfo[i], frameData + cursor + 4);
 LogErrorF("D1Smk::save encoded len:%d", audiolen);
                     audiolen += 4;
@@ -1904,6 +1905,7 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
                 }
             }
         }
+LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
         // add the pixels
         unsigned cacheValues[SMK_TREE_COUNT][3] = { 0 };
         int type = -1; unsigned typelen = 0;
@@ -1972,10 +1974,10 @@ LogErrorF("D1Smk::save encoded len:%d", audiolen);
 // LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", width, height - 4, type, typelen, cursor, bitNum);
         encodePixels(width, height - 4, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
 // LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
-		LogErrorF("D1Smk::saved frame %d cu%d bn%d", n, cursor, bitNum);
         if (bitNum != 0) {
             cursor++;
         }
+LogErrorF("D1Smk::saved frame %d size%d", n, cursor);
         outFile.write((const char*)frameData, cursor);
         frameLengths.push_back(cursor);
 
