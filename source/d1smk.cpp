@@ -538,7 +538,7 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
     // branch <<= 1;
     cursor = buildTreeData(leafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
-    branch |= (1 << (depth - 1);
+    branch |= 1 << (depth - 1);
     cursor = buildTreeData(rightLeafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
     return cursor;
