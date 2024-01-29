@@ -1729,7 +1729,7 @@ videoTree[i].VideoTreeIndex = i;
         for (int y = 0; y < height; y += 4) {
             for (int x = 0; x < width; x += 4) {
                 int ctype = 1;
-                /*if (prevFrame != nullptr) {
+                if (prevFrame != nullptr) {
                     int yy = 0;
                     for ( ; yy < 4; yy++) {
                         for (int xx = 0; xx < 4; xx++) {
@@ -1767,18 +1767,18 @@ videoTree[i].VideoTreeIndex = i;
                     }
                     if (numColors <= 2) {
                         if (numColors == 2) {
-                            // 2COLOR BLOCK -> SMK_TREE_MMAP/SMK_TREE_MCLR
+                            /*// 2COLOR BLOCK -> SMK_TREE_MMAP/SMK_TREE_MCLR
 //if (n == 1)
 //LogErrorF("D1Smk::prepTree 2color %d:%d, %d offset%d bn%d", color1, color2, colors);
                             addTreeValue(color1 << 8 | color2, videoTree[SMK_TREE_MCLR], cacheValues[SMK_TREE_MCLR]);
                             addTreeValue(colors, videoTree[SMK_TREE_MMAP], cacheValues[SMK_TREE_MMAP]);
-                            ctype = 0;
+                            ctype = 0;*/
                         } else {
                             // SOLID BLOCK
                             ctype = 3 | (color1 << 8);
                         }
                     }
-                }*/
+                }
                 if (ctype == 1) {
                     // FULL BLOCK -> SMK_TREE_FULL
                     unsigned color1, color2;
@@ -1919,7 +1919,7 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
         for (int y = 0; y < height; y += 4) {
             for (int x = 0; x < width; x += 4) {
                 int ctype = 1;
-                /*if (prevFrame != nullptr) {
+                if (prevFrame != nullptr) {
                     int yy = 0;
                     for ( ; yy < 4; yy++) {
                         for (int xx = 0; xx < 4; xx++) {
@@ -1957,13 +1957,13 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                     if (numColors <= 2) {
                         if (numColors == 2) {
                             // 2COLOR BLOCK -> SMK_TREE_MMAP/SMK_TREE_MCLR
-                            ctype = 0;
+                            // ctype = 0;
                         } else {
                             // SOLID BLOCK
                             ctype = 3 | (color1 << 8);
                         }
                     }
-                }*/
+                }
                 if (ctype == 1) {
                     // FULL BLOCK -> SMK_TREE_FULL
                     // ctype = 1;
