@@ -1252,7 +1252,7 @@ LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%
                     }
                 } else {
 					leafs++;
-					LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
+					// LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
 					auto it = tree.paths.find(testTree.tree[i]);
 					if (it == tree.paths.end()) {
 						LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
@@ -1310,6 +1310,7 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
     int width = frame->getWidth();
     int dy = (typelen * 4) / width;
     int dx = (typelen * 4) % width;
+int sx = x, sy = y, slen = typelen;
     x -= dx;
     if (x < 0) {
         x += width;
@@ -1385,6 +1386,9 @@ LogErrorF("ERROR D1Smk::encodePixels not 2color %d:%d vs %d at %d:%d", color1, c
             }
         }
     }
+if (x != sx || y != sy) {
+    LogErrorF("ERROR D1Smk::encodePixels not complete %d:%d vs %d:%d len%d", sx, sy, x, y, slen);
+}
 	cursor = (size_t)res - (size_t)frameData;
 }
 
@@ -1804,7 +1808,7 @@ videoTree[i].VideoTreeIndex = i;
     size_t allocSize = 1 + (1 + (UINT8_MAX + 1) * 1 * 2 * 8 + 1) + (1 + (UINT8_MAX + 1) * 1 * 2 * 8 + 1) + 3 * sizeof(uint16_t) * 8 + ((UINT16_MAX + 1) * sizeof(uint16_t) * 2 * 8) + 1;
     allocSize *= 4;
     allocSize = (allocSize + 7) / 8;
-    uint8_t *videoTreeData = (uint8_t *)malloc(allocSize);
+    uint8_t *videoTreeData = (uint8_t *)calloc(1, allocSize);
     size_t cursor = 0; unsigned bitNum = 0;
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
 LogErrorF("D1Smk::save 4:%d as%d c%d bn%d ts%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum,
@@ -1870,7 +1874,7 @@ LogErrorF("D1Smk::save 9:%d", videoTreeDataSize);
     outFile.write((const char*)videoTreeData, videoTreeDataSize);
 LogErrorF("D1Smk::save 10:%d", 256 * 3 + maxAudioLength + 4 * width * height);
     /*D1GfxFrame **/ prevFrame = nullptr;
-    uint8_t *frameData = (uint8_t*)malloc(D1SMK_COLORS * 3 + maxAudioLength + 4 * width * height);
+    uint8_t *frameData = (uint8_t*)calloc(1, D1SMK_COLORS * 3 + maxAudioLength + 4 * width * height);
     QList<uint32_t> frameLengths;
     for (int n = 0; n < frameCount; n++) {
 LogErrorF("D1Smk::save frame %d dp%d to %d", n, frameData, outFile.pos());
@@ -1886,8 +1890,8 @@ LogErrorF("D1Smk::save frame %d dp%d to %d", n, frameData, outFile.pos());
         if (framePal != nullptr) {
 LogErrorF("D1Smk::save encode palette of frame %d offset %d", n, cursor + 1);
             unsigned pallen = encodePalette(framePal, n, frameData + cursor + 1);
-LogErrorF("D1Smk::save encoded palette len %d", pallen);
-			pallen = (pallen + 1 + 3) / 4;
+LogErrorF("D1Smk::save encoded palette len %d", pallen, (pallen + 1 + 3) & ~3);
+            pallen = (pallen + 1 + 3) / 4;
             *&frameData[cursor] = pallen;
             cursor += pallen * 4;
         }
@@ -1985,7 +1989,7 @@ if (n == 0) {
 	deepDeb = true;
 LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", width, height - 4, type, typelen, cursor, bitNum);
 }
-        encodePixels(width, height - 4, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
+        encodePixels(0, height, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
 if (n == 0) {
 	deepDeb = false;
 LogErrorF("D1Smk::save encoded last pixels:%d;%d", cursor, bitNum);
@@ -1993,8 +1997,10 @@ LogErrorF("D1Smk::save encoded last pixels:%d;%d", cursor, bitNum);
         if (bitNum != 0) {
             cursor++;
         }
+        cursor = (cursor + 3) & ~3;
 LogErrorF("D1Smk::saved frame %d size%d", n, cursor);
         outFile.write((const char*)frameData, cursor);
+        memset(frameData, 0, cursor);
         frameLengths.push_back(cursor);
 
         prevFrame = frame;
