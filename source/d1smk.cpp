@@ -310,7 +310,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 1250);
+    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 100);
 
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
@@ -1781,7 +1781,7 @@ videoTree[i].VideoTreeIndex = i;
                             ctype = 0;
                         } else {
                             // SOLID BLOCK
-                            // ctype = 3 | (color1 << 8);
+                            ctype = 3 | (color1 << 8);
                         }
                     }
                 }
@@ -1940,13 +1940,12 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                     }
                 }
                 if (ctype == 1) {
-                    unsigned numColors = 1, color1, color2 = D1PAL_COLORS, colors = 0;
+                    unsigned numColors = 1, color1, color2 = D1PAL_COLORS;
                     color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
-                    for (int yy = 4 - 1; yy >= 0 && numColors < 3; yy--) {
-                        for (int xx = 4 - 1; xx >= 0; xx--, colors <<= 1) {
+                    for (int yy = 4 - 1; yy >= 0 && numColors <= 2; yy--) {
+                        for (int xx = 4 - 1; xx >= 0; xx--) {
                             unsigned color = frame->getPixel(x + xx, y + yy).getPaletteIndex();
                             if (color == color1) {
-                                colors |= 1;
                                 continue;
                             }
                             if (color == color2) {
@@ -1966,7 +1965,7 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                             ctype = 0;
                         } else {
                             // SOLID BLOCK
-                            // ctype = 3 | (color1 << 8);
+                            ctype = 3 | (color1 << 8);
                         }
                     }
                 }
