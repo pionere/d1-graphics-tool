@@ -3185,7 +3185,7 @@ unsigned firstCol = col;
 deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 				for (k = 0; k < 4; k ++) {
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
-						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
+						LogError("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree right (%d. at %d:%d).\n", k, row, col);
 						return -1;
 					}
 
@@ -3198,7 +3198,7 @@ deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 if (deepDebug)
 LogErrorFF("Full block %d:0 value%d (offsetend%d bitend%d) %d,%d:%d (%d:%d) = %d", k, unpack, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num, col + 2, col + 3, row + k, t[skip + 2], t[skip + 3], *(uint16_t*)&t[skip + 2]);
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
-						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
+						LogError("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree left (%d. at %d:%d).\n", k, row, col);
 						return -1;
 					}
 #ifdef FULL

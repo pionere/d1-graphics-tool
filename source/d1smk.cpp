@@ -1198,7 +1198,7 @@ tmpPtr = res; tmpBitNum = bitNum;
     {
         // add the cache values
         for (int i = 0; i < 3; i++) {
-            res = writeNBits(SwapLE16(tree.cacheCount[i]), 16, res, bitNum);
+            res = writeNBits(tree.cacheCount[i], 16, res, bitNum);
 LogErrorF("D1Smk::prepareVideoTree INFO: cache %d : %d", i, tree.cacheCount[i]);
         }
     }
@@ -1328,7 +1328,7 @@ if (deepDeb)
                 LogErrorF("D1Smk::encodePixels treetype end offset%d bn%d", (size_t)res - (size_t)&frameData[cursor], bitNum);
 
                 for (int n = 0; n < sizetable[i]; n++) {
-                    switch (type) {
+                    switch (type & 3) {
                     case 0: { // 2COLOR BLOCK  SMK_TREE_MMAP/SMK_TREE_MCLR
                         unsigned color1, color2, colors = 0;
 color2 = 256;
