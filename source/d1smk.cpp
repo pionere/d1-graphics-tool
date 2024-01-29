@@ -310,7 +310,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 60);
+    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 15);
 
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
@@ -1357,10 +1357,10 @@ LogErrorF("ERROR D1Smk::encodePixels not 2color %d:%d vs %d at %d:%d", color1, c
                         for (int yy = 0; yy < 4; yy++) {
                             color1 = frame->getPixel(x + 2, y + yy).getPaletteIndex();
                             color2 = frame->getPixel(x + 3, y + yy).getPaletteIndex();
-                            res = writeTreeValue(color1 << 8 | color2, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL], res, bitNum);
+                            res = writeTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL], res, bitNum);
                             color1 = frame->getPixel(x + 0, y + yy).getPaletteIndex();
                             color2 = frame->getPixel(x + 1, y + yy).getPaletteIndex();
-                            res = writeTreeValue(color1 << 8 | color2, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL], res, bitNum);
+                            res = writeTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL], res, bitNum);
                         }
                     } break;
                     case 2: // VOID BLOCK
@@ -1729,7 +1729,7 @@ videoTree[i].VideoTreeIndex = i;
         for (int y = 0; y < height; y += 4) {
             for (int x = 0; x < width; x += 4) {
                 int ctype = 1;
-                if (prevFrame != nullptr) {
+                /*if (prevFrame != nullptr) {
                     int yy = 0;
                     for ( ; yy < 4; yy++) {
                         for (int xx = 0; xx < 4; xx++) {
@@ -1778,17 +1778,17 @@ videoTree[i].VideoTreeIndex = i;
                             ctype = 3 | (color1 << 8);
                         }
                     }
-                }
+                }*/
                 if (ctype == 1) {
                     // FULL BLOCK -> SMK_TREE_FULL
                     unsigned color1, color2;
                     for (int yy = 0; yy < 4; yy++) {
                         color1 = frame->getPixel(x + 2, y + yy).getPaletteIndex();
                         color2 = frame->getPixel(x + 3, y + yy).getPaletteIndex();
-                        addTreeValue(color1 << 8 | color2, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
+                        addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
                         color1 = frame->getPixel(x + 0, y + yy).getPaletteIndex();
                         color2 = frame->getPixel(x + 1, y + yy).getPaletteIndex();
-                        addTreeValue(color1 << 8 | color2, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
+                        addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
                     }
                     // ctype = 1;
                 }
@@ -1919,7 +1919,7 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
         for (int y = 0; y < height; y += 4) {
             for (int x = 0; x < width; x += 4) {
                 int ctype = 1;
-                if (prevFrame != nullptr) {
+                /*if (prevFrame != nullptr) {
                     int yy = 0;
                     for ( ; yy < 4; yy++) {
                         for (int xx = 0; xx < 4; xx++) {
@@ -1963,7 +1963,7 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                             ctype = 3 | (color1 << 8);
                         }
                     }
-                }
+                }*/
                 if (ctype == 1) {
                     // FULL BLOCK -> SMK_TREE_FULL
                     // ctype = 1;
