@@ -310,7 +310,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 90);
+    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 100);
 
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
@@ -1974,12 +1974,12 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                     // ctype = 1;
                 }
                 if (type != ctype) {
-if (n == 0) {
+if (n <= 3) {
 	deepDeb = true;
  LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", x, y, type, typelen, cursor, bitNum);
 }
                     encodePixels(x, y, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
-if (n == 0) {
+if (n <= 3) {
 	deepDeb = false;
 LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
 }
@@ -1990,12 +1990,12 @@ LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
                 typelen++;
             }
         }
-if (n == 0) {
+if (n <= 3) {
 	deepDeb = true;
 LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", width, height - 4, type, typelen, cursor, bitNum);
 }
         encodePixels(0, height, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
-if (n == 0) {
+if (n <= 3) {
 	deepDeb = false;
 LogErrorF("D1Smk::save encoded last pixels:%d;%d", cursor, bitNum);
 }
