@@ -1743,7 +1743,7 @@ videoTree[i].VideoTreeIndex = i;
                         ctype = 2; // VOID BLOCK -> skip
                     }
                 }
-                /*if (ctype == 1) {
+                if (ctype == 1) {
                     unsigned numColors = 1, color1, color2 = D1PAL_COLORS, colors = 0;
                     color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
                     for (int yy = 4 - 1; yy >= 0 && numColors <= 2; yy--) {
@@ -1775,10 +1775,10 @@ videoTree[i].VideoTreeIndex = i;
                             ctype = 0;
                         } else {
                             // SOLID BLOCK
-                            ctype = 3 | (color1 << 8);
+                            // ctype = 3 | (color1 << 8);
                         }
                     }
-                }*/
+                }
                 if (ctype == 1) {
                     // FULL BLOCK -> SMK_TREE_FULL
                     unsigned color1, color2;
@@ -1933,7 +1933,7 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                         ctype = 2; // VOID BLOCK -> skip
                     }
                 }
-                /*if (ctype == 1) {
+                if (ctype == 1) {
                     unsigned numColors = 1, color1, color2 = D1PAL_COLORS, colors = 0;
                     color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
                     for (int yy = 4 - 1; yy >= 0 && numColors < 3; yy--) {
@@ -1960,10 +1960,10 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                             ctype = 0;
                         } else {
                             // SOLID BLOCK
-                            ctype = 3 | (color1 << 8);
+                            // ctype = 3 | (color1 << 8);
                         }
                     }
-                }*/
+                }
                 if (ctype == 1) {
                     // FULL BLOCK -> SMK_TREE_FULL
                     // ctype = 1;
