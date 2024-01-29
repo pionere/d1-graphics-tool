@@ -248,7 +248,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 // LogErrorF("D1Smk::load 3 %d %d %d", channels, depth, rate);
     smk_enable_video(SVidSMK, true);
     for (int i = 0; i < D1SMK_TRACKS; i++) {
-        smk_enable_audio(SVidSMK, i, true);
+        smk_enable_audio(SVidSMK, i, false); // true);
     }
     // Decode first frame
 // LogErrorF("D1Smk::load 4");
@@ -310,7 +310,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 250);
+    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 125);
 
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
