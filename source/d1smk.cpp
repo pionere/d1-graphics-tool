@@ -310,7 +310,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 100);
+    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 80);
 
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
@@ -875,7 +875,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 // LogErrorFF("huff16_build 3");
 		/* Init the escape code cache. */
 
-		LogErrorF("libsmacker::huff16_build() - INFO: cache starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
+//		LogErrorF("libsmacker::huff16_build() - INFO: cache starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
 		for (i = 0; i < 3; i ++) {
 			if ((value = bs_read_8(bs)) < 0) {
 				LogErrorF("libsmacker::huff16_build() - ERROR: get LOW value for cache %d returned -1\n", i);
@@ -891,7 +891,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 			}
 
 			t->cache[i] |= (value << 8);
-			LogErrorF("libsmacker::huff16_build() - INFO: cache %d : %d\n", i, t->cache[i]);
+//			LogErrorF("libsmacker::huff16_build() - INFO: cache %d : %d\n", i, t->cache[i]);
 		}
 		/* Everything looks OK so far. Time to malloc structure. */
 		if (alloc_size < 12 || alloc_size % 4) {
@@ -904,7 +904,7 @@ static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int
 			LogErrorF("libsmacker::huff16_build() - ERROR: failed to malloc() huff16 tree");
 			return 0;
 		}
-		LogErrorF("libsmacker::huff16_build() - INFO: main starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
+//		LogErrorF("libsmacker::huff16_build() - INFO: main starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
 		/* Finally, call recursive function to retrieve the Bigtree. */
 		if (! huff16_build_rec(t, bs, &low8, &hi8, limit, 0)) {
 			LogErrorF("libsmacker::huff16_build() - ERROR: failed to build huff16 tree\n");
@@ -982,7 +982,7 @@ LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d ref
                 }
             }
             if (it == tree.treeStat.end()) {
-LogErrorF("D1Smk::prepareVideoTree cache normal i%d n%d cc%d", i, n, tree.cacheCount[i]);
+// LogErrorF("D1Smk::prepareVideoTree cache normal i%d n%d cc%d", i, n, tree.cacheCount[i]);
                 if (tree.cacheCount[i] != 0) {
                     tree.treeStat.push_back(QPair<unsigned, unsigned>(n, tree.cacheCount[i]));
                 }
@@ -1206,8 +1206,8 @@ LogErrorF("D1Smk::prepareVideoTree INFO: cache %d : %d", i, tree.cacheCount[i]);
 LogErrorF("D1Smk::prepareVideoTree cache added %d bn%d from bn%d [%d,%d,%d,%d,%d]", (size_t)res - (size_t)treeData, bitNum, tmpBitNum, tmpPtr[0], tmpPtr[1], tmpPtr[2], tmpPtr[3], tmpPtr[4]);
 // deepDeb = true;
 tmpPtr = res; tmpBitNum = bitNum;
-mainCounter = 40;
-leafCounter = 10;
+mainCounter = 0;
+leafCounter = 0;
     {
         // add the main tree
         joints = 0;
@@ -1226,8 +1226,8 @@ LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%
 		bt.bit_num = startBitNum;
 		unsigned alloc_size = (joints + 3) * 4;
 		huff16_start = bt.buffer;
-		huffCounter = 40;
-		huffLeafCounter = 10;
+		huffCounter = 0;
+		huffLeafCounter = 0;
 		if (!huff16_build(&testTree, &bt, alloc_size)) {
 			LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build failed");
         } else {
