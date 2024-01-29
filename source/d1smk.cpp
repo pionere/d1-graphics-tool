@@ -310,7 +310,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 1250);
+    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 80);
 
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
@@ -948,7 +948,7 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
 {
 // LogErrorF("D1Smk::prepareVideoTree 0");
     // reduce inflated cache frequencies
-    for (int i = 0; i < 3; i++) {
+    /*for (int i = 0; i < 3; i++) {
 // LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
@@ -966,7 +966,7 @@ LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d ref
                 }
             }
         }
-    }
+    }*/
 // LogErrorF("D1Smk::prepareVideoTree 1");
     // convert cache values to normal values
     bool hasEntries = !tree.treeStat.isEmpty();
@@ -1775,7 +1775,7 @@ videoTree[i].VideoTreeIndex = i;
                             ctype = 0;
                         } else {
                             // SOLID BLOCK
-                            // ctype = 3 | (color1 << 8);
+                            ctype = 3 | (color1 << 8);
                         }
                     }
                 }
@@ -1960,7 +1960,7 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                             ctype = 0;
                         } else {
                             // SOLID BLOCK
-                            // ctype = 3 | (color1 << 8);
+                            ctype = 3 | (color1 << 8);
                         }
                     }
                 }
