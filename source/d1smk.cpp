@@ -948,7 +948,7 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
 {
 // LogErrorF("D1Smk::prepareVideoTree 0");
     // reduce inflated cache frequencies
-    /*for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
 // LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
@@ -956,7 +956,7 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
                 if (it->first == value) {
                     if (it->second + tree.cacheStat[i][n].second >= tree.cacheCount[i] - tree.cacheStat[i][n].second) {
                         // use the 'normal' leaf instead of the cache
-LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d refs%d cacherefs%d of %d", value, it->second, tree.cacheStat[i][n].second, tree.cacheCount[i]);
+LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d refs%d cacherefs%d of %d in tree %d", value, it->second, tree.cacheStat[i][n].second, tree.cacheCount[i], tree.VideoTreeIndex);
                         it->second += tree.cacheStat[i][n].second;
                         tree.cacheCount[i] -= tree.cacheStat[i][n].second;
                         tree.cacheStat[i].removeAt(n);
@@ -967,7 +967,7 @@ LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d ref
                 }
             }
         }
-    }*/
+    }
 // LogErrorF("D1Smk::prepareVideoTree 1");
     // convert cache values to normal values
     bool hasEntries = !tree.treeStat.isEmpty();
@@ -1282,11 +1282,16 @@ static uint8_t *writeTreeValue(unsigned value, const SmkTreeInfo &videoTree, uns
     for (int i = 0; i < 3; i++) {
         if (cacheValues[i] == value) {
             // check if the value was not removed from the cache (in prepareVideoTree)
+bool cached = false;
             for (const QPair<unsigned, unsigned> &entry : videoTree.cacheStat[i]) {
                 if (entry.first == value) {
                     v = videoTree.cacheCount[i]; // use the 'fake' leaf value
+					cached = true;
                 }
             }
+if (!cached) {
+	// LogErrorF("D1Smk::writeTreeValue does not use cache value (%d) for %d in tree %d", videoTree.cacheCount[i], value, videoTree.VideoTreeIndex);
+}
             break;
         }
     }
@@ -1776,7 +1781,7 @@ videoTree[i].VideoTreeIndex = i;
                             ctype = 0;
                         } else {
                             // SOLID BLOCK
-                            ctype = 3 | (color1 << 8);
+                            // ctype = 3 | (color1 << 8);
                         }
                     }
                 }
@@ -1961,7 +1966,7 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                             ctype = 0;
                         } else {
                             // SOLID BLOCK
-                            ctype = 3 | (color1 << 8);
+                            // ctype = 3 | (color1 << 8);
                         }
                     }
                 }
