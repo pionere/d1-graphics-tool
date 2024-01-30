@@ -372,6 +372,7 @@ typedef struct _SmkFrameInfo {
 typedef struct _SmkTreeInfo {
     QList<QPair<unsigned, unsigned>> treeStat;
     QList<QPair<unsigned, unsigned>> cacheStat[3];
+    QSet<unsigned> freezeCache;
     unsigned cacheCount[3];
     unsigned uncompressedTreeSize;
     QMap<unsigned, QPair<unsigned, uint32_t>> paths;
@@ -385,6 +386,9 @@ static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValu
         if (value == cacheValues[i]) {
             stat = &tree.cacheStat[i];
             tree.cacheCount[i]++;
+            while (--i >= 0) {
+                tree.freezeCache.insert(cacheValues[i]);
+            }
             break;
         }
     }
@@ -469,8 +473,8 @@ static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *c
 {
     joints++;
 if (mainCounter > 0) {
-	mainCounter--;
-	LogErrorF("buildTreeData - INFO: rec-building %d", leafs.count());
+    mainCounter--;
+    LogErrorF("buildTreeData - INFO: rec-building %d", leafs.count());
 }
     if (leafs.count() == 1) {
         cursor = writeBit(0, cursor, bitNum);
@@ -482,7 +486,7 @@ if (mainCounter > 0) {
         } else {
 // LogErrorF("TreeData leafPaths access");
 if (leafCounter > 0) {
-	LogErrorF("buildTreeData - INFO: leaf %d at %d:%d\n", leaf, branch, depth);
+    LogErrorF("buildTreeData - INFO: leaf %d at %d:%d\n", leaf, branch, depth);
 }
 uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
             {
@@ -506,8 +510,8 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
                 }
             }
 if (leafCounter > 0) {
-	leafCounter--;
-			LogErrorF("buildTreeData - INFO: leaf %d at %d:%d len%d (ebn%d fbn%d) offset%d", leaf, branch, depth, ((size_t)cursor - (size_t)tmpPtr) * 8 + tmpBitNum - bitNum, tmpBitNum, bitNum, (size_t)tmpPtr - (size_t)main_start);
+    leafCounter--;
+            LogErrorF("buildTreeData - INFO: leaf %d at %d:%d len%d (ebn%d fbn%d) offset%d", leaf, branch, depth, ((size_t)cursor - (size_t)tmpPtr) * 8 + tmpBitNum - bitNum, tmpBitNum, bitNum, (size_t)tmpPtr - (size_t)main_start);
 }
             /*for (auto it = leafPaths[0].begin(); it != leafPaths[0].end(); it++) {
                 if (it->first == (leaf & 0xFF)) {
@@ -526,8 +530,8 @@ if (leafCounter > 0) {
     }
     cursor = writeBit(1, cursor, bitNum);
     depth++;
-	if (depth > 32) {
-		LogErrorF("buildTreeData ERROR: depth %d too much.", depth);
+    if (depth > 32) {
+        LogErrorF("buildTreeData ERROR: depth %d too much.", depth);
     }
     QList<QPair<unsigned, unsigned>> rightLeafs;
     unsigned leftCount = 0, rightCount = 0;
@@ -554,396 +558,415 @@ if (leafCounter > 0) {
 
 /* Recursive sub-func for building a tree into an array. */
 typedef struct _huff8_t {
-	/* Unfortunately, smk files do not store the alloc size of a small tree.
-		511 entries is the pessimistic case (N codes and N-1 branches,
-		with N=256 for 8 bits) */
-	size_t size;
-	unsigned short tree[511];
+    /* Unfortunately, smk files do not store the alloc size of a small tree.
+        511 entries is the pessimistic case (N codes and N-1 branches,
+        with N=256 for 8 bits) */
+    size_t size;
+    unsigned short tree[511];
 } huff8_t;
 typedef struct _bit_t {
-	const unsigned char * buffer, * end;
-	unsigned int bit_num;
+    const unsigned char * buffer, * end;
+    unsigned int bit_num;
 } bit_t;
 #define HUFF8_BRANCH 0x8000
 #define HUFF8_LEAF_MASK 0x7FFF
 static int bs_read_1(bit_t * const bs)
 {
-	int ret;
-	/* null check */
-	assert(bs);
+    int ret;
+    /* null check */
+    assert(bs);
 
-	/* don't die when running out of bits, but signal */
-	if (bs->buffer >= bs->end) {
-		LogErrorF("libsmacker::bs_read_1(): ERROR: bitstream exhausted.\n");
-		return -1;
-	}
+    /* don't die when running out of bits, but signal */
+    if (bs->buffer >= bs->end) {
+        LogErrorF("libsmacker::bs_read_1(): ERROR: bitstream exhausted.\n");
+        return -1;
+    }
 
-	/* get next bit and store for return */
-	ret = (*bs->buffer >> bs->bit_num) & 1;
+    /* get next bit and store for return */
+    ret = (*bs->buffer >> bs->bit_num) & 1;
 
-	/* advance to next bit */
-	if (bs->bit_num >= 7) {
-		/* Out of bits in this byte: next! */
-		bs->buffer ++;
-		bs->bit_num = 0;
-	} else
-		bs->bit_num ++;
+    /* advance to next bit */
+    if (bs->bit_num >= 7) {
+        /* Out of bits in this byte: next! */
+        bs->buffer ++;
+        bs->bit_num = 0;
+    } else
+        bs->bit_num ++;
 
-	return ret;
+    return ret;
 }
 /* Reads a byte
-	Returns -1 if error. */
+    Returns -1 if error. */
 static int bs_read_8(bit_t * const bs)
 {
-	/* don't die when running out of bits, but signal */
-	if (bs->buffer + (bs->bit_num > 0) >= bs->end) {
-		LogErrorF("libsmacker::bs_read_8(): ERROR: bitstream exhausted.\n");
-		return -1;
-	}
+    /* don't die when running out of bits, but signal */
+    if (bs->buffer + (bs->bit_num > 0) >= bs->end) {
+        LogErrorF("libsmacker::bs_read_8(): ERROR: bitstream exhausted.\n");
+        return -1;
+    }
 #ifdef FULL
-	if (bs->bit_num) {
-		/* unaligned read */
+    if (bs->bit_num) {
+        /* unaligned read */
 #endif
-		int ret = *bs->buffer >> bs->bit_num;
-		bs->buffer ++;
-		return ret | (*bs->buffer << (8 - bs->bit_num) & 0xFF);
+        int ret = *bs->buffer >> bs->bit_num;
+        bs->buffer ++;
+        return ret | (*bs->buffer << (8 - bs->bit_num) & 0xFF);
 #ifdef FULL
-	}
+    }
 
-	/* aligned read */
-	return *bs->buffer++;
+    /* aligned read */
+    return *bs->buffer++;
 #endif
 }
 static int huff8_build_rec(huff8_t * const t, bit_t * const bs)
 {
-	int bit, value;
+    int bit, value;
 
-	/* Make sure we aren't running out of bounds */
-	if (t->size >= 511) {
-		LogErrorF("libsmacker::huff8_build_rec() - ERROR: size exceeded\n");
-		return 0;
-	}
+    /* Make sure we aren't running out of bounds */
+    if (t->size >= 511) {
+        LogErrorF("libsmacker::huff8_build_rec() - ERROR: size exceeded\n");
+        return 0;
+    }
 
-	/* Read the next bit */
-	if ((bit = bs_read_1(bs)) < 0) {
-		LogErrorF("libsmacker::huff8_build_rec() - ERROR: get_bit returned -1\n");
-		return 0;
-	}
+    /* Read the next bit */
+    if ((bit = bs_read_1(bs)) < 0) {
+        LogErrorF("libsmacker::huff8_build_rec() - ERROR: get_bit returned -1\n");
+        return 0;
+    }
 
-	if (bit) {
-		/* Bit set: this forms a Branch node.
-			what we have to do is build the left-hand branch,
-			assign the "jump" address,
-			then build the right hand branch from there.
-		*/
-		/* track the current index */
-		value = t->size ++;
+    if (bit) {
+        /* Bit set: this forms a Branch node.
+            what we have to do is build the left-hand branch,
+            assign the "jump" address,
+            then build the right hand branch from there.
+        */
+        /* track the current index */
+        value = t->size ++;
 
-		/* go build the left branch */
-		if (! huff8_build_rec(t, bs)) {
-			LogErrorF("libsmacker::huff8_build_rec() - ERROR: failed to build left sub-tree\n");
-			return 0;
-		}
+        /* go build the left branch */
+        if (! huff8_build_rec(t, bs)) {
+            LogErrorF("libsmacker::huff8_build_rec() - ERROR: failed to build left sub-tree\n");
+            return 0;
+        }
 
-		/* now go back to our current location, and
-			mark our location as a "jump" */
-		t->tree[value] = HUFF8_BRANCH | t->size;
+        /* now go back to our current location, and
+            mark our location as a "jump" */
+        t->tree[value] = HUFF8_BRANCH | t->size;
 
-		/* continue building the right side */
-		if (! huff8_build_rec(t, bs)) {
-			LogErrorF("libsmacker::huff8_build_rec() - ERROR: failed to build right sub-tree\n");
-			return 0;
-		}
-	} else {
-		/* Bit unset signifies a Leaf node. */
-		/* Attempt to read value */
-		if ((value = bs_read_8(bs)) < 0) {
-			LogErrorF("libsmacker::huff8_build_rec() - ERROR: get_byte returned -1\n");
-			return 0;
-		}
+        /* continue building the right side */
+        if (! huff8_build_rec(t, bs)) {
+            LogErrorF("libsmacker::huff8_build_rec() - ERROR: failed to build right sub-tree\n");
+            return 0;
+        }
+    } else {
+        /* Bit unset signifies a Leaf node. */
+        /* Attempt to read value */
+        if ((value = bs_read_8(bs)) < 0) {
+            LogErrorF("libsmacker::huff8_build_rec() - ERROR: get_byte returned -1\n");
+            return 0;
+        }
 
 //if (deepDebug)
 //LogErrorFF("huff8_build_rec leaf[%d]=%d (%d:%d:%d)", t->size, value);
-		/* store to tree */
-		t->tree[t->size ++] = value;
-	}
+        /* store to tree */
+        t->tree[t->size ++] = value;
+    }
 
-	return 1;
+    return 1;
 }
 static int huff8_build(huff8_t * const t, bit_t * const bs)
 {
-	int bit;
+    int bit;
 
-	/* Smacker huff trees begin with a set-bit. */
-	if ((bit = bs_read_1(bs)) < 0) {
-		LogErrorF("libsmacker::huff8_build() - ERROR: initial get_bit returned -1\n");
-		return 0;
-	}
+    /* Smacker huff trees begin with a set-bit. */
+    if ((bit = bs_read_1(bs)) < 0) {
+        LogErrorF("libsmacker::huff8_build() - ERROR: initial get_bit returned -1\n");
+        return 0;
+    }
 
-	/* OK to fill out the struct now */
-	t->size = 0;
+    /* OK to fill out the struct now */
+    t->size = 0;
 
-	/* First bit indicates whether a tree is present or not. */
-	/*  Very small or audio-only files may have no tree. */
-	if (bit) {
-		if (! huff8_build_rec(t, bs)) {
-			LogErrorF("libsmacker::huff8_build() - ERROR: tree build failed\n");
-			return 0;
-		}
-	} else
-		t->tree[0] = 0;
+    /* First bit indicates whether a tree is present or not. */
+    /*  Very small or audio-only files may have no tree. */
+    if (bit) {
+        if (! huff8_build_rec(t, bs)) {
+            LogErrorF("libsmacker::huff8_build() - ERROR: tree build failed\n");
+            return 0;
+        }
+    } else
+        t->tree[0] = 0;
 
-	/* huff trees end with an unset-bit */
-	if ((bit = bs_read_1(bs)) < 0) {
-		LogErrorF("libsmacker::huff8_build() - ERROR: final get_bit returned -1\n");
-		return 0;
-	}
+    /* huff trees end with an unset-bit */
+    if ((bit = bs_read_1(bs)) < 0) {
+        LogErrorF("libsmacker::huff8_build() - ERROR: final get_bit returned -1\n");
+        return 0;
+    }
 
-	/* a 0 is expected here, a 1 generally indicates a problem! */
-	if (bit) {
-		LogErrorF("libsmacker::huff8_build() - ERROR: final get_bit returned 1\n");
-		return 0;
-	}
+    /* a 0 is expected here, a 1 generally indicates a problem! */
+    if (bit) {
+        LogErrorF("libsmacker::huff8_build() - ERROR: final get_bit returned 1\n");
+        return 0;
+    }
 
-	return 1;
+    return 1;
 }
 
 /* Look up an 8-bit value from a basic huff tree.
-	Return -1 on error. */
+    Return -1 on error. */
 static int huff8_lookup(const huff8_t * const t, bit_t * const bs)
 {
-	int bit, index = 0;
+    int bit, index = 0;
 
-	while (t->tree[index] & HUFF8_BRANCH) {
-		if ((bit = bs_read_1(bs)) < 0) {
-			LogErrorF("libsmacker::huff8_lookup() - ERROR: get_bit returned -1\n");
-			return -1;
-		}
-		int prevIndex = index;
-		if (bit) {
-			/* take the right branch */
-			index = t->tree[index] & HUFF8_LEAF_MASK;
-		} else {
-			/* take the left branch */
-			index ++;
-		}
+    while (t->tree[index] & HUFF8_BRANCH) {
+        if ((bit = bs_read_1(bs)) < 0) {
+            LogErrorF("libsmacker::huff8_lookup() - ERROR: get_bit returned -1\n");
+            return -1;
+        }
+        int prevIndex = index;
+        if (bit) {
+            /* take the right branch */
+            index = t->tree[index] & HUFF8_LEAF_MASK;
+        } else {
+            /* take the left branch */
+            index ++;
+        }
         if (index >= sizeof(t->tree)) {
             LogErrorF("libsmacker::huff8_lookup() - ERROR: invalid leaf index %d at %d (%d) \n", index, prevIndex, bit);
             return -1;
         }
-	}
+    }
 
-	/* at leaf node.  return the value at this point. */
-	return t->tree[index];
+    /* at leaf node.  return the value at this point. */
+    return t->tree[index];
 }
 
 #define HUFF16_BRANCH    0x80000000
 #define HUFF16_CACHE     0x40000000
 
 typedef struct _huff16_t {
-	unsigned int * tree;
-	size_t size;
+    unsigned int * tree;
+    size_t size;
 
-	/* recently-used values cache */
-	unsigned short cache[3];
+    /* recently-used values cache */
+    unsigned short cache[3];
 } huff16_t;
 static const unsigned char *huff16_start;
 static unsigned huffCounter = 0;
 static unsigned huffLeafCounter = 0;
 static int huff16_build_rec(huff16_t * const t, bit_t * const bs, const huff8_t * const low8, const huff8_t * const hi8, const size_t limit, int depth)
 {
-	int bit, value;
-	/* Make sure we aren't running out of bounds */
-	if (t->size >= limit) {
-		LogErrorF("libsmacker::huff16_build_rec() - ERROR: size exceeded\n");
-		return 0;
-	}
+    int bit, value;
+    /* Make sure we aren't running out of bounds */
+    if (t->size >= limit) {
+        LogErrorF("libsmacker::huff16_build_rec() - ERROR: size exceeded\n");
+        return 0;
+    }
 
-	/* Read the first bit */
-	if ((bit = bs_read_1(bs)) < 0) {
-		LogErrorF("libsmacker::huff16_build_rec() - ERROR: get_bit returned -1\n");
-		return 0;
-	}
+    /* Read the first bit */
+    if ((bit = bs_read_1(bs)) < 0) {
+        LogErrorF("libsmacker::huff16_build_rec() - ERROR: get_bit returned -1\n");
+        return 0;
+    }
 if (huffCounter > 0) {
-	huffCounter--;
-	LogErrorF("libsmacker::huff16_build_rec() - INFO: rec-reading %d", bit);
+    huffCounter--;
+    LogErrorF("libsmacker::huff16_build_rec() - INFO: rec-reading %d", bit);
 }
-	if (bit) {
-		/* See tree-in-array explanation for HUFF8 above */
-		/* track the current index */
-		value = t->size ++;
+    if (bit) {
+        /* See tree-in-array explanation for HUFF8 above */
+        /* track the current index */
+        value = t->size ++;
 
-		/* go build the left branch */
-		if (! huff16_build_rec(t, bs, low8, hi8, limit, depth + 1)) {
-			LogErrorF("libsmacker::huff16_build_rec() - ERROR: failed to build left sub-tree\n");
-			return 0;
-		}
+        /* go build the left branch */
+        if (! huff16_build_rec(t, bs, low8, hi8, limit, depth + 1)) {
+            LogErrorF("libsmacker::huff16_build_rec() - ERROR: failed to build left sub-tree\n");
+            return 0;
+        }
 
-		/* now go back to our current location, and
-			mark our location as a "jump" */
-		t->tree[value] = HUFF16_BRANCH | t->size;
-//		treeValue[depth] = true;
-		/* continue building the right side */
-		if (! huff16_build_rec(t, bs, low8, hi8, limit, depth + 1)) {
-			LogErrorF("libsmacker::huff16_build_rec() - ERROR: failed to build right sub-tree\n");
-			return 0;
-		}
-//		treeValue[depth] = false;
-	} else {
-		/* Bit unset signifies a Leaf node. */
+        /* now go back to our current location, and
+            mark our location as a "jump" */
+        t->tree[value] = HUFF16_BRANCH | t->size;
+//        treeValue[depth] = true;
+        /* continue building the right side */
+        if (! huff16_build_rec(t, bs, low8, hi8, limit, depth + 1)) {
+            LogErrorF("libsmacker::huff16_build_rec() - ERROR: failed to build right sub-tree\n");
+            return 0;
+        }
+//        treeValue[depth] = false;
+    } else {
+        /* Bit unset signifies a Leaf node. */
 const unsigned char * tmpBuffer = bs->buffer; unsigned tmpBitNum = bs->bit_num;
-		/* Attempt to read LOW value */
-		if ((value = huff8_lookup(low8, bs)) < 0) {
-			LogErrorF("libsmacker::huff16_build_rec() - ERROR: get LOW value returned -1\n");
-			return 0;
-		}
+        /* Attempt to read LOW value */
+        if ((value = huff8_lookup(low8, bs)) < 0) {
+            LogErrorF("libsmacker::huff16_build_rec() - ERROR: get LOW value returned -1\n");
+            return 0;
+        }
 
-		t->tree[t->size] = value;
+        t->tree[t->size] = value;
 
-		/* now read HIGH value */
-		if ((value = huff8_lookup(hi8, bs)) < 0) {
-			LogErrorF("libsmacker::huff16_build_rec() - ERROR: get HIGH value returned -1\n");
-			return 0;
-		}
+        /* now read HIGH value */
+        if ((value = huff8_lookup(hi8, bs)) < 0) {
+            LogErrorF("libsmacker::huff16_build_rec() - ERROR: get HIGH value returned -1\n");
+            return 0;
+        }
 
-		/* Looks OK: we got low and hi values. Return a new LEAF */
-		t->tree[t->size] |= (value << 8);
+        /* Looks OK: we got low and hi values. Return a new LEAF */
+        t->tree[t->size] |= (value << 8);
 if (huffLeafCounter > 0) {
-	huffLeafCounter--;
-		LogErrorF("libsmacker::huff16_build_rec() - INFO: leaf %d at %d len%d (ebn%d fbn%d) offset%d\n", t->tree[t->size], t->size, ((size_t)bs->buffer - (size_t)tmpBuffer) * 8 + tmpBitNum - bs->bit_num, tmpBitNum, bs->bit_num, (size_t)tmpBuffer - (size_t)huff16_start);
+    huffLeafCounter--;
+        LogErrorF("libsmacker::huff16_build_rec() - INFO: leaf %d at %d len%d (ebn%d fbn%d) offset%d\n", t->tree[t->size], t->size, ((size_t)bs->buffer - (size_t)tmpBuffer) * 8 + tmpBitNum - bs->bit_num, tmpBitNum, bs->bit_num, (size_t)tmpBuffer - (size_t)huff16_start);
 }
 // bool deepDebug = t->tree[t->size] == t->cache[0] || t->tree[t->size] == t->cache[1] || t->tree[t->size] == t->cache[2];
 /*if (deepDebug) {
 // LogErrorFF("huff16_build leaf[%d]=%d (%d,%d) d%d c(%d:%d:%d)", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
-	/*int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
-	for ( ; i >= 0; i--) {
-		if (fullLeafs[i] == t->tree[t->size])
-			break;
+    /*int i = sizeof(fullLeafs) / sizeof(fullLeafs[0]) - 1;
+    for ( ; i >= 0; i--) {
+        if (fullLeafs[i] == t->tree[t->size])
+            break;
     }
-	if (i >= 0) {* /
+    if (i >= 0) {* /
         unsigned char bytes[4] = { 0 };
-		for (int n = 0; n < depth; n++) {
-			if (treeValue[n])
-				bytes[n / 8] |= 1 << (n % 8);
+        for (int n = 0; n < depth; n++) {
+            if (treeValue[n])
+                bytes[n / 8] |= 1 << (n % 8);
         }
-		LogErrorFF("huff16_build leaf[%d]=%d (%d,%d) d%d %d c%d:%d:%d", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, *(unsigned*)(&bytes[0]), t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
+        LogErrorFF("huff16_build leaf[%d]=%d (%d,%d) d%d %d c%d:%d:%d", t->size, t->tree[t->size], t->tree[t->size] & 0xFF, value, depth, *(unsigned*)(&bytes[0]), t->tree[t->size] == t->cache[0], t->tree[t->size] == t->cache[1], t->tree[t->size] == t->cache[2]);
     // }
 }*/
-		/* Last: when building the tree, some Values may correspond to cache positions.
-			Identify these values and set the Escape code byte accordingly. */
-		if (t->tree[t->size] == t->cache[0])
-			t->tree[t->size] = HUFF16_CACHE;
-		else if (t->tree[t->size] == t->cache[1])
-			t->tree[t->size] = HUFF16_CACHE | 1;
-		else if (t->tree[t->size] == t->cache[2])
-			t->tree[t->size] = HUFF16_CACHE | 2;
+        /* Last: when building the tree, some Values may correspond to cache positions.
+            Identify these values and set the Escape code byte accordingly. */
+        if (t->tree[t->size] == t->cache[0])
+            t->tree[t->size] = HUFF16_CACHE;
+        else if (t->tree[t->size] == t->cache[1])
+            t->tree[t->size] = HUFF16_CACHE | 1;
+        else if (t->tree[t->size] == t->cache[2])
+            t->tree[t->size] = HUFF16_CACHE | 2;
 
-		t->size ++;
-	}
+        t->size ++;
+    }
 
-	return 1;
+    return 1;
 }
 
 /* Entry point for building a big 16-bit tree. */
 static int huff16_build(huff16_t * const t, bit_t * const bs, const unsigned int alloc_size)
 {
-	huff8_t low8, hi8;
-	size_t limit;
-	int value, i, bit;
+    huff8_t low8, hi8;
+    size_t limit;
+    int value, i, bit;
 
-	/* Smacker huff trees begin with a set-bit. */
-	if ((bit = bs_read_1(bs)) < 0) {
-		LogErrorF("libsmacker::huff16_build() - ERROR: initial get_bit returned -1\n");
-		return 0;
-	}
+    /* Smacker huff trees begin with a set-bit. */
+    if ((bit = bs_read_1(bs)) < 0) {
+        LogErrorF("libsmacker::huff16_build() - ERROR: initial get_bit returned -1\n");
+        return 0;
+    }
 
-	t->size = 0;
+    t->size = 0;
 
-	/* First bit indicates whether a tree is present or not. */
-	/*  Very small or audio-only files may have no tree. */
-	if (bit) {
+    /* First bit indicates whether a tree is present or not. */
+    /*  Very small or audio-only files may have no tree. */
+    if (bit) {
 // LogErrorFF("huff16_build 1 %d", alloc_size);
-		/* build low-8-bits tree */
-		if (! huff8_build(&low8, bs)) {
-			LogErrorF("libsmacker::huff16_build() - ERROR: failed to build LOW tree\n");
-			return 0;
-		}
+        /* build low-8-bits tree */
+        if (! huff8_build(&low8, bs)) {
+            LogErrorF("libsmacker::huff16_build() - ERROR: failed to build LOW tree\n");
+            return 0;
+        }
 // LogErrorFF("huff16_build 2");
-		/* build hi-8-bits tree */
-		if (! huff8_build(&hi8, bs)) {
-			LogErrorF("libsmacker::huff16_build() - ERROR: failed to build HIGH tree\n");
-			return 0;
-		}
+        /* build hi-8-bits tree */
+        if (! huff8_build(&hi8, bs)) {
+            LogErrorF("libsmacker::huff16_build() - ERROR: failed to build HIGH tree\n");
+            return 0;
+        }
 // LogErrorFF("huff16_build 3");
-		/* Init the escape code cache. */
+        /* Init the escape code cache. */
 
-//		LogErrorF("libsmacker::huff16_build() - INFO: cache starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
-		for (i = 0; i < 3; i ++) {
-			if ((value = bs_read_8(bs)) < 0) {
-				LogErrorF("libsmacker::huff16_build() - ERROR: get LOW value for cache %d returned -1\n", i);
-				return 0;
-			}
+//        LogErrorF("libsmacker::huff16_build() - INFO: cache starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
+        for (i = 0; i < 3; i ++) {
+            if ((value = bs_read_8(bs)) < 0) {
+                LogErrorF("libsmacker::huff16_build() - ERROR: get LOW value for cache %d returned -1\n", i);
+                return 0;
+            }
 
-			t->cache[i] = value;
+            t->cache[i] = value;
 
-			/* now read HIGH value */
-			if ((value = bs_read_8(bs)) < 0) {
-				LogErrorF("libsmacker::huff16_build() - ERROR: get HIGH value for cache %d returned -1\n", i);
-				return 0;
-			}
+            /* now read HIGH value */
+            if ((value = bs_read_8(bs)) < 0) {
+                LogErrorF("libsmacker::huff16_build() - ERROR: get HIGH value for cache %d returned -1\n", i);
+                return 0;
+            }
 
-			t->cache[i] |= (value << 8);
-//			LogErrorF("libsmacker::huff16_build() - INFO: cache %d : %d\n", i, t->cache[i]);
-		}
-		/* Everything looks OK so far. Time to malloc structure. */
-		if (alloc_size < 12 || alloc_size % 4) {
-			LogErrorF("libsmacker::huff16_build() - ERROR: illegal value %u for alloc_size\n", alloc_size);
-			return 0;
-		}
+            t->cache[i] |= (value << 8);
+//            LogErrorF("libsmacker::huff16_build() - INFO: cache %d : %d\n", i, t->cache[i]);
+        }
+        /* Everything looks OK so far. Time to malloc structure. */
+        if (alloc_size < 12 || alloc_size % 4) {
+            LogErrorF("libsmacker::huff16_build() - ERROR: illegal value %u for alloc_size\n", alloc_size);
+            return 0;
+        }
 // LogErrorFF("huff16_build 4");
-		limit = (alloc_size - 12) / 4;
-		if ((t->tree = (unsigned int*)malloc(limit * sizeof(unsigned int))) == NULL) {
-			LogErrorF("libsmacker::huff16_build() - ERROR: failed to malloc() huff16 tree");
-			return 0;
-		}
-//		LogErrorF("libsmacker::huff16_build() - INFO: main starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
-		/* Finally, call recursive function to retrieve the Bigtree. */
-		if (! huff16_build_rec(t, bs, &low8, &hi8, limit, 0)) {
-			LogErrorF("libsmacker::huff16_build() - ERROR: failed to build huff16 tree\n");
-			goto error;
-		}
+        limit = (alloc_size - 12) / 4;
+        if ((t->tree = (unsigned int*)malloc(limit * sizeof(unsigned int))) == NULL) {
+            LogErrorF("libsmacker::huff16_build() - ERROR: failed to malloc() huff16 tree");
+            return 0;
+        }
+//        LogErrorF("libsmacker::huff16_build() - INFO: main starting bn%d [%d,%d,%d,%d,%d]\n", bs->bit_num, bs->buffer[0], bs->buffer[1], bs->buffer[2], bs->buffer[3], bs->buffer[4]);
+        /* Finally, call recursive function to retrieve the Bigtree. */
+        if (! huff16_build_rec(t, bs, &low8, &hi8, limit, 0)) {
+            LogErrorF("libsmacker::huff16_build() - ERROR: failed to build huff16 tree\n");
+            goto error;
+        }
 // LogErrorFF("huff16_build 5");
-		/* check that we completely filled the tree */
-		if (limit != t->size) {
+        /* check that we completely filled the tree */
+        if (limit != t->size) {
 // LogErrorFF("failed to completely decode huff16 tree %d vs %d", limit, t->size);
-			LogErrorF("libsmacker::huff16_build() - ERROR: failed to completely decode huff16 tree (%d vs %d)\n", limit, t->size);
-			goto error;
-		}
-	} else {
-		if ((t->tree = (unsigned int*)malloc(sizeof(unsigned int))) == NULL) {
-			LogErrorF("libsmacker::huff16_build() - ERROR: failed to malloc() huff16 tree");
-			return 0;
-		}
+            LogErrorF("libsmacker::huff16_build() - ERROR: failed to completely decode huff16 tree (%d vs %d)\n", limit, t->size);
+            goto error;
+        }
+    } else {
+        if ((t->tree = (unsigned int*)malloc(sizeof(unsigned int))) == NULL) {
+            LogErrorF("libsmacker::huff16_build() - ERROR: failed to malloc() huff16 tree");
+            return 0;
+        }
 
-		t->tree[0] = 0;
-		//t->cache[0] = t->cache[1] = t->cache[2] = 0;
-	}
+        t->tree[0] = 0;
+        //t->cache[0] = t->cache[1] = t->cache[2] = 0;
+    }
 
-	/* Check final end tag. */
-	if ((bit = bs_read_1(bs)) < 0) {
-		LogErrorF("libsmacker::huff16_build() - ERROR: final get_bit returned -1\n");
-		goto error;
-	}
+    /* Check final end tag. */
+    if ((bit = bs_read_1(bs)) < 0) {
+        LogErrorF("libsmacker::huff16_build() - ERROR: final get_bit returned -1\n");
+        goto error;
+    }
 
-	/* a 0 is expected here, a 1 generally indicates a problem! */
-	if (bit) {
-		LogErrorF("libsmacker::huff16_build() - ERROR: final get_bit returned 1\n");
-		goto error;
-	}
+    /* a 0 is expected here, a 1 generally indicates a problem! */
+    if (bit) {
+        LogErrorF("libsmacker::huff16_build() - ERROR: final get_bit returned 1\n");
+        goto error;
+    }
 
-	return 1;
+    return 1;
 error:
-	return 0;
+    return 0;
+}
+
+static void DumpTreeLeafs(SmkTreeInfo &tree)
+{
+	char tmp[256];
+
+	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", tree.VideoTreeIndex + 1);
+	FILE* f0 = fopen(tmp, "a+");
+	if (f0 == NULL)
+		return;
+
+	for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
+		snprintf(tmp, sizeof(tmp), "leaf=%d (%d,%d) occ %d", it->first, it->first & 0xFF, (it->first >> 8) & 0xFF, it->second);
+		fputs(tmp, f0);
+	}
+
+	fputc('\n', f0);
+
+	fclose(f0);
 }
 
 static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &allocSize, size_t &cursor, unsigned &bitNum)
@@ -954,6 +977,8 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
 // LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
+            if (tree.freezeCache.contains(value))
+                continue;
             for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
                 if (it->first == value) {
                     if (it->second + tree.cacheStat[i][n].second >= tree.cacheCount[i] - tree.cacheStat[i][n].second) {
@@ -1028,6 +1053,7 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
     // sort treeStat
 LogErrorF("D1Smk::prepareVideoTree sort %d", tree.treeStat.count());
     std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second || (e1.second == e2.second && e1.first < e2.first); });
+DumpTreeLeafs(tree);
 // LogErrorF("D1Smk::prepareVideoTree sorted %d", tree.treeStat.count());
     // prepare the sub-trees
     QList<QPair<unsigned, unsigned>> lowByteLeafs, hiByteLeafs;
@@ -1089,68 +1115,68 @@ joints = 0;
     }
 LogErrorF("D1Smk::prepareVideoTree low added %d bn%d", (size_t)res - (size_t)treeData, bitNum);
     {
-		huff8_t testTree;
-		memset(&testTree, 0, sizeof(testTree));
-		bit_t bt;
-		bt.buffer = tmpPtr;
-		bt.end = res + ((bitNum != 0) ? 1 : 0);
-		bt.bit_num = tmpBitNum;
-		if (!huff8_build(&testTree, &bt)) {
-			LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 0 failed");
+        huff8_t testTree;
+        memset(&testTree, 0, sizeof(testTree));
+        bit_t bt;
+        bt.buffer = tmpPtr;
+        bt.end = res + ((bitNum != 0) ? 1 : 0);
+        bt.bit_num = tmpBitNum;
+        if (!huff8_build(&testTree, &bt)) {
+            LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 0 failed");
         } else {
-			// LogErrorF("D1Smk::prepareVideoTree huff8_build 0 success joints%d leafs %d, treesize%d", joints, bytePaths[0].size(), testTree.size);
-			unsigned leafs = 0;
-			unsigned dbgLeafCount = 0;
-			for (unsigned i = 0; i < testTree.size; i++) {
-				if (testTree.tree[i] & HUFF8_BRANCH) {
-					// LogErrorF("D1Smk::prepareVideoTree branch at %d to %d", i, testTree.tree[i] & HUFF8_LEAF_MASK);
+            // LogErrorF("D1Smk::prepareVideoTree huff8_build 0 success joints%d leafs %d, treesize%d", joints, bytePaths[0].size(), testTree.size);
+            unsigned leafs = 0;
+            unsigned dbgLeafCount = 0;
+            for (unsigned i = 0; i < testTree.size; i++) {
+                if (testTree.tree[i] & HUFF8_BRANCH) {
+                    // LogErrorF("D1Smk::prepareVideoTree branch at %d to %d", i, testTree.tree[i] & HUFF8_LEAF_MASK);
                 } else {
-					leafs++;
-					// LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
-					auto it = bytePaths[0].find(testTree.tree[i]);
-					if (it == bytePaths[0].end()) {
-						LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
+                    leafs++;
+                    // LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
+                    auto it = bytePaths[0].find(testTree.tree[i]);
+                    if (it == bytePaths[0].end()) {
+                        LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
                     } else {
-						// LogErrorF("D1Smk::prepareVideoTree 0 encoded leaf value%d depth%d branch%d", it.key(), it.value().first, it.value().second);
-						if (dbgLeafCount > 0) {
-							dbgLeafCount--;
-							unsigned branch = it.value().second;
-							unsigned short *leafPtr = testTree.tree;
-							unsigned char route[256];
-							unsigned depth = it.value().first;
-							route[depth] = '\0';
-							unsigned index = 0;
-							for (unsigned n = 0; n < depth; n++) {
-								if (testTree.tree[index] & HUFF8_BRANCH) {
-									if (branch & 1) {
-										route[n] = 'R';
-										index = testTree.tree[index] & HUFF8_LEAF_MASK;
-									} else {
-										route[n] = 'L';
-										index++;
-									}
-									branch >>= 1;
-									if (index >= testTree.size) {
-										LogErrorF("ERROR D1Smk::prepareVideoTree out of range at %d (step %d)", index, n);
+                        // LogErrorF("D1Smk::prepareVideoTree 0 encoded leaf value%d depth%d branch%d", it.key(), it.value().first, it.value().second);
+                        if (dbgLeafCount > 0) {
+                            dbgLeafCount--;
+                            unsigned branch = it.value().second;
+                            unsigned short *leafPtr = testTree.tree;
+                            unsigned char route[256];
+                            unsigned depth = it.value().first;
+                            route[depth] = '\0';
+                            unsigned index = 0;
+                            for (unsigned n = 0; n < depth; n++) {
+                                if (testTree.tree[index] & HUFF8_BRANCH) {
+                                    if (branch & 1) {
+                                        route[n] = 'R';
+                                        index = testTree.tree[index] & HUFF8_LEAF_MASK;
+                                    } else {
+                                        route[n] = 'L';
+                                        index++;
+                                    }
+                                    branch >>= 1;
+                                    if (index >= testTree.size) {
+                                        LogErrorF("ERROR D1Smk::prepareVideoTree out of range at %d (step %d)", index, n);
                                     }
                                 } else {
-									route[n] = 'X';
-									LogErrorF("ERROR D1Smk::prepareVideoTree lost branch at %d", n);
-									break;
+                                    route[n] = 'X';
+                                    LogErrorF("ERROR D1Smk::prepareVideoTree lost branch at %d", n);
+                                    break;
                                 }
-							}
-							LogErrorF("D1Smk::prepareVideoTree route %s", route);
-							if (testTree.tree[index] != it.key()) {
-								LogErrorF("ERROR D1Smk::prepareVideoTree wrong value %d (@ %d) vs %d", testTree.tree[index], it.key(), index);
+                            }
+                            LogErrorF("D1Smk::prepareVideoTree route %s", route);
+                            if (testTree.tree[index] != it.key()) {
+                                LogErrorF("ERROR D1Smk::prepareVideoTree wrong value %d (@ %d) vs %d", testTree.tree[index], it.key(), index);
                             }
                         }
                     }
                 }
             }
-			if (leafs != bytePaths[0].size())
-				LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 0 res leafs %d vs %d", leafs, bytePaths[0].size());
+            if (leafs != bytePaths[0].size())
+                LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 0 res leafs %d vs %d", leafs, bytePaths[0].size());
             else
-				; // LogErrorF("D1Smk::prepareVideoTree huff8_build 0 res leafs %d", leafs);
+                ; // LogErrorF("D1Smk::prepareVideoTree huff8_build 0 res leafs %d", leafs);
         }
     }
 tmpPtr = res; tmpBitNum = bitNum;
@@ -1166,35 +1192,35 @@ joints = 0;
     }
 LogErrorF("D1Smk::prepareVideoTree hi added %d bn%d", (size_t)res - (size_t)treeData, bitNum);
     {
-		huff8_t testTree;
-		memset(&testTree, 0, sizeof(testTree));
-		bit_t bt;
-		bt.buffer = tmpPtr;
-		bt.end = res + ((bitNum != 0) ? 1 : 0);
-		bt.bit_num = tmpBitNum;
-		if (!huff8_build(&testTree, &bt)) {
-			LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 1 failed");
+        huff8_t testTree;
+        memset(&testTree, 0, sizeof(testTree));
+        bit_t bt;
+        bt.buffer = tmpPtr;
+        bt.end = res + ((bitNum != 0) ? 1 : 0);
+        bt.bit_num = tmpBitNum;
+        if (!huff8_build(&testTree, &bt)) {
+            LogErrorF("ERROR D1Smk::prepareVideoTree huff8_build 1 failed");
         } else {
-			// LogErrorF("D1Smk::prepareVideoTree huff8_build 1 success joints%d leafs %d, treesize%d", joints, bytePaths[1].size(), testTree.size);
-			unsigned leafs = 0;
-			for (unsigned i = 0; i < testTree.size; i++) {
-				if (testTree.tree[i] & HUFF8_BRANCH) {
-					// LogErrorF("D1Smk::prepareVideoTree branch at %d to %d", i, testTree.tree[i] & HUFF8_LEAF_MASK);
+            // LogErrorF("D1Smk::prepareVideoTree huff8_build 1 success joints%d leafs %d, treesize%d", joints, bytePaths[1].size(), testTree.size);
+            unsigned leafs = 0;
+            for (unsigned i = 0; i < testTree.size; i++) {
+                if (testTree.tree[i] & HUFF8_BRANCH) {
+                    // LogErrorF("D1Smk::prepareVideoTree branch at %d to %d", i, testTree.tree[i] & HUFF8_LEAF_MASK);
                 } else {
-					leafs++;
-					// LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
-					auto it = bytePaths[1].find(testTree.tree[i]);
-					if (it == bytePaths[1].end()) {
-						LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
+                    leafs++;
+                    // LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
+                    auto it = bytePaths[1].find(testTree.tree[i]);
+                    if (it == bytePaths[1].end()) {
+                        LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
                     } else {
-						// LogErrorF("D1Smk::prepareVideoTree 1 encoded leaf value%d depth%d branch%d", it.key(), it.value().first, it.value().second);
+                        // LogErrorF("D1Smk::prepareVideoTree 1 encoded leaf value%d depth%d branch%d", it.key(), it.value().first, it.value().second);
                     }
                 }
             }
-			if (leafs != bytePaths[1].size())
-				LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build 1 res leafs %d vs %d", leafs, bytePaths[1].size());
+            if (leafs != bytePaths[1].size())
+                LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build 1 res leafs %d vs %d", leafs, bytePaths[1].size());
             else
-				; // LogErrorF("D1Smk::prepareVideoTree huff8_build 1 res leafs %d", leafs);
+                ; // LogErrorF("D1Smk::prepareVideoTree huff8_build 1 res leafs %d", leafs);
         }
     }
 tmpPtr = res; tmpBitNum = bitNum;
@@ -1220,56 +1246,56 @@ leafCounter = 0;
 // deepDeb = false;
 LogErrorF("D1Smk::prepareVideoTree main added %d bn%d js%d from bn%d [%d,%d,%d,%d,%d]", (size_t)res - (size_t)treeData, bitNum, joints, tmpBitNum, tmpPtr[0], tmpPtr[1], tmpPtr[2], tmpPtr[3], tmpPtr[4]);
     {
-		huff16_t testTree;
-		memset(&testTree, 0, sizeof(testTree));
-		bit_t bt;
-		bt.buffer = &treeData[cursor];
-		bt.end = res + ((bitNum != 0) ? 1 : 0);
-		bt.bit_num = startBitNum;
-		unsigned alloc_size = (joints + 3) * 4;
-		huff16_start = bt.buffer;
-		huffCounter = 0;
-		huffLeafCounter = 0;
-		if (!huff16_build(&testTree, &bt, alloc_size)) {
-			LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build failed");
+        huff16_t testTree;
+        memset(&testTree, 0, sizeof(testTree));
+        bit_t bt;
+        bt.buffer = &treeData[cursor];
+        bt.end = res + ((bitNum != 0) ? 1 : 0);
+        bt.bit_num = startBitNum;
+        unsigned alloc_size = (joints + 3) * 4;
+        huff16_start = bt.buffer;
+        huffCounter = 0;
+        huffLeafCounter = 0;
+        if (!huff16_build(&testTree, &bt, alloc_size)) {
+            LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build failed");
         } else {
-			// LogErrorF("D1Smk::prepareVideoTree huff16_build success joints%d leafs %d, treesize%d", joints, tree.paths.size(), testTree.size);
-			unsigned leafs = 0;
-			for (unsigned i = 0; i < testTree.size; i++) {
-				if (testTree.tree[i] & HUFF16_BRANCH) {
-					// LogErrorF("D1Smk::prepareVideoTree branch at %d", i);
+            // LogErrorF("D1Smk::prepareVideoTree huff16_build success joints%d leafs %d, treesize%d", joints, tree.paths.size(), testTree.size);
+            unsigned leafs = 0;
+            for (unsigned i = 0; i < testTree.size; i++) {
+                if (testTree.tree[i] & HUFF16_BRANCH) {
+                    // LogErrorF("D1Smk::prepareVideoTree branch at %d", i);
                 } else if (testTree.tree[i] & HUFF16_CACHE) {
-					leafs++;
-					unsigned cacheIdx = testTree.tree[i] & ~HUFF16_CACHE;
-					// LogErrorF("D1Smk::prepareVideoTree cache leaf %d (%d) at %d", testTree.tree[i], cacheIdx, i);
-					if (cacheIdx > 2) {
-						LogErrorF("ERROR D1Smk::prepareVideoTree bad cache index %d", cacheIdx);
+                    leafs++;
+                    unsigned cacheIdx = testTree.tree[i] & ~HUFF16_CACHE;
+                    // LogErrorF("D1Smk::prepareVideoTree cache leaf %d (%d) at %d", testTree.tree[i], cacheIdx, i);
+                    if (cacheIdx > 2) {
+                        LogErrorF("ERROR D1Smk::prepareVideoTree bad cache index %d", cacheIdx);
                     } else {
-						unsigned value = tree.cacheCount[cacheIdx];
-						auto it = tree.paths.find(value);
-						if (it == tree.paths.end()) {
-							LogErrorF("ERROR D1Smk::prepareVideoTree cache (%d) not planned", value);
-						} else {
-							// LogErrorF("D1Smk::prepareVideoTree encoded cache depth%d value%d", it.value().first, it.value().second);
-						}
+                        unsigned value = tree.cacheCount[cacheIdx];
+                        auto it = tree.paths.find(value);
+                        if (it == tree.paths.end()) {
+                            LogErrorF("ERROR D1Smk::prepareVideoTree cache (%d) not planned", value);
+                        } else {
+                            // LogErrorF("D1Smk::prepareVideoTree encoded cache depth%d value%d", it.value().first, it.value().second);
+                        }
                     }
                 } else {
-					leafs++;
-					// LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
-					auto it = tree.paths.find(testTree.tree[i]);
-					if (it == tree.paths.end()) {
-						LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
+                    leafs++;
+                    // LogErrorF("D1Smk::prepareVideoTree leaf %d at %d", testTree.tree[i], i);
+                    auto it = tree.paths.find(testTree.tree[i]);
+                    if (it == tree.paths.end()) {
+                        LogErrorF("ERROR D1Smk::prepareVideoTree leaf not planned");
                     } else {
-						// LogErrorF("D1Smk::prepareVideoTree encoded leaf depth%d value%d", it.value().first, it.value().second);
+                        // LogErrorF("D1Smk::prepareVideoTree encoded leaf depth%d value%d", it.value().first, it.value().second);
                     }
                 }
             }
-			if (leafs != tree.paths.size())
-				LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build res leafs %d vs %d", leafs, tree.paths.size());
+            if (leafs != tree.paths.size())
+                LogErrorF("ERROR D1Smk::prepareVideoTree huff16_build res leafs %d vs %d", leafs, tree.paths.size());
             else
-				; // LogErrorF("D1Smk::prepareVideoTree huff16_build res leafs %d", leafs);
+                ; // LogErrorF("D1Smk::prepareVideoTree huff16_build res leafs %d", leafs);
         }
-		free(testTree.tree);
+        free(testTree.tree);
     }
 
     tree.uncompressedTreeSize = (joints + 3) * 4;
@@ -1288,11 +1314,11 @@ bool cached = false;
             for (const QPair<unsigned, unsigned> &entry : videoTree.cacheStat[i]) {
                 if (entry.first == value) {
                     v = videoTree.cacheCount[i]; // use the 'fake' leaf value
-					cached = true;
+                    cached = true;
                 }
             }
 if (!cached) {
-	// LogErrorF("D1Smk::writeTreeValue does not use cache value (%d) for %d in tree %d", videoTree.cacheCount[i], value, videoTree.VideoTreeIndex);
+    // LogErrorF("D1Smk::writeTreeValue does not use cache value (%d) for %d in tree %d", videoTree.cacheCount[i], value, videoTree.VideoTreeIndex);
 }
             break;
         }
@@ -1399,7 +1425,7 @@ LogErrorF("ERROR D1Smk::encodePixels not 2color %d:%d vs %d at %d:%d", color1, c
 if (x != sx || y != sy) {
     LogErrorF("ERROR D1Smk::encodePixels not complete %d:%d vs %d:%d len%d", sx, sy, x, y, slen);
 }
-	cursor = (size_t)res - (size_t)frameData;
+    cursor = (size_t)res - (size_t)frameData;
 }
 
 static unsigned char oldPalette[D1SMK_COLORS][3];
@@ -1978,15 +2004,15 @@ LogErrorF("D1Smk::save pixels of frame %d offset%d", n, cursor);
                     // ctype = 1;
                 }
                 if (type != ctype) {
-if (n <= 3) {
-	deepDeb = true;
+/*if (n <= 3) {
+    deepDeb = true;
  LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", x, y, type, typelen, cursor, bitNum);
-}
+}*/
                     encodePixels(x, y, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
-if (n <= 3) {
-	deepDeb = false;
+/*if (n <= 3) {
+    deepDeb = false;
 LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
-}
+}*/
 
                     type = ctype;
                     typelen = 0;
@@ -1994,15 +2020,15 @@ LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
                 typelen++;
             }
         }
-if (n <= 3) {
-	deepDeb = true;
+/*if (n <= 3) {
+    deepDeb = true;
 LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", width, height - 4, type, typelen, cursor, bitNum);
-}
+}*/
         encodePixels(0, height, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
-if (n <= 3) {
-	deepDeb = false;
+/*if (n <= 3) {
+    deepDeb = false;
 LogErrorF("D1Smk::save encoded last pixels:%d;%d", cursor, bitNum);
-}
+}*/
         if (bitNum != 0) {
             cursor++;
         }
