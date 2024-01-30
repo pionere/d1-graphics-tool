@@ -196,6 +196,20 @@ uint8_t* D1SmkAudioData::getAudio(unsigned track, unsigned long *len) const
     return const_cast<uint8_t*>(this->audio[track]);
 }
 
+bool D1SmkAudioData::setCompress(unsigned track, uint8_t compress)
+{
+    if (this->compress[track] == compress) {
+        return false;
+    }
+    this->compress[track] = compress;
+    return true;
+}
+
+uint8_t D1SmkAudioData::getCompress(unsigned track) const
+{
+    return this->compress[track];
+}
+
 static D1Pal* LoadPalette(smk SVidSMK)
 {
     D1Pal *pal = new D1Pal();
@@ -242,9 +256,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     double SVidFrameLength;
     smk_info_all(SVidSMK, &SVidWidth, &SVidHeight, &SVidFrameLength);
 // LogErrorF("D1Smk::load 2 %d %d %d", SVidWidth, SVidHeight, SVidFrameLength);
-    unsigned char channels, depth;
-    unsigned long rate;
-    smk_info_audio(SVidSMK, &channels, &depth, &rate);
 // LogErrorF("D1Smk::load 3 %d %d %d", channels, depth, rate);
     smk_enable_video(SVidSMK, true);
     for (int i = 0; i < D1SMK_TRACKS; i++) {
@@ -293,6 +304,10 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
             frame->addPixelLine(std::move(pixelLine));
         }
 
+        unsigned char channels, depth;
+        unsigned long rate;
+        uint8_t compress;
+        smk_info_audio(SVidSMK, 0, &channels, &depth, &rate, &compress); // FIXME track vs frameAudio
         D1SmkAudioData *audio = new D1SmkAudioData(channels, depth, rate);
         for (unsigned i = 0; i < D1SMK_TRACKS; i++) {
             unsigned long len = smk_get_audio_size(SVidSMK, i);
@@ -305,6 +320,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
                 memcpy(ct, track, len);
             }
             audio->setAudio(i, ct, len);
+            audio->setCompress(i, compress);
         }
         frame->frameAudio = audio;
 
@@ -952,21 +968,40 @@ error:
 
 static void DumpTreeLeafs(SmkTreeInfo &tree)
 {
-	char tmp[256];
+    char tmp[256];
 
-	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", tree.VideoTreeIndex + 1);
-	FILE* f0 = fopen(tmp, "a+");
-	if (f0 == NULL)
-		return;
+    snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", tree.VideoTreeIndex + 1);
+    FILE* f0 = fopen(tmp, "a+");
+    if (f0 == NULL)
+        return;
 
-	for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
-		snprintf(tmp, sizeof(tmp), "leaf=%d (%d,%d) occ %d\n", it->first, it->first & 0xFF, (it->first >> 8) & 0xFF, it->second);
-		fputs(tmp, f0);
-	}
+    for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
+        snprintf(tmp, sizeof(tmp), "leaf=%d (%d,%d) occ %d\n", it->first, it->first & 0xFF, (it->first >> 8) & 0xFF, it->second);
+        fputs(tmp, f0);
+    }
 
-	fputc('\n', f0);
+    fputc('\n', f0);
 
-	fclose(f0);
+    fclose(f0);
+}
+
+bool leafSorter(const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2)
+{
+    return e1.second > e2.second || (e1.second == e2.second && e1.first < e2.first);
+}
+
+static void addTreeValue(unsigned byteValue, QList<QPair<unsigned, unsigned>> &byteLeafs)
+{
+    auto it = byteLeafs.begin();
+    for ( ; it != byteLeafs.end(); it++) {
+        if (it->first == byteValue) {
+            it->second++;
+            break;
+        }
+    }
+    if (it == byteLeafs.end()) {
+        lowByteLeafs.push_back(QPair<unsigned, unsigned>(byteValue, 1));
+    }
 }
 
 static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &allocSize, size_t &cursor, unsigned &bitNum)
@@ -1052,34 +1087,18 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
     }
     // sort treeStat
 LogErrorF("D1Smk::prepareVideoTree sort %d", tree.treeStat.count());
-    std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second > e2.second || (e1.second == e2.second && e1.first < e2.first); });
-DumpTreeLeafs(tree);
+    // std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second > e2.second || (e1.second == e2.second && e1.first < e2.first); });
+    std::sort(tree.treeStat.begin(), tree.treeStat.end(), leafSorter);
+// DumpTreeLeafs(tree);
 // LogErrorF("D1Smk::prepareVideoTree sorted %d", tree.treeStat.count());
     // prepare the sub-trees
     QList<QPair<unsigned, unsigned>> lowByteLeafs, hiByteLeafs;
     for (QPair<unsigned, unsigned> &leaf : tree.treeStat) {
         unsigned lowByte = leaf.first & 0xFF;
         unsigned hiByte = (leaf.first >> 8) & 0xFF;
-        auto it1 = lowByteLeafs.begin();
-        for (; it1 != lowByteLeafs.end(); it1++) {
-            if (it1->first == lowByte) {
-                it1->second++;
-                break;
-            }
-        }
-        if (it1 == lowByteLeafs.end()) {
-            lowByteLeafs.push_back(QPair<unsigned, unsigned>(lowByte, 1));
-        }
-        auto it2 = hiByteLeafs.begin();
-        for (; it2 != hiByteLeafs.end(); it2++) {
-            if (it2->first == hiByte) {
-                it2->second++;
-                break;
-            }
-        }
-        if (it2 == hiByteLeafs.end()) {
-            hiByteLeafs.push_back(QPair<unsigned, unsigned>(hiByte, 1));
-        }
+
+        addTreeValue(lowByte, lowByteLeafs);
+        addTreeValue(hiByte, hiByteLeafs);
     }
 LogErrorF("D1Smk::prepareVideoTree subtrees %d and %d. As%d, c%d bn%d", lowByteLeafs.count(), hiByteLeafs.count(), allocSize, cursor, bitNum);
 /*    size_t maxSize = 1 + (1 + lowByteLeafs.count() * sizeof(uint8_t) * 2 * 8 + 1) + (1 + hiByteLeafs.count() * sizeof(uint8_t) * 2 * 8 + 1) + lengthof(tree.cacheCount) * sizeof(uint16_t) * 8 + (tree.treeStat.count() * sizeof(uint16_t) * 2 * 8) + 1;
@@ -1570,26 +1589,155 @@ LogErrorF("ERROR D1Smk::save non-matching palette %d[%d]: %d vs %d", i, n, cv, p
     return len;
 }
 
-static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &audioInfo, uint8_t *dest)
+static uint8_t *writeTreeValue(unsigned v, const QMap<unsigned, QPair<unsigned, uint32_t>> &bytePaths, uint8_t *cursor, unsigned &bitNum)
 {
-    unsigned bitNum;
-    size_t result;
+    auto it = bytePaths.find(v);
+    if (it == bytePaths.end()) {
+        LogErrorF("ERROR: writeTreeValue missing entry %d in byte paths.", v, value);
+        return cursor;
+    }
+
+    QPair<unsigned, uint32_t> theEntryPair = it.value();
+    return writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
+}
+
+static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &audioInfo, uint8_t *cursor)
+{
+    unsigned bitNum = 0;
+    uint8_t *res = cursor;
 
     if (!audioInfo.compress) {
-        memcpy(dest, audioData, len);
-        result = len;
-    } else {
-        bitNum = 0;
-        result = 0;
+        memcpy(cursor, audioData, len);
+        res += len;
+    } else {        
+        uint8_t *audioDataEnd = &audioData[len];
+        unsigned dw;
+        channels = audioInfo.channels;
+        bitdepth = audioInfo.bitDepth;
 
-        // FIXME... UNCOMPRESSED_SIZE{4} 1 CH W TREE_DATA[4] AUDIO_DATA
+        *((uint32_t*)res) = SwapLE32(len);
+        res += 4;
+
+        res = writeBit(1, res, bitNum);
+
+        dw = channels == 2 ? 2 : 1;
+        res = writeBit(channels == 2 ? 1 : 0, res, bitNum);
+
+        dw *= bitdepth == 16 ? 2 : 1;
+        res = writeBit(bitdepth == 16 ? 1 : 0, res, bitNum);
+        /* prepare the trees */
+        QList<QPair<unsigned, unsigned>> audioBytes[4];
+        QMap<unsigned, QPair<unsigned, uint32_t>> bytePaths[4];
+        uint8_t *audioCursor = audioData[dw];
+        while (audioCursor < audioDataEnd) {
+            /*addTreeValue(audioData[i], audioBytes[0]);
+
+            if (bitdepth == 16) {
+                i++;
+                addTreeValue(audioData[i], audioBytes[1]);
+            }
+
+            if (channels == 2) {
+                i++;
+                addTreeValue(audioData[i], audioBytes[2]);
+
+                if (bitdepth == 16) {
+                    i++;
+                    addTreeValue(audioData[i], audioBytes[3]);
+                }
+            }*/
+            if (bitdepth == 16) {
+                int16_t dv = ((int16_t *)audioCursor)[0] - ((int16_t *)audioCursor)[ - channels];
+                addTreeValue(dv & 0xFF, audioBytes[0]);
+                addTreeValue((dv >> 8) & 0xFF, audioBytes[1]);
+                audioCursor += 2;
+            } else {
+                int8_t dv = ((int8_t *)audioCursor)[0] - ((int8_t *)audioCursor)[ - channels];
+                addTreeValue(dv, audioBytes[0]);
+                audioCursor++;
+            }
+
+            if (channels == 2) {
+                if (bitdepth == 16) {
+                    int16_t dv = ((int16_t *)audioCursor)[0] - ((int16_t *)audioCursor)[ - 2];
+                    addTreeValue(dv & 0xFF, audioBytes[2]);
+                    addTreeValue((dv >> 8) & 0xFF, audioBytes[3]);
+                    audioCursor += 2;
+                } else {
+                    int8_t dv = ((int8_t *)audioCursor)[0] - ((int8_t *)audioCursor)[ - 2];
+                    addTreeValue(dv, audioBytes[2]);
+                    audioCursor++;
+                }
+            }
+        }
+        /* write the trees */
+        for (int i = 0; i < 4; i++) {
+            if (!audioBytes[i].isEmpty()) {
+                unsigned joints;
+                std::sort(audioBytes[i].begin(), audioBytes[i].end(), leafSorter);
+                // start the sub-tree
+                res = writeBit(1, res, bitNum);
+                // add the sub-tree
+                res = buildTreeData(audioBytes[i], res, bitNum, 0, 0, joints, bytePaths[i], nullptr);
+                // close the sub-tree
+                res = writeBit(0, res, bitNum);
+            } else {
+                // add open/close bits
+                res = writeNBits(0, 2, res, bitNum);
+            }
+        }
+        
+        /* write initial sound level */
+        if (channels == 2) {
+            if (bitdepth == 16) {
+                res = writeNBits(audioBytes[3], 8, res, bitNum);
+                res = writeNBits(audioBytes[2], 8, res, bitNum);
+            } else {
+                res = writeNBits(audioBytes[1], 8, res, bitNum);
+            }
+        }
+
+        if (bitdepth == 16) {
+            res = writeNBits(audioBytes[1], 8, res, bitNum);
+            res = writeNBits(audioBytes[0], 8, res, bitNum);
+        } else {
+            res = writeNBits(audioBytes[0], 8, res, bitNum);
+        }
+
+        audioData += dw;
+        /* write the rest of the data */
+        while (audioData != audioDataEnd) {
+            if (bitdepth == 16) {
+                int16_t dv = ((int16_t *)audioData)[0] - ((int16_t *)audioData)[ - channels];
+                res = writeTreeValue(dv & 0xFF, audioBytes[0], res, bitNum);
+                res = writeTreeValue((dv >> 8) & 0xFF, audioBytes[1], res, bitNum);
+                audioData += 2;
+            } else {
+                int8_t dv = ((int8_t *)audioData)[0] - ((int8_t *)audioData)[ - channels];
+                res = writeTreeValue(dv, audioBytes[0], res, bitNum);
+                audioData++;
+            }
+
+            if (channels == 2) {
+                if (bitdepth == 16) {
+                    int16_t dv = ((int16_t *)audioData)[0] - ((int16_t *)audioData)[ - 2];
+                    res = writeTreeValue(dv & 0xFF, audioBytes[2], res, bitNum);
+                    res = writeTreeValue((dv >> 8) & 0xFF, audioBytes[3], res, bitNum);
+                    audioData += 2;
+                } else {
+                    int8_t dv = ((int8_t *)audioData)[0] - ((int8_t *)audioData)[ - 2];
+                    res = writeTreeValue(dv, audioBytes[2], res, bitNum);
+                    audioData++;
+                }
+            }
+        }
 
         if (bitNum != 0) {
-            result++;
+            res++;
         }
     }
 
-    return result;
+    return (size_t)res - (size_t)cursor;
 }
 
 bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
@@ -1651,6 +1799,7 @@ LogErrorF("D1Smk::save 1 %d", frameInfo.count());
         unsigned bitDepth = 0;
         unsigned channels = 0;
         unsigned maxChunkLength = 0;
+        bool compress = false;
         for (int n = 0; n < frameCount; n++) {
             D1GfxFrame *frame = gfx.getFrame(n);
             D1SmkAudioData *audioData = frame->getFrameAudio();
@@ -1667,6 +1816,14 @@ LogErrorF("D1Smk::save 1 %d", frameInfo.count());
                 }
                 if (len > maxChunkLength) {
                     maxChunkLength = len;
+                }
+                if (audioData->compress[i] != compress) {
+                    if (n == 0) {
+                        compress = audioData->compress[i];
+                    } else {
+                        dProgressErr() << QApplication::tr("Audio chunk of frame %1 (track %2) has mismatching compression setting (%3 vs %4).").arg(n + 1).arg(i + 1).arg(audioData->compress[i]).arg(compress);
+                        return false;
+                    }
                 }
                 if (audioData->bitDepth != 8 && audioData->bitDepth != 16) {
                     dProgressErr() << QApplication::tr("Sample size of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 8 or 16).").arg(n + 1).arg(i + 1).arg(audioData->bitDepth);
@@ -1711,7 +1868,7 @@ LogErrorF("D1Smk::save 1 %d", frameInfo.count());
         audioInfo[i].bitDepth = bitDepth;
         audioInfo[i].channels = channels;
         audioInfo[i].maxChunkLength = maxChunkLength;
-        audioInfo[i].compress = false;
+        audioInfo[i].compress = compress;
     }
 
     int frameLen = gfx.getFrameLen(); 

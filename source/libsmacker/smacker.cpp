@@ -2802,11 +2802,12 @@ char smk_info_all(const smk object, unsigned long * w, unsigned long * h, double
 	return 0;
 }
 
-void smk_info_audio(const smk object, unsigned char* channels, unsigned char* bitdepth, unsigned long* audio_rate)
+void smk_info_audio(const smk object, unsigned track, unsigned char* channels, unsigned char* bitdepth, unsigned long* audio_rate, uint8_t *compress)
 {
-	*channels = object->audio[0].channels;
-	*bitdepth = object->audio[0].bitdepth;
-	*audio_rate = object->audio[0].rate;
+	*channels = object->audio[track].channels;
+	*bitdepth = object->audio[track].bitdepth;
+	*audio_rate = object->audio[track].rate;
+	*compress = object->audio[track].compress;
 }
 #endif /* FULL */
 

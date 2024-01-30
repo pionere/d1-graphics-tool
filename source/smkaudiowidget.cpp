@@ -143,6 +143,8 @@ void SmkAudioWidget::frameModified()
     this->ui->audioLenLineEdit->setText("");
     this->ui->audioLenLabel->setText("");
     this->ui->trackComboBox->setEnabled(hasAudio);
+    this->ui->audioCompressCheckBox->setChecked(false);
+    this->ui->audioCompressCheckBox->setEnabled(hasAudio);
     if (hasAudio) {
         // - tracks
         for (int i = 0; i < D1SMK_TRACKS; i++) {
@@ -166,6 +168,9 @@ void SmkAudioWidget::frameModified()
         // - audio length
         this->ui->audioLenLineEdit->setText(QString::number(audioLen));
         this->ui->audioLenLabel->setText(bitRate == 0 ? tr("N/A") : tr("%1us").arg((uint64_t)audioLen * 1000000 / bitRate));
+
+        // - compress
+        this->ui->audioCompressCheckBox->setChecked(frameAudio->getCompress(0)); // FIXME track vs frameAudio
     }
 
     // update the scene
@@ -215,6 +220,28 @@ void SmkAudioWidget::on_trackComboBox_activated(int index)
     this->currentTrack = index;
 
     this->frameModified();
+}
+
+void SmkAudioWidget::on_audioCompressCheckBox_clicked()
+{
+    int track = this->currentTrack;
+    uint8_t compress = this->ui->audioCompressCheckBox->isChecked() ? 1 : 0;
+    bool result = false;
+
+    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->gfx->getFrame(i);
+        D1SmkAudioData *frameAudio = frame->getFrameAudio();
+        if (frameAudio != nullptr) {
+            result |= frameAudio->setCompress(track, compress);
+        }
+    }
+    if (result) {
+        this->gfx->setModified();
+        // update the window
+        this->frameModified();
+        // update the main view
+        ((CelView *)this->parent())->displayFrame();
+    }
 }
 
 void SmkAudioWidget::on_playPushButtonClicked()

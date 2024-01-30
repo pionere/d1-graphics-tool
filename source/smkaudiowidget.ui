@@ -153,6 +153,9 @@
       <widget class="QLabel" name="audioLenLabel"/>
      </item>
      <item>
+      <widget class="QCheckBox" name="audioCompressCheckBox"/>
+     </item>
+     <item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
