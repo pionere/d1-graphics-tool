@@ -1612,8 +1612,8 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
     } else {        
         uint8_t *audioDataEnd = &audioData[len];
         unsigned dw;
-        unsigned channels = audioInfo.channels;
-        unsigned bitdepth = audioInfo.bitDepth;
+        int channels = audioInfo.channels;
+        int bitdepth = audioInfo.bitDepth;
 
         *((uint32_t*)res) = SwapLE32(len);
         res += 4;
