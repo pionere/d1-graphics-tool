@@ -87,7 +87,7 @@ char smk_info_video(const smk object, unsigned long * w, unsigned long * h, unsi
 char smk_info_audio(const smk object, unsigned char * track_mask, unsigned char channels[7], unsigned char bitdepth[7], unsigned long audio_rate[7]);
 #else
 char smk_info_all(const smk object, unsigned long * w, unsigned long * h, double * usf);
-void smk_info_audio(const smk object, unsigned char * channels, unsigned char * bitdepth, unsigned long * audio_rate);
+void smk_info_audio(const smk object, unsigned char * channels, unsigned char * bitdepth, unsigned long * audio_rate, unsigned char *compress);
 #endif
 
 /* ENABLE/DISABLE Switches */

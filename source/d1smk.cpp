@@ -259,7 +259,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 // LogErrorF("D1Smk::load 3 %d %d %d", channels, depth, rate);
     smk_enable_video(SVidSMK, true);
     for (int i = 0; i < D1SMK_TRACKS; i++) {
-        smk_enable_audio(SVidSMK, i, false); // true);
+        smk_enable_audio(SVidSMK, i, true);
     }
     // Decode first frame
 // LogErrorF("D1Smk::load 4");
@@ -1000,7 +1000,7 @@ static void addTreeValue(unsigned byteValue, QList<QPair<unsigned, unsigned>> &b
         }
     }
     if (it == byteLeafs.end()) {
-        lowByteLeafs.push_back(QPair<unsigned, unsigned>(byteValue, 1));
+        byteLeafs.push_back(QPair<unsigned, unsigned>(byteValue, 1));
     }
 }
 
@@ -1593,7 +1593,7 @@ static uint8_t *writeTreeValue(unsigned v, const QMap<unsigned, QPair<unsigned, 
 {
     auto it = bytePaths.find(v);
     if (it == bytePaths.end()) {
-        LogErrorF("ERROR: writeTreeValue missing entry %d in byte paths.", v, value);
+        LogErrorF("ERROR: writeTreeValue missing entry %d in byte paths.", v);
         return cursor;
     }
 
@@ -1612,8 +1612,8 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
     } else {        
         uint8_t *audioDataEnd = &audioData[len];
         unsigned dw;
-        channels = audioInfo.channels;
-        bitdepth = audioInfo.bitDepth;
+        unsigned channels = audioInfo.channels;
+        unsigned bitdepth = audioInfo.bitDepth;
 
         *((uint32_t*)res) = SwapLE32(len);
         res += 4;
@@ -1628,7 +1628,7 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
         /* prepare the trees */
         QList<QPair<unsigned, unsigned>> audioBytes[4];
         QMap<unsigned, QPair<unsigned, uint32_t>> bytePaths[4];
-        uint8_t *audioCursor = audioData[dw];
+        uint8_t *audioCursor = &audioData[dw];
         while (audioCursor < audioDataEnd) {
             /*addTreeValue(audioData[i], audioBytes[0]);
 
@@ -1690,18 +1690,18 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
         /* write initial sound level */
         if (channels == 2) {
             if (bitdepth == 16) {
-                res = writeNBits(audioBytes[3], 8, res, bitNum);
-                res = writeNBits(audioBytes[2], 8, res, bitNum);
+                res = writeNBits(audioData[3], 8, res, bitNum);
+                res = writeNBits(audioData[2], 8, res, bitNum);
             } else {
-                res = writeNBits(audioBytes[1], 8, res, bitNum);
+                res = writeNBits(audioData[1], 8, res, bitNum);
             }
         }
 
         if (bitdepth == 16) {
-            res = writeNBits(audioBytes[1], 8, res, bitNum);
-            res = writeNBits(audioBytes[0], 8, res, bitNum);
+            res = writeNBits(audioData[1], 8, res, bitNum);
+            res = writeNBits(audioData[0], 8, res, bitNum);
         } else {
-            res = writeNBits(audioBytes[0], 8, res, bitNum);
+            res = writeNBits(audioData[0], 8, res, bitNum);
         }
 
         audioData += dw;
@@ -1709,24 +1709,24 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
         while (audioData != audioDataEnd) {
             if (bitdepth == 16) {
                 int16_t dv = ((int16_t *)audioData)[0] - ((int16_t *)audioData)[ - channels];
-                res = writeTreeValue(dv & 0xFF, audioBytes[0], res, bitNum);
-                res = writeTreeValue((dv >> 8) & 0xFF, audioBytes[1], res, bitNum);
+                res = writeTreeValue(dv & 0xFF, bytePaths[0], res, bitNum);
+                res = writeTreeValue((dv >> 8) & 0xFF, bytePaths[1], res, bitNum);
                 audioData += 2;
             } else {
                 int8_t dv = ((int8_t *)audioData)[0] - ((int8_t *)audioData)[ - channels];
-                res = writeTreeValue(dv, audioBytes[0], res, bitNum);
+                res = writeTreeValue(dv, bytePaths[0], res, bitNum);
                 audioData++;
             }
 
             if (channels == 2) {
                 if (bitdepth == 16) {
                     int16_t dv = ((int16_t *)audioData)[0] - ((int16_t *)audioData)[ - 2];
-                    res = writeTreeValue(dv & 0xFF, audioBytes[2], res, bitNum);
-                    res = writeTreeValue((dv >> 8) & 0xFF, audioBytes[3], res, bitNum);
+                    res = writeTreeValue(dv & 0xFF, bytePaths[2], res, bitNum);
+                    res = writeTreeValue((dv >> 8) & 0xFF, bytePaths[3], res, bitNum);
                     audioData += 2;
                 } else {
                     int8_t dv = ((int8_t *)audioData)[0] - ((int8_t *)audioData)[ - 2];
-                    res = writeTreeValue(dv, audioBytes[2], res, bitNum);
+                    res = writeTreeValue(dv, bytePaths[2], res, bitNum);
                     audioData++;
                 }
             }
