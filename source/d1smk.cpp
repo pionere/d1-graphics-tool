@@ -406,9 +406,11 @@ static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValu
         stat->push_back(QPair<unsigned, unsigned>(value, 1));
     }
 
-    cacheValues[2] = cacheValues[1];
-    cacheValues[1] = cacheValues[0];
-    cacheValues[0] = value;
+    if (cacheValues[0] != value) {
+        cacheValues[2] = cacheValues[1];
+        cacheValues[1] = cacheValues[0];
+        cacheValues[0] = value;
+    }
 }
 
 static void addTreeTypeValue(int type, int typelen, SmkTreeInfo &tree, unsigned (&cacheValues)[3])
@@ -1296,9 +1298,11 @@ if (!cached) {
         }
     }
 
-    cacheValues[2] = cacheValues[1];
-    cacheValues[1] = cacheValues[0];
-    cacheValues[0] = value;
+    if (cacheValues[0] != value) {
+        cacheValues[2] = cacheValues[1];
+        cacheValues[1] = cacheValues[0];
+        cacheValues[0] = value;
+    }
 
     auto it = videoTree.paths.find(v);
     if (it == videoTree.paths.end()) {
