@@ -960,7 +960,7 @@ static void DumpTreeLeafs(SmkTreeInfo &tree)
 		return;
 
 	for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
-		snprintf(tmp, sizeof(tmp), "leaf=%d (%d,%d) occ %d", it->first, it->first & 0xFF, (it->first >> 8) & 0xFF, it->second);
+		snprintf(tmp, sizeof(tmp), "leaf=%d (%d,%d) occ %d\n", it->first, it->first & 0xFF, (it->first >> 8) & 0xFF, it->second);
 		fputs(tmp, f0);
 	}
 
