@@ -1052,7 +1052,7 @@ LogErrorF("D1Smk::prepareVideoTree new cursor %d", cursor);
     }
     // sort treeStat
 LogErrorF("D1Smk::prepareVideoTree sort %d", tree.treeStat.count());
-    std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second < e2.second || (e1.second == e2.second && e1.first < e2.first); });
+    std::sort(tree.treeStat.begin(), tree.treeStat.end(), [](const QPair<unsigned, unsigned> &e1, const QPair<unsigned, unsigned> &e2) { return e1.second >= e2.second || (e1.second == e2.second && e1.first < e2.first); });
 DumpTreeLeafs(tree);
 // LogErrorF("D1Smk::prepareVideoTree sorted %d", tree.treeStat.count());
     // prepare the sub-trees
