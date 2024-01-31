@@ -1579,6 +1579,7 @@ LogErrorF("ERROR D1Smk::save non-matching palette %d[%d]: %d vs %d", i, n, cv, p
     } else {
         len = 0;
         for (int i = 0; i < D1PAL_COLORS; i++) {
+            int direct;
             if (palUse[i]) {
                 // 0x00: Set Color block
                 dest[len] = newPalette[i][0];
