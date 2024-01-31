@@ -153,7 +153,11 @@
       <widget class="QLabel" name="audioLenLabel"/>
      </item>
      <item>
-      <widget class="QCheckBox" name="audioCompressCheckBox"/>
+      <widget class="QCheckBox" name="audioCompressCheckBox">
+       <property name="toolTip">
+        <string>Compressed audio data</string>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer>

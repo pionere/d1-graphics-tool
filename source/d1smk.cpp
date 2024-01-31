@@ -1005,7 +1005,7 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
 {
 // LogErrorF("D1Smk::prepareVideoTree 0");
     // reduce inflated cache frequencies
-    for (int i = 0; i < 3; i++) {
+    /*for (int i = 0; i < 3; i++) {
 // LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
@@ -1024,7 +1024,7 @@ LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d ref
                 }
             }
         }
-    }
+    }*/
 // LogErrorF("D1Smk::prepareVideoTree 1");
     // convert cache values to normal values
     bool hasEntries = !tree.treeStat.isEmpty();
