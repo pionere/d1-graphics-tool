@@ -327,7 +327,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 1250);
+    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 1);
 
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
@@ -974,6 +974,26 @@ static void DumpTreeLeafs(SmkTreeInfo &tree)
 
     for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
         snprintf(tmp, sizeof(tmp), "leaf=%d (%d,%d) occ %d\n", it->first, it->first & 0xFF, (it->first >> 8) & 0xFF, it->second);
+        fputs(tmp, f0);
+    }
+
+    fputc('\n', f0);
+
+    fclose(f0);
+}
+
+static void DumpTreeLeafs(QList<QPair<unsigned, unsigned>> &tree, int index)
+{
+    char tmp[256];
+
+    snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", index + 1);
+    FILE* f0 = fopen(tmp, "a+");
+    if (f0 == NULL)
+        return;
+
+    for (auto it = tree.begin(); it != tree.end(); it++) {
+        // snprintf(tmp, sizeof(tmp), "leaf=%d (%d,%d) occ %d\n", it->first, it->first & 0xFF, (it->first >> 8) & 0xFF, it->second);
+        snprintf(tmp, sizeof(tmp), "leaf=%d occ %d\n", it->first, it->second);
         fputs(tmp, f0);
     }
 
@@ -1651,7 +1671,7 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
         unsigned dw;
         int channels = audioInfo.channels;
         int bitdepth = audioInfo.bitDepth;
-        // assert((len % (channels * bitdepth / 8) == 0);
+        // assert((len % (channels * bitdepth / 8)) == 0);
         // assert(channels < D1SMK_CHANNELS);
         // assert(bitdepth == 8 || bitdepth == 16);
         *((uint32_t*)res) = SwapLE32(len);
@@ -1698,6 +1718,8 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
             if (!audioBytes[i].isEmpty()) {
                 unsigned joints;
                 std::sort(audioBytes[i].begin(), audioBytes[i].end(), leafSorter);
+if (len == 47040)
+DumpTreeLeafs(audioBytes[i], i);
                 // start the sub-tree
                 res = writeBit(1, res, bitNum);
                 // add the sub-tree
