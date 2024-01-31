@@ -510,7 +510,7 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
                 if (it == leafPaths[0].end()) {
                     LogErrorF("ERROR: Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
-                    QPair<unsigned, uint32_t> &theEntryPair = it->value();
+                    QPair<unsigned, uint32_t> &theEntryPair = it.value();
 //                    LogErrorF("TreeData writeNBits value %d length %d for lo-leaf %d", theEntryPair.second, theEntryPair.first, leaf & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
@@ -520,7 +520,7 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
                 if (it == leafPaths[1].end()) {
                     LogErrorF("ERROR: Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
                 } else {
-                    QPair<unsigned, uint32_t> theEntryPair = it->value();
+                    QPair<unsigned, uint32_t> theEntryPair = it.value();
 //                    LogErrorF("TreeData writeNBits value %d length %d for hi-leaf %d", theEntryPair.second, theEntryPair.first, (leaf >> 8) & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
