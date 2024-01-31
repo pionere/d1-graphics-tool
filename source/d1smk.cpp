@@ -186,6 +186,7 @@ unsigned D1SmkAudioData::getBitRate() const
 
 void D1SmkAudioData::setAudio(unsigned track, uint8_t* data, unsigned long len)
 {
+    // assert((len % (this->channels * this->bitDepth / 8) == 0);
     this->audio[track] = data;
     this->len[track] = len;
 }
@@ -388,7 +389,6 @@ typedef struct _SmkFrameInfo {
 typedef struct _SmkTreeInfo {
     QList<QPair<unsigned, unsigned>> treeStat;
     QList<QPair<unsigned, unsigned>> cacheStat[3];
-    QSet<unsigned> freezeCache;
     unsigned cacheCount[3];
     unsigned uncompressedTreeSize;
     QMap<unsigned, QPair<unsigned, uint32_t>> paths;
@@ -402,9 +402,6 @@ static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValu
         if (value == cacheValues[i]) {
             stat = &tree.cacheStat[i];
             tree.cacheCount[i]++;
-            while (--i >= 0) {
-                tree.freezeCache.insert(cacheValues[i]);
-            }
             break;
         }
     }
@@ -483,14 +480,14 @@ static bool deepDeb = false;
 static uint8_t *main_start;
 static unsigned mainCounter = 0;
 static unsigned leafCounter = 0;
-static uint8_t *buildTreeData(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
+static uint8_t *writeTreeLeafs(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
 //    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> (&leafPaths)[2])
     unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
 {
     joints++;
 if (mainCounter > 0) {
     mainCounter--;
-    LogErrorF("buildTreeData - INFO: rec-building %d", leafs.count());
+    LogErrorF("writeTreeLeafs - INFO: rec-building %d", leafs.count());
 }
     if (leafs.count() == 1) {
         cursor = writeBit(0, cursor, bitNum);
@@ -502,7 +499,7 @@ if (mainCounter > 0) {
         } else {
 // LogErrorF("TreeData leafPaths access");
 if (leafCounter > 0) {
-    LogErrorF("buildTreeData - INFO: leaf %d at %d:%d\n", leaf, branch, depth);
+    LogErrorF("writeTreeLeafs - INFO: leaf %d at %d:%d\n", leaf, branch, depth);
 }
 uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
             {
@@ -527,7 +524,7 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
             }
 if (leafCounter > 0) {
     leafCounter--;
-            LogErrorF("buildTreeData - INFO: leaf %d at %d:%d len%d (ebn%d fbn%d) offset%d", leaf, branch, depth, ((size_t)cursor - (size_t)tmpPtr) * 8 + tmpBitNum - bitNum, tmpBitNum, bitNum, (size_t)tmpPtr - (size_t)main_start);
+            LogErrorF("writeTreeLeafs - INFO: leaf %d at %d:%d len%d (ebn%d fbn%d) offset%d", leaf, branch, depth, ((size_t)cursor - (size_t)tmpPtr) * 8 + tmpBitNum - bitNum, tmpBitNum, bitNum, (size_t)tmpPtr - (size_t)main_start);
 }
             /*for (auto it = leafPaths[0].begin(); it != leafPaths[0].end(); it++) {
                 if (it->first == (leaf & 0xFF)) {
@@ -547,7 +544,7 @@ if (leafCounter > 0) {
     cursor = writeBit(1, cursor, bitNum);
     depth++;
     if (depth > 32) {
-        LogErrorF("buildTreeData ERROR: depth %d too much.", depth);
+        LogErrorF("writeTreeLeafs ERROR: depth %d too much.", depth);
     }
     QList<QPair<unsigned, unsigned>> rightLeafs;
     unsigned leftCount = 0, rightCount = 0;
@@ -564,10 +561,10 @@ if (leafCounter > 0) {
 //    if (deepDeb)
 //        LogErrorF("TreeData joint %d depth %d value %d length %d / %d", joints, depth, branch, leafs.count(), rightLeafs.count());
     // branch <<= 1;
-    cursor = buildTreeData(leafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
+    cursor = writeTreeLeafs(leafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
     branch |= 1 << (depth - 1);
-    cursor = buildTreeData(rightLeafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
+    cursor = writeTreeLeafs(rightLeafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
     return cursor;
 }
@@ -1012,8 +1009,6 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
 // LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
-            if (tree.freezeCache.contains(value))
-                continue;
             for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
                 if (it->first == value) {
                     if (it->second + tree.cacheStat[i][n].second >= tree.cacheCount[i] - tree.cacheStat[i][n].second) {
@@ -1128,7 +1123,7 @@ main_start = res;
         // add the low sub-tree
         // joints = 0;
 joints = 0;
-        res = buildTreeData(lowByteLeafs, res, bitNum, 0, 0, joints, bytePaths[0], nullptr);
+        res = writeTreeLeafs(lowByteLeafs, res, bitNum, 0, 0, joints, bytePaths[0], nullptr);
         // close the low-sub-tree
         res = writeBit(0, res, bitNum);
     }
@@ -1205,7 +1200,7 @@ tmpPtr = res; tmpBitNum = bitNum;
         // add the hi sub-tree
         // joints = 0;
 joints = 0;
-        res = buildTreeData(hiByteLeafs, res, bitNum, 0, 0, joints, bytePaths[1], nullptr);
+        res = writeTreeLeafs(hiByteLeafs, res, bitNum, 0, 0, joints, bytePaths[1], nullptr);
         // close the hi-sub-tree
         res = writeBit(0, res, bitNum);
     }
@@ -1258,7 +1253,7 @@ leafCounter = 0;
     {
         // add the main tree
         joints = 0;
-        res = buildTreeData(tree.treeStat, res, bitNum, 0, 0, joints, tree.paths, bytePaths);
+        res = writeTreeLeafs(tree.treeStat, res, bitNum, 0, 0, joints, tree.paths, bytePaths);
         // close the main tree
         res = writeBit(0, res, bitNum);
     }
@@ -1605,7 +1600,7 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
 {
     unsigned bitNum = 0;
     uint8_t *res = cursor;
-
+    // assert(len != 0);
     if (!audioInfo.compress) {
         memcpy(cursor, audioData, len);
         res += len;
@@ -1614,7 +1609,9 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
         unsigned dw;
         int channels = audioInfo.channels;
         int bitdepth = audioInfo.bitDepth;
-
+        // assert((len % (channels * bitdepth / 8) == 0);
+        // assert(channels < D1SMK_CHANNELS);
+        // assert(bitdepth == 8 || bitdepth == 16);
         *((uint32_t*)res) = SwapLE32(len);
         res += 4;
 
@@ -1630,22 +1627,6 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
         QMap<unsigned, QPair<unsigned, uint32_t>> bytePaths[4];
         uint8_t *audioCursor = &audioData[dw];
         while (audioCursor < audioDataEnd) {
-            /*addTreeValue(audioData[i], audioBytes[0]);
-
-            if (bitdepth == 16) {
-                i++;
-                addTreeValue(audioData[i], audioBytes[1]);
-            }
-
-            if (channels == 2) {
-                i++;
-                addTreeValue(audioData[i], audioBytes[2]);
-
-                if (bitdepth == 16) {
-                    i++;
-                    addTreeValue(audioData[i], audioBytes[3]);
-                }
-            }*/
             if (bitdepth == 16) {
                 int16_t dv = ((int16_t *)audioCursor)[0] - ((int16_t *)audioCursor)[ - channels];
                 addTreeValue(dv & 0xFF, audioBytes[0]);
@@ -1678,12 +1659,9 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
                 // start the sub-tree
                 res = writeBit(1, res, bitNum);
                 // add the sub-tree
-                res = buildTreeData(audioBytes[i], res, bitNum, 0, 0, joints, bytePaths[i], nullptr);
+                res = writeTreeLeafs(audioBytes[i], res, bitNum, 0, 0, joints, bytePaths[i], nullptr);
                 // close the sub-tree
                 res = writeBit(0, res, bitNum);
-            } else {
-                // add open/close bits
-                res = writeNBits(0, 2, res, bitNum);
             }
         }
         
@@ -1799,7 +1777,8 @@ LogErrorF("D1Smk::save 1 %d", frameInfo.count());
         unsigned bitDepth = 0;
         unsigned channels = 0;
         unsigned maxChunkLength = 0;
-        bool compress = false;
+        uint8_t compress = 0;
+        bool first = true;
         for (int n = 0; n < frameCount; n++) {
             D1GfxFrame *frame = gfx.getFrame(n);
             D1SmkAudioData *audioData = frame->getFrameAudio();
@@ -1817,47 +1796,44 @@ LogErrorF("D1Smk::save 1 %d", frameInfo.count());
                 if (len > maxChunkLength) {
                     maxChunkLength = len;
                 }
-                if (audioData->compress[i] != compress) {
-                    if (n == 0) {
-                        compress = audioData->compress[i];
-                    } else {
+                // assert(len % (audioData->channels * audioData->bitDepth / 8));
+                if (!first) {
+                    if (compress != audioData->compress[i]) {
                         dProgressErr() << QApplication::tr("Audio chunk of frame %1 (track %2) has mismatching compression setting (%3 vs %4).").arg(n + 1).arg(i + 1).arg(audioData->compress[i]).arg(compress);
                         return false;
                     }
-                }
-                if (audioData->bitDepth != 8 && audioData->bitDepth != 16) {
-                    dProgressErr() << QApplication::tr("Sample size of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 8 or 16).").arg(n + 1).arg(i + 1).arg(audioData->bitDepth);
-                    return false;
-                }
-                if (bitDepth != audioData->bitDepth) {
-                    if (bitDepth == 0) {
-                        bitDepth = audioData->bitDepth;
-                    } else {
+                    if (bitDepth != audioData->bitDepth) {
                         dProgressErr() << QApplication::tr("Audio chunk of frame %1 (track %2) has mismatching sample size (%3 vs %4).").arg(n + 1).arg(i + 1).arg(audioData->bitDepth).arg(bitDepth);
                         return false;
                     }
-                }
-                if (audioData->channels != 1 && audioData->channels != 2) {
-                    dProgressErr() << QApplication::tr("Channel-count of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 1 or 2).").arg(n + 1).arg(i + 1).arg(audioData->channels);
-                    return false;
-                }
-                if (channels != audioData->channels) {
-                    if (channels == 0) {
-                        channels = audioData->channels;
-                    } else {
+                    if (channels != audioData->channels) {
                         dProgressErr() << QApplication::tr("Audio chunk of frame %1 (track %2) has mismatching channel-count (%3 vs %4).").arg(n + 1).arg(i + 1).arg(audioData->channels).arg(channels);
                         return false;
                     }
-                }
-                if (audioData->bitRate == 0 || audioData->bitRate > 0x00FFFFFF) {
-                    dProgressErr() << QApplication::tr("Bitrate of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 1-%4).").arg(n + 1).arg(i + 1).arg(audioData->bitRate).arg(0x00FFFFFF);
-                    return false;
-                }
-                if (bitRate != audioData->bitRate) {
-                    if (bitRate == 0) {
-                        bitRate = audioData->bitRate;
-                    } else {
+                    if (bitRate != audioData->bitRate) {
                         dProgressErr() << QApplication::tr("Audio chunk of frame %1 (track %2) has mismatching bitrate (%3 vs %4).").arg(n + 1).arg(i + 1).arg(audioData->bitRate).arg(bitRate);
+                        return false;
+                    }
+                } else {
+                    first = false;
+                    compress = audioData->compress[i];
+                    bitDepth = audioData->bitDepth;
+                    channels = audioData->channels;
+                    bitRate = audioData->bitRate;
+                    if (compress != 0 && compress != 1) {
+                        dProgressErr() << QApplication::tr("Compression mode of the audio chunk of frame %1 (track %2) is not supported (%3 Must be 0 or 1).").arg(n + 1).arg(i + 1).arg(compress);
+                        return false;
+                    }
+                    if (bitDepth != 8 && bitDepth != 16) {
+                        dProgressErr() << QApplication::tr("Sample size of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 8 or 16).").arg(n + 1).arg(i + 1).arg(bitDepth);
+                        return false;
+                    }
+                    if (channels != 1 && channels != 2) {
+                        dProgressErr() << QApplication::tr("Channel-count of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 1 or 2).").arg(n + 1).arg(i + 1).arg(channels);
+                        return false;
+                    }
+                    if (bitRate == 0 || bitRate > 0x00FFFFFF) {
+                        dProgressErr() << QApplication::tr("Bitrate of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 1-%4).").arg(n + 1).arg(i + 1).arg(bitRate).arg(0x00FFFFFF);
                         return false;
                     }
                 }
