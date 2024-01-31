@@ -489,13 +489,13 @@ typedef struct _TreeLeaf {
 } TreeLeaf;
 
 static uint8_t *writeTreeLeafs(TreeLeaf* treeLeaf, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
-    unsigned &joints, std::map<unsigned, std::pair<unsigned, uint32_t>> &paths, std::map<unsigned, std::pair<unsigned, uint32_t>> *leafPaths)
+    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
 {
     joints++;
     if (!treeLeaf->isBranch) {
         cursor = writeBit(0, cursor, bitNum);
         unsigned leaf = treeLeaf->value;
-        paths[leaf] = std::pair<unsigned, uint32_t>(depth, branch);
+        paths[leaf] = QPair<unsigned, uint32_t>(depth, branch);
 
         if (leafPaths == nullptr) {
             cursor = writeNBits(leaf, 8, cursor, bitNum);
@@ -510,7 +510,7 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
                 if (it == leafPaths[0].end()) {
                     LogErrorF("ERROR: Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
-                    std::pair<unsigned, uint32_t> &theEntryPair = it->second;
+                    QPair<unsigned, uint32_t> &theEntryPair = it->second;
 //                    LogErrorF("TreeData writeNBits value %d length %d for lo-leaf %d", theEntryPair.second, theEntryPair.first, leaf & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
@@ -520,7 +520,7 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
                 if (it == leafPaths[1].end()) {
                     LogErrorF("ERROR: Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
                 } else {
-                    std::pair<unsigned, uint32_t> theEntryPair = it->second;
+                    QPair<unsigned, uint32_t> theEntryPair = it->second;
 //                    LogErrorF("TreeData writeNBits value %d length %d for hi-leaf %d", theEntryPair.second, theEntryPair.first, (leaf >> 8) & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
@@ -560,12 +560,12 @@ if (leafCounter > 0) {
     return cursor;
 }
 
-static uint8_t *writeTree(std::vector<std::pair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum,
-    unsigned &joints, std::map<unsigned, std::pair<unsigned, uint32_t>> &paths, std::map<unsigned, std::pair<unsigned, uint32_t>> *leafPaths)
+static uint8_t *writeTree(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum,
+    unsigned &joints, QMap<unsigned, qPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
 {
     // std::sort(leafs.begin(), leafs.end(), leafSorter);
 
-    std::vector<TreeLeaf*> treeLeafs;
+    QList<TreeLeaf*> treeLeafs;
     for (auto it = leafs.begin(); it != leafs.end(); it++) {
         TreeLeaf *tl = new TreeLeaf();
         tl->value = it->first;
