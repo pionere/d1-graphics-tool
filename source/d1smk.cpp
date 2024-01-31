@@ -1005,7 +1005,7 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
 {
 // LogErrorF("D1Smk::prepareVideoTree 0");
     // reduce inflated cache frequencies
-    /*for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
 // LogErrorF("D1Smk::prepareVideoTree cache clean c%d as%d bn%d", i, tree.cacheStat[i].count());
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
@@ -1024,7 +1024,7 @@ LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d ref
                 }
             }
         }
-    }*/
+    }
 // LogErrorF("D1Smk::prepareVideoTree 1");
     // convert cache values to normal values
     bool hasEntries = !tree.treeStat.isEmpty();
@@ -1443,7 +1443,7 @@ if (x != sx || y != sy) {
 }
 
 static unsigned char oldPalette[D1SMK_COLORS][3];
-static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
+static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS], uint8_t *dest)
 {
     // convert pal to smk-palette
     unsigned char newPalette[D1SMK_COLORS][3];
@@ -1490,8 +1490,14 @@ LogErrorF("ERROR D1Smk::save non-matching palette %d[%d]: %d vs %d", i, n, cv, p
             for (int n = 0; n < D1PAL_COLORS; n++) {
                 int curr = 0;
                 for (int k = n; k < D1PAL_COLORS; k++, curr++) {
+                    if (!palUse[i + curr]) {
+                        continue; // destination color is unused -> ok
+                    }
+                    if (!palUse[k]) {
+                        break; // source color is unused while the destination is used -> stop
+                    }
                     if (oldPalette[k][0] != newPalette[i + curr][0] || oldPalette[k][1] != newPalette[i + curr][1] || oldPalette[k][2] != newPalette[i + curr][2]) {
-                        break;
+                        break; // mismatching colors -> stop
                     }
                 }
                 if (curr > best) {
@@ -1571,9 +1577,44 @@ LogErrorF("ERROR D1Smk::save non-matching palette %d[%d]: %d vs %d", i, n, cv, p
             len++;
         }
     } else {
-        len = sizeof(newPalette);
+        len = 0;
+        for (int i = 0; i < D1PAL_COLORS; i++) {
+            if (palUse[i]) {
+                // 0x00: Set Color block
+                dest[len] = newPalette[i][0];
+                len++;
+                dest[len] = newPalette[i][1];
+                len++;
+                dest[len] = newPalette[i][2];
+                len++;
+            } else {
+                // 0x80: Skip block(s)
+                for (direct = 0; (i + direct) < D1PAL_COLORS; direct++) {
+                    if (palUse[i + direct]) {
+                        break;
+                    }
+                    // do not write garbage to the file even if it does not matter
+                    /*newPalette[i][0] = 0;
+                    newPalette[i][1] = 0;
+                    newPalette[i][2] = 0;*/
+                }
+                int dn = direct;
+                // - place the whole range
+                if (dn > 128) {
+                    dn -= 128;
+                    dest[len] = 0x80 | 127;
+                    len++;
+                }
+                dest[len] = 0x80 | (dn - 1);
+                len++;
+
+                i += direct - 1;
+            }
+        }
+
+        // len = sizeof(newPalette);
 // LogErrorF("D1Smk::save first palette %d to %d", len, dest);
-        memcpy(dest, newPalette, len);
+        // memcpy(dest, newPalette, len);
 // LogErrorF("D1Smk::saved first palette");
     }
 // LogErrorF("D1Smk::saving keepsake palette 0 %d", len);
@@ -1723,6 +1764,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     // validate the content
     int width = 0, height = 0;
     int frameCount = gfx.getFrameCount();
+    bool palUse[D1PAL_COLORS] = { 0 };
     for (int i = 0; i < frameCount; i++) {
         D1GfxFrame *frame = gfx.getFrame(i);
         if (i == 0) {
@@ -1738,10 +1780,12 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
         }
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (frame->getPixel(x, y).isTransparent()) {
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (pixel.isTransparent()) {
                     dProgressErr() << QApplication::tr("Transparent pixel in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
                     return false;
                 }
+                palUse[pixel.getPaletteIndex()] = true;
             }
         }
     }
@@ -2058,7 +2102,7 @@ LogErrorF("D1Smk::save frame %d dp%d to %d", n, frameData, outFile.pos());
         }
         if (framePal != nullptr) {
 LogErrorF("D1Smk::save encode palette of frame %d offset %d", n, cursor + 1);
-            unsigned pallen = encodePalette(framePal, n, frameData + cursor + 1);
+            unsigned pallen = encodePalette(framePal, n, palUse, frameData + cursor + 1);
 LogErrorF("D1Smk::save encoded palette len %d", pallen, (pallen + 1 + 3) & ~3);
             pallen = (pallen + 1 + 3) / 4;
             *&frameData[cursor] = pallen;
