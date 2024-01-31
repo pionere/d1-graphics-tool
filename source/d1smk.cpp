@@ -327,7 +327,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         gfx.frames.append(frame);
         frameNum++;
-    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 1);
+    } while ((result = smk_next(SVidSMK)) == SMK_MORE && frameNum < 1250);
 
     if (SMK_ERR(result)) {
         dProgressErr() << QApplication::tr("SMK not fully loaded.");
@@ -480,20 +480,23 @@ static bool deepDeb = false;
 static uint8_t *main_start;
 static unsigned mainCounter = 0;
 static unsigned leafCounter = 0;
-static uint8_t *writeTreeLeafs(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
-//    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> (&leafPaths)[2])
-    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
+typedef struct _TreeLeaf {
+    bool isBranch;
+    _TreeLeaf *left;
+    _TreeLeaf *right;
+    unsigned value;
+    unsigned weight;
+} TreeLeaf;
+
+static uint8_t *writeTreeLeafs(TreeLeaf* treeLeaf, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
+    unsigned &joints, std::map<unsigned, std::pair<unsigned, uint32_t>> &paths, std::map<unsigned, std::pair<unsigned, uint32_t>> *leafPaths)
 {
     joints++;
-if (mainCounter > 0) {
-    mainCounter--;
-    LogErrorF("writeTreeLeafs - INFO: rec-building %d", leafs.count());
-}
-    if (leafs.count() == 1) {
+    if (!treeLeaf->isBranch) {
         cursor = writeBit(0, cursor, bitNum);
-        unsigned leaf = leafs[0].first;
-        paths[leaf] = QPair<unsigned, uint32_t>(depth, branch);
-        
+        unsigned leaf = treeLeaf->value;
+        paths[leaf] = std::pair<unsigned, uint32_t>(depth, branch);
+
         if (leafPaths == nullptr) {
             cursor = writeNBits(leaf, 8, cursor, bitNum);
         } else {
@@ -507,7 +510,7 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
                 if (it == leafPaths[0].end()) {
                     LogErrorF("ERROR: Missing entry for leaf %d in the low paths.", leaf & 0xFF);
                 } else {
-                    QPair<unsigned, uint32_t> &theEntryPair = it.value();
+                    std::pair<unsigned, uint32_t> &theEntryPair = it->second;
 //                    LogErrorF("TreeData writeNBits value %d length %d for lo-leaf %d", theEntryPair.second, theEntryPair.first, leaf & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
@@ -517,7 +520,7 @@ uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
                 if (it == leafPaths[1].end()) {
                     LogErrorF("ERROR: Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
                 } else {
-                    QPair<unsigned, uint32_t> theEntryPair = it.value();
+                    std::pair<unsigned, uint32_t> theEntryPair = it->second;
 //                    LogErrorF("TreeData writeNBits value %d length %d for hi-leaf %d", theEntryPair.second, theEntryPair.first, (leaf >> 8) & 0xFF);
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
                 }
@@ -546,6 +549,139 @@ if (leafCounter > 0) {
     if (depth > 32) {
         LogErrorF("writeTreeLeafs ERROR: depth %d too much.", depth);
     }
+//    if (deepDeb)
+//        LogErrorF("TreeData joint %d depth %d value %d length %d / %d", joints, depth, branch, leafs.size(), rightLeafs.size());
+    // branch <<= 1;
+    cursor = writeTreeLeafs(treeLeaf->left, cursor, bitNum, branch, depth, joints, paths, leafPaths);
+
+    branch |= 1 << (depth - 1);
+    cursor = writeTreeLeafs(treeLeaf->right, cursor, bitNum, branch, depth, joints, paths, leafPaths);
+
+    return cursor;
+}
+
+static uint8_t *writeTree(std::vector<std::pair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum,
+    unsigned &joints, std::map<unsigned, std::pair<unsigned, uint32_t>> &paths, std::map<unsigned, std::pair<unsigned, uint32_t>> *leafPaths)
+{
+    // std::sort(leafs.begin(), leafs.end(), leafSorter);
+
+    std::vector<TreeLeaf*> treeLeafs;
+    for (auto it = leafs.begin(); it != leafs.end(); it++) {
+        TreeLeaf *tl = new TreeLeaf();
+        tl->value = it->first;
+        tl->weight = it->second;
+        tl->isBranch = false;
+        treeLeafs.push_back(tl);
+    }
+    while (treeLeafs.size() > 1) {
+        TreeLeaf *tl0 = treeLeafs.back();
+        treeLeafs.pop_back();
+        TreeLeaf *tl1 = treeLeafs.back();
+        treeLeafs.pop_back();
+        TreeLeaf *tls = new TreeLeaf();
+        tls->isBranch = true;
+        tls->left = tl0;
+        tls->right = tl1;
+        tls->weight = tl0->weight + tl1->weight;
+
+        size_t size = treeLeafs.size();
+        auto it = treeLeafs.begin();
+        if (size != 0) {
+            it += size - 1;
+            for ( ; ; it--) {
+                if ((*it)->weight > tls->weight) {
+                    it++;
+                    break;
+                }
+
+                if (it == treeLeafs.begin()) {
+                    break;
+                }
+            }
+        }
+        treeLeafs.insert(it, tls);
+    }
+
+    uint8_t *res = writeTreeLeafs(treeLeafs.front(), cursor, bitNum, 0, 0, joints, paths, leafPaths);
+
+    while (!treeLeafs.empty()) {
+        TreeLeaf *tls = treeLeafs.back();
+        treeLeafs.pop_back();
+        if (tls->isBranch) {
+            treeLeafs.push_back(tls->left);
+            treeLeafs.push_back(tls->right);
+        }
+        free(tls);
+    }
+    return res;
+}
+
+static uint8_t *writeTreeLeafsOld(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum, uint32_t branch, unsigned depth,
+//    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> (&leafPaths)[2])
+    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
+{
+    joints++;
+if (mainCounter > 0) {
+    mainCounter--;
+    LogErrorF("writeTreeLeafsOld - INFO: rec-building %d", leafs.count());
+}
+    if (leafs.count() == 1) {
+        cursor = writeBit(0, cursor, bitNum);
+        unsigned leaf = leafs[0].first;
+        paths[leaf] = QPair<unsigned, uint32_t>(depth, branch);
+        
+        if (leafPaths == nullptr) {
+            cursor = writeNBits(leaf, 8, cursor, bitNum);
+        } else {
+// LogErrorF("TreeData leafPaths access");
+if (leafCounter > 0) {
+    LogErrorF("writeTreeLeafsOld - INFO: leaf %d at %d:%d\n", leaf, branch, depth);
+}
+uint8_t *tmpPtr = cursor; unsigned tmpBitNum = bitNum;
+            {
+                auto it = leafPaths[0].find(leaf & 0xFF);
+                if (it == leafPaths[0].end()) {
+                    LogErrorF("ERROR: Missing entry for leaf %d in the low paths.", leaf & 0xFF);
+                } else {
+                    QPair<unsigned, uint32_t> &theEntryPair = it.value();
+//                    LogErrorF("TreeData writeNBits value %d length %d for lo-leaf %d", theEntryPair.second, theEntryPair.first, leaf & 0xFF);
+                    cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
+                }
+            }
+            {
+                auto it = leafPaths[1].find((leaf >> 8) & 0xFF);
+                if (it == leafPaths[1].end()) {
+                    LogErrorF("ERROR: Missing entry for leaf %d in the high paths.", (leaf >> 8) & 0xFF);
+                } else {
+                    QPair<unsigned, uint32_t> theEntryPair = it.value();
+//                    LogErrorF("TreeData writeNBits value %d length %d for hi-leaf %d", theEntryPair.second, theEntryPair.first, (leaf >> 8) & 0xFF);
+                    cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
+                }
+            }
+if (leafCounter > 0) {
+    leafCounter--;
+            LogErrorF("writeTreeLeafsOld - INFO: leaf %d at %d:%d len%d (ebn%d fbn%d) offset%d", leaf, branch, depth, ((size_t)cursor - (size_t)tmpPtr) * 8 + tmpBitNum - bitNum, tmpBitNum, bitNum, (size_t)tmpPtr - (size_t)main_start);
+}
+            /*for (auto it = leafPaths[0].begin(); it != leafPaths[0].end(); it++) {
+                if (it->first == (leaf & 0xFF)) {
+                    cursor = writeNBits(it->second.second, it->second.first, cursor, bitNum);
+                    break;
+                }
+            }
+            for (auto it = leafPaths[1].begin(); it != leafPaths[1].end(); it++) {
+                if (it->first == ((leaf >> 8) & 0xFF)) {
+                    cursor = writeNBits(it->second, it->first, cursor, bitNum);
+                    break;
+                }
+            }*/
+        }
+        return cursor;
+    }
+    cursor = writeBit(1, cursor, bitNum);
+    depth++;
+    if (depth > 32) {
+        LogErrorF("writeTreeLeafsOld ERROR: depth %d too much.", depth);
+    }
     QList<QPair<unsigned, unsigned>> rightLeafs;
     unsigned leftCount = 0, rightCount = 0;
     for (auto it = leafs.begin(); it != leafs.end(); ) {
@@ -561,10 +697,10 @@ if (leafCounter > 0) {
 //    if (deepDeb)
 //        LogErrorF("TreeData joint %d depth %d value %d length %d / %d", joints, depth, branch, leafs.count(), rightLeafs.count());
     // branch <<= 1;
-    cursor = writeTreeLeafs(leafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
+    cursor = writeTreeLeafsOld(leafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
     branch |= 1 << (depth - 1);
-    cursor = writeTreeLeafs(rightLeafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
+    cursor = writeTreeLeafsOld(rightLeafs, cursor, bitNum, branch, depth, joints, paths, leafPaths);
 
     return cursor;
 }
@@ -1143,7 +1279,7 @@ main_start = res;
         // add the low sub-tree
         // joints = 0;
 joints = 0;
-        res = writeTreeLeafs(lowByteLeafs, res, bitNum, 0, 0, joints, bytePaths[0], nullptr);
+        res = writeTree(lowByteLeafs, res, bitNum, joints, bytePaths[0], nullptr);
         // close the low-sub-tree
         res = writeBit(0, res, bitNum);
     }
@@ -1220,7 +1356,7 @@ tmpPtr = res; tmpBitNum = bitNum;
         // add the hi sub-tree
         // joints = 0;
 joints = 0;
-        res = writeTreeLeafs(hiByteLeafs, res, bitNum, 0, 0, joints, bytePaths[1], nullptr);
+        res = writeTree(hiByteLeafs, res, bitNum, joints, bytePaths[1], nullptr);
         // close the hi-sub-tree
         res = writeBit(0, res, bitNum);
     }
@@ -1273,7 +1409,7 @@ leafCounter = 0;
     {
         // add the main tree
         joints = 0;
-        res = writeTreeLeafs(tree.treeStat, res, bitNum, 0, 0, joints, tree.paths, bytePaths);
+        res = writeTree(tree.treeStat, res, bitNum, joints, tree.paths, bytePaths);
         // close the main tree
         res = writeBit(0, res, bitNum);
     }
@@ -1718,12 +1854,12 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
             if (!audioBytes[i].isEmpty()) {
                 unsigned joints;
                 std::sort(audioBytes[i].begin(), audioBytes[i].end(), leafSorter);
-if (len == 47040)
-DumpTreeLeafs(audioBytes[i], i);
+// if (len == 47040)
+// DumpTreeLeafs(audioBytes[i], i);
                 // start the sub-tree
                 res = writeBit(1, res, bitNum);
                 // add the sub-tree
-                res = writeTreeLeafs(audioBytes[i], res, bitNum, 0, 0, joints, bytePaths[i], nullptr);
+                res = writeTree(audioBytes[i], res, bitNum, joints, bytePaths[i], nullptr);
                 // close the sub-tree
                 res = writeBit(0, res, bitNum);
             }
