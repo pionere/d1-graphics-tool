@@ -561,7 +561,7 @@ if (leafCounter > 0) {
 }
 
 static uint8_t *writeTree(QList<QPair<unsigned, unsigned>> leafs, uint8_t *cursor, unsigned &bitNum,
-    unsigned &joints, QMap<unsigned, qPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
+    unsigned &joints, QMap<unsigned, QPair<unsigned, uint32_t>> &paths, QMap<unsigned, QPair<unsigned, uint32_t>> *leafPaths)
 {
     // std::sort(leafs.begin(), leafs.end(), leafSorter);
 
