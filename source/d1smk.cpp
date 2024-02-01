@@ -1187,34 +1187,40 @@ LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d ref
 // LogErrorF("D1Smk::prepareVideoTree 1");
     // convert cache values to normal values
     bool hasEntries = !tree.treeStat.isEmpty();
+    int dummyLeaf = UINT16_MAX + 1;
     for (int i = 0; i < 3; i++) {
-        hasEntries |= tree.cacheCount[i] != 0;
-        unsigned n = 0;
-        for ( ; n < UINT16_MAX; n++) {
-            auto it = tree.treeStat.begin();
-            for ( ; it != tree.treeStat.end(); it++) {
-                if (it->first == n) {
+        bool hasEntry = tree.cacheCount[i] != 0;
+        hasEntries |= hasEntry;
+        unsigned n;
+        if (!hasEntry && dummyLeaf != UINT16_MAX + 1) {
+            n = dummyLeaf; // use previous dummy entry
+        } else {
+            for (n = 0; n < UINT16_MAX; n++) {
+                if (n == dummyLeaf) {
+                    continue;
+                }
+                auto it = tree.treeStat.begin();
+                for ( ; it != tree.treeStat.end(); it++) {
+                    if (it->first == n) {
+                        break;
+                    }
+                }
+                // auto it = std::find_if(tree.treeStat.begin(), tree.treeStat.end(), [n](const QPair<unsigned, unsigned> &entry) { return entry.first == n; });
+                if (it == tree.treeStat.end()) {
                     break;
                 }
             }
-            if (it == tree.treeStat.end()) {
-LogErrorF("D1Smk::prepareVideoTree cache normal i%d n%d cc%d in tree %d", i, n, tree.cacheCount[i], tree.VideoTreeIndex);
-                if (tree.cacheCount[i] != 0) {
-                    tree.treeStat.push_back(QPair<unsigned, unsigned>(n, tree.cacheCount[i]));
-                }
-                tree.cacheCount[i] = n; // replace cache-count with the 'fake' leaf value
-                break;
+            if (n >= UINT16_MAX) {
+                dProgressFail() << QApplication::tr("Congratulation, you managed to break SMK.");
             }
-            /*auto val = std::find_if(tree.treeStat.begin(), tree.treeStat.end(), [n](const QPair<unsigned, unsigned> &entry) { return entry.first == n; });
-            if (val == tree.treeStat.end()) {
-                tree.treeStat.push_back(QPair<unsigned, unsigned>(n, tree.cacheCount[i]));
-                tree.cacheCount[i] = n;
-                break;
-            }*/
         }
-        if (n >= UINT16_MAX) {
-            dProgressFail() << QApplication::tr("Congratulation, you managed to break SMK.");
+LogErrorF("D1Smk::prepareVideoTree cache normal i%d n%d cc%d in tree %d", i, n, tree.cacheCount[i], tree.VideoTreeIndex);
+        if (hasEntry) {
+            tree.treeStat.push_back(QPair<unsigned, unsigned>(n, tree.cacheCount[i]));
+        } else {
+            dummyLeaf = n;
         }
+        tree.cacheCount[i] = n; // replace cache-count with the 'fake' leaf value
     }
 
     if (!hasEntries) {
@@ -2344,12 +2350,12 @@ videoTree[i].VideoTreeIndex = i;
                     // ctype = 1;
                 }
                 if (type != ctype) {
-if (n == 2 && y == 28) {
+/*if (n == 2 && y == 28) {
     deepDeb = true;
  LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", x, y, type, typelen, cursor, bitNum);
-}
+}*/
                     encodePixels(x, y, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
-deepDeb = false;
+//deepDeb = false;
 /*if (n <= 3) {
     deepDeb = false;
 LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
