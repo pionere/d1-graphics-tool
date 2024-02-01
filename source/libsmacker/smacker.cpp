@@ -395,6 +395,7 @@ static int smk_huff8_lookup(const struct smk_huff8_t * const t, struct smk_bit_t
 #define SMK_HUFF16_BRANCH    0x80000000
 #define SMK_HUFF16_CACHE     0x40000000
 #define SMK_HUFF16_LEAF_MASK 0x3FFFFFFF
+#define SMK_HUFF16_CACHE_MSK  0x3
 
 struct smk_huff16_t {
 	unsigned int * tree;
@@ -643,7 +644,7 @@ int depth = 0;
 //LogErrorFF("smk_huff16_lookup value %d cache%d depth%d ", value, (value & SMK_HUFF16_CACHE) != 0, depth);
 	if (value & SMK_HUFF16_CACHE) {
 		/* uses cached value instead of actual value */
-		value = t->cache[value & SMK_HUFF16_LEAF_MASK];
+		value = t->cache[value & SMK_HUFF16_CACHE_MSK];
 	}
 if (deepDebug)
 LogErrorFF("smk_bw_skip(&bw, %d); // mem (%d:%d) value (%d,%d)", depth, (size_t)bs->buffer - (size_t)bufMem - depth / 8, bs->bit_num, value & 0xFF, (value >> 8) & 0xFF);
