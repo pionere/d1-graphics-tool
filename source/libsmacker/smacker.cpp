@@ -2922,7 +2922,7 @@ unsigned long smk_get_audio_size(const smk object, const unsigned char t, unsign
 #else
 	assert(object);
 
-	*compress = object->audio[track].compress;
+	*compress = object->audio[t].compress;
 #endif
 
 	return object->audio[t].buffer_size;
