@@ -533,10 +533,12 @@ static int smk_huff16_lookup(struct smk_huff16_t * const t, struct smk_bit_t * c
 /* SMACKER Structure */
 /* ************************************************************************* */
 /* tree processing order */
+#ifdef FULL
 #define SMK_TREE_MMAP	0
 #define SMK_TREE_MCLR	1
 #define SMK_TREE_FULL	2
 #define SMK_TREE_TYPE	3
+#endif
 
 struct smk_t {
 	/* meta-info */
