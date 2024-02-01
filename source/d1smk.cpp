@@ -2187,14 +2187,14 @@ videoTree[i].VideoTreeIndex = i;
     size_t cursor = 0; unsigned bitNum = 0;
     for (int i = 0; i < SMK_TREE_COUNT; i++) {
 // LogErrorF("D1Smk::save 4:%d as%d c%d bn%d ts%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum,
-        videoTree[i].treeStat.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
+//        videoTree[i].treeStat.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
         videoTreeData = prepareVideoTree(videoTree[i], videoTreeData, allocSize, cursor, bitNum);
         if (videoTreeData == nullptr) {
             dProgressFail() << QApplication::tr("Out of memory");
             return false;
         }
 // LogErrorF("D1Smk::save 5:%d as%d c%d bn%d jc%d pc%d cs%d:%d:%d (tc%d:%d:%d)", i, allocSize, cursor, bitNum, videoTree[i].uncompressedTreeSize,
-        videoTree[i].paths.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
+//        videoTree[i].paths.count(), videoTree[i].cacheStat[0].count(), videoTree[i].cacheStat[1].count(), videoTree[i].cacheStat[2].count(), videoTree[i].cacheCount[0], videoTree[i].cacheCount[1], videoTree[i].cacheCount[2]);
     }
     unsigned videoTreeDataSize = cursor;
     if (bitNum != 0) {
