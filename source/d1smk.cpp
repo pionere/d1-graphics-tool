@@ -1385,7 +1385,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     }
     // write the header to the file
     smk_header header;
-    header.SmkMarker = SwapLE32(*((uint32_t*)"SMK2"));
+    header.SmkMarker[0] = 'S';header.SmkMarker[1] = 'M';header.SmkMarker[2] = 'K';header.SmkMarker[3] = '2';
     header.VideoWidth = SwapLE32(width);
     header.VideoHeight = SwapLE32(height);
     header.FrameCount = SwapLE32(frameCount);
