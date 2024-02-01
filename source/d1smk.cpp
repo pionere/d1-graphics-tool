@@ -671,7 +671,7 @@ static void prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &curso
         res = writeNBits(0, 2, res, bitNum);
         cursor = (size_t)res - (size_t)treeData;
         tree.uncompressedTreeSize = 0;
-        return treeData;
+        return;
     }
     // sort treeStat
     std::sort(tree.treeStat.begin(), tree.treeStat.end(), leafSorter);
