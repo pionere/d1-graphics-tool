@@ -24,6 +24,9 @@
 
 /* includes - needed for FILE* here */
 #include <stdio.h>
+#ifndef FULL
+#include <stdint.h>
+#endif
 
 /** forward-declaration for an struct */
 typedef struct smk_t * smk;

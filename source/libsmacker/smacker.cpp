@@ -883,14 +883,11 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 }
 #else
 #define smk_swap_le16(X) (X)
-#define smk_swap_le32(dest, src) \
-{ \
-	dest = *(uint32_t*)&src[0]; \
-}
+#define smk_swap_le32(X) (X)
 #define smk_read_ul(p) \
 { \
 	smk_read(buf,4); \
-	smk_swap_le32(p, buf); \
+	p = smk_swap_le32(*(uint32_t*)&buf[0]); \
 }
 #endif
 
@@ -3394,7 +3391,7 @@ static char smk_render_audio(struct smk_t::smk_audio_t * s, unsigned char * p, u
 			((unsigned int) p[1] << 8) |
 			((unsigned int) p[0]);
 #else
-		smk_swap_le32(s->buffer_size, p);
+		s->buffer_size = smk_swap_le32(*(uint32_t*)&p[0]);
 #endif
 		p += 4;
 		size -= 4;
@@ -3703,7 +3700,7 @@ static char smk_render(smk s)
 					((unsigned int) p[1] << 8) |
 					((unsigned int) p[0]));
 #else
-			smk_swap_le32(size, p);
+			size = smk_swap_le32(*(uint32_t*)&p[0]);
 #endif
 			if (i < size) {
 				LogError("libsmacker::smk_render() - ERROR: frame %lu: insufficient data for audio[%u] content.\n", s->cur_frame, track);
