@@ -1172,7 +1172,7 @@ static uint8_t *prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &a
                 if (it->first == value) {
                     if (it->second + tree.cacheStat[i][n].second >= tree.cacheCount[i] - tree.cacheStat[i][n].second) {
                         // use the 'normal' leaf instead of the cache
-LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d refs%d cacherefs%d of %d in tree %d", value, it->second, tree.cacheStat[i][n].second, tree.cacheCount[i], tree.VideoTreeIndex);
+LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d refs%d cacherefs%d of %d in cache %d of tree %d", value, it->second, tree.cacheStat[i][n].second, tree.cacheCount[i], i, tree.VideoTreeIndex);
                         it->second += tree.cacheStat[i][n].second;
                         tree.cacheCount[i] -= tree.cacheStat[i][n].second;
                         tree.cacheStat[i].removeAt(n);
@@ -1198,7 +1198,7 @@ LogErrorF("D1Smk::prepareVideoTree using normal leaf instead of cache for %d ref
                 }
             }
             if (it == tree.treeStat.end()) {
-// LogErrorF("D1Smk::prepareVideoTree cache normal i%d n%d cc%d", i, n, tree.cacheCount[i]);
+LogErrorF("D1Smk::prepareVideoTree cache normal i%d n%d cc%d in tree %d", i, n, tree.cacheCount[i], tree.VideoTreeIndex);
                 if (tree.cacheCount[i] != 0) {
                     tree.treeStat.push_back(QPair<unsigned, unsigned>(n, tree.cacheCount[i]));
                 }
@@ -1490,13 +1490,14 @@ bool cached = false;
                     cached = true;
                 }
             }
-if (!cached) {
-    // LogErrorF("D1Smk::writeTreeValue does not use cache value (%d) for %d in tree %d", videoTree.cacheCount[i], value, videoTree.VideoTreeIndex);
+if (!cached && deepDeb) {
+    LogErrorF("D1Smk::writeTreeValue does not use cache value (%d) for %d in tree %d", videoTree.cacheCount[i], value, videoTree.VideoTreeIndex);
 }
             break;
         }
     }
-
+if (deepDeb)
+    LogErrorF("D1Smk::writeTreeValue %d -> %d cache values (%d:%d:%d) for %d in tree %d", value, v, cacheValues[0], cacheValues[1], cacheValues[2], videoTree.VideoTreeIndex);
     if (cacheValues[0] != value) {
         cacheValues[2] = cacheValues[1];
         cacheValues[1] = cacheValues[0];
@@ -2343,11 +2344,12 @@ videoTree[i].VideoTreeIndex = i;
                     // ctype = 1;
                 }
                 if (type != ctype) {
-/*if (n <= 3) {
+if (n == 2 && y == 28) {
     deepDeb = true;
  LogErrorF("D1Smk::save encode pixels %d:%d type%d len%d from %d;%d", x, y, type, typelen, cursor, bitNum);
-}*/
+}
                     encodePixels(x, y, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
+deepDeb = false;
 /*if (n <= 3) {
     deepDeb = false;
 LogErrorF("D1Smk::save encoded pixels:%d;%d", cursor, bitNum);
