@@ -37,6 +37,8 @@ public:
     unsigned getBitRate() const;
     bool setAudio(unsigned track, uint8_t* audio, unsigned long len);
     uint8_t* getAudio(unsigned track, unsigned long *len) const;
+    bool setCompress(unsigned track, uint8_t compress);
+    uint8_t getCompress(unsigned track) const;
 
 private:
     unsigned channels;
@@ -44,6 +46,7 @@ private:
     unsigned long bitRate;
     uint8_t* audio[D1SMK_TRACKS] = { nullptr };
     unsigned long len[D1SMK_TRACKS] = { 0 };
+    uint8_t compress[D1SMK_TRACKS] = { 0 };
 };
 
 class D1Smk {

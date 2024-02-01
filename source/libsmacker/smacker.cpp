@@ -1267,7 +1267,7 @@ char smk_info_all(const smk object, unsigned long * w, unsigned long * h, double
 	return 0;
 }
 
-void smk_info_audio(const smk object, unsigned char* channels, unsigned char* bitdepth, unsigned long* audio_rate)
+void smk_info_audio(const smk object, unsigned char * channels, unsigned char * bitdepth, unsigned long * audio_rate)
 {
 	*channels = object->audio[0].channels;
 	*bitdepth = object->audio[0].bitdepth;
@@ -1376,7 +1376,7 @@ unsigned char * smk_get_audio(const smk object, const unsigned char t)
 
 	return (unsigned char *)object->audio[t].buffer;
 }
-unsigned long smk_get_audio_size(const smk object, const unsigned char t)
+unsigned long smk_get_audio_size(const smk object, const unsigned char t, unsigned char * compress)
 {
 	/* null check */
 #ifdef FULL
@@ -1386,6 +1386,8 @@ unsigned long smk_get_audio_size(const smk object, const unsigned char t)
 	}
 #else
 	assert(object);
+
+	*compress = object->audio[t].compress;
 #endif
 
 	return object->audio[t].buffer_size;

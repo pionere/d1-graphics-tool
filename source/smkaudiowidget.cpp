@@ -111,6 +111,7 @@ void SmkAudioWidget::frameModified()
     uint8_t *audioData;
     unsigned bitWidth, channels, bitRate, width, height;
     int track;
+    bool compress;
 
     if (this->isHidden())
         return;
@@ -124,12 +125,14 @@ void SmkAudioWidget::frameModified()
         channels = frameAudio->getChannels();
         bitWidth = frameAudio->getBitDepth() / 8;
         audioData = frameAudio->getAudio(track, &audioDataLen);
+        compress = frameAudio->getCompress(track) != 0;
     } else {
         // track = -1;
         channels = 0;
         bitWidth = 1;
         audioData = nullptr;
         audioDataLen = 0;
+        compress = false;
     }
     audioLen = (channels == 0 || bitWidth == 0) ? audioDataLen : (audioDataLen / (channels * bitWidth));
 
@@ -142,6 +145,8 @@ void SmkAudioWidget::frameModified()
     this->ui->audioLenLineEdit->setText("");
     this->ui->audioLenLineEdit->setToolTip("");
     this->ui->trackComboBox->setEnabled(hasAudio);
+    this->ui->audioCompressCheckBox->setChecked(compress);
+    this->ui->audioCompressCheckBox->setEnabled(hasAudio);
     if (hasAudio) {
         // - tracks
         for (int i = 0; i < D1SMK_TRACKS; i++) {
@@ -212,6 +217,28 @@ void SmkAudioWidget::on_trackComboBox_activated(int index)
     this->currentTrack = index;
 
     this->frameModified();
+}
+
+void SmkAudioWidget::on_audioCompressCheckBox_clicked()
+{
+    int track = this->currentTrack;
+    uint8_t compress = this->ui->audioCompressCheckBox->isChecked() ? 1 : 0;
+    bool result = false;
+
+    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->gfx->getFrame(i);
+        D1SmkAudioData *frameAudio = frame->getFrameAudio();
+        if (frameAudio != nullptr) {
+            result |= frameAudio->setCompress(track, compress);
+        }
+    }
+    if (result) {
+        this->gfx->setModified();
+        // update the window
+        this->frameModified();
+        // update the main view
+        ((CelView *)this->parent())->displayFrame();
+    }
 }
 
 void SmkAudioWidget::on_playPushButtonClicked()

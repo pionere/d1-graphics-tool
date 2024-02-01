@@ -194,6 +194,20 @@ uint8_t* D1SmkAudioData::getAudio(unsigned track, unsigned long *len) const
     return const_cast<uint8_t*>(this->audio[track]);
 }
 
+bool D1SmkAudioData::setCompress(unsigned track, uint8_t compress)
+{
+    if (this->compress[track] == compress) {
+        return false;
+    }
+    this->compress[track] = compress;
+    return true;
+}
+
+uint8_t D1SmkAudioData::getCompress(unsigned track) const
+{
+    return this->compress[track];
+}
+
 static D1Pal* LoadPalette(smk SVidSMK)
 {
     D1Pal *pal = new D1Pal();
@@ -287,7 +301,8 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
 
         D1SmkAudioData *audio = new D1SmkAudioData(channels, depth, rate);
         for (unsigned i = 0; i < D1SMK_TRACKS; i++) {
-            unsigned long len = smk_get_audio_size(SVidSMK, i);
+            uint8_t compress;
+            unsigned long len = smk_get_audio_size(SVidSMK, i, &compress);
             unsigned char* ct = nullptr;
             if (len != 0) {
                 unsigned char* track = smk_get_audio(SVidSMK, i);
@@ -295,6 +310,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
                 memcpy(ct, track, len);
             }
             audio->setAudio(i, ct, len);
+            audio->setCompress(i, compress);
         }
         frame->frameAudio = audio;
 

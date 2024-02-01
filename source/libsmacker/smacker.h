@@ -108,7 +108,7 @@ const unsigned char* smk_get_audio(const smk object, const unsigned char track);
 unsigned char* smk_get_audio(const smk object, const unsigned char track);
 #endif
 /** Get size of currently pointed decoded audio chunk, track N */
-unsigned long smk_get_audio_size(const smk object, const unsigned char track);
+unsigned long smk_get_audio_size(const smk object, const unsigned char track, unsigned char * compress);
 
 /** rewind to first frame and unpack */
 char smk_first(smk object);
