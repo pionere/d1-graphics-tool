@@ -371,7 +371,7 @@ static int smk_huff8_lookup(const struct smk_huff8_t * const t, struct smk_bit_t
 			LogErrorMsg("libsmacker::smk_huff8_lookup() - ERROR: get_bit returned -1\n");
 			return -1;
 		}
-		int prevIndex = index;
+
 		if (bit) {
 			/* take the right branch */
 			index = t->tree[index] & SMK_HUFF8_LEAF_MASK;
@@ -379,10 +379,6 @@ static int smk_huff8_lookup(const struct smk_huff8_t * const t, struct smk_bit_t
 			/* take the left branch */
 			index ++;
 		}
-        if (index >= sizeof(t->tree)) {
-            LogError("libsmacker::smk_huff8_lookup() - ERROR: invalid leaf index %d at %d (%d) \n", index, prevIndex, bit);
-            return -1;
-        }
 	}
 
 	/* at leaf node.  return the value at this point. */
@@ -622,7 +618,6 @@ int depth = 0;
 			return -1;
 		}
 		depth++;
-		int prevIndex = index;
 //if (deepDebug)
 //LogErrorFF("smk_huff16_lookup idx %d value%d bit%d", index, t->tree[index], bit);
 		if (bit) {
@@ -632,10 +627,6 @@ int depth = 0;
 			/* take the left branch */
 			index ++;
 		}
-        if (index >= t->size) {
-            LogError("libsmacker::smk_huff16_lookup() - ERROR: invalid leaf index %d at %d (%d) \n", index, prevIndex, bit);
-            return -1;
-        }
 	}
 
 	/* Get the value at this point */
@@ -663,10 +654,12 @@ LogErrorFF("smk_bw_skip(&bw, %d); // mem (%d:%d) value (%d,%d)", depth, (size_t)
 /* SMACKER Structure */
 /* ************************************************************************* */
 /* tree processing order */
+#ifdef FULL
 #define SMK_TREE_MMAP	0
 #define SMK_TREE_MCLR	1
 #define SMK_TREE_FULL	2
 #define SMK_TREE_TYPE	3
+#endif
 
 struct smk_t {
 	/* meta-info */
@@ -2321,13 +2314,10 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		PrintError("libsmacker::smk_open_generic() - ERROR: failed to malloc() smk structure");
 		return NULL;
 	}
-#else
-	s = NULL;
-	smk_mallocc(s, sizeof(struct smk_t), smk_t);
-#endif
+
 	/* Check for a valid signature */
 	smk_read(buf, 4);
-// LogErrorFF("smk_open_generic 0 %d", size);
+
 	if (buf[0] != 'S' || buf[1] != 'M' || buf[2] != 'K') {
 		LogError("libsmacker::smk_open_generic() - ERROR: invalid SMKn signature (got: %s)\n", buf);
 		goto error;
@@ -2335,7 +2325,6 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 	/* Read .smk file version */
 	//smk_read(buf, 1);
-#ifdef FULL
 	if (buf[3] != '2' && buf[3] != '4') {
 		LogError("libsmacker::smk_open_generic() - Warning: invalid SMK version %c (expected: 2 or 4)\n", buf[3]);
 
@@ -2347,13 +2336,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 		LogError("\tProcessing will continue as type %c\n", buf[3]);
 	}
-#else
-	if (buf[3] != '2') {
-		LogError("libsmacker::smk_open_generic() - Warning: SMK version %c is not supported by the game.\n", buf[3]);
-	}
-#endif
 	s->video.v = buf[3];
-// LogErrorFF("smk_open_generic 1 %d", buf[3]);
 	/* width, height, total num frames */
 	smk_read_ul(s->video.w);
 	smk_read_ul(s->video.h);
@@ -2372,13 +2355,11 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		/* defaults to 10 usf (= 100000 microseconds) */
 		s->usf = 100000;
 	}
-// LogErrorFF("smk_open_generic 2 wh%d:%d f%d r%f (%d)", s->video.w, s->video.h, s->total_frames, s->usf, temp_l);
 	/* Video flags follow.
 		Ring frame is important to libsmacker.
 		Y scale / Y interlace go in the Video flags.
 		The user should scale appropriately. */
 	smk_read_ul(temp_u);
-#ifdef FULL
 	if (temp_u & 0x01) {
 		s->ring_frame = 1;
 		s->total_frames++;
@@ -2393,37 +2374,23 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 		s->video.y_scale_mode = SMK_FLAG_Y_INTERLACE;
 	}
-#else
-	if (temp_u & 0x01) {
-		LogErrorMsg("libsmacker::smk_open_generic() - Warning: ring_frames are no supported by the game.\n");
-		s->total_frames++;
-	}
-#endif
 	/* Max buffer size for each audio track - used to pre-allocate buffers */
 	for (temp_l = 0; temp_l < 7; temp_l ++)
 		smk_read_ul(s->audio[temp_l].max_buffer);
-
 	/* Read size of "hufftree chunk" - save for later. */
 	smk_read_ul(tree_size);
-// LogErrorFF("smk_open_generic 3 trees:%d", tree_size);
 	/* "unpacked" sizes of each huff tree */
 	for (temp_l = 0; temp_l < 4; temp_l ++) {
-#ifdef FULL
 		smk_read_ul(s->video.tree_size[temp_l]);
-#else
-		smk_read_ul(video_tree_size[temp_l]);
-#endif
 	}
-
 	/* read audio rate data */
 	for (temp_l = 0; temp_l < 7; temp_l ++) {
 		smk_read_ul(temp_u);
 
 		if (temp_u & 0x40000000) {
-#ifdef FULL
 			/* Audio track specifies "exists" flag, malloc structure and copy components. */
 			s->audio[temp_l].exists = 1;
-#endif
+
 			/* and for all audio tracks */
 			smk_malloc(s->audio[temp_l].buffer, s->audio[temp_l].max_buffer);
 
@@ -2432,20 +2399,97 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 
 			s->audio[temp_l].bitdepth = ((temp_u & 0x20000000) ? 16 : 8);
 			s->audio[temp_l].channels = ((temp_u & 0x10000000) ? 2 : 1);
-#ifdef FULL
+
 			if (temp_u & 0x0c000000) {
 				LogError("libsmacker::smk_open_generic() - Warning: audio track %ld is compressed with Bink (perceptual) Audio Codec: this is currently unsupported by libsmacker\n", temp_l);
 				s->audio[temp_l].compress = 2;
 			}
-#endif
+
 			/* Bits 25 & 24 are unused. */
 			s->audio[temp_l].rate = (temp_u & 0x00FFFFFF);
 		}
 	}
-// LogErrorFF("smk_open_generic 4");
 	/* Skip over Dummy field */
 	smk_read_ul(temp_u);
-// LogErrorFF("smk_open_generic 5 dummy%d", temp_u);
+#else
+	s = NULL;
+	smk_mallocc(s, sizeof(struct smk_t), smk_t);
+	smk_header *hdr = (smk_header*)fp.ram;
+	if (size < sizeof(smk_header)) {
+		LogError("libsmacker::smk_open_generic() - ERROR: SMK content is too short. (got: %d, required: %d)\n", size, sizeof(smk_header));
+		goto error;
+	}
+	size -= sizeof(smk_header);
+	fp.ram += sizeof(smk_header);
+
+	/* Check for a valid signature */
+	if (hdr->SmkMarker[0] != 'S' || hdr->SmkMarker[1] != 'M' || hdr->SmkMarker[2] != 'K') {
+		LogError("libsmacker::smk_open_generic() - ERROR: invalid SMKn signature (got: %c%c%c)\n", hdr->SmkMarker[0], hdr->SmkMarker[1], hdr->SmkMarker[2]);
+		goto error;
+	}
+	/* Read .smk file version */
+	if (hdr->SmkMarker[3] != '2') {
+		LogError("libsmacker::smk_open_generic() - Warning: SMK version %c is not supported by the game.\n", hdr->SmkMarker[3]);
+	}
+	s->video.v = hdr->SmkMarker[3];
+	s->video.w = smk_swap_le32(hdr->VideoWidth);
+	s->video.h = smk_swap_le32(hdr->VideoHeight);
+	s->total_frames = smk_swap_le32(hdr->FrameCount);
+	/* frames per second calculation */
+	temp_u = smk_swap_le32(hdr->FrameLen);
+	/* frames per second calculation */
+	temp_l = (int)temp_u;
+
+	if (temp_l > 0) {
+		/* millisec per frame */
+		s->usf = temp_l * 1000;
+	} else if (temp_l < 0) {
+		/* 10 microsec per frame */
+		s->usf = temp_l * -10;
+	} else {
+		/* defaults to 10 usf (= 100000 microseconds) */
+		s->usf = 100000;
+	}
+	/* Video flags follow.
+		Ring frame is important to libsmacker.
+		Y scale / Y interlace go in the Video flags.
+		The user should scale appropriately. */
+	temp_u = smk_swap_le32(hdr->VideoFlags);
+	if (temp_u & 0x01) {
+		LogErrorMsg("libsmacker::smk_open_generic() - Warning: ring_frames are no supported by the game.\n");
+		s->total_frames++;
+	}
+	/* Max buffer size for each audio track - used to pre-allocate buffers */
+	for (temp_l = 0; temp_l < 7; temp_l ++)
+		s->audio[temp_l].max_buffer = smk_swap_le32(hdr->AudioMaxChunkLength[temp_l]);
+	/* Read size of "hufftree chunk" - save for later. */
+	tree_size = smk_swap_le32(hdr->VideoTreeDataSize);
+	/* "unpacked" sizes of each huff tree */
+	for (temp_l = 0; temp_l < 4; temp_l ++) {
+		video_tree_size[temp_l] = smk_swap_le32(hdr->VideoTreeSize[temp_l]);
+	}
+	/* read audio rate data */
+	for (temp_l = 0; temp_l < 7; temp_l ++) {
+		temp_u = smk_swap_le32(hdr->AudioType[temp_l]);
+
+		if (temp_u & 0x40000000) {
+			/* and for all audio tracks */
+			smk_malloc(s->audio[temp_l].buffer, s->audio[temp_l].max_buffer);
+
+			if (temp_u & 0x80000000)
+				s->audio[temp_l].compress = 1;
+
+			s->audio[temp_l].bitdepth = ((temp_u & 0x20000000) ? 16 : 8);
+			s->audio[temp_l].channels = ((temp_u & 0x10000000) ? 2 : 1);
+			if (temp_u & 0x0c000000) {
+				LogError("libsmacker::smk_open_generic() - Warning: audio track %ld is compressed with Bink (perceptual) Audio Codec: this is currently unsupported by libsmacker\n", temp_l);
+				s->audio[temp_l].compress = 2;
+			}
+			/* Bits 25 & 24 are unused. */
+			s->audio[temp_l].rate = (temp_u & 0x00FFFFFF);
+		}
+	}
+#endif // FULL
 	/* FrameSizes and Keyframe marker are stored together. */
 #ifdef FULL
 	smk_malloc(s->keyframe, (s->f + s->ring_frame));
@@ -2965,7 +3009,7 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 	assert(p);
 	/* Copy palette to old palette */
 	memcpy(oldPalette, s->palette, 256 * 3);
-unsigned long origSize = size;
+
 	/* Loop until palette is complete, or we are out of bytes to process */
 	while ((i < 256) && (size > 0)) {
 		if ((*p) & 0x80) {
@@ -3035,7 +3079,7 @@ unsigned long origSize = size;
 	}
 
 	if (i < 256) {
-		LogError("libsmacker::smk_render_palette() - ERROR: did not completely fill palette (idx=%u; size=%u)\n", i, origSize);
+		LogError("libsmacker::smk_render_palette() - ERROR: did not completely fill palette (idx=%u)\n", i);
 		goto error;
 	}
 
@@ -3188,7 +3232,7 @@ unsigned firstCol = col;
 deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 				for (k = 0; k < 4; k ++) {
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
-						LogError("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree right (%d. at %d:%d).\n", k, row, col);
+						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
 						return -1;
 					}
 
@@ -3201,7 +3245,7 @@ deepDebug = doDebug && row >= 136 && row < 140 && col >= 28 && col <= 116;
 if (deepDebug)
 LogErrorFF("Full block %d:0 value%d (offsetend%d bitend%d) %d,%d:%d (%d:%d) = %d", k, unpack, (size_t)bs.buffer - (size_t)bufMem, bs.bit_num, col + 2, col + 3, row + k, t[skip + 2], t[skip + 3], *(uint16_t*)&t[skip + 2]);
 					if ((unpack = smk_huff16_lookup(&s->tree[SMK_TREE_FULL], &bs)) < 0) {
-						LogError("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree left (%d. at %d:%d).\n", k, row, col);
+						LogErrorMsg("libsmacker::smk_render_video() - ERROR: failed to lookup from FULL tree.\n");
 						return -1;
 					}
 #ifdef FULL
@@ -3295,6 +3339,7 @@ deepDebug = false;
 				}
 
 				break;
+
 			}
 
 			col += 4;

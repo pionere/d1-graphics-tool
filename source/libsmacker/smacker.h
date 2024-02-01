@@ -57,6 +57,34 @@ typedef struct smk_t * smk;
 #define	SMK_AUDIO_TRACK_6	0x40
 #define	SMK_VIDEO_TRACK	0x80
 
+#ifndef FULL
+#define	SMK_AUDIO_TRACKS	7
+
+#define SMK_TREE_MMAP	0
+#define SMK_TREE_MCLR	1
+#define SMK_TREE_FULL	2
+#define SMK_TREE_TYPE	3
+#define SMK_TREE_COUNT	4
+
+typedef struct _smk_header {
+    uint8_t SmkMarker[4];
+    uint32_t VideoWidth;
+    uint32_t VideoHeight;
+    uint32_t FrameCount;
+    uint32_t FrameLen;
+    uint32_t VideoFlags;
+    uint32_t AudioMaxChunkLength[SMK_AUDIO_TRACKS]; // uncompressed length
+    uint32_t VideoTreeDataSize;
+    uint32_t VideoTreeSize[SMK_TREE_COUNT];     // uncompressed size
+    uint32_t AudioType[SMK_AUDIO_TRACKS];
+    uint32_t Dummy;
+    // uint32_t FrameDataSize[FrameCount];
+    // uint8_t FrameType[FrameCount];
+    // uint8_t VideoTreeData[VideoTreeDataSize];
+    // uint8_t FrameData[FrameDataSize][FrameCount];    [PAL_SIZE PALETTE] [AUDIO_SIZE{4} (AUDIO_DATA | UNCOMPRESSED_SIZE{4} 1 CH W TREE_DATA[4] AUDIO_DATA)][7] [VIDEO_DATA]
+} smk_header;
+#endif
+
 /* PUBLIC FUNCTIONS */
 #ifdef __cplusplus
 extern "C" {

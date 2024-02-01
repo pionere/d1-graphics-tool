@@ -348,30 +348,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     return true;
 }
 
-#define SMK_TREE_MMAP    0
-#define SMK_TREE_MCLR    1
-#define SMK_TREE_FULL    2
-#define SMK_TREE_TYPE    3
-#define SMK_TREE_COUNT    4
-
-typedef struct _SmkHeader {
-    quint32 SmkMarker;
-    quint32 VideoWidth;
-    quint32 VideoHeight;
-    quint32 FrameCount;
-    quint32 FrameLen;
-    quint32 VideoFlags;
-    quint32 AudioMaxChunkLength[D1SMK_TRACKS]; // uncompressed length
-    quint32 VideoTreeDataSize;
-    quint32 VideoTreeSize[SMK_TREE_COUNT];     // uncompressed size
-    quint32 AudioType[D1SMK_TRACKS];
-    quint32 Dummy;
-    // quint32 FrameDataSize[FrameCount];
-    // quint8 FrameType[FrameCount];
-    // quint8 VideoTreeData[VideoTreeDataSize];
-    // quint8 FrameData[FrameDataSize][FrameCount];    [PAL_SIZE PALETTE] [AUDIO_SIZE{4} (AUDIO_DATA | UNCOMPRESSED_SIZE{4} 1 CH W TREE_DATA[4] AUDIO_DATA)][7] [VIDEO_DATA]
-} SMKHEADER;
-
 typedef struct _SmkAudioInfo {
     unsigned bitRate;
     unsigned bitDepth;
@@ -1408,7 +1384,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
         videoTreeDataSize++;
     }
     // write the header to the file
-    SMKHEADER header;
+    smk_header header;
     header.SmkMarker = SwapLE32(*((uint32_t*)"SMK2"));
     header.VideoWidth = SwapLE32(width);
     header.VideoHeight = SwapLE32(height);

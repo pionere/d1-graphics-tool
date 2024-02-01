@@ -21,7 +21,8 @@ void PatchGfxDialog::initialize(D1Gfx *g, CelView *cv)
     this->celView = cv;
 
     // initialize the dropdown based on the filename
-    int fileIndex = D1Gfx::getPatchFileIndex(g->getFilePath());
+    QString filePath = g->getFilePath();
+    int fileIndex = D1Gfx::getPatchFileIndex(filePath);
     this->ui->gfxFileComboBox->setCurrentIndex(fileIndex);
 }
 
