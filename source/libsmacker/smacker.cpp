@@ -2802,12 +2802,11 @@ char smk_info_all(const smk object, unsigned long * w, unsigned long * h, double
 	return 0;
 }
 
-void smk_info_audio(const smk object, unsigned track, unsigned char * channels, unsigned char * bitdepth, unsigned long * audio_rate, unsigned char * compress)
+void smk_info_audio(const smk object, unsigned char * channels, unsigned char * bitdepth, unsigned long * audio_rate)
 {
-	*channels = object->audio[track].channels;
-	*bitdepth = object->audio[track].bitdepth;
-	*audio_rate = object->audio[track].rate;
-	*compress = object->audio[track].compress;
+	*channels = object->audio[0].channels;
+	*bitdepth = object->audio[0].bitdepth;
+	*audio_rate = object->audio[0].rate;
 }
 #endif /* FULL */
 
@@ -2912,7 +2911,7 @@ unsigned char * smk_get_audio(const smk object, const unsigned char t)
 
 	return (unsigned char *)object->audio[t].buffer;
 }
-unsigned long smk_get_audio_size(const smk object, const unsigned char t)
+unsigned long smk_get_audio_size(const smk object, const unsigned char t, unsigned char * compress)
 {
 	/* null check */
 #ifdef FULL
@@ -2922,6 +2921,8 @@ unsigned long smk_get_audio_size(const smk object, const unsigned char t)
 	}
 #else
 	assert(object);
+
+	*compress = object->audio[track].compress;
 #endif
 
 	return object->audio[t].buffer_size;
@@ -3107,10 +3108,10 @@ bool doDebug = false; // frameCount == 174;
 		type = ((unpack & 0x0003));
 		blocklen = ((unpack & 0x00FC) >> 2);
 		typedata = ((unpack & 0xFF00) >> 8);
-if (ss->cur_frame == 0) {
+/*if (ss->cur_frame == 0) {
 			unsigned char * pp = ss->source.chunk_data[ss->cur_frame];
 LogError("libsmacker::smk_render_video() - INFO: lookup from TYPE tree %d (ty%d len %d=%d data%d) bn%d (frame=%d, row=%d, chunk offset%d size%d [%d;%d;%d;%d;%d]).\n", unpack, type, blocklen, sizetable[blocklen], typedata, bs.bit_num, ss->cur_frame, row, p - pp, ss->chunk_size[ss->cur_frame], pp[0], pp[1], pp[2], pp[3], pp[4]);
-}
+}*/
 
 		/* support for v4 full-blocks */
 		if (type == 1 && s->v == '4') {
@@ -3619,7 +3620,6 @@ static char smk_render(smk s)
 		/* Byte 1 in block, times 4, tells how many
 			subsequent bytes are present */
 		size = 4 * (*p);
-LogError("libsmacker::smk_render() -frame %lu: palette size %d.\n", s->cur_frame, size);
 
 		if (i < size) {
 			LogError("libsmacker::smk_render() - ERROR: frame %lu: insufficient data for a palette content.\n", s->cur_frame);

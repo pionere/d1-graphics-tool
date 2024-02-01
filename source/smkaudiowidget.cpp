@@ -40,6 +40,8 @@ SmkAudioWidget::SmkAudioWidget(CelView *parent)
     layout = this->ui->centerButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &SmkAudioWidget::on_movePushButtonClicked);
     layout = this->ui->rightButtonsHorizontalLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCancelButton, tr("Remove chunk"), this, &SmkAudioWidget::on_removeChunkPushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Remove track"), this, &SmkAudioWidget::on_removeTrackPushButtonClicked);
     this->muteBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Mute"), this, &SmkAudioWidget::on_mutePushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &SmkAudioWidget::on_closePushButtonClicked);
 
@@ -112,6 +114,7 @@ void SmkAudioWidget::frameModified()
     uint8_t *audioData;
     unsigned bitWidth, channels, bitRate, width, height;
     int track;
+    bool compress;
 
     if (this->isHidden())
         return;
@@ -125,12 +128,14 @@ void SmkAudioWidget::frameModified()
         channels = frameAudio->getChannels();
         bitWidth = frameAudio->getBitDepth() / 8;
         audioData = frameAudio->getAudio(track, &audioDataLen);
+        compress = frameAudio->getCompress(track) != 0;
     } else {
         // track = -1;
         channels = 0;
         bitWidth = 1;
         audioData = nullptr;
         audioDataLen = 0;
+        compress = false;
     }
     audioLen = (channels == 0 || bitWidth == 0) ? audioDataLen : (audioDataLen / (channels * bitWidth));
 
@@ -141,9 +146,9 @@ void SmkAudioWidget::frameModified()
     this->ui->bitWidthLabel->setText("");
     this->ui->bitRateLabel->setText("");
     this->ui->audioLenLineEdit->setText("");
-    this->ui->audioLenLabel->setText("");
+    this->ui->audioLenLineEdit->setToolTip("");
     this->ui->trackComboBox->setEnabled(hasAudio);
-    this->ui->audioCompressCheckBox->setChecked(false);
+    this->ui->audioCompressCheckBox->setChecked(compress);
     this->ui->audioCompressCheckBox->setEnabled(hasAudio);
     if (hasAudio) {
         // - tracks
@@ -167,10 +172,7 @@ void SmkAudioWidget::frameModified()
 
         // - audio length
         this->ui->audioLenLineEdit->setText(QString::number(audioLen));
-        this->ui->audioLenLabel->setText(bitRate == 0 ? tr("N/A") : tr("%1us").arg((uint64_t)audioLen * 1000000 / bitRate));
-
-        // - compress
-        this->ui->audioCompressCheckBox->setChecked(frameAudio->getCompress(0)); // FIXME track vs frameAudio
+        this->ui->audioLenLineEdit->setToolTip(bitRate == 0 ? tr("N/A") : tr("%1us").arg((uint64_t)audioLen * 1000000 / bitRate));
     }
 
     // update the scene
@@ -322,6 +324,57 @@ void SmkAudioWidget::on_loadTrackPushButtonClicked()
             // update the main view
             ((CelView *)this->parent())->displayFrame();
         }
+    }
+}
+
+void SmkAudioWidget::on_removeChunkPushButtonClicked()
+{
+    int frameIdx, track;
+
+    frameIdx = this->currentFrameIndex;
+    if (frameIdx < 0) {
+        frameIdx = 0;
+    }
+    track = this->currentTrack;
+
+    int frameCount = this->gfx->getFrameCount();
+    if (track >= 0 && frameCount > frameIdx) {
+        D1GfxFrame *frame = this->gfx->getFrame(frameIdx);
+        D1SmkAudioData *frameAudio = frame->getFrameAudio();
+        bool result = false;
+        if (frameAudio != nullptr) {
+            result |= frameAudio->setAudio(track, nullptr, 0);
+        }
+        if (result) {
+            this->gfx->setModified();
+            // update the window
+            this->frameModified();
+            // update the main view
+            ((CelView *)this->parent())->displayFrame();
+        }
+    }
+}
+
+void SmkAudioWidget::on_removeTrackPushButtonClicked()
+{
+    int track = this->currentTrack;
+    bool result = false;
+
+    if (track >= 0) {
+        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+            D1GfxFrame *frame = this->gfx->getFrame(i);
+            D1SmkAudioData *frameAudio = frame->getFrameAudio();
+            if (frameAudio != nullptr) {
+                result |= frameAudio->setAudio(track, nullptr, 0);
+            }
+        }
+    }
+    if (result) {
+        this->gfx->setModified();
+        // update the window
+        this->frameModified();
+        // update the main view
+        ((CelView *)this->parent())->displayFrame();
     }
 }
 

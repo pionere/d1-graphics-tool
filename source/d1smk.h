@@ -35,7 +35,7 @@ public:
     unsigned getBitDepth() const;
     bool setBitRate(unsigned bitRate);
     unsigned getBitRate() const;
-    void setAudio(unsigned track, uint8_t* audio, unsigned long len);
+    bool setAudio(unsigned track, uint8_t* audio, unsigned long len);
     uint8_t* getAudio(unsigned track, unsigned long *len) const;
     bool setCompress(unsigned track, uint8_t compress);
     uint8_t getCompress(unsigned track) const;
