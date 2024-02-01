@@ -499,7 +499,7 @@ static uint8_t *writeTreeLeafs(TreeLeaf* treeLeaf, uint8_t *cursor, unsigned &bi
             {
                 auto it = leafPaths[0].find(leaf & 0xFF);
                 if (it == leafPaths[0].end()) {
-                    dProgressErr() << QApplication::tr("ERROR: Missing entry for leaf %1 in the low paths.", leaf & 0xFF);
+                    dProgressErr() << QApplication::tr("ERROR: Missing entry for leaf %1 in the low paths.").arg(leaf & 0xFF);
                 } else {
                     QPair<unsigned, uint32_t> &theEntryPair = it.value();
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
@@ -508,7 +508,7 @@ static uint8_t *writeTreeLeafs(TreeLeaf* treeLeaf, uint8_t *cursor, unsigned &bi
             {
                 auto it = leafPaths[1].find((leaf >> 8) & 0xFF);
                 if (it == leafPaths[1].end()) {
-                    dProgressErr() << QApplication::tr("ERROR: Missing entry for leaf %1 in the high paths.", (leaf >> 8) & 0xFF);
+                    dProgressErr() << QApplication::tr("ERROR: Missing entry for leaf %1 in the high paths.").arg((leaf >> 8) & 0xFF);
                 } else {
                     QPair<unsigned, uint32_t> theEntryPair = it.value();
                     cursor = writeNBits(theEntryPair.second, theEntryPair.first, cursor, bitNum);
@@ -520,7 +520,7 @@ static uint8_t *writeTreeLeafs(TreeLeaf* treeLeaf, uint8_t *cursor, unsigned &bi
     cursor = writeBit(1, cursor, bitNum);
     depth++;
     if (depth > 32) {
-        dProgressErr() << QApplication::tr("writeTreeLeafs ERROR: depth %1 too much.", depth);
+        dProgressErr() << QApplication::tr("writeTreeLeafs ERROR: depth %1 too much.").arg(depth);
     }
     // branch <<= 1;
     cursor = writeTreeLeafs(treeLeaf->left, cursor, bitNum, branch, depth, joints, paths, leafPaths);
@@ -751,7 +751,7 @@ static uint8_t *writeTreeValue(unsigned value, const SmkTreeInfo &videoTree, uns
 
     auto it = videoTree.paths.find(v);
     if (it == videoTree.paths.end()) {
-        dProgressErr() << QApplication::tr("ERROR: writeTreeValue missing entry %1 (%2)", v, value);
+        dProgressErr() << QApplication::tr("ERROR: writeTreeValue missing entry %1 (%2)").arg(v).arg(value);
         return cursor;
     }
 
@@ -1011,7 +1011,7 @@ static uint8_t *writeTreeValue(unsigned v, const QMap<unsigned, QPair<unsigned, 
 {
     auto it = bytePaths.find(v);
     if (it == bytePaths.end()) {
-        dProgressErr() << QApplication::tr("ERROR: writeTreeValue missing entry %1 in byte paths.", v);
+        dProgressErr() << QApplication::tr("ERROR: writeTreeValue missing entry %1 in byte paths.").arg(v);
         return cursor;
     }
 
