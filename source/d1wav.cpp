@@ -165,11 +165,7 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
             audio = new D1SmkAudioData(wavAudioData.channels, wavAudioData.bitDepth, wavAudioData.bitRate);
             gfxFrame->frameAudio = audio;
         }
-        if (audio->audio[track] != nullptr) {
-            free(audio->audio[track]);
-            audio->audio[track] = nullptr;
-            audio->len[track] = 0;
-        }
+        audio->setAudio(track, nullptr, 0);
     }
     // add the new track
     unsigned long audioLen = wavAudioData.len;

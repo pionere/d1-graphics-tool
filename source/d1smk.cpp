@@ -178,10 +178,14 @@ unsigned D1SmkAudioData::getBitRate() const
     return this->bitRate;
 }
 
-void D1SmkAudioData::setAudio(unsigned track, uint8_t* data, unsigned long len)
+bool D1SmkAudioData::setAudio(unsigned track, uint8_t* data, unsigned long len)
 {
+    // assert((len % (this->channels * this->bitDepth / 8) == 0);
+    bool result = this->len[track] != len || (len != 0 && memcmp(data, this->audio[track], len) != 0);
+    free(this->audio[track]);
     this->audio[track] = data;
     this->len[track] = len;
+    return result;
 }
 
 uint8_t* D1SmkAudioData::getAudio(unsigned track, unsigned long *len) const
