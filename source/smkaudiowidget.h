@@ -40,6 +40,8 @@ private slots:
     void on_playPushButtonClicked();
     void on_loadChunkPushButtonClicked();
     void on_loadTrackPushButtonClicked();
+    void on_removeChunkPushButtonClicked();
+    void on_removeTrackPushButtonClicked();
     void on_mutePushButtonClicked();
 
     void on_closePushButtonClicked();

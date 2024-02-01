@@ -37,6 +37,8 @@ SmkAudioWidget::SmkAudioWidget(CelView *parent)
     layout = this->ui->centerButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &SmkAudioWidget::on_movePushButtonClicked);
     layout = this->ui->rightButtonsHorizontalLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCancelButton, tr("Remove chunk"), this, &SmkAudioWidget::on_removeChunkPushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Remove track"), this, &SmkAudioWidget::on_removeTrackPushButtonClicked);
     this->muteBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Mute"), this, &SmkAudioWidget::on_mutePushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &SmkAudioWidget::on_closePushButtonClicked);
 
@@ -290,6 +292,57 @@ void SmkAudioWidget::on_loadTrackPushButtonClicked()
             // update the main view
             ((CelView *)this->parent())->displayFrame();
         }
+    }
+}
+
+void SmkAudioWidget::on_removeChunkPushButtonClicked()
+{
+    int frameIdx, track;
+
+    frameIdx = this->currentFrameIndex;
+    if (frameIdx < 0) {
+        frameIdx = 0;
+    }
+    track = this->currentTrack;
+
+    int frameCount = this->gfx->getFrameCount();
+    if (track >= 0 && frameCount > frameIdx) {
+        D1GfxFrame *frame = this->gfx->getFrame(frameIdx);
+        D1SmkAudioData *frameAudio = frame->getFrameAudio();
+        bool result = false;
+        if (frameAudio != nullptr) {
+            result |= frameAudio->setAudio(track, nullptr, 0);
+        }
+        if (result) {
+            this->gfx->setModified();
+            // update the window
+            this->frameModified();
+            // update the main view
+            ((CelView *)this->parent())->displayFrame();
+        }
+    }
+}
+
+void SmkAudioWidget::on_removeTrackPushButtonClicked()
+{
+    int track = this->currentTrack;
+    bool result = false;
+
+    if (track >= 0) {
+        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+            D1GfxFrame *frame = this->gfx->getFrame(i);
+            D1SmkAudioData *frameAudio = frame->getFrameAudio();
+            if (frameAudio != nullptr) {
+                result |= frameAudio->setAudio(track, nullptr, 0);
+            }
+        }
+    }
+    if (result) {
+        this->gfx->setModified();
+        // update the window
+        this->frameModified();
+        // update the main view
+        ((CelView *)this->parent())->displayFrame();
     }
 }
 
