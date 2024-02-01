@@ -138,7 +138,7 @@ void SmkAudioWidget::frameModified()
     this->ui->bitWidthLabel->setText("");
     this->ui->bitRateLabel->setText("");
     this->ui->audioLenLineEdit->setText("");
-    this->ui->audioLenLabel->setText("");
+    this->ui->audioLenLineEdit->setToolTip("");
     this->ui->trackComboBox->setEnabled(hasAudio);
     if (hasAudio) {
         // - tracks
@@ -162,7 +162,7 @@ void SmkAudioWidget::frameModified()
 
         // - audio length
         this->ui->audioLenLineEdit->setText(QString::number(audioLen));
-        this->ui->audioLenLabel->setText(bitRate == 0 ? tr("N/A") : tr("%1us").arg((uint64_t)audioLen * 1000000 / bitRate));
+        this->ui->audioLenLineEdit->setToolTip(bitRate == 0 ? tr("N/A") : tr("%1us").arg((uint64_t)audioLen * 1000000 / bitRate));
     }
 
     // update the scene

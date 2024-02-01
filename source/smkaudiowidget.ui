@@ -128,9 +128,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="audioLenLabel"/>
-     </item>
-     <item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
