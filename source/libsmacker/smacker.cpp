@@ -24,7 +24,12 @@
 #include <QApplication>
 #include <QByteArray>
 #include "progressdialog.h"
+#include "../dungeon/defs.h"
 #include "../dungeon/interfac.h"
+
+/* endianness */
+#define smk_swap_le16(X) SwapLE16(X)
+#define smk_swap_le32(X) SwapLE32(X)
 
 #ifdef FULL
 #undef DEBUG_MODE
@@ -390,8 +395,12 @@ static int smk_huff8_lookup(const struct smk_huff8_t * const t, struct smk_bit_t
 /* ************************************************************************* */
 #define SMK_HUFF16_BRANCH    0x80000000
 #define SMK_HUFF16_CACHE     0x40000000
+#ifdef FULL
 #define SMK_HUFF16_LEAF_MASK 0x3FFFFFFF
-#define SMK_HUFF16_CACHE_MSK  0x3
+#else
+#define SMK_HUFF16_LEAF_MASK 0x7FFFFFFF
+#define SMK_HUFF16_CACHE_MSK 0x3
+#endif
 
 struct smk_huff16_t {
 	unsigned int * tree;
@@ -678,7 +687,6 @@ struct smk_t {
 #else
 	unsigned long	total_frames; /* f + ring_frame */
 #endif
-
 	/* Index of current frame */
 	unsigned long	cur_frame;
 
@@ -734,7 +742,7 @@ struct smk_t {
 		/* version ('2' or '4') */
 		unsigned char	v;
 #endif
-		struct smk_huff16_t tree[4];
+		struct smk_huff16_t tree[SMK_TREE_COUNT];
 
 		/* Palette data type: pointer to last-decoded-palette */
 		unsigned char palette[256][3];
@@ -767,7 +775,7 @@ struct smk_t {
 		/* pointer to last-decoded-audio-buffer */
 		void * buffer;
 		unsigned long	buffer_size;
-	} audio[7];
+	} audio[SMK_AUDIO_TRACKS];
 };
 
 union smk_read_t {
@@ -872,7 +880,7 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 }
 #endif
 /* Calls smk_read, but returns a ul */
-#if FULL
+#ifdef FULL
 #define smk_read_ul(p) \
 { \
 	smk_read(buf,4); \
@@ -882,8 +890,6 @@ static char smk_read_in_memory(unsigned char ** buf, const unsigned long size, u
 		((unsigned long) buf[0]); \
 }
 #else
-#define smk_swap_le16(X) (X)
-#define smk_swap_le32(X) (X)
 #define smk_read_ul(p) \
 { \
 	smk_read(buf,4); \
@@ -2298,12 +2304,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	unsigned long tree_size;
 	/* a bitstream struct */
 	struct smk_bit_t bs;
-#ifndef FULL
-	unsigned long video_tree_size[4];
- bufMem = fp.ram;
- bufSize = size;
-// patchFile();
-#endif
+
 	/** **/
 	/* safe malloc the structure */
 #ifdef FULL
@@ -2334,10 +2335,11 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		LogError("\tProcessing will continue as type %c\n", buf[3]);
 	}
 	s->video.v = buf[3];
+
 	/* width, height, total num frames */
 	smk_read_ul(s->video.w);
 	smk_read_ul(s->video.h);
-	smk_read_ul(s->total_frames);
+	smk_read_ul(s->f);
 	/* frames per second calculation */
 	smk_read_ul(temp_u);
 	temp_l = (int)temp_u;
@@ -2352,15 +2354,14 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		/* defaults to 10 usf (= 100000 microseconds) */
 		s->usf = 100000;
 	}
+
 	/* Video flags follow.
 		Ring frame is important to libsmacker.
 		Y scale / Y interlace go in the Video flags.
 		The user should scale appropriately. */
 	smk_read_ul(temp_u);
-	if (temp_u & 0x01) {
+	if (temp_u & 0x01)
 		s->ring_frame = 1;
-		s->total_frames++;
-	}
 
 	if (temp_u & 0x02)
 		s->video.y_scale_mode = SMK_FLAG_Y_DOUBLE;
@@ -2374,12 +2375,14 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	/* Max buffer size for each audio track - used to pre-allocate buffers */
 	for (temp_l = 0; temp_l < 7; temp_l ++)
 		smk_read_ul(s->audio[temp_l].max_buffer);
+
 	/* Read size of "hufftree chunk" - save for later. */
 	smk_read_ul(tree_size);
+
 	/* "unpacked" sizes of each huff tree */
-	for (temp_l = 0; temp_l < 4; temp_l ++) {
+	for (temp_l = 0; temp_l < 4; temp_l ++)
 		smk_read_ul(s->video.tree_size[temp_l]);
-	}
+
 	/* read audio rate data */
 	for (temp_l = 0; temp_l < 7; temp_l ++) {
 		smk_read_ul(temp_u);
@@ -2406,9 +2409,14 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 			s->audio[temp_l].rate = (temp_u & 0x00FFFFFF);
 		}
 	}
+
 	/* Skip over Dummy field */
 	smk_read_ul(temp_u);
 #else
+	unsigned long video_tree_size[SMK_TREE_COUNT];
+ bufMem = fp.ram;
+ bufSize = size;
+// patchFile();
 	s = NULL;
 	smk_mallocc(s, sizeof(struct smk_t), smk_t);
 	smk_header *hdr = (smk_header*)fp.ram;
@@ -2456,32 +2464,37 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 		LogErrorMsg("libsmacker::smk_open_generic() - Warning: ring_frames are no supported by the game.\n");
 		s->total_frames++;
 	}
+
 	/* Max buffer size for each audio track - used to pre-allocate buffers */
-	for (temp_l = 0; temp_l < 7; temp_l ++)
+	for (temp_l = 0; temp_l < SMK_AUDIO_TRACKS; temp_l ++)
 		s->audio[temp_l].max_buffer = smk_swap_le32(hdr->AudioMaxChunkLength[temp_l]);
 	/* Read size of "hufftree chunk" - save for later. */
 	tree_size = smk_swap_le32(hdr->VideoTreeDataSize);
 	/* "unpacked" sizes of each huff tree */
-	for (temp_l = 0; temp_l < 4; temp_l ++) {
+	for (temp_l = 0; temp_l < SMK_TREE_COUNT; temp_l ++) {
 		video_tree_size[temp_l] = smk_swap_le32(hdr->VideoTreeSize[temp_l]);
 	}
 	/* read audio rate data */
-	for (temp_l = 0; temp_l < 7; temp_l ++) {
+	for (temp_l = 0; temp_l < SMK_AUDIO_TRACKS; temp_l ++) {
 		temp_u = smk_swap_le32(hdr->AudioType[temp_l]);
 
 		if (temp_u & 0x40000000) {
 			/* and for all audio tracks */
 			smk_malloc(s->audio[temp_l].buffer, s->audio[temp_l].max_buffer);
-
+#ifdef FULL
 			if (temp_u & 0x80000000)
 				s->audio[temp_l].compress = 1;
-
+#else
+			s->audio[temp_l].compress = ((temp_u & 0x80000000) ? 1 : 0);
+#endif
 			s->audio[temp_l].bitdepth = ((temp_u & 0x20000000) ? 16 : 8);
 			s->audio[temp_l].channels = ((temp_u & 0x10000000) ? 2 : 1);
+
 			if (temp_u & 0x0c000000) {
 				LogError("libsmacker::smk_open_generic() - Warning: audio track %ld is compressed with Bink (perceptual) Audio Codec: this is currently unsupported by libsmacker\n", temp_l);
 				s->audio[temp_l].compress = 2;
 			}
+
 			/* Bits 25 & 24 are unused. */
 			s->audio[temp_l].rate = (temp_u & 0x00FFFFFF);
 		}
@@ -2490,10 +2503,15 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	/* FrameSizes and Keyframe marker are stored together. */
 #ifdef FULL
 	smk_malloc(s->keyframe, (s->f + s->ring_frame));
-#endif
+
+	smk_malloc(s->chunk_size, (s->f + s->ring_frame) * sizeof(unsigned long));
+
+	for (temp_u = 0; temp_u < (s->f + s->ring_frame); temp_u ++) {
+#else
 	smk_mallocc(s->chunk_size, s->total_frames * sizeof(unsigned long), unsigned long);
 
 	for (temp_u = 0; temp_u < s->total_frames; temp_u ++) {
+#endif
 		smk_read_ul(s->chunk_size[temp_u]);
 // LogErrorFF("smk_open_generic 6 %d. %d", temp_u, s->chunk_size[temp_u]);
 #ifdef FULL
@@ -2524,7 +2542,7 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	smk_bs_init(&bs, hufftree_chunk, tree_size);
 
 	/* create some tables */
-	for (temp_u = 0; temp_u < 4; temp_u ++) {
+	for (temp_u = 0; temp_u < SMK_TREE_COUNT; temp_u ++) {
 // LogErrorFF("smk_open_generic 8 %d: %d", temp_u, video_tree_size[temp_u]);
 		// deepDebug = temp_u == SMK_TREE_FULL;
 #ifdef FULL
@@ -2548,8 +2566,10 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	/* Handle the rest of the data.
 		For MODE_MEMORY, read the chunks and store */
 	if (s->mode == SMK_MODE_MEMORY) {
-#endif
+		smk_malloc(s->source.chunk_data, (s->f + s->ring_frame) * sizeof(unsigned char *));
+#else
 		smk_mallocc(s->source.chunk_data, s->total_frames * sizeof(unsigned char *), unsigned char*);
+#endif
 
 #ifdef FULL_ORIG
 		for (temp_u = 0; temp_u < (s->f + s->ring_frame); temp_u ++) {
@@ -2607,13 +2627,11 @@ smk smk_open_memory(const unsigned char * buffer, const unsigned long size)
 
 #ifdef FULL
 	if (!(s = smk_open_generic(0, fp, size, SMK_MODE_MEMORY))) {
-		LogError("libsmacker::smk_open_memory(buffer,%lu) - ERROR: Fatal error in smk_open_generic, returning NULL.\n", size);
-	}
 #else
 	if (!(s = smk_open_generic(fp, size))) {
+#endif
 		LogError("libsmacker::smk_open_memory(buffer,%lu) - ERROR: Fatal error in smk_open_generic, returning NULL.\n", size);
 	}
-#endif
 	return s;
 }
 
@@ -2685,18 +2703,24 @@ void smk_close(smk s)
 	}
 
 	/* free video sub-components */
-	for (u = 0; u < 4; u ++) {
+	for (u = 0; u < SMK_TREE_COUNT; u ++) {
+#ifdef FULL
 		if (s->video.tree[u].tree) free(s->video.tree[u].tree);
+#else
+		free(s->video.tree[u].tree);
+#endif
 	}
 
 	smk_free(s->video.frame);
 
 	/* free audio sub-components */
-	for (u = 0; u < 7; u++) {
+	for (u = 0; u < SMK_AUDIO_TRACKS; u++) {
 #ifdef FULL
 		if (s->audio[u].buffer)
-#endif
 			smk_free(s->audio[u].buffer);
+#else
+		free(s->audio[u].buffer);
+#endif
 	}
 
 #ifdef FULL
@@ -2714,17 +2738,19 @@ void smk_close(smk s)
 
 		smk_free(s->source.file.chunk_offset);
 	} else {
-		/* mem-mode */
-		if (s->source.chunk_data != NULL) {
 #endif
+		/* mem-mode */
 #ifdef FULL_ORIG
+		if (s->source.chunk_data != NULL) {
 			for (u = 0; u < (s->f + s->ring_frame); u++)
 				smk_free(s->source.chunk_data[u]);
-#endif
 
 			smk_free(s->source.chunk_data);
-#ifdef FULL
 		}
+#else
+		free(s->source.chunk_data);
+#endif
+#ifdef FULL
 	}
 #endif
 	smk_free(s->chunk_size);
@@ -3137,7 +3163,7 @@ bool doDebug = false; // frameCount == 174;
 	smk_bs_init(&bs, p, size);
 
 	/* Reset the cache on all bigtrees */
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < SMK_TREE_COUNT; i++)
 		memset(&s->tree[i].cache, 0, 3 * sizeof(unsigned short));
 
 	while (row < s->h) {
@@ -3684,7 +3710,7 @@ static char smk_render(smk s)
 	}
 
 	/* Unpack audio chunks */
-	for (track = 0; track < 7; track ++) {
+	for (track = 0; track < SMK_AUDIO_TRACKS; track ++) {
 		if (s->frame_type[s->cur_frame] & (0x02 << track)) {
 			/* need at least 4 byte to process */
 			if (i < 4) {
