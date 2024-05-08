@@ -1977,16 +1977,16 @@ bool D1Gfx::patchFallGWalk(bool silent)
                         continue;
                     break;
                 }
-				D1GfxPixel wPixel = frame->getPixel(x + dx, y + dy);
-				color = wPixel.getPaletteIndex();
+                D1GfxPixel wPixel = frame->getPixel(x + dx, y + dy);
+                color = wPixel.getPaletteIndex();
                 if (wPixel.isTransparent()
-				 || (i == 0 && color == 0 && x >= 75 + 11)) {
+                    || (i == 0 && color == 0 && x >= 75 + 11)) {
                     change |= frame->setPixel(x + dx, y + dy, sPixel);
                 }
             }
         }
 
-		// fix artifacts
+        // fix artifacts
         switch (i) {
         case 0: dx = 91; break;
         case 1: dx = 92; break;
@@ -2002,14 +2002,115 @@ bool D1Gfx::patchFallGWalk(bool silent)
                 change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
             }
         }
-		if (i == 0) {
-			for (int x = 88; x < width; x++) {
-				change |= frame->setPixel(88, 109, D1GfxPixel::transparentPixel());
+        if (i == 0) {
+            for (int x = 88; x < width; x++) {
+                change |= frame->setPixel(88, 109, D1GfxPixel::transparentPixel());
+            }
+            change |= frame->setPixel(77, 113, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(78, 113, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(75, 114, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(76, 114, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(77, 114, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(78, 114, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(79, 114, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(75, 115, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(76, 115, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(77, 115, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(78, 115, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(75, 116, D1GfxPixel::colorPixel(0));
+        }
+        if (i == 1) {
+            change |= frame->setPixel(86, 104, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(87, 104, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(91, 102, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(91, 103, D1GfxPixel::transparentPixel());
+
+            change |= frame->setPixel(80, 117, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(81, 117, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(81, 118, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(82, 118, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(83, 118, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(84, 118, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(85, 118, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(86, 118, D1GfxPixel::colorPixel(0));
+            for (int y = 106; y < 114; y++) {
+                for (int x = 73; x < 86; x++) {
+                    if (y < 276 - 2 * x) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                }
+            }
+            for (int y = 105; y < 109; y++) {
+                for (int x = 84; x < 88; x++) {
+                    if (x != 87 || (y != 105 || y != 108)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                }
             }
         }
-		if (i == 1) {
+        if (i == 2) {
+            change |= frame->setPixel(92, 103, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(88, 114, D1GfxPixel::colorPixel(0));
+            for (int y = 104; y < 114; y++) {
+                for (int x = 86; x < 93; x++) {
+                    if (y == 104 && x < 89) {
+                        continue;
+                    }
+                    if (y == 113 && x == 86) {
+                        continue;
+                    }
+                    change |= frame->setPixel(92, 103, D1GfxPixel::transparentPixel());
+                }
+            }
+            for (int y = 112; y < 118; y++) {
+                for (int x = 75; x < 89; x++) {
+                    if (y >= 70 + (x + 1) / 2) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                }
+            }
+            for (int y = 107; y < 111; y++) {
+                for (int x = 73; x < 84; x++) {
+                    if (y <= 191 - x) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                }
+            }
         }
-
+        if (i == 3) {
+            change |= frame->setPixel(90, 113, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(90, 117, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(91, 114, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(91, 115, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(91, 116, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(84, 112, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(72, 114, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(73, 113, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(74, 113, D1GfxPixel::colorPixel(0));
+            for (int y = 110; y < 112; y++) {
+                for (int x = 73; x < 82; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                }
+            }
+            for (int y = 103; y < 109; y++) {
+                for (int x = 88; x < 95; x++) {
+                    if (y >= 150 - (x + 1) / 2) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            for (int y = 116; y < 119; y++) {
+                for (int x = 70; x < 73; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                }
+            }
+        }
         if (change) {
             result = true;
             if (!silent) {
