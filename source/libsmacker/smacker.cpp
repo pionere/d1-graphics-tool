@@ -2560,7 +2560,15 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 	/* Go ahead and malloc storage for the video frame */
 	smk_mallocc(s->video.frame, s->video.w * s->video.h, unsigned char);
 #ifdef FULL
+	/* final processing: depending on ProcessMode, handle what to do with rest of file data */
+	s->mode = process_mode;
+
+	/* Handle the rest of the data.
+		For MODE_MEMORY, read the chunks and store */
+	if (s->mode == SMK_MODE_MEMORY) {
+		smk_malloc(s->source.chunk_data, (s->f + s->ring_frame) * sizeof(unsigned char *));
 #else
+	{
 		smk_mallocc(s->source.chunk_data, s->total_frames * sizeof(unsigned char *), unsigned char*);
 #endif
 
@@ -2590,8 +2598,8 @@ static smk smk_open_generic(union smk_read_t fp, unsigned long size)
 				goto error;
 			}
 		}
-	}
 #endif
+	}
 
 	return s;
 error:

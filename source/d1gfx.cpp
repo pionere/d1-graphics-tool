@@ -236,19 +236,19 @@ static void reportDiff(const QString text, QString &header)
 void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
 {
 	if (gfx->type != this->type) {
-		reportDiff(tr("type is %1 (was %2)").arg(this->type).arg(gfx->type), header);
+		reportDiff(QApplication::tr("type is %1 (was %2)").arg(this->type).arg(gfx->type), header);
     }
 	if (gfx->groupFrameIndices.size() == this->groupFrameIndices.size()) {
         for (int i = 0; i < this->groupFrameIndices.size(); i++) {
 			if (this->groupFrameIndices[i].first != gfx->groupFrameIndices[i].first || 
                 this->groupFrameIndices[i].second != gfx->groupFrameIndices[i].second) {
-				reportDiff(tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)
+				reportDiff(QApplication::tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)
                     .arg(this->groupFrameIndices[i].first + 1).arg(this->groupFrameIndices[i].second + 1)
                     .arg(gfx->groupFrameIndices[i].first + 1).arg(gfx->groupFrameIndices[i].second + 1), header);
             }
         }
     } else {
-		reportDiff(tr("group-count is %1 (was %2)").arg(this->groupFrameIndices.size()).arg(gfx->groupFrameIndices.size()), header);
+		reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(this->groupFrameIndices.size()).arg(gfx->groupFrameIndices.size()), header);
     }
 	if (gfx->getFrameCount() == this->getFrameCount()) {
         for (int i = 0; i < this->getFrameCount(); i++) {
@@ -263,22 +263,22 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
 						if (pixelA != pixelB) {
 							if (firstInFrame) {
 								firstInFrame = false;
-								reportDiff(tr("Frame %1:").arg(i), header);
+								reportDiff(QApplication::tr("Frame %1:").arg(i), header);
                             }
-							reportDiff(tr("  pixel %1:%2 is %3 (was %4)").arg(x).arg(y)
-								.arg(pixelA.isTransparent() ? tr("transparent") : tr("color%1").arg(pixelA.getPaletteIndex()))
-			                    .arg(pixelB.isTransparent() ? tr("transparent") : tr("color%1").arg(pixelB.getPaletteIndex())), header);
+							reportDiff(QApplication::tr("  pixel %1:%2 is %3 (was %4)").arg(x).arg(y)
+								.arg(pixelA.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelA.getPaletteIndex()))
+			                    .arg(pixelB.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelB.getPaletteIndex())), header);
                         }
                     }
                 }
             } else {
-				reportDiff(tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1)
+				reportDiff(QApplication::tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1)
                     .arg(frameA->getWidth()).arg(frameA->getHeight())
                     .arg(frameB->getWidth()).arg(frameB->getHeight()), header);
             }
         }
     } else {
-		reportDiff(tr("frame-count is %1 (was %2)").arg(this->getFrameCount()).arg(gfx->getFrameCount()), header);
+		reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(this->getFrameCount()).arg(gfx->getFrameCount()), header);
     }
 }
 

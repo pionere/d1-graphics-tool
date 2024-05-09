@@ -382,7 +382,7 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
     return true;
 }
 
-void D1Pcx::compareTo(D1Gfx &gfx, D1Pal *pal, const LoadFileContent *fileContent)
+void D1Pcx::compare(D1Gfx &gfx, D1Pal *pal, const LoadFileContent *fileContent)
 {
-	dProgressErr() << tr("Not supported.");
+	dProgressErr() << QApplication::tr("Not supported.");
 }

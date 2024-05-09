@@ -56,7 +56,7 @@ public:
     static bool load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &smkFilePath, const OpenAsParam &params);
     static bool save(D1Gfx &gfx, const SaveAsParam &params);
 
-    static void compareTo(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent);
+    static void compare(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent);
 
     static void playAudio(D1GfxFrame &gfxFrame, int track = -1);
     static void stopAudio();

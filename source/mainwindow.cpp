@@ -1005,7 +1005,7 @@ void MainWindow::changeEvent(QEvent *event)
 
 static void closeFileContent(LoadFileContent *result)
 {
-	result->fileType = -1;
+    result->fileType = FILE_CONTENT::UNKNOWN;
 
     MemFree(result->trnUnique);
     MemFree(result->trnBase);
@@ -1024,11 +1024,11 @@ void MainWindow::failWithError(MainWindow *instance, LoadFileContent *result, co
 {
     dProgressFail() << error;
 
-	if (instance != nullptr) {
-		instance->on_actionClose_triggered();
+    if (instance != nullptr) {
+        instance->on_actionClose_triggered();
     }
 
-	closeFileContent(result);
+    closeFileContent(result);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1076,19 +1076,19 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
         else if (fileLower.endsWith(".smk"))
             fileType = FILE_CONTENT::SMK;
         else
-			fileType = FILE_CONTENT::UNKNOWN;
+            fileType = FILE_CONTENT::UNKNOWN;
     }
-	result->fileType = fileType;
-	if (fileType == FILE_CONTENT::UNKNOWN)
-		return;
+    result->fileType = fileType;
+    if (fileType == FILE_CONTENT::UNKNOWN)
+        return;
 
-	if (instance != nullptr) {
-	    instance->on_actionClose_triggered();
+    if (instance != nullptr) {
+        instance->on_actionClose_triggered();
     }
-	// result->fileType = fileType;
-	// result->pal = nullptr;
-	// result->trnUnique = nullptr;
-	// result->trnBase = nullptr;
+    // result->fileType = fileType;
+    // result->pal = nullptr;
+    // result->trnUnique = nullptr;
+    // result->trnBase = nullptr;
     result->gfx = nullptr;
     result->tileset = nullptr;
     result->gfxset = nullptr;
@@ -1215,15 +1215,17 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     // If SLA, MIN and TIL files exist then build a LevelCelView
     bool isTileset = params.gfxType == OPEN_GFX_TYPE::TILESET;
     if (params.gfxType == OPEN_GFX_TYPE::AUTODETECT) {
-		if (!dunFilePath.isEmpty() && QFileInfo::exists(dunFilePath) && (fileType == FILE_CONTENT::CEL || fileType == FILE_CONTENT::EMPTY)) {
-			fileType = FILE_CONTENT::DUN;
-			isTileset = true;
+        if (!dunFilePath.isEmpty() && QFileInfo::exists(dunFilePath) && (fileType == FILE_CONTENT::CEL || fileType == FILE_CONTENT::EMPTY)) {
+            fileType = FILE_CONTENT::DUN;
+            isTileset = true;
         } else if ((QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(slaFilePath)) && fileType == FILE_CONTENT::CEL) {
-			isTileset = true;
+            isTileset = true;
         }
     }
 
     bool isGfxset = params.gfxType == OPEN_GFX_TYPE::GFXSET;
+    result->isTileset = isTileset;
+    result->isGfxset = isGfxset;
 
     result->gfx = new D1Gfx();
     result->gfx->setPalette(result->trnBase->getResultingPalette());
@@ -1568,12 +1570,14 @@ void MainWindow::openFile(const OpenAsParam &params)
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
     }*/
-	LoadFileContent fileContent;
-	MainWindow::loadFile(params, this, &fileContent);
-	if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
-		return;
-	const FILE_CONTENT fileType = fileContent.fileType;
-	this->pal = fileContent.pal;
+    LoadFileContent fileContent;
+    MainWindow::loadFile(params, this, &fileContent);
+    if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
+        return;
+    const FILE_CONTENT fileType = fileContent.fileType;
+    const bool isTileset = fileContent.isTileset;
+    const bool isGfxset = fileContent.isGfxset;
+    this->pal = fileContent.pal;
     this->trnUnique = fileContent.trnUnique;
     this->trnBase = fileContent.trnBase;
     this->gfx = fileContent.gfx;
@@ -1583,7 +1587,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->tableset = fileContent.tableset;
     this->cpp = fileContent.cpp;
 
-	this->pals = fileContent.pals;
+    this->pals = fileContent.pals;
 
     this->uniqueTrns[D1Trn::IDENTITY_PATH] = this->trnUnique;
     this->baseTrns[D1Trn::IDENTITY_PATH] = this->trnBase;
@@ -2132,26 +2136,26 @@ const char* FileContentTypeTxt(FILE_CONTENT fileType)
     case FILE_CONTENT::DUN:   result = tr("DUN"); break;
     default: result = tr("???"); break;
     }
-	return result;
+    return result;
 }
 
 void MainWindow::on_actionDiff_triggered()
 {
     QString filter;
 
-	if (this->gfxset != nullptr) {
-		filter = "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)";
+    if (this->gfxset != nullptr) {
+        filter = "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)";
     } else if (this->dun != nullptr) {
-		filter = "DUN Files (*.dun *.DUN *.rdun *.RDUN)";
+        filter = "DUN Files (*.dun *.DUN *.rdun *.RDUN)";
     } else if (this->tileset != nullptr) {
-		filter = "CEL Files (*.cel *.CEL)";
+        filter = "CEL Files (*.cel *.CEL)";
     // } else if (this->tableset != nullptr) {
-	//	filter = "TBL Files (*.tbl *.TBL)";
+    //    filter = "TBL Files (*.tbl *.TBL)";
     //} else if (this->cpp != nullptr) {
-	//	filter = "CPP Files (*.cpp *.CPP *.c *.C)";
+    //    filter = "CPP Files (*.cpp *.CPP *.c *.C)";
     } else {
-		QString filePath = this->gfx->getFilePath();
-		QString fileLower = filePath.toLower();
+        QString filePath = this->gfx->getFilePath();
+        QString fileLower = filePath.toLower();
         if (fileLower.endsWith(".cel")) {
             filter = "CEL Files (*.cel *.CEL)";
         } else if (fileLower.endsWith(".cl2")) {
@@ -2163,12 +2167,12 @@ void MainWindow::on_actionDiff_triggered()
         } else {
             QMessageBox::critical(this, tr("Error"), tr("Not supported."));
             return;
-		}
+        }
     }
 
     QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), filter);
     if (openFilePath.isEmpty()) {
-		return;
+        return;
     }
 
     OpenAsParam params = OpenAsParam();
@@ -2177,37 +2181,37 @@ void MainWindow::on_actionDiff_triggered()
     } else {
         params.celFilePath = openFilePath;
     }
-	LoadFileContent fileContent;
-	MainWindow::loadFile(params, nullptr, &fileContent);
-	if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
-		return;
+    LoadFileContent fileContent;
+    MainWindow::loadFile(params, nullptr, &fileContent);
+    if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
+        return;
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Comparing..."), 0, PAF_OPEN_DIALOG);
 
-	if (this->gfxset != nullptr) {
-		this->gfxset->compareTo(&fileContent);
+    if (this->gfxset != nullptr) {
+        this->gfxset->compareTo(&fileContent);
     } else if (this->dun != nullptr) {
-		this->dun->compareTo(&fileContent);
+        this->dun->compareTo(&fileContent);
     //} else if (this->tableset != nullptr) {
-	//	this->tableset->compareTo(&fileContent);
+    //    this->tableset->compareTo(&fileContent);
     //} else if (this->cpp != nullptr) {
-	//	this->cpp->compareTo(&fileContent);
+    //    this->cpp->compareTo(&fileContent);
     } else {
-		QString header;
-		switch (fileContent.fileType) {
-        case FILE_CONTENT::EMPTY: dProgressErr(tr("File is empty.")); break;
+        QString header;
+        switch (fileContent.fileType) {
+        case FILE_CONTENT::EMPTY: dProgressErr() << tr("File is empty."); break;
         case FILE_CONTENT::CEL:
         case FILE_CONTENT::CL2: this->gfx->compareTo(fileContent.gfx, header); break;
         case FILE_CONTENT::PCX: D1Pcx::compare(*this->gfx, this->pal, &fileContent); break;
-        case FILE_CONTENT::TBL: dProgressErr(tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::TBL))); break;
-        case FILE_CONTENT::CPP: dProgressErr(tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::CPP))); break;
+        case FILE_CONTENT::TBL: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::TBL)); break;
+        case FILE_CONTENT::CPP: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::CPP)); break;
         case FILE_CONTENT::SMK: D1Smk::compare(*this->gfx, this->pals, &fileContent); break;
-        case FILE_CONTENT::DUN: dProgressErr(tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::DUN))); break;
-        default: dProgressErr(tr("Not supported.")); break;
+        case FILE_CONTENT::DUN: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::DUN)); break;
+        default: dProgressErr() << tr("Not supported."); break;
         }
     }
 
-	closeFileContent(&fileContent);
+    closeFileContent(&fileContent);
 
     // Clear loading message from status bar
     ProgressDialog::done();

@@ -1554,9 +1554,9 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     return true;
 }
 
-void D1Smk::compareTo(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent)
+void D1Smk::compare(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent)
 {
-	dProgressErr() << tr("Not supported.");
+	dProgressErr() << QApplication::tr("Not supported.");
 }
 
 static void audioCallback(int track, QAudio::State newState)
