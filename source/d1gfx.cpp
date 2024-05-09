@@ -233,10 +233,25 @@ static void reportDiff(const QString text, QString &header)
     }
 	dProgress() << text;
 }
+static const char* CelTypeTxt(D1CEL_TYPE type)
+{
+    const char* result;
+    switch (type) {
+    case D1CEL_TYPE::V1_REGULAR:         result = QApplication::tr("regular (v1)");     break;
+    case D1CEL_TYPE::V1_COMPILATION:     result = QApplication::tr("compilation (v1)"); break;
+    case D1CEL_TYPE::V1_LEVEL:           result = QApplication::tr("level (v1)");       break;
+    case D1CEL_TYPE::V2_MONO_GROUP:      result = QApplication::tr("mono group (v2)");  break;
+    case D1CEL_TYPE::V2_MULTIPLE_GROUPS: result = QApplication::tr("multi group (v2)"); break;
+    case D1CEL_TYPE::SMK:                result = "smk";                                break;
+    default: result = "???"; break;
+    }
+    return result;
+}
+
 void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
 {
 	if (gfx->type != this->type) {
-		reportDiff(QApplication::tr("type is %1 (was %2)").arg(this->type).arg(gfx->type), header);
+		reportDiff(QApplication::tr("type is %1 (was %2)").arg(CelTypeTxt(this->type)).arg(CelTypeTxt(gfx->type)), header);
     }
 	if (gfx->groupFrameIndices.size() == this->groupFrameIndices.size()) {
         for (int i = 0; i < this->groupFrameIndices.size(); i++) {

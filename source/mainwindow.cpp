@@ -1226,6 +1226,7 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     bool isGfxset = params.gfxType == OPEN_GFX_TYPE::GFXSET;
     result->isTileset = isTileset;
     result->isGfxset = isGfxset;
+	result->baseDir = baseDir;
 
     result->gfx = new D1Gfx();
     result->gfx->setPalette(result->trnBase->getResultingPalette());
@@ -1577,6 +1578,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     const FILE_CONTENT fileType = fileContent.fileType;
     const bool isTileset = fileContent.isTileset;
     const bool isGfxset = fileContent.isGfxset;
+	const QString &baseDir = fileContent.baseDir;
     this->pal = fileContent.pal;
     this->trnUnique = fileContent.trnUnique;
     this->trnBase = fileContent.trnBase;
@@ -2126,15 +2128,15 @@ const char* FileContentTypeTxt(FILE_CONTENT fileType)
 {
     const char* result;
     switch (fileType) {
-    case FILE_CONTENT::EMPTY: result = tr("empty"); break;
-    case FILE_CONTENT::CEL:   result = tr("CEL"); break;
-    case FILE_CONTENT::CL2:   result = tr("CL2"); break;
-    case FILE_CONTENT::PCX:   result = tr("PCX"); break;
-    case FILE_CONTENT::TBL:   result = tr("TBL"); break;
-    case FILE_CONTENT::CPP:   result = tr("CPP"); break;
-    case FILE_CONTENT::SMK:   result = tr("SMK"); break;
-    case FILE_CONTENT::DUN:   result = tr("DUN"); break;
-    default: result = tr("???"); break;
+    case FILE_CONTENT::EMPTY: result = QApplication::tr("empty"); break;
+    case FILE_CONTENT::CEL:   result = "CEL"; break;
+    case FILE_CONTENT::CL2:   result = "CL2"; break;
+    case FILE_CONTENT::PCX:   result = "PCX"; break;
+    case FILE_CONTENT::TBL:   result = "TBL"; break;
+    case FILE_CONTENT::CPP:   result = "CPP"; break;
+    case FILE_CONTENT::SMK:   result = "SMK"; break;
+    case FILE_CONTENT::DUN:   result = "DUN"; break;
+    default: result = "???"; break;
     }
     return result;
 }
