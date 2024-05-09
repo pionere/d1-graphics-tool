@@ -225,6 +225,63 @@ void D1Gfx::clear()
     this->modified = true;
 }
 
+static void reportDiff(const QString text, QString &header)
+{
+	if (!header.isEmpty()) {
+		dProgress() << header;
+		header.clear();
+    }
+	dProgress() << text;
+}
+void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
+{
+	if (gfx->type != this->type) {
+		reportDiff(tr("type is %1 (was %2)").arg(this->type).arg(gfx->type), header);
+    }
+	if (gfx->groupFrameIndices.size() == this->groupFrameIndices.size()) {
+        for (int i = 0; i < this->groupFrameIndices.size(); i++) {
+			if (this->groupFrameIndices[i].first != gfx->groupFrameIndices[i].first || 
+                this->groupFrameIndices[i].second != gfx->groupFrameIndices[i].second) {
+				reportDiff(tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)
+                    .arg(this->groupFrameIndices[i].first + 1).arg(this->groupFrameIndices[i].second + 1)
+                    .arg(gfx->groupFrameIndices[i].first + 1).arg(gfx->groupFrameIndices[i].second + 1), header);
+            }
+        }
+    } else {
+		reportDiff(tr("group-count is %1 (was %2)").arg(this->groupFrameIndices.size()).arg(gfx->groupFrameIndices.size()), header);
+    }
+	if (gfx->getFrameCount() == this->getFrameCount()) {
+        for (int i = 0; i < this->getFrameCount(); i++) {
+            D1GfxFrame *frameA = this->frames[i];
+			D1GfxFrame *frameB = gfx->frames[i];
+			if (frameA->getWidth() == frameB->getWidth() && frameA->getHeight() == frameB->getHeight()) {
+				bool firstInFrame = true;
+                for (int y = 0; y < frameA->getHeight(); y++) {
+                    for (int x = 0; x < frameA->getWidth(); x++) {
+						D1GfxPixel pixelA = frameA->getPixel(x, y);
+						D1GfxPixel pixelB = frameB->getPixel(x, y);
+						if (pixelA != pixelB) {
+							if (firstInFrame) {
+								firstInFrame = false;
+								reportDiff(tr("Frame %1:").arg(i), header);
+                            }
+							reportDiff(tr("  pixel %1:%2 is %3 (was %4)").arg(x).arg(y)
+								.arg(pixelA.isTransparent() ? tr("transparent") : tr("color%1").arg(pixelA.getPaletteIndex()))
+			                    .arg(pixelB.isTransparent() ? tr("transparent") : tr("color%1").arg(pixelB.getPaletteIndex())), header);
+                        }
+                    }
+                }
+            } else {
+				reportDiff(tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1)
+                    .arg(frameA->getWidth()).arg(frameA->getHeight())
+                    .arg(frameB->getWidth()).arg(frameB->getHeight()), header);
+            }
+        }
+    } else {
+		reportDiff(tr("frame-count is %1 (was %2)").arg(this->getFrameCount()).arg(gfx->getFrameCount()), header);
+    }
+}
+
 bool D1Gfx::isFrameSizeConstant() const
 {
     if (this->frames.isEmpty()) {
@@ -2059,11 +2116,11 @@ bool D1Gfx::patchFallGWalk(bool silent)
                     if (y == 113 && x == 86) {
                         continue;
                     }
-                    change |= frame->setPixel(92, 103, D1GfxPixel::transparentPixel());
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
             for (int y = 112; y < 118; y++) {
-                for (int x = 75; x < 89; x++) {
+                for (int x = 75; x < 88; x++) {
                     if (y >= 70 + (x + 1) / 2) {
                         change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0));
                     }

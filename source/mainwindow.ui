@@ -73,6 +73,7 @@
     <addaction name="actionSaveAs"/>
     <addaction name="actionClose"/>
     <addaction name="actionExport"/>
+    <addaction name="actionDiff"/>
     <addaction name="separator"/>
     <addaction name="actionSettings"/>
     <addaction name="separator"/>
@@ -555,6 +556,11 @@
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionDiff">
+   <property name="text">
+    <string>Diff</string>
    </property>
   </action>
   <action name="actionUpscaleTask">

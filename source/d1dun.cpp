@@ -19,6 +19,7 @@
 #include "d1til.h"
 #include "d1tileset.h"
 #include "d1trn.h"
+#include "mainwindow.h"
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
@@ -865,6 +866,11 @@ bool D1Dun::save(const SaveAsParam &params)
     this->dunFilePath = filePath; // this->load(filePath, allocate);
     this->modified = false;
     return true;
+}
+
+void D1Dun::compareTo(const LoadFileContent *fileContent) const
+{
+	dProgressErr(tr("Not supported."));
 }
 
 #define CELL_BORDER 0

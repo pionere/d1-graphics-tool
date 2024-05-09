@@ -19,6 +19,7 @@ typedef QAudioOutput SmkAudioOutput;
 #include <QObject>
 
 #include "config.h"
+#include "mainwindow.h"
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
@@ -1385,7 +1386,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     }
     // write the header to the file
     smk_header header;
-    header.SmkMarker[0] = 'S';header.SmkMarker[1] = 'M';header.SmkMarker[2] = 'K';header.SmkMarker[3] = '2';
+    header.SmkMarker[0] = 'S'; header.SmkMarker[1] = 'M'; header.SmkMarker[2] = 'K'; header.SmkMarker[3] = '2';
     header.VideoWidth = SwapLE32(width);
     header.VideoHeight = SwapLE32(height);
     header.FrameCount = SwapLE32(frameCount);
@@ -1551,6 +1552,11 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     gfx.gfxFilePath = filePath; //  D1Smk::load(gfx, filePath);
     gfx.modified = false;
     return true;
+}
+
+void D1Smk::compareTo(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent)
+{
+	dProgressErr(tr("Not supported."));
 }
 
 static void audioCallback(int track, QAudio::State newState)

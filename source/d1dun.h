@@ -16,6 +16,7 @@ class D1Pal;
 class D1Sla;
 class D1Til;
 class D1Trn;
+struct LoadFileContent;
 
 #define UNDEF_SUBTILE -1
 #define UNDEF_TILE -1
@@ -156,6 +157,8 @@ public:
     bool load(const QString &dunFilePath, const OpenAsParam &params);
     void initialize(D1Pal *pal, D1Tileset *tileset);
     bool save(const SaveAsParam &params);
+
+    void compareTo(const LoadFileContent *fileContent) const;
 
     QImage getImage(const DunDrawParam &params);
     QImage getObjectImage(int objectIndex, unsigned time);

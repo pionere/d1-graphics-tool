@@ -151,6 +151,8 @@ public:
     D1Gfx() = default;
     ~D1Gfx();
 
+    void compareTo(const D1Gfx *gfx, QString header) const;
+
     void clear();
 
     bool isFrameSizeConstant() const;

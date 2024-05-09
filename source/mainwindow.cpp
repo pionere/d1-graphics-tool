@@ -1003,11 +1003,32 @@ void MainWindow::changeEvent(QEvent *event)
     QMainWindow::changeEvent(event);
 }
 
-void MainWindow::failWithError(const QString &error)
+static void closeFileContent(LoadFileContent *result)
+{
+	result->fileType = -1;
+
+    MemFree(result->trnUnique);
+    MemFree(result->trnBase);
+    MemFree(result->gfx);
+    MemFree(result->tileset);
+    MemFree(result->gfxset);
+    MemFree(result->dun);
+    MemFree(result->tableset);
+    MemFree(result->cpp);
+
+    qDeleteAll(result->pals);
+    result->pals.clear();
+}
+
+void MainWindow::failWithError(MainWindow *instance, LoadFileContent *result, const QString &error)
 {
     dProgressFail() << error;
 
-    this->on_actionClose_triggered();
+	if (instance != nullptr) {
+		instance->on_actionClose_triggered();
+    }
+
+	closeFileContent(result);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1034,9 +1055,275 @@ static void findFirstFile(const QString &dir, const QString &filter, QString &fi
     }
 }
 
-void MainWindow::openFile(const OpenAsParam &params)
+void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadFileContent *result)
 {
     QString gfxFilePath = params.celFilePath;
+
+    // Check file extension
+    FILE_CONTENT fileType = FILE_CONTENT::EMPTY;
+    if (!gfxFilePath.isEmpty()) {
+        QString fileLower = gfxFilePath.toLower();
+        if (fileLower.endsWith(".cel"))
+            fileType = FILE_CONTENT::CEL;
+        else if (fileLower.endsWith(".cl2"))
+            fileType = FILE_CONTENT::CL2;
+        else if (fileLower.endsWith(".pcx"))
+            fileType = FILE_CONTENT::PCX;
+        else if (fileLower.endsWith(".tbl"))
+            fileType = FILE_CONTENT::TBL;
+        else if (fileLower.endsWith(".cpp"))
+            fileType = FILE_CONTENT::CPP;
+        else if (fileLower.endsWith(".smk"))
+            fileType = FILE_CONTENT::SMK;
+        else
+			fileType = FILE_CONTENT::UNKNOWN;
+    }
+	result->fileType = fileType;
+	if (fileType == FILE_CONTENT::UNKNOWN)
+		return;
+
+	if (instance != nullptr) {
+	    instance->on_actionClose_triggered();
+    }
+	// result->fileType = fileType;
+	// result->pal = nullptr;
+	// result->trnUnique = nullptr;
+	// result->trnBase = nullptr;
+    result->gfx = nullptr;
+    result->tileset = nullptr;
+    result->gfxset = nullptr;
+    result->dun = nullptr;
+    result->tableset = nullptr;
+    result->cpp = nullptr;
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
+
+    // Loading default.pal
+    D1Pal *newPal = new D1Pal();
+    newPal->load(D1Pal::DEFAULT_PATH);
+    result->pals[D1Pal::DEFAULT_PATH] = newPal;
+    result->pal = newPal;
+
+    // Loading default null.trn
+    D1Trn *newUniqueTrn = new D1Trn();
+    newUniqueTrn->load(D1Trn::IDENTITY_PATH, newPal);
+    result->trnUnique = newUniqueTrn;
+    D1Trn *newBaseTrn = new D1Trn();
+    newBaseTrn->load(D1Trn::IDENTITY_PATH, newUniqueTrn->getResultingPalette());
+    result->trnBase = newBaseTrn;
+
+    QString clsFilePath = params.clsFilePath;
+    QString tilFilePath = params.tilFilePath;
+    QString minFilePath = params.minFilePath;
+    QString slaFilePath = params.slaFilePath;
+    QString tlaFilePath = params.tlaFilePath;
+    QString dunFilePath = params.dunFilePath;
+    QString tblFilePath = params.tblFilePath;
+
+    QString baseDir;
+    if (fileType == FILE_CONTENT::TBL) {
+        if (tblFilePath.isEmpty()) {
+            QFileInfo tblFileInfo = QFileInfo(gfxFilePath);
+            QString fileLower = tblFileInfo.completeBaseName().toLower();
+            QDirIterator it(tblFileInfo.absolutePath(), QStringList("*.tbl"), QDir::Files | QDir::Readable);
+            while (it.hasNext()) {
+                QString sPath = it.next();
+
+                if (sPath == gfxFilePath) {
+                    continue;
+                }
+                tblFilePath = sPath;
+
+                tblFileInfo = QFileInfo(sPath);
+                QString sLower = tblFileInfo.completeBaseName().toLower();
+
+                // try to find a matching pair for any *dark*.tbl
+                int match = 0;
+                while (true) {
+                    match = fileLower.indexOf("dark", match);
+                    if (match == -1) {
+                        break;
+                    }
+                    QString test = fileLower;
+                    test.replace(match, 4, "dist");
+                    if (test == sLower) {
+                        break;
+                    }
+                    match++;
+                }
+                if (match != -1) {
+                    break;
+                }
+                // try to find a matching pair for any *dist*.tbl
+                match = 0;
+                while (true) {
+                    match = fileLower.indexOf("dist", match);
+                    if (match == -1) {
+                        break;
+                    }
+                    QString test = fileLower;
+                    test.replace(match, 4, "dark");
+                    if (test == sLower) {
+                        break;
+                    }
+                    match++;
+                }
+                if (match != -1) {
+                    break;
+                }
+            }
+            if (tblFilePath.isEmpty()) {
+                MainWindow::failWithError(instance, result, tr("Could not find the other table file for TBL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+                return;
+            }
+        }
+    } else if (!gfxFilePath.isEmpty()) {
+        QFileInfo celFileInfo = QFileInfo(gfxFilePath);
+
+        baseDir = celFileInfo.absolutePath();
+        QString basePath = baseDir + "/" + celFileInfo.completeBaseName();
+
+        if (clsFilePath.isEmpty()) {
+            clsFilePath = basePath + "s.cel";
+        }
+        if (tilFilePath.isEmpty()) {
+            tilFilePath = basePath + ".til";
+        }
+        if (minFilePath.isEmpty()) {
+            minFilePath = basePath + ".min";
+        }
+        if (slaFilePath.isEmpty()) {
+            slaFilePath = basePath + ".sla";
+        }
+        if (tlaFilePath.isEmpty()) {
+            tlaFilePath = basePath + ".tla";
+        }
+    } else if (!dunFilePath.isEmpty()) {
+        QFileInfo dunFileInfo = QFileInfo(dunFilePath);
+
+        baseDir = dunFileInfo.absolutePath();
+        QString baseName;
+
+        findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.sla"), slaFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.tla"), tlaFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.cel"), gfxFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*s.cel"), clsFilePath, baseName);
+    }
+
+    // If SLA, MIN and TIL files exist then build a LevelCelView
+    bool isTileset = params.gfxType == OPEN_GFX_TYPE::TILESET;
+    if (params.gfxType == OPEN_GFX_TYPE::AUTODETECT) {
+		if (!dunFilePath.isEmpty() && QFileInfo::exists(dunFilePath) && (fileType == FILE_CONTENT::CEL || fileType == FILE_CONTENT::EMPTY)) {
+			fileType = FILE_CONTENT::DUN;
+			isTileset = true;
+        } else if ((QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(slaFilePath)) && fileType == FILE_CONTENT::CEL) {
+			isTileset = true;
+        }
+    }
+
+    bool isGfxset = params.gfxType == OPEN_GFX_TYPE::GFXSET;
+
+    result->gfx = new D1Gfx();
+    result->gfx->setPalette(result->trnBase->getResultingPalette());
+    if (isGfxset) {
+        result->gfxset = new D1Gfxset(result->gfx);
+        if (!result->gfxset->load(gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading GFX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (isTileset) {
+        result->tileset = new D1Tileset(result->gfx);
+        // Loading SLA
+        if (!result->tileset->sla->load(slaFilePath)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(slaFilePath)));
+            return;
+        }
+
+        // Loading MIN
+        std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
+        if (!result->tileset->min->load(minFilePath, result->tileset, celFrameTypes, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath)));
+            return;
+        }
+
+        // Loading TIL
+        if (!result->tileset->til->load(tilFilePath, result->tileset->min)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath)));
+            return;
+        }
+
+        // Loading TLA
+        if (!result->tileset->tla->load(tlaFilePath, result->tileset->til->getTileCount(), params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(tlaFilePath)));
+            return;
+        }
+
+        // Loading CEL
+        if (!D1CelTileset::load(*result->gfx, celFrameTypes, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+
+        // Loading sCEL
+        if (!result->tileset->loadCls(clsFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath)));
+            return;
+        }
+
+        // Loading DUN
+        if (!dunFilePath.isEmpty() || params.createDun) {
+            result->dun = new D1Dun();
+            if (!result->dun->load(dunFilePath, params)) {
+                MainWindow::failWithError(instance, result, tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+                return;
+            }
+            result->dun->initialize(result->pal, result->tileset);
+        }
+    } else if (fileType == FILE_CONTENT::CEL) {
+        if (!D1Cel::load(*result->gfx, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::CL2) {
+        if (!D1Cl2::load(*result->gfx, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::PCX) {
+        if (!D1Pcx::load(*result->gfx, result->pal, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading PCX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::TBL) {
+        result->tableset = new D1Tableset();
+        if (!result->tableset->load(gfxFilePath, tblFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading TBL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::CPP) {
+        result->cpp = new D1Cpp();
+        if (!result->cpp->load(gfxFilePath)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading CPP file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::SMK) {
+        if (!D1Smk::load(*result->gfx, result->pals, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading SMK file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+        // add paths in palWidget
+        // result->palWidget->updatePathComboBoxOptions(result->pals.keys(), result->pal->getFilePath()); -- should be called later
+    } else {
+        // gfxFilePath.isEmpty()
+        result->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
+    }
+}
+
+void MainWindow::openFile(const OpenAsParam &params)
+{
+    /*QString gfxFilePath = params.celFilePath;
 
     // Check file extension
     int fileType = 0;
@@ -1069,14 +1356,14 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->pal = newPal;
 
     // Loading default null.trn
-    D1Trn *newTrn = new D1Trn();
-    newTrn->load(D1Trn::IDENTITY_PATH, this->pal);
-    this->uniqueTrns[D1Trn::IDENTITY_PATH] = newTrn;
-    this->trnUnique = newTrn;
-    newTrn = new D1Trn();
-    newTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette());
-    this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
-    this->trnBase = newTrn;
+    D1Trn *newUniqueTrn = new D1Trn();
+    newUniqueTrn->load(D1Trn::IDENTITY_PATH, this->pal);
+    this->uniqueTrns[D1Trn::IDENTITY_PATH] = newUniqueTrn;
+    this->trnUnique = newUniqueTrn;
+    D1Trn *newBaseTrn = new D1Trn();
+    newBaseTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette());
+    this->baseTrns[D1Trn::IDENTITY_PATH] = newBaseTrn;
+    this->trnBase = newBaseTrn;
 
     QString clsFilePath = params.clsFilePath;
     QString tilFilePath = params.tilFilePath;
@@ -1280,9 +1567,28 @@ void MainWindow::openFile(const OpenAsParam &params)
     } else {
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
-    }
+    }*/
+	LoadFileContent fileContent;
+	MainWindow::loadFile(params, this, &fileContent);
+	if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
+		return;
+	const FILE_CONTENT fileType = fileContent.fileType;
+	this->pal = fileContent.pal;
+    this->trnUnique = fileContent.trnUnique;
+    this->trnBase = fileContent.trnBase;
+    this->gfx = fileContent.gfx;
+    this->tileset = fileContent.tileset;
+    this->gfxset = fileContent.gfxset;
+    this->dun = fileContent.dun;
+    this->tableset = fileContent.tableset;
+    this->cpp = fileContent.cpp;
 
-    if (fileType != 5) {
+	this->pals = fileContent.pals;
+
+    this->uniqueTrns[D1Trn::IDENTITY_PATH] = this->trnUnique;
+    this->baseTrns[D1Trn::IDENTITY_PATH] = this->trnBase;
+
+    if (fileType != FILE_CONTENT::CPP) {
     // Add palette widgets for PAL and TRNs
     this->palWidget = new PaletteWidget(this, this->undoStack, tr("Palette"));
     this->trnUniqueWidget = new PaletteWidget(this, this->undoStack, tr("Unique translation"));
@@ -1318,7 +1624,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
 
         view = this->levelCelView;
-    } else if (fileType == 4) {
+    } else if (fileType == FILE_CONTENT::TBL) {
         this->tblView = new TblView(this, this->undoStack);
         this->tblView->initialize(this->pal, this->tableset, this->bottomPanelHidden);
 
@@ -1326,7 +1632,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
 
         view = this->tblView;
-    } else if (fileType == 5) {
+    } else if (fileType == FILE_CONTENT::CPP) {
         this->cppView = new CppView(this, this->undoStack);
         this->cppView->initialize(this->cpp);
 
@@ -1348,7 +1654,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->mainFrameLayout->addWidget(view);
 
     // prepare the paint dialog
-    if (fileType != 4 && fileType != 5) {
+    if (fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP) {
         this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView, this->gfxsetView);
         this->paintWidget->setPalette(this->trnBase->getResultingPalette());
     }
@@ -1360,7 +1666,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
     }
 
-    if (fileType != 5) {
+    if (fileType != FILE_CONTENT::CPP) {
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
@@ -1404,9 +1710,9 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound;
-    if (fileType == 3) {
+    if (fileType == FILE_CONTENT::PCX) {
         firstPaletteFound = D1Pal::DEFAULT_PATH;
-    } else if (fileType == 6 && this->pals.size() > 1) {
+    } else if (fileType == FILE_CONTENT::SMK && this->pals.size() > 1) {
         firstPaletteFound = (this->pals.begin() + 1).key();
     }
     if (!baseDir.isEmpty()) {
@@ -1427,23 +1733,24 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->cppView->displayFrame();
     }
     // update available menu entries
-    this->ui->menuEdit->setEnabled(fileType != 4);
-    this->ui->menuView->setEnabled(fileType != 5);
-    this->ui->menuColors->setEnabled(fileType != 5);
-    this->ui->menuData->setEnabled(fileType == 5);
-    this->ui->actionExport->setEnabled(fileType != 4 && fileType != 5);
+    this->ui->menuEdit->setEnabled(fileType != FILE_CONTENT::TBL);
+    this->ui->menuView->setEnabled(fileType != FILE_CONTENT::CPP);
+    this->ui->menuColors->setEnabled(fileType != FILE_CONTENT::CPP);
+    this->ui->menuData->setEnabled(fileType == FILE_CONTENT::CPP);
+    this->ui->actionExport->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionDiff->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionLoad->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
 
-    this->ui->menuFrame->setEnabled(fileType != 4 && fileType != 5);
+    this->ui->menuFrame->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->menuSubtile->setEnabled(isTileset);
     this->ui->menuTile->setEnabled(isTileset);
     this->ui->actionPatch->setEnabled(this->celView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
-    this->ui->actionUpscale->setEnabled(fileType != 4 && fileType != 5);
-    this->ui->actionMerge->setEnabled(fileType != 4 && fileType != 5);
+    this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
@@ -1786,6 +2093,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuColors->setEnabled(false);
     this->ui->menuData->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
+    this->ui->actionDiff->setEnabled(false);
     this->ui->actionLoad->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
     this->ui->actionSaveAs->setEnabled(false);
@@ -1808,6 +2116,101 @@ void MainWindow::on_actionExport_triggered()
     }
     this->exportDialog->initialize(this->gfx, this->tileset);
     this->exportDialog->show();
+}
+
+const char* FileContentTypeTxt(FILE_CONTENT fileType)
+{
+    const char* result;
+    switch (fileType) {
+    case FILE_CONTENT::EMPTY: result = tr("empty"); break;
+    case FILE_CONTENT::CEL:   result = tr("CEL"); break;
+    case FILE_CONTENT::CL2:   result = tr("CL2"); break;
+    case FILE_CONTENT::PCX:   result = tr("PCX"); break;
+    case FILE_CONTENT::TBL:   result = tr("TBL"); break;
+    case FILE_CONTENT::CPP:   result = tr("CPP"); break;
+    case FILE_CONTENT::SMK:   result = tr("SMK"); break;
+    case FILE_CONTENT::DUN:   result = tr("DUN"); break;
+    default: result = tr("???"); break;
+    }
+	return result;
+}
+
+void MainWindow::on_actionDiff_triggered()
+{
+    QString filter;
+
+	if (this->gfxset != nullptr) {
+		filter = "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)";
+    } else if (this->dun != nullptr) {
+		filter = "DUN Files (*.dun *.DUN *.rdun *.RDUN)";
+    } else if (this->tileset != nullptr) {
+		filter = "CEL Files (*.cel *.CEL)";
+    // } else if (this->tableset != nullptr) {
+	//	filter = "TBL Files (*.tbl *.TBL)";
+    //} else if (this->cpp != nullptr) {
+	//	filter = "CPP Files (*.cpp *.CPP *.c *.C)";
+    } else {
+		QString filePath = this->gfx->getFilePath();
+		QString fileLower = filePath.toLower();
+        if (fileLower.endsWith(".cel")) {
+            filter = "CEL Files (*.cel *.CEL)";
+        } else if (fileLower.endsWith(".cl2")) {
+            filter = "CL2 Files (*.cl2 *.CL2)";
+        } else if (fileLower.endsWith(".pcx")) {
+            filter = "PCX Files (*.pcx *.PCX)";
+        } else if (fileLower.endsWith(".smk")) {
+            filter = "SMK Files (*.smk *.SMK)";
+        } else {
+            QMessageBox::critical(this, tr("Error"), tr("Not supported."));
+            return;
+		}
+    }
+
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), filter);
+    if (openFilePath.isEmpty()) {
+		return;
+    }
+
+    OpenAsParam params = OpenAsParam();
+    if (openFilePath.toLower().endsWith("dun")) { // .dun or .rdun
+        params.dunFilePath = openFilePath;
+    } else {
+        params.celFilePath = openFilePath;
+    }
+	LoadFileContent fileContent;
+	MainWindow::loadFile(params, nullptr, &fileContent);
+	if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
+		return;
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Comparing..."), 0, PAF_OPEN_DIALOG);
+
+	if (this->gfxset != nullptr) {
+		this->gfxset->compareTo(&fileContent);
+    } else if (this->dun != nullptr) {
+		this->dun->compareTo(&fileContent);
+    //} else if (this->tableset != nullptr) {
+	//	this->tableset->compareTo(&fileContent);
+    //} else if (this->cpp != nullptr) {
+	//	this->cpp->compareTo(&fileContent);
+    } else {
+		QString header;
+		switch (fileContent.fileType) {
+        case FILE_CONTENT::EMPTY: dProgressErr(tr("File is empty.")); break;
+        case FILE_CONTENT::CEL:
+        case FILE_CONTENT::CL2: this->gfx->compareTo(fileContent.gfx, header); break;
+        case FILE_CONTENT::PCX: D1Pcx::compare(*this->gfx, this->pal, &fileContent); break;
+        case FILE_CONTENT::TBL: dProgressErr(tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::TBL))); break;
+        case FILE_CONTENT::CPP: dProgressErr(tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::CPP))); break;
+        case FILE_CONTENT::SMK: D1Smk::compare(*this->gfx, this->pals, &fileContent); break;
+        case FILE_CONTENT::DUN: dProgressErr(tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::DUN))); break;
+        default: dProgressErr(tr("Not supported.")); break;
+        }
+    }
+
+	closeFileContent(&fileContent);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionQuit_triggered()
