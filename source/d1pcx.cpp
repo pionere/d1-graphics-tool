@@ -384,5 +384,5 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
 
 void D1Pcx::compareTo(D1Gfx &gfx, D1Pal *pal, const LoadFileContent *fileContent)
 {
-	dProgressErr(tr("Not supported."));
+	dProgressErr() << tr("Not supported.");
 }

@@ -288,7 +288,7 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
 			for (int i = 0; i < this->gfxList.count(); i++) {
 				QString header = tr("Gfx %1 vs. %2").arg(i + 1).arg(i + 1);
 				this->gfxList[i]->compareTo(fileContent->gfxset->gfxList[i], header);
-				dProgress("\n");
+				dProgress() << "\n";
 			}
         } else {
 			if (this->gfxList.count() == 1) {
@@ -296,14 +296,14 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
 				for (int i = 0; i < fileContent->gfxset->gfxList.count(); i++) {
 					QString header = tr("Gfx %1 vs. %2").arg(0 + 1).arg(i + 1);
 					this->gfxList[0]->compareTo(fileContent->gfxset->gfxList[i]);
-					dProgress("\n");
+					dProgress() << "\n";
 				}
             } else if (fileContent->gfxset->gfxList.count() == 1) {
 				// compare N to 1
 				for (int i = 0; i < this->gfxList.count(); i++) {
 					QString header = tr("Gfx %1 vs. %2").arg(i + 1).arg(0 + 1);
 					this->gfxList[i]->compareTo(fileContent->gfxset->gfxList[0]);
-					dProgress("\n");
+					dProgress() << "\n";
 				}
             }
         }
@@ -312,10 +312,10 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
         for (int i = 0; i < this->gfxList.count(); i++) {
 			QString header = tr("Gfx %1 vs. single gfx").arg(i + 1);
             this->gfxList[i]->compareTo(fileContent->gfx);
-            dProgress("\n");
+            dProgress() << "\n";
         }
     } else {
-		dProgressErr(tr("Not a graphics file (%1)").arg(FileContentTypeTxt(fileContent->fileType)));
+		dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeTxt(fileContent->fileType));
     }
 }
 

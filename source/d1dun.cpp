@@ -870,7 +870,7 @@ bool D1Dun::save(const SaveAsParam &params)
 
 void D1Dun::compareTo(const LoadFileContent *fileContent) const
 {
-	dProgressErr(tr("Not supported."));
+	dProgressErr() << tr("Not supported.");
 }
 
 #define CELL_BORDER 0
