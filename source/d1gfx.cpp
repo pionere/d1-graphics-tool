@@ -233,9 +233,9 @@ static void reportDiff(const QString text, QString &header)
     }
 	dProgress() << text;
 }
-static const char* CelTypeTxt(D1CEL_TYPE type)
+static QString CelTypeTxt(D1CEL_TYPE type)
 {
-    const char* result;
+    QString result;
     switch (type) {
     case D1CEL_TYPE::V1_REGULAR:         result = QApplication::tr("regular (v1)");     break;
     case D1CEL_TYPE::V1_COMPILATION:     result = QApplication::tr("compilation (v1)"); break;
@@ -254,7 +254,7 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
 		reportDiff(QApplication::tr("type is %1 (was %2)").arg(CelTypeTxt(this->type)).arg(CelTypeTxt(gfx->type)), header);
     }
 	if (gfx->groupFrameIndices.size() == this->groupFrameIndices.size()) {
-        for (int i = 0; i < this->groupFrameIndices.size(); i++) {
+        for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
 			if (this->groupFrameIndices[i].first != gfx->groupFrameIndices[i].first || 
                 this->groupFrameIndices[i].second != gfx->groupFrameIndices[i].second) {
 				reportDiff(QApplication::tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)

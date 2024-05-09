@@ -2124,9 +2124,9 @@ void MainWindow::on_actionExport_triggered()
     this->exportDialog->show();
 }
 
-const char* FileContentTypeTxt(FILE_CONTENT fileType)
+QString MainWindow::FileContentTypeTxt(FILE_CONTENT fileType)
 {
-    const char* result;
+    QString result;
     switch (fileType) {
     case FILE_CONTENT::EMPTY: result = QApplication::tr("empty"); break;
     case FILE_CONTENT::CEL:   result = "CEL"; break;
