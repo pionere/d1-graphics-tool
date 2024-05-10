@@ -2072,7 +2072,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
                 }
             }
         }
-
+#if 0
         // fix artifacts
         switch (i) {
         case 0: dx = 91; break;
@@ -3111,7 +3111,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
             change |= frame->setPixel(85, 119, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(84, 120, D1GfxPixel::colorPixel(0)); // was tp
         }
-
+#endif
         // check for change
         change = false;
         for (int y = 0; y < height; y++) {
