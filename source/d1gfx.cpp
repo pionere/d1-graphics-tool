@@ -2030,7 +2030,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
                 change |= frame->setPixel(x, y, wPixel);
             }
         }
-
+#if 0
         // copy the club from the stand frame
         int fn, dx, dy;
         switch (i) {
@@ -2072,7 +2072,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
                 }
             }
         }
-#if 0
+
         // fix artifacts
         switch (i) {
         case 0: dx = 91; break;
