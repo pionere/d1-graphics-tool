@@ -3114,18 +3114,11 @@ bool D1Gfx::patchFallGWalk(bool silent)
 
         // check for change
         change = false;
-        bool tmpChange = false;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 change |= currFrame->setPixel(x, y, frame->getPixel(x, y));
-                if (change) {
-                    dProgressErr() << tr("Frame %1 changed @ %2:%3.").arg(n + 1).arg(x).arg(y);
-                    tmpChange = true;
-                    change = false;
-                }
             }
         }
-        change = tmpChange;
 
         if (change) {
             result = true;
