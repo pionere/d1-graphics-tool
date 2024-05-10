@@ -227,11 +227,11 @@ void D1Gfx::clear()
 
 static void reportDiff(const QString text, QString &header)
 {
-	if (!header.isEmpty()) {
-		dProgress() << header;
-		header.clear();
+    if (!header.isEmpty()) {
+        dProgress() << header;
+        header.clear();
     }
-	dProgress() << text;
+    dProgress() << text;
 }
 static QString CelTypeTxt(D1CEL_TYPE type)
 {
@@ -250,50 +250,50 @@ static QString CelTypeTxt(D1CEL_TYPE type)
 
 void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
 {
-	if (gfx->type != this->type) {
-		reportDiff(QApplication::tr("type is %1 (was %2)").arg(CelTypeTxt(this->type)).arg(CelTypeTxt(gfx->type)), header);
+    if (gfx->type != this->type) {
+        reportDiff(QApplication::tr("type is %1 (was %2)").arg(CelTypeTxt(this->type)).arg(CelTypeTxt(gfx->type)), header);
     }
-	if (gfx->groupFrameIndices.size() == this->groupFrameIndices.size()) {
+    if (gfx->groupFrameIndices.size() == this->groupFrameIndices.size()) {
         for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
-			if (this->groupFrameIndices[i].first != gfx->groupFrameIndices[i].first || 
+            if (this->groupFrameIndices[i].first != gfx->groupFrameIndices[i].first || 
                 this->groupFrameIndices[i].second != gfx->groupFrameIndices[i].second) {
-				reportDiff(QApplication::tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)
+                reportDiff(QApplication::tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)
                     .arg(this->groupFrameIndices[i].first + 1).arg(this->groupFrameIndices[i].second + 1)
                     .arg(gfx->groupFrameIndices[i].first + 1).arg(gfx->groupFrameIndices[i].second + 1), header);
             }
         }
     } else {
-		reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(this->groupFrameIndices.size()).arg(gfx->groupFrameIndices.size()), header);
+        reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(this->groupFrameIndices.size()).arg(gfx->groupFrameIndices.size()), header);
     }
-	if (gfx->getFrameCount() == this->getFrameCount()) {
+    if (gfx->getFrameCount() == this->getFrameCount()) {
         for (int i = 0; i < this->getFrameCount(); i++) {
             D1GfxFrame *frameA = this->frames[i];
-			D1GfxFrame *frameB = gfx->frames[i];
-			if (frameA->getWidth() == frameB->getWidth() && frameA->getHeight() == frameB->getHeight()) {
-				bool firstInFrame = true;
+            D1GfxFrame *frameB = gfx->frames[i];
+            if (frameA->getWidth() == frameB->getWidth() && frameA->getHeight() == frameB->getHeight()) {
+                bool firstInFrame = true;
                 for (int y = 0; y < frameA->getHeight(); y++) {
                     for (int x = 0; x < frameA->getWidth(); x++) {
-						D1GfxPixel pixelA = frameA->getPixel(x, y);
-						D1GfxPixel pixelB = frameB->getPixel(x, y);
-						if (pixelA != pixelB) {
-							if (firstInFrame) {
-								firstInFrame = false;
-								reportDiff(QApplication::tr("Frame %1:").arg(i + 1), header);
+                        D1GfxPixel pixelA = frameA->getPixel(x, y);
+                        D1GfxPixel pixelB = frameB->getPixel(x, y);
+                        if (pixelA != pixelB) {
+                            if (firstInFrame) {
+                                firstInFrame = false;
+                                reportDiff(QApplication::tr("Frame %1:").arg(i + 1), header);
                             }
-							reportDiff(QApplication::tr("  pixel %1:%2 is %3 (was %4)").arg(x).arg(y)
-								.arg(pixelA.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelA.getPaletteIndex()))
-			                    .arg(pixelB.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelB.getPaletteIndex())), header);
+                            reportDiff(QApplication::tr("  pixel %1:%2 is %3 (was %4)").arg(x).arg(y)
+                                .arg(pixelA.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelA.getPaletteIndex()))
+                                .arg(pixelB.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelB.getPaletteIndex())), header);
                         }
                     }
                 }
             } else {
-				reportDiff(QApplication::tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1)
+                reportDiff(QApplication::tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1)
                     .arg(frameA->getWidth()).arg(frameA->getHeight())
                     .arg(frameB->getWidth()).arg(frameB->getHeight()), header);
             }
         }
     } else {
-		reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(this->getFrameCount()).arg(gfx->getFrameCount()), header);
+        reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(this->getFrameCount()).arg(gfx->getFrameCount()), header);
     }
 }
 
@@ -1900,21 +1900,42 @@ bool D1Gfx::patchFallGWalk(bool silent)
         dProgressErr() << tr("Not enough frames in the frame group to East in '%1'.").arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
+    // prepare a 'work'-frame
+    D1GfxFrame* frame = new D1GfxFrame();
+    for (int y = 0; y < height; y++) {
+        std::vector<D1GfxPixel> pixelLine;
+        for (x = 0; x < width; x++) {
+            pixelLine.push_back(D1GfxPixel::transparentPixel());
+        }
+        frame->addPixelLine(pixelLine);
+    }
     bool result = false;
     for (int i = 0; i < frameCount; i++) {
         int n = this->getGroupFrameIndices(DIR_E).first + i;
-        D1GfxFrame* frame = this->getFrame(n);
-        if (frame->getWidth() != width || frame->getHeight() != height) {
+        D1GfxFrame* currFrame = this->getFrame(n);
+        if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
-            return result;
+            break;
         }
-        // mirror the image
         D1GfxFrame* walkWestFrame = this->getFrame(this->getGroupFrameIndices(DIR_W).first + i);
         if (walkWestFrame->getWidth() != width || walkWestFrame->getHeight() != height) {
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
-            return result;
+            break;
         }
+        D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
+        if (stdEastFrame->getWidth() != width || stdEastFrame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            break;
+        }
+
         bool change = false;
+        // duplicate the current frame
+        for (int y = 0; y < height; y++) {
+            for (x = 0; x < width; x++) {
+                frame->setPixel(x, y, currFrame->getPixel(x, y));
+            }
+        }
+        // mirror the west-walk frame
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 D1GfxPixel wPixel = walkWestFrame->getPixel(width - x - 1, y);
@@ -2016,7 +2037,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
             }
         }
 
-        // copy the shield from the stand frame
+        // copy the club from the stand frame
         int fn, dx, dy;
         switch (i) {
         case 0: fn = 8; dx = -11; dy = 11; break;
@@ -2027,12 +2048,6 @@ bool D1Gfx::patchFallGWalk(bool silent)
         case 5: fn = 9; dx =  -5; dy =  8; break;
         case 6: fn = 8; dx =  -2; dy =  5; break;
         case 7: fn = 9; dx =  -8; dy =  8; break;
-        }
-
-        D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
-        if (stdEastFrame->getWidth() != width || stdEastFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
-            return result;
         }
 
         for (int y = 0; y < height; y++) {
@@ -2645,6 +2660,7 @@ change |= frame->setPixel(79, 112, D1GfxPixel::colorPixel(237)); // was tp
 change |= frame->setPixel(82, 112, D1GfxPixel::colorPixel(236)); // was color219)
 change |= frame->setPixel(83, 112, D1GfxPixel::colorPixel(237)); // was color219)
 // change |= frame->setPixel(84, 112, D1GfxPixel::colorPixel(0)); // was tp
+change |= frame->setPixel(85, 112, D1GfxPixel::transparentPixel()); // color0)
 change |= frame->setPixel(86, 112, D1GfxPixel::transparentPixel()); // color0)
 change |= frame->setPixel(87, 112, D1GfxPixel::transparentPixel()); // color0)
 change |= frame->setPixel(64, 113, D1GfxPixel::colorPixel(0)); // was tp
@@ -2892,13 +2908,13 @@ change |= frame->setPixel(72, 94, D1GfxPixel::colorPixel(173)); // was tp
 change |= frame->setPixel(73, 94, D1GfxPixel::colorPixel(173)); // was tp
 change |= frame->setPixel(74, 94, D1GfxPixel::colorPixel(0)); // was tp
 change |= frame->setPixel(75, 94, D1GfxPixel::colorPixel(173)); // was tp
-change |= frame->setPixel(72, 95, D1GfxPixel::colorPixel(203)); // was tp
+change |= frame->setPixel(72, 95, D1GfxPixel::colorPixel(221)); // was tp
 change |= frame->setPixel(73, 95, D1GfxPixel::colorPixel(173)); // was tp
 change |= frame->setPixel(74, 95, D1GfxPixel::colorPixel(173)); // was tp
 change |= frame->setPixel(75, 95, D1GfxPixel::colorPixel(203)); // was tp
 change |= frame->setPixel(76, 95, D1GfxPixel::colorPixel(171)); // was tp
 change |= frame->setPixel(77, 95, D1GfxPixel::colorPixel(203)); // was tp
-change |= frame->setPixel(78, 95, D1GfxPixel::colorPixel(203)); // was tp
+change |= frame->setPixel(78, 95, D1GfxPixel::colorPixel(252)); // was tp
 change |= frame->setPixel(73, 96, D1GfxPixel::colorPixel(173)); // was tp
 change |= frame->setPixel(74, 96, D1GfxPixel::colorPixel(203)); // was tp
 change |= frame->setPixel(75, 96, D1GfxPixel::colorPixel(171)); // was tp
@@ -2908,7 +2924,7 @@ change |= frame->setPixel(78, 96, D1GfxPixel::colorPixel(171)); // was tp
 change |= frame->setPixel(79, 96, D1GfxPixel::colorPixel(171)); // was tp
 change |= frame->setPixel(80, 96, D1GfxPixel::colorPixel(171)); // was tp
 change |= frame->setPixel(81, 96, D1GfxPixel::colorPixel(171)); // was tp
-change |= frame->setPixel(74, 97, D1GfxPixel::colorPixel(203)); // was tp
+change |= frame->setPixel(74, 97, D1GfxPixel::colorPixel(237)); // was tp
 change |= frame->setPixel(75, 97, D1GfxPixel::colorPixel(203)); // was tp
 change |= frame->setPixel(76, 97, D1GfxPixel::colorPixel(171)); // was tp
 change |= frame->setPixel(77, 97, D1GfxPixel::colorPixel(171)); // was tp
@@ -2916,7 +2932,7 @@ change |= frame->setPixel(78, 97, D1GfxPixel::colorPixel(171)); // was tp
 change |= frame->setPixel(79, 97, D1GfxPixel::colorPixel(171)); // was tp
 change |= frame->setPixel(80, 97, D1GfxPixel::colorPixel(203)); // was tp
 change |= frame->setPixel(74, 98, D1GfxPixel::colorPixel(0)); // was tp
-change |= frame->setPixel(75, 98, D1GfxPixel::colorPixel(203)); // was tp
+change |= frame->setPixel(75, 98, D1GfxPixel::colorPixel(237)); // was tp
 change |= frame->setPixel(76, 98, D1GfxPixel::colorPixel(171)); // was tp
 change |= frame->setPixel(77, 98, D1GfxPixel::colorPixel(203)); // was tp
 change |= frame->setPixel(78, 98, D1GfxPixel::colorPixel(203)); // was tp
@@ -2998,6 +3014,8 @@ change |= frame->setPixel(74, 110, D1GfxPixel::colorPixel(0)); // was tp
 change |= frame->setPixel(75, 110, D1GfxPixel::colorPixel(0)); // was tp
 change |= frame->setPixel(76, 110, D1GfxPixel::colorPixel(0)); // was tp
 change |= frame->setPixel(77, 110, D1GfxPixel::colorPixel(0)); // was tp
+change |= frame->setPixel(78, 110, D1GfxPixel::colorPixel(0)); // was color171)
+change |= frame->setPixel(79, 110, D1GfxPixel::colorPixel(0)); // was color188)
 change |= frame->setPixel(80, 110, D1GfxPixel::colorPixel(0)); // was tp
 change |= frame->setPixel(81, 110, D1GfxPixel::colorPixel(0)); // was tp
 change |= frame->setPixel(82, 110, D1GfxPixel::colorPixel(0)); // was tp
@@ -3113,6 +3131,21 @@ change |= frame->setPixel(85, 119, D1GfxPixel::colorPixel(0)); // was tp
 change |= frame->setPixel(84, 120, D1GfxPixel::colorPixel(0)); // was tp
         }
 
+        // check for change
+        change = false;
+        bool tmpChange = false;
+        for (int y = 0; y < height; y++) {
+            for (x = 0; x < width; x++) {
+                change |= currFrame->setPixel(x, y, frame->getPixel(x, y));
+                if (change) {
+                    dProgressErr() << tr("Frame %1 changed @ %2:%3.").arg(n + 1).arg(x).arg(y);
+                    tmpChange = true;
+                    change = false;
+                }
+            }
+        }
+        change = tmpChange;
+
         if (change) {
             result = true;
             this->setModified();
@@ -3121,6 +3154,7 @@ change |= frame->setPixel(84, 120, D1GfxPixel::colorPixel(0)); // was tp
             }
         }
     }
+    delete frame;
     return result;
 }
 
