@@ -1904,10 +1904,10 @@ bool D1Gfx::patchFallGWalk(bool silent)
     D1GfxFrame* frame = new D1GfxFrame();
     for (int y = 0; y < height; y++) {
         std::vector<D1GfxPixel> pixelLine;
-        for (x = 0; x < width; x++) {
+        for (int x = 0; x < width; x++) {
             pixelLine.push_back(D1GfxPixel::transparentPixel());
         }
-        frame->addPixelLine(pixelLine);
+        frame->addPixelLine(std::move(pixelLine));
     }
     bool result = false;
     for (int i = 0; i < frameCount; i++) {
@@ -1922,12 +1922,6 @@ bool D1Gfx::patchFallGWalk(bool silent)
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
-        D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
-        if (stdEastFrame->getWidth() != width || stdEastFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
-            break;
-        }
-
         bool change = false;
         // duplicate the current frame
         for (int y = 0; y < height; y++) {
@@ -2048,6 +2042,11 @@ bool D1Gfx::patchFallGWalk(bool silent)
         case 5: fn = 9; dx =  -5; dy =  8; break;
         case 6: fn = 8; dx =  -2; dy =  5; break;
         case 7: fn = 9; dx =  -8; dy =  8; break;
+        }
+        D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
+        if (stdEastFrame->getWidth() != width || stdEastFrame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            break;
         }
 
         for (int y = 0; y < height; y++) {
@@ -3135,7 +3134,7 @@ change |= frame->setPixel(84, 120, D1GfxPixel::colorPixel(0)); // was tp
         change = false;
         bool tmpChange = false;
         for (int y = 0; y < height; y++) {
-            for (x = 0; x < width; x++) {
+            for (int x = 0; x < width; x++) {
                 change |= currFrame->setPixel(x, y, frame->getPixel(x, y));
                 if (change) {
                     dProgressErr() << tr("Frame %1 changed @ %2:%3.").arg(n + 1).arg(x).arg(y);
