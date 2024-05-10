@@ -1925,7 +1925,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         bool change = false;
         // duplicate the current frame
         for (int y = 0; y < height; y++) {
-            for (x = 0; x < width; x++) {
+            for (int x = 0; x < width; x++) {
                 frame->setPixel(x, y, currFrame->getPixel(x, y));
             }
         }
