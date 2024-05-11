@@ -2092,16 +2092,19 @@ bool D1Gfx::patchFallGWalk(bool silent)
             }
         }
         if (i == 0) {
-            /*for (int x = 88; x < width; x++) {
-                change |= frame->setPixel(88, 109, D1GfxPixel::transparentPixel());
-            }*/
             change |= frame->setPixel(76, 109, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(83, 109, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(77, 110, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(78, 110, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(79, 110, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(83, 110, D1GfxPixel::transparentPixel()); // color0)
+            change |= frame->setPixel(84, 110, D1GfxPixel::transparentPixel()); // color0)
             change |= frame->setPixel(78, 111, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(79, 112, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(80, 112, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(77, 113, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(78, 113, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(79, 113, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(75, 114, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(76, 114, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(77, 114, D1GfxPixel::colorPixel(0)); // was tp
@@ -2111,13 +2114,22 @@ bool D1Gfx::patchFallGWalk(bool silent)
             change |= frame->setPixel(76, 115, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(77, 115, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(78, 115, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(81, 115, D1GfxPixel::transparentPixel()); // color0)
+            change |= frame->setPixel(82, 115, D1GfxPixel::transparentPixel()); // color0)
+            change |= frame->setPixel(83, 115, D1GfxPixel::transparentPixel()); // color0)
+            change |= frame->setPixel(84, 115, D1GfxPixel::transparentPixel()); // color0)
             change |= frame->setPixel(75, 116, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(76, 116, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(77, 116, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(82, 116, D1GfxPixel::transparentPixel()); // color0)
+            change |= frame->setPixel(83, 116, D1GfxPixel::transparentPixel()); // color0)
+            change |= frame->setPixel(84, 116, D1GfxPixel::transparentPixel()); // color0)
             change |= frame->setPixel(69, 117, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(70, 117, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(75, 117, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(76, 117, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(80, 117, D1GfxPixel::colorPixel(0)); // was tp
+            change |= frame->setPixel(81, 118, D1GfxPixel::colorPixel(0)); // was tp
         }
         if (i == 1) {
             for (int y = 106; y < 114; y++) {
