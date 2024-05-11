@@ -1855,7 +1855,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
 bool setPixelTest(D1GfxFrame* frame, int framenum, int x, int y, D1GfxPixel pixel)
 {
 	if (!frame->setPixel(x, y, pixel)) {
-		dProgressErr() << tr("Useless set @ %1:%2 in frame %3").arg(x).arg(y).arg(framenum);
+		dProgressErr() << QApplication::tr("Useless set @ %1:%2 in frame %3").arg(x).arg(y).arg(framenum);
 		return false;
     }
 	return true;
