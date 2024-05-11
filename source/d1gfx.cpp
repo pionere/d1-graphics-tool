@@ -2030,7 +2030,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
                 change |= frame->setPixel(x, y, wPixel);
             }
         }
-#if 0
+
         // copy the club from the stand frame
         int fn, dx, dy;
         switch (i) {
@@ -2052,6 +2052,8 @@ bool D1Gfx::patchFallGWalk(bool silent)
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 D1GfxPixel sPixel = stdEastFrame->getPixel(x, y);
+                if (sPixel.isTransparent())
+                    continue;
                 quint8 color = sPixel.getPaletteIndex();
                 switch (fn) {
                 case 7:
@@ -2075,7 +2077,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
 
         // fix artifacts
         switch (i) {
-        case 0: dx = 91; break;
+        case 0: dx = 85; break;
         case 1: dx = 92; break;
         case 2: dx = 93; break;
         case 3: dx = 95; break;
@@ -3111,7 +3113,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
             change |= frame->setPixel(85, 119, D1GfxPixel::colorPixel(0)); // was tp
             change |= frame->setPixel(84, 120, D1GfxPixel::colorPixel(0)); // was tp
         }
-#endif
+
         // check for change
         change = false;
         for (int y = 0; y < height; y++) {
