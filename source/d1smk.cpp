@@ -1568,10 +1568,10 @@ void D1Smk::compare(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileCont
     gfx.compareTo(fileContent->gfx, header);
     {
         header = QApplication::tr("Palettes:");
-        QMap<QString, D1Pal *> *palsB = &fileContent.pals;
+        QMap<QString, D1Pal *> *palsB = &fileContent->pals;
         for (auto it = pals.begin(); it != pals.end(); it++) {
             if (palsB->contains(it.key())) {
-                it.value()->compareTo(palsB[it.key()], header);
+                it.value()->compareTo((*palsB)[it.key()], header);
             } else {
                 reportDiff(QApplication::tr("Palette '%1' is added.").arg(it.key()), header);
             }

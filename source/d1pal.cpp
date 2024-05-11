@@ -7,6 +7,7 @@
 #include <QTextStream>
 
 #include "config.h"
+#include "progressdialog.h"
 
 PaletteColor::PaletteColor(const QColor &color, int index)
     : xv(index)
