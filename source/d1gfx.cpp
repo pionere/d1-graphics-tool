@@ -2095,7 +2095,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         case 6: dx = 94; break;
         case 7: dx = 93; break;
         }
-        for (int y = 0; y < height; y++) {
+        for (int y = 85; y < height; y++) {
             for (int x = dx; x < width; x++) {
 				if (!frame->getPixel(x, y).isTransparent())
                 change |= setPixelTest(frame, i, x, y, D1GfxPixel::transparentPixel());
@@ -2112,32 +2112,32 @@ bool D1Gfx::patchFallGWalk(bool silent)
             change |= setPixelTest(frame, i, 78, 111, D1GfxPixel::colorPixel(0)); // was tp
             change |= setPixelTest(frame, i, 79, 112, D1GfxPixel::colorPixel(0)); // was tp
             change |= setPixelTest(frame, i, 80, 112, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 77, 113, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 78, 113, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 77, 113, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 78, 113, D1GfxPixel::colorPixel(0)); // was tp
             change |= setPixelTest(frame, i, 79, 113, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 75, 114, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 76, 114, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 77, 114, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 78, 114, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 79, 114, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 75, 115, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 76, 115, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 77, 115, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 78, 115, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 75, 114, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 76, 114, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 77, 114, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 78, 114, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 79, 114, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 75, 115, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 76, 115, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 77, 115, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 78, 115, D1GfxPixel::colorPixel(0)); // was tp
             change |= setPixelTest(frame, i, 81, 115, D1GfxPixel::transparentPixel()); // color0)
             change |= setPixelTest(frame, i, 82, 115, D1GfxPixel::transparentPixel()); // color0)
             change |= setPixelTest(frame, i, 83, 115, D1GfxPixel::transparentPixel()); // color0)
             change |= setPixelTest(frame, i, 84, 115, D1GfxPixel::transparentPixel()); // color0)
-            change |= setPixelTest(frame, i, 75, 116, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 76, 116, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 77, 116, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 75, 116, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 76, 116, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 77, 116, D1GfxPixel::colorPixel(0)); // was tp
             change |= setPixelTest(frame, i, 82, 116, D1GfxPixel::transparentPixel()); // color0)
             change |= setPixelTest(frame, i, 83, 116, D1GfxPixel::transparentPixel()); // color0)
             change |= setPixelTest(frame, i, 84, 116, D1GfxPixel::transparentPixel()); // color0)
             change |= setPixelTest(frame, i, 69, 117, D1GfxPixel::colorPixel(0)); // was tp
             change |= setPixelTest(frame, i, 70, 117, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 75, 117, D1GfxPixel::colorPixel(0)); // was tp
-            change |= setPixelTest(frame, i, 76, 117, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 75, 117, D1GfxPixel::colorPixel(0)); // was tp
+            // change |= setPixelTest(frame, i, 76, 117, D1GfxPixel::colorPixel(0)); // was tp
             change |= setPixelTest(frame, i, 80, 117, D1GfxPixel::colorPixel(0)); // was tp
             change |= setPixelTest(frame, i, 81, 118, D1GfxPixel::colorPixel(0)); // was tp
         }
@@ -2145,6 +2145,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
             for (int y = 106; y < 114; y++) {
                 for (int x = 73; x < 86; x++) {
                     if (y < 276 - 2 * x) {
+						if (frame->getPixel(x, y).isTransparent() || frame->getPixel(x, y).getPaletteIndex() != 0)
                         change |= setPixelTest(frame, i, x, y, D1GfxPixel::colorPixel(0));
                     }
                 }
@@ -2152,6 +2153,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
             for (int y = 105; y < 109; y++) {
                 for (int x = 84; x < 88; x++) {
                     if (x != 87 || (y != 105 || y != 108)) {
+						if (frame->getPixel(x, y).isTransparent() || frame->getPixel(x, y).getPaletteIndex() != 0)
                         change |= setPixelTest(frame, i, x, y, D1GfxPixel::colorPixel(0));
                     }
                 }
