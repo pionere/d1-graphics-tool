@@ -1554,9 +1554,34 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     return true;
 }
 
+static void reportDiff(const QString text, QString &header)
+{
+    if (!header.isEmpty()) {
+        dProgress() << header;
+        header.clear();
+    }
+    dProgress() << text;
+}
 void D1Smk::compare(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent)
 {
-	dProgressErr() << QApplication::tr("Not supported.");
+    QString header = QApplication::tr("Content:");
+    gfx->compareTo(fileContent->gfx, header);
+    {
+        header = QApplication::tr("Palettes:");
+        QMap<QString, D1Pal *> *palsB = &fileContent.pals;
+        for (auto it = pals.begin(); it != pals.end(); it++) {
+            if (palsB->contains(it->first)) {
+                it->second->compareTo(palsB[it->first], header);
+            } else {
+                reportDiff(QApplication::tr("Palette '%1' is added.").arg(it->first), header);
+            }
+        }
+        for (auto it = palsB->begin(); it != palsB->end(); it++) {
+            if (!pals.contains(it->first)) {
+                reportDiff(QApplication::tr("Palette '%1' is removed.").arg(it->first), header);
+            }
+        }
+    }
 }
 
 static void audioCallback(int track, QAudio::State newState)
