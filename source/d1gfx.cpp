@@ -1746,6 +1746,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         }
         if (change) {
             result = true;
+            this->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_SW + 1);
             }
