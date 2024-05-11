@@ -2097,6 +2097,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         }
         for (int y = 0; y < height; y++) {
             for (int x = dx; x < width; x++) {
+				if (!frame->getPixel(x, y).isTransparent())
                 change |= setPixelTest(frame, i, x, y, D1GfxPixel::transparentPixel());
             }
         }
