@@ -218,6 +218,78 @@ void D1Gfx::clear()
     this->modified = true;
 }
 
+static void reportDiff(const QString text, QString &header)
+{
+    if (!header.isEmpty()) {
+        dProgress() << header;
+        header.clear();
+    }
+    dProgress() << text;
+}
+static QString CelTypeTxt(D1CEL_TYPE type)
+{
+    QString result;
+    switch (type) {
+    case D1CEL_TYPE::V1_REGULAR:         result = QApplication::tr("regular (v1)");     break;
+    case D1CEL_TYPE::V1_COMPILATION:     result = QApplication::tr("compilation (v1)"); break;
+    case D1CEL_TYPE::V1_LEVEL:           result = QApplication::tr("level (v1)");       break;
+    case D1CEL_TYPE::V2_MONO_GROUP:      result = QApplication::tr("mono group (v2)");  break;
+    case D1CEL_TYPE::V2_MULTIPLE_GROUPS: result = QApplication::tr("multi group (v2)"); break;
+    case D1CEL_TYPE::SMK:                result = "smk";                                break;
+    default: result = "???"; break;
+    }
+    return result;
+}
+
+void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
+{
+    if (gfx->type != this->type) {
+        reportDiff(QApplication::tr("type is %1 (was %2)").arg(CelTypeTxt(this->type)).arg(CelTypeTxt(gfx->type)), header);
+    }
+    if (gfx->groupFrameIndices.size() == this->groupFrameIndices.size()) {
+        for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
+            if (this->groupFrameIndices[i].first != gfx->groupFrameIndices[i].first || 
+                this->groupFrameIndices[i].second != gfx->groupFrameIndices[i].second) {
+                reportDiff(QApplication::tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)
+                    .arg(this->groupFrameIndices[i].first + 1).arg(this->groupFrameIndices[i].second + 1)
+                    .arg(gfx->groupFrameIndices[i].first + 1).arg(gfx->groupFrameIndices[i].second + 1), header);
+            }
+        }
+    } else {
+        reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(this->groupFrameIndices.size()).arg(gfx->groupFrameIndices.size()), header);
+    }
+    if (gfx->getFrameCount() == this->getFrameCount()) {
+        for (int i = 0; i < this->getFrameCount(); i++) {
+            D1GfxFrame *frameA = this->frames[i];
+            D1GfxFrame *frameB = gfx->frames[i];
+            if (frameA->getWidth() == frameB->getWidth() && frameA->getHeight() == frameB->getHeight()) {
+                bool firstInFrame = true;
+                for (int y = 0; y < frameA->getHeight(); y++) {
+                    for (int x = 0; x < frameA->getWidth(); x++) {
+                        D1GfxPixel pixelA = frameA->getPixel(x, y);
+                        D1GfxPixel pixelB = frameB->getPixel(x, y);
+                        if (pixelA != pixelB) {
+                            if (firstInFrame) {
+                                firstInFrame = false;
+                                reportDiff(QApplication::tr("Frame %1:").arg(i + 1), header);
+                            }
+                            reportDiff(QApplication::tr("  pixel %1:%2 is %3 (was %4)").arg(x).arg(y)
+                                .arg(pixelA.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelA.getPaletteIndex()))
+                                .arg(pixelB.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelB.getPaletteIndex())), header);
+                        }
+                    }
+                }
+            } else {
+                reportDiff(QApplication::tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1)
+                    .arg(frameA->getWidth()).arg(frameA->getHeight())
+                    .arg(frameB->getWidth()).arg(frameB->getHeight()), header);
+            }
+        }
+    } else {
+        reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(this->getFrameCount()).arg(gfx->getFrameCount()), header);
+    }
+}
+
 bool D1Gfx::isFrameSizeConstant() const
 {
     if (this->frames.isEmpty()) {

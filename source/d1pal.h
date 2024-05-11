@@ -60,6 +60,8 @@ public:
     bool load(const QString &palFilePath);
     bool save(const QString &palFilePath);
 
+    void compareTo(const D1Pal *pal, QString header) const;
+
     bool reloadConfig();
 
     bool isModified() const;

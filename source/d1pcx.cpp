@@ -8,6 +8,7 @@
 
 #include "config.h"
 #include "d1image.h"
+#include "mainwindow.h"
 #include "progressdialog.h"
 
 #define D1PCX_COLORS 256
@@ -379,4 +380,12 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
         out << (uint8_t)color.blue();
     }
     return true;
+}
+
+void D1Pcx::compare(D1Gfx &gfx, D1Pal *pal, const LoadFileContent *fileContent)
+{
+    QString header = QApplication::tr("Graphics:");
+    gfx.compareTo(fileContent->gfx, header);
+    header = QApplication::tr("Palette:");
+    pal->compareTo(fileContent->gfx->getPalette(), header);
 }

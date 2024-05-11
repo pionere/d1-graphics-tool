@@ -46,6 +46,8 @@ enum class D1GFX_SET_WEAPON_TYPE {
     Unknown = -1,
 };
 
+struct LoadFileContent;
+
 class D1Gfxset {
 public:
     D1Gfxset(D1Gfx *gfx);
@@ -53,6 +55,8 @@ public:
 
     bool load(const QString &gfxFilePath, const OpenAsParam &params);
     void save(const SaveAsParam &params);
+
+    void compareTo(const LoadFileContent *fileContent) const;
 
     D1GFX_SET_TYPE getType() const;
     D1GFX_SET_CLASS_TYPE getClassType() const;

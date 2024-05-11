@@ -19,6 +19,7 @@
 #include "d1til.h"
 #include "d1tileset.h"
 #include "d1trn.h"
+#include "mainwindow.h"
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
@@ -865,6 +866,113 @@ bool D1Dun::save(const SaveAsParam &params)
     this->dunFilePath = filePath; // this->load(filePath, allocate);
     this->modified = false;
     return true;
+}
+
+static void reportDiff(const QString text, QString &header)
+{
+    if (!header.isEmpty()) {
+        dProgress() << header;
+        header.clear();
+    }
+    dProgress() << text;
+}
+void D1Dun::compareTo(const LoadFileContent *fileContent) const
+{
+    D1Dun *dunB = fileContent->dun;
+    if (dunB != nullptr) {
+        QString header = QApplication::tr("Dungeon:");
+        if (dunB->width == this->width && dunB->height == this->height) {
+            int dunWidth = this->width / TILE_WIDTH;
+            int dunHeight = this->height / TILE_HEIGHT;
+
+            for (int y = 0; y < dunHeight; y++) {
+                for (int x = 0; x < dunWidth; x++) {
+                    if (this->tiles[y][x] != dunB->tiles[y][x]) {
+                        reportDiff(QApplication::tr("tile %1:%2 is %3 (was %4)").arg(x).arg(y)
+                            .arg(this->tiles[y][x])
+                            .arg(dunB->tiles[y][x]), header);
+                    }
+
+                }
+            }
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    if (this->subtiles[y][x] != dunB->subtiles[y][x]) {
+                        reportDiff(QApplication::tr("subtile %1:%2 is %3 (was %4)").arg(x).arg(y)
+                            .arg(this->subtiles[y][x])
+                            .arg(dunB->subtiles[y][x]), header);
+                    }
+
+                }
+            }
+            for (int y = 0; y < dunHeight; y++) {
+                for (int x = 0; x < dunWidth; x++) {
+                    if (this->tileProtections[y][x] != dunB->tileProtections[y][x]) {
+                        reportDiff(QApplication::tr("tile-protection %1:%2 is %3 (was %4)").arg(x).arg(y)
+                            .arg(this->tileProtections[y][x])
+                            .arg(dunB->tileProtections[y][x]), header);
+                    }
+
+                }
+            }
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    if (this->subtileProtections[y][x] != dunB->subtileProtections[y][x]) {
+                        reportDiff(QApplication::tr("subtile-protection %1:%2 is %3 (was %4)").arg(x).arg(y)
+                            .arg(this->subtileProtections[y][x])
+                            .arg(dunB->subtileProtections[y][x]), header);
+                    }
+
+                }
+            }
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    if (this->items[y][x] != dunB->items[y][x]) {
+                        reportDiff(QApplication::tr("item %1:%2 is %3 (was %4)").arg(x).arg(y)
+                            .arg(this->items[y][x] == 0 ? "-" : this->getItemName(this->items[y][x]))
+                            .arg(dunB->items[y][x] == 0 ? "-" : this->getItemName(dunB->items[y][x])), header);
+                    }
+
+                }
+            }
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    if (this->objects[y][x] != dunB->objects[y][x]) {
+                        reportDiff(QApplication::tr("object %1:%2 is %3 (was %4)").arg(x).arg(y)
+                            .arg(this->objects[y][x] == 0 ? "-" : this->getObjectName(this->objects[y][x]))
+                            .arg(dunB->objects[y][x] == 0 ? "-" : this->getObjectName(dunB->objects[y][x])), header);
+                    }
+
+                }
+            }
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    if (this->monsters[y][x].type != dunB->monsters[y][x].type) {
+                        reportDiff(QApplication::tr("monster %1:%2 is %3 (was %4)").arg(x).arg(y)
+                            .arg(this->monsters[y][x].type.monIndex == 0 ? "-" : this->getMonsterName(this->monsters[y][x].type))
+                            .arg(dunB->monsters[y][x].type.monIndex == 0 ? "-" : this->getMonsterName(dunB->monsters[y][x].type)), header);
+                    }
+
+                }
+            }
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    if (this->rooms[y][x] != dunB->rooms[y][x]) {
+                        reportDiff(QApplication::tr("room %1:%2 is %3 (was %4)").arg(x).arg(y)
+                            .arg(this->rooms[y][x])
+                            .arg(dunB->rooms[y][x]), header);
+                    }
+
+                }
+            }
+        } else {
+                reportDiff(QApplication::tr("size is %1x%2 (was %3x%4)")
+                    .arg(this->width).arg(this->height)
+                    .arg(dunB->width).arg(dunB->height), header);
+        }
+    } else {
+        dProgressErr() << tr("Not a dungeon file (%1)").arg(MainWindow::FileContentTypeTxt(fileContent->fileType));
+    }
 }
 
 #define CELL_BORDER 0

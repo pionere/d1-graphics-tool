@@ -68,6 +68,36 @@ namespace Ui {
 class MainWindow;
 }
 
+enum class FILE_CONTENT {
+    EMPTY,
+    CEL,
+    CL2,
+    PCX,
+    TBL,
+    CPP,
+    SMK,
+    DUN,
+    UNKNOWN = -1
+};
+
+typedef struct LoadFileContent
+{
+    FILE_CONTENT fileType;
+    bool isTileset;
+    bool isGfxset;
+    QString baseDir;
+    D1Pal *pal;
+    D1Trn *trnUnique;
+    D1Trn *trnBase;
+    D1Gfx *gfx;
+    D1Tileset *tileset;
+    D1Gfxset *gfxset;
+    D1Dun *dun;
+    D1Tableset *tableset;
+    D1Cpp *cpp;
+    QMap<QString, D1Pal *> pals;
+} LoadFileContent;
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -114,9 +144,11 @@ public:
     static bool hasImageUrl(const QMimeData *mimeData);
     static bool isResourcePath(const QString &path);
     static void supportedImageFormats(QStringList &allSupportedImageFormats);
+    static QString FileContentTypeTxt(FILE_CONTENT fileType);
 
 private:
-    void failWithError(const QString &error);
+    static void loadFile(const OpenAsParam &params, MainWindow *instance, LoadFileContent *result);
+    static void failWithError(MainWindow *instance, LoadFileContent *result, const QString &error);
 
     void setPal(const QString &palFilePath);
     void setUniqueTrn(const QString &trnfilePath);
@@ -170,6 +202,7 @@ private slots:
     void on_actionSaveAs_triggered();
     void on_actionClose_triggered();
     void on_actionExport_triggered();
+    void on_actionDiff_triggered();
     void on_actionSettings_triggered();
     void on_actionQuit_triggered();
 

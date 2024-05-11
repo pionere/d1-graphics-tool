@@ -19,6 +19,7 @@ typedef QAudioOutput SmkAudioOutput;
 #include <QObject>
 
 #include "config.h"
+#include "mainwindow.h"
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
@@ -1536,6 +1537,36 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     gfx.gfxFilePath = filePath; //  D1Smk::load(gfx, filePath);
     gfx.modified = false;
     return true;
+}
+
+static void reportDiff(const QString text, QString &header)
+{
+    if (!header.isEmpty()) {
+        dProgress() << header;
+        header.clear();
+    }
+    dProgress() << text;
+}
+void D1Smk::compare(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent)
+{
+    QString header = QApplication::tr("Content:");
+    gfx.compareTo(fileContent->gfx, header);
+    {
+        header = QApplication::tr("Palettes:");
+        const QMap<QString, D1Pal *> *palsB = &fileContent->pals;
+        for (auto it = pals.begin(); it != pals.end(); it++) {
+            if (palsB->contains(it.key())) {
+                it.value()->compareTo((*palsB)[it.key()], header);
+            } else {
+                reportDiff(QApplication::tr("Palette '%1' is added.").arg(it.key()), header);
+            }
+        }
+        for (auto it = palsB->begin(); it != palsB->end(); it++) {
+            if (!pals.contains(it.key())) {
+                reportDiff(QApplication::tr("Palette '%1' is removed.").arg(it.key()), header);
+            }
+        }
+    }
 }
 
 static void audioCallback(int track, QAudio::State newState)

@@ -7,6 +7,7 @@
 #include <QTextStream>
 
 #include "config.h"
+#include "progressdialog.h"
 
 PaletteColor::PaletteColor(const QColor &color, int index)
     : xv(index)
@@ -138,6 +139,23 @@ bool D1Pal::save(const QString &filePath)
         // this->palFilePath = filePath;
     }
     return true;
+}
+
+void D1Pal::compareTo(const D1Pal *pal, QString header) const
+{
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        QColor colorA = this->colors[i];
+        QColor colorB = pal->colors[i];
+        if (colorA != colorB) {
+            QString text = QApplication::tr("color %1 is %2 (was %3)").arg(i).arg(colorA.name()).arg(colorB.name());
+            // reportDiff
+            if (!header.isEmpty()) {
+                dProgress() << header;
+                header.clear();
+            }
+            dProgress() << text;
+        }
+    }
 }
 
 bool D1Pal::reloadConfig()
