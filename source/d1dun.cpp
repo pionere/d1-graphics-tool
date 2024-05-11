@@ -947,10 +947,10 @@ void D1Dun::compareTo(const LoadFileContent *fileContent) const
             }
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    if (this->monsters[y][x] != dunB->monsters[y][x]) {
+                    if (this->monsters[y][x].type != dunB->monsters[y][x].type) {
                         reportDiff(QApplication::tr("monster %1:%2 is %3 (was %4)").arg(x).arg(y)
-                            .arg(this->monsters[y][x] == 0 ? "-" : this->getMonsterName(this->monsters[y][x]))
-                            .arg(dunB->monsters[y][x] == 0 ? "-" : this->getMonsterName(dunB->monsters[y][x])), header);
+                            .arg(this->monsters[y][x].type.monIndex == 0 ? "-" : this->getMonsterName(this->monsters[y][x].type))
+                            .arg(dunB->monsters[y][x].type.monIndex == 0 ? "-" : this->getMonsterName(dunB->monsters[y][x].type)), header);
                     }
 
                 }

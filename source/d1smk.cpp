@@ -1565,20 +1565,20 @@ static void reportDiff(const QString text, QString &header)
 void D1Smk::compare(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent)
 {
     QString header = QApplication::tr("Content:");
-    gfx->compareTo(fileContent->gfx, header);
+    gfx.compareTo(fileContent->gfx, header);
     {
         header = QApplication::tr("Palettes:");
         QMap<QString, D1Pal *> *palsB = &fileContent.pals;
         for (auto it = pals.begin(); it != pals.end(); it++) {
-            if (palsB->contains(it->first)) {
-                it->second->compareTo(palsB[it->first], header);
+            if (palsB->contains(it.key())) {
+                it.value()->compareTo(palsB[it.key()], header);
             } else {
-                reportDiff(QApplication::tr("Palette '%1' is added.").arg(it->first), header);
+                reportDiff(QApplication::tr("Palette '%1' is added.").arg(it.key()), header);
             }
         }
         for (auto it = palsB->begin(); it != palsB->end(); it++) {
-            if (!pals.contains(it->first)) {
-                reportDiff(QApplication::tr("Palette '%1' is removed.").arg(it->first), header);
+            if (!pals.contains(it.key())) {
+                reportDiff(QApplication::tr("Palette '%1' is removed.").arg(it.key()), header);
             }
         }
     }
