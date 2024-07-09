@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: '5.15.2'
         arch: 'win32_msvc2019'
@@ -62,7 +62,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: '5.15.2'
         arch: 'win32_msvc2019'
