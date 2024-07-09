@@ -3113,8 +3113,11 @@ static QString protectionString(Qt::CheckState protectionState)
 
 void D1Dun::loadTiles(const D1Dun *srcDun)
 {
-    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
-        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+    if (this->height != srcDun->height || this->width != srcDun->width) {
+        dProgressWarn() << tr("Size of the dungeon does not match. (%1x%2 vs. %3x%4)").arg(this->width).arg(this->height).arg(srcDun->width).arg(srcDun->height);
+    }
+    for (int y = 0; y < std::min(this->height, srcDun->height) / TILE_HEIGHT; y++) {
+        for (int x = 0; x < std::min(this->width, srcDun->width) / TILE_WIDTH; x++) {
             int newTile = srcDun->tiles[y][x];
             int currTile = this->tiles[y][x];
             if (newTile != 0 && currTile != newTile) {
@@ -3135,8 +3138,11 @@ void D1Dun::loadTiles(const D1Dun *srcDun)
 
 void D1Dun::loadProtections(const D1Dun *srcDun)
 {
-    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
-        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+    if (this->height != srcDun->height || this->width != srcDun->width) {
+        dProgressWarn() << tr("Size of the dungeon does not match. (%1x%2 vs. %3x%4)").arg(this->width).arg(this->height).arg(srcDun->width).arg(srcDun->height);
+    }
+    for (int y = 0; y < std::min(this->height, srcDun->height) / TILE_HEIGHT; y++) {
+        for (int x = 0; x < std::min(this->width, srcDun->width) / TILE_WIDTH; x++) {
             Qt::CheckState newProtections = srcDun->tileProtections[y][x];
             Qt::CheckState currProtections = this->tileProtections[y][x];
             if (newProtections != Qt::Unchecked && currProtections != newProtections) {
@@ -3148,8 +3154,8 @@ void D1Dun::loadProtections(const D1Dun *srcDun)
             }
         }
     }
-    for (int y = 0; y < this->height; y++) {
-        for (int x = 0; x < this->width; x++) {
+    for (int y = 0; y < std::min(this->height, srcDun->height); y++) {
+        for (int x = 0; x < std::min(this->width, srcDun->width); x++) {
             int newProtections = srcDun->subtileProtections[y][x];
             int currProtections = this->subtileProtections[y][x];
             if (newProtections && currProtections != newProtections) {
@@ -3162,8 +3168,11 @@ void D1Dun::loadProtections(const D1Dun *srcDun)
 
 void D1Dun::loadItems(const D1Dun *srcDun)
 {
-    for (int y = 0; y < this->height; y++) {
-        for (int x = 0; x < this->width; x++) {
+    if (this->height != srcDun->height || this->width != srcDun->width) {
+        dProgressWarn() << tr("Size of the dungeon does not match. (%1x%2 vs. %3x%4)").arg(this->width).arg(this->height).arg(srcDun->width).arg(srcDun->height);
+    }
+    for (int y = 0; y < std::min(this->height, srcDun->height); y++) {
+        for (int x = 0; x < std::min(this->width, srcDun->width); x++) {
             int newItemIndex = srcDun->items[y][x];
             int currItemIndex = this->items[y][x];
             if (newItemIndex != 0 && currItemIndex != newItemIndex) {
@@ -3181,8 +3190,11 @@ void D1Dun::loadItems(const D1Dun *srcDun)
 
 void D1Dun::loadMonsters(const D1Dun *srcDun)
 {
-    for (int y = 0; y < this->height; y++) {
-        for (int x = 0; x < this->width; x++) {
+    if (this->height != srcDun->height || this->width != srcDun->width) {
+        dProgressWarn() << tr("Size of the dungeon does not match. (%1x%2 vs. %3x%4)").arg(this->width).arg(this->height).arg(srcDun->width).arg(srcDun->height);
+    }
+    for (int y = 0; y < std::min(this->height, srcDun->height); y++) {
+        for (int x = 0; x < std::min(this->width, srcDun->width); x++) {
             const DunMonsterType &newMonster = srcDun->monsters[y][x].type;
             const DunMonsterType &currMonster = this->monsters[y][x].type;
             if (newMonster.monIndex != 0 && currMonster != newMonster) {
@@ -3202,8 +3214,11 @@ void D1Dun::loadMonsters(const D1Dun *srcDun)
 
 void D1Dun::loadObjects(const D1Dun *srcDun)
 {
-    for (int y = 0; y < this->height; y++) {
-        for (int x = 0; x < this->width; x++) {
+    if (this->height != srcDun->height || this->width != srcDun->width) {
+        dProgressWarn() << tr("Size of the dungeon does not match. (%1x%2 vs. %3x%4)").arg(this->width).arg(this->height).arg(srcDun->width).arg(srcDun->height);
+    }
+    for (int y = 0; y < std::min(this->height, srcDun->height); y++) {
+        for (int x = 0; x < std::min(this->width, srcDun->width); x++) {
             int newObjectIndex = srcDun->objects[y][x];
             int currObjectIndex = this->objects[y][x];
             if (newObjectIndex != 0 && currObjectIndex != newObjectIndex) {
@@ -3378,8 +3393,11 @@ bool D1Dun::maskTilesFrom(const D1Dun *srcDun)
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);
     bool result = false;
-    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
-        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
+    if (this->height != srcDun->height || this->width != srcDun->width) {
+        dProgressWarn() << tr("Size of the dungeon does not match. (%1x%2 vs. %3x%4)").arg(this->width).arg(this->height).arg(srcDun->width).arg(srcDun->height);
+    }
+    for (int tilePosY = 0; tilePosY < std::min(this->height, srcDun->height) / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; tilePosX < std::min(this->width, srcDun->width) / TILE_WIDTH; tilePosX++) {
             if (this->tiles[tilePosY][tilePosX] != 0 && srcDun->tiles[tilePosY][tilePosX] == this->tiles[tilePosY][tilePosX]) {
                 this->changeTileAt(tilePosX, tilePosY, 0);
                 result = true;
@@ -3444,8 +3462,11 @@ bool D1Dun::protectTilesFrom(const D1Dun *srcDun)
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);
     bool result = false;
-    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
-        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
+    if (this->height != srcDun->height || this->width != srcDun->width) {
+        dProgressWarn() << tr("Size of the dungeon does not match. (%1x%2 vs. %3x%4)").arg(this->width).arg(this->height).arg(srcDun->width).arg(srcDun->height);
+    }
+    for (int tilePosY = 0; tilePosY < std::min(this->height, srcDun->height) / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; tilePosX < std::min(this->width, srcDun->width) / TILE_WIDTH; tilePosX++) {
             bool needsProtection = srcDun->tiles[tilePosY][tilePosX] > 0; // !0 && !UNDEF_TILE
             int dunx = tilePosX * TILE_WIDTH;
             int duny = tilePosY * TILE_HEIGHT;
