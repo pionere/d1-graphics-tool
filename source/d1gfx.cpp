@@ -366,6 +366,17 @@ std::vector<std::vector<D1GfxPixel>> D1Gfx::getFramePixelImage(int frameIndex) c
     return frame->getPixels();
 }
 
+bool D1Gfx::isClipped(int frameIndex) const
+{
+    bool clipped;
+    if (this->frames.count() > frameIndex) {
+        clipped = this->frames[frameIndex]->isClipped();
+    } else {
+        clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    }
+    return clipped;
+}
+
 void D1Gfx::insertFrame(int idx, int width, int height)
 {
     D1GfxFrame *frame = this->insertFrame(idx);
@@ -381,12 +392,7 @@ void D1Gfx::insertFrame(int idx, int width, int height)
 
 D1GfxFrame *D1Gfx::insertFrame(int idx)
 {
-    bool clipped;
-    if (!this->frames.isEmpty()) {
-        clipped = this->frames[0]->isClipped();
-    } else {
-        clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
-    }
+    bool clipped = this->isClipped(0);
 
     D1GfxFrame* newFrame = new D1GfxFrame();
     newFrame->clipped = clipped;
@@ -611,12 +617,7 @@ void D1Gfx::addGfx(D1Gfx *gfx)
     if (numNewFrames == 0) {
         return;
     }
-    bool clipped;
-    if (!this->frames.isEmpty()) {
-        clipped = this->frames[0]->isClipped();
-    } else {
-        clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
-    }
+    bool clipped = this->isClipped(0);
     for (int i = 0; i < numNewFrames; i++) {
         const D1GfxFrame* frame = gfx->getFrame(i);
         D1GfxFrame* newFrame = new D1GfxFrame(*frame);
