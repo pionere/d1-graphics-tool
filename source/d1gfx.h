@@ -200,6 +200,8 @@ public:
     static int getPatchFileIndex(QString &filePath);
 
 private:
+    bool isClipped(int frameIndex) const;
+
     bool patchCathedralDoors(bool silent);
     bool patchCatacombsDoors(bool silent);
     bool patchCavesDoors(bool silent);
