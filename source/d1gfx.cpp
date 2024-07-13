@@ -440,6 +440,11 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 
 D1GfxFrame *D1Gfx::addToFrame(int idx, const D1GfxFrame &frame)
 {
+    if (this->frames.count() <= idx) {
+        // assert(idx == this->frames.count());
+        this->insertFrame(idx, frame.width, frame.height);
+    }
+    // assert(this->frames.count() > idx);
     if (!this->frames[idx]->addTo(frame)) {
         return nullptr;
     }
@@ -459,7 +464,7 @@ D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
 
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QString &pixels)
 {
-    bool clipped = this->frames[idx]->isClipped();
+    bool clipped = this->isClipped(idx);
 
     D1GfxFrame *frame = new D1GfxFrame();
     D1ImageFrame::load(*frame, pixels, clipped, this->palette);
@@ -470,7 +475,7 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QString &pixels)
 
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
 {
-    bool clipped = this->frames[idx]->isClipped();
+    bool clipped = this->isClipped(idx);
 
     D1GfxFrame *frame = new D1GfxFrame();
     D1ImageFrame::load(*frame, image, clipped, this->palette);
@@ -780,6 +785,10 @@ D1GfxFrame *D1Gfx::getFrame(int frameIndex) const
 
 void D1Gfx::setFrame(int frameIndex, D1GfxFrame *frame)
 {
+    if (this->frames.count() <= frameIndex) {
+        // assert(frameIndex == this->frames.count());
+        this->insertFrame(frameIndex);
+    }
     delete this->frames[frameIndex];
     this->frames[frameIndex] = frame;
     this->modified = true;
