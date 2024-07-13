@@ -2205,6 +2205,12 @@ void MainWindow::on_actionMerge_triggered()
 {
     QStringList gfxFilePaths = this->filesDialog(tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
 
+    if (gfxFilePaths.isEmpty()) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
     D1Gfx *gfx = nullptr;
     for (const QString &filePath : gfxFilePaths) {
         // load the gfx
@@ -2228,7 +2234,9 @@ void MainWindow::on_actionMerge_triggered()
         this->gfx->addGfx(gfx);
     }
     delete gfx;
-    this->updateWindow();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionReportUse_Tileset_triggered()
