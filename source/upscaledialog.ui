@@ -3,7 +3,7 @@
  <class>UpscaleDialog</class>
  <widget class="QDialog">
   <property name="windowTitle">
-   <string>Upscale</string>
+   <string>Upscale/Downscale</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -186,7 +186,7 @@
      <item>
       <widget class="QPushButton" name="upscaleButton">
        <property name="text">
-        <string>Upscale</string>
+        <string>Resample</string>
        </property>
       </widget>
      </item>
