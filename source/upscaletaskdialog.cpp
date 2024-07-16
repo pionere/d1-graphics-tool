@@ -467,6 +467,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         OpenAsParam opParams = OpenAsParam();
 
         UpscaleParam upParams = UpscaleParam();
+        upParams.downscale = false;
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
@@ -514,6 +515,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
@@ -568,6 +570,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
@@ -611,6 +614,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
@@ -654,6 +658,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
@@ -689,6 +694,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
@@ -724,6 +730,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
@@ -765,6 +772,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
@@ -813,6 +821,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::TILESET;
@@ -858,6 +867,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
+        upParams.downscale = false;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::TILESET;

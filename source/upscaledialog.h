@@ -13,6 +13,7 @@ enum class ANTI_ALIASING_MODE {
 class UpscaleParam {
 public:
     int multiplier;
+    bool downscale;
     int firstfixcolor;
     int lastfixcolor;
     ANTI_ALIASING_MODE antiAliasingMode;

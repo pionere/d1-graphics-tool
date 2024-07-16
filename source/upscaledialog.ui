@@ -3,7 +3,7 @@
  <class>UpscaleDialog</class>
  <widget class="QDialog">
   <property name="windowTitle">
-   <string>Upscale</string>
+   <string>Upscale/Downscale</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -26,6 +26,9 @@
         </property>
         <property name="alignment">
          <enum>Qt::AlignCenter</enum>
+        </property>
+        <property name="toolTip">
+         <string>'2', '3' ... to upscale, '1/2', '1/3' ... to downscale</string>
         </property>
        </widget>
       </item>
@@ -183,7 +186,7 @@
      <item>
       <widget class="QPushButton" name="upscaleButton">
        <property name="text">
-        <string>Upscale</string>
+        <string>Resample</string>
        </property>
       </widget>
      </item>

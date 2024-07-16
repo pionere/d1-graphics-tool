@@ -732,7 +732,7 @@
     <string>Upscale</string>
    </property>
    <property name="toolTip">
-    <string>Upscale the current graphics</string>
+    <string>Upscale/Downscale the current graphics</string>
    </property>
   </action>
   <action name="actionMerge">

@@ -51,11 +51,21 @@ void UpscaleDialog::on_levelTypeComboBox_activated(int index)
 
 void UpscaleDialog::on_upscaleButton_clicked()
 {
+    QString mplText;
     UpscaleParam params;
-    params.multiplier = this->ui->multiplierLineEdit->text().toInt();
-    if (params.multiplier <= 1) {
-        this->close();
-        return;
+    mplText = this->ui->multiplierLineEdit->text().replace(' ', "");
+    params.multiplier = mplText.toInt();
+    params.downscale = params.multiplier <= 1;
+    if (params.downscale) {
+        if (mplText.startsWith("1/")) {
+            mplText = mplText.mid(2);
+            params.multiplier = mplText.toInt();
+        }
+
+        if (params.multiplier <= 1) {
+            this->close();
+            return;
+        }
     }
     bool firstOk, lastOk;
     params.firstfixcolor = this->ui->firstFixColorLineEdit->text().toUShort(&firstOk);
