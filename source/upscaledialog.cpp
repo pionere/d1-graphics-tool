@@ -57,7 +57,7 @@ void UpscaleDialog::on_upscaleButton_clicked()
     params.multiplier = mplText.toInt();
     params.downscale = params.multiplier <= 1;
     if (params.downscale) {
-        if (mplText.startsWith('1/')) {
+        if (mplText.startsWith("1/")) {
             mplText = mplText.mid(2);
             params.multiplier = mplText.toInt();
         }

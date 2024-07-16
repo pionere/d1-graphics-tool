@@ -3131,7 +3131,7 @@ void Upscaler::downscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
                     }
                 }
                 numcolors = multiplier * multiplier - (fix + transparent);
-                if (transparent > = multiplier * multiplier / 2) {
+                if (transparent >= multiplier * multiplier / 2) {
                     // mostly transparent -> transparent
                     pixelLine.push_back(D1GfxPixel::transparentPixel());
                 } else if (fix > numcolors) {
