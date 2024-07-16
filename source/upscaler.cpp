@@ -3091,10 +3091,125 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
     frame->height *= multiplier;
 }
 
+void Upscaler::downscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
+{
+    int multiplier = upParams.multiplier;
+    int newHeight = frame->height / multiplier;
+    int newWidth = frame->width / multiplier;
+    if (newHeight == 0) {
+        newHeight = 1;
+    }
+    if (newWidth == 0) {
+        newWidth = 1;
+    }
+    std::vector<std::vector<D1GfxPixel>> newPixels;
+    switch (upParams.antiAliasingMode) {
+    case ANTI_ALIASING_MODE::BASIC: {  // select a new palette entry based on the average
+        for (int y = 0; y < newHeight; y++) {
+            std::vector<D1GfxPixel> pixelLine;
+            for (int x = 0; x < newWidth; x++) {
+                int fixcolors[D1PAL_COLORS] = { 0 };
+                int transparent = 0, fix = 0;
+                int rw = 0, gw = 0, bw = 0, numcolors; 
+
+                for (int yy = y * multiplier; yy < y * multiplier + multiplier; yy++) {
+                    for (int xx = x * multiplier; xx < x * multiplier + multiplier; xx++) {
+                        const D1GfxPixel &pixel = frame->pixels[yy][xx];
+                        if (pixel.isTransparent()) {
+                            transparent++;
+                        } else {
+                            quint8 color = pixel.getPaletteIndex();
+                            if (color >= upParams.firstfixcolor && color <= upParams.lastfixcolor) {
+                                fix++;
+                                fixcolors[color]++;
+                            }
+                            QColor c0 = upParams.pal->getColor(color);
+                            rw += c0.red();
+                            gw += c0.green();
+                            bw += c0.blue();
+                        }
+                    }
+                }
+                numcolors = multiplier * multiplier - (fix + transparent);
+                if (transparent > = multiplier * multiplier / 2) {
+                    // mostly transparent -> transparent
+                    pixelLine.push_back(D1GfxPixel::transparentPixel());
+                } else if (fix > numcolors) {
+                    // more fix colors than normal colors -> select the most used fix color
+                    int best = 0;
+                    int bestColor = upParams.firstfixcolor;
+                    for (int n = upParams.firstfixcolor + 1; n < upParams.lastfixcolor; n++) {
+                        if (fixcolors[n] > best) {
+                            best = fixcolors[n];
+                            bestColor = n;
+                        }
+                    }
+
+                    pixelLine.push_back(D1GfxPixel::colorPixel(bestColor));
+                } else {
+                    // select a new palette entry based on the average of the colors
+                    numcolors += fix;
+                    rw /= numcolors;
+                    gw /= numcolors;
+                    bw /= numcolors;
+                    pixelLine.push_back(getPalColor(upParams, QColor(rw, gw, bw)));
+                }
+            }
+            newPixels.push_back(pixelLine);
+        }
+    } break;
+    case ANTI_ALIASING_MODE::TILESET: { // select the most used palette entry
+        for (int y = 0; y < newHeight; y++) {
+            std::vector<D1GfxPixel> pixelLine;
+            for (int x = 0; x < newWidth; x++) {
+                int colors[D1PAL_COLORS] = { 0 };
+                int transparent = 0;
+
+                for (int yy = y * multiplier; yy < y * multiplier + multiplier; yy++) {
+                    for (int xx = x * multiplier; xx < x * multiplier + multiplier; xx++) {
+                        const D1GfxPixel &pixel = frame->pixels[yy][xx];
+                        if (pixel.isTransparent()) {
+                            transparent++;
+                        } else {
+                            colors[pixel.getPaletteIndex()]++;
+                        }
+                    }
+                }
+                int best = transparent;
+                int bestColor = -1;
+                for (int n = 0; n < lengthof(colors); n++) {
+                    if (colors[n] > best) {
+                        best = colors[n];
+                        bestColor = n;
+                    }
+                }
+
+                pixelLine.push_back(bestColor < 0 ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(bestColor));
+            }
+            newPixels.push_back(pixelLine);
+        }
+    } break;
+    case ANTI_ALIASING_MODE::NONE: {  // resample
+        for (int y = 0; y < newHeight; y++) {
+            std::vector<D1GfxPixel> pixelLine;
+            for (int x = 0; x < newWidth; x++) {
+                pixelLine.push_back(frame->pixels[y * multiplier][x * multiplier]);
+            }
+            newPixels.push_back(pixelLine);
+        }
+    } break;
+    }
+
+    // update the frame
+    frame->pixels.swap(newPixels);
+    frame->width = newWidth;
+    frame->height = newHeight;
+}
+
 bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
 {
     int amount = gfx->getFrameCount();
-    ProgressDialog::incBar(silent ? QStringLiteral("") : QApplication::tr("Upscaling graphics..."), amount + 1);
+    ProgressDialog::incBar(silent ? QStringLiteral("") : (params.downscale ? QApplication::tr("Downscaling graphics...")  : QApplication::tr("Upscaling graphics...")), amount + 1);
 
     UpscalingParam upParams;
     upParams.multiplier = params.multiplier;
@@ -3107,7 +3222,7 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
-        progress.second = QString(QApplication::tr("Upscaling frame %1.")).arg(i + 1);
+        progress.second = QString((params.downscale ? QApplication::tr("Downscaling frame %1.") : QApplication::tr("Upscaling frame %1."))).arg(i + 1);
         dProgress() << progress;
         if (ProgressDialog::wasCanceled()) {
             qDeleteAll(newFrames);
@@ -3120,7 +3235,11 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
             upParams.pal = pal;
             pal->getValidColors(upParams.dynColors);
         }
-        upscaleFrame(newFrame, upParams);
+        if (params.downscale) {
+            downscaleFrame(newFrame, upParams);
+        } else {
+            upscaleFrame(newFrame, upParams);
+        }
         newFrames.append(newFrame);
 
         if (!ProgressDialog::incValue()) {
@@ -3129,11 +3248,11 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
         }
     }
     gfx->frames.swap(newFrames);
-    gfx->upscaled = true;
+    gfx->upscaled = !params.downscale;
     gfx->modified = true;
 
     qDeleteAll(newFrames);
-    progress.second = QApplication::tr("Upscaled %n frame(s).", "", amount);
+    progress.second = params.downscale ? QApplication::tr("Downscaled %n frame(s).", "", amount) : QApplication::tr("Upscaled %n frame(s).", "", amount);
     dProgress() << progress;
 
     ProgressDialog::decBar();
@@ -3226,6 +3345,11 @@ int Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std:
 
 bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params, bool silent)
 {
+    if (params.downscale) {
+        dProgressErr() << QApplication::tr("Downscaling of a tileset is not supported.");
+        return true;
+    }
+
     int amount = min->getSubtileCount();
     ProgressDialog::incBar(silent ? QStringLiteral("") : QApplication::tr("Upscaling tileset..."), amount + 1);
 
