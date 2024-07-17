@@ -1070,6 +1070,8 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 static void DRLG_FTVR(unsigned offset)
 {
 	BYTE *tvp = &dTransVal[0][0];
+    if (offset >= lengthof(dTransVal) * lengthof(dTransVal[0]))
+        return;
 	if (tvp[offset] != 0) {
 		return;
 	}
@@ -1107,9 +1109,9 @@ void DRLG_FloodTVal()
 	int i, j;
 	BYTE *tdp = &drlg.transDirMap[0][0]; // Overlaps with transvalMap!
 	BYTE *tvp = &dTransVal[0][0];
-
+    LogErrorF("DRLG_FloodTVal 0");
 	DRLG_InitTrans();
-
+    LogErrorF("DRLG_FloodTVal 1");
 	// prepare the propagation-directions
 	for (i = DMAXX - 1; i >= 0; i--) {
 		for (j = DMAXY - 1; j >= 0; j--) {
@@ -1161,7 +1163,8 @@ void DRLG_FloodTVal()
 			drlg.transDirMap[2 * i + 1][2 * j + 1] = tpm;
 		}
 	}
-	// create the rooms
+    LogErrorF("DRLG_FloodTVal 3");
+    // create the rooms
 	for (i = 0; i < DSIZEX * DSIZEY; i++) {
 		if (tvp[i] != 0)
 			continue;
@@ -1170,7 +1173,8 @@ void DRLG_FloodTVal()
 		DRLG_FTVR(i);
 		numtrans++;
 	}
-	// move the values into position (add borders)
+    LogErrorF("DRLG_FloodTVal 4 %d", numtrans);
+    // move the values into position (add borders)
 	static_assert(DBORDERY + DBORDERX * MAXDUNY > DSIZEY, "DRLG_FloodTVal requires large enough border(x) to use memcpy instead of memmove.");
 	for (i = DSIZEX - 1; i >= 0; i--) {
 		BYTE *tvpSrc = tvp + i * DSIZEY;
@@ -1185,6 +1189,7 @@ void DRLG_FloodTVal()
 		memset(tvp, 0, 2 * DBORDERY);
 		tvp += 2 * DBORDERY + DSIZEY;
 	}
+    LogErrorF("DRLG_FloodTVal 5");
 }
 
 void DRLG_LoadSP(int idx, BYTE bv)
