@@ -43,7 +43,7 @@ void DungeonGenerateDialog::on_levelComboBox_activated(int index)
     bool dynLevel = (index + 1) == NUM_FIXLVLS;
     this->ui->levelLineEdit->setEnabled(dynLevel);
     if (!dynLevel) {
-        this->ui->levelLineEdit->setText(Qtring::number(index + 1));
+        this->ui->levelLineEdit->setText(QString::number(index + 1));
     }
 }
 
