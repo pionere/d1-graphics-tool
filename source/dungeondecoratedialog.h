@@ -8,7 +8,8 @@ class D1Tileset;
 
 class DecorateDunParam {
 public:
-    int level;      // dungeon_level / _setlevels
+    int levelIdx;   // dungeon_level / _setlevels
+    int levelNum;   // index in AllLevels (dungeon_level / NUM_FIXLVLS)
     int difficulty; // _difficulty
     int numPlayers;
     bool isMulti;
@@ -42,6 +43,7 @@ public:
     void initialize(D1Dun *dun, D1Tileset *tileset);
 
 private slots:
+    void on_levelComboBox_activated(int index);
     void on_actionGenerateSeed_triggered();
 
     void on_decorateButton_clicked();

@@ -20,6 +20,7 @@ bool IsHellfireGame;
 bool HasTileset;
 bool PatchDunFiles;
 int ddLevelPlrs;
+int dnLevel;
 QString assetPath;
 char infostr[256];
 
@@ -269,7 +270,7 @@ static void EnterLevel(int lvl, int seed)
 	currLvl._dDynLvl = lvl >= NUM_FIXLVLS;
 	if (currLvl._dDynLvl) {
 		// select level
-		unsigned baseLevel = gDynLevels[lvl - NUM_FIXLVLS]._dnLevel;
+		unsigned baseLevel = dnLevel;
 		// assert(baseLevel + HELL_LEVEL_BONUS < CF_LEVEL);
 		int availableLvls[NUM_FIXLVLS];
 		int numLvls = 0;
@@ -520,6 +521,7 @@ static void StoreDungeon(D1Dun *dun)
 void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const DecorateDunParam &params)
 {
     ddLevelPlrs = params.numPlayers;
+    dnLevel = params.levelNum;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
@@ -532,7 +534,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 
     ResetGameLevel(dun, params);
 
-    EnterLevel(params.level, params.seed);
+    EnterLevel(params.levelIdx, params.seed);
 
     int extraRounds = params.extraRounds;
     // SetRndSeed(params.seed);
@@ -548,6 +550,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
     ddLevelPlrs = params.numPlayers;
+    dnLevel = params.levelNum;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
@@ -572,7 +575,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 //    }
 //    IncProgress();
 //    FreeLevelMem();
-    EnterLevel(params.level, params.seed);
+    EnterLevel(params.levelIdx, params.seed);
     IncProgress();
 
     int32_t questSeed = params.seedQuest;
@@ -581,8 +584,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     // SetRndSeed(params.seed);
     while (true) {
         extern int32_t sglGameSeed;
-        //LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
-        dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(questSeed).arg(params.entryMode);
+        //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, sglGameSeed, params.seedQuest, params.entryMode);
+        dProgress() << QApplication::tr("Generating dungeon %1/%2 with seed: %3 / %4. Entry mode: %5").arg(params.levelIdx).arg(params.levelNum).arg(sglGameSeed).arg(questSeed).arg(params.entryMode);
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
         dProgress() << QApplication::tr("Done. The dungeon contains %1 monsters (%2 types), %3 objects and %4 items.").arg(nummonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems);

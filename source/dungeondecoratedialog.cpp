@@ -30,6 +30,15 @@ void DungeonDecorateDialog::initialize(D1Dun *d, D1Tileset *ts)
     this->tileset = ts;
 }
 
+void DungeonDecorateDialog::on_levelComboBox_activated(int index)
+{
+    bool dynLevel = (index + 1) == NUM_FIXLVLS;
+    this->ui->levelLineEdit->setEnabled(dynLevel);
+    if (!dynLevel) {
+        this->ui->levelLineEdit->setText(Qtring::number(index + 1));
+    }
+}
+
 void DungeonDecorateDialog::on_actionGenerateSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
@@ -39,7 +48,8 @@ void DungeonDecorateDialog::on_actionGenerateSeed_triggered()
 void DungeonDecorateDialog::on_decorateButton_clicked()
 {
     DecorateDunParam params;
-    params.level = this->ui->levelComboBox->currentIndex() + 1;
+    params.levelIdx = this->ui->levelComboBox->currentIndex() + 1;
+    params.levelNum = this->ui->levelLineEdit->text().toUShort();
     params.difficulty = this->ui->difficultyComboBox->currentIndex();
     int numPlayers = this->ui->plrCountLineEdit->text().toUShort();
     params.numPlayers = numPlayers == 0 ? 1 : numPlayers;

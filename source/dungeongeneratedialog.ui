@@ -158,6 +158,21 @@
           <string>Vile Betrayer</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Custom Level</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="LineEditWidget" name="levelLineEdit">
+        <property name="charWidth">
+         <number>2</number>
+        </property>
+        <property name="text">
+         <string>1</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
