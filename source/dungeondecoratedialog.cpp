@@ -32,9 +32,9 @@ void DungeonDecorateDialog::initialize(D1Dun *d, D1Tileset *ts)
 
 void DungeonDecorateDialog::on_levelComboBox_activated(int index)
 {
-    bool dynLevel = (index + 1) == NUM_FIXLVLS;
-    this->ui->levelLineEdit->setEnabled(dynLevel);
-    if (!dynLevel) {
+    bool fixLevel = (index + 1) < NUM_FIXLVLS;
+    this->ui->levelLineEdit->setReadOnly(fixLevel);
+    if (fixLevel) {
         this->ui->levelLineEdit->setText(QString::number(index + 1));
     }
 }
