@@ -151,7 +151,8 @@ static void LoadTileset(D1Tileset *tileset)
 
 static void CreateDungeon()
 {
-	switch (currLvl._dDunType) {
+    LogErrorF("CreateDungeon 0 %d", currLvl._dDunType);
+    switch (currLvl._dDunType) {
 	case DGT_TOWN:
 		// CreateTown();
 		break;
