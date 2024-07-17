@@ -45,6 +45,7 @@ void DungeonGenerateDialog::on_levelComboBox_activated(int index)
     if (fixLevel) {
         this->ui->levelLineEdit->setText(QString::number(index + 1));
     }
+    this->ui->levelLineEdit->ensurePolished();
 }
 
 void DungeonGenerateDialog::on_actionGenerateSeed_triggered()

@@ -151,8 +151,7 @@ static void LoadTileset(D1Tileset *tileset)
 
 static void CreateDungeon()
 {
-    LogErrorF("CreateDungeon 0 %d", currLvl._dDunType);
-    switch (currLvl._dDunType) {
+	switch (currLvl._dDunType) {
 	case DGT_TOWN:
 		// CreateTown();
 		break;
@@ -203,11 +202,10 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
 	// extern int32_t sglGameSeed;
 	// int32_t gameSeed = sglGameSeed;
-    LogErrorF("LoadGameLevel 0");
+
 	IncProgress();
 	InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
 	IncProgress();
-    LogErrorF("LoadGameLevel 1");
 
 	InitLvlAutomap();
 
@@ -215,38 +213,28 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //		InitLvlLighting();
 //		InitLvlVision();
 	//}
-    LogErrorF("LoadGameLevel 1");
-    InitLvlMonsters(); // reset monsters
-    LogErrorF("LoadGameLevel 2");
-    InitLvlObjects();  // reset objects
-    LogErrorF("LoadGameLevel 3");
-    InitLvlThemes();   // reset themes
+	InitLvlMonsters(); // reset monsters
+	InitLvlObjects();  // reset objects
+	InitLvlThemes();   // reset themes
 	InitLvlItems();    // reset items
 	IncProgress();
-    LogErrorF("LoadGameLevel 4");
 
 	// SetRndSeed(gameSeed); // restore seed after InitLvlMonsters
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
 	CreateDungeon();
-    LogErrorF("LoadGameLevel 5");
-    // LoadLvlPalette();
+	// LoadLvlPalette();
 	int rv = RandRange(1, 4);
 	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
 	StoreProtections(dun);
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
-        LogErrorF("LoadGameLevel 6");
-        GetLevelMTypes(); // select monster types and load their fx
-        LogErrorF("LoadGameLevel 7");
-        InitThemes();     // select theme types
-        LogErrorF("LoadGameLevel 8");
-        IncProgress();
-        LogErrorF("LoadGameLevel 9");
-        HoldThemeRooms(); // protect themes with dFlags
-        LogErrorF("LoadGameLevel 10");
-        InitMonsters();   // place monsters
+		GetLevelMTypes(); // select monster types and load their fx
+		InitThemes();     // select theme types
+		IncProgress();
+		HoldThemeRooms(); // protect themes with dFlags
+		InitMonsters();   // place monsters
 	} else {
 //		InitLvlStores();
 		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
@@ -256,23 +244,16 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //		InitTowners();
 	}
 	IncProgress();
-    LogErrorF("LoadGameLevel 11");
-    InitObjectGFX();    // load object graphics
-    LogErrorF("LoadGameLevel 12");
-    IncProgress();
-    InitObjects();      // place objects
-    LogErrorF("LoadGameLevel 13");
-    InitItems();        // place items
-    LogErrorF("LoadGameLevel 14");
-    CreateThemeRooms(); // populate theme rooms
-    LogErrorF("LoadGameLevel 15");
-    FreeSetPieces();
+	InitObjectGFX();    // load object graphics
+	IncProgress();
+	InitObjects();      // place objects
+	InitItems();        // place items
+	CreateThemeRooms(); // populate theme rooms
+	FreeSetPieces();
 	IncProgress();
 //	InitMissiles();  // reset missiles
 //	SavePreLighting(); // fill dPreLight
-    LogErrorF("LoadGameLevel 16");
-    InitView(lvldir);
-    LogErrorF("LoadGameLevel 17");
+	InitView(lvldir);
 
 	IncProgress();
 
