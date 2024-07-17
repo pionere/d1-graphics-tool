@@ -199,8 +199,8 @@ static int GetBaseTile()
 
 static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
-	extern int32_t sglGameSeed;
-	int32_t gameSeed = sglGameSeed;
+	// extern int32_t sglGameSeed;
+	// int32_t gameSeed = sglGameSeed;
 
 	IncProgress();
 	InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
@@ -218,7 +218,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitLvlItems();    // reset items
 	IncProgress();
 
-	SetRndSeed(gameSeed); // restore seed after InitLvlMonsters
+	// SetRndSeed(gameSeed); // restore seed after InitLvlMonsters
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
@@ -256,20 +256,49 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 
 	IncProgress();
 
-//	music_start(AllLevels[currLvl._dLevelIdx].dMusic);
+//	music_start(AllLevels[currLvl._dLevelNum].dMusic);
 }
 
-static void EnterLevel(int lvl)
+static void EnterLevel(int lvl, int seed)
 {
 	int lvlBonus;
 
+	SetRndSeed(seed);
 	currLvl._dLevelPlyrs = IsMultiGame ? ddLevelPlrs : 1;
 	currLvl._dLevelIdx = lvl;
-	currLvl._dLevel = AllLevels[lvl].dLevel;
-	currLvl._dSetLvl = AllLevels[lvl].dSetLvl;
-	currLvl._dType = AllLevels[lvl].dType;
-	currLvl._dDunType = AllLevels[lvl].dDunType;
-	lvlBonus = 0;
+	currLvl._dDynLvl = lvl >= NUM_FIXLVLS;
+	if (currLvl._dDynLvl) {
+		// select level
+		unsigned baseLevel = gDynLevels[lvl - NUM_FIXLVLS]._dnLevel;
+		// assert(baseLevel + HELL_LEVEL_BONUS < CF_LEVEL);
+		int availableLvls[NUM_FIXLVLS];
+		int numLvls = 0;
+		for (int i = DLV_CATHEDRAL1; i < NUM_STDLVLS; i++) {
+			if (AllLevels[i].dLevel <= baseLevel /*&& AllLevels[i].dMonTypes[0] != MT_INVALID*/) {
+				availableLvls[numLvls] = i;
+				numLvls++;
+			}
+		}
+		lvl = DLV_CATHEDRAL1;
+		if (numLvls != 0) {
+			lvl = availableLvls[random_low(141, numLvls)];
+		} else {
+			baseLevel = AllLevels[DLV_CATHEDRAL1].dLevel;
+		}
+		currLvl._dLevelNum = lvl;
+		currLvl._dLevel = AllLevels[lvl].dLevel;
+		currLvl._dSetLvl = false; // AllLevels[lvl].dSetLvl;
+		currLvl._dType = AllLevels[lvl].dType;
+		currLvl._dDunType = AllLevels[lvl].dDunType;
+		lvlBonus = baseLevel - AllLevels[lvl].dLevel;
+	} else {
+		currLvl._dLevelNum = lvl;
+		currLvl._dLevel = AllLevels[lvl].dLevel;
+		currLvl._dSetLvl = AllLevels[lvl].dSetLvl;
+		currLvl._dType = AllLevels[lvl].dType;
+		currLvl._dDunType = AllLevels[lvl].dDunType;
+		lvlBonus = 0;
+	}
 	if (gnDifficulty == DIFF_NIGHTMARE) {
 		lvlBonus += NIGHTMARE_LEVEL_BONUS;
 	} else if (gnDifficulty == DIFF_HELL) {
@@ -503,10 +532,10 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 
     ResetGameLevel(dun, params);
 
-    EnterLevel(params.level);
+    EnterLevel(params.level, params.seed);
 
     int extraRounds = params.extraRounds;
-    SetRndSeed(params.seed);
+    // SetRndSeed(params.seed);
     do {
         LoadDungeon(dun, extraRounds == params.extraRounds);
 
@@ -543,13 +572,13 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 //    }
 //    IncProgress();
 //    FreeLevelMem();
-    EnterLevel(params.level);
+    EnterLevel(params.level, params.seed);
     IncProgress();
 
     int32_t questSeed = params.seedQuest;
     int extraRounds = params.extraRounds;
     quint64 started = QDateTime::currentMSecsSinceEpoch();
-    SetRndSeed(params.seed);
+    // SetRndSeed(params.seed);
     while (true) {
         extern int32_t sglGameSeed;
         //LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);

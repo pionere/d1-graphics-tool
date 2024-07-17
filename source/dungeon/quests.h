@@ -8,7 +8,7 @@
 
 extern QuestStruct quests[NUM_QUESTS];
 
-#define LEVEL_MASK(x)   ((uint32_t)1 << (x))
+#define LEVEL_MASK(x)   (x < 32 ? (uint32_t)1 << (x) : 0)
 
 void InitQuests(int seed);
 bool QuestStatus(int qn);
