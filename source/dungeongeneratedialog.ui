@@ -173,7 +173,7 @@
         <property name="text">
          <string>1</string>
         </property>
-        <property name="readonly">
+        <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
