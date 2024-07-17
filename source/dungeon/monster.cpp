@@ -287,14 +287,6 @@ void GetLevelMTypes()
 
 	lvl = currLvl._dLevelIdx;
 	//if (!currLvl._dSetLvl) {
-		if (lvl == DLV_HELL4) {
-			AddMonsterType(MT_BMAGE, TRUE);
-			AddMonsterType(MT_GBLACK, TRUE);
-			// AddMonsterType(MT_NBLACK, FALSE);
-			// AddMonsterType(uniqMonData[UMT_DIABLO].mtype, FALSE);
-			return;
-		}
-
 #ifdef HELLFIRE
 		if (lvl == uniqMonData[UMT_HORKDMN].muLevelIdx - 1)
 			AddMonsterType(MT_HORKSPWN, TRUE);
@@ -305,7 +297,6 @@ void GetLevelMTypes()
 		if (lvl == uniqMonData[UMT_DEFILER].muLevelIdx)
 			AddMonsterType(uniqMonData[UMT_DEFILER].mtype, FALSE);
 		if (lvl == DLV_CRYPT4) {
-			AddMonsterType(MT_ARCHLICH, TRUE);
 			// AddMonsterType(uniqMonData[UMT_NAKRUL].mtype, FALSE);
 		}
 #endif
@@ -341,6 +332,19 @@ void GetLevelMTypes()
 		//	AddMonsterType(uniqMonData[UMT_RED_VEX].mtype, FALSE);
 		//  assert(uniqMonData[UMT_RED_VEX].mtype == uniqMonData[UMT_BLACKJADE].mtype);
 		//}
+		lvl = currLvl._dLevelNum;
+		if (lvl == DLV_HELL4) {
+			AddMonsterType(MT_BMAGE, TRUE);
+			AddMonsterType(MT_GBLACK, TRUE);
+			// AddMonsterType(MT_NBLACK, FALSE);
+			// AddMonsterType(uniqMonData[UMT_DIABLO].mtype, FALSE);
+			// return;
+		}
+#ifdef HELLFIRE
+		if (lvl == DLV_CRYPT4) {
+			AddMonsterType(MT_ARCHLICH, TRUE);
+		}
+#endif
 		lds = &AllLevels[lvl];
 		for (nt = 0; nt < lengthof(lds->dMonTypes); nt++) {
 			mtype = lds->dMonTypes[nt];
@@ -697,10 +701,14 @@ static void PlaceUniques()
 	for (u = 0; uniqMonData[u].mtype != MT_INVALID; u++) {
 		if (uniquetrans >= NUM_COLOR_TRNS)
 			continue;
-		if (uniqMonData[u].muLevelIdx != currLvl._dLevelIdx)
+		/*if (uniqMonData[u].muLevelIdx != currLvl._dLevelIdx)
 			continue;
 		if (uniqMonData[u].mQuestId != Q_INVALID
 		 && quests[uniqMonData[u].mQuestId]._qactive == QUEST_NOTAVAIL)
+			continue;*/
+		if (uniqMonData[u].muLevelIdx != currLvl._dLevelNum)
+			continue;
+		if (uniqMonData[u].mQuestId != Q_INVALID && !QuestStatus(uniqMonData[u].mQuestId))
 			continue;
 		for (mt = 0; mt < nummtypes; mt++) {
 			if (mapMonTypes[mt].cmType == uniqMonData[u].mtype) {
@@ -804,7 +812,7 @@ void InitMonsters()
 			for (yy = DBORDERY; yy < DSIZEY + DBORDERY; yy++)
 				if ((nSolidTable[dPiece[xx][yy]] | (dFlags[xx][yy] & (BFLAG_ALERT | BFLAG_MON_PROTECT))) == 0)
 					na++;
-		na = na * AllLevels[currLvl._dLevelIdx].dMonDensity / 32;
+		na = na * AllLevels[currLvl._dLevelNum].dMonDensity / 32;
 
 		numplacemonsters = na / 32;
 		totalmonsters = nummonsters + numplacemonsters;

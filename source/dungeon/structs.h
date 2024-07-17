@@ -410,8 +410,10 @@ typedef struct ObjectStruct {
 //////////////////////////////////////////////////
 
 typedef struct LevelStruct {
-	int _dLevelIdx;   // index in AllLevels (dungeon_level)
+	int _dLevelIdx;   // dungeon_level / NUM_LEVELS
+	int _dLevelNum;   // index in AllLevels (dungeon_level / NUM_FIXLVLS)
 	bool _dSetLvl;    // cached flag if the level is a set-level
+	bool _dDynLvl;    // cached flag if the level is a dynamic-level
 	int _dLevel;      // cached difficulty value of the level
 	int _dType;       // cached type of the level (dungeon_type)
 	int _dDunType;    // cached type of the dungeon (dungeon_gen_type)
