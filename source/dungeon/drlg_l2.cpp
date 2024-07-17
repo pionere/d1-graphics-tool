@@ -2759,25 +2759,37 @@ void CreateL2Dungeon()
 {
 	const LevelData* lds = &AllLevels[currLvl._dLevelNum];
 
-	if (lds->dSetLvl) {
-		LoadL2Dungeon(lds);
-	} else {
+    LogErrorF("CreateL2Dungeon 0 num%d set%d", currLvl._dLevelNum, lds->dSetLvl);
+    if (lds->dSetLvl) {
+        LogErrorF("CreateL2Dungeon 1a");
+        LoadL2Dungeon(lds);
+        LogErrorF("CreateL2Dungeon 1b");
+    } else {
 		// in the original version the function was executed twice in case the quest of the
 		// current level was not available (only in single player mode). The point of this
 		// could have been to share the same layout between levels, but that does not make too
 		// much sense due to the stairs placement are 'wrong' anyway. Just to have a reasonable
 		// sized main room, changing DRLG_L2CreateDungeon would have been much cheaper solution.
-		DRLG_LoadL2SP();
-		DRLG_L2();
-	}
+        LogErrorF("CreateL2Dungeon 1");
+        DRLG_LoadL2SP();
+        LogErrorF("CreateL2Dungeon 2");
+        DRLG_L2();
+        LogErrorF("CreateL2Dungeon 3");
+    }
 
-	DRLG_L2Subs();
+    LogErrorF("CreateL2Dungeon 4");
+    DRLG_L2Subs();
+    LogErrorF("CreateL2Dungeon 5");
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
-	DRLG_L2DrawPreMaps();
+    LogErrorF("CreateL2Dungeon 6");
+    DRLG_L2DrawPreMaps();
+    LogErrorF("CreateL2Dungeon 7");
 
 	DRLG_L2InitTransVals();
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
+    LogErrorF("CreateL2Dungeon 8");
+    DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
+    LogErrorF("CreateL2Dungeon 9");
 }
 
 DEVILUTION_END_NAMESPACE
