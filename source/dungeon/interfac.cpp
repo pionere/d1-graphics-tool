@@ -168,6 +168,31 @@ static void CreateDungeon()
 	}
 }
 
+static int GetBaseTile()
+{
+    int baseTile = 0;
+    switch (currLvl._dDunType) {
+    case DGT_TOWN:
+        break;
+    case DGT_CATHEDRAL:
+        baseTile = 22; // BASE_MEGATILE_L1
+        break;
+    case DGT_CATACOMBS:
+        baseTile = 12; // BASE_MEGATILE_L2
+        break;
+    case DGT_CAVES:
+        baseTile = 8; // BASE_MEGATILE_L3
+        break;
+    case DGT_HELL:
+        baseTile = 30; // BASE_MEGATILE_L4
+        break;
+    default:
+        ASSUME_UNREACHABLE
+        break;
+    }
+    return baseTile;
+}
+
 static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
 	extern int32_t sglGameSeed;
@@ -301,26 +326,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 
     dun->setLevelType(currLvl._dType);
 
-    int baseTile = 0;
-    switch (currLvl._dDunType) {
-    case DGT_TOWN:
-        break;
-    case DGT_CATHEDRAL:
-        baseTile = 22; // BASE_MEGATILE_L1
-        break;
-    case DGT_CATACOMBS:
-        baseTile = 12; // BASE_MEGATILE_L2
-        break;
-    case DGT_CAVES:
-        baseTile = 8; // BASE_MEGATILE_L3
-        break;
-    case DGT_HELL:
-        baseTile = 30; // BASE_MEGATILE_L4
-        break;
-    default:
-        ASSUME_UNREACHABLE
-        break;
-    }
+    int baseTile = GetBaseTile();
     for (int y = 0; y < MAXDUNY; y += TILE_HEIGHT) {
         for (int x = 0; x < MAXDUNX; x += TILE_WIDTH) {
             dun->setTileAt(x, y, baseTile);
