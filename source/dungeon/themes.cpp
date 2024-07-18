@@ -579,7 +579,7 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
 		if (dObject[xx][yy - 3] != 0 && objects[dObject[xx][yy - 3] - 1]._otype != 0) {
             extern bool stopgen;
             stopgen = true;
-            LogErrorF("object to north-east %d type%d @%d:%d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, yy - 3);
+            LogErrorF("object to north-east %d type%d x:%d y:%d vs %d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, themes[themeId]._tsy1, yy - 3);
         }
 		AddObject(OBJ_BOOK2R, xx, yy - 2);
 	} else {
@@ -595,7 +595,7 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
         if (dObject[xx][yy + 3] != 0 && objects[dObject[xx][yy + 3] - 1]._otype != 0) {
             extern bool stopgen;
             stopgen = true;
-            LogErrorF("object to south-east %d type%d @%d:%d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, yy + 3);
+            LogErrorF("object to south-east %d type%d x:%d y:%d vs %d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, themes[themeId]._tsy2, yy + 3);
         }
 		AddObject(OBJ_BOOK2R, xx, yy + 2);
 	} else {
