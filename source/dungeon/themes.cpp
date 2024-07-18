@@ -576,7 +576,7 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
 	// if (dObject[xx][yy - 3] == 0) {
 	if (themes[themeId]._tsy1 < yy - 3                     // the room extends to NE
 	 || (automaptype[dPiece[xx][yy - 3]] & MAT_WALL_NE)) { // there is a wall on the NE side (not a door or arch)
-		if (dObject[xx][yy - 3] != 0) {
+		if (dObject[xx][yy - 3] != 0 && objects[dObject[xx][yy - 3] - 1]._otype != 0) {
             extern bool stopgen;
             stopgen = true;
             LogErrorF("object to north-east %d type%d @%d:%d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, yy - 3);
@@ -592,7 +592,7 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
     }
 	if (themes[themeId]._tsy2 > yy + 3                     // the room extends to SW
 	 || (automaptype[dPiece[xx][yy + 3]] & MAT_WALL_SW)) { // there is a wall on the SW side (not a door or arch)
-        if (dObject[xx][yy + 3] != 0) {
+        if (dObject[xx][yy + 3] != 0 && objects[dObject[xx][yy + 3] - 1]._otype != 0) {
             extern bool stopgen;
             stopgen = true;
             LogErrorF("object to south-east %d type%d @%d:%d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, yy + 3);
