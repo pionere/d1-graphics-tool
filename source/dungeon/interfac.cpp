@@ -602,7 +602,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         }
     }
     quint64 now = QDateTime::currentMSecsSinceEpoch();
-    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms.").arg(params.extraRounds + 1).arg(now - started);
+    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms.").arg(params.extraRounds - extraRounds + 1).arg(now - started);
 
     dun->setLevelType(currLvl._dType);
 

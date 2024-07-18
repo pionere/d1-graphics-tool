@@ -573,37 +573,36 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
 		AddObject(OBJ_BANNERL, xx + 1, yy + 1);
 	}
 
-	// if (dObject[xx][yy - 3] == 0) {
-	if (themes[themeId]._tsy1 < yy - 3                     // the room extends to NE
-	 || (automaptype[dPiece[xx][yy - 3]] & MAT_WALL_NE)) { // there is a wall on the NE side (not a door or arch)
+	if (dObject[xx][yy - 2] == 0                            // no object was placed there (e.g. OBJ_L1LIGHT)
+	 && (themes[themeId]._tsy1 < yy - 3                     // the room extends to NE
+	 || (automaptype[dPiece[xx][yy - 3]] & MAT_WALL_NE))) { // there is a wall on the NE side (not a door or arch)
 		if (dObject[xx][yy - 3] != 0 && objects[dObject[xx][yy - 3] - 1]._otype != 0) {
             extern bool stopgen;
             stopgen = true;
             LogErrorF("object to north-east %d type%d @%d:%d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, yy - 3);
         }
-		// assert(dObject[xx][yy - 2] == 0);
 		AddObject(OBJ_BOOK2R, xx, yy - 2);
 	} else {
-        if (dObject[xx][yy - 3] == 0) {
+        if (dObject[xx][yy - 3] == 0 && dObject[xx][yy - 2] == 0) {
             extern bool stopgen;
             stopgen = true;
-            LogErrorF("no object to north-east y:%d vs %d type %d", themes[themeId]._tsy1, yy - 3, automaptype[dPiece[xx][yy - 3]]);
+            LogErrorF("no object to north-east x:%d y:%d vs %d type %d", xx, themes[themeId]._tsy1, yy - 3, automaptype[dPiece[xx][yy - 3]]);
         }
     }
-	if (themes[themeId]._tsy2 > yy + 3                     // the room extends to SW
-	 || (automaptype[dPiece[xx][yy + 3]] & MAT_WALL_SW)) { // there is a wall on the SW side (not a door or arch)
+	if (dObject[xx][yy + 2] == 0                            // no object was placed there (e.g. OBJ_L1LIGHT)
+	 && (themes[themeId]._tsy2 > yy + 3                     // the room extends to SW
+	 || (automaptype[dPiece[xx][yy + 3]] & MAT_WALL_SW))) { // there is a wall on the SW side (not a door or arch)
         if (dObject[xx][yy + 3] != 0 && objects[dObject[xx][yy + 3] - 1]._otype != 0) {
             extern bool stopgen;
             stopgen = true;
             LogErrorF("object to south-east %d type%d @%d:%d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, yy + 3);
         }
-		// assert(dObject[xx][yy + 2] == 0);
 		AddObject(OBJ_BOOK2R, xx, yy + 2);
 	} else {
-        if (dObject[xx][yy + 3] == 0) {
+        if (dObject[xx][yy + 3] == 0 && dObject[xx][yy + 2] == 0) {
             extern bool stopgen;
             stopgen = true;
-            LogErrorF("no object to south-east y:%d vs %d type %d", themes[themeId]._tsy2, yy + 3, automaptype[dPiece[xx][yy + 3]]);
+            LogErrorF("no object to south-east x:%d y:%d vs %d type %d", xx, themes[themeId]._tsy2, yy + 3, automaptype[dPiece[xx][yy + 3]]);
         }
     }
 }
