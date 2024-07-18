@@ -573,14 +573,39 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
 		AddObject(OBJ_BANNERL, xx + 1, yy + 1);
 	}
 
-	if (dObject[xx][yy - 3] == 0) {
+	// if (dObject[xx][yy - 3] == 0) {
+	if (themes[themeId]._tsy1 < yy - 3                     // the room extends to NE
+	 || (automaptype[dPiece[xx][yy - 3]] & MAT_WALL_NE)) { // there is a wall on the NE side (not a door or arch)
+		if (dObject[xx][yy - 3] != 0) {
+            extern bool stopgen;
+            stopgen = true;
+            LogErrorF("object to north-east %d", dObject[xx][yy - 3]);
+        }
 		// assert(dObject[xx][yy - 2] == 0);
 		AddObject(OBJ_BOOK2R, xx, yy - 2);
-	}
-	if (dObject[xx][yy + 3] == 0) {
+	} else {
+        if (dObject[xx][yy - 3] == 0) {
+            extern bool stopgen;
+            stopgen = true;
+            LogErrorF("no object to north-east y:%d vs %d type %d", themes[themeId]._tsy1, yy - 3, automaptype[dPiece[xx][yy - 3]]);
+        }
+    }
+	if (themes[themeId]._tsy2 > yy + 3                     // the room extends to SW
+	 || (automaptype[dPiece[xx][yy + 3]] & MAT_WALL_SW)) { // there is a wall on the SW side (not a door or arch)
+        if (dObject[xx][yy + 3] != 0) {
+            extern bool stopgen;
+            stopgen = true;
+            LogErrorF("object to south-east %d", dObject[xx][yy + 3]);
+        }
 		// assert(dObject[xx][yy + 2] == 0);
 		AddObject(OBJ_BOOK2R, xx, yy + 2);
-	}
+	} else {
+        if (dObject[xx][yy + 3] == 0) {
+            extern bool stopgen;
+            stopgen = true;
+            LogErrorF("no object to south-east y:%d vs %d type %d", themes[themeId]._tsy2, yy + 3, automaptype[dPiece[xx][yy + 3]]);
+        }
+    }
 }
 
 /**

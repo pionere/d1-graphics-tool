@@ -33,12 +33,14 @@ void DungeonDecorateDialog::initialize(D1Dun *d, D1Tileset *ts)
 void DungeonDecorateDialog::on_levelComboBox_activated(int index)
 {
     bool fixLevel = (index + 1) < NUM_FIXLVLS;
-    this->ui->levelLineEdit->setReadOnly(fixLevel);
+    LineEditWidget *lew = this->ui->levelLineEdit;
+    lew->setReadOnly(fixLevel);
     if (fixLevel) {
-        this->ui->levelLineEdit->setText(QString::number(index + 1));
+        lew->setText(QString::number(index + 1));
     }
-    this->ui->levelLineEdit->style()->unpolish(this->ui->levelLineEdit);
-    this->ui->levelLineEdit->style()->polish(this->ui->levelLineEdit);
+    // update the lineedit widget (thanks qt...)
+    lew->style()->unpolish(lew);
+    lew->style()->polish(lew);
 }
 
 void DungeonDecorateDialog::on_actionGenerateSeed_triggered()

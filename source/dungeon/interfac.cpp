@@ -23,6 +23,7 @@ int ddLevelPlrs;
 int dnLevel;
 QString assetPath;
 char infostr[256];
+bool stopgen;
 
 typedef struct ObjStruct {
     int otype;
@@ -568,6 +569,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     InitQuests(params.seedQuest);
     ViewX = 0;
     ViewY = 0;
+    stopgen = false;
 //    if (IsMultiGame) {
 //        DeltaSaveLevel();
 //    } else {
@@ -582,7 +584,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     int extraRounds = params.extraRounds;
     quint64 started = QDateTime::currentMSecsSinceEpoch();
     // SetRndSeed(params.seed);
-    while (true) {
+    while (!stopgen /*true*/) {
         extern int32_t sglGameSeed;
         //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, sglGameSeed, params.seedQuest, params.entryMode);
         dProgress() << QApplication::tr("Generating dungeon %1/%2 with seed: %3 / %4. Entry mode: %5").arg(params.levelIdx).arg(params.levelNum).arg(sglGameSeed).arg(questSeed).arg(params.entryMode);
