@@ -574,8 +574,8 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
 	}
 
 	if (dObject[xx][yy - 2] == 0                            // no object was placed there (e.g. OBJ_L1LIGHT)
-	 && (themes[themeId]._tsy1 < yy - 3                     // the room extends to NE
-	 || (automaptype[dPiece[xx][yy - 3]] & MAT_WALL_NE))) { // there is a wall on the NE side (not a door or arch)
+	 && (dObject[xx][yy - 3] == 0 || !objects[dObject[xx][yy - 3] - 1]._oDoorFlag)                     // the room extends to NE
+	 && (nSolidTable[dPiece[xx][yy - 3]] || !nSolidTable[dPiece[xx + 1][yy - 3]])) { // there is a wall on the NE side (not a door or arch)
 		if (dObject[xx][yy - 3] != 0 && objects[dObject[xx][yy - 3] - 1]._otype != 0) {
             extern bool stopgen;
             stopgen = true;
@@ -590,8 +590,8 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
         }
     }
 	if (dObject[xx][yy + 2] == 0                            // no object was placed there (e.g. OBJ_L1LIGHT)
-	 && (themes[themeId]._tsy2 > yy + 3                     // the room extends to SW
-	 || (automaptype[dPiece[xx][yy + 3]] & MAT_WALL_SW))) { // there is a wall on the SW side (not a door or arch)
+	 && (dObject[xx][yy + 3] == 0 || !objects[dObject[xx][yy + 3] - 1]._oDoorFlag)                     // the room extends to NE
+	 && (nSolidTable[dPiece[xx][yy + 3]] || !nSolidTable[dPiece[xx + 1][yy + 3]])) { // there is a wall on the NE side (not a door or arch)
         if (dObject[xx][yy + 3] != 0 && objects[dObject[xx][yy + 3] - 1]._otype != 0) {
             extern bool stopgen;
             stopgen = true;
