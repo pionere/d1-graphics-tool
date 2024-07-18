@@ -584,7 +584,7 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
 		AddObject(OBJ_BOOK2R, xx, yy - 2);
 	} else {
         // if (dObject[xx][yy - 3] == 0 && dObject[xx][yy - 2] == 0 && dPiece[xx][yy - 3] != 11 && dPiece[xx][yy - 3] != 249 && dPiece[xx][yy - 3] != 325 && dPiece[xx + 1][yy - 3] != 270) {
-        if (dObject[xx][yy - 3] == 0 && dObject[xx][yy - 2] == 0 /*&& dPiece[xx][yy - 3] != 11 && dPiece[xx][yy - 3] != 249 && dPiece[xx][yy - 3] != 325 && dPiece[xx + 1][yy - 3] != 270*/) {
+        if (dObject[xx][yy - 3] == 0 && dObject[xx][yy - 2] == 0 /*&& dPiece[xx][yy - 3] != 11 && dPiece[xx][yy - 3] != 249 && dPiece[xx][yy - 3] != 325*/ && dPiece[xx + 1][yy - 3] != 424) {
             extern bool stopgen;
             stopgen = true;
             LogErrorF("no object to north-east x:%d y:%d vs %d pn%d type %d", xx, themes[themeId]._tsy1, yy - 3, dPiece[xx][yy - 3], automaptype[dPiece[xx][yy - 3]]);
