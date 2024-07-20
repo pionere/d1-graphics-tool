@@ -35,12 +35,14 @@ private slots:
     void on_actionChangeColumn_triggered();
     void on_actionTrimColumn_triggered();
     void on_actionInsertColumn_triggered();
+    void on_actionDuplicateColumn_triggered();
     void on_actionDelColumn_triggered();
     void on_actionHideColumn_triggered();
     void on_actionMoveLeftColumn_triggered();
     void on_actionMoveRightColumn_triggered();
     void on_actionChangeRow_triggered();
     void on_actionInsertRow_triggered();
+    void on_actionDuplicateRow_triggered();
     void on_actionDelRow_triggered();
     void on_actionHideRow_triggered();
     void on_actionMoveUpRow_triggered();

@@ -3216,6 +3216,11 @@ void MainWindow::on_actionInsertColumn_Table_triggered()
     this->cppView->on_actionInsertColumn_triggered();
 }
 
+void MainWindow::on_actionDuplicateColumn_Table_triggered()
+{
+    this->cppView->on_actionDuplicateColumn_triggered();
+}
+
 void MainWindow::on_actionDelColumn_Table_triggered()
 {
     this->cppView->on_actionDelColumn_triggered();
@@ -3259,6 +3264,11 @@ void MainWindow::on_actionAddRow_Table_triggered()
 void MainWindow::on_actionInsertRow_Table_triggered()
 {
     this->cppView->on_actionInsertRow_triggered();
+}
+
+void MainWindow::on_actionDuplicateRow_Table_triggered()
+{
+    this->cppView->on_actionDuplicateRow_triggered();
 }
 
 void MainWindow::on_actionDelRow_Table_triggered()

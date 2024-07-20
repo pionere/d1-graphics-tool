@@ -1074,6 +1074,12 @@ void D1CppRow::insertEntry(int index)
     this->entryTexts.insert(this->entryTexts.begin() + index, QString());
 }
 
+void D1CppRow::duplicateEntry(int index)
+{
+    this->entries.insert(this->entries.begin() + index, new D1CppRowEntry(this->entries[index]->getContent()));
+    this->entryTexts.insert(this->entryTexts.begin() + index, QString()/* this->entryTexts[index]*/);
+}
+
 void D1CppRow::trimEntry(int index)
 {
     QString content = this->entries[index]->getContent();
@@ -1206,6 +1212,24 @@ void D1CppTable::insertRow(int index)
     this->leader.insert(this->leader.begin() + index, QString());
 }
 
+void D1CppTable::duplicateRow(int index)
+{
+    D1CppRow *rowbase = this->rows[index];
+    D1CppRow *row = new D1CppRow();
+    int entries = this->getColumnCount();
+    for (int i = 0; i < entries; i++) {
+        row->insertEntry(0);
+    }
+    for (int i = 0; i < entries; i++) {
+        row->getEntry(i)->setContent(rowbase->getEntry(i)->getContent());
+        // row->getEntry(i)->setEntryText(rowbase->getEntryText());
+    }
+
+    this->rows.insert(this->rows.begin() + index, row);
+    this->rowTexts.insert(this->rowTexts.begin() + index, this->rowTexts[index]);
+    this->leader.insert(this->leader.begin() + index, this->leader[index]);
+}
+
 void D1CppTable::swapRows(int index1, int index2, bool complete)
 {
     this->rows.swapItemsAt(index1, index2);
@@ -1231,6 +1255,15 @@ void D1CppTable::insertColumn(int index)
     }
     this->header.insert(this->header.begin() + index, QString());
     this->columnType.insert(this->columnType.begin() + index, D1CPP_ENTRY_TYPE::String);
+}
+
+void D1CppTable::duplicateColumn(int index)
+{
+    for (D1CppRow *row : this->rows) {
+        row->duplicateEntry(index);
+    }
+    this->header.insert(this->header.begin() + index, this->header[index]);
+    this->columnType.insert(this->columnType.begin() + index, this->columnType[index]);
 }
 
 void D1CppTable::trimColumn(int index)

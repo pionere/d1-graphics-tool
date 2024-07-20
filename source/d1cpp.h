@@ -74,6 +74,7 @@ public:
     D1CppRowEntry *getEntry(int index) const;
     QString getEntryText(int index) const;
     void insertEntry(int column);
+    void duplicateEntry(int column);
     void trimEntry(int column);
     void delEntry(int column);
     void swapColumns(int column1, int column2, bool complete);
@@ -104,8 +105,10 @@ public:
     QString getLeader(int index) const;
     bool setLeader(int index, const QString &text);
     void insertRow(int row);
+    void duplicateRow(int row);
     void swapRows(int row1, int row2, bool complete);
     void insertColumn(int column);
+    void duplicateColumn(int column);
     void trimColumn(int column);
     void swapColumns(int column1, int column2, bool complete);
     void delRow(int row);

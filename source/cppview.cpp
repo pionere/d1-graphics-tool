@@ -186,19 +186,12 @@ void CppView::trimColumn(int index)
     dMainWindow().updateWindow();
 }
 
-void CppView::insertColumn(int index)
+/*
+ * Move columns to the right and add initialize the given column.
+ */
+void CppView::updateColumnsAfter(int index)
 {
     D1CppTable *table = this->currentTable;
-    // adjust the 'backend'-data
-    table->insertColumn(index - 1);
-    this->cpp->setModified();
-    // adjust the view-data
-    this->gridColumnCount++;
-    int cw = BASE_COLUMN_WIDTH + CppViewEntryWidget::baseHorizontalMargin();
-    this->columnWidths.insert(this->columnWidths.begin() + index, cw);
-    if (this->currentColumnIndex >= index) {
-        this->currentColumnIndex++;
-    }
     // adjust the widgets
     this->hide();
     for (int y = 0; y < table->getRowCount() + 1; y++) {
@@ -223,6 +216,40 @@ void CppView::insertColumn(int index)
     this->show();
     // this->updateFields();
     dMainWindow().updateWindow();
+}
+
+void CppView::insertColumn(int index)
+{
+    D1CppTable *table = this->currentTable;
+    // adjust the 'backend'-data
+    table->insertColumn(index - 1);
+    this->cpp->setModified();
+    // adjust the view-data
+    this->gridColumnCount++;
+    int cw = BASE_COLUMN_WIDTH + CppViewEntryWidget::baseHorizontalMargin();
+    this->columnWidths.insert(this->columnWidths.begin() + index, cw);
+    if (this->currentColumnIndex >= index) {
+        this->currentColumnIndex++;
+    }
+    // adjust the widgets
+    this->updateColumnsAfter(index);
+}
+
+void CppView::duplicateColumn(int index)
+{
+    D1CppTable *table = this->currentTable;
+    // adjust the 'backend'-data
+    table->duplicateColumn(index - 1);
+    this->cpp->setModified();
+    // adjust the view-data
+    this->gridColumnCount++;
+    int cw = this->columnWidths[index];
+    this->columnWidths.insert(this->columnWidths.begin() + index, cw);
+    if (this->currentColumnIndex >= index) {
+        this->currentColumnIndex++;
+    }
+    // adjust the widgets
+    this->updateColumnsAfter(index);
 }
 
 void CppView::moveColumnLeft(int index)
@@ -373,17 +400,12 @@ void CppView::changeRow(int index)
     this->changeRowDialog.show();
 }
 
-void CppView::insertRow(int index)
+/*
+ * Move rows down and add initialize the given row.
+ */
+void CppView::updateRowsAfter(int index)
 {
     D1CppTable *table = this->currentTable;
-    // adjust the 'backend'-data
-    table->insertRow(index - 1);
-    this->cpp->setModified();
-    // adjust the view-data
-    this->gridRowCount++;
-    if (this->currentRowIndex >= index) {
-        this->currentRowIndex++;
-    }
     // adjust the widgets
     this->hide();
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
@@ -408,6 +430,36 @@ void CppView::insertRow(int index)
     this->show();
     // this->updateFields();
     dMainWindow().updateWindow();
+}
+
+void CppView::insertRow(int index)
+{
+    D1CppTable *table = this->currentTable;
+    // adjust the 'backend'-data
+    table->insertRow(index - 1);
+    this->cpp->setModified();
+    // adjust the view-data
+    this->gridRowCount++;
+    if (this->currentRowIndex >= index) {
+        this->currentRowIndex++;
+    }
+    // adjust the widgets
+    this->updateRowsAfter(index);
+}
+
+void CppView::duplicateRow(int index)
+{
+    D1CppTable *table = this->currentTable;
+    // adjust the 'backend'-data
+    table->duplicateRow(index - 1);
+    this->cpp->setModified();
+    // adjust the view-data
+    this->gridRowCount++;
+    if (this->currentRowIndex >= index) {
+        this->currentRowIndex++;
+    }
+    // adjust the widgets
+    this->updateRowsAfter(index);
 }
 
 void CppView::moveRowUp(int index)
@@ -855,6 +907,15 @@ void CppView::on_actionInsertColumn_triggered()
     }
 }
 
+void CppView::on_actionDuplicateColumn_triggered()
+{
+    int index = this->currentColumnIndex;
+
+    if (index > 0) {
+        this->duplicateColumn(index);
+    }
+}
+
 void CppView::on_actionDelColumn_triggered()
 {
     int index = this->currentColumnIndex;
@@ -947,6 +1008,15 @@ void CppView::on_actionInsertRow_triggered()
     }
 }
 
+void CppView::on_actionDuplicateRow_triggered()
+{
+    int index = this->currentRowIndex;
+
+    if (index > 0) {
+        this->duplicateRow(index);
+    }
+}
+
 void CppView::on_actionDelRow_triggered()
 {
     int index = this->currentRowIndex;
@@ -1007,6 +1077,11 @@ void CppView::ShowContextMenu(const QPoint &pos)
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionInsertColumn_Table_triggered()));
     menu->addAction(action);
 
+    action = new QAction(tr("Duplicate"));
+    action->setToolTip(tr("Duplicate the current column"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDuplicateColumn_Table_triggered()));
+    menu->addAction(action);
+
     action = new QAction(tr("Delete"));
     action->setToolTip(tr("Delete the current column"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelColumn_Table_triggered()));
@@ -1064,6 +1139,11 @@ void CppView::ShowContextMenu(const QPoint &pos)
     action = new QAction(tr("Insert"));
     action->setToolTip(tr("Add new row before the current one"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionInsertRow_Table_triggered()));
+    menu->addAction(action);
+
+    action = new QAction(tr("Duplicate"));
+    action->setToolTip(tr("Duplicate the current row"));
+    QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDuplicateRow_Table_triggered()));
     menu->addAction(action);
 
     action = new QAction(tr("Delete"));

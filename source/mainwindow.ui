@@ -318,6 +318,7 @@
     </property>
     <addaction name="actionAddColumn_Table"/>
     <addaction name="actionInsertColumn_Table"/>
+    <addaction name="actionDuplicateColumn_Table"/>
     <addaction name="actionDelColumn_Table"/>
     <addaction name="actionHideColumn_Table"/>
     <addaction name="actionMoveLeftColumn_Table"/>
@@ -336,6 +337,7 @@
     </property>
     <addaction name="actionAddRow_Table"/>
     <addaction name="actionInsertRow_Table"/>
+    <addaction name="actionDuplicateRow_Table"/>
     <addaction name="actionDelRow_Table"/>
     <addaction name="actionHideRow_Table"/>
     <addaction name="actionMoveUpRow_Table"/>
@@ -1274,6 +1276,14 @@
     <string>Add new column before the current one</string>
    </property>
   </action>
+  <action name="actionDuplicateColumn_Table">
+   <property name="text">
+    <string>Duplicate</string>
+   </property>
+   <property name="toolTip">
+    <string>Duplicate the current column</string>
+   </property>
+  </action>
   <action name="actionDelColumn_Table">
    <property name="text">
     <string>Delete</string>
@@ -1346,6 +1356,14 @@
     <string>Add new row before the current one</string>
    </property>
   </action>
+  <action name="actionDuplicateRow_Table">
+   <property name="text">
+    <string>Duplicate</string>
+   </property>
+   <property name="toolTip">
+    <string>Duplicate the current row</string>
+   </property>
+  </action>  
   <action name="actionDelRow_Table">
    <property name="text">
     <string>Delete</string>

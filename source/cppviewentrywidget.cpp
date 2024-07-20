@@ -266,6 +266,11 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertColumn_triggered()));
     menu->addAction(action);
 
+    action = new QAction(tr("Duplicate"));
+    action->setToolTip(tr("Duplicate this column"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionDuplicateColumn_triggered()));
+    menu->addAction(action);
+
     action = new QAction(tr("Delete"));
     action->setToolTip(tr("Delete this column"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionDelColumn_triggered()));
@@ -323,6 +328,11 @@ void CppViewEntryWidget::ShowRowContextMenu()
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
     menu->addAction(action);
 
+    action = new QAction(tr("Duplicate"));
+    action->setToolTip(tr("Duplicate this row"));
+    QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionDuplicateRow_triggered()));
+    menu->addAction(action);
+
     action = new QAction(tr("Delete"));
     action->setToolTip(tr("Delete this row"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionDelRow_triggered()));
@@ -366,6 +376,11 @@ void CppViewEntryWidget::on_actionInsertColumn_triggered()
     this->view->insertColumn(this->columnNum);
 }
 
+void CppViewEntryWidget::on_actionDuplicateColumn_triggered()
+{
+    this->view->duplicateColumn(this->columnNum);
+}
+
 void CppViewEntryWidget::on_actionDelColumn_triggered()
 {
     this->view->delColumns(this->columnNum, this->columnNum);
@@ -394,6 +409,11 @@ void CppViewEntryWidget::on_actionChangeRow_triggered()
 void CppViewEntryWidget::on_actionInsertRow_triggered()
 {
     this->view->insertRow(this->rowNum);
+}
+
+void CppViewEntryWidget::on_actionDuplicateRow_triggered()
+{
+    this->view->duplicateRow(this->rowNum);
 }
 
 void CppViewEntryWidget::on_actionDelRow_triggered()
