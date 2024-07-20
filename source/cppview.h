@@ -39,10 +39,12 @@ public:
     void changeColumn(int column);
     void trimColumn(int column);
     void insertColumn(int column);
+    void duplicateColumn(int column);
     void moveColumnLeft(int column);
     void moveColumnRight(int column);
     void changeRow(int row);
     void insertRow(int row);
+    void duplicateRow(int row);
     void moveRowUp(int row);
     void moveRowDown(int row);
     void delColumns(int fromIndex, int toIndex);
@@ -57,6 +59,7 @@ public slots:
 
     void on_actionAddColumn_triggered();
     void on_actionInsertColumn_triggered();
+    void on_actionDuplicateColumn_triggered();
     void on_actionDelColumn_triggered();
     void on_actionHideColumn_triggered();
     void on_actionMoveLeftColumn_triggered();
@@ -66,6 +69,7 @@ public slots:
     void on_actionShowColumns_triggered();
     void on_actionAddRow_triggered();
     void on_actionInsertRow_triggered();
+    void on_actionDuplicateRow_triggered();
     void on_actionDelRow_triggered();
     void on_actionHideRow_triggered();
     void on_actionMoveUpRow_triggered();
@@ -77,6 +81,9 @@ public slots:
 private:
     void updateFields();
     void updateLabel();
+
+    void updateColumnsAfter(int column);
+    void updateRowsAfter(int column);
 
     void delRow(int row);
     void showRow(int row);
