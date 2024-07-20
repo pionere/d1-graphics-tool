@@ -573,14 +573,14 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
 		AddObject(OBJ_BANNERL, xx + 1, yy + 1);
 	}
 
-	if (dObject[xx][yy - 2] == 0                            // no object was placed there (e.g. OBJ_L1LIGHT)
-	 && (dObject[xx][yy - 3] == 0 || !objects[dObject[xx][yy - 3] - 1]._oDoorFlag)                     // the room extends to NE
-	 && (nSolidTable[dPiece[xx][yy - 3]] || !nSolidTable[dPiece[xx + 1][yy - 3]])) { // there is a wall on the NE side (not a door or arch)
-		if (dObject[xx][yy - 3] != 0 && objects[dObject[xx][yy - 3] - 1]._otype != 0) {
+	if ((dObject[xx][yy - 3] == 0 || !objects[dObject[xx][yy - 3] - 1]._oDoorFlag)   // not a door
+	 && (nSolidTable[dPiece[xx][yy - 3]] || !nSolidTable[dPiece[xx + 1][yy - 3]])) { // or a single path to NE TODO: allow if !nSolidTable[dPiece[xx - 1][yy - 3]]?
+		if (dObject[xx][yy - 2] != 0 || (dObject[xx][yy - 3] != 0 && objects[dObject[xx][yy - 3] - 1]._otype != 0)) {
             extern bool stopgen;
             stopgen = true;
             LogErrorF("object to north-east %d type%d x:%d y:%d vs %d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, themes[themeId]._tsy1, yy - 3);
         }
+		// assert(dObject[xx][yy - 2] == 0);
 		AddObject(OBJ_BOOK2R, xx, yy - 2);
 	} else {
         // if (dObject[xx][yy - 3] == 0 && dObject[xx][yy - 2] == 0 && dPiece[xx][yy - 3] != 11 && dPiece[xx][yy - 3] != 249 && dPiece[xx][yy - 3] != 325 && dPiece[xx + 1][yy - 3] != 270) {
@@ -590,14 +590,14 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
             LogErrorF("no object to north-east x:%d y:%d vs %d pn%d type %d", xx, themes[themeId]._tsy1, yy - 3, dPiece[xx][yy - 3], automaptype[dPiece[xx][yy - 3]]);
         }
     }
-	if (dObject[xx][yy + 2] == 0                            // no object was placed there (e.g. OBJ_L1LIGHT)
-	 && (dObject[xx][yy + 3] == 0 || !objects[dObject[xx][yy + 3] - 1]._oDoorFlag)                     // the room extends to NE
-	 && (nSolidTable[dPiece[xx][yy + 3]] || !nSolidTable[dPiece[xx + 1][yy + 3]])) { // there is a wall on the NE side (not a door or arch)
-        if (dObject[xx][yy + 3] != 0 && objects[dObject[xx][yy + 3] - 1]._otype != 0) {
+	if ((dObject[xx][yy + 3] == 0 || !objects[dObject[xx][yy + 3] - 1]._oDoorFlag)   // not a door
+	 && (nSolidTable[dPiece[xx][yy + 3]] || !nSolidTable[dPiece[xx + 1][yy + 3]])) { // or a single path to SW TODO: allow if !nSolidTable[dPiece[xx - 1][yy + 3]]?
+        if (dObject[xx][yy + 2] != 0 || (dObject[xx][yy + 3] != 0 && objects[dObject[xx][yy + 3] - 1]._otype != 0)) {
             extern bool stopgen;
             stopgen = true;
             LogErrorF("object to south-east %d type%d x:%d y:%d vs %d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, themes[themeId]._tsy2, yy + 3);
         }
+		// assert(dObject[xx][yy + 2] == 0);
 		AddObject(OBJ_BOOK2R, xx, yy + 2);
 	} else {
         // if (dObject[xx][yy + 3] == 0 && dObject[xx][yy + 2] == 0 && dPiece[xx][yy + 3] != 11 && dPiece[xx][yy + 3] != 249 && dPiece[xx][yy + 3] != 325 && dPiece[xx + 1][yy + 3] != 270) {
