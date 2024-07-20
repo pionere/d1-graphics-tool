@@ -1008,13 +1008,13 @@ void CppView::ShowContextMenu(const QPoint &pos)
     menu->addAction(action);
 
     action = new QAction(tr("Delete"));
-    action->setToolTip(tr("Delete columns"));
+    action->setToolTip(tr("Delete the current column"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
 
     action = new QAction(tr("Hide"));
-    action->setToolTip(tr("Hide columns"));
+    action->setToolTip(tr("Hide the current column"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
