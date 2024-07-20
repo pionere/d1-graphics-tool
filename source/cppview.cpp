@@ -153,7 +153,7 @@ void CppView::trimColumn(int index)
 
     table->trimColumn(index - 1);
     this->cpp->setModified();
-
+    // adjust the view-data
     int columnWidth;
     QFontMetrics fm = this->fontMetrics();
     int entryHorizontalMargin = CppViewEntryWidget::baseHorizontalMargin();
@@ -172,7 +172,7 @@ void CppView::trimColumn(int index)
         this->columnWidths[index] = maxWidth;
         columnWidth = maxWidth;
     }
-
+    // adjust the widgets
     this->hide();
     for (int y = 0; y < table->getRowCount() + 1; y++) {
         QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, index);
@@ -248,10 +248,11 @@ void CppView::moveColumnLeft(int index)
 
     table->swapColumns(index - 1, index - 1 - dn, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
     this->cpp->setModified();
-
+    // adjust the view-data
     if (this->currentColumnIndex == index) {
         this->currentColumnIndex -= dn;
     }
+    // adjust the widgets
     this->hide();
     // for (int y = 0; y < table->getRowCount() + 1; y++) {
     for (int y = 0; y < this->gridRowCount; y++) {
@@ -295,10 +296,11 @@ void CppView::moveColumnRight(int index)
 
     table->swapColumns(index - 1, index - 1 + dn, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
     this->cpp->setModified();
-
+    // adjust the view-data
     if (this->currentColumnIndex == index) {
         this->currentColumnIndex += dn;
     }
+    // adjust the widgets
     this->hide();
     // for (int y = 0; y < table->getRowCount() + 1; y++) {
     for (int y = 0; y < this->gridRowCount; y++) {
@@ -325,12 +327,13 @@ void CppView::delColumn(int index)
 
     table->delColumn(index - 1);
     this->cpp->setModified();
-
+    // adjust the view-data
     this->gridColumnCount--;
     if (this->currentColumnIndex > index || this->currentColumnIndex > this->gridColumnCount) {
         this->currentColumnIndex--;
     }
     this->columnWidths.erase(this->columnWidths.begin() + index);
+    // adjust the widgets
     for (int y = 0; y < table->getRowCount() + 1; y++) {
         for (int x = index; x < table->getColumnCount() + 1; x++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
@@ -430,10 +433,11 @@ void CppView::moveRowUp(int index)
 
     table->swapRows(index - 1, index - 1 - dn, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
     this->cpp->setModified();
-
+    // adjust the view-data
     if (this->currentRowIndex == index) {
         this->currentRowIndex -= dn;
     }
+    // adjust the widgets
     this->hide();
     //for (int x = 0; x < table->getColumnCount() + 1; x++) {
     for (int x = 0; x < this->gridColumnCount; x++) {
@@ -477,10 +481,11 @@ void CppView::moveRowDown(int index)
 
     table->swapRows(index - 1, index - 1 + dn, (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0);
     this->cpp->setModified();
-
+    // adjust the view-data
     if (this->currentRowIndex == index) {
         this->currentRowIndex += dn;
     }
+    // adjust the widgets
     this->hide();
     // for (int x = 0; x < table->getColumnCount() + 1; x++) {
     for (int x = 0; x < this->gridColumnCount; x++) {
@@ -507,11 +512,12 @@ void CppView::delRow(int index)
 
     table->delRow(index - 1);
     this->cpp->setModified();
-
+    // adjust the view-data
     this->gridRowCount--;
     if (this->currentRowIndex > index || this->currentRowIndex > this->gridRowCount) {
         this->currentRowIndex--;
     }
+    // adjust the widgets
     for (int x = 0; x < table->getColumnCount() + 1; x++) {
         for (int y = index; y < table->getRowCount() + 1; y++) {
             QLayoutItem *item = this->ui->tableGrid->itemAtPosition(y, x);
@@ -1002,13 +1008,13 @@ void CppView::ShowContextMenu(const QPoint &pos)
     menu->addAction(action);
 
     action = new QAction(tr("Delete"));
-    action->setToolTip(tr("Delete columns"));
+    action->setToolTip(tr("Delete the current column"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionDelColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
 
     action = new QAction(tr("Hide"));
-    action->setToolTip(tr("Hide columns"));
+    action->setToolTip(tr("Hide the current column"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionHideColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
