@@ -86,6 +86,7 @@ public:
     ~ProgressDialog();
 
     static void openDialog();
+    static bool running();
 
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags);
     static void done();
@@ -151,6 +152,8 @@ class ProgressWidget : public QFrame {
 public:
     explicit ProgressWidget(QWidget *parent);
     ~ProgressWidget();
+
+    void showMessage(const QString &text);
 
 private:
     void updateWidget(PROGRESS_STATE status, bool active, const QString &text);

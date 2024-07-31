@@ -39,6 +39,7 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
+    this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->on_dunZoomEdit_escPressed();
@@ -520,29 +521,18 @@ QPoint LevelCelView::getCellPos(const QPoint &pos) const
     return QPoint(cellX, cellY);
 }
 
-void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
+bool LevelCelView::subtilePos(QPoint &pos) const
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned tileWidth = subtileWidth * TILE_WIDTH;
 
-    unsigned celFrameHeight = MICRO_HEIGHT; // this->gfx->getFrameHeight(this->currentFrameIndex);
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
-    unsigned subtileShiftY = subtileWidth / 4;
-    unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
-    if (this->dunView) {
-        QPoint cellPos = this->getCellPos(pos);
-        dMainWindow().dunClicked(cellPos, flags);
-        return;
-    }
     if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING)
         && pos.x() < (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth)
         && pos.y() >= CEL_SCENE_MARGIN
         && pos.y() < (int)(subtileHeight + CEL_SCENE_MARGIN)
         && this->min->getSubtileCount() != 0) {
-        // When a CEL frame is clicked in the subtile, display the corresponding CEL frame
-
         // Adjust coordinates
         unsigned stx = pos.x() - (CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING);
         unsigned sty = pos.y() - CEL_SCENE_MARGIN;
@@ -552,47 +542,29 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
         stx /= MICRO_WIDTH;
         sty /= MICRO_HEIGHT;
 
-        unsigned stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
-        std::vector<unsigned> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
-        unsigned frameRef = 0;
-        if (minFrames.size() > stFrame) {
-            frameRef = minFrames.at(stFrame);
-            this->tabSubtileWidget.selectFrame(stFrame);
-        }
+        pos.setX(stx);
+        pos.setY(sty);
+        return true;
+    }
 
-        if (frameRef > 0) {
-            this->currentFrameIndex = frameRef - 1;
-            this->displayFrame();
-        }
-        // highlight selection
-        QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
-        QPen pen(borderColor);
-        pen.setWidth(PALETTE_SELECTION_WIDTH);
-        QRectF coordinates = QRectF(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_MARGIN + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
-        int a = PALETTE_SELECTION_WIDTH / 2;
-        coordinates.adjust(-a, -a, 0, 0);
-        // - top line
-        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
-        // - bottom line
-        this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
-        // - left side
-        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left(), coordinates.bottom(), pen);
-        // - right side
-        this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
-        // clear after some time
-        QTimer *timer = new QTimer();
-        QObject::connect(timer, &QTimer::timeout, [this, timer]() {
-            this->displayFrame();
-            timer->deleteLater();
-        });
-        timer->start(500);
-        return;
-    } else if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth + CEL_SCENE_SPACING)
+    return false;
+}
+
+bool LevelCelView::tilePos(QPoint &pos) const
+{
+    unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned tileWidth = subtileWidth * TILE_WIDTH;
+
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    unsigned subtileShiftY = subtileWidth / 4;
+    unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
+
+    if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth + CEL_SCENE_SPACING)
         && pos.x() < (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth + CEL_SCENE_SPACING + tileWidth)
         && pos.y() >= CEL_SCENE_MARGIN
         && pos.y() < (int)(CEL_SCENE_MARGIN + tileHeight)
         && this->til->getTileCount() != 0) {
-        // When a subtile is clicked in the tile, display the corresponding subtile
 
         // Adjust coordinates
         unsigned tx = pos.x() - (CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth + CEL_SCENE_SPACING);
@@ -631,6 +603,82 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
             else
                 tSubtile = 3;
         }
+        pos.setX(tSubtile);
+        pos.setY(UINT_MAX);
+        return true;
+    }
+    return false;
+}
+
+bool LevelCelView::framePos(QPoint &pos) const
+{
+    if (this->gfx->getFrameCount() != 0) {
+        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
+        pos -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        return pos.x() >= 0 && pos.x() < frame->getWidth() && pos.y() >= 0 && pos.y() < frame->getHeight();
+    }
+
+    return false;
+}
+
+void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
+{
+    unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned tileWidth = subtileWidth * TILE_WIDTH;
+
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    unsigned subtileShiftY = subtileWidth / 4;
+    unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
+
+    if (this->dunView) {
+        QPoint cellPos = this->getCellPos(pos);
+        dMainWindow().dunClicked(cellPos, flags);
+        return;
+    }
+    QPoint tpos = pos;
+    if (this->subtilePos(tpos)) {
+        unsigned stx = tpos.x();
+        unsigned sty = tpos.y();
+
+        unsigned stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
+        std::vector<unsigned> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
+        unsigned frameRef = 0;
+        if (minFrames.size() > stFrame) {
+            frameRef = minFrames.at(stFrame);
+            this->tabSubtileWidget.selectFrame(stFrame);
+        }
+
+        if (frameRef > 0) {
+            this->currentFrameIndex = frameRef - 1;
+            this->displayFrame();
+        }
+        // highlight selection
+        QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+        QPen pen(borderColor);
+        pen.setWidth(PALETTE_SELECTION_WIDTH);
+        QRectF coordinates = QRectF(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_MARGIN + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
+        int a = PALETTE_SELECTION_WIDTH / 2;
+        coordinates.adjust(-a, -a, 0, 0);
+        // - top line
+        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
+        // - bottom line
+        this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
+        // - left side
+        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left(), coordinates.bottom(), pen);
+        // - right side
+        this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
+        // clear after some time
+        QTimer *timer = new QTimer();
+        QObject::connect(timer, &QTimer::timeout, [this, timer]() {
+            this->displayFrame();
+            timer->deleteLater();
+        });
+        timer->start(500);
+        return;
+    }
+    if (this->tilePos(tpos)) {
+        unsigned tSubtile = tpos.x();
 
         std::vector<int> &tilSubtiles = this->til->getSubtileIndices(this->currentTileIndex);
         if (tilSubtiles.size() > tSubtile) {
@@ -640,22 +688,48 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
         }
         return;
     }
+
     // otherwise emit frame-click event
     if (this->gfx->getFrameCount() == 0) {
         return;
     }
+    this->framePos(tpos);
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-    QPoint p = pos;
-    p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    dMainWindow().frameClicked(frame, p, flags);
+    dMainWindow().frameClicked(frame, tpos, flags);
 }
 
-void LevelCelView::framePixelHovered(const QPoint &pos)
+void LevelCelView::framePixelHovered(const QPoint &pos) const
 {
     if (this->dunView) {
         QPoint cellPos = this->getCellPos(pos);
         dMainWindow().dunHovered(cellPos);
+        return;
     }
+    QPoint tpos = pos;
+    if (this->subtilePos(tpos)) {
+        unsigned stx = tpos.x();
+        unsigned sty = tpos.y();
+        unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+
+        unsigned stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
+        tpos.setX(stFrame);
+        tpos.setY(UINT_MAX);
+
+        dMainWindow().pointHovered(tpos);
+        return;
+    }
+    if (this->tilePos(tpos)) {
+        dMainWindow().pointHovered(tpos);
+        return;
+    }
+    if (this->framePos(tpos)) {
+        dMainWindow().pointHovered(tpos);
+        return;
+    }
+
+    tpos.setX(UINT_MAX);
+    tpos.setY(UINT_MAX);
+    dMainWindow().pointHovered(tpos);
 }
 
 void LevelCelView::scrollTo(int posx, int posy)

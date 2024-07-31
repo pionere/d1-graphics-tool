@@ -199,6 +199,11 @@ void ProgressDialog::openDialog()
     theDialog->adjustSize();
 }
 
+bool ProgressDialog::running()
+{
+    return theDialog->status == PROGRESS_STATE::RUNNING;
+}
+
 void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags)
 {
     bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
@@ -625,6 +630,15 @@ ProgressWidget::ProgressWidget(QWidget *parent)
 ProgressWidget::~ProgressWidget()
 {
     delete ui;
+}
+
+void ProgressWidget::showMessage(const QString &text)
+{
+    if (!theDialog->running() && this->ui->messageLabel->text() != text) {
+        this->ui->messageLabel->setText(text);
+        this->adjustSize();
+        this->repaint();
+    }
 }
 
 void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QString &label)

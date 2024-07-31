@@ -268,6 +268,7 @@ CelView::CelView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
+    this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
@@ -438,8 +439,28 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
     dMainWindow().frameClicked(frame, p, flags);
 }
 
-void CelView::framePixelHovered(const QPoint &pos)
+bool CelView::framePos(QPoint &pos) const
 {
+    if (this->gfx->getFrameCount() != 0) {
+        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
+        pos -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        return pos.x() >= 0 && pos.x() < frame->getWidth() && pos.y() >= 0 && pos.y() < frame->getHeight();
+    }
+
+    return false;
+}
+
+void CelView::framePixelHovered(const QPoint &pos) const
+{
+    QPoint tpos = pos;
+    if (this->framePos(tpos)) {
+        dMainWindow().pointHovered(tpos);
+        return;
+    }
+
+    tpos.setX(UINT_MAX);
+    tpos.setY(UINT_MAX);
+    dMainWindow().pointHovered(tpos);
 }
 
 void CelView::createFrame(bool append)

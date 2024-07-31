@@ -41,7 +41,7 @@ public:
     int getCurrentFrameIndex() const;
 
     void framePixelClicked(const QPoint &pos, int flags);
-    void framePixelHovered(const QPoint &pos);
+    void framePixelHovered(const QPoint &pos) const;
     void createFrame(bool append);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void addToCurrentFrame(const QString &imagefilePath);
@@ -70,6 +70,7 @@ private:
     void updateGroupIndex();
     void setGroupIndex(int groupIndex);
     void selectGfx(int gfxIndex);
+    bool framePos(QPoint &pos) const;
 
 signals:
     void frameRefreshed();

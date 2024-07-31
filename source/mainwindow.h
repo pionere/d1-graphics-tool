@@ -128,6 +128,7 @@ public:
     void remapColors(const RemapParam &params);
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);
+    void pointHovered(const QPoint &pos);
     void dunClicked(const QPoint &cell, int flags);
     void dunHovered(const QPoint &cell);
     int getDunBuilderMode() const;
