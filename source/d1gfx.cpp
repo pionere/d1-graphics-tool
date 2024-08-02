@@ -3169,6 +3169,11 @@ bool D1Gfx::patchGoatLDie(bool silent)
         bool change = false;
         switch (i) {
         case 4:
+            if (currFrame->getPixel(63, 50).isTransparent()) {
+                i = frameCount;
+                dProgressErr() << tr("Patch done 0.");
+                continue; // assume it is already done
+            }
             //        y += 32
             //        (85; 116)
             //        y += 18;
@@ -3185,11 +3190,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
             //(92; 123) - color == 0 --(0; 0), (1; 0), (0; 1)
             //y += 18;
         case 7: {
-            if (currFrame->getPixel(63, 50).isTransparent()) {
-                i = frameCount;
-                continue; // assume it is already done
-            }
-
             // shift the bottom part (shadow) with (0;18) down
             for (int y = height - 18 - 1; y >= 116; y--) {
                 for (int x = width - 1; x > 0; x--) {
@@ -3201,7 +3201,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 }
             }
             // shift the upper part (monster) with (0;32) down
-            for (int y = 128 - 1; y > 0; y--) {
+            for (int y = height - 32 - 1; y > 0; y--) {
                 for (int x = width - 1; x > 0; x--) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     if (pixel.isTransparent() || pixel.getPaletteIndex() == 0)
@@ -3226,7 +3226,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 }
             }
             // shift the upper part (monster) with (0;64) down
-            for (int y = 96 - 1; y > 0; y--) {
+            for (int y = height - 64 - 1; y > 0; y--) {
                 for (int x = width - 1; x > 0; x--) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     if (pixel.isTransparent() || pixel.getPaletteIndex() == 0)
@@ -3251,7 +3251,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 }
             }
             // shift the upper part (monster) with (0;96) down
-            for (int y = 64 - 1; y > 0; y--) {
+            for (int y = height - 96 - 1; y > 0; y--) {
                 for (int x = width - 1; x > 0; x--) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     if (pixel.isTransparent() || pixel.getPaletteIndex() == 0)
@@ -3271,7 +3271,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
         }
     }
 
-
     for (int i = 0; i < frameCount; i++) {
         int n = this->getGroupFrameIndices(DIR_N).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
@@ -3282,14 +3281,14 @@ bool D1Gfx::patchGoatLDie(bool silent)
         bool change = false;
         switch (i) {
         case 4:
+            if (currFrame->getPixel(111, 46).isTransparent()) {
+                i = frameCount;
+                dProgressErr() << tr("Patch done 1.");
+                continue; // assume it is already done
+            }
         case 5:
         case 6:
         case 7: {
-            if (currFrame->getPixel(111, 46).isTransparent()) {
-                i = frameCount;
-                continue; // assume it is already done
-            }
-
             int sy;
             switch (i) {
             case 4: sy = 111; break;
@@ -3326,7 +3325,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
             int dx = 15;
             if (i == 11)
                 dx = 10;
-            for (int y = height - 15 - 1; y >= sy; y--) {
+            for (int y = height - 25 - 1; y >= sy; y--) {
                 for (int x = width - 15 - 1; x > 0; x--) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     change |= currFrame->setPixel(x + dx, y + 25, pixel);
@@ -3351,15 +3350,15 @@ bool D1Gfx::patchGoatLDie(bool silent)
         case 15: {
             int sy = 100;
             // shift the bottom part (shadow) with (16;35) down
-            for (int y = height - 15 - 1; y >= sy; y--) {
-                for (int x = width - 15 - 1; x > 0; x--) {
+            for (int y = height - 35 - 1; y >= sy; y--) {
+                for (int x = width - 16 - 1; x > 0; x--) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     change |= currFrame->setPixel(x + 16, y + 35, pixel);
                     change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
             // shift the upper part (monster) with (0;96) down
-            for (int y = sy - 1; y > 0; y--) {
+            for (int y = height - 96 - 1; y > 0; y--) {
                 for (int x = width - 1; x > 0; x--) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     change |= currFrame->setPixel(x, y + 96, pixel);
