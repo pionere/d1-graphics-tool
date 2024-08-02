@@ -3145,22 +3145,22 @@ bool D1Gfx::patchGoatLDie(bool silent)
     constexpr int height = 160;
     constexpr int width = 160;
 
-    if (this->getGroupCount() <= DIR_N || this->getGroupCount() <= DIR_E) {
+    if (this->getGroupCount() <= DIR_NW || this->getGroupCount() <= DIR_NE) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
-    if ((this->getGroupFrameIndices(DIR_N).second - this->getGroupFrameIndices(DIR_N).first + 1) != frameCount) {
+    if ((this->getGroupFrameIndices(DIR_NW).second - this->getGroupFrameIndices(DIR_NW).first + 1) != frameCount) {
         dProgressErr() << tr("Not enough frames in the frame group to West.");
         return false;
     }
-    if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) != frameCount) {
+    if ((this->getGroupFrameIndices(DIR_NE).second - this->getGroupFrameIndices(DIR_NE).first + 1) != frameCount) {
         dProgressErr() << tr("Not enough frames in the frame group to East.");
         return false;
     }
 
     bool result = false;
     for (int i = 0; i < frameCount; i++) {
-        int n = this->getGroupFrameIndices(DIR_E).first + i;
+        int n = this->getGroupFrameIndices(DIR_NE).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
         if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
@@ -3266,13 +3266,13 @@ bool D1Gfx::patchGoatLDie(bool silent)
             result = true;
             this->setModified();
             if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_E + 1);
+                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_NE + 1);
             }
         }
     }
 
     for (int i = 0; i < frameCount; i++) {
-        int n = this->getGroupFrameIndices(DIR_N).first + i;
+        int n = this->getGroupFrameIndices(DIR_NW).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
         if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
@@ -3371,7 +3371,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
             result = true;
             this->setModified();
             if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_N + 1);
+                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_NW + 1);
             }
         }
     }
