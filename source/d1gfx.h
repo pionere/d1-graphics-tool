@@ -123,6 +123,7 @@ typedef enum gfx_file_index {
     GFX_OBJ_L5LIGHT, // graphics of the light stand in Crypt (L5Light.CEL)
     GFX_PLR_WMHAS,   // graphics of the warrior with shield and mace standing in the dungeon (WMHAS.CL2)
     GFX_MON_FALLGW,  // graphics of the Devil Kin Brute walking (Fallgw.CL2)
+    GFX_MON_GOATLD,  // graphics of the Satyr Lord dying (GoatLd.CL2)
     GFX_SPL_ICONS,   // spell icons (SpelIcon.CEL)
 } gfx_file_index;
 
@@ -212,6 +213,7 @@ private:
     bool patchCryptLight(bool silent);
     bool patchWarriorStand(bool silent);
     bool patchFallGWalk(bool silent);
+    bool patchGoatLDie(bool silent);
     bool patchSplIcons(bool silent);
 
 protected:

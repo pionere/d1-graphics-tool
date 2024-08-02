@@ -3114,6 +3114,453 @@ bool D1Gfx::patchFallGWalk(bool silent)
     return result;
 }
 
+/*bool D1Gfx::patchGoatLDieDio(bool silent)
+{
+    constexpr int frameCount = 16;
+    constexpr int height = 160;
+    constexpr int width = 160;
+
+    if (this->getGroupCount() <= DIR_NW || this->getGroupCount() <= DIR_NE) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_NW).second - this->getGroupFrameIndices(DIR_NW).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to North-West.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_NE).second - this->getGroupFrameIndices(DIR_NE).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to North-East.");
+        return false;
+    }
+
+    bool result = false;
+    for (int i = 0; i < frameCount; i++) {
+        int n = this->getGroupFrameIndices(DIR_NE).first + i;
+        D1GfxFrame* currFrame = this->getFrame(n);
+        if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            break;
+        }
+        bool change = false;
+        switch (i) {
+        case 4:
+            if (currFrame->getPixel(63, 50).isTransparent()) {
+                i = frameCount;
+                continue; // assume it is already done
+            }
+        case 5:
+        case 6:
+        case 7: {
+            // shift the bottom part (shadow) with (0;18) down
+            for (int y = height - 18 - 1; y >= 116; y--) {
+                for (int x = width - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent() || pixel.getPaletteIndex() != 0)
+                        continue;
+                    change |= currFrame->setPixel(x, y + 18, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // shift the upper part (monster) with (0;32) down
+            for (int y = height - 32 - 1; y >= 0; y--) {
+                for (int x = width - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent() || pixel.getPaletteIndex() == 0)
+                        continue;
+                    change |= currFrame->setPixel(x, y + 32, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } break;
+        case 8:
+        case 9:
+        case 10:
+        case 11: {
+            // shift the bottom part (shadow) with (0;28) down
+            for (int y = height - 28 - 1; y >= 100; y--) {
+                for (int x = width - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent() || pixel.getPaletteIndex() != 0)
+                        continue;
+                    change |= currFrame->setPixel(x, y + 28, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // shift the upper part (monster) with (0;64) down
+            for (int y = height - 64 - 1; y >= 0; y--) {
+                for (int x = width - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent() || pixel.getPaletteIndex() == 0)
+                        continue;
+                    change |= currFrame->setPixel(x, y + 64, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } break;
+        case 12:
+        case 13:
+        case 14:
+        case 15: {
+            // shift the bottom part (shadow) with (18;35) down
+            for (int y = height - 35 - 1; y >= 100; y--) {
+                for (int x = width - 18 - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent() || pixel.getPaletteIndex() != 0)
+                        continue;
+                    change |= currFrame->setPixel(x + 18, y + 35, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // shift the upper part (monster) with (0;96) down
+            for (int y = height - 96 - 1; y >= 0; y--) {
+                for (int x = width - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent() || pixel.getPaletteIndex() == 0)
+                        continue;
+                    change |= currFrame->setPixel(x, y + 96, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } break;
+        }
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_NE + 1);
+            }
+        }
+    }
+
+    for (int i = 0; i < frameCount; i++) {
+        int n = this->getGroupFrameIndices(DIR_NW).first + i;
+        D1GfxFrame* currFrame = this->getFrame(n);
+        if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            break;
+        }
+        bool change = false;
+        switch (i) {
+        case 4:
+            if (currFrame->getPixel(111, 46).isTransparent()) {
+                i = frameCount;
+                continue; // assume it is already done
+            }
+        case 5:
+        case 6:
+        case 7: {
+            int sy;
+            switch (i) {
+            case 4: sy = 111; break;
+            case 5: sy = 115; break;
+            case 6: sy = 118; break;
+            case 7: sy = 118; break;
+            }
+            // shift the bottom part (shadow) with (dx;15) down
+            int dx = 10;
+            if (i == 5)
+                dx = 15;
+            for (int y = height - 15 - 1; y >= sy; y--) {
+                for (int x = width - 15 - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent())
+                        continue;
+                    change |= currFrame->setPixel(x + dx, y + 15, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // shift the upper part (monster) with (0;30) down
+            for (int y = sy - 1; y >= 0; y--) {
+                for (int x = width - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent())
+                        continue;
+                    change |= currFrame->setPixel(x, y + 30, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } break;
+        case 8:
+        case 9:
+        case 10:
+        case 11: {
+            int sy = 110;
+            // shift the bottom part (shadow) with (dx;25) down
+            int dx = 15;
+            if (i == 11)
+                dx = 10;
+            for (int y = height - 25 - 1; y >= sy; y--) {
+                for (int x = width - 15 - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent())
+                        continue;
+                    change |= currFrame->setPixel(x + dx, y + 25, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // shift the upper part (monster) with (0;dy) down
+            int dy = 60;
+            if (i == 11)
+                dy = 62;
+            for (int y = sy - 1; y >= 0; y--) {
+                for (int x = width - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent())
+                        continue;
+                    change |= currFrame->setPixel(x, y + dy, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } break;
+        case 12:
+        case 13:
+        case 14:
+        case 15: {
+            int sy = 100;
+            // shift the bottom part (shadow) with (16;35) down
+            for (int y = height - 35 - 1; y >= sy; y--) {
+                for (int x = width - 16 - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent())
+                        continue;
+                    change |= currFrame->setPixel(x + 16, y + 35, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // shift the upper part (monster) with (0;96) down
+            for (int y = height - 96 - 1; y >= 0; y--) {
+                for (int x = width - 1; x >= 0; x--) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent())
+                        continue;
+                    change |= currFrame->setPixel(x, y + 96, pixel);
+                    change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } break;
+        }
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_NW + 1);
+            }
+        }
+    }
+
+    return result;
+}*/
+
+bool D1Gfx::patchGoatLDie(bool silent)
+{
+    constexpr int frameCount = 16;
+    constexpr int height = 128;
+    constexpr int width = 160;
+
+    if (this->getGroupCount() <= DIR_SW || this->getGroupCount() <= DIR_W || this->getGroupCount() <= DIR_NW || this->getGroupCount() <= DIR_E || this->getGroupCount() <= DIR_SE) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_SW).second - this->getGroupFrameIndices(DIR_SW).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to South-West.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_W).second - this->getGroupFrameIndices(DIR_W).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to West.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_NW).second - this->getGroupFrameIndices(DIR_NW).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to North-West.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to East.");
+        return false;
+    }
+    if ((this->getGroupFrameIndices(DIR_SE).second - this->getGroupFrameIndices(DIR_SE).first + 1) != frameCount) {
+        dProgressErr() << tr("Not enough frames in the frame group to South-East.");
+        return false;
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < this->getGroupCount(); ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                break;
+            }
+            bool change = false;
+            switch (ii) {
+            case DIR_SW: {
+                switch (i + 1) {
+                case 9:
+                    if (currFrame->getPixel(71, 127).isTransparent()) {
+                        i = frameCount;
+                        ii = INT_MAX - 1;
+                        continue; // assume it is already done
+                    }
+                case 10:
+                case 11:
+                case 12: {
+                    // shift the monster with (0;16) up
+                    for (int y = 16; y < height; y++) {
+                        for (int x = 0; x < width; x++) {
+                            D1GfxPixel pixel = currFrame->getPixel(x, y);
+                            if (pixel.isTransparent())
+                                continue;
+                            change |= currFrame->setPixel(x, y - 16, pixel);
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                    // copy pixels from the followup frames
+                    if (i + 1 != 9) {
+                        D1GfxFrame* oFrame = this->getFrame(n + 4);
+                        for (int y = 4 - 1; y >= 0; y--) {
+                            for (int x = 0; x < width; x++) {
+                                D1GfxPixel pixel = oFrame->getPixel(x, y);
+                                if (pixel.isTransparent())
+                                    continue;
+                                change |= currFrame->setPixel(x, y + 112, pixel);
+                            }
+                        }
+                    }
+                } break;
+                case 14:
+                case 15:
+                case 16: {
+                    // clear pixels from the first rows
+                    for (int y = 4 - 1; y >= 0; y--) {
+                        for (int x = 0; x < width; x++) {
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                } break;
+                }
+            } break;
+            case DIR_W: {
+                switch (i + 1) {
+                case 9:
+                case 10:
+                case 11:
+                case 12: {
+                    // shift the monster with (0;16) up
+                    for (int y = 16; y < height; y++) {
+                        for (int x = 0; x < width; x++) {
+                            D1GfxPixel pixel = currFrame->getPixel(x, y);
+                            if (pixel.isTransparent())
+                                continue;
+                            change |= currFrame->setPixel(x, y - 16, pixel);
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                    // copy pixels from the followup frames
+                    {
+                        D1GfxFrame* oFrame = this->getFrame(n + 4);
+                        for (int y = 16 - 1; y >= 0; y--) {
+                            for (int x = 0; x < width; x++) {
+                                D1GfxPixel pixel = oFrame->getPixel(x, y);
+                                if (pixel.isTransparent())
+                                    continue;
+                                change |= currFrame->setPixel(x, y + 112, pixel);
+                            }
+                        }
+                    }
+                } break;
+                case 13:
+                case 14:
+                case 15:
+                case 16: {
+                    // shift the monster with (1;9) up/right
+                    for (int y = 16; y < height; y++) {
+                        for (int x = width - 1 - 1; x >= 0; x--) {
+                            D1GfxPixel pixel = currFrame->getPixel(x, y);
+                            if (pixel.isTransparent())
+                                continue;
+                            change |= currFrame->setPixel(x + 1, y - 9, pixel);
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                    // clear pixels from the first rows
+                    for (int y = 16 - 1; y >= 0; y--) {
+                        for (int x = 0; x < width; x++) {
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                } break;
+                }
+            } break;
+            case DIR_NW: {
+                switch (i + 1) {
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16: {
+                    // shift the monster with (0;4) down
+                    for (int y = height - 4 - 1; y >= 0; y--) {
+                        for (int x = width - 1; x >= 0; x--) {
+                            D1GfxPixel pixel = currFrame->getPixel(x, y);
+                            if (pixel.isTransparent())
+                                continue;
+                            change |= currFrame->setPixel(x, y + 4, pixel);
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                } break;
+                }
+            } break;
+            case DIR_E: {
+                switch (i + 1) {
+                case 9:
+                case 10:
+                case 11:
+                case 12: {
+                    // clear pixels from the first rows
+                    for (int y = 4 - 1; y >= 0; y--) {
+                        for (int x = 0; x < width; x++) {
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                } break;
+                }
+            } break;
+            case DIR_SE: {
+                switch (i + 1) {
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16: {
+                    // shift the monster with (0;16) up
+                    for (int y = 16; y < height; y++) {
+                        for (int x = 0; x < width; x++) {
+                            D1GfxPixel pixel = currFrame->getPixel(x, y);
+                            if (pixel.isTransparent())
+                                continue;
+                            change |= currFrame->setPixel(x, y - 16, pixel);
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                } break;
+                }
+            } break;
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 bool D1Gfx::patchSplIcons(bool silent)
 {
     int frameCount = this->getFrameCount();
@@ -3173,6 +3620,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_FALLGW: // patch Fallgw.CL2
         change = this->patchFallGWalk(silent);
         break;
+    case GFX_MON_GOATLD: // patch GoatLd.CL2
+        change = this->patchGoatLDie(silent);
+        break;
     case GFX_SPL_ICONS: // patch SpelIcon.CEL
         change = this->patchSplIcons(silent);
         break;
@@ -3220,6 +3670,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "fallgw") {
         fileIndex = GFX_MON_FALLGW;
+    }
+    if (baseName == "goatld") {
+        fileIndex = GFX_MON_GOATLD;
     }
     return fileIndex;
 }
