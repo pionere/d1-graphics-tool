@@ -3139,7 +3139,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
     return result;
 }
 
-bool D1Gfx::patchGoatLDieDio(bool silent)
+/*bool D1Gfx::patchGoatLDieDio(bool silent)
 {
     constexpr int frameCount = 16;
     constexpr int height = 160;
@@ -3374,7 +3374,7 @@ bool D1Gfx::patchGoatLDieDio(bool silent)
     }
 
     return result;
-}
+}*/
 
 bool D1Gfx::patchGoatLDie(bool silent)
 {
@@ -3427,7 +3427,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                     16 : 0 - 3 move to 12 y = 112*/
                 switch (i + 1) {
                 case 9:
-                    if (i == 9currFrame->getPixel(63, 50).isTransparent()) {
+                    if (currFrame->getPixel(63, 50).isTransparent()) {
                         i = frameCount;
                         ii = INT_MAX - 1;
                         continue; // assume it is already done
