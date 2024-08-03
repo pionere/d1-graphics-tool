@@ -3446,8 +3446,8 @@ bool D1Gfx::patchGoatLDie(bool silent)
                         }
                     }
                     // copy pixels from the followup frames
-                    if (i != 9) {
-                        D1GfxFrame* oFrame = this->getFrame(n + 5);
+                    if (i + 1 != 9) {
+                        D1GfxFrame* oFrame = this->getFrame(n + 4);
                         for (int y = 4 - 1; y >= 0; y--) {
                             for (int x = 0; x < width; x++) {
                                 D1GfxPixel pixel = oFrame->getPixel(x, y);
@@ -3503,7 +3503,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                     // copy pixels from the followup frames
                     {
                         D1GfxFrame* oFrame = this->getFrame(n + 4);
-                        for (int y = 5 - 1; y >= 0; y--) {
+                        for (int y = 16 - 1; y >= 0; y--) {
                             for (int x = 0; x < width; x++) {
                                 D1GfxPixel pixel = oFrame->getPixel(x, y);
                                 if (pixel.isTransparent())
@@ -3524,12 +3524,12 @@ bool D1Gfx::patchGoatLDie(bool silent)
                             D1GfxPixel pixel = currFrame->getPixel(x, y);
                             if (pixel.isTransparent())
                                 continue;
-                            change |= currFrame->setPixel(x + 1, y - 16, pixel);
+                            change |= currFrame->setPixel(x + 1, y - 9, pixel);
                             change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                         }
                     }
                     // clear pixels from the first rows
-                    for (int y = 5 - 1; y >= 0; y--) {
+                    for (int y = 16 - 1; y >= 0; y--) {
                         for (int x = 0; x < width; x++) {
                             // D1GfxPixel pixel = currFrame->getPixel(x, y);
                             // if (pixel.isTransparent())
@@ -3589,7 +3589,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 /*
                 DIR_SE / 8
                     12..16
-                    y -= 8*/
+                    y -= 16*/
                 switch (i + 1) {
                 case 12:
                 case 13:
@@ -3597,12 +3597,12 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 case 15:
                 case 16: {
                     // shift the monster with (0;8) up
-                    for (int y = 8; y < height; y++) {
+                    for (int y = 16; y < height; y++) {
                         for (int x = 0; x < width; x++) {
                             D1GfxPixel pixel = currFrame->getPixel(x, y);
                             if (pixel.isTransparent())
                                 continue;
-                            change |= currFrame->setPixel(x, y - 8, pixel);
+                            change |= currFrame->setPixel(x, y - 16, pixel);
                             change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                         }
                     }
