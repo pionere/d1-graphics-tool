@@ -3171,24 +3171,10 @@ bool D1Gfx::patchGoatLDie(bool silent)
         case 4:
             if (currFrame->getPixel(63, 50).isTransparent()) {
                 i = frameCount;
-                dProgressErr() << tr("Patch done 0.");
                 continue; // assume it is already done
             }
-            //        y += 32
-            //        (85; 116)
-            //        y += 18;
         case 5:
-            //    y += 32
-            //(82; 118) - color == 0
-            //y += 18;
         case 6:
-            //y += 32
-            //(83; 121) - color == 0 -- (0; 0), (1; 0), (0; 1)
-            //y += 18;
-        //case 7:
-            // y += 32
-            //(92; 123) - color == 0 --(0; 0), (1; 0), (0; 1)
-            //y += 18;
         case 7: {
             // shift the bottom part (shadow) with (0;18) down
             for (int y = height - 18 - 1; y >= 116; y--) {
@@ -3283,7 +3269,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
         case 4:
             if (currFrame->getPixel(111, 46).isTransparent()) {
                 i = frameCount;
-                dProgressErr() << tr("Patch done 1.");
                 continue; // assume it is already done
             }
         case 5:
