@@ -3427,7 +3427,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                     16 : 0 - 3 move to 12 y = 112*/
                 switch (i + 1) {
                 case 9:
-                    if (currFrame->getPixel(63, 50).isTransparent()) {
+                    if (currFrame->getPixel(71, 127).isTransparent()) {
                         i = frameCount;
                         ii = INT_MAX - 1;
                         continue; // assume it is already done
