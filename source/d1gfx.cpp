@@ -3313,6 +3313,8 @@ bool D1Gfx::patchGoatLDie(bool silent)
             for (int y = sy - 1; y >= 0; y--) {
                 for (int x = width - 1; x >= 0; x--) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent())
+                        continue;
                     change |= currFrame->setPixel(x, y + 30, pixel);
                     change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
