@@ -3419,12 +3419,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
             bool change = false;
             switch (ii) {
             case DIR_SW: {
-                /*DIR_SW / 2
-                    9..12
-                    y -= 16
-                    14 : 0 - 1 move to 10 y = 112
-                    15 : 0 - 2 move to 11 y = 112
-                    16 : 0 - 3 move to 12 y = 112*/
                 switch (i + 1) {
                 case 9:
                     if (currFrame->getPixel(71, 127).isTransparent()) {
@@ -3454,7 +3448,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
                                 if (pixel.isTransparent())
                                     continue;
                                 change |= currFrame->setPixel(x, y + 112, pixel);
-                                change |= oFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                             }
                         }
                     }
@@ -3465,9 +3458,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
                     // clear pixels from the first rows
                     for (int y = 4 - 1; y >= 0; y--) {
                         for (int x = 0; x < width; x++) {
-                            // D1GfxPixel pixel = currFrame->getPixel(x, y);
-                            // if (pixel.isTransparent())
-                            //    continue;
                             change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                         }
                     }
@@ -3475,16 +3465,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 }
             } break;
             case DIR_W: {
-                /*
-                DIR_W / 3
-                    9..12
-                    y -= 16
-                    13..16
-                    y -= 9; x += 1;
-                    13 : 0 - 1 move to 10 y = 112
-                    14 : 0 - 2 move to 10 y = 112
-                    15 : 0 - 4 move to 11 y = 112
-                    16 : 0 - 4 move to 12 y = 112*/
                 switch (i + 1) {
                 case 9:
                 case 10:
@@ -3509,7 +3489,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
                                 if (pixel.isTransparent())
                                     continue;
                                 change |= currFrame->setPixel(x, y + 112, pixel);
-                                change |= oFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                             }
                         }
                     }
@@ -3531,9 +3510,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
                     // clear pixels from the first rows
                     for (int y = 16 - 1; y >= 0; y--) {
                         for (int x = 0; x < width; x++) {
-                            // D1GfxPixel pixel = currFrame->getPixel(x, y);
-                            // if (pixel.isTransparent())
-                            //    continue;
                             change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                         }
                     }
@@ -3541,10 +3517,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 }
             } break;
             case DIR_NW: {
-                /*
-                DIR_NW / 4
-                    12..16
-                    y += 4*/
                 switch (i + 1) {
                 case 12:
                 case 13:
@@ -3565,9 +3537,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 }
             } break;
             case DIR_E: {
-                /*
-                DIR_E / 7
-                    9..12 0 - 3*/
                 switch (i + 1) {
                 case 9:
                 case 10:
@@ -3576,9 +3545,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
                     // clear pixels from the first rows
                     for (int y = 4 - 1; y >= 0; y--) {
                         for (int x = 0; x < width; x++) {
-                            // D1GfxPixel pixel = currFrame->getPixel(x, y);
-                            // if (pixel.isTransparent())
-                            //    continue;
                             change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                         }
                     }
@@ -3586,17 +3552,13 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 }
             } break;
             case DIR_SE: {
-                /*
-                DIR_SE / 8
-                    12..16
-                    y -= 16*/
                 switch (i + 1) {
                 case 12:
                 case 13:
                 case 14:
                 case 15:
                 case 16: {
-                    // shift the monster with (0;8) up
+                    // shift the monster with (0;16) up
                     for (int y = 16; y < height; y++) {
                         for (int x = 0; x < width; x++) {
                             D1GfxPixel pixel = currFrame->getPixel(x, y);
