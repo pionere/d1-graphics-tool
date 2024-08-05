@@ -25,6 +25,7 @@ GfxsetView::GfxsetView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
+    this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;

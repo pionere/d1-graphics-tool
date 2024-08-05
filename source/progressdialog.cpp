@@ -12,8 +12,6 @@
 #include "ui_progressdialog.h"
 #include "ui_progresswidget.h"
 
-#include "dungeon/interfac.h"
-
 static ProgressDialog *theDialog;
 static ProgressWidget *theWidget;
 
@@ -637,7 +635,6 @@ ProgressWidget::~ProgressWidget()
 void ProgressWidget::showMessage(const QString &text)
 {
     if (!theDialog->running() && this->ui->messageLabel->text() != text) {
-        LogErrorF("showMessage %s", text.data());
         this->ui->messageLabel->setText(text);
         this->adjustSize();
         this->repaint();

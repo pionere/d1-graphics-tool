@@ -96,7 +96,6 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
 
-    
     setAcceptDrops(true);
 }
 
@@ -708,21 +707,18 @@ void LevelCelView::framePixelHovered(const QPoint &pos) const
     }
     QPoint tpos = pos;
     if (this->subtilePos(tpos)) {
-        LogErrorF("LvlScene mouse hover in subtilePos");
         dMainWindow().pointHovered(tpos);
         return;
     }
     if (this->tilePos(tpos)) {
-        LogErrorF("LvlScene mouse hover in tilePos");
         dMainWindow().pointHovered(tpos);
         return;
     }
     if (this->framePos(tpos)) {
-        LogErrorF("LvlScene mouse hover in framePos");
         dMainWindow().pointHovered(tpos);
         return;
     }
-    LogErrorF("LvlScene mouse hover out");
+
     tpos.setX(UINT_MAX);
     tpos.setY(UINT_MAX);
     dMainWindow().pointHovered(tpos);

@@ -19,8 +19,6 @@
 #include "ui_celview.h"
 #include "upscaler.h"
 
-#include "dungeon/interfac.h"
-
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene(v)
 {
@@ -124,7 +122,6 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());
     QObject *view = this->parent();
-    LogErrorF("Scene mouse hover");
     CelView *celView = qobject_cast<CelView *>(view);
     if (celView != nullptr) {
         celView->framePixelHovered(currPos);
@@ -132,7 +129,6 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     }
     LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
     if (levelCelView != nullptr) {
-        LogErrorF("LvlScene mouse hover");
         levelCelView->framePixelHovered(currPos);
         return;
     }
@@ -275,6 +271,7 @@ CelView::CelView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
+    this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
