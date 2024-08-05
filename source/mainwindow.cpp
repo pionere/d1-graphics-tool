@@ -388,7 +388,7 @@ void MainWindow::pointHovered(const QPoint &pos)
             msg = QString("%1:%2").arg(pos.x()).arg(pos.y());
         }
     }
-    this->progressWidget->showMessage(msg);
+    this->progressWidget.showMessage(msg);
 }
 
 void MainWindow::dunClicked(const QPoint &cell, int flags)
