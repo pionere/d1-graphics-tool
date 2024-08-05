@@ -407,6 +407,7 @@ void MainWindow::dunClicked(const QPoint &cell, int flags)
 
 void MainWindow::dunHovered(const QPoint &cell)
 {
+    this->pointHovered(cell);
     this->builderWidget->dunHovered(cell);
 }
 
