@@ -637,7 +637,7 @@ ProgressWidget::~ProgressWidget()
 void ProgressWidget::showMessage(const QString &text)
 {
     if (!theDialog->running() && this->ui->messageLabel->text() != text) {
-        LogErrorF("showMessage %s", text);
+        LogErrorF("showMessage %s", text.data());
         this->ui->messageLabel->setText(text);
         this->adjustSize();
         this->repaint();

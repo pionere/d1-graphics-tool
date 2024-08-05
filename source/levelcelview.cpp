@@ -95,6 +95,7 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
 
+    setMouseTracking(true);
     setAcceptDrops(true);
 }
 
