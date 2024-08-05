@@ -39,6 +39,7 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
+    this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->on_dunZoomEdit_escPressed();
@@ -95,7 +96,7 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
 
-    setMouseTracking(true);
+    
     setAcceptDrops(true);
 }
 
