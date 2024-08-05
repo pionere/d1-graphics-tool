@@ -707,6 +707,14 @@ void LevelCelView::framePixelHovered(const QPoint &pos) const
     }
     QPoint tpos = pos;
     if (this->subtilePos(tpos)) {
+        unsigned stx = tpos.x();
+        unsigned sty = tpos.y();
+        unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+
+        unsigned stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
+        tpos.setX(stFrame);
+        tpos.setY(UINT_MAX);
+
         dMainWindow().pointHovered(tpos);
         return;
     }
