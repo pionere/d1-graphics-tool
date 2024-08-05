@@ -543,7 +543,7 @@ bool LevelCelView::subtilePos(QPoint &pos) const
         sty /= MICRO_HEIGHT;
 
         pos.setX(stx);
-        pos.setX(sty);
+        pos.setY(sty);
         return true;
     }
 
