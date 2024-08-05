@@ -86,13 +86,14 @@ public:
     ~ProgressDialog();
 
     static void openDialog();
+    static bool running();
 
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags);
     static void done();
 
     static void startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags, std::function<void()> &&callFunc);
 
-    static void incProgressBar(const QString &label, int maxValue);
+    // static void incProgressBar(const QString &label, int maxValue);
 
     static void incBar(const QString &label, int maxValue);
     static void decBar();
