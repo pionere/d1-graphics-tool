@@ -330,7 +330,7 @@ bool GfxsetView::framePos(QPoint &pos) const
     return false;
 }
 
-void GfxsetView::framePixelHovered(const QPoint &pos)
+void GfxsetView::framePixelHovered(const QPoint &pos) const
 {
     QPoint tpos = pos;
     if (this->framePos(tpos)) {

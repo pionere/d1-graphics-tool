@@ -377,7 +377,7 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
     this->trnBaseWidget->selectColor(pixel);
 }
 
-void MainWindow::pixelHovered(const QPoint &pos)
+void MainWindow::pointHovered(const QPoint &pos)
 {
     QString msg;
     if (pos.x() == UINT_MAX) {
