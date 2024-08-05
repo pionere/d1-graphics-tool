@@ -74,17 +74,22 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     QObject *view = this->parent();
     CelView *celView = qobject_cast<CelView *>(view);
     if (celView != nullptr) {
-        celView->framePixelClicked(this->lastPos, flags);
+        celView->framePixelClicked(currPos, flags);
         return;
     }
     LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
     if (levelCelView != nullptr) {
-        levelCelView->framePixelClicked(this->lastPos, flags);
+        levelCelView->framePixelClicked(currPos, flags);
+        return;
+    }
+    GfxsetView *setView = qobject_cast<GfxsetView *>(view);
+    if (setView != nullptr) {
+        setView->framePixelClicked(currPos, flags);
         return;
     }
     TblView *tblView = qobject_cast<TblView *>(view);
     if (tblView != nullptr) {
-        tblView->framePixelClicked(this->lastPos, flags);
+        tblView->framePixelClicked(currPos, flags);
         return;
     }
 }
@@ -125,6 +130,11 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
     if (levelCelView != nullptr) {
         levelCelView->framePixelHovered(currPos);
+        return;
+    }
+    GfxsetView *setView = qobject_cast<GfxsetView *>(view);
+    if (setView != nullptr) {
+        setView->framePixelHovered(currPos);
         return;
     }
     TblView *tblView = qobject_cast<TblView *>(view);
@@ -431,8 +441,28 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
     dMainWindow().frameClicked(frame, p, flags);
 }
 
-void CelView::framePixelHovered(const QPoint &pos)
+bool CelView::framePos(QPoint &pos) const
 {
+    if (this->gfx->getFrameCount() != 0) {
+        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
+        pos -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        return pos.x() >= 0 && pos.x() < frame->getWidth() && pos.y() >= 0 && pos.y() < frame->getHeight();
+    }
+
+    return false;
+}
+
+void CelView::framePixelHovered(const QPoint &pos) const
+{
+    QPoint tpos = pos;
+    if (this->framePos(tpos)) {
+        dMainWindow().pointHovered(tpos);
+        return;
+    }
+
+    tpos.setX(UINT_MAX);
+    tpos.setY(UINT_MAX);
+    dMainWindow().pointHovered(tpos);
 }
 
 void CelView::createFrame(bool append)
@@ -1235,6 +1265,11 @@ void CelView::on_playStopButton_clicked()
     dMainWindow().initPaletteCycle();
 
     this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
+/*
+    this->timer.start();
+    qint64 nextTickNS = timer.nsecsElapsed() + this->currentPlayDelay * 1000;
+    QTimer::singleShot(this->currentPlayDelay / 1000, Qt::PreciseTimer, this, &CelView::timerEvent);
+*/
 }
 
 void CelView::timerEvent(QTimerEvent *event)
@@ -1278,6 +1313,16 @@ void CelView::timerEvent(QTimerEvent *event)
         dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
         // this->displayFrame();
     }
+/*
+    nextTickNS += this->currentPlayDelay * 1000;
+    qint64 now = timer.nsecsElapsed();
+    int delta = (nextTick - now) / (1000 * 1000);
+    if (delta > 0) {
+        QTimer::singleShot(delta, Qt::PreciseTimer, this, &CelView::timerEvent);
+    } else {
+        this->timerEvent();
+    }
+*/
 }
 
 void CelView::dragEnterEvent(QDragEnterEvent *event)

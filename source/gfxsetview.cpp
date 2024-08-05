@@ -319,8 +319,28 @@ void GfxsetView::framePixelClicked(const QPoint &pos, int flags)
     dMainWindow().frameClicked(frame, p, flags);
 }
 
+bool GfxsetView::framePos(QPoint &pos) const
+{
+    if (this->gfx->getFrameCount() != 0) {
+        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
+        pos -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        return pos.x() >= 0 && pos.x() < frame->getWidth() && pos.y() >= 0 && pos.y() < frame->getHeight();
+    }
+
+    return false;
+}
+
 void GfxsetView::framePixelHovered(const QPoint &pos)
 {
+    QPoint tpos = pos;
+    if (this->framePos(tpos)) {
+        dMainWindow().pointHovered(tpos);
+        return;
+    }
+
+    tpos.setX(UINT_MAX);
+    tpos.setY(UINT_MAX);
+    dMainWindow().pointHovered(tpos);
 }
 
 void GfxsetView::createFrame(bool append)

@@ -58,7 +58,7 @@ public:
     const QComboBox *getMonsters() const;
 
     void framePixelClicked(const QPoint &pos, int flags);
-    void framePixelHovered(const QPoint &pos);
+    void framePixelHovered(const QPoint &pos) const;
 
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
 
@@ -193,6 +193,9 @@ private:
     void setPosition(int posx, int posy);
     void shiftPosition(int dx, int dy);
     QPoint getCellPos(const QPoint &pos) const;
+    bool subtilePos(QPoint &pos) const;
+    bool tilePos(QPoint &pos) const;
+    bool framePos(QPoint &pos) const;
     void showSubtileInfo();
 
 signals:

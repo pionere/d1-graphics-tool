@@ -377,6 +377,20 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
     this->trnBaseWidget->selectColor(pixel);
 }
 
+void MainWindow::pixelHovered(const QPoint &pos)
+{
+    QString msg;
+    if (pos.x() == UINT_MAX) {
+    } else {
+        if (pos.y() == UINT_MAX) {
+            msg = QString(":%1:").arg(pos.x());
+        } else {
+            msg = QString("%1:%2").arg(pos.x()).arg(pos.y());
+        }
+    }
+    this->ui->statusBar->showMessage(msg);
+}
+
 void MainWindow::dunClicked(const QPoint &cell, int flags)
 {
     if (this->builderWidget != nullptr && this->builderWidget->dunClicked(cell, flags)) {
