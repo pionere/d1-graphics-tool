@@ -629,8 +629,8 @@ ProgressWidget::~ProgressWidget()
 
 void ProgressWidget::showMessage(const QString &text)
 {
-    if (theDialog->status != PROGRESS_STATE::RUNNING) {
-        this->ui->messageLabel->setText(label);
+    if (theDialog->status != PROGRESS_STATE::RUNNING && this->ui->messageLabel->text() != text) {
+        this->ui->messageLabel->setText(text);
         this->adjustSize();
         this->repaint();
     }
