@@ -152,6 +152,8 @@ public:
     explicit ProgressWidget(QWidget *parent);
     ~ProgressWidget();
 
+    void showMessage(const QString &text);
+
 private:
     void updateWidget(PROGRESS_STATE status, bool active, const QString &text);
 

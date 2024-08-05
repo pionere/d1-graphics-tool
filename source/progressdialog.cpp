@@ -627,6 +627,15 @@ ProgressWidget::~ProgressWidget()
     delete ui;
 }
 
+void ProgressWidget::showMessage(const QString &text)
+{
+    if (theDialog->status != PROGRESS_STATE::RUNNING) {
+        this->ui->messageLabel->setText(label);
+        this->adjustSize();
+        this->repaint();
+    }
+}
+
 void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QString &label)
 {
     this->ui->openPushButton->setEnabled(active);
