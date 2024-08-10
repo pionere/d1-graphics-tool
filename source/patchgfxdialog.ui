@@ -95,6 +95,11 @@
          <string>Spell icons (SpelIcon.CEL)</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Cursor icons (ObjCurs.CEL)</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
