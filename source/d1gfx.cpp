@@ -3638,13 +3638,9 @@ bool D1Gfx::patchCursorIcons(bool silent)
 
     if (frameCount == 179) {
         QString baseFilePath = this->getFilePath();
-        if (baseFilePath.length() < sizeof("ObjCurs.CEL") - 1) {
-            dProgressErr() << tr("Unrecognized file-path. Expected ObjCurs.CEL");
-            return false;
-        }
         // read ObjCurs2.CEL from the same folder
         QString stdPath = baseFilePath;
-        stdPath.insert(7, "2");
+        stdPath.insert(stdPath.length() - 4, "2");
 
         if (QFileInfo::exists(stdPath)) {
             OpenAsParam opParams = OpenAsParam();
