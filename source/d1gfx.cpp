@@ -3680,7 +3680,7 @@ bool D1Gfx::patchCursorIcons(bool silent)
         case 236: dx = 0; dy = -2; break;
         case 234: dx = 0; dy = -2; break;
         case 233: dx = 0; dy = -1; break;
-        case 232: dx = 2; dy = -2; break;
+        case 232: dx = -2; dy = -2; break;
         case 231: dx = 0; dy = -1; break;
         case 230: dx = 2; dy = 0; break;
         case 229: dx = -1; dy = -3; break;
