@@ -3666,6 +3666,8 @@ bool D1Gfx::patchCursorIcons(bool silent)
             // merge the two cel files
             this->addGfx(&hfGfx);
             frameCount += 61 - 2;
+        } else {
+            dProgressWarn() << tr("File not found (%1).").arg(stdPath);
         }
     }
 
@@ -3731,6 +3733,7 @@ bool D1Gfx::patchCursorIcons(bool silent)
         case 116: dx = 0; dy = 1; break;
         case 115: dx = 0; dy = 4; break;// a
         case 114: dx = 0; dy = 1; break;
+        case 112: dx = 0; dy = -1; break;
         case 109: dx = 3; dy = 3; break;
         case 108: dx = 2; dy = 3; break;
         case 106: dx = 0; dy = 2; break;
@@ -3760,8 +3763,11 @@ bool D1Gfx::patchCursorIcons(bool silent)
         case 74: dx = 2; dy = 0; break;
         case 72: dx = -1; dy = 0; break;
         case 69: dx = 0; dy = 1; break;
+        case 68: dx = 1; dy = 0; break;
         case 66: dx = 0; dy = 1; break;
         case 65: dx = 1; dy = 0; break;
+        case 64: dx = 0; dy = 4; break;
+        case 63: dx = 0; dy = 2; break;
         case 60: dx = 0; dy = 1; break;// ?
         case 57: dx = 0; dy = 1; break;// ?
         case 56: dx = 0; dy = 1;
@@ -3771,13 +3777,23 @@ bool D1Gfx::patchCursorIcons(bool silent)
             change |= currFrame->setPixel(19, 25, D1GfxPixel::colorPixel(184));
             change |= currFrame->setPixel(20, 25, D1GfxPixel::colorPixel(183));
             break;
+        case 55: dx = -1; dy = 3; break;
         case 52: dx = 0; dy = 1; break;
         case 51: dx = -1; dy = 0; break;
         case 49: dx = 1; dy = 0; break;
         case 43: dx = -1; dy = 0; break;
         case 42: dx = 1; dy = 0; break;
+        case 39: dx = 0; dy = -1; break;
+        case 37: dx = 0; dy = 1; break;
+        case 35: dx = 1; dy = 0; break;
+        case 34: dx = 2; dy = 1; break;
+        case 33: dx = 0; dy = 1; break;
+        case 32: dx = 0; dy = 1; break;
+        case 31: dx = 0; dy = 1; break;
         case 30: dx = 2; dy = 0; break;
+        case 27: dx = 0; dy = 1; break;
         case 26: dx = 1; dy = 0; break;
+        case 25: dx = 0; dy = 1; break;
         case 24: dx = 1; dy = 0; break;
         case 22: dx = 0; dy = 1; break;
         case 20: dx = 1; dy = 2; break;
