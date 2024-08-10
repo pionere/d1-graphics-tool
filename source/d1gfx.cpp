@@ -3586,6 +3586,222 @@ bool D1Gfx::patchGoatLDie(bool silent)
     return result;
 }
 
+bool D1Gfx::moveImage(D1GfxFrame* currFrame, int dx, int dy)
+{
+    int width = currFrame->getWidth();
+    int height = currFrame->getHeight();
+    bool change = false;
+    if (dx > 0) {
+        for (int y = 0; y < height; y++) {
+            for (int x = width - dx - 1; x >= 0; x--) {
+                change |= currFrame->setPixel(x + dx, y, currFrame->getPixel(x, y));
+                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+    }
+    if (dx < 0) {
+        for (int y = 0; y < height; y++) {
+            for (int x = -dx; x < width; x++) {
+                change |= currFrame->setPixel(x + dx, y, currFrame->getPixel(x, y));
+                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+    }
+    if (dy > 0) {
+        for (int y = height - dy - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
+                change |= currFrame->setPixel(x, (y + dy), currFrame->getPixel(x, y));
+                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+    }
+    if (dy < 0) {
+        for (int y = -dy; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                change |= currFrame->setPixel(x, (y + dy), currFrame->getPixel(x, y));
+                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+    }
+    return change;
+}
+
+bool D1Gfx::patchCursorIcons(bool silent)
+{
+    int frameCount = this->getFrameCount();
+
+    if (frameCount < 179) {
+        dProgressErr() << tr("Invalid ObjCurs.CEL (Number of frames: %1. Expected at least 179.)").arg(frameCount);
+        return false;
+    }
+
+    if (frameCount == 179) {
+        QString baseFilePath = this->getFilePath();
+        if (baseFilePath.length() < sizeof("ObjCurs.CEL") - 1) {
+            dProgressErr() << tr("Unrecognized file-path. Expected ObjCurs.CEL");
+            return false;
+        }
+        // read ObjCurs2.CEL from the same folder
+        QString stdPath = baseFilePath;
+        stdPath.insert(7, "2");
+
+        if (QFileInfo::exists(stdPath)) {
+            OpenAsParam opParams = OpenAsParam();
+            D1Gfx hfGfx;
+            hfGfx.setPalette(this->palette);
+            if (!D1Cel::load(hfGfx, stdPath, opParams)) {
+                dProgressErr() << tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(stdPath));
+                return false;
+            }
+            if (hfGfx.getFrameCount() != 61) {
+                dProgressErr() << tr("Invalid file: %1. (Number of frames: %2. Expected 61.)").arg(QDir::toNativeSeparators(stdPath)).arg(hfGfx.getFrameCount());
+                return false;
+            }
+
+            // remove the last two entries
+            hfGfx.removeFrame(59, false);
+            hfGfx.removeFrame(59, false);
+
+            // merge the two cel files
+            this->addGfx(&hfGfx);
+            frameCount += 61 - 2;
+        }
+    }
+
+    if (frameCount != 179 + 61 - 2) {
+        dProgressWarn() << tr("Skipped CEL-merge for Hellfire (%1).").arg(frameCount == 179 ? tr("ObjCurs2.CEL not found") : tr("Frame-count is %1").arg(frameCount));
+    }
+
+    bool result = false;
+    for (int i = 0; i < frameCount; i++) {
+        D1GfxFrame* currFrame = this->getFrame(i);
+        bool change = false;
+        int dx = 0, dy = 0;
+        switch (i + 1) {
+        case 179: dx = 1; dy = 5; break;
+        case 177: dx = 0; dy = 2; break;
+        case 176: dx = 1; dy = 0; break;
+        case 173: dx = 1; dy = 0; break;
+        case 171: dx = 0; dy = -3; break; // a
+        case 167: dx = -1; dy = 0; break;
+        case 165: dx = 2; dy = -3; // a
+            for (int y = 0; y < currFrame->getHeight(); y++) {
+                for (int x = 0; x < currFrame->getWidth(); x++) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (pixel.isTransparent())
+                        continue;
+                    quint8 color = pixel.getPaletteIndex();
+                    if (color == 144 || color == 145)
+                        change |= currFrame->setPixel(x, y, D1GfxPixel::colorPixel(color + 96));
+                }
+            }
+            break;
+        case 164: dx = 0; dy = 4; break;// a
+        case 162: dx = 0; dy = -4; break;// a
+        case 161: dx = 0; dy = 1; break;
+        case 159: dx = 1; dy = 1; break;
+        case 158: dx = 0; dy = 3; break;
+        case 157: dx = 1; dy = -1; break;
+        case 156: dx = 0; dy = 1; break;
+        case 154: dx = 1; dy = 0; break;
+        case 153: dx = -1; dy = 1; break;
+        case 152: dx = 0; dy = 2; break;
+        case 151: dx = 0; dy = 2; break;// a
+        case 147: dx = 0; dy = 2; break;// a
+        case 146: dx = -2; dy = -2; break;
+        case 145: dx = 0; dy = -2; break;
+        case 144: dx = 0; dy = 1; break;
+        case 142: dx = 1; dy = 2; break;
+        case 141: dx = 0; dy = 4; break;// a
+        case 140: dx = 0; dy = 0;  break; //a
+        case 139: dx = 1; dy = 1; break;// a
+        case 138: dx = 3; dy = 1; break;
+        case 137: dx = 1; dy = 0; break;
+        case 135: dx = -1; dy = 0; break;
+        case 134: dx = 0; dy = 2; break;
+        case 133: dx = -1; dy = -1; break;
+        case 130: dx = -1; dy = 2; break;
+        case 127: dx = 0; dy = 1; break;
+        case 126: dx = 0; dy = 4; break;// a
+        case 124: dx = 0; dy = 3; break;
+        case 123: dx = -1; dy = 3; break;// a
+        case 120: dx = 0; dy = 1; break;
+        case 119: dx = 0; dy = 1; break;
+        case 116: dx = 0; dy = 1; break;
+        case 115: dx = 0; dy = 4; break;// a
+        case 114: dx = 0; dy = 1; break;
+        case 109: dx = 3; dy = 3; break;
+        case 108: dx = 2; dy = 3; break;
+        case 106: dx = 0; dy = 2; break;
+        case 105: dx = 1; dy = 0; break;
+        case 104: dx = 0; dy = 1; break;
+        case 103: dx = 0; dy = 1; break;
+        case 102: dx = 0; dy = 1; break;
+        case 100: dx = 0; dy = 3; break;
+        case 99: dx = 1; dy = 2; break;
+        case 98: dx = 0; dy = 2; break;
+        case 95: dx = 1; dy = 1; break;
+        case 94: dx = 1; dy = 0; break;
+        case 93: dx = 0; dy = 2; break;
+        case 92: dx = 0; dy = 2; break;
+        case 90: dx = 0; dy = 1; break;
+        case 89: dx = 1; dy = 8; break;
+        case 88: dx = 0; dy = 1; break;
+        case 87: dx = 0; dy = 1; break;
+        case 86: dx = 0; dy = 2; break;
+        case 85: dx = 0; dy = 2; break;
+        case 84: dx = 1; dy = 1; break;
+        case 83: dx = 0; dy = 3; break;
+        case 82: dx = 1; dy = 2; break;
+        case 81: dx = -2; dy = -3; break;
+        case 76: dx = -1; dy = -3; break;
+        case 75: dx = -2; dy = 0; break;
+        case 74: dx = 2; dy = 0; break;
+        case 72: dx = -1; dy = 0; break;
+        case 69: dx = 0; dy = 1; break;
+        case 66: dx = 0; dy = 1; break;
+        case 65: dx = 1; dy = 0; break;
+        case 60: dx = 0; dy = 1; break;// ?
+        case 57: dx = 0; dy = 1; break;// ?
+        case 56: dx = 0; dy = 1;
+            change |= currFrame->setPixel(16, 25, D1GfxPixel::colorPixel(188));
+            change |= currFrame->setPixel(17, 25, D1GfxPixel::colorPixel(186));
+            change |= currFrame->setPixel(18, 25, D1GfxPixel::colorPixel(185));
+            change |= currFrame->setPixel(19, 25, D1GfxPixel::colorPixel(184));
+            change |= currFrame->setPixel(20, 25, D1GfxPixel::colorPixel(183));
+            break;
+        case 52: dx = 0; dy = 1; break;
+        case 51: dx = -1; dy = 0; break;
+        case 49: dx = 1; dy = 0; break;
+        case 43: dx = -1; dy = 0; break;
+        case 42: dx = 1; dy = 0; break;
+        case 30: dx = 2; dy = 0; break;
+        case 26: dx = 1; dy = 0; break;
+        case 24: dx = 1; dy = 0; break;
+        case 22: dx = 0; dy = 1; break;
+        case 20: dx = 1; dy = 2; break;
+        case 19: dx = 1; dy = 1; break;
+        case 13: dx = 1; dy = 0;
+            if (!currFrame->getPixel(25, 4).isTransparent()) {
+                i = frameCount;
+                continue; // assume it is already done
+            }
+            break;
+        }
+
+        change = moveImage(currFrame, dx, dy);
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        }
+    }
+
+    return result;
+}
+
 bool D1Gfx::patchSplIcons(bool silent)
 {
     int frameCount = this->getFrameCount();
@@ -3651,6 +3867,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_SPL_ICONS: // patch SpelIcon.CEL
         change = this->patchSplIcons(silent);
         break;
+    case GFX_CURS_ICONS: // patch ObjCurs.CEL
+        change = this->patchCursorIcons(silent);
+        break;
     }
     if (!change && !silent) {
         dProgress() << tr("No change was necessary.");
@@ -3688,6 +3907,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "spelicon") {
         fileIndex = GFX_SPL_ICONS;
+    }
+    if (baseName == "objcurs") {
+        fileIndex = GFX_CURS_ICONS;
     }
     // cl2 files
     if (baseName == "wmhas") {

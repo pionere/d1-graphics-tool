@@ -125,6 +125,7 @@ typedef enum gfx_file_index {
     GFX_MON_FALLGW,  // graphics of the Devil Kin Brute walking (Fallgw.CL2)
     GFX_MON_GOATLD,  // graphics of the Satyr Lord dying (GoatLd.CL2)
     GFX_SPL_ICONS,   // spell icons (SpelIcon.CEL)
+    GFX_CURS_ICONS,  // cursor icons (ObjCurs.CEL)
 } gfx_file_index;
 
 enum class D1CEL_TYPE {
@@ -202,6 +203,7 @@ public:
 
 private:
     bool isClipped(int frameIndex) const;
+    bool moveImage(D1GfxFrame* currFrame, int dx, int dy);
 
     bool patchCathedralDoors(bool silent);
     bool patchCatacombsDoors(bool silent);
@@ -215,6 +217,7 @@ private:
     bool patchFallGWalk(bool silent);
     bool patchGoatLDie(bool silent);
     bool patchSplIcons(bool silent);
+    bool patchCursorIcons(bool silent);
 
 protected:
     D1CEL_TYPE type = D1CEL_TYPE::V1_REGULAR;
