@@ -4,6 +4,7 @@
 #include <QMessageBox>
 
 #include "d1image.h"
+#include "d1cel.h"
 #include "d1cl2.h"
 #include "d1smk.h"
 #include "openasdialog.h"
