@@ -3677,6 +3677,28 @@ bool D1Gfx::patchCursorIcons(bool silent)
         bool change = false;
         int dx = 0, dy = 0;
         switch (i + 1) {
+        case 236: dx = 0; dy = -2; break;
+        case 234: dx = 0; dy = -2; break;
+        case 233: dx = 0; dy = -1; break;
+        case 232: dx = 2; dy = -2; break;
+        case 231: dx = 0; dy = -1; break;
+        case 230: dx = 2; dy = 0; break;
+        case 229: dx = -1; dy = -3; break;
+        case 228: dx = 0; dy = -2; break;
+        case 227: dx = -1; dy = -2; break;
+        case 226: dx = -1; dy = -2; break;
+        case 225: dx = 0; dy = 2; break;
+        case 224: dx = -1; dy = 1; break;
+        case 223: dx = 0; dy = 1; break;
+        case 222: dx = -2; dy = 3; break;
+        case 221: dx = -1; dy = 2; break;
+        case 220: dx = -1; dy = 0; break;
+        case 219: dx = -1; dy = 0; break;
+        case 218: dx = -1; dy = 0; break;
+        case 217: dx = 0; dy = 1; break;
+        case 216: dx = -1; dy = 9; break; // a
+        case 215: dx = 0; dy = 12; break; // a
+        case 213: dx = -1; dy = 0; break;
         case 179: dx = 1; dy = 5; break;
         case 177: dx = 0; dy = 2; break;
         case 176: dx = 1; dy = 0; break;
@@ -3721,7 +3743,7 @@ bool D1Gfx::patchCursorIcons(bool silent)
         case 133: dx = -1; dy = -1; break;
         case 130: dx = -1; dy = 2; break;
         case 127: dx = 0; dy = 1; break;
-        case 126: dx = 0; dy = 4; break;// a
+        case 126: dx = 1; dy = 4; break;// a
         case 124: dx = 0; dy = 3; break;
         case 123: dx = -1; dy = 3; break;// a
         case 120: dx = 0; dy = 1; break;
@@ -3780,11 +3802,12 @@ bool D1Gfx::patchCursorIcons(bool silent)
         case 43: dx = -1; dy = 0; break;
         case 42: dx = 1; dy = 0; break;
         case 39: dx = 0; dy = -1; break;
+        case 36: dx = 1; dy = 0; break;
         case 37: dx = 0; dy = 1; break;
         case 35: dx = 1; dy = 0; break;
         case 34: dx = 2; dy = 1; break;
         case 33: dx = 0; dy = 1; break;
-        case 32: dx = 0; dy = 1; break;
+        case 32: dx = -1; dy = 1; break;
         case 31: dx = 0; dy = 1; break;
         case 30: dx = 2; dy = 0; break;
         case 27: dx = 0; dy = 1; break;
