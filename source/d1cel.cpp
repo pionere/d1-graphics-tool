@@ -25,7 +25,7 @@ static void LogErrorFFF(const char* msg, ...)
 
 	// dProgressErr() << QString(tmsg);
 	
-	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
+	snprintf(tmp, sizeof(tmp), "c:\\logdebug%d.txt", 0);
 	FILE* f0 = fopen(tmp, "a+");
 	if (f0 == NULL)
 		return;

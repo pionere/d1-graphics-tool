@@ -6,6 +6,34 @@
 #include "d1gfx.h"
 #include "progressdialog.h"
 
+static void LogErrorFFF(const char* msg, ...)
+{
+    char tmp[256];
+    char tmsg[256];
+    va_list va;
+
+    va_start(va, msg);
+
+    vsnprintf(tmsg, sizeof(tmsg), msg, va);
+
+    va_end(va);
+
+    // dProgressErr() << QString(tmsg);
+
+    snprintf(tmp, sizeof(tmp), "c:\\logdebug%d.txt", 0);
+    FILE* f0 = fopen(tmp, "a+");
+    if (f0 == NULL)
+        return;
+
+    fputs(tmsg, f0);
+
+    fputc('\n', f0);
+
+    fclose(f0);
+}
+
+bool logged[10] = { false };
+
 bool D1CelTilesetFrame::load(D1GfxFrame &frame, D1CEL_FRAME_TYPE type, QByteArray rawData, const OpenAsParam &params)
 {
     (void)params; // unused
@@ -20,21 +48,41 @@ bool D1CelTilesetFrame::load(D1GfxFrame &frame, D1CEL_FRAME_TYPE type, QByteArra
     bool valid = false;
     switch (type) {
     case D1CEL_FRAME_TYPE::Square:
+        if (!logged[(int)type]) {
+            logged[(int)type] = true;
+            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
+        }        
         valid = D1CelTilesetFrame::LoadSquare(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::TransparentSquare:
         valid = D1CelTilesetFrame::LoadTransparentSquare(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::LeftTriangle:
+        if (!logged[(int)type]) {
+            logged[(int)type] = true;
+            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
+        }
         valid = D1CelTilesetFrame::LoadLeftTriangle(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::RightTriangle:
+        if (!logged[(int)type]) {
+            logged[(int)type] = true;
+            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
+        }
         valid = D1CelTilesetFrame::LoadRightTriangle(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::LeftTrapezoid:
+        if (!logged[(int)type]) {
+            logged[(int)type] = true;
+            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
+        }
         valid = D1CelTilesetFrame::LoadLeftTrapezoid(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::RightTrapezoid:
+        if (!logged[(int)type]) {
+            logged[(int)type] = true;
+            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
+        }
         valid = D1CelTilesetFrame::LoadRightTrapezoid(frame, rawData);
         break;
     }
@@ -53,10 +101,12 @@ bool D1CelTilesetFrame::load(D1GfxFrame &frame, D1CEL_FRAME_TYPE type, QByteArra
 bool D1CelTilesetFrame::LoadSquare(D1GfxFrame &frame, const QByteArray &rawData)
 {
     int offset = 0;
+    if (rawData.size() != MICRO_WIDTH * MICRO_HEIGHT)
+        return false;
     for (int i = MICRO_HEIGHT /* frame.height */ - 1; i >= 0; i--) {
         std::vector<D1GfxPixel> &pixelLine = frame.pixels[i];
-        if (rawData.size() < offset + MICRO_WIDTH /* frame.width */)
-            return false;
+        //if (rawData.size() < offset + MICRO_WIDTH /* frame.width */)
+        //    return false;
         for (int j = 0; j < MICRO_WIDTH /* frame.width */; j++) {
             pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
         }
@@ -103,8 +153,8 @@ static bool LoadBottomLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
         for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::transparentPixel());
         }
-        if (rawData.size() < offset + 2 * i)
-            return false;
+        //if (rawData.size() < offset + 2 * i)
+        //    return false;
         for (int j = 0; j < 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
         }
@@ -168,6 +218,8 @@ static bool LoadTopRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 
 bool D1CelTilesetFrame::LoadLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 {
+    //if (rawData.size() != )
+    //    return false;
     return LoadBottomLeftTriangle(frame, rawData) && LoadTopLeftTriangle(frame, rawData);
 }
 
