@@ -6,34 +6,6 @@
 #include "d1gfx.h"
 #include "progressdialog.h"
 
-static void LogErrorFFF(const char* msg, ...)
-{
-    char tmp[256];
-    char tmsg[256];
-    va_list va;
-
-    va_start(va, msg);
-
-    vsnprintf(tmsg, sizeof(tmsg), msg, va);
-
-    va_end(va);
-
-    // dProgressErr() << QString(tmsg);
-
-    snprintf(tmp, sizeof(tmp), "c:\\logdebug%d.txt", 0);
-    FILE* f0 = fopen(tmp, "a+");
-    if (f0 == NULL)
-        return;
-
-    fputs(tmsg, f0);
-
-    fputc('\n', f0);
-
-    fclose(f0);
-}
-
-bool logged[10] = { false };
-
 bool D1CelTilesetFrame::load(D1GfxFrame &frame, D1CEL_FRAME_TYPE type, QByteArray rawData, const OpenAsParam &params)
 {
     (void)params; // unused
@@ -48,41 +20,21 @@ bool D1CelTilesetFrame::load(D1GfxFrame &frame, D1CEL_FRAME_TYPE type, QByteArra
     bool valid = false;
     switch (type) {
     case D1CEL_FRAME_TYPE::Square:
-        if (!logged[(int)type]) {
-            logged[(int)type] = true;
-            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
-        }        
         valid = D1CelTilesetFrame::LoadSquare(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::TransparentSquare:
         valid = D1CelTilesetFrame::LoadTransparentSquare(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::LeftTriangle:
-        if (!logged[(int)type]) {
-            logged[(int)type] = true;
-            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
-        }
         valid = D1CelTilesetFrame::LoadLeftTriangle(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::RightTriangle:
-        if (!logged[(int)type]) {
-            logged[(int)type] = true;
-            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
-        }
         valid = D1CelTilesetFrame::LoadRightTriangle(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::LeftTrapezoid:
-        if (!logged[(int)type]) {
-            logged[(int)type] = true;
-            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
-        }
         valid = D1CelTilesetFrame::LoadLeftTrapezoid(frame, rawData);
         break;
     case D1CEL_FRAME_TYPE::RightTrapezoid:
-        if (!logged[(int)type]) {
-            logged[(int)type] = true;
-            LogErrorFFF("D1CelTilesetFrame::load %d size %d", type, rawData.size());
-        }
         valid = D1CelTilesetFrame::LoadRightTrapezoid(frame, rawData);
         break;
     }
@@ -119,7 +71,8 @@ bool D1CelTilesetFrame::LoadTransparentSquare(D1GfxFrame &frame, const QByteArra
     int offset = 0;
     for (int i = MICRO_HEIGHT /* frame.height */ - 1; i >= 0; i--) {
         std::vector<D1GfxPixel> &pixelLine = frame.pixels[i];
-        for (int j = 0; j < MICRO_WIDTH /* frame.width */;) {
+        int j = 0;
+        for ( ; j < MICRO_WIDTH /* frame.width */;) {
             if (rawData.size() <= offset)
                 return false;
             qint8 readByte = rawData[offset++];
@@ -134,12 +87,14 @@ bool D1CelTilesetFrame::LoadTransparentSquare(D1GfxFrame &frame, const QByteArra
                 if (rawData.size() < offset + readByte)
                     return false;
                 // color pixels
-                for (int j = 0; j < readByte; j++) {
+                for (int k = 0; k < readByte; k++) {
                     pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
                 }
             }
             j += readByte;
         }
+        if (j != MICRO_WIDTH)
+            return false;
     }
     return true;
 }
@@ -167,8 +122,8 @@ static bool LoadBottomRightTriangle(D1GfxFrame &frame, const QByteArray &rawData
     int offset = 0;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
         std::vector<D1GfxPixel> &pixelLine = frame.getPixels()[MICRO_HEIGHT /* frame.height */ - i];
-        if (rawData.size() < offset + 2 * i)
-            return false;
+        //if (rawData.size() < offset + 2 * i)
+        //    return false;
         for (int j = 0; j < 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
         }
@@ -189,8 +144,8 @@ static bool LoadTopLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
         for (int j = 0; j < 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::transparentPixel());
         }
-        if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
-            return false;
+        //if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
+        //    return false;
         for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
         }
@@ -203,8 +158,8 @@ static bool LoadTopRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
     int offset = 288;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
         std::vector<D1GfxPixel> &pixelLine = frame.getPixels()[MICRO_HEIGHT /* frame.height */ / 2 - i];
-        if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
-            return false;
+        //if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
+        //    return false;
         for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
         }
@@ -218,13 +173,15 @@ static bool LoadTopRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 
 bool D1CelTilesetFrame::LoadLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 {
-    //if (rawData.size() != )
-    //    return false;
+    if (rawData.size() != MICRO_HEIGHT * MICRO_WIDTH / 2 + 32 /* 544 */)
+        return false;
     return LoadBottomLeftTriangle(frame, rawData) && LoadTopLeftTriangle(frame, rawData);
 }
 
 bool D1CelTilesetFrame::LoadRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 {
+    if (rawData.size() != MICRO_HEIGHT * MICRO_WIDTH / 2 + 32 /* 544 */)
+        return false;
     return LoadBottomRightTriangle(frame, rawData) && LoadTopRightTriangle(frame, rawData);
 }
 
@@ -233,8 +190,8 @@ static bool LoadTopHalfSquare(D1GfxFrame &frame, const QByteArray &rawData)
     int offset = 288;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
         std::vector<D1GfxPixel> &pixelLine = frame.getPixels()[MICRO_HEIGHT /* frame.height */ / 2 - i];
-        if (rawData.size() < offset + MICRO_WIDTH /* frame.width */)
-            return false;
+        //if (rawData.size() < offset + MICRO_WIDTH /* frame.width */)
+        //    return false;
         for (int j = 0; j < MICRO_WIDTH /* frame.width */; j++) {
             pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
         }
@@ -244,11 +201,15 @@ static bool LoadTopHalfSquare(D1GfxFrame &frame, const QByteArray &rawData)
 
 bool D1CelTilesetFrame::LoadLeftTrapezoid(D1GfxFrame &frame, const QByteArray &rawData)
 {
+    if (rawData.size() != MICRO_HEIGHT * MICRO_WIDTH / 2 + MICRO_HEIGHT * MICRO_WIDTH / 4 + 32 /* 800 */)
+        return false;
     return LoadBottomLeftTriangle(frame, rawData) && LoadTopHalfSquare(frame, rawData);
 }
 
 bool D1CelTilesetFrame::LoadRightTrapezoid(D1GfxFrame &frame, const QByteArray &rawData)
 {
+    if (rawData.size() != MICRO_HEIGHT * MICRO_WIDTH / 2 + MICRO_HEIGHT * MICRO_WIDTH / 4 + 32 /* 800 */)
+        return false;
     return LoadBottomRightTriangle(frame, rawData) && LoadTopHalfSquare(frame, rawData);
 }
 
