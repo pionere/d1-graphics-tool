@@ -60,9 +60,10 @@ private:
 
 private slots:
     void on_inputFileBrowseButton_clicked();
-    void on_isTilesetYesRadioButton_toggled(bool checked);
-    void on_isTilesetNoRadioButton_toggled(bool checked);
-    void on_isTilesetAutoRadioButton_toggled(bool checked);
+    void on_celTypeBasicRadioButton_toggled(bool checked);
+    void on_celTypeTilesetRadioButton_toggled(bool checked);
+    void on_celTypeGfxsetRadioButton_toggled(bool checked);
+    void on_celTypeAutoRadioButton_toggled(bool checked);
     void on_clsFileBrowseButton_clicked();
     void on_tilFileBrowseButton_clicked();
     void on_minFileBrowseButton_clicked();
