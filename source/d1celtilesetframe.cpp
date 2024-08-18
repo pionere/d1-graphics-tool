@@ -77,14 +77,14 @@ bool D1CelTilesetFrame::LoadTransparentSquare(D1GfxFrame &frame, const QByteArra
                 readByte = -readByte;
                 // transparent pixels
                 D1GfxPixel pixel = D1GfxPixel::transparentPixel();
-                for (int j = 0; j < readByte; j++) {
+                for (int k = 0; k < readByte; k++) {
                     pixelLine.push_back(pixel);
                 }
             } else {
                 if (rawData.size() < offset + readByte)
                     return false;
                 // color pixels
-                for (int j = 0; j < readByte; j++) {
+                for (int k = 0; k < readByte; k++) {
                     pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
                 }
             }
