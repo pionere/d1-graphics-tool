@@ -9,36 +9,34 @@
 #include "d1celtilesetframe.h"
 #include "progressdialog.h"
 
-D1CEL_FRAME_TYPE guessFrameType(QByteArray &rawFrameData)
+D1CEL_FRAME_TYPE guessFrameType(const QByteArray &rawFrameData)
 {
     if (rawFrameData.size() == 544 || rawFrameData.size() == 800) {
-        const int leftZeros[32] = {
-            0, 1, 8, 9, 24, 25, 48, 49, 80, 81, 120, 121, 168, 169, 224, 225,
-            288, 289, 348, 349, 400, 401, 444, 445, 480, 481, 508, 509, 528, 529, 540, 541
+        const int leftZeros[16] = {
+            0, 8, 24, 48, 80, 120, 168, 224,
+            288, 348, 400, 444, 480, 508, 528, 540
         };
 
-        for (int i = 0; i < 32; i++) {
-            std::uint8_t byte = rawFrameData[leftZeros[i]];
-            if (byte != 0)
+        for (int i = 0; i < 16; i++) {
+            if (rawFrameData[leftZeros[i]] != 0 || rawFrameData[leftZeros[i] + 1] != 0)
                 break;
-            if (i == 15 && rawFrameData.size() == 800)
+            if (i == 7 && rawFrameData.size() == 800)
                 return D1CEL_FRAME_TYPE::LeftTrapezoid;
-            if (i == 31 && rawFrameData.size() == 544)
+            if (i == 15 && rawFrameData.size() == 544)
                 return D1CEL_FRAME_TYPE::LeftTriangle;
         }
 
-        const int rightZeros[32] = {
-            2, 3, 14, 15, 34, 35, 62, 63, 98, 99, 142, 143, 194, 195, 254, 255,
-            318, 319, 374, 375, 422, 423, 462, 463, 494, 495, 518, 519, 534, 535, 542, 543
+        const int rightZeros[16] = {
+            2, 14, 34, 62, 98, 142, 194, 254,
+            318, 374, 422, 462, 494, 518, 534, 542
         };
 
-        for (int i = 0; i < 32; i++) {
-            std::uint8_t byte = rawFrameData[rightZeros[i]];
-            if (byte != 0)
+        for (int i = 0; i < 16; i++) {
+            if (rawFrameData[rightZeros[i]] != 0 || rawFrameData[rightZeros[i] + 1] != 0)
                 break;
-            if (i == 15 && rawFrameData.size() == 800)
+            if (i == 7 && rawFrameData.size() == 800)
                 return D1CEL_FRAME_TYPE::RightTrapezoid;
-            if (i == 31 && rawFrameData.size() == 544)
+            if (i == 15 && rawFrameData.size() == 544)
                 return D1CEL_FRAME_TYPE::RightTriangle;
         }
     }
