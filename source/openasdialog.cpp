@@ -126,17 +126,22 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
     this->updateFields();
 }
 
-void OpenAsDialog::on_isTilesetYesRadioButton_toggled(bool checked)
+void OpenAsDialog::on_celTypeBasicRadioButton_toggled(bool checked)
 {
     this->updateFields();
 }
 
-void OpenAsDialog::on_isTilesetNoRadioButton_toggled(bool checked)
+void OpenAsDialog::on_celTypeTilesetRadioButton_toggled(bool checked)
 {
     this->updateFields();
 }
 
-void OpenAsDialog::on_isTilesetAutoRadioButton_toggled(bool checked)
+void OpenAsDialog::on_celTypeGfxsetRadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void OpenAsDialog::on_celTypeAutoRadioButton_toggled(bool checked)
 {
     this->updateFields();
 }
