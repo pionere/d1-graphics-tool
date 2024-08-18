@@ -1233,8 +1233,12 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
         if (!dunFilePath.isEmpty() && QFileInfo::exists(dunFilePath) && (fileType == FILE_CONTENT::CEL || fileType == FILE_CONTENT::EMPTY)) {
             fileType = FILE_CONTENT::DUN;
             isTileset = true;
-        } else if ((QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(slaFilePath)) && fileType == FILE_CONTENT::CEL) {
-            isTileset = true;
+        } else if (!isTileset && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && fileType == FILE_CONTENT::CEL) {
+            if (QFileInfo::exists(slaFilePath))) {
+                isTileset = true;
+            } else {
+                dProgressWarn() << tr("Opening as standard CEL file because the SLA file (%1) is missing.").arg(QDir::toNativeSeparators(slaFilePath));
+            }
         }
     }
 
