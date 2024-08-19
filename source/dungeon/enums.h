@@ -76,11 +76,12 @@ typedef enum item_indexes {
 	IDI_BOOK4      = 0x61,
 	IDI_CLUB       = 0x7A,
 	IDI_DROPSHSTAFF= 0x86,
+	IDI_CAMPAIGNMAP= 0x93,
 #ifdef HELLFIRE
-	NUM_IDI        = 0x9A,
-	NUM_IDI_DIABLO = 0x93,
+	NUM_IDI        = 0x9B,
+	NUM_IDI_DIABLO = 0x94,
 #else
-	NUM_IDI        = 0x93,
+	NUM_IDI        = 0x94,
 #endif
 	IDI_PHOLDER    = 0xFFFE,
 	IDI_NONE       = 0xFFFF
@@ -258,6 +259,7 @@ typedef enum item_misc_id {
 	IMISC_OILCLEAN,
 	IMISC_OILLAST = IMISC_OILCLEAN,
 	//IMISC_MAPOFDOOM,
+	IMISC_MAP,
 	IMISC_RUNE,
 	IMISC_NOTE,
 	IMISC_INVALID   = -1,
@@ -399,7 +401,7 @@ typedef enum item_effect_type {
 	IPL_DUR_CURSE,
 	IPL_INDESTRUCTIBLE,
 	IPL_LIGHT,
-	IPL_INVCURS,
+	//IPL_INVCURS,
 	//IPL_THORNS,
 	IPL_NOMANA,
 	IPL_KNOCKBACK,
@@ -432,6 +434,13 @@ typedef enum item_effect_type {
 	IPL_INVALID          = 0xFF,
 } item_effect_type;
 
+typedef enum item_affix_range {
+	IAR_DROP,
+	IAR_SHOP,
+	IAR_CRAFT,
+	NUM_IARS
+} item_affix_range;
+
 typedef enum affix_item_type {
 	PLT_MISC   = 1 << 1,
 	PLT_BOW    = 1 << 2,
@@ -443,6 +452,7 @@ typedef enum affix_item_type {
 	PLT_LARMOR = 1 << 8,
 	PLT_MARMOR = 1 << 9,
 	PLT_HARMOR = 1 << 10,
+	PLT_MAP    = 1 << 11,
 } affix_item_type;
 
 typedef enum item_base_bonus {
@@ -510,6 +520,7 @@ typedef enum item_cursor_graphic {
 	ICURS_EAR_WARRIOR                 = 20,
 	ICURS_EAR_ROGUE                   = 21,
 	ICURS_BLOOD_STONE                 = 25,
+	ICURS_CAMPAIGN_MAP                = 26,
 	ICURS_OIL_OF_DEXTERITY            = 29,
 	ICURS_OIL_OF_STRENGTH             = 30,
 	ICURS_OIL_OF_CLEANSING            = 31,
@@ -544,7 +555,8 @@ typedef enum item_cursor_graphic {
 	ICURS_CLUB                        = 66,
 	ICURS_SABRE                       = 67,
 	ICURS_FALCON_GRYPHON              = 68,
-	ICURS_SPIKED_CLUB                 = 70,
+	ICURS_GNARLROOT                   = 70,
+	ICURS_SPIKED_CLUB                 = 71,
 	ICURS_SCIMITAR                    = 72,
 	ICURS_POIGNARD                    = 73,
 	ICURS_FULL_HELM                   = 75,
@@ -578,7 +590,7 @@ typedef enum item_cursor_graphic {
 	ICURS_STONECLEAVER                = 104,
 	ICURS_SMALL_SHIELD                = 105,
 	ICURS_CLEAVER                     = 106,
-	ICURS_STUDDED_LEATHER_ARMOR       = 107,
+	ICURS_STUD_LEATH_ARMOR            = 107,
 	ICURS_BATTLE_BOW                  = 108,
 	ICURS_SHORT_STAFF                 = 109,
 	ICURS_TWO_HANDED_SWORD            = 110,
@@ -1803,13 +1815,13 @@ typedef enum _sfx_id {
 	USFX_LACH2,
 	USFX_LACH3,
 	USFX_LAZ1,
-	USFX_LAZ2,
+	//USFX_LAZ2,
 	USFX_SKING1,
 	USFX_SNOT1,
 	USFX_SNOT2,
 	USFX_SNOT3,
 	USFX_WARLRD1,
-	USFX_WLOCK1,
+	//USFX_WLOCK1,
 	USFX_ZHAR1,
 	USFX_ZHAR2,
 	USFX_DIABLOD,
@@ -1958,6 +1970,8 @@ typedef enum missile_id {
 	MIS_LIGHTNING2,
 	MIS_BLOODBOILC,
 	MIS_BLOODBOIL,
+	MIS_SWAMPC,
+	MIS_SWAMP,
 	MIS_TOWN,
 	MIS_RPORTAL,
 	MIS_FLASH,
@@ -2077,6 +2091,7 @@ typedef enum missile_gfx_id {
 	//MFILE_DOOM,
 	//MFILE_DOOMEXP,
 	MFILE_BLODBURS,
+	MFILE_SWAMP,
 	//MFILE_NEWEXP,
 	MFILE_SHATTER1,
 	MFILE_BIGEXP,
@@ -2157,6 +2172,17 @@ typedef enum missile_collision_mode {
 	MICM_BLOCK_ANY,
 	MICM_BLOCK_WALL,
 } missile_collision_mode;
+
+typedef enum missile_resistance {
+	MISR_NONE,
+	MISR_SLASH,
+	MISR_BLUNT,
+	MISR_PUNCTURE,
+	MISR_FIRE,
+	MISR_LIGHTNING,
+	MISR_MAGIC,
+	MISR_ACID,
+} missile_resistance;
 
 typedef enum _monster_ai {
 	AI_ZOMBIE,
@@ -2517,17 +2543,6 @@ typedef enum _monster_resistance {
 	MORS_ACID_RESIST         = 0x02 << MORS_IDX_ACID,
 	MORS_ACID_IMMUNE         = 0x03 << MORS_IDX_ACID,
 } _monster_resistance;
-
-typedef enum missile_resistance {
-	MISR_NONE,
-	MISR_SLASH,
-	MISR_BLUNT,
-	MISR_PUNCTURE,
-	MISR_FIRE,
-	MISR_LIGHTNING,
-	MISR_MAGIC,
-	MISR_ACID,
-} missile_resistance;
 
 typedef enum _speech_id {
 	TEXT_KING1,
@@ -3545,7 +3560,9 @@ typedef enum theme_id {
 typedef enum event_type {
 	EVENT_TYPE_JOIN_ACCEPTED,
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
+#ifdef ZEROTIER
 	EVENT_TYPE_PLAYER_INFO,
+#endif
 	NUM_EVT_TYPES,
 } event_type;
 
@@ -3570,12 +3587,12 @@ typedef enum text_color {
 	COL_GOLD,
 } text_color;
 
-/*typedef enum item_color {
+typedef enum item_color {
 	ICOL_YELLOW = PAL16_YELLOW + 5,
 	ICOL_WHITE = PAL16_GRAY + 5,
 	ICOL_BLUE  = PAL16_BLUE + 5,
 	ICOL_RED   = PAL16_RED + 5,
-} item_color;*/
+} item_color;
 
 typedef enum _difficulty {
 	DIFF_NORMAL,
@@ -3715,7 +3732,7 @@ typedef enum _target_mode {
 	TGT_NORMAL,
 	TGT_ITEM,
 	TGT_OBJECT,
-	TGT_PLAYER,
+	TGT_OTHER,
 	TGT_DEAD,
 	TGT_NONE
 } _target_mode;
@@ -3762,7 +3779,7 @@ typedef enum lvl_entry {
 	ENTRY_SETLVL,
 	ENTRY_RTNLVL,
 	ENTRY_DYNLVL,
-	ENTRY_WARPLVL,
+	ENTRY_PORTLVL,
 	ENTRY_TWARPDN,
 	ENTRY_TWARPUP,
 	ENTRY_RETOWN,
@@ -3811,6 +3828,7 @@ typedef enum spell_id {
 	SPL_POISON,
 	SPL_WIND,
 	SPL_SHROUD,
+	SPL_SWAMP,
 	SPL_GUARDIAN,
 	SPL_GOLEM,
 	SPL_STONE,
@@ -3891,6 +3909,7 @@ typedef enum _cmd_id {
 	CMD_CUTPLRITEM,
 	CMD_DELPLRITEM,
 	CMD_USEPLRITEM,
+	CMD_USEPLRMAP,
 	CMD_PUTITEM,
 	CMD_SPAWNITEM,
 	CMD_GETITEM,
@@ -4325,6 +4344,12 @@ typedef enum quest_nakrul_book {
 	QNB_BOOK_B,
 	QNB_BOOK_C,
 } quest_nakrul_book;
+
+typedef enum map_status {
+	CMAP_NONE,
+	CMAP_IDENTIFIED,
+	CMAP_UNIDENTIFIED
+} map_status;
 
 typedef enum talk_id {
 	STORE_NONE,

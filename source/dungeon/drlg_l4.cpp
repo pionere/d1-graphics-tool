@@ -56,19 +56,19 @@ const BYTE L4DYNENTRY2[] = {
 /** Miniset: Stairs up. */
 const BYTE L4USTAIRS[] = {
 	// clang-format off
-	5, 5, // width, height
+	4, 5, // width, height
 
-	 6, 6, 6, 6, 6, // search
-	 6, 6, 6, 6, 6,
-	 6, 6, 6, 6, 6,
-	 6, 6, 6, 6, 6,
-	 6, 6, 6, 6, 6,
+	 6, 6, 6, 6, // search
+	 6, 6, 6, 6,
+	 6, 6, 6, 6,
+	 6, 6, 6, 6,
+	 6, 6, 6, 6,
 
-	 0,  0,  0,  0, 0, // replace
-	36, 38, 35,  0, 0,
-	37, 34, 33, 32, 0,
-	 0,  0, 31,  0, 0,
-	 0,  0,  0,  0, 0,
+	 0,  0,  0,  0, // replace
+	36, 38, 35,  0,
+	37, 34, 33, 32,
+	 0,  0, 31,  0,
+	 0,  0,  0,  0,
 	// clang-format on
 };
 /** Miniset: Stairs up to town. */
@@ -2160,7 +2160,7 @@ static void DRLG_L4FixPreMap(int idx)
 	} else if (pSetPieces[idx]._sptype == SPT_DIAB_QUAD_3) {
 		// patch set-piece - Diab3a.DUN
 		// useless tiles
-		for (int y = 0; y < 12; y++) {
+		for (int y = 0; y < 11; y++) {
 			for (int x = 0; x < 11; x++) {
 				if (x >= 4 && x <= 6 && y >= 10 && y <= 10) {
 					continue; // SW-wall

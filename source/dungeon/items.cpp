@@ -127,7 +127,7 @@ static void PlaceInitItems()
 		SetItemData(ii, random_(12, 2) != 0 ? IDI_HEAL : IDI_MANA);
 		items[ii]._iSeed = seed;
 		items[ii]._iCreateInfo = lvl; // | CF_PREGEN;
-		// assert(gbLvlLoad != 0);
+		// assert(gbLvlLoad);
 		RespawnItem(ii);
 
 		GetRandomItemSpace(ii);
@@ -334,8 +334,7 @@ static void GetBookSpell(int ii, unsigned lvl)
 	ns = 0;
 	for (bs = 0; bs < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); bs++) {
 		if (spelldata[bs].sBookLvl != SPELL_NA && lvl >= spelldata[bs].sBookLvl
-		 && (IsMultiGame
-			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))) {
+		 && (IsMultiGame || bs != SPL_RESURRECT)) {
 			ss[ns] = bs;
 			ns++;
 		}
@@ -388,8 +387,7 @@ static void GetScrollSpell(int ii, unsigned lvl)
 	ns = 0;
 	for (bs = 0; bs < (IsHellfireGame ? SPL_RUNE_FIRST : NUM_SPELLS_DIABLO); bs++) {
 		if (spelldata[bs].sScrollLvl != SPELL_NA && lvl >= spelldata[bs].sScrollLvl
-		 && (IsMultiGame
-			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))) {
+		 && (IsMultiGame || bs != SPL_RESURRECT)) {
 			ss[ns] = bs;
 			ns++;
 		}
@@ -421,8 +419,7 @@ static void GetRuneSpell(int ii, unsigned lvl)
 	ns = 0;
 	for (bs = SPL_RUNE_FIRST; bs <= SPL_RUNE_LAST; bs++) {
 		if (/*spelldata[bs].sScrollLvl != SPELL_NA &&*/ lvl >= spelldata[bs].sScrollLvl
-		 /*&& (IsMultiGame
-			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))*/) {
+		 /*&& (IsMultiGame || bs != SPL_RESURRECT)*/) {
 			ss[ns] = bs;
 			ns++;
 		}
@@ -470,8 +467,7 @@ static void GetStaffSpell(int ii, unsigned lvl)
 	ns = 0;
 	for (bs = 0; bs < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); bs++) {
 		if (spelldata[bs].sStaffLvl != SPELL_NA && lvl >= spelldata[bs].sStaffLvl
-		 && (IsMultiGame
-			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))) {
+		 && (IsMultiGame || bs != SPL_RESURRECT)) {
 			ss[ns] = bs;
 			ns++;
 		}
@@ -490,7 +486,7 @@ static void GetStaffSpell(int ii, unsigned lvl)
 	is->_iMaxCharges = is->_iCharges;
 
 	is->_iMinMag = sd->sMinInt;
-	v = is->_iCharges * sd->sStaffCost / 5;
+	v = is->_iCharges * sd->sStaffCost;
 	is->_ivalue += v;
 	is->_iIvalue += v;
 }
@@ -503,8 +499,7 @@ static int GetItemSpell()
 	ns = 0;
 	for (bs = 0; bs < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); bs++) {
 		if (spelldata[bs].sManaCost != 0 // TODO: use sSkillFlags ?
-		 && (IsMultiGame
-			 || (bs != SPL_RESURRECT && bs != SPL_HEALOTHER))) {
+		 && (IsMultiGame || bs != SPL_RESURRECT)) {
 			ss[ns] = bs;
 			ns++;
 		}
@@ -614,7 +609,7 @@ static void SaveItemPower(int ii, int power, int param1, int param2, int minval,
 		is->_iPLSkillLevels = r;
 		break;
 	case IPL_CHARGES:
-		is->_iCharges *= param1;
+		is->_iCharges *= r;
 		is->_iMaxCharges = is->_iCharges;
 		break;
 	case IPL_FIREDAM:
@@ -662,26 +657,23 @@ static void SaveItemPower(int ii, int power, int param1, int param2, int minval,
 		break;
 	case IPL_DUR:
 		r2 = r * is->_iMaxDur / 100;
-		is->_iMaxDur += r2;
-		is->_iDurability += r2;
+		is->_iDurability = is->_iMaxDur = is->_iMaxDur + r2;
 		break;
 	case IPL_CRYSTALLINE:
 		is->_iPLDam = r * 2;
 		// no break
 	case IPL_DUR_CURSE:
-		is->_iMaxDur = r < 100 ? (is->_iMaxDur - r * is->_iMaxDur / 100) : 1;
-		is->_iDurability = is->_iMaxDur;
+		is->_iDurability = is->_iMaxDur = r < 100 ? (is->_iMaxDur - r * is->_iMaxDur / 100) : 1;
 		break;
 	case IPL_INDESTRUCTIBLE:
-		is->_iDurability = DUR_INDESTRUCTIBLE;
-		is->_iMaxDur = DUR_INDESTRUCTIBLE;
+		is->_iDurability = is->_iMaxDur = DUR_INDESTRUCTIBLE;
 		break;
 	case IPL_LIGHT:
 		is->_iPLLight = r;
 		break;
-	case IPL_INVCURS:
-		is->_iCurs = param1;
-		break;
+	// case IPL_INVCURS:
+	//	is->_iCurs = param1;
+	//	break;
 	//case IPL_THORNS:
 	//	is->_iFlags |= ISPL_THORNS;
 	//	break;
@@ -738,8 +730,7 @@ static void SaveItemPower(int ii, int power, int param1, int param2, int minval,
 		is->_iMaxDam = param2;
 		break;
 	case IPL_SETDUR:
-		is->_iDurability = param1;
-		is->_iMaxDur = param1;
+		is->_iDurability = is->_iMaxDur = r;
 		break;
 	case IPL_NOMINSTR:
 		is->_iMinStr = 0;
@@ -793,7 +784,7 @@ static void SaveItemPower(int ii, int power, int param1, int param2, int minval,
 	}
 }
 
-static void GetItemPower(int ii, unsigned minlvl, unsigned maxlvl, int flgs, bool onlygood)
+static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygood)
 {
 	int nl, v;
 	const AffixData *pres, *sufs;
@@ -802,6 +793,8 @@ static void GetItemPower(int ii, unsigned minlvl, unsigned maxlvl, int flgs, boo
 	BOOLEAN good;
 
 	// assert(items[ii]._iMagical == ITEM_QUALITY_NORMAL);
+	if (flgs != PLT_MISC) // items[ii]._itype != ITYPE_RING && items[ii]._itype != ITYPE_AMULET)
+		lvl = lvl > AllItemsList[items[ii]._iIdx].iMinMLvl ? lvl - AllItemsList[items[ii]._iIdx].iMinMLvl : 0;
 
 	// select affixes (3: both, 2: prefix, 1: suffix)
 	v = random_(23, 128);
@@ -812,7 +805,7 @@ static void GetItemPower(int ii, unsigned minlvl, unsigned maxlvl, int flgs, boo
 		nl = 0;
 		for (pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++) {
 			if ((flgs & pres->PLIType)
-			 && pres->PLMinLvl >= minlvl && pres->PLMinLvl <= maxlvl
+			 && pres->PLRanges[range].from <= lvl && pres->PLRanges[range].to >= lvl
 			// && (!onlygood || pres->PLOk)) {
 			 && (good <= pres->PLOk)) {
 				l[nl] = pres;
@@ -842,7 +835,7 @@ static void GetItemPower(int ii, unsigned minlvl, unsigned maxlvl, int flgs, boo
 		nl = 0;
 		for (sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++) {
 			if ((sufs->PLIType & flgs)
-			    && sufs->PLMinLvl >= minlvl && sufs->PLMinLvl <= maxlvl
+			    && sufs->PLRanges[range].from <= lvl && sufs->PLRanges[range].to >= lvl
 			   // && (!onlygood || sufs->PLOk)) {
 			    && (good <= sufs->PLOk)) {
 				l[nl] = sufs;
@@ -866,27 +859,36 @@ static void GetItemPower(int ii, unsigned minlvl, unsigned maxlvl, int flgs, boo
 	}
 	// prefix or suffix added -> recalculate the value of the item
 	if (items[ii]._iMagical == ITEM_QUALITY_MAGIC) {
-		v = items[ii]._iVMult;
-		if (v >= 0) {
-			v *= items[ii]._ivalue;
+		if (items[ii]._iMiscId != IMISC_MAP) {
+			v = items[ii]._iVMult;
+			if (v >= 0) {
+				v *= items[ii]._ivalue;
+			}
+			else {
+				v = items[ii]._ivalue / -v;
+			}
+			v += items[ii]._iVAdd;
+			if (v <= 0) {
+				v = 1;
+			}
 		} else {
-			v = items[ii]._ivalue / -v;
-		}
-		v += items[ii]._iVAdd;
-		if (v <= 0) {
-			v = 1;
+			v = ((1 << MAXCAMPAIGNSIZE) - 1) >> (6 - items[ii]._iPLLight);
+			items[ii]._ivalue = v;
 		}
 		items[ii]._iIvalue = v;
 	}
 }
 
-static void GetItemBonus(int ii, unsigned minlvl, unsigned maxlvl, bool onlygood, bool allowspells)
+static void GetItemBonus(int ii, unsigned lvl, BYTE range, bool onlygood, bool allowspells)
 {
 	int flgs;
 
 	switch (items[ii]._itype) {
 	case ITYPE_MISC:
-		return;
+		if (items[ii]._iMiscId != IMISC_MAP)
+			return;
+		flgs = PLT_MAP;
+		break;
 	case ITYPE_SWORD:
 	case ITYPE_AXE:
 	case ITYPE_MACE:
@@ -913,7 +915,7 @@ static void GetItemBonus(int ii, unsigned minlvl, unsigned maxlvl, bool onlygood
 	case ITYPE_STAFF:
 		flgs = PLT_STAFF;
 		if (allowspells && random_(17, 4) != 0) {
-			GetStaffSpell(ii, maxlvl);
+			GetStaffSpell(ii, lvl);
 			if (random_(51, 2) != 0)
 				return;
 			flgs |= PLT_CHRG;
@@ -930,7 +932,7 @@ static void GetItemBonus(int ii, unsigned minlvl, unsigned maxlvl, bool onlygood
 		return;
 	}
 
-	GetItemPower(ii, minlvl, maxlvl, flgs, onlygood);
+	GetItemPower(ii, lvl, range, flgs, onlygood);
 }
 
 static int RndUItem(unsigned lvl)
@@ -958,7 +960,7 @@ static int RndUItem(unsigned lvl)
 
 	for (i = IDI_RNDDROP_FIRST; i < (IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO); i++) {
 		ril[i - IDI_RNDDROP_FIRST] = (lvl < AllItemsList[i].iMinMLvl ||
-			(AllItemsList[i].itype == ITYPE_MISC && AllItemsList[i].iMiscId != IMISC_BOOK)) ? 0 : AllItemsList[i].iRnd;
+			(AllItemsList[i].itype == ITYPE_MISC && AllItemsList[i].iMiscId != IMISC_BOOK && AllItemsList[i].iMiscId != IMISC_MAP)) ? 0 : AllItemsList[i].iRnd;
 	}
 	ri = 0;
 	for (i = 0; i < ((IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO) - IDI_RNDDROP_FIRST); i++)
@@ -1110,6 +1112,7 @@ static void GetUniqueItem(int ii, int uid)
 		SaveItemPower(ii, ui->UIPower6, ui->UIParam6a, ui->UIParam6b, 0, 0, 1);
 	}}}}}
 
+	items[ii]._iCurs = ui->UICurs;
 	items[ii]._iIvalue = ui->UIValue;
 
 	// if (items[ii]._iMiscId == IMISC_UNIQUE)
@@ -1148,7 +1151,7 @@ static void SetupAllItems(int ii, int idx, int iseed, unsigned lvl, unsigned qua
 		 || random_(32, 128) < 14 || (unsigned)random_(33, 128) <= lvl) {
 			uid = CheckUnique(ii, lvl, quality);
 			if (uid < 0) {
-				GetItemBonus(ii, lvl >> 2, lvl, quality >= CFDQ_GOOD, true);
+				GetItemBonus(ii, lvl, IAR_DROP, quality >= CFDQ_GOOD, true);
 			} else {
 				GetUniqueItem(ii, uid);
 				return;
@@ -1313,7 +1316,7 @@ void PlaceQuestItemInArea(int idx, int areasize)
 		assert(i == numitems);
 		CreateQuestItemAt(IDI_ROCK, objects[oi]._ox, objects[oi]._oy);
 //		SetItemData(i, IDI_ROCK);
-		// assert(gbLvlLoad != 0);
+		// assert(gbLvlLoad);
 //		RespawnItem(i);
 		// draw it above the stand
 		items[i]._iSelFlag = 2;

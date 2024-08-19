@@ -64,7 +64,7 @@ static int TFit_Shrine(int themeId)
 	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2; xx++) {
 		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2; yy++) {
 			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
-				if ((nSpecTrapTable[dPiece[xx][yy - 1]] & PST_SPEC_TYPE) != PST_NONE
+				if ((nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
 				 // - on the inside
 				 && !nSolidTable[dPiece[xx - 1][yy]]
@@ -86,7 +86,7 @@ static int TFit_Shrine(int themeId)
 					// if (numMatches == lengthof(drlg.thLocs))
 					//	goto done;
 				}
-				if ((nSpecTrapTable[dPiece[xx - 1][yy]] & PST_SPEC_TYPE) != PST_NONE
+				if ((nSpecTrapTable[dPiece[xx - 1][yy]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
 				 // - on the inside
 				 && !nSolidTable[dPiece[xx][yy - 1]]
@@ -312,12 +312,43 @@ void InitLvlThemes()
 
 void InitThemes()
 {
-	int i, j;
+	int i, j, x, y, x1, y1, x2, y2;
 
 	// assert(currLvl._dType != DTYPE_TOWN);
 	if (currLvl._dLevelNum >= DLV_HELL4) // there are no themes in hellfire (and on diablo-level)
 		return;
 
+	for (i = 0; i < numthemes; i++) {
+		x1 = themes[i]._tsx1;
+		y1 = themes[i]._tsy1;
+		x2 = themes[i]._tsx2;
+		y2 = themes[i]._tsy2;
+		// convert to subtile-coordinates
+		x1 = DBORDERX + 2 * x1;
+		y1 = DBORDERY + 2 * y1;
+		x2 = DBORDERX + 2 * x2 + 1;
+		y2 = DBORDERY + 2 * y2 + 1;
+		themes[i]._tsx1 = x1;
+		themes[i]._tsy1 = y1;
+		themes[i]._tsx2 = x2;
+		themes[i]._tsy2 = y2;
+		// select transval
+		themes[i]._tsTransVal = dTransVal[x1 + 2][y1 + 2];
+		if (themes[i]._tsTransVal == 0) {
+			dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 .. %3:%4.").arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2);
+		}
+		// protect themes with dFlags
+		// v = themes[i]._tsTransVal;
+		for (x = x1 + 1; x < x2; x++) {
+			for (y = y1 + 1; y < y2; y++) {
+				// if (dTransVal[x][y] == v) { -- wall?
+					dFlags[x][y] |= BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT;
+				// }
+			}
+		}
+	}
+
+	// select theme types
 	// TODO: use dType instead
 	_gbShrineFlag = currLvl._dDunType != DGT_CAVES && currLvl._dDunType != DGT_HELL;
 	_gbSkelRoomFlag = _gbShrineFlag && numSkelTypes != 0;
@@ -331,18 +362,6 @@ void InitThemes()
 	_gbTFountainFlag = true;
 	_gbTreasureFlag = true;
 
-	for (i = 0; i < numthemes; i++) {
-		// convert to subtile-coordinates
-		themes[i]._tsx1 = DBORDERX + 2 * themes[i]._tsx1;
-		themes[i]._tsy1 = DBORDERY + 2 * themes[i]._tsy1;
-		themes[i]._tsx2 = DBORDERX + 2 * themes[i]._tsx2 + 1;
-		themes[i]._tsy2 = DBORDERY + 2 * themes[i]._tsy2 + 1;
-		// select transval
-		themes[i]._tsTransVal = dTransVal[themes[i]._tsx1 + 2][themes[i]._tsy1 + 2];
-		if (themes[i]._tsTransVal == 0) {
-			dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 .. %3:%4.").arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2);
-		}
-	}
 	if (QuestStatus(Q_ZHAR)) {
 		for (i = 0; i < numthemes; i++) {
 			if (SpecialThemeFit(i, THEME_LIBRARY)) {
@@ -356,28 +375,6 @@ void InitThemes()
 			j = ThemeGood[random_(0, lengthof(ThemeGood))];
 			while (!SpecialThemeFit(i, j))
 				j = random_(0, NUM_THEMES);
-		}
-	}
-}
-
-void HoldThemeRooms()
-{
-	int i, x, y, x1, y1, x2, y2;
-	// assert(currLvl._dType != DTYPE_TOWN);
-	// assert(currLvl._dLevelNum < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
-
-	for (i = numthemes - 1; i >= 0; i--) {
-		x1 = themes[i]._tsx1;
-		y1 = themes[i]._tsy1;
-		x2 = themes[i]._tsx2;
-		y2 = themes[i]._tsy2;
-		// v = themes[i]._tsTransVal;
-		for (x = x1 + 1; x < x2; x++) {
-			for (y = y1 + 1; y < y2; y++) {
-				// if (dTransVal[x][y] == v) { -- wall?
-					dFlags[x][y] |= BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT;
-				// }
-			}
 		}
 	}
 }
@@ -510,7 +507,10 @@ restart:
 
 static void AddSkelMonster(int x, int y)
 {
-	assert(PosOkActor(x, y));
+	if (!PosOkActor(x, y)) {
+		dProgressErr() << QString("AddSkelMonster failed to place monster to %1:%2 room-id:%3").arg(x).arg(y).arg(dTransVal[x][y]);
+		return;
+	}
 	AddMonster(mapSkelTypes[random_low(136, numSkelTypes)], x, y);
 }
 
@@ -590,7 +590,7 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
 static void Theme_Treasure(BYTE tv)
 {
 	int xx, yy;
-	const BYTE treasrnds[4] = { 4, 9, 7, 10 };
+	const BYTE treasrnds[4] = { 6, 9, 7, 10 };
 	const BYTE treasrnd = treasrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
 	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {

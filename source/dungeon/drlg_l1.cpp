@@ -71,7 +71,7 @@ const BYTE L1DYNENTRY[] = {
 	 0,   0, 0, // replace
 	 0, 134, 0,
 	 0,   0, 0,
-	 // clang-format on
+	// clang-format on
 };
 #ifdef HELLFIRE
 const BYTE L5DYNENTRY[] = {
@@ -949,7 +949,7 @@ static void DRLG_LoadL1SP()
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// use common tiles
 		lm[2 + 5 + 4 * 7] =  SwapLE16(203 - 181);
-		// use common tiles and make the inner tile at the entrance non-walkable
+		// use common tile and make the inner tile at the entrance non-walkable
 		lm[2 + 5 + 2 * 7] =  SwapLE16(203 - 181);
 		// let the game generate the shadow
 		lm[2 + 0 + 5 * 7] = 0;
@@ -1949,16 +1949,16 @@ static void DRLG_L1PlaceThemeRooms()
 			}
 		}
 		if (!fit)
-			continue;
+			continue; // room is too small or incomplete
 		// create the room
-		int w = roomRight - roomLeft + 1;
-		int h = roomBottom - roomTop + 1;
-		w += 2;
-		h += 2;
+		int w = (roomRight + 1) - (roomLeft - 1) + 1;
+		int h = (roomBottom + 1) - (roomTop - 1) + 1;
+		if (w * h > 100)
+			continue; // room is too large
 		themes[numthemes]._tsx1 = roomLeft - 1;
 		themes[numthemes]._tsy1 = roomTop - 1;
-		themes[numthemes]._tsx2 = roomLeft + w - 2;
-		themes[numthemes]._tsy2 = roomTop + h - 2;
+		themes[numthemes]._tsx2 = roomLeft - 1 + w - 1;
+		themes[numthemes]._tsy2 = roomTop - 1 + h - 1;
 		numthemes++;
 		if (numthemes == lengthof(themes))
 			break;

@@ -359,12 +359,12 @@ static void AddCandles()
 {
 	int tx, ty;
 
-	tx = pWarps[DWARP_SIDE]._wx + 1;
+	tx = pWarps[DWARP_SIDE]._wx;
 	ty = pWarps[DWARP_SIDE]._wy;
 	AddObject(OBJ_STORYCANDLE, tx - 2, ty + 1);
-	AddObject(OBJ_STORYCANDLE, tx + 3, ty + 1);
+	AddObject(OBJ_STORYCANDLE, tx + 2, ty + 1);
 	AddObject(OBJ_STORYCANDLE, tx - 1, ty + 2);
-	AddObject(OBJ_STORYCANDLE, tx + 2, ty + 2);
+	AddObject(OBJ_STORYCANDLE, tx + 1, ty + 2);
 }
 
 static void AddBookLever(int type, int x1, int y1, int x2, int y2, int qn)
@@ -486,7 +486,7 @@ static void AddDunObjs(int x1, int y1, int x2, int y2)
 static void AddL2Torches()
 {
 	int i, j;
-	// place torches on NE->SW walls
+	// place torches on NW->SE walls
 	for (i = DBORDERX; i < DBORDERX + DSIZEX; i++) {
 		for (j = DBORDERY; j < DBORDERY + DSIZEY; j++) {
 			// skip setmap pieces
@@ -507,7 +507,7 @@ static void AddL2Torches()
 			j += 4;
 		}
 	}
-	// place torches on NW->SE walls
+	// place torches on NE->SW walls
 	for (j = DBORDERY; j < DBORDERY + DSIZEY; j++) {
 		for (i = DBORDERX; i < DBORDERX + DSIZEX; i++) {
 			// skip setmap pieces
@@ -717,14 +717,6 @@ static int SetupObject(int type, int ox, int oy)
 			//os->_oMissFlag = FALSE;
 			//os->_oDoorFlag = ldoor ? ODT_LEFT : ODT_RIGHT;
 			os->_oVar1 = dPiece[ox][oy]; // DOOR_PIECE_CLOSED
-			// DOOR_SIDE_PIECE_CLOSED
-			int bx = ox;
-			int by = oy;
-			if (os->_oDoorFlag == ODT_LEFT)
-				by--;
-			else
-				bx--;
-			os->_oVar2 = dPiece[bx][by];
 		}
 	}
 	return oi;
@@ -1145,10 +1137,11 @@ static void AddShrine(int oi)
 	os = &objects[oi];
 	os->_oRndSeed = NextRndSeed();
 	os->_oVar1 = FindValidShrine(NUM_SHRINETYPE); // SHRINE_TYPE
+	/* -- disabled because the animation is shifted and not much point without trap (+ cel file is cut in the patcher)
 	if (random_(150, 2) != 0) {
 		os->_oAnimFrame = 12;
 		os->_oAnimLen = 22;
-	}
+	}*/
 }
 
 static void ObjAddRndSeed(int oi)
@@ -1325,9 +1318,10 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_MUSHPATCH:
 			Alloc2x2Obj(oi);
 			break;
-			//case OBJ_TEARFTN:
-			//	ObjAddRndSeed(oi);
-			//	break;
+		//case OBJ_BLOODFTN:
+		//case OBJ_TEARFTN:
+		//	ObjAddRndSeed(oi);
+		//	break;
 		case OBJ_MCIRCLE1:
 		case OBJ_MCIRCLE2:
 			AddMagicCircle(oi);
