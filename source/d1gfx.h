@@ -179,6 +179,8 @@ public:
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);
+    bool isPatched() const;
+    void setPatched(bool patched);
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
     unsigned getFrameLen() const;
@@ -227,6 +229,7 @@ protected:
     std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
     // fields of tilesets
+    bool patched = false;
     bool upscaled = false;
     // fields of smk
     unsigned frameLen; // microsec

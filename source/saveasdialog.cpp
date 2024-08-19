@@ -46,6 +46,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     this->ui->celClippedAutoRadioButton->setChecked(true);
     this->ui->celGroupEdit->setText("0");
 
+    this->ui->celPatchedAutoRadioButton->setChecked(true);
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
 
     this->ui->outputClsFileEdit->setText(isTilesetGfx ? tileset->cls->getFilePath() : "");
@@ -195,7 +196,14 @@ void SaveAsDialog::on_saveButton_clicked()
     } else {
         params.clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     }
-    // tilSettingsGroupBox: upscaled, min, til, sla and tla files
+    // tilSettingsGroupBox: patched, upscaled, min, til, sla and tla files
+    if (this->ui->celPatchedYesRadioButton->isChecked()) {
+        params.patched = SAVE_PATCHED_TYPE::TRUE;
+    } else if (this->ui->celPatcheddNoRadioButton->isChecked()) {
+        params.patched = SAVE_PATCHED_TYPE::FALSE;
+    } else {
+        params.patched = SAVE_PATCHED_TYPE::AUTODETECT;
+    }
     if (this->ui->minUpscaledYesRadioButton->isChecked()) {
         params.upscaled = SAVE_UPSCALED_TYPE::TRUE;
     } else if (this->ui->minUpscaledNoRadioButton->isChecked()) {

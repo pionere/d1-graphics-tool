@@ -20501,4 +20501,5 @@ void D1Tileset::patch(int dunType, bool silent)
         unsigned refIndex = *it;
         this->removeFrame(refIndex - 1, -1);
     }
+    this->gfx->setPatched(true);
 }

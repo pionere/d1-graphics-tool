@@ -119,6 +119,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
 
     // BUILDING {CEL FRAMES}
     // std::stack<quint16> invalidFrames;
+    gfx.patched = false;
     for (unsigned i = 0; i < frameOffsets.size(); i++) {
         const auto &offset = frameOffsets[i];
         device->seek(offset.first);
@@ -137,7 +138,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
             }
         }
         D1GfxFrame *frame = new D1GfxFrame();
-        if (!D1CelTilesetFrame::load(*frame, frameType, celFrameRawData, params)) {
+        if (!D1CelTilesetFrame::load(*frame, frameType, celFrameRawData, &gfx.patched)) {
             quint16 frameIndex = gfx.frames.size();
             dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
             // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
@@ -166,6 +167,13 @@ bool D1CelTileset::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &
         gfx.upscaled = upscaled; // setUpscaled
     }
 
+    // update patched info
+    bool patched = gfx.patched;
+    if (params.patched != SAVE_PATCHED_TYPE::AUTODETECT) {
+        patched = params.patched == SAVE_PATCHED_TYPE::TRUE;
+        gfx.patched = patched; // setPatched
+    }
+
     // calculate header size
     int headerSize = 4 + numFrames * 4 + 4;
 
@@ -183,11 +191,11 @@ bool D1CelTileset::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &
     for (int ii = 0; ii < numFrames; ii++) {
         *(quint32 *)&buf[(ii + 1) * sizeof(quint32)] = SwapLE32(pBuf - buf);
         D1GfxFrame *frame = gfx.getFrame(ii);
-        if (upscaled) {
+        if (gfx.upscaled) {
             *pBuf = (quint8)frame->getFrameType();
             pBuf++;
         }
-        pBuf = D1CelTilesetFrame::writeFrameData(*frame, pBuf);
+        pBuf = D1CelTilesetFrame::writeFrameData(*frame, pBuf, gfx.patched);
     }
 
     *(quint32 *)&buf[(numFrames + 1) * sizeof(quint32)] = SwapLE32(pBuf - buf);

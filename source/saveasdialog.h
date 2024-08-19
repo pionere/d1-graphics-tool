@@ -22,6 +22,12 @@ enum class SAVE_UPSCALED_TYPE {
     FALSE,
 };
 
+enum class SAVE_PATCHED_TYPE {
+    AUTODETECT,
+    TRUE,
+    FALSE,
+};
+
 class SaveAsParam {
 public:
     QString celFilePath;
@@ -35,6 +41,7 @@ public:
     int groupNum = 0;
     SAVE_CLIPPED_TYPE clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     SAVE_UPSCALED_TYPE upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
+    SAVE_PATCHED_TYPE patched = SAVE_PATCHED_TYPE::AUTODETECT;
     bool autoOverwrite = false;
     QString tblFilePath;
 };
