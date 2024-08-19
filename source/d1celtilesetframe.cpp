@@ -183,7 +183,7 @@ bool D1CelTilesetFrame::LoadLeftTriangle(D1GfxFrame &frame, const QByteArray &ra
     if (rawData.size() == MICRO_HEIGHT * MICRO_WIDTH / 2 + 32 /* 544 */) {
         patched = false;
         if (*set_patched) {
-            dProgressWarn() << tr("Unpatched left triangle in a patched tileset.");
+            dProgressWarn() << QApplication::tr("Unpatched left triangle in a patched tileset.");
         }
     } else if (rawData.size() == MICRO_HEIGHT * MICRO_WIDTH / 2 /* 512 */) {
         patched = true;
@@ -200,7 +200,7 @@ bool D1CelTilesetFrame::LoadRightTriangle(D1GfxFrame &frame, const QByteArray &r
     if (rawData.size() == MICRO_HEIGHT * MICRO_WIDTH / 2 + 32 /* 544 */) {
         patched = false;
         if (*set_patched) {
-            dProgressWarn() << tr("Unpatched right triangle in a patched tileset.");
+            dProgressWarn() << QApplication::tr("Unpatched right triangle in a patched tileset.");
         }
     } else if (rawData.size() == MICRO_HEIGHT * MICRO_WIDTH / 2 /* 512 */) {
         patched = true;
@@ -231,7 +231,7 @@ bool D1CelTilesetFrame::LoadLeftTrapezoid(D1GfxFrame &frame, const QByteArray &r
     if (rawData.size() == MICRO_HEIGHT * MICRO_WIDTH / 2 + MICRO_HEIGHT * MICRO_WIDTH / 4 + 32 /* 800 */) {
         patched = false;
         if (*set_patched) {
-            dProgressWarn() << tr("Unpatched left trapezoid in a patched tileset.");
+            dProgressWarn() << QApplication::tr("Unpatched left trapezoid in a patched tileset.");
         }
     } else if (rawData.size() == MICRO_HEIGHT * MICRO_WIDTH / 2 + MICRO_HEIGHT * MICRO_WIDTH / 4 /* 768 */) {
         patched = true;
@@ -248,7 +248,7 @@ bool D1CelTilesetFrame::LoadRightTrapezoid(D1GfxFrame &frame, const QByteArray &
     if (rawData.size() == MICRO_HEIGHT * MICRO_WIDTH / 2 + MICRO_HEIGHT * MICRO_WIDTH / 4 + 32 /* 800 */) {
         patched = false;
         if (*set_patched) {
-            dProgressWarn() << tr("Unpatched right trapezoid in a patched tileset.");
+            dProgressWarn() << QApplication::tr("Unpatched right trapezoid in a patched tileset.");
         }
     } else if (rawData.size() == MICRO_HEIGHT * MICRO_WIDTH / 2 + MICRO_HEIGHT * MICRO_WIDTH / 4 /* 768 */) {
         patched = true;
