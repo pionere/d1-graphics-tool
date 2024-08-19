@@ -86,15 +86,15 @@ const BYTE L2BTYPES[159] = {
 };
 /** Miniset: Entry point of the dynamic maps. */
 const BYTE L2DYNENTRY[] = {
-    // clang-format off
-    2, 2, // width, height
+	// clang-format off
+	2, 2, // width, height
 
-    2, 2, // search
-    3, 3,
+	2, 2, // search
+	3, 3,
 
-    33, 0, // replace
-    0, 0,
-    // clang-format on
+	33, 0, // replace
+	0, 0,
+	// clang-format on
 };
 /** Miniset: Stairs up. */
 const BYTE L2USTAIRS[] = {
@@ -2339,19 +2339,18 @@ static void DRLG_L2()
 			DRLG_L2SetRoom(0);
 		}
 
-        if (currLvl._dDynLvl) {
-            POS32 warpPos = DRLG_PlaceMiniSet(L2DYNENTRY);
-            if (warpPos.x < 0) {
-                continue;
-            }
-
-            pWarps[DWARP_ENTRY]._wx = warpPos.x;
-            pWarps[DWARP_ENTRY]._wy = warpPos.y;
-            pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
-            pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
-            pWarps[DWARP_ENTRY]._wtype = WRPT_CIRCLE;
-            break;
-        }
+		if (currLvl._dDynLvl) {
+			POS32 warpPos = DRLG_PlaceMiniSet(L2DYNENTRY);
+			if (warpPos.x < 0) {
+				continue;
+			}
+			pWarps[DWARP_ENTRY]._wx = warpPos.x;
+			pWarps[DWARP_ENTRY]._wy = warpPos.y;
+			pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
+			pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
+			pWarps[DWARP_ENTRY]._wtype = WRPT_CIRCLE;
+			break;
+		}
 		POS32 warpPos = DRLG_PlaceMiniSet(L2USTAIRS); // L2USTAIRS (5, 3)
 		if (warpPos.x < 0) {
 			continue;
@@ -2646,6 +2645,7 @@ static void DRLG_L2FixPreMap(int idx)
 		lm[2 + 5 + 8 * 10] = SwapLE16(50);
 		// remove 'items'
 		lm[2 + 10 * 16 + 9 + 2 * 10 * 2] = 0;
+		// adjust objects
 		// - add book and pedistal
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 9 + 24 * 10 * 2] = SwapLE16(15);
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 9 + 16 * 10 * 2] = SwapLE16(91);
@@ -2661,6 +2661,13 @@ static void DRLG_L2FixPreMap(int idx)
 			for (int x = 2; x <= 6; x++) {
 				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
+		}
+		lm[2 + 10 * 16 + 2 + 3 * 10] = SwapLE16((3 << 10));
+		lm[2 + 10 * 16 + 3 + 3 * 10] = SwapLE16((3 << 8) | (3 << 12));
+		lm[2 + 10 * 16 + 6 + 3 * 10] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12));
+		for (int y = 4; y < 7; y++) {
+			lm[2 + 10 * 16 + 3 + y * 10] = SwapLE16((3 << 8) | (3 << 12));
+			lm[2 + 10 * 16 + 6 + y * 10] = SwapLE16((3 << 8) | (3 << 12));
 		}
 	} else if (pSetPieces[idx]._sptype == SPT_BCHAMB) {
 		// patch the map - Bonestr1.DUN
@@ -2712,7 +2719,7 @@ static void DRLG_L2FixPreMap(int idx)
 				lm[2 + 32 * 18 + x + y * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
-		// protect the changing tiles room from torch placement
+		// protect the changing tiles from torch placement
 		lm[2 + 32 * 18 + (28 / 2) + (10 / 2) * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 		lm[2 + 32 * 18 + (36 / 2) + (10 / 2) * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 	}

@@ -44,43 +44,43 @@ const BYTE L4ConvTbl[16] = { BASE_MEGATILE_L4, 6, 1, 6, 2, 6, 6, 6, 9, 6, 1, 6, 
 
 /** Miniset: Entry point of the dynamic maps. */
 const BYTE L4DYNENTRY1[] = {
-    // clang-format off
-    2, 2, // width, height
+	// clang-format off
+	2, 2, // width, height
 
-    2, 2, // search
-    6, 6,
+	2, 2, // search
+	6, 6,
 
-    64, 0, // replace
-    0, 0,
-    // clang-format on
+	64, 0, // replace
+	0, 0,
+	// clang-format on
 };
 const BYTE L4DYNENTRY2[] = {
-    // clang-format off
-    2, 2, // width, height
+	// clang-format off
+	2, 2, // width, height
 
-    2, 6, // search
-    2, 6,
+	2, 6, // search
+	2, 6,
 
-    63, 0, // replace
-    0, 0,
-    // clang-format on
+	63, 0, // replace
+	0, 0,
+	// clang-format on
 };
 /** Miniset: Stairs up. */
 const BYTE L4USTAIRS[] = {
 	// clang-format off
-	5, 5, // width, height
+	4, 5, // width, height
 
-	 6, 6, 6, 6, 6, // search
-	 6, 6, 6, 6, 6,
-	 6, 6, 6, 6, 6,
-	 6, 6, 6, 6, 6,
-	 6, 6, 6, 6, 6,
+	 6, 6, 6, 6, // search
+	 6, 6, 6, 6,
+	 6, 6, 6, 6,
+	 6, 6, 6, 6,
+	 6, 6, 6, 6,
 
-	 0,  0,  0,  0, 0, // replace
-	36, 38, 35,  0, 0,
-	37, 34, 33, 32, 0,
-	 0,  0, 31,  0, 0,
-	 0,  0,  0,  0, 0,
+	 0,  0,  0,  0, // replace
+	36, 38, 35,  0,
+	37, 34, 33, 32,
+	 0,  0, 31,  0,
+	 0,  0,  0,  0,
 	// clang-format on
 };
 /** Miniset: Stairs up to town. */
@@ -2080,18 +2080,18 @@ static void DRLG_L4()
 		}
 		L4AddWall();
 
-        if (currLvl._dDynLvl) {
-            POS32 warpPos = DRLG_PlaceMiniSet(random_(141, 2) ? L4DYNENTRY1 : L4DYNENTRY2);
-            if (warpPos.x < 0) {
-                continue;
-            }
-            pWarps[DWARP_ENTRY]._wx = warpPos.x;
-            pWarps[DWARP_ENTRY]._wy = warpPos.y;
-            pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
-            pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
-            pWarps[DWARP_ENTRY]._wtype = WRPT_CIRCLE;
-            break;
-        }
+		if (currLvl._dDynLvl) {
+			POS32 warpPos = DRLG_PlaceMiniSet(random_(141, 2) ? L4DYNENTRY1 : L4DYNENTRY2);
+			if (warpPos.x < 0) {
+				continue;
+			}
+			pWarps[DWARP_ENTRY]._wx = warpPos.x;
+			pWarps[DWARP_ENTRY]._wy = warpPos.y;
+			pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
+			pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
+			pWarps[DWARP_ENTRY]._wtype = WRPT_CIRCLE;
+			break;
+		}
 		POS32 warpPos = DRLG_PlaceMiniSet(L4USTAIRS); // L4USTAIRS (5, 6)
 		if (warpPos.x < 0) {
 			continue;
@@ -2208,7 +2208,7 @@ static void DRLG_L4FixPreMap(int idx)
 	} else if (pSetPieces[idx]._sptype == SPT_DIAB_QUAD_3) {
 		// patch set-piece - Diab3a.DUN
 		// useless tiles
-		for (int y = 0; y < 12; y++) {
+		for (int y = 0; y < 11; y++) {
 			for (int x = 0; x < 11; x++) {
 				if (x >= 4 && x <= 6 && y >= 10 && y <= 10) {
 					continue; // SW-wall

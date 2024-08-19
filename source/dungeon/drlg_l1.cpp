@@ -61,29 +61,29 @@ static const BYTE L1BTYPES[207] = {
 };
 /** Miniset: Entry point of the dynamic maps. */
 const BYTE L1DYNENTRY[] = {
-    // clang-format off
-    3, 3, // width, height -- larger miniset to prevent theme-room placement
+	// clang-format off
+	3, 3, // width, height -- larger miniset to prevent theme-room placement
 
-     2,  2,  2, // search
-    13, 13, 13,
-    13, 13, 13,
+	 2,  2,  2, // search
+	13, 13, 13,
+	13, 13, 13,
 
-     0,   0, 0, // replace
-     0, 134, 0,
-     0,   0, 0,
-     // clang-format on
+	 0,   0, 0, // replace
+	 0, 134, 0,
+	 0,   0, 0,
+	// clang-format on
 };
 #ifdef HELLFIRE
 const BYTE L5DYNENTRY[] = {
-    // clang-format off
-    2, 2, // width, height
+	// clang-format off
+	2, 2, // width, height
 
-     2,  2, // search
-    13, 13,
+	 2,  2, // search
+	13, 13,
 
-    0, 0, // replace
-    195, 0,
-    // clang-format on
+	0, 0, // replace
+	195, 0,
+	// clang-format on
 };
 #endif
 /** Miniset: stairs up on a corner wall. */
@@ -957,9 +957,8 @@ static void DRLG_LoadL1SP()
 		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// use common tiles
-		// lm[2 + 5 + 3 * 7] =  SwapLE16(203 - 181);
 		lm[2 + 5 + 4 * 7] =  SwapLE16(203 - 181);
-		// use common tiles and make the inner tile at the entrance non-walkable
+		// use common tile and make the inner tile at the entrance non-walkable
 		lm[2 + 5 + 2 * 7] =  SwapLE16(203 - 181);
 		// let the game generate the shadow
 		lm[2 + 0 + 5 * 7] = 0;
@@ -1959,16 +1958,16 @@ static void DRLG_L1PlaceThemeRooms()
 			}
 		}
 		if (!fit)
-			continue;
+			continue; // room is too small or incomplete
 		// create the room
-		int w = roomRight - roomLeft + 1;
-		int h = roomBottom - roomTop + 1;
-		w += 2;
-		h += 2;
+		int w = (roomRight + 1) - (roomLeft - 1) + 1;
+		int h = (roomBottom + 1) - (roomTop - 1) + 1;
+		if (w > 10 - 2 || h > 10 - 2)
+			continue; // room is too large
 		themes[numthemes]._tsx1 = roomLeft - 1;
 		themes[numthemes]._tsy1 = roomTop - 1;
-		themes[numthemes]._tsx2 = roomLeft + w - 2;
-		themes[numthemes]._tsy2 = roomTop + h - 2;
+		themes[numthemes]._tsx2 = roomLeft - 1 + w - 1;
+		themes[numthemes]._tsy2 = roomTop - 1 + h - 1;
 		numthemes++;
 		if (numthemes == lengthof(themes))
 			break;
@@ -2631,22 +2630,23 @@ static void DRLG_L1()
 		L1FillChambers();
 		L1AddWall();
 		L1ClearChamberFlags();
-        if (currLvl._dDynLvl) {
+		if (currLvl._dDynLvl) {
 #ifdef HELLFIRE
-            POS32 warpPos = DRLG_PlaceMiniSet(currLvl._dType == DTYPE_CRYPT ? L5DYNENTRY : L1DYNENTRY);
+			POS32 warpPos = DRLG_PlaceMiniSet(currLvl._dType == DTYPE_CRYPT ? L5DYNENTRY : L1DYNENTRY);
 #else
-            POS32 warpPos = DRLG_PlaceMiniSet(L1DYNENTRY);
+			POS32 warpPos = DRLG_PlaceMiniSet(L1DYNENTRY);
 #endif
-            if (warpPos.x < 0) {
-                continue;
-            }
-            pWarps[DWARP_ENTRY]._wx = warpPos.x;
-            pWarps[DWARP_ENTRY]._wy = warpPos.y;
-            pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 2;
-            pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
-            pWarps[DWARP_ENTRY]._wtype = WRPT_CIRCLE;
-            break;
-        }
+			if (warpPos.x < 0) {
+				continue;
+			}
+			// LogErrorF("Warp at %d:%d", warpPos.x, warpPos.y);
+			pWarps[DWARP_ENTRY]._wx = warpPos.x;
+			pWarps[DWARP_ENTRY]._wy = warpPos.y;
+			pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 2;
+			pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
+			pWarps[DWARP_ENTRY]._wtype = WRPT_CIRCLE;
+			break;
+		}
 		if (placeWater) {
 			POS32 warpPos = DRLG_PlaceMiniSet(PWATERIN);
 			if (warpPos.x < 0) {

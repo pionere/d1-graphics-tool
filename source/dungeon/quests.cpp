@@ -53,24 +53,19 @@ void InitQuests(int seed)
 
 	SetRndSeed(seed);
 	quests[Q_DIABLO]._qvar1 = random_(0, 3);
+	quests[random_(0, 2) != 0 ? Q_SKELKING : Q_PWATER]._qactive = QUEST_NOTAVAIL;
+	if (IsHellfireGame) {
+	if (random_(0, 2) != 0)
+		quests[Q_GIRL]._qactive = QUEST_NOTAVAIL;
+	}
 
-		quests[random_(0, 2) != 0 ? Q_SKELKING : Q_PWATER]._qactive = QUEST_NOTAVAIL;
-// #ifdef HELLFIRE
-		if (IsHellfireGame) {
-		if (random_(0, 2) != 0)
-			quests[Q_GIRL]._qactive = QUEST_NOTAVAIL;
-		}
-// #endif
-
-		quests[QuestGroup1[random_(0, lengthof(QuestGroup1))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup2[random_(0, lengthof(QuestGroup2))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup3[random_(0, lengthof(QuestGroup3))]]._qactive = QUEST_NOTAVAIL;
-		quests[random_(0, 2) != 0 ? Q_VEIL : Q_WARLORD]._qactive = QUEST_NOTAVAIL;
-// #ifdef HELLFIRE
-		if (IsHellfireGame) {
-		quests[random_(0, 2) != 0 ? Q_FARMER : Q_JERSEY]._qactive = QUEST_NOTAVAIL;
-		}
-// #endif
+	quests[QuestGroup1[random_(0, lengthof(QuestGroup1))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup2[random_(0, lengthof(QuestGroup2))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup3[random_(0, lengthof(QuestGroup3))]]._qactive = QUEST_NOTAVAIL;
+	quests[random_(0, 2) != 0 ? Q_VEIL : Q_WARLORD]._qactive = QUEST_NOTAVAIL;
+	if (IsHellfireGame) {
+	quests[random_(0, 2) != 0 ? Q_FARMER : Q_JERSEY]._qactive = QUEST_NOTAVAIL;
+	}
 
 	if (quests[Q_PWATER]._qactive == QUEST_NOTAVAIL)
 		quests[Q_PWATER]._qvar1 = QV_PWATER_CLEAN;

@@ -28,11 +28,16 @@ typedef struct RECT32 {
 // items
 //////////////////////////////////////////////////
 
+typedef struct RANGE {
+	BYTE from;
+	BYTE to;
+} RANGE;
+
 typedef struct AffixData {
 	BYTE PLPower; // item_effect_type
 	int PLParam1;
 	int PLParam2;
-	BYTE PLMinLvl;
+	RANGE PLRanges[NUM_IARS];
 	int PLIType; // affix_item_type
 	BOOLEAN PLDouble;
 	BOOLEAN PLOk;
@@ -45,6 +50,7 @@ typedef struct UniqItemData {
 	const char* UIName;
 	BYTE UIUniqType; // unique_item_type
 	BYTE UIMinLvl;
+	uint16_t UICurs;
 	int UIValue;
 	BYTE UIPower1; // item_effect_type
 	int UIParam1a;
@@ -631,10 +637,6 @@ typedef struct LightListStruct {
 	int _lxoff;
 	int _lyoff;
 } LightListStruct;
-
-#if defined(X86_32bit_COMP) || defined(X86_64bit_COMP)
-static_assert((sizeof(LightListStruct) & (sizeof(LightListStruct) - 1)) == 0, "Align LightListStruct closer to power of 2 for better performance.");
-#endif
 
 //////////////////////////////////////////////////
 // trigs

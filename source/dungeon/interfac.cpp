@@ -21,6 +21,7 @@ bool HasTileset;
 bool PatchDunFiles;
 int ddLevelPlrs;
 int dnLevel;
+int dnType;
 QString assetPath;
 char infostr[256];
 bool stopgen;
@@ -232,9 +233,8 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
-		InitThemes();     // select theme types
+		InitThemes();     // protect themes with dFlags and select theme types
 		IncProgress();
-		HoldThemeRooms(); // protect themes with dFlags
 		InitMonsters();   // place monsters
 	} else {
 //		InitLvlStores();
@@ -272,11 +272,12 @@ static void EnterLevel(int lvl, int seed)
 	if (currLvl._dDynLvl) {
 		// select level
 		unsigned baseLevel = dnLevel;
+		unsigned leveltype = dnType;
 		// assert(baseLevel + HELL_LEVEL_BONUS < CF_LEVEL);
 		int availableLvls[NUM_FIXLVLS];
 		int numLvls = 0;
 		for (int i = DLV_CATHEDRAL1; i < NUM_STDLVLS; i++) {
-			if (AllLevels[i].dLevel <= baseLevel /*&& AllLevels[i].dMonTypes[0] != MT_INVALID*/) {
+			if (AllLevels[i].dLevel <= baseLevel && (leveltype == DLV_TOWN || leveltype == AllLevels[i].dType) /*&& AllLevels[i].dMonTypes[0] != MT_INVALID*/) {
 				availableLvls[numLvls] = i;
 				numLvls++;
 			}
@@ -523,6 +524,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 {
     ddLevelPlrs = params.numPlayers;
     dnLevel = params.levelNum;
+    dnType = DLV_TOWN; // params.levelType;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
@@ -552,6 +554,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 {
     ddLevelPlrs = params.numPlayers;
     dnLevel = params.levelNum;
+    dnType = DLV_TOWN; // params.levelType;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;

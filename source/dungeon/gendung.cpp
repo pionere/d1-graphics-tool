@@ -199,7 +199,9 @@ void InitLvlDungeon()
 		break;
 	case DTYPE_CATHEDRAL:
 		// patch dSolidTable - L1.SOL
-		/*// adjust SOL after fixCathedralShadows
+		/*nMissileTable[28] = true; // fix inconsistent corners
+		nMissileTable[29] = true; // fix inconsistent corners
+		// adjust SOL after fixCathedralShadows
 		nSolidTable[298] = true;
 		nSolidTable[304] = true;
 		nBlockTable[334] = false;
@@ -619,24 +621,23 @@ void InitLvlDungeon()
 		// - free subtile to enable fix for a glitch
 		pTiles[47][3] = 158; // 148
 		break;
-#ifdef HELLFIRE
 	case DTYPE_NEST:
 		// patch dSolidTable - L6.SOL
-		nSolidTable[390] = false; // make a pool tile walkable I.
+		/*nSolidTable[390] = false; // make a pool tile walkable I.
 		nSolidTable[413] = false; // make a pool tile walkable II.
 		nSolidTable[416] = false; // make a pool tile walkable III.
 		// - with subtile-based automap
 		nBlockTable[61] = false;
 		nBlockTable[63] = false;
 		nBlockTable[65] = false;
-		nBlockTable[66] = false;
+		nBlockTable[66] = false;*/
 		// patch dMegaTiles - L6.TIL
 		// - separate subtiles for the automap
 		pTiles[23][0] = 29;
 		pTiles[23][2] = 31;
 		break;
 	case DTYPE_CRYPT:
-		// revert 'patched' L5.SPT
+		// revert 'patched' L5.SLA
 		for (int i = 0; i < lengthof(nSpecTrapTable); i++) {
 			if ((nSpecTrapTable[i] & PST_SPEC_TYPE) <= 2) {
 				continue;
@@ -683,7 +684,7 @@ void InitLvlDungeon()
 		nMissileTable[104] = true;
 		nMissileTable[355] = true;
 		nMissileTable[357] = true;
-		// - adjust SOL after cleanupCrypt
+		// - adjust SOL after patchCryptMin
 		nSolidTable[238] = false;
 		nMissileTable[238] = false;
 		nBlockTable[238] = false;
@@ -793,7 +794,6 @@ void InitLvlDungeon()
 		pTiles[216][2] = pTiles[11][2];
 		pTiles[216][3] = pTiles[11][3];
 		break;
-#endif /* HELLFIRE */
 	default:
 		ASSUME_UNREACHABLE
 		break;

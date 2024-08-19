@@ -63,8 +63,7 @@ const int offset_y[NUM_DIRS] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
 static inline void InitMonsterTRN(MonAnimStruct (&anims)[NUM_MON_ANIM], const char* transFile)
 {
-	/*BYTE* cf;
-	int i, j;
+	/*int i, j;
 	const MonAnimStruct* as;
 	BYTE trn[NUM_COLORS];
 
@@ -72,7 +71,7 @@ static inline void InitMonsterTRN(MonAnimStruct (&anims)[NUM_MON_ANIM], const ch
 	// as indexes into a palette. (a 256 byte array of palette indices)
 	LoadFileWithMem(transFile, trn);
 	// patch TRN files - Monsters/*.TRN
-	cf = trn;
+	BYTE *cf = trn;
 	for (i = 0; i < NUM_COLORS; i++) {
 		if (*cf == 255) {
 			*cf = 0;
@@ -185,11 +184,16 @@ static void InitMonsterStats(int midx)
 	cmon->cmMinDamage2 = monLvl * cmon->cmMinDamage2 / baseLvl;
 	cmon->cmMaxDamage2 = monLvl * cmon->cmMaxDamage2 / baseLvl;
 
+	if (gnDifficulty == DIFF_HELL) {
+		cmon->cmMagicRes = monsterdata[cmon->cmType].mMagicRes2;
+	}
+
 	int mpl = currLvl._dLevelPlyrs;
 	// assert(mpl != 0);
 	mpl++;
 	cmon->cmMinHP = (cmon->cmMinHP * mpl) >> 1;
 	cmon->cmMaxHP = (cmon->cmMaxHP * mpl) >> 1;
+	cmon->cmExp = (cmon->cmExp * mpl) >> 1;
 }
 
 static bool IsSkel(int mt)
@@ -260,15 +264,16 @@ void InitLvlMonsters()
 		monsters[i]._mNameColor = COL_WHITE;
 		monsters[i]._mlid = NO_LIGHT;
 		// reset _mleaderflag value to simplify GroupUnity
-		monsters[i]._mleader = MON_NO_LEADER;
-		monsters[i]._mleaderflag = MLEADER_NONE;
-		monsters[i]._mpacksize = 0;
-		monsters[i]._mvid = NO_VISION;
+		// monsters[i]._mleader = MON_NO_LEADER;
+		// monsters[i]._mleaderflag = MLEADER_NONE;
+		// monsters[i]._mpacksize = 0;
+		// monsters[i]._mvid = NO_VISION;
 	}
 	// reserve minions
 	nummonsters = MAX_MINIONS;
 	if (currLvl._dLevelIdx != DLV_TOWN) {
 		AddMonsterType(MT_GOLEM, FALSE);
+		mapMonTypes[0].cmFlags |= MFLAG_NOCORPSE | MFLAG_NODROP;
 		for (i = 0; i < MAX_MINIONS; i++) {
 			InitMonster(i, 0, 0, 0, 0);
 			monsters[i]._mmode = MM_RESERVED;
@@ -395,10 +400,7 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	// mon->_mFileNum = cmon->cmFileNum;
 	mon->_mLevel = cmon->cmLevel;
 	mon->_mSelFlag = cmon->cmSelFlag;
-	mon->_mAI.aiType = cmon->cmAI.aiType;
-	mon->_mAI.aiInt = cmon->cmAI.aiInt;
-	mon->_mAI.aiParam1 = cmon->cmAI.aiParam1;
-	mon->_mAI.aiParam2 = cmon->cmAI.aiParam2;
+	mon->_mAI = cmon->cmAI; // aiType, aiInt, aiParam1, aiParam2
 	mon->_mFlags = cmon->cmFlags;
 	mon->_mHit = cmon->cmHit;
 	mon->_mMinDamage = cmon->cmMinDamage;
