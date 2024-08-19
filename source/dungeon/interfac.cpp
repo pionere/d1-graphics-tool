@@ -549,7 +549,10 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 
     StoreDungeon(dun);
 }
-
+static uint64_t totalMonsters;
+static unsigned maxMonsters;
+static unsigned minMonsters;
+static unsigned rounds;
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
     ddLevelPlrs = params.numPlayers;
@@ -583,6 +586,10 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     EnterLevel(params.levelIdx, params.seed);
     IncProgress();
 
+    rounds = 0;
+    totalMonsters = 0;
+    minMonsters = UINT_MAX;
+    maxMonsters = 0;
     int32_t questSeed = params.seedQuest;
     int extraRounds = params.extraRounds;
     quint64 started = QDateTime::currentMSecsSinceEpoch();
@@ -594,6 +601,12 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
         dProgress() << QApplication::tr("Done. The dungeon contains %1 monsters (%2 types), %3 objects and %4 items.").arg(nummonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems);
+        rounds++;
+        totalMonsters += (nummonsters - MAX_MINIONS);
+        if (nummonsters > maxMonsters)
+            maxMonsters = nummonsters;
+        if (nummonsters < minMonsters)
+            minMonsters = nummonsters;
         if (--extraRounds < 0) {
             break;
         }
@@ -605,7 +618,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         }
     }
     quint64 now = QDateTime::currentMSecsSinceEpoch();
-    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms.").arg(params.extraRounds - extraRounds + 1).arg(now - started);
+    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3 min:%4 max:%5. Leveltype %6.").arg(params.extraRounds - extraRounds + 1).arg(now - started).arg(totalMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(currLvl._dType);
 
     dun->setLevelType(currLvl._dType);
 

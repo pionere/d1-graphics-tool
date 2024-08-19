@@ -621,6 +621,7 @@ void InitLvlDungeon()
 		// - free subtile to enable fix for a glitch
 		pTiles[47][3] = 158; // 148
 		break;
+#ifdef HELLFIRE
 	case DTYPE_NEST:
 		// patch dSolidTable - L6.SOL
 		/*nSolidTable[390] = false; // make a pool tile walkable I.
@@ -794,6 +795,7 @@ void InitLvlDungeon()
 		pTiles[216][2] = pTiles[11][2];
 		pTiles[216][3] = pTiles[11][3];
 		break;
+#endif /* HELLFIRE */
 	default:
 		ASSUME_UNREACHABLE
 		break;
@@ -1070,6 +1072,7 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 static void DRLG_FTVR(unsigned offset)
 {
 	BYTE *tvp = &dTransVal[0][0];
+    // do not crash if the tileset does not match
 	if (offset >= lengthof(dTransVal) * lengthof(dTransVal[0]))
 		return;
 	if (tvp[offset] != 0) {
