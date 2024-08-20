@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>DungeonGenerateDialog</class>
  <widget class="QDialog">
+  <property name="windowTitle">
+   <string>Generate Dungeon</string>
+  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
