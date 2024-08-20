@@ -24,6 +24,7 @@ int dnLevel;
 int dnType;
 QString assetPath;
 char infostr[256];
+unsigned baseMonsters;
 bool stopgen;
 
 typedef struct ObjStruct {
@@ -249,6 +250,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	IncProgress();
 	InitObjects();      // place objects
 	InitItems();        // place items
+    baseMonsters = nummonsters;
 	CreateThemeRooms(); // populate theme rooms
 	FreeSetPieces();
 	IncProgress();
@@ -549,7 +551,8 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 
     StoreDungeon(dun);
 }
-static uint64_t totalMonsters;
+static unsigned totalMonsters;
+static unsigned themeMonsters;
 static unsigned maxMonsters;
 static unsigned minMonsters;
 static unsigned rounds;
@@ -589,6 +592,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 
     rounds = 0;
     totalMonsters = 0;
+    themeMonsters = 0;
     minMonsters = UINT_MAX;
     maxMonsters = 0;
     int32_t questSeed = params.seedQuest;
@@ -596,14 +600,14 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     quint64 started = QDateTime::currentMSecsSinceEpoch();
     // SetRndSeed(params.seed);
     while (!stopgen /*true*/) {
-        extern int32_t sglGameSeed;
-        //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, sglGameSeed, params.seedQuest, params.entryMode);
+        //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, params.seedQuest, params.entryMode);
         dProgress() << QApplication::tr("Generating dungeon %1/%2 with seed: %3 / %4. Entry mode: %5").arg(params.levelIdx).arg(params.levelNum).arg(lvlSeed).arg(questSeed).arg(params.entryMode);
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
-        dProgress() << QApplication::tr("Done. The dungeon contains %1 monsters (%2 types), %3 objects and %4 items.").arg(nummonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems);
+        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items.").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems);
         rounds++;
         totalMonsters += (nummonsters - MAX_MINIONS);
+        themeMonsters += nummonsters - baseMonsters;
         if (nummonsters > maxMonsters)
             maxMonsters = nummonsters;
         if (nummonsters < minMonsters)
@@ -617,11 +621,11 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             questSeed = NextRndSeed();
             InitQuests(questSeed);
         }
-        lvlSeed = sglGameSeed;
+        lvlSeed = NextRndSeed();
         EnterLevel(params.levelIdx, lvlSeed);
     }
     quint64 now = QDateTime::currentMSecsSinceEpoch();
-    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3 min:%4 max:%5. Leveltype %6.").arg(params.extraRounds - extraRounds + 1).arg(now - started).arg(totalMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(currLvl._dType);
+    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Leveltype %7.").arg(params.extraRounds - extraRounds + 1).arg(now - started).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(currLvl._dType);
 
     dun->setLevelType(currLvl._dType);
 
