@@ -317,11 +317,12 @@ void InitThemes()
     extern bool dooDebug;
     extern int32_t sglGameSeed;
     if (dooDebug)
-        LogErrorF("  InitThemes 0 themes%d", numthemes);
+        LogErrorF("  InitThemes 0 themes%d on %d", numthemes, currLvl._dLevelNum);
 
 	// assert(currLvl._dType != DTYPE_TOWN);
-	if (currLvl._dLevelNum >= DLV_HELL4) // there are no themes in hellfire (and on diablo-level)
+	if (numthemes == 0) { // there are no themes in hellfire (and on diablo-level)
 		return;
+	}
 
 	for (i = 0; i < numthemes; i++) {
 		x1 = themes[i]._tsx1;
@@ -884,8 +885,7 @@ void CreateThemeRooms()
 {
 	int i;
 	BYTE tv;
-	// assert(currLvl._dType != DTYPE_TOWN);
-	// assert(currLvl._dLevelNum < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
+	// assert(currLvl._dLevelNum < DLV_HELL4 || (currLvl._dDynLvl && currLvl._dLevelNum == DLV_HELL4) || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 extern bool dooDebug;
 extern int32_t sglGameSeed;
 if (dooDebug)
