@@ -208,6 +208,8 @@
            </property>
           </item>
          </widget>
+        </item>
+        <item>
          <widget class="LineEditWidget" name="levelLineEdit">
           <property name="charWidth">
            <number>2</number>

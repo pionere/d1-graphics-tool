@@ -45,7 +45,7 @@ void DungeonGenerateDialog::on_levelComboBox_activated(int index)
     LineEditWidget *lew = this->ui->levelLineEdit;
     QComboBox *ltc = this->ui->levelTypeComboBox;
     lew->setReadOnly(fixLevel);
-    ltc->setDisabled(fixlevel);
+    ltc->setDisabled(fixLevel);
     if (fixLevel) {
         lew->setText(QString::number(index + 1));
         static_assert(DLV_TOWN == 0, "DungeonGenerateDialog has hardcoded enum values I.");
@@ -58,7 +58,7 @@ void DungeonGenerateDialog::on_levelComboBox_activated(int index)
         ltc->setCurrentIndex((int)AllLevels[index + 1].dType);
     }
     // update the lineedit widget (thanks qt...)
-    lwe->style()->unpolish(lew);
+    lew->style()->unpolish(lew);
     lew->style()->polish(lew);
 }
 
