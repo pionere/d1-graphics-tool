@@ -314,24 +314,15 @@ void InitThemes()
 {
 	int i, j, x, y, x1, y1, x2, y2;
 
-    extern bool dooDebug;
-    extern int32_t sglGameSeed;
-    if (dooDebug)
-        LogErrorF("  InitThemes 0 themes%d on %d", numthemes, currLvl._dLevelNum);
-
 	// assert(currLvl._dType != DTYPE_TOWN);
-	if (numthemes == 0) { // there are no themes in hellfire (and on diablo-level)
+	if (numthemes == 0)
 		return;
-	}
-
+	// assert(currLvl._dLevelNum < DLV_HELL4 || (currLvl._dDynLvl && currLvl._dLevelNum == DLV_HELL4)); // there are no themes in hellfire (and on diablo-level)
 	for (i = 0; i < numthemes; i++) {
 		x1 = themes[i]._tsx1;
 		y1 = themes[i]._tsy1;
 		x2 = themes[i]._tsx2;
 		y2 = themes[i]._tsy2;
-if (dooDebug)
-    LogErrorF("  theme %d: %d;%d - %d;%d", i, x1, y, x2, y2);
-
 		// convert to subtile-coordinates
 		x1 = DBORDERX + 2 * x1;
 		y1 = DBORDERY + 2 * y1;
@@ -379,18 +370,11 @@ if (dooDebug)
 			}
 		}
 	}
-if (dooDebug)
-    LogErrorF("  themes %d zhar%d", numthemes, zharlib);
 	for (i = 0; i < numthemes; i++) {
 		if (i != zharlib) {
 			j = ThemeGood[random_(0, lengthof(ThemeGood))];
-if (dooDebug)
-    LogErrorF("  themegood %d.:%d", i, j);
-			while (!SpecialThemeFit(i, j)) {
+			while (!SpecialThemeFit(i, j))
 				j = random_(0, NUM_THEMES);
-if (dooDebug)
-    LogErrorF("  themerand %d.:%d", i, j);
-			}
 		}
 	}
 }
@@ -886,15 +870,9 @@ void CreateThemeRooms()
 	int i;
 	BYTE tv;
 	// assert(currLvl._dLevelNum < DLV_HELL4 || (currLvl._dDynLvl && currLvl._dLevelNum == DLV_HELL4) || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
-extern bool dooDebug;
-extern int32_t sglGameSeed;
-if (dooDebug)
-LogErrorF("  CreateThemeRooms 0 themes%d", numthemes);
 	//gbInitObjFlag = true;
 	for (i = 0; i < numthemes; i++) {
 		tv = themes[i]._tsTransVal;
-        if (dooDebug)
-            LogErrorF("  CreateThemeRooms 1 theme%d:%d monsters%d seed%d", i, themes[i]._tsType, nummonsters, sglGameSeed);
 		switch (themes[i]._tsType) {
 		case THEME_BARREL:
 			Theme_Barrel(tv);
@@ -951,8 +929,6 @@ LogErrorF("  CreateThemeRooms 0 themes%d", numthemes);
 			ASSUME_UNREACHABLE
 			break;
 		}
-        if (dooDebug)
-            LogErrorF("  CreateThemeRooms 2 theme%d:%d monsters%d seed%d", i, themes[i]._tsType, nummonsters, sglGameSeed);
 	}
 	//gbInitObjFlag = false;
 	// TODO: why was this necessary in the vanilla code?
