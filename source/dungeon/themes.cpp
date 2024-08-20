@@ -314,6 +314,11 @@ void InitThemes()
 {
 	int i, j, x, y, x1, y1, x2, y2;
 
+    extern bool dooDebug;
+    extern int32_t sglGameSeed;
+    if (dooDebug)
+        LogErrorF("  InitThemes 0 themes%d", numthemes);
+
 	// assert(currLvl._dType != DTYPE_TOWN);
 	if (currLvl._dLevelNum >= DLV_HELL4) // there are no themes in hellfire (and on diablo-level)
 		return;
@@ -323,6 +328,9 @@ void InitThemes()
 		y1 = themes[i]._tsy1;
 		x2 = themes[i]._tsx2;
 		y2 = themes[i]._tsy2;
+if (dooDebug)
+    LogErrorF("  theme %d: %d;%d - %d;%d", i, x1, y, x2, y2);
+
 		// convert to subtile-coordinates
 		x1 = DBORDERX + 2 * x1;
 		y1 = DBORDERY + 2 * y1;
@@ -370,11 +378,18 @@ void InitThemes()
 			}
 		}
 	}
+if (dooDebug)
+    LogErrorF("  themes %d zhar%d", numthemes, zharlib);
 	for (i = 0; i < numthemes; i++) {
 		if (i != zharlib) {
 			j = ThemeGood[random_(0, lengthof(ThemeGood))];
-			while (!SpecialThemeFit(i, j))
+if (dooDebug)
+    LogErrorF("  themegood %d.:%d", i, j);
+			while (!SpecialThemeFit(i, j)) {
 				j = random_(0, NUM_THEMES);
+if (dooDebug)
+    LogErrorF("  themerand %d.:%d", i, j);
+			}
 		}
 	}
 }
@@ -589,7 +604,7 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
             stopgen = true;
             LogErrorF("no object to north-east x:%d y:%d vs %d pn%d type %d", xx, themes[themeId]._tsy1, yy - 3, dPiece[xx][yy - 3], automaptype[dPiece[xx][yy - 3]]);
         }
-    }
+	}
 	if ((dObject[xx][yy + 3] == 0 || !objects[dObject[xx][yy + 3] - 1]._oDoorFlag)   // not a door
 	 && (nSolidTable[dPiece[xx][yy + 3]] || !nSolidTable[dPiece[xx + 1][yy + 3]])) { // or a single path to SW TODO: allow if !nSolidTable[dPiece[xx - 1][yy + 3]]?
         if (dObject[xx][yy + 2] != 0 || (dObject[xx][yy + 3] != 0 && objects[dObject[xx][yy + 3] - 1]._otype != 0)) {
@@ -609,7 +624,7 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
             stopgen = true;
             LogErrorF("no object to south-east x:%d y:%d vs %d pn%d type %d", xx, themes[themeId]._tsy2, yy + 3, dPiece[xx][yy + 3], automaptype[dPiece[xx][yy + 3]]);
         }
-    }
+	}
 }
 
 /**

@@ -1072,7 +1072,7 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 static void DRLG_FTVR(unsigned offset)
 {
 	BYTE *tvp = &dTransVal[0][0];
-    // do not crash if the tileset does not match
+	// do not crash if the tileset does not match
 	if (offset >= lengthof(dTransVal) * lengthof(dTransVal[0]))
 		return;
 	if (tvp[offset] != 0) {

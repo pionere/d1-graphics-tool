@@ -241,6 +241,8 @@ if (dooDebug)
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
+if (dooDebug)
+    LogErrorF("  LoadGameLevel 2.5 %d", sglGameSeed);
 		InitThemes();     // protect themes with dFlags and select theme types
 if (dooDebug)
     LogErrorF("  LoadGameLevel 3 %d", sglGameSeed);
@@ -248,7 +250,7 @@ if (dooDebug)
 		InitMonsters();   // place monsters
 if (dooDebug)
     LogErrorF("  LoadGameLevel 4 %d", sglGameSeed);
-    } else {
+	} else {
 //		InitLvlStores();
 		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
 		// SetRndSeed(seed);
@@ -262,11 +264,11 @@ if (dooDebug)
 	InitObjects();      // place objects
 if (dooDebug)
     LogErrorF("  LoadGameLevel 5 %d", sglGameSeed);
-    InitItems();        // place items
+	InitItems();        // place items
     baseMonsters = nummonsters;
 if (dooDebug)
     LogErrorF("  LoadGameLevel 6 %d", sglGameSeed);
-    CreateThemeRooms(); // populate theme rooms
+	CreateThemeRooms(); // populate theme rooms
 	FreeSetPieces();
 	IncProgress();
 //	InitMissiles();  // reset missiles
