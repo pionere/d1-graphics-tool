@@ -205,7 +205,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
 	extern int32_t sglGameSeed;
 	// int32_t gameSeed = sglGameSeed;
-    LogErrorF("  LoadGameLevel 0 %d", sglGameSeed);
+    // LogErrorF("  LoadGameLevel 0 %d", sglGameSeed);
 	IncProgress();
 	InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
 	IncProgress();
@@ -221,14 +221,14 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitLvlThemes();   // reset themes
 	InitLvlItems();    // reset items
 	IncProgress();
-    LogErrorF("  LoadGameLevel 1 %d", sglGameSeed);
+    // LogErrorF("  LoadGameLevel 1 %d", sglGameSeed);
 
 	// SetRndSeed(gameSeed); // restore seed after InitLvlMonsters
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
 	CreateDungeon();
-    LogErrorF("  LoadGameLevel 2 %d", sglGameSeed);
+    // LogErrorF("  LoadGameLevel 2 %d", sglGameSeed);
 
 	// LoadLvlPalette();
 	int rv = RandRange(1, 4);
@@ -238,10 +238,10 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
 		InitThemes();     // protect themes with dFlags and select theme types
-        LogErrorF("  LoadGameLevel 3 %d", sglGameSeed);
+        // LogErrorF("  LoadGameLevel 3 %d", sglGameSeed);
 		IncProgress();
 		InitMonsters();   // place monsters
-        LogErrorF("  LoadGameLevel 4 %d", sglGameSeed);
+        // LogErrorF("  LoadGameLevel 4 %d", sglGameSeed);
     } else {
 //		InitLvlStores();
 		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
@@ -254,10 +254,10 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitObjectGFX();    // load object graphics
 	IncProgress();
 	InitObjects();      // place objects
-    LogErrorF("  LoadGameLevel 5 %d", sglGameSeed);
+    // LogErrorF("  LoadGameLevel 5 %d", sglGameSeed);
     InitItems();        // place items
     baseMonsters = nummonsters;
-    LogErrorF("  LoadGameLevel 6 %d", sglGameSeed);
+    // LogErrorF("  LoadGameLevel 6 %d", sglGameSeed);
     CreateThemeRooms(); // populate theme rooms
 	FreeSetPieces();
 	IncProgress();
