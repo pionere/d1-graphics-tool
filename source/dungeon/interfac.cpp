@@ -616,10 +616,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     // SetRndSeed(params.seed);
     while (!stopgen /*true*/) {
         //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, params.seedQuest, params.entryMode);
-        dProgress() << QApplication::tr("Generating dungeon %1/%2 with seed: %3 / %4. Entry mode: %5").arg(params.levelIdx).arg(params.levelNum).arg(lvlSeed).arg(questSeed).arg(params.entryMode);
+        dProgress() << QApplication::tr("Generating dungeon %1: %2/%3 with seed: %4 / %5. Entry mode: %6").arg(rounds).arg(params.levelIdx).arg(params.levelNum).arg(lvlSeed).arg(questSeed).arg(params.entryMode);
 dooDebug = lvlSeed == 857218202 && questSeed == 1620865881;
-if (dooDebug)
-LogErrorF("  Generating round %d", rounds);
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
         dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items.").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems);

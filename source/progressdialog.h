@@ -86,7 +86,7 @@ public:
     ~ProgressDialog();
 
     static void openDialog();
-    static bool running();
+    static bool isRunning();
 
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags);
     static void done();
@@ -136,6 +136,7 @@ private:
     QList<QProgressBar *> progressBars;
     int activeBars;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
+    bool running = false;
     int afterFlags; // progress_after_flags
 };
 
