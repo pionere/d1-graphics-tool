@@ -17,7 +17,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="levelComboBox">
+       <widget class="QComboBox" name="lvlComboBox">
         <item>
          <property name="text">
           <string>Cathedral 1</string>
@@ -213,7 +213,7 @@
          </widget>
         </item>
         <item>
-         <widget class="LineEditWidget" name="levelLineEdit">
+         <widget class="LineEditWidget" name="lvlLineEdit">
           <property name="charWidth">
            <number>2</number>
           </property>

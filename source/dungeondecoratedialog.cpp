@@ -31,16 +31,16 @@ void DungeonDecorateDialog::initialize(D1Dun *d, D1Tileset *ts)
     this->tileset = ts;
 }
 
-void DungeonDecorateDialog::on_levelComboBox_activated(int index)
+void DungeonDecorateDialog::on_lvlComboBox_activated(int index)
 {
     bool fixLevel = (index + 1) < NUM_FIXLVLS;
-    LineEditWidget *lew = this->ui->levelLineEdit;
-    QComboBox *ltc = this->ui->levelTypeComboBox;
+    LineEditWidget *lew = this->ui->lvlLineEdit;
+    QComboBox *ltc = this->ui->lvlTypeComboBox;
     lew->setReadOnly(fixLevel);
     ltc->setDisabled(fixLevel);
     if (fixLevel) {
         lew->setText(QString::number(index + 1));
-        static_assert(DLV_TOWN == 0, "DungeonDecorateDialog has hardcoded enum values I.");
+        static_assert(DTYPE_TOWN == 0, "DungeonDecorateDialog has hardcoded enum values I.");
         static_assert(DTYPE_CATHEDRAL == 1, "DungeonDecorateDialog has hardcoded enum values II.");
         static_assert(DTYPE_CATACOMBS == 2, "DungeonDecorateDialog has hardcoded enum values III.");
         static_assert(DTYPE_CAVES == 3, "DungeonDecorateDialog has hardcoded enum values IV.");
@@ -54,6 +54,25 @@ void DungeonDecorateDialog::on_levelComboBox_activated(int index)
     lew->style()->polish(lew);
 }
 
+void DungeonDecorateDialog::on_lvlTypeComboBox_activated(int index)
+{
+    LineEditWidget *lew = this->ui->lvlLineEdit;
+    int levelNum = lew->text().toUShort();
+    if (index != 0) {
+        int from = INT_MAX;
+        for (int i = 0; i < NUM_FIXLVLS; i++) {
+            if (AllLevels[i].dType == index) {
+                int lvl = AllLevels[i].dLevel;
+                if (from > lvl)
+                    from = lvl;
+            }
+        }
+        if (levelNum < from) {
+            lew->setText(QString::number(from));
+        }
+    }
+}
+
 void DungeonDecorateDialog::on_actionGenerateSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
@@ -63,9 +82,9 @@ void DungeonDecorateDialog::on_actionGenerateSeed_triggered()
 void DungeonDecorateDialog::on_decorateButton_clicked()
 {
     DecorateDunParam params;
-    params.levelIdx = this->ui->levelComboBox->currentIndex() + 1;
-    params.levelNum = this->ui->levelLineEdit->text().toUShort();
-    params.levelType = this->ui->levelTypeComboBox->currentIndex();
+    params.levelIdx = this->ui->lvlComboBox->currentIndex() + 1;
+    params.levelType = this->ui->lvlTypeComboBox->currentIndex();
+    params.levelNum = this->ui->lvlLineEdit->text().toUShort();
     params.difficulty = this->ui->difficultyComboBox->currentIndex();
     int numPlayers = this->ui->plrCountLineEdit->text().toUShort();
     params.numPlayers = numPlayers == 0 ? 1 : numPlayers;

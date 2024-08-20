@@ -38,7 +38,8 @@ public:
     void initialize(D1Dun *dun, D1Tileset *tileset);
 
 private slots:
-    void on_levelComboBox_activated(int index);
+    void on_lvlComboBox_activated(int index); 
+    void on_lvlTypeComboBox_activated(int index);
     void on_actionGenerateSeed_triggered();
     void on_actionGenerateQuestSeed_triggered();
 
