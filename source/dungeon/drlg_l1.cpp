@@ -592,7 +592,7 @@ void DRLG_L5Shadows()
 				//} else if (dungeon[i][j - 1] == 203) {
 				//	dungeon[i][j - 1] = 204;
 				} else {
-					if (dungeon[i][j - 1] != 25 || dungeon[i][j - 1] != 195)
+					if (dungeon[i][j - 1] != 25 && dungeon[i][j - 1] != 195)
 	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// 195 -> not perfect, but ok and only on the dyn map entrance
