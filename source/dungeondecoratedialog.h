@@ -46,6 +46,8 @@ public:
 private slots:
     void on_lvlComboBox_activated(int index);
     void on_lvlTypeComboBox_activated(int index);
+    void on_lvlLineEdit_returnPressed();
+    void on_lvlLineEdit_escPressed();
     void on_actionGenerateSeed_triggered();
 
     void on_decorateButton_clicked();

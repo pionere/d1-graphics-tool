@@ -18,6 +18,9 @@ DungeonDecorateDialog::DungeonDecorateDialog(QWidget *parent)
     QHBoxLayout *layout = this->ui->seedWithRefreshButtonLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &DungeonDecorateDialog::on_actionGenerateSeed_triggered);
     layout->addStretch();
+
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->lvlLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_lvlLineEdit_escPressed()));
 }
 
 DungeonDecorateDialog::~DungeonDecorateDialog()
@@ -71,6 +74,17 @@ void DungeonDecorateDialog::on_lvlTypeComboBox_activated(int index)
             lew->setText(QString::number(from));
         }
     }
+}
+
+void DungeonDecorateDialog::on_lvlLineEdit_returnPressed()
+{
+    this->on_lvlLineEdit_escPressed();
+}
+
+void DungeonDecorateDialog::on_lvlLineEdit_escPressed()
+{
+    this->ui->lvlLineEdit->clearFocus();
+    this->on_lvlTypeComboBox_activated(this->ui->lvlTypeComboBox->currentIndex());
 }
 
 void DungeonDecorateDialog::on_actionGenerateSeed_triggered()

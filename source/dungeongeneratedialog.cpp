@@ -26,6 +26,9 @@ DungeonGenerateDialog::DungeonGenerateDialog(QWidget *parent)
     layout = this->ui->questSeedWithRefreshButtonLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &DungeonGenerateDialog::on_actionGenerateQuestSeed_triggered);
     layout->addStretch();
+
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->lvlLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_lvlLineEdit_escPressed()));
 }
 
 DungeonGenerateDialog::~DungeonGenerateDialog()
@@ -62,7 +65,7 @@ void DungeonGenerateDialog::on_lvlComboBox_activated(int index)
     lew->style()->polish(lew);
 }
 
-void DungeonDecorateDialog::on_lvlTypeComboBox_activated(int index)
+void DungeonGenerateDialog::on_lvlTypeComboBox_activated(int index)
 {
     LineEditWidget *lew = this->ui->lvlLineEdit;
     int levelNum = lew->text().toUShort();
@@ -79,6 +82,17 @@ void DungeonDecorateDialog::on_lvlTypeComboBox_activated(int index)
             lew->setText(QString::number(from));
         }
     }
+}
+
+void DungeonGenerateDialog::on_lvlLineEdit_returnPressed()
+{
+    this->on_lvlLineEdit_escPressed();
+}
+
+void DungeonGenerateDialog::on_lvlLineEdit_escPressed()
+{
+    this->ui->lvlLineEdit->clearFocus();
+    this->on_lvlTypeComboBox_activated(this->ui->lvlTypeComboBox->currentIndex());
 }
 
 void DungeonGenerateDialog::on_actionGenerateSeed_triggered()
