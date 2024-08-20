@@ -199,9 +199,9 @@ void ProgressDialog::openDialog()
     theDialog->adjustSize();
 }
 
-bool ProgressDialog::running()
+bool ProgressDialog::isRunning()
 {
-    return theDialog->status == PROGRESS_STATE::RUNNING;
+    return theDialog->running;
 }
 
 void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags)
@@ -213,7 +213,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     taskErrorOnFail = 0;
     taskTextLastLine.clear();
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
-
+    theDialog->running = true;
     theDialog->afterFlags = flags;
     theDialog->setWindowTitle(label);
     theDialog->ui->outputTextEdit->clear();
@@ -278,6 +278,7 @@ void ProgressDialog::done()
     }
 
     theWidget->updateWidget(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
+    theDialog->running = false;
 }
 
 void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags, std::function<void()> &&callFunc)
@@ -634,7 +635,7 @@ ProgressWidget::~ProgressWidget()
 
 void ProgressWidget::showMessage(const QString &text)
 {
-    if (!theDialog->running() && this->ui->messageLabel->text() != text) {
+    if (!theDialog->isRunning() && this->ui->messageLabel->text() != text) {
         this->ui->messageLabel->setText(text);
         this->adjustSize();
         this->repaint();
