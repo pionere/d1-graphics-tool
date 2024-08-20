@@ -43,7 +43,7 @@ void DungeonGenerateDialog::on_levelComboBox_activated(int index)
 {
     bool fixLevel = (index + 1) < NUM_FIXLVLS;
     LineEditWidget *lew = this->ui->levelLineEdit;
-    QComboBox *ltc = this->ui->levelTypeComboBox;
+    QComboBox *ltc = this->ui->lvlTypeComboBox;
     lew->setReadOnly(fixLevel);
     ltc->setDisabled(fixLevel);
     if (fixLevel) {
@@ -79,7 +79,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     GenerateDunParam params;
     params.levelIdx = this->ui->levelComboBox->currentIndex() + 1;
     params.levelNum = this->ui->levelLineEdit->text().toUShort();
-    params.levelType = this->ui->levelTypeComboBox->currentIndex();
+    params.levelType = this->ui->lvlTypeComboBox->currentIndex();
     params.difficulty = this->ui->difficultyComboBox->currentIndex();
     int numPlayers = this->ui->plrCountLineEdit->text().toUShort();
     params.numPlayers = numPlayers == 0 ? 1 : numPlayers;

@@ -168,7 +168,10 @@
       <item row="1" column="1">
        <layout class="QHBoxLayout">
         <item>
-         <widget class="QComboBox" name="levelTypeComboBox">
+         <widget class="QComboBox" name="lvlTypeComboBox">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
           <property name="disabled">
            <bool>true</bool>
           </property>
