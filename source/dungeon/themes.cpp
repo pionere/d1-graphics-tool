@@ -871,10 +871,15 @@ void CreateThemeRooms()
 	BYTE tv;
 	// assert(currLvl._dType != DTYPE_TOWN);
 	// assert(currLvl._dLevelNum < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
-
+extern bool dooDebug;
+extern int32_t sglGameSeed;
+if (dooDebug)
+LogErrorF("  CreateThemeRooms 0 themes%d", numthemes);
 	//gbInitObjFlag = true;
 	for (i = 0; i < numthemes; i++) {
 		tv = themes[i]._tsTransVal;
+        if (dooDebug)
+            LogErrorF("  CreateThemeRooms 1 theme%d:%d monsters%d seed%d", i, themes[i]._tsType, nummonsters, sglGameSeed);
 		switch (themes[i]._tsType) {
 		case THEME_BARREL:
 			Theme_Barrel(tv);
@@ -931,6 +936,8 @@ void CreateThemeRooms()
 			ASSUME_UNREACHABLE
 			break;
 		}
+        if (dooDebug)
+            LogErrorF("  CreateThemeRooms 2 theme%d:%d monsters%d seed%d", i, themes[i]._tsType, nummonsters, sglGameSeed);
 	}
 	//gbInitObjFlag = false;
 	// TODO: why was this necessary in the vanilla code?

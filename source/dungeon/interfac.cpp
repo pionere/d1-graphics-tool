@@ -26,6 +26,7 @@ QString assetPath;
 char infostr[256];
 unsigned baseMonsters;
 bool stopgen;
+bool dooDebug;
 
 typedef struct ObjStruct {
     int otype;
@@ -205,7 +206,8 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
 	extern int32_t sglGameSeed;
 	// int32_t gameSeed = sglGameSeed;
-    // LogErrorF("  LoadGameLevel 0 %d", sglGameSeed);
+if (dooDebug)
+    LogErrorF("  LoadGameLevel 0 %d", sglGameSeed);
 	IncProgress();
 	InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
 	IncProgress();
@@ -221,14 +223,16 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitLvlThemes();   // reset themes
 	InitLvlItems();    // reset items
 	IncProgress();
-    // LogErrorF("  LoadGameLevel 1 %d", sglGameSeed);
+if (dooDebug)
+    LogErrorF("  LoadGameLevel 1 %d", sglGameSeed);
 
 	// SetRndSeed(gameSeed); // restore seed after InitLvlMonsters
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
 	CreateDungeon();
-    // LogErrorF("  LoadGameLevel 2 %d", sglGameSeed);
+if (dooDebug)
+    LogErrorF("  LoadGameLevel 2 %d", sglGameSeed);
 
 	// LoadLvlPalette();
 	int rv = RandRange(1, 4);
@@ -238,10 +242,12 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
 		InitThemes();     // protect themes with dFlags and select theme types
-        // LogErrorF("  LoadGameLevel 3 %d", sglGameSeed);
+if (dooDebug)
+    LogErrorF("  LoadGameLevel 3 %d", sglGameSeed);
 		IncProgress();
 		InitMonsters();   // place monsters
-        // LogErrorF("  LoadGameLevel 4 %d", sglGameSeed);
+if (dooDebug)
+    LogErrorF("  LoadGameLevel 4 %d", sglGameSeed);
     } else {
 //		InitLvlStores();
 		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
@@ -254,10 +260,12 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitObjectGFX();    // load object graphics
 	IncProgress();
 	InitObjects();      // place objects
-    // LogErrorF("  LoadGameLevel 5 %d", sglGameSeed);
+if (dooDebug)
+    LogErrorF("  LoadGameLevel 5 %d", sglGameSeed);
     InitItems();        // place items
     baseMonsters = nummonsters;
-    // LogErrorF("  LoadGameLevel 6 %d", sglGameSeed);
+if (dooDebug)
+    LogErrorF("  LoadGameLevel 6 %d", sglGameSeed);
     CreateThemeRooms(); // populate theme rooms
 	FreeSetPieces();
 	IncProgress();
@@ -609,6 +617,9 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     while (!stopgen /*true*/) {
         //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, params.seedQuest, params.entryMode);
         dProgress() << QApplication::tr("Generating dungeon %1/%2 with seed: %3 / %4. Entry mode: %5").arg(params.levelIdx).arg(params.levelNum).arg(lvlSeed).arg(questSeed).arg(params.entryMode);
+dooDebug = lvlSeed == 857218202 && questSeed == 1620865881;
+if (dooDebug)
+LogErrorF("  Generating round %d", rounds);
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
         dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items.").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems);
