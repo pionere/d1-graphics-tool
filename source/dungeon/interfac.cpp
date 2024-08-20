@@ -616,6 +616,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             questSeed = NextRndSeed();
             InitQuests(questSeed);
         }
+        EnterLevel(params.levelIdx, sglGameSeed);
     }
     quint64 now = QDateTime::currentMSecsSinceEpoch();
     dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3 min:%4 max:%5. Leveltype %6.").arg(params.extraRounds - extraRounds + 1).arg(now - started).arg(totalMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(currLvl._dType);
