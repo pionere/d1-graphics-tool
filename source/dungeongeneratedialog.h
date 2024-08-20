@@ -10,6 +10,7 @@ class GenerateDunParam {
 public:
     int levelIdx;   // dungeon_level / _setlevels
     int levelNum;   // index in AllLevels (dungeon_level / NUM_FIXLVLS)
+    int levelType;   // dungeon_type
     int difficulty; // _difficulty
     int numPlayers;
     bool isMulti;

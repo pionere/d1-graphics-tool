@@ -524,7 +524,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 {
     ddLevelPlrs = params.numPlayers;
     dnLevel = params.levelNum;
-    dnType = DLV_TOWN; // params.levelType;
+    dnType = params.levelType;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
@@ -557,7 +557,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 {
     ddLevelPlrs = params.numPlayers;
     dnLevel = params.levelNum;
-    dnType = DLV_TOWN; // params.levelType;
+    dnType = params.levelType;
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;

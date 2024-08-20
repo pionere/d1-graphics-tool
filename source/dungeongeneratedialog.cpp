@@ -3,10 +3,11 @@
 #include <QMessageBox>
 
 #include "d1dun.h"
-#include "dungeon/interfac.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_dungeongeneratedialog.h"
+
+#include "dungeon/all.h"
 
 DungeonGenerateDialog::DungeonGenerateDialog(QWidget *parent)
     : QDialog(parent)
@@ -42,12 +43,22 @@ void DungeonGenerateDialog::on_levelComboBox_activated(int index)
 {
     bool fixLevel = (index + 1) < NUM_FIXLVLS;
     LineEditWidget *lew = this->ui->levelLineEdit;
+    QComboBox *ltc = this->ui->levelTypeComboBox;
     lew->setReadOnly(fixLevel);
+    ltc->setDisabled(fixlevel);
     if (fixLevel) {
         lew->setText(QString::number(index + 1));
+        static_assert(DLV_TOWN == 0, "DungeonGenerateDialog has hardcoded enum values I.");
+        static_assert(DTYPE_CATHEDRAL == 1, "DungeonGenerateDialog has hardcoded enum values II.");
+        static_assert(DTYPE_CATACOMBS == 2, "DungeonGenerateDialog has hardcoded enum values III.");
+        static_assert(DTYPE_CAVES == 3, "DungeonGenerateDialog has hardcoded enum values IV.");
+        static_assert(DTYPE_HELL == 4, "DungeonGenerateDialog has hardcoded enum values V.");
+        static_assert(DTYPE_CRYPT == 5, "DungeonGenerateDialog has hardcoded enum values VI.");
+        static_assert(DTYPE_NEST == 6, "DungeonGenerateDialog has hardcoded enum values VII.");
+        ltc->setCurrentIndex((int)AllLevels[index + 1].dType);
     }
     // update the lineedit widget (thanks qt...)
-    lew->style()->unpolish(lew);
+    lwe->style()->unpolish(lew);
     lew->style()->polish(lew);
 }
 
@@ -68,6 +79,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     GenerateDunParam params;
     params.levelIdx = this->ui->levelComboBox->currentIndex() + 1;
     params.levelNum = this->ui->levelLineEdit->text().toUShort();
+    params.levelType = this->ui->levelTypeComboBox->currentIndex();
     params.difficulty = this->ui->difficultyComboBox->currentIndex();
     int numPlayers = this->ui->plrCountLineEdit->text().toUShort();
     params.numPlayers = numPlayers == 0 ? 1 : numPlayers;
