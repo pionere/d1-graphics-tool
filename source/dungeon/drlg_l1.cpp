@@ -21,7 +21,7 @@ DEVILUTION_BEGIN_NAMESPACE
 #define SF 4
 
 /**  The number of generated rooms */
-static int nRoomCnt;
+/*static*/ int nRoomCnt;
 /** Specifies whether to generate a vertical or horizontal rooms in the Cathedral. */
 static BOOLEAN ChambersVertical;
 /** Specifies whether to generate a room at position 1 in the Cathedral. */

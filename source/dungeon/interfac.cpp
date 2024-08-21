@@ -6,7 +6,7 @@
 #include "all.h"
 
 #include <QApplication>
-#include <QDateTime>
+#include <QElapsedTimer>
 #include <QMessageBox>
 #include <QString>
 
@@ -27,6 +27,8 @@ char infostr[256];
 unsigned baseMonsters;
 bool stopgen;
 bool dooDebug;
+QElapsedTimer* timer;
+quint64_t dt[16];
 
 typedef struct ObjStruct {
     int otype;
@@ -227,12 +229,15 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
+    dt[0] -= timer->nsecsElapsed();
 	CreateDungeon();
+    dt[0] += timer->nsecsElapsed();
 	// LoadLvlPalette();
 	int rv = RandRange(1, 4);
 	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
 	StoreProtections(dun);
 	IncProgress();
+    dt[1] -= timer->nsecsElapsed();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
 		InitThemes();     // protect themes with dFlags and select theme types
@@ -246,13 +251,18 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 
 //		InitTowners();
 	}
+    dt[1] += timer->nsecsElapsed();
 	IncProgress();
 	InitObjectGFX();    // load object graphics
 	IncProgress();
+    dt[2] -= timer->nsecsElapsed();
 	InitObjects();      // place objects
+    dt[2] += timer->nsecsElapsed();
 	InitItems();        // place items
     baseMonsters = nummonsters;
+    dt[3] -= timer->nsecsElapsed();
 	CreateThemeRooms(); // populate theme rooms
+    dt[3] += timer->nsecsElapsed();
 	FreeSetPieces();
 	IncProgress();
 //	InitMissiles();  // reset missiles
@@ -604,7 +614,10 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     maxThemes = 0;
     int32_t questSeed = params.seedQuest;
     int extraRounds = params.extraRounds;
-    quint64 started = QDateTime::currentMSecsSinceEpoch();
+    memset(dt, 0, sizeof(dt));
+    QElapsedTimer tmr;
+    timer = &tmr;
+    tmr.start();
     // SetRndSeed(params.seed);
     while (!stopgen /*true*/) {
         //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, params.seedQuest, params.entryMode);
@@ -612,7 +625,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         // dooDebug = lvlSeed == 952458269 && questSeed == 1654566178;
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
-        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes.").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes);
+        extern int nRoomCnt;
+        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms.").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt);
         rounds++;
         totalMonsters += (nummonsters - MAX_MINIONS);
         themeMonsters += nummonsters - baseMonsters;
@@ -638,8 +652,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         // lvlSeed = (lvlSeed >> 8) | (lvlSeed << 24); // _rotr(lvlSeed, 8)
         EnterLevel(params.levelIdx, lvlSeed);
     }
-    quint64 now = QDateTime::currentMSecsSinceEpoch();
-    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: avg:%7 min:%8 max:%9 Leveltype %10.").arg(params.extraRounds - extraRounds).arg(now - started).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(totalThemes / rounds).arg(minThemes).arg(maxThemes).arg(currLvl._dType);
+    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: avg:%7 min:%8 max:%9 Leveltype %10. times(dun%11, mon%12, obj%13, themes%14)").arg(params.extraRounds - extraRounds).arg(tmr.elapsed()).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(totalThemes / rounds).arg(minThemes).arg(maxThemes).arg(currLvl._dType).arg(dt[0]).arg(dt[1]).arg(dt[2]).arg(dt[3]);
 
     dun->setLevelType(currLvl._dType);
 
