@@ -622,18 +622,30 @@ static void Theme_Treasure(BYTE tv)
 	int xx, yy;
 	const BYTE treasrnds[4] = { 6, 9, 7, 10 };
 	const BYTE treasrnd = treasrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
-
+    extern bool dooDebug;
+    if (dooDebug)
+        LogErrorF("Theme_Treasure 0 %d", tv);
 	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
 		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, treasrnd) == 0) {
+    if (dooDebug)
+        LogErrorF("Theme_Treasure CreateTypeItem %d:%d", xx, yy);
 					CreateTypeItem(xx, yy, CFDQ_NORMAL, ITYPE_GOLD, IMISC_NONE);
+    if (dooDebug)
+        LogErrorF("Theme_Treasure CreateTypeItem");
 				} else if (random_low(0, treasrnd) == 0) {
+    if (dooDebug)
+        LogErrorF("Theme_Treasure CreateRndItem %d:%d", xx, yy);
 					CreateRndItem(xx, yy, CFDQ_NORMAL);
+    if (dooDebug)
+        LogErrorF("Theme_Treasure CreateRndItem");
 				}
 			}
 		}
 	}
+    if (dooDebug)
+        LogErrorF("Theme_Treasure 1 %d", tv);
 	PlaceThemeMonsts(tv);
 }
 

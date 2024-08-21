@@ -41,8 +41,10 @@ static const uint32_t RndMult = 0x015A4E35;
  */
 void SetRndSeed(int32_t s)
 {
-    LogErrorF("SetRndSeed %d counter%d", s, rndCounter);
-    rndCounter = 0;
+    if (s != sglGameSeed) {
+        LogErrorF("SetRndSeed %d (prev %d) counter%d ", s, sglGameSeed, rndCounter);
+        rndCounter = 0;
+    }
 	sglGameSeed = s;
 }
 
