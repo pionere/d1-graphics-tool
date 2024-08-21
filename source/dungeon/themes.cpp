@@ -622,30 +622,18 @@ static void Theme_Treasure(BYTE tv)
 	int xx, yy;
 	const BYTE treasrnds[4] = { 6, 9, 7, 10 };
 	const BYTE treasrnd = treasrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
-    extern bool dooDebug;
-    if (dooDebug)
-        LogErrorF("Theme_Treasure 0 %d", tv);
+
 	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
 		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, treasrnd) == 0) {
-    if (dooDebug)
-        LogErrorF("Theme_Treasure CreateTypeItem %d:%d", xx, yy);
 					CreateTypeItem(xx, yy, CFDQ_NORMAL, ITYPE_GOLD, IMISC_NONE);
-    if (dooDebug)
-        LogErrorF("Theme_Treasure CreateTypeItem");
 				} else if (random_low(0, treasrnd) == 0) {
-    if (dooDebug)
-        LogErrorF("Theme_Treasure CreateRndItem %d:%d", xx, yy);
 					CreateRndItem(xx, yy, CFDQ_NORMAL);
-    if (dooDebug)
-        LogErrorF("Theme_Treasure CreateRndItem");
 				}
 			}
 		}
 	}
-    if (dooDebug)
-        LogErrorF("Theme_Treasure 1 %d", tv);
 	PlaceThemeMonsts(tv);
 }
 
@@ -890,7 +878,7 @@ void CreateThemeRooms()
 		tv = themes[i]._tsTransVal;
         int thememons = nummonsters;
         if (dooDebug)
-            LogErrorF("CreateThemeRoom %d monsters %d", themes[i]._tsType, nummonsters);
+            LogErrorF("CreateThemeRoom %d (%dx%d) monsters %d", themes[i]._tsType, themes[i]._tsx2 - themes[i]._tsx1, themes[i]._tsy2 - themes[i]._tsy1, nummonsters);
 		switch (themes[i]._tsType) {
 		case THEME_BARREL:
 			Theme_Barrel(tv);
@@ -948,7 +936,7 @@ void CreateThemeRooms()
 			break;
 		}
         if (dooDebug)
-            LogErrorF(" added %d monsters", themes[i]._tsType, nummonsters - thememons);
+            LogErrorF(" added %d monsters", nummonsters - thememons);
 	}
 	//gbInitObjFlag = false;
 	// TODO: why was this necessary in the vanilla code?

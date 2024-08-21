@@ -44,12 +44,12 @@ void SetRndSeed(int32_t s)
     if (s != sglGameSeed) {
         LogErrorF("SetRndSeed %d (prev %d) counter%d ", s, sglGameSeed, rndCounter);
         rndCounter = 0;
-        sglGameSeed = s;
+        /*sglGameSeed = s;
         do {
             NextRndSeed();
         } while (sglGameSeed != s);
         LogErrorF(" repetition length %d", rndCounter);
-        rndCounter = 0;
+        rndCounter = 0;*/
     }
 	sglGameSeed = s;
 }
