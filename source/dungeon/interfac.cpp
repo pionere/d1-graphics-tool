@@ -28,7 +28,7 @@ unsigned baseMonsters;
 bool stopgen;
 bool dooDebug;
 QElapsedTimer* timer;
-quint64_t dt[16];
+quint64 dt[16];
 
 typedef struct ObjStruct {
     int otype;
