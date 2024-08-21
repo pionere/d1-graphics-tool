@@ -23,6 +23,8 @@ DEVILUTION_BEGIN_NAMESPACE
 /** Current game seed */
 int32_t sglGameSeed;
 
+int rndCounter;
+
 /**
  * Specifies the increment used in the Borland C/C++ pseudo-random.
  */
@@ -39,6 +41,8 @@ static const uint32_t RndMult = 0x015A4E35;
  */
 void SetRndSeed(int32_t s)
 {
+    LogErrorF("SetRndSeed %d counter%d", s, rndCounter);
+    rndCounter = 0;
 	sglGameSeed = s;
 }
 
@@ -57,6 +61,7 @@ int32_t GetRndSeed()
  */
 int32_t NextRndSeed()
 {
+    rndCounter++;
 	sglGameSeed = RndMult * static_cast<uint32_t>(sglGameSeed) + RndInc;
 	return abs(sglGameSeed);
 }
