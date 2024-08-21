@@ -45,9 +45,9 @@ void SetRndSeed(int32_t s)
         LogErrorF("SetRndSeed %d (prev %d) counter%d ", s, sglGameSeed, rndCounter);
         rndCounter = 0;
         sglGameSeed = s;
-        while (NextRndSeed() != s) {
-            ;
-        }
+        do {
+            NextRndSeed();
+        } while (sglGameSeed != s);
         LogErrorF(" repetition length %d", rndCounter);
         rndCounter = 0;
     }
@@ -71,7 +71,8 @@ int32_t NextRndSeed()
 {
     rndCounter++;
 	sglGameSeed = RndMult * static_cast<uint32_t>(sglGameSeed) + RndInc;
-	return abs(sglGameSeed);
+	//return abs(sglGameSeed);
+    return sglGameSeed;
 }
 
 /**
