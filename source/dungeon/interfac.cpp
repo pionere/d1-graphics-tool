@@ -622,6 +622,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             InitQuests(questSeed);
         }
         lvlSeed = NextRndSeed();
+        lvlSeed = (lvlSeed >> 8) | (lvlSeed << 24); // _rotr(lvlSeed, 8)
         EnterLevel(params.levelIdx, lvlSeed);
     }
     quint64 now = QDateTime::currentMSecsSinceEpoch();
