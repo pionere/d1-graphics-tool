@@ -1135,9 +1135,15 @@ static void ItemRndDur(int ii)
 static void SetupAllItems(int ii, int idx, int iseed, unsigned lvl, unsigned quality)
 {
 	int uid;
+    extern bool dooDebug;
+
+    if (dooDebug)
+        LogErrorF("SetupAllItems 0 %d", iseed);
 
 	SetRndSeed(iseed);
 	GetItemAttrs(ii, idx, lvl);
+    if (dooDebug)
+        LogErrorF("SetupAllItems 1 %d", idx);
 	items[ii]._iSeed = iseed;
 	items[ii]._iCreateInfo = lvl;
 
@@ -1151,14 +1157,22 @@ static void SetupAllItems(int ii, int idx, int iseed, unsigned lvl, unsigned qua
 		 || random_(32, 128) < 14 || (unsigned)random_(33, 128) <= lvl) {
 			uid = CheckUnique(ii, lvl, quality);
 			if (uid < 0) {
+                if (dooDebug)
+                    LogErrorF("SetupAllItems 2a basic:%d", quality);
 				GetItemBonus(ii, lvl, IAR_DROP, quality >= CFDQ_GOOD, true);
 			} else {
+                if (dooDebug)
+                    LogErrorF("SetupAllItems 2b uniq:%d", uid);
 				GetUniqueItem(ii, uid);
 				return;
 			}
 		}
 		// if (items[ii]._iMagical != ITEM_QUALITY_UNIQUE)
+                if (dooDebug)
+                    LogErrorF("SetupAllItems 3 dur");
 			ItemRndDur(ii);
+                if (dooDebug)
+                    LogErrorF("SetupAllItems 4");
 	/*} else {
 		assert(items[ii]._iLoc != ILOC_UNEQUIPABLE);
 		GetUniqueItem(ii, iseed);
@@ -1169,13 +1183,16 @@ void CreateRndItem(int x, int y, unsigned quality)
 {
 	int idx, ii;
 	unsigned lvl;
-
+    extern bool dooDebug;
 	lvl = items_get_currlevel();
-
+    if (dooDebug)
+        LogErrorF("CreateRndItem 0");
 	if (quality == CFDQ_GOOD)
 		idx = RndUItem(lvl);
 	else
 		idx = RndAllItems(lvl);
+    if (dooDebug)
+        LogErrorF("CreateRndItem 1 %d", idx);
 
 	if (numitems >= MAXITEMS)
 		return; // should never be the case
@@ -1183,10 +1200,16 @@ void CreateRndItem(int x, int y, unsigned quality)
 	numitems++;
 
 	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
+    if (dooDebug)
+        LogErrorF("CreateRndItem 2 %d:%d", x, y);
 
 	GetSuperItemSpace(x, y, ii);
+    if (dooDebug)
+        LogErrorF("CreateRndItem 3");
 
 	RespawnItem(ii);
+    if (dooDebug)
+        LogErrorF("CreateRndItem 4");
 }
 
 static void SetupAllUseful(int ii, int iseed, unsigned lvl)
