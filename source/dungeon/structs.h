@@ -105,7 +105,7 @@ typedef struct ItemData {
 } ItemData;
 
 typedef struct ItemStruct {
-	int _iSeed;
+	int32_t _iSeed;
 	uint16_t _iIdx;        // item_indexes
 	uint16_t _iCreateInfo; // icreateinfo_flag
 	int _ix;
@@ -287,7 +287,7 @@ typedef struct MonsterStruct {
 	int _mAnimLen;   // Number of frames in current animation
 	int _mAnimFrame; // Current frame of animation.
 	int _mmaxhp;
-	int _mRndSeed;
+	int32_t _mRndSeed;
 	BYTE _muniqtype;
 	BYTE _muniqtrans;
 	BYTE _mNameColor;  // color of the tooltip. white: normal, blue: pack; gold: unique. (text_color)
@@ -400,7 +400,7 @@ typedef struct ObjectStruct {
 	BYTE _oDoorFlag; // object_door_type
 	BYTE _oSelFlag;
 	BOOLEAN _oPreFlag;
-	int _oRndSeed;
+	int32_t _oRndSeed;
 	int _oVar1;
 	int _oVar2;
 	int _oVar3;

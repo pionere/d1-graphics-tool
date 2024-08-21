@@ -556,6 +556,9 @@ static unsigned totalMonsters;
 static unsigned themeMonsters;
 static unsigned maxMonsters;
 static unsigned minMonsters;
+static unsigned totalThemes;
+static unsigned maxThemes;
+static unsigned minThemes;
 static unsigned rounds;
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
@@ -597,6 +600,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     themeMonsters = 0;
     minMonsters = UINT_MAX;
     maxMonsters = 0;
+    minThemes = UINT_MAX;
+    maxThemes = 0;
     int32_t questSeed = params.seedQuest;
     int extraRounds = params.extraRounds;
     quint64 started = QDateTime::currentMSecsSinceEpoch();
@@ -616,6 +621,10 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         if (nummonsters < minMonsters)
             minMonsters = nummonsters;
         totalThemes += numthemes;
+        if (numthemes > maxThemes)
+            maxThemes = numthemes;
+        if (numthemes < minThemes)
+            minThemes = numthemes;
         if (--extraRounds < 0) {
             break;
         }
@@ -630,7 +639,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         EnterLevel(params.levelIdx, lvlSeed);
     }
     quint64 now = QDateTime::currentMSecsSinceEpoch();
-    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: %7 Leveltype %8.").arg(params.extraRounds - extraRounds).arg(now - started).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(totalThemes / rounds).arg(currLvl._dType);
+    dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: avg:%7 min:%8 max:%9 Leveltype %10.").arg(params.extraRounds - extraRounds).arg(now - started).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(totalThemes / rounds).arg(minThemes).arg(maxThemes).arg(currLvl._dType);
 
     dun->setLevelType(currLvl._dType);
 
