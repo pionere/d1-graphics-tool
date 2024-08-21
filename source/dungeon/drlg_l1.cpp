@@ -1908,6 +1908,8 @@ static void L1TileFix()
 static void DRLG_L1PlaceThemeRooms()
 {
 	for (int i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
+		if (random_(0, 16) > 4)
+			continue;
 		int roomLeft = drlg.L1RoomList[i].lrx;
 		int roomRight = roomLeft + drlg.L1RoomList[i].lrw - 1;
 		int roomTop = drlg.L1RoomList[i].lry;
