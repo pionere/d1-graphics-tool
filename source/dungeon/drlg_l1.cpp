@@ -1242,6 +1242,30 @@ static int DRLG_L1GetArea()
 		rv += *pTmp;
 	}
 
+    int n = 0;
+    for (i = 0; i < nRoomCnt; i++) {
+        n += drlg.L1RoomList[i].lrw * drlg.L1RoomList[i].lrh;
+    }
+    int is = CHAMBER_SIZE + 1;
+    int ie = 29;
+    if (!ChambersFirst)
+        is = 1 + CHAMBER_SIZE + 4 + CHAMBER_SIZE;
+
+    if (!ChambersLast)
+        ie = 15;
+    if (ie > is) {
+        n += 6 * (ie - is);
+        if (ChambersMiddle)
+            n -= CHAMBER_SIZE * 6;
+    }
+    if (n != rv) {
+        dProgressWarn() << QString("Area mismatch %1 vs %2 chambers(%3, %4, %5)").arg(n).arg(rv).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);
+    } else {
+        extern int counter1, counter2;
+        if (counter1 == 0)
+            dProgressWarn() << QString("Area %1 chambers(%2, %3, %4)").arg(n).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);
+    }
+
 	return rv;
 }
 
@@ -2645,12 +2669,12 @@ static void DRLG_L1()
 		break;
 	}
 	while (true) {
-    counter1++;
+    // counter1++;
     dt[0] -= timer->nsecsElapsed();
 		do {
 			memset(dungeon, 0, sizeof(dungeon));
 			DRLG_L1CreateDungeon();
-            counter2++;
+            // counter2++;
 		} while (DRLG_L1GetArea() < minarea);
     dt[0] += timer->nsecsElapsed();
     dt[1] -= timer->nsecsElapsed();
@@ -2770,7 +2794,7 @@ static void DRLG_L1()
 		}
 		break;
 	}
-
+    counter1++;
 	/*if (placeWater) {
 		int x, y;
 
