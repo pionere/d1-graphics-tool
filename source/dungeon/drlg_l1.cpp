@@ -1246,7 +1246,7 @@ static int DRLG_L1GetArea()
     for (i = 0; i < nRoomCnt; i++) {
         n += drlg.L1RoomList[i].lrw * drlg.L1RoomList[i].lrh;
     }
-    int is = CHAMBER_SIZE + 1;
+    /*int is = CHAMBER_SIZE + 1;
     int ie = 29;
     if (!ChambersFirst)
         is = 1 + CHAMBER_SIZE + 4 + CHAMBER_SIZE;
@@ -1255,8 +1255,13 @@ static int DRLG_L1GetArea()
         ie = 15;
     if (ie > is) {
         n += 6 * (ie - is);
-        if (ChambersMiddle)
+        if (ChambersFirst + ChambersMiddle + ChambersLast == 3)
             n -= CHAMBER_SIZE * 6;
+    }*/
+    if (ChambersFirst + ChambersMiddle + ChambersLast == 3) {
+        n += 6 * 4 * 2;
+    } else if (ChambersFirst + ChambersMiddle + ChambersLast == 2) {
+        n += 6 * 4;
     }
     if (n != rv) {
         dProgressWarn() << QString("Area mismatch %1 vs %2 chambers(%3, %4, %5)").arg(n).arg(rv).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);
