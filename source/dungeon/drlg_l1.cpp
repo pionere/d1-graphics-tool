@@ -2633,8 +2633,6 @@ static void DRLG_L1()
     extern quint64 dt[16];
     extern int counter1, counter2;
 
-    counter1 = 0;
-    counter2 = 0;
 	switch (currLvl._dLevelIdx) {
 	case DLV_CATHEDRAL1:
 		minarea = 533;

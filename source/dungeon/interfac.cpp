@@ -598,6 +598,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     IncProgress();
 
     rounds = 0;
+    counter1 = 0;
+    counter2 = 0;
     totalThemes = 0;
     totalMonsters = 0;
     themeMonsters = 0;
