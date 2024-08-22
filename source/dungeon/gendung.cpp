@@ -1483,9 +1483,11 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				rh -= tPos.y;
 				int ap = random_low(0, rw * rh); // assert((maxSize - 2) * (maxSize - 2) < 0x7FFF); -- DRLG_PlaceThemeRooms uses RandRangeLow to set theme size.
 
-				tArea.w -= ap % rw;
-				tArea.h -= ap / rw;
-
+				// tArea.w -= ap % rw;
+				// tArea.h -= ap / rw;
+				tArea.w = min + (ap % rw);
+				tArea.h = min + (ap / rw);
+                // Random room at 11:12 (w : 6, h : 6) selected offset 0 : 1 (w : 5, h : 6)
                 dProgressWarn() << QString("Random room at %1:%2 (w:%3, h:%4) selected offset %5:%6 (w:%7, h:%8)").arg(i + 1).arg(j + 1).arg(currArea.w).arg(currArea.h).arg(tPos.x).arg(tPos.y).arg(tArea.w).arg(tArea.h);
 			}
 			tPos.x += i + 1;

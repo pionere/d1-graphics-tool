@@ -2631,7 +2631,10 @@ static void DRLG_L1()
 	bool placeWater = QuestStatus(Q_PWATER);
     extern QElapsedTimer* timer;
     extern quint64 dt[16];
+    extern int counter1, counter2;
 
+    counter1 = 0;
+    counter2 = 0;
 	switch (currLvl._dLevelIdx) {
 	case DLV_CATHEDRAL1:
 		minarea = 533;
@@ -2643,18 +2646,26 @@ static void DRLG_L1()
 		minarea = 761;
 		break;
 	}
-    dt[0] -= timer->nsecsElapsed();
 	while (true) {
+    counter1++;
+    dt[0] -= timer->nsecsElapsed();
 		do {
 			memset(dungeon, 0, sizeof(dungeon));
 			DRLG_L1CreateDungeon();
+            counter2++;
 		} while (DRLG_L1GetArea() < minarea);
-
+    dt[0] += timer->nsecsElapsed();
+    dt[1] -= timer->nsecsElapsed();
 		DRLG_L1MakeMegas();
+    dt[1] += timer->nsecsElapsed();
+    dt[2] -= timer->nsecsElapsed();
 		L1TileFix();
 		memset(drlgFlags, 0, sizeof(drlgFlags));
 		L1FillChambers();
+    dt[2] += timer->nsecsElapsed();
+    dt[3] -= timer->nsecsElapsed();
 		L1AddWall();
+    dt[3] += timer->nsecsElapsed();
 		L1ClearChamberFlags();
 		if (currLvl._dDynLvl) {
 #ifdef HELLFIRE
@@ -2761,7 +2772,7 @@ static void DRLG_L1()
 		}
 		break;
 	}
-    dt[0] += timer->nsecsElapsed();
+
 	/*if (placeWater) {
 		int x, y;
 
@@ -2836,18 +2847,12 @@ static void DRLG_L1()
 	} else
 #endif
 	{
-        dt[1] -= timer->nsecsElapsed();
 		// assert(currLvl._dType == DTYPE_CATHEDRAL);
 		DRLG_L1PlaceThemeRooms();
-        dt[1] += timer->nsecsElapsed();
 
-    dt[2] -= timer->nsecsElapsed();
 		DRLG_L1Shadows();
-    dt[2] += timer->nsecsElapsed();
-    dt[3] -= timer->nsecsElapsed();
 		for (i = RandRange(5, 9); i > 0; i--)
 			DRLG_PlaceMiniSet(LAMPS);
-    dt[3] += timer->nsecsElapsed();
 	}
 }
 

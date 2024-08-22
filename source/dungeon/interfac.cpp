@@ -29,6 +29,7 @@ bool stopgen;
 bool dooDebug;
 QElapsedTimer* timer;
 quint64 dt[16];
+int counter1, counter2;
 
 typedef struct ObjStruct {
     int otype;
@@ -618,7 +619,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
         extern int nRoomCnt;
-        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms.").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt);
+        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms. (%8:%9)").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt).arg(counter1).arg(counter2);
         rounds++;
         totalMonsters += (nummonsters - MAX_MINIONS);
         themeMonsters += nummonsters - baseMonsters;
