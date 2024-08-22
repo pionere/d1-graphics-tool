@@ -2629,6 +2629,8 @@ static void DRLG_L1()
 	int i;
 	int minarea;
 	bool placeWater = QuestStatus(Q_PWATER);
+    extern QElapsedTimer* timer;
+    extern quint64 dt[16];
 
 	switch (currLvl._dLevelIdx) {
 	case DLV_CATHEDRAL1:
@@ -3268,8 +3270,6 @@ static void LoadL1Dungeon(const LevelData* lds)
 void CreateL1Dungeon()
 {
 	const LevelData* lds = &AllLevels[currLvl._dLevelNum];
-    extern QElapsedTimer* timer;
-    extern quint64 dt[16];
 
 	if (lds->dSetLvl) {
 		LoadL1Dungeon(lds);
