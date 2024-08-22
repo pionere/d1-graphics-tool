@@ -2641,7 +2641,7 @@ static void DRLG_L1()
 		minarea = 761;
 		break;
 	}
-
+    dt[0] -= timer->nsecsElapsed();
 	while (true) {
 		do {
 			memset(dungeon, 0, sizeof(dungeon));
@@ -2759,7 +2759,7 @@ static void DRLG_L1()
 		}
 		break;
 	}
-
+    dt[0] += timer->nsecsElapsed();
 	/*if (placeWater) {
 		int x, y;
 
@@ -2834,12 +2834,18 @@ static void DRLG_L1()
 	} else
 #endif
 	{
+        dt[1] -= timer->nsecsElapsed();
 		// assert(currLvl._dType == DTYPE_CATHEDRAL);
 		DRLG_L1PlaceThemeRooms();
+        dt[1] += timer->nsecsElapsed();
 
+    dt[2] -= timer->nsecsElapsed();
 		DRLG_L1Shadows();
+    dt[2] += timer->nsecsElapsed();
+    dt[3] -= timer->nsecsElapsed();
 		for (i = RandRange(5, 9); i > 0; i--)
 			DRLG_PlaceMiniSet(LAMPS);
+    dt[3] += timer->nsecsElapsed();
 	}
 }
 
@@ -3269,9 +3275,7 @@ void CreateL1Dungeon()
 		LoadL1Dungeon(lds);
 	} else {
 		DRLG_LoadL1SP();
-    dt[0] -= timer->nsecsElapsed();
 		DRLG_L1();
-    dt[0] -= timer->nsecsElapsed();
 	}
 
 #ifdef HELLFIRE
@@ -3283,17 +3287,11 @@ void CreateL1Dungeon()
 		DRLG_L1Subs();
 	}
 
-    dt[1] -= timer->nsecsElapsed();
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 	DRLG_L1DrawPreMaps();
-    dt[1] += timer->nsecsElapsed();
 
-    dt[2] -= timer->nsecsElapsed();
 	DRLG_L1InitTransVals();
-    dt[2] += timer->nsecsElapsed();
-    dt[3] -= timer->nsecsElapsed();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
-    dt[3] += timer->nsecsElapsed();
 }
 
 DEVILUTION_END_NAMESPACE

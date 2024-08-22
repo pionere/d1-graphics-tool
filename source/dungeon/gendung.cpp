@@ -1485,6 +1485,8 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 
 				tArea.w -= ap % rw;
 				tArea.h -= ap / rw;
+
+                dProgressWarn() << QString("Random room at %1:%2 (w:%3, h:%4) selected offset %5:%6 (w:%7, h:%8)").arg(i + 1).arg(j + 1).arg(currArea.w).arg(currArea.h).arg(tPos.x).arg(tPos.y).arg(tArea.w).arg(tArea.h);
 			}
 			tPos.x += i + 1;
 			tPos.y += j + 1;
