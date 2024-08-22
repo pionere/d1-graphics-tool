@@ -17,12 +17,24 @@ typedef struct POS32 {
 	int y;
 } POS32;
 
+typedef struct AREA32 {
+	int w;
+	int h;
+} AREA32;
+
 typedef struct RECT32 {
 	int x;
 	int y;
 	int w;
 	int h;
 } RECT32;
+
+typedef struct RECT_AREA32 {
+	int x1;
+	int y1;
+	int x2;
+	int y2;
+} RECT_AREA32;
 
 //////////////////////////////////////////////////
 // items
@@ -568,23 +580,24 @@ typedef struct ROOMHALLNODE {
 } ROOMHALLNODE;
 
 typedef struct L1ROOM {
-	BYTE lrx;
-	BYTE lry;
-	BYTE lrw;
-	BYTE lrh;
+	int lrx;
+	int lry;
+	int lrw;
+	int lrh;
 } L1ROOM;
 
 typedef struct ThemePosDir {
-	BYTE tpdx;
-	BYTE tpdy;
-	BYTE tpdvar1;
-	BYTE tpdvar2; // unused
+	int tpdx;
+	int tpdy;
+	int tpdvar1;
+	int tpdvar2; // unused
 } ThemePosDir;
 
 /** The number of generated rooms in cathedral. */
 #define L1_MAXROOMS ((DSIZEX * DSIZEY) / sizeof(L1ROOM))
 /** The number of generated rooms in catacombs. */
 #define L2_MAXROOMS 32
+static_assert(L2_MAXROOMS * sizeof(ROOMHALLNODE) <= (DSIZEX * DSIZEY), "RoomList is too large for DrlgMem.");
 /** Possible matching locations in a theme room. */
 #define THEME_LOCS ((DSIZEX * DSIZEY) / sizeof(ThemePosDir))
 

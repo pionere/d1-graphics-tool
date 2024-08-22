@@ -83,6 +83,7 @@ static int TFit_Shrine(int themeId)
 					drlg.thLocs[numMatches].tpdvar1 = 1;
 					drlg.thLocs[numMatches].tpdvar2 = 0;
 					numMatches++;
+					static_assert(lengthof(drlg.thLocs) >= (10 - 2 - (1 + 1)) * (10 - 2 - (1 + 1)), "TFit_Shrine skips limit checks assuming enough thLocs entries I.");
 					// if (numMatches == lengthof(drlg.thLocs))
 					//	goto done;
 				}
@@ -105,6 +106,7 @@ static int TFit_Shrine(int themeId)
 					drlg.thLocs[numMatches].tpdvar1 = 0;
 					drlg.thLocs[numMatches].tpdvar2 = 0;
 					numMatches++;
+					static_assert(lengthof(drlg.thLocs) >= (10 - 2 - (1 + 1)) * (10 - 2 - (1 + 1)), "TFit_Shrine skips limit checks assuming enough thLocs entries II.");
 					// if (numMatches == lengthof(drlg.thLocs))
 					//	goto done;
 				}
@@ -114,7 +116,7 @@ static int TFit_Shrine(int themeId)
 // done:
 	if (numMatches == 0)
 		return -1;
-	// static_assert(lengthof(drlg.thLocs) < 0x7FFF);
+	static_assert(lengthof(drlg.thLocs) < 0x7FFF, "TFit_Shrine uses random_low to select a matching location.");
 	return random_low(0, numMatches);
 }
 
@@ -142,6 +144,7 @@ static int TFit_Obj5(int themeId)
 					drlg.thLocs[numMatches].tpdvar1 = 0;
 					drlg.thLocs[numMatches].tpdvar2 = 0;
 					numMatches++;
+					static_assert(lengthof(drlg.thLocs) >= (10 - 2 - (3 + 3)) * (10 - 2 - (3 + 3)), "TFit_Obj5 skips limit checks assuming enough thLocs entries II.");
 					// if (numMatches == lengthof(drlg.thLocs))
 					//	goto done;
 				}
@@ -151,7 +154,7 @@ static int TFit_Obj5(int themeId)
 // done:
 	if (numMatches == 0)
 		return -1;
-	// static_assert(lengthof(drlg.thLocs) < 0x7FFF);
+	static_assert(lengthof(drlg.thLocs) < 0x7FFF, "TFit_Obj5 uses random_low to select a matching location.");
 	return random_low(0, numMatches);
 }
 
@@ -188,6 +191,7 @@ static int TFit_Obj3(int themeId)
 				drlg.thLocs[numMatches].tpdvar1 = 0;
 				drlg.thLocs[numMatches].tpdvar2 = 0;
 				numMatches++;
+				static_assert(lengthof(drlg.thLocs) >= (10 - 2 - (2 + 2)) * (10 - 2 - (2 + 2)), "TFit_Obj3 skips limit checks assuming enough thLocs entries II.");
 				// if (numMatches == lengthof(drlg.thLocs))
 				//	goto done;
 			}
@@ -196,7 +200,7 @@ static int TFit_Obj3(int themeId)
 // done:
 	if (numMatches == 0)
 		return -1;
-	// static_assert(lengthof(drlg.thLocs) < 0x7FFF);
+	static_assert(lengthof(drlg.thLocs) < 0x7FFF, "TFit_Obj3 uses random_low to select a matching location.");
 	return random_low(0, numMatches);
 }
 
@@ -646,7 +650,7 @@ static void Theme_Treasure(BYTE tv)
 static void Theme_Library(int themeId, BYTE tv)
 {
 	int xx, yy, oi;
-	const BYTE librnds[4] = { 1, 2, 2, 5 };
+	const BYTE librnds[4] = { 1, 2, 0, 0 };
 	BYTE librnd;
 
 	xx = themes[themeId]._tsObjX;
@@ -660,7 +664,8 @@ static void Theme_Library(int themeId, BYTE tv)
 		AddObject(OBJ_BOOKCASEL, xx, yy);
 		AddObject(OBJ_BOOKCANDLE, xx, yy + 1);
 	}
-
+	static_assert(DTYPE_CATHEDRAL == 1 && DTYPE_CATACOMBS == 2, "Theme_Library uses dungeon_type as an array-index.");
+	// assert(currLvl._dDunType == 1 /* DTYPE_CATHEDRAL */ || currLvl._dDunType == 2 /* DTYPE_CATACOMBS */);
 	librnd = librnds[currLvl._dDunType - 1];     // TODO: use dType instead?
 	for (xx = DBORDERX + 1; xx < DBORDERX + DSIZEX - 1; xx++) {
 		for (yy = DBORDERY + 1; yy < DBORDERY + DSIZEY - 1; yy++) {

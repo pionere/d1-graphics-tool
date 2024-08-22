@@ -6,7 +6,7 @@
 #include "all.h"
 
 #include <QString>
-
+#include <QElapsedTimer>
 #include "../progressdialog.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -1084,6 +1084,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
 	bool ran2;
+	static_assert(((DMAXX - 2) * (DMAXY - 2) - (CHAMBER_SIZE + 2) * (CHAMBER_SIZE + 2)) / (2 * 2) <= lengthof(drlg.L1RoomList), "L1RoomGen skips limit checks assuming enough L1RoomList entries.");
 
 	dirProb = random_(0, 4);
 
@@ -1907,9 +1908,11 @@ static void L1TileFix()
 
 static void DRLG_L1PlaceThemeRooms()
 {
-	for (int i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
-		if (random_(0, 16) > 4)
-			continue;
+	RECT_AREA32 thops[32];
+	int i, numops = 0;
+	for (i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
+		//if (random_(0, 16) > 4)
+		//	continue;
 		int roomLeft = drlg.L1RoomList[i].lrx;
 		int roomRight = roomLeft + drlg.L1RoomList[i].lrw - 1;
 		int roomTop = drlg.L1RoomList[i].lry;
@@ -1962,19 +1965,37 @@ static void DRLG_L1PlaceThemeRooms()
 		}
 		if (!fit)
 			continue; // room is too small or incomplete
-		// create the room
 		int w = (roomRight + 1) - (roomLeft - 1) + 1;
 		int h = (roomBottom + 1) - (roomTop - 1) + 1;
 		if (w > 10 - 2 || h > 10 - 2)
 			continue; // room is too large
-		themes[numthemes]._tsx1 = roomLeft - 1;
-		themes[numthemes]._tsy1 = roomTop - 1;
-		themes[numthemes]._tsx2 = roomLeft - 1 + w - 1;
-		themes[numthemes]._tsy2 = roomTop - 1 + h - 1;
-		numthemes++;
-		if (numthemes == lengthof(themes))
-			break;
+        if (numops == lengthof(thops)) {
+            dProgressWarn() << QString("Not enough thops entry to store the theme-room option at %1:%2 (w:%3, h:%4)").arg(roomLeft - 1).arg(roomTop - 1).arg(w).arg(h);
+            continue;
+        }
+		// register the room
+		thops[numops].x1 = roomLeft - 1;
+		thops[numops].y1 = roomTop - 1;
+		thops[numops].x2 = roomLeft - 1 + w - 1;
+		thops[numops].y2 = roomTop - 1 + h - 1;
+		numops++;
+		// if (numops == lengthof(thops))
+		//	break; // should not happen (too often), otherwise the theme-placement is biased
 	}
+	// filter the rooms
+	while (numops > lengthof(themes)) {
+		i = random_low(0, numops);
+		--numops;
+		thops[i] = thops[numops];
+	}
+	// add the rooms
+	for (i = 0; i < numops; i++) {
+		themes[i]._tsx1 = thops[i].x1;
+		themes[i]._tsy1 = thops[i].y1;
+		themes[i]._tsx2 = thops[i].x2;
+		themes[i]._tsy2 = thops[i].y2;
+	}
+	numthemes = numops;
 }
 
 #ifdef HELLFIRE
@@ -3241,12 +3262,16 @@ static void LoadL1Dungeon(const LevelData* lds)
 void CreateL1Dungeon()
 {
 	const LevelData* lds = &AllLevels[currLvl._dLevelNum];
+    extern QElapsedTimer* timer;
+    extern quint64 dt[16];
 
 	if (lds->dSetLvl) {
 		LoadL1Dungeon(lds);
 	} else {
 		DRLG_LoadL1SP();
+    dt[0] -= timer->nsecsElapsed();
 		DRLG_L1();
+    dt[0] -= timer->nsecsElapsed();
 	}
 
 #ifdef HELLFIRE
@@ -3258,11 +3283,17 @@ void CreateL1Dungeon()
 		DRLG_L1Subs();
 	}
 
+    dt[1] -= timer->nsecsElapsed();
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 	DRLG_L1DrawPreMaps();
+    dt[1] += timer->nsecsElapsed();
 
+    dt[2] -= timer->nsecsElapsed();
 	DRLG_L1InitTransVals();
+    dt[2] += timer->nsecsElapsed();
+    dt[3] -= timer->nsecsElapsed();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
+    dt[3] += timer->nsecsElapsed();
 }
 
 DEVILUTION_END_NAMESPACE

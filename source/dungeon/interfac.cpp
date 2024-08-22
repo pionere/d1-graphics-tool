@@ -229,15 +229,12 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
-    dt[0] -= timer->nsecsElapsed();
 	CreateDungeon();
-    dt[0] += timer->nsecsElapsed();
 	// LoadLvlPalette();
 	int rv = RandRange(1, 4);
 	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
 	StoreProtections(dun);
 	IncProgress();
-    dt[1] -= timer->nsecsElapsed();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
 		InitThemes();     // protect themes with dFlags and select theme types
@@ -251,18 +248,13 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 
 //		InitTowners();
 	}
-    dt[1] += timer->nsecsElapsed();
 	IncProgress();
 	InitObjectGFX();    // load object graphics
 	IncProgress();
-    dt[2] -= timer->nsecsElapsed();
 	InitObjects();      // place objects
-    dt[2] += timer->nsecsElapsed();
 	InitItems();        // place items
     baseMonsters = nummonsters;
-    dt[3] -= timer->nsecsElapsed();
 	CreateThemeRooms(); // populate theme rooms
-    dt[3] += timer->nsecsElapsed();
 	FreeSetPieces();
 	IncProgress();
 //	InitMissiles();  // reset missiles
