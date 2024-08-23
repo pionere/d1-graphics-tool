@@ -1290,10 +1290,11 @@ static void DRLG_L1CreateDungeon()
 }
 int minars[4];
 int maxars[4];
+int avgars[4];
 static int DRLG_L1GetArea()
 {
 	int i, rv;
-#if 1
+#if 0
 	BYTE* pTmp;
 
 	rv = 0;
@@ -1308,10 +1309,6 @@ static int DRLG_L1GetArea()
     for (i = 0; i < nRoomCnt; i++) {
         rv += drlg.L1RoomList[i].lrw * drlg.L1RoomList[i].lrh;
     }
-    /*if (minars[ChambersFirst + ChambersMiddle + ChambersLast] > rv)
-        minars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
-    if (maxars[ChambersFirst + ChambersMiddle + ChambersLast] < rv)
-        maxars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;*/
     if (ChambersFirst + ChambersMiddle + ChambersLast == 3) {
         rv += 6 * 4 * 2;
     } else if (ChambersFirst + ChambersMiddle + ChambersLast == 2) {
@@ -1319,6 +1316,11 @@ static int DRLG_L1GetArea()
         if (!ChambersMiddle)
             rv += 6 * 4 + CHAMBER_SIZE * 6;
     }
+    avgars[ChambersFirst + ChambersMiddle + ChambersLast] += rv;
+    if (minars[ChambersFirst + ChambersMiddle + ChambersLast] > rv)
+        minars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
+    if (maxars[ChambersFirst + ChambersMiddle + ChambersLast] < rv)
+        maxars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
 #endif
 	return rv;
 }
