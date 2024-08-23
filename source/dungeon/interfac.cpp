@@ -29,7 +29,7 @@ bool stopgen;
 bool dooDebug;
 QElapsedTimer* timer;
 quint64 dt[16];
-int counter1, counter2;
+int counter1, counter2, lc2;
 
 typedef struct ObjStruct {
     int otype;
@@ -609,6 +609,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     rounds = 0;
     counter1 = 0;
     counter2 = 0;
+    lc2 = 0;
     totalThemes = 0;
     totalMonsters = 0;
     themeMonsters = 0;
@@ -630,8 +631,9 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
         extern int nRoomCnt;
-        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms. (%8:%9)").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt).arg(counter1).arg(counter2);
+        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms. (%8:%9)").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt).arg(counter1).arg(counter2).arg(counter2 - lc2);
         rounds++;
+        lc2 = counter2;
         totalMonsters += (nummonsters - MAX_MINIONS);
         themeMonsters += nummonsters - baseMonsters;
         if (nummonsters > maxMonsters)
@@ -657,7 +659,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         EnterLevel(params.levelIdx, lvlSeed);
     }
     dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: avg:%7 min:%8 max:%9 Leveltype %10. times(dun%11, mon%12, obj%13, themes%14)").arg(params.extraRounds - extraRounds).arg(tmr.elapsed()).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(totalThemes / rounds).arg(minThemes).arg(maxThemes).arg(currLvl._dType).arg(dt[0]).arg(dt[1]).arg(dt[2]).arg(dt[3]);
-    dProgress() << QApplication::tr("minareas(%1, %2, %3) maxareas(%4, %5, %6) avgareas(%7, %8, %9) (%10, %11, %12)").arg(minars[1]).arg(minars[2]).arg(minars[3]).arg(maxars[1]).arg(maxars[2]).arg(maxars[3]).arg(cntars[1] == 0 ? 0 : (avgars[1] / cntars[1])).arg(cntars[2] == 0 ? 0 : (avgars[2] / cntars[2])).arg(cntars[3] == 0 ? 0 : (avgars[3] / cntars[3])).arg(cntars[1]).arg(cntars[2]).arg(cntars[3]);
+    dProgress() << QApplication::tr("minareas(%1, %2, %3) maxareas(%4, %5, %6) avgareas(%7, %8, %9) (%10, %11, %12) dvg+rounds%13").arg(minars[1]).arg(minars[2]).arg(minars[3]).arg(maxars[1]).arg(maxars[2]).arg(maxars[3]).arg(cntars[1] == 0 ? 0 : (avgars[1] / cntars[1])).arg(cntars[2] == 0 ? 0 : (avgars[2] / cntars[2])).arg(cntars[3] == 0 ? 0 : (avgars[3] / cntars[3])).arg(cntars[1]).arg(cntars[2]).arg(cntars[3]).arg(counter2 / rounds);
 
     dun->setLevelType(currLvl._dType);
 

@@ -2718,13 +2718,20 @@ void DRLG_L1InitTransVals()
 static void DRLG_L1()
 {
 	int i;
-	int minarea;
+	int minarea, areaidx;
 	bool placeWater = QuestStatus(Q_PWATER);
     extern QElapsedTimer* timer;
     extern quint64 dt[16];
     extern int counter1, counter2;
 
-	switch (currLvl._dLevelIdx) {
+	const int arealimits[] = { DMAXX * DMAXY; 761; 693; 533 };
+	areaidx = 0;
+	if (currLvl._dLevelIdx == DLV_CATHEDRAL1) {
+		areaidx = 2;
+	} else if (currLvl._dLevelIdx == DLV_CATHEDRAL2) {
+		areaidx = 1;
+	}
+	/*switch (currLvl._dLevelIdx) {
 	case DLV_CATHEDRAL1:
 		minarea = 533;
 		break;
@@ -2734,7 +2741,7 @@ static void DRLG_L1()
 	default:
 		minarea = 761;
 		break;
-	}
+	}*/
 	while (true) {
     counter1++;
     dt[0] -= timer->nsecsElapsed();
@@ -2742,7 +2749,9 @@ static void DRLG_L1()
 			memset(dungeon, 0, sizeof(dungeon));
 			DRLG_L1CreateDungeon();
             counter2++;
-		} while (DRLG_L1GetArea() < minarea);
+			i = DRLG_L1GetArea();
+		// } while (DRLG_L1GetArea() < minarea);
+		} while (arealimits[areaidx] > i || arealimits[areaidx + 1] < i);
     dt[0] += timer->nsecsElapsed();
     dt[1] -= timer->nsecsElapsed();
 		DRLG_L1MakeMegas();
