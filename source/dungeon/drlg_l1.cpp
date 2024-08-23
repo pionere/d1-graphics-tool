@@ -1291,6 +1291,7 @@ static void DRLG_L1CreateDungeon()
 int minars[4];
 int maxars[4];
 int avgars[4];
+int cntars[4];
 static int DRLG_L1GetArea()
 {
 	int i, rv;
@@ -1317,6 +1318,7 @@ static int DRLG_L1GetArea()
             rv += 6 * 4 + CHAMBER_SIZE * 6;
     }
     avgars[ChambersFirst + ChambersMiddle + ChambersLast] += rv;
+    cntars[ChambersFirst + ChambersMiddle + ChambersLast]++;
     if (minars[ChambersFirst + ChambersMiddle + ChambersLast] > rv)
         minars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
     if (maxars[ChambersFirst + ChambersMiddle + ChambersLast] < rv)
