@@ -1093,13 +1093,13 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 		for (i = 20; i != 0; i--) {
 			width = RandRange(2, 6) & ~1;
 			height = RandRange(2, 6) & ~1;
-			ry = h / 2 + y - height / 2;
+			ry = h / 2u + y - height / 2u;
 			rx = x - width;
 			if (L1CheckVHall(x, ry - 1, height + 2)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 1, height + 2)) // BUGFIX: swap args 3 and 4 ("height+2" and "width+1") (fixed)
 				break;
 		}
-
+/*
 		if (i != 0)
 			L1DrawRoom(rx, ry, width, height);
 		// try to place a room to the right
@@ -1114,18 +1114,48 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 		// proceed with the placed a room on the right
 		if (ran2)
 			L1RoomGen(rxy2, ry, width, height, true);
+            */
+        // - add room to the left
+        if (i != 0) {
+            L1DrawRoom(rx, ry, width, height);
+            i = 1;
+        } else {
+            rx = -1;
+            i = 20;
+        }
+        // try to place a room to the right
+        rxy2 = x + w;
+        while(true) {
+            if (L1CheckVHall(rxy2 - 1, ry - 1, height + 2)
+             && L1CheckRoom(rxy2, ry - 1, width + 1, height + 2))
+                break;
+            if (--i == 0)
+                break;
+            width = RandRange(2, 6) & ~1;
+            height = RandRange(2, 6) & ~1;
+            ry = h / 2u + y - height / 2u;
+        }
+        // - add room to the right
+        if (i != 0)
+            L1DrawRoom(rxy2, ry, width, height);
+        // proceed with the placed a room on the left
+        if (rx >= 0)
+            L1RoomGen(rx, ry, width, height, true);
+        // proceed with the placed a room on the right
+        if (i != 0)
+            L1RoomGen(rxy2, ry, width, height, true);
 	} else {
 		// try to place a room to the top
 		for (i = 20; i != 0; i--) {
 			width = RandRange(2, 6) & ~1;
 			height = RandRange(2, 6) & ~1;
-			rx = w / 2 + x - width / 2;
+			rx = w / 2u + x - width / 2u;
 			ry = y - height;
 			if (L1CheckHHall(y, rx - 1, width + 2)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 2, height + 1))
 				break;
 		}
-
+/*
 		if (i != 0)
 			L1DrawRoom(rx, ry, width, height);
 		// try to place a room to the bottom
@@ -1140,6 +1170,36 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 		// proceed with the placed a room on the bottom
 		if (ran2)
 			L1RoomGen(rx, rxy2, width, height, false);
+            */
+        // - add room to the top
+        if (i != 0) {
+            L1DrawRoom(rx, ry, width, height);
+            i = 1;
+        } else {
+            ry = -1;
+            i = 20;
+        }
+        // try to place a room to the bottom
+        rxy2 = y + h;
+        while(true) {
+            if (L1CheckHHall(rxy2 - 1, rx - 1, width + 2)
+             && L1CheckRoom(rx - 1, rxy2, width + 2, height + 1))
+                break;
+            if (--i == 0)
+                break;
+            width = RandRange(2, 6) & ~1;
+            height = RandRange(2, 6) & ~1;
+            rx = w / 2u + x - width / 2u;
+        }
+        // - add room to the bottom
+        if (i != 0)
+            L1DrawRoom(rx, rxy2, width, height);
+        // proceed with the placed a room on the top
+        if (ry >= 0)
+            L1RoomGen(rx, ry, width, height, false);
+        // proceed with the placed a room on the bottom
+        if (i != 0)
+            L1RoomGen(rx, rxy2, width, height, false);
 	}
 }
 

@@ -23,8 +23,6 @@ DEVILUTION_BEGIN_NAMESPACE
 /** Current game seed */
 int32_t sglGameSeed;
 
-int rndCounter;
-
 /**
  * Specifies the increment used in the Borland C/C++ pseudo-random.
  */
@@ -41,16 +39,6 @@ static const uint32_t RndMult = 0x015A4E35;
  */
 void SetRndSeed(int32_t s)
 {
-    if (s != sglGameSeed) {
-        // LogErrorF("SetRndSeed %d (prev %d) counter%d ", s, sglGameSeed, rndCounter);
-        rndCounter = 0;
-        /*sglGameSeed = s;
-        do {
-            NextRndSeed();
-        } while (sglGameSeed != s);
-        LogErrorF(" repetition length %d", rndCounter);
-        rndCounter = 0;*/
-    }
 	sglGameSeed = s;
 }
 
@@ -69,13 +57,11 @@ int32_t GetRndSeed()
  */
 int32_t NextRndSeed()
 {
-    rndCounter++;
 	sglGameSeed = RndMult * static_cast<uint32_t>(sglGameSeed) + RndInc;
-	//return abs(sglGameSeed);
 	return sglGameSeed;
 }
 
-static int32_t NextRndValue()
+static unsigned NextRndValue()
 {
 	return abs(NextRndSeed());
 }
@@ -91,8 +77,8 @@ int random_(BYTE idx, int v)
 	if (v <= 0)
 		return 0;
 	if (v < 0x7FFF)
-		return (((unsigned)NextRndValue()) >> 16) % v;
-	return ((unsigned)NextRndValue()) % v;
+		return (NextRndValue() >> 16) % v;
+	return NextRndValue() % v;
 }
 
 /**
@@ -105,7 +91,7 @@ int random_low(BYTE idx, int v)
 {
 	// assert(v > 0);
 	// assert(v < 0x7FFF);
-	return (((unsigned)NextRndValue()) >> 16) % v;
+	return (NextRndValue() >> 16) % v;
 	//return ((unsigned)NextRndValue()) % v;
 }
 
