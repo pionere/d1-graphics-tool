@@ -1228,7 +1228,8 @@ static void DRLG_L1CreateDungeon()
 			L1RoomGen(29, 15, CHAMBER_SIZE, CHAMBER_SIZE, true);
 	}
 }
-
+int minars[4];
+int maxars[4];
 static int DRLG_L1GetArea()
 {
 	int i, rv;
@@ -1258,17 +1259,23 @@ static int DRLG_L1GetArea()
         if (ChambersFirst + ChambersMiddle + ChambersLast == 3)
             n -= CHAMBER_SIZE * 6;
     }*/
+    if (minars[ChambersFirst + ChambersMiddle + ChambersLast] > rv)
+        minars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
+    if (maxars[ChambersFirst + ChambersMiddle + ChambersLast] < rv)
+        maxars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
     if (ChambersFirst + ChambersMiddle + ChambersLast == 3) {
         n += 6 * 4 * 2;
     } else if (ChambersFirst + ChambersMiddle + ChambersLast == 2) {
         n += 6 * 4;
+        if (!ChambersMiddle)
+            n += CHAMBER_SIZE * 6;
     }
     if (n != rv) {
         dProgressWarn() << QString("Area mismatch %1 vs %2 chambers(%3, %4, %5)").arg(n).arg(rv).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);
-    } else {
+    /*} else {
         extern int counter1, counter2;
         if (counter1 == 0)
-            dProgressWarn() << QString("Area %1 chambers(%2, %3, %4)").arg(n).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);
+            dProgressWarn() << QString("Area %1 chambers(%2, %3, %4)").arg(n).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);*/
     }
 
 	return rv;

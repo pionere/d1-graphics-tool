@@ -597,6 +597,11 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     EnterLevel(params.levelIdx, lvlSeed);
     IncProgress();
 
+    extern int minars[4];
+    extern int maxars[4];
+    memset(maxars, 0, sizeof(maxars));
+    for (int i = 0; i < 4; i++)
+        minars[i] = INT_MAX;
     rounds = 0;
     counter1 = 0;
     counter2 = 0;
@@ -648,6 +653,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         EnterLevel(params.levelIdx, lvlSeed);
     }
     dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: avg:%7 min:%8 max:%9 Leveltype %10. times(dun%11, mon%12, obj%13, themes%14)").arg(params.extraRounds - extraRounds).arg(tmr.elapsed()).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(totalThemes / rounds).arg(minThemes).arg(maxThemes).arg(currLvl._dType).arg(dt[0]).arg(dt[1]).arg(dt[2]).arg(dt[3]);
+    dProgress() << QApplication::tr("minareas(%1, %2, %3) maxareas(%4, %5, %6)").arg(minars[1]).arg(minars[2]).arg(minars[3]).arg(maxars[1]).arg(maxars[2]).arg(maxars[3]);
 
     dun->setLevelType(currLvl._dType);
 
