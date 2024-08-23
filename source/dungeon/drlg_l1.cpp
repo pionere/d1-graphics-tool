@@ -2725,12 +2725,12 @@ static void DRLG_L1()
 		break;
 	}
 	while (true) {
-    // counter1++;
+    counter1++;
     dt[0] -= timer->nsecsElapsed();
 		do {
 			memset(dungeon, 0, sizeof(dungeon));
 			DRLG_L1CreateDungeon();
-            // counter2++;
+            counter2++;
 		} while (DRLG_L1GetArea() < minarea);
     dt[0] += timer->nsecsElapsed();
     dt[1] -= timer->nsecsElapsed();
