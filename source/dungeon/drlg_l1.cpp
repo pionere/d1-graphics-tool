@@ -1308,7 +1308,7 @@ int cntars[4];
 static int DRLG_L1GetArea()
 {
 	int i, rv;
-#if 0
+#if 1
 	BYTE* pTmp;
 
 	rv = 0;
