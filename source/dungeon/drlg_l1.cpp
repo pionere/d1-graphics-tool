@@ -2724,7 +2724,7 @@ static void DRLG_L1()
     extern quint64 dt[16];
     extern int counter1, counter2;
 
-	const int arealimits[] = { DMAXX * DMAXY; 761; 693; 533 };
+	const int arealimits[] = { DMAXX * DMAXY, 761, 693, 533 };
 	areaidx = 0;
 	if (currLvl._dLevelIdx == DLV_CATHEDRAL1) {
 		areaidx = 2;
