@@ -1233,6 +1233,7 @@ int maxars[4];
 static int DRLG_L1GetArea()
 {
 	int i, rv;
+#if 0
 	BYTE* pTmp;
 
 	rv = 0;
@@ -1242,40 +1243,21 @@ static int DRLG_L1GetArea()
 		assert(*pTmp <= 1);
 		rv += *pTmp;
 	}
-
-    int n = 0;
+#endif
+    rv = 0;
     for (i = 0; i < nRoomCnt; i++) {
-        n += drlg.L1RoomList[i].lrw * drlg.L1RoomList[i].lrh;
+        rv += drlg.L1RoomList[i].lrw * drlg.L1RoomList[i].lrh;
     }
-    /*int is = CHAMBER_SIZE + 1;
-    int ie = 29;
-    if (!ChambersFirst)
-        is = 1 + CHAMBER_SIZE + 4 + CHAMBER_SIZE;
-
-    if (!ChambersLast)
-        ie = 15;
-    if (ie > is) {
-        n += 6 * (ie - is);
-        if (ChambersFirst + ChambersMiddle + ChambersLast == 3)
-            n -= CHAMBER_SIZE * 6;
-    }*/
-    if (minars[ChambersFirst + ChambersMiddle + ChambersLast] > rv)
+    /*if (minars[ChambersFirst + ChambersMiddle + ChambersLast] > rv)
         minars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
     if (maxars[ChambersFirst + ChambersMiddle + ChambersLast] < rv)
-        maxars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
+        maxars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;*/
     if (ChambersFirst + ChambersMiddle + ChambersLast == 3) {
-        n += 6 * 4 * 2;
+        rv += 6 * 4 * 2;
     } else if (ChambersFirst + ChambersMiddle + ChambersLast == 2) {
-        n += 6 * 4;
+        rv += 6 * 4;
         if (!ChambersMiddle)
-            n += 6 * 4 + CHAMBER_SIZE * 6;
-    }
-    if (n != rv) {
-        dProgressWarn() << QString("Area mismatch %1 vs %2 chambers(%3, %4, %5)").arg(n).arg(rv).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);
-    /*} else {
-        extern int counter1, counter2;
-        if (counter1 == 0)
-            dProgressWarn() << QString("Area %1 chambers(%2, %3, %4)").arg(n).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);*/
+            rv += 6 * 4 + CHAMBER_SIZE * 6;
     }
 
 	return rv;
