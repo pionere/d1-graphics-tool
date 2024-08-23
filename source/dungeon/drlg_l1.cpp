@@ -1213,9 +1213,18 @@ static void DRLG_L1CreateDungeon()
 
 	nRoomCnt = 0;
 	ChambersVertical = random_(0, 2);
+#if 0
 	ChambersFirst = random_(0, 2);
 	ChambersMiddle = random_(0, 2);
 	ChambersLast = random_(0, 2);
+#else
+    i = random_(0, 8);
+    if (i == 0)
+        i = 7;
+    ChambersFirst = (i & 1) ? TRUE : FALSE;
+    ChambersMiddle = (i & 2) ? TRUE : FALSE;
+    ChambersLast = (i & 4) ? TRUE : FALSE;
+#endif
 	// make sure there is at least one chamber + prevent standalone first/last chambers
 	if (!(ChambersFirst & ChambersLast))
 		ChambersMiddle = TRUE;
