@@ -1079,7 +1079,7 @@ static bool L1CheckHHall(int y, int left, int w)
 		i++;
 	return i == right;
 }
-// #define ORIGROOMS
+#define ORIGROOMS
 static void L1RoomGen(int x, int y, int w, int h, bool dir)
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
