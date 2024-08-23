@@ -1233,7 +1233,7 @@ int maxars[4];
 static int DRLG_L1GetArea()
 {
 	int i, rv;
-#if 0
+#if 1
 	BYTE* pTmp;
 
 	rv = 0;
@@ -1243,7 +1243,7 @@ static int DRLG_L1GetArea()
 		assert(*pTmp <= 1);
 		rv += *pTmp;
 	}
-#endif
+#else
     rv = 0;
     for (i = 0; i < nRoomCnt; i++) {
         rv += drlg.L1RoomList[i].lrw * drlg.L1RoomList[i].lrh;
@@ -1259,7 +1259,7 @@ static int DRLG_L1GetArea()
         if (!ChambersMiddle)
             rv += 6 * 4 + CHAMBER_SIZE * 6;
     }
-
+#endif
 	return rv;
 }
 
