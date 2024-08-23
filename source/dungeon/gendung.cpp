@@ -1479,8 +1479,8 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				numthemes++;
 				if (numthemes == lengthof(themes))
 					return;
-				j += tArea.h;
 			}
+			j += tArea.h;
 		}
 	}
 

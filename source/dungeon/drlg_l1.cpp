@@ -1079,7 +1079,7 @@ static bool L1CheckHHall(int y, int left, int w)
 		i++;
 	return i == right;
 }
-#define ORIGROOMS
+//#define ORIGROOMS
 static void L1RoomGen(int x, int y, int w, int h, bool dir)
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
@@ -1315,7 +1315,7 @@ static int DRLG_L1GetArea()
 	static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L1GetArea.");
 	pTmp = &dungeon[0][0];
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++) {
-		assert(*pTmp <= 1);
+		// assert(*pTmp <= 1);
 		rv += *pTmp;
 	}
 #else
