@@ -2751,7 +2751,7 @@ static void DRLG_L1()
             counter2++;
 			i = DRLG_L1GetArea();
 		// } while (DRLG_L1GetArea() < minarea);
-		} while (arealimits[areaidx] > i || arealimits[areaidx + 1] < i);
+		} while (arealimits[areaidx] < i || arealimits[areaidx + 1] > i);
     dt[0] += timer->nsecsElapsed();
     dt[1] -= timer->nsecsElapsed();
 		DRLG_L1MakeMegas();
