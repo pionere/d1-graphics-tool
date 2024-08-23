@@ -1079,11 +1079,13 @@ static bool L1CheckHHall(int y, int left, int w)
 		i++;
 	return i == right;
 }
-
+// #define ORIGROOMS
 static void L1RoomGen(int x, int y, int w, int h, bool dir)
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
-	// bool ran2;
+#ifdef ORIGROOMS
+	bool ran2;
+#endif
 	static_assert(((DMAXX - 2) * (DMAXY - 2) - (CHAMBER_SIZE + 2) * (CHAMBER_SIZE + 2)) / (2 * 2) <= lengthof(drlg.L1RoomList), "L1RoomGen skips limit checks assuming enough L1RoomList entries.");
 
 	dirProb = random_(0, 4);
@@ -1099,7 +1101,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 1, height + 2)) // BUGFIX: swap args 3 and 4 ("height+2" and "width+1") (fixed)
 				break;
 		}
-/*
+#ifdef ORIGROOMS
 		if (i != 0)
 			L1DrawRoom(rx, ry, width, height);
 		// try to place a room to the right
@@ -1114,7 +1116,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 		// proceed with the placed a room on the right
 		if (ran2)
 			L1RoomGen(rxy2, ry, width, height, true);
-            */
+#else
         // - add room to the left
         if (i != 0) {
             L1DrawRoom(rx, ry, width, height);
@@ -1144,6 +1146,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
         // proceed with the placed a room on the right
         if (i != 0)
             L1RoomGen(rxy2, ry, width, height, true);
+#endif
 	} else {
 		// try to place a room to the top
 		for (i = 20; i != 0; i--) {
@@ -1155,7 +1158,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 2, height + 1))
 				break;
 		}
-/*
+#ifdef ORIGROOMS
 		if (i != 0)
 			L1DrawRoom(rx, ry, width, height);
 		// try to place a room to the bottom
@@ -1170,7 +1173,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 		// proceed with the placed a room on the bottom
 		if (ran2)
 			L1RoomGen(rx, rxy2, width, height, false);
-            */
+#else
         // - add room to the top
         if (i != 0) {
             L1DrawRoom(rx, ry, width, height);
@@ -1200,6 +1203,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
         // proceed with the placed a room on the bottom
         if (i != 0)
             L1RoomGen(rx, rxy2, width, height, false);
+#endif
 	}
 }
 
@@ -1326,12 +1330,12 @@ static int DRLG_L1GetArea()
         if (!ChambersMiddle)
             rv += 6 * 4 + CHAMBER_SIZE * 6;
     }
-    avgars[ChambersFirst + ChambersMiddle + ChambersLast] += rv;
+    /*avgars[ChambersFirst + ChambersMiddle + ChambersLast] += rv;
     cntars[ChambersFirst + ChambersMiddle + ChambersLast]++;
     if (minars[ChambersFirst + ChambersMiddle + ChambersLast] > rv)
         minars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
     if (maxars[ChambersFirst + ChambersMiddle + ChambersLast] < rv)
-        maxars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;
+        maxars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;*/
 #endif
 	return rv;
 }
