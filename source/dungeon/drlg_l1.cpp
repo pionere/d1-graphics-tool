@@ -1268,7 +1268,7 @@ static int DRLG_L1GetArea()
     } else if (ChambersFirst + ChambersMiddle + ChambersLast == 2) {
         n += 6 * 4;
         if (!ChambersMiddle)
-            n += CHAMBER_SIZE * 6;
+            n += 6 * 4 + CHAMBER_SIZE * 6;
     }
     if (n != rv) {
         dProgressWarn() << QString("Area mismatch %1 vs %2 chambers(%3, %4, %5)").arg(n).arg(rv).arg(ChambersFirst).arg(ChambersMiddle).arg(ChambersLast);

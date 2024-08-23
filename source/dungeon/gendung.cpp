@@ -1451,16 +1451,16 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 			if (dungeon[i][j] != themeTiles[DRT_FLOOR]) {
 				continue;
 			}
-			/*if (rndSize && random_(0, 8) != 0) {
+			if (random_(0, 128) < rndSkip) {
 				continue;
-			}*/
+			}
 			// check if there is enough space
 			AREA32 tArea = DRLG_FitThemeRoom(themeTiles[DRT_FLOOR], i, j, minSize, maxSize);
 			if (tArea.w <= 0) {
 				continue;
 			}
 			// randomize the size
-			if (rndSize) {
+			if (rndSkip) {
 				// assert(minSize > 2);
 				min = minSize - 2;
 				static_assert(DMAXX /* - minSize */ + 2 < 0x7FFF, "DRLG_PlaceThemeRooms uses RandRangeLow to set themeW.");
