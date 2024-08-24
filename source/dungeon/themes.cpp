@@ -6,7 +6,7 @@
 #include "all.h"
 
 #include <QApplication>
-
+#include <QElapsedTimer>
 #include "../progressdialog.h"
 
 int numthemes;
@@ -876,6 +876,9 @@ void CreateThemeRooms()
 	BYTE tv;
 	// assert(currLvl._dLevelNum < DLV_HELL4 || (currLvl._dDynLvl && currLvl._dLevelNum == DLV_HELL4) || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 	//gbInitObjFlag = true;
+    extern QElapsedTimer* timer;
+    extern quint64 dt[16];
+    dt[0] -= timer->nsecsElapsed();
 	for (i = 0; i < numthemes; i++) {
 		tv = themes[i]._tsTransVal;
 		switch (themes[i]._tsType) {
@@ -935,6 +938,13 @@ void CreateThemeRooms()
 			break;
 		}
 	}
+    dt[0] += timer->nsecsElapsed();
+    /*dt[1] -= timer->nsecsElapsed();
+    dt[1] += timer->nsecsElapsed();
+    dt[2] -= timer->nsecsElapsed();
+    dt[2] += timer->nsecsElapsed();
+    dt[3] -= timer->nsecsElapsed();
+    dt[3] += timer->nsecsElapsed();*/
 	//gbInitObjFlag = false;
 	// TODO: why was this necessary in the vanilla code?
 	//if (currLvl._dType == DTYPE_HELL && numthemes > 0) {

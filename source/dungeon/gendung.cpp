@@ -1326,9 +1326,10 @@ void InitLvlMap()
  * @param y the y-coordinate of the starting position
  * @param minSize the minimum size of the room (must be less than 20)
  * @param maxSize the maximum size of the room (must be less than 20)
- * @return the size of the room
+ * @param room the w/h of the room if found
+ * @return whether a fitting room was found
  */
-static AREA32 DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSize)
+static bool DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSize, AREA32 &room)
 {
 	int xmax, ymax, i, j, smallest;
 	int xArray[16], yArray[16];
@@ -1340,7 +1341,7 @@ static AREA32 DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSi
 	ymax = std::min(maxSize, DMAXY - y);
 	// BUGFIX: change '&&' to '||' (fixed)
 	if (xmax < minSize || ymax < minSize)
-		return { 0, 0 };
+		return false;
 
 	memset(xArray, 0, sizeof(xArray));
 	memset(yArray, 0, sizeof(yArray));
@@ -1359,7 +1360,7 @@ static AREA32 DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSi
 		xArray[++i] = smallest;
 	}
 	if (i < minSize)
-		return { 0, 0 };
+		return false;
 
 	// find vertical(y) limits
 	smallest = ymax;
@@ -1375,7 +1376,7 @@ static AREA32 DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSi
 		yArray[++i] = smallest;
 	}
 	if (i < minSize)
-		return { 0, 0 };
+		return false;
 
 	// select the best option
 	xmax = std::max(xmax, ymax);
@@ -1395,7 +1396,9 @@ static AREA32 DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSi
 		}
 	}
 	assert(bestSize != 0);
-	return { w - 2, h - 2 };
+	room.w = w - 2;
+	room.h = h - 2;
+	return true;
 }
 
 static void DRLG_CreateThemeRoom(int themeIndex, const BYTE (&themeTiles)[NUM_DRT_TYPES])
@@ -1444,7 +1447,8 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 {
 	int i, j;
 	int min;
-
+    RECT32 lastArea = { 0, 0, 0, 0 };
+    AREA32 currArea;
 	for (i = 0; i < DMAXX; i++) {
 		for (j = 0; j < DMAXY; j++) {
 			// always start from a floor tile
@@ -1455,10 +1459,12 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				continue;
 			}
 			// check if there is enough space
-			AREA32 tArea = DRLG_FitThemeRoom(themeTiles[DRT_FLOOR], i, j, minSize, maxSize);
-			if (tArea.w <= 0) {
+			AREA32 tArea;
+			if (!DRLG_FitThemeRoom(themeTiles[DRT_FLOOR], i, j, minSize, maxSize, tArea)) {
 				continue;
 			}
+			// assert(tArea.w > 0); -- assert(minSize > 2);
+            currArea = tArea;
 			// randomize the size
 			if (rndSkip) {
 				// assert(minSize > 2);
@@ -1470,6 +1476,16 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 			}
 			// ensure there is no overlapping with previous themes
 			if (!InThemeRoom(i + 1, j + 1)) {
+                if (numthemes == lengthof(themes)) {
+                    if (!POS_IN_RECT(tPos.x, tPos.y, lastArea.x, lastArea.y, lastArea.w, lastArea.h)) {
+                        dProgressWarn() << QString("Not enough themes entry to store the theme-room option at %1:%2 (w:%3, h:%4)").arg(i + 1).arg(j + 1).arg(currArea.w).arg(currArea.h);
+
+                        lastArea.x = i + 1;
+                        lastArea.y = j + 1;
+                        lastArea.w = currArea.w;
+                        lastArea.h = currArea.h;
+                    }
+                } else {
 				// create the room
 				themes[numthemes]._tsx1 = i + 1;
 				themes[numthemes]._tsy1 = j + 1;
@@ -1477,8 +1493,8 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				themes[numthemes]._tsy2 = j + 1 + tArea.h - 1;
 				DRLG_CreateThemeRoom(numthemes, themeTiles);
 				numthemes++;
-				if (numthemes == lengthof(themes))
-					return;
+				} // if (numthemes == lengthof(themes))
+				//	break;
 			}
 			j += tArea.h;
 		}

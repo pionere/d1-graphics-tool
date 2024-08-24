@@ -6,7 +6,6 @@
 #include "all.h"
 
 #include <QString>
-#include <QElapsedTimer>
 #include "../progressdialog.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -593,7 +592,7 @@ void DRLG_L5Shadows()
 				//	dungeon[i][j - 1] = 204;
 				} else {
 					if (dungeon[i][j - 1] != 25 && dungeon[i][j - 1] != 195)
-	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// 195 -> not perfect, but ok and only on the dyn map entrance
 					// TODO: what else?
@@ -619,7 +618,7 @@ void DRLG_L5Shadows()
 				case 84:  replaceA = 84;  okB = true;  break;
 				default:
 					if (replaceB != 2 && replaceB != 4 && replaceB != 7 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
-		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					continue;
 				}
 
@@ -664,7 +663,7 @@ void DRLG_L5Shadows()
 					} else if (replace == 36) {
 						replace = pillar ? 83 : 84;
 					} else {
-	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
 					}
 					dungeon[i - 1][j] = 206;
@@ -758,7 +757,7 @@ void DRLG_L1Shadows()
 				default:
 					okB = true;
 					if (replaceA != 25)
-	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door piece as well
 					// TODO: what else?
 				}
@@ -815,7 +814,7 @@ void DRLG_L1Shadows()
 				default:
 					// if (replaceB != 25)
 					if (replaceB != 53 && replaceB != 54)
-		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// 53, 54 -> fix shadows in Banner1.DUN
 					if (replaceB != 53 && replaceB != 54)
@@ -868,7 +867,7 @@ void DRLG_L1Shadows()
 					} else if (replace == 36) {
 						replace = pillar ? 152 : 153;
 					} else if (replace != 164 && replace != 159) {
-	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
 					}
 					dungeon[i - 1][j] = 142;
@@ -1083,10 +1082,7 @@ static bool L1CheckHHall(int y, int left, int w)
 static void L1RoomGen(int x, int y, int w, int h, bool dir)
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
-#ifdef ORIGROOMS
-	bool ran2;
-#endif
-	static_assert(((DMAXX - 2) * (DMAXY - 2) - (CHAMBER_SIZE + 2) * (CHAMBER_SIZE + 2)) / (2 * 2) <= lengthof(drlg.L1RoomList), "L1RoomGen skips limit checks assuming enough L1RoomList entries.");
+	static_assert((DMAXX * DMAXY - (CHAMBER_SIZE + 2) * (CHAMBER_SIZE + 2) + 4) / (2 * 2) <= lengthof(drlg.L1RoomList), "L1RoomGen skips limit checks assuming enough L1RoomList entries.");
 
 	dirProb = random_(0, 4);
 
@@ -1101,52 +1097,35 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 1, height + 2)) // BUGFIX: swap args 3 and 4 ("height+2" and "width+1") (fixed)
 				break;
 		}
-#ifdef ORIGROOMS
-		if (i != 0)
+		// - add room to the left
+		if (i != 0) {
 			L1DrawRoom(rx, ry, width, height);
+			i = 1;
+		} else {
+			rx = -1;
+			i = 20;
+		}
 		// try to place a room to the right
 		rxy2 = x + w;
-		ran2 = L1CheckVHall(rxy2 - 1, ry - 1, height + 2)
-			&& L1CheckRoom(rxy2, ry - 1, width + 1, height + 2);
-		if (ran2)
+		while(true) {
+			if (L1CheckVHall(rxy2 - 1, ry - 1, height + 2)
+			 && L1CheckRoom(rxy2, ry - 1, width + 1, height + 2))
+				break;
+			if (--i == 0)
+				break;
+			width = RandRange(2, 6) & ~1;
+			height = RandRange(2, 6) & ~1;
+			ry = h / 2u + y - height / 2u;
+		}
+		// - add room to the right
+		if (i != 0)
 			L1DrawRoom(rxy2, ry, width, height);
 		// proceed with the placed a room on the left
-		if (i != 0)
+		if (rx >= 0)
 			L1RoomGen(rx, ry, width, height, true);
 		// proceed with the placed a room on the right
-		if (ran2)
+		if (i != 0)
 			L1RoomGen(rxy2, ry, width, height, true);
-#else
-        // - add room to the left
-        if (i != 0) {
-            L1DrawRoom(rx, ry, width, height);
-            i = 1;
-        } else {
-            rx = -1;
-            i = 20;
-        }
-        // try to place a room to the right
-        rxy2 = x + w;
-        while(true) {
-            if (L1CheckVHall(rxy2 - 1, ry - 1, height + 2)
-             && L1CheckRoom(rxy2, ry - 1, width + 1, height + 2))
-                break;
-            if (--i == 0)
-                break;
-            width = RandRange(2, 6) & ~1;
-            height = RandRange(2, 6) & ~1;
-            ry = h / 2u + y - height / 2u;
-        }
-        // - add room to the right
-        if (i != 0)
-            L1DrawRoom(rxy2, ry, width, height);
-        // proceed with the placed a room on the left
-        if (rx >= 0)
-            L1RoomGen(rx, ry, width, height, true);
-        // proceed with the placed a room on the right
-        if (i != 0)
-            L1RoomGen(rxy2, ry, width, height, true);
-#endif
 	} else {
 		// try to place a room to the top
 		for (i = 20; i != 0; i--) {
@@ -1158,52 +1137,35 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 2, height + 1))
 				break;
 		}
-#ifdef ORIGROOMS
-		if (i != 0)
+		// - add room to the top
+		if (i != 0) {
 			L1DrawRoom(rx, ry, width, height);
+			i = 1;
+		} else {
+			ry = -1;
+			i = 20;
+		}
 		// try to place a room to the bottom
 		rxy2 = y + h;
-		ran2 = L1CheckHHall(rxy2 - 1, rx - 1, width + 2)
-			&& L1CheckRoom(rx - 1, rxy2, width + 2, height + 1);
-		if (ran2)
+		while(true) {
+			if (L1CheckHHall(rxy2 - 1, rx - 1, width + 2)
+			 && L1CheckRoom(rx - 1, rxy2, width + 2, height + 1))
+				break;
+			if (--i == 0)
+				break;
+			width = RandRange(2, 6) & ~1;
+			height = RandRange(2, 6) & ~1;
+			rx = w / 2u + x - width / 2u;
+		}
+		// - add room to the bottom
+		if (i != 0)
 			L1DrawRoom(rx, rxy2, width, height);
 		// proceed with the placed a room on the top
-		if (i != 0)
+		if (ry >= 0)
 			L1RoomGen(rx, ry, width, height, false);
 		// proceed with the placed a room on the bottom
-		if (ran2)
+		if (i != 0)
 			L1RoomGen(rx, rxy2, width, height, false);
-#else
-        // - add room to the top
-        if (i != 0) {
-            L1DrawRoom(rx, ry, width, height);
-            i = 1;
-        } else {
-            ry = -1;
-            i = 20;
-        }
-        // try to place a room to the bottom
-        rxy2 = y + h;
-        while(true) {
-            if (L1CheckHHall(rxy2 - 1, rx - 1, width + 2)
-             && L1CheckRoom(rx - 1, rxy2, width + 2, height + 1))
-                break;
-            if (--i == 0)
-                break;
-            width = RandRange(2, 6) & ~1;
-            height = RandRange(2, 6) & ~1;
-            rx = w / 2u + x - width / 2u;
-        }
-        // - add room to the bottom
-        if (i != 0)
-            L1DrawRoom(rx, rxy2, width, height);
-        // proceed with the placed a room on the top
-        if (ry >= 0)
-            L1RoomGen(rx, ry, width, height, false);
-        // proceed with the placed a room on the bottom
-        if (i != 0)
-            L1RoomGen(rx, rxy2, width, height, false);
-#endif
 	}
 }
 
@@ -1217,19 +1179,16 @@ static void DRLG_L1CreateDungeon()
 
 	nRoomCnt = 0;
 	ChambersVertical = random_(0, 2);
-#if 0
-	ChambersFirst = random_(0, 2);
-	ChambersMiddle = random_(0, 2);
-	ChambersLast = random_(0, 2);
-#else
-    i = random_(0, 8);
-    if (i == 0)
-        i = 7;
-    ChambersFirst = (i & 1) ? TRUE : FALSE;
-    ChambersMiddle = (i & 2) ? TRUE : FALSE;
-    ChambersLast = (i & 4) ? TRUE : FALSE;
-#endif
-	// make sure there is at least one chamber + prevent standalone first/last chambers
+	// select the base chambers
+	i = random_(0, 8);
+	// make sure at least one chamber is selected
+	//  (prefer complete selection over a single chamber to increase the chance of success)
+	if (i == 0)
+		i = 7;
+	ChambersFirst = (i & 1) ? TRUE : FALSE;
+	ChambersMiddle = (i & 2) ? TRUE : FALSE;
+	ChambersLast = (i & 4) ? TRUE : FALSE;
+	// prevent standalone first/last chambers
 	if (!(ChambersFirst & ChambersLast))
 		ChambersMiddle = TRUE;
 	if (ChambersVertical) {
@@ -1319,17 +1278,17 @@ static int DRLG_L1GetArea()
 		rv += *pTmp;
 	}
 #else
-    rv = 0;
-    for (i = 0; i < nRoomCnt; i++) {
-        rv += drlg.L1RoomList[i].lrw * drlg.L1RoomList[i].lrh;
-    }
-    if (ChambersFirst + ChambersMiddle + ChambersLast == 3) {
-        rv += 6 * 4 * 2;
-    } else if (ChambersFirst + ChambersMiddle + ChambersLast == 2) {
-        rv += 6 * 4;
-        if (!ChambersMiddle)
-            rv += 6 * 4 + CHAMBER_SIZE * 6;
-    }
+	rv = 0;
+	for (i = 0; i < nRoomCnt; i++) {
+		rv += drlg.L1RoomList[i].lrw * drlg.L1RoomList[i].lrh;
+	}
+	if (ChambersFirst + ChambersMiddle + ChambersLast == 3) {
+		rv += 6 * 4 * 2;
+	} else if (ChambersFirst + ChambersMiddle + ChambersLast == 2) {
+		rv += 6 * 4;
+		if (!ChambersMiddle)
+			rv += 6 * 4 + CHAMBER_SIZE * 6;
+	}
     /*avgars[ChambersFirst + ChambersMiddle + ChambersLast] += rv;
     cntars[ChambersFirst + ChambersMiddle + ChambersLast]++;
     if (minars[ChambersFirst + ChambersMiddle + ChambersLast] > rv)
@@ -2721,13 +2680,8 @@ void DRLG_L1InitTransVals()
 
 static void DRLG_L1()
 {
-	int i;
-	int minarea, areaidx;
-	bool placeWater = QuestStatus(Q_PWATER);
-    extern QElapsedTimer* timer;
-    extern quint64 dt[16];
-    extern int counter1, counter2;
-
+	int i, areaidx;
+	// bool placeWater = QuestStatus(Q_PWATER);
 	const int arealimits[] = { DMAXX * DMAXY, 761, 693, 533 };
 	areaidx = 0;
 	if (currLvl._dLevelIdx == DLV_CATHEDRAL1) {
@@ -2735,39 +2689,19 @@ static void DRLG_L1()
 	} else if (currLvl._dLevelIdx == DLV_CATHEDRAL2) {
 		areaidx = 1;
 	}
-	/*switch (currLvl._dLevelIdx) {
-	case DLV_CATHEDRAL1:
-		minarea = 533;
-		break;
-	case DLV_CATHEDRAL2:
-		minarea = 693;
-		break;
-	default:
-		minarea = 761;
-		break;
-	}*/
+
 	while (true) {
-    counter1++;
-    dt[0] -= timer->nsecsElapsed();
 		do {
 			memset(dungeon, 0, sizeof(dungeon));
 			DRLG_L1CreateDungeon();
-            counter2++;
 			i = DRLG_L1GetArea();
-		// } while (DRLG_L1GetArea() < minarea);
 		} while (arealimits[areaidx] < i || arealimits[areaidx + 1] > i);
-    dt[0] += timer->nsecsElapsed();
-    dt[1] -= timer->nsecsElapsed();
+
 		DRLG_L1MakeMegas();
-    dt[1] += timer->nsecsElapsed();
-    dt[2] -= timer->nsecsElapsed();
 		L1TileFix();
 		memset(drlgFlags, 0, sizeof(drlgFlags));
 		L1FillChambers();
-    dt[2] += timer->nsecsElapsed();
-    dt[3] -= timer->nsecsElapsed();
 		L1AddWall();
-    dt[3] += timer->nsecsElapsed();
 		L1ClearChamberFlags();
 		if (currLvl._dDynLvl) {
 #ifdef HELLFIRE
@@ -2786,7 +2720,7 @@ static void DRLG_L1()
 			pWarps[DWARP_ENTRY]._wtype = WRPT_CIRCLE;
 			break;
 		}
-		if (placeWater) {
+		if (QuestStatus(Q_PWATER)) {
 			POS32 warpPos = DRLG_PlaceMiniSet(PWATERIN);
 			if (warpPos.x < 0) {
 				continue;
@@ -2874,7 +2808,7 @@ static void DRLG_L1()
 		}
 		break;
 	}
-    counter1++;
+
 	/*if (placeWater) {
 		int x, y;
 
