@@ -1477,7 +1477,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 			// ensure there is no overlapping with previous themes
 			if (!InThemeRoom(i + 1, j + 1)) {
                 if (numthemes == lengthof(themes)) {
-                    if (!POS_IN_RECT(tPos.x, tPos.y, lastArea.x, lastArea.y, lastArea.w, lastArea.h)) {
+                    if (!POS_IN_RECT(i + 1, j + 1, lastArea.x, lastArea.y, lastArea.w, lastArea.h)) {
                         dProgressWarn() << QString("Not enough themes entry to store the theme-room option at %1:%2 (w:%3, h:%4)").arg(i + 1).arg(j + 1).arg(currArea.w).arg(currArea.h);
 
                         lastArea.x = i + 1;
