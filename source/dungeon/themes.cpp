@@ -192,7 +192,7 @@ static bool CheckThemeObj3(int x, int y, BYTE tv)
 		yy = y + trm3y[i];
 		//if (xx < 0 || yy < 0)
 		//	return false;
-        if (dTransVal[xx][yy] != tv) {
+        if (dTransVal[xx][yy] != tv && !nSolidTable[dPiece[xx][yy]]) {
             dProgressErr() << QString("CheckThemeObj3 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[currThemeId]._tsx1).arg(themes[currThemeId]._tsy1).arg(themes[currThemeId]._tsx2).arg(themes[currThemeId]._tsy2);
             // return false;
         }
