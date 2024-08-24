@@ -112,7 +112,7 @@ static void LoadTileset(D1Tileset *tileset)
 	entries = std::min(lengthof(nSpecTrapTable) - 1, tileset->sla->getSubtileCount());
 	for (int n = 0; n < entries; n++) {
 		quint8 bv = tileset->sla->getTrapProperty(n);
-		nSpecTrapTable[n + 1] = bv << 6;
+		nSpecTrapTable[n + 1] = bv;
 	}
 
 	// 'load' collision properties
