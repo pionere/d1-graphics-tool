@@ -783,7 +783,7 @@ static void Theme_Library_Query(int xx, int yy, void* userParam)
 {
 	const ThemeLibraryParam* param = (const ThemeLibraryParam*)userParam;
 	if (CheckThemeObj3(xx, yy, dTransVal[xx][yy]) && dMonster[xx][yy] == 0 && random_low(0, param->librnd) == 0) {
-		oi = AddObject(OBJ_BOOK2L, xx, yy);
+		int oi = AddObject(OBJ_BOOK2L, xx, yy);
 		if (random_low(0, 2 * param->librnd) != 0 && oi != -1) { /// BUGFIX: check AddObject succeeded (fixed)
 			objects[oi]._oSelFlag = 0;
 			objects[oi]._oAnimFrame += 2;
