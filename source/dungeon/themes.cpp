@@ -27,8 +27,7 @@ static int currThemeId;
 #define THEMEQUERY 1
 //#define THEMEAREA 1
 /** Specifies the set of special theme IDs from which one will be selected at random. */
-//static const int ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
-static const int ThemeGood[] = { THEME_SHRINE, THEME_LIBRARY };
+static const int ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 /** Specifies a 5x5 area to fit theme objects. */
 static const int trm5x[] = {
 	0, 0, 0, 0, 0,
@@ -76,17 +75,11 @@ static int TFit_Shrine(int themeId)
 	int xx, yy, numMatches;
 	BYTE tv = themes[themeId]._tsTransVal;
 
-	for (int n = 0; n < 5; n++) {
-        if (n >= 1 && n <= 4)
-            dProgress() << QString("TFit_Shrine spec %1:%2 .. %3").arg(n + 1).arg(nSpecTrapTable[n + 1]).arg(nSpecTrapTable[n + 1] & PST_TRAP_TYPE);
-	}
-
 	numMatches = 0;
-    dProgress() << QString("TFit_Shrine check theme %1 Room: %2:%3;%4:%5. ").arg(themeId).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
-	for (xx = themes[themeId]._tsx1 - 1; xx < themes[themeId]._tsx2 + 1; xx++) {
-		for (yy = themes[themeId]._tsy1 - 1; yy < themes[themeId]._tsy2 + 1; yy++) {
+	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
+		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
-            dProgress() << QString("TFit_Shrine check 0 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx][yy - 1]).arg(nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE)
+            // dProgress() << QString("TFit_Shrine check 0 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx][yy - 1]).arg(nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE)
                 .arg(nSolidTable[dPiece[xx - 1][yy]]).arg(nSolidTable[dPiece[xx + 1][yy]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx + 1][yy - 1]]);
 				if ((nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
@@ -115,7 +108,7 @@ static int TFit_Shrine(int themeId)
 					// if (numMatches == lengthof(drlg.thLocs))
 					//	goto done;
 				}
-            dProgress() << QString("TFit_Shrine check 1 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx - 1][yy]).arg(nSpecTrapTable[dPiece[xx - 1][yy]] & PST_TRAP_TYPE)
+            // dProgress() << QString("TFit_Shrine check 1 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx - 1][yy]).arg(nSpecTrapTable[dPiece[xx - 1][yy]] & PST_TRAP_TYPE)
                 .arg(nSolidTable[dPiece[xx][yy - 1]]).arg(nSolidTable[dPiece[xx][yy + 1]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx - 1][yy + 1]]);
 				if ((nSpecTrapTable[dPiece[xx - 1][yy]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
@@ -148,7 +141,7 @@ static int TFit_Shrine(int themeId)
 		}
 	}
 // done:
-    dProgress() << QString("TFit_Shrine check matches %1. ").arg(numMatches);
+    // dProgress() << QString("TFit_Shrine check matches %1. ").arg(numMatches);
 	if (numMatches == 0)
 		return -1;
 	static_assert(lengthof(drlg.thLocs) < 0x7FFF, "TFit_Shrine uses random_low to select a matching location.");

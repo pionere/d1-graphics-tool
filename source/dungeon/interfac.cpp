@@ -120,12 +120,9 @@ static void LoadTileset(D1Tileset *tileset)
 	// 'load' special properties
 	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
 	entries = std::min(lengthof(nSpecTrapTable) - 1, tileset->sla->getSubtileCount());
-    dProgress() << QString("LoadTileset specs %1.").arg(entries);
 	for (int n = 0; n < entries; n++) {
 		quint8 bv = tileset->sla->getTrapProperty(n);
 		nSpecTrapTable[n + 1] = bv;
-        if (n >= 1 && n <= 4)
-            dProgress() << QString("spec %1:%2 -> %3 .. %4").arg(n + 1).arg(bv).arg(nSpecTrapTable[n + 1]).arg(nSpecTrapTable[n + 1] & PST_TRAP_TYPE);
 	}
 
 	// 'load' collision properties
