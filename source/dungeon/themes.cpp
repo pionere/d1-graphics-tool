@@ -78,8 +78,8 @@ static int TFit_Shrine(int themeId)
 
 	numMatches = 0;
     dProgress() << QString("TFit_Shrine check theme %1 Room: %2:%3;%4:%5. ").arg(themeId).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
-	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
+	for (xx = themes[themeId]._tsx1 - 1; xx < themes[themeId]._tsx2 + 1; xx++) {
+		for (yy = themes[themeId]._tsy1 - 1; yy < themes[themeId]._tsy2 + 1; yy++) {
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
             dProgress() << QString("TFit_Shrine check 0 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx][yy - 1]).arg(nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE)
                 .arg(nSolidTable[dPiece[xx - 1][yy]]).arg(nSolidTable[dPiece[xx + 1][yy]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx + 1][yy - 1]]);
