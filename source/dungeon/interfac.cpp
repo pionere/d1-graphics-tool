@@ -123,9 +123,9 @@ static void LoadTileset(D1Tileset *tileset)
     dProgress() << QString("LoadTileset specs %1.").arg(entries);
 	for (int n = 0; n < entries; n++) {
 		quint8 bv = tileset->sla->getTrapProperty(n);
-		nSpecTrapTable[n + 1] = bv << 6;
+		nSpecTrapTable[n + 1] = bv;
         if (n >= 1 && n <= 4)
-            dProgress() << QString("spec %1:%2 -> %3 .. %4").arg(n + 1).arg(bv << 6).arg(nSpecTrapTable[n + 1]).arg(nSpecTrapTable[n + 1] & PST_TRAP_TYPE);
+            dProgress() << QString("spec %1:%2 -> %3 .. %4").arg(n + 1).arg(bv).arg(nSpecTrapTable[n + 1]).arg(nSpecTrapTable[n + 1] & PST_TRAP_TYPE);
 	}
 
 	// 'load' collision properties
