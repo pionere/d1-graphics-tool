@@ -1049,7 +1049,7 @@ void CreateThemeRooms()
 	//gbInitObjFlag = true;
     for (i = 0; i < numthemes; i++) {
         tv = themes[i]._tsTransVal;
-        dProgress() << QString("Themeroom %1: %2:%3;%4:%5.").arg(i).arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2);
+        dProgress() << QString("Themeroom %1: %2:%3;%4:%5 type%6.").arg(i).arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2).arg(themes[i]._tsType);
         for (int xx = themes[i]._tsx1; xx < themes[i]._tsx2; xx++) {
             for (int yy = themes[i]._tsy1; yy < themes[i]._tsy2; yy++) {
                 if (dTransVal[xx][yy] != tv && !nSolidTable[dPiece[xx][yy]]) {
