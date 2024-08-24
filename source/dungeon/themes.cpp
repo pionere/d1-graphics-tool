@@ -23,7 +23,8 @@ static bool _gbPFountainFlag;
 static bool _gbBFountainFlag;
 int zharlib;
 ThemeStruct themes[MAXTHEMES];
-#define THEMEAREA 1
+#define THEMEQUERY 1
+//#define THEMEAREA 1
 /** Specifies the set of special theme IDs from which one will be selected at random. */
 static const int ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 /** Specifies a 5x5 area to fit theme objects. */
@@ -54,6 +55,19 @@ static const int trm3y[] = {
 	-1, 0, 1,
 	-1, 0, 1
 };
+
+static void QueryTheme(int themeId, void (func)(int x, int y, void *param), void *userParam)
+{
+	int xx, yy;
+	BYTE tv = themes[themeId]._tsTransVal;
+
+	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2; xx++) {
+		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2; yy++) {
+			// if (dTransVal[xx][yy] == tv)
+				func(xx, yy, userParam);
+		}
+	}
+}
 
 static int TFit_Shrine(int themeId)
 {
@@ -389,8 +403,25 @@ void InitThemes()
  * @param type: the type of the object to place
  * @param rndfrq: the frequency to place the object
  */
+typedef struct PlaceObj3QueryParam {
+	int rndfrq;
+	int type;
+} PlaceObj3QueryParam;
+static void Place_Obj3_Query(int xx, int yy, void* userParam)
+{
+	PlaceObj3QueryParam* param = (PlaceObj3QueryParam*)userParam;
+	if (CheckThemeObj3(xx, yy, dTransVal[xx][yy]) && random_low(0, param->rndfrq) == 0) {
+		AddObject(param->type, xx, yy);
+	}
+}
 static void Place_Obj3(int themeId, BYTE tv, int type, int rndfrq)
 {
+#ifdef THEMEQUERY
+	PlaceObj3QueryParam param;
+	param.rndfrq = rndfrq;
+	param.type = type;
+	QueryTheme(themeId, Place_Obj3_Query, &param);
+#else
 	int xx, yy;
 	// assert(rndfrq > 0);
 #ifdef THEMEAREA
@@ -405,12 +436,26 @@ static void Place_Obj3(int themeId, BYTE tv, int type, int rndfrq)
 			}
 		}
 	}
+#endif
 }
 /**
  * PlaceThemeMonsts places theme monsters with the specified frequency.
  *
  * @param tv: room id in the dungeon matrix.
  */
+typedef struct ThemeMonstsParam {
+	int rndfrq;
+	int mtype;
+} ThemeMonstsParam;
+static void Theme_Monsts_Query(int xx, int yy, void* userParam)
+{
+	ThemeMonstsParam* param = (ThemeMonstsParam*)userParam;
+	if (/*dTransVal[xx][yy] == tv &&*/ (nSolidTable[dPiece[xx][yy]] | dItem[xx][yy] | dObject[xx][yy]) == 0) {
+		if (random_low(0, param->rndfrq) == 0) {
+			AddMonster(param->mtype, xx, yy);
+		}
+	}
+}
 static void PlaceThemeMonsts(int themeId, BYTE tv)
 {
 	int xx, yy;
@@ -428,6 +473,12 @@ static void PlaceThemeMonsts(int themeId, BYTE tv)
 	}
 	// assert(numscattypes > 0);
 	mtype = scattertypes[random_low(0, numscattypes)];
+#ifdef THEMEQUERY
+	ThemeMonstsParam param;
+	param.rndfrq = rndfrq;
+	param.mtype = mtype;
+	QueryTheme(themeId, Theme_Monsts_Query, &param);
+#else
 #ifdef THEMEAREA
 	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
 		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
@@ -442,6 +493,7 @@ static void PlaceThemeMonsts(int themeId, BYTE tv)
 			}
 		}
 	}
+#endif
 }
 
 /**
@@ -449,12 +501,30 @@ static void PlaceThemeMonsts(int themeId, BYTE tv)
  *
  * @param tv: room id in the dungeon matrix.
  */
+typedef struct ThemeBarrelParam {
+	int barrnd;
+} ThemeBarrelParam;
+static void Theme_Barrel_Query(int xx, int yy, void* userParam)
+{
+	ThemeBarrelParam* param = (ThemeBarrelParam*)userParam;
+	if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
+		if (random_low(0, param->barrnd) == 0) {
+			int r = random_low(0, param->barrnd) == 0 ? OBJ_BARREL : OBJ_BARRELEX;
+			AddObject(r, xx, yy);
+		}
+	}
+}
 static void Theme_Barrel(int themeId, BYTE tv)
 {
 	int r, xx, yy;
 	const BYTE barrnds[4] = { 2, 6, 4, 8 };
 	const BYTE barrnd = barrnds[currLvl._dDunType - 1];     // TODO: use dType instead?
 
+#ifdef THEMEQUERY
+	ThemeBarrelParam param;
+	param.barrnd = barrnd;
+	QueryTheme(themeId, Theme_Barrel_Query, &param);
+#else
 #ifdef THEMEAREA
 	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
 		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
@@ -470,6 +540,7 @@ static void Theme_Barrel(int themeId, BYTE tv)
 			}
 		}
 	}
+#endif
 	PlaceThemeMonsts(themeId, tv);
 }
 
@@ -503,23 +574,41 @@ static void Theme_Shrine(int themeId, BYTE tv)
  * @param themeId: theme id.
  * @param tv: room id in the dungeon matrix.
  */
+typedef struct ThemeMonstPitParam {
+	int r;
+} ThemeMonstPitParam;
+static void Theme_MonstPit_Query(int xx, int yy, void* userParam)
+{
+	ThemeMonstPitParam* param = (ThemeMonstPitParam*)userParam;
+	if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]] && param->r >= 0 && --param->r < 0) {
+		CreateRndItem(xx, yy, CFDQ_GOOD);
+	}
+}
 static void Theme_MonstPit(int themeId, BYTE tv)
 {
 	int r, xx, yy;
-	bool done = false;
 
 	r = random_(11, (themes[themeId]._tsx2 - themes[themeId]._tsx1 - 1) * (themes[themeId]._tsy2 - themes[themeId]._tsy1 - 1));
+#ifdef THEMEQUERY
+	ThemeMonstPitParam param;
+	param.r = r;
 restart:
-	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 && !done; xx++) {
-		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 && !done; yy++) {
+	QueryTheme(themeId, Theme_MonstPit_Query, &param);
+	if (param.r >= 0)
+		goto restart;
+#else
+	while (true) {
+	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2; xx++) {
+		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2; yy++) {
 			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]] && --r < 0) {
 				CreateRndItem(xx, yy, CFDQ_GOOD);
-				done = true;
+				goto done;
 			}
 		}
 	}
-	if (!done)
-		goto restart;
+	}
+done:
+#endif
 
 	PlaceThemeMonsts(themeId, tv);
 }
@@ -636,12 +725,31 @@ static void Theme_SkelRoom(int themeId, BYTE tv)
  *
  * @param tv: theme id in the dungeon matrix.
  */
+typedef struct ThemeTreasureParam {
+	int treasrnd;
+} ThemeTreasureParam;
+static void Theme_Treasure_Query(int xx, int yy, void* userParam)
+{
+	const ThemeTreasureParam* param = (const ThemeTreasureParam*)userParam;
+	if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
+		if (random_low(0, param->treasrnd) == 0) {
+			CreateTypeItem(xx, yy, CFDQ_NORMAL, ITYPE_GOLD, IMISC_NONE);
+		} else if (random_low(0, param->treasrnd) == 0) {
+			CreateRndItem(xx, yy, CFDQ_NORMAL);
+		}
+	}
+}
 static void Theme_Treasure(int themeId, BYTE tv)
 {
 	int xx, yy;
 	const BYTE treasrnds[4] = { 6, 9, 7, 10 };
 	const BYTE treasrnd = treasrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
+#ifdef THEMEQUERY
+	ThemeTreasureParam param;
+	param.treasrnd = treasrnd;
+	QueryTheme(themeId, Theme_Treasure_Query, &param);
+#else
 #ifdef THEMEAREA
 	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
 		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
@@ -658,6 +766,7 @@ static void Theme_Treasure(int themeId, BYTE tv)
 			}
 		}
 	}
+#endif
 	PlaceThemeMonsts(themeId, tv);
 }
 
@@ -667,6 +776,20 @@ static void Theme_Treasure(int themeId, BYTE tv)
  * @param themeId: theme id.
  * @param tv: room id in the dungeon matrix.
  */
+typedef struct ThemeLibraryParam {
+	int librnd;
+} ThemeLibraryParam;
+static void Theme_Library_Query(int xx, int yy, void* userParam)
+{
+	const ThemeLibraryParam* param = (const ThemeLibraryParam*)userParam;
+	if (CheckThemeObj3(xx, yy, dTransVal[xx][yy]) && dMonster[xx][yy] == 0 && random_low(0, param->librnd) == 0) {
+		oi = AddObject(OBJ_BOOK2L, xx, yy);
+		if (random_low(0, 2 * param->librnd) != 0 && oi != -1) { /// BUGFIX: check AddObject succeeded (fixed)
+			objects[oi]._oSelFlag = 0;
+			objects[oi]._oAnimFrame += 2;
+		}
+	}
+}
 static void Theme_Library(int themeId, BYTE tv)
 {
 	int xx, yy, oi;
@@ -687,6 +810,11 @@ static void Theme_Library(int themeId, BYTE tv)
 	static_assert(DTYPE_CATHEDRAL == 1 && DTYPE_CATACOMBS == 2, "Theme_Library uses dungeon_type as an array-index.");
 	// assert(currLvl._dDunType == 1 /* DTYPE_CATHEDRAL */ || currLvl._dDunType == 2 /* DTYPE_CATACOMBS */);
 	librnd = librnds[currLvl._dDunType - 1];     // TODO: use dType instead?
+#ifdef THEMEQUERY
+	ThemeLibraryParam param;
+	param.librnd = librnd;
+	QueryTheme(themeId, Theme_Library_Query, &param);
+#else
 #ifdef THEMEAREA
 	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
 		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
@@ -703,7 +831,7 @@ static void Theme_Library(int themeId, BYTE tv)
 			}
 		}
 	}
-
+#endif
 	if (/*QuestStatus(Q_ZHAR) &&*/ themeId == zharlib)
 		return;
 
@@ -901,6 +1029,19 @@ void CreateThemeRooms()
 	BYTE tv;
 	// assert(currLvl._dLevelNum < DLV_HELL4 || (currLvl._dDynLvl && currLvl._dLevelNum == DLV_HELL4) || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 	//gbInitObjFlag = true;
+    for (i = 0; i < numthemes; i++) {
+        tv = themes[i]._tsTransVal;
+        for (int xx = themes[i]._tsx1; xx <= themes[i]._tsx2; xx++) {
+            for (int yy = themes[i]._tsy1; yy <= themes[i]._tsy2; yy++) {
+                if (dTransVal[xx][yy] != tv && !nSolidTable[dPiece[xx][yy]]) {
+                    dProgressErr() << QString("Themeroom %1 has a non-tv subtile at %2:%3").arg(i).arg(xx).arg(yy);
+                }
+                /*if ((xx == themes[i]._tsx1 || xx == themes[i]._tsx2 || yy == themes[i]._tsy1 || yy == themes[i]._tsy2)
+                 && !nSolidTable[dPiece[xx][yy]]) {
+                }*/
+            }
+        }
+    }
     extern QElapsedTimer* timer;
     extern quint64 dt[16];
     dt[0] -= timer->nsecsElapsed();
