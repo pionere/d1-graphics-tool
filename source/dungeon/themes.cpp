@@ -23,6 +23,7 @@ static bool _gbPFountainFlag;
 static bool _gbBFountainFlag;
 int zharlib;
 ThemeStruct themes[MAXTHEMES];
+static int currThemeId;
 #define THEMEQUERY 1
 //#define THEMEAREA 1
 /** Specifies the set of special theme IDs from which one will be selected at random. */
@@ -77,7 +78,7 @@ static int TFit_Shrine(int themeId)
 	numMatches = 0;
 	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
 		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
-			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
+			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 				if ((nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
 				 // - on the inside
@@ -87,11 +88,15 @@ static int TFit_Shrine(int themeId)
 				 && nSolidTable[dPiece[xx - 1][yy - 1]]
 				 && nSolidTable[dPiece[xx + 1][yy - 1]]
 				 // make sure it is in the same room
-				 && dTransVal[xx - 1][yy] == tv
-				 && dTransVal[xx + 1][yy] == tv) {
+				 /*&& dTransVal[xx - 1][yy] == tv
+				 && dTransVal[xx + 1][yy] == tv*/) {
 					// assert(dObject[xx][yy] == 0);
 					// assert(dObject[xx - 1][yy] == 0);
 					// assert(dObject[xx + 1][yy] == 0);
+                    if (dTransVal[xx - 1][yy] != tv)
+                        dProgressErr() << QString("TFit_Shrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                    if (dTransVal[xx + 1][yy] != tv)
+                        dProgressErr() << QString("TFit_Shrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
 					drlg.thLocs[numMatches].tpdx = xx;
 					drlg.thLocs[numMatches].tpdy = yy;
 					drlg.thLocs[numMatches].tpdvar1 = 1;
@@ -110,11 +115,15 @@ static int TFit_Shrine(int themeId)
 				 && nSolidTable[dPiece[xx - 1][yy - 1]]
 				 && nSolidTable[dPiece[xx - 1][yy + 1]]
 				 // make sure it is in the same room
-				 && dTransVal[xx][yy - 1] == tv
-				 && dTransVal[xx][yy + 1] == tv) {
+				 /*&& dTransVal[xx][yy - 1] == tv
+				 && dTransVal[xx][yy + 1] == tv*/) {
 					// assert(dObject[xx][yy] == 0);
 					// assert(dObject[xx][yy - 1] == 0);
 					// assert(dObject[xx][yy + 1] == 0);
+                    if (dTransVal[xx - 1][yy] != tv)
+                        dProgressErr() << QString("TFit_Shrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy - 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                    if (dTransVal[xx + 1][yy] != tv)
+                        dProgressErr() << QString("TFit_Shrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy + 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
 					drlg.thLocs[numMatches].tpdx = xx;
 					drlg.thLocs[numMatches].tpdy = yy;
 					drlg.thLocs[numMatches].tpdvar1 = 0;
@@ -142,14 +151,15 @@ static int TFit_Obj5(int themeId)
 	numMatches = 0;
 	for (xx = themes[themeId]._tsx1 + 2; xx < themes[themeId]._tsx2 - 2; xx++) {
 		for (yy = themes[themeId]._tsy1 + 2; yy < themes[themeId]._tsy2 - 2; yy++) {
-			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
+			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 				static_assert(lengthof(trm5x) == lengthof(trm5y), "Mismatching trm5 tables.");
 				for (i = 0; i < lengthof(trm5x); i++) {
 					if (nSolidTable[dPiece[xx + trm5x[i]][yy + trm5y[i]]]) {
 						break;
 					}
 					if (dTransVal[xx + trm5x[i]][yy + trm5y[i]] != tv) {
-						break;
+                        dProgressErr() << QString("TFit_Obj5 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + trm5x[i]).arg(yy + trm5y[i]).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+						// break;
 					}
 				}
 				if (i == lengthof(trm5x)) {
@@ -182,8 +192,10 @@ static bool CheckThemeObj3(int x, int y, BYTE tv)
 		yy = y + trm3y[i];
 		//if (xx < 0 || yy < 0)
 		//	return false;
-		if (dTransVal[xx][yy] != tv)
-			return false;
+        if (dTransVal[xx][yy] != tv) {
+            dProgressErr() << QString("CheckThemeObj3 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[currThemeId]._tsx1).arg(themes[currThemeId]._tsy1).arg(themes[currThemeId]._tsx2).arg(themes[currThemeId]._tsy2);
+            // return false;
+        }
 		if ((nSolidTable[dPiece[xx][yy]] | dObject[xx][yy]) != 0)
 			return false;
 	}
@@ -195,7 +207,7 @@ static int TFit_Obj3(int themeId)
 {
 	int xx, yy, numMatches;
 	BYTE tv = themes[themeId]._tsTransVal;
-
+    currThemeId = themeId;
 	numMatches = 0;
 	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 - 1; xx++) {
 		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 - 1; yy++) {
@@ -344,8 +356,8 @@ void InitThemes()
 		// convert to subtile-coordinates
 		x1 = DBORDERX + 2 * x1 + 1;
 		y1 = DBORDERY + 2 * y1 + 1;
-		x2 = DBORDERX + 2 * x2 + 1;
-		y2 = DBORDERY + 2 * y2 + 1;
+		x2 = DBORDERX + 2 * x2;
+		y2 = DBORDERY + 2 * y2;
 		themes[i]._tsx1 = x1;
 		themes[i]._tsy1 = y1;
 		themes[i]._tsx2 = x2;
@@ -357,8 +369,8 @@ void InitThemes()
 		}
 		// protect themes with dFlags
 		// v = themes[i]._tsTransVal;
-		for (x = x1; x < x2; x++) {
-			for (y = y1; y < y2; y++) {
+		for (x = x1 - 1; x <= x2; x++) {
+			for (y = y1 - 1; y <= y2; y++) {
 				// if (dTransVal[x][y] == v) { -- wall?
 					dFlags[x][y] |= BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT;
 				// }
@@ -928,7 +940,13 @@ static void Theme_GoatShrine(int themeId, BYTE tv)
 	for (i = 0; i < lengthof(offset_x); i++) {
 		x = xx + offset_x[i];
 		y = yy + offset_y[i];
-		assert(dTransVal[x][y] == tv && !nSolidTable[dPiece[x][y]]);
+        if (dTransVal[x][y] != tv) {
+            dProgressErr() << QString("Theme_GoatShrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(x).arg(y).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+        }
+        if (nSolidTable[dPiece[x][y]]) {
+            dProgressErr() << QString("Theme_GoatShrine has a solid subtile at %1:%2. Room: %3:%4;%5:%6.").arg(x).arg(y).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+        }
+		// assert(dTransVal[x][y] == tv && !nSolidTable[dPiece[x][y]]);
 		AddMonster(mapGoatTypes[0], x, y); // OPPOSITE(i)
 	}
 }
@@ -1047,6 +1065,7 @@ void CreateThemeRooms()
     extern quint64 dt[16];
     dt[0] -= timer->nsecsElapsed();
 	for (i = 0; i < numthemes; i++) {
+        currThemeId = i;
 		tv = themes[i]._tsTransVal;
 		switch (themes[i]._tsType) {
 		case THEME_BARREL:
