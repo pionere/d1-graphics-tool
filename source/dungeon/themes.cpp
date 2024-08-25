@@ -190,6 +190,7 @@ static int TFit_Obj5(int themeId)
 static bool CheckThemeObj3(int x, int y, BYTE tv)
 {
 	int i, xx, yy;
+    bool shouldFail = false;
 
 	static_assert(lengthof(trm3x) == lengthof(trm3y), "Mismatching trm3 tables.");
 	for (i = 0; i < lengthof(trm3x); i++) {
@@ -198,12 +199,14 @@ static bool CheckThemeObj3(int x, int y, BYTE tv)
 		//if (xx < 0 || yy < 0)
 		//	return false;
         if (dTransVal[xx][yy] != tv && !nSolidTable[dPiece[xx][yy]]) {
-            dProgressErr() << QString("CheckThemeObj3 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[currThemeId]._tsx1).arg(themes[currThemeId]._tsy1).arg(themes[currThemeId]._tsx2).arg(themes[currThemeId]._tsy2);
-            // return false;
+            shouldFail = true;
+			// return false;
         }
 		if ((nSolidTable[dPiece[xx][yy]] | dObject[xx][yy]) != 0)
 			return false;
 	}
+    if (shouldFail)
+        dProgressErr() << QString("CheckThemeObj3 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[currThemeId]._tsx1).arg(themes[currThemeId]._tsy1).arg(themes[currThemeId]._tsx2).arg(themes[currThemeId]._tsy2);
 
 	return true;
 }
@@ -358,7 +361,7 @@ void InitThemes()
 		y1 = themes[i]._tsy1;
 		x2 = themes[i]._tsx2;
 		y2 = themes[i]._tsy2;
-		// convert to subtile-coordinates
+		// convert to subtile-coordinates and select the internal subtiles of the room [p0;p1)
 		x1 = DBORDERX + 2 * x1 + 1;
 		y1 = DBORDERY + 2 * y1 + 1;
 		x2 = DBORDERX + 2 * x2;
@@ -799,6 +802,8 @@ typedef struct ThemeLibraryParam {
 static void Theme_Library_Query(int xx, int yy, void* userParam)
 {
 	const ThemeLibraryParam* param = (const ThemeLibraryParam*)userParam;
+    if (currThemeId == zharlib && CheckThemeObj3(xx, yy, dTransVal[xx][yy]) && dMonster[xx][yy] != 0)
+        dProgressErr() << QString("Theme_Library_Query wanted to place to %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[currThemeId]._tsx1).arg(themes[currThemeId]._tsy1).arg(themes[currThemeId]._tsx2).arg(themes[currThemeId]._tsy2);
 	if (CheckThemeObj3(xx, yy, dTransVal[xx][yy]) && dMonster[xx][yy] == 0 && random_low(0, param->librnd) == 0) {
 		int oi = AddObject(OBJ_BOOK2L, xx, yy);
 		if (random_low(0, 2 * param->librnd) != 0 && oi != -1) { /// BUGFIX: check AddObject succeeded (fixed)
