@@ -80,7 +80,7 @@ static int TFit_Shrine(int themeId)
 		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
             // dProgress() << QString("TFit_Shrine check 0 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx][yy - 1]).arg(nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE)
-                .arg(nSolidTable[dPiece[xx - 1][yy]]).arg(nSolidTable[dPiece[xx + 1][yy]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx + 1][yy - 1]]);
+            //    .arg(nSolidTable[dPiece[xx - 1][yy]]).arg(nSolidTable[dPiece[xx + 1][yy]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx + 1][yy - 1]]);
 				if ((nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
 				 // - on the inside
@@ -109,7 +109,7 @@ static int TFit_Shrine(int themeId)
 					//	goto done;
 				}
             // dProgress() << QString("TFit_Shrine check 1 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx - 1][yy]).arg(nSpecTrapTable[dPiece[xx - 1][yy]] & PST_TRAP_TYPE)
-                .arg(nSolidTable[dPiece[xx][yy - 1]]).arg(nSolidTable[dPiece[xx][yy + 1]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx - 1][yy + 1]]);
+            //    .arg(nSolidTable[dPiece[xx][yy - 1]]).arg(nSolidTable[dPiece[xx][yy + 1]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx - 1][yy + 1]]);
 				if ((nSpecTrapTable[dPiece[xx - 1][yy]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
 				 // - on the inside
