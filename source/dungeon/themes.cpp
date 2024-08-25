@@ -84,8 +84,8 @@ static int TFit_Shrine(int themeId)
 				if ((nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
 				 // - on the inside
-				 /*&& !nSolidTable[dPiece[xx - 1][yy]]
-				 && !nSolidTable[dPiece[xx + 1][yy]]*/
+				 && !nSolidTable[dPiece[xx - 1][yy]]
+				 && !nSolidTable[dPiece[xx + 1][yy]]
 				 // - on the wall (to avoid doors)
 				 && nSolidTable[dPiece[xx - 1][yy - 1]]
 				 && nSolidTable[dPiece[xx + 1][yy - 1]]
@@ -95,10 +95,10 @@ static int TFit_Shrine(int themeId)
 					// assert(dObject[xx][yy] == 0);
 					// assert(dObject[xx - 1][yy] == 0);
 					// assert(dObject[xx + 1][yy] == 0);
-                    if (nSolidTable[dPiece[xx - 1][yy]])
+                    /*if (nSolidTable[dPiece[xx - 1][yy]])
                         dProgressErr() << QString("TFit_Shrine failed(0) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
                     if (nSolidTable[dPiece[xx + 1][yy]])
-                        dProgressErr() << QString("TFit_Shrine failed(1) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(1) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);*/
 
                     if (dTransVal[xx - 1][yy] != tv)
                         dProgressErr() << QString("TFit_Shrine failed(0) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
@@ -125,8 +125,8 @@ static int TFit_Shrine(int themeId)
 				if ((nSpecTrapTable[dPiece[xx - 1][yy]] & PST_TRAP_TYPE) != PST_NONE
 				 // make sure the place is wide enough
 				 // - on the inside
-				 /*&& !nSolidTable[dPiece[xx][yy - 1]]
-				 && !nSolidTable[dPiece[xx][yy + 1]]*/
+				 && !nSolidTable[dPiece[xx][yy - 1]]
+				 && !nSolidTable[dPiece[xx][yy + 1]]
 				 // - on the wall (to avoid doors)
 				 && nSolidTable[dPiece[xx - 1][yy - 1]]
 				 && nSolidTable[dPiece[xx - 1][yy + 1]]
@@ -136,10 +136,10 @@ static int TFit_Shrine(int themeId)
 					// assert(dObject[xx][yy] == 0);
 					// assert(dObject[xx][yy - 1] == 0);
 					// assert(dObject[xx][yy + 1] == 0);
-                    if (nSolidTable[dPiece[xx][yy - 1]])
+                    /*if (nSolidTable[dPiece[xx][yy - 1]])
                         dProgressErr() << QString("TFit_Shrine failed(2) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy - 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
                     if (nSolidTable[dPiece[xx][yy + 1]])
-                        dProgressErr() << QString("TFit_Shrine failed(3) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy + 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(3) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy + 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);*/
 
                     if (dTransVal[xx][yy - 1] != tv)
                         dProgressErr() << QString("TFit_Shrine failed(2) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy - 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
