@@ -386,9 +386,11 @@ void InitThemes()
 		themes[i]._tsy2 = y2;
 		// select transval
 		themes[i]._tsTransVal = dTransVal[x1 + 1][y1 + 1];
-		if (themes[i]._tsTransVal == 0) {
-			dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 .. %3:%4.").arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2);
-		}
+        if (themes[i]._tsTransVal == 0) {
+            dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 .. %3:%4.").arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2);
+        } else {
+            dProgress() << QString("Themeroom %1: %2:%3;%4:%5 tv%6.").arg(i).arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2).arg(themes[i]._tsTransVal);
+        }
 		// protect themes with dFlags
 		// v = themes[i]._tsTransVal;
 		for (x = x1 - 1; x <= x2; x++) {
@@ -429,6 +431,7 @@ void InitThemes()
 				j = random_(0, NUM_THEMES);
 		}
 	}
+    numthemes = 0;
 }
 
 /*
