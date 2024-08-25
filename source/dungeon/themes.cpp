@@ -975,6 +975,7 @@ static void Theme_ArmorStand(int themeId) // , BYTE tv)
 static void Theme_GoatShrine(int themeId) // , BYTE tv)
 {
 	int i, xx, yy, x, y;
+    BYTE tv = themes[themeId]._tsTransVal;
 
 	xx = themes[themeId]._tsObjX;
 	yy = themes[themeId]._tsObjY;
