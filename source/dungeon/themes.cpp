@@ -114,7 +114,7 @@ static int TFit_Shrine(int themeId)
 					//	goto done;
 				}
 			} else {
-                dProgressErr() << QString("TFit_Shrine failed(0) to check solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                // dProgressErr() << QString("TFit_Shrine failed(0) to check solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
 			}
 	}
 	xx = themes[themeId]._tsx1;
@@ -155,7 +155,7 @@ static int TFit_Shrine(int themeId)
 					//	goto done;
 				}
 			} else {
-                dProgressErr() << QString("TFit_Shrine failed(1) to check solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                // dProgressErr() << QString("TFit_Shrine failed(1) to check solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
 			}
 		}
 // done:
