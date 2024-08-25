@@ -96,9 +96,9 @@ static int TFit_Shrine(int themeId)
 					// assert(dObject[xx - 1][yy] == 0);
 					// assert(dObject[xx + 1][yy] == 0);
                     if (dTransVal[xx - 1][yy] != tv)
-                        dProgressErr() << QString("TFit_Shrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(0) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
                     if (dTransVal[xx + 1][yy] != tv)
-                        dProgressErr() << QString("TFit_Shrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(1) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
 					drlg.thLocs[numMatches].tpdx = xx;
 					drlg.thLocs[numMatches].tpdy = yy;
 					drlg.thLocs[numMatches].tpdvar1 = 1;
@@ -125,9 +125,9 @@ static int TFit_Shrine(int themeId)
 					// assert(dObject[xx][yy - 1] == 0);
 					// assert(dObject[xx][yy + 1] == 0);
                     if (dTransVal[xx - 1][yy] != tv)
-                        dProgressErr() << QString("TFit_Shrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy - 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(2) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
                     if (dTransVal[xx + 1][yy] != tv)
-                        dProgressErr() << QString("TFit_Shrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy + 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(3) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
 					drlg.thLocs[numMatches].tpdx = xx;
 					drlg.thLocs[numMatches].tpdy = yy;
 					drlg.thLocs[numMatches].tpdvar1 = 0;
