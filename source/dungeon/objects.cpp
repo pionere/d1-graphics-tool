@@ -495,8 +495,8 @@ static void AddL2Torches()
 			// select 'trapable' position
 			if ((nSpecTrapTable[dPiece[i][j]] & PST_TRAP_TYPE) != PST_LEFT)
 				continue;
-			if (random_(145, 32) != 0)
-				continue;
+			//if (random_(145, 32) != 0)
+			//	continue;
 			// assert(nSolidTable[dPiece[i][j - 1]] | nSolidTable[dPiece[i][j + 1]]);
 			if (!nSolidTable[dPiece[i + 1][j]]) {
 				AddObject(OBJ_TORCHL1, i, j);
@@ -516,8 +516,8 @@ static void AddL2Torches()
 			// select 'trapable' position
 			if ((nSpecTrapTable[dPiece[i][j]] & PST_TRAP_TYPE) != PST_RIGHT)
 				continue;
-			if (random_(145, 32) != 0)
-				continue;
+			//if (random_(145, 32) != 0)
+			//	continue;
 			// assert(nSolidTable[dPiece[i - 1][j]] | nSolidTable[dPiece[i + 1][j]]);
 			if (!nSolidTable[dPiece[i][j + 1]]) {
 				if (dObject[i][j] == 0) // check torches from the previous loop
