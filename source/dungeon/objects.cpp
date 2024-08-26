@@ -504,7 +504,7 @@ static void AddL2Torches()
 				AddObject(OBJ_TORCHL2, i - 1, j);
 			}
 			// skip a few tiles to prevent close placement
-			j += 4;
+			//j += 4;
 		}
 	}
 	// place torches on NE->SW walls
@@ -527,7 +527,7 @@ static void AddL2Torches()
 					AddObject(OBJ_TORCHR2, i, j - 1);
 			}
 			// skip a few tiles to prevent close placement
-			i += 4;
+			//i += 4;
 		}
 	}
 }
