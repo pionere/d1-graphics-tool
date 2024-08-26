@@ -24,8 +24,8 @@ static bool _gbBFountainFlag;
 int zharlib;
 ThemeStruct themes[MAXTHEMES];
 static int currThemeId;
-#define THEMEQUERY 1
-//#define THEMEAREA 1
+//#define THEMEQUERY 1
+#define THEMEAREA 1
 /** Specifies the set of special theme IDs from which one will be selected at random. */
 static const int ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 /** Specifies a 5x5 area to fit theme objects. */
@@ -217,7 +217,8 @@ static bool CheckThemeObj3(int x, int y, int themeId)
 		//if (xx < 0 || yy < 0)
 		//	return false;
 		if (dTransVal[xx][yy] != tv)
-			return false;
+            dProgressErr() << QString("CheckThemeObj3 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+			//return false;
 		if ((nSolidTable[dPiece[xx][yy]] | dObject[xx][yy]) != 0)
 			return false;
 	}
@@ -391,10 +392,10 @@ void InitThemes()
         // } else {
         //    dProgress() << QString("Themeroom %1: %2:%3;%4:%5 tv%6.").arg(i).arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2).arg(themes[i]._tsTransVal);
         }
-		// protect themes with dFlags
+		// protect themes with dFlags - TODO: extend the protection +1 to prevent overdrawn shrine and torch? unlikely + protection would prevent torches in theme rooms...
 		// v = themes[i]._tsTransVal;
-		for (x = x1 /*- 1*/; x </*=*/ x2; x++) {
-			for (y = y1 /*- 1*/; y </*=*/ y2; y++) {
+		for (x = x1; x < x2; x++) {
+			for (y = y1; y < y2; y++) {
 				// if (dTransVal[x][y] == v) { -- wall?
 					dFlags[x][y] |= BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT;
 				// }
@@ -463,13 +464,13 @@ static void Place_Obj3(int themeId/*, BYTE tv*/, int type, int rndfrq)
 	int xx, yy;
 	// assert(rndfrq > 0);
 #ifdef THEMEAREA
-	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
+	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 - 1; xx++) {
+		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 - 1; yy++) {
 #else
 	for (xx = DBORDERX + 1; xx < DBORDERX + DSIZEX - 1; xx++) {
 		for (yy = DBORDERY + 1; yy < DBORDERY + DSIZEY - 1; yy++) {
 #endif
-			if (CheckThemeObj3(xx, yy, tv) && random_low(0, rndfrq) == 0) {
+			if (CheckThemeObj3(xx, yy, themeId) && random_low(0, rndfrq) == 0) {
 				AddObject(type, xx, yy);
 			}
 		}
@@ -501,6 +502,7 @@ static void Theme_Monsts_Query(int xx, int yy, void* userParam)
 static void PlaceThemeMonsts(int themeId) // , BYTE tv)
 {
 	int xx, yy;
+    BYTE tv = themes[themeId]._tsTransVal;
 	int scattertypes[MAX_LVLMTYPES];
 	int numscattypes, mtype, i;
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
@@ -522,13 +524,16 @@ static void PlaceThemeMonsts(int themeId) // , BYTE tv)
 	QueryTheme(themeId, Theme_Monsts_Query, &param);
 #else
 #ifdef THEMEAREA
-	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
+	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
+		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
 #else
 	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
 		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 #endif
-			if (dTransVal[xx][yy] == tv && (nSolidTable[dPiece[xx][yy]] | dItem[xx][yy] | dObject[xx][yy]) == 0) {
+            if (dTransVal[xx][yy] != tv) {
+                dProgressErr() << QString("PlaceThemeMonsts failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+            }
+			if (/*dTransVal[xx][yy] == tv &&*/ (nSolidTable[dPiece[xx][yy]] | dItem[xx][yy] | dObject[xx][yy]) == 0) {
 				if (random_low(0, rndfrq) == 0) {
 					AddMonster(mtype, xx, yy);
 				}
@@ -563,6 +568,7 @@ static void Theme_Barrel_Query(int xx, int yy, void* userParam)
 static void Theme_Barrel(int themeId) // , BYTE tv)
 {
 	int r, xx, yy;
+    BYTE tv = themes[themeId]._tsTransVal;
 	const BYTE barrnds[4] = { 2, 6, 4, 8 };
 	const BYTE barrnd = barrnds[currLvl._dDunType - 1];     // TODO: use dType instead?
 
@@ -572,13 +578,16 @@ static void Theme_Barrel(int themeId) // , BYTE tv)
 	QueryTheme(themeId, Theme_Barrel_Query, &param);
 #else
 #ifdef THEMEAREA
-	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
+	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
+		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
 #else
 	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
 		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 #endif
-			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
+            if (dTransVal[xx][yy] != tv) {
+                dProgressErr() << QString("Theme_Barrel failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+            }
+			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, barrnd) == 0) {
 					r = random_low(0, barrnd) == 0 ? OBJ_BARREL : OBJ_BARRELEX;
 					AddObject(r, xx, yy);
@@ -637,7 +646,7 @@ static void Theme_MonstPit_Query(int xx, int yy, void* userParam)
 static void Theme_MonstPit(int themeId) // , BYTE tv)
 {
 	int r, xx, yy;
-
+    BYTE tv = themes[themeId]._tsTransVal;
 	r = random_(11, (themes[themeId]._tsx2 - themes[themeId]._tsx1) * (themes[themeId]._tsy2 - themes[themeId]._tsy1));
 #ifdef THEMEQUERY
 	ThemeMonstPitParam param;
@@ -648,14 +657,17 @@ restart:
 		goto restart;
 #else
 	while (true) {
-	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2; yy++) {
-			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]] && --r < 0) {
-				CreateRndItem(xx, yy, CFDQ_GOOD);
-				goto done;
+		for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
+			for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
+                if (dTransVal[xx][yy] != tv) {
+                    dProgressErr() << QString("Theme_MonstPit failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                }
+				if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]] && --r < 0) {
+					CreateRndItem(xx, yy, CFDQ_GOOD);
+					goto done;
+				}
 			}
 		}
-	}
 	}
 done:
 #endif
@@ -796,6 +808,7 @@ static void Theme_Treasure_Query(int xx, int yy, void* userParam)
 static void Theme_Treasure(int themeId) // , BYTE tv)
 {
 	int xx, yy;
+    BYTE tv = themes[themeId]._tsTransVal;
 	const BYTE treasrnds[4] = { 6, 9, 7, 10 };
 	const BYTE treasrnd = treasrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
@@ -805,13 +818,16 @@ static void Theme_Treasure(int themeId) // , BYTE tv)
 	QueryTheme(themeId, Theme_Treasure_Query, &param);
 #else
 #ifdef THEMEAREA
-	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
+	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
+		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
 #else
 	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
 		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 #endif
-			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
+            if (dTransVal[xx][yy] != tv) {
+                dProgressErr() << QString("Theme_Treasure failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+            }
+			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, treasrnd) == 0) {
 					CreateTypeItem(xx, yy, CFDQ_NORMAL, ITYPE_GOLD, IMISC_NONE);
 				} else if (random_low(0, treasrnd) == 0) {
@@ -872,13 +888,13 @@ static void Theme_Library(int themeId) // , BYTE tv)
 	QueryTheme(themeId, Theme_Library_Query, &param);
 #else
 #ifdef THEMEAREA
-	for (xx = themes[themeId]._tsx1; xx <= themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy <= themes[themeId]._tsy2; yy++) {
+	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 - 1; xx++) {
+		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 - 1; yy++) {
 #else
 	for (xx = DBORDERX + 1; xx < DBORDERX + DSIZEX - 1; xx++) {
 		for (yy = DBORDERY + 1; yy < DBORDERY + DSIZEY - 1; yy++) {
 #endif
-			if (CheckThemeObj3(xx, yy, tv) && dMonster[xx][yy] == 0 && random_low(0, librnd) == 0) {
+			if (CheckThemeObj3(xx, yy, themeId) && dMonster[xx][yy] == 0 && random_low(0, librnd) == 0) {
 				oi = AddObject(OBJ_BOOK2L, xx, yy);
 				if (random_low(0, 2 * librnd) != 0 && oi != -1) { /// BUGFIX: check AddObject succeeded (fixed)
 					objects[oi]._oSelFlag = 0;
