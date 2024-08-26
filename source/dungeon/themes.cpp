@@ -393,8 +393,8 @@ void InitThemes()
         }
 		// protect themes with dFlags
 		// v = themes[i]._tsTransVal;
-		for (x = x1 - 1; x <= x2; x++) {
-			for (y = y1 - 1; y <= y2; y++) {
+		for (x = x1 /*- 1*/; x </*=*/ x2; x++) {
+			for (y = y1 /*- 1*/; y </*=*/ y2; y++) {
 				// if (dTransVal[x][y] == v) { -- wall?
 					dFlags[x][y] |= BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT;
 				// }
