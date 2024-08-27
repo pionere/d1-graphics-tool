@@ -744,7 +744,7 @@ static void Theme_SkelRoom(int themeId) // , BYTE tv)
 	 && (nSolidTable[dPiece[xx][yy - 3]] || !nSolidTable[dPiece[xx + 1][yy - 3]])) { // or a single path to NE TODO: allow if !nSolidTable[dPiece[xx - 1][yy - 3]]?
 		if (dObject[xx][yy - 2] != 0 || dObject[xx][yy - 3] < 0 || (dObject[xx][yy - 3] > 0
              && (currLvl._dType != DTYPE_CATHEDRAL || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_L1LIGHT && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR))
-             && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR)))) {
+             && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TORCHR1)))) {
             extern bool stopgen;
             stopgen = true;
             LogErrorF("object to north-east %d type%d x:%d y:%d vs %d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, themes[themeId]._tsy1, yy - 3);
