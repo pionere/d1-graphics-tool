@@ -1405,7 +1405,27 @@ static bool L4CheckHHall(int y, int left, int w)
 	return i == right;
 }
 
-static void L4RoomGen(int x, int y, int w, int h, bool dir) // LxRoomGen ?
+static bool L4AddRoomLR(int x, int y, int int w, int h, bool left)
+{
+    int hx = left ? x + w : x - 1;
+    int cx = left ? x - 1 : x;
+    bool result = L4CheckVHall(hx, y - 1, h + 2) && L4CheckRoom(cx, y - 1, w + 1, h + 2);
+    if (result)
+        L4DrawRoom(x, y, w, h);
+    return result;
+}
+
+static bool L4AddHRoomTB(int x, int y, int int w, int h, bool top)
+{
+    int hy = top ? y + h : y - 1;
+    int cy = top ? y - 1 : y;
+    bool result = L4CheckHHall(hy, x - 1, w + 2) && L4CheckRoom(x - 1, cy, w + 2, h + 1);
+    if (result)
+        L4DrawRoom(x, y, w, h);
+    return result;
+}
+
+static void L4RoomGen(int x, int y, int w, int h, bool dir)
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
 	bool ran2;
@@ -2153,7 +2173,12 @@ static void DRLG_L4()
 		}
 		break;
 	}
+    extern int counter2;
     counter2 += i;
+    if (minars[2] > i)
+        minars[2] = i;
+    if (maxars[2] < i)
+        maxars[2] = i;
 
 	// DRLG_L4GeneralFix(); - commented out, because this is no longer necessary
 

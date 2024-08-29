@@ -1079,6 +1079,26 @@ static bool L1CheckHHall(int y, int left, int w)
 	return i == right;
 }
 
+static bool L1AddRoomLR(int x, int y, int int w, int h, bool left)
+{
+    int hx = left ? x + w : x - 1;
+    int cx = left ? x - 1 : x;
+    bool result = L1CheckVHall(hx, y - 1, h + 2) && L1CheckRoom(cx, y - 1, w + 1, h + 2);
+    if (result)
+        L1DrawRoom(x, y, w, h);
+    return result;
+}
+
+static bool L1AddRoomTB(int x, int y, int int w, int h, bool top)
+{
+    int hy = top ? y + h : y - 1;
+    int cy = top ? y - 1 : y;
+    bool result = L1CheckHHall(hy, x - 1, w + 2) && L1CheckRoom(x - 1, cy, w + 2, h + 1);
+    if (result)
+        L1DrawRoom(x, y, w, h);
+    return result;
+}
+
 static void L1RoomGen(int x, int y, int w, int h, bool dir)
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
