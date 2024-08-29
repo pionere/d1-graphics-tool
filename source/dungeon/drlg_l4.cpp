@@ -1405,7 +1405,7 @@ static bool L4CheckHHall(int y, int left, int w)
 	return i == right;
 }
 
-static bool L4AddRoomLR(int x, int y, int int w, int h, bool left)
+static bool L4AddRoomLR(int x, int y, int w, int h, bool left)
 {
     int hx = left ? x + w : x - 1;
     int cx = left ? x - 1 : x;
@@ -1415,7 +1415,7 @@ static bool L4AddRoomLR(int x, int y, int int w, int h, bool left)
     return result;
 }
 
-static bool L4AddHRoomTB(int x, int y, int int w, int h, bool top)
+static bool L4AddHRoomTB(int x, int y, int w, int h, bool top)
 {
     int hy = top ? y + h : y - 1;
     int cy = top ? y - 1 : y;

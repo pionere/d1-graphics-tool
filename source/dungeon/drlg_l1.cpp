@@ -1079,7 +1079,7 @@ static bool L1CheckHHall(int y, int left, int w)
 	return i == right;
 }
 
-static bool L1AddRoomLR(int x, int y, int int w, int h, bool left)
+static bool L1AddRoomLR(int x, int y, int w, int h, bool left)
 {
     int hx = left ? x + w : x - 1;
     int cx = left ? x - 1 : x;
@@ -1089,7 +1089,7 @@ static bool L1AddRoomLR(int x, int y, int int w, int h, bool left)
     return result;
 }
 
-static bool L1AddRoomTB(int x, int y, int int w, int h, bool top)
+static bool L1AddRoomTB(int x, int y, int w, int h, bool top)
 {
     int hy = top ? y + h : y - 1;
     int cy = top ? y - 1 : y;
@@ -1124,7 +1124,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			// room added to the left -> force similar room on the right side
 			i = 1;
 		} else {
-			// room was not added to the left -> try to more options on the right
+			// room was not added to the left -> try more options on the right
 			rx = -1;
 			i = 20;
 		}
@@ -1167,7 +1167,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			// room added to the top -> force similar room on the bottom side
 			i = 1;
 		} else {
-			// room was not added to the top -> try to more options on the bottom
+			// room was not added to the top -> try more options on the bottom
 			ry = -1;
 			i = 20;
 		}
