@@ -837,7 +837,7 @@ POS32 DRLG_PlaceMiniSet(const BYTE* miniset)
 	sh = miniset[1];
 	// assert(sw < DMAXX && sh < DMAXY);
 	tries = (DMAXX * DMAXY) & ~0xFF;
-	while (TRUE) {
+	while (true) {
 		if ((tries & 0xFF) == 0) {
 			sx = random_low(0, DMAXX - sw);
 			sy = random_low(0, DMAXY - sh);
@@ -1496,7 +1496,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				DRLG_CreateThemeRoom(numthemes, themeTiles);
 				numthemes++;
 				} // if (numthemes == lengthof(themes))
-				//	break;
+				//	return;
 			}
 			j += tArea.h;
 		}

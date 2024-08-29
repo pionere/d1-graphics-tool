@@ -635,7 +635,7 @@ static void L4AddHWall(int x, int y)
 	BYTE bv;
 
 	i = x;
-	while (TRUE) {
+	while (true) {
 		i++;
 		bv = dungeon[i][y];
 		if (bv != 6)
@@ -726,7 +726,7 @@ static void L4AddVWall(int x, int y)
 	BYTE bv;
 
 	j = y;
-	while (TRUE) {
+	while (true) {
 		j++;
 		bv = dungeon[x][j];
 		if (bv != 6)
@@ -1190,7 +1190,7 @@ void DRLG_L4Subs()
 				if (c != 0 && (drlgFlags[x][y] & DRLG_FROZEN) == 0) {
 					rv = random_(0, MAX_MATCH);
 					k = 0;
-					while (TRUE) {
+					while (true) {
 						if (c == L4BTYPES[k] && --rv < 0)
 							break;
 						if (++k == NUM_L4TYPES)
@@ -1256,7 +1256,7 @@ static void L4ConnectBlock()
 	}
 
 	rv = RandRange(1, L4BLOCKY - 1);
-	while (TRUE) {
+	while (true) {
 		if (hallok[rv] != 0) {
 			for (i = L4BLOCKX - 1; i > hallok[rv]; i--) {
 				drlg.dungBlock[i][rv] = 1;
@@ -1285,7 +1285,7 @@ static void L4ConnectBlock()
 	}
 
 	rv = RandRange(1, L4BLOCKX - 1);
-	while (TRUE) {
+	while (true) {
 		if (hallok[rv] != 0) {
 			for (j = L4BLOCKY - 1; j > hallok[rv]; j--) {
 				drlg.dungBlock[rv][j] = 1;
@@ -1394,7 +1394,7 @@ static bool L4CheckHHall(int y, int left, int w)
 	return i == right;
 }
 
-static void L4RoomGen(int x, int y, int w, int h, bool dir)
+static void L4RoomGen(int x, int y, int w, int h, bool dir) // LxRoomGen ?
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
 	bool ran2;
@@ -1409,12 +1409,12 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 			ry = h / 2 + y - height / 2;
 			rx = x - width;
 			if (L4CheckVHall(x, ry - 1, height + 2)
-			 && L4CheckRoom(rx - 1, ry - 1, width + 1, height + 2))  /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1") (fixed)
+			 && L4CheckRoom(rx - 1, ry - 1, width + 1, height + 2)) { /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1") (fixed)
+				// - add room to the left
+				L4DrawRoom(rx, ry, width, height);
 				break;
+			}
 		}
-
-		if (i != 0)
-			L4DrawRoom(rx, ry, width, height);
 		// try to place a room to the right
 		rxy2 = x + w;
 		ran2 = L4CheckVHall(rxy2 - 1, ry - 1, height + 2)
@@ -1435,12 +1435,13 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 			rx = w / 2 + x - width / 2;
 			ry = y - height;
 			if (L4CheckHHall(y, rx - 1, width + 2)
-			 && L4CheckRoom(rx - 1, ry - 1, width + 2, height + 1))
+			 && L4CheckRoom(rx - 1, ry - 1, width + 2, height + 1)) {
+				// - add room to the top
+				L4DrawRoom(rx, ry, width, height);
 				break;
+			}
 		}
 
-		if (i != 0)
-			L4DrawRoom(rx, ry, width, height);
 		// try to place a room to the bottom
 		rxy2 = y + h;
 		ran2 = L4CheckHHall(rxy2 - 1, rx - 1, width + 2)
