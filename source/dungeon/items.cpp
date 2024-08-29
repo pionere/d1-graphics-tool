@@ -53,7 +53,7 @@ static void GetRandomItemSpace(int randarea, int ii)
 	// assert(randarea > 0 && randarea < DBORDERX && randarea < DBORDERY);
 
 	tries = numTries;
-	while (TRUE) {
+	while (true) {
 		x = random_(0, DSIZEX) + DBORDERX;
 		y = random_(0, DSIZEY) + DBORDERY;
 		for (i = x; i < x + randarea; i++) {
@@ -123,7 +123,6 @@ static void PlaceInitItems()
 		ii = itemactive[numitems];
 		assert(ii == numitems);
 		seed = NextRndSeed();
-		SetRndSeed(seed);
 		SetItemData(ii, random_(12, 2) != 0 ? IDI_HEAL : IDI_MANA);
 		items[ii]._iSeed = seed;
 		items[ii]._iCreateInfo = lvl; // | CF_PREGEN;
@@ -1320,7 +1319,7 @@ void PlaceQuestItemInArea(int idx, int areasize)
 //		RespawnItem(i);
 		// draw it above the stand
 		items[i]._iSelFlag = 2;
-		items[i]._iPostDraw = TRUE;
+		//items[i]._iPostDraw = TRUE;
 		items[i]._iAnimFrame = 11;
 		//items[i]._iAnimFlag = TRUE;
 //		items[i]._iCreateInfo = items_get_currlevel(); // | CF_PREGEN;
@@ -1343,7 +1342,7 @@ void RespawnItem(int ii)
 	is->_iAnimFrameLen = 1;
 	//is->_iAnimWidth = ITEM_ANIM_WIDTH;
 	//is->_iAnimXOffset = (ITEM_ANIM_WIDTH - TILE_WIDTH) / 2;
-	is->_iPostDraw = FALSE;
+	//is->_iPostDraw = FALSE;
 	is->_iAnimFrame = is->_iAnimLen;
 	is->_iAnimFlag = is->_iCurs == ICURS_MAGIC_ROCK;
 	is->_iSelFlag = 1;

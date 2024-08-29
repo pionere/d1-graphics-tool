@@ -17,12 +17,24 @@ typedef struct POS32 {
 	int y;
 } POS32;
 
+typedef struct AREA32 {
+	int w;
+	int h;
+} AREA32;
+
 typedef struct RECT32 {
 	int x;
 	int y;
 	int w;
 	int h;
 } RECT32;
+
+typedef struct RECT_AREA32 {
+	int x1;
+	int y1;
+	int x2;
+	int y2;
+} RECT_AREA32;
 
 //////////////////////////////////////////////////
 // items
@@ -105,7 +117,7 @@ typedef struct ItemData {
 } ItemData;
 
 typedef struct ItemStruct {
-	int _iSeed;
+	int32_t _iSeed;
 	uint16_t _iIdx;        // item_indexes
 	uint16_t _iCreateInfo; // icreateinfo_flag
 	int _ix;
@@ -137,7 +149,7 @@ typedef struct ItemStruct {
 	unsigned _iAnimFrame;    // Current frame of animation.
 	//int _iAnimWidth;
 	//int _iAnimXOffset;
-	BOOL _iPostDraw; // should be drawn during the post-phase (magic rock on the stand)
+	BOOL _iPostDraw; // should be drawn during the post-phase (magic rock on the stand) -- unused
 	char _iName[32];
 	int _ivalue;
 	int _iIvalue;
@@ -287,7 +299,7 @@ typedef struct MonsterStruct {
 	int _mAnimLen;   // Number of frames in current animation
 	int _mAnimFrame; // Current frame of animation.
 	int _mmaxhp;
-	int _mRndSeed;
+	int32_t _mRndSeed;
 	BYTE _muniqtype;
 	BYTE _muniqtrans;
 	BYTE _mNameColor;  // color of the tooltip. white: normal, blue: pack; gold: unique. (text_color)
@@ -400,7 +412,7 @@ typedef struct ObjectStruct {
 	BYTE _oDoorFlag; // object_door_type
 	BYTE _oSelFlag;
 	BOOLEAN _oPreFlag;
-	int _oRndSeed;
+	int32_t _oRndSeed;
 	int _oVar1;
 	int _oVar2;
 	int _oVar3;
@@ -568,17 +580,17 @@ typedef struct ROOMHALLNODE {
 } ROOMHALLNODE;
 
 typedef struct L1ROOM {
-	BYTE lrx;
-	BYTE lry;
-	BYTE lrw;
-	BYTE lrh;
+	int lrx;
+	int lry;
+	int lrw;
+	int lrh;
 } L1ROOM;
 
 typedef struct ThemePosDir {
-	BYTE tpdx;
-	BYTE tpdy;
-	BYTE tpdvar1;
-	BYTE tpdvar2; // unused
+	int tpdx;
+	int tpdy;
+	int tpdvar1;
+	int tpdvar2; // unused
 } ThemePosDir;
 
 /** The number of generated rooms in cathedral. */

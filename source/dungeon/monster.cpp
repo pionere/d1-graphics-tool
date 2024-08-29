@@ -668,12 +668,12 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 	case UMT_ZHAR:
 		if (zharlib == -1)
 			return;
-		xp = themes[zharlib]._tsx1 + 4;
-		yp = themes[zharlib]._tsy1 + 4;
+		xp = themes[zharlib]._tsx1 + 3;
+		yp = themes[zharlib]._tsy1 + 3;
 		break;
 	default:
 		count = 1000;
-		while (TRUE) {
+		while (true) {
 			xp = random_(91, DSIZEX) + DBORDERX;
 			yp = random_(91, DSIZEY) + DBORDERY;
 			static_assert(DBORDERX >= MON_PACK_DISTANCE, "PlaceUniqueMonst does not check IN_DUNGEON_AREA but expects a large enough border I.");

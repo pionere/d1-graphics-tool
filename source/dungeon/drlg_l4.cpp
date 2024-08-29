@@ -620,7 +620,7 @@ static void L4AddHWall(int x, int y)
 	BYTE bv;
 
 	i = x;
-	while (TRUE) {
+	while (true) {
 		i++;
 		bv = dungeon[i][y];
 		if (bv != 6)
@@ -711,7 +711,7 @@ static void L4AddVWall(int x, int y)
 	BYTE bv;
 
 	j = y;
-	while (TRUE) {
+	while (true) {
 		j++;
 		bv = dungeon[x][j];
 		if (bv != 6)
@@ -1175,7 +1175,7 @@ static void DRLG_L4Subs()
 				if (c != 0 && (drlgFlags[x][y] & DRLG_FROZEN) == 0) {
 					rv = random_(0, MAX_MATCH);
 					k = 0;
-					while (TRUE) {
+					while (true) {
 						if (c == L4BTYPES[k] && --rv < 0)
 							break;
 						if (++k == NUM_L4TYPES)
@@ -1241,7 +1241,7 @@ static void L4ConnectBlock()
 	}
 
 	rv = RandRange(1, L4BLOCKY - 1);
-	while (TRUE) {
+	while (true) {
 		if (hallok[rv] != 0) {
 			for (i = L4BLOCKX - 1; i > hallok[rv]; i--) {
 				drlg.dungBlock[i][rv] = 1;
@@ -1270,7 +1270,7 @@ static void L4ConnectBlock()
 	}
 
 	rv = RandRange(1, L4BLOCKX - 1);
-	while (TRUE) {
+	while (true) {
 		if (hallok[rv] != 0) {
 			for (j = L4BLOCKY - 1; j > hallok[rv]; j--) {
 				drlg.dungBlock[rv][j] = 1;
@@ -1391,7 +1391,7 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 		for (i = 20; i != 0; i--) {
 			width = RandRange(2, 6) & ~1;
 			height = RandRange(2, 6) & ~1;
-			ry = h / 2 + y - height / 2;
+			ry = h / 2u + y - height / 2u;
 			rx = x - width;
 			if (L4CheckVHall(x, ry - 1, height + 2)
 			 && L4CheckRoom(rx - 1, ry - 1, width + 1, height + 2))  /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1") (fixed)
@@ -1417,7 +1417,7 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 		for (i = 20; i != 0; i--) {
 			width = RandRange(2, 6) & ~1;
 			height = RandRange(2, 6) & ~1;
-			rx = w / 2 + x - width / 2;
+			rx = w / 2u + x - width / 2u;
 			ry = y - height;
 			if (L4CheckHHall(y, rx - 1, width + 2)
 			 && L4CheckRoom(rx - 1, ry - 1, width + 2, height + 1))
@@ -1976,21 +1976,21 @@ static void DRLG_L4ThemeExitFix()
 		y2 = themes[i]._tsy2;
 		switch (random_(0, 4)) {
 		case 0:
-			yy = (y1 + y2 + 1) / 2;
+			yy = (y1 + y2 + 1) / 2u;
 			dungeon[x1][yy - 1] = 53;
 			dungeon[x1][yy + 0] = 50;
 			dungeon[x1][yy + 1] = 52;
 			//dungeon[x2 - 1][yy - 1] = 54;
 			break;
 		case 1:
-			yy = (y1 + y2 + 1) / 2;
+			yy = (y1 + y2 + 1) / 2u;
 			dungeon[x2][yy - 1] = 53;
 			dungeon[x2][yy + 0] = 50;
 			dungeon[x2][yy + 1] = 52;
 			//dungeon[x2 - 1][yy - 1] = 54;
 			break;
 		case 2:
-			xx = (x1 + x2 + 1) / 2;
+			xx = (x1 + x2 + 1) / 2u;
 			dungeon[xx - 1][y1] = 57;
 			dungeon[xx + 0][y1] = 50;
 			dungeon[xx + 1][y1] = 56;
@@ -1998,7 +1998,7 @@ static void DRLG_L4ThemeExitFix()
 			//dungeon[xx - 1][y2 - 1] = 58;
 			break;
 		case 3:
-			xx = (x1 + x2 + 1) / 2;
+			xx = (x1 + x2 + 1) / 2u;
 			dungeon[xx - 1][y2] = 57;
 			dungeon[xx + 0][y2] = 50;
 			dungeon[xx + 1][y2] = 56;
@@ -2095,7 +2095,7 @@ static void DRLG_L4()
 	// DRLG_L4GeneralFix(); - commented out, because this is no longer necessary
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
-		DRLG_PlaceThemeRooms(7, 10, themeTiles, 112, true);
+		DRLG_PlaceThemeRooms(7, 10, themeTiles, 112);
 		DRLG_L4ThemeExitFix();
 	}
 
