@@ -2092,8 +2092,10 @@ static void DRLG_L4ThemeExitFix()
 static void DRLG_L4()
 {
     int i;
+    extern int counter1;
 	while (true) {
 		do {
+            counter1++;
 			memset(drlg.dungBlock, 0, sizeof(drlg.dungBlock));
 
 			//static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L4.");
