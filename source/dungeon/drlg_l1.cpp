@@ -1266,10 +1266,10 @@ static void DRLG_L1CreateDungeon()
 			L1RoomGen(29, 15, CHAMBER_SIZE, CHAMBER_SIZE, true);
 	}
 }
-int minars[4];
+/*int minars[4];
 int maxars[4];
 int avgars[4];
-int cntars[4];
+int cntars[4];*/
 static int DRLG_L1GetArea()
 {
 	int i, rv;

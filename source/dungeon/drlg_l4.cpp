@@ -77,7 +77,7 @@ const BYTE L4USTAIRS[] = {
 	 6, 6, 6, 6, 6,
 
 	 0,  0,  0,  0,  0, // replace
-	36, 38, 35,  0,  0,
+	 0, 38, 35,  0,  0,
 	37, 34, 33, 32,  0,
 	 0,  0, 31,  0,  0,
 	 0,  0,  0,  0,  0,
@@ -1301,6 +1301,10 @@ static void L4ConnectBlock()
 	}
 }
 
+int minars[4];
+int maxars[4];
+int avgars[4]; 
+int cntars[4];
 static int DRLG_L4GetArea()
 {
 	int i, rv;
@@ -1313,6 +1317,13 @@ static int DRLG_L4GetArea()
 		assert(*pTmp <= 1);
 		rv += *pTmp;
 	}
+
+    if (minars[1] > rv)
+        minars[1] = rv;
+    if (maxars[1] < rv)
+        maxars[1] = rv;
+    avgars[1] += rv;
+    cntars[1]++;
 
 	return rv;
 }
@@ -2060,6 +2071,7 @@ static void DRLG_L4ThemeExitFix()
 
 static void DRLG_L4()
 {
+    int i;
 	while (true) {
 		do {
 			memset(drlg.dungBlock, 0, sizeof(drlg.dungBlock));
@@ -2067,7 +2079,8 @@ static void DRLG_L4()
 			//static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L4.");
 			//memset(dungeon, 30, sizeof(dungeon));
 			L4FirstRoom();
-		} while (DRLG_L4GetArea() < 173);
+            i = DRLG_L4GetArea();
+		} while (i < 173);
 		L4ConnectBlock();
 
 		L4Block2Dungeon();
@@ -2140,6 +2153,7 @@ static void DRLG_L4()
 		}
 		break;
 	}
+    counter2 += i;
 
 	// DRLG_L4GeneralFix(); - commented out, because this is no longer necessary
 
