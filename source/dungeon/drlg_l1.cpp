@@ -1286,10 +1286,10 @@ static void DRLG_L1CreateDungeon()
 			L1RoomGen(29, 15, CHAMBER_SIZE, CHAMBER_SIZE, true);
 	}
 }
-/*int minars[4];
-int maxars[4];
-int avgars[4];
-int cntars[4];*/
+extern int minars[4];
+extern int maxars[4];
+extern int avgars[4];
+extern int cntars[4];
 static int DRLG_L1GetArea()
 {
 	int i, rv;
@@ -1322,6 +1322,12 @@ static int DRLG_L1GetArea()
     if (maxars[ChambersFirst + ChambersMiddle + ChambersLast] < rv)
         maxars[ChambersFirst + ChambersMiddle + ChambersLast] = rv;*/
 #endif
+    if (minars[1] > rv)
+        minars[1] = rv;
+    if (maxars[1] < rv)
+        maxars[1] = rv;
+    avgars[1] += rv;
+    cntars[1]++;
 	return rv;
 }
 
@@ -2716,8 +2722,10 @@ static void DRLG_L1()
 		areaidx = 1;
 	}
 
+    extern int counter1;
 	while (true) {
 		do {
+            counter1++;
 			memset(dungeon, 0, sizeof(dungeon));
 			DRLG_L1CreateDungeon();
 			i = DRLG_L1GetArea();
@@ -2834,7 +2842,12 @@ static void DRLG_L1()
 		}
 		break;
 	}
-
+    extern int counter2;
+    counter2 += i;
+    if (minars[2] > i)
+        minars[2] = i;
+    if (maxars[2] < i)
+        maxars[2] = i;
 	/*if (placeWater) {
 		int x, y;
 

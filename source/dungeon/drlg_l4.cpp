@@ -538,7 +538,7 @@ static void DRLG_L4SetRoom(int idx)
 }
 
 /*
- * Transform dungeon by replacing values using 2x2 block patterns defined in L1ConvTbl
+ * Transform dungeon by replacing values using 2x2 block patterns defined in L4ConvTbl
  * New dungeon values: 1 2 3 6 9 30
  */
 static void DRLG_L4MakeMegas()
@@ -1469,10 +1469,10 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 		// try to place a room to the right
 		rxy2 = x + w;
 		while(true) {
-			if (L1CheckVHall(rxy2 - 1, ry - 1, height + 2)
-			 && L1CheckRoom(rxy2, ry - 1, width + 1, height + 2)) {
+			if (L4CheckVHall(rxy2 - 1, ry - 1, height + 2)
+			 && L4CheckRoom(rxy2, ry - 1, width + 1, height + 2)) {
 				// - add room to the right
-				L1DrawRoom(rxy2, ry, width, height);
+				L4DrawRoom(rxy2, ry, width, height);
 				break;
 			}
 			if (--i == 0)
@@ -1483,10 +1483,10 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 		}
 		// proceed with the placed a room on the left
 		if (rx >= 0)
-			L1RoomGen(rx, ry, width, height, true);
+			L4RoomGen(rx, ry, width, height, true);
 		// proceed with the placed a room on the right
 		if (i != 0)
-			L1RoomGen(rxy2, ry, width, height, true);
+			L4RoomGen(rxy2, ry, width, height, true);
 	} else {
 		// try to place a room to the top
 		for (i = 20; i != 0; i--) {
@@ -1525,10 +1525,10 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 		// try to place a room to the bottom
 		rxy2 = y + h;
 		while(true) {
-			if (L1CheckHHall(rxy2 - 1, rx - 1, width + 2)
-			 && L1CheckRoom(rx - 1, rxy2, width + 2, height + 1)) {
+			if (L4CheckHHall(rxy2 - 1, rx - 1, width + 2)
+			 && L4CheckRoom(rx - 1, rxy2, width + 2, height + 1)) {
 				// - add room to the bottom
-				L1DrawRoom(rx, rxy2, width, height);
+				L4DrawRoom(rx, rxy2, width, height);
 				break;
 			}
 			if (--i == 0)
@@ -1539,10 +1539,10 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 		}
 		// proceed with the placed a room on the top
 		if (ry >= 0)
-			L1RoomGen(rx, ry, width, height, false);
+			L4RoomGen(rx, ry, width, height, false);
 		// proceed with the placed a room on the bottom
 		if (i != 0)
-			L1RoomGen(rx, rxy2, width, height, false);
+			L4RoomGen(rx, rxy2, width, height, false);
 	}
 }
 
