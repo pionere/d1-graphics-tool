@@ -2194,7 +2194,7 @@ static void DRLG_L4()
 			L4FirstRoom();
 			L4ConnectBlock();
 			i = DRLG_L4GetArea();
-		} while (i < 180);
+		} while (i < 190);
 		// L4ConnectBlock();
 
 		L4Block2Dungeon();

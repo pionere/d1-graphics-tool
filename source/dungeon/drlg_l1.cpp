@@ -1130,7 +1130,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 		}
 		// try to place a room to the right
 		rxy2 = x + w;
-		while(true) {
+		while (true) {
 			if (L1CheckVHall(rxy2 - 1, ry - 1, height + 2)
 			 && L1CheckRoom(rxy2, ry - 1, width + 1, height + 2)) {
 				// - add room to the right
@@ -1173,7 +1173,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 		}
 		// try to place a room to the bottom
 		rxy2 = y + h;
-		while(true) {
+		while (true) {
 			if (L1CheckHHall(rxy2 - 1, rx - 1, width + 2)
 			 && L1CheckRoom(rx - 1, rxy2, width + 2, height + 1)) {
 				// - add room to the bottom
