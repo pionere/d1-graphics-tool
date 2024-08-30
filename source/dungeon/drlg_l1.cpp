@@ -1790,7 +1790,7 @@ static void L1TileFix()
 				// [ 2(17) ]    13
 				// Impossible case ([2 13]) if there is an empty tile between walls.
                 if (dungeon[i - 1][j] == 2) {
-                    dProgressErr() << QString("Unhandled case in L1TileFix (wall - floor) on left side (%1:%2 @%3:%4)").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                    dProgressErr() << QString("Unhandled case in L1TileFix (2 - 13) on left side (%1:%2 @%3:%4)").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
                 }
 				assert(dungeon[i - 1][j] != 2);
 				if (dungeon[i][j - 1] == 1) {
@@ -1815,6 +1815,9 @@ static void L1TileFix()
 						dungeon[i][j] = 3; // connect
 					}
 				} else {
+                    if (dungeon[i][j - 1] == 13) {
+                        dProgressErr() << QString("Unhandled case in L1TileFix (13 - 16) on left side (%1:%2 @%3:%4)").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                    }
 					assert(dungeon[i][j - 1] != 13);
 					//if (dungeon[i][j - 1] == 13) {
 					//	dungeon[i][j] = 13; // cut + cut

@@ -1237,6 +1237,60 @@ static void L4Block2Dungeon()
  */
 static void L4ConnectBlock()
 {
+#if 1
+	int j, i, rv;
+	int hallok[std::max(L4BLOCKX, L4BLOCKY)];
+	// find the right side of the rooms
+	for (j = L4BLOCKY - 1; j >= 0; j--) {
+		for (i = L4BLOCKX - 2; i > 0; i--) {
+			if (drlg.dungBlock[i][j] == 1) {
+				break;
+			}
+		}
+		hallok[j] = i;
+	}
+	// connect to the right side of the dungeon where there is a matching 2 tiles-wide ending
+	rv = RandRange(1, L4BLOCKY - 2);
+	while (true) {
+		if (hallok[rv] != 0 && hallok[rv] == hallok[rv + 1]) {
+			for (i = L4BLOCKX - 1; i > hallok[rv]; i--) {
+				drlg.dungBlock[i][rv] = 1;
+				drlg.dungBlock[i][rv + 1] = 1;
+			}
+			break;
+		} else {
+			rv++;
+			if (rv == L4BLOCKY - 1) {
+				rv = 1;
+			}
+		}
+	}
+	// find the bottom side of the rooms
+	for (i = L4BLOCKX - 1; i >= 0; i--) {
+		for (j = L4BLOCKY - 2; j > 0; j--) {
+			if (drlg.dungBlock[i][j] == 1) {
+				break;
+			}
+		}
+		hallok[i] = j;
+	}
+	// connect to the bottom side of the dungeon where there is a matching 2 tiles-wide ending
+	rv = RandRange(1, L4BLOCKX - 2);
+	while (true) {
+		if (hallok[rv] != 0 && hallok[rv] == hallok[rv + 1]) {
+			for (j = L4BLOCKY - 1; j > hallok[rv]; j--) {
+				drlg.dungBlock[rv][j] = 1;
+				drlg.dungBlock[rv + 1][j] = 1;
+			}
+			break;
+		} else {
+			rv++;
+			if (rv == L4BLOCKX - 1) {
+				rv = 1;
+			}
+		}
+	}
+#else
 	int j, i, n, rv;
 	POS32 pos[std::max(L4BLOCKX, L4BLOCKY)];
 
@@ -1271,22 +1325,6 @@ static void L4ConnectBlock()
 		drlg.dungBlock[i][pos[rv].y + 1] = 1;
 	}
 
-	/*rv = RandRange(1, L4BLOCKY - 1);
-	while (true) {
-		if (hallok[rv] != 0) {
-			for (i = L4BLOCKX - 1; i > hallok[rv]; i--) {
-				drlg.dungBlock[i][rv] = 1;
-				drlg.dungBlock[i][rv + 1] = 1;
-			}
-			break;
-		} else {
-			rv++;
-			if (rv == L4BLOCKY) {
-				rv = 1;
-			}
-		}
-	}
-	memset(hallok, 0, sizeof(hallok));*/
 	// find 2-tile wide borders on the bottom side
 	n = 0;
 	for (i = L4BLOCKX - 2; i > 0; i--) {
@@ -1318,22 +1356,6 @@ static void L4ConnectBlock()
 		drlg.dungBlock[pos[rv].x][j] = 1;
 		drlg.dungBlock[pos[rv].x + 1][j] = 1;
 	}
-
-	/*rv = RandRange(1, L4BLOCKX - 1);
-	while (true) {
-		if (hallok[rv] != 0) {
-			for (j = L4BLOCKY - 1; j > hallok[rv]; j--) {
-				drlg.dungBlock[rv][j] = 1;
-				drlg.dungBlock[rv + 1][j] = 1;
-			}
-			break;
-		} else {
-			rv++;
-			if (rv == L4BLOCKX) {
-				rv = 1;
-			}
-		}
-	}*/
 }
 
 int minars[4];
