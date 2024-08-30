@@ -1356,6 +1356,7 @@ static void L4ConnectBlock()
 		drlg.dungBlock[pos[rv].x][j] = 1;
 		drlg.dungBlock[pos[rv].x + 1][j] = 1;
 	}
+#endif
 }
 
 int minars[4];
