@@ -1239,10 +1239,10 @@ static void L4ConnectBlock()
 {
 #if 1
 	int j, i, rv;
-	int hallok[std::max(L4BLOCKX, L4BLOCKY)];
+	BYTE hallok[std::max(L4BLOCKX, L4BLOCKY)];
 	// find the right side of the rooms
 	for (j = L4BLOCKY - 1; j >= 0; j--) {
-		for (i = L4BLOCKX - 2; i > 0; i--) {
+		for (i = L4BLOCKX - 1; i > 0; i--) {
 			if (drlg.dungBlock[i][j] == 1) {
 				break;
 			}
@@ -1267,7 +1267,7 @@ static void L4ConnectBlock()
 	}
 	// find the bottom side of the rooms
 	for (i = L4BLOCKX - 1; i >= 0; i--) {
-		for (j = L4BLOCKY - 2; j > 0; j--) {
+		for (j = L4BLOCKY - 1; j > 0; j--) {
 			if (drlg.dungBlock[i][j] == 1) {
 				break;
 			}
