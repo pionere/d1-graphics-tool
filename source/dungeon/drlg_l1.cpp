@@ -1753,7 +1753,6 @@ static void L1FillChambers()
 
 /*
  * Draw wall around the tiles selected by DRLG_L1CreateDungeon.
- * Assumes the border of dungeon was empty.
  * New dungeon values: 3 6 7 16 17 18 19 21 23 24
  */
 static void L1TileFix()
@@ -1790,6 +1789,9 @@ static void L1TileFix()
 				//          [ 1(16) ]
 				// [ 2(17) ]    13
 				// Impossible case ([2 13]) if there is an empty tile between walls.
+                if (dungeon[i - 1][j] == 2) {
+                    dProgressErr() << QString("Unhandled case in L1TileFix (wall - floor) on left side (%1:%2 @%3:%4)").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                }
 				assert(dungeon[i - 1][j] != 2);
 				if (dungeon[i][j - 1] == 1) {
 					//if (dungeon[i - 1][j] == 2) {
@@ -1856,6 +1858,9 @@ static void L1TileFix()
 
 	// apply the same logic to the first row/column
 	for (i = DMAXX - 1; i > 0; i--) {
+        if (dungeon[i][0] == 13 && dungeon[i - 1][0] == 2) {
+            dProgressErr() << QString("Unhandled case in L1TileFix (wall - floor) on left side (%1:%2 @%3:%4)").arg(i).arg(0).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * 0);
+        }
 		/* Impossible case ([2 13]) if there is an empty tile between walls.
 		if (dungeon[i][0] == 13) {
 			// [ 2(17) ]   13

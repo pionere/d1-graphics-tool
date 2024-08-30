@@ -1249,7 +1249,7 @@ static void L4ConnectBlock()
 				if (drlg.dungBlock[i][j + 1] == 1 && drlg.dungBlock[i + 1][j + 1] == 0) {
 					// hallok[j] = i;
 					pos[n] = { i, j };
-                    if (n > 0 && pos[n - 1].x > i) {
+                    if (n > 0 && pos[n - 1].y == j + 1 && pos[n - 1].x > i) {
                         dProgressErr() << QString("Possible right connection over a room %1:%2 @%3:%4").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
                         pos[n].x = -pos[n].x;
                     }
@@ -1296,7 +1296,7 @@ static void L4ConnectBlock()
 				if (drlg.dungBlock[i + 1][j] == 1 && drlg.dungBlock[i + 1][j + 1] == 0) {
 					//hallok[i] = j;
 					pos[n] = { i, j };
-                    if (n > 0 && pos[n - 1].y > j) {
+                    if (n > 0 && pos[n - 1].x == i + 1 && pos[n - 1].y > j) {
                         dProgressErr() << QString("Possible bottom connection over a room %1:%2 @%3:%4").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
                         pos[n].y = -pos[n].y;
                     }
