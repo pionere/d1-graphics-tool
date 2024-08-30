@@ -2160,7 +2160,7 @@ static void DRLG_L4()
 			//memset(dungeon, 30, sizeof(dungeon));
 			L4FirstRoom();
             i = DRLG_L4GetArea();
-		} while (i < 173);
+		} while (i < 190);
 		L4ConnectBlock();
 
 		L4Block2Dungeon();
