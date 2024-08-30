@@ -911,7 +911,6 @@ static void ValidateSEConnection(int x, int y)
 
 /*
  * Draw wall around the tiles selected by L4FirstRoom (and L4ConnectBlock).
- * Assumes the border of dungeon was empty.
  * New dungeon values: 4 .. 29 except 20
  */
 static void L4TileFix()
@@ -1235,27 +1234,44 @@ static void L4Block2Dungeon()
 
 /*
  * Create link between the quarters (blocks) of the dungeon.
- * Assumes the border of dungBlock to be empty.
  */
 static void L4ConnectBlock()
 {
-	int j, i, rv;
-	BYTE hallok[std::max(L4BLOCKX, L4BLOCKY)];
+	int j, i, n, rv;
+	POS32 pos[std::max(L4BLOCKX, L4BLOCKY)];
 
-	memset(hallok, 0, sizeof(hallok));
-	for (j = L4BLOCKY - 2; j >= 0; j--) {
-		for (i = L4BLOCKX - 2; i >= 0; i--) {
+	// find 2-tile wide borders on the right side
+	n = 0;
+	for (j = L4BLOCKY - 2; j > 0; j--) {
+		for (i = L4BLOCKX - 2; i > 0; i--) {
 			if (drlg.dungBlock[i][j] == 1) {
-				assert(i + 1 < L4BLOCKX && j + 1 < L4BLOCKY);
+				// assert(i + 1 < L4BLOCKX && j + 1 < L4BLOCKY);
 				if (drlg.dungBlock[i][j + 1] == 1 && drlg.dungBlock[i + 1][j + 1] == 0) {
-					hallok[j] = i;
+					// hallok[j] = i;
+					pos[n] = { i, j };
+                    if (n > 0 && pos[n - 1].x > i) {
+                        dProgressErr() << QString("Possible right connection over a room %1:%2 @%3:%4").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        pos[n].x = -pos[n].x;
+                    }
+					n++;
 				}
 				i = 0;
 			}
 		}
 	}
+	assert(n != 0);
+	// connect to the right side of the dungeon
+	rv = random_low(0, n);
+    if (pos[rv].x < 0) {
+        pos[rv].x = -pos[rv].x;
+        dProgressErr() << QString("Right connection over a room %1:%2 @%3:%4").arg(pos[rv].x).arg(pos[rv].y).arg(DBORDERX + 2 * pos[rv].x).arg(DBORDERY + 2 * pos[rv].y);
+    }
+	for (i = pos[rv].x + 1; i < L4BLOCKX; i++) {
+		drlg.dungBlock[i][pos[rv].y] = 1;
+		drlg.dungBlock[i][pos[rv].y + 1] = 1;
+	}
 
-	rv = RandRange(1, L4BLOCKY - 1);
+	/*rv = RandRange(1, L4BLOCKY - 1);
 	while (true) {
 		if (hallok[rv] != 0) {
 			for (i = L4BLOCKX - 1; i > hallok[rv]; i--) {
@@ -1270,21 +1286,40 @@ static void L4ConnectBlock()
 			}
 		}
 	}
-
-	memset(hallok, 0, sizeof(hallok));
-	for (i = L4BLOCKX - 2; i >= 0; i--) {
-		for (j = L4BLOCKY - 2; j >= 0; j--) {
+	memset(hallok, 0, sizeof(hallok));*/
+	// find 2-tile wide borders on the bottom side
+	n = 0;
+	for (i = L4BLOCKX - 2; i > 0; i--) {
+		for (j = L4BLOCKY - 2; j > 0; j--) {
 			if (drlg.dungBlock[i][j] == 1) {
-				assert(i + 1 < L4BLOCKX && j + 1 < L4BLOCKY);
+				// assert(i + 1 < L4BLOCKX && j + 1 < L4BLOCKY);
 				if (drlg.dungBlock[i + 1][j] == 1 && drlg.dungBlock[i + 1][j + 1] == 0) {
-					hallok[i] = j;
+					//hallok[i] = j;
+					pos[n] = { i, j };
+                    if (n > 0 && pos[n - 1].y > j) {
+                        dProgressErr() << QString("Possible bottom connection over a room %1:%2 @%3:%4").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        pos[n].y = -pos[n].y;
+                    }
+					n++;
 				}
 				j = 0;
 			}
 		}
 	}
 
-	rv = RandRange(1, L4BLOCKX - 1);
+	assert(n != 0);
+	// connect to the bottom side of the dungeon
+	rv = random_low(0, n);
+    if (pos[rv].y < 0) {
+        pos[rv].y = -pos[rv].y;
+        dProgressErr() << QString("Bottom connection over a room %1:%2 @%3:%4").arg(pos[rv].x).arg(pos[rv].y).arg(DBORDERX + 2 * pos[rv].x).arg(DBORDERY + 2 * pos[rv].y);
+    }
+	for (j = pos[rv].y + 1; j < L4BLOCKY; j++) {
+		drlg.dungBlock[pos[rv].x][j] = 1;
+		drlg.dungBlock[pos[rv].x + 1][j] = 1;
+	}
+
+	/*rv = RandRange(1, L4BLOCKX - 1);
 	while (true) {
 		if (hallok[rv] != 0) {
 			for (j = L4BLOCKY - 1; j > hallok[rv]; j--) {
@@ -1298,7 +1333,7 @@ static void L4ConnectBlock()
 				rv = 1;
 			}
 		}
-	}
+	}*/
 }
 
 int minars[4];
@@ -1428,7 +1463,6 @@ static bool L4AddHRoomTB(int x, int y, int w, int h, bool top)
 static void L4RoomGen(int x, int y, int w, int h, bool dir)
 {
 	int dirProb, i, width, height, rx, ry, rxy2;
-	bool ran2;
 
 	dirProb = random_(0, 4);
 
@@ -1437,7 +1471,7 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 		for (i = 20; i != 0; i--) {
 			width = RandRange(2, 6) & ~1;
 			height = RandRange(2, 6) & ~1;
-			ry = h / 2 + y - height / 2;
+			ry = h / 2u + y - height / 2u;
 			rx = x - width;
 			if (L4CheckVHall(x, ry - 1, height + 2)
 			 && L4CheckRoom(rx - 1, ry - 1, width + 1, height + 2)) { /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1") (fixed)
@@ -1446,18 +1480,6 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 				break;
 			}
 		}
-		// try to place a room to the right
-		/*rxy2 = x + w;
-		ran2 = L4CheckVHall(rxy2 - 1, ry - 1, height + 2)
-			&& L4CheckRoom(rxy2, ry - 1, width + 1, height + 2);
-		if (ran2)
-			L4DrawRoom(rxy2, ry, width, height);
-		// proceed with the placed a room on the left
-		if (i != 0)
-			L4RoomGen(rx, ry, width, height, true);
-		// proceed with the placed a room on the right
-		if (ran2)
-			L4RoomGen(rxy2, ry, width, height, true);*/
 		if (i != 0) {
 			// room added to the left -> force similar room on the right side
 			i = 1;
@@ -1492,7 +1514,7 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 		for (i = 20; i != 0; i--) {
 			width = RandRange(2, 6) & ~1;
 			height = RandRange(2, 6) & ~1;
-			rx = w / 2 + x - width / 2;
+			rx = w / 2u + x - width / 2u;
 			ry = y - height;
 			if (L4CheckHHall(y, rx - 1, width + 2)
 			 && L4CheckRoom(rx - 1, ry - 1, width + 2, height + 1)) {
@@ -1502,18 +1524,6 @@ static void L4RoomGen(int x, int y, int w, int h, bool dir)
 			}
 		}
 
-		// try to place a room to the bottom
-		/*rxy2 = y + h;
-		ran2 = L4CheckHHall(rxy2 - 1, rx - 1, width + 2)
-			&& L4CheckRoom(rx - 1, rxy2, width + 2, height + 1);
-		if (ran2)
-			L4DrawRoom(rx, rxy2, width, height);
-		// proceed with the placed a room on the top
-		if (i != 0)
-			L4RoomGen(rx, ry, width, height, false);
-		// proceed with the placed a room on the bottom
-		if (ran2)
-			L4RoomGen(rx, rxy2, width, height, false);*/
 		if (i != 0) {
 			// room added to the top -> force similar room on the bottom side
 			i = 1;
@@ -2160,7 +2170,7 @@ static void DRLG_L4()
 			//memset(dungeon, 30, sizeof(dungeon));
 			L4FirstRoom();
             i = DRLG_L4GetArea();
-		} while (i < 190);
+		} while (i < 173);
 		L4ConnectBlock();
 
 		L4Block2Dungeon();
