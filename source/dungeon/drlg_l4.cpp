@@ -1232,12 +1232,27 @@ static void L4Block2Dungeon()
 	}
 }
 
+static int L4SelectPos(const BYTE (&hall)[20])
+{
+	int i, n, rv;
+	BYTE match[20];
+	n = 0;
+	for (i = 20 - 2; i >= 0; i--) {
+		if (hall[i] != 0 && hall[i] == hall[i + 1]) {
+			match[n] = i;
+			n++;
+		}
+	}
+	// assert(n != 0);
+	rv = random_low(0, n);
+	return match[rv];
+}
+
 /*
  * Create link between the quarters (blocks) of the dungeon.
  */
 static void L4ConnectBlock()
 {
-#if 1
 	int j, i, rv;
 	BYTE hallok[std::max(L4BLOCKX, L4BLOCKY)];
 	// find the right side of the rooms
@@ -1249,21 +1264,12 @@ static void L4ConnectBlock()
 		}
 		hallok[j] = i;
 	}
-	// connect to the right side of the dungeon where there is a matching 2 tiles-wide ending
-	rv = RandRange(1, L4BLOCKY - 2);
-	while (true) {
-		if (hallok[rv] != 0 && hallok[rv] == hallok[rv + 1]) {
-			for (i = L4BLOCKX - 1; i > hallok[rv]; i--) {
-				drlg.dungBlock[i][rv] = 1;
-				drlg.dungBlock[i][rv + 1] = 1;
-			}
-			break;
-		} else {
-			rv++;
-			if (rv == L4BLOCKY - 1) {
-				rv = 1;
-			}
-		}
+	// select a position with matching 2 tiles-wide ending
+	rv = L4SelectPos(hallok);
+	// connect to the right side of the dungeon
+	for (i = L4BLOCKX - 1; i > hallok[rv]; i--) {
+		drlg.dungBlock[i][rv] = 1;
+		drlg.dungBlock[i][rv + 1] = 1;
 	}
 	// find the bottom side of the rooms
 	for (i = L4BLOCKX - 1; i >= 0; i--) {
@@ -1274,89 +1280,13 @@ static void L4ConnectBlock()
 		}
 		hallok[i] = j;
 	}
-	// connect to the bottom side of the dungeon where there is a matching 2 tiles-wide ending
-	rv = RandRange(1, L4BLOCKX - 2);
-	while (true) {
-		if (hallok[rv] != 0 && hallok[rv] == hallok[rv + 1]) {
-			for (j = L4BLOCKY - 1; j > hallok[rv]; j--) {
-				drlg.dungBlock[rv][j] = 1;
-				drlg.dungBlock[rv + 1][j] = 1;
-			}
-			break;
-		} else {
-			rv++;
-			if (rv == L4BLOCKX - 1) {
-				rv = 1;
-			}
-		}
-	}
-#else
-	int j, i, n, rv;
-	POS32 pos[std::max(L4BLOCKX, L4BLOCKY)];
-
-	// find 2-tile wide borders on the right side
-	n = 0;
-	for (j = L4BLOCKY - 2; j > 0; j--) {
-		for (i = L4BLOCKX - 2; i > 0; i--) {
-			if (drlg.dungBlock[i][j] == 1) {
-				// assert(i + 1 < L4BLOCKX && j + 1 < L4BLOCKY);
-				if (drlg.dungBlock[i][j + 1] == 1 && drlg.dungBlock[i + 1][j + 1] == 0) {
-					// hallok[j] = i;
-					pos[n] = { i, j };
-                    if (n > 0 && pos[n - 1].y == j + 1 && pos[n - 1].x > i) {
-                        dProgressErr() << QString("Possible right connection over a room %1:%2 @%3:%4").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-                        pos[n].x = -pos[n].x;
-                    }
-					n++;
-				}
-				i = 0;
-			}
-		}
-	}
-	assert(n != 0);
-	// connect to the right side of the dungeon
-	rv = random_low(0, n);
-    if (pos[rv].x < 0) {
-        pos[rv].x = -pos[rv].x;
-        dProgressErr() << QString("Right connection over a room %1:%2 @%3:%4").arg(pos[rv].x).arg(pos[rv].y).arg(DBORDERX + 2 * pos[rv].x).arg(DBORDERY + 2 * pos[rv].y);
-    }
-	for (i = pos[rv].x + 1; i < L4BLOCKX; i++) {
-		drlg.dungBlock[i][pos[rv].y] = 1;
-		drlg.dungBlock[i][pos[rv].y + 1] = 1;
-	}
-
-	// find 2-tile wide borders on the bottom side
-	n = 0;
-	for (i = L4BLOCKX - 2; i > 0; i--) {
-		for (j = L4BLOCKY - 2; j > 0; j--) {
-			if (drlg.dungBlock[i][j] == 1) {
-				// assert(i + 1 < L4BLOCKX && j + 1 < L4BLOCKY);
-				if (drlg.dungBlock[i + 1][j] == 1 && drlg.dungBlock[i + 1][j + 1] == 0) {
-					//hallok[i] = j;
-					pos[n] = { i, j };
-                    if (n > 0 && pos[n - 1].x == i + 1 && pos[n - 1].y > j) {
-                        dProgressErr() << QString("Possible bottom connection over a room %1:%2 @%3:%4").arg(i).arg(j).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-                        pos[n].y = -pos[n].y;
-                    }
-					n++;
-				}
-				j = 0;
-			}
-		}
-	}
-
-	assert(n != 0);
+	// select a position with matching 2 tiles-wide ending
+	rv = L4SelectPos(hallok);
 	// connect to the bottom side of the dungeon
-	rv = random_low(0, n);
-    if (pos[rv].y < 0) {
-        pos[rv].y = -pos[rv].y;
-        dProgressErr() << QString("Bottom connection over a room %1:%2 @%3:%4").arg(pos[rv].x).arg(pos[rv].y).arg(DBORDERX + 2 * pos[rv].x).arg(DBORDERY + 2 * pos[rv].y);
-    }
-	for (j = pos[rv].y + 1; j < L4BLOCKY; j++) {
-		drlg.dungBlock[pos[rv].x][j] = 1;
-		drlg.dungBlock[pos[rv].x + 1][j] = 1;
+	for (j = L4BLOCKY - 1; j > hallok[rv]; j--) {
+		drlg.dungBlock[rv][j] = 1;
+		drlg.dungBlock[rv + 1][j] = 1;
 	}
-#endif
 }
 
 int minars[4];
