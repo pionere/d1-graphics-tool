@@ -1246,7 +1246,7 @@ static int L4SelectPos(const BYTE (&hall)[20])
 	}
 	// assert(n != 0);
 	rv = random_low(0, n);
-    dProgress() << << QString("hall connection %1:%2 @ %3:%4 or %4:%3").arg(match[rv]).arg(hall[match[rv]]).arg(DBORDERX + 2 * match[rv]).arg(DBORDERY + 2 * hall[match[rv]]);
+    dProgress() << QString("hall connection %1:%2 @ %3:%4 or %4:%3").arg(match[rv]).arg(hall[match[rv]]).arg(DBORDERX + 2 * match[rv]).arg(DBORDERY + 2 * hall[match[rv]]);
 	return match[rv];
 }
 
