@@ -178,7 +178,7 @@ QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, in
         for (tx = dx - r; tx <= dx + r; tx++) {
             for (ty = dx - r; ty <= dy + r; ty++) {
                 dist = (tx - dx) * (tx - dx) + (ty - dy) * (ty - dy);
-                dist = sqrt((double)dist) + 0.5d;
+                dist = sqrt((double)dist) + 0.5f;
                 if (dist <= 15)
                     colors[tx][ty] = dist;
             }

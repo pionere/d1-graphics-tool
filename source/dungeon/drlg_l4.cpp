@@ -2127,7 +2127,6 @@ static void DRLG_L4()
 			L4ConnectBlock();
 			i = DRLG_L4GetArea();
 		} while (i < 190);
-		// L4ConnectBlock();
 
 		L4Block2Dungeon();
 		DRLG_L4MakeMegas();
