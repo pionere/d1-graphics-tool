@@ -159,7 +159,7 @@ QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, in
     int colors[2 * (DBORDERX + 2) + 1][2 * (DBORDERY + 2) + 1];
     memset(colors, 0xFF, sizeof(colors));
     if (radius == 1) {
-        int dx, dy, tx, ty;
+        int dx, dy, i, j, tx, ty;
         dx = DBORDERX + 1;
         dy = DBORDERY + 1;
         for (i = 0; i <= 15; i++) {
