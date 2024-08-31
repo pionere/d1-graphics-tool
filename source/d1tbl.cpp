@@ -155,13 +155,50 @@ QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, in
             dProgressWarn() << tr("Ray-tracing with offset is not supported.");
         }
     }
-
+#if 1
+    int colors[2 * (DBORDERX + 2) + 1][2 * (DBORDERY + 2) + 1];
+    memset(colors, 0xFF, sizeof(colors));
+    if (radius == 1) {
+        int dx, dy, tx, ty;
+        dx = DBORDERX + 1;
+        dy = DBORDERY + 1;
+        for (i = 0; i <= 15; i++) {
+            cr = &CrawlTable[CrawlNum[i]];
+            for (j = (BYTE)*cr; j > 0; j--) {
+                tx = dx + *++cr;
+                ty = dy + *++cr;
+                colors[tx][ty] = i;
+            }
+        }
+    } else /*if (radius == 2)*/ {
+        int dx, dy, tx, ty, r = 15, dist;
+        dx = DBORDERX + 1;
+        dy = DBORDERY + 1;
+        for (tx = dx - r; tx <= dx + r; tx++) {
+            for (ty = dx - r; ty <= dy + r; ty++) {
+                dist = (tx - dx) * (tx - dx) + (ty - dy) * (ty - dy);
+                dist = sqrt((double)dist) + 0.5d;
+                if (dist <= 15)
+                    colors[tx][ty] = dist;
+            }
+        }
+    }
+#endif
     QImage image = QImage(D1Tbl::getTableImageWidth(), D1Tbl::getTableImageHeight(), QImage::Format_ARGB32);
 
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0));
     for (int x = 0; x < lengthof(dLight); x++) {
         for (int y = 0; y < lengthof(dLight[0]); y++) {
+#if 0
             QColor c = pal->getColor(ColorTrns[dLight[x][y]][color]);
+#else
+            QColor c;
+            if (colors[x][y] == -1) {
+                c = QColor(Qt::transparent);
+            } else {
+                c = pal->getColor(colors[x][y]);
+            }
+#endif
             for (int xx = x * TABLE_TILE_SIZE; xx < x * TABLE_TILE_SIZE + TABLE_TILE_SIZE; xx++) {
                 for (int yy = y * TABLE_TILE_SIZE; yy < y * TABLE_TILE_SIZE + TABLE_TILE_SIZE; yy++) {
                     // image.setPixelColor(xx, yy, color);
