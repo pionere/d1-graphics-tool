@@ -171,7 +171,7 @@ QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, in
                 colors[tx][ty] = i;
             }
         }
-    } else /*if (radius == 2)*/ {
+    } else if (radius == 2) {
         int dx, dy, tx, ty, r = 15, dist;
         dx = DBORDERX + 1;
         dy = DBORDERY + 1;
@@ -179,6 +179,50 @@ QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, in
             for (ty = dx - r; ty <= dy + r; ty++) {
                 dist = (tx - dx) * (tx - dx) + (ty - dy) * (ty - dy);
                 dist = sqrt((double)dist) + 0.5f;
+                if (dist <= 15)
+                    colors[tx][ty] = dist;
+            }
+        }
+    } else if (radius == 3) {
+        int dx, dy, tx, ty, r = 15, dist;
+        dx = DBORDERX + 1;
+        dy = DBORDERY + 1;
+        for (tx = dx - r; tx <= dx + r; tx++) {
+            for (ty = dx - r; ty <= dy + r; ty++) {
+                dist = (tx - dx) * (tx - dx) + (ty - dy) * (ty - dy);
+                dist = sqrt((double)dist) + 0.5f;
+                if (dist == 1 && (tx != dx || ty != dy))
+                    dist++;
+                if (dist <= 15)
+                    colors[tx][ty] = dist;
+            }
+        }
+    } else if (radius == 4) {
+        int dx, dy, tx, ty, r = 15, dist;
+        dx = DBORDERX + 1;
+        dy = DBORDERY + 1;
+        for (tx = dx - r; tx <= dx + r; tx++) {
+            for (ty = dx - r; ty <= dy + r; ty++) {
+                dist = std::max(abs(tx - dx), abs(ty - dy));
+                if (abs(tx - dx) == abs(ty - dy) && (tx != dx || ty != dy))
+                    dist++;
+                if (dist <= 15)
+                    colors[tx][ty] = dist;
+            }
+        }
+    } else /*if (radius == 5)*/ {
+        int dx, dy, tx, ty, r = 15, dist;
+        dx = DBORDERX + 1;
+        dy = DBORDERY + 1;
+        for (tx = dx - r; tx <= dx + r; tx++) {
+            for (ty = dx - r; ty <= dy + r; ty++) {
+                dist = std::max(abs(tx - dx), abs(ty - dy));
+                if (abs(tx - dx) == abs(ty - dy) && (tx != dx || ty != dy))
+                    dist++;
+                if (dist > 3) {
+                    dist = (tx - dx) * (tx - dx) + (ty - dy) * (ty - dy);
+                    dist = sqrt((double)dist) + 0.5f;
+                }
                 if (dist <= 15)
                     colors[tx][ty] = dist;
             }
