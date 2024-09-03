@@ -591,7 +591,7 @@ static void DRLG_L5Shadows()
 				//	dungeon[i][j - 1] = 204;
 				} else {
 					if (dungeon[i][j - 1] != 25 && dungeon[i][j - 1] != 195)
-	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// 195 -> not perfect, but ok and only on the dyn map entrance
 					// TODO: what else?
@@ -617,7 +617,7 @@ static void DRLG_L5Shadows()
 				case 84:  replaceA = 84;  okB = true;  break;
 				default:
 					if (replaceB != 2 && replaceB != 4 && replaceB != 7 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
-		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					continue;
 				}
 
@@ -660,7 +660,7 @@ static void DRLG_L5Shadows()
 					} else if (replace == 36) {
 						replace = pillar ? 83 : 84;
 					} else {
-	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
 					}
 					dungeon[i - 1][j] = 206;
@@ -751,7 +751,7 @@ static void DRLG_L1Shadows()
 				default:
 					okB = true;
 					if (replaceA != 25)
-	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door piece as well
 					// TODO: what else?
 				}
@@ -808,7 +808,7 @@ static void DRLG_L1Shadows()
 				default:
 					// if (replaceB != 25)
 					if (replaceB != 53 && replaceB != 54)
-		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// 53, 54 -> fix shadows in Banner1.DUN
 					if (replaceB != 53 && replaceB != 54)
@@ -859,7 +859,7 @@ static void DRLG_L1Shadows()
 					} else if (replace == 36) {
 						replace = pillar ? 152 : 153;
 					} else if (replace != 164 && replace != 159) {
-	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
 					}
 					dungeon[i - 1][j] = 142;
@@ -2675,7 +2675,7 @@ static void DRLG_L1()
 			memset(dungeon, 0, sizeof(dungeon));
 			DRLG_L1CreateDungeon();
 			i = DRLG_L1GetArea();
-		} while (i > arealimits[areaidx]  || i < arealimits[areaidx + 1]);
+		} while (i > arealimits[areaidx] || i < arealimits[areaidx + 1]);
 
 		DRLG_L1MakeMegas();
 		L1TileFix();
