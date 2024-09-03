@@ -207,7 +207,7 @@ static int GetBaseTile()
 
 static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
-	extern int32_t sglGameSeed;
+	// extern int32_t sglGameSeed;
 	// int32_t gameSeed = sglGameSeed;
 
 	IncProgress();
@@ -625,7 +625,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     tmr.start();
     // SetRndSeed(params.seed);
     while (!stopgen /*true*/) {
-        //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, params.seedQuest, params.entryMode);
+        //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, questSeed, params.entryMode);
         dProgress() << QApplication::tr("Generating dungeon %1: %2/%3 with seed: %4 / %5. Entry mode: %6").arg(rounds).arg(params.levelIdx).arg(params.levelNum).arg(lvlSeed).arg(questSeed).arg(params.entryMode);
         // dooDebug = lvlSeed == 952458269 && questSeed == 1654566178;
         LoadGameLevel(params.entryMode, dun);

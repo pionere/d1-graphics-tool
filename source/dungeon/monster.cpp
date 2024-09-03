@@ -673,7 +673,7 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 		break;
 	default:
 		count = 1000;
-		while (TRUE) {
+		while (true) {
 			xp = random_(91, DSIZEX) + DBORDERX;
 			yp = random_(91, DSIZEY) + DBORDERY;
 			static_assert(DBORDERX >= MON_PACK_DISTANCE, "PlaceUniqueMonst does not check IN_DUNGEON_AREA but expects a large enough border I.");
@@ -684,6 +684,9 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 				if (count2 == 0 || --count != 0) {
 					continue;
 				}
+                if (count == 0) {
+                    dProgressErr() << QApplication::tr("Failed proper unique placement (Id %d. Type %2. Pos %3:%4).").arg(uniqindex).arg(mtidx).arg(xp).arg(yp);
+                }
 			}
 			break;
 		}

@@ -1115,7 +1115,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			rx = x - width;
 			if (L1CheckVHall(x, ry - 1, height + 2)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 1, height + 2)) { // BUGFIX: swap args 3 and 4 ("height+2" and "width+1") (fixed)
-            	// - add room to the left
+				// - add room to the left
 				L1DrawRoom(rx, ry, width, height);
 				break;
 			}
@@ -1417,7 +1417,7 @@ static bool L1AddHWall(int x, int y)
 	BYTE bv;
 
 	i = x;
-	while (TRUE) {
+	while (true) {
 		i++;
 		bv = dungeon[i][y];
 		if (bv != 13)
@@ -1499,7 +1499,7 @@ static void L1AddVWall(int x, int y)
 	BYTE bv;
 
 	j = y;
-	while (TRUE) {
+	while (true) {
 		j++;
 		bv = dungeon[x][j];
 		if (bv != 13)
@@ -2005,8 +2005,6 @@ static void DRLG_L1PlaceThemeRooms()
 	RECT_AREA32 thops[32];
 	int i, numops = 0;
 	for (i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
-		//if (random_(0, 16) > 4)
-		//	continue;
 		int roomLeft = drlg.L1RoomList[i].lrx;
 		int roomRight = roomLeft + drlg.L1RoomList[i].lrw - 1;
 		int roomTop = drlg.L1RoomList[i].lry;
@@ -2187,7 +2185,7 @@ void DRLG_L1Subs()
 				if (c != 0 && (drlgFlags[x][y] & DRLG_FROZEN) == 0) {
 					rv = random_(0, MAX_MATCH);
 					k = 0;
-					while (TRUE) {
+					while (true) {
 						if (c == L1BTYPES[k] && --rv < 0) {
 							break;
 						}
@@ -2737,7 +2735,7 @@ static void DRLG_L1()
 			memset(dungeon, 0, sizeof(dungeon));
 			DRLG_L1CreateDungeon();
 			i = DRLG_L1GetArea();
-		} while (arealimits[areaidx] < i || arealimits[areaidx + 1] > i);
+		} while (i > arealimits[areaidx] || i < arealimits[areaidx + 1]);
 
 		DRLG_L1MakeMegas();
 		L1TileFix();

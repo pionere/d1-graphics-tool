@@ -53,7 +53,7 @@ static void GetRandomItemSpace(int randarea, int ii)
 	// assert(randarea > 0 && randarea < DBORDERX && randarea < DBORDERY);
 
 	tries = numTries;
-	while (TRUE) {
+	while (true) {
 		x = random_(0, DSIZEX) + DBORDERX;
 		y = random_(0, DSIZEY) + DBORDERY;
 		for (i = x; i < x + randarea; i++) {
@@ -403,7 +403,7 @@ static void GetScrollSpell(int ii, unsigned lvl)
 	is->_ivalue = sd->sStaffCost;
 	is->_iIvalue = sd->sStaffCost;
 }
-
+#ifdef HELLFIRE
 static void GetRuneSpell(int ii, unsigned lvl)
 {
 	const SpellData* sd;
@@ -451,6 +451,7 @@ static void GetRuneSpell(int ii, unsigned lvl)
 	}
 	is->_iCurs = bs;
 }
+#endif
 
 static void GetStaffSpell(int ii, unsigned lvl)
 {
@@ -1319,7 +1320,7 @@ void PlaceQuestItemInArea(int idx, int areasize)
 //		RespawnItem(i);
 		// draw it above the stand
 		items[i]._iSelFlag = 2;
-		items[i]._iPostDraw = TRUE;
+		//items[i]._iPostDraw = TRUE;
 		items[i]._iAnimFrame = 11;
 		//items[i]._iAnimFlag = TRUE;
 //		items[i]._iCreateInfo = items_get_currlevel(); // | CF_PREGEN;
@@ -1342,7 +1343,7 @@ void RespawnItem(int ii)
 	is->_iAnimFrameLen = 1;
 	//is->_iAnimWidth = ITEM_ANIM_WIDTH;
 	//is->_iAnimXOffset = (ITEM_ANIM_WIDTH - TILE_WIDTH) / 2;
-	is->_iPostDraw = FALSE;
+	//is->_iPostDraw = FALSE;
 	is->_iAnimFrame = is->_iAnimLen;
 	is->_iAnimFlag = is->_iCurs == ICURS_MAGIC_ROCK;
 	is->_iSelFlag = 1;
