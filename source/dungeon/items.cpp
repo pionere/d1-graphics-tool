@@ -404,6 +404,7 @@ static void GetScrollSpell(int ii, unsigned lvl)
 	is->_iIvalue = sd->sStaffCost;
 }
 
+#ifdef HELLFIRE
 static void GetRuneSpell(int ii, unsigned lvl)
 {
 	const SpellData* sd;
@@ -451,6 +452,7 @@ static void GetRuneSpell(int ii, unsigned lvl)
 	}
 	is->_iCurs = bs;
 }
+#endif
 
 static void GetStaffSpell(int ii, unsigned lvl)
 {
