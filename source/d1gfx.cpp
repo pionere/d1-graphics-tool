@@ -699,6 +699,8 @@ D1CEL_TYPE D1Gfx::getType() const
 
 void D1Gfx::setType(D1CEL_TYPE type)
 {
+    if (this->type == type)
+        return;
     this->type = type;
     this->modified = true;
 }
@@ -720,6 +722,8 @@ bool D1Gfx::isUpscaled() const
 
 void D1Gfx::setUpscaled(bool upscaled)
 {
+    if (this->upscaled == upscaled)
+        return;
     this->upscaled = upscaled;
     this->modified = true;
 }
@@ -731,6 +735,8 @@ unsigned D1Gfx::getFrameLen() const
 
 void D1Gfx::setFrameLen(unsigned frameLen)
 {
+    if (this->frameLen == frameLen)
+        return;
     this->frameLen = frameLen;
     this->modified = true;
 }
