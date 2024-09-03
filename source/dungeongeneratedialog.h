@@ -10,6 +10,7 @@ class GenerateDunParam {
 public:
     int levelIdx;   // dungeon_level / _setlevels
     int levelNum;   // index in AllLevels (dungeon_level / NUM_FIXLVLS)
+    int levelType;   // dungeon_type
     int difficulty; // _difficulty
     int numPlayers;
     bool isMulti;
@@ -37,7 +38,10 @@ public:
     void initialize(D1Dun *dun, D1Tileset *tileset);
 
 private slots:
-    void on_levelComboBox_activated(int index);
+    void on_lvlComboBox_activated(int index); 
+    void on_lvlTypeComboBox_activated(int index);
+    void on_lvlLineEdit_returnPressed();
+    void on_lvlLineEdit_escPressed();
     void on_actionGenerateSeed_triggered();
     void on_actionGenerateQuestSeed_triggered();
 
