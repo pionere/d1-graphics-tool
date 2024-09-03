@@ -1133,7 +1133,7 @@ static void ItemRndDur(int ii)
 	}
 }
 
-static void SetupAllItems(int ii, int idx, int iseed, unsigned lvl, unsigned quality)
+static void SetupAllItems(int ii, int idx, int32_t iseed, unsigned lvl, unsigned quality)
 {
 	int uid;
 
@@ -1190,7 +1190,7 @@ void CreateRndItem(int x, int y, unsigned quality)
 	RespawnItem(ii);
 }
 
-static void SetupAllUseful(int ii, int iseed, unsigned lvl)
+static void SetupAllUseful(int ii, int32_t iseed, unsigned lvl)
 {
 	int idx;
 
