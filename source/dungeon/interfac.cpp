@@ -335,15 +335,15 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 //    }
 //    IncProgress();
 //    FreeLevelMem();
-    EnterLevel(params.levelIdx, params.seed);
+    int32_t lvlSeed = params.seed;
+    EnterLevel(params.levelIdx, lvlSeed);
     IncProgress();
 
     int32_t questSeed = params.seedQuest;
     int extraRounds = params.extraRounds;
     // SetRndSeed(params.seed);
     while (true) {
-        extern int32_t sglGameSeed;
-        LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, sglGameSeed, questSeed, params.entryMode);
+        LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, questSeed, params.entryMode);
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
         if (--extraRounds < 0) {
@@ -355,6 +355,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             questSeed = NextRndSeed();
             InitQuests(questSeed);
         }
+        lvlSeed = NextRndSeed();
+        EnterLevel(params.levelIdx, lvlSeed);
     }
 
     dun->setLevelType(currLvl._dType);
