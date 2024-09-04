@@ -13,11 +13,9 @@
 
 #include "config.h"
 #include "d1pcx.h"
-#include "d1smk.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_celview.h"
-#include "upscaler.h"
 
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene(v)
@@ -77,21 +75,6 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
         celView->framePixelClicked(currPos, flags);
         return;
     }
-    LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
-    if (levelCelView != nullptr) {
-        levelCelView->framePixelClicked(currPos, flags);
-        return;
-    }
-    GfxsetView *setView = qobject_cast<GfxsetView *>(view);
-    if (setView != nullptr) {
-        setView->framePixelClicked(currPos, flags);
-        return;
-    }
-    TblView *tblView = qobject_cast<TblView *>(view);
-    if (tblView != nullptr) {
-        tblView->framePixelClicked(currPos, flags);
-        return;
-    }
 }
 
 void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -125,21 +108,6 @@ void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
     CelView *celView = qobject_cast<CelView *>(view);
     if (celView != nullptr) {
         celView->framePixelHovered(currPos);
-        return;
-    }
-    LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
-    if (levelCelView != nullptr) {
-        levelCelView->framePixelHovered(currPos);
-        return;
-    }
-    GfxsetView *setView = qobject_cast<GfxsetView *>(view);
-    if (setView != nullptr) {
-        setView->framePixelHovered(currPos);
-        return;
-    }
-    TblView *tblView = qobject_cast<TblView *>(view);
-    if (tblView != nullptr) {
-        tblView->framePixelHovered(currPos);
         return;
     }
 }
@@ -270,14 +238,6 @@ CelView::CelView(QWidget *parent)
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
-    // this->on_playDelayEdit_escPressed();
-    QLayout *layout = this->ui->paintbuttonHorizontalLayout;
-    this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
-    layout->setAlignment(this->audioBtn, Qt::AlignLeft);
-    this->audioBtn->setVisible(false);
-    this->audioMuted = false;
-    PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
-    layout->setAlignment(btn, Qt::AlignRight);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
@@ -298,7 +258,6 @@ CelView::CelView(QWidget *parent)
 
 CelView::~CelView()
 {
-    delete smkAudioWidget;
     delete ui;
 }
 
@@ -308,11 +267,6 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     this->gfx = g;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
-    bool smkGfx = g->getType() == D1CEL_TYPE::SMK;
-    this->audioBtn->setVisible(smkGfx);
-    if (smkGfx) {
-        this->currentPlayDelay = g->getFrameLen();
-    }
 
     this->updateFields();
 }
@@ -355,19 +309,11 @@ void CelView::setGfx(D1Gfx *g)
     }
 
     this->gfx = g;
-    if (g->getType() == D1CEL_TYPE::SMK) {
-        this->currentPlayDelay = g->getFrameLen();
-    }
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
         this->currentFrameIndex = 0;
     }
     this->updateGroupIndex();
-
-    // notify the audio-popup that the gfx changed
-    if (this->smkAudioWidget != nullptr) {
-        this->smkAudioWidget->setGfx(this->gfx);
-    }
 }
 
 void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
@@ -395,8 +341,6 @@ void CelView::updateFields()
     this->updateLabel();
     // set play-delay text
     this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
-    // update visiblity of the audio icon
-    this->audioBtn->setVisible(this->gfx->getType() == D1CEL_TYPE::SMK && this->gfx->getFrameCount() != 0);
 
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
@@ -921,11 +865,6 @@ void CelView::displayFrame()
 
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
-
-    // notify the audio-popup that the frame changed
-    if (this->smkAudioWidget != nullptr) {
-        this->smkAudioWidget->initialize(this->currentFrameIndex);
-    }
 }
 
 void CelView::toggleBottomPanel()
@@ -935,9 +874,6 @@ void CelView::toggleBottomPanel()
 
 bool CelView::toggleMute()
 {
-    this->audioMuted = !this->audioMuted;
-    this->audioBtn->setIcon(QApplication::style()->standardIcon(this->audioMuted ? QStyle::SP_MediaVolumeMuted : QStyle::SP_MediaVolume));
-    return this->audioMuted;
 }
 
 void CelView::updateGroupIndex()
@@ -998,64 +934,15 @@ void CelView::setGroupIndex(int groupIndex)
     this->displayFrame();
 }
 
-void CelView::showAudioInfo()
-{
-    if (this->smkAudioWidget == nullptr) {
-        this->smkAudioWidget = new SmkAudioWidget(this);
-        this->smkAudioWidget->setGfx(this->gfx);
-    }
-    this->smkAudioWidget->initialize(this->currentFrameIndex);
-    this->smkAudioWidget->show();
-}
-
 void CelView::ShowContextMenu(const QPoint &pos)
 {
-    MainWindow *mw = &dMainWindow();
+    /*MainWindow *mw = &dMainWindow();
     QAction actions[8];
 
     QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
 
-    // 'Frame' submenu of 'Edit'
-    int cursor = 0;
-    actions[cursor].setText(tr("Add Layer"));
-    actions[cursor].setToolTip(tr("Add the content of an image to the current frame"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddTo_Frame_triggered()));
-    contextMenu.addAction(&actions[cursor]);
-
-    cursor++;
-    actions[cursor].setText(tr("Create Frame"));
-    actions[cursor].setToolTip(tr("Create new frames"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionCreate_Frame_triggered()));
-    contextMenu.addAction(&actions[cursor]);
-
-    cursor++;
-    actions[cursor].setText(tr("Insert Frame"));
-    actions[cursor].setToolTip(tr("Add new frames before the current one"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
-    contextMenu.addAction(&actions[cursor]);
-
-    cursor++;
-    actions[cursor].setText(tr("Duplicate Frame"));
-    actions[cursor].setToolTip(tr("Duplicate the current frame"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Frame_triggered()));
-    contextMenu.addAction(&actions[cursor]);
-
-    cursor++;
-    actions[cursor].setText(tr("Replace Frame"));
-    actions[cursor].setToolTip(tr("Replace the current frame"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
-    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
-    contextMenu.addAction(&actions[cursor]);
-
-    cursor++;
-    actions[cursor].setText(tr("Del Frame"));
-    actions[cursor].setToolTip(tr("Delete the current frame"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
-    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
-    contextMenu.addAction(&actions[cursor]);
-
-    contextMenu.exec(mapToGlobal(pos));
+    contextMenu.exec(mapToGlobal(pos));*/
 }
 
 void CelView::on_framesGroupCheckBox_clicked()
@@ -1235,7 +1122,6 @@ void CelView::on_playStopButton_clicked()
     if (this->playTimer != 0) {
         this->killTimer(this->playTimer);
         this->playTimer = 0;
-        D1Smk::stopAudio();
 
         // restore the currentFrameIndex
         this->currentFrameIndex = this->origFrameIndex;
@@ -1290,9 +1176,6 @@ void CelView::timerEvent(QTimerEvent *event)
     this->currentFrameIndex = nextFrameIndex;
     if (this->gfx->getType() == D1CEL_TYPE::SMK) {
         D1GfxFrame *frame = this->gfx->getFrame(nextFrameIndex);
-        if (!this->audioMuted) {
-            D1Smk::playAudio(*frame);
-        }
         QPointer<D1Pal>& pal = frame->getFramePal();
         if (!pal.isNull()) {
             dMainWindow().updatePalette(pal.data());

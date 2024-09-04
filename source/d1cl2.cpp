@@ -270,12 +270,6 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     }
     // update type
     gfx.type = groupped ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
-    // update clipped info
-    bool clippedForced = params.clipped != SAVE_CLIPPED_TYPE::AUTODETECT;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
-        frame->clipped = (clippedForced && params.clipped == SAVE_CLIPPED_TYPE::TRUE) || (!clippedForced && frame->isClipped());
-    }
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
     for (int n = 0; n < numFrames; n++) {

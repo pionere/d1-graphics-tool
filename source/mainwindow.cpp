@@ -506,23 +506,22 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_DiabloHero_triggered()
 {
-    this->openNew(OPEN_GFX_TYPE::BASIC, OPEN_CLIPPED_TYPE::FALSE);
+    this->openNew(OPEN_GFX_TYPE::BASIC);
 }
 
 void MainWindow::on_actionNew_HellfireHero_triggered()
 {
-    this->openNew(OPEN_GFX_TYPE::BASIC, OPEN_CLIPPED_TYPE::TRUE);
+    this->openNew(OPEN_GFX_TYPE::BASIC);
 }
 
 void MainWindow::on_actionToggle_View_triggered()
 {
 }
 
-void MainWindow::openNew(OPEN_GFX_TYPE gfxType, OPEN_CLIPPED_TYPE clipped)
+void MainWindow::openNew(OPEN_GFX_TYPE gfxType)
 {
     OpenAsParam params = OpenAsParam();
     params.gfxType = gfxType;
-    params.clipped = clipped;
     this->openFile(params);
 }
 
@@ -759,8 +758,6 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
         baseDir = celFileInfo.absolutePath();
     }
 
-    result->isTileset = false;
-    result->isGfxset = false;
     result->baseDir = baseDir;
 
     result->gfx = new D1Gfx();
@@ -1066,7 +1063,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx, nullptr, nullptr, nullptr, nullptr, nullptr);
+    this->saveAsDialog->initialize(this->gfx);
     this->saveAsDialog->show();
 }
 

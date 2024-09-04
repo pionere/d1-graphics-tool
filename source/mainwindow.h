@@ -62,8 +62,6 @@ enum class FILE_CONTENT {
 typedef struct LoadFileContent
 {
     FILE_CONTENT fileType;
-    bool isTileset;
-    bool isGfxset;
     QString baseDir;
     D1Pal *pal;
     D1Trn *trnUnique;

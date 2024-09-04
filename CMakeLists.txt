@@ -46,79 +46,29 @@ file(APPEND ${TRANSLATIONS_QRC} "\n    </qresource>\n</RCC>")
 include_directories(source)
 
 set(PROJECT_SOURCES
-        source/builderwidget.cpp
-        source/builderwidget.h
-        source/builderwidget.ui
         source/celview.cpp
         source/celview.h
         source/celview.ui
-        source/cppdataeditdialog.cpp
-        source/cppdataeditdialog.h
-        source/cppdataeditdialog.ui
-        source/cppcolumnchangedialog.cpp
-        source/cppcolumnchangedialog.h
-        source/cppcolumnchangedialog.ui
-        source/cpprowchangedialog.cpp
-        source/cpprowchangedialog.h
-        source/cpprowchangedialog.ui
-        source/cppview.cpp
-        source/cppview.h
-        source/cppview.ui
-        source/cppviewentrywidget.cpp
-        source/cppviewentrywidget.h
-        source/cppviewentrywidget.ui
         source/config.cpp
         source/config.h
         source/d1cel.cpp
         source/d1celframe.cpp
         source/d1celframe.h
         source/d1cel.h
-        source/d1celtileset.cpp
-        source/d1celtilesetframe.cpp
-        source/d1celtilesetframe.h
-        source/d1celtileset.h
         source/d1cl2.cpp
         source/d1cl2.h
         source/d1cl2frame.cpp
         source/d1cl2frame.h
-        source/d1cpp.cpp
-        source/d1cpp.h
-        source/d1dun.cpp
-        source/d1dun.h
         source/d1gfx.cpp
         source/d1gfx.h
-        source/d1gfxset.cpp
-        source/d1gfxset.h
         source/d1image.cpp
         source/d1image.h
-        source/d1min.cpp
-        source/d1min.h
         source/d1pal.cpp
         source/d1pal.h
-        source/d1palhits.cpp
-        source/d1palhits.h
         source/d1pcx.cpp
         source/d1pcx.h
-        source/d1sla.cpp
-        source/d1sla.h
-        source/d1smk.cpp
-        source/d1smk.h
-        source/d1tableset.cpp
-        source/d1tableset.h
-        source/d1tbl.cpp
-        source/d1tbl.h
-        source/d1tla.cpp
-        source/d1tla.h
-        source/d1til.cpp
-        source/d1til.h
-        source/d1tileset.cpp
-        source/d1tileset.h
         source/d1trn.cpp
         source/d1trn.h
-        source/d1trs.cpp
-        source/d1trs.h
-        source/d1wav.cpp
-        source/d1wav.h
         source/dungeon/automap.cpp
         source/dungeon/drlg_l1.cpp
         source/dungeon/drlg_l2.cpp
@@ -140,36 +90,6 @@ set(PROJECT_SOURCES
         source/dungeon/spelldat.cpp
         source/dungeon/themes.cpp
         source/dungeon/trigs.cpp
-        source/dungeongeneratedialog.cpp
-        source/dungeongeneratedialog.h
-        source/dungeongeneratedialog.ui
-        source/dungeonsubtilewidget.cpp
-        source/dungeonsubtilewidget.h
-        source/dungeonsubtilewidget.ui
-        source/dungeonresourcedialog.cpp
-        source/dungeonresourcedialog.h
-        source/dungeonresourcedialog.ui
-        source/dungeonsearchdialog.cpp
-        source/dungeonsearchdialog.h
-        source/dungeonsearchdialog.ui
-        source/exportdialog.cpp
-        source/exportdialog.h
-        source/exportdialog.ui
-        source/gfxsetview.cpp
-        source/gfxsetview.h
-        source/gfxsetview.ui
-        source/levelcelview.cpp
-        source/levelcelview.h
-        source/levelcelview.ui
-        source/leveltabframewidget.cpp
-        source/leveltabframewidget.h
-        source/leveltabframewidget.ui
-        source/leveltabsubtilewidget.cpp
-        source/leveltabsubtilewidget.h
-        source/leveltabsubtilewidget.ui
-        source/leveltabtilewidget.cpp
-        source/leveltabtilewidget.h
-        source/leveltabtilewidget.ui
         source/libsmacker/smacker.cpp
         source/lineeditwidget.cpp
         source/lineeditwidget.h
@@ -177,60 +97,27 @@ set(PROJECT_SOURCES
         source/mainwindow.cpp
         source/mainwindow.h
         source/mainwindow.ui
-        source/mergeframesdialog.cpp
-        source/mergeframesdialog.h
-        source/mergeframesdialog.ui
         source/openasdialog.cpp
         source/openasdialog.h
         source/openasdialog.ui
-        source/paintwidget.cpp
-        source/paintwidget.h
-        source/paintwidget.ui
         source/paletteshowdialog.cpp
         source/paletteshowdialog.h
         source/paletteshowdialog.ui
         source/palettewidget.cpp
         source/palettewidget.h
         source/palettewidget.ui
-        source/patchdungeondialog.cpp
-        source/patchdungeondialog.h
-        source/patchdungeondialog.ui
-        source/patchgfxdialog.cpp
-        source/patchgfxdialog.h
-        source/patchgfxdialog.ui
-        source/patchtilesetdialog.cpp
-        source/patchtilesetdialog.h
-        source/patchtilesetdialog.ui
         source/progressdialog.cpp
         source/progressdialog.h
         source/progressdialog.ui
         source/progresswidget.ui
         source/pushbuttonwidget.cpp
         source/pushbuttonwidget.h
-        source/remapdialog.cpp
-        source/remapdialog.h
-        source/remapdialog.ui
-        source/resizedialog.cpp
-        source/resizedialog.h
-        source/resizedialog.ui
         source/saveasdialog.cpp
         source/saveasdialog.h
         source/saveasdialog.ui
         source/settingsdialog.cpp
         source/settingsdialog.h
         source/settingsdialog.ui
-        source/smkaudiowidget.cpp
-        source/smkaudiowidget.h
-        source/smkaudiowidget.ui
-        source/tblview.cpp
-        source/tblview.h
-        source/tblview.ui
-        source/tilesetlightdialog.cpp
-        source/tilesetlightdialog.h
-        source/tilesetlightdialog.ui
-        source/tilesetlightentrywidget.cpp
-        source/tilesetlightentrywidget.h
-        source/tilesetlightentrywidget.ui
         source/trngeneratecolentrywidget.cpp
         source/trngeneratecolentrywidget.h
         source/trngeneratecolentrywidget.ui
@@ -243,14 +130,6 @@ set(PROJECT_SOURCES
         source/trngeneratepalpopupdialog.cpp
         source/trngeneratepalpopupdialog.h
         source/trngeneratepalpopupdialog.ui
-        source/upscaledialog.cpp
-        source/upscaledialog.h
-        source/upscaledialog.ui
-        source/upscaler.cpp
-        source/upscaler.h
-        source/upscaletaskdialog.cpp
-        source/upscaletaskdialog.h
-        source/upscaletaskdialog.ui
 )
 
 qt_add_resources(RESOURCES

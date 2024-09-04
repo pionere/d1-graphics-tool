@@ -4,12 +4,7 @@
 
 #include "ui_saveasdialog.h"
 
-#include "d1cpp.h"
 #include "d1gfx.h"
-#include "d1min.h"
-#include "d1sla.h"
-#include "d1til.h"
-#include "d1tla.h"
 #include "mainwindow.h"
 
 SaveAsDialog::SaveAsDialog(QWidget *parent)
@@ -24,70 +19,23 @@ SaveAsDialog::~SaveAsDialog()
     delete ui;
 }
 
-void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1Dun *dun, D1Tableset *tableset, D1Cpp *cpp)
+void SaveAsDialog::initialize(D1Gfx *g)
 {
-    bool isTilesetGfx = tileset != nullptr;
-    bool isTableset = tableset != nullptr;
-    bool isGfxset = gfxset != nullptr;
-    bool isCpp = cpp != nullptr;
-    bool isSmk = g->getType() == D1CEL_TYPE::SMK;
-
-    this->gfx = isGfxset ? gfxset->getGfx(0) : g;
-    this->isTileset = isTilesetGfx;
-    this->isGfxset = isGfxset;
-    this->isTableset = isTableset;
-    this->isCpp = isCpp;
-    this->isSmk = isSmk;
+    this->gfx = g;
 
     // initialize the main file-path
-    QString filePath = isTableset ? tableset->distTbl->getFilePath() : (isCpp ? cpp->getFilePath() : this->gfx->getFilePath());
+    QString filePath = this->gfx->getFilePath();
     this->ui->outputCelFileEdit->setText(filePath);
     // reset fields
     this->ui->celClippedAutoRadioButton->setChecked(true);
     this->ui->celGroupEdit->setText("0");
-
-    this->ui->minUpscaledAutoRadioButton->setChecked(true);
-
-    this->ui->outputClsFileEdit->setText(isTilesetGfx ? tileset->cls->getFilePath() : "");
-    this->ui->outputMinFileEdit->setText(isTilesetGfx ? tileset->min->getFilePath() : "");
-    this->ui->outputTilFileEdit->setText(isTilesetGfx ? tileset->til->getFilePath() : "");
-    this->ui->outputSlaFileEdit->setText(isTilesetGfx ? tileset->sla->getFilePath() : "");
-    this->ui->outputTlaFileEdit->setText(isTilesetGfx ? tileset->tla->getFilePath() : "");
-    this->ui->tblFileEdit->setText(isTableset ? tableset->darkTbl->getFilePath() : "");
-
-    if (dun == nullptr) {
-        this->ui->outputDunFileLabel->setVisible(false);
-        this->ui->outputDunFileEdit->setVisible(false);
-        this->ui->outputDunFileEdit->setText("");
-        this->ui->outputDunFileBrowseButton->setVisible(false);
-    } else {
-        this->ui->outputDunFileEdit->setText(dun->getFilePath());
-        switch (dun->getNumLayers()) {
-        case 0:
-            this->ui->dunLayerTilesRadioButton->setChecked(true);
-            break;
-        case 1:
-            this->ui->dunLayerProtectionsRadioButton->setChecked(true);
-            break;
-        case 2:
-            this->ui->dunLayerMonstersRadioButton->setChecked(true);
-            break;
-        case 3:
-            this->ui->dunLayerObjectsRadioButton->setChecked(true);
-            break;
-        }
-    }
-
-    this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx && !isTableset && !isGfxset && !isCpp && !isSmk);
-    this->ui->tilSettingsGroupBox->setEnabled(isTilesetGfx);
-    this->ui->tblSettingsGroupBox->setEnabled(isTableset);
 }
 
 void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
 {
     QString filePath = this->gfx->getFilePath();
-    const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : (this->isTableset ? tr("TBL Files (*.tbl *.TBL)") : (this->isGfxset ? tr("CL2 Files (*.cl2 *.CL2)") : (this->isCpp ? tr("CPP Files (*.cpp *.CPP *.c *.C)") : (this->isSmk ? tr("SMK Files (*.smk *.SMK)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)")))));
-    const QString title = this->isTableset ? tr("Save Dist TBL as...") : (this->isCpp ? tr("Save Source as...") : tr("Save Graphics as..."));
+    const QString filter = tr("HS/HSV Files (*.hs *.HS *.hsv *.HSV)");
+    const QString title = tr("Save Hero as...");
 
     QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, title, filter);
 
@@ -96,89 +44,6 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
     }
 
     this->ui->outputCelFileEdit->setText(saveFilePath);
-
-    if (this->isTileset) {
-        int extPos = saveFilePath.lastIndexOf('.', saveFilePath.length() - 1);
-        if (extPos >= 0 && extPos < saveFilePath.length() - 1) {
-            bool upperCase = saveFilePath.at(extPos + 1).isUpper();
-            saveFilePath.chop(saveFilePath.length() - extPos);
-            this->ui->outputClsFileEdit->setText(saveFilePath + (upperCase ? "S.CEL" : "s.cel"));
-            this->ui->outputMinFileEdit->setText(saveFilePath + (upperCase ? ".MIN" : ".min"));
-            this->ui->outputTilFileEdit->setText(saveFilePath + (upperCase ? ".TIL" : ".til"));
-            this->ui->outputSlaFileEdit->setText(saveFilePath + (upperCase ? ".SLA" : ".sla"));
-            this->ui->outputTlaFileEdit->setText(saveFilePath + (upperCase ? ".TLA" : ".tla"));
-        }
-    }
-}
-
-void SaveAsDialog::on_outputClsFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Special-CEL as..."), tr("CEL Files (*.cel *.CEL)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputClsFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputMinFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save MIN as..."), tr("MIN Files (*.min *.MIN)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputMinFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputTilFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TIL as..."), tr("TIL Files (*.til *.TIL)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputTilFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputSlaFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SLA as..."), tr("SLA Files (*.sla *.SLA)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputSlaFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputTlaFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TLA as..."), tr("TLA Files (*.tla *.TLA)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputTlaFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save DUN as..."), tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->outputDunFileEdit->setText(saveFilePath);
-}
-
-void SaveAsDialog::on_tblFileBrowseButton_clicked()
-{
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Dark TBL as..."), tr("TBL Files (*.tbl *.TBL)"));
-
-    if (saveFilePath.isEmpty())
-        return;
-
-    this->ui->tblFileEdit->setText(saveFilePath);
 }
 
 void SaveAsDialog::on_saveButton_clicked()
@@ -195,31 +60,7 @@ void SaveAsDialog::on_saveButton_clicked()
     } else {
         params.clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     }
-    // tilSettingsGroupBox: upscaled, min, til, sla and tla files
-    if (this->ui->minUpscaledYesRadioButton->isChecked()) {
-        params.upscaled = SAVE_UPSCALED_TYPE::TRUE;
-    } else if (this->ui->minUpscaledNoRadioButton->isChecked()) {
-        params.upscaled = SAVE_UPSCALED_TYPE::FALSE;
-    } else {
-        params.upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
-    }
-    params.clsFilePath = this->ui->outputClsFileEdit->text();
-    params.minFilePath = this->ui->outputMinFileEdit->text();
-    params.tilFilePath = this->ui->outputTilFileEdit->text();
-    params.slaFilePath = this->ui->outputSlaFileEdit->text();
-    params.tlaFilePath = this->ui->outputTlaFileEdit->text();
-    params.dunFilePath = this->ui->outputDunFileEdit->text();
-    if (this->ui->dunLayerTilesRadioButton->isChecked()) {
-        params.dunLayerNum = 0;
-    } else if (this->ui->dunLayerProtectionsRadioButton->isChecked()) {
-        params.dunLayerNum = 1;
-    } else if (this->ui->dunLayerMonstersRadioButton->isChecked()) {
-        params.dunLayerNum = 2;
-    } else if (this->ui->dunLayerObjectsRadioButton->isChecked()) {
-        params.dunLayerNum = 3;
-    }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
-    params.tblFilePath = this->ui->tblFileEdit->text();
 
     this->close();
 

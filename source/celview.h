@@ -15,11 +15,7 @@
 #include <QWidget>
 
 #include "d1gfx.h"
-#include "mergeframesdialog.h"
 #include "pushbuttonwidget.h"
-#include "resizedialog.h"
-#include "smkaudiowidget.h"
-#include "upscaledialog.h"
 
 #define ZOOM_LIMIT 10
 #define CEL_SCENE_SPACING 8
@@ -122,7 +118,6 @@ private:
     void setFrameIndex(int frameIndex);
     void updateGroupIndex();
     void setGroupIndex(int groupIndex);
-    void showAudioInfo();
     bool framePos(QPoint &pos) const;
 
 signals:
@@ -165,9 +160,6 @@ private slots:
 private:
     Ui::CelView *ui;
     CelScene celScene = CelScene(this);
-    SmkAudioWidget *smkAudioWidget = nullptr;
-    PushButtonWidget *audioBtn;
-    bool audioMuted;
 
     D1Pal *pal;
     D1Gfx *gfx;
