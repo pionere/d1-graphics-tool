@@ -89,17 +89,6 @@ public:
 
     void framePixelClicked(const QPoint &pos, int flags);
     void framePixelHovered(const QPoint &pos) const;
-    void createFrame(bool append);
-    void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
-    void addToCurrentFrame(const QString &imagefilePath);
-    void duplicateCurrentFrame(bool wholeGroup);
-    void replaceCurrentFrame(const QString &imagefilePath);
-    void removeCurrentFrame(bool wholeGroup);
-
-    QString copyCurrentPixels(bool values) const;
-    void pasteCurrentPixels(const QString &pixels);
-    QImage copyCurrentImage() const;
-    void pasteCurrentImage(const QImage &image);
 
     void displayFrame();
     void toggleBottomPanel();
@@ -109,7 +98,6 @@ public:
 private:
     void updateFields();
     void updateLabel();
-    void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void setFrameIndex(int frameIndex);
     void updateGroupIndex();
     void setGroupIndex(int groupIndex);

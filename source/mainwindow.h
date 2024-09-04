@@ -86,7 +86,6 @@ public:
     void openNew(OPEN_GFX_TYPE gfxType);
     void openFile(const OpenAsParam &params);
     void openFiles(const QStringList &filePaths);
-    void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
     void updateTrns(const std::vector<D1Trn *> &newTrns);

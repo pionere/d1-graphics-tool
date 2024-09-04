@@ -849,22 +849,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     ProgressDialog::done();
 }
 
-void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append)
-{
-    if (filePaths.isEmpty()) {
-        return;
-    }
-
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
-
-    if (this->celView != nullptr) {
-        this->celView->insertImageFiles(mode, filePaths, append);
-    }
-
-    // Clear loading message from status bar
-    ProgressDialog::done();
-}
-
 void MainWindow::openPalFiles(const QStringList &filePaths, PaletteWidget *widget)
 {
     QString firstFound;
