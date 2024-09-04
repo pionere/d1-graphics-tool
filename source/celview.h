@@ -103,7 +103,6 @@ public:
 
     void displayFrame();
     void toggleBottomPanel();
-    bool toggleMute();
 
     static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 

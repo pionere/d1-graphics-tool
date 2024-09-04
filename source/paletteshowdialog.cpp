@@ -1,10 +1,14 @@
 #include "paletteshowdialog.h"
 
+#include <QGraphicsPixmapItem>
+
 #include "config.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "pushbuttonwidget.h"
 #include "ui_paletteshowdialog.h"
+
+#include "dungeon/defs.h"
 
 static QImage *loadImageARGB32(const QString &path)
 {

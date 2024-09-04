@@ -71,7 +71,6 @@ D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
 
 D1GfxFrame::~D1GfxFrame()
 {
-    delete this->frameAudio;
 }
 
 int D1GfxFrame::getWidth() const

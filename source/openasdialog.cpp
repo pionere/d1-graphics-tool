@@ -29,10 +29,10 @@ void OpenAsDialog::initialize()
 
 void OpenAsDialog::updateFields()
 {
-    QString filePath = this->ui->inputFileEdit->text();
+    /*QString filePath = this->ui->inputFileEdit->text();
     bool hasInputFile = !filePath.isEmpty();
 
-    this->ui->celSettingsGroupBox->setEnabled(hasInputFile);
+    this->ui->celSettingsGroupBox->setEnabled(hasInputFile);*/
 }
 
 void OpenAsDialog::on_inputFileBrowseButton_clicked()

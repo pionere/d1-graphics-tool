@@ -674,10 +674,6 @@ void CelView::toggleBottomPanel()
     this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
 }
 
-bool CelView::toggleMute()
-{
-}
-
 void CelView::updateGroupIndex()
 {
     int i = 0;

@@ -65,8 +65,6 @@ set(PROJECT_SOURCES
         source/d1image.h
         source/d1pal.cpp
         source/d1pal.h
-        source/d1pcx.cpp
-        source/d1pcx.h
         source/d1trn.cpp
         source/d1trn.h
         source/dungeon/automap.cpp
