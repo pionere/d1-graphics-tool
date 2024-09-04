@@ -8,7 +8,7 @@
 #include "openasdialog.h"
 #include "progressdialog.h"
 
-#include "dungeon/enums.h"
+//#include "dungeon/all.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
 {

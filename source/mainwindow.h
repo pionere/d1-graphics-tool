@@ -90,8 +90,6 @@ public:
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
     void updateTrns(const std::vector<D1Trn *> &newTrns);
-    void resize(const ResizeParam &params);
-    void upscale(const UpscaleParam &params);
 
     void gfxChanged(D1Gfx *gfx);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);

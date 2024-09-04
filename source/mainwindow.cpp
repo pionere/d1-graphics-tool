@@ -928,48 +928,6 @@ void MainWindow::saveFile(const SaveAsParam &params)
     ProgressDialog::done();
 }
 
-void MainWindow::resize(const ResizeParam &params)
-{
-    // ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_UPDATE_WINDOW);
-
-    if (this->celView != nullptr) {
-        this->celView->resize(params);
-    }
-
-    // Clear loading message from status bar
-    // ProgressDialog::done();
-    /*std::function<void()> func = [this, params]() {
-        this->celView->resize(params);
-    };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_UPDATE_WINDOW, std::move(func));*/
-}
-
-void MainWindow::upscale(const UpscaleParam &params)
-{
-    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW);
-
-    if (this->celView != nullptr) {
-        this->celView->upscale(params);
-    }
-
-    // Clear loading message from status bar
-    ProgressDialog::done();*/
-    std::function<void()> func = [this, params]() {
-        if (this->celView != nullptr) {
-            this->celView->upscale(params);
-        }
-    };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW, std::move(func));
-}
-
-void MainWindow::mergeFrames(const MergeFramesParam &params)
-{
-    if (this->celView != nullptr) {
-        this->celView->mergeFrames(params);
-    }
-    this->updateWindow();
-}
-
 void MainWindow::supportedImageFormats(QStringList &allSupportedImageFormats)
 {
     // get supported image file types
