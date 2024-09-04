@@ -22,8 +22,4 @@ private:
 class D1CelFrame {
 public:
     static bool load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params);
-
-private:
-    static unsigned computeWidthFromHeader(const QByteArray &rawData);
-    static unsigned computeWidthFromData(const QByteArray &rawData, bool clipped);
 };

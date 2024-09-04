@@ -5,93 +5,10 @@
 
 #include "progressdialog.h"
 
-unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
-{
-    // Reading the frame header {CEL FRAME HEADER}
-    const quint8 *data = (const quint8 *)rawFrameData.constData();
-    const quint16 *header = (const quint16 *)data;
-    const quint8 *dataEnd = data + rawFrameData.size();
-
-    if (rawFrameData.size() < SUB_HEADER_SIZE)
-        return 0; // invalid header
-    unsigned celFrameHeaderSize = SwapLE16(header[0]);
-    if (celFrameHeaderSize & 1)
-        return 0; // invalid header
-    if (celFrameHeaderSize < SUB_HEADER_SIZE)
-        return 0; // invalid header
-    if (data + celFrameHeaderSize > dataEnd)
-        return 0; // invalid header
-    // Decode the 32 pixel-lines blocks to calculate the image width
-    unsigned celFrameWidth = 0;
-    quint16 lastFrameOffset = celFrameHeaderSize;
-    celFrameHeaderSize /= 2;
-    for (unsigned i = 1; i < celFrameHeaderSize; i++) {
-        quint16 nextFrameOffset = SwapLE16(header[i]);
-        if (nextFrameOffset == 0) {
-            // check if the remaining entries are zero
-            while (++i < celFrameHeaderSize) {
-                if (SwapLE16(header[i]) != 0)
-                    return 0; // invalid header
-            }
-            break;
-        }
-
-        unsigned pixelCount = 0;
-        // ensure the offsets are consecutive
-        if (lastFrameOffset >= nextFrameOffset)
-            return 0; // invalid data
-        for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
-            if (data + j >= dataEnd)
-                return 0; // invalid data
-
-            quint8 readByte = data[j];
-            if (/*readByte >= 0x00 &&*/ readByte < 0x80) {
-                // Transparent pixels
-                pixelCount += readByte;
-            } else if (/*readByte >= 0x80 &&*/ readByte < 0xBF) {
-                // RLE encoded palette index
-                pixelCount += (0xBF - readByte);
-                j++;
-            } else /*if (readByte >= 0xBF && readByte <= 0xFF)*/ {
-                // Palette indices
-                pixelCount += (256 - readByte);
-                j += (256 - readByte);
-            }
-        }
-
-        unsigned width = pixelCount / CEL_BLOCK_HEIGHT;
-        // The calculated width has to be identical for each 32 pixel-line block
-        if (celFrameWidth == 0) {
-            if (width == 0)
-                return 0; // invalid data
-        } else {
-            if (celFrameWidth != width)
-                return 0; // mismatching width values
-        }
-
-        celFrameWidth = width;
-        lastFrameOffset = nextFrameOffset;
-    }
-
-    return celFrameWidth;
-}
-
 bool D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsParam &params)
 {
     unsigned width = 0;
-    // frame.clipped = false;
-    if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
-        // Try to compute frame width from frame header
-        width = D1Cl2Frame::computeWidthFromHeader(rawData);
-        frame.clipped = true; // Assume the presence of the {CEL FRAME HEADER}
-    } else {
-        if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
-            // Try to compute frame width from frame header
-            width = D1Cl2Frame::computeWidthFromHeader(rawData);
-            frame.clipped = true;
-        }
-    }
-    frame.width = params.celWidth == 0 ? width : params.celWidth;
+    frame.width = width;
 
     // check if a positive width was found
     if (frame.width == 0)

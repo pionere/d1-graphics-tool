@@ -89,25 +89,6 @@ MainWindow &dMainWindow()
     return *theMainWindow;
 }
 
-void MainWindow::remapColors(const RemapParam &params)
-{
-    QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
-    int index = params.colorTo.first;
-    const int dc = params.colorTo.first == params.colorTo.second ? 0 : (params.colorTo.first < params.colorTo.second ? 1 : -1);
-    for (int i = params.colorFrom.first; i <= params.colorFrom.second; i++, index += dc) {
-        D1GfxPixel source = (i == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(i);
-        D1GfxPixel replacement = (index == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
-        replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(source, replacement));
-    }
-
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
-
-        this->gfx->replacePixels(replacements, params, 0);
-
-    // Clear loading message from status bar
-    ProgressDialog::done();
-}
-
 void MainWindow::updatePalette(const D1Pal* pal)
 {
     const QString &path = pal->getFilePath();
@@ -251,20 +232,6 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
 
 void MainWindow::pointHovered(const QPoint &pos)
 {
-}
-
-void MainWindow::dunClicked(const QPoint &cell, int flags)
-{
-}
-
-void MainWindow::dunHovered(const QPoint &cell)
-{
-    this->pointHovered(cell);
-}
-
-int MainWindow::getDunBuilderMode() const
-{
-    return -1;
 }
 
 void MainWindow::frameModified(D1GfxFrame *frame)
@@ -774,7 +741,7 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
         }
     } else {
         // gfxFilePath.isEmpty()
-        result->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
+        result->gfx->setType(D1CEL_TYPE::V1_REGULAR);
     }
 }
 

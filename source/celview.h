@@ -95,15 +95,11 @@ public:
     void duplicateCurrentFrame(bool wholeGroup);
     void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame(bool wholeGroup);
-    void mergeFrames(const MergeFramesParam &params);
 
     QString copyCurrentPixels(bool values) const;
     void pasteCurrentPixels(const QString &pixels);
     QImage copyCurrentImage() const;
     void pasteCurrentImage(const QImage &image);
-
-    void resize(const ResizeParam &params);
-    void upscale(const UpscaleParam &params);
 
     void displayFrame();
     void toggleBottomPanel();

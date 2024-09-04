@@ -18,9 +18,6 @@
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
 
-class D1SmkAudioData;
-class RemapParam;
-
 class D1GfxPixel {
 public:
     static D1GfxPixel transparentPixel();
@@ -66,14 +63,9 @@ class D1GfxFrame : public QObject {
     friend class D1CelFrame;
     friend class D1Cl2;
     friend class D1Cl2Frame;
-    friend class D1CelTileset;
-    friend class D1CelTilesetFrame;
     friend class D1Gfx;
     friend class D1ImageFrame;
     friend class D1Pcx;
-    friend class D1Wav;
-    friend class D1Smk;
-    friend class Upscaler;
 
 public:
     D1GfxFrame() = default;
@@ -97,7 +89,6 @@ public:
     // functions for smk-frames
     QPointer<D1Pal>& getFramePal();
     void setFramePal(D1Pal *pal);
-    D1SmkAudioData *getFrameAudio();
 
 protected:
     int width = 0;
@@ -109,7 +100,6 @@ protected:
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
     // fields of smk-frames
     QPointer<D1Pal> framePal = nullptr;
-    D1SmkAudioData *frameAudio = nullptr;
 };
 
 typedef enum gfx_file_index {
@@ -142,12 +132,7 @@ class D1Gfx : public QObject {
 
     friend class D1Cel;
     friend class D1Cl2;
-    friend class D1CelTileset;
-    friend class D1Min;
     friend class D1Pcx;
-    friend class D1Wav;
-    friend class D1Smk;
-    friend class Upscaler;
 
 public:
     D1Gfx() = default;
@@ -175,7 +160,6 @@ public:
     void swapFrames(unsigned frameIndex0, unsigned frameIndex1);
     void mergeFrames(unsigned frameIndex0, unsigned frameIndex1);
     void addGfx(D1Gfx *gfx);
-    void replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params, int verbose);
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);
@@ -198,26 +182,8 @@ public:
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
-    void patch(int gfxFileIndex, bool silent); // gfx_file_index
-    static int getPatchFileIndex(QString &filePath);
-
 private:
     bool isClipped(int frameIndex) const;
-    bool moveImage(D1GfxFrame* currFrame, int dx, int dy);
-
-    bool patchCathedralDoors(bool silent);
-    bool patchCatacombsDoors(bool silent);
-    bool patchCavesDoors(bool silent);
-    bool patchMagicCircle(bool silent);
-    bool patchCandle(bool silent);
-    bool patchLeftShrine(bool silent);
-    bool patchRightShrine(bool silent);
-    bool patchCryptLight(bool silent);
-    bool patchWarriorStand(bool silent);
-    bool patchFallGWalk(bool silent);
-    bool patchGoatLDie(bool silent);
-    bool patchSplIcons(bool silent);
-    bool patchCursorIcons(bool silent);
 
 protected:
     D1CEL_TYPE type = D1CEL_TYPE::V1_REGULAR;

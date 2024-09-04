@@ -83,7 +83,7 @@ public:
     void updateWindow();
 
     void openArgFile(const char *arg);
-    void openNew(OPEN_GFX_TYPE gfxType, OPEN_CLIPPED_TYPE clipped);
+    void openNew(OPEN_GFX_TYPE gfxType);
     void openFile(const OpenAsParam &params);
     void openFiles(const QStringList &filePaths);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
@@ -92,18 +92,13 @@ public:
     void updateTrns(const std::vector<D1Trn *> &newTrns);
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
-    void mergeFrames(const MergeFramesParam &params);
 
     void gfxChanged(D1Gfx *gfx);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void updatePalette(const D1Pal* pal);
-    void remapColors(const RemapParam &params);
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);
     void pointHovered(const QPoint &pos);
-    void dunClicked(const QPoint &cell, int flags);
-    void dunHovered(const QPoint &cell);
-    int getDunBuilderMode() const;
     void frameModified(D1GfxFrame *frame);
 
     void initPaletteCycle();
