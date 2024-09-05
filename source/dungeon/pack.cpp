@@ -14,8 +14,30 @@ static void PackItem(PkItemStruct* pis, const ItemStruct* is)
 	} else if (is->_itype == ITYPE_PLACEHOLDER) {
 		pis->wIndx = static_cast<uint16_t>(IDI_PHOLDER);
 		pis->dwBuff = static_cast<uint32_t>(is->_iPHolder);
+	} else if (is->_iIdx != IDI_EAR) {
+		pis->dwSeed = is->_iSeed;
+		pis->wIndx = is->_iIdx;
+		pis->wCI = is->_iCreateInfo;
+		pis->bId = is->_iIdentified;
+		pis->bDur = is->_iDurability;
+		pis->bMDur = is->_iMaxDur;
+		pis->bCh = is->_iCharges;
+		pis->bMCh = is->_iMaxCharges;
+		static_assert(GOLD_MAX_LIMIT <= UINT16_MAX, "PackPkItem stores the gold value in 2 bytes.");
+		static_assert(MAXCAMPAIGNSIZE <= 16, "PackPkItem stores the campaign status in 2 bytes.");
+		pis->wValue = static_cast<uint16_t>(is->_ivalue);
 	} else {
-		PackPkItem(pis, is);
+		pis->wIndx = static_cast<uint16_t>(IDI_EAR);
+		pis->wCI = *(uint16_t*)&is->_iName[7];
+		pis->dwSeed = *(int32_t*)&is->_iName[9];
+		pis->bId = is->_iName[13];
+		pis->bDur = is->_iName[14];
+		pis->bMDur = is->_iName[15];
+		pis->bCh = is->_iName[16];
+		pis->bMCh = is->_iName[17];
+		static_assert(MAXCHARLEVEL < (1 << 6), "PackPkItem stores the player level of ears in 6 bits.");
+		pis->wValue = static_cast<uint16_t>(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCERER) << 6));
+		pis->dwBuff = *(uint32_t*)&is->_iName[19];
 	}
 }
 

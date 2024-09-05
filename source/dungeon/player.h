@@ -13,6 +13,7 @@ DEVILUTION_BEGIN_NAMESPACE
 #define plx(x)         players[x]
 #define PLR_WALK_SHIFT 8
 
+extern int mypnum;
 extern PlayerStruct players[MAX_PLRS];
 
 void CreatePlayer(const _uiheroinfo& heroinfo);

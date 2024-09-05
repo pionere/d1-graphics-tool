@@ -106,6 +106,24 @@ inline void copy_cstr(char (&dest)[N1], const char (&src)[N2])
 	memcpy(dest, src, std::min(N1, (unsigned)(((N2 + sizeof(int) - 1) / sizeof(int)) * sizeof(int))));
 }
 
+/*
+ * Copy POD (Plain-Old-Data) from source to dest.
+ */
+template <class T>
+inline void copy_pod(T& dest, T& src)
+{
+	memcpy(&dest, &src, sizeof(T));
+}
+
+/*
+ * Copy POD (Plain-Old-Data) from constant source to dest.
+ */
+template <class T>
+inline void copy_pod(T& dest, const T& src)
+{
+	memcpy(&dest, &src, sizeof(T));
+}
+
 /*  SStrCopy @ 501
  *
  *  Copies a string from src to dest (including NULL terminator)

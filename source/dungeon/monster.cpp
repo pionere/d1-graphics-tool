@@ -261,13 +261,6 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	mon->_mMaxDamage2 = uniqm->mMaxDamage2;
 	mon->_mMagicRes = uniqm->mMagicRes;
 
-	if (uniqm->mTrnName != NULL) {
-		/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
-		LoadFileWithMem(filestr, ColorTrns[uniquetrans]);*/
-		static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
-		mon->_muniqtrans = uniquetrans++;
-	}
-
 	mon->_mHit += uniqm->mUnqHit;
 	mon->_mHit2 += uniqm->mUnqHit2;
 	mon->_mMagic += uniqm->mUnqMag;

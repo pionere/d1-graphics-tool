@@ -120,7 +120,10 @@ typedef struct ItemStruct {
 	int32_t _iSeed;
 	uint16_t _iIdx;        // item_indexes
 	uint16_t _iCreateInfo; // icreateinfo_flag
-	int _ix;
+	union {
+		int _ix;
+		int _iPHolder; // parent index of a placeholder entry in InvList
+	};
 	int _iy;
 	int _iCurs;   // item_cursor_graphic
 	int _itype;   // item_type

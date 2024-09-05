@@ -10,6 +10,189 @@ DEVILUTION_BEGIN_NAMESPACE
 int mypnum;
 PlayerStruct players[MAX_PLRS];
 
+/* Data related to the player-animation types. */
+static const PlrAnimType PlrAnimTypes[NUM_PGTS] = {
+	// clang-format off
+	{ "ST", PGX_STAND },     // PGT_STAND_TOWN
+	{ "AS", PGX_STAND },     // PGT_STAND_DUNGEON
+	{ "WL", PGX_WALK },      // PGT_WALK_TOWN
+	{ "AW", PGX_WALK },      // PGT_WALK_DUNGEON
+	{ "AT", PGX_ATTACK },    // PGT_ATTACK
+	{ "FM", PGX_FIRE },      // PGT_FIRE
+	{ "LM", PGX_LIGHTNING }, // PGT_LIGHTNING
+	{ "QM", PGX_MAGIC },     // PGT_MAGIC
+	{ "BL", PGX_BLOCK },     // PGT_BLOCK
+	{ "HT", PGX_GOTHIT },    // PGT_GOTHIT
+	{ "DT", PGX_DEATH },     // PGT_DEATH
+	// clang-format on
+};
+/**
+ * Specifies the number of frames of each animation for each player class.
+   STAND, ATTACK, WALK, BLOCK, DEATH, SPELL, GOTHIT
+ */
+const BYTE PlrGFXAnimLens[NUM_CLASSES][NUM_PLR_ANIMS] = {
+	// clang-format off
+	{ 10, 8, 16, 20, 2, 6, 20 },
+	{  8, 8, 18, 16, 4, 7, 20 },
+	{  8, 8, 16, 12, 6, 8, 20 },
+#ifdef HELLFIRE
+	{  8, 8, 16, 18, 3, 6, 20 },
+	{  8, 8, 18, 16, 4, 7, 20 },
+	{ 10, 8, 16, 20, 2, 6, 20 },
+#endif
+	// clang-format on
+};
+/** Specifies the frame of attack and spell animation for which the action is triggered, for each player class. */
+const BYTE PlrGFXAnimActFrames[NUM_CLASSES][2] = {
+	// clang-format off
+	{  9, 14 },
+	{ 10, 12 },
+	{ 12,  9 },
+#ifdef HELLFIRE
+	{ 12, 13 },
+	{ 10, 12 },
+	{  9, 14 },
+#endif
+	// clang-format on
+};
+/** Specifies the length of a frame for each animation (player_graphic_idx). */
+const BYTE PlrAnimFrameLens[NUM_PGXS] = { 4, 1, 1, 1, 1, 1, 3, 1, 2 };
+
+/** Maps from player_class to starting stat in strength. */
+const int StrengthTbl[NUM_CLASSES] = {
+	// clang-format off
+	20,
+	15,
+	10,
+#ifdef HELLFIRE
+	20,
+	15,
+	35,
+#endif
+	// clang-format on
+};
+/** Maps from player_class to starting stat in magic. */
+const int MagicTbl[NUM_CLASSES] = {
+	// clang-format off
+	10,
+	20,
+	30,
+#ifdef HELLFIRE
+	15,
+	20,
+	 0,
+#endif
+	// clang-format on
+};
+/** Maps from player_class to starting stat in dexterity. */
+const int DexterityTbl[NUM_CLASSES] = {
+	// clang-format off
+	20,
+	25,
+	20,
+#ifdef HELLFIRE
+	20,
+	25,
+	10,
+#endif
+	// clang-format on
+};
+/** Maps from player_class to starting stat in vitality. */
+const int VitalityTbl[NUM_CLASSES] = {
+	// clang-format off
+	30,
+	20,
+	20,
+#ifdef HELLFIRE
+	25,
+	20,
+	35,
+#endif
+	// clang-format on
+};
+const BYTE Abilities[NUM_CLASSES] = {
+	SPL_REPAIR, SPL_DISARM, SPL_RECHARGE,
+#ifdef HELLFIRE
+	SPL_WHITTLE, SPL_IDENTIFY, SPL_BUCKLE,
+#endif
+};
+
+/** Specifies the experience point limit of each player level. */
+const unsigned PlrExpLvlsTbl[MAXCHARLEVEL + 1] = {
+	0,
+	2000,
+	4620,
+	8040,
+	12489,
+	18258,
+	25712,
+	35309,
+	47622,
+	63364,
+	83419,
+	108879,
+	141086,
+	181683,
+	231075,
+	313656,
+	424067,
+	571190,
+	766569,
+	1025154,
+	1366227,
+	1814568,
+	2401895,
+	3168651,
+	4166200,
+	5459523,
+	7130496,
+	9281874,
+	12042092,
+	15571031,
+	20066900,
+	25774405,
+	32994399,
+	42095202,
+	53525811,
+	67831218,
+	85670061,
+	107834823,
+	135274799,
+	169122009,
+	210720231,
+	261657253,
+	323800420,
+	399335440,
+	490808349,
+	601170414,
+	733825617,
+	892680222,
+	1082908612,
+	1310707109,
+	1583495809
+};
+
+/** Specifies the experience point limit of skill-level. */
+const unsigned SkillExpLvlsTbl[MAXSPLLEVEL + 1] = {
+	8040,
+	25712,
+	63364,
+	141086,
+	313656,
+	766569,
+	1814568,
+	4166200,
+	9281874,
+	20066900,
+	42095202,
+	85670061,
+	169122009,
+	323800420,
+	601170414,
+	1082908612,
+};
+
+
 /**
  * @param c plr_classes value
  */
@@ -117,9 +300,7 @@ void IncreasePlrStr(int pnum)
 {
 	int v;
 
-	if ((unsigned)pnum >= MAX_PLRS) {
-		dev_fatal("IncreasePlrStr: illegal player %d", pnum);
-	}
+	dev_assert((unsigned)pnum < MAX_PLRS, "IncreasePlrStr: illegal player %d", pnum);
 	if (plr._pStatPts <= 0)
 		return;
 	plr._pStatPts--;
@@ -146,9 +327,7 @@ void IncreasePlrMag(int pnum)
 {
 	int v, ms;
 
-	if ((unsigned)pnum >= MAX_PLRS) {
-		dev_fatal("IncreasePlrMag: illegal player %d", pnum);
-	}
+	dev_assert((unsigned)pnum < MAX_PLRS, "IncreasePlrMag: illegal player %d", pnum);
 	if (plr._pStatPts <= 0)
 		return;
 	plr._pStatPts--;
@@ -185,9 +364,7 @@ void IncreasePlrDex(int pnum)
 {
 	int v;
 
-	if ((unsigned)pnum >= MAX_PLRS) {
-		dev_fatal("IncreasePlrDex: illegal player %d", pnum);
-	}
+	dev_assert((unsigned)pnum < MAX_PLRS, "IncreasePlrDex: illegal player %d", pnum);
 	if (plr._pStatPts <= 0)
 		return;
 	plr._pStatPts--;
@@ -215,9 +392,7 @@ void IncreasePlrVit(int pnum)
 {
 	int v, ms;
 
-	if ((unsigned)pnum >= MAX_PLRS) {
-		dev_fatal("IncreasePlrVit: illegal player %d", pnum);
-	}
+	dev_assert((unsigned)pnum < MAX_PLRS, "IncreasePlrVit: illegal player %d", pnum);
 	if (plr._pStatPts <= 0)
 		return;
 	plr._pStatPts--;
@@ -252,9 +427,7 @@ void RestorePlrHpVit(int pnum)
 {
 	int hp;
 
-	if ((unsigned)pnum >= MAX_PLRS) {
-		dev_fatal("RestorePlrHpVit: illegal player %d", pnum);
-	}
+	dev_assert((unsigned)pnum < MAX_PLRS, "RestorePlrHpVit: illegal player %d", pnum);
 	// base hp
 	hp = plr._pBaseVit << (6 + 1);
 
