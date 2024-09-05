@@ -177,7 +177,7 @@ bool D1Wav::load(D1Gfx &gfx, int track, const QString &filePath)
         unsigned frameLen = gfx.frameLen;
         if (frameLen == 0) {
             // assert(frameCount != 0);
-            frameLen = ((uint64_t)sampleCount * 1000000 + frameCount * bitRate - 1) / (frameCount * bitRate);
+            frameLen = ((uint64_t)sampleCount * 1000000 + (uint64_t)frameCount * bitRate - 1) / (frameCount * bitRate);
             gfx.frameLen = frameLen;
         }
         uint64_t tmp = (uint64_t)bitRate * frameLen;

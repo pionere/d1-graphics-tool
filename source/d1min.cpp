@@ -384,7 +384,8 @@ void D1Min::setSubtileWidth(int width)
         for (unsigned i = 0; i < this->frameReferences.size(); i++) {
             std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int y = 0; y < this->subtileHeight; y++) {
-                auto sit = frameReferencesList.begin() + y * width + prevWidth;
+                unsigned idx = y * width + prevWidth;
+                auto sit = frameReferencesList.begin() + idx;
                 frameReferencesList.insert(sit, diff, 0);
             }
         }
@@ -414,7 +415,8 @@ void D1Min::setSubtileWidth(int width)
         for (unsigned i = 0; i < this->frameReferences.size(); i++) {
             std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int y = 0; y < this->subtileHeight; y++) {
-                auto sit = frameReferencesList.begin() + (y + 1) * width;
+                unsigned idx = (y + 1) * width;
+                auto sit = frameReferencesList.begin() + idx;
                 frameReferencesList.erase(sit, sit + diff);
             }
         }
