@@ -36,6 +36,7 @@ void GetItemSeed(ItemStruct* is);
 void SetGoldItemValue(ItemStruct* is, int value);
 void CreatePlrItems(int pnum);
 void SetItemData(int ii, int idata);
+void SetItemSData(ItemStruct* is, int idata);
 void CreateRndItem(int x, int y, unsigned quality);
 void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc);
 void DeleteItems(int ii);

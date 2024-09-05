@@ -20,6 +20,8 @@ DEVILUTION_BEGIN_NAMESPACE
 /* The cooldown period of the rage skill. */
 #define RAGE_COOLDOWN_TICK 1200
 
+#define SPELL_MASK(sn)     ((uint64_t)1 << (sn - 1))
+
 extern const SpellData spelldata[NUM_SPELLS];
 
 DEVILUTION_END_NAMESPACE

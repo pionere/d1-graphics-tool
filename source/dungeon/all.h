@@ -17,9 +17,11 @@
 #include "structs.h"
 
 #include "engine.h"
+#include "gendung.h"
 #include "interfac.h"
 #include "itemdat.h"
 #include "items.h"
+#include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
 #include "pack.h"

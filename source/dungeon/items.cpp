@@ -779,6 +779,12 @@ void SetItemData(int ii, int idata)
 	//is->_iPLSkill = SPL_NULL;
 }
 
+void SetItemSData(ItemStruct* is, int idata)
+{
+	SetItemData(MAXITEMS, idata);
+	copy_pod(*is, items[MAXITEMS]);
+}
+
 /**
  * @brief Set a new unique seed value on the given item
  * @param is Item to update

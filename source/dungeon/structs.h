@@ -150,6 +150,7 @@ typedef struct ItemStruct {
 	//int _iAnimWidth;
 	//int _iAnimXOffset;
 	BOOL _iPostDraw; // should be drawn during the post-phase (magic rock on the stand) -- unused
+	BOOL _iIdentified;
 	char _iName[32];
 	int _ivalue;
 	int _iIvalue;
@@ -181,6 +182,7 @@ typedef struct ItemStruct {
 	BYTE _iPLManaSteal;
 	BYTE _iPLLifeSteal;
 	BYTE _iPLCrit;
+	BOOLEAN _iStatFlag;
 	int _iUid; // unique_item_indexes
 	BYTE _iPLFMinDam;
 	BYTE _iPLFMaxDam;
@@ -1012,3 +1014,26 @@ typedef struct TriggerStruct {
 	int _tlvl;  // dungeon_level
 	int _tmsg;  // window_messages
 } TriggerStruct;
+
+//////////////////////////////////////////////////
+// diabloui
+//////////////////////////////////////////////////
+
+typedef struct _uidefaultstats {
+	uint16_t dsStrength;
+	uint16_t dsMagic;
+	uint16_t dsDexterity;
+	uint16_t dsVitality;
+} _uidefaultstats;
+
+typedef struct _uiheroinfo {
+	BYTE hiIdx;
+	BYTE hiLevel;
+	BYTE hiClass;
+	BYTE hiRank;
+	char hiName[16];
+	int16_t hiStrength;
+	int16_t hiMagic;
+	int16_t hiDexterity;
+	int16_t hiVitality;
+} _uiheroinfo;
