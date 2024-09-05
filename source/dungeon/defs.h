@@ -17,6 +17,8 @@
 #define ALIGNMENT
 #define ALIGN
 
+#define INV_SLOT_SIZE_PX 28
+
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
 #define SwapLE64(X) qToLittleEndian((quint64)(X))
