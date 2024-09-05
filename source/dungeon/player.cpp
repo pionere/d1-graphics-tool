@@ -473,5 +473,19 @@ void RestorePlrHpVit(int pnum)
 	CalcPlrInv(pnum, true);
 }
 
+void CalculateGold(int pnum)
+{
+	ItemStruct* pi;
+	int i, gold;
+
+	gold = 0;
+	pi = plr._pInvList;
+	for (i = NUM_INV_GRID_ELEM; i > 0; i--, pi++) {
+		if (pi->_itype == ITYPE_GOLD)
+			gold += pi->_ivalue;
+	}
+
+	plr._pGold = gold;
+}
 
 DEVILUTION_END_NAMESPACE

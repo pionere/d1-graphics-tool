@@ -67,8 +67,10 @@ set(PROJECT_SOURCES
         source/d1pal.h
         source/d1trn.cpp
         source/d1trn.h
+        source/dungeon/cursor.cpp
         source/dungeon/engine.cpp
         source/dungeon/interfac.cpp
+        source/dungeon/inv.cpp
         source/dungeon/itemdat.cpp
         source/dungeon/items.cpp
         source/dungeon/monstdat.cpp

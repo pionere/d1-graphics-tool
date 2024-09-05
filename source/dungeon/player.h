@@ -26,6 +26,8 @@ void IncreasePlrDex(int pnum);
 void IncreasePlrVit(int pnum);
 void RestorePlrHpVit(int pnum);
 
+void CalculateGold(int pnum);
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __PLAYER_H__ */

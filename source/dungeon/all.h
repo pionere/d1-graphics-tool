@@ -16,9 +16,11 @@
 #include "enums.h"
 #include "structs.h"
 
+#include "cursor.h"
 #include "engine.h"
 #include "gendung.h"
 #include "interfac.h"
+#include "inv.h"
 #include "itemdat.h"
 #include "items.h"
 #include "lighting.h"

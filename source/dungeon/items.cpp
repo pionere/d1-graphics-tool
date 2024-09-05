@@ -1780,6 +1780,143 @@ void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
 	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
 }
 
+static bool SmithItemOk(int i)
+{
+	return AllItemsList[i].itype != ITYPE_MISC
+	 && AllItemsList[i].itype != ITYPE_GOLD
+	 && AllItemsList[i].itype != ITYPE_RING
+	 && AllItemsList[i].itype != ITYPE_AMULET;
+}
+
+static int RndSmithItem(unsigned lvl)
+{
+#if UNOPTIMIZED_RNDITEMS
+	int i, j, ri;
+	int ril[ITEM_RNDDROP_MAX];
+
+	ri = 0;
+	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+		if (!SmithItemOk(i) || lvl < AllItemsList[i].iMinMLvl)
+			continue;
+		for (j = AllItemsList[i].iRnd; j > 0; j--) {
+			ril[ri] = i;
+			ri++;
+		}
+	}
+
+	return ril[random_(50, ri)];
+#else
+	int i, ri;
+	int ril[NUM_IDI - IDI_RNDDROP_FIRST];
+
+	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+		ril[i - IDI_RNDDROP_FIRST] = (!SmithItemOk(i) || lvl < AllItemsList[i].iMinMLvl) ? 0 : AllItemsList[i].iRnd;
+	}
+	ri = 0;
+	for (i = 0; i < (NUM_IDI - IDI_RNDDROP_FIRST); i++)
+		ri += ril[i];
+	// assert(ri != 0 && ri <= 0x7FFF);
+	ri = random_low(50, ri);
+	for (i = 0; ; i++) {
+		ri -= ril[i];
+		if (ri < 0)
+			break;
+	}
+	return i + IDI_RNDDROP_FIRST;
+#endif
+}
+
+static bool WitchItemOk(int i)
+{
+	return AllItemsList[i].itype == ITYPE_STAFF
+	 || (AllItemsList[i].itype == ITYPE_MISC
+	  && (AllItemsList[i].iMiscId == IMISC_SCROLL
+	   || AllItemsList[i].iMiscId == IMISC_RUNE));
+}
+
+static int RndWitchItem(unsigned lvl)
+{
+#if UNOPTIMIZED_RNDITEMS
+	int i, j, ri;
+	int ril[ITEM_RNDDROP_MAX];
+
+	ri = 0;
+	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+		if (!WitchItemOk(i) || lvl < AllItemsList[i].iMinMLvl)
+			continue;
+		for (j = AllItemsList[i].iRnd; j > 0; j--) {
+			ril[ri] = i;
+			ri++;
+		}
+	}
+
+	return ril[random_(51, ri)];
+#else
+	int i, ri;
+	int ril[NUM_IDI - IDI_RNDDROP_FIRST];
+
+	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+		ril[i - IDI_RNDDROP_FIRST] = (!WitchItemOk(i) || lvl < AllItemsList[i].iMinMLvl) ? 0 : AllItemsList[i].iRnd;
+	}
+	ri = 0;
+	for (i = 0; i < (NUM_IDI - IDI_RNDDROP_FIRST); i++)
+		ri += ril[i];
+	// assert(ri != 0 && ri <= 0x7FFF);
+	ri = random_low(51, ri);
+	for (i = 0; ; i++) {
+		ri -= ril[i];
+		if (ri < 0)
+			break;
+	}
+	return i + IDI_RNDDROP_FIRST;
+#endif
+}
+
+static bool HealerItemOk(int i)
+{
+	return AllItemsList[i].iMiscId == IMISC_REJUV
+		|| AllItemsList[i].iMiscId == IMISC_FULLREJUV
+		|| AllItemsList[i].iMiscId == IMISC_SCROLL;
+}
+
+static int RndHealerItem(unsigned lvl)
+{
+#if UNOPTIMIZED_RNDITEMS
+	int i, j, ri;
+	int ril[ITEM_RNDDROP_MAX];
+
+	ri = 0;
+	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+		if (!HealerItemOk(i) || lvl < AllItemsList[i].iMinMLvl)
+			continue;
+		for (j = AllItemsList[i].iRnd; j > 0; j--) {
+			ril[ri] = i;
+			ri++;
+		}
+	}
+
+	return ril[random_(50, ri)];
+#else
+	int i, ri;
+	int ril[NUM_IDI - IDI_RNDDROP_FIRST];
+
+	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+		ril[i - IDI_RNDDROP_FIRST] = (!HealerItemOk(i) || lvl < AllItemsList[i].iMinMLvl) ? 0 : AllItemsList[i].iRnd;
+	}
+	ri = 0;
+	for (i = 0; i < (NUM_IDI - IDI_RNDDROP_FIRST); i++)
+		ri += ril[i];
+	// assert(ri != 0 && ri <= 0x7FFF);
+	ri = random_low(50, ri);
+	for (i = 0; ; i++) {
+		ri -= ril[i];
+		if (ri < 0)
+			break;
+	}
+	return i + IDI_RNDDROP_FIRST;
+#endif
+}
+
 void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI)
 {
 	if (wIndex == IDI_GOLD) {
