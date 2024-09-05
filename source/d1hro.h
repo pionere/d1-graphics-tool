@@ -6,7 +6,7 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
-class D1Hero {
+class D1Hero : public QObject {
     Q_OBJECT
 
 public:
