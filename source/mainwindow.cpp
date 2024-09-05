@@ -26,6 +26,7 @@
 #include "config.h"
 #include "d1cel.h"
 #include "d1cl2.h"
+#include "d1hro.h"
 #include "ui_mainwindow.h"
 
 static MainWindow *theMainWindow;
@@ -135,7 +136,7 @@ void MainWindow::setBaseTrn(const QString &path)
 
     D1Pal *resPal = this->trnBase->getResultingPalette();
     // update entities
-    this->gfx->setPalette(resPal);
+    // this->hero->setPalette(resPal);
 }
 
 void MainWindow::updateWindow()
@@ -277,9 +278,9 @@ void MainWindow::reloadConfig()
     }
 }
 
-void MainWindow::gfxChanged(D1Gfx *gfx)
+void MainWindow::heroChanged(D1Hero *hero)
 {
-    this->gfx = gfx;
+    this->hero = hero;
     this->updateWindow();
 }
 
@@ -472,28 +473,28 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_DiabloHero_triggered()
 {
-    this->openNew(OPEN_GFX_TYPE::BASIC);
+    this->openNew(OPEN_GFX_TYPE::DIABLO);
 }
 
 void MainWindow::on_actionNew_HellfireHero_triggered()
 {
-    this->openNew(OPEN_GFX_TYPE::BASIC);
+    this->openNew(OPEN_GFX_TYPE::HELLFIRE);
 }
 
 void MainWindow::on_actionToggle_View_triggered()
 {
 }
 
-void MainWindow::openNew(OPEN_GFX_TYPE gfxType)
+void MainWindow::openNew(OPEN_HERO_TYPE heroType)
 {
     OpenAsParam params = OpenAsParam();
-    params.gfxType = gfxType;
+    params.heroType = heroType;
     this->openFile(params);
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("hsv/sv Files (*.sv *.SV *.hsv *.HSV)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("hro Files (*.hro *.HRO)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -508,29 +509,29 @@ void MainWindow::on_actionLoad_triggered()
     QString filter;
     // assert(this->celView != nullptr);
     title = tr("Load Hero");
-    filter = tr("hsv/sv Files (*.sv *.SV *.hsv *.HSV)");
+    filter = tr("hro Files (*.hro *.HRO)");
 
-    QString gfxFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
-    if (gfxFilePath.isEmpty()) {
+    QString filePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
+    if (filePath.isEmpty()) {
         return;
     }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
 
-    QString fileLower = gfxFilePath.toLower();
+    QString fileLower = filePath.toLower();
     OpenAsParam params = OpenAsParam();
-    params.celFilePath = gfxFilePath;
+    params.celFilePath = filePath;
 
-        D1Gfx *gfx = new D1Gfx();
-        gfx->setPalette(this->trnBase->getResultingPalette());
+        D1Hero *hero = new D1Hero();
+        // hero->setPalette(this->trnBase->getResultingPalette());
 
-        if (D1Cel::load(*gfx, gfxFilePath, params) || D1Cl2::load(*gfx, gfxFilePath, params)) {
-            delete this->gfx;
-            // this->gfx = gfx;
-            this->gfxChanged(gfx);
-        } else /* if (fileLower.endsWith(".cl2"))*/ {
-            delete gfx;
-            dProgressFail() << tr("Failed loading GFX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+        if (hero->load(filePath, params)) {
+            delete this->hero;
+            // this->hero = hero;
+            this->heroChanged(hero);
+        } else {
+            delete hero;
+            dProgressFail() << tr("Failed loading HRO file: %1.").arg(QDir::toNativeSeparators(filePath));
         }
 
 
@@ -632,7 +633,7 @@ static void closeFileContent(LoadFileContent *result)
 
     MemFree(result->trnUnique);
     MemFree(result->trnBase);
-    MemFree(result->gfx);
+    MemFree(result->hero);
 
     qDeleteAll(result->pals);
     result->pals.clear();
@@ -675,16 +676,14 @@ static void findFirstFile(const QString &dir, const QString &filter, QString &fi
 
 void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadFileContent *result)
 {
-    QString gfxFilePath = params.celFilePath;
+    QString filePath = params.celFilePath;
 
     // Check file extension
     FILE_CONTENT fileType = FILE_CONTENT::EMPTY;
-    if (!gfxFilePath.isEmpty()) {
-        QString fileLower = gfxFilePath.toLower();
-        if (fileLower.endsWith(".hs"))
-            fileType = FILE_CONTENT::CEL;
-        else if (fileLower.endsWith(".hsv"))
-            fileType = FILE_CONTENT::CL2;
+    if (!filePath.isEmpty()) {
+        QString fileLower = filePath.toLower();
+        if (fileLower.endsWith(".hro"))
+            fileType = FILE_CONTENT::HRO;
         else
             fileType = FILE_CONTENT::UNKNOWN;
     }
@@ -695,11 +694,10 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     if (instance != nullptr) {
         instance->on_actionClose_triggered();
     }
-    // result->fileType = fileType;
     // result->pal = nullptr;
     // result->trnUnique = nullptr;
     // result->trnBase = nullptr;
-    result->gfx = nullptr;
+    result->hero = nullptr;
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
 
@@ -718,29 +716,25 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     result->trnBase = newBaseTrn;
 
     QString baseDir;
-    if (!gfxFilePath.isEmpty()) {
-        QFileInfo celFileInfo = QFileInfo(gfxFilePath);
+    if (!filePath.isEmpty()) {
+        QFileInfo celFileInfo = QFileInfo(filePath);
 
         baseDir = celFileInfo.absolutePath();
     }
 
     result->baseDir = baseDir;
 
-    result->gfx = new D1Gfx();
-    result->gfx->setPalette(result->trnBase->getResultingPalette());
-    if (fileType == FILE_CONTENT::CEL) {
-        if (!D1Cel::load(*result->gfx, gfxFilePath, params)) {
-            MainWindow::failWithError(instance, result, tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
-            return;
-        }
-    } else if (fileType == FILE_CONTENT::CL2) {
-        if (!D1Cl2::load(*result->gfx, gfxFilePath, params)) {
-            MainWindow::failWithError(instance, result, tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+    result->hero = D1Hero::instance();
+    // assert(result->hero != nullptr);
+    // result->hero->setPalette(result->trnBase->getResultingPalette());
+    if (fileType == FILE_CONTENT::HRO) {
+        if (!result->hero->load(filePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading HRO file: %1.").arg(QDir::toNativeSeparators(filePath)));
             return;
         }
     } else {
-        // gfxFilePath.isEmpty()
-        result->gfx->setType(D1CEL_TYPE::V1_REGULAR);
+        // filePath.isEmpty()
+        // result->hero->setType(D1CEL_TYPE::V1_REGULAR);
     }
 }
 
@@ -755,7 +749,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->pal = fileContent.pal;
     this->trnUnique = fileContent.trnUnique;
     this->trnBase = fileContent.trnBase;
-    this->gfx = fileContent.gfx;
+    this->hero = fileContent.hero;
 
     this->pals = fileContent.pals;
 
@@ -774,7 +768,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     QWidget *view;
         // build a CelView
         this->celView = new CelView(this);
-        this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
+        this->celView->initialize(this->pal, this->hero, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -892,13 +886,11 @@ void MainWindow::saveFile(const SaveAsParam &params)
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
-    QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
+    QString filePath = params.celFilePath.isEmpty() ? this->hero->getFilePath() : params.celFilePath;
     if (!filePath.isEmpty()) {
         QString fileLower = filePath.toLower();
-            if (fileLower.endsWith(".hs")) {
-                D1Cel::save(*this->gfx, params);
-            } else if (fileLower.endsWith(".hsv")) {
-                D1Cl2::save(*this->gfx, params);
+            if (fileLower.endsWith(".hro")) {
+                this->hero->save(params);
             } else {
                 // Clear loading message from status bar
                 ProgressDialog::done();
@@ -958,7 +950,7 @@ void MainWindow::on_actionOpenAs_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    if (this->gfx->getFilePath().isEmpty()) {
+    if (this->hero->getFilePath().isEmpty()) {
         this->on_actionSaveAs_triggered();
         return;
     }
@@ -971,7 +963,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx);
+    this->saveAsDialog->initialize(this->hero);
     this->saveAsDialog->show();
 }
 
@@ -983,7 +975,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->palWidget);
     MemFree(this->trnUniqueWidget);
     MemFree(this->trnBaseWidget);
-    MemFree(this->gfx);
+    MemFree(this->hero);
 
     qDeleteAll(this->pals);
     this->pals.clear();
@@ -1033,20 +1025,7 @@ QString MainWindow::FileContentTypeTxt(FILE_CONTENT fileType)
 
 void MainWindow::on_actionDiff_triggered()
 {
-    QString filter;
-
-        QString filePath = this->gfx->getFilePath();
-        QString fileLower = filePath.toLower();
-        if (fileLower.endsWith(".sv")) {
-            filter = "SV Files (*.sv *.SV)";
-        } else if (fileLower.endsWith(".hsv")) {
-            filter = "HSV Files (*.hsv *.HSV)";
-        } else {
-            QMessageBox::critical(this, tr("Error"), tr("Not supported."));
-            return;
-        }
-
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), filter);
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), "hro Files (*.hro *.HRO)");
     if (openFilePath.isEmpty()) {
         return;
     }
@@ -1065,8 +1044,7 @@ void MainWindow::on_actionDiff_triggered()
         QString header;
         switch (fileContent.fileType) {
         case FILE_CONTENT::EMPTY: dProgressErr() << tr("File is empty."); break;
-        case FILE_CONTENT::CEL:
-        case FILE_CONTENT::CL2: this->gfx->compareTo(fileContent.gfx, header); break;
+        case FILE_CONTENT::HRO: this->hero->compareTo(fileContent.hero, header); break;
         default: dProgressErr() << tr("Not supported."); break;
         }
     }

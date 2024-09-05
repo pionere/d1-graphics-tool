@@ -3,15 +3,9 @@
 #include <QDialog>
 #include <QString>
 
-class D1Gfx;
+class D1Hero;
 
-enum class SAVE_CLIPPED_TYPE {
-    AUTODETECT,
-    TRUE,
-    FALSE,
-};
-
-enum class SAVE_UPSCALED_TYPE {
+enum class SAVE_HELLFIRE_TYPE {
     AUTODETECT,
     TRUE,
     FALSE,
@@ -19,9 +13,8 @@ enum class SAVE_UPSCALED_TYPE {
 
 class SaveAsParam {
 public:
-    QString celFilePath;
-    int groupNum = 0;
-    SAVE_CLIPPED_TYPE clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
+    QString filePath;
+    SAVE_HELLFIRE_TYPE hellfireHero = SAVE_HELLFIRE_TYPE::AUTODETECT;
     bool autoOverwrite = false;
 };
 
@@ -36,10 +29,10 @@ public:
     explicit SaveAsDialog(QWidget *parent);
     ~SaveAsDialog();
 
-    void initialize(D1Gfx *gfx);
+    void initialize(D1Hero *hero);
 
 private slots:
-    void on_outputCelFileBrowseButton_clicked();
+    void on_outputFileBrowseButton_clicked();
     void on_saveButton_clicked();
     void on_saveCancelButton_clicked();
 
@@ -48,5 +41,5 @@ private slots:
 
 private:
     Ui::SaveAsDialog *ui;
-    D1Gfx *gfx = nullptr;
+    D1Hero *hero = nullptr;
 };

@@ -4,7 +4,7 @@
 
 #include "ui_saveasdialog.h"
 
-#include "d1gfx.h"
+#include "d1hero.h"
 #include "mainwindow.h"
 
 SaveAsDialog::SaveAsDialog(QWidget *parent)
@@ -19,22 +19,21 @@ SaveAsDialog::~SaveAsDialog()
     delete ui;
 }
 
-void SaveAsDialog::initialize(D1Gfx *g)
+void SaveAsDialog::initialize(D1Hero *h)
 {
-    this->gfx = g;
+    this->hero = h;
 
     // initialize the main file-path
-    QString filePath = this->gfx->getFilePath();
-    this->ui->outputCelFileEdit->setText(filePath);
+    QString filePath = this->hero->getFilePath();
+    this->ui->outputFileEdit->setText(filePath);
     // reset fields
-    this->ui->celClippedAutoRadioButton->setChecked(true);
-    this->ui->celGroupEdit->setText("0");
+    this->ui->hellfireHeroAutoRadioButton->setChecked(true);
 }
 
-void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
+void SaveAsDialog::on_outputFileBrowseButton_clicked()
 {
-    QString filePath = this->gfx->getFilePath();
-    const QString filter = tr("HS/HSV Files (*.hs *.HS *.hsv *.HSV)");
+    QString filePath = this->hero->getFilePath();
+    const QString filter = tr("hro Files (*.hro *.HRO)");
     const QString title = tr("Save Hero as...");
 
     QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, title, filter);
@@ -43,22 +42,21 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
         return;
     }
 
-    this->ui->outputCelFileEdit->setText(saveFilePath);
+    this->ui->outputFileEdit->setText(saveFilePath);
 }
 
 void SaveAsDialog::on_saveButton_clicked()
 {
     SaveAsParam params;
     // main cel file
-    params.celFilePath = this->ui->outputCelFileEdit->text();
-    // celSettingsGroupBox: groupNum, clipped
-    params.groupNum = this->ui->celGroupEdit->nonNegInt();
-    if (this->ui->celClippedYesRadioButton->isChecked()) {
-        params.clipped = SAVE_CLIPPED_TYPE::TRUE;
-    } else if (this->ui->celClippedNoRadioButton->isChecked()) {
-        params.clipped = SAVE_CLIPPED_TYPE::FALSE;
+    params.celFilePath = this->ui->outputFileEdit->text();
+    // heroSettingsGroupBox: hellfireHero
+    if (this->ui->hellfireHeroYesRadioButton->isChecked()) {
+        params.hellfireHero = SAVE_HELLFIRE_TYPE::TRUE;
+    } else if (this->ui->hellfireHeroNoRadioButton->isChecked()) {
+        params.hellfireHero = SAVE_HELLFIRE_TYPE::FALSE;
     } else {
-        params.clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
+        params.hellfireHero = SAVE_HELLFIRE_TYPE::AUTODETECT;
     }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 

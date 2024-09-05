@@ -10,9 +10,17 @@ enum class OPEN_CLIPPED_TYPE {
 
 enum class OPEN_GFX_TYPE {
     AUTODETECT,
+    DIABLO,
+    HELLFIRE,
     BASIC,
     TILESET,
     GFXSET,
+};
+
+enum class OPEN_HERO_TYPE {
+    AUTODETECT,
+    DIABLO,
+    HELLFIRE,
 };
 
 enum class OPEN_UPSCALED_TYPE {
@@ -25,6 +33,7 @@ class OpenAsParam {
 public:
     QString celFilePath;
     OPEN_GFX_TYPE gfxType = OPEN_GFX_TYPE::AUTODETECT;
+    OPEN_HERO_TYPE heroType = OPEN_HERO_TYPE::AUTODETECT;
 };
 
 namespace Ui {

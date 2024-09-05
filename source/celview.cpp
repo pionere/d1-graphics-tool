@@ -236,17 +236,13 @@ CelView::CelView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
-    this->on_zoomEdit_escPressed();
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
     // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
-    QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
     QObject::connect(this->ui->groupIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_groupIndexEdit_escPressed()));
-    QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
-    QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -260,10 +256,10 @@ CelView::~CelView()
     delete ui;
 }
 
-void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
+void CelView::initialize(D1Pal *p, D1Hero *h, bool bottomPanelHidden)
 {
     this->pal = p;
-    this->gfx = g;
+    this->hero = h;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
@@ -273,46 +269,11 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
 void CelView::setPal(D1Pal *p)
 {
     this->pal = p;
-
-    if (this->gfx->getType() == D1CEL_TYPE::SMK) {
-        for (int i = this->currentFrameIndex; i >= 0; i--) {
-            QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-            if (!fp.isNull()) {
-                if (fp.data() != p) {
-                    // update the palette of the current frame if it does not match
-                    i = this->currentFrameIndex;
-                    this->gfx->getFrame(i)->setFramePal(p);
-                    // remove subsequent palette if it matches
-                    while (++i < this->gfx->getFrameCount()) {
-                        QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-                        if (!fp.isNull()) {
-                            if (fp.data() == p) {
-                                this->gfx->getFrame(i)->setFramePal(nullptr);
-                            }
-                            break;
-                        }
-                    }
-                    this->gfx->setModified();
-                }
-                break;
-            }
-        }
-    }
 }
 
-void CelView::setGfx(D1Gfx *g)
+void CelView::setHero(D1Hero *h)
 {
-    // stop playback
-    if (this->playTimer != 0) {
-        this->on_playStopButton_clicked();
-    }
-
-    this->gfx = g;
-
-    if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
-        this->currentFrameIndex = 0;
-    }
-    this->updateGroupIndex();
+    this->hero = h;
 }
 
 void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
@@ -330,7 +291,7 @@ void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modif
 // Displaying CEL file path information
 void CelView::updateLabel()
 {
-    CelView::setLabelContent(this->ui->celLabel, this->gfx->getFilePath(), this->gfx->isModified());
+    CelView::setLabelContent(this->ui->celLabel, this->hero->getFilePath(), this->hero->isModified());
 }
 
 void CelView::updateFields()
@@ -342,20 +303,13 @@ void CelView::updateFields()
     this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
 
     // Set current and maximum group text
-    count = this->gfx->getGroupCount();
+    count = 0;
     this->ui->groupIndexEdit->setText(
         QString::number(count != 0 ? this->currentGroupIndex + 1 : 0));
     this->ui->groupNumberEdit->setText(QString::number(count));
 
     // Set current and maximum frame text
     int frameIndex = this->currentFrameIndex;
-    if (this->ui->framesGroupCheckBox->isChecked() && count != 0) {
-        std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
-        frameIndex -= groupFrameIndices.first;
-        count = groupFrameIndices.second - groupFrameIndices.first + 1;
-    } else {
-        count = this->gfx->getFrameCount();
-    }
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
@@ -373,23 +327,13 @@ int CelView::getCurrentFrameIndex() const
 
 void CelView::framePixelClicked(const QPoint &pos, int flags)
 {
-    if (this->gfx->getFrameCount() == 0) {
-        return;
-    }
-    D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-    QPoint p = pos;
+    /*QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    dMainWindow().frameClicked(frame, p, flags);
+    dMainWindow().frameClicked(frame, p, flags);*/
 }
 
 bool CelView::framePos(QPoint &pos) const
 {
-    if (this->gfx->getFrameCount() != 0) {
-        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-        pos -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-        return pos.x() >= 0 && pos.x() < frame->getWidth() && pos.y() >= 0 && pos.y() < frame->getHeight();
-    }
-
     return false;
 }
 
@@ -412,7 +356,7 @@ void CelView::displayFrame()
     this->celScene.clear();
 
     // Getting the current frame to display
-    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
+    QImage celFrame = QImage();
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -445,62 +389,8 @@ void CelView::toggleBottomPanel()
     this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
 }
 
-void CelView::updateGroupIndex()
-{
-    int i = 0;
-
-    for (; i < this->gfx->getGroupCount(); i++) {
-        std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(i);
-
-        if (this->currentFrameIndex >= groupFrameIndices.first
-            && this->currentFrameIndex <= groupFrameIndices.second) {
-            break;
-        }
-    }
-    this->currentGroupIndex = i;
-}
-
-void CelView::setFrameIndex(int frameIndex)
-{
-    const int frameCount = this->gfx->getFrameCount();
-    if (frameCount == 0) {
-        // this->currentFrameIndex = 0;
-        // this->currentGroupIndex = 0;
-        // this->displayFrame();
-        return;
-    }
-    if (frameIndex >= frameCount) {
-        frameIndex = frameCount - 1;
-    } else if (frameIndex < 0) {
-        frameIndex = 0;
-    }
-    this->currentFrameIndex = frameIndex;
-    this->updateGroupIndex();
-
-    this->displayFrame();
-}
-
 void CelView::setGroupIndex(int groupIndex)
 {
-    const int groupCount = this->gfx->getGroupCount();
-    if (groupCount == 0) {
-        // this->currentFrameIndex = 0;
-        // this->currentGroupIndex = 0;
-        // this->displayFrame();
-        return;
-    }
-    if (groupIndex >= groupCount) {
-        groupIndex = groupCount - 1;
-    } else if (groupIndex < 0) {
-        groupIndex = 0;
-    }
-    std::pair<int, int> prevGroupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
-    int frameIndex = this->currentFrameIndex - prevGroupFrameIndices.first;
-    std::pair<int, int> newGroupFrameIndices = this->gfx->getGroupFrameIndices(groupIndex);
-    this->currentGroupIndex = groupIndex;
-    this->currentFrameIndex = std::min(newGroupFrameIndices.first + frameIndex, newGroupFrameIndices.second);
-
-    this->displayFrame();
 }
 
 void CelView::ShowContextMenu(const QPoint &pos)
@@ -522,98 +412,6 @@ void CelView::on_framesGroupCheckBox_clicked()
 
 void CelView::on_firstFrameButton_clicked()
 {
-    int nextFrameIndex = 0;
-    const bool moveFrame = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
-    if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
-        nextFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).first;
-        if (moveFrame) {
-            for (int i = this->currentFrameIndex; i > nextFrameIndex; i--) {
-                this->gfx->swapFrames(i, i - 1);
-            }
-        }
-    } else {
-        if (moveFrame) {
-            this->gfx->swapFrames(UINT_MAX, this->currentFrameIndex);
-        }
-    }
-    this->setFrameIndex(nextFrameIndex);
-}
-
-void CelView::on_previousFrameButton_clicked()
-{
-    int nextFrameIndex = this->currentFrameIndex - 1;
-    const bool moveFrame = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
-    if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
-        nextFrameIndex = std::max(nextFrameIndex, this->gfx->getGroupFrameIndices(this->currentGroupIndex).first);
-    }
-    if (moveFrame) {
-        this->gfx->swapFrames(nextFrameIndex, this->currentFrameIndex);
-    }
-    this->setFrameIndex(nextFrameIndex);
-}
-
-void CelView::on_nextFrameButton_clicked()
-{
-    int nextFrameIndex = this->currentFrameIndex + 1;
-    const bool moveFrame = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
-    if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
-        nextFrameIndex = std::min(nextFrameIndex, this->gfx->getGroupFrameIndices(this->currentGroupIndex).second);
-    }
-    if (moveFrame) {
-        this->gfx->swapFrames(this->currentFrameIndex, nextFrameIndex);
-    }
-    this->setFrameIndex(nextFrameIndex);
-}
-
-void CelView::on_lastFrameButton_clicked()
-{
-    int nextFrameIndex = this->gfx->getFrameCount() - 1;
-    const bool moveFrame = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
-    if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
-        nextFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).second;
-        if (moveFrame) {
-            for (int i = this->currentFrameIndex; i < nextFrameIndex; i++) {
-                this->gfx->swapFrames(i, i + 1);
-            }
-        }
-    } else {
-        if (moveFrame) {
-            this->gfx->swapFrames(this->currentFrameIndex, UINT_MAX);
-        }
-    }
-    this->setFrameIndex(nextFrameIndex);
-}
-
-void CelView::on_frameIndexEdit_returnPressed()
-{
-    int nextFrameIndex = this->ui->frameIndexEdit->text().toInt() - 1;
-
-    if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
-        std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
-        nextFrameIndex += groupFrameIndices.first;
-        nextFrameIndex = std::max(nextFrameIndex, groupFrameIndices.first);
-        nextFrameIndex = std::min(nextFrameIndex, groupFrameIndices.second);
-    }
-    this->setFrameIndex(nextFrameIndex);
-
-    this->on_frameIndexEdit_escPressed();
-}
-
-void CelView::on_frameIndexEdit_escPressed()
-{
-    // update frameIndexEdit
-    this->updateFields();
-    this->ui->frameIndexEdit->clearFocus();
-}
-
-void CelView::on_firstGroupButton_clicked()
-{
-    this->setGroupIndex(0);
-}
-
-void CelView::on_previousGroupButton_clicked()
-{
-    this->setGroupIndex(this->currentGroupIndex - 1);
 }
 
 void CelView::on_groupIndexEdit_returnPressed()
@@ -630,134 +428,6 @@ void CelView::on_groupIndexEdit_escPressed()
     // update groupIndexEdit
     this->updateFields();
     this->ui->groupIndexEdit->clearFocus();
-}
-
-void CelView::on_nextGroupButton_clicked()
-{
-    this->setGroupIndex(this->currentGroupIndex + 1);
-}
-
-void CelView::on_lastGroupButton_clicked()
-{
-    this->setGroupIndex(this->gfx->getGroupCount() - 1);
-}
-
-void CelView::on_zoomOutButton_clicked()
-{
-    this->celScene.zoomOut();
-    this->on_zoomEdit_escPressed();
-}
-
-void CelView::on_zoomInButton_clicked()
-{
-    this->celScene.zoomIn();
-    this->on_zoomEdit_escPressed();
-}
-
-void CelView::on_zoomEdit_returnPressed()
-{
-    QString zoom = this->ui->zoomEdit->text();
-
-    this->celScene.setZoom(zoom);
-
-    this->on_zoomEdit_escPressed();
-}
-
-void CelView::on_zoomEdit_escPressed()
-{
-    this->ui->zoomEdit->setText(this->celScene.zoomText());
-    this->ui->zoomEdit->clearFocus();
-}
-
-void CelView::on_playDelayEdit_returnPressed()
-{
-    unsigned playDelay = this->ui->playDelayEdit->text().toUInt();
-
-    if (playDelay != 0)
-        this->currentPlayDelay = playDelay;
-
-    this->on_playDelayEdit_escPressed();
-}
-
-void CelView::on_playDelayEdit_escPressed()
-{
-    // update playDelayEdit
-    this->updateFields();
-    this->ui->playDelayEdit->clearFocus();
-}
-
-void CelView::on_playStopButton_clicked()
-{
-    if (this->playTimer != 0) {
-        this->killTimer(this->playTimer);
-        this->playTimer = 0;
-
-        // restore the currentFrameIndex
-        this->currentFrameIndex = this->origFrameIndex;
-        // restore palette
-        if (!this->origPal.isNull()) {
-            dMainWindow().updatePalette(this->origPal.data());
-        }
-        dMainWindow().resetPaletteCycle();
-        // change the label of the button
-        this->ui->playStopButton->setText(tr("Play"));
-        // enable the related fields
-        this->ui->playDelayEdit->setReadOnly(false);
-        this->ui->playComboBox->setEnabled(true);
-        return;
-    }
-    // disable the related fields
-    this->ui->playDelayEdit->setReadOnly(true);
-    this->ui->playComboBox->setEnabled(false);
-    // change the label of the button
-    this->ui->playStopButton->setText(tr("Stop"));
-    // preserve the currentFrameIndex
-    this->origFrameIndex = this->currentFrameIndex;
-    // preserve the palette
-    this->origPal = this->pal;
-    dMainWindow().initPaletteCycle();
-
-    this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
-}
-
-void CelView::timerEvent(QTimerEvent *event)
-{
-    if (this->gfx->getGroupCount() == 0) {
-        return;
-    }
-    std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
-
-    int nextFrameIndex = this->currentFrameIndex + 1;
-    Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
-    if (playType == Qt::Unchecked) {
-        // normal playback
-        if (nextFrameIndex > groupFrameIndices.second)
-            nextFrameIndex = groupFrameIndices.first;
-    } else if (playType == Qt::PartiallyChecked) {
-        // playback till the original frame
-        if (nextFrameIndex > this->origFrameIndex)
-            nextFrameIndex = groupFrameIndices.first;
-    } else {
-        // playback from the original frame
-        if (nextFrameIndex > groupFrameIndices.second)
-            nextFrameIndex = this->origFrameIndex;
-    }
-    this->currentFrameIndex = nextFrameIndex;
-    if (this->gfx->getType() == D1CEL_TYPE::SMK) {
-        D1GfxFrame *frame = this->gfx->getFrame(nextFrameIndex);
-        QPointer<D1Pal>& pal = frame->getFramePal();
-        if (!pal.isNull()) {
-            dMainWindow().updatePalette(pal.data());
-        }
-    }
-    int cycleType = this->ui->playComboBox->currentIndex();
-    if (cycleType == 0) {
-        // normal playback
-        this->displayFrame();
-    } else {
-        dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
-        // this->displayFrame();
-    }
 }
 
 void CelView::dragEnterEvent(QDragEnterEvent *event)

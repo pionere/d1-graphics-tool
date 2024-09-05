@@ -14,7 +14,7 @@
 #include <QTimer>
 #include <QWidget>
 
-#include "d1gfx.h"
+#include "d1hero.h"
 #include "pushbuttonwidget.h"
 
 #define ZOOM_LIMIT 10
@@ -80,9 +80,9 @@ public:
     explicit CelView(QWidget *parent);
     ~CelView();
 
-    void initialize(D1Pal *pal, D1Gfx *gfx, bool bottomPanelHidden);
+    void initialize(D1Pal *pal, D1Hero *hero, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
-    void setGfx(D1Gfx *gfx);
+    void setHero(D1Hero *hero);
 
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
@@ -98,8 +98,6 @@ public:
 private:
     void updateFields();
     void updateLabel();
-    void setFrameIndex(int frameIndex);
-    void updateGroupIndex();
     void setGroupIndex(int groupIndex);
     bool framePos(QPoint &pos) const;
 
@@ -110,29 +108,9 @@ signals:
 private slots:
     void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
-    void on_previousFrameButton_clicked();
-    void on_nextFrameButton_clicked();
-    void on_lastFrameButton_clicked();
-    void on_frameIndexEdit_returnPressed();
-    void on_frameIndexEdit_escPressed();
 
-    void on_firstGroupButton_clicked();
-    void on_previousGroupButton_clicked();
     void on_groupIndexEdit_returnPressed();
     void on_groupIndexEdit_escPressed();
-    void on_nextGroupButton_clicked();
-    void on_lastGroupButton_clicked();
-
-    void on_zoomOutButton_clicked();
-    void on_zoomInButton_clicked();
-    void on_zoomEdit_returnPressed();
-    void on_zoomEdit_escPressed();
-
-    void on_playDelayEdit_returnPressed();
-    void on_playDelayEdit_escPressed();
-    void on_playStopButton_clicked();
-
-    void timerEvent(QTimerEvent *event) override;
 
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
@@ -145,7 +123,7 @@ private:
     CelScene celScene = CelScene(this);
 
     D1Pal *pal;
-    D1Gfx *gfx;
+    D1Hero *hero;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     int origFrameIndex = 0;
