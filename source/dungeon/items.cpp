@@ -11,162 +11,727 @@ ItemStruct items[MAXITEMS + 1];
 //BYTE* itemanims[NUM_IFILE];
 int numitems;
 
-/** Maps from direction to delta X-offset in an 3x3 area. */
-static const int area3x3_x[NUM_DIRS + 1] = { 0, 1, 0, -1, -1, -1, 0, 1, 1 };
-/** Maps from direction to delta Y-offset in an 3x3 area. */
-static const int area3x3_y[NUM_DIRS + 1] = { 0, 1, 1, 1, 0, -1, -1, -1, 0 };
-
-static void SetItemLoc(int ii, int x, int y)
-{
-	items[ii]._ix = x;
-	items[ii]._iy = y;
-	if (ii != MAXITEMS)
-		dItem[x][y] = ii + 1;
-}
-
-/**
- * Check the location if an item can be placed there in the init phase.
- * Must not consider the player's position, since it is already initialized
- * and messes up the pseudo-random generated dungeon.
- */
-static bool RandomItemPlace(int x, int y)
-{
-	return (dMonster[x][y] | /*dPlayer[x][y] |*/ dItem[x][y] | dObject[x][y]
-	 | (dFlags[x][y] & BFLAG_OBJ_PROTECT) | nSolidTable[dPiece[x][y]]) == 0;
-}
-
-static void GetRandomItemSpace(int ii)
-{
-	int x, y;
-
-	do {
-		x = random_(12, DSIZEX) + DBORDERX;
-		y = random_(12, DSIZEY) + DBORDERY;
-	} while (!RandomItemPlace(x, y));
-	SetItemLoc(ii, x, y);
-}
-
-static void GetRandomItemSpace(int randarea, int ii)
-{
-	int x, y, i, j, tries;
-	constexpr int numTries = 1000;
-	// assert(randarea > 0 && randarea < DBORDERX && randarea < DBORDERY);
-
-	tries = numTries;
-	while (true) {
-		x = random_(0, DSIZEX) + DBORDERX;
-		y = random_(0, DSIZEY) + DBORDERY;
-		for (i = x; i < x + randarea; i++) {
-			for (j = y; j < y + randarea; j++) {
-				if (!RandomItemPlace(i, j))
-					goto fail;
-			}
-		}
-		break;
-fail:
-		tries--;
-		if (tries < 0 && randarea > 1) {
-			randarea--;
-			tries = numTries;
-		}
-	}
-
-	SetItemLoc(ii, x, y);
-}
-
 static inline unsigned items_get_currlevel()
 {
 	return currLvl._dLevel;
 }
 
-void InitItemGFX()
+/*
+ * Calculate the walk speed from walk-speed modifiers.
+ *  ISPL_FASTWALK:    +1
+ *  ISPL_FASTERWALK:  +2
+ *  ISPL_FASTESTWALK: +3
+ */
+inline static BYTE WalkSpeed(unsigned flags)
 {
-	/*int i;
-	char filestr[DATA_ARCHIVE_MAX_PATH];
+	BYTE res = 0;
 
-	for (i = 0; i < NUM_IFILE; i++) {
-		snprintf(filestr, sizeof(filestr), "Items\\%s.CEL", itemfiledata[i].ifName);
-		assert(itemanims[i] == NULL);
-		itemanims[i] = LoadFileInMem(filestr);
-	}*/
+	if (flags & ISPL_FASTESTWALK) {
+		res = 3;
+	} else if (flags & ISPL_FASTERWALK) {
+		res = 2;
+	} else if (flags & ISPL_FASTWALK) {
+		res = 1;
+	}
+
+	return res;
 }
 
-void FreeItemGFX()
+/*
+ * Calculate the (hit-)recovery speed from recover-speed modifiers.
+ *  ISPL_FASTRECOVER:    +1
+ *  ISPL_FASTERRECOVER:  +2
+ *  ISPL_FASTESTRECOVER: +3
+ */
+inline static BYTE RecoverySpeed(unsigned flags)
 {
-	/*int i;
+	BYTE res = 0;
 
-	for (i = 0; i < NUM_IFILE; i++) {
-		MemFreeDbg(itemanims[i]);
-	}*/
+	if (flags & ISPL_FASTESTRECOVER) {
+		res = 3;
+	} else if (flags & ISPL_FASTERRECOVER) {
+		res = 2;
+	} else if (flags & ISPL_FASTRECOVER) {
+		res = 1;
+	}
+
+	return res;
 }
 
-void InitLvlItems()
+/*
+ * Calculate the base cast speed from cast-speed modifiers.
+ *  ISPL_FASTCAST:    +1
+ *  ISPL_FASTERCAST:  +2
+ *  ISPL_FASTESTCAST: +3
+ */
+inline static BYTE BaseCastSpeed(unsigned flags)
 {
+	BYTE res = 0;
+
+	if (flags & ISPL_FASTESTCAST) {
+		res = 3;
+	} else if (flags & ISPL_FASTERCAST) {
+		res = 2;
+	} else if (flags & ISPL_FASTCAST) {
+		res = 1;
+	}
+
+	return res;
+}
+
+/*
+ * Calculate the base attack speed from attack-speed modifiers.
+ *  ISPL_QUICKATTACK:   +1
+ *  ISPL_FASTATTACK:    +2
+ *  ISPL_FASTERATTACK:  +3
+ *  ISPL_FASTESTATTACK: +4
+ */
+inline static BYTE BaseAttackSpeed(unsigned flags)
+{
+	BYTE res = 0;
+
+	if (flags & ISPL_FASTESTATTACK) {
+		res = 4;
+	} else if (flags & ISPL_FASTERATTACK) {
+		res = 3;
+	} else if (flags & ISPL_FASTATTACK) {
+		res = 2;
+	} else if (flags & ISPL_QUICKATTACK) {
+		res = 1;
+	}
+
+	return res;
+}
+
+/*
+ * Calculate the arrow-velocity bonus gained from attack-speed modifiers.
+ *  ISPL_QUICKATTACK:   +1
+ *  ISPL_FASTATTACK:    +2
+ *  ISPL_FASTERATTACK:  +4
+ *  ISPL_FASTESTATTACK: +8
+ */
+inline static int ArrowVelBonus(unsigned flags)
+{
+	flags &= (ISPL_QUICKATTACK | ISPL_FASTATTACK | ISPL_FASTERATTACK | ISPL_FASTESTATTACK);
+	//if (flags != 0) {
+		static_assert((ISPL_QUICKATTACK & (ISPL_QUICKATTACK - 1)) == 0, "Optimized ArrowVelBonus depends simple flag-like attack-speed modifiers.");
+		static_assert(ISPL_QUICKATTACK == ISPL_FASTATTACK / 2, "ArrowVelBonus depends on ordered attack-speed modifiers I.");
+		static_assert(ISPL_FASTATTACK == ISPL_FASTERATTACK / 2, "ArrowVelBonus depends on ordered attack-speed modifiers II.");
+		static_assert(ISPL_FASTERATTACK == ISPL_FASTESTATTACK / 2, "ArrowVelBonus depends on ordered attack-speed modifiers III.");
+		flags /= ISPL_QUICKATTACK;
+	//}
+	return flags;
+}
+
+static void ValidateActionSkills(int pnum, BYTE type, uint64_t mask)
+{
+	PlayerStruct* p;
+
+	p = &plr;
+	// check if the current RSplType is a valid/allowed spell
+	if (p->_pAtkSkillType == type && !(mask & SPELL_MASK(p->_pAtkSkill))) {
+		p->_pAtkSkill = SPL_INVALID;
+		p->_pAtkSkillType = RSPLTYPE_INVALID;
+		//gbRedrawFlags |= REDRAW_SPELL_ICON;
+	}
+	if (p->_pMoveSkillType == type && !(mask & SPELL_MASK(p->_pMoveSkill))) {
+		p->_pMoveSkill = SPL_INVALID;
+		p->_pMoveSkillType = RSPLTYPE_INVALID;
+		//gbRedrawFlags |= REDRAW_SPELL_ICON;
+	}
+	if (p->_pAltAtkSkillType == type && !(mask & SPELL_MASK(p->_pAltAtkSkill))) {
+		p->_pAltAtkSkill = SPL_INVALID;
+		p->_pAltAtkSkillType = RSPLTYPE_INVALID;
+		//gbRedrawFlags |= REDRAW_SPELL_ICON;
+	}
+	if (p->_pAltMoveSkillType == type && !(mask & SPELL_MASK(p->_pAltMoveSkill))) {
+		p->_pAltMoveSkill = SPL_INVALID;
+		p->_pAltMoveSkillType = RSPLTYPE_INVALID;
+		//gbRedrawFlags |= REDRAW_SPELL_ICON;
+	}
+}
+
+void CalcPlrItemVals(int pnum, bool Loadgfx)
+{
+	ItemStruct* pi;
+	ItemStruct *wRight, *wLeft;
+
+	BYTE gfx;       // graphics
+	int wt;         // weapon-type
+	bool bf;        // blockflag
+	int av;         // arrow velocity bonus
+	unsigned pdmod; // player damage mod
+
 	int i;
 
-	numitems = 0;
+	BOOL idi = TRUE; // items are identified
 
-	//memset(items, 0, sizeof(items));
-	for (i = 0; i < MAXITEMS; i++) {
-		itemactive[i] = i;
+	int tac = 0;    // armor class
+	int btohit = 0; // bonus chance to hit
+
+	int iflgs = ISPL_NONE; // item_special_effect flags
+
+	int sadd = 0; // added strength
+	int madd = 0; // added magic
+	int dadd = 0; // added dexterity
+	int vadd = 0; // added vitality
+
+	uint64_t spl = 0; // bitarray for all enabled/active spells
+
+	int br = gnDifficulty * -10;
+	int fr = br; // fire resistance
+	int lr = br; // lightning resistance
+	int mr = br; // magic resistance
+	int ar = br; // acid resistance
+
+	// temporary values to calculate armor class/damage of the current item
+	int cac, cdmod, cdmodp, mindam, maxdam;
+	int ghit = 0; // increased damage from enemies
+	BYTE manasteal = 0;
+	BYTE lifesteal = 0;
+
+	int lrad = 10; // light radius
+
+	int ihp = 0;   // increased HP
+	int imana = 0; // increased mana
+
+	int skillLvl;            // temporary value to calculate skill levels
+	int8_t skillLvlAdds = 0; // increased skill level
+	BYTE skillLvlMods[NUM_SPELLS] = { 0 };
+
+	unsigned minsl = 0; // min slash-damage
+	unsigned maxsl = 0; // max slash-damage
+	unsigned minbl = 0; // min blunt-damage
+	unsigned maxbl = 0; // max blunt-damage
+	unsigned minpc = 0; // min puncture-damage
+	unsigned maxpc = 0; // max puncture-damage
+	unsigned fmin = 0;  // min fire damage
+	unsigned fmax = 0;  // max fire damage
+	unsigned lmin = 0;  // min lightning damage
+	unsigned lmax = 0;  // max lightning damage
+	unsigned mmin = 0;  // min magic damage
+	unsigned mmax = 0;  // max magic damage
+	unsigned amin = 0;  // min acid damage
+	unsigned amax = 0;  // max acid damage
+
+	unsigned cc = 0; // critical hit chance
+	int btochit = 0; // bonus chance to critical hit
+
+	// Loadgfx &= plr._pDunLevel == currLvl._dLevelIdx && !plr._pLvlChanging;
+
+	pi = plr._pInvBody;
+	for (i = NUM_INVLOC; i != 0; i--, pi++) {
+		if (pi->_itype != ITYPE_NONE && pi->_iStatFlag) {
+			if (pi->_iSpell != SPL_NULL) {
+				spl |= SPELL_MASK(pi->_iSpell);
+			}
+			cac = pi->_iAC;
+			cdmod = 0;
+			cdmodp = 0;
+
+			if (pi->_iMagical != ITEM_QUALITY_NORMAL) {
+				idi &= pi->_iIdentified;
+				btohit += pi->_iPLToHit;
+				iflgs |= pi->_iFlags;
+
+				sadd += pi->_iPLStr;
+				madd += pi->_iPLMag;
+				dadd += pi->_iPLDex;
+				vadd += pi->_iPLVit;
+				fr += pi->_iPLFR;
+				lr += pi->_iPLLR;
+				mr += pi->_iPLMR;
+				ar += pi->_iPLAR;
+				ghit += pi->_iPLGetHit;
+				lrad += pi->_iPLLight;
+				ihp += pi->_iPLHP;
+				imana += pi->_iPLMana;
+				skillLvlAdds += pi->_iPLSkillLevels;
+				skillLvlMods[pi->_iPLSkill] += pi->_iPLSkillLvl;
+				lifesteal += pi->_iPLLifeSteal;
+				manasteal += pi->_iPLManaSteal;
+				btochit += pi->_iPLCrit;
+				fmin += pi->_iPLFMinDam;
+				fmax += pi->_iPLFMaxDam;
+				lmin += pi->_iPLLMinDam;
+				lmax += pi->_iPLLMaxDam;
+				mmin += pi->_iPLMMinDam;
+				mmax += pi->_iPLMMaxDam;
+				amin += pi->_iPLAMinDam;
+				amax += pi->_iPLAMaxDam;
+
+				cdmod = pi->_iPLDamMod;
+				cdmodp = pi->_iPLDam;
+				if (pi->_iPLAC != 0) {
+					int tmpac = pi->_iPLAC * cac / 100;
+					if (tmpac == 0)
+						tmpac = pi->_iPLAC >= 0 ? 1 : -1;
+					cac += tmpac;
+				}
+			}
+
+			tac += cac;
+			maxdam = pi->_iMaxDam;
+			if (maxdam == 0)
+				continue;
+			cdmodp += 100;
+			cc += pi->_iBaseCrit;
+			mindam = pi->_iMinDam;
+			mindam = mindam * cdmodp + cdmod * 100;
+			maxdam = maxdam * cdmodp + cdmod * 100;
+			switch (pi->_iDamType) {
+			case IDAM_NONE: break;
+			case IDAM_SLASH:
+				minsl += (unsigned)mindam << 1;
+				maxsl += (unsigned)maxdam << 1;
+				break;
+			case IDAM_BLUNT:
+				minbl += (unsigned)mindam << 1;
+				maxbl += (unsigned)maxdam << 1;
+				break;
+			case IDAM_SB_MIX:
+				minsl += mindam;
+				minbl += mindam;
+				maxsl += maxdam;
+				maxbl += maxdam;
+				break;
+			case IDAM_PUNCTURE:
+				minpc += (unsigned)mindam << 1;
+				maxpc += (unsigned)maxdam << 1;
+				break;
+			default:
+				ASSUME_UNREACHABLE
+			}
+		}
+	}
+
+	if (plr._pTimer[PLTR_RAGE] > 0) {
+		sadd += 2 * plr._pLevel;
+		dadd += plr._pLevel;
+		vadd += 2 * plr._pLevel;
+	}
+	plr._pStrength = std::max(0, sadd + plr._pBaseStr);
+	plr._pMagic = std::max(0, madd + plr._pBaseMag);
+	plr._pDexterity = std::max(0, dadd + plr._pBaseDex);
+	plr._pVitality = std::max(0, vadd + plr._pBaseVit);
+
+	plr._pIFlags = iflgs;
+	plr._pInfraFlag = /*(iflgs & ISPL_INFRAVISION) != 0 ||*/ plr._pTimer[PLTR_INFRAVISION] > 0;
+	plr._pHasUnidItem = !idi;
+	plr._pIGetHit = ghit << 6;
+	plr._pILifeSteal = lifesteal;
+	plr._pIManaSteal = manasteal;
+
+	pdmod = (1 << 9) + (32 * plr._pMagic);
+	plr._pIFMinDam = fmin * pdmod >> (-6 + 9);
+	plr._pIFMaxDam = fmax * pdmod >> (-6 + 9);
+	plr._pILMinDam = lmin * pdmod >> (-6 + 9);
+	plr._pILMaxDam = lmax * pdmod >> (-6 + 9);
+	plr._pIMMinDam = mmin * pdmod >> (-6 + 9);
+	plr._pIMMaxDam = mmax * pdmod >> (-6 + 9);
+	plr._pIAMinDam = amin * pdmod >> (-6 + 9);
+	plr._pIAMaxDam = amax * pdmod >> (-6 + 9);
+
+	plr._pISpells = spl;
+	if (pnum == mypnum)
+		ValidateActionSkills(pnum, RSPLTYPE_CHARGES, spl);
+
+	lrad = std::max(2, std::min(MAX_LIGHT_RAD, lrad));
+	if (plr._pLightRad != lrad) {
+		plr._pLightRad = lrad;
+		/*if (Loadgfx) {
+			ChangeLightRadius(plr._plid, lrad);
+			ChangeVisionRadius(plr._pvid, std::max(PLR_MIN_VISRAD, lrad));
+		}*/
+	}
+
+	ihp += vadd << (6 + 1); // BUGFIX: blood boil can cause negative shifts here (see line 557)
+	imana += madd << (6 + 1);
+
+	if (iflgs & ISPL_LIFETOMANA) {
+		ihp -= plr._pMaxHPBase >> 1;
+		imana += plr._pMaxHPBase >> 1;
+	}
+	if (iflgs & ISPL_MANATOLIFE) {
+		ihp += plr._pMaxManaBase >> 1;
+		imana -= plr._pMaxManaBase >> 1;
+	}
+	if (iflgs & ISPL_NOMANA) {
+		imana = -plr._pManaBase;
+	}
+	if (iflgs & ISPL_ALLRESZERO) {
+		// reset resistances to zero if the respective special effect is active
+		fr = 0;
+		lr = 0;
+		mr = 0;
+		ar = 0;
+	}
+
+	if (fr > MAXRESIST)
+		fr = MAXRESIST;
+	plr._pFireResist = fr;
+
+	if (lr > MAXRESIST)
+		lr = MAXRESIST;
+	plr._pLghtResist = lr;
+
+	if (mr > MAXRESIST)
+		mr = MAXRESIST;
+	plr._pMagResist = mr;
+
+	if (ar > MAXRESIST)
+		ar = MAXRESIST;
+	plr._pAcidResist = ar;
+
+	plr._pHitPoints = ihp + plr._pHPBase;
+	plr._pMaxHP = ihp + plr._pMaxHPBase;
+
+	plr._pMana = imana + plr._pManaBase;
+	plr._pMaxMana = imana + plr._pMaxManaBase;
+
+	wLeft = &plr._pInvBody[INVLOC_HAND_LEFT];
+	wRight = &plr._pInvBody[INVLOC_HAND_RIGHT];
+
+	bf = false;
+	wt = SFLAG_MELEE;
+	gfx = wLeft->_iStatFlag ? wLeft->_itype : ITYPE_NONE;
+
+	switch (gfx) {
+	case ITYPE_NONE:
+		gfx = ANIM_ID_UNARMED;
+		break;
+	case ITYPE_SWORD:
+		gfx = ANIM_ID_SWORD;
+		break;
+	case ITYPE_AXE:
+		gfx = ANIM_ID_AXE;
+		break;
+	case ITYPE_BOW:
+		wt = SFLAG_RANGED;
+		gfx = ANIM_ID_BOW;
+		break;
+	case ITYPE_MACE:
+		gfx = ANIM_ID_MACE;
+		break;
+	case ITYPE_STAFF:
+		gfx = ANIM_ID_STAFF;
+		break;
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+
+/*#ifdef HELLFIRE
+	if (plr._pClass == PC_MONK) {
+		if (gfx == ANIM_ID_STAFF) {
+			bf = true;
+			plr._pIFlags |= ISPL_FASTBLOCK;
+		} else if (wRight->_itype == ITYPE_NONE
+		 && (wLeft->_itype == ITYPE_NONE || wLeft->_iLoc != ILOC_TWOHAND))
+			bf = true;
+	}
+#endif*/
+	maxdam = plr._pMaxHP >> (2 - 1 + 1); // ~1/4 hp - halved by resists, doubled by MissToPlr
+	if (wRight->_itype == ITYPE_SHIELD && wRight->_iStatFlag
+	 && (gfx == ANIM_ID_UNARMED || gfx == ANIM_ID_SWORD || gfx == ANIM_ID_MACE)) {
+		tac += ((plr._pDexterity - (1 << 7)) * wRight->_iAC) >> 7;
+		bf = true;
+		static_assert((int)ANIM_ID_UNARMED + 1 == (int)ANIM_ID_UNARMED_SHIELD, "CalcPlrItemVals uses inc to set gfx with shield I.");
+		static_assert((int)ANIM_ID_SWORD + 1 == (int)ANIM_ID_SWORD_SHIELD, "CalcPlrItemVals uses inc to set gfx with shield II.");
+		static_assert((int)ANIM_ID_MACE + 1 == (int)ANIM_ID_MACE_SHIELD, "CalcPlrItemVals uses inc to set gfx with shield III.");
+		gfx++;
+
+		maxdam += wRight->_iAC << (6 + 1 - 1); // 2*AC - halved by resists, doubled by MissToPlr
+	}
+	plr._pIChMinDam = maxdam >> 1;
+	plr._pIChMaxDam = maxdam;
+
+	if (gfx == ANIM_ID_UNARMED || gfx == ANIM_ID_UNARMED_SHIELD) {
+		if (gfx == ANIM_ID_UNARMED_SHIELD) {
+			minbl = maxbl = 3 << 1;
+		} else {
+			minbl = maxbl = 1 << 1;
+		}
+		minbl += plr._pLevel >> (2 - 1);
+		maxbl += plr._pLevel >> (1 - 1);
+		minbl *= 100;
+		maxbl *= 100;
+	}
+
+	pi = &plr._pInvBody[INVLOC_CHEST];
+	if (pi->_itype == ITYPE_MARMOR && pi->_iStatFlag) {
+		gfx |= ANIM_ID_MEDIUM_ARMOR;
+	} else if (pi->_itype == ITYPE_HARMOR && pi->_iStatFlag) {
+		gfx |= ANIM_ID_HEAVY_ARMOR;
+	}
+
+	// calculate bonuses
+	cc = cc * (btochit + 100) / 50;
+	plr._pIBaseHitBonus = btohit == 0 ? IBONUS_NONE : (btohit >= 0 ? IBONUS_POSITIVE : IBONUS_NEGATIVE);
+	plr._pIEvasion = plr._pDexterity / 5 + 2 * plr._pLevel;
+	plr._pIAC = tac + plr._pIEvasion;
+	btohit += 50; // + plr._pLevel;
+	if (wt == SFLAG_MELEE) {
+		btohit += 20 + (plr._pDexterity >> 1);
+	} else {
+		// assert(wt == SFLAG_RANGED);
+		btohit += plr._pDexterity;
+	}
+	plr._pIHitChance = btohit;
+
+	// calculate skill flags
+	if (plr._pDunLevel != DLV_TOWN)
+		wt |= SFLAG_DUNGEON;
+	if (bf)
+		wt |= SFLAG_BLOCK;
+	if (plr._pTimer[PLTR_RAGE] == 0)
+		wt |= SFLAG_RAGE;
+	plr._pSkillFlags = wt;
+
+	// calculate the damages for each type
+	if (maxsl != 0) {
+		pdmod = 512 + plr._pStrength * 6 + plr._pDexterity * 2;
+		minsl = minsl * pdmod / (100 * 512 / 64);
+		maxsl = maxsl * pdmod / (100 * 512 / 64);
+	}
+	if (maxbl != 0) {
+		if (wLeft->_itype == ITYPE_STAFF)
+			pdmod = 512 + plr._pStrength * 4 + plr._pDexterity * 4;
+		else
+			pdmod = 512 + plr._pStrength * 6 + plr._pVitality * 2;
+		minbl = minbl * pdmod / (100 * 512 / 64);
+		maxbl = maxbl * pdmod / (100 * 512 / 64);
+	}
+	if (maxpc != 0) {
+		if (wLeft->_itype == ITYPE_BOW)
+			pdmod = 512 + plr._pDexterity * 8;
+		else // dagger
+			pdmod = 512 + plr._pStrength * 2 + plr._pDexterity * 6;
+		minpc = minpc * pdmod / (100 * 512 / 64);
+		maxpc = maxpc * pdmod / (100 * 512 / 64);
+	}
+	if (wRight->_itype != ITYPE_NONE && wRight->_itype != ITYPE_SHIELD) {
+		// adjust dual-wield damage
+		//if (maxsl != 0) {
+			minsl = minsl * 5 / 8;
+			maxsl = maxsl * 5 / 8;
+		//}
+		//if (maxbl != 0) {
+			minbl = minbl * 5 / 8;
+			maxbl = maxbl * 5 / 8;
+		//}
+		//if (maxpc != 0) {
+			minpc = minpc * 5 / 8;
+			maxpc = maxpc * 5 / 8;
+		//}
+		cc >>= 1;
+	}
+	plr._pISlMinDam = minsl;
+	plr._pISlMaxDam = maxsl;
+	plr._pIBlMinDam = minbl;
+	plr._pIBlMaxDam = maxbl;
+	plr._pIPcMinDam = minpc;
+	plr._pIPcMaxDam = maxpc;
+	plr._pICritChance = cc;
+
+	// calculate block chance
+	plr._pIBlockChance = (plr._pSkillFlags & SFLAG_BLOCK) ? std::min(200, 10 + (std::min(plr._pStrength, plr._pDexterity) >> 1)) : 0;
+
+	// calculate walk speed
+	plr._pIWalkSpeed = WalkSpeed(plr._pIFlags);
+
+	// calculate (hit-)recovery speed
+	plr._pIRecoverySpeed = RecoverySpeed(plr._pIFlags);
+
+	// calculate base attack speed
+	plr._pIBaseAttackSpeed = BaseAttackSpeed(plr._pIFlags);
+
+	// calculate base cast speed
+	plr._pIBaseCastSpeed = BaseCastSpeed(plr._pIFlags);
+
+	// calculate arrow velocity bonus
+	av = ArrowVelBonus(plr._pIFlags);
+	/*  No other velocity bonus for the moment, otherwise POINT_BLANK and FAR_SHOT do not work well...
+#ifdef HELLFIRE
+	if (plr._pClass == PC_ROGUE)
+		av += (plr._pLevel - 1) >> 2;
+	else if (plr._pClass == PC_WARRIOR || plr._pClass == PC_BARD)
+		av += (plr._pLevel - 1) >> 3;
+#else
+	if (plr._pClass == PC_ROGUE)
+		av += (plr._pLevel - 1) >> 2;
+	else if (plr._pClass == PC_WARRIOR)
+		av += (plr._pLevel - 1) >> 3;
+#endif*/
+	plr._pIArrowVelBonus = av;
+
+	static_assert(SPL_NULL == 0, "CalcPlrItemVals expects SPL_NULL == 0.");
+	for (i = 1; i < NUM_SPELLS; i++) {
+		skillLvl = 0;
+		//if (plr._pMemSkills & SPELL_MASK(i)) {
+			skillLvl = plr._pSkillLvlBase[i] + skillLvlAdds + skillLvlMods[i];
+			if (skillLvl < 0)
+				skillLvl = 0;
+		//}
+		plr._pSkillLvl[i] = skillLvl;
+	}
+
+	/*if (plr._pmode == PM_DEATH || plr._pmode == PM_DYING) {
+		PlrSetHp(pnum, 0);
+		PlrSetMana(pnum, 0);
+		gfx = ANIM_ID_UNARMED;
+	}
+	if (plr._pgfxnum != gfx) {
+		plr._pgfxnum = gfx;
+		plr._pGFXLoad = 0;
+		if (Loadgfx) {
+			SetPlrAnims(pnum);
+
+			PlrStartStand(pnum);
+		}
+	}
+
+	if (pnum == mypnum)
+		gbRedrawFlags |= REDRAW_HP_FLASK | REDRAW_MANA_FLASK;*/
+}
+
+void CalcPlrSpells(int pnum)
+{
+	PlayerStruct* p;
+
+	p = &plr;
+	// switch between normal attacks
+	if (p->_pSkillFlags & SFLAG_MELEE) {
+		if (p->_pAtkSkill == SPL_RATTACK)
+			p->_pAtkSkill = SPL_ATTACK;
+		if (p->_pAltAtkSkill == SPL_RATTACK)
+			p->_pAltAtkSkill = SPL_ATTACK;
+	} else {
+		if (p->_pAtkSkill == SPL_ATTACK)
+			p->_pAtkSkill = SPL_RATTACK;
+		if (p->_pAltAtkSkill == SPL_ATTACK)
+			p->_pAltAtkSkill = SPL_RATTACK;
 	}
 }
 
-static void PlaceInitItems()
+void CalcPlrScrolls(int pnum)
 {
-	int ii, i, seed;
-	unsigned lvl;
+	ItemStruct* pi;
+	int i;
+	uint64_t mask = 0;
 
-	lvl = items_get_currlevel();
-
-	for (i = RandRange(3, 5); i != 0; i--) {
-		ii = itemactive[numitems];
-		assert(ii == numitems);
-		seed = NextRndSeed();
-		SetItemData(ii, random_(12, 2) != 0 ? IDI_HEAL : IDI_MANA);
-		items[ii]._iSeed = seed;
-		items[ii]._iCreateInfo = lvl; // | CF_PREGEN;
-		// assert(gbLvlLoad);
-		RespawnItem(ii);
-
-		GetRandomItemSpace(ii);
-
-		numitems++;
+	pi = plr._pInvList;
+	for (i = NUM_INV_GRID_ELEM; i > 0; i--, pi++) {
+		if (pi->_itype == ITYPE_MISC && (pi->_iMiscId == IMISC_SCROLL || pi->_iMiscId == IMISC_RUNE) && pi->_iStatFlag)
+			mask |= SPELL_MASK(pi->_iSpell);
 	}
+	pi = plr._pSpdList;
+	for (i = MAXBELTITEMS; i != 0; i--, pi++) {
+		if (pi->_itype == ITYPE_MISC && (pi->_iMiscId == IMISC_SCROLL || pi->_iMiscId == IMISC_RUNE) && pi->_iStatFlag)
+			mask |= SPELL_MASK(pi->_iSpell);
+	}
+	plr._pInvSkills = mask;
+
+	ValidateActionSkills(pnum, RSPLTYPE_INV, mask);
 }
 
-void InitItems()
+void CalcPlrCharges(int pnum)
 {
-	// if (!currLvl._dSetLvl) {
-		if (QuestStatus(Q_ROCK))
-			PlaceRock();
-		if (QuestStatus(Q_ANVIL))
-			CreateQuestItemAt(IDI_ANVIL, 2 * pSetPieces[0]._spx + DBORDERX + 11, 2 * pSetPieces[0]._spy + DBORDERY + 11);
-		if (currLvl._dLevelIdx == questlist[Q_VEIL]._qdlvl + 1 && quests[Q_VEIL]._qactive != QUEST_NOTAVAIL)
-			PlaceQuestItemInArea(IDI_GLDNELIX, 5);
-		if (QuestStatus(Q_MUSHROOM))
-			PlaceQuestItemInArea(IDI_FUNGALTM, 5);
-#ifdef HELLFIRE
-		if (quests[Q_JERSEY]._qactive != QUEST_NOTAVAIL) {
-			if (currLvl._dLevelIdx == DLV_NEST4)
-				PlaceQuestItemInArea(IDI_BROWNSUIT, 3);
-			else if (currLvl._dLevelIdx == DLV_NEST3)
-				PlaceQuestItemInArea(IDI_GRAYSUIT, 3);
+	ItemStruct* pi;
+	int i;
+	uint64_t mask = 0;
+
+	pi = plr._pInvBody;
+	for (i = NUM_INVLOC; i > 0; i--, pi++) {
+		if (pi->_itype != ITYPE_NONE && pi->_iCharges > 0 && pi->_iStatFlag)
+			mask |= SPELL_MASK(pi->_iSpell);
+	}
+	plr._pISpells = mask;
+
+	ValidateActionSkills(pnum, RSPLTYPE_CHARGES, mask);
+}
+
+static void ItemStatOk(ItemStruct* is, int sa, int ma, int da)
+{
+	is->_iStatFlag = sa >= is->_iMinStr
+				  && da >= is->_iMinDex
+				  && ma >= is->_iMinMag;
+}
+
+static void CalcItemReqs(int pnum)
+{
+	int i;
+	ItemStruct* pi;
+	int sa, ma, da, sc, mc, dc;
+
+	sa = plr._pBaseStr;
+	ma = plr._pBaseMag;
+	da = plr._pBaseDex;
+	int strReq[NUM_INVLOC];
+	int magReq[NUM_INVLOC];
+	int dexReq[NUM_INVLOC];
+
+	pi = plr._pInvBody;
+	for (i = 0; i < NUM_INVLOC; i++, pi++) {
+		if (pi->_itype != ITYPE_NONE) {
+			pi->_iStatFlag = TRUE;
+			//if (pi->_iIdentified) {
+				sa += pi->_iPLStr;
+				ma += pi->_iPLMag;
+				da += pi->_iPLDex;
+				strReq[i] = pi->_iMinStr == 0 ? INT_MIN : pi->_iMinStr + (pi->_iPLStr > 0 ? pi->_iPLStr : 0);
+				magReq[i] = pi->_iMinMag == 0 ? INT_MIN : pi->_iMinMag + (pi->_iPLMag > 0 ? pi->_iPLMag : 0);
+				dexReq[i] = pi->_iMinDex == 0 ? INT_MIN : pi->_iMinDex + (pi->_iPLDex > 0 ? pi->_iPLDex : 0);
+			//}
 		}
-#endif
-		if ((currLvl._dLevelIdx >= DLV_CATHEDRAL1 && currLvl._dLevelIdx <= DLV_CATHEDRAL4)
-		 || (currLvl._dLevelIdx >= DLV_CATACOMBS1 && currLvl._dLevelIdx <= DLV_CATACOMBS4))
-			PlaceInitItems();
-#ifdef HELLFIRE
-		if (currLvl._dLevelIdx >= DLV_CRYPT1 && currLvl._dLevelIdx <= DLV_CRYPT3) {
-			static_assert(DLV_CRYPT1 + 1 == DLV_CRYPT2, "InitItems requires ordered DLV_CRYPT indices I.");
-			static_assert(DLV_CRYPT2 + 1 == DLV_CRYPT3, "InitItems requires ordered DLV_CRYPT indices II.");
-			static_assert(IDI_NOTE1 + 1 == IDI_NOTE2, "InitItems requires ordered IDI_NOTE indices I.");
-			static_assert(IDI_NOTE2 + 1 == IDI_NOTE3, "InitItems requires ordered IDI_NOTE indices II.");
-			PlaceQuestItemInArea(IDI_NOTE1 + (currLvl._dLevelIdx - DLV_CRYPT1), 1);
+	}
+recheck:
+		pi = plr._pInvBody;
+		for (i = 0; i < NUM_INVLOC; i++, pi++) {
+			if (pi->_itype == ITYPE_NONE)
+				continue;
+			// if (sc >= pi->_iMinStr && mc >= pi->_iMinMag && dc >= pi->_iMinDex)
+			// if ((pi->_iMinStr == 0 || sc >= strReq[i]) && (pi->_iMinMag || mc >= magReq[i]) && (pi->_iMinDex == 0 || dc >= dexReq[i]))
+			// if (sc >= strReq[i] && mc >= magReq[i] && dc >= dexReq[i])
+			if (sa >= strReq[i] && ma >= magReq[i] && da >= dexReq[i])
+				continue;
+			if (pi->_iStatFlag) {
+				pi->_iStatFlag = FALSE;
+				//if (pi->_iIdentified) {
+					sa -= pi->_iPLStr;
+					ma -= pi->_iPLMag;
+					da -= pi->_iPLDex;
+				//}
+				goto recheck;
+			}
 		}
-#endif
-	// }
+
+	sc = std::max(0, sa);
+	mc = std::max(0, ma);
+	dc = std::max(0, da);
+
+	pi = &plr._pHoldItem;
+	ItemStatOk(pi, sc, mc, dc);
+
+	pi = plr._pInvList;
+	for (i = NUM_INV_GRID_ELEM; i != 0; i--, pi++)
+		ItemStatOk(pi, sc, mc, dc);
+
+	pi = plr._pSpdList;
+	for (i = MAXBELTITEMS; i != 0; i--, pi++)
+		ItemStatOk(pi, sc, mc, dc);
+}
+
+void CalcPlrInv(int pnum, bool Loadgfx)
+{
+	CalcItemReqs(pnum);
+	CalcPlrItemVals(pnum, Loadgfx);
+	//if (pnum == mypnum) {
+		CalcPlrSpells(pnum);
+		//CalcPlrBookVals(pnum);
+		CalcPlrScrolls(pnum);
+		//CalcPlrCharges(pnum);
+	//}
 }
 
 void SetItemData(int ii, int idata)
@@ -223,6 +788,12 @@ void GetItemSeed(ItemStruct* is)
 	is->_iSeed = NextRndSeed();
 }
 
+void CreateBaseItem(ItemStruct* is, int idata)
+{
+	SetItemSData(is, idata);
+	GetItemSeed(is);
+}
+
 void SetGoldItemValue(ItemStruct* is, int value)
 {
 	is->_ivalue = value;
@@ -234,90 +805,88 @@ void SetGoldItemValue(ItemStruct* is, int value)
 		is->_iCurs = ICURS_GOLD_MEDIUM;
 }
 
-/**
- * Check the location if an item can be placed there in 'runtime'.
- */
-bool ItemSpaceOk(int x, int y)
+void CreatePlrItems(int pnum)
 {
-	int oi;
+	ItemStruct* pi;
+	//int i;
 
-	if (x < DBORDERX || x >= DBORDERX + DSIZEX || y < DBORDERY || y >= DBORDERY + DSIZEY)
-		return false;
+	static_assert(ITYPE_NONE == 0, "CreatePlrItems skips item initialization by expecting ITYPE_NONE to be zero.");
+	/*plr._pHoldItem._itype = ITYPE_NONE;
 
-	if ((dItem[x][y] | dMonster[x][y] | /*dPlayer[x][y] |*/ nSolidTable[dPiece[x][y]]) != 0)
-		return false;
-
-	oi = dObject[x][y];
-	if (oi != 0) {
-		oi = oi >= 0 ? oi - 1 : -(oi + 1);
-		if (objects[oi]._oSolidFlag)
-			return false;
+	pi = plr._pInvBody;
+	for (i = NUM_INVLOC; i != 0; i--) {
+		pi->_itype = ITYPE_NONE;
+		pi++;
 	}
 
-	return true;
+	pi = plr._pSpdList;
+	for (i = MAXBELTITEMS; i != 0; i--) {
+		pi->_itype = ITYPE_NONE;
+		pi++;
+	}
+
+	pi = plr._pInvList;
+	for (i = NUM_INV_GRID_ELEM; i != 0; i--) {
+		pi->_itype = ITYPE_NONE;
+		pi++;
+	}*/
+
+	switch (plr._pClass) {
+	case PC_WARRIOR:
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_LEFT], IDI_WARRSWORD);
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
+
+		CreateBaseItem(&plr._pSpdList[0], IDI_HEAL);
+		CreateBaseItem(&plr._pSpdList[1], IDI_HEAL);
+		break;
+	case PC_ROGUE:
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_LEFT], IDI_ROGUEBOW);
+
+		CreateBaseItem(&plr._pSpdList[0], IDI_HEAL);
+		CreateBaseItem(&plr._pSpdList[1], IDI_HEAL);
+		break;
+	case PC_SORCERER:
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_LEFT], IDI_SORCSTAFF);
+
+#ifdef HELLFIRE
+		CreateBaseItem(&plr._pSpdList[0], IDI_HEAL);
+		CreateBaseItem(&plr._pSpdList[1], IDI_HEAL);
+#else
+		CreateBaseItem(&plr._pSpdList[0], IDI_MANA);
+		CreateBaseItem(&plr._pSpdList[1], IDI_MANA);
+#endif
+		break;
+#ifdef HELLFIRE
+	case PC_MONK:
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_LEFT], IDI_MONKSTAFF);
+
+		CreateBaseItem(&plr._pSpdList[0], IDI_HEAL);
+		CreateBaseItem(&plr._pSpdList[1], IDI_HEAL);
+		break;
+	case PC_BARD:
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_RIGHT], IDI_BARDDAGGER);
+
+		CreateBaseItem(&plr._pSpdList[0], IDI_HEAL);
+		CreateBaseItem(&plr._pSpdList[1], IDI_HEAL);
+		break;
+	case PC_BARBARIAN:
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_LEFT], IDI_BARBCLUB);
+		CreateBaseItem(&plr._pInvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
+
+		CreateBaseItem(&plr._pSpdList[0], IDI_HEAL);
+		CreateBaseItem(&plr._pSpdList[1], IDI_HEAL);
+		break;
+#endif
+	}
+
+	pi = &plr._pInvList[0];
+	CreateBaseItem(pi, IDI_GOLD);
+	SetGoldItemValue(pi, 100);
+	plr._pGold = 100;
+
+	CalcPlrItemVals(pnum, false);
 }
-
-static bool GetItemSpace(int x, int y, int ii)
-{
-	BYTE i, rs;
-	BYTE slist[NUM_DIRS + 1];
-
-	rs = 0;
-	for (i = 0; i < lengthof(area3x3_x); i++) {
-		if (ItemSpaceOk(x + area3x3_x[i], y + area3x3_y[i])) {
-			slist[rs] = i;
-			rs++;
-		}
-	}
-
-	if (rs == 0)
-		return false;
-
-	rs = slist[random_low(13, rs)];
-
-	SetItemLoc(ii, x + area3x3_x[rs], y + area3x3_y[rs]);
-	return true;
-}
-
-static void GetSuperItemSpace(int x, int y, int ii)
-{
-	int xx, yy;
-	int i, j, k;
-
-	if (!GetItemSpace(x, y, ii)) {
-		for (k = 2; k < 50; k++) {
-			for (j = -k; j <= k; j++) {
-				yy = y + j;
-				for (i = -k; i <= k; i++) {
-					xx = i + x;
-					if (ItemSpaceOk(xx, yy)) {
-						SetItemLoc(ii, xx, yy);
-						return;
-					}
-				}
-			}
-		}
-	}
-}
-
-/*static void GetSuperItemLoc(int x, int y, int ii)
-{
-	int xx, yy;
-	int i, j, k;
-
-	for (k = 1; k < 50; k++) {
-		for (j = -k; j <= k; j++) {
-			yy = y + j;
-			for (i = -k; i <= k; i++) {
-				xx = i + x;
-				if (ItemSpaceOk(xx, yy)) {
-					SetItemLoc(ii, xx, yy);
-					return;
-				}
-			}
-		}
-	}
-}*/
 
 static void GetBookSpell(int ii, unsigned lvl)
 {
@@ -1184,39 +1753,6 @@ void CreateRndItem(int x, int y, unsigned quality)
 	numitems++;
 
 	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
-
-	GetSuperItemSpace(x, y, ii);
-
-	RespawnItem(ii);
-}
-
-static void SetupAllUseful(int ii, int32_t iseed, unsigned lvl)
-{
-	int idx;
-
-	SetRndSeed(iseed);
-
-	idx = random_(34, lvl > 1 ? 5 : 4);
-	switch (idx) {
-	case 0:
-	case 1:
-		idx = IDI_HEAL;
-		break;
-	case 2:
-	case 3:
-		idx = IDI_MANA;
-		break;
-	case 4:
-		idx = IDI_PORTAL;
-		break;
-	default:
-		ASSUME_UNREACHABLE
-		break;
-	}
-
-	SetItemData(ii, idx);
-	items[ii]._iSeed = iseed;
-	items[ii]._iCreateInfo = lvl; // | CF_USEFUL;
 }
 
 void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
@@ -1236,100 +1772,6 @@ void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
 	numitems++;
 
 	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
-
-	GetSuperItemSpace(x, y, ii);
-
-	RespawnItem(ii);
-}
-
-/**
- * Place a fixed item to the given location.
- * 
- * @param idx: the index of the item(item_indexes enum)
- * @param x tile-coordinate of the target location
- * @param y tile-coordinate of the target location
- * @param mode icreate_mode except for ICM_SEND_FLIP
- */
-void CreateQuestItemAt(int idx, int x, int y)
-{
-	int ii;
-
-		if (numitems >= MAXITEMS)
-			return; // should never be the case
-		ii = itemactive[numitems];
-		numitems++;
-
-	SetItemData(ii, idx);
-	items[ii]._iCreateInfo = items_get_currlevel();
-	// set Seed for the bloodstones, otherwise quick successive pickup and use
-	// will be prevented by the ItemRecord logic
-	items[ii]._iSeed = NextRndSeed();
-
-	SetItemLoc(ii, x, y);
-
-	RespawnItem(ii);
-}
-
-/**
- * Place a fixed item to a random location where the space is large enough.
- * 
- * @param idx: the index of the item(item_indexes enum)
- * @param areasize: the require size of the space (will be lowered if no matching place is found)
- */
-void PlaceQuestItemInArea(int idx, int areasize)
-{
-	int ii;
-
-	if (numitems >= MAXITEMS)
-		return; // should never be the case
-
-	ii = itemactive[numitems];
-	numitems++;
-	// assert(_iMiscId != IMISC_BOOK && _iMiscId != IMISC_SCROLL && _itype != ITYPE_GOLD);
-	SetItemData(ii, idx);
-	items[ii]._iCreateInfo = items_get_currlevel(); // | CF_PREGEN;
-	items[ii]._iSeed = NextRndSeed();               // make sure it is unique
-
-	GetRandomItemSpace(areasize, ii);
-
-	RespawnItem(ii);
-}
-
-/**
- * Place a rock(item) on a stand (OBJ_STAND).
- */
-/*static*/ void PlaceRock()
-{
-	int i, oi;
-
-	if (numitems >= MAXITEMS)
-		return; // should never be the case
-
-	/*for (i = 0; i < numobjects; i++) {
-		oi = i; // objectactive[i];
-		if (objects[oi]._otype == OBJ_STAND)
-			break;
-	}
-	if (i != numobjects) {*/
-	oi = 0; // objectactive[0];
-	if (objects[oi]._otype == OBJ_STAND) {
-		i = itemactive[numitems];
-		assert(i == numitems);
-		CreateQuestItemAt(IDI_ROCK, objects[oi]._ox, objects[oi]._oy);
-//		SetItemData(i, IDI_ROCK);
-		// assert(gbLvlLoad);
-//		RespawnItem(i);
-		// draw it above the stand
-		items[i]._iSelFlag = 2;
-		//items[i]._iPostDraw = TRUE;
-		items[i]._iAnimFrame = 11;
-		//items[i]._iAnimFlag = TRUE;
-//		items[i]._iCreateInfo = items_get_currlevel(); // | CF_PREGEN;
-//		items[i]._iSeed = NextRndSeed();               // make sure it is unique
-//		SetItemLoc(i, objects[oi]._ox, objects[oi]._oy);
-
-//		numitems++;
-	}
 }
 
 void RespawnItem(int ii)

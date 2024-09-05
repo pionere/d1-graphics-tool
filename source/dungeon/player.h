@@ -8,7 +8,20 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-bool PosOkActor(int x, int y);
+#define myplr          players[mypnum]
+#define plr            players[pnum]
+#define plx(x)         players[x]
+#define PLR_WALK_SHIFT 8
+
+extern PlayerStruct players[MAX_PLRS];
+
+void CreatePlayer(const _uiheroinfo& heroinfo);
+
+void IncreasePlrStr(int pnum);
+void IncreasePlrMag(int pnum);
+void IncreasePlrDex(int pnum);
+void IncreasePlrVit(int pnum);
+void RestorePlrHpVit(int pnum);
 
 DEVILUTION_END_NAMESPACE
 

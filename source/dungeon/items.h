@@ -25,18 +25,19 @@ extern int numitems;
 
 void InitItemGFX();
 void FreeItemGFX();
-void InitLvlItems();
-void InitItems();
+void CalcPlrItemVals(int pnum, bool Loadgfx);
+void CalcPlrSpells(int pnum);
+void CalcPlrScrolls(int pnum);
+void CalcPlrCharges(int pnum);
+void ItemStatOk(int pnum, ItemStruct* is);
+void CalcPlrInv(int pnum, bool Loadgfx);
+void CreateBaseItem(ItemStruct* is, int idata);
 void GetItemSeed(ItemStruct* is);
 void SetGoldItemValue(ItemStruct* is, int value);
-bool ItemSpaceOk(int x, int y);
+void CreatePlrItems(int pnum);
 void SetItemData(int ii, int idata);
 void CreateRndItem(int x, int y, unsigned quality);
 void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc);
-void PlaceQuestItemInArea(int idx, int areasize);
-void CreateQuestItemAt(int idx, int x, int y);
-void PlaceRock();
-void RespawnItem(int ii);
 void DeleteItems(int ii);
 
 #endif /* __ITEMS_H__ */
