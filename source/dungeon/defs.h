@@ -19,6 +19,7 @@
 
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
+#define SwapLE64(X) qToLittleEndian((quint64)(X))
 
 // MAXDUN = DSIZE + 2 * DBORDER
 // DSIZE = 2 * DMAX

@@ -67,28 +67,15 @@ set(PROJECT_SOURCES
         source/d1pal.h
         source/d1trn.cpp
         source/d1trn.h
-        source/dungeon/automap.cpp
-        source/dungeon/drlg_l1.cpp
-        source/dungeon/drlg_l2.cpp
-        source/dungeon/drlg_l3.cpp
-        source/dungeon/drlg_l4.cpp
         source/dungeon/engine.cpp
-        source/dungeon/gendung.cpp
         source/dungeon/interfac.cpp
         source/dungeon/itemdat.cpp
         source/dungeon/items.cpp
-        source/dungeon/lighting.cpp
         source/dungeon/monstdat.cpp
         source/dungeon/monster.cpp
-        source/dungeon/objdat.cpp
-        source/dungeon/objects.cpp
+        source/dungeon/pack.cpp
         source/dungeon/player.cpp
-        source/dungeon/questdat.cpp
-        source/dungeon/quests.cpp
         source/dungeon/spelldat.cpp
-        source/dungeon/themes.cpp
-        source/dungeon/trigs.cpp
-        source/libsmacker/smacker.cpp
         source/lineeditwidget.cpp
         source/lineeditwidget.h
         source/main.cpp
@@ -116,18 +103,6 @@ set(PROJECT_SOURCES
         source/settingsdialog.cpp
         source/settingsdialog.h
         source/settingsdialog.ui
-        source/trngeneratecolentrywidget.cpp
-        source/trngeneratecolentrywidget.h
-        source/trngeneratecolentrywidget.ui
-        source/trngeneratedialog.cpp
-        source/trngeneratedialog.h
-        source/trngeneratedialog.ui
-        source/trngeneratepalentrywidget.cpp
-        source/trngeneratepalentrywidget.h
-        source/trngeneratepalentrywidget.ui
-        source/trngeneratepalpopupdialog.cpp
-        source/trngeneratepalpopupdialog.h
-        source/trngeneratepalpopupdialog.ui
 )
 
 qt_add_resources(RESOURCES

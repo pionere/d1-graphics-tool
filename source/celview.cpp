@@ -146,7 +146,7 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         filePaths.append(url.toLocalFile());
     }
     // try to insert as frames
-    dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
+    // dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
 
 void CelScene::zoomOut()
@@ -781,5 +781,5 @@ void CelView::dropEvent(QDropEvent *event)
         filePaths.append(url.toLocalFile());
     }
     // try to insert as frames
-    dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
+    // dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
