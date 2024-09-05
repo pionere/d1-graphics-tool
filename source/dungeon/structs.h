@@ -4,9 +4,22 @@
  * Various global structures.
  */
 
-typedef uint8_t BYTE;
+//////////////////////////////////////////////////
+// miniwin
+//////////////////////////////////////////////////
+
+typedef int32_t INT;
 typedef uint8_t BOOLEAN;
-typedef uint32_t BOOL;
+
+typedef uint32_t DWORD;
+typedef int BOOL;
+typedef unsigned char BYTE;
+typedef uint16_t WORD;
+
+typedef unsigned int UINT;
+
+typedef int32_t WPARAM;
+typedef int32_t LPARAM;
 
 //////////////////////////////////////////////////
 // control

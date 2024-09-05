@@ -1780,6 +1780,33 @@ void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
 	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
 }
 
+void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI)
+{
+	if (wIndex == IDI_GOLD) {
+		SetItemData(MAXITEMS, IDI_GOLD);
+		//items[MAXITEMS]._iSeed = iseed;
+		//items[MAXITEMS]._iCreateInfo = wCI;
+	} else {
+		if ((wCI & ~CF_LEVEL) == 0) {
+			SetItemData(MAXITEMS, wIndex);
+			//items[MAXITEMS]._iSeed = iseed;
+			//items[MAXITEMS]._iCreateInfo = wCI;
+		} else {
+			if (wCI & CF_TOWN) {
+				RecreateTownItem(MAXITEMS, iseed, wIndex, wCI);
+			//	items[MAXITEMS]._iSeed = iseed;
+			//	items[MAXITEMS]._iCreateInfo = wCI;
+			//} else if ((wCI & CF_USEFUL) == CF_USEFUL) {
+			//	SetupAllUseful(MAXITEMS, iseed, wCI & CF_LEVEL);
+			} else {
+				SetupAllItems(MAXITEMS, wIndex, iseed, wCI & CF_LEVEL, (wCI & CF_DROP_QUALITY) >> 11); //, onlygood);
+			}
+		}
+	}
+	items[MAXITEMS]._iSeed = iseed;
+	items[MAXITEMS]._iCreateInfo = wCI;
+}
+
 void RespawnItem(int ii)
 {
 	ItemStruct* is;
@@ -1802,4 +1829,105 @@ void RespawnItem(int ii)
 		PlaySfxLoc(itemfiledata[ItemCAnimTbl[ICURS_MAGIC_ROCK]].idSFX, is->_ix, is->_iy);
 	} else if (is->_iCurs == ICURS_TAVERN_SIGN || is->_iCurs == ICURS_ANVIL_OF_FURY)
 		is->_iSelFlag = 1;*/
+}
+
+static void RecreateSmithItem(int ii/*, int iseed*/, int idx, unsigned lvl)
+{
+	// SetRndSeed(iseed);
+	GetItemAttrs(ii, RndSmithItem(lvl), lvl);
+
+	//items[ii]._iSeed = iseed;
+	//items[ii]._iCreateInfo = lvl | CF_SMITH;
+}
+
+static void RecreatePremiumItem(int ii/*, int iseed*/, int idx, unsigned lvl)
+{
+	// SetRndSeed(iseed);
+	GetItemAttrs(ii, RndSmithItem(lvl), lvl);
+	GetItemBonus(ii, lvl, IAR_SHOP, true, false);
+
+	//items[ii]._iSeed = iseed;
+	//items[ii]._iCreateInfo = lvl | CF_SMITHPREMIUM;
+}
+
+static void RecreateBoyItem(int ii/*, int iseed*/, int idx, unsigned lvl)
+{
+	// SetRndSeed(iseed);
+	GetItemAttrs(ii, RndSmithItem(lvl), lvl);
+	GetItemBonus(ii, lvl, IAR_SHOP, true, true);
+
+	//items[ii]._iSeed = iseed;
+	//items[ii]._iCreateInfo = lvl | CF_BOY;
+}
+
+static void RecreateWitchItem(int ii/*, int iseed*/, int idx, unsigned lvl)
+{
+	/*if (idx == IDI_MANA || idx == IDI_FULLMANA || idx == IDI_PORTAL) {
+		SetItemData(ii, idx);
+	} else {*/
+		// SetRndSeed(iseed);
+		GetItemAttrs(ii, RndWitchItem(lvl), lvl);
+		// if (random_(51, 100) <= 5 || items[ii]._itype == ITYPE_STAFF)
+			GetItemBonus(ii, lvl, IAR_SHOP, true, true);
+	//}
+
+	//items[ii]._iSeed = iseed;
+	//items[ii]._iCreateInfo = lvl | CF_WITCH;
+}
+
+static void RecreateHealerItem(int ii/*, int iseed*/, int idx, unsigned lvl)
+{
+	/*if (idx == IDI_HEAL || idx == IDI_FULLHEAL || idx == IDI_RESURRECT) {
+		SetItemData(ii, idx);
+	} else {*/
+		// SetRndSeed(iseed);
+		GetItemAttrs(ii, RndHealerItem(lvl), lvl);
+	//}
+
+	//items[ii]._iSeed = iseed;
+	//items[ii]._iCreateInfo = lvl | CF_HEALER;
+}
+
+static void RecreateCraftedItem(int ii/*, int iseed*/, int idx, unsigned lvl)
+{
+	// SetRndSeed(iseed);
+	GetItemAttrs(ii, idx, lvl);
+	if (random_(51, 2) != 0)
+		GetItemBonus(ii, lvl, IAR_CRAFT, true, true);
+
+	//items[ii]._iSeed = iseed;
+	//items[ii]._iCreateInfo = lvl | CF_CRAFTED;
+}
+
+void RecreateTownItem(int ii, int iseed, uint16_t idx, uint16_t icreateinfo)
+{
+	int loc;
+	unsigned lvl;
+
+	loc = (icreateinfo & CF_TOWN) >> 8;
+	lvl = icreateinfo & CF_LEVEL;
+	SetRndSeed(iseed);
+	switch (loc) {
+	case CFL_SMITH:
+		RecreateSmithItem(ii, /*iseed, */idx, lvl);
+		break;
+	case CFL_SMITHPREMIUM:
+		RecreatePremiumItem(ii, /*iseed, */idx, lvl);
+		break;
+	case CFL_BOY:
+		RecreateBoyItem(ii, /*iseed, */idx, lvl);
+		break;
+	case CFL_WITCH:
+		RecreateWitchItem(ii, /*iseed, */idx, lvl);
+		break;
+	case CFL_HEALER:
+		RecreateHealerItem(ii, /*iseed, */idx, lvl);
+		break;
+	case CFL_CRAFTED:
+		RecreateCraftedItem(ii, /*iseed, */idx, lvl);
+		break;
+	default:
+		ASSUME_UNREACHABLE;
+		break;
+	}
 }
