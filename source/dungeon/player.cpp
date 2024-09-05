@@ -296,6 +296,33 @@ void CreatePlayer(const _uiheroinfo& heroinfo)
 	//SetRndSeed(0);
 }
 
+/*
+ * Initialize player fields at startup(unpack).
+ *  - calculate derived values
+ */
+void InitPlayer(int pnum)
+{
+	dev_assert((unsigned)pnum < MAX_PLRS, "InitPlayer: illegal player %d", pnum);
+	
+	// calculate derived values
+	CalculateGold(pnum);
+
+	plr._pNextExper = PlrExpLvlsTbl[plr._pLevel];
+
+	plr._pAblSkills = SPELL_MASK(Abilities[plr._pClass]);
+	plr._pAblSkills |= SPELL_MASK(SPL_WALK) | SPELL_MASK(SPL_BLOCK) | SPELL_MASK(SPL_ATTACK) | SPELL_MASK(SPL_RATTACK);
+
+	plr._pWalkpath[MAX_PATH_LENGTH] = DIR_NONE;
+}
+
+void ClrPlrPath(int pnum)
+{
+	dev_assert((unsigned)pnum < MAX_PLRS, "ClrPlrPath: illegal player %d", pnum);
+
+	plr._pWalkpath[0] = DIR_NONE;
+	//memset(plr._pWalkpath, DIR_NONE, sizeof(plr._pWalkpath));
+}
+
 void IncreasePlrStr(int pnum)
 {
 	int v;

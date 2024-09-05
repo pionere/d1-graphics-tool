@@ -149,13 +149,10 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #endif
 
 #if DEBUG_MODE || DEV_MODE
-#define dev_assert(x) 
-#endif
-
-#if DEBUG_MODE || DEV_MODE
-#define dev_assert(exp, msg, ...) (void)((exp) || (app_fatal(msg, __VA_ARGS__), 0))
+//#define dev_assert(exp, msg, ...) (void)((exp) || (app_fatal(msg, __VA_ARGS__), 0))
+#define dev_assert(exp, msg, ...) assert(exp)
 #else
-#define dev_assert(exp) ((void)0)
+#define dev_assert(exp, msg, ...) ((void)0)
 #endif
 
 #if INET_MODE
