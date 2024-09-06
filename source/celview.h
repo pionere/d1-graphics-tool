@@ -14,7 +14,7 @@
 #include <QTimer>
 #include <QWidget>
 
-#include "d1hero.h"
+#include "d1hro.h"
 #include "pushbuttonwidget.h"
 
 #define ZOOM_LIMIT 10

@@ -33,7 +33,7 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     return true;
 }
 
-D1Hero::instance()
+D1Hero* D1Hero::instance()
 {
     for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
         if (!plr._pActive) {
@@ -56,12 +56,12 @@ void D1Hero::compareTo(const D1Hero *hero, QString header) const
 
 }
 
-QString D1Gfx::getFilePath() const
+QString D1Hero::getFilePath() const
 {
     return this->filePath;
 }
 
-void D1Gfx::setFilePath(const QString &filePath)
+void D1Hero::setFilePath(const QString &filePath)
 {
     this->filePath = filePath;
     this->modified = true;
@@ -80,8 +80,8 @@ void D1Hero::setModified(bool modified)
 bool D1Hero::save(const SaveAsParam &params)
 {
     QString filePath = this->filePath;
-    if (!params.celFilePath.isEmpty()) {
-        filePath = params.celFilePath;
+    if (!params.filePath.isEmpty()) {
+        filePath = params.filePath;
         if (!params.autoOverwrite && QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, QApplication::tr("Confirmation"), QApplication::tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
