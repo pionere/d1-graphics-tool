@@ -502,9 +502,9 @@ void MainWindow::on_actionLoad_triggered()
 
     QString fileLower = filePath.toLower();
     OpenAsParam params = OpenAsParam();
-    params.celFilePath = filePath;
+    params.filePath = filePath;
 
-        D1Hero *hero = new D1Hero();
+        D1Hero *hero = D1Hero::instance();
         // hero->setPalette(this->trnBase->getResultingPalette());
 
         if (hero->load(filePath, params)) {
@@ -564,7 +564,7 @@ void MainWindow::openFiles(const QStringList &filePaths)
 {
     for (const QString &filePath : filePaths) {
         OpenAsParam params = OpenAsParam();
-        params.celFilePath = filePath;
+        params.filePath = filePath;
         this->openFile(params);
     }
 }
@@ -658,7 +658,7 @@ static void findFirstFile(const QString &dir, const QString &filter, QString &fi
 
 void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadFileContent *result)
 {
-    QString filePath = params.celFilePath;
+    QString filePath = params.filePath;
 
     // Check file extension
     FILE_CONTENT fileType = FILE_CONTENT::EMPTY;
@@ -868,7 +868,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
-    QString filePath = params.celFilePath.isEmpty() ? this->hero->getFilePath() : params.celFilePath;
+    QString filePath = params.filePath.isEmpty() ? this->hero->getFilePath() : params.filePath;
     if (!filePath.isEmpty()) {
         QString fileLower = filePath.toLower();
             if (fileLower.endsWith(".hro")) {
@@ -1013,7 +1013,7 @@ void MainWindow::on_actionDiff_triggered()
     }
 
     OpenAsParam params = OpenAsParam();
-    params.celFilePath = openFilePath;
+    params.filePath = openFilePath;
 
     LoadFileContent fileContent;
     MainWindow::loadFile(params, nullptr, &fileContent);

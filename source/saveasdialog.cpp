@@ -4,7 +4,7 @@
 
 #include "ui_saveasdialog.h"
 
-#include "d1hero.h"
+#include "d1hro.h"
 #include "mainwindow.h"
 
 SaveAsDialog::SaveAsDialog(QWidget *parent)

@@ -115,7 +115,6 @@ public:
     // void initializePathComboBox();
     void initializeDisplayComboBox();
 
-    void selectColor(const D1GfxPixel &pixel);
     std::pair<int, int> getCurrentSelection() const;
     void checkTranslationsSelection(const std::vector<quint8> &indices);
 

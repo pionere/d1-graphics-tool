@@ -38,7 +38,7 @@ D1Hero* D1Hero::instance()
     for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
         if (!plr._pActive) {
             plr._pActive = TRUE;
-            D1Hero* hero = D1Hero();
+            D1Hero* hero = new D1Hero();
             hero->pnum = pnum;
             return hero;
         }

@@ -360,23 +360,6 @@ void PaletteWidget::initializeDisplayComboBox()
     ui->displayComboBox->addItem(tr("Show all colors"), QVariant::fromValue(COLORFILTER_TYPE::NONE));
 }
 
-void PaletteWidget::selectColor(const D1GfxPixel &pixel)
-{
-    this->initStopColorPicking();
-
-    int index;
-
-    if (pixel.isTransparent()) {
-        index = COLORIDX_TRANSPARENT;
-    } else {
-        index = pixel.getPaletteIndex();
-    }
-    this->selectedFirstColorIndex = index;
-    this->selectedLastColorIndex = index;
-
-    this->updateFields();
-}
-
 std::pair<int, int> PaletteWidget::getCurrentSelection() const
 {
     return std::pair<int, int>(this->selectedFirstColorIndex, this->selectedLastColorIndex);
