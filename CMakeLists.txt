@@ -51,20 +51,8 @@ set(PROJECT_SOURCES
         source/celview.ui
         source/config.cpp
         source/config.h
-        source/d1cel.cpp
-        source/d1celframe.cpp
-        source/d1celframe.h
-        source/d1cel.h
-        source/d1cl2.cpp
-        source/d1cl2.h
-        source/d1cl2frame.cpp
-        source/d1cl2frame.h
-        source/d1gfx.cpp
-        source/d1gfx.h
         source/d1hro.cpp
         source/d1hro.h
-        source/d1image.cpp
-        source/d1image.h
         source/d1pal.cpp
         source/d1pal.h
         source/d1trn.cpp

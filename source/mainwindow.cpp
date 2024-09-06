@@ -217,26 +217,8 @@ bool MainWindow::loadBaseTrn(const QString &path)
     return true;
 }
 
-void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
-{
-    // picking
-    if (pos.x() < 0 || pos.x() >= frame->getWidth() || pos.y() < 0 || pos.y() >= frame->getHeight()) {
-        // no target hit -> ignore
-        return;
-    }
-    const D1GfxPixel pixel = frame->getPixel(pos.x(), pos.y());
-    this->palWidget->selectColor(pixel);
-    this->trnUniqueWidget->selectColor(pixel);
-    this->trnBaseWidget->selectColor(pixel);
-}
-
 void MainWindow::pointHovered(const QPoint &pos)
 {
-}
-
-void MainWindow::frameModified(D1GfxFrame *frame)
-{
-    this->updateWindow();
 }
 
 void MainWindow::colorModified()
@@ -473,12 +455,12 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_DiabloHero_triggered()
 {
-    this->openNew(OPEN_GFX_TYPE::DIABLO);
+    this->openNew(OPEN_HERO_TYPE::DIABLO);
 }
 
 void MainWindow::on_actionNew_HellfireHero_triggered()
 {
-    this->openNew(OPEN_GFX_TYPE::HELLFIRE);
+    this->openNew(OPEN_HERO_TYPE::HELLFIRE);
 }
 
 void MainWindow::on_actionToggle_View_triggered()

@@ -10,15 +10,13 @@
 #include <QUndoCommand>
 
 #include "celview.h"
-#include "d1gfx.h"
-#include "d1hero.h"
+#include "d1hro.h"
 #include "d1pal.h"
 #include "d1trn.h"
 #include "openasdialog.h"
 #include "paletteshowdialog.h"
 #include "palettewidget.h"
 #include "progressdialog.h"
-#include "trngeneratedialog.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
 
@@ -85,20 +83,18 @@ public:
     void updateWindow();
 
     void openArgFile(const char *arg);
-    void openNew(OPEN_GFX_TYPE gfxType);
+    void openNew(OPEN_HERO_TYPE heroType);
     void openFile(const OpenAsParam &params);
     void openFiles(const QStringList &filePaths);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
     void updateTrns(const std::vector<D1Trn *> &newTrns);
 
-    void gfxChanged(D1Gfx *gfx);
+    void heroChanged(D1Hero *hero);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void updatePalette(const D1Pal* pal);
     void colorModified();
-    void frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);
     void pointHovered(const QPoint &pos);
-    void frameModified(D1GfxFrame *frame);
 
     void initPaletteCycle();
     void nextPaletteCycle(D1PAL_CYCLE_TYPE type);

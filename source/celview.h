@@ -15,6 +15,7 @@
 #include <QWidget>
 
 #include "d1hro.h"
+#include "d1pal.h"
 #include "pushbuttonwidget.h"
 
 #define ZOOM_LIMIT 10
