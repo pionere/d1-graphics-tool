@@ -49,7 +49,7 @@ void SaveAsDialog::on_saveButton_clicked()
 {
     SaveAsParam params;
     // main cel file
-    params.celFilePath = this->ui->outputFileEdit->text();
+    params.filePath = this->ui->outputFileEdit->text();
     // heroSettingsGroupBox: hellfireHero
     if (this->ui->hellfireHeroYesRadioButton->isChecked()) {
         params.hellfireHero = SAVE_HELLFIRE_TYPE::TRUE;

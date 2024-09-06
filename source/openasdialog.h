@@ -2,37 +2,15 @@
 
 #include <QDialog>
 
-enum class OPEN_CLIPPED_TYPE {
-    AUTODETECT,
-    TRUE,
-    FALSE,
-};
-
-enum class OPEN_GFX_TYPE {
-    AUTODETECT,
-    DIABLO,
-    HELLFIRE,
-    BASIC,
-    TILESET,
-    GFXSET,
-};
-
 enum class OPEN_HERO_TYPE {
     AUTODETECT,
     DIABLO,
     HELLFIRE,
 };
 
-enum class OPEN_UPSCALED_TYPE {
-    AUTODETECT,
-    TRUE,
-    FALSE,
-};
-
 class OpenAsParam {
 public:
-    QString celFilePath;
-    OPEN_GFX_TYPE gfxType = OPEN_GFX_TYPE::AUTODETECT;
+    QString filePath;
     OPEN_HERO_TYPE heroType = OPEN_HERO_TYPE::AUTODETECT;
 };
 

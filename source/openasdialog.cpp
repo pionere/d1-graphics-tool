@@ -37,7 +37,7 @@ void OpenAsDialog::updateFields()
 
 void OpenAsDialog::on_inputFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("HS/HSV Files (*.hs *.HS *.hsv *.HSV)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("hro Files (*.hro *.HRO)"));
 
     if (openFilePath.isEmpty())
         return;
@@ -50,13 +50,13 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
 void OpenAsDialog::on_openButton_clicked()
 {
     OpenAsParam params;
-    params.celFilePath = this->ui->inputFileEdit->text();
-    if (params.celFilePath.isEmpty()) {
+    params.filePath = this->ui->inputFileEdit->text();
+    if (params.filePath.isEmpty()) {
         QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
         return;
     }
 
-    params.gfxType = OPEN_GFX_TYPE::BASIC;
+    params.heroType = OPEN_HERO_TYPE::AUTODETECT;
 
     this->close();
 
