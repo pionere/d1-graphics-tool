@@ -309,10 +309,6 @@ void CelView::displayFrame()
     this->celScene.addPixmap(QPixmap::fromImage(celFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
 
-    // Set current frame width and height
-    this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
-    this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
-
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
 }
@@ -347,7 +343,7 @@ void CelView::on_firstFrameButton_clicked()
 {
 }
 
-void CelView::on_groupIndexEdit_returnPressed()
+/*void CelView::on_groupIndexEdit_returnPressed()
 {
     int groupIndex = this->ui->groupIndexEdit->text().toInt() - 1;
 
@@ -385,4 +381,4 @@ void CelView::dropEvent(QDropEvent *event)
     }
     // try to insert as frames
     // dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
-}
+}*/

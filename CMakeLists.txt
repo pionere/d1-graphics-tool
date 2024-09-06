@@ -78,9 +78,6 @@ set(PROJECT_SOURCES
         source/openasdialog.cpp
         source/openasdialog.h
         source/openasdialog.ui
-        source/paletteshowdialog.cpp
-        source/paletteshowdialog.h
-        source/paletteshowdialog.ui
         source/palettewidget.cpp
         source/palettewidget.h
         source/palettewidget.ui

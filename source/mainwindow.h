@@ -14,7 +14,6 @@
 #include "d1pal.h"
 #include "d1trn.h"
 #include "openasdialog.h"
-#include "paletteshowdialog.h"
 #include "palettewidget.h"
 #include "progressdialog.h"
 #include "saveasdialog.h"
@@ -199,7 +198,6 @@ private:
     OpenAsDialog *openAsDialog = nullptr;
     SaveAsDialog *saveAsDialog = nullptr;
     SettingsDialog *settingsDialog = nullptr;
-    PaletteShowDialog *paletteShowDialog = nullptr;
 
     D1Pal *pal = nullptr;
     D1Trn *trnUnique = nullptr;

@@ -723,7 +723,7 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
         }
     } else {
         // filePath.isEmpty()
-        result->hero->create(params.heroClass == OPEN_HERO_CLASS::AUTODETECT ? 0 : (params.heroClass - 1));
+        result->hero->create(params.heroClass == OPEN_HERO_CLASS::AUTODETECT ? 0 : ((int)params.heroClass - 1));
     }
 }
 

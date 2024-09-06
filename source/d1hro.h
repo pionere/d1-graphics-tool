@@ -26,7 +26,7 @@ public:
     void setModified(bool modified = true);
 
     const char* getName() const;
-    void setName(const char* name);
+    void setName(const QString &name);
 
     int getClass() const;
     void setClass(int cls);

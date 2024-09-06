@@ -26,6 +26,16 @@ void IncreasePlrDex(int pnum);
 void IncreasePlrVit(int pnum);
 void RestorePlrHpVit(int pnum);
 
+extern const BYTE PlrAnimFrameLens[NUM_PGXS];
+extern const int StrengthTbl[NUM_CLASSES];
+extern const int MagicTbl[NUM_CLASSES];
+extern const int DexterityTbl[NUM_CLASSES];
+extern const int VitalityTbl[NUM_CLASSES];
+extern const BYTE Abilities[NUM_CLASSES];
+extern const char* const ClassStrTbl[NUM_CLASSES];
+extern const unsigned PlrExpLvlsTbl[MAXCHARLEVEL + 1];
+extern const unsigned SkillExpLvlsTbl[MAXSPLLEVEL + 1];
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __PLAYER_H__ */

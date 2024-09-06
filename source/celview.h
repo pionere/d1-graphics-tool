@@ -100,12 +100,12 @@ private slots:
     void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
 
-    void on_groupIndexEdit_returnPressed();
-    void on_groupIndexEdit_escPressed();
+    //void on_groupIndexEdit_returnPressed();
+    //void on_groupIndexEdit_escPressed();
 
-    void dragEnterEvent(QDragEnterEvent *event) override;
-    void dragMoveEvent(QDragMoveEvent *event) override;
-    void dropEvent(QDropEvent *event) override;
+    //void dragEnterEvent(QDragEnterEvent *event) override;
+    //void dragMoveEvent(QDragMoveEvent *event) override;
+    //void dropEvent(QDropEvent *event) override;
 
     void ShowContextMenu(const QPoint &pos);
 

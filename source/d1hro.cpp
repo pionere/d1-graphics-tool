@@ -30,7 +30,6 @@ D1Hero::~D1Hero()
     plr._pActive = FALSE;
 }
 
-
 bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
 {
     // Opening CEL file and load it in RAM
@@ -69,7 +68,7 @@ void D1Hero::create(unsigned index)
 
     selhero_heroInfo.hiName[0] = '\0';
 
-    CreatePlayer(this->pnum, &hi);
+    CreatePlayer(this->pnum, &selhero_heroInfo);
 
     this->filePath.clear();
     this->modified = true;
