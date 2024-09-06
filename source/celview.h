@@ -18,7 +18,6 @@
 #include "d1pal.h"
 #include "pushbuttonwidget.h"
 
-#define ZOOM_LIMIT 10
 #define CEL_SCENE_SPACING 8
 #define CEL_SCENE_MARGIN 0
 
@@ -40,14 +39,7 @@ class CelScene : public QGraphicsScene {
 public:
     CelScene(QWidget *view);
 
-    void zoomOut();
-    void zoomIn();
-    void setZoom(QString &zoom);
-    QString zoomText() const;
-
 private:
-    static void parseZoomValue(QString &zoom, quint8 &zoomNumerator, quint8 &zoomDenominator);
-    void updateQGraphicsView();
     void mouseEvent(QGraphicsSceneMouseEvent *event, int flags);
     void mouseHoverEvent(QGraphicsSceneMouseEvent *event);
 
@@ -58,17 +50,15 @@ private slots:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
-    void dragMoveEvent(QGraphicsSceneDragDropEvent *event) override;
-    void dropEvent(QGraphicsSceneDragDropEvent *event) override;
+    //void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
+    //void dragMoveEvent(QGraphicsSceneDragDropEvent *event) override;
+    //void dropEvent(QGraphicsSceneDragDropEvent *event) override;
 
 signals:
     // void framePixelClicked(const QPoint &pos, int flags);
     // void framePixelHovered(const QPoint &pos);
 
 private:
-    quint8 currentZoomNumerator = 1;
-    quint8 currentZoomDenominator = 1;
     bool panning = false;
     bool leftMousePressed = false;
     QPoint lastPos;
@@ -125,10 +115,4 @@ private:
 
     D1Pal *pal;
     D1Hero *hero;
-    int currentGroupIndex = 0;
-    int currentFrameIndex = 0;
-    int origFrameIndex = 0;
-    QPointer<D1Pal> origPal;
-    unsigned currentPlayDelay = 50000; // microsec
-    int playTimer = 0;
 };

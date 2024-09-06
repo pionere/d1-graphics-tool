@@ -83,7 +83,7 @@ public:
     void updateWindow();
 
     void openArgFile(const char *arg);
-    void openNew(OPEN_HERO_TYPE heroType);
+    void openNew(OPEN_HERO_CLASS heroClass);
     void openFile(const OpenAsParam &params);
     void openFiles(const QStringList &filePaths);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
@@ -104,7 +104,7 @@ public:
     QStringList filesDialog(const QString &title, const QString &filter);
     QString folderDialog(const QString &title);
 
-    static bool hasImageUrl(const QMimeData *mimeData);
+    static bool hasHeroUrl(const QMimeData *mimeData);
     static bool isResourcePath(const QString &path);
     static void supportedImageFormats(QStringList &allSupportedImageFormats);
     static QString FileContentTypeTxt(FILE_CONTENT fileType);
@@ -125,8 +125,12 @@ public slots:
     void on_actionToggle_View_triggered();
 
 private slots:
-    void on_actionNew_DiabloHero_triggered();
-    void on_actionNew_HellfireHero_triggered();
+    void on_actionNew_Warrior_triggered();
+    void on_actionNew_Rogue_triggered();
+    void on_actionNew_Sorcerer_triggered();
+    void on_actionNew_Monk_triggered();
+    void on_actionNew_Bard_triggered();
+    void on_actionNew_Barbarian_triggered();
 
     void on_actionOpen_triggered();
     void on_actionOpenAs_triggered();

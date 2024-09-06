@@ -29,10 +29,10 @@ void OpenAsDialog::initialize()
 
 void OpenAsDialog::updateFields()
 {
-    /*QString filePath = this->ui->inputFileEdit->text();
+    QString filePath = this->ui->inputFileEdit->text();
     bool hasInputFile = !filePath.isEmpty();
 
-    this->ui->celSettingsGroupBox->setEnabled(hasInputFile);*/
+    this->ui->heroSettingsGroupBox->setEnabled(hasInputFile);
 }
 
 void OpenAsDialog::on_inputFileBrowseButton_clicked()
@@ -55,8 +55,14 @@ void OpenAsDialog::on_openButton_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
         return;
     }
-
-    params.heroType = OPEN_HERO_TYPE::AUTODETECT;
+    // heroSettingsGroupBox: hellfireHero
+    if (this->ui->hellfireHeroYesRadioButton->isChecked()) {
+        params.heroType = OPEN_HERO_TYPE::TRUE;
+    } else if (this->ui->hellfireHeroNoRadioButton->isChecked()) {
+        params.heroType = OPEN_HERO_TYPE::FALSE;
+    } else {
+        params.heroType = OPEN_HERO_TYPE::AUTODETECT;
+    }
 
     this->close();
 

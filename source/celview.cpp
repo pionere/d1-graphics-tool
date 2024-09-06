@@ -123,14 +123,14 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     this->mouseHoverEvent(event);
 }
 
-void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+/*void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     this->dragMoveEvent(event);
 }
 
 void CelScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
 {
-    if (MainWindow::hasImageUrl(event->mimeData())) {
+    if (MainWindow::hasHeroUrl(event->mimeData())) {
         event->acceptProposedAction();
     } else {
         event->ignore();
@@ -145,89 +145,8 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     for (const QUrl &url : event->mimeData()->urls()) {
         filePaths.append(url.toLocalFile());
     }
-    // try to insert as frames
-    // dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
-}
-
-void CelScene::zoomOut()
-{
-    if (this->currentZoomNumerator > 1 || this->currentZoomDenominator < ZOOM_LIMIT) {
-        if (this->currentZoomNumerator > 1) {
-            this->currentZoomNumerator--;
-        } else {
-            this->currentZoomDenominator++;
-        }
-        this->updateQGraphicsView();
-    }
-}
-
-void CelScene::zoomIn()
-{
-    if (this->currentZoomDenominator > 1 || this->currentZoomNumerator < ZOOM_LIMIT) {
-        if (this->currentZoomDenominator > 1) {
-            this->currentZoomDenominator--;
-        } else {
-            this->currentZoomNumerator++;
-        }
-        this->updateQGraphicsView();
-    }
-}
-
-void CelScene::setZoom(QString &zoom)
-{
-    CelScene::parseZoomValue(zoom, this->currentZoomNumerator, this->currentZoomDenominator);
-
-    this->updateQGraphicsView();
-}
-
-QString CelScene::zoomText() const
-{
-    return QString::number(this->currentZoomNumerator) + ":" + QString::number(this->currentZoomDenominator);
-}
-
-void CelScene::updateQGraphicsView()
-{
-    qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
-    for (QGraphicsView *view : this->views()) {
-        view->resetTransform();
-        view->scale(zoomFactor, zoomFactor);
-        view->show();
-    }
-}
-
-void CelScene::parseZoomValue(QString &zoom, quint8 &zoomNumerator, quint8 &zoomDenominator)
-{
-    int sepIdx = zoom.indexOf(":");
-
-    if (sepIdx >= 0) {
-        if (sepIdx == 0) {
-            zoomNumerator = 1;
-            zoomDenominator = zoom.mid(1).toUShort();
-        } else if (sepIdx == zoom.length() - 1) {
-            zoom.chop(1);
-            zoomNumerator = zoom.toUShort();
-            zoomDenominator = 1;
-        } else {
-            zoomNumerator = zoom.mid(0, sepIdx).toUShort();
-            zoomDenominator = zoom.mid(sepIdx + 1).toUShort();
-        }
-    } else {
-        zoomNumerator = zoom.toUShort();
-        zoomDenominator = 1;
-    }
-    if (zoomNumerator == 0) {
-        zoomNumerator = 1;
-    }
-    if (zoomNumerator > ZOOM_LIMIT) {
-        zoomNumerator = ZOOM_LIMIT;
-    }
-    if (zoomDenominator == 0) {
-        zoomDenominator = 1;
-    }
-    if (zoomDenominator > ZOOM_LIMIT) {
-        zoomDenominator = ZOOM_LIMIT;
-    }
-}
+    dMainWindow().openFiles(filePaths);
+}*/
 
 CelView::CelView(QWidget *parent)
     : QWidget(parent)
@@ -291,38 +210,52 @@ void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modif
 // Displaying CEL file path information
 void CelView::updateLabel()
 {
-    CelView::setLabelContent(this->ui->celLabel, this->hero->getFilePath(), this->hero->isModified());
+    CelView::setLabelContent(this->ui->heroLabel, this->hero->getFilePath(), this->hero->isModified());
 }
 
 void CelView::updateFields()
 {
-    int count;
-
+    QLabel *label;
     this->updateLabel();
-    // set play-delay text
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
 
-    // Set current and maximum group text
-    count = 0;
-    this->ui->groupIndexEdit->setText(
-        QString::number(count != 0 ? this->currentGroupIndex + 1 : 0));
-    this->ui->groupNumberEdit->setText(QString::number(count));
+    // set texts
+    this->ui->heroNameEdit->setText(this->hero->getName());
 
-    // Set current and maximum frame text
-    int frameIndex = this->currentFrameIndex;
-    this->ui->frameIndexEdit->setText(
-        QString::number(count != 0 ? frameIndex + 1 : 0));
-    this->ui->frameNumberEdit->setText(QString::number(count));
+    this->ui->heroClassComboBox->setCurrentIndex(this->hero->getClass());
+
+    this->ui->heroLevelEdit->setText(QString::number(this->hero->getLevel()));
+
+    this->ui->heroStatPtsLabel->setText(QString::number(this->hero->getStatPoints()));
+
+    label = this->ui->heroStrengthLabel;
+    label->setText(QString::number(this->hero->getStrength()));
+    label->setToolTip(QString::number(this->hero->getBaseStrength()));
+    label = this->ui->heroDexterityLabel;
+    label->setText(QString::number(this->hero->getDexterity()));
+    label->setToolTip(QString::number(this->hero->getBaseDexterity()));
+    label = this->ui->heroMagicLabel;
+    label->setText(QString::number(this->hero->getMagic()));
+    label->setToolTip(QString::number(this->hero->getBaseMagic()));
+    label = this->ui->heroVitalityLabel;
+    label->setText(QString::number(this->hero->getVitality()));
+    label->setToolTip(QString::number(this->hero->getBaseVitality()));
+
+    label = this->ui->heroLifeLabel;
+    label->setText(QString::number(this->hero->getLife()));
+    label->setToolTip(QString::number(this->hero->getBaseLife()));
+    label = this->ui->heroManaLabel;
+    label->setText(QString::number(this->hero->getMana()));
+    label->setToolTip(QString::number(this->hero->getBaseMana()));
+
+    this->ui->heroMagicResist->setText(QString::number(this->hero->getMagicResist()));
+    this->ui->heroFireResist->setText(QString::number(this->hero->getFireResist()));
+    this->ui->heroLightningResist->setText(QString::number(this->hero->getLightningResist()));
+    this->ui->heroAcidResist->setText(QString::number(this->hero->getAcidResist()));
 }
 
 CelScene *CelView::getCelScene() const
 {
     return const_cast<CelScene *>(&this->celScene);
-}
-
-int CelView::getCurrentFrameIndex() const
-{
-    return this->currentFrameIndex;
 }
 
 void CelView::framePixelClicked(const QPoint &pos, int flags)

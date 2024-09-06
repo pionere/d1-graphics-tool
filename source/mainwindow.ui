@@ -55,8 +55,12 @@
     <property name="title">
      <string>New</string>
     </property>
-    <addaction name="actionNew_DiabloHero"/>
-    <addaction name="actionNew_HellfireHero"/>
+    <addaction name="actionNew_Warrior"/>
+    <addaction name="actionNew_Rogue"/>
+    <addaction name="actionNew_Sorcerer"/>
+    <addaction name="actionNew_Monk"/>
+    <addaction name="actionNew_Bard"/>
+    <addaction name="actionNew_Barbarian"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -171,14 +175,34 @@
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actionNew_DiabloHero">
+  <action name="actionNew_Warrior">
    <property name="text">
-    <string>Hero (Diablo)</string>
+    <string>Warrior</string>
    </property>
   </action>
-  <action name="actionNew_HellfireHero">
+  <action name="actionNew_Rogue">
    <property name="text">
-    <string>Hero (Hellfire)</string>
+    <string>Rogue</string>
+   </property>
+  </action>
+  <action name="actionNew_Sorcerer">
+   <property name="text">
+    <string>Sorcerer</string>
+   </property>
+  </action>
+  <action name="actionNew_Monk">
+   <property name="text">
+    <string>Monk</string>
+   </property>
+  </action>
+  <action name="actionNew_Bard">
+   <property name="text">
+    <string>Bard</string>
+   </property>
+  </action>
+  <action name="actionNew_Barbarian">
+   <property name="text">
+    <string>Barbarian</string>
    </property>
   </action>
   <action name="actionQuit">

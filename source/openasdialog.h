@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QString>
 
 enum class OPEN_HERO_TYPE {
     AUTODETECT,
@@ -8,10 +9,21 @@ enum class OPEN_HERO_TYPE {
     HELLFIRE,
 };
 
+enum class OPEN_HERO_CLASS {
+    AUTODETECT,
+    WARRIOR,
+    ROGUE,
+    SORCERER,
+    MONK,
+    BARD,
+    BARBARIAN,
+};
+
 class OpenAsParam {
 public:
     QString filePath;
     OPEN_HERO_TYPE heroType = OPEN_HERO_TYPE::AUTODETECT;
+    OPEN_HERO_CLASS heroClass = OPEN_HERO_CLASS::AUTODETECT;
 };
 
 namespace Ui {

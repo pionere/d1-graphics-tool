@@ -427,22 +427,12 @@ QString MainWindow::folderDialog(const QString &title)
     return dirPath;
 }
 
-bool MainWindow::hasImageUrl(const QMimeData *mimeData)
+bool MainWindow::hasHeroUrl(const QMimeData *mimeData)
 {
-    const QByteArrayList supportedMimeTypes = QImageReader::supportedMimeTypes();
-    QMimeDatabase mimeDB;
-
     for (const QUrl &url : mimeData->urls()) {
         QString filePath = url.toLocalFile();
-        // add PCX support
-        if (filePath.toLower().endsWith(".pcx")) {
+        if (filePath.toLower().endsWith(".hro")) {
             return true;
-        }
-        QMimeType mimeType = mimeDB.mimeTypeForFile(filePath);
-        for (const QByteArray &mimeTypeName : supportedMimeTypes) {
-            if (mimeType.inherits(mimeTypeName)) {
-                return true;
-            }
         }
     }
     return false;
@@ -453,24 +443,45 @@ bool MainWindow::isResourcePath(const QString &path)
     return path.startsWith(':');
 }
 
-void MainWindow::on_actionNew_DiabloHero_triggered()
+void MainWindow::on_actionNew_Warrior_triggered()
 {
-    this->openNew(OPEN_HERO_TYPE::DIABLO);
+    this->openNew(OPEN_HERO_CLASS::WARRIOR);
 }
 
-void MainWindow::on_actionNew_HellfireHero_triggered()
+void MainWindow::on_actionNew_Rogue_triggered()
 {
-    this->openNew(OPEN_HERO_TYPE::HELLFIRE);
+    this->openNew(OPEN_HERO_CLASS::ROGUE);
+}
+
+void MainWindow::on_actionNew_Sorcerer_triggered()
+{
+    this->openNew(OPEN_HERO_CLASS::SORCERER);
+}
+
+void MainWindow::on_actionNew_Monk_triggered()
+{
+    this->openNew(OPEN_HERO_CLASS::MONK);
+}
+
+void MainWindow::on_actionNew_Bard_triggered()
+{
+    this->openNew(OPEN_HERO_CLASS::BARD);
+}
+
+void MainWindow::on_actionNew_Barbarian_triggered()
+{
+    this->openNew(OPEN_HERO_CLASS::BARBARIAN);
 }
 
 void MainWindow::on_actionToggle_View_triggered()
 {
 }
 
-void MainWindow::openNew(OPEN_HERO_TYPE heroType)
+void MainWindow::openNew(OPEN_HERO_CLASS heroClass)
 {
     OpenAsParam params = OpenAsParam();
-    params.heroType = heroType;
+    params.heroType = OPEN_HERO_TYPE::AUTODETECT;
+    params.heroClass = heroClass;
     this->openFile(params);
 }
 
@@ -528,12 +539,8 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
-    for (const QUrl &url : event->mimeData()->urls()) {
-        QString fileLower = url.toLocalFile().toLower();
-        if (fileLower.endsWith(".sv") || fileLower.endsWith(".hsv")) {
-            event->acceptProposedAction();
-            return;
-        }
+    if (hasHeroUrl(event->mimeData())) {
+        event->acceptProposedAction();
     }
 }
 
@@ -716,7 +723,7 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
         }
     } else {
         // filePath.isEmpty()
-        // result->hero->setType(D1CEL_TYPE::V1_REGULAR);
+        result->hero->create(params.heroClass == OPEN_HERO_CLASS::AUTODETECT ? 0 : (params.heroClass - 1));
     }
 }
 

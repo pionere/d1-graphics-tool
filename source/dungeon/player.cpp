@@ -196,10 +196,10 @@ const unsigned SkillExpLvlsTbl[MAXSPLLEVEL + 1] = {
 /**
  * @param c plr_classes value
  */
-void CreatePlayer(const _uiheroinfo& heroinfo)
+void CreatePlayer(int pnum, const _uiheroinfo& heroinfo)
 {
 	int val, hp, mana;
-	int i, pnum = 0;
+	int i; // , pnum = 0;
 
 	memset(&plr, 0, sizeof(PlayerStruct));
 	//SetRndSeed(SDL_GetTicks());

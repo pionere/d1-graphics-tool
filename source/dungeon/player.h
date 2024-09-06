@@ -16,7 +16,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern int mypnum;
 extern PlayerStruct players[MAX_PLRS];
 
-void CreatePlayer(const _uiheroinfo& heroinfo);
+void CreatePlayer(int pnum, const _uiheroinfo& heroinfo);
 void InitPlayer(int pnum);
 void ClrPlrPath(int pnum);
 

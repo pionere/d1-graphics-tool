@@ -14,7 +14,7 @@ enum class SAVE_HELLFIRE_TYPE {
 class SaveAsParam {
 public:
     QString filePath;
-    SAVE_HELLFIRE_TYPE hellfireHero = SAVE_HELLFIRE_TYPE::AUTODETECT;
+    SAVE_HELLFIRE_TYPE heroType = SAVE_HELLFIRE_TYPE::AUTODETECT;
     bool autoOverwrite = false;
 };
 

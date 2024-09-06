@@ -45,6 +45,63 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="heroSettingsGroupBox">
+     <property name="title">
+      <string>Hero Settings</string>
+     </property>
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Hellfire:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QRadioButton" name="hellfireHeroYesRadioButton">
+          <property name="text">
+           <string>YES</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">hellfireHeroButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="hellfireHeroNoRadioButton">
+          <property name="text">
+           <string>NO</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">hellfireHeroButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="hellfireHeroAutoRadioButton">
+          <property name="text">
+           <string>Preserve</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">hellfireHeroButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout">
      <item>
       <spacer>
