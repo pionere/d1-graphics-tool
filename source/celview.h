@@ -100,8 +100,10 @@ private slots:
     void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
 
-    //void on_groupIndexEdit_returnPressed();
-    //void on_groupIndexEdit_escPressed();
+    void on_heroNameEdit_returnPressed();
+    void on_heroNameEdit_escPressed();
+    void on_heroLevelEdit_returnPressed();
+    void on_heroLevelEdit_escPressed();
 
     //void dragEnterEvent(QDragEnterEvent *event) override;
     //void dragMoveEvent(QDragMoveEvent *event) override;

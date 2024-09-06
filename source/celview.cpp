@@ -16,6 +16,8 @@
 #include "progressdialog.h"
 #include "ui_celview.h"
 
+#include "dungeon/defs.h"
+
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene(v)
 {
@@ -161,7 +163,8 @@ CelView::CelView(QWidget *parent)
     // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
-    QObject::connect(this->ui->groupIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_groupIndexEdit_escPressed()));
+    QObject::connect(this->ui->heroNameEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroNameEdit_escPressed()));
+    QObject::connect(this->ui->heroLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroLevelEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -343,23 +346,42 @@ void CelView::on_firstFrameButton_clicked()
 {
 }
 
-/*void CelView::on_groupIndexEdit_returnPressed()
+void CelView::on_heroNameEdit_returnPressed()
 {
-    int groupIndex = this->ui->groupIndexEdit->text().toInt() - 1;
+    QString name = this->ui->heroNameEdit->text();
 
-    this->setGroupIndex(groupIndex);
+    this->hero->setName(name);
+    this->ui->heroNameEdit->setText(this->hero->getName());
 
-    this->on_groupIndexEdit_escPressed();
+    this->on_heroNameEdit_escPressed();
 }
 
-void CelView::on_groupIndexEdit_escPressed()
+void CelView::on_heroNameEdit_escPressed()
 {
-    // update groupIndexEdit
+    // update heroNameEdit
     this->updateFields();
-    this->ui->groupIndexEdit->clearFocus();
+    this->ui->heroNameEdit->clearFocus();
 }
 
-void CelView::dragEnterEvent(QDragEnterEvent *event)
+void CelView::on_heroLevelEdit_returnPressed()
+{
+    int level = this->ui->heroLevelEdit->text().toShort();
+
+    if (level >= 1 && level < MAXCHARLEVEL) {
+        this->hero->setLevel(level);
+    }
+
+    this->on_heroLevelEdit_escPressed();
+}
+
+void CelView::on_heroLevelEdit_escPressed()
+{
+    // update heroLevelEdit
+    this->updateFields();
+    this->ui->heroLevelEdit->clearFocus();
+}
+
+/*void CelView::dragEnterEvent(QDragEnterEvent *event)
 {
     this->dragMoveEvent(event);
 }
