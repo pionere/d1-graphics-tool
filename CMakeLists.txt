@@ -76,6 +76,7 @@ set(PROJECT_SOURCES
         source/dungeon/inv.cpp
         source/dungeon/itemdat.cpp
         source/dungeon/items.cpp
+        source/dungeon/lighting.cpp
         source/dungeon/monstdat.cpp
         source/dungeon/monster.cpp
         source/dungeon/pack.cpp
