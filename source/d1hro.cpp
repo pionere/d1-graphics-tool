@@ -206,6 +206,7 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
         }
         InvPainter->setPen(InvPal->getColor(col));
         InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
+        LogErrorF("scrollrt_draw_item text %s to %d:%d (w:%d col%d)", is->_iName, sx + (nWidth - textWidth) / 2, sy - fm.height(), nWidth, col);
     }
 }
 
@@ -220,13 +221,13 @@ QImage D1Hero::getEquipmentImage() const
     // draw the inventory
     QString invFilePath = folder + "Data\\Inv\\Inv.CEL";
     if (QFile::exists(invFilePath)) {
-        LogErrorF("File '%s' exists", invFilePath);
+        LogErrorF("File '%s' exists", invFilePath.constData());
         D1Gfx gfx;
         gfx.setPalette(this->palette);
         OpenAsParam params;
         if (D1Cel::load(gfx, invFilePath, params) && gfx.getFrameCount() != 0) {
             D1GfxFrame *inv = gfx.getFrame(0);
-            LogErrorF("File '%s' loaded %dx%d", invFilePath, inv->getWidth(), inv->getHeight());
+            LogErrorF("File '%s' loaded %dx%d", invFilePath.constData(), inv->getWidth(), inv->getHeight());
             int ox = (INV_WIDTH - inv->getWidth()) / 2;
             int oy = (INV_HEIGHT - (inv->getHeight() - INV_ROWS)) / 2;
 
@@ -247,10 +248,10 @@ QImage D1Hero::getEquipmentImage() const
             }
             LogErrorF("Inv copied %d:%d", ox, oy);
         } else {
-            LogErrorF("Failed to load CEL file: %s", invFilePath);
+            LogErrorF("Failed to load CEL file: %s", invFilePath.constData());
         }
     } else {
-        LogErrorF("Failed to load %s", invFilePath);
+        LogErrorF("Failed to load %s", invFilePath.constData());
     }
     // draw the items
     QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
@@ -262,19 +263,19 @@ QImage D1Hero::getEquipmentImage() const
 
     D1Gfx *cCels = nullptr;
     if (QFile::exists(objFilePath)) {
-        LogErrorF("File '%s' exists", objFilePath);
+        LogErrorF("File '%s' exists", objFilePath.constData());
         cCels = new D1Gfx();
         cCels->setPalette(this->palette);
         OpenAsParam params;
         if (!D1Cel::load(*cCels, objFilePath, params)) {
-            LogErrorF("Failed to load CEL file: %s", objFilePath);
+            LogErrorF("Failed to load CEL file: %s", objFilePath.constData());
             delete cCels;
             cCels = nullptr;
         } else {
-            LogErrorF("File '%s' loaded.", objFilePath);
+            LogErrorF("File '%s' loaded.", objFilePath.constData());
         }
     } else {
-        LogErrorF("Failed to load %s", objFilePath);
+        LogErrorF("Failed to load %s", objFilePath.constData());
     }
     // DrawInv
 	ItemStruct *is, *pi;
@@ -416,7 +417,9 @@ void D1Hero::setName(const QString &name)
     QString currName = QString(players[this->pnum]._pName);
     if (currName == name)
         return;
+
     unsigned len = name.length();
+    LogErrorF("setName %d", len);
     if (len > lengthof(players[this->pnum]._pName) - 1)
         len = lengthof(players[this->pnum]._pName) - 1;
 

@@ -171,7 +171,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="2" column="3">
        <widget class="QPushButton" name="heroRestoreLifeButton">
         <property name="minimumWidth">
          <number>24</number>
@@ -187,7 +187,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="2" column="4">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>48</number>
@@ -197,7 +197,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item row="2" column="5">
        <widget class="QLabel" name="heroManaLabel"/>
       </item>
       <item row="3" column="0" colspan="6">
