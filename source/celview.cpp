@@ -294,8 +294,6 @@ void CelView::displayFrame()
     // Getting the current frame to display
     QImage celFrame = this->hero->getEquipmentImage();
 
-    LogErrorF();
-
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     // Building background of the width/height of the CEL frame
@@ -342,10 +340,6 @@ void CelView::on_framesGroupCheckBox_clicked()
 {
     // update frameIndexEdit and frameNumberEdit
     this->updateFields();
-}
-
-void CelView::on_firstFrameButton_clicked()
-{
 }
 
 void CelView::on_heroNameEdit_returnPressed()

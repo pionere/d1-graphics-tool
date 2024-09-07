@@ -422,7 +422,7 @@ void D1Hero::setName(const QString &name)
 
     memcpy(players[this->pnum]._pName, name.constData(), len);
 
-    players[len] = '\0';
+    players[this->pnum]._pName[len] = '\0';
 
     this->modified = true;
 }

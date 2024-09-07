@@ -453,10 +453,7 @@ void IncreasePlrVit(int pnum)
 void DecreasePlrMaxHp(int pnum)
 {
 	int tmp;
-	if ((unsigned)pnum >= MAX_PLRS) {
-		dev_fatal("DecreasePlrMaxHp: illegal player %d", pnum);
-	}
-
+	dev_assert((unsigned)pnum < MAX_PLRS, "DecreasePlrMaxHp: illegal player %d", pnum);
 	if (plr._pMaxHPBase > (1 << 6) && plr._pMaxHP > (1 << 6)) {
 		tmp = plr._pMaxHP - (1 << 6);
 		plr._pMaxHP = tmp;
