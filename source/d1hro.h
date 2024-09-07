@@ -57,6 +57,8 @@ public:
 
     int getLife() const;
     int getBaseLife() const;
+    void decLife();
+    void restoreLife();
     int getMana() const;
     int getBaseMana() const;
 

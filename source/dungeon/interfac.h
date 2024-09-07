@@ -17,4 +17,6 @@ extern bool PatchDunFiles;
 extern QString assetPath;
 extern char infostr[256];
 
+void LogErrorF(const char* msg, ...);
+
 #endif /* __INTERFAC_H__ */

@@ -35,26 +35,28 @@ typedef struct ObjStruct {
     };
 } ObjStruct;
 
-static void LogErrorF(const char* msg, ...)
+void LogErrorF(const char* msg, ...)
 {
 	char tmp[256];
-	/*snprintf(tmp, sizeof(tmp), "c:\\logdebug%d.txt", 0);
-	FILE* f0 = fopen(tmp, "a+");
-	if (f0 == NULL)
-		return;*/
-
+	char tmsg[256];
 	va_list va;
 
 	va_start(va, msg);
 
-	vsnprintf(tmp, sizeof(tmp), msg, va);
+	vsnprintf(tmsg, sizeof(tmsg), msg, va);
 
 	va_end(va);
 
-	dProgress() << QString(tmp);
-	/*fputs(tmp, f0);
+	// dProgressErr() << QString(tmsg);
+	
+	snprintf(tmp, sizeof(tmp), "c:\\logdebug%d.txt", 0);
+	FILE* f0 = fopen(tmp, "a+");
+	if (f0 == NULL)
+		return;
+
+	fputs(tmsg, f0);
 
 	fputc('\n', f0);
 
-	fclose(f0);*/
+	fclose(f0);
 }

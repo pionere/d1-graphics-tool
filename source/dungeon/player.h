@@ -25,6 +25,7 @@ void IncreasePlrMag(int pnum);
 void IncreasePlrDex(int pnum);
 void IncreasePlrVit(int pnum);
 void RestorePlrHpVit(int pnum);
+void DecreasePlrMaxHp(int pnum);
 
 extern const BYTE PlrAnimFrameLens[NUM_PGXS];
 extern const int StrengthTbl[NUM_CLASSES];

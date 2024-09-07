@@ -250,10 +250,10 @@ void CelView::updateFields()
     label->setText(QString::number(this->hero->getMana()));
     label->setToolTip(QString::number(this->hero->getBaseMana()));
 
-    this->ui->heroMagicResist->setText(QString("%1%%").arg(this->hero->getMagicResist()));
-    this->ui->heroFireResist->setText(QString("%1%%").arg(this->hero->getFireResist()));
-    this->ui->heroLightningResist->setText(QString("%1%%").arg(this->hero->getLightningResist()));
-    this->ui->heroAcidResist->setText(QString("%1%%").arg(this->hero->getAcidResist()));
+    this->ui->heroMagicResist->setText(QString("%1%").arg(this->hero->getMagicResist()));
+    this->ui->heroFireResist->setText(QString("%1%").arg(this->hero->getFireResist()));
+    this->ui->heroLightningResist->setText(QString("%1%").arg(this->hero->getLightningResist()));
+    this->ui->heroAcidResist->setText(QString("%1%").arg(this->hero->getAcidResist()));
 }
 
 CelScene *CelView::getCelScene() const
@@ -293,6 +293,8 @@ void CelView::displayFrame()
 
     // Getting the current frame to display
     QImage celFrame = this->hero->getEquipmentImage();
+
+    LogErrorF();
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -379,6 +381,18 @@ void CelView::on_heroLevelEdit_escPressed()
     // update heroLevelEdit
     this->updateFields();
     this->ui->heroLevelEdit->clearFocus();
+}
+
+void CelView::on_heroDecLifeButton_clicked()
+{
+    this->hero->decLife();
+    this->updateFields();
+}
+
+void CelView::on_heroRestoreLifeButton_clicked()
+{
+    this->hero->restoreLife();
+    this->updateFields();
 }
 
 /*void CelView::dragEnterEvent(QDragEnterEvent *event)

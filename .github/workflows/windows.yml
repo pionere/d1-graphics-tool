@@ -1,10 +1,11 @@
 name: Windows
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: [ push, pull_request ]
+#on:
+#  push:
+#    branches: [ "master" ]
+#  pull_request:
+#    branches: [ "master" ]
 
 jobs:
   build:
@@ -26,12 +27,12 @@ jobs:
       run: cmake -S. -Bbuild
 
     - name: Make
-      run: cmake --build build -j $(nproc)
+      run: cmake --build build -j $(nproc) --config Release
 
     - name: Package
       run: |
         mkdir dist
-        copy build\Debug\D1GraphicsTool.exe dist
+        copy build\Release\D1GraphicsTool.exe dist
         cd dist
         windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
       shell: cmd
@@ -42,3 +43,10 @@ jobs:
       with:
         name: D1GraphicsTool-Windows-x64
         path: dist
+
+    - name: Upload bin
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: D1GraphicsTool.exe
+        path: build\Release\D1GraphicsTool.exe

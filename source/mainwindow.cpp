@@ -219,6 +219,16 @@ bool MainWindow::loadBaseTrn(const QString &path)
 
 void MainWindow::pointHovered(const QPoint &pos)
 {
+    QString msg;
+    if (pos.x() == UINT_MAX) {
+    } else {
+        if (pos.y() == UINT_MAX) {
+            msg = QString(":%1:").arg(pos.x());
+        } else {
+            msg = QString("%1:%2").arg(pos.x()).arg(pos.y());
+        }
+    }
+    this->progressWidget.showMessage(msg);
 }
 
 void MainWindow::colorModified()

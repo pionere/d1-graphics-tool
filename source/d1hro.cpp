@@ -100,6 +100,7 @@ static bool gbCelTransparencyActive;
 
 static void InvDrawSlotBack(int X, int Y, int W, int H)
 {
+    LogErrorF("InvDrawSlotBack %d:%d %dx%d", X, Y, W, H);
     QImage *destImage = (QImage *)InvPainter->device();
     for (int y = Y; y < Y + H; y++) {
         for (int x = X; x < X + W; x++) {
@@ -113,10 +114,12 @@ static void InvDrawSlotBack(int X, int Y, int W, int H)
             }
         }
     }
+    LogErrorF("InvDrawSlotBack done");
 }
 
 static void CelClippedDrawOutline(BYTE col, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
+    LogErrorF("CelClippedDrawOutline %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, col);
     QImage *destImage = (QImage *)InvPainter->device();
 
     QColor color = InvPal->getColor(col);
@@ -132,10 +135,12 @@ static void CelClippedDrawOutline(BYTE col, int sx, int sy, const D1Gfx *pCelBuf
             }
         }
     }
+    LogErrorF("CelClippedDrawOutline done");
 }
 
 static void CelClippedDrawLightTbl(int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth, BYTE trans)
 {
+    LogErrorF("CelClippedDrawLightTbl %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, trans);
     QImage *destImage = (QImage *)InvPainter->device();
 
     D1GfxFrame *item = pCelBuff->getFrame(nCel - 1);
@@ -149,12 +154,14 @@ static void CelClippedDrawLightTbl(int sx, int sy, const D1Gfx *pCelBuff, int nC
             }
         }
     }
+    LogErrorF("CelClippedDrawLightTbl done");
 }
 
 static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
-    QImage *destImage = (QImage *)InvPainter->device();
     BYTE trans = light_trn_index;
+    LogErrorF("CelClippedDrawLightTrans %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, trans);
+    QImage *destImage = (QImage *)InvPainter->device();
 
     D1GfxFrame *item = pCelBuff->getFrame(nCel - 1);
     for (int y = sy - item->getHeight() + 1; y <= sy; y++) {
@@ -169,12 +176,13 @@ static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int 
             }
         }
     }
+    LogErrorF("CelClippedDrawLightTrans done");
 }
 
 static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
 	BYTE col, trans;
-
+    LogErrorF("scrollrt_draw_item %d:%d idx:%d w:%d outline%d", sx, sy, nCel, nWidth, outline);
 	col = ICOL_YELLOW;
 	if (is->_iMagical != ITEM_QUALITY_NORMAL) {
 		col = ICOL_BLUE;
@@ -212,11 +220,13 @@ QImage D1Hero::getEquipmentImage() const
     // draw the inventory
     QString invFilePath = folder + "Data\\Inv\\Inv.CEL";
     if (QFile::exists(invFilePath)) {
+        LogErrorF("File '%s' exists", invFilePath);
         D1Gfx gfx;
         gfx.setPalette(this->palette);
         OpenAsParam params;
         if (D1Cel::load(gfx, invFilePath, params) && gfx.getFrameCount() != 0) {
             D1GfxFrame *inv = gfx.getFrame(0);
+            LogErrorF("File '%s' loaded %dx%d", invFilePath, inv->getWidth(), inv->getHeight());
             int ox = (INV_WIDTH - inv->getWidth()) / 2;
             int oy = (INV_HEIGHT - (inv->getHeight() - INV_ROWS)) / 2;
 
@@ -235,7 +245,12 @@ QImage D1Hero::getEquipmentImage() const
                     }
                 }
             }
+            LogErrorF("Inv copied %d:%d", ox, oy);
+        } else {
+            LogErrorF("Failed to load CEL file: %s", invFilePath);
         }
+    } else {
+        LogErrorF("Failed to load %s", invFilePath);
     }
     // draw the items
     QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
@@ -246,14 +261,20 @@ QImage D1Hero::getEquipmentImage() const
     InvPal = this->palette;
 
     D1Gfx *cCels = nullptr;
-    if (QFile::exists(invFilePath)) {
+    if (QFile::exists(objFilePath)) {
+        LogErrorF("File '%s' exists", objFilePath);
         cCels = new D1Gfx();
         cCels->setPalette(this->palette);
         OpenAsParam params;
         if (!D1Cel::load(*cCels, objFilePath, params)) {
+            LogErrorF("Failed to load CEL file: %s", objFilePath);
             delete cCels;
             cCels = nullptr;
+        } else {
+            LogErrorF("File '%s' loaded.", objFilePath);
         }
+    } else {
+        LogErrorF("Failed to load %s", objFilePath);
     }
     // DrawInv
 	ItemStruct *is, *pi;
@@ -395,10 +416,13 @@ void D1Hero::setName(const QString &name)
     QString currName = QString(players[this->pnum]._pName);
     if (currName == name)
         return;
+    unsigned len = name.length();
+    if (len > lengthof(players[this->pnum]._pName) - 1)
+        len = lengthof(players[this->pnum]._pName) - 1;
 
-    memcpy(players[this->pnum]._pName, name.constData(), name.length() > lengthof(players[this->pnum]._pName) ? lengthof(players[this->pnum]._pName) : name.length());
+    memcpy(players[this->pnum]._pName, name.constData(), len);
 
-    players[this->pnum]._pName[lengthof(players[this->pnum]._pName) - 1] = '\0';
+    players[len] = '\0';
 
     this->modified = true;
 }
@@ -413,6 +437,8 @@ void D1Hero::setClass(int cls)
     if (players[this->pnum]._pClass == cls)
         return;
     players[this->pnum]._pClass = cls;
+
+    // FIXME: recalc stats
 
     CalcPlrInv(this->pnum, false);
 
@@ -514,22 +540,32 @@ void D1Hero::addVitality()
 
 int D1Hero::getLife() const
 {
-    return players[this->pnum]._pMaxHP;
+    return players[this->pnum]._pMaxHP >> 6;
 }
 
 int D1Hero::getBaseLife() const
 {
-    return players[this->pnum]._pMaxHPBase;
+    return players[this->pnum]._pMaxHPBase >> 6;
+}
+
+void D1Hero::decLife()
+{
+    DecreasePlrMaxHp(this->pnum);
+}
+
+void D1Hero::restoreLife()
+{
+    RestorePlrHpVit(this->pnum);
 }
 
 int D1Hero::getMana() const
 {
-    return players[this->pnum]._pMaxMana;
+    return players[this->pnum]._pMaxMana >> 6;
 }
 
 int D1Hero::getBaseMana() const
 {
-    return players[this->pnum]._pMaxManaBase;
+    return players[this->pnum]._pMaxManaBase >> 6;
 }
 
 int D1Hero::getMagicResist() const
