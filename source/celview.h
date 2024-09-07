@@ -89,7 +89,6 @@ public:
 private:
     void updateFields();
     void updateLabel();
-    void setGroupIndex(int groupIndex);
     bool framePos(QPoint &pos) const;
 
 signals:
