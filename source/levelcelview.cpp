@@ -2660,9 +2660,26 @@ void LevelCelView::checkSubtileFlags() const
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         int mapType = this->sla->getMapType(i);
+        if (mapType == MAT_NONE) {
+            if ((this->sla->getSubProperties(i) & PSF_BLOCK_LIGHT) && this->sla->getMapProperties(i) == 0) {
+                this->warnOrReportSubtile(tr("Subtile %1 is plain light blocker, but it has no walls.").arg(i + 1), i);
+                result = true;
+            }
+        }
+        if (mapType == MAT_EXTERN) {
+            if (!(this->sla->getSubProperties(i) & PSF_BLOCK_LIGHT)) {
+                this->warnOrReportSubtile(tr("Subtile %1 is marked extern, but it does not block light.").arg(i + 1), i);
+                result = true;
+            }
+        }
         if (mapType == MAT_DOOR_EAST || mapType == MAT_DOOR_WEST) {
             if (this->sla->getMapProperties(i) != 0) {
                 this->warnOrReportSubtile(tr("Subtile %1 is for doors, but it has also walls.").arg(i + 1), i);
+                result = true;
+            }
+
+            if (!(this->sla->getSubProperties(i) & PSF_BLOCK_LIGHT)) {
+                this->warnOrReportSubtile(tr("Subtile %1 is for doors, but it does not block light.").arg(i + 1), i);
                 result = true;
             }
 
