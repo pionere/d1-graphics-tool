@@ -53,8 +53,12 @@ set(PROJECT_SOURCES
         source/config.h
         source/d1cel.cpp
         source/d1cel.h
+        source/d1celframe.cpp
+        source/d1celframe.h
         source/d1cl2.cpp
         source/d1cl2.h
+        source/d1cl2frame.cpp
+        source/d1cl2frame.h
         source/d1gfx.cpp
         source/d1gfx.h
         source/d1hro.cpp
