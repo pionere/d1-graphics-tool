@@ -63,6 +63,8 @@ set(PROJECT_SOURCES
         source/d1gfx.h
         source/d1hro.cpp
         source/d1hro.h
+        source/d1image.cpp
+        source/d1image.h
         source/d1pal.cpp
         source/d1pal.h
         source/d1trn.cpp
