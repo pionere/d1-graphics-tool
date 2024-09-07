@@ -47,11 +47,32 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Graphics background color:</string>
+         <string>Assets Folder:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
+       <widget class="LineEditWidget" name="assetsFolderEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="assetsFolderBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Graphics background color:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
        <widget class="QLabel" name="graphicsBackgroundColorImageLabel">
         <property name="minimumSize">
          <size>
@@ -67,7 +88,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="1" column="2">
        <widget class="LineEditWidget" name="graphicsBackgroundColorLineEdit">
         <property name="charWidth">
          <number>8</number>
@@ -80,21 +101,21 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
+      <item row="1" column="3">
        <widget class="QPushButton" name="graphicsBackgroundColorPushButton">
         <property name="text">
          <string>Pick</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>Graphics transparent color:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QLabel" name="graphicsTransparentColorImageLabel">
         <property name="minimumSize">
          <size>
@@ -110,7 +131,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="2" column="2">
        <widget class="LineEditWidget" name="graphicsTransparentColorLineEdit">
         <property name="charWidth">
          <number>8</number>
@@ -123,7 +144,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
+      <item row="2" column="3">
        <widget class="QPushButton" name="graphicsTransparentColorPushButton">
         <property name="text">
          <string>Pick</string>

@@ -14,6 +14,7 @@ private:
 
     static constexpr const char *CFG_LOCALE = "Locale";
     static constexpr const char *CFG_LAST_FILE_PATH = "LastFilePath";
+    static constexpr const char *CFG_ASSETS_FOLDER = "AssetsFolder";
     static constexpr const char *CFG_PAL_UNDEFINED_COLOR = "PaletteUndefinedColor";
     static constexpr const char *CFG_PAL_SELECTION_BORDER_COLOR = "PaletteSelectionBorderColor";
     static constexpr const char *CFG_GRAPHICS_BACKGROUND_COLOR = "GraphicsBackgroundColor";
@@ -42,6 +43,14 @@ public:
     static void setLastFilePath(const QString &path)
     {
         Config::insert(Config::CFG_LAST_FILE_PATH, path);
+    };
+    static QString getAssetsFolder()
+    {
+        return Config::value(Config::CFG_ASSETS_FOLDER).toString();
+    };
+    static void setAssetsFolder(const QString &path)
+    {
+        Config::insert(Config::CFG_ASSETS_FOLDER, path);
     };
     static QString getPaletteUndefinedColor()
     {

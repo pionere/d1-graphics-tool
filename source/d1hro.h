@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QString>
 
+#include "d1pal.h"
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
@@ -17,6 +18,11 @@ public:
     bool load(const QString &filePath, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
     void create(unsigned index);
+
+    D1Pal *getPalette() const;
+    void setPalette(D1Pal *pal);
+
+    QImage getEquipmentImage() const;
 
     void compareTo(const D1Hero *hero, QString header) const;
 
@@ -118,7 +124,8 @@ public:
 private:
     D1Hero() = default;
 
-    QString filePath;
     int pnum;
+    QString filePath;
     bool modified = false;
+    D1Pal *palette = nullptr;
 };

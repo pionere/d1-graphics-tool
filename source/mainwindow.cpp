@@ -136,7 +136,7 @@ void MainWindow::setBaseTrn(const QString &path)
 
     D1Pal *resPal = this->trnBase->getResultingPalette();
     // update entities
-    // this->hero->setPalette(resPal);
+    this->hero->setPalette(resPal);
 }
 
 void MainWindow::updateWindow()
@@ -516,7 +516,7 @@ void MainWindow::on_actionLoad_triggered()
     params.filePath = filePath;
 
         D1Hero *hero = D1Hero::instance();
-        // hero->setPalette(this->trnBase->getResultingPalette());
+        hero->setPalette(this->trnBase->getResultingPalette());
 
         if (hero->load(filePath, params)) {
             delete this->hero;
@@ -715,7 +715,7 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
 
     result->hero = D1Hero::instance();
     // assert(result->hero != nullptr);
-    // result->hero->setPalette(result->trnBase->getResultingPalette());
+    result->hero->setPalette(result->trnBase->getResultingPalette());
     if (fileType == FILE_CONTENT::HRO) {
         if (!result->hero->load(filePath, params)) {
             MainWindow::failWithError(instance, result, tr("Failed loading HRO file: %1.").arg(QDir::toNativeSeparators(filePath)));

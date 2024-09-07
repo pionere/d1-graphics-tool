@@ -21,6 +21,7 @@ private:
     void updateIcons();
 
 private slots:
+    void on_assetsFolderBrowseButton_clicked();
     void on_graphicsBackgroundColorPushButton_clicked();
     void on_graphicsBackgroundColorLineEdit_returnPressed();
     void on_graphicsBackgroundColorLineEdit_escPressed();
@@ -42,6 +43,7 @@ private slots:
 private:
     Ui::SettingsDialog *ui;
 
+    QString assetsFolder;
     QString graphicsBackgroundColor;
     QString graphicsTransparentColor;
     QString undefinedPaletteColor;

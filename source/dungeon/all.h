@@ -18,6 +18,7 @@
 
 #include "cursor.h"
 #include "engine.h"
+#include "gameui.h"
 #include "gendung.h"
 #include "interfac.h"
 #include "inv.h"

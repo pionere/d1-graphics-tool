@@ -250,10 +250,10 @@ void CelView::updateFields()
     label->setText(QString::number(this->hero->getMana()));
     label->setToolTip(QString::number(this->hero->getBaseMana()));
 
-    this->ui->heroMagicResist->setText(QString::number(this->hero->getMagicResist()));
-    this->ui->heroFireResist->setText(QString::number(this->hero->getFireResist()));
-    this->ui->heroLightningResist->setText(QString::number(this->hero->getLightningResist()));
-    this->ui->heroAcidResist->setText(QString::number(this->hero->getAcidResist()));
+    this->ui->heroMagicResist->setText(QString("%1%%").arg(this->hero->getMagicResist()));
+    this->ui->heroFireResist->setText(QString("%1%%").arg(this->hero->getFireResist()));
+    this->ui->heroLightningResist->setText(QString("%1%%").arg(this->hero->getLightningResist()));
+    this->ui->heroAcidResist->setText(QString("%1%%").arg(this->hero->getAcidResist()));
 }
 
 CelScene *CelView::getCelScene() const
@@ -292,7 +292,7 @@ void CelView::displayFrame()
     this->celScene.clear();
 
     // Getting the current frame to display
-    QImage celFrame = QImage();
+    QImage celFrame = this->hero->getEquipmentImage();
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 

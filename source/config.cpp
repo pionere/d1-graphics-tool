@@ -49,6 +49,10 @@ void Config::loadConfiguration()
         Config::setLastFilePath(jsonFilePath);
         configurationModified = true;
     }
+    if (!theConfig.contains(Config::CFG_ASSETS_FOLDER)) {
+        Config::setAssetsFolder(jsonFilePath.chopped(sizeof(Config::FILE_PATH)));
+        configurationModified = true;
+    }
     if (!theConfig.contains(Config::CFG_PAL_UNDEFINED_COLOR)) {
         Config::setPaletteUndefinedColor(Config::DEFAULT_PAL_UNDEFINED_COLOR);
         configurationModified = true;

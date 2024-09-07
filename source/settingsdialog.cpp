@@ -54,6 +54,9 @@ void SettingsDialog::initialize()
             this->ui->languageComboBox->setCurrentIndex(i);
         }
     }
+    // initialize the assets folder
+    this->assetsFolder = Config::getAssetsFolder();
+    this->ui->assetsFolderEdit->setText(this->assetsFolder);
     // reset the color values
     this->graphicsBackgroundColor = Config::getGraphicsBackgroundColor();
     this->graphicsTransparentColor = Config::getGraphicsTransparentColor();
@@ -65,6 +68,16 @@ void SettingsDialog::initialize()
     this->on_paletteSelectionBorderColorLineEdit_escPressed();
 
     this->updateIcons();
+}
+
+void SettingsDialog::on_assetsFolderBrowseButton_clicked()
+{
+    QString dirPath = dMainWindow().folderDialog(tr("Select Assets Folder"));
+
+    if (!dirPath.isEmpty()) {
+        this->assetsFolder = dirPath;
+        this->ui->assetsFolderEdit->setText(this->assetsFolder);
+    }
 }
 
 void SettingsDialog::setIconColor(QLabel *imageLabel, const QString &colorText)
@@ -205,6 +218,9 @@ void SettingsDialog::on_settingsOkButton_clicked()
     // Locale
     QString locale = this->ui->languageComboBox->currentData().value<QString>();
     Config::setLocale(locale);
+
+    // Assets Folder
+    Config::setAssetsFolder(this->assetsFolder);
 
     // GraphicsBackgroundColor
     QColor gfxBackgroundColor = QColor(this->graphicsBackgroundColor);

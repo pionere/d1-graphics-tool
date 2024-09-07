@@ -1,15 +1,19 @@
 #include "d1hro.h"
 
-#include <vector>
-
 #include <QApplication>
 #include <QByteArray>
 #include <QDataStream>
 #include <QDir>
+#include <QFile>
+#include <QFontMetrics>
+#include <QImage>
 #include <QMessageBox>
 
 #include "dungeon/all.h"
 
+#include "config.h"
+#include "d1cel.h"
+#include "d1gfx.h"
 #include "progressdialog.h"
 
 D1Hero* D1Hero::instance()
@@ -77,6 +81,262 @@ void D1Hero::create(unsigned index)
 void D1Hero::compareTo(const D1Hero *hero, QString header) const
 {
 
+}
+
+D1Pal *D1Hero::getPalette() const
+{
+    return this->palette;
+}
+
+void D1Hero::setPalette(D1Pal *pal)
+{
+    this->palette = pal;
+}
+
+static QPainter *InvPainter = nullptr;
+static D1Pal *InvPal = nullptr;
+
+static void InvDrawSlotBack(int X, int Y, int W, int H)
+{
+    QImage *destImage = (QImage *)InvPainter->device();
+    for (int y = Y; y < Y + H; y++) {
+        for (int x = X; x < X + W; x++) {
+            QColor color = destImage->pixelColor(x, y);
+            for (int i = PAL16_GRAY; i < PAL16_GRAY + 15; i++) {
+                if (InvPal->getColor(i) == color) {
+                    color = InvPal->getColor(i - (PAL16_GRAY - PAL16_BEIGE));
+                    destImage->setPixelColor(x, y, color);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+static void CelClippedDrawOutline(BYTE col, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
+{
+    QImage *destImage = (QImage *)InvPainter->device();
+
+    QColor color = InvPal->getColor(col);
+    D1GfxFrame *item = pCelBuff->getFrame(nCel - 1);
+    for (int y = sy - item->getHeight() + 1; y <= sy; y++) {
+        for (int x = sx; x < sx + item->getWidth(); x++) {
+            D1GfxPixel pixel = item->getPixel(x - sx, y - (sy - item->getHeight() + 1));
+            if (!pixel.isTransparent()) {
+                destImage->setColorPixel(x + 1, y, color);
+                destImage->setColorPixel(x - 1, y, color);
+                destImage->setColorPixel(x, y + 1, color);
+                destImage->setColorPixel(x, y - 1, color);
+            }
+        }
+    }
+}
+
+static void CelClippedDrawLightTbl(int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth, BYTE trans)
+{
+    QImage *destImage = (QImage *)InvPainter->device();
+
+    D1GfxFrame *item = pCelBuff->getFrame(nCel - 1);
+    for (int y = sy - item->getHeight() + 1; y <= sy; y++) {
+        for (int x = sx; x < sx + item->getWidth(); x++) {
+            D1GfxPixel pixel = item->getPixel(x - sx, y - (sy - item->getHeight() + 1));
+            if (!pixel.isTransparent()) {
+                QColor color = InvPal->getColor(ColorTrns[trans][i]);
+                destImage->setColorPixel(x, y, color);
+            }
+        }
+    }
+}
+
+static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
+{
+	BYTE col, trans;
+
+	col = ICOL_YELLOW;
+	if (is->_iMagical != ITEM_QUALITY_NORMAL) {
+		col = ICOL_BLUE;
+	}
+	if (!is->_iStatFlag) {
+		col = ICOL_RED;
+	}
+
+    if (pCelBuff != nullptr && pCelBuff->getFrameCount() > nCel) {
+        if (outline) {
+            CelClippedDrawOutline(col, sx, sy, pCelBuff, nCel, nWidth);
+        }
+        trans = col != ICOL_RED ? 0 : COLOR_TRN_RED;
+        CelClippedDrawLightTbl(sx, sy, pCelBuff, nCel, nWidth, trans);
+    } else {
+        QString text = is->_iName;
+        QFontMetrics fm(InvPainter->font());
+        unsigned textWidth = fm.horizontalAdvance(text);
+        if (outline) {
+            col = PAL16_ORANGE + 2;
+        }
+        InvPainter->setPen(InvPal->getColor(col));
+        InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
+    }
+}
+
+QImage D1Hero::getEquipmentImage() const
+{
+    constexpr int INV_WIDTH = SPANEL_WIDTH;
+    constexpr int INV_HEIGHT = 178;
+    constexpr int INV_ROWS = 298 - INV_ROWS;
+    QImage result = QImage(INV_WIDTH, INV_HEIGHT, QImage::Format_ARGB32);
+    result.fill(Qt::transparent);
+    QString folder = Config::getAssetsFolder() + "\\";
+    // draw the inventory
+    QString invFilePath = folder + "Data\\Inv\\Inv.CEL";
+    if (QFile::exists(invFilePath)) {
+        D1Gfx gfx;
+        gfx.setPalette(this->palette);
+        OpenAsParam params;
+        if (D1Cel::load(gfx, invFilePath, params) && gfx.getFrameCount() != 0) {
+            D1GfxFrame *inv = gfx.getFrame(0);
+            int ox = (INV_WIDTH - inv->getWidth()) / 2;
+            int oy = (INV_HEIGHT - (inv->getHeight() - INV_ROWS)) / 2;
+
+            for (int y = 0; y < inv->getHeight(); y++) {
+                int yy = y - oy;
+                if (yy >= 0 && yy < INV_HEIGHT) {
+                    for (int x = 0; x < inv->getWidth(); x++) {
+                        int xx = x - ox;
+                        if (xx >= 0 && xx < INV_WIDTH) {
+                            D1GfxPixel pixel = inv->getPixel(x, y);
+                            if (!pixel.isTransparent()) {
+                                QColor color = this->palette->getColor(pixel.getPaletteIndex());
+                                result.setPixelColor(xx, yy, color);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // draw the items
+    QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
+    QPainter invPainter(&result);
+    invPainter.setPen(QColor(Config::getPaletteUndefinedColor()));
+
+    InvPainter = &invPainter;
+    InvPal = this->palette;
+
+    D1Gfx *cCels = nullptr;
+    if (QFile::exists(invFilePath)) {
+        cCels = new D1Gfx();
+        cCels->setPalette(this->palette);
+        OpenAsParam params;
+        if (!D1Cel::load(*cCels, objFilePath, params)) {
+            delete cCels;
+            cCels = nullptr;
+        }
+    }
+    // DrawInv
+	ItemStruct *is, *pi;
+	int pnum, frame, frame_width, screen_x, screen_y, dx, dy, i;
+
+	screen_x = 0;
+	screen_y = 0;
+
+    pi = nullptr; // FIXME /*pcursinvitem == ITEM_NONE ? NULL :*/ PlrItem(pnum, pcursinvitem);
+	is = &plr._pInvBody[INVLOC_HEAD];
+	if (is->_itype != ITYPE_NONE) {
+		InvDrawSlotBack(screen_x + InvRect[SLOTXY_HEAD_FIRST].X, screen_y + InvRect[SLOTXY_HEAD_LAST].Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
+
+		frame = is->_iCurs + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_HEAD_FIRST].X, screen_y + InvRect[SLOTXY_HEAD_LAST].Y, cCels, frame, frame_width);
+	}
+
+	is = &plr._pInvBody[INVLOC_RING_LEFT];
+	if (is->_itype != ITYPE_NONE) {
+		InvDrawSlotBack(screen_x + InvRect[SLOTXY_RING_LEFT].X, screen_y + InvRect[SLOTXY_RING_LEFT].Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+
+		frame = is->_iCurs + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_RING_LEFT].X, screen_y + InvRect[SLOTXY_RING_LEFT].Y, cCels, frame, frame_width);
+	}
+
+	is = &plr._pInvBody[INVLOC_RING_RIGHT];
+	if (is->_itype != ITYPE_NONE) {
+		InvDrawSlotBack(screen_x + InvRect[SLOTXY_RING_RIGHT].X, screen_y + InvRect[SLOTXY_RING_RIGHT].Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+
+		frame = is->_iCurs + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_RING_RIGHT].X, screen_y + InvRect[SLOTXY_RING_RIGHT].Y, cCels, frame, frame_width);
+	}
+
+	is = &plr._pInvBody[INVLOC_AMULET];
+	if (is->_itype != ITYPE_NONE) {
+		InvDrawSlotBack(screen_x + InvRect[SLOTXY_AMULET].X, screen_y + InvRect[SLOTXY_AMULET].Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+
+		frame = is->_iCurs + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_AMULET].X, screen_y + InvRect[SLOTXY_AMULET].Y, cCels, frame, frame_width);
+	}
+
+	is = &plr._pInvBody[INVLOC_HAND_LEFT];
+	if (is->_itype != ITYPE_NONE) {
+		InvDrawSlotBack(screen_x + InvRect[SLOTXY_HAND_LEFT_FIRST].X, screen_y + InvRect[SLOTXY_HAND_LEFT_LAST].Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+
+		frame = is->_iCurs + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+		// calc item offsets for weapons smaller than 2x3 slots
+		dx = 0;
+		dy = 0;
+		if (frame_width == INV_SLOT_SIZE_PX)
+			dx += INV_SLOT_SIZE_PX / 2;
+		if (InvItemHeight[frame] != (3 * INV_SLOT_SIZE_PX))
+			dy -= INV_SLOT_SIZE_PX / 2;
+
+		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_HAND_LEFT_FIRST].X + dx, screen_y + InvRect[SLOTXY_HAND_LEFT_LAST].Y + dy, cCels, frame, frame_width);
+
+		if (TWOHAND_WIELD(&plr, is)) {
+				InvDrawSlotBack(screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+				light_trn_index = 0;
+				gbCelTransparencyActive = true;
+
+				dx = 0;
+				dy = 0;
+				if (frame_width == INV_SLOT_SIZE_PX)
+					dx += INV_SLOT_SIZE_PX / 2;
+				if (InvItemHeight[frame] != 3 * INV_SLOT_SIZE_PX)
+					dy -= INV_SLOT_SIZE_PX / 2;
+				CelClippedDrawLightTrans(screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X + dx, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y + dy, cCels, frame, frame_width);
+		}
+	}
+
+	is = &plr._pInvBody[INVLOC_HAND_RIGHT];
+	if (is->_itype != ITYPE_NONE) {
+		InvDrawSlotBack(screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+
+		frame = is->_iCurs + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+		// calc item offsets for weapons smaller than 2x3 slots
+		dx = 0;
+		dy = 0;
+		if (frame_width == INV_SLOT_SIZE_PX)
+			dx += INV_SLOT_SIZE_PX / 2;
+		if (InvItemHeight[frame] != 3 * INV_SLOT_SIZE_PX)
+			dy -= INV_SLOT_SIZE_PX / 2;
+
+		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X + dx, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y + dy, cCels, frame, frame_width);
+	}
+
+	is = &plr._pInvBody[INVLOC_CHEST];
+	if (is->_itype != ITYPE_NONE) {
+		InvDrawSlotBack(screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+
+		frame = is->_iCurs + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, cCels, frame, frame_width);
+	}
 }
 
 QString D1Hero::getFilePath() const
