@@ -745,7 +745,7 @@ void SetItemData(int ii, int idata)
 
 	is->_iIdx = idata;
 	ids = &AllItemsList[idata];
-//	strcpy(is->_iName, ids->iName);
+	strcpy(is->_iName, ids->iName);
 	is->_iCurs = ids->iCurs;
 	is->_itype = ids->itype;
 	is->_iMiscId = ids->iMiscId;
@@ -919,7 +919,7 @@ static void GetBookSpell(int ii, unsigned lvl)
 	is = &items[ii];
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-//	strcat(is->_iName, sd->sNameText);
+	strcat(is->_iName, sd->sNameText);
 	is->_iMinMag = sd->sMinInt;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sBookCost;
@@ -972,7 +972,7 @@ static void GetScrollSpell(int ii, unsigned lvl)
 	is = &items[ii];
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-//	strcat(is->_iName, sd->sNameText);
+	strcat(is->_iName, sd->sNameText);
 	is->_iMinMag = sd->sMinInt > 20 ? sd->sMinInt - 20 : 0;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sStaffCost;
@@ -1005,7 +1005,7 @@ static void GetRuneSpell(int ii, unsigned lvl)
 	is = &items[ii];
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-//	strcat(is->_iName, sd->sNameText);
+	strcat(is->_iName, sd->sNameText);
 	is->_iMinMag = sd->sMinInt;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sStaffCost;

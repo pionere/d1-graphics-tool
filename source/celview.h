@@ -106,6 +106,10 @@ private slots:
 
     void on_heroDecLifeButton_clicked();
     void on_heroRestoreLifeButton_clicked();    
+    void on_heroAddStrengthButton_clicked();
+    void on_heroAddDexterityButton_clicked();
+    void on_heroAddMagicButton_clicked();
+    void on_heroAddVitalityButton_clicked();
 
     //void dragEnterEvent(QDragEnterEvent *event) override;
     //void dragMoveEvent(QDragMoveEvent *event) override;

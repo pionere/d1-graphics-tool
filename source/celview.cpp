@@ -228,7 +228,12 @@ void CelView::updateFields()
 
     this->ui->heroLevelEdit->setText(QString::number(this->hero->getLevel()));
 
-    this->ui->heroStatPtsLabel->setText(QString::number(this->hero->getStatPoints()));
+    int statPts = this->hero->getStatPoints();
+    this->ui->heroStatPtsLabel->setText(QString::number(statPts));
+    this->ui->heroAddStrengthButton->setEnabled(statPts > 0);
+    this->ui->heroAddDexterityButton->setEnabled(statPts > 0);
+    this->ui->heroAddMagicButton->setEnabled(statPts > 0);
+    this->ui->heroAddVitalityButton->setEnabled(statPts > 0);
 
     label = this->ui->heroStrengthLabel;
     label->setText(QString::number(this->hero->getStrength()));
@@ -386,6 +391,30 @@ void CelView::on_heroDecLifeButton_clicked()
 void CelView::on_heroRestoreLifeButton_clicked()
 {
     this->hero->restoreLife();
+    this->updateFields();
+}
+
+void CelView::on_heroAddStrengthButton_clicked()
+{
+    this->hero->addStrength();
+    this->updateFields();
+}
+
+void CelView::on_heroAddDexterityButton_clicked()
+{
+    this->hero->addDexterity();
+    this->updateFields();
+}
+
+void CelView::on_heroAddMagicButton_clicked()
+{
+    this->hero->addMagic();
+    this->updateFields();
+}
+
+void CelView::on_heroAddVitalityButton_clicked()
+{
+    this->hero->addVitality();
     this->updateFields();
 }
 

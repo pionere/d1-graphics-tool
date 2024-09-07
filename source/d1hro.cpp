@@ -182,7 +182,7 @@ static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int 
 static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
 	BYTE col, trans;
-    LogErrorF("scrollrt_draw_item %d:%d idx:%d w:%d outline%d", sx, sy, nCel, nWidth, outline);
+    dProgressErr() << QString("scrollrt_draw_item %1:%2 idx:%3 w:%4 outline%5").arg(sx).arg(sy).arg(nCel).arg(nWidth).arg(outline);
 	col = ICOL_YELLOW;
 	if (is->_iMagical != ITEM_QUALITY_NORMAL) {
 		col = ICOL_BLUE;
@@ -206,7 +206,7 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
         }
         InvPainter->setPen(InvPal->getColor(col));
         InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
-        LogErrorF("scrollrt_draw_item text %s to %d:%d (w:%d col%d)", is->_iName, sx + (nWidth - textWidth) / 2, sy - fm.height(), nWidth, col);
+        dProgressErr() << QString("scrollrt_draw_item text %1 to %2:%3 (w:%4 col%5)").arg(text).arg(sx + (nWidth - textWidth) / 2).arg(sy - fm.height()).arg(nWidth).arg(col);
     }
 }
 
@@ -221,13 +221,13 @@ QImage D1Hero::getEquipmentImage() const
     // draw the inventory
     QString invFilePath = folder + "Data\\Inv\\Inv.CEL";
     if (QFile::exists(invFilePath)) {
-        LogErrorF("File '%s' exists", invFilePath.constData());
+        dProgressErr() << QString("File '%1' exists").arg(invFilePath);
         D1Gfx gfx;
         gfx.setPalette(this->palette);
         OpenAsParam params;
         if (D1Cel::load(gfx, invFilePath, params) && gfx.getFrameCount() != 0) {
             D1GfxFrame *inv = gfx.getFrame(0);
-            LogErrorF("File '%s' loaded %dx%d", invFilePath.constData(), inv->getWidth(), inv->getHeight());
+            dProgressErr() << QString("File '%1' loaded %2x%3").arg(invFilePath).arg(inv->getWidth()).arg(inv->getHeight());
             int ox = (INV_WIDTH - inv->getWidth()) / 2;
             int oy = (INV_HEIGHT - (inv->getHeight() - INV_ROWS)) / 2;
 
@@ -246,12 +246,12 @@ QImage D1Hero::getEquipmentImage() const
                     }
                 }
             }
-            LogErrorF("Inv copied %d:%d", ox, oy);
+            dProgressErr() << QString("Inv copied %1:%2").arg(ox).arg(oy);
         } else {
-            LogErrorF("Failed to load CEL file: %s", invFilePath.constData());
+            dProgressErr() << QString("Failed to load CEL file: %1").arg(invFilePath);
         }
     } else {
-        LogErrorF("Failed to load %s", invFilePath.constData());
+        dProgressErr() << QString("Failed to load %1").arg(invFilePath);
     }
     // draw the items
     QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
@@ -263,19 +263,19 @@ QImage D1Hero::getEquipmentImage() const
 
     D1Gfx *cCels = nullptr;
     if (QFile::exists(objFilePath)) {
-        LogErrorF("File '%s' exists", objFilePath.constData());
+        dProgressErr() << QString("File '%1' exists").arg(objFilePath);
         cCels = new D1Gfx();
         cCels->setPalette(this->palette);
         OpenAsParam params;
         if (!D1Cel::load(*cCels, objFilePath, params)) {
-            LogErrorF("Failed to load CEL file: %s", objFilePath.constData());
+            dProgressErr() << QString("Failed to load CEL file: %1").arg(objFilePath);
             delete cCels;
             cCels = nullptr;
         } else {
-            LogErrorF("File '%s' loaded.", objFilePath.constData());
+            dProgressErr() << QString("File '%1' loaded.").arg(objFilePath);
         }
     } else {
-        LogErrorF("Failed to load %s", objFilePath.constData());
+        dProgressErr() << QString("Failed to load %1").arg(objFilePath);
     }
     // DrawInv
 	ItemStruct *is, *pi;
@@ -423,9 +423,13 @@ void D1Hero::setName(const QString &name)
     if (len > lengthof(players[this->pnum]._pName) - 1)
         len = lengthof(players[this->pnum]._pName) - 1;
 
-    memcpy(players[this->pnum]._pName, name.constData(), len);
+    memcpy(players[this->pnum]._pName, name.toLatin1().constData(), len);
 
     players[this->pnum]._pName[len] = '\0';
+
+    currName = QString(players[this->pnum]._pName);
+    len = currName.length();
+    LogErrorF("setName result %d", len);
 
     this->modified = true;
 }
@@ -465,8 +469,10 @@ void D1Hero::setLevel(int level)
     if (dlvl == 0)
         return;
     players[this->pnum]._pLevel = level;
+    LogErrorF("setLevel result %d delta%d", level, dlvl);
     if (dlvl > 0) {
         players[this->pnum]._pStatPts += 4 * dlvl;
+        LogErrorF("setLevel statpoints %d", players[this->pnum]._pStatPts);
     } else {
         // FIXME...
     }
