@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QFile>
+#include <QPainter>
 #include <QString>
 
 #include "d1pal.h"

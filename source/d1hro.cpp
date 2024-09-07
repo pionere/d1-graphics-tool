@@ -95,6 +95,8 @@ void D1Hero::setPalette(D1Pal *pal)
 
 static QPainter *InvPainter = nullptr;
 static D1Pal *InvPal = nullptr;
+static BYTE light_trn_index = 0;
+static bool gbCelTransparencyActive;
 
 static void InvDrawSlotBack(int X, int Y, int W, int H)
 {
@@ -123,10 +125,10 @@ static void CelClippedDrawOutline(BYTE col, int sx, int sy, const D1Gfx *pCelBuf
         for (int x = sx; x < sx + item->getWidth(); x++) {
             D1GfxPixel pixel = item->getPixel(x - sx, y - (sy - item->getHeight() + 1));
             if (!pixel.isTransparent()) {
-                destImage->setColorPixel(x + 1, y, color);
-                destImage->setColorPixel(x - 1, y, color);
-                destImage->setColorPixel(x, y + 1, color);
-                destImage->setColorPixel(x, y - 1, color);
+                destImage->setPixelColor(x + 1, y, color);
+                destImage->setPixelColor(x - 1, y, color);
+                destImage->setPixelColor(x, y + 1, color);
+                destImage->setPixelColor(x, y - 1, color);
             }
         }
     }
@@ -141,8 +143,28 @@ static void CelClippedDrawLightTbl(int sx, int sy, const D1Gfx *pCelBuff, int nC
         for (int x = sx; x < sx + item->getWidth(); x++) {
             D1GfxPixel pixel = item->getPixel(x - sx, y - (sy - item->getHeight() + 1));
             if (!pixel.isTransparent()) {
+                quint8 col = pixel.getPaletteIndex();
+                QColor color = InvPal->getColor(ColorTrns[trans][col]);
+                destImage->setPixelColor(x, y, color);
+            }
+        }
+    }
+}
+
+static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
+{
+    QImage *destImage = (QImage *)InvPainter->device();
+    BYTE trans = light_trn_index;
+
+    D1GfxFrame *item = pCelBuff->getFrame(nCel - 1);
+    for (int y = sy - item->getHeight() + 1; y <= sy; y++) {
+        for (int x = sx; x < sx + item->getWidth(); x++) {
+            if ((x & 1) == (y & 1))
+                continue;
+            D1GfxPixel pixel = item->getPixel(x - sx, y - (sy - item->getHeight() + 1));
+            if (!pixel.isTransparent()) {
                 QColor color = InvPal->getColor(ColorTrns[trans][i]);
-                destImage->setColorPixel(x, y, color);
+                destImage->setPixelColor(x, y, color);
             }
         }
     }
