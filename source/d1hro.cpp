@@ -163,7 +163,8 @@ static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int 
                 continue;
             D1GfxPixel pixel = item->getPixel(x - sx, y - (sy - item->getHeight() + 1));
             if (!pixel.isTransparent()) {
-                QColor color = InvPal->getColor(ColorTrns[trans][i]);
+                quint8 col = pixel.getPaletteIndex();
+                QColor color = InvPal->getColor(ColorTrns[trans][col]);
                 destImage->setPixelColor(x, y, color);
             }
         }
@@ -204,7 +205,7 @@ QImage D1Hero::getEquipmentImage() const
 {
     constexpr int INV_WIDTH = SPANEL_WIDTH;
     constexpr int INV_HEIGHT = 178;
-    constexpr int INV_ROWS = 298 - INV_ROWS;
+    constexpr int INV_ROWS = SPANEL_HEIGHT - INV_HEIGHT;
     QImage result = QImage(INV_WIDTH, INV_HEIGHT, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
     QString folder = Config::getAssetsFolder() + "\\";
