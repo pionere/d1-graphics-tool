@@ -257,7 +257,7 @@ QImage D1Hero::getEquipmentImage() const
     }
     // DrawInv
 	ItemStruct *is, *pi;
-	int pnum, frame, frame_width, screen_x, screen_y, dx, dy, i;
+	int frame, frame_width, screen_x, screen_y, dx, dy;
 
 	screen_x = 0;
 	screen_y = 0;
@@ -360,6 +360,8 @@ QImage D1Hero::getEquipmentImage() const
 
 		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, cCels, frame, frame_width);
 	}
+
+    return result;
 }
 
 QString D1Hero::getFilePath() const
