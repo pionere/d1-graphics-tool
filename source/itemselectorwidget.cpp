@@ -33,7 +33,7 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
     this->hero = h;
     this->invIdx = ii;
 
-    const ItemStruct* pi = h->item(cii);
+    const ItemStruct* pi = h->item(ii);
     memcpy(&this->is, pi, sizeof(*pi));
     
     QComboBox *typeComboBox = this->ui->itemTypeComboBox;
@@ -42,7 +42,7 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
     locComboBox->clear();
     
     typeComboBox->addItem(tr("None"), ITYPE_NONE);
-    switch (cii) {
+    switch (ii) {
     case INVITEM_HEAD:
         this->is._iClass = ICLASS_ARMOR;
         locComboBox->addItem(tr("Helm"), ILOC_HELM);

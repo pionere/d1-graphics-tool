@@ -23,8 +23,21 @@ void SidePanelWidget::initialize(D1Hero *h)
     if (this->itemSelector == nullptr) {
         this->itemSelector = new ItemSelectorWidget(this);
 
-        this->ui->panelVBoxLayout->clear();
-        this->ui->panelVBoxLayout->addWidget(this->itemSelector, 0, Qt::AlignTop);
+        // clear the layout
+        QHBoxLayout *layout = this->ui->panelVBoxLayout;
+        /*QLayoutItem *child;
+        while ((child = layout->takeAt(0)) != nullptr) {
+            child->widget()->deleteLater(); // delete the widget
+            delete child;           // delete the layout item
+        }*/
+        for (int i = layout->count() - 1; i >= 0; i--) {
+            QWidget *w = layout->itemAt(i)->widget();
+            if (w != nullptr) {
+                w->deleteLater();
+            }
+        }
+
+        layout->addWidget(this->itemSelector, 0, Qt::AlignTop);
     }
 }
 

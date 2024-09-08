@@ -282,7 +282,7 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
     constexpr int gnWndInvY = 0;
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    int i - p.x(), j = p.y(), r;
+    int i = p.x(), j = p.y(), r;
 
     for (r = 0; r < SLOTXY_CHEST_LAST; r++) {
         if (POS_IN_RECT(i, j,

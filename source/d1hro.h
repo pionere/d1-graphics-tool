@@ -8,7 +8,7 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
-class ItemStruct;
+struct ItemStruct;
 
 class D1Hero : public QObject {
     Q_OBJECT

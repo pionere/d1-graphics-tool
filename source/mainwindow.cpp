@@ -786,7 +786,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->mainFrameLayout->addWidget(view);
 
     // Initialize the side panel
-    this->sideView = new SideView(this);
+    this->sideView = new SidePanelWidget(this);
     this->sideView->initialize(this->hero);
     this->ui->sideFrameLayout->addWidget(this->sideView);
 
