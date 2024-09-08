@@ -11,6 +11,8 @@
 #include "sidepanelwidget.h"
 #include "ui_itemselectorwidget.h"
 
+#include "dungeon/all.h"
+
 ItemSelectorWidget::ItemSelectorWidget(SidePanelWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ItemSelectorWidget())
@@ -22,6 +24,7 @@ ItemSelectorWidget::ItemSelectorWidget(SidePanelWidget *parent)
 ItemSelectorWidget::~ItemSelectorWidget()
 {
     delete ui;
+    delete this->is;
 }
 
 void ItemSelectorWidget::initialize(D1Hero *h, int ii)
@@ -30,6 +33,9 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
     this->invIdx = ii;
 
     const ItemStruct* pi = h->item(ii);
+
+    delete this->is;
+    is = new ItemStruct();
     memcpy(&this->is, pi, sizeof(*pi));
     
     QComboBox *typeComboBox = this->ui->itemTypeComboBox;

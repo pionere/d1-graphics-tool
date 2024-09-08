@@ -2,10 +2,9 @@
 
 #include <QWidget>
 
-#include "dungeon/all.h"
-
 class SidePanelWidget;
 class D1Hero;
+struct ItemStruct;
 
 namespace Ui {
 class ItemSelectorWidget;
@@ -33,5 +32,5 @@ private:
 
     D1Hero *hero;
     int invIdx;
-    ItemStruct is;
+    ItemStruct *is = nullptr;
 };
