@@ -375,7 +375,7 @@ void CelView::on_heroLevelEdit_returnPressed()
 {
     int level = this->ui->heroLevelEdit->text().toShort();
 
-    if (level >= 1 && level < MAXCHARLEVEL) {
+    if (level >= 1 && level <= MAXCHARLEVEL) {
         this->hero->setLevel(level);
     }
 

@@ -130,6 +130,7 @@ public:
 
 private:
     D1Hero() = default;
+    void rebalance();
 
     int pnum;
     QString filePath;

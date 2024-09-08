@@ -102,18 +102,18 @@ static void InvDrawSlotBack(int X, int Y, int W, int H)
 {
     LogErrorF("InvDrawSlotBack %d:%d %dx%d", X, Y, W, H);
     QImage *destImage = (QImage *)InvPainter->device();
-    for (int y = Y; y < Y + H; y++) {
+    for (int y = Y - H + 1; y <= Y; y++) {
         for (int x = X; x < X + W; x++) {
-            /*QColor color = destImage->pixelColor(x, y);
+            QColor color = destImage->pixelColor(x, y);
             for (int i = PAL16_GRAY; i < PAL16_GRAY + 15; i++) {
                 if (InvPal->getColor(i) == color) {
                     color = InvPal->getColor(i - (PAL16_GRAY - PAL16_BEIGE));
                     destImage->setPixelColor(x, y, color);
                     break;
                 }
-            }*/
-            QColor color = QColor(0, 0, 0);
-            destImage->setPixelColor(x, y, color);
+            }
+            //QColor color = QColor(0, 0, 0);
+            //destImage->setPixelColor(x, y, color);
         }
     }
     LogErrorF("InvDrawSlotBack done");
@@ -520,7 +520,7 @@ void D1Hero::setClass(int cls)
         return;
     players[this->pnum]._pClass = cls;
 
-    // FIXME: recalc stats
+    this->rebalance();
 
     CalcPlrInv(this->pnum, false);
 
@@ -547,7 +547,7 @@ void D1Hero::setLevel(int level)
     if (dlvl > 0) {
         players[this->pnum]._pStatPts += 4 * dlvl;
     } else {
-        // FIXME...
+        this->rebalance();
     }
     players[this->pnum]._pExperience = PlrExpLvlsTbl[level - 1];
 
@@ -692,6 +692,101 @@ int D1Hero::getLightningResist() const
 int D1Hero::getAcidResist() const
 {
     return players[this->pnum]._pAcidResist;
+}
+
+void D1Hero::rebalance()
+{
+    // validate the player ?
+    if (plr._pClass >= NUM_CLASSES)
+        plr._pClass = PC_WARRIOR;
+    if (plr._pLevel < 1)
+        plr._pLevel = 1;
+    if (plr._pLevel > MAXCHARLEVEL)
+        plr._pLevel = MAXCHARLEVEL;
+    // if (plr._pStatPts < 0)
+    //    plr._pStatPts = 0;
+    if (plr._pBaseStr < StrengthTbl[plr._pClass])
+        plr._pBaseStr = StrengthTbl[plr._pClass];
+    if (plr._pBaseMag < MagicTbl[plr._pClass])
+        plr._pBaseMag = MagicTbl[plr._pClass];
+    if (plr._pBaseDex < DexterityTbl[plr._pClass])
+        plr._pBaseDex = DexterityTbl[plr._pClass];
+    if (plr._pBaseVit < VitalityTbl[plr._pClass])
+        plr._pBaseVit = VitalityTbl[plr._pClass];
+
+    while (true) {
+        int remStatPts = (plr._pLevel - 1) * 4;
+
+        if (plr._pStatPts >= remStatPts) {
+            plr._pStatPts = remStatPts;
+        }
+        remStatPts -= plr._pStatPts;
+
+        int usedStatPts[4];
+        switch (plr._pClass) {
+        case PC_WARRIOR:
+            usedStatPts[0] = ((plr._pBaseStr - StrengthTbl[PC_WARRIOR]) * 2 + 4) / 5;
+            usedStatPts[1] = plr._pBaseMag - MagicTbl[PC_WARRIOR];
+            usedStatPts[2] = ((plr._pBaseDex - DexterityTbl[PC_WARRIOR]) * 2 + 2) / 3;
+            usedStatPts[3] = (plr._pBaseVit - VitalityTbl[PC_WARRIOR]) / 2;
+            break;
+        case PC_ROGUE:
+            usedStatPts[0] = plr._pBaseStr - StrengthTbl[PC_ROGUE];
+            usedStatPts[1] = (plr._pBaseMag - MagicTbl[PC_ROGUE]) / 2;
+            usedStatPts[2] = (plr._pBaseDex - DexterityTbl[PC_ROGUE]) / 3;
+            usedStatPts[3] = plr._pBaseVit - VitalityTbl[PC_ROGUE];
+            break;
+        case PC_SORCERER:
+            usedStatPts[0] = plr._pBaseStr - StrengthTbl[PC_SORCERER];
+            usedStatPts[1] = (plr._pBaseMag - MagicTbl[PC_SORCERER]) / 3;
+            usedStatPts[2] = ((plr._pBaseDex - DexterityTbl[PC_SORCERER]) * 2 + 2) / 3;
+            usedStatPts[3] = ((plr._pBaseVit - VitalityTbl[PC_SORCERER]) * 2 + 2) / 3;
+            break;
+#ifdef HELLFIRE
+        case PC_MONK:
+            usedStatPts[0] = (plr._pBaseStr - StrengthTbl[PC_MONK]) / 2;
+            usedStatPts[1] = ((plr._pBaseMag - MagicTbl[PC_MONK]) * 2 + 2) / 3;
+            usedStatPts[2] = (plr._pBaseDex - DexterityTbl[PC_MONK]) / 2;
+            usedStatPts[3] = ((plr._pBaseVit - VitalityTbl[PC_MONK]) * 2 + 2) / 3;
+            break;
+        case PC_BARD:
+            usedStatPts[0] = plr._pBaseStr - StrengthTbl[PC_BARD];
+            usedStatPts[1] = ((plr._pBaseMag - MagicTbl[PC_BARD]) * 2 + 2) / 3;
+            usedStatPts[2] = (plr._pBaseDex - DexterityTbl[PC_BARD]) / 3;
+            usedStatPts[3] = ((plr._pBaseVit - VitalityTbl[PC_BARD]) * 2 + 2) / 3;
+            break;
+        case PC_BARBARIAN:
+            usedStatPts[0] = (plr._pBaseStr - StrengthTbl[PC_BARBARIAN]) / 3;
+            usedStatPts[1] = plr._pBaseMag - MagicTbl[PC_BARBARIAN];
+            usedStatPts[2] = plr._pBaseDex - DexterityTbl[PC_BARBARIAN];
+            usedStatPts[3] = (plr._pBaseVit - VitalityTbl[PC_BARBARIAN]) / 2;
+            break;
+#endif
+        default:
+            ASSUME_UNREACHABLE
+                break;
+        }
+
+        int totalUsedStatPts = usedStatPts[0] + usedStatPts[1] + usedStatPts[2] + usedStatPts[3];
+        if (totalUsedStatPts <= remStatPts) {
+            break;
+        }
+        int mostUsedIdx = 0;
+        int mostUsedVal = usedStatPts[0];
+        for (int i = 1; i < 4; i++) {
+            if (usedStatPts[i] > mostUsedVal) {
+                mostUsedIdx = i;
+                mostUsedVal = usedStatPts[i];
+            }
+        }
+        switch (mostUsedIdx) {
+        case 0: DecreasePlrStr(pnum); break;
+        case 1: DecreasePlrMag(pnum); break;
+        case 2: DecreasePlrDex(pnum); break;
+        case 3: DecreasePlrVit(pnum); break;
+        }
+        plr._pStatPts--;
+    }
 }
 
 bool D1Hero::save(const SaveAsParam &params)
