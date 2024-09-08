@@ -212,6 +212,7 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
 
 static void draw_item_placeholder(const char* name, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
+    BYTE col = ICOL_YELLOW;
     if (pCelBuff != nullptr && pCelBuff->getFrameCount() > nCel) {
         if (outline) {
             CelClippedDrawOutline(col, sx, sy, pCelBuff, nCel, nWidth);
@@ -393,13 +394,14 @@ QImage D1Hero::getEquipmentImage() const
 		}
 	} else {
         frame = 0;
-        switch (plr._pClass)
+        switch (plr._pClass) {
         case PC_WARRIOR:   frame = ICURS_SHORT_SWORD; break;
         case PC_ROGUE:     frame = ICURS_SHORT_BOW;   break;
         case PC_SORCERER:  frame = ICURS_SHORT_STAFF; break;
         case PC_MONK:      frame = ICURS_SHORT_STAFF; break;
         case PC_BARD:      frame = ICURS_DAGGER;      break;
         case PC_BARBARIAN: frame = ICURS_CLUB;        break;
+        }
 		frame += CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 		// calc item offsets for weapons smaller than 2x3 slots
@@ -488,7 +490,7 @@ void D1Hero::setName(const QString &name)
     if (currName == name)
         return;
 
-    unsigned len = name.length();
+    int len = name.length();
     LogErrorF("setName %d", len);
     if (len > lengthof(players[this->pnum]._pName) - 1)
         len = lengthof(players[this->pnum]._pName) - 1;

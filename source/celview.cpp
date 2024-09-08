@@ -220,7 +220,7 @@ void CelView::updateLabel()
 
 void CelView::updateFields()
 {
-    QMessageBox::critical(nullptr, "Error", QStringLiteral("updateFields");
+    QMessageBox::critical(nullptr, "Error", QStringLiteral("updateFields"));
     QLabel *label;
     this->updateLabel();
 
@@ -271,7 +271,7 @@ CelScene *CelView::getCelScene() const
 
 void CelView::framePixelClicked(const QPoint &pos, int flags)
 {
-    QMessageBox::critical(nullptr, "Error", QStringLiteral("Clicked %1:%2").arg(pos.x()).arg(pos.y());
+    QMessageBox::critical(nullptr, "Error", QStringLiteral("Clicked %1:%2").arg(pos.x()).arg(pos.y()));
     /*QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     dMainWindow().frameClicked(frame, p, flags);*/
