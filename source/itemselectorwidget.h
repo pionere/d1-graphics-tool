@@ -2,9 +2,10 @@
 
 #include <QWidget>
 
+#include "dungeon/all.h"
+
 class SidePanelWidget;
 class D1Hero;
-class ItemStruct;
 
 namespace Ui {
 class ItemSelectorWidget;

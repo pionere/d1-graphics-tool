@@ -15,19 +15,22 @@ SidePanelWidget::SidePanelWidget(QWidget *parent)
 SidePanelWidget::~SidePanelWidget()
 {
     delete ui;
-    delete this->itemSelector;
 }
 
 void SidePanelWidget::initialize(D1Hero *h)
 {
-    this->itemSelector = new ItemSelectorWidget(this);
+    this->hero = h;
+    if (this->itemSelector == nullptr) {
+        this->itemSelector = new ItemSelectorWidget(this);
 
-    this->ui->palettesVBoxLayout->addWidget(this->itemSelector, 0, Qt::AlignTop);
+        this->ui->panelVBoxLayout->clear();
+        this->ui->panelVBoxLayout->addWidget(this->itemSelector, 0, Qt::AlignTop);
+    }
 }
 
 void SidePanelWidget::setHeroItem(D1Hero *h, int ii)
 {
-    // this->hero = h;
+    this->initialize(h);
     this->itemSelector->initialize(h, ii);
 
 

@@ -466,6 +466,11 @@ QImage D1Hero::getEquipmentImage() const
     return result;
 }
 
+const ItemStruct *D1Hero::item(int ii) const
+{
+    return PlrItem(this->pnum, ii);
+}
+
 QString D1Hero::getFilePath() const
 {
     return this->filePath;

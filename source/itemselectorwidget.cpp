@@ -33,7 +33,7 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
     this->hero = h;
     this->invIdx = ii;
 
-    ItemStruct* pi = PlrItem(int pnum, cii);
+    const ItemStruct* pi = h->item(cii);
     memcpy(&this->is, pi, sizeof(*pi));
     
     QComboBox *typeComboBox = this->ui->itemTypeComboBox;

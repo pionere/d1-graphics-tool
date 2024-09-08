@@ -8,6 +8,8 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
+class ItemStruct;
+
 class D1Hero : public QObject {
     Q_OBJECT
 
@@ -24,6 +26,7 @@ public:
     void setPalette(D1Pal *pal);
 
     QImage getEquipmentImage() const;
+    const ItemStruct *item(int ii) const;
 
     void compareTo(const D1Hero *hero, QString header) const;
 
