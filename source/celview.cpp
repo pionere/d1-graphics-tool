@@ -279,7 +279,7 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
 
 bool CelView::framePos(QPoint &pos) const
 {
-    return false;
+    return true;
 }
 
 void CelView::framePixelHovered(const QPoint &pos) const

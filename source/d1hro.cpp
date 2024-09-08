@@ -210,6 +210,23 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
     }
 }
 
+static void draw_item_placeholder(const char* name, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
+{
+    if (pCelBuff != nullptr && pCelBuff->getFrameCount() > nCel) {
+        if (outline) {
+            CelClippedDrawOutline(col, sx, sy, pCelBuff, nCel, nWidth);
+        }
+        CelClippedDrawLightTbl(sx, sy, pCelBuff, nCel, nWidth, COLOR_TRN_GRAY);
+    } else {
+        QString text = name;
+        QFontMetrics fm(InvPainter->font());
+        unsigned textWidth = fm.horizontalAdvance(text);
+        InvPainter->setPen(InvPal->getColor(PAL16_GRAY));
+        InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
+        dProgressErr() << QString("scrollrt_draw_item text %1 to %2:%3 (w:%4 col%5)").arg(text).arg(sx + (nWidth - textWidth) / 2).arg(sy - fm.height()).arg(nWidth).arg(col);
+    }
+}
+
 QImage D1Hero::getEquipmentImage() const
 {
     constexpr int INV_WIDTH = SPANEL_WIDTH;
@@ -251,7 +268,7 @@ QImage D1Hero::getEquipmentImage() const
             dProgressErr() << QString("Failed to load CEL file: %1").arg(invFilePath);
         }
     } else {
-        dProgressErr() << QString("Failed to load %1").arg(invFilePath);
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load inv %1").arg(invFilePath));
     }
     // draw the items
     QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
@@ -275,7 +292,7 @@ QImage D1Hero::getEquipmentImage() const
             dProgressErr() << QString("File '%1' loaded.").arg(objFilePath);
         }
     } else {
-        dProgressErr() << QString("Failed to load %1").arg(objFilePath);
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load obj %1").arg(objFilePath));
     }
     // DrawInv
 	ItemStruct *is, *pi;
@@ -293,7 +310,12 @@ QImage D1Hero::getEquipmentImage() const
 		frame_width = InvItemWidth[frame];
 
 		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_HEAD_FIRST].X, screen_y + InvRect[SLOTXY_HEAD_LAST].Y, cCels, frame, frame_width);
-	}
+	} else {
+		frame = ICURS_HELM + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+        draw_item_placeholder("helm", pi == is, screen_x + InvRect[SLOTXY_HEAD_FIRST].X, screen_y + InvRect[SLOTXY_HEAD_LAST].Y, cCels, frame, frame_width);
+    }
 
 	is = &plr._pInvBody[INVLOC_RING_LEFT];
 	if (is->_itype != ITYPE_NONE) {
@@ -303,6 +325,11 @@ QImage D1Hero::getEquipmentImage() const
 		frame_width = InvItemWidth[frame];
 
 		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_RING_LEFT].X, screen_y + InvRect[SLOTXY_RING_LEFT].Y, cCels, frame, frame_width);
+	} else {
+		frame = ICURS_RING + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+        draw_item_placeholder("left ring", pi == is, screen_x + InvRect[SLOTXY_RING_LEFT].X, screen_y + InvRect[SLOTXY_RING_LEFT].Y, cCels, frame, frame_width);
 	}
 
 	is = &plr._pInvBody[INVLOC_RING_RIGHT];
@@ -313,6 +340,11 @@ QImage D1Hero::getEquipmentImage() const
 		frame_width = InvItemWidth[frame];
 
 		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_RING_RIGHT].X, screen_y + InvRect[SLOTXY_RING_RIGHT].Y, cCels, frame, frame_width);
+	} else {
+		frame = ICURS_RING + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+        draw_item_placeholder("right ring", pi == is, screen_x + InvRect[SLOTXY_RING_RIGHT].X, screen_y + InvRect[SLOTXY_RING_RIGHT].Y, cCels, frame, frame_width);
 	}
 
 	is = &plr._pInvBody[INVLOC_AMULET];
@@ -323,6 +355,11 @@ QImage D1Hero::getEquipmentImage() const
 		frame_width = InvItemWidth[frame];
 
 		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_AMULET].X, screen_y + InvRect[SLOTXY_AMULET].Y, cCels, frame, frame_width);
+	} else {
+		frame = ICURS_AMULET + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+        draw_item_placeholder("amulet", pi == is, screen_x + InvRect[SLOTXY_AMULET].X, screen_y + InvRect[SLOTXY_AMULET].Y, cCels, frame, frame_width);
 	}
 
 	is = &plr._pInvBody[INVLOC_HAND_LEFT];
@@ -354,6 +391,26 @@ QImage D1Hero::getEquipmentImage() const
 					dy -= INV_SLOT_SIZE_PX / 2;
 				CelClippedDrawLightTrans(screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X + dx, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y + dy, cCels, frame, frame_width);
 		}
+	} else {
+        frame = 0;
+        switch (plr._pClass)
+        case PC_WARRIOR:   frame = ICURS_SHORT_SWORD; break;
+        case PC_ROGUE:     frame = ICURS_SHORT_BOW;   break;
+        case PC_SORCERER:  frame = ICURS_SHORT_STAFF; break;
+        case PC_MONK:      frame = ICURS_SHORT_STAFF; break;
+        case PC_BARD:      frame = ICURS_DAGGER;      break;
+        case PC_BARBARIAN: frame = ICURS_CLUB;        break;
+		frame += CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+		// calc item offsets for weapons smaller than 2x3 slots
+		dx = 0;
+		dy = 0;
+		if (frame_width == INV_SLOT_SIZE_PX)
+			dx += INV_SLOT_SIZE_PX / 2;
+		if (InvItemHeight[frame] != (3 * INV_SLOT_SIZE_PX))
+			dy -= INV_SLOT_SIZE_PX / 2;
+
+        draw_item_placeholder("weapon", pi == is, screen_x + InvRect[SLOTXY_HAND_LEFT_FIRST].X + dx, screen_y + InvRect[SLOTXY_HAND_LEFT_LAST].Y + dy, cCels, frame, frame_width);
 	}
 
 	is = &plr._pInvBody[INVLOC_HAND_RIGHT];
@@ -371,6 +428,14 @@ QImage D1Hero::getEquipmentImage() const
 			dy -= INV_SLOT_SIZE_PX / 2;
 
 		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X + dx, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y + dy, cCels, frame, frame_width);
+	} else {
+        is = &plr._pInvBody[INVLOC_HAND_LEFT];
+        if ((is->_itype == ITYPE_NONE && (plr._pClass == PC_WARRIOR || plr._pClass == PC_BARBARIAN || plr._pClass == PC_BARD)) || !TWOHAND_WIELD(&plr, is)) {
+            frame = ICURS_SMALL_SHIELD + CURSOR_FIRSTITEM;
+            frame_width = InvItemWidth[frame];
+
+            draw_item_placeholder("shield", pi == is, screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, cCels, frame, frame_width);
+        }
 	}
 
 	is = &plr._pInvBody[INVLOC_CHEST];
@@ -381,6 +446,11 @@ QImage D1Hero::getEquipmentImage() const
 		frame_width = InvItemWidth[frame];
 
 		scrollrt_draw_item(is, pi == is, screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, cCels, frame, frame_width);
+	} else {
+		frame = ICURS_QUILTED_ARMOR + CURSOR_FIRSTITEM;
+		frame_width = InvItemWidth[frame];
+
+        draw_item_placeholder("armor", pi == is, screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, cCels, frame, frame_width);
 	}
 
     return result;
@@ -469,10 +539,10 @@ void D1Hero::setLevel(int level)
     if (dlvl == 0)
         return;
     players[this->pnum]._pLevel = level;
-    LogErrorF("setLevel result %d delta%d", level, dlvl);
+    QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("setLevel result %1 delta%2").arg(level).arg(dlvl));
     if (dlvl > 0) {
         players[this->pnum]._pStatPts += 4 * dlvl;
-        LogErrorF("setLevel statpoints %d", players[this->pnum]._pStatPts);
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("setLevel statpoints %1").arg(players[this->pnum]._pStatPts));
     } else {
         // FIXME...
     }

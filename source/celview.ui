@@ -22,7 +22,7 @@
    </item>
    <item>
     <widget class="QGraphicsView" name="celGraphicsView">
-     <property name="minimumSize">
+     <!--property name="minimumSize">
       <size>
        <width>294</width>
        <height>178</height>
@@ -33,10 +33,10 @@
        <width>294</width>
        <height>178</height>
       </size>
-     </property>
-     <!--property name="sizeAdjustPolicy">
-      <enum>QAbstractScrollArea::AdjustToContents</enum>
      </property-->
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
     </widget>
    </item>
    <item>

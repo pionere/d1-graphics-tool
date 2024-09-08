@@ -30,6 +30,8 @@ void InitLighting()
     LoadFileWithMem("PlrGFX\\Coral.TRN", ColorTrns[COLOR_TRN_CORAL]);*/
     for (int i = 0; i < NUM_COLORS; i++) {
         ColorTrns[0][i] = i;
+        ColorTrns[1][i] = i;
+        ColorTrns[2][i] = i;
     }
 }
 
