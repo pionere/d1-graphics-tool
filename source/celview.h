@@ -105,6 +105,10 @@ private slots:
 
     void on_heroDecLifeButton_clicked();
     void on_heroRestoreLifeButton_clicked();    
+    void on_heroSubStrengthButton_clicked();
+    void on_heroSubDexterityButton_clicked();
+    void on_heroSubMagicButton_clicked();
+    void on_heroSubVitalityButton_clicked();
     void on_heroAddStrengthButton_clicked();
     void on_heroAddDexterityButton_clicked();
     void on_heroAddMagicButton_clicked();

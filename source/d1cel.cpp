@@ -144,7 +144,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         D1GfxFrame *frame = new D1GfxFrame();
         if (!D1CelFrame::load(*frame, celFrameRawData, params)) {
             quint16 frameIndex = gfx.frames.size();
-            dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
+            dProgressErr() << QApplication::tr("Frame %1 is invalid (size = %2. from %3 to %4)").arg(frameIndex + 1).arg(offset.second - offset.first).arg(offset.first).arg(offset.second);
             // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
         }

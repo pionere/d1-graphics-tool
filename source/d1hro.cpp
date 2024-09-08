@@ -104,14 +104,16 @@ static void InvDrawSlotBack(int X, int Y, int W, int H)
     QImage *destImage = (QImage *)InvPainter->device();
     for (int y = Y; y < Y + H; y++) {
         for (int x = X; x < X + W; x++) {
-            QColor color = destImage->pixelColor(x, y);
+            /*QColor color = destImage->pixelColor(x, y);
             for (int i = PAL16_GRAY; i < PAL16_GRAY + 15; i++) {
                 if (InvPal->getColor(i) == color) {
                     color = InvPal->getColor(i - (PAL16_GRAY - PAL16_BEIGE));
                     destImage->setPixelColor(x, y, color);
                     break;
                 }
-            }
+            }*/
+            QColor color = QColor(0, 0, 0);
+            destImage->setPixelColor(x, y, color);
         }
     }
     LogErrorF("InvDrawSlotBack done");
@@ -201,7 +203,7 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
     } else {
         QString text = is->_iName;
         QFontMetrics fm(InvPainter->font());
-        unsigned textWidth = fm.horizontalAdvance(text);
+        int textWidth = fm.horizontalAdvance(text);
         if (outline) {
             col = PAL16_ORANGE + 2;
         }
@@ -223,10 +225,10 @@ static void draw_item_placeholder(const char* name, bool outline, int sx, int sy
     } else {
         QString text = name;
         QFontMetrics fm(InvPainter->font());
-        unsigned textWidth = fm.horizontalAdvance(text);
+        int textWidth = fm.horizontalAdvance(text);
         InvPainter->setPen(InvPal->getColor(PAL16_GRAY));
         InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
-        LogErrorF("draw_item_placeholder text %d to %d:%d (w:%d)", text, sx + (nWidth - textWidth) / 2, sy - fm.height(), nWidth);
+        LogErrorF("draw_item_placeholder text %s to %d:%d (w:%d)", name, sx + (nWidth - textWidth) / 2, sy - fm.height(), nWidth);
     }
 }
 
@@ -244,7 +246,7 @@ QImage D1Hero::getEquipmentImage() const
         QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' exists").arg(invFilePath));
         D1Gfx gfx;
         gfx.setPalette(this->palette);
-        OpenAsParam params;
+        OpenAsParam params = OpenAsParam();
         if (D1Cel::load(gfx, invFilePath, params) && gfx.getFrameCount() != 0) {
             D1GfxFrame *inv = gfx.getFrame(0);
             QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' loaded %2x%3").arg(invFilePath).arg(inv->getWidth()).arg(inv->getHeight()));
@@ -286,7 +288,7 @@ QImage D1Hero::getEquipmentImage() const
         dProgressErr() << QString("File '%1' exists").arg(objFilePath);
         cCels = new D1Gfx();
         cCels->setPalette(this->palette);
-        OpenAsParam params;
+        OpenAsParam params = OpenAsParam();
         if (!D1Cel::load(*cCels, objFilePath, params)) {
             dProgressErr() << QString("Failed to load CEL file: %1").arg(objFilePath);
             delete cCels;
@@ -438,7 +440,7 @@ QImage D1Hero::getEquipmentImage() const
             frame = ICURS_SMALL_SHIELD + CURSOR_FIRSTITEM;
             frame_width = InvItemWidth[frame];
 
-            draw_item_placeholder("shield", pi == is, screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, cCels, frame, frame_width);
+            draw_item_placeholder("shield", pi == is, screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y, cCels, frame, frame_width);
         }
 	}
 
@@ -458,6 +460,8 @@ QImage D1Hero::getEquipmentImage() const
 	}
 
     invPainter.end();
+
+    delete cCels;
 
     return result;
 }
@@ -495,17 +499,12 @@ void D1Hero::setName(const QString &name)
         return;
 
     int len = name.length();
-    LogErrorF("setName %d", len);
     if (len > lengthof(players[this->pnum]._pName) - 1)
         len = lengthof(players[this->pnum]._pName) - 1;
 
     memcpy(players[this->pnum]._pName, name.toLatin1().constData(), len);
 
     players[this->pnum]._pName[len] = '\0';
-
-    currName = QString(players[this->pnum]._pName);
-    len = currName.length();
-    LogErrorF("setName result %d", len);
 
     this->modified = true;
 }
@@ -573,6 +572,12 @@ void D1Hero::addStrength()
     this->modified = true;
 }
 
+void D1Hero::subStrength()
+{
+    DecreasePlrStr(this->pnum);
+    this->modified = true;
+}
+
 int D1Hero::getDexterity() const
 {
     return players[this->pnum]._pDexterity;
@@ -586,6 +591,12 @@ int D1Hero::getBaseDexterity() const
 void D1Hero::addDexterity()
 {
     IncreasePlrDex(this->pnum);
+    this->modified = true;
+}
+
+void D1Hero::subDexterity()
+{
+    DecreasePlrDex(this->pnum);
     this->modified = true;
 }
 
@@ -605,6 +616,12 @@ void D1Hero::addMagic()
     this->modified = true;
 }
 
+void D1Hero::subMagic()
+{
+    DecreasePlrMag(this->pnum);
+    this->modified = true;
+}
+
 int D1Hero::getVitality() const
 {
     return players[this->pnum]._pVitality;
@@ -618,6 +635,12 @@ int D1Hero::getBaseVitality() const
 void D1Hero::addVitality()
 {
     IncreasePlrVit(this->pnum);
+    this->modified = true;
+}
+
+void D1Hero::subVitality()
+{
+    DecreasePlrVit(this->pnum);
     this->modified = true;
 }
 

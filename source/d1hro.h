@@ -45,15 +45,19 @@ public:
     int getStrength() const;
     int getBaseStrength() const;
     void addStrength();
+    void subStrength();
     int getDexterity() const;
     int getBaseDexterity() const;
     void addDexterity();
+    void subDexterity();
     int getMagic() const;
     int getBaseMagic() const;
     void addMagic();
+    void subMagic();
     int getVitality() const;
     int getBaseVitality() const;
     void addVitality();
+    void subVitality();
 
     int getLife() const;
     int getBaseLife() const;

@@ -491,4 +491,132 @@ void RestorePlrHpVit(int pnum)
 	CalcPlrInv(pnum, true);
 }
 
+void DecreasePlrStr(int pnum)
+{
+	int v;
+
+	if (plr._pBaseStr <= StrengthTbl[plr._pClass])
+		return;
+	switch (plr._pClass) {
+	case PC_WARRIOR:	v = (((plr._pBaseStr - StrengthTbl[PC_WARRIOR] - 3) % 5) == 2) ? 3 : 2; break;
+	case PC_ROGUE:		v = 1; break;
+	case PC_SORCERER:	v = 1; break;
+#ifdef HELLFIRE
+	case PC_MONK:		v = 2; break;
+	case PC_BARD:		v = 1; break;
+	case PC_BARBARIAN:	v = 3; break;
+#endif
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+	//plr._pStrength -= v;
+	plr._pBaseStr -= v;
+
+	plr._pStatPts++;
+
+	CalcPlrInv(pnum, true);
+}
+
+void IncreasePlrMag(int pnum)
+{
+	int v, ms;
+
+	if (plr._pBaseMag <= MagicTbl[plr._pClass])
+		return;
+	switch (plr._pClass) {
+	case PC_WARRIOR:	v = 1; break;
+	case PC_ROGUE:		v = 2; break;
+	case PC_SORCERER:	v = 3; break;
+#ifdef HELLFIRE
+	case PC_MONK:		v = (((plr._pBaseMag - MagicTbl[PC_MONK] - 2) % 3) == 1) ? 2 : 1; break;
+	case PC_BARD:		v = (((plr._pBaseMag - MagicTbl[PC_BARD] - 2) % 3) == 1) ? 2 : 1; break;
+	case PC_BARBARIAN:	v = 1; break;
+#endif
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+
+	//plr._pMagic -= v;
+	plr._pBaseMag -= v;
+
+	plr._pStatPts++;
+
+	ms = v << (6 + 1);
+
+	plr._pMaxManaBase -= ms;
+	//plr._pMaxMana -= ms;
+	//if (!(plr._pIFlags & ISPL_NOMANA)) {
+		plr._pManaBase -= ms;
+		//plr._pMana -= ms;
+	//}
+
+	CalcPlrInv(pnum, true);
+}
+
+void IncreasePlrDex(int pnum)
+{
+	int v;
+
+	if (plr._pBaseDex <= MagicTbl[plr._pClass])
+		return;
+	switch (plr._pClass) {
+	case PC_WARRIOR:	v = (((plr._pBaseDex - DexterityTbl[PC_WARRIOR] - 2) % 3) == 1) ? 2 : 1; break;
+	case PC_ROGUE:		v = 3; break;
+	case PC_SORCERER:	v = (((plr._pBaseDex - DexterityTbl[PC_SORCERER] - 2) % 3) == 1) ? 2 : 1; break;
+#ifdef HELLFIRE
+	case PC_MONK:		v = 2; break;
+	case PC_BARD:		v = 3; break;
+	case PC_BARBARIAN:	v = 1; break;
+#endif
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+
+	//plr._pDexterity -= v;
+	plr._pBaseDex -= v;
+
+	plr._pStatPts++;
+
+	CalcPlrInv(pnum, true);
+}
+
+void IncreasePlrVit(int pnum)
+{
+	int v, ms;
+
+	if (plr._pBaseVit <= MagicTbl[plr._pClass])
+		return;
+	switch (plr._pClass) {
+	case PC_WARRIOR:	v = 2; break;
+	case PC_ROGUE:		v = 1; break;
+	case PC_SORCERER:	v = (((plr._pBaseVit - VitalityTbl[PC_SORCERER] - 2) % 3) == 1) ? 2 : 1; break;
+#ifdef HELLFIRE
+	case PC_MONK:		v = (((plr._pBaseVit - VitalityTbl[PC_MONK] - 2) % 3) == 1) ? 2 : 1; break;
+	case PC_BARD:		v = (((plr._pBaseVit - VitalityTbl[PC_BARD] - 2) % 3) == 1) ? 2 : 1; break;
+	case PC_BARBARIAN:	v = 2; break;
+#endif
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+
+	//plr._pVitality -= v;
+	plr._pBaseVit -= v;
+
+	plr._pStatPts++;
+
+	ms = v << (6 + 1);
+
+	plr._pHPBase -= ms;
+	plr._pMaxHPBase -= ms;
+	//plr._pHitPoints += ms;
+	//plr._pMaxHP += ms;
+
+	CalcPlrInv(pnum, true);
+}
+
+
 DEVILUTION_END_NAMESPACE

@@ -220,13 +220,15 @@ void CelView::updateLabel()
 
 void CelView::updateFields()
 {
+    int hc, bv;
     QLabel *label;
     this->updateLabel();
 
     // set texts
     this->ui->heroNameEdit->setText(this->hero->getName());
 
-    this->ui->heroClassComboBox->setCurrentIndex(this->hero->getClass());
+    hc = this->hero->getClass();
+    this->ui->heroClassComboBox->setCurrentIndex(hc);
 
     this->ui->heroLevelEdit->setText(QString::number(this->hero->getLevel()));
 
@@ -239,16 +241,24 @@ void CelView::updateFields()
 
     label = this->ui->heroStrengthLabel;
     label->setText(QString::number(this->hero->getStrength()));
-    label->setToolTip(QString::number(this->hero->getBaseStrength()));
+    bv = this->hero->getBaseStrength();
+    label->setToolTip(QString::number(bv));
+    this->ui->heroSubStrengthButton->setEnabled(bv > StrengthTbl[hc]);
     label = this->ui->heroDexterityLabel;
     label->setText(QString::number(this->hero->getDexterity()));
-    label->setToolTip(QString::number(this->hero->getBaseDexterity()));
+    bv = this->hero->getBaseDexterity();
+    label->setToolTip(QString::number(bv));
+    this->ui->heroSubDexterityButton->setEnabled(bv > DexterityTbl[hc]);
     label = this->ui->heroMagicLabel;
     label->setText(QString::number(this->hero->getMagic()));
-    label->setToolTip(QString::number(this->hero->getBaseMagic()));
+    bv = this->hero->getBaseMagic();
+    label->setToolTip(QString::number(bv));
+    this->ui->heroSubMagicButton->setEnabled(bv > MagicTbl[hc]);
     label = this->ui->heroVitalityLabel;
     label->setText(QString::number(this->hero->getVitality()));
-    label->setToolTip(QString::number(this->hero->getBaseVitality()));
+    bv = this->hero->getBaseVitality();
+    label->setToolTip(QString::number(bv));
+    this->ui->heroSubVitalityButton->setEnabled(bv > VitalityTbl[hc]);
 
     label = this->ui->heroLifeLabel;
     label->setText(QString::number(this->hero->getLife()));
@@ -414,6 +424,30 @@ void CelView::on_heroAddMagicButton_clicked()
 void CelView::on_heroAddVitalityButton_clicked()
 {
     this->hero->addVitality();
+    this->updateFields();
+}
+
+void CelView::on_heroSubStrengthButton_clicked()
+{
+    this->hero->subStrength();
+    this->updateFields();
+}
+
+void CelView::on_heroSubDexterityButton_clicked()
+{
+    this->hero->subDexterity();
+    this->updateFields();
+}
+
+void CelView::on_heroSubMagicButton_clicked()
+{
+    this->hero->subMagic();
+    this->updateFields();
+}
+
+void CelView::on_heroSubVitalityButton_clicked()
+{
+    this->hero->subVitality();
     this->updateFields();
 }
 

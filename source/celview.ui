@@ -219,6 +219,22 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="heroSubStrengthButton">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="toolTip">
+           <string>Decrease strength</string>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="heroStrengthLabel"/>
         </item>
         <item>
@@ -244,6 +260,22 @@
           </property>
           <property name="text">
            <string>Dexterity:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="heroSubDexterityButton">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="toolTip">
+           <string>Decrease dexterity</string>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
           </property>
          </widget>
         </item>
@@ -277,6 +309,22 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="heroSubMagicButton">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="toolTip">
+           <string>Decrease magic</string>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="heroMagicLabel"/>
         </item>
         <item>
@@ -302,6 +350,22 @@
           </property>
           <property name="text">
            <string>Vitality:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="heroSubVitalityButton">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="toolTip">
+           <string>Decrease vitality</string>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
           </property>
          </widget>
         </item>
