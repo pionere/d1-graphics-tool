@@ -518,7 +518,7 @@ void DecreasePlrStr(int pnum)
 	CalcPlrInv(pnum, true);
 }
 
-void IncreasePlrMag(int pnum)
+void DecreasePlrMag(int pnum)
 {
 	int v, ms;
 
@@ -555,7 +555,7 @@ void IncreasePlrMag(int pnum)
 	CalcPlrInv(pnum, true);
 }
 
-void IncreasePlrDex(int pnum)
+void DecreasePlrDex(int pnum)
 {
 	int v;
 
@@ -583,7 +583,7 @@ void IncreasePlrDex(int pnum)
 	CalcPlrInv(pnum, true);
 }
 
-void IncreasePlrVit(int pnum)
+void DecreasePlrVit(int pnum)
 {
 	int v, ms;
 

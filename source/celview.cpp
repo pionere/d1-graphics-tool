@@ -16,9 +16,7 @@
 #include "progressdialog.h"
 #include "ui_celview.h"
 
-#include "dungeon/defs.h"
-
-#include "dungeon/interfac.h"
+#include "dungeon/all.h"
 
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene(v)

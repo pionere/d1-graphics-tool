@@ -27,7 +27,7 @@ void IncreasePlrVit(int pnum);
 void RestorePlrHpVit(int pnum);
 void DecreasePlrMaxHp(int pnum);
 
-void DencreasePlrStr(int pnum);
+void DecreasePlrStr(int pnum);
 void DecreasePlrMag(int pnum);
 void DecreasePlrDex(int pnum);
 void DecreasePlrVit(int pnum);
