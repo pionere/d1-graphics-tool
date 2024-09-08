@@ -36,7 +36,7 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
 
     delete this->is;
     is = new ItemStruct();
-    memcpy(&this->is, pi, sizeof(*pi));
+    memcpy(this->is, pi, sizeof(*pi));
     
     QComboBox *typeComboBox = this->ui->itemTypeComboBox;
     QComboBox *locComboBox = this->ui->itemLocComboBox;
@@ -46,27 +46,27 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
     typeComboBox->addItem(tr("None"), ITYPE_NONE);
     switch (ii) {
     case INVITEM_HEAD:
-        this->is._iClass = ICLASS_ARMOR;
+        this->is->_iClass = ICLASS_ARMOR;
         locComboBox->addItem(tr("Helm"), ILOC_HELM);
         typeComboBox->addItem(tr("Helm"), ITYPE_HELM);
         break;
     case INVITEM_RING_LEFT:
-        this->is._iClass = ICLASS_MISC;
+        this->is->_iClass = ICLASS_MISC;
         locComboBox->addItem(tr("Ring"), ILOC_RING);
         typeComboBox->addItem(tr("Ring"), ITYPE_RING);
         break;
     case INVITEM_RING_RIGHT:
-        this->is._iClass = ICLASS_MISC;
+        this->is->_iClass = ICLASS_MISC;
         locComboBox->addItem(tr("Ring"), ILOC_RING);
         typeComboBox->addItem(tr("Ring"), ITYPE_RING);
         break;
     case INVITEM_AMULET:
-        this->is._iClass = ICLASS_MISC;
+        this->is->_iClass = ICLASS_MISC;
         locComboBox->addItem(tr("Amulet"), ILOC_AMULET);
         typeComboBox->addItem(tr("Amulet"), ITYPE_AMULET);
         break;
     case INVITEM_HAND_LEFT:
-        this->is._iClass = ICLASS_WEAPON;
+        this->is->_iClass = ICLASS_WEAPON;
         locComboBox->addItem(tr("One handed"), ILOC_ONEHAND);
         locComboBox->addItem(tr("Two handed"), ILOC_TWOHAND);
         typeComboBox->addItem(tr("Sword"), ITYPE_SWORD);
@@ -76,7 +76,7 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
         typeComboBox->addItem(tr("Staff"), ITYPE_STAFF);
         break;
     case INVITEM_HAND_RIGHT:
-        this->is._iClass = ICLASS_WEAPON;
+        this->is->_iClass = ICLASS_WEAPON;
         locComboBox->addItem(tr("One handed"), ILOC_ONEHAND);
         typeComboBox->addItem(tr("Sword"), ITYPE_SWORD);
         typeComboBox->addItem(tr("Axe"), ITYPE_AXE);
@@ -86,7 +86,7 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
         typeComboBox->addItem(tr("Shield"), ITYPE_SHIELD);
         break;
     case INVITEM_CHEST:
-        this->is._iClass = ICLASS_ARMOR;
+        this->is->_iClass = ICLASS_ARMOR;
         locComboBox->addItem(tr("Armor"), ILOC_ARMOR);
         typeComboBox->addItem(tr("Light"), ITYPE_LARMOR);
         typeComboBox->addItem(tr("Medium"), ITYPE_MARMOR);
