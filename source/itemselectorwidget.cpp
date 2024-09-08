@@ -11,10 +11,6 @@
 #include "sidepanelwidget.h"
 #include "ui_itemselectorwidget.h"
 
-#include "dungeon/all.h"
-
-static int entryHorizontalMargin = 0;
-
 ItemSelectorWidget::ItemSelectorWidget(SidePanelWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ItemSelectorWidget())

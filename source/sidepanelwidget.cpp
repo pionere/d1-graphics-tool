@@ -24,7 +24,7 @@ void SidePanelWidget::initialize(D1Hero *h)
         this->itemSelector = new ItemSelectorWidget(this);
 
         // clear the layout
-        QHBoxLayout *layout = this->ui->panelVBoxLayout;
+        QVBoxLayout *layout = this->ui->panelVBoxLayout;
         /*QLayoutItem *child;
         while ((child = layout->takeAt(0)) != nullptr) {
             child->widget()->deleteLater(); // delete the widget
