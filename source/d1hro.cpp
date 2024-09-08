@@ -201,7 +201,7 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
         trans = col != ICOL_RED ? 0 : COLOR_TRN_RED;
         CelClippedDrawLightTbl(sx, sy, pCelBuff, nCel, nWidth, trans);
     } else {
-        QString text = is->_iName;
+        QString text = ItemName(is);
         QFontMetrics fm(InvPainter->font());
         int textWidth = fm.horizontalAdvance(text);
         if (outline) {
@@ -714,6 +714,59 @@ void D1Hero::rebalance()
     if (plr._pBaseVit < VitalityTbl[plr._pClass])
         plr._pBaseVit = VitalityTbl[plr._pClass];
 
+    int tmp;
+    switch (plr._pClass) {
+    case PC_WARRIOR:
+        tmp = 5 * ((plr._pBaseStr - StrengthTbl[PC_WARRIOR]) / 5);
+        plr._pBaseStr = tmp + ((tmp * 5 + StrengthTbl[PC_WARRIOR]) == plr._pBaseStr ? 0 : 2);
+        tmp = 3 * ((plr._pBaseDex - DexterityTbl[PC_WARRIOR]) / 3);
+        plr._pBaseDex = tmp + ((tmp * 3 + DexterityTbl[PC_WARRIOR]) == plr._pBaseDex ? 0 : 1);
+        plr._pBaseVit = 2 * ((plr._pBaseVit - VitalityTbl[PC_WARRIOR]) / 2) + VitalityTbl[PC_WARRIOR];
+        break;
+    case PC_ROGUE:
+        plr._pBaseMag = 2 * ((plr._pBaseMag - MagicTbl[PC_ROGUE]) / 2) + MagicTbl[PC_ROGUE];
+        plr._pBaseDex = 3 * ((plr._pBaseDex - DexterityTbl[PC_ROGUE]) / 3) + DexterityTbl[PC_ROGUE];
+        break;
+    case PC_SORCERER:
+        plr._pBaseMag = 3 * ((plr._pBaseMag - MagicTbl[PC_SORCERER]) / 3) + MagicTbl[PC_SORCERER];
+        tmp = 3 * ((plr._pBaseDex - DexterityTbl[PC_SORCERER]) / 3);
+        plr._pBaseDex = tmp + ((tmp * 3 + DexterityTbl[PC_SORCERER]) == plr._pBaseDex ? 0 : 1);
+        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_SORCERER]) / 3);
+        plr._pBaseVit = tmp + ((tmp * 3 + VitalityTbl[PC_SORCERER]) == plr._pBaseVit ? 0 : 1);
+        break;
+#ifdef HELLFIRE
+    case PC_MONK:
+        plr._pBaseStr = 2 * ((plr._pBaseStr - StrengthTbl[PC_MONK]) / 2) + StrengthTbl[PC_MONK];
+        tmp = 3 * ((plr._pBaseMag - MagicTbl[PC_MONK]) / 3);
+        plr._pBaseMag = tmp + ((tmp * 3 + MagicTbl[PC_MONK]) == plr._pBaseMag ? 0 : 1);
+        plr._pBaseDex = 2 * ((plr._pBaseDex - DexterityTbl[PC_MONK]) / 2) + DexterityTbl[PC_MONK];
+        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_MONK]) / 3);
+        plr._pBaseVit = tmp + ((tmp * 3 + VitalityTbl[PC_MONK]) == plr._pBaseVit ? 0 : 1);
+        break;
+    case PC_BARD:
+        tmp = 3 * ((plr._pBaseMag - MagicTbl[PC_BARD]) / 3);
+        plr._pBaseMag = tmp + ((tmp * 3 + MagicTbl[PC_BARD]) == plr._pBaseMag ? 0 : 1);
+        plr._pBaseDex = 3 * ((plr._pBaseDex - DexterityTbl[PC_BARD]) / 3) + DexterityTbl[PC_BARD];
+        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_BARD]) / 3);
+        plr._pBaseVit = tmp + ((tmp * 3 + VitalityTbl[PC_BARD]) == plr._pBaseVit ? 0 : 1);
+        break;
+    case PC_BARBARIAN:
+        plr._pBaseStr = 3 * ((plr._pBaseStr - StrengthTbl[PC_BARBARIAN]) / 3) + StrengthTbl[PC_BARBARIAN];
+        plr._pBaseVit = 2 * ((plr._pBaseVit - VitalityTbl[PC_BARBARIAN]) / 2) + VitalityTbl[PC_BARBARIAN];
+        break;
+#endif
+    default:
+        ASSUME_UNREACHABLE
+            break;
+    }
+
+    // if (change) {
+        // RestorePlrHpVit
+        plr._pMaxHPBase = plr._pBaseVit << (6 + 1);
+        // RestorePlrHpMana
+        plr._pMaxManaBase = plr._pBaseMag << (6 + 1);
+    // }
+
     while (true) {
         int remStatPts = (plr._pLevel - 1) * 4;
 
@@ -769,6 +822,7 @@ void D1Hero::rebalance()
 
         int totalUsedStatPts = usedStatPts[0] + usedStatPts[1] + usedStatPts[2] + usedStatPts[3];
         if (totalUsedStatPts <= remStatPts) {
+            plr._pStatPts += remStatPts - totalUsedStatPts;
             break;
         }
         int mostUsedIdx = 0;

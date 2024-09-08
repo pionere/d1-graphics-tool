@@ -100,11 +100,12 @@ private slots:
 
     void on_heroNameEdit_returnPressed();
     void on_heroNameEdit_escPressed();
+    void on_heroClassComboBox_activated(int index);
     void on_heroLevelEdit_returnPressed();
     void on_heroLevelEdit_escPressed();
 
     void on_heroDecLifeButton_clicked();
-    void on_heroRestoreLifeButton_clicked();    
+    void on_heroRestoreLifeButton_clicked();
     void on_heroSubStrengthButton_clicked();
     void on_heroSubDexterityButton_clicked();
     void on_heroSubMagicButton_clicked();

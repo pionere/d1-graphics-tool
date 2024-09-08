@@ -18,6 +18,7 @@
 #include "progressdialog.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
+#include "sidepanelwidget.h"
 
 #define D1_GRAPHICS_TOOL_TITLE "Diablo 1 Hero Planner"
 #define D1_GRAPHICS_TOOL_VERSION "0.5.0"
@@ -90,6 +91,7 @@ public:
     void updateTrns(const std::vector<D1Trn *> &newTrns);
 
     void heroChanged(D1Hero *hero);
+    void heroItemClicked(int ii);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void updatePalette(const D1Pal* pal);
     void colorModified();
@@ -188,6 +190,7 @@ private:
     QAction *redoAction;
 
     CelView *celView = nullptr;
+    SidePanelWidget *sideView = nullptr;
 
     PaletteWidget *palWidget = nullptr;
     PaletteWidget *trnUniqueWidget = nullptr;

@@ -1968,6 +1968,33 @@ void RespawnItem(int ii)
 		is->_iSelFlag = 1;*/
 }
 
+ItemStruct* PlrItem(int pnum, int cii)
+{
+	ItemStruct* pi;
+
+	if (cii <= INVITEM_INV_LAST) {
+		if (cii < INVITEM_INV_FIRST) {
+			pi = &plr._pInvBody[cii];
+		} else {
+			pi = &plr._pInvList[cii - INVITEM_INV_FIRST];
+			if (pi->_itype == ITYPE_PLACEHOLDER)
+				pi = &plr._pInvList[pi->_iPHolder];
+		}
+	} else {
+		pi = &plr._pSpdList[cii - INVITEM_BELT_FIRST];
+	}
+	return pi;
+}
+const char* ItemName(const ItemStruct* is)
+{
+	const char* name;
+
+	name = is->_iName;
+	if (is->_iMagical == ITEM_QUALITY_UNIQUE && is->_iIdentified)
+		name = UniqueItemList[is->_iUid].UIName;
+	return name;
+}
+
 static void RecreateSmithItem(int ii/*, int iseed*/, int idx, unsigned lvl)
 {
 	// SetRndSeed(iseed);

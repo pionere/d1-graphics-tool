@@ -278,10 +278,22 @@ CelScene *CelView::getCelScene() const
 
 void CelView::framePixelClicked(const QPoint &pos, int flags)
 {
-    QMessageBox::critical(nullptr, "Error", QStringLiteral("Clicked %1:%2").arg(pos.x()).arg(pos.y()));
-    /*QPoint p = pos;
+    constexpr int gnWndInvX = 0;
+    constexpr int gnWndInvY = 0;
+    QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    dMainWindow().frameClicked(frame, p, flags);*/
+    int i - p.x();
+    int h = p.y();
+
+    for (r = 0; r < SLOTXY_CHEST_LAST; r++) {
+        if (POS_IN_RECT(i, j,
+            gnWndInvX + InvRect[r].X, gnWndInvY + InvRect[r].Y - INV_SLOT_SIZE_PX,
+            INV_SLOT_SIZE_PX + 1, INV_SLOT_SIZE_PX + 1)) {
+
+            dMainWindow().heroItemClicked(r);
+            break;
+        }
+    }
 }
 
 bool CelView::framePos(QPoint &pos) const
@@ -369,6 +381,12 @@ void CelView::on_heroNameEdit_escPressed()
     // update heroNameEdit
     this->updateFields();
     this->ui->heroNameEdit->clearFocus();
+}
+
+void CelView::on_heroClassComboBox_activated(int index)
+{
+    this->hero->setClass(index);
+    this->updateFields();
 }
 
 void CelView::on_heroLevelEdit_returnPressed()

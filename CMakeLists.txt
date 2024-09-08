@@ -82,6 +82,9 @@ set(PROJECT_SOURCES
         source/dungeon/pack.cpp
         source/dungeon/player.cpp
         source/dungeon/spelldat.cpp
+        source/itemselectorwidget.cpp
+        source/itemselectorwidget.h
+        source/itemselectorwidget.ui
         source/lineeditwidget.cpp
         source/lineeditwidget.h
         source/main.cpp
@@ -106,6 +109,9 @@ set(PROJECT_SOURCES
         source/settingsdialog.cpp
         source/settingsdialog.h
         source/settingsdialog.ui
+        source/sidepanelwidget.cpp
+        source/sidepanelwidget.h
+        source/sidepanelwidget.ui
 )
 
 qt_add_resources(RESOURCES

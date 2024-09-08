@@ -30,6 +30,18 @@
       </layout>
      </widget>
     </item>
+    <item>
+     <widget class="QFrame">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="sideFrameLayout">
+      </layout>
+     </widget>
+    </item>
     <item alignment="Qt::AlignTop">
      <widget class="QFrame" name="palFrameWidget">
       <property name="sizePolicy">

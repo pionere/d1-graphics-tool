@@ -40,7 +40,8 @@ void SetItemSData(ItemStruct* is, int idata);
 void CreateRndItem(int x, int y, unsigned quality);
 void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc);
 void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI);
-void DeleteItems(int ii);
+ItemStruct* PlrItem(int pnum, int cii);
+const char* ItemName(const ItemStruct* is);
 void RecreateTownItem(int ii, int iseed, uint16_t idx, uint16_t icreateinfo);
 
 #endif /* __ITEMS_H__ */

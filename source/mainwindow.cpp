@@ -276,6 +276,11 @@ void MainWindow::heroChanged(D1Hero *hero)
     this->updateWindow();
 }
 
+void MainWindow::heroItemClicked(int ii)
+{
+    this->sideView->setHeroItem(this->hero, ii);
+}
+
 void MainWindow::paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type)
 {
     if (widget == this->palWidget) {
@@ -779,6 +784,11 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Add the view to the main frame
     this->ui->mainFrameLayout->addWidget(view);
+
+    // Initialize the side panel
+    this->sideView = new SideView(this);
+    this->sideView->initialize(this->hero);
+    this->ui->sideFrameLayout->addWidget(this->sideView);
 
     // Initialize palette widgets
     this->palWidget->initialize(this->pal, this->celView);
