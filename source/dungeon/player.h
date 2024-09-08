@@ -33,7 +33,6 @@ extern const int MagicTbl[NUM_CLASSES];
 extern const int DexterityTbl[NUM_CLASSES];
 extern const int VitalityTbl[NUM_CLASSES];
 extern const BYTE Abilities[NUM_CLASSES];
-extern const char* const ClassStrTbl[NUM_CLASSES];
 extern const unsigned PlrExpLvlsTbl[MAXCHARLEVEL + 1];
 extern const unsigned SkillExpLvlsTbl[MAXSPLLEVEL + 1];
 

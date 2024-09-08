@@ -168,6 +168,7 @@ static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int 
         for (int x = sx; x < sx + item->getWidth(); x++) {
             if ((x & 1) == (y & 1))
                 continue;
+            LogErrorF("CelClippedDrawLightTrans pixel %d:%d of %dx%d to %d:%d", x - sx, y - (sy - item->getHeight() + 1), item->getWidth(), item->getHeight(), x, y);
             D1GfxPixel pixel = item->getPixel(x - sx, y - (sy - item->getHeight() + 1));
             if (!pixel.isTransparent()) {
                 quint8 col = pixel.getPaletteIndex();
@@ -213,6 +214,7 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
 static void draw_item_placeholder(const char* name, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
     BYTE col = ICOL_YELLOW;
+    LogErrorF("draw_item_placeholder %s %d:%d idx:%d w:%d", name, sx, sy, nCel, nWidth);
     if (pCelBuff != nullptr && pCelBuff->getFrameCount() > nCel) {
         if (outline) {
             CelClippedDrawOutline(col, sx, sy, pCelBuff, nCel, nWidth);
@@ -224,7 +226,7 @@ static void draw_item_placeholder(const char* name, bool outline, int sx, int sy
         unsigned textWidth = fm.horizontalAdvance(text);
         InvPainter->setPen(InvPal->getColor(PAL16_GRAY));
         InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
-        dProgressErr() << QString("scrollrt_draw_item text %1 to %2:%3 (w:%4 col%5)").arg(text).arg(sx + (nWidth - textWidth) / 2).arg(sy - fm.height()).arg(nWidth).arg(col);
+        LogErrorF("draw_item_placeholder text %d to %d:%d (w:%d)", text, sx + (nWidth - textWidth) / 2, sy - fm.height(), nWidth);
     }
 }
 
@@ -239,13 +241,13 @@ QImage D1Hero::getEquipmentImage() const
     // draw the inventory
     QString invFilePath = folder + "Data\\Inv\\Inv.CEL";
     if (QFile::exists(invFilePath)) {
-        dProgressErr() << QString("File '%1' exists").arg(invFilePath);
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' exists").arg(invFilePath));
         D1Gfx gfx;
         gfx.setPalette(this->palette);
         OpenAsParam params;
         if (D1Cel::load(gfx, invFilePath, params) && gfx.getFrameCount() != 0) {
             D1GfxFrame *inv = gfx.getFrame(0);
-            dProgressErr() << QString("File '%1' loaded %2x%3").arg(invFilePath).arg(inv->getWidth()).arg(inv->getHeight());
+            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' loaded %2x%3").arg(invFilePath).arg(inv->getWidth()).arg(inv->getHeight()));
             int ox = (INV_WIDTH - inv->getWidth()) / 2;
             int oy = (INV_HEIGHT - (inv->getHeight() - INV_ROWS)) / 2;
 
@@ -264,9 +266,9 @@ QImage D1Hero::getEquipmentImage() const
                     }
                 }
             }
-            dProgressErr() << QString("Inv copied %1:%2").arg(ox).arg(oy);
+            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Inv copied %1:%2").arg(ox).arg(oy));
         } else {
-            dProgressErr() << QString("Failed to load CEL file: %1").arg(invFilePath);
+            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load CEL file: %1").arg(invFilePath));
         }
     } else {
         QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load inv %1").arg(invFilePath));
@@ -455,6 +457,8 @@ QImage D1Hero::getEquipmentImage() const
         draw_item_placeholder("armor", pi == is, screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, cCels, frame, frame_width);
 	}
 
+    invPainter.end();
+
     return result;
 }
 
@@ -537,14 +541,12 @@ int D1Hero::getStatPoints() const
 void D1Hero::setLevel(int level)
 {
     int dlvl;
-    dlvl = players[this->pnum]._pLevel - level;
+    dlvl = level - players[this->pnum]._pLevel;
     if (dlvl == 0)
         return;
     players[this->pnum]._pLevel = level;
-    QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("setLevel result %1 delta%2").arg(level).arg(dlvl));
     if (dlvl > 0) {
         players[this->pnum]._pStatPts += 4 * dlvl;
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("setLevel statpoints %1").arg(players[this->pnum]._pStatPts));
     } else {
         // FIXME...
     }

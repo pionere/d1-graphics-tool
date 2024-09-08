@@ -220,7 +220,6 @@ void CelView::updateLabel()
 
 void CelView::updateFields()
 {
-    QMessageBox::critical(nullptr, "Error", QStringLiteral("updateFields"));
     QLabel *label;
     this->updateLabel();
 
