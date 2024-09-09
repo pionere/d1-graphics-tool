@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ItemSelectorWidget</class>
- <widget class="QWidget">
+ <class>ItemSelectorDialog</class>
+ <widget class="QDialog">
+  <property name="windowTitle">
+   <string>Select Item</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout">
    <item>
     <widget class="QGroupBox">
@@ -198,6 +204,8 @@
    </item>
   </layout>
  </widget>
+ <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
+ <buttongroups/>
 </ui>

@@ -13,6 +13,7 @@
 #include "d1hro.h"
 #include "d1pal.h"
 #include "d1trn.h"
+#include "itemselectordialog.h"
 #include "openasdialog.h"
 #include "palettewidget.h"
 #include "progressdialog.h"
@@ -70,6 +71,8 @@ typedef struct LoadFileContent
     QMap<QString, D1Pal *> pals;
 } LoadFileContent;
 
+struct ItemStruct;
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -92,6 +95,8 @@ public:
 
     void heroChanged(D1Hero *hero);
     void heroItemClicked(int ii);
+    void selectHeroItem(int ii);
+    void addHeroItem(int ii, ItemStruct *is);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void updatePalette(const D1Pal* pal);
     void colorModified();
@@ -201,6 +206,7 @@ private:
     OpenAsDialog *openAsDialog = nullptr;
     SaveAsDialog *saveAsDialog = nullptr;
     SettingsDialog *settingsDialog = nullptr;
+    ItemSelectorDialog *itemSelectorDialog = nullptr;
 
     D1Pal *pal = nullptr;
     D1Trn *trnUnique = nullptr;

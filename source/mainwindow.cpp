@@ -287,6 +287,22 @@ void MainWindow::heroItemClicked(int ii)
     this->sideView->setHeroItem(this->hero, ii);
 }
 
+void MainWindow::selectHeroItem(int ii)
+{
+    if (this->itemSelectorDialog == nullptr) {
+        this->itemSelectorDialog = new ItemSelectorDialog(this);
+    }
+    this->itemSelectorDialog->initialize(this->hero, ii);
+    this->itemSelectorDialog->show();
+}
+
+void MainWindow::addHeroItem(int ii, ItemStruct *is)
+{
+    if (this->hero->addItem(ii, is)) {
+        this->updateWindow();
+    }
+}
+
 void MainWindow::paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type)
 {
     if (widget == this->palWidget) {

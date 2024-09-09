@@ -85,9 +85,9 @@ set(PROJECT_SOURCES
         source/itemdetailswidget.cpp
         source/itemdetailswidget.h
         source/itemdetailswidget.ui
-        source/itemselectorwidget.cpp
-        source/itemselectorwidget.h
-        source/itemselectorwidget.ui
+        source/itemselectordialog.cpp
+        source/itemselectordialog.h
+        source/itemselectordialog.ui
         source/lineeditwidget.cpp
         source/lineeditwidget.h
         source/main.cpp

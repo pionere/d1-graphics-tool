@@ -499,6 +499,42 @@ const ItemStruct *D1Hero::item(int ii) const
     return PlrItem(this->pnum, ii);
 }
 
+bool D1Hero::addItem(int dst_ii, ItemStruct *is)
+{
+    if (is->_itype == ITYPE_NONE)
+        return false;
+    ItemStruct *pi;
+    if (dst_ii < NUM_INVLOC) {
+        pi = PlrItem(this->pnum, dst_ii);
+        if (memcmp(pi, is, sizeof(ItemStruct)) == 0)
+            return false;
+    }  else {
+        for (int ii = INVITEM_INV_FIRST; ii < INVITEM_INV_LAST; ii++) {
+            pi = &plr._pInvList[ii];
+            if (memcmp(pi, is, sizeof(ItemStruct)) == 0) {
+                return false;
+            }
+        }
+        for (int ii = INVITEM_INV_FIRST; ii < INVITEM_INV_LAST; ii++) {
+            pi = &plr._pInvList[ii];
+            if (pi->_itype == ITYPE_NONE) {
+                break;
+            }
+        }
+    }
+    if (pi->_itype != ITYPE_NONE) {
+        for (int ii = INVITEM_INV_FIRST; ii < INVITEM_INV_LAST; ii++) {
+            ci = &plr._pInvList[ii];
+            if (ci->_itype == ITYPE_NONE) {
+                memcpy(ci, pi, sizeof(ItemStruct));
+                break;
+            }
+        }
+    }
+    memcpy(pi, is, sizeof(ItemStruct));
+    return true;
+}
+
 void D1Hero::swapItem(int dst_ii, int src_ii)
 {
     if (SwapPlrItem(this->pnum, dst_ii, src_ii)) {

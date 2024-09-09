@@ -18,6 +18,20 @@
      <item>
       <widget class="QComboBox" name="invItemIndexComboBox"/>
      </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addItemButton">
+       <property name="text">
+        <string>Add New Item</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

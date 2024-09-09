@@ -24,6 +24,8 @@ private:
 private slots:
     void on_invItemIndexComboBox_activated(int index);
 
+    void on_addItemButton_clicked();
+
     void on_submitButton_clicked();
     void on_cancelButton_clicked();
 

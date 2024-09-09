@@ -247,15 +247,20 @@ void ItemDetailsWidget::on_invItemIndexComboBox_activated(int index)
     this->updateFields();
 }
 
+void ItemDetailsWidget::on_addItemButton_clicked()
+{
+    dMainWindow().addHeroItem(this->invIdx);
+}
+
 void ItemDetailsWidget::on_submitButton_clicked()
 {
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
 
     int ii = itemsComboBox->currentData().value<int>();
 
-    if (ii == -2) {
+    if (ii == -1) {
         ii = INVITEM_NONE;
-    } else if (ii == -1) {
+    } else if (ii == -2) {
         ii = this->invIdx;
     }
     LogErrorF("ItemDetailsWidget swap %d:%d", this->invIdx, ii);
