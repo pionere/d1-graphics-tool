@@ -5,8 +5,8 @@
 
 enum class OPEN_HERO_TYPE {
     AUTODETECT,
-    DIABLO,
-    HELLFIRE,
+    DIABLO_HERO,
+    HELLFIRE_HERO,
 };
 
 enum class OPEN_HERO_CLASS {

@@ -52,11 +52,11 @@ void SaveAsDialog::on_saveButton_clicked()
     params.filePath = this->ui->outputFileEdit->text();
     // heroSettingsGroupBox: hellfireHero
     if (this->ui->hellfireHeroYesRadioButton->isChecked()) {
-        params.heroType = SAVE_HELLFIRE_TYPE::TRUE;
+        params.heroType = SAVE_HERO_TYPE::HELLFIRE_HERO;
     } else if (this->ui->hellfireHeroNoRadioButton->isChecked()) {
-        params.heroType = SAVE_HELLFIRE_TYPE::FALSE;
+        params.heroType = SAVE_HERO_TYPE::DIABLO_HERO;
     } else {
-        params.heroType = SAVE_HELLFIRE_TYPE::AUTODETECT;
+        params.heroType = SAVE_HERO_TYPE::AUTODETECT;
     }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 

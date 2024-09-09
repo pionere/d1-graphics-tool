@@ -5,16 +5,16 @@
 
 class D1Hero;
 
-enum class SAVE_HELLFIRE_TYPE {
+enum class SAVE_HERO_TYPE {
     AUTODETECT,
-    TRUE,
-    FALSE,
+    DIABLO_HERO,
+    HELLFIRE_HERO,
 };
 
 class SaveAsParam {
 public:
     QString filePath;
-    SAVE_HELLFIRE_TYPE heroType = SAVE_HELLFIRE_TYPE::AUTODETECT;
+    SAVE_HERO_TYPE heroType = SAVE_HERO_TYPE::AUTODETECT;
     bool autoOverwrite = false;
 };
 
