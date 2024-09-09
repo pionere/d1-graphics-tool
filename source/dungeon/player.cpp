@@ -559,7 +559,7 @@ void DecreasePlrDex(int pnum)
 {
 	int v;
 
-	if (plr._pBaseDex <= MagicTbl[plr._pClass])
+	if (plr._pBaseDex <= DexterityTbl[plr._pClass])
 		return;
 	switch (plr._pClass) {
 	case PC_WARRIOR:	v = (((plr._pBaseDex - DexterityTbl[PC_WARRIOR] - 2) % 3) == 1) ? 2 : 1; break;
@@ -587,7 +587,7 @@ void DecreasePlrVit(int pnum)
 {
 	int v, ms;
 
-	if (plr._pBaseVit <= MagicTbl[plr._pClass])
+	if (plr._pBaseVit <= VitalityTbl[plr._pClass])
 		return;
 	switch (plr._pClass) {
 	case PC_WARRIOR:	v = 2; break;

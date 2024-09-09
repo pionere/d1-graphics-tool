@@ -30,7 +30,7 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
 {
     this->hero = h;
     this->invIdx = ii;
-
+    LogErrorF("ItemDetailsWidget init 0 %d", ii);
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
     itemsComboBox->clear();
     itemsComboBox->addItem(tr("None"), QVariant::fromValue(-1));

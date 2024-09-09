@@ -883,7 +883,7 @@ void D1Hero::rebalance()
         case 3: DecreasePlrVit(pnum); break;
         }
         plr._pStatPts--;
-        LogErrorF("mostUsedIdx: %d -> (bonus%d)", plr._pStatPts);
+        LogErrorF("mostUsedIdx: %d -> (bonus%d)", mostUsedIdx, plr._pStatPts);
     }
 }
 
