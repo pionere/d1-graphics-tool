@@ -813,8 +813,8 @@ void D1Hero::rebalance()
         }
         remStatPts -= plr._pStatPts;
 
-        LogErrorF("PlrStats: [str%d mag%d dex%d vit%d] vs base[str%d mag%d dex%d vit%d] (bonus%d)", plr._pBaseStr, plr._pBaseMag, plr._pBaseDex, plr._pBaseVit,
-            StrengthTbl[plr._pClass], MagicTbl[plr._pClass], DexterityTbl[plr._pClass], VitalityTbl[plr._pClass], plr._pStatPts);
+        // LogErrorF("PlrStats: [str%d mag%d dex%d vit%d] vs base[str%d mag%d dex%d vit%d] (bonus%d)", plr._pBaseStr, plr._pBaseMag, plr._pBaseDex, plr._pBaseVit,
+        //     StrengthTbl[plr._pClass], MagicTbl[plr._pClass], DexterityTbl[plr._pClass], VitalityTbl[plr._pClass], plr._pStatPts);
 
         int usedStatPts[4];
         switch (plr._pClass) {
@@ -862,7 +862,7 @@ void D1Hero::rebalance()
         }
 
         int totalUsedStatPts = usedStatPts[0] + usedStatPts[1] + usedStatPts[2] + usedStatPts[3];
-        LogErrorF("UsedStats: %d [str%d mag%d dex%d vit%d] vs %d (bonus%d)", totalUsedStatPts, usedStatPts[0], usedStatPts[1], usedStatPts[2], usedStatPts[3], remStatPts, plr._pStatPts);
+        // LogErrorF("UsedStats: %d [str%d mag%d dex%d vit%d] vs %d (bonus%d)", totalUsedStatPts, usedStatPts[0], usedStatPts[1], usedStatPts[2], usedStatPts[3], remStatPts, plr._pStatPts);
         if (totalUsedStatPts <= remStatPts) {
             plr._pStatPts += remStatPts - totalUsedStatPts;
             break;
@@ -883,7 +883,7 @@ void D1Hero::rebalance()
         case 3: DecreasePlrVit(pnum); break;
         }
         plr._pStatPts--;
-        LogErrorF("mostUsedIdx: %d -> (bonus%d)", mostUsedIdx, plr._pStatPts);
+        // LogErrorF("mostUsedIdx: %d -> (bonus%d)", mostUsedIdx, plr._pStatPts);
     }
 }
 

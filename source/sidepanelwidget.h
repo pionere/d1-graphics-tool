@@ -26,5 +26,5 @@ private:
     Ui::SidePanelWidget *ui;
 
     D1Hero *hero;
-    ItemDetailsWidget *itemDetails;
+    ItemDetailsWidget *itemDetails = nullptr;
 };
