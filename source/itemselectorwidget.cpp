@@ -38,7 +38,7 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
     is = new ItemStruct();
     memcpy(this->is, pi, sizeof(*pi));
     
-    QComboBox *typeComboBox = this->ui->itemTypeComboBox;
+    /*QComboBox *typeComboBox = this->ui->itemTypeComboBox;
     QComboBox *locComboBox = this->ui->itemLocComboBox;
     typeComboBox->clear();
     locComboBox->clear();
@@ -97,7 +97,21 @@ void ItemSelectorWidget::initialize(D1Hero *h, int ii)
     if (pi->_itype != ITYPE_NONE) {
         locComboBox->setCurrentIndex(locComboBox->findData(pi->_iLoc));
         typeComboBox->setCurrentIndex(typeComboBox->findData(pi->_itype));
-    }
+
+
+        QComboBox *idxComboBox = this->ui->itemIdxComboBox;
+        idxComboBox->clear();
+
+
+
+        this->ui->itemLevelEdit->setText(QString::number(pi->_iCreateInfo & CF_LEVEL));
+        this->ui->itemSourceComboBox->setCurrentIndex();
+        this->ui->itemQualityComboBox->setCurrentIndex((pi->_iCreateInfo & CF_DROP_QUALITY) >> 11);
+    } else {
+        this->ui->seedEdit
+
+
+    }*/
 
     this->setVisible(true);
 }

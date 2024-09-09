@@ -27,6 +27,7 @@ public:
 
     QImage getEquipmentImage() const;
     const ItemStruct *item(int ii) const;
+    void swapItem(int dst_ii, int src_ii);
 
     void compareTo(const D1Hero *hero, QString header) const;
 

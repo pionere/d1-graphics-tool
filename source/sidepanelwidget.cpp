@@ -20,8 +20,8 @@ SidePanelWidget::~SidePanelWidget()
 void SidePanelWidget::initialize(D1Hero *h)
 {
     this->hero = h;
-    if (this->itemSelector == nullptr) {
-        this->itemSelector = new ItemSelectorWidget(this);
+    if (this->itemDetails == nullptr) {
+        this->itemDetails = new ItemDetailsWidget(this);
 
         // clear the layout
         QVBoxLayout *layout = this->ui->panelVBoxLayout;
@@ -37,14 +37,12 @@ void SidePanelWidget::initialize(D1Hero *h)
             }
         }
 
-        layout->addWidget(this->itemSelector, 0, Qt::AlignTop);
+        layout->addWidget(this->itemDetails, 0, Qt::AlignTop);
     }
 }
 
 void SidePanelWidget::setHeroItem(D1Hero *h, int ii)
 {
     this->initialize(h);
-    this->itemSelector->initialize(h, ii);
-
-
+    this->itemDetails->initialize(h, ii);
 }

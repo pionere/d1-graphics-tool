@@ -14,9 +14,14 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+class D1Gfx;
+class D1Pal;
+extern D1Gfx *pInvCels;
+
 extern const InvXY InvRect[NUM_XY_SLOTS];
 extern const BYTE InvSlotTbl[NUM_XY_SLOTS];
 
+void InitInv(D1Pal *pal);
 void CheckInvClick(bool bShift);
 BYTE CheckInvItem();
 void CalculateGold(int pnum);

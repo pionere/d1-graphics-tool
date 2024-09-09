@@ -5,6 +5,11 @@
  */
 #include "all.h"
 
+#include <QString>
+
+#include "../config.h"
+#include "../d1trn.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /*
@@ -28,10 +33,26 @@ void InitLighting()
     LoadFileWithMem("PlrGFX\\Infra.TRN", ColorTrns[COLOR_TRN_RED]);
     LoadFileWithMem("PlrGFX\\Stone.TRN", ColorTrns[COLOR_TRN_GRAY]);
     LoadFileWithMem("PlrGFX\\Coral.TRN", ColorTrns[COLOR_TRN_CORAL]);*/
-    for (int i = 0; i < NUM_COLORS; i++) {
-        ColorTrns[0][i] = i;
-        ColorTrns[1][i] = i;
-        ColorTrns[2][i] = i;
+    for (int j = 0; j < NUM_COLOR_TRNS; j++) {
+        for (int i = 0; i < NUM_COLORS; i++) {
+            ColorTrns[j][i] = i;
+        }
+    }
+
+    D1Pal pal;
+    D1Trn trn;
+    QString folder = Config::getAssetsFolder() + "\\";
+    QString trnFilePath = folder + "PlrGFX\\Infra.TRN";
+    if (trn.load(trnFilePath, &pal)) {
+        for (int i = 0; i < NUM_COLORS; i++) {
+            ColorTrns[COLOR_TRN_RED][i] = trn.getTranslation(i);
+        }
+    }
+    trnFilePath = folder + "PlrGFX\\Stone.TRN";
+    if (trn.load(trnFilePath, &pal)) {
+        for (int i = 0; i < NUM_COLORS; i++) {
+            ColorTrns[COLOR_TRN_GRAY][i] = trn.getTranslation(i);
+        }
     }
 }
 

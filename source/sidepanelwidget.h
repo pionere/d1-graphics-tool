@@ -4,7 +4,7 @@
 #include <QGraphicsScene>
 #include <QMouseEvent>
 
-#include "itemselectorwidget.h"
+#include "itemdetailswidget.h"
 
 class D1Hero;
 
@@ -26,5 +26,5 @@ private:
     Ui::SidePanelWidget *ui;
 
     D1Hero *hero;
-    ItemSelectorWidget *itemSelector;
+    ItemDetailsWidget *itemDetails;
 };

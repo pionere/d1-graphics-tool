@@ -288,8 +288,14 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
         if (POS_IN_RECT(i, j,
             gnWndInvX + InvRect[r].X, gnWndInvY + InvRect[r].Y - INV_SLOT_SIZE_PX,
             INV_SLOT_SIZE_PX + 1, INV_SLOT_SIZE_PX + 1)) {
-
-            dMainWindow().heroItemClicked(r);
+            static_assert((int)SLOT_HEAD == (int)INVITEM_HEAD, "SLOT - INVITEM match is necessary in framePixelClicked I.");
+            static_assert((int)SLOT_RING_LEFT == (int)INVITEM_RING_LEFT, "SLOT - INVITEM match is necessary in framePixelClicked II.");
+            static_assert((int)SLOT_RING_RIGHT == (int)INVITEM_RING_RIGHT, "SLOT - INVITEM match is necessary in framePixelClicked III.");
+            static_assert((int)SLOT_AMULET == (int)INVITEM_AMULET, "SLOT - INVITEM match is necessary in framePixelClicked IV.");
+            static_assert((int)SLOT_HAND_LEFT == (int)INVITEM_HAND_LEFT, "SLOT - INVITEM match is necessary in framePixelClicked V.");
+            static_assert((int)SLOT_HAND_RIGHT == (int)INVITEM_HAND_RIGHT, "SLOT - INVITEM match is necessary in framePixelClicked VI.");
+            static_assert((int)SLOT_CHEST == (int)INVITEM_CHEST, "SLOT - INVITEM match is necessary in framePixelClicked VII.");
+            dMainWindow().heroItemClicked(InvSlotTbl[r]);
             break;
         }
     }

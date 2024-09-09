@@ -12,6 +12,12 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+class D1Gfx;
+class D1Pal;
+extern D1Gfx *pCursCels;
+
+void InitCursorGFX(D1Pal *pal);
+
 /* rdata */
 #define MAX_CURSOR_AREA 8192
 extern const int InvItemWidth[(int)CURSOR_FIRSTITEM + (int)NUM_ICURS];

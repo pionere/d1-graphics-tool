@@ -5,7 +5,17 @@
  */
 #include "all.h"
 
+#include <QFile>
+#include <QString>
+
+#include "../config.h"
+#include "../d1cel.h"
+#include "../d1gfx.h"
+#include "../openasdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
+
+D1Gfx *pInvCels;
 
 /**
  * Maps from inventory slot to screen position. The inventory slots are
@@ -179,6 +189,30 @@ const BYTE InvSlotTbl[] = {
 	SLOT_BELT
 	// clang-format on
 };
+
+void InitInv(D1Pal *pal)
+{
+    delete pInvCels;
+    pInvCels = nullptr;
+
+    QString folder = Config::getAssetsFolder() + "\\";
+    QString invFilePath = folder + "Data\\Inv\\Inv.CEL";
+    if (QFile::exists(invFilePath)) {
+        // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' exists").arg(invFilePath));
+        pInvCels = new D1Gfx();
+        pInvCels->setPalette(pal);
+        OpenAsParam params = OpenAsParam();
+        if (!D1Cel::load(*pInvCels, invFilePath, params) || pInvCels->getFrameCount() == 0) {
+            // dProgressErr() << QString("Failed to load CEL file: %1").arg(objFilePath);
+            delete pInvCels;
+            pInvCels = nullptr;
+        } else {
+            // dProgressErr() << QString("File '%1' loaded.").arg(objFilePath);
+        }
+    } else {
+        // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load inv %1").arg(invFilePath));
+    }
+}
 
 void CalculateGold(int pnum)
 {

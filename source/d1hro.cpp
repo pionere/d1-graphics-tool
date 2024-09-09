@@ -100,7 +100,7 @@ static bool gbCelTransparencyActive;
 
 static void InvDrawSlotBack(int X, int Y, int W, int H)
 {
-    LogErrorF("InvDrawSlotBack %d:%d %dx%d", X, Y, W, H);
+    // LogErrorF("InvDrawSlotBack %d:%d %dx%d", X, Y, W, H);
     QImage *destImage = (QImage *)InvPainter->device();
     for (int y = Y - H + 1; y <= Y; y++) {
         for (int x = X; x < X + W; x++) {
@@ -116,12 +116,12 @@ static void InvDrawSlotBack(int X, int Y, int W, int H)
             //destImage->setPixelColor(x, y, color);
         }
     }
-    LogErrorF("InvDrawSlotBack done");
+    // LogErrorF("InvDrawSlotBack done");
 }
 
 static void CelClippedDrawOutline(BYTE col, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
-    LogErrorF("CelClippedDrawOutline %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, col);
+    // LogErrorF("CelClippedDrawOutline %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, col);
     QImage *destImage = (QImage *)InvPainter->device();
 
     QColor color = InvPal->getColor(col);
@@ -137,12 +137,12 @@ static void CelClippedDrawOutline(BYTE col, int sx, int sy, const D1Gfx *pCelBuf
             }
         }
     }
-    LogErrorF("CelClippedDrawOutline done");
+    // LogErrorF("CelClippedDrawOutline done");
 }
 
 static void CelClippedDrawLightTbl(int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth, BYTE trans)
 {
-    LogErrorF("CelClippedDrawLightTbl %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, trans);
+    // LogErrorF("CelClippedDrawLightTbl %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, trans);
     QImage *destImage = (QImage *)InvPainter->device();
 
     D1GfxFrame *item = pCelBuff->getFrame(nCel - 1);
@@ -156,13 +156,13 @@ static void CelClippedDrawLightTbl(int sx, int sy, const D1Gfx *pCelBuff, int nC
             }
         }
     }
-    LogErrorF("CelClippedDrawLightTbl done");
+    // LogErrorF("CelClippedDrawLightTbl done");
 }
 
 static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
     BYTE trans = light_trn_index;
-    LogErrorF("CelClippedDrawLightTrans %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, trans);
+    // LogErrorF("CelClippedDrawLightTrans %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, trans);
     QImage *destImage = (QImage *)InvPainter->device();
 
     D1GfxFrame *item = pCelBuff->getFrame(nCel - 1);
@@ -170,7 +170,7 @@ static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int 
         for (int x = sx; x < sx + item->getWidth(); x++) {
             if ((x & 1) == (y & 1))
                 continue;
-            LogErrorF("CelClippedDrawLightTrans pixel %d:%d of %dx%d to %d:%d", x - sx, y - (sy - item->getHeight() + 1), item->getWidth(), item->getHeight(), x, y);
+            // LogErrorF("CelClippedDrawLightTrans pixel %d:%d of %dx%d to %d:%d", x - sx, y - (sy - item->getHeight() + 1), item->getWidth(), item->getHeight(), x, y);
             D1GfxPixel pixel = item->getPixel(x - sx, y - (sy - item->getHeight() + 1));
             if (!pixel.isTransparent()) {
                 quint8 col = pixel.getPaletteIndex();
@@ -179,13 +179,13 @@ static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int 
             }
         }
     }
-    LogErrorF("CelClippedDrawLightTrans done");
+    // LogErrorF("CelClippedDrawLightTrans done");
 }
 
 static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
 	BYTE col, trans;
-    dProgressErr() << QString("scrollrt_draw_item %1:%2 idx:%3 w:%4 outline%5").arg(sx).arg(sy).arg(nCel).arg(nWidth).arg(outline);
+    // dProgressErr() << QString("scrollrt_draw_item %1:%2 idx:%3 w:%4 outline%5").arg(sx).arg(sy).arg(nCel).arg(nWidth).arg(outline);
 	col = ICOL_YELLOW;
 	if (is->_iMagical != ITEM_QUALITY_NORMAL) {
 		col = ICOL_BLUE;
@@ -209,14 +209,14 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
         }
         InvPainter->setPen(InvPal->getColor(col));
         InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
-        dProgressErr() << QString("scrollrt_draw_item text %1 to %2:%3 (w:%4 col%5)").arg(text).arg(sx + (nWidth - textWidth) / 2).arg(sy - fm.height()).arg(nWidth).arg(col);
+        // dProgressErr() << QString("scrollrt_draw_item text %1 to %2:%3 (w:%4 col%5)").arg(text).arg(sx + (nWidth - textWidth) / 2).arg(sy - fm.height()).arg(nWidth).arg(col);
     }
 }
 
 static void draw_item_placeholder(const char* name, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
     BYTE col = ICOL_YELLOW;
-    LogErrorF("draw_item_placeholder %s %d:%d idx:%d w:%d", name, sx, sy, nCel, nWidth);
+    // LogErrorF("draw_item_placeholder %s %d:%d idx:%d w:%d", name, sx, sy, nCel, nWidth);
     if (pCelBuff != nullptr && pCelBuff->getFrameCount() > nCel) {
         if (outline) {
             CelClippedDrawOutline(col, sx, sy, pCelBuff, nCel, nWidth);
@@ -228,7 +228,7 @@ static void draw_item_placeholder(const char* name, bool outline, int sx, int sy
         int textWidth = fm.horizontalAdvance(text);
         InvPainter->setPen(InvPal->getColor(PAL16_GRAY));
         InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
-        LogErrorF("draw_item_placeholder text %s to %d:%d (w:%d)", name, sx + (nWidth - textWidth) / 2, sy - fm.height(), nWidth);
+        // LogErrorF("draw_item_placeholder text %s to %d:%d (w:%d)", name, sx + (nWidth - textWidth) / 2, sy - fm.height(), nWidth);
     }
 }
 
@@ -239,17 +239,17 @@ QImage D1Hero::getEquipmentImage() const
     constexpr int INV_ROWS = SPANEL_HEIGHT - INV_HEIGHT;
     QImage result = QImage(INV_WIDTH, INV_HEIGHT, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
-    QString folder = Config::getAssetsFolder() + "\\";
+    /*QString folder = Config::getAssetsFolder() + "\\";
     // draw the inventory
     QString invFilePath = folder + "Data\\Inv\\Inv.CEL";
     if (QFile::exists(invFilePath)) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' exists").arg(invFilePath));
+        // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' exists").arg(invFilePath));
         D1Gfx gfx;
         gfx.setPalette(this->palette);
         OpenAsParam params = OpenAsParam();
         if (D1Cel::load(gfx, invFilePath, params) && gfx.getFrameCount() != 0) {
             D1GfxFrame *inv = gfx.getFrame(0);
-            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' loaded %2x%3").arg(invFilePath).arg(inv->getWidth()).arg(inv->getHeight()));
+            // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' loaded %2x%3").arg(invFilePath).arg(inv->getWidth()).arg(inv->getHeight()));
             int ox = (INV_WIDTH - inv->getWidth()) / 2;
             int oy = (INV_HEIGHT - (inv->getHeight() - INV_ROWS)) / 2;
 
@@ -268,37 +268,63 @@ QImage D1Hero::getEquipmentImage() const
                     }
                 }
             }
-            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Inv copied %1:%2").arg(ox).arg(oy));
+            // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Inv copied %1:%2").arg(ox).arg(oy));
         } else {
-            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load CEL file: %1").arg(invFilePath));
+            // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load CEL file: %1").arg(invFilePath));
         }
     } else {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load inv %1").arg(invFilePath));
+        // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load inv %1").arg(invFilePath));
+    }*/
+    // draw the inventory
+    D1Gfx *iCels = pInvCels;
+    if (iCels != nullptr) {
+        // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' exists").arg(invFilePath));
+            D1GfxFrame *inv = iCels->getFrame(0);
+            // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File '%1' loaded %2x%3").arg(invFilePath).arg(inv->getWidth()).arg(inv->getHeight()));
+            int ox = (INV_WIDTH - inv->getWidth()) / 2;
+            int oy = (INV_HEIGHT - (inv->getHeight() - INV_ROWS)) / 2;
+
+            for (int y = 0; y < inv->getHeight(); y++) {
+                int yy = y - oy;
+                if (yy >= 0 && yy < INV_HEIGHT) {
+                    for (int x = 0; x < inv->getWidth(); x++) {
+                        int xx = x - ox;
+                        if (xx >= 0 && xx < INV_WIDTH) {
+                            D1GfxPixel pixel = inv->getPixel(x, y);
+                            if (!pixel.isTransparent()) {
+                                QColor color = this->palette->getColor(pixel.getPaletteIndex());
+                                result.setPixelColor(xx, yy, color);
+                            }
+                        }
+                    }
+                }
+            }
     }
+
     // draw the items
-    QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
+    // QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
     QPainter invPainter(&result);
     invPainter.setPen(QColor(Config::getPaletteUndefinedColor()));
 
     InvPainter = &invPainter;
     InvPal = this->palette;
 
-    D1Gfx *cCels = nullptr;
-    if (QFile::exists(objFilePath)) {
-        dProgressErr() << QString("File '%1' exists").arg(objFilePath);
+    D1Gfx *cCels = pCursCels;
+    /*if (QFile::exists(objFilePath)) {
+        // dProgressErr() << QString("File '%1' exists").arg(objFilePath);
         cCels = new D1Gfx();
         cCels->setPalette(this->palette);
         OpenAsParam params = OpenAsParam();
         if (!D1Cel::load(*cCels, objFilePath, params)) {
-            dProgressErr() << QString("Failed to load CEL file: %1").arg(objFilePath);
+            // dProgressErr() << QString("Failed to load CEL file: %1").arg(objFilePath);
             delete cCels;
             cCels = nullptr;
         } else {
-            dProgressErr() << QString("File '%1' loaded.").arg(objFilePath);
+            // dProgressErr() << QString("File '%1' loaded.").arg(objFilePath);
         }
     } else {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load obj %1").arg(objFilePath));
-    }
+        // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load obj %1").arg(objFilePath));
+    }*/
     // DrawInv
 	ItemStruct *is, *pi;
 	int frame, frame_width, screen_x, screen_y, dx, dy;
@@ -469,6 +495,13 @@ QImage D1Hero::getEquipmentImage() const
 const ItemStruct *D1Hero::item(int ii) const
 {
     return PlrItem(this->pnum, ii);
+}
+
+void D1Hero::swapItem(int dst_ii, int src_ii)
+{
+    if (SwapPlrItem(this->pnum, dst_ii, src_ii))
+        this->modified = true;
+    }
 }
 
 QString D1Hero::getFilePath() const
@@ -722,10 +755,10 @@ void D1Hero::rebalance()
     int tmp;
     switch (plr._pClass) {
     case PC_WARRIOR:
-        tmp = 5 * ((plr._pBaseStr - StrengthTbl[PC_WARRIOR]) / 5);
-        plr._pBaseStr = tmp + ((tmp * 5 + StrengthTbl[PC_WARRIOR]) == plr._pBaseStr ? 0 : 2);
-        tmp = 3 * ((plr._pBaseDex - DexterityTbl[PC_WARRIOR]) / 3);
-        plr._pBaseDex = tmp + ((tmp * 3 + DexterityTbl[PC_WARRIOR]) == plr._pBaseDex ? 0 : 1);
+        tmp = 5 * ((plr._pBaseStr - StrengthTbl[PC_WARRIOR]) / 5) + StrengthTbl[PC_WARRIOR];
+        plr._pBaseStr = tmp + (tmp == plr._pBaseStr ? 0 : 2);
+        tmp = 3 * ((plr._pBaseDex - DexterityTbl[PC_WARRIOR]) / 3) + DexterityTbl[PC_WARRIOR];
+        plr._pBaseDex = tmp + (tmp == plr._pBaseDex ? 0 : 1);
         plr._pBaseVit = 2 * ((plr._pBaseVit - VitalityTbl[PC_WARRIOR]) / 2) + VitalityTbl[PC_WARRIOR];
         break;
     case PC_ROGUE:
@@ -734,26 +767,26 @@ void D1Hero::rebalance()
         break;
     case PC_SORCERER:
         plr._pBaseMag = 3 * ((plr._pBaseMag - MagicTbl[PC_SORCERER]) / 3) + MagicTbl[PC_SORCERER];
-        tmp = 3 * ((plr._pBaseDex - DexterityTbl[PC_SORCERER]) / 3);
-        plr._pBaseDex = tmp + ((tmp * 3 + DexterityTbl[PC_SORCERER]) == plr._pBaseDex ? 0 : 1);
-        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_SORCERER]) / 3);
-        plr._pBaseVit = tmp + ((tmp * 3 + VitalityTbl[PC_SORCERER]) == plr._pBaseVit ? 0 : 1);
+        tmp = 3 * ((plr._pBaseDex - DexterityTbl[PC_SORCERER]) / 3) + DexterityTbl[PC_SORCERER];
+        plr._pBaseDex = tmp + (tmp == plr._pBaseDex ? 0 : 1);
+        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_SORCERER]) / 3) + VitalityTbl[PC_SORCERER];
+        plr._pBaseVit = tmp + (tmp == plr._pBaseVit ? 0 : 1);
         break;
 #ifdef HELLFIRE
     case PC_MONK:
         plr._pBaseStr = 2 * ((plr._pBaseStr - StrengthTbl[PC_MONK]) / 2) + StrengthTbl[PC_MONK];
-        tmp = 3 * ((plr._pBaseMag - MagicTbl[PC_MONK]) / 3);
-        plr._pBaseMag = tmp + ((tmp * 3 + MagicTbl[PC_MONK]) == plr._pBaseMag ? 0 : 1);
+        tmp = 3 * ((plr._pBaseMag - MagicTbl[PC_MONK]) / 3) + MagicTbl[PC_MONK];
+        plr._pBaseMag = tmp + (tmp == plr._pBaseMag ? 0 : 1);
         plr._pBaseDex = 2 * ((plr._pBaseDex - DexterityTbl[PC_MONK]) / 2) + DexterityTbl[PC_MONK];
-        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_MONK]) / 3);
-        plr._pBaseVit = tmp + ((tmp * 3 + VitalityTbl[PC_MONK]) == plr._pBaseVit ? 0 : 1);
+        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_MONK]) / 3) + VitalityTbl[PC_MONK];
+        plr._pBaseVit = tmp + (tmp == plr._pBaseVit ? 0 : 1);
         break;
     case PC_BARD:
-        tmp = 3 * ((plr._pBaseMag - MagicTbl[PC_BARD]) / 3);
-        plr._pBaseMag = tmp + ((tmp * 3 + MagicTbl[PC_BARD]) == plr._pBaseMag ? 0 : 1);
+        tmp = 3 * ((plr._pBaseMag - MagicTbl[PC_BARD]) / 3) + MagicTbl[PC_BARD];
+        plr._pBaseMag = tmp + (tmp == plr._pBaseMag ? 0 : 1);
         plr._pBaseDex = 3 * ((plr._pBaseDex - DexterityTbl[PC_BARD]) / 3) + DexterityTbl[PC_BARD];
-        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_BARD]) / 3);
-        plr._pBaseVit = tmp + ((tmp * 3 + VitalityTbl[PC_BARD]) == plr._pBaseVit ? 0 : 1);
+        tmp = 3 * ((plr._pBaseVit - VitalityTbl[PC_BARD]) / 3) + VitalityTbl[PC_BARD];
+        plr._pBaseVit = tmp + (tmp == plr._pBaseVit ? 0 : 1);
         break;
     case PC_BARBARIAN:
         plr._pBaseStr = 3 * ((plr._pBaseStr - StrengthTbl[PC_BARBARIAN]) / 3) + StrengthTbl[PC_BARBARIAN];
@@ -775,10 +808,13 @@ void D1Hero::rebalance()
     while (true) {
         int remStatPts = (plr._pLevel - 1) * 4;
 
-        if (plr._pStatPts >= remStatPts) {
+        if (plr._pStatPts > remStatPts) {
             plr._pStatPts = remStatPts;
         }
         remStatPts -= plr._pStatPts;
+
+        //LogErrorF("PlrStats: [str%d mag%d dex%d vit%d] vs base[str%d mag%d dex%d vit%d] (bonus%d)", plr._pBaseStr, plr._pBaseMag, plr._pBaseDex, plr._pBaseVit,
+        //    StrengthTbl[plr._pClass], MagicTbl[plr._pClass], DexterityTbl[plr._pClass], VitalityTbl[plr._pClass], plr._pStatPts);
 
         int usedStatPts[4];
         switch (plr._pClass) {
@@ -826,10 +862,12 @@ void D1Hero::rebalance()
         }
 
         int totalUsedStatPts = usedStatPts[0] + usedStatPts[1] + usedStatPts[2] + usedStatPts[3];
+        // LogErrorF("UsedStats: %d [str%d mag%d dex%d vit%d] vs %d (bonus%d)", totalUsedStatPts, usedStatPts[0], usedStatPts[1], usedStatPts[2], usedStatPts[3], remStatPts, plr._pStatPts);
         if (totalUsedStatPts <= remStatPts) {
             plr._pStatPts += remStatPts - totalUsedStatPts;
             break;
         }
+
         int mostUsedIdx = 0;
         int mostUsedVal = usedStatPts[0];
         for (int i = 1; i < 4; i++) {
@@ -845,6 +883,7 @@ void D1Hero::rebalance()
         case 3: DecreasePlrVit(pnum); break;
         }
         plr._pStatPts--;
+        // LogErrorF("mostUsedIdx: %d -> (bonus%d)", plr._pStatPts);
     }
 }
 

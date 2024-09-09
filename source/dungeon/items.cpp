@@ -1985,6 +1985,41 @@ ItemStruct* PlrItem(int pnum, int cii)
 	}
 	return pi;
 }
+
+static void BubbleSwapItem(ItemStruct* a, ItemStruct* b)
+{
+	ItemStruct h;
+
+	copy_pod(h, *a);
+	copy_pod(*a, *b);
+	copy_pod(*b, h);
+}
+
+bool SwapPlrItem(int pnum, int dst_ii, int src_ii)
+{
+    if (dst_ii == src_ii)
+        return false;
+
+    ItemStruct* si;
+    if (src_ii != INVITEM_NONE) {
+        si = PlrItem(pnum, src_ii);
+    } else {
+        si = &items[MAXITEMS];
+        for (int ii = INVITEM_INV_FIRST; ii <= INVITEM_INV_LAST; ii++) {
+            ItemStruct *ci = PlrItem(pnum, ii);
+            if (ci->_itype == ITYPE_NONE) {
+                si = ci;
+                break;
+            }
+        }
+    }
+
+    ItemStruct* di = PlrItem(pnum, dst_ii);
+
+    BubbleSwapItem(si, di);
+    return true;
+}
+
 const char* ItemName(const ItemStruct* is)
 {
 	const char* name;

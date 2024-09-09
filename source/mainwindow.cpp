@@ -29,6 +29,8 @@
 #include "d1hro.h"
 #include "ui_mainwindow.h"
 
+#include "dungeon/lighting.h"
+
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
@@ -268,6 +270,10 @@ void MainWindow::reloadConfig()
     if (currPalChanged && this->palWidget != nullptr) {
         this->palWidget->modify();
     }
+    // reload asset-dependend data
+    InitLighting();
+    InitCursorGFX(this->pal);
+    InitInv(this->pal);
 }
 
 void MainWindow::heroChanged(D1Hero *hero)

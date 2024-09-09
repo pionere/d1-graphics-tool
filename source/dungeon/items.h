@@ -23,8 +23,6 @@ extern int itemactive[MAXITEMS];
 extern ItemStruct items[MAXITEMS + 1];
 extern int numitems;
 
-void InitItemGFX();
-void FreeItemGFX();
 void CalcPlrItemVals(int pnum, bool Loadgfx);
 void CalcPlrSpells(int pnum);
 void CalcPlrScrolls(int pnum);
@@ -41,6 +39,7 @@ void CreateRndItem(int x, int y, unsigned quality);
 void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc);
 void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI);
 ItemStruct* PlrItem(int pnum, int cii);
+bool SwapPlrItem(int pnum, int dst_ii, int src_ii);
 const char* ItemName(const ItemStruct* is);
 void RecreateTownItem(int ii, int iseed, uint16_t idx, uint16_t icreateinfo);
 
