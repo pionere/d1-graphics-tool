@@ -4,21 +4,25 @@
  <widget class="QWidget">
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox">
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>48</number>
+       </property>
+       <property name="text">
+        <string>Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="invItemIndexComboBox"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="itemDetailsGroupBox">
      <layout class="QGridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel">
-        <property name="minimumWidth">
-         <number>48</number>
-        </property>
-        <property name="text">
-         <string>Name:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="invItemIndexComboBox"/>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">

@@ -1997,21 +1997,28 @@ static void BubbleSwapItem(ItemStruct* a, ItemStruct* b)
 
 bool SwapPlrItem(int pnum, int dst_ii, int src_ii)
 {
-    if (dst_ii == src_ii)
+    if (dst_ii == src_ii) {
+        LogErrorF("SwapPlrItem no swap 0 %d", dst_ii);
         return false;
+    }
 
     ItemStruct* si;
     if (src_ii != INVITEM_NONE) {
         si = PlrItem(pnum, src_ii);
+        LogErrorF("SwapPlrItem swap 0 %d:%d", dst_ii, src_ii);
     } else {
         si = &items[MAXITEMS];
+        si->_itype = ITYPE_NONE;
+        LogErrorF("SwapPlrItem swap 1 %d:%d", dst_ii, src_ii);
         for (int ii = INVITEM_INV_FIRST; ii <= INVITEM_INV_LAST; ii++) {
             ItemStruct *ci = PlrItem(pnum, ii);
             if (ci->_itype == ITYPE_NONE) {
                 si = ci;
+                LogErrorF("SwapPlrItem swap 2 %d", ii);
                 break;
             }
         }
+        
     }
 
     ItemStruct* di = PlrItem(pnum, dst_ii);

@@ -74,6 +74,8 @@ void D1Hero::create(unsigned index)
 
     CreatePlayer(this->pnum, selhero_heroInfo);
 
+    CalcPlrInv(this->pnum, false);
+
     this->filePath.clear();
     this->modified = true;
 }
@@ -215,7 +217,7 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
 
 static void draw_item_placeholder(const char* name, bool outline, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
 {
-    BYTE col = ICOL_YELLOW;
+    /*BYTE col = ICOL_YELLOW;
     // LogErrorF("draw_item_placeholder %s %d:%d idx:%d w:%d", name, sx, sy, nCel, nWidth);
     if (pCelBuff != nullptr && pCelBuff->getFrameCount() > nCel) {
         if (outline) {
@@ -229,7 +231,7 @@ static void draw_item_placeholder(const char* name, bool outline, int sx, int sy
         InvPainter->setPen(InvPal->getColor(PAL16_GRAY));
         InvPainter->drawText(sx + (nWidth - textWidth) / 2, sy - fm.height(), text);
         // LogErrorF("draw_item_placeholder text %s to %d:%d (w:%d)", name, sx + (nWidth - textWidth) / 2, sy - fm.height(), nWidth);
-    }
+    }*/
 }
 
 QImage D1Hero::getEquipmentImage() const
