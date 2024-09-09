@@ -141,7 +141,7 @@ void ItemSelectorDialog::updateFields()
     static_assert((((int)CF_TOWN >> 8) & ((((int)CF_TOWN >> 8) + 1))) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted II.");
     this->ui->itemSourceComboBox->setCurrentIndex((this->is->_iCreateInfo & CF_TOWN) >> 8);
     static_assert(((int)CF_DROP_QUALITY & ((1 << 11) - 1)) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted I.");
-    static_assert(((((int)CF_DROP_QUALITY >> 11) & ((((int)CF_DROP_QUALITY >> 11) + 1))) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted II.");
+    static_assert((((int)CF_DROP_QUALITY >> 11) & ((((int)CF_DROP_QUALITY >> 11) + 1))) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted II.");
     this->ui->itemQualityComboBox->setCurrentIndex((this->is->_iCreateInfo & CF_DROP_QUALITY) >> 11);
 }
 

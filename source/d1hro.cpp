@@ -524,7 +524,7 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
     }
     if (pi->_itype != ITYPE_NONE) {
         for (int ii = INVITEM_INV_FIRST; ii < INVITEM_INV_LAST; ii++) {
-            ci = &plr._pInvList[ii];
+            ItemStruct *ci = &plr._pInvList[ii];
             if (ci->_itype == ITYPE_NONE) {
                 memcpy(ci, pi, sizeof(ItemStruct));
                 break;
