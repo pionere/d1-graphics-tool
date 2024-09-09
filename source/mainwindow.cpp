@@ -270,7 +270,7 @@ void MainWindow::reloadConfig()
     if (currPalChanged && this->palWidget != nullptr) {
         this->palWidget->modify();
     }
-    // reload asset-dependend data
+    // reload asset-dependent data
     InitLighting();
     InitCursorGFX(this->pal);
     InitInv(this->pal);

@@ -254,7 +254,7 @@ void ItemDetailsWidget::on_submitButton_clicked()
 {
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
 
-    int ii = itemsComboBox->currentData();
+    int ii = itemsComboBox->currentData().value<int>(;
 
     if (ii == -2) {
         ii = INVITEM_NONE;
