@@ -249,7 +249,7 @@ void ItemDetailsWidget::on_invItemIndexComboBox_activated(int index)
 
 void ItemDetailsWidget::on_addItemButton_clicked()
 {
-    dMainWindow().addHeroItem(this->invIdx);
+    dMainWindow().selectHeroItem(this->invIdx);
 }
 
 void ItemDetailsWidget::on_submitButton_clicked()

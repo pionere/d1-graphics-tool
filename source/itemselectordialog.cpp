@@ -15,7 +15,7 @@
 #include "dungeon/all.h"
 
 ItemSelectorDialog::ItemSelectorDialog(QWidget *parent)
-    : QWidget(parent)
+    : QDialog(parent)
     , ui(new Ui::ItemSelectorDialog())
 {
     ui->setupUi(this);
@@ -66,13 +66,13 @@ void ItemSelectorDialog::initialize(D1Hero *h, int ii)
         break;
     case INVITEM_RING_RIGHT:
         // this->is->_iClass = ICLASS_MISC;
-        locComboBox->addItem(tr("Ring"), QVariant::fromValue(ILOC_RING)));
-        typeComboBox->addItem(tr("Ring"), QVariant::fromValue(ITYPE_RING)));
+        locComboBox->addItem(tr("Ring"), QVariant::fromValue(ILOC_RING));
+        typeComboBox->addItem(tr("Ring"), QVariant::fromValue(ITYPE_RING));
         break;
     case INVITEM_AMULET:
         this->is->_iClass = ICLASS_MISC;
-        locComboBox->addItem(tr("Amulet"), QVariant::fromValue(ILOC_AMULET)));
-        typeComboBox->addItem(tr("Amulet"), QVariant::fromValue(ITYPE_AMULET)));
+        locComboBox->addItem(tr("Amulet"), QVariant::fromValue(ILOC_AMULET));
+        typeComboBox->addItem(tr("Amulet"), QVariant::fromValue(ITYPE_AMULET));
         break;
     case INVITEM_HAND_LEFT:
         // this->is->_iClass = ICLASS_WEAPON;
@@ -137,10 +137,10 @@ void ItemSelectorDialog::updateFields()
 
     this->ui->itemSeedEdit->setText(QString::number(this->is->_iSeed));
     this->ui->itemLevelEdit->setText(QString::number(this->is->_iCreateInfo & CF_LEVEL));
-    static_assert(((int)CF_TOWN & ((1 << (8 + 1)) - 1)) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted I.");
-    static_assert(((((int)CF_TOWN >> 8) & ((((int)CF_TOWN >> 8) + 1))) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted II.");
+    static_assert(((int)CF_TOWN & ((1 << 8) - 1)) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted I.");
+    static_assert((((int)CF_TOWN >> 8) & ((((int)CF_TOWN >> 8) + 1))) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted II.");
     this->ui->itemSourceComboBox->setCurrentIndex((this->is->_iCreateInfo & CF_TOWN) >> 8);
-    static_assert(((int)CF_DROP_QUALITY & ((1 << (11 + 1)) - 1)) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted I.");
+    static_assert(((int)CF_DROP_QUALITY & ((1 << 11) - 1)) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted I.");
     static_assert(((((int)CF_DROP_QUALITY >> 11) & ((((int)CF_DROP_QUALITY >> 11) + 1))) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted II.");
     this->ui->itemQualityComboBox->setCurrentIndex((this->is->_iCreateInfo & CF_DROP_QUALITY) >> 11);
 }
@@ -176,7 +176,7 @@ void ItemSelectorDialog::on_itemSeedEdit_escPressed()
 
 void ItemSelectorDialog::on_itemLevelEdit_returnPressed()
 {
-    this->is->_iCreateInfo = (this->is->_iCreateInfo & ~CF_LEVEL) | (this->ui->itemLevelEdit->toShort() & CF_LEVEL);
+    this->is->_iCreateInfo = (this->is->_iCreateInfo & ~CF_LEVEL) | (this->ui->itemLevelEdit->text().toShort() & CF_LEVEL);
 
     this->on_itemLevelEdit_escPressed();
 }
@@ -208,7 +208,7 @@ bool ItemSelectorDialog::recreateItem()
         QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
         return false;
     }
-    /*int wCI = this->ui->itemLevelEdit->toShort();
+    /*int wCI = this->ui->itemLevelEdit->text().toShort();
     wCI &= CF_LEVEL;
     wCI |= this->ui->itemSourceComboBox->currentIndex() << 8;
     wCI |= this->ui->itemQualityComboBox->currentIndex() << 11;
