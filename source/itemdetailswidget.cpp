@@ -34,16 +34,17 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
     itemsComboBox->clear();
     itemsComboBox->addItem(tr("None"), QVariant::fromValue(-1));
-
+    LogErrorF("ItemDetailsWidget init 1 %d", ii);
     const ItemStruct* pi = h->item(ii);
     if (pi->_itype != ITYPE_NONE) {
+        LogErrorF("ItemDetailsWidget init 2 %s", ItemName(pi));
         itemsComboBox->addItem(ItemName(pi), QVariant::fromValue(-2));
 
         itemsComboBox->setCurrentIndex(1);
     } else {
         itemsComboBox->setCurrentIndex(0);
     }
-
+    LogErrorF("ItemDetailsWidget init 3");
     for (int i = INVITEM_INV_FIRST; i < NUM_INVELEM; i++) {
         const ItemStruct* is = h->item(i);
         if (is->_itype == ITYPE_NONE || is->_itype == ITYPE_PLACEHOLDER) {
@@ -76,11 +77,12 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
                 continue;
             break;
         }
-
+        LogErrorF("ItemDetailsWidget init 4 %s (%d) %d", ItemName(is), is->_itype, i);
         itemsComboBox->addItem(ItemName(is), QVariant::fromValue(i));
     }
-
+    LogErrorF("ItemDetailsWidget init 5");
     this->updateFields();
+    LogErrorF("ItemDetailsWidget init 6");
     this->setVisible(true);
 }
 
@@ -89,12 +91,12 @@ void ItemDetailsWidget::updateFields()
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
 
     int ii = itemsComboBox->currentData().value<int>();
-
+    LogErrorF("updateFields 0 %d", ii);
     const ItemStruct* pi = ii == -1 ? nullptr : (ii == -2 ? this->hero->item(this->invIdx) : this->hero->item(ii));
 
     if (pi != nullptr && pi->_itype != ITYPE_NONE) {
         QString text;
-
+        LogErrorF("updateFields 1 %d", pi->_itype);
         text.clear();
         switch (pi->_itype) {
         case ITYPE_SWORD:       text = tr("Sword");        break;
@@ -114,7 +116,7 @@ void ItemDetailsWidget::updateFields()
         case ITYPE_PLACEHOLDER: text = tr("Placeholder");  break;
         }
         this->ui->itemTypeEdit->setText(text);
-
+        LogErrorF("updateFields 2 %d", pi->_iClass);
         text.clear();
         switch (pi->_iClass) {
         case ICLASS_NONE:   text = tr("None");   break;
@@ -125,7 +127,7 @@ void ItemDetailsWidget::updateFields()
         case ICLASS_QUEST:  text = tr("Quest");  break;
         }
         this->ui->itemClassEdit->setText(text);
-
+        LogErrorF("updateFields 3 %d", pi->_iLoc);
         text.clear();
         switch (pi->_iLoc) {
         case ILOC_UNEQUIPABLE: text = tr("Unequipable"); break;
@@ -138,13 +140,13 @@ void ItemDetailsWidget::updateFields()
         case ILOC_BELT:        text = tr("Belt");        break;
         }
         this->ui->itemLocEdit->setText(text);
-
+        LogErrorF("updateFields 4 %d", pi->_iSeed);
         this->ui->itemSeedEdit->setText(QString::number(pi->_iSeed));
-
+        LogErrorF("updateFields 5 %d", pi->_iIdx);
         this->ui->itemIdxEdit->setText(QString("%1 (%2)").arg(pi->_iIdx < NUM_IDI ? AllItemsList[pi->_iIdx].iName : "").arg(pi->_iIdx));
-
+        LogErrorF("updateFields 6 %d", pi->_iCreateInfo & CF_LEVEL);
         this->ui->itemLevelEdit->setText(QString::number(pi->_iCreateInfo & CF_LEVEL));
-
+        LogErrorF("updateFields 7 %d", (pi->_iCreateInfo & CF_TOWN) >> 8);
         text.clear();
         switch ((pi->_iCreateInfo & CF_TOWN) >> 8) {
         case CFL_NONE:         text = tr("Drop");          break;
@@ -156,7 +158,7 @@ void ItemDetailsWidget::updateFields()
         case CFL_CRAFTED:      text = tr("Crafted");       break;
         }
         this->ui->itemSourceEdit->setText(text);
-
+        LogErrorF("updateFields 7 %d", (pi->_iCreateInfo & CF_DROP_QUALITY) >> 11);
         text.clear();
         switch ((pi->_iCreateInfo & CF_DROP_QUALITY) >> 11) {
         case CFDQ_NONE:   text = tr("None");   break;
@@ -165,7 +167,7 @@ void ItemDetailsWidget::updateFields()
         case CFDQ_UNIQUE: text = tr("Unique"); break;
         }
         this->ui->itemQualityEdit->setText(text);
-
+        LogErrorF("updateFields 8");
 /*
 	union {
 		int _ix;
