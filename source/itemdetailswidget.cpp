@@ -33,11 +33,11 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
 
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
     itemsComboBox->clear();
-    itemsComboBox->addItem(tr("None"), -1);
+    itemsComboBox->addItem(tr("None"), QVariant::fromValue(-1));
 
     const ItemStruct* pi = h->item(ii);
     if (pi->_itype != ITYPE_NONE) {
-        itemsComboBox->addItem(ItemName(pi), -2);
+        itemsComboBox->addItem(ItemName(pi), QVariant::fromValue(-2));
 
         itemsComboBox->setCurrentIndex(1);
     } else {
@@ -46,7 +46,7 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
 
     for (int i = INVITEM_INV_FIRST; i < NUM_INVELEM; i++) {
         const ItemStruct* is = h->item(i);
-        if (is->_itype === ITYPE_NONE || is->_itype == ITYPE_PLACEHOLDER) {
+        if (is->_itype == ITYPE_NONE || is->_itype == ITYPE_PLACEHOLDER) {
             continue;
         }
         switch (ii) {
@@ -77,9 +77,10 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
             break;
         }
 
-        itemsComboBox->addItem(ItemName(is), i);
+        itemsComboBox->addItem(ItemName(is), QVariant::fromValue(i));
     }
 
+    this->updateFields();
     this->setVisible(true);
 }
 
@@ -87,9 +88,9 @@ void ItemDetailsWidget::updateFields()
 {
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
 
-    int ii = itemsComboBox->currentData();
+    int ii = itemsComboBox->currentData().value<int>();
 
-    const ItemStruct* pi = ii == -1 ? nullptr : (ii == -2 ? h->item(this->invIdx) : h->item(ii));
+    const ItemStruct* pi = ii == -1 ? nullptr : (ii == -2 ? this->hero->item(this->invIdx) : this->hero->item(ii));
 
     if (pi != nullptr && pi->_itype != ITYPE_NONE) {
         QString text;

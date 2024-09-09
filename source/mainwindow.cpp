@@ -29,9 +29,7 @@
 #include "d1hro.h"
 #include "ui_mainwindow.h"
 
-#include "dungeon/cursor.h"
-#include "dungeon/inv.h"
-#include "dungeon/lighting.h"
+#include "dungeon/all.h"
 
 static MainWindow *theMainWindow;
 

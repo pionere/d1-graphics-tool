@@ -57,9 +57,9 @@ void OpenAsDialog::on_openButton_clicked()
     }
     // heroSettingsGroupBox: hellfireHero
     if (this->ui->hellfireHeroYesRadioButton->isChecked()) {
-        params.heroType = OPEN_HERO_TYPE::HELLFIRE;
+        params.heroType = OPEN_HERO_TYPE::HELLFIRE_HERO;
     } else if (this->ui->hellfireHeroNoRadioButton->isChecked()) {
-        params.heroType = OPEN_HERO_TYPE::DIABLO;
+        params.heroType = OPEN_HERO_TYPE::DIABLO_HERO;
     } else {
         params.heroType = OPEN_HERO_TYPE::AUTODETECT;
     }
