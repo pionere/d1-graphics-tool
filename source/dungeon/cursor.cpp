@@ -9,6 +9,7 @@
 #include <QString>
 
 #include "../config.h"
+#include "../d1cel.h"
 #include "../d1gfx.h"
 #include "../openasdialog.h"
 

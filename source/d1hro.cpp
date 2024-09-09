@@ -499,7 +499,7 @@ const ItemStruct *D1Hero::item(int ii) const
 
 void D1Hero::swapItem(int dst_ii, int src_ii)
 {
-    if (SwapPlrItem(this->pnum, dst_ii, src_ii))
+    if (SwapPlrItem(this->pnum, dst_ii, src_ii)) {
         this->modified = true;
     }
 }
