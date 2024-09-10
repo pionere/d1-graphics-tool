@@ -41,6 +41,7 @@ void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI);
 ItemStruct* PlrItem(int pnum, int cii);
 bool SwapPlrItem(int pnum, int dst_ii, int src_ii);
 const char* ItemName(const ItemStruct* is);
+void PrintItemPower(BYTE plidx, const ItemStruct* is);
 void RecreateTownItem(int ii, int iseed, uint16_t idx, uint16_t icreateinfo);
 
 #endif /* __ITEMS_H__ */

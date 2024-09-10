@@ -178,7 +178,7 @@ void ItemSelectorDialog::updateFilters()
         if (itype != ITYPE_NONE && itype != id.itype) {
             continue;
         }
-        if (iloc != ILOC_UNEQUIPABLE && iloc != id.iloc) {
+        if (iloc != ILOC_UNEQUIPABLE && iloc != id.iLoc) {
             continue;
         }
         idxComboBox->addItem(QString("%1 (%2)").arg(id.iName).arg(i), QVariant::fromValue(i));

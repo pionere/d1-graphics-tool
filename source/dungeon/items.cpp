@@ -1780,6 +1780,262 @@ void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
 	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
 }
 
+static void PrintEquipmentPower(BYTE plidx, const ItemStruct* is)
+{
+	switch (plidx) {
+	case IPL_TOHIT:
+		snprintf(tempstr, sizeof(tempstr), "chance to hit: %+d%%", is->_iPLToHit);
+		break;
+	case IPL_DAMP:
+		snprintf(tempstr, sizeof(tempstr), "%+d%% damage", is->_iPLDam);
+		break;
+	case IPL_TOHIT_DAMP:
+		snprintf(tempstr, sizeof(tempstr), "to hit: %+d%%, %+d%% damage", is->_iPLToHit, is->_iPLDam);
+		break;
+	case IPL_ACP:
+		snprintf(tempstr, sizeof(tempstr), "%+d%% armor", is->_iPLAC);
+		break;
+	case IPL_FIRERES:
+		//if (is->_iPLFR < 75)
+			snprintf(tempstr, sizeof(tempstr), "resist fire: %+d%%", is->_iPLFR);
+		//else
+		//	copy_cstr(tempstr, "Resist Fire: 75% MAX");
+		break;
+	case IPL_LIGHTRES:
+		//if (is->_iPLLR < 75)
+			snprintf(tempstr, sizeof(tempstr), "resist lightning: %+d%%", is->_iPLLR);
+		//else
+		//	copy_cstr(tempstr, "Resist Lightning: 75% MAX");
+		break;
+	case IPL_MAGICRES:
+		//if (is->_iPLMR < 75)
+			snprintf(tempstr, sizeof(tempstr), "resist magic: %+d%%", is->_iPLMR);
+		//else
+		//	copy_cstr(tempstr, "Resist Magic: 75% MAX");
+		break;
+	case IPL_ACIDRES:
+		//if (is->_iPLAR < 75)
+			snprintf(tempstr, sizeof(tempstr), "resist acid: %+d%%", is->_iPLAR);
+		//else
+		//	copy_cstr(tempstr, "Resist Acid: 75% MAX");
+		break;
+	case IPL_ALLRES:
+		//if (is->_iPLFR < 75)
+			snprintf(tempstr, sizeof(tempstr), "resist all: %+d%%", is->_iPLFR);
+		//else
+		//	copy_cstr(tempstr, "Resist All: 75% MAX");
+		break;
+	case IPL_CRITP:
+		snprintf(tempstr, sizeof(tempstr), "%d%% increased crit. chance", is->_iPLCrit);
+		break;
+	case IPL_SKILLLVL:
+		snprintf(tempstr, sizeof(tempstr), "%+d to %s", is->_iPLSkillLvl, spelldata[is->_iPLSkill].sNameText);
+		break;
+	case IPL_SKILLLEVELS:
+		snprintf(tempstr, sizeof(tempstr), "%+d to skill levels", is->_iPLSkillLevels);
+		break;
+	case IPL_CHARGES:
+		copy_cstr(tempstr, "extra charges");
+		break;
+	case IPL_FIREDAM:
+		if (is->_iPLFMinDam != is->_iPLFMaxDam)
+			snprintf(tempstr, sizeof(tempstr), "fire damage: %d-%d", is->_iPLFMinDam, is->_iPLFMaxDam);
+		else
+			snprintf(tempstr, sizeof(tempstr), "fire damage: %d", is->_iPLFMinDam);
+		break;
+	case IPL_LIGHTDAM:
+		if (is->_iPLLMinDam != is->_iPLLMaxDam)
+			snprintf(tempstr, sizeof(tempstr), "lightning damage: %d-%d", is->_iPLLMinDam, is->_iPLLMaxDam);
+		else
+			snprintf(tempstr, sizeof(tempstr), "lightning damage: %d", is->_iPLLMinDam);
+		break;
+	case IPL_MAGICDAM:
+		if (is->_iPLMMinDam != is->_iPLMMaxDam)
+			snprintf(tempstr, sizeof(tempstr), "magic damage: %d-%d", is->_iPLMMinDam, is->_iPLMMaxDam);
+		else
+			snprintf(tempstr, sizeof(tempstr), "magic damage: %d", is->_iPLMMinDam);
+		break;
+	case IPL_ACIDDAM:
+		if (is->_iPLAMinDam != is->_iPLAMaxDam)
+			snprintf(tempstr, sizeof(tempstr), "acid damage: %d-%d", is->_iPLAMinDam, is->_iPLAMaxDam);
+		else
+			snprintf(tempstr, sizeof(tempstr), "acid damage: %d", is->_iPLAMinDam);
+		break;
+	case IPL_STR:
+		snprintf(tempstr, sizeof(tempstr), "%+d to strength", is->_iPLStr);
+		break;
+	case IPL_MAG:
+		snprintf(tempstr, sizeof(tempstr), "%+d to magic", is->_iPLMag);
+		break;
+	case IPL_DEX:
+		snprintf(tempstr, sizeof(tempstr), "%+d to dexterity", is->_iPLDex);
+		break;
+	case IPL_VIT:
+		snprintf(tempstr, sizeof(tempstr), "%+d to vitality", is->_iPLVit);
+		break;
+	case IPL_ATTRIBS:
+		snprintf(tempstr, sizeof(tempstr), "%+d to all attributes", is->_iPLStr);
+		break;
+	case IPL_GETHIT:
+		snprintf(tempstr, sizeof(tempstr), "%+d damage from enemies", is->_iPLGetHit);
+		break;
+	case IPL_LIFE:
+		snprintf(tempstr, sizeof(tempstr), "hit points: %+d", is->_iPLHP >> 6);
+		break;
+	case IPL_MANA:
+		snprintf(tempstr, sizeof(tempstr), "mana: %+d", is->_iPLMana >> 6);
+		break;
+	case IPL_DUR:
+	case IPL_DUR_CURSE:
+	case IPL_SETDUR:
+		copy_cstr(tempstr, "altered durability");
+		break;
+	case IPL_INDESTRUCTIBLE:
+		copy_cstr(tempstr, "indestructible");
+		break;
+	case IPL_LIGHT:
+		snprintf(tempstr, sizeof(tempstr), "%+d%% light radius", 10 * is->_iPLLight);
+		break;
+	// case IPL_INVCURS:
+	//	copy_cstr(tempstr, " ");
+	//	break;
+	//case IPL_THORNS:
+	//	copy_cstr(tempstr, "attacker takes 1-3 damage");
+	//	break;
+	case IPL_NOMANA:
+		copy_cstr(tempstr, "user loses all mana");
+		break;
+	case IPL_KNOCKBACK:
+		copy_cstr(tempstr, "knocks target back");
+		break;
+	case IPL_STUN:
+		copy_cstr(tempstr, "reduces stun threshold");
+		break;
+	case IPL_NO_BLEED:
+		copy_cstr(tempstr, "immune to bleeding");
+		break;
+	case IPL_BLEED:
+		copy_cstr(tempstr, "increased chance to bleed");
+		break;
+	//case IPL_NOHEALMON:
+	//	copy_cstr(tempstr, "hit monster doesn't heal");
+	//	break;
+	case IPL_STEALMANA:
+		snprintf(tempstr, sizeof(tempstr), "hit steals %d%% mana", (is->_iPLManaSteal * 100 + 64) >> 7);
+		break;
+	case IPL_STEALLIFE:
+		snprintf(tempstr, sizeof(tempstr), "hit steals %d%% life", (is->_iPLLifeSteal * 100 + 64) >> 7);
+		break;
+	case IPL_PENETRATE_PHYS:
+		copy_cstr(tempstr, "penetrates target's armor");
+		break;
+	case IPL_FASTATTACK:
+		if (is->_iFlags & ISPL_FASTESTATTACK)
+			copy_cstr(tempstr, "fastest attack");
+		else if (is->_iFlags & ISPL_FASTERATTACK)
+			copy_cstr(tempstr, "faster attack");
+		else if (is->_iFlags & ISPL_FASTATTACK)
+			copy_cstr(tempstr, "fast attack");
+		else // if (is->_iFlags & ISPL_QUICKATTACK)
+			copy_cstr(tempstr, "quick attack");
+		break;
+	case IPL_FASTRECOVER:
+		if (is->_iFlags & ISPL_FASTESTRECOVER)
+			copy_cstr(tempstr, "fastest hit recovery");
+		else if (is->_iFlags & ISPL_FASTERRECOVER)
+			copy_cstr(tempstr, "faster hit recovery");
+		else // if (is->_iFlags & ISPL_FASTRECOVER)
+			copy_cstr(tempstr, "fast hit recovery");
+		break;
+	case IPL_FASTBLOCK:
+		copy_cstr(tempstr, "fast block");
+		break;
+	case IPL_DAMMOD:
+		snprintf(tempstr, sizeof(tempstr), "adds %d points to damage", is->_iPLDamMod);
+		break;
+	case IPL_SETDAM:
+		copy_cstr(tempstr, "unusual item damage");
+		break;
+	case IPL_NOMINSTR:
+		copy_cstr(tempstr, "no strength requirement");
+		break;
+	case IPL_SPELL:
+		snprintf(tempstr, sizeof(tempstr), "%d %s charges", is->_iMaxCharges, spelldata[is->_iSpell].sNameText);
+		break;
+	case IPL_ONEHAND:
+		copy_cstr(tempstr, "one handed sword");
+		break;
+	case IPL_ALLRESZERO:
+		copy_cstr(tempstr, "all Resistance equals 0");
+		break;
+	case IPL_DRAINLIFE:
+		copy_cstr(tempstr, "constantly lose hit points");
+		break;
+	//case IPL_INFRAVISION:
+	//	copy_cstr(tempstr, "see with infravision");
+	//	break;
+	case IPL_SETAC:
+	case IPL_ACMOD:
+		snprintf(tempstr, sizeof(tempstr), "armor class: %d", is->_iAC);
+		break;
+	case IPL_CRYSTALLINE:
+		snprintf(tempstr, sizeof(tempstr), "low dur, %+d%% damage", is->_iPLDam);
+		break;
+	case IPL_MANATOLIFE:
+		copy_cstr(tempstr, "50% Mana moved to Health");
+		break;
+	case IPL_LIFETOMANA:
+		copy_cstr(tempstr, "50% Health moved to Mana");
+		break;
+	case IPL_FASTCAST:
+		if (is->_iFlags & ISPL_FASTESTCAST)
+			copy_cstr(tempstr, "fastest cast");
+		else if (is->_iFlags & ISPL_FASTERCAST)
+			copy_cstr(tempstr, "faster cast");
+		else // if (is->_iFlags & ISPL_FASTCAST)
+			copy_cstr(tempstr, "fast cast");
+		break;
+	case IPL_FASTWALK:
+		if (is->_iFlags & ISPL_FASTESTWALK)
+			copy_cstr(tempstr, "fastest walk");
+		else if (is->_iFlags & ISPL_FASTERWALK)
+			copy_cstr(tempstr, "faster walk");
+		else // if (is->_iFlags & ISPL_FASTWALK)
+			copy_cstr(tempstr, "fast walk");
+		break;
+	default:
+		ASSUME_UNREACHABLE
+	}
+}
+
+static void PrintMapPower(BYTE plidx, const ItemStruct* is)
+{
+	switch (plidx) {
+	case IPL_SKILLLEVELS:
+		snprintf(tempstr, sizeof(tempstr), "%+d to map levels", is->_iPLSkillLevels);
+		break;
+	case IPL_ACP:
+		snprintf(tempstr, sizeof(tempstr), "%+d to level gain", is->_iPLAC);
+		break;
+	case IPL_SETAC:
+		snprintf(tempstr, sizeof(tempstr), "starting level %d", is->_iAC);
+		break;
+	case IPL_LIGHT:
+		snprintf(tempstr, sizeof(tempstr), (is->_iPLLight & 1) ? "%+d area" : "%+d areas", is->_iPLLight);
+		break;
+	default:
+		ASSUME_UNREACHABLE
+	}
+}
+
+void PrintItemPower(BYTE plidx, const ItemStruct* is)
+{
+	if (is->_itype != ITYPE_MISC || is->_iMiscId != IMISC_MAP)
+		PrintEquipmentPower(plidx, is);
+	else
+		PrintMapPower(plidx, is);
+}
+
 static bool SmithItemOk(int i)
 {
 	return AllItemsList[i].itype != ITYPE_MISC

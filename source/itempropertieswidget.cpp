@@ -21,7 +21,7 @@ ItemPropertiesWidget::~ItemPropertiesWidget()
     delete ui;
 }
 
-void ItemPropertiesWidget::initialize(ItemStruct *is)
+void ItemPropertiesWidget::initialize(const ItemStruct *is)
 {
     QString label;
     QString text;
@@ -78,7 +78,7 @@ void ItemPropertiesWidget::initialize(ItemStruct *is)
     if (is->_iMagical == ITEM_QUALITY_UNIQUE && (unsigned)is->_iUid < NUM_UITEM) {
         // DrawUniqueInfo(is, x, y);
         const UniqItemData* uis;
-        uis = &UniqueItemList[];
+        uis = &UniqueItemList[is->_iUid];
         PrintItemPower(uis->UIPower1, is);
         this->ui->itemUniquePower1Text->setText(tempstr);
         active++;
@@ -87,19 +87,19 @@ void ItemPropertiesWidget::initialize(ItemStruct *is)
             this->ui->itemUniquePower2Text->setText(tempstr);
             active++;
             if (uis->UIPower3 != IPL_INVALID) {
-                PrintUniquePower(uis->UIPower3, is);
+                PrintItemPower(uis->UIPower3, is);
                 this->ui->itemUniquePower3Text->setText(tempstr);
                 active++;
                 if (uis->UIPower4 != IPL_INVALID) {
-                    PrintUniquePower(uis->UIPower4, is);
+                    PrintItemPower(uis->UIPower4, is);
                     this->ui->itemUniquePower4Text->setText(tempstr);
                     active++;
                     if (uis->UIPower5 != IPL_INVALID) {
-                        PrintUniquePower(uis->UIPower5, is);
+                        PrintItemPower(uis->UIPower5, is);
                         this->ui->itemUniquePower5Text->setText(tempstr);
                         active++;
                         if (uis->UIPower6 != IPL_INVALID) {
-                            PrintUniquePower(uis->UIPower6, is);
+                            PrintItemPower(uis->UIPower6, is);
                             this->ui->itemUniquePower6Text->setText(tempstr);
                             active++;
                         }
@@ -122,7 +122,7 @@ void ItemPropertiesWidget::initialize(ItemStruct *is)
     this->ui->itemUniquePower6Text->setVisible(active > 5);
 
     active = 0;
-    if ((is->_iMinStr | is->_iMinMag | _iMinDex) != 0) {
+    if ((is->_iMinStr | is->_iMinMag | is->_iMinDex) != 0) {
         text.clear();
         if (is->_iMinStr)
             text.append(tr("%1 Str  ").arg(is->_iMinStr));

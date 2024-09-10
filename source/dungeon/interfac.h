@@ -16,6 +16,7 @@ extern bool HasTileset;
 extern bool PatchDunFiles;
 extern QString assetPath;
 extern char infostr[256];
+extern char tempstr[256];
 
 void LogErrorF(const char* msg, ...);
 

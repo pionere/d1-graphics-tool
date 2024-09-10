@@ -15,7 +15,7 @@ public:
     explicit ItemPropertiesWidget(QWidget *parent);
     ~ItemPropertiesWidget();
 
-    void initialize(ItemStruct *is);
+    void initialize(const ItemStruct *is);
 
 private:
     Ui::ItemPropertiesWidget *ui;

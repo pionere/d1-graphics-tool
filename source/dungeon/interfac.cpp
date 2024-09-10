@@ -21,6 +21,7 @@ int dnLevel;
 int dnType;
 QString assetPath;
 char infostr[256];
+char tempstr[256];
 
 typedef struct ObjStruct {
     int otype;
