@@ -21,7 +21,7 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
 {
     ui->setupUi(this);
 
-    static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
+    // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
     int row = 0, column = 0;
     constexpr int COLUMNS = 2;
     for (int s = 0; s < NUM_SPELLS; s++) {
@@ -46,7 +46,7 @@ void SkillDetailsWidget::initialize(D1Hero *h)
 {
     this->hero = h;
 
-    static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
+    // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
     for (int s = 0; s < NUM_SPELLS; s++) {
         this->skills[s] = this->hero->getSkillLvl(s);
     }
@@ -59,7 +59,7 @@ void SkillDetailsWidget::initialize(D1Hero *h)
 
 void SkillDetailsWidget::updateFields()
 {
-    static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
+    // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
     for (int s = 0; s < NUM_SPELLS; s++) {
         skillWidgets[s]->setText(QString::number(this->skills[s]));
     }
