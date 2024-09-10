@@ -2,8 +2,6 @@
 
 #include <QWidget>
 
-#include "skillpropertieswidget.h"
-
 class SidePanelWidget;
 class D1Hero;
 
