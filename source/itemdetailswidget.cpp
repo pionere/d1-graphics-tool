@@ -175,8 +175,11 @@ void ItemDetailsWidget::updateFields()
         this->ui->itemDetailsGroupBox->setVisible(true);
 
         this->itemProps->initialize(pi);
+        this->itemProps->adjustSize();
+        this->itemProps->setVisible(true);
     } else {
         this->ui->itemDetailsGroupBox->setVisible(false);
+        this->itemProps->setVisible(false);
     }
 }
 

@@ -321,12 +321,14 @@ void CelView::framePixelHovered(const QPoint &pos) const
 
 void CelView::displayFrame()
 {
+    LogErrorF("CelView::displayFrame 0");
     this->updateFields();
+    LogErrorF("CelView::displayFrame 1");
     this->celScene.clear();
-
+    LogErrorF("CelView::displayFrame 2");
     // Getting the current frame to display
     QImage celFrame = this->hero->getEquipmentImage();
-
+    LogErrorF("CelView::displayFrame 3 %dx%d", celFrame.width(), celFrame.height());
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     // Building background of the width/height of the CEL frame
@@ -344,7 +346,7 @@ void CelView::displayFrame()
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     this->celScene.addPixmap(QPixmap::fromImage(celFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-
+    LogErrorF("CelView::displayFrame 4");
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
 }

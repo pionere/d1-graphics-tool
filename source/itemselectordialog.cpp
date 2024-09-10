@@ -97,7 +97,7 @@ void ItemSelectorDialog::initialize(D1Hero *h, int ii)
         break;
     }
 
-    int idx = locComboBox->findData(this->is->_iLoc);
+    int idx = locComboBox->findData(QVariant::fromValue(this->is->_iLoc));
     QMessageBox::critical(this, "Error", tr("Loc %1 idx%2.").arg(this->is->_iLoc).arg(idx));
     if (idx < 0) idx = 0;
     locComboBox->setCurrentIndex(idx);
@@ -166,7 +166,7 @@ void ItemSelectorDialog::updateFilters()
         break;
     }
 
-    int idx = typeComboBox->findData(this->is->_itype);
+    int idx = typeComboBox->findData(QVariant::fromValue(this->is->_itype));
     QMessageBox::critical(this, "Error", tr("updateFilters type %1 val %2.").arg(this->is->_itype).arg(idx));
     if (idx < 0) idx = 0;
     typeComboBox->setCurrentIndex(idx);
@@ -188,7 +188,7 @@ void ItemSelectorDialog::updateFilters()
         idxComboBox->addItem(QString("%1 (%2)").arg(id.iName).arg(i), QVariant::fromValue(i));
     }
 
-    idx = idxComboBox->findData(this->is->_iIdx);
+    idx = idxComboBox->findData(QVariant::fromValue(this->is->_iIdx));
     if (idx < 0) idx = 0;
     idxComboBox->setCurrentIndex(idx);
 }
@@ -215,6 +215,7 @@ void ItemSelectorDialog::updateFields()
     this->ui->itemQualityComboBox->setCurrentIndex((this->is->_iCreateInfo & CF_DROP_QUALITY) >> 11);
 
     this->itemProps->initialize(this->is);
+    this->itemProps->adjustSize();
     this->itemProps->setVisible(this->is->_itype != ITYPE_NONE);
 }
 

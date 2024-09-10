@@ -501,6 +501,7 @@ const ItemStruct *D1Hero::item(int ii) const
 
 bool D1Hero::addItem(int dst_ii, ItemStruct *is)
 {
+    LogErrorF("D1Hero::addItem %d type %d", dst_ii, is->_itype);
     if (is->_itype == ITYPE_NONE)
         return false;
     ItemStruct *pi;
@@ -532,6 +533,7 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
         }
     }
     memcpy(pi, is, sizeof(ItemStruct));
+    LogErrorF("D1Hero::addItem done");
     return true;
 }
 
