@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 
 #include "itemdetailswidget.h"
+#include "skilldetailswidget.h"
 
 class D1Hero;
 
@@ -19,12 +20,15 @@ public:
     explicit SidePanelWidget(QWidget *parent);
     ~SidePanelWidget();
 
-    void initialize(D1Hero *hero);
-    void setHeroItem(D1Hero *hero, int ii);
+    void initialize(D1Hero *hero, int mode);
+    void showHeroItem(D1Hero *hero, int ii);
+    void showSkills(D1Hero *hero);
 
 private:
     Ui::SidePanelWidget *ui;
 
+    int mode;
     D1Hero *hero;
     ItemDetailsWidget *itemDetails = nullptr;
+    SkillDetailsWidget *skillDetails = nullptr;    
 };

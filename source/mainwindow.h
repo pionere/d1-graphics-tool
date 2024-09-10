@@ -94,6 +94,7 @@ public:
     void updateTrns(const std::vector<D1Trn *> &newTrns);
 
     void heroChanged(D1Hero *hero);
+    void heroSkillsClicked();
     void heroItemClicked(int ii);
     void selectHeroItem(int ii);
     void addHeroItem(int ii, ItemStruct *is);

@@ -89,11 +89,11 @@ public:
 private:
     void updateFields();
     void updateLabel();
-    bool framePos(QPoint &pos) const;
+    int invItemIdx(QPoint &pos) const;
+    bool framePos(const QPoint &pos) const;
 
 signals:
     void frameRefreshed();
-    void palModified();
 
 private slots:
     void on_framesGroupCheckBox_clicked();
@@ -103,6 +103,8 @@ private slots:
     void on_heroClassComboBox_activated(int index);
     void on_heroLevelEdit_returnPressed();
     void on_heroLevelEdit_escPressed();
+
+    void on_heroSkillsButton_clicked();
 
     void on_heroDecLifeButton_clicked();
     void on_heroRestoreLifeButton_clicked();
@@ -127,4 +129,5 @@ private:
 
     D1Pal *pal;
     D1Hero *hero;
+    int hoverItem;
 };

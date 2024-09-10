@@ -282,9 +282,14 @@ void MainWindow::heroChanged(D1Hero *hero)
     this->updateWindow();
 }
 
+void MainWindow::heroSkillsClicked()
+{
+    this->sideView->showSkills(this->hero);
+}
+
 void MainWindow::heroItemClicked(int ii)
 {
-    this->sideView->setHeroItem(this->hero, ii);
+    this->sideView->showHeroItem(this->hero, ii);
 }
 
 void MainWindow::selectHeroItem(int ii)
@@ -809,7 +814,6 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Initialize the side panel
     this->sideView = new SidePanelWidget(this);
-    this->sideView->initialize(this->hero);
     this->ui->sideFrameLayout->addWidget(this->sideView);
 
     // Initialize palette widgets

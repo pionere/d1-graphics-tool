@@ -99,7 +99,7 @@ void ItemSelectorDialog::initialize(D1Hero *h, int ii)
         break;
     }
 
-    int idx = locComboBox->findData(QVariant::fromValue(this->is->_iLoc));
+    int idx = locComboBox->findData(QVariant::fromValue((item_equip_type)this->is->_iLoc));
     QMessageBox::critical(this, "Error", tr("Loc %1 idx%2 ii %3 wth%4.").arg(this->is->_iLoc).arg(idx).arg(ii).arg(this->is->_iLoc == ILOC_ONEHAND));
     if (idx < 0) idx = 0;
     locComboBox->setCurrentIndex(idx);
@@ -117,7 +117,8 @@ void ItemSelectorDialog::updateFilters()
     idxComboBox->clear();
 
     QMessageBox::critical(this, "Error", tr("updateFilters loc %1.").arg(locComboBox->currentData().value<int>()));
-    switch (locComboBox->currentData().value<int>()) {
+    int iloc = locComboBox->currentData().value<int>();
+    switch (iloc) {
     case ILOC_HELM:
         typeComboBox->addItem(tr("Helm"), QVariant::fromValue(ITYPE_HELM));
         break;
@@ -150,30 +151,37 @@ void ItemSelectorDialog::updateFilters()
         break;
     default:
         typeComboBox->addItem(tr("All"), QVariant::fromValue(ITYPE_NONE));
-        typeComboBox->addItem(tr("Helm"), QVariant::fromValue(ITYPE_HELM));
-        typeComboBox->addItem(tr("Amulet"), QVariant::fromValue(ITYPE_AMULET));
-        typeComboBox->addItem(tr("Light Armor"), QVariant::fromValue(ITYPE_LARMOR));
-        typeComboBox->addItem(tr("Medium Armor"), QVariant::fromValue(ITYPE_MARMOR));
-        typeComboBox->addItem(tr("Heavy Armor"), QVariant::fromValue(ITYPE_HARMOR));
-        typeComboBox->addItem(tr("Sword"), QVariant::fromValue(ITYPE_SWORD));
-        typeComboBox->addItem(tr("Axe"), QVariant::fromValue(ITYPE_AXE));
-        typeComboBox->addItem(tr("Mace"), QVariant::fromValue(ITYPE_MACE));
-        typeComboBox->addItem(tr("Shield"), QVariant::fromValue(ITYPE_SHIELD));
+        if (this->invIdx == INVITEM_NONE) {
+            typeComboBox->addItem(tr("Helm"), QVariant::fromValue(ITYPE_HELM));
+            typeComboBox->addItem(tr("Amulet"), QVariant::fromValue(ITYPE_AMULET));
+            typeComboBox->addItem(tr("Ring"), QVariant::fromValue(ITYPE_RING));
+            typeComboBox->addItem(tr("Light Armor"), QVariant::fromValue(ITYPE_LARMOR));
+            typeComboBox->addItem(tr("Medium Armor"), QVariant::fromValue(ITYPE_MARMOR));
+            typeComboBox->addItem(tr("Heavy Armor"), QVariant::fromValue(ITYPE_HARMOR));
+        } else {
+            // assert(this->invIdx == INVITEM_HAND_LEFT || this->invIdx == INVITEM_HAND_RIGHT);
+        }
         typeComboBox->addItem(tr("Sword"), QVariant::fromValue(ITYPE_SWORD));
         typeComboBox->addItem(tr("Axe"), QVariant::fromValue(ITYPE_AXE));
         typeComboBox->addItem(tr("Bow"), QVariant::fromValue(ITYPE_BOW));
         typeComboBox->addItem(tr("Mace"), QVariant::fromValue(ITYPE_MACE));
         typeComboBox->addItem(tr("Staff"), QVariant::fromValue(ITYPE_STAFF));
-        typeComboBox->addItem(tr("Ring"), QVariant::fromValue(ITYPE_RING));
+        typeComboBox->addItem(tr("Shield"), QVariant::fromValue(ITYPE_SHIELD));
         break;
     }
 
-    int idx = typeComboBox->findData(QVariant::fromValue(this->itemType));
-    QMessageBox::critical(this, "Error", tr("updateFilters type %1 val %2.").arg(this->itemType).arg(idx));
+    int idx = typeComboBox->findData(QVariant::fromValue((item_type)this->itemType));
+    QMessageBox::critical(this, "Error", tr("updateFilters type %1 val %2 - %d.").arg(this->itemType).arg(idx).arg(this->itemType == ITYPE_AMULET));
+    for (int i = 0; i < typeComboBox->count(); i++) {
+        int tv = typeComboBox->currentData().value<int>();
+        if (tv == this->itemType && idx != i) {
+            QMessageBox::critical(this, "Error", tr("Fuck you!!!!!"));
+        }
+    }
     if (idx < 0) idx = 0;
     typeComboBox->setCurrentIndex(idx);
 
-    int iloc = locComboBox->currentData().value<int>();
+    
     int itype = typeComboBox->currentData().value<int>();
     QMessageBox::critical(this, "Error", tr("updateFilters filter idx by loc %1 type %2.").arg(iloc).arg(itype));
     for (int i = 0; i < NUM_IDI; ++i) {

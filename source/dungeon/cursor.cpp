@@ -106,27 +106,26 @@ static_assert(validateCursorAreas(), "One of the cursor area does not fit to the
 
 void InitCursorGFX(D1Pal *pal)
 {
-    delete pCursCels;
-    pCursCels = nullptr;
+	delete pCursCels;
+	pCursCels = nullptr;
 
-    QString folder = Config::getAssetsFolder() + "\\";
-    QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
-    if (QFile::exists(objFilePath)) {
-        // dProgressErr() << QString("File '%1' exists").arg(objFilePath);
-        pCursCels = new D1Gfx();
-        pCursCels->setPalette(pal);
-        OpenAsParam params = OpenAsParam();
-        if (!D1Cel::load(*pCursCels, objFilePath, params) || pCursCels->getFrameCount() == 0) {
-            // dProgressErr() << QString("Failed to load CEL file: %1").arg(objFilePath);
-            delete pCursCels;
-            pCursCels = nullptr;
-        } else {
-            // dProgressErr() << QString("File '%1' loaded.").arg(objFilePath);
-        }
-    } else {
-        // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load obj %1").arg(objFilePath));
-    }
-
+	QString folder = Config::getAssetsFolder() + "\\";
+	QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
+	if (QFile::exists(objFilePath)) {
+		// dProgressErr() << QString("File '%1' exists").arg(objFilePath);
+		pCursCels = new D1Gfx();
+		pCursCels->setPalette(pal);
+		OpenAsParam params = OpenAsParam();
+		if (!D1Cel::load(*pCursCels, objFilePath, params) || pCursCels->getFrameCount() == 0) {
+			// dProgressErr() << QString("Failed to load CEL file: %1").arg(objFilePath);
+			delete pCursCels;
+			pCursCels = nullptr;
+		} else {
+			// dProgressErr() << QString("File '%1' loaded.").arg(objFilePath);
+		}
+	} else {
+		// QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load obj %1").arg(objFilePath));
+	}
 }
 
 DEVILUTION_END_NAMESPACE

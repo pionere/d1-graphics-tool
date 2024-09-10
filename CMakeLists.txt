@@ -118,6 +118,9 @@ set(PROJECT_SOURCES
         source/sidepanelwidget.cpp
         source/sidepanelwidget.h
         source/sidepanelwidget.ui
+        source/skilldetailswidget.cpp
+        source/skilldetailswidget.h
+        source/skilldetailswidget.ui
 )
 
 qt_add_resources(RESOURCES

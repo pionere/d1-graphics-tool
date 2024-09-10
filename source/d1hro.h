@@ -25,7 +25,7 @@ public:
     D1Pal *getPalette() const;
     void setPalette(D1Pal *pal);
 
-    QImage getEquipmentImage() const;
+    QImage getEquipmentImage(int ii) const;
     const ItemStruct *item(int ii) const;
     bool addItem(int dst_ii, ItemStruct *is);
     void swapItem(int dst_ii, int src_ii);
@@ -75,6 +75,9 @@ public:
     int getFireResist() const;
     int getLightningResist() const;
     int getAcidResist() const;
+
+    int getSkillLvl(int sn) const;
+    void setSkillLvl(int sn, int level);
 
 	/*
 	BYTE _pRank;

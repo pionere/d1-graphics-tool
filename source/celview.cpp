@@ -182,6 +182,7 @@ void CelView::initialize(D1Pal *p, D1Hero *h, bool bottomPanelHidden)
 {
     this->pal = p;
     this->hero = h;
+    this->hoverItem = INVITEM_NONE;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
@@ -276,13 +277,12 @@ CelScene *CelView::getCelScene() const
     return const_cast<CelScene *>(&this->celScene);
 }
 
-void CelView::framePixelClicked(const QPoint &pos, int flags)
+int CelView::invItemIdx(QPoint &pos) const
 {
     constexpr int gnWndInvX = 0;
     constexpr int gnWndInvY = 0;
-    QPoint p = pos;
-    p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    int i = p.x(), j = p.y(), r;
+    pos -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    int i = pos.x(), j = pos.y(), r;
 
     for (r = 0; r < SLOTXY_CHEST_LAST; r++) {
         if (POS_IN_RECT(i, j,
@@ -295,20 +295,41 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
             static_assert((int)SLOT_HAND_LEFT == (int)INVITEM_HAND_LEFT, "SLOT - INVITEM match is necessary in framePixelClicked V.");
             static_assert((int)SLOT_HAND_RIGHT == (int)INVITEM_HAND_RIGHT, "SLOT - INVITEM match is necessary in framePixelClicked VI.");
             static_assert((int)SLOT_CHEST == (int)INVITEM_CHEST, "SLOT - INVITEM match is necessary in framePixelClicked VII.");
-            dMainWindow().heroItemClicked(InvSlotTbl[r]);
-            break;
+            return InvSlotTbl[r];
         }
+    }
+    return INVITEM_NONE;
+}
+
+void CelView::framePixelClicked(const QPoint &pos, int flags)
+{
+    QPoint tpos = pos;
+    int idx = this->invItemIdx(tpos);
+    if (idx != INVITEM_NONE) {
+        dMainWindow().heroItemClicked(idx);
     }
 }
 
-bool CelView::framePos(QPoint &pos) const
+bool CelView::framePos(const QPoint &pos) const
 {
+    constexpr int INV_WIDTH = SPANEL_WIDTH; // same as D1Hero::getEquipmentImage
+    constexpr int INV_HEIGHT = 178;
+
+    if (p.x() < 0 || p.x() >= INV_WIDTH)
+        return false;
+    if (p.y() < 0 || p.y() >= INV_HEIGHT)
+        return false;
     return true;
 }
 
 void CelView::framePixelHovered(const QPoint &pos) const
 {
     QPoint tpos = pos;
+    int idx = this->invItemIdx(tpos);
+    if (idx != this->hoverItem) {
+        this->hoverItem = idx;
+        this->displayFrame();
+    }
     if (this->framePos(tpos)) {
         dMainWindow().pointHovered(tpos);
         return;
@@ -321,14 +342,14 @@ void CelView::framePixelHovered(const QPoint &pos) const
 
 void CelView::displayFrame()
 {
-    LogErrorF("CelView::displayFrame 0");
+    // LogErrorF("CelView::displayFrame 0");
     this->updateFields();
-    LogErrorF("CelView::displayFrame 1");
+    // LogErrorF("CelView::displayFrame 1");
     this->celScene.clear();
-    LogErrorF("CelView::displayFrame 2");
+    // LogErrorF("CelView::displayFrame 2");
     // Getting the current frame to display
-    QImage celFrame = this->hero->getEquipmentImage();
-    LogErrorF("CelView::displayFrame 3 %dx%d", celFrame.width(), celFrame.height());
+    QImage celFrame = this->hero->getEquipmentImage(this->hoverItem);
+    // LogErrorF("CelView::displayFrame 3 %dx%d", celFrame.width(), celFrame.height());
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     // Building background of the width/height of the CEL frame
@@ -346,7 +367,7 @@ void CelView::displayFrame()
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     this->celScene.addPixmap(QPixmap::fromImage(celFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    LogErrorF("CelView::displayFrame 4");
+    // LogErrorF("CelView::displayFrame 4");
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
 }
@@ -412,6 +433,11 @@ void CelView::on_heroLevelEdit_escPressed()
     // update heroLevelEdit
     this->updateFields();
     this->ui->heroLevelEdit->clearFocus();
+}
+
+void CelView::on_heroSkillsButton_clicked()
+{
+    dMainWindow().heroSkillsClicked();
 }
 
 void CelView::on_heroDecLifeButton_clicked()

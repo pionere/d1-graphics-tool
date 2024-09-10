@@ -112,6 +112,13 @@
         </item>
        </widget>
       </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="heroSkillsButton">
+        <property name="text">
+         <string>Skills</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">
