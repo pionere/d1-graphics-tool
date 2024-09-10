@@ -50,5 +50,6 @@ private:
 
     D1Hero *hero;
     int invIdx;
+    int itemType;
     ItemStruct *is = nullptr;
 };

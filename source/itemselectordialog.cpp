@@ -48,9 +48,13 @@ void ItemSelectorDialog::initialize(D1Hero *h, int ii)
     if (ii < NUM_INVLOC) {
         const ItemStruct* pi = h->item(ii);
         memcpy(this->is, pi, sizeof(ItemStruct));
+
+        this->itemType = pi->_itype;
     } else {
         memset(this->is, 0, sizeof(ItemStruct));
         this->is->_iCreateInfo = 1 | (CFL_NONE << 8) | (CFDQ_NORMAL << 11);
+
+        this->itemType = ITYPE_NONE;
     }
 
     QComboBox *locComboBox = this->ui->itemLocComboBox;
@@ -74,13 +78,11 @@ void ItemSelectorDialog::initialize(D1Hero *h, int ii)
         locComboBox->addItem(tr("Amulet"), QVariant::fromValue(ILOC_AMULET));
         break;
     case INVITEM_HAND_LEFT:
-        // this->is->_iClass = ICLASS_WEAPON;
-        locComboBox->addItem(tr("One handed"), QVariant::fromValue(ILOC_ONEHAND));
-        locComboBox->addItem(tr("Two handed"), QVariant::fromValue(ILOC_TWOHAND));
-        break;
     case INVITEM_HAND_RIGHT:
         // this->is->_iClass = ICLASS_WEAPON;
+        locComboBox->addItem(tr("Weapon / Shield"), QVariant::fromValue(ILOC_UNEQUIPABLE));
         locComboBox->addItem(tr("One handed"), QVariant::fromValue(ILOC_ONEHAND));
+        locComboBox->addItem(tr("Two handed"), QVariant::fromValue(ILOC_TWOHAND));
         break;
     case INVITEM_CHEST:
         // this->is->_iClass = ICLASS_ARMOR;
@@ -129,14 +131,14 @@ void ItemSelectorDialog::updateFilters()
         typeComboBox->addItem(tr("Heavy Armor"), QVariant::fromValue(ITYPE_HARMOR));
         break;
     case ILOC_ONEHAND:
-        typeComboBox->addItem(tr("Weapon / Shield"), QVariant::fromValue(ITYPE_NONE));
+        typeComboBox->addItem(tr("All"), QVariant::fromValue(ITYPE_NONE));
         typeComboBox->addItem(tr("Sword"), QVariant::fromValue(ITYPE_SWORD));
         typeComboBox->addItem(tr("Axe"), QVariant::fromValue(ITYPE_AXE));
         typeComboBox->addItem(tr("Mace"), QVariant::fromValue(ITYPE_MACE));
         typeComboBox->addItem(tr("Shield"), QVariant::fromValue(ITYPE_SHIELD));
         break;
     case ILOC_TWOHAND:
-        typeComboBox->addItem(tr("Weapon"), QVariant::fromValue(ITYPE_NONE));
+        typeComboBox->addItem(tr("All"), QVariant::fromValue(ITYPE_NONE));
         typeComboBox->addItem(tr("Sword"), QVariant::fromValue(ITYPE_SWORD));
         typeComboBox->addItem(tr("Axe"), QVariant::fromValue(ITYPE_AXE));
         typeComboBox->addItem(tr("Bow"), QVariant::fromValue(ITYPE_BOW));
@@ -147,7 +149,7 @@ void ItemSelectorDialog::updateFilters()
         typeComboBox->addItem(tr("Ring"), QVariant::fromValue(ITYPE_RING));
         break;
     default:
-        typeComboBox->addItem(tr("Any"), QVariant::fromValue(ITYPE_NONE));
+        typeComboBox->addItem(tr("All"), QVariant::fromValue(ITYPE_NONE));
         typeComboBox->addItem(tr("Helm"), QVariant::fromValue(ITYPE_HELM));
         typeComboBox->addItem(tr("Amulet"), QVariant::fromValue(ITYPE_AMULET));
         typeComboBox->addItem(tr("Light Armor"), QVariant::fromValue(ITYPE_LARMOR));
@@ -166,8 +168,8 @@ void ItemSelectorDialog::updateFilters()
         break;
     }
 
-    int idx = typeComboBox->findData(QVariant::fromValue(this->is->_itype));
-    QMessageBox::critical(this, "Error", tr("updateFilters type %1 val %2.").arg(this->is->_itype).arg(idx));
+    int idx = typeComboBox->findData(QVariant::fromValue(this->itemType));
+    QMessageBox::critical(this, "Error", tr("updateFilters type %1 val %2.").arg(this->itemType).arg(idx));
     if (idx < 0) idx = 0;
     typeComboBox->setCurrentIndex(idx);
 
@@ -203,8 +205,11 @@ void ItemSelectorDialog::updateFields()
     // typeComboBox->setCurrentIndex(typeComboBox->findData(this->is->_itype));
     // idxComboBox->setCurrentIndex(idxComboBox->findData(this->is->_iIdx));
 
-    this->is->_iIdx = idxComboBox->currentData().value<int>();
-
+    int idx = idxComboBox->currentData().value<int>();
+    if (idx != this->is->_iIdx) {
+        this->is->_iIdx = idx;
+        this->is->_itype = ITYPE_NONE;
+    }
     this->ui->itemSeedEdit->setText(QString::number(this->is->_iSeed));
     this->ui->itemLevelEdit->setText(QString::number(this->is->_iCreateInfo & CF_LEVEL));
     static_assert(((int)CF_TOWN & ((1 << 8) - 1)) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted I.");
@@ -216,11 +221,13 @@ void ItemSelectorDialog::updateFields()
 
     this->itemProps->initialize(this->is);
     this->itemProps->adjustSize();
+    this->ui->itemPropertiesBox->adjustSize();
     this->itemProps->setVisible(this->is->_itype != ITYPE_NONE);
 }
 
 void ItemSelectorDialog::on_itemTypeComboBox_activated(int index)
 {
+    this->itemType = this->ui->itemTypeComboBox->currentData().value<int>();
     this->updateFilters();
 }
 

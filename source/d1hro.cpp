@@ -492,8 +492,6 @@ QImage D1Hero::getEquipmentImage() const
 
     invPainter.end();
 
-    delete cCels;
-
     return result;
 }
 
