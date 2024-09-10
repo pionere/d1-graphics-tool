@@ -284,7 +284,7 @@ void MainWindow::heroChanged(D1Hero *hero)
 
 void MainWindow::heroSkillsClicked()
 {
-    this->sideView->showSkills(this->hero);
+    this->sideView->showHeroSkills(this->hero);
 }
 
 void MainWindow::heroItemClicked(int ii)
