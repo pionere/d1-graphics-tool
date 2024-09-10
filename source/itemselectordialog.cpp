@@ -242,6 +242,12 @@ void ItemSelectorDialog::on_itemSeedEdit_escPressed()
     this->ui->itemSeedEdit->clearFocus();
 }
 
+void ItemSelectorDialog::on_actionGenerateSeed_triggered()
+{
+    QRandomGenerator *gen = QRandomGenerator::global();
+    this->ui->itemSeedEdit->setText(QString::number((int)gen->generate()));
+}
+
 void ItemSelectorDialog::on_itemLevelEdit_returnPressed()
 {
     this->is->_iCreateInfo = (this->is->_iCreateInfo & ~CF_LEVEL) | (this->ui->itemLevelEdit->text().toShort() & CF_LEVEL);
