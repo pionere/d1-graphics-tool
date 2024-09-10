@@ -49,14 +49,15 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="LineEditWidget" name="itemSeedEdit">
-        <property name="charWidth">
-         <number>16</number>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="seedWithRefreshButtonLayout">
+        <item>
+         <widget class="LineEditWidget" name="itemSeedEdit">
+          <property name="charWidth">
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="3" column="0">
        <widget class="QLabel">
@@ -176,6 +177,52 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="generateButton">
+       <property name="text">
+        <string>Generate</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="itemProperties"/>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout">

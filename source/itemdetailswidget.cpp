@@ -20,6 +20,9 @@ ItemDetailsWidget::ItemDetailsWidget(SidePanelWidget *parent)
     , view(parent)
 {
     ui->setupUi(this);
+
+    this->itemProps = new ItemPropertiesWidget(this);
+    this->ui->itemProperties->addWidget(this->itemProps);
 }
 
 ItemDetailsWidget::~ItemDetailsWidget()
@@ -169,74 +172,9 @@ void ItemDetailsWidget::updateFields()
         }
         this->ui->itemQualityEdit->setText(text);
         // LogErrorF("updateFields 8");
-/*
-	union {
-		int _ix;
-		int _iPHolder; // parent index of a placeholder entry in InvList
-	};
-	int _iy;
-	int _iCurs;   // item_cursor_graphic
-	int _iMiscId; // item_misc_id
-	int _iSpell;  // spell_id
-	BYTE _iDamType; // item_damage_type
-	BYTE _iMinDam;
-	BYTE _iMaxDam;
-	BYTE _iBaseCrit;
-	BYTE _iMinStr;
-	BYTE _iMinMag;
-	BYTE _iMinDex;
-	BOOLEAN _iUsable; // can be placed in belt, can be consumed/used or stacked (if max durability is not 1)
-	BYTE _iPrePower; // item_effect_type
-	BYTE _iSufPower; // item_effect_type
-	BYTE _iMagical;	// item_quality
-	BYTE _iSelFlag;
-	BOOLEAN _iFloorFlag;
-	BOOL _iIdentified;
-	int _ivalue;
-	int _iIvalue;
-	int _iAC;
-	int _iFlags;	// item_special_effect
-	int _iCharges;
-	int _iMaxCharges;
-	int _iDurability;
-	int _iMaxDur;
-	int _iPLDam;
-	int _iPLToHit;
-	int _iPLAC;
-	int _iPLStr;
-	int _iPLMag;
-	int _iPLDex;
-	int _iPLVit;
-	int _iPLFR;
-	int _iPLLR;
-	int _iPLMR;
-	int _iPLAR;
-	int _iPLMana;
-	int _iPLHP;
-	int _iPLDamMod;
-	int _iPLGetHit;
-	int8_t _iPLLight;
-	int8_t _iPLSkillLevels;
-	BYTE _iPLSkill;
-	int8_t _iPLSkillLvl;
-	BYTE _iPLManaSteal;
-	BYTE _iPLLifeSteal;
-	BYTE _iPLCrit;
-	BOOLEAN _iStatFlag;
-	int _iUid; // unique_item_indexes
-	BYTE _iPLFMinDam;
-	BYTE _iPLFMaxDam;
-	BYTE _iPLLMinDam;
-	BYTE _iPLLMaxDam;
-	BYTE _iPLMMinDam;
-	BYTE _iPLMMaxDam;
-	BYTE _iPLAMinDam;
-	BYTE _iPLAMaxDam;
-	int _iVAdd;
-	int _iVMult;
-
-*/
         this->ui->itemDetailsGroupBox->setVisible(true);
+
+        this->itemProps->initialize(pi);
     } else {
         this->ui->itemDetailsGroupBox->setVisible(false);
     }

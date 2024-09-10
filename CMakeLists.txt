@@ -85,6 +85,9 @@ set(PROJECT_SOURCES
         source/itemdetailswidget.cpp
         source/itemdetailswidget.h
         source/itemdetailswidget.ui
+        source/itempropertieswidget.cpp
+        source/itempropertieswidget.h
+        source/itempropertieswidget.ui
         source/itemselectordialog.cpp
         source/itemselectordialog.h
         source/itemselectordialog.ui

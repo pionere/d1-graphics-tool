@@ -234,6 +234,27 @@
       </spacer>
      </item>
      <item>
+      <layout class="QHBoxLayout" name="itemProperties"/>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QPushButton" name="submitButton">
        <property name="text">
         <string>Submit</string>

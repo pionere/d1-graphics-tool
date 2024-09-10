@@ -2,6 +2,8 @@
 
 #include <QWidget>
 
+#include "itempropertieswidget.h"
+
 class SidePanelWidget;
 class D1Hero;
 
@@ -32,6 +34,7 @@ private slots:
 private:
     Ui::ItemDetailsWidget *ui;
     SidePanelWidget *view;
+    ItemPropertiesWidget *itemProps;
 
     D1Hero *hero;
     int invIdx;
