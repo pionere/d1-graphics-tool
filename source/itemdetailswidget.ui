@@ -187,9 +187,6 @@
       </item>
       <item row="6" column="3">
        <widget class="LineEditWidget" name="itemSourceEdit">
-        <property name="charWidth">
-         <number>2</number>
-        </property>
         <property name="alignment">
          <enum>Qt::AlignCenter</enum>
         </property>
@@ -210,9 +207,6 @@
       </item>
       <item row="6" column="5">
        <widget class="LineEditWidget" name="itemQualityEdit">
-        <property name="charWidth">
-         <number>2</number>
-        </property>
         <property name="alignment">
          <enum>Qt::AlignCenter</enum>
         </property>
@@ -225,25 +219,27 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout">
-     <item>
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="itemProperties"/>
-     </item>
-     <item>
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+     <layout class="QHBoxLayout">
+      <item>
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QGroupBox">
+        <layout class="QHBoxLayout" name="itemProperties"/>
+       </widget>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+     </layout>
    </item>
    <item>
     <layout class="QHBoxLayout">

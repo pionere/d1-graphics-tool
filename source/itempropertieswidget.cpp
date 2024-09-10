@@ -30,7 +30,7 @@ void ItemPropertiesWidget::initialize(const ItemStruct *is)
 
     active = 0;
 	if (is->_iClass == ICLASS_WEAPON) {
-        label = tr("Damage");
+        label = tr("Damage:");
 		if (is->_iMinDam == is->_iMaxDam)
 			text = QString::number(is->_iMinDam);
 		else
@@ -45,7 +45,7 @@ void ItemPropertiesWidget::initialize(const ItemStruct *is)
         tooltip = tr("Type: %1. Base crit. chance: %2").arg(tooltip).arg(is->_iBaseCrit);
         active = 1;
 	} else if (is->_iClass == ICLASS_ARMOR) {
-        label = tr("Armor");
+        label = tr("Armor:");
         text = QString::number(is->_iAC);
         tooltip = "";
         active = 1;

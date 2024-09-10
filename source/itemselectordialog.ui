@@ -213,7 +213,9 @@
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="itemProperties"/>
+      <widget class="QGroupBox">
+       <layout class="QHBoxLayout" name="itemProperties"/>
+      </widget>
      </item>
      <item>
       <spacer>

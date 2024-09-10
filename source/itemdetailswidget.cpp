@@ -205,8 +205,9 @@ void ItemDetailsWidget::on_submitButton_clicked()
     this->hero->swapItem(this->invIdx, ii);
 
     this->setVisible(false);
-
+    LogErrorF("ItemDetailsWidget swap 2");
     dMainWindow().updateWindow();
+    LogErrorF("ItemDetailsWidget swap 3");
 }
 
 void ItemDetailsWidget::on_cancelButton_clicked()

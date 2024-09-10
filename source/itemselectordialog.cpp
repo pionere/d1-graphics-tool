@@ -97,9 +97,10 @@ void ItemSelectorDialog::initialize(D1Hero *h, int ii)
         break;
     }
 
-    if (this->is->_itype != ITYPE_NONE) {
-        locComboBox->setCurrentIndex(locComboBox->findData(this->is->_iLoc));
-    }
+    int idx = locComboBox->findData(this->is->_iLoc);
+    QMessageBox::critical(this, "Error", tr("Loc %1 idx%2.").arg(this->is->_iLoc).arg(idx));
+    if (idx < 0) idx = 0;
+    locComboBox->setCurrentIndex(idx);
 
     this->updateFilters();
     this->updateFields();
@@ -113,6 +114,7 @@ void ItemSelectorDialog::updateFilters()
     typeComboBox->clear();
     idxComboBox->clear();
 
+    QMessageBox::critical(this, "Error", tr("updateFilters loc %1.").arg(locComboBox->currentData().value<int>()));
     switch (locComboBox->currentData().value<int>()) {
     case ILOC_HELM:
         typeComboBox->addItem(tr("Helm"), QVariant::fromValue(ITYPE_HELM));
@@ -165,11 +167,13 @@ void ItemSelectorDialog::updateFilters()
     }
 
     int idx = typeComboBox->findData(this->is->_itype);
+    QMessageBox::critical(this, "Error", tr("updateFilters type %1 val %2.").arg(this->is->_itype).arg(idx));
     if (idx < 0) idx = 0;
     typeComboBox->setCurrentIndex(idx);
 
     int iloc = locComboBox->currentData().value<int>();
     int itype = typeComboBox->currentData().value<int>();
+    QMessageBox::critical(this, "Error", tr("updateFilters filter idx by loc %1 type %2.").arg(iloc).arg(itype));
     for (int i = 0; i < NUM_IDI; ++i) {
         const ItemData &id = AllItemsList[i];
         //if (id.iClass != this->is->_iClass) {
@@ -210,6 +214,7 @@ void ItemSelectorDialog::updateFields()
     static_assert((((int)CF_DROP_QUALITY >> 11) & ((((int)CF_DROP_QUALITY >> 11) + 1))) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted II.");
     this->ui->itemQualityComboBox->setCurrentIndex((this->is->_iCreateInfo & CF_DROP_QUALITY) >> 11);
 
+    this->itemProps->initialize(this->is);
     this->itemProps->setVisible(this->is->_itype != ITYPE_NONE);
 }
 
