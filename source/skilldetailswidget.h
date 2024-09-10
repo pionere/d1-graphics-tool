@@ -2,6 +2,8 @@
 
 #include <QWidget>
 
+#include "lineeditwidget.h"
+
 class SidePanelWidget;
 class D1Hero;
 
@@ -34,6 +36,6 @@ private:
     SidePanelWidget *view;
 
     D1Hero *hero;
-    QWidget *skillWidgets[64];
+    LineEditWidget *skillWidgets[64];
     int skills[64];
 };

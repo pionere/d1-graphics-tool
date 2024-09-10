@@ -26,8 +26,8 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
     constexpr int COLUMNS = 2;
     for (int s = 0; s < NUM_SPELLS; s++) {
         QLabel *label = new QLabel(spelldata[s].sNameText);
-        this->ui->heroSkillList->addWidget(label, row, 2 * column);
-        skillWidgets[s] = new LineEditWidget();
+        this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
+        skillWidgets[s] = new LineEditWidget(this);
         this->ui->heroSkillGridLayout->addWidget(skillWidgets[s], row, 2 * column + 1);
 
         if (++column == COLUMNS) {
@@ -72,7 +72,7 @@ void SkillDetailsWidget::on_submitButton_clicked()
         if (lvl < 0)
             lvl = 0;
         if (lvl > MAXSPLLEVEL)
-            lvl = MAXSPLLEVEL
+            lvl = MAXSPLLEVEL;
         this->hero->setSkillLvl(s, lvl);
     }
 

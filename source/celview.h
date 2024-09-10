@@ -94,6 +94,7 @@ private:
 
 signals:
     void frameRefreshed();
+    void palModified();
 
 private slots:
     void on_framesGroupCheckBox_clicked();

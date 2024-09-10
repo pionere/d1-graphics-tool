@@ -22,7 +22,7 @@ public:
 
     void initialize(D1Hero *hero, int mode);
     void showHeroItem(D1Hero *hero, int ii);
-    void showSkills(D1Hero *hero);
+    void showHeroSkills(D1Hero *hero);
 
 private:
     Ui::SidePanelWidget *ui;
