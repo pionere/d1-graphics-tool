@@ -102,7 +102,7 @@ static bool gbCelTransparencyActive;
 
 static void InvDrawSlotBack(int X, int Y, int W, int H)
 {
-    // LogErrorF("InvDrawSlotBack %d:%d %dx%d", X, Y, W, H);
+    LogErrorF("InvDrawSlotBack %d:%d %dx%d", X, Y, W, H);
     QImage *destImage = (QImage *)InvPainter->device();
     for (int y = Y - H + 1; y <= Y; y++) {
         for (int x = X; x < X + W; x++) {
@@ -118,7 +118,7 @@ static void InvDrawSlotBack(int X, int Y, int W, int H)
             //destImage->setPixelColor(x, y, color);
         }
     }
-    // LogErrorF("InvDrawSlotBack done");
+    LogErrorF("InvDrawSlotBack done");
 }
 
 static void CelClippedDrawOutline(BYTE col, int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
@@ -144,7 +144,7 @@ static void CelClippedDrawOutline(BYTE col, int sx, int sy, const D1Gfx *pCelBuf
 
 static void CelClippedDrawLightTbl(int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth, BYTE trans)
 {
-    // LogErrorF("CelClippedDrawLightTbl %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, trans);
+    LogErrorF("CelClippedDrawLightTbl %d:%d idx:%d w:%d trn%d", sx, sy, nCel, nWidth, trans);
     QImage *destImage = (QImage *)InvPainter->device();
 
     D1GfxFrame *item = pCelBuff->getFrame(nCel - 1);
@@ -158,7 +158,7 @@ static void CelClippedDrawLightTbl(int sx, int sy, const D1Gfx *pCelBuff, int nC
             }
         }
     }
-    // LogErrorF("CelClippedDrawLightTbl done");
+    LogErrorF("CelClippedDrawLightTbl done");
 }
 
 static void CelClippedDrawLightTrans(int sx, int sy, const D1Gfx *pCelBuff, int nCel, int nWidth)
@@ -188,6 +188,7 @@ static void scrollrt_draw_item(const ItemStruct* is, bool outline, int sx, int s
 {
 	BYTE col, trans;
     // dProgressErr() << QString("scrollrt_draw_item %1:%2 idx:%3 w:%4 outline%5").arg(sx).arg(sy).arg(nCel).arg(nWidth).arg(outline);
+    LogErrorF("scrollrt_draw_item %d:%d cel%d, w%d o%d", sx, sy, nCel, nWidth, outline);
 	col = ICOL_YELLOW;
 	if (is->_iMagical != ITEM_QUALITY_NORMAL) {
 		col = ICOL_BLUE;
@@ -277,6 +278,7 @@ QImage D1Hero::getEquipmentImage() const
     } else {
         // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to load inv %1").arg(invFilePath));
     }*/
+    LogErrorF("D1Hero::getEquipmentImage 0 %d", pInvCels != nullptr);
     // draw the inventory
     D1Gfx *iCels = pInvCels;
     if (iCels != nullptr) {
@@ -302,7 +304,7 @@ QImage D1Hero::getEquipmentImage() const
                 }
             }
     }
-
+    LogErrorF("D1Hero::getEquipmentImage 1");
     // draw the items
     // QString objFilePath = folder + "Data\\Inv\\Objcurs.CEL";
     QPainter invPainter(&result);
@@ -335,6 +337,7 @@ QImage D1Hero::getEquipmentImage() const
 	screen_y = 0;
 
     pi = nullptr; // FIXME /*pcursinvitem == ITEM_NONE ? NULL :*/ PlrItem(pnum, pcursinvitem);
+    LogErrorF("D1Hero::getEquipmentImage 2 %d", INVLOC_HEAD);
 	is = &plr._pInvBody[INVLOC_HEAD];
 	if (is->_itype != ITYPE_NONE) {
 		InvDrawSlotBack(screen_x + InvRect[SLOTXY_HEAD_FIRST].X, screen_y + InvRect[SLOTXY_HEAD_LAST].Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
@@ -349,7 +352,7 @@ QImage D1Hero::getEquipmentImage() const
 
         draw_item_placeholder("helm", pi == is, screen_x + InvRect[SLOTXY_HEAD_FIRST].X, screen_y + InvRect[SLOTXY_HEAD_LAST].Y, cCels, frame, frame_width);
     }
-
+    LogErrorF("D1Hero::getEquipmentImage 3 %d", INVLOC_RING_LEFT);
 	is = &plr._pInvBody[INVLOC_RING_LEFT];
 	if (is->_itype != ITYPE_NONE) {
 		InvDrawSlotBack(screen_x + InvRect[SLOTXY_RING_LEFT].X, screen_y + InvRect[SLOTXY_RING_LEFT].Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
@@ -364,7 +367,7 @@ QImage D1Hero::getEquipmentImage() const
 
         draw_item_placeholder("left ring", pi == is, screen_x + InvRect[SLOTXY_RING_LEFT].X, screen_y + InvRect[SLOTXY_RING_LEFT].Y, cCels, frame, frame_width);
 	}
-
+    LogErrorF("D1Hero::getEquipmentImage 4 %d", INVLOC_RING_RIGHT);
 	is = &plr._pInvBody[INVLOC_RING_RIGHT];
 	if (is->_itype != ITYPE_NONE) {
 		InvDrawSlotBack(screen_x + InvRect[SLOTXY_RING_RIGHT].X, screen_y + InvRect[SLOTXY_RING_RIGHT].Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
@@ -379,7 +382,7 @@ QImage D1Hero::getEquipmentImage() const
 
         draw_item_placeholder("right ring", pi == is, screen_x + InvRect[SLOTXY_RING_RIGHT].X, screen_y + InvRect[SLOTXY_RING_RIGHT].Y, cCels, frame, frame_width);
 	}
-
+    LogErrorF("D1Hero::getEquipmentImage 5 %d", INVLOC_AMULET);
 	is = &plr._pInvBody[INVLOC_AMULET];
 	if (is->_itype != ITYPE_NONE) {
 		InvDrawSlotBack(screen_x + InvRect[SLOTXY_AMULET].X, screen_y + InvRect[SLOTXY_AMULET].Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
@@ -394,7 +397,7 @@ QImage D1Hero::getEquipmentImage() const
 
         draw_item_placeholder("amulet", pi == is, screen_x + InvRect[SLOTXY_AMULET].X, screen_y + InvRect[SLOTXY_AMULET].Y, cCels, frame, frame_width);
 	}
-
+    LogErrorF("D1Hero::getEquipmentImage 6 %d", INVLOC_HAND_LEFT);
 	is = &plr._pInvBody[INVLOC_HAND_LEFT];
 	if (is->_itype != ITYPE_NONE) {
 		InvDrawSlotBack(screen_x + InvRect[SLOTXY_HAND_LEFT_FIRST].X, screen_y + InvRect[SLOTXY_HAND_LEFT_LAST].Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
@@ -446,7 +449,7 @@ QImage D1Hero::getEquipmentImage() const
 
         draw_item_placeholder("weapon", pi == is, screen_x + InvRect[SLOTXY_HAND_LEFT_FIRST].X + dx, screen_y + InvRect[SLOTXY_HAND_LEFT_LAST].Y + dy, cCels, frame, frame_width);
 	}
-
+    LogErrorF("D1Hero::getEquipmentImage 7 %d", INVLOC_HAND_RIGHT);
 	is = &plr._pInvBody[INVLOC_HAND_RIGHT];
 	if (is->_itype != ITYPE_NONE) {
 		InvDrawSlotBack(screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
@@ -471,7 +474,7 @@ QImage D1Hero::getEquipmentImage() const
             draw_item_placeholder("shield", pi == is, screen_x + InvRect[SLOTXY_HAND_RIGHT_FIRST].X, screen_y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y, cCels, frame, frame_width);
         }
 	}
-
+    LogErrorF("D1Hero::getEquipmentImage 8 %d", INVLOC_CHEST);
 	is = &plr._pInvBody[INVLOC_CHEST];
 	if (is->_itype != ITYPE_NONE) {
 		InvDrawSlotBack(screen_x + InvRect[SLOTXY_CHEST_FIRST].X, screen_y + InvRect[SLOTXY_CHEST_LAST].Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);

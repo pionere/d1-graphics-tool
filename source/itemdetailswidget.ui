@@ -228,7 +228,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QGroupBox">
+       <widget class="QGroupBox" name="itemPropertiesBox">
         <layout class="QHBoxLayout" name="itemProperties"/>
        </widget>
       </item>
