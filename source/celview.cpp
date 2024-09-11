@@ -310,7 +310,7 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
     }
 }
 
-bool CelView::framePos(const QPoint &pos) const
+bool CelView::framePos(const QPoint &p) const
 {
     constexpr int INV_WIDTH = SPANEL_WIDTH; // same as D1Hero::getEquipmentImage
     constexpr int INV_HEIGHT = 178;
@@ -377,15 +377,86 @@ void CelView::toggleBottomPanel()
     this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
 }
 
+class ItemAction : QAction {
+    Q_OBJECT
+
+public:
+    explicit QAction(D1Hero *hero, int ii, const QString &text, int pi);
+
+private slots:
+    void on_action_triggered();
+private:
+    D1Hero *hero;
+    int ii;
+    int pi;
+}
+
+ItemAction::ItemAction(D1Hero *h, int ii, const QString &text, int pi)
+    : QAction()
+    , hero(h)
+    , idx(ii)
+{
+    setText(text);
+    QObject::connect(this, SIGNAL(triggered()), this, SLOT(on_action_triggered()));
+}
+
+void ItemAction::on_action_triggered()
+{
+    this->hero->swapItem(ii, pi);
+
+    dMainWindow().updateWindow();
+}
+
 void CelView::ShowContextMenu(const QPoint &pos)
 {
-    /*MainWindow *mw = &dMainWindow();
-    QAction actions[8];
+    int ii = this->hoverItem;
+    if (ii != INVITEM_NONE) {
+        QList<QAction*> actions;
 
-    QMenu contextMenu(this);
-    contextMenu.setToolTipsVisible(true);
+        for (int i = INVITEM_INV_FIRST; i < NUM_INVELEM; i++) {
+            const ItemStruct* is = this->hero->item(i);
+            if (is->_itype == ITYPE_NONE || is->_itype == ITYPE_PLACEHOLDER) {
+                continue;
+            }
+            switch (ii) {
+            case INVITEM_HEAD:
+                if (is->_iLoc != ILOC_HELM)
+                    continue;
+                break;
+            case INVITEM_RING_LEFT:
+            case INVITEM_RING_RIGHT:
+                if (is->_iLoc != ILOC_RING)
+                    continue;
+                break;
+            case INVITEM_AMULET:
+                if (is->_iLoc != ILOC_AMULET)
+                    continue;
+                break;
+            case INVITEM_HAND_LEFT:
+                if (is->_iLoc != ILOC_ONEHAND && is->_iLoc != ILOC_TWOHAND)
+                    continue;
+                break;
+            case INVITEM_HAND_RIGHT:
+                if (is->_iLoc != ILOC_ONEHAND)
+                    continue;
+                break;
+            case INVITEM_CHEST:
+                if (is->_iLoc != ILOC_ARMOR)
+                    continue;
+                break;
+            }
+            ItemAction *action = new ItemAction(this->hero, ii, ItemName(is), i);
+            actions.append(action);
+        }
+        if (!actions.isEmpty()) {
+            QMenu contextMenu(this);
+            contextMenu.setToolTipsVisible(true);
+            contextMenu.addActions(actions);
+            contextMenu.exec(mapToGlobal(pos));
+        }
 
-    contextMenu.exec(mapToGlobal(pos));*/
+        qDeleteAll(actions);
+    }
 }
 
 void CelView::on_framesGroupCheckBox_clicked()

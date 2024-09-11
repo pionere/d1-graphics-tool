@@ -205,13 +205,13 @@ void ItemDetailsWidget::on_submitButton_clicked()
     } else if (ii == -2) {
         ii = this->invIdx;
     }
-    LogErrorF("ItemDetailsWidget swap %d:%d", this->invIdx, ii);
+    //LogErrorF("ItemDetailsWidget swap %d:%d", this->invIdx, ii);
     this->hero->swapItem(this->invIdx, ii);
 
     this->setVisible(false);
-    LogErrorF("ItemDetailsWidget swap 2");
+    //LogErrorF("ItemDetailsWidget swap 2");
     dMainWindow().updateWindow();
-    LogErrorF("ItemDetailsWidget swap 3");
+    //LogErrorF("ItemDetailsWidget swap 3");
 }
 
 void ItemDetailsWidget::on_cancelButton_clicked()

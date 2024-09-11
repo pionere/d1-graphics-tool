@@ -778,7 +778,7 @@ int D1Hero::getSkillLvl(int sn) const
     return players[this->pnum]._pSkillLvlBase[sn];
 }
 
-void D1Hero::setSkillLvl(int sn, int level) const
+void D1Hero::setSkillLvl(int sn, int level)
 {
     if (players[this->pnum]._pSkillLvlBase[sn] == level)
         return;
