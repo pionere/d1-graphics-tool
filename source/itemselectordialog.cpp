@@ -100,7 +100,7 @@ void ItemSelectorDialog::initialize(D1Hero *h, int ii)
     }
 
     int idx = locComboBox->findData(QVariant::fromValue((item_equip_type)this->is->_iLoc));
-    QMessageBox::critical(this, "Error", tr("Loc %1 idx%2 ii %3 wth%4.").arg(this->is->_iLoc).arg(idx).arg(ii).arg(this->is->_iLoc == ILOC_ONEHAND));
+    // QMessageBox::critical(this, "Error", tr("Loc %1 idx%2 ii %3 wth%4.").arg(this->is->_iLoc).arg(idx).arg(ii).arg(this->is->_iLoc == ILOC_ONEHAND));
     if (idx < 0) idx = 0;
     locComboBox->setCurrentIndex(idx);
 
@@ -116,7 +116,7 @@ void ItemSelectorDialog::updateFilters()
     typeComboBox->clear();
     idxComboBox->clear();
 
-    QMessageBox::critical(this, "Error", tr("updateFilters loc %1.").arg(locComboBox->currentData().value<int>()));
+    // QMessageBox::critical(this, "Error", tr("updateFilters loc %1.").arg(locComboBox->currentData().value<int>()));
     int iloc = locComboBox->currentData().value<int>();
     switch (iloc) {
     case ILOC_HELM:
@@ -171,19 +171,18 @@ void ItemSelectorDialog::updateFilters()
     }
 
     int idx = typeComboBox->findData(QVariant::fromValue((item_type)this->itemType));
-    QMessageBox::critical(this, "Error", tr("updateFilters type %1 val %2 - %d.").arg(this->itemType).arg(idx).arg(this->itemType == ITYPE_AMULET));
-    for (int i = 0; i < typeComboBox->count(); i++) {
-        int tv = typeComboBox->currentData().value<int>();
-        if (tv == this->itemType && idx != i) {
-            QMessageBox::critical(this, "Error", tr("Fuck you!!!!!"));
-        }
-    }
+    // QMessageBox::critical(this, "Error", tr("updateFilters type %1 val %2 - %3.").arg(this->itemType).arg(idx).arg(this->itemType == ITYPE_AMULET));
+    // for (int i = 0; i < typeComboBox->count(); i++) {
+    //     int tv = typeComboBox->currentData().value<int>();
+    //     if (tv == this->itemType && idx != i) {
+    //         QMessageBox::critical(this, "Error", tr("Fuck you!!!!!"));
+    //     }
+    // }
     if (idx < 0) idx = 0;
     typeComboBox->setCurrentIndex(idx);
 
-    
     int itype = typeComboBox->currentData().value<int>();
-    QMessageBox::critical(this, "Error", tr("updateFilters filter idx by loc %1 type %2.").arg(iloc).arg(itype));
+    // QMessageBox::critical(this, "Error", tr("updateFilters filter idx by loc %1 type %2.").arg(iloc).arg(itype));
     for (int i = 0; i < NUM_IDI; ++i) {
         const ItemData &id = AllItemsList[i];
         //if (id.iClass != this->is->_iClass) {
@@ -314,6 +313,7 @@ bool ItemSelectorDialog::recreateItem()
 
     RecreateItem(seed, wIdx, wCI);
 
+    items[MAXITEMS]._iIdentified = TRUE;
     memcpy(this->is, &items[MAXITEMS], sizeof(ItemStruct));
     return true;
 }

@@ -120,6 +120,8 @@ private slots:
     void on_heroClassComboBox_activated(int index);
     void on_heroLevelEdit_returnPressed();
     void on_heroLevelEdit_escPressed();
+    void on_heroRankEdit_returnPressed();
+    void on_heroRankEdit_escPressed();
 
     void on_heroSkillsButton_clicked();
 

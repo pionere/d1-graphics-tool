@@ -23,7 +23,7 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
 
     // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
     int row = 0, column = 0;
-    constexpr int COLUMNS = 2;
+    constexpr int COLUMNS = 3;
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
         if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
             skillWidgets[sn] = nullptr;
@@ -33,6 +33,7 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
         QLabel *label = new QLabel(spelldata[sn].sNameText);
         this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
         skillWidgets[sn] = new LineEditWidget(this);
+        skillWidgets[sn]->setCharWidth(2);
         skillWidgets[sn]->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
         this->ui->heroSkillGridLayout->addWidget(skillWidgets[sn], row, 2 * column + 1);
 

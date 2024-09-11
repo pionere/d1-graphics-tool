@@ -543,6 +543,7 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
 void D1Hero::swapItem(int dst_ii, int src_ii)
 {
     if (SwapPlrItem(this->pnum, dst_ii, src_ii)) {
+        CalcPlrInv(this->pnum, false);
         this->modified = true;
     }
 }
@@ -849,7 +850,7 @@ int D1Hero::getBlockChance() const
 
 int D1Hero::getGetHit() const
 {
-    return players[this->pnum]._pIGetHit;
+    return players[this->pnum]._pIGetHit >> 6;
 }
 
 int D1Hero::getLifeSteal() const

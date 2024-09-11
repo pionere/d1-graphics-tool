@@ -164,6 +164,7 @@ CelView::CelView(QWidget *parent)
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->heroNameEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroNameEdit_escPressed()));
     QObject::connect(this->ui->heroLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroLevelEdit_escPressed()));
+    QObject::connect(this->ui->heroRankEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroRankEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -241,6 +242,7 @@ void CelView::updateFields()
     this->ui->heroClassComboBox->setCurrentIndex(hc);
 
     this->ui->heroLevelEdit->setText(QString::number(this->hero->getLevel()));
+    this->ui->heroRankEdit->setText(QString::number(this->hero->getRank()));
 
     int statPts = this->hero->getStatPoints();
     this->ui->heroStatPtsLabel->setText(QString::number(statPts));
@@ -527,6 +529,24 @@ void CelView::on_heroLevelEdit_escPressed()
     // update heroLevelEdit
     this->updateFields();
     this->ui->heroLevelEdit->clearFocus();
+}
+
+void CelView::on_heroRankEdit_returnPressed()
+{
+    int rank = this->ui->heroRankEdit->text().toShort();
+
+    if (rank >= 0 && rank <= 3) {
+        this->hero->setRank(rank);
+    }
+
+    this->on_heroRankEdit_escPressed();
+}
+
+void CelView::on_heroRankEdit_escPressed()
+{
+    // update heroRankEdit
+    this->updateFields();
+    this->ui->heroRankEdit->clearFocus();
 }
 
 void CelView::on_heroSkillsButton_clicked()

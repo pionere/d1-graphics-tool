@@ -84,6 +84,7 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
         // LogErrorF("ItemDetailsWidget init 4 %s (%d) %d", ItemName(is), is->_itype, i);
         itemsComboBox->addItem(ItemName(is), QVariant::fromValue(i));
     }
+    itemsComboBox->adjustSize();
     // LogErrorF("ItemDetailsWidget init 5");
     this->updateFields();
     // LogErrorF("ItemDetailsWidget init 6");
