@@ -360,14 +360,14 @@ void ItemSelectorDialog::updateFields()
 
     int si;
     si = 0;
-    for (AffixData *pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++) {
+    for (const AffixData *pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++) {
         if ((flgs & pres->PLIType)
 			 && pres->PLRanges[range].from <= lvl && pres->PLRanges[range].to >= lvl) {
             preComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(pres)).arg(pres->PLParam1).arg(pres->PLParam2), QVariant::fromValue(si));
         }
     }
     si = 0;
-    for (AffixData *sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++) {
+    for (const AffixData *sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++) {
         if ((flgs & sufs->PLIType)
 			 && sufs->PLRanges[range].from <= lvl && sufs->PLRanges[range].to >= lvl) {
             sufComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(sufs)).arg(sufs->PLParam1).arg(sufs->PLParam2), QVariant::fromValue(si));
@@ -476,14 +476,14 @@ start:
     RecreateItem(seed, wIdx, wCI);
 
     if (preIdx >= 0) {
-        AffixData *affix = &PL_Prefix[preIdx];
+        const AffixData *affix = &PL_Prefix[preIdx];
         if (items[MAXITEMS]._iPrePower != affix->PLPower)
             goto restart;
         if (items[MAXITEMS]._ix < affix->PLParam1 || items[MAXITEMS]._ix > affix->PLParam2)
             goto restart;
     }
     if (sufIdx >= 0) {
-        AffixData *affix = &PL_Suffix[sufIdx];
+        const AffixData *affix = &PL_Suffix[sufIdx];
         if (items[MAXITEMS]._iSufPower != affix->PLPower)
             goto restart;
         if (items[MAXITEMS]._iy < affix->PLParam1 || items[MAXITEMS]._iy > affix->PLParam2)

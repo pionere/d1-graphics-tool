@@ -181,7 +181,7 @@ void MonsterDetailsWidget::updateFields()
     else
         InitLvlMonster(type, lvl, numplrs, difficulty, lvlbonus);
 
-    MonsterStruct *mon = monsters[0];
+    MonsterStruct *mon = &monsters[0];
 
     const char* color = "black";
     if (mon->_mNameColor == COL_BLUE)
