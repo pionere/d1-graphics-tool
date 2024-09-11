@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include <QAction>
 #include <QDebug>
 #include <QFileInfo>
 #include <QGraphicsPixmapItem>

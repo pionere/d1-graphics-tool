@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QAction>
 #include <QContextMenuEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -69,9 +70,11 @@ class ItemAction : public QAction {
 
 public:
     explicit QAction(D1Hero *hero, int ii, const QString &text, int pi);
+    ~QAction() = default;
 
 private slots:
     void on_action_triggered();
+
 private:
     D1Hero *hero;
     int ii;
