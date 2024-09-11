@@ -288,7 +288,7 @@ void MainWindow::heroSkillsClicked()
     this->sideView->showHeroSkills(this->hero);
 }
 
-void MainWindow::heroSkillsClicked()
+void MainWindow::heroMonstersClicked()
 {
     this->sideView->showMonsters(this->hero);
 }

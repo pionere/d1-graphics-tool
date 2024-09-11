@@ -331,7 +331,7 @@ void ItemSelectorDialog::updateFields()
     }
     int ci = this->is->_iCreateInfo;
     this->ui->itemSeedEdit->setText(QString::number(this->is->_iSeed));
-    this->ui->itemLevelEdit->setText(QString::number( & CF_LEVEL));
+    this->ui->itemLevelEdit->setText(QString::number(ci & CF_LEVEL));
     static_assert(((int)CF_TOWN & ((1 << 8) - 1)) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted I.");
     static_assert((((int)CF_TOWN >> 8) & ((((int)CF_TOWN >> 8) + 1))) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted II.");
     this->ui->itemSourceComboBox->setCurrentIndex((ci & CF_TOWN) >> 8);

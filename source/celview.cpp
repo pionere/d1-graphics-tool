@@ -516,13 +516,13 @@ void CelView::on_heroClassComboBox_activated(int index)
     this->updateFields();
 }
 
-void on_heroDecLevelButton_clicked()
+void CelView::on_heroDecLevelButton_clicked()
 {
     this->hero->setLevel(this->hero->getLevel() - 1);
     this->updateFields();
 }
 
-void on_heroIncLevelButton_clicked()
+void CelView::on_heroIncLevelButton_clicked()
 {
     this->hero->setLevel(this->hero->getLevel() + 1);
     this->updateFields();

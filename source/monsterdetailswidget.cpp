@@ -17,7 +17,6 @@
 MonsterDetailsWidget::MonsterDetailsWidget(SidePanelWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MonsterDetailsWidget())
-    , view(parent)
 {
     ui->setupUi(this);
 }
@@ -251,7 +250,7 @@ void MonsterDetailsWidget::on_dunLevelEdit_escPressed()
 {
     // update dunLevelEdit
     this->updateFields();
-    this->ui->heroRankEdit->clearFocus();
+    this->ui->dunLevelEdit->clearFocus();
 }
 
 void MonsterDetailsWidget::on_dunLevelBonusEdit_returnPressed()
@@ -265,7 +264,7 @@ void MonsterDetailsWidget::on_dunLevelBonusEdit_escPressed()
 {
     // update dunLevelBonusEdit
     this->updateFields();
-    this->ui->heroRankEdit->clearFocus();
+    this->ui->dunLevelBonusEdit->clearFocus();
 }
 
 void MonsterDetailsWidget::on_plrCountSpinBox_valueChanged(int value)

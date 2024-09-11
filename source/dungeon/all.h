@@ -31,6 +31,7 @@
 #include "monster.h"
 #include "pack.h"
 #include "player.h"
+#include "questdat.h"
 #include "spelldat.h"
 
 #endif /* __ALL_H__ */

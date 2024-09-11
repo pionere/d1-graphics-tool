@@ -83,6 +83,7 @@ set(PROJECT_SOURCES
         source/dungeon/monster.cpp
         source/dungeon/pack.cpp
         source/dungeon/player.cpp
+        source/dungeon/questdat.cpp
         source/dungeon/spelldat.cpp
         source/itemdetailswidget.cpp
         source/itemdetailswidget.h
