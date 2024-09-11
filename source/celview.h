@@ -69,8 +69,8 @@ class ItemAction : public QAction {
     Q_OBJECT
 
 public:
-    explicit QAction(D1Hero *hero, int ii, const QString &text, int pi);
-    ~QAction() = default;
+    explicit ItemAction(D1Hero *hero, int ii, const QString &text, int pi);
+    ~ItemAction() = default;
 
 private slots:
     void on_action_triggered();
