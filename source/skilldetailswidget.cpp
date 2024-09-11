@@ -62,6 +62,8 @@ void SkillDetailsWidget::updateFields()
     // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
     for (int s = 0; s < NUM_SPELLS; s++) {
         skillWidgets[s]->setText(QString::number(this->skills[s]));
+        GetSkillDesc(this->hero, this->skills[s]);
+        skillWidgets[s]->setToolTip(infostr);
     }
 }
 

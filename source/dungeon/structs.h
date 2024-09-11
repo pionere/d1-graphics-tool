@@ -378,6 +378,21 @@ typedef struct PlayerStruct {
 } PlayerStruct;
 
 //////////////////////////////////////////////////
+// missiles
+//////////////////////////////////////////////////
+
+typedef struct MisFileData {
+	int mfAnimFAmt;
+	const char* mfName;
+	const char* mfAnimTrans;
+	int mfFlags; // missile_anim_flags
+	BYTE mfAnimFrameLen[16];
+	BYTE mfAnimLen[16];
+	int mfAnimWidth;
+	int mfAnimXOffset; // could be calculated
+} MisFileData;
+
+//////////////////////////////////////////////////
 // monster
 //////////////////////////////////////////////////
 

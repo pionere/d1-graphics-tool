@@ -25,6 +25,8 @@
 #include "itemdat.h"
 #include "items.h"
 #include "lighting.h"
+#include "misdat.h"
+#include "missiles.h"
 #include "monstdat.h"
 #include "monster.h"
 #include "pack.h"

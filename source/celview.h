@@ -79,7 +79,7 @@ private:
     D1Hero *hero;
     int ii;
     int pi;
-}
+};
 
 class CelView : public QWidget {
     Q_OBJECT
