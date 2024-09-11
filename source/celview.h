@@ -95,7 +95,7 @@ public:
     CelScene *getCelScene() const;
 
     void framePixelClicked(const QPoint &pos, int flags);
-    void framePixelHovered(const QPoint &pos) const;
+    void framePixelHovered(const QPoint &pos);
 
     void displayFrame();
     void toggleBottomPanel();

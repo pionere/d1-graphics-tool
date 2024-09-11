@@ -321,7 +321,7 @@ bool CelView::framePos(const QPoint &p) const
     return true;
 }
 
-void CelView::framePixelHovered(const QPoint &pos) const
+void CelView::framePixelHovered(const QPoint &pos)
 {
     QPoint tpos = pos;
     int idx = this->invItemIdx(tpos);
