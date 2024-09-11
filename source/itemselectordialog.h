@@ -39,6 +39,9 @@ private slots:
     void on_itemSourceComboBox_activated(int index);
     void on_itemQualityComboBox_activated(int index);
 
+    void on_itemPrefixComboBox_activated(int index);
+    void on_itemSuffixComboBox_activated(int index);
+
     void on_generateButton_clicked();
 
     void on_submitButton_clicked();
@@ -52,4 +55,7 @@ private:
     int invIdx;
     int itemType;
     ItemStruct *is = nullptr;
+
+    int wishPre;
+    int wishSuf;
 };

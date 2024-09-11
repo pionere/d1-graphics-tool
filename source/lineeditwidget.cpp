@@ -22,6 +22,10 @@ void LineEditWidget::setCharWidth(int value)
 
     maxWidth += margins.left() + margins.right();
 
+    const QMargins textmargins = this->textMargins();
+
+    maxWidth += textmargins.left() + textmargins.right();
+
     this->setMinimumWidth(maxWidth);
     this->setMaximumWidth(maxWidth);
 }

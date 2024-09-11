@@ -202,6 +202,118 @@ void ItemSelectorDialog::updateFilters()
     idxComboBox->setCurrentIndex(idx);
 }
 
+static int GetItemBonusFlags(int itype, int misc_id)
+{
+    int flgs = 0;
+	switch () {
+	case ITYPE_MISC:
+		if (items[ii]._iMiscId != IMISC_MAP)
+			break;
+		flgs = PLT_MAP;
+		break;
+	case ITYPE_SWORD:
+	case ITYPE_AXE:
+	case ITYPE_MACE:
+		flgs = PLT_MELEE;
+		break;
+	case ITYPE_BOW:
+		flgs = PLT_BOW;
+		break;
+	case ITYPE_SHIELD:
+		flgs = PLT_SHLD;
+		break;
+	case ITYPE_LARMOR:
+		flgs = PLT_ARMO | PLT_LARMOR;
+		break;
+	case ITYPE_HELM:
+		flgs = PLT_ARMO;
+		break;
+	case ITYPE_MARMOR:
+		flgs = PLT_ARMO | PLT_MARMOR;
+		break;
+	case ITYPE_HARMOR:
+		flgs = PLT_ARMO | PLT_HARMOR;
+		break;
+	case ITYPE_STAFF:
+		flgs = PLT_STAFF | PLT_CHRG;
+		break;
+	case ITYPE_GOLD:
+		break;
+	case ITYPE_RING:
+	case ITYPE_AMULET:
+		flgs = PLT_MISC;
+		break;
+	}
+    return flgs;
+}
+
+static QString AffixName(AffixData *affix)
+{
+    QString = "";
+    switch (affix->PLPower) {
+	case IPL_TOHIT: result = QApplication::tr("to hit"); break;
+	case IPL_DAMP: result = QApplication::tr("damage %"); break;
+	case IPL_TOHIT_DAMP: result = QApplication::tr("to hit + damage"); break;
+	case IPL_ACP: result = QApplication::tr("armor %"); break;
+	case IPL_FIRERES: result = QApplication::tr("fire res."); break;
+	case IPL_LIGHTRES: result = QApplication::tr("light res."); break;
+	case IPL_MAGICRES: result = QApplication::tr("magic res."); break;
+	case IPL_ACIDRES: result = QApplication::tr("acid res."); break;
+	case IPL_ALLRES: result = QApplication::tr("all res."); break;
+	case IPL_CRITP: result = QApplication::tr("crit. %"); break;
+	case IPL_SKILLLVL: result = QApplication::tr("skill"); break;
+	case IPL_SKILLLEVELS: result = QApplication::tr("skills"); break;
+	case IPL_CHARGES: result = QApplication::tr("charges"); break;
+	case IPL_FIREDAM: result = QApplication::tr("fire damage"); break;
+	case IPL_LIGHTDAM: result = QApplication::tr("lightning  damage"); break;
+	case IPL_MAGICDAM: result = QApplication::tr("magic damage"); break;
+	case IPL_ACIDDAM: result = QApplication::tr("acid damage"); break;
+	case IPL_STR: result = QApplication::tr("strength"); break;
+	case IPL_MAG: result = QApplication::tr("magic"); break;
+	case IPL_DEX: result = QApplication::tr("dexterity"); break;
+	case IPL_VIT: result = QApplication::tr("vitality"); break;
+	case IPL_ATTRIBS: result = QApplication::tr("attributes"); break;
+	case IPL_GETHIT: result = QApplication::tr("get hit"); break;
+	case IPL_LIFE: result = QApplication::tr("life"); break;
+	case IPL_MANA: result = QApplication::tr("mana"); break;
+	case IPL_DUR: result = QApplication::tr("durability +"); break;
+	case IPL_DUR_CURSE: result = QApplication::tr("durability -"); break;
+	case IPL_INDESTRUCTIBLE: result = QApplication::tr("indestructible"); break;
+	case IPL_LIGHT: result = QApplication::tr("light range"); break;
+	//case IPL_INVCURS: result = QApplication::tr("xxx"); break;
+	//case IPL_THORNS: result = QApplication::tr("xxx"); break;
+	case IPL_NOMANA: result = QApplication::tr("no mana"); break;
+	case IPL_KNOCKBACK: result = QApplication::tr("knockback"); break;
+	case IPL_STUN: result = QApplication::tr("stun"); break;
+	//case IPL_NOHEALMON: result = QApplication::tr("xxx"); break;
+	case IPL_NO_BLEED: result = QApplication::tr("no bleed"); break;
+	case IPL_BLEED: result = QApplication::tr("bleed"); break;
+	case IPL_STEALMANA: result = QApplication::tr("steal mana"); break;
+	case IPL_STEALLIFE: result = QApplication::tr("steal life"); break;
+	case IPL_PENETRATE_PHYS: result = QApplication::tr("penetrate phy."); break;
+	case IPL_FASTATTACK: result = QApplication::tr("attack speed"); break;
+	case IPL_FASTRECOVER: result = QApplication::tr("recovery speed"); break;
+	case IPL_FASTBLOCK: result = QApplication::tr("block speed"); break;
+	case IPL_DAMMOD: result = QApplication::tr("damage +"); break;
+	case IPL_SETDAM: result = QApplication::tr("damage *"); break;
+	case IPL_SETDUR: result = QApplication::tr("durability *"); break;
+	case IPL_NOMINSTR: result = QApplication::tr("no min. strength"); break;
+	case IPL_SPELL: result = QApplication::tr("spell"); break;
+	case IPL_ONEHAND: result = QApplication::tr("one handed"); break;
+	case IPL_ALLRESZERO: result = QApplication::tr("all res. zero"); break;
+	case IPL_DRAINLIFE: result = QApplication::tr("drain life"); break;
+	//case IPL_INFRAVISION: result = QApplication::tr("xxx"); break;
+	case IPL_SETAC: result = QApplication::tr("armor *"); break;
+	case IPL_ACMOD: result = QApplication::tr("armor +"); break;
+	case IPL_CRYSTALLINE: result = QApplication::tr("damage % durability -"); break;
+	case IPL_MANATOLIFE: result = QApplication::tr("mana to life"); break;     /* only used in hellfire */
+	case IPL_LIFETOMANA: result = QApplication::tr("life to mana"); break;     /* only used in hellfire */
+	case IPL_FASTCAST: result = QApplication::tr("cast speed"); break;
+	case IPL_FASTWALK: result = QApplication::tr("walk speed"); break;
+    }
+    return result;
+}
+
 void ItemSelectorDialog::updateFields()
 {
     // QComboBox *typeComboBox = this->ui->itemTypeComboBox;
@@ -217,19 +329,53 @@ void ItemSelectorDialog::updateFields()
         this->is->_iIdx = idx;
         this->is->_itype = ITYPE_NONE;
     }
+    int ci = this->is->_iCreateInfo;
     this->ui->itemSeedEdit->setText(QString::number(this->is->_iSeed));
-    this->ui->itemLevelEdit->setText(QString::number(this->is->_iCreateInfo & CF_LEVEL));
+    this->ui->itemLevelEdit->setText(QString::number( & CF_LEVEL));
     static_assert(((int)CF_TOWN & ((1 << 8) - 1)) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted I.");
     static_assert((((int)CF_TOWN >> 8) & ((((int)CF_TOWN >> 8) + 1))) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted II.");
-    this->ui->itemSourceComboBox->setCurrentIndex((this->is->_iCreateInfo & CF_TOWN) >> 8);
+    this->ui->itemSourceComboBox->setCurrentIndex((ci & CF_TOWN) >> 8);
     static_assert(((int)CF_DROP_QUALITY & ((1 << 11) - 1)) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted I.");
     static_assert((((int)CF_DROP_QUALITY >> 11) & ((((int)CF_DROP_QUALITY >> 11) + 1))) == 0, "ItemSelectorDialog hardcoded CF_DROP_QUALITY must be adjusted II.");
-    this->ui->itemQualityComboBox->setCurrentIndex((this->is->_iCreateInfo & CF_DROP_QUALITY) >> 11);
+    this->ui->itemQualityComboBox->setCurrentIndex((ci & CF_DROP_QUALITY) >> 11);
 
     this->itemProps->initialize(this->is);
     this->itemProps->adjustSize();
     this->ui->itemPropertiesBox->adjustSize();
     this->itemProps->setVisible(this->is->_itype != ITYPE_NONE);
+
+    // update whish-lists
+	int flgs = GetItemBonusFlags(this->is->_itype, this->is->_iMiscId);
+    int source = (ci & CF_TOWN) >> 8;
+    int range = source == CFL_NONE ? IAR_DROP : (source == CFL_CRAFTED ? IAR_CRAFT : IAR_SHOP);
+    int lvl = ci & CF_LEVEL;
+
+    QComboBox *preComboBox = this->ui->itemPrefixComboBox;
+    QComboBox *sufComboBox = this->ui->itemSuffixComboBox;
+    preComboBox->clear();
+    sufComboBox->clear();
+
+    preComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
+    sufComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
+
+    int si;
+    si = 0;
+    for (AffixData *pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++) {
+        if ((flgs & pres->PLIType)
+			 && pres->PLRanges[range].from <= lvl && pres->PLRanges[range].to >= lvl) {
+            preComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(pres)).arg(pres->PLParam1).arg(pres->PLParam2), QVariant::fromValue(si));
+        }
+    }
+    si = 0;
+    for (AffixData *sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++) {
+        if ((flgs & sufs->PLIType)
+			 && sufs->PLRanges[range].from <= lvl && sufs->PLRanges[range].to >= lvl) {
+            sufComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(sufs)).arg(sufs->PLParam1).arg(sufs->PLParam2), QVariant::fromValue(si));
+        }
+    }
+
+    preComboBox->setCurrentIndex(preComboBox->findData(this->wishPre));
+    sufComboBox->setCurrentIndex(sufComboBox->findData(this->wishSuf));
 }
 
 void ItemSelectorDialog::on_itemTypeComboBox_activated(int index)
@@ -290,6 +436,18 @@ void ItemSelectorDialog::on_itemSourceComboBox_activated(int index)
 void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
 {
     this->is->_iCreateInfo = (this->is->_iCreateInfo & ~CF_DROP_QUALITY) | (index << 11);
+    // this->updateFields();
+}
+
+void on_itemPrefixComboBox_activated(int index)
+{
+    this->wishPre = this->ui->itemIdxComboBox->currentData().value<int>();
+    // this->updateFields();
+}
+
+void on_itemSuffixComboBox_activated(int index)
+{
+    this->wishSuf = this->ui->itemIdxComboBox->currentData().value<int>();
     // this->updateFields();
 }
 

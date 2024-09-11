@@ -241,7 +241,10 @@ void CelView::updateFields()
     hc = this->hero->getClass();
     this->ui->heroClassComboBox->setCurrentIndex(hc);
 
-    this->ui->heroLevelEdit->setText(QString::number(this->hero->getLevel()));
+    bv = this->hero->getLevel();
+    this->ui->heroLevelEdit->setText(QString::number(bv));
+    this->ui->heroDecLevelButton->setEnabled(bv > 1);
+    this->ui->heroIncLevelButton->setEnabled(bv < MAXCHARLEVEL);
     this->ui->heroRankEdit->setText(QString::number(this->hero->getRank()));
 
     int statPts = this->hero->getStatPoints();
@@ -513,13 +516,23 @@ void CelView::on_heroClassComboBox_activated(int index)
     this->updateFields();
 }
 
+void on_heroDecLevelButton_clicked()
+{
+    this->hero->setLevel(this->hero->getLevel() - 1);
+    this->updateFields();
+}
+
+void on_heroIncLevelButton_clicked()
+{
+    this->hero->setLevel(this->hero->getLevel() + 1);
+    this->updateFields();
+}
+
 void CelView::on_heroLevelEdit_returnPressed()
 {
     int level = this->ui->heroLevelEdit->text().toShort();
 
-    if (level >= 1 && level <= MAXCHARLEVEL) {
-        this->hero->setLevel(level);
-    }
+    this->hero->setLevel(level);
 
     this->on_heroLevelEdit_escPressed();
 }

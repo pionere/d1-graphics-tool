@@ -622,6 +622,10 @@ int D1Hero::getStatPoints() const
 void D1Hero::setLevel(int level)
 {
     int dlvl;
+    if (level < 1)
+        level = 1;
+    if (level > MAXCHARLEVEL)
+        level = MAXCHARLEVEL;
     dlvl = level - players[this->pnum]._pLevel;
     if (dlvl == 0)
         return;
