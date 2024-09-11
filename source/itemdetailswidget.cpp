@@ -95,6 +95,7 @@ void ItemDetailsWidget::updateFields()
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
 
     int ii = itemsComboBox->currentData().value<int>();
+    this->ui->discardItemButton->setEnabled(ii >= 0);
     // LogErrorF("updateFields 0 %d", ii);
     const ItemStruct* pi = ii == -1 ? nullptr : (ii == -2 ? this->hero->item(this->invIdx) : this->hero->item(ii));
 
@@ -187,6 +188,19 @@ void ItemDetailsWidget::updateFields()
 void ItemDetailsWidget::on_invItemIndexComboBox_activated(int index)
 {
     this->updateFields();
+}
+
+void ItemDetailsWidget::on_discardItemButton_clicked()
+{
+    QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
+
+    int ii = itemsComboBox->currentData().value<int>();
+
+    this->hero->swapItem(ii, INVITEM_NONE);
+
+    // updateComboBox ...
+    this->initialize(this->hero, this->invIdx);
+    // dMainWindow().updateWindow();
 }
 
 void ItemDetailsWidget::on_addItemButton_clicked()

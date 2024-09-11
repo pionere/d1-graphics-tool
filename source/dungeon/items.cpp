@@ -2229,7 +2229,7 @@ ItemStruct* PlrItem(int pnum, int cii)
 	ItemStruct* pi;
 
 	if (cii <= INVITEM_INV_LAST) {
-		if (cii < INVITEM_INV_FIRST) {
+		if (cii < INVITEM_INV_FIRST) { // INVITEM_BODY_LAST
 			pi = &plr._pInvBody[cii];
 		} else {
 			pi = &plr._pInvList[cii - INVITEM_INV_FIRST];
@@ -2266,15 +2266,16 @@ bool SwapPlrItem(int pnum, int dst_ii, int src_ii)
         si = &items[MAXITEMS];
         si->_itype = ITYPE_NONE;
         // LogErrorF("SwapPlrItem swap 1 %d:%d", dst_ii, src_ii);
-        for (int ii = INVITEM_INV_FIRST; ii <= INVITEM_INV_LAST; ii++) {
-            ItemStruct *ci = PlrItem(pnum, ii);
-            if (ci->_itype == ITYPE_NONE) {
-                si = ci;
-                // LogErrorF("SwapPlrItem swap 2 %d", ii);
-                break;
+        if (dst_ii < INVITEM_INV_FIRST) { // INVITEM_BODY_LAST
+            for (int ii = INVITEM_INV_FIRST; ii <= INVITEM_INV_LAST; ii++) {
+                ItemStruct *ci = PlrItem(pnum, ii);
+                if (ci->_itype == ITYPE_NONE) {
+                    si = ci;
+                    // LogErrorF("SwapPlrItem swap 2 %d", ii);
+                    break;
+                }
             }
         }
-        
     }
 
     ItemStruct* di = PlrItem(pnum, dst_ii);

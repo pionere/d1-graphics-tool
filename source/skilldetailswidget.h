@@ -24,10 +24,6 @@ private:
     void updateFields();
 
 private slots:
-    void on_invSkillIndexComboBox_activated(int index);
-
-    void on_addSkillButton_clicked();
-
     void on_submitButton_clicked();
     void on_cancelButton_clicked();
 
