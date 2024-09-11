@@ -9,12 +9,15 @@
 #define OPPOSITE(x) (((x) + 4) & 7)
 
 extern MonsterStruct monsters[MAXMONSTERS];
-extern MapMonData mapMonTypes[MAX_LVLMTYPES];
-extern int nummtypes;
+// extern MapMonData mapMonTypes[MAX_LVLMTYPES];
+// extern int nummtypes;
 
-void InitLvlMonsters();
-void GetLevelMTypes();
-void InitMonster(int mnum, int dir, int mtidx, int x, int y);
+void InitUniqMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus);
+void InitLvlMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus);
+
+// void InitLvlMonsters();
+// void GetLevelMTypes();
+// void InitMonster(int mnum, int dir, int mtidx, int x, int y);
 
 inline void SetMonsterLoc(MonsterStruct* mon, int x, int y)
 {

@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MonsterDetailsWidget</class>
+ <widget class="QWidget">
+  <layout class="QVBoxLayout">
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QComboBox" name="monLocationComboBox">
+       <item>
+        <property name="text">
+         <string>Any</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L1) Cathedral</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L2) Catacombs</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L3) Caves</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L4) Hell</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L5) Crypt</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L6) Nest</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QComboBox" name="monTypeComboBox"/>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="LineEditWidget" name="dunLevelEdit">
+       <property name="charWidth">
+        <number>3</number>
+       </property>
+       <property name="toolTip">
+        <string>Dungeon Level</string>
+       </property>
+       <property name="alignment">
+        <enum>Qt::AlignCenter</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="plrCountSpinBox">
+       <item>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+       </item>
+       <item>
+        <property name="maximum">
+         <number>4</number>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="difficutlyComboBox">
+       <item>
+        <property name="text">
+         <string>Normal</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Nigthmare</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Hell</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="LineEditWidget" name="dunLevelBonusEdit">
+       <property name="charWidth">
+        <number>3</number>
+       </property>
+       <property name="toolTip">
+        <string>Dungeon Level Bonus</string>
+       </property>
+       <property name="alignment">
+        <enum>Qt::AlignCenter</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
+      <item row="1" column="0" colspan="4" alignment="Qt::AlignCenter">
+       <widget class="QLabel" name="monsterName"/>
+      </item>
+      <item row="2" column="0" colspan="4" alignment="Qt::AlignCenter">
+       <widget class="QLabel" name="monsterLevel"/>
+      </item>
+
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Status:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="monsterStatus"/>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;AI-Int:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QLabel" name="monsterInt"/>
+      </item>
+
+      <item row="4" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Damage:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="monsterDamage"/>
+      </item>
+      <item row="4" column="2">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;To Hit:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLabel" name="monsterHit"/>
+      </item>
+
+      <item row="5" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Damage2:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLabel" name="monsterDamage2"/>
+      </item>
+      <item row="5" column="2">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;To Hit2:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QLabel" name="monsterHit2"/>
+      </item>
+
+      <item row="6" column="2">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Magic Hit:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QLabel" name="monsterMagic"/>
+      </item>
+
+
+      <item row="7" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Hit Points:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLabel" name="monsterHp"/>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Armor:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QLabel" name="monsterArmorClass"/>
+      </item>
+      <item row="8" column="2">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Evasion:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <widget class="QLabel" name="monsterEvasion"/>
+      </item>
+
+      <item row="9" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Resists:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1" colspan="3">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QProgressBar" name="monsterResSlash">
+          <property name="fixedWidth">
+           <number>52</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="monsterResBlunt">
+          <property name="fixedWidth">
+           <number>52</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="monsterResPunct">
+          <property name="fixedWidth">
+           <number>52</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item row="10" column="1" colspan="3">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QProgressBar" name="monsterResFire">
+          <property name="fixedWidth">
+           <number>38</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="monsterResLight">
+          <property name="fixedWidth">
+           <number>38</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="monsterResMagic">
+          <property name="fixedWidth">
+           <number>38</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="monsterResAcid">
+          <property name="fixedWidth">
+           <number>38</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Flags:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1" colspan="3">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QCheckBox" name="monsterHiddenCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Hidden</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="monsterStealCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Steals life</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="monsterOpenCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Opens doors</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="monsterSearchCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Searches for enemy</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="monsterBleedCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Bleeds</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="monsterKnockbackCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Knocks back</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="monsterNoStoneCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Immune to stone curse</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="monsterGargCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Starts in a special mode</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="monsterNoDropCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>No loot</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+
+      <item row="12" column="0" colspan="2">
+       <widget class="QLabel">
+        <property name="text">
+         <string>&lt;b&gt;Xp Reward:&lt;/b&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="2">
+       <widget class="QLabel" name="monsterExp"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="closeButton">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

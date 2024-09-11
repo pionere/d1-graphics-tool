@@ -9,6 +9,8 @@
 
 #include "../progressdialog.h"
 
+/* Limit the number of (scattered) monster-types on the current level by the required resources (In CRYPT the values are not valid). */
+static int monstimgtot;
 /* Number of active monsters on the current level (minions are considered active). */
 int nummonsters;
 /* The data of the monsters on the current level. */
@@ -17,6 +19,16 @@ MonsterStruct monsters[MAXMONSTERS];
 MapMonData mapMonTypes[MAX_LVLMTYPES];
 /* The number of monster types on the current level. */
 int nummtypes;
+
+static_assert(MAX_LVLMTYPES <= UCHAR_MAX, "Monster-type indices are stored in a BYTE fields.");
+/* The number of skeleton-monster types on the current level. */
+BYTE numSkelTypes;
+/* The number of goat-monster types on the current level. */
+BYTE numGoatTypes;
+/* Skeleton-monster types on the current level. */
+BYTE mapSkelTypes[MAX_LVLMTYPES];
+/* Goat-monster types on the current level. */
+BYTE mapGoatTypes[MAX_LVLMTYPES];
 
 /* The next light-index to be used for the trn of a unique monster. */
 BYTE uniquetrans;
@@ -152,6 +164,52 @@ static void InitMonsterStats(int midx)
 	cmon->cmMinHP = (cmon->cmMinHP * mpl) >> 1;
 	cmon->cmMaxHP = (cmon->cmMaxHP * mpl) >> 1;
 	cmon->cmExp = (cmon->cmExp * mpl) >> 1;
+}
+
+static bool IsSkel(int mt)
+{
+	return (mt >= MT_WSKELAX && mt <= MT_XSKELAX)
+	    || (mt >= MT_WSKELBW && mt <= MT_XSKELBW)
+	    || (mt >= MT_WSKELSD && mt <= MT_XSKELSD);
+}
+
+static bool IsGoat(int mt)
+{
+	return (mt >= MT_NGOATMC && mt <= MT_GGOATMC)
+	    || (mt >= MT_NGOATBW && mt <= MT_GGOATBW);
+}
+
+static int AddMonsterType(int type, BOOL scatter)
+{
+	int i;
+
+	for (i = 0; i < nummtypes && mapMonTypes[i].cmType != type; i++)
+		;
+
+	if (i == nummtypes) {
+		nummtypes++;
+		assert(nummtypes <= MAX_LVLMTYPES);
+		if (IsGoat(type)) {
+			mapGoatTypes[numGoatTypes] = i;
+			numGoatTypes++;
+		}
+		if (IsSkel(type)) {
+			mapSkelTypes[numSkelTypes] = i;
+			numSkelTypes++;
+		}
+		mapMonTypes[i].cmType = type;
+		mapMonTypes[i].cmPlaceScatter = FALSE;
+		InitMonsterStats(i); // init stats first because InitMonsterGFX depends on it (cmFileNum)
+		InitMonsterGFX(i);
+		// InitMonsterSFX(i);
+	}
+
+	if (scatter && !mapMonTypes[i].cmPlaceScatter) {
+		mapMonTypes[i].cmPlaceScatter = TRUE;
+		monstimgtot -= monfiledata[monsterdata[type].moFileNum].moImage;
+	}
+
+	return i;
 }
 
 void InitLvlMonsters()
@@ -307,4 +365,23 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 //		mon->_mlid = AddLight(mon->_mx, mon->_my, MON_LIGHTRAD);
 //	}
 	return flags;
+}
+
+
+void InitLvlMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus)
+{
+    monstimgtot = MAX_LVLMIMAGE;
+    nummtypes = 0;
+    gnDifficulty = difficulty;
+    currLvl._dLevelPlyrs = numplrs;
+    currLvl._dLevelBonus = lvlbonus;
+    AddMonsterType(type, false);
+    InitMonster(MAX_MINIONS, 0, 0, 0, 0);
+    
+}
+
+void InitUniqMonster(int uniqindex, int lvl, int numplrs, int difficulty, int lvlbonus)
+{
+    InitLvlMonster(uniqMonData[uniqindex].mtype, lvl, numplrs, difficulty, lvlbonus);
+    InitUniqueMonster(MAX_MINIONS, uniqindex);
 }

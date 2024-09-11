@@ -1124,7 +1124,7 @@ static int PLVal(int pv, int p1, int p2, int minv, int maxv)
 	return rv;
 }
 
-static void SaveItemPower(int ii, int power, int param1, int param2, int minval, int maxval, int multval)
+static int SaveItemPower(int ii, int power, int param1, int param2, int minval, int maxval, int multval)
 {
 	ItemStruct* is;
 	int r, r2;
@@ -1142,8 +1142,8 @@ static void SaveItemPower(int ii, int power, int param1, int param2, int minval,
 		break;
 	case IPL_TOHIT_DAMP:
 		is->_iPLDam = r;
-		r = RandRangeLow(param1 >> 2, param2 >> 2);
-		is->_iPLToHit = r;
+		r2 = RandRangeLow(param1 >> 2, param2 >> 2);
+		is->_iPLToHit = r2;
 		break;
 	case IPL_ACP:
 		is->_iPLAC = r;
@@ -1358,6 +1358,7 @@ static void SaveItemPower(int ii, int power, int param1, int param2, int minval,
 	default:
 		ASSUME_UNREACHABLE
 	}
+    return r;
 }
 
 static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygood)
@@ -1397,7 +1398,7 @@ static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygo
 			pres = l[random_low(23, nl)];
 			items[ii]._iMagical = ITEM_QUALITY_MAGIC;
 			items[ii]._iPrePower = pres->PLPower;
-			SaveItemPower(
+			items[ii]._ix = SaveItemPower(
 			    ii,
 			    pres->PLPower,
 			    pres->PLParam1,
@@ -1423,7 +1424,7 @@ static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygo
 			sufs = l[random_low(23, nl)];
 			items[ii]._iMagical = ITEM_QUALITY_MAGIC;
 			items[ii]._iSufPower = sufs->PLPower;
-			SaveItemPower(
+			items[ii]._iy = SaveItemPower(
 			    ii,
 			    sufs->PLPower,
 			    sufs->PLParam1,

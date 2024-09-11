@@ -99,6 +99,9 @@ set(PROJECT_SOURCES
         source/mainwindow.cpp
         source/mainwindow.h
         source/mainwindow.ui
+        source/monsterdetailswidget.cpp
+        source/monsterdetailswidget.h
+        source/monsterdetailswidget.ui
         source/openasdialog.cpp
         source/openasdialog.h
         source/openasdialog.ui

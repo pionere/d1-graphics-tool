@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QSpinBox>
 #include <QWidget>
 
 #include "lineeditwidget.h"
@@ -33,6 +34,7 @@ private:
     SidePanelWidget *view;
 
     D1Hero *hero;
-    LineEditWidget *skillWidgets[64];
+    // LineEditWidget *skillWidgets[64];
+    QSpinBox *skillWidgets[64];
     int skills[64];
 };

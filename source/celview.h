@@ -126,6 +126,7 @@ private slots:
     void on_heroRankEdit_escPressed();
 
     void on_heroSkillsButton_clicked();
+    void on_heroMonstersButton_clicked();
 
     void on_heroDecLifeButton_clicked();
     void on_heroRestoreLifeButton_clicked();

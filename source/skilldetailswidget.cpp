@@ -32,8 +32,11 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
 
         QLabel *label = new QLabel(spelldata[sn].sNameText);
         this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
-        skillWidgets[sn] = new LineEditWidget(this);
-        skillWidgets[sn]->setCharWidth(2);
+        // skillWidgets[sn] = new LineEditWidget(this);
+        // skillWidgets[sn]->setCharWidth(2);
+        skillWidgets[sn] = new QSpinBox(this);
+        // skillWidgets[sn]->setMinimum(0);
+        skillWidgets[sn]->setMaximum(MAXSPLLEVEL);
         skillWidgets[sn]->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
         this->ui->heroSkillGridLayout->addWidget(skillWidgets[sn], row, 2 * column + 1);
 
@@ -76,7 +79,8 @@ void SkillDetailsWidget::updateFields()
         if (skillWidgets[sn] == nullptr)
             continue;
         int sm = this->skills[sn];
-        skillWidgets[sn]->setText(QString::number(sm));
+        // skillWidgets[sn]->setText(QString::number(sm));
+        skillWidgets[sn]->setValue(sm);
         if (sm <= 0) {
             skillWidgets[sn]->setToolTip("");
         } else {
@@ -92,11 +96,12 @@ void SkillDetailsWidget::on_submitButton_clicked()
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
         if (skillWidgets[sn] == nullptr)
             continue;
-        int lvl = skillWidgets[sn]->text().toInt();
-        if (lvl < 0)
-            lvl = 0;
-        if (lvl > MAXSPLLEVEL)
-            lvl = MAXSPLLEVEL;
+        // int lvl = skillWidgets[sn]->text().toInt();
+        int lvl = skillWidgets[sn]->value();
+        // if (lvl < 0)
+        //     lvl = 0;
+        // if (lvl > MAXSPLLEVEL)
+        //     lvl = MAXSPLLEVEL;
         this->hero->setSkillLvlBase(sn, lvl);
     }
 

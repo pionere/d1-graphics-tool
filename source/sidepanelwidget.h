@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 
 #include "itemdetailswidget.h"
+#include "monsterdetailswidget.h"
 #include "skilldetailswidget.h"
 
 class D1Hero;
@@ -24,6 +25,7 @@ public:
     void displayFrame();
     void showHeroItem(D1Hero *hero, int ii);
     void showHeroSkills(D1Hero *hero);
+    void showMonsters(D1Hero *hero);
 
 private:
     Ui::SidePanelWidget *ui;
@@ -31,5 +33,6 @@ private:
     int mode;
     D1Hero *hero;
     ItemDetailsWidget *itemDetails = nullptr;
-    SkillDetailsWidget *skillDetails = nullptr;    
+    SkillDetailsWidget *skillDetails = nullptr;
+    MonsterDetailsWidget *monsterDetails = nullptr;
 };

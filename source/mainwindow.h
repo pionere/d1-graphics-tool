@@ -95,6 +95,7 @@ public:
 
     void heroChanged(D1Hero *hero);
     void heroSkillsClicked();
+    void heroMonstersClicked();
     void heroItemClicked(int ii);
     void selectHeroItem(int ii);
     void addHeroItem(int ii, ItemStruct *is);

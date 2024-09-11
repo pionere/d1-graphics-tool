@@ -567,6 +567,11 @@ void CelView::on_heroSkillsButton_clicked()
     dMainWindow().heroSkillsClicked();
 }
 
+void CelView::on_heroMonstersButton_clicked()
+{
+    dMainWindow().heroMonstersClicked();
+}
+
 void CelView::on_heroDecLifeButton_clicked()
 {
     this->hero->decLife();

@@ -44,16 +44,22 @@ void SidePanelWidget::initialize(D1Hero *h, int m)
     QWidget *w;
     switch (this->mode) {
     case 0:
-        // if (this->itemDetails == nullptr) {
+        if (this->itemDetails == nullptr) {
             this->itemDetails = new ItemDetailsWidget(this);
-        // }
+        }
         w = this->itemDetails;
         break;
     case 1:
-        // if (this->itemDetails == nullptr) {
+        // if (this->skillDetails == nullptr) {
             this->skillDetails = new SkillDetailsWidget(this);
         // }
         w = this->skillDetails;
+        break;
+    case 2:
+        // if (this->monsterDetails == nullptr) {
+            this->monsterDetails = new MonsterDetailsWidget(this);
+        // }
+        w = this->monsterDetails;
         break;
     }
     layout->addWidget(w, 0, Qt::AlignTop);
@@ -83,4 +89,13 @@ void SidePanelWidget::showHeroSkills(D1Hero *h)
     // LogErrorF("SidePanelWidget::showHeroSkills 1 %d", ii);
     this->skillDetails->initialize(h);
     // LogErrorF("SidePanelWidget::showHeroSkills 2 %d", ii);
+}
+
+void SidePanelWidget::showMonsters(D1Hero *h)
+{
+    // LogErrorF("SidePanelWidget::showMonsters 0 %d", ii);
+    this->initialize(h, 2);
+    // LogErrorF("SidePanelWidget::showMonsters 1 %d", ii);
+    this->monsterDetails->initialize(h);
+    // LogErrorF("SidePanelWidget::showMonsters 2 %d", ii);
 }

@@ -205,9 +205,9 @@ void ItemSelectorDialog::updateFilters()
 static int GetItemBonusFlags(int itype, int misc_id)
 {
     int flgs = 0;
-	switch () {
+	switch (itype) {
 	case ITYPE_MISC:
-		if (items[ii]._iMiscId != IMISC_MAP)
+		if (misc_id != IMISC_MAP)
 			break;
 		flgs = PLT_MAP;
 		break;
@@ -249,7 +249,7 @@ static int GetItemBonusFlags(int itype, int misc_id)
 
 static QString AffixName(AffixData *affix)
 {
-    QString = "";
+    QString result = "";
     switch (affix->PLPower) {
 	case IPL_TOHIT: result = QApplication::tr("to hit"); break;
 	case IPL_DAMP: result = QApplication::tr("damage %"); break;
@@ -439,13 +439,13 @@ void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
     // this->updateFields();
 }
 
-void on_itemPrefixComboBox_activated(int index)
+void ItemSelectorDialog::on_itemPrefixComboBox_activated(int index)
 {
     this->wishPre = this->ui->itemIdxComboBox->currentData().value<int>();
     // this->updateFields();
 }
 
-void on_itemSuffixComboBox_activated(int index)
+void ItemSelectorDialog::on_itemSuffixComboBox_activated(int index)
 {
     this->wishSuf = this->ui->itemIdxComboBox->currentData().value<int>();
     // this->updateFields();
@@ -469,10 +469,38 @@ bool ItemSelectorDialog::recreateItem()
     int wCI = this->is->_iCreateInfo;
     int wIdx = this->is->_iIdx;
 
+    int preIdx = this->ui->itemPrefixComboBox->currentData().value<int>();
+    int sufIdx = this->ui->itemSuffixComboBox->currentData().value<int>();
+    int counter = 0;
+start:
     RecreateItem(seed, wIdx, wCI);
+
+    if (preIdx >= 0) {
+        AffixData *affix = &PL_Prefix[preIdx];
+        if (items[MAXITEMS]._iPrePower != affix->PLPower)
+            goto restart;
+        if (items[MAXITEMS]._ix < affix->PLParam1 || items[MAXITEMS]._ix > affix->PLParam2)
+            goto restart;
+    }
+    if (sufIdx >= 0) {
+        AffixData *affix = &PL_Suffix[sufIdx];
+        if (items[MAXITEMS]._iSufPower != affix->PLPower)
+            goto restart;
+        if (items[MAXITEMS]._iy < affix->PLParam1 || items[MAXITEMS]._iy > affix->PLParam2)
+            goto restart;
+    }
+    goto done;
+restart:
+    counter++;
+    seed = NextRndSeed();
+    goto start;
+done:
 
     items[MAXITEMS]._iIdentified = TRUE;
     memcpy(this->is, &items[MAXITEMS], sizeof(ItemStruct));
+    if (counter != 0) {
+        dProgress() << tr("Succeeded after %1 iterations.").arg(counter + 1);
+    }
     return true;
 }
 
