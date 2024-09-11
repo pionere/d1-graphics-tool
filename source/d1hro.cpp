@@ -775,10 +775,15 @@ int D1Hero::getAcidResist() const
 
 int D1Hero::getSkillLvl(int sn) const
 {
+    return players[this->pnum]._pSkillLvl[sn];
+}
+
+int D1Hero::getSkillLvlBase(int sn) const
+{
     return players[this->pnum]._pSkillLvlBase[sn];
 }
 
-void D1Hero::setSkillLvl(int sn, int level)
+void D1Hero::setSkillLvlBase(int sn, int level)
 {
     if (players[this->pnum]._pSkillLvlBase[sn] == level)
         return;

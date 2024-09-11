@@ -379,7 +379,8 @@ void CelView::toggleBottomPanel()
 ItemAction::ItemAction(D1Hero *h, int ii, const QString &text, int pi)
     : QAction()
     , hero(h)
-    , idx(ii)
+    , ii(ii)
+    , pi(pi)
 {
     setText(text);
     QObject::connect(this, SIGNAL(triggered()), this, SLOT(on_action_triggered()));
@@ -387,7 +388,7 @@ ItemAction::ItemAction(D1Hero *h, int ii, const QString &text, int pi)
 
 void ItemAction::on_action_triggered()
 {
-    this->hero->swapItem(ii, pi);
+    this->hero->swapItem(this->ii, this->pi);
 
     dMainWindow().updateWindow();
 }

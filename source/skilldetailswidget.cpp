@@ -24,11 +24,11 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
     // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
     int row = 0, column = 0;
     constexpr int COLUMNS = 2;
-    for (int s = 0; s < NUM_SPELLS; s++) {
-        QLabel *label = new QLabel(spelldata[s].sNameText);
+    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        QLabel *label = new QLabel(spelldata[sn].sNameText);
         this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
-        skillWidgets[s] = new LineEditWidget(this);
-        this->ui->heroSkillGridLayout->addWidget(skillWidgets[s], row, 2 * column + 1);
+        skillWidgets[sn] = new LineEditWidget(this);
+        this->ui->heroSkillGridLayout->addWidget(skillWidgets[sn], row, 2 * column + 1);
 
         if (++column == COLUMNS) {
             row++;
@@ -47,8 +47,8 @@ void SkillDetailsWidget::initialize(D1Hero *h)
     this->hero = h;
 
     // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
-    for (int s = 0; s < NUM_SPELLS; s++) {
-        this->skills[s] = this->hero->getSkillLvl(s);
+    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        this->skills[sn] = this->hero->getSkillLvlBase(sn);
     }
 
     // LogErrorF("SkillDetailsWidget init 5");
@@ -60,22 +60,23 @@ void SkillDetailsWidget::initialize(D1Hero *h)
 void SkillDetailsWidget::updateFields()
 {
     // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
-    for (int s = 0; s < NUM_SPELLS; s++) {
-        skillWidgets[s]->setText(QString::number(this->skills[s]));
-        GetSkillDesc(this->hero, this->skills[s]);
-        skillWidgets[s]->setToolTip(infostr);
+    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        skillWidgets[sn]->setText(QString::number(this->skills[sn]));
+        int sm = this->hero->getSkillLvl(sn) - this->hero->getSkillLvlBase(sn);
+        GetSkillDesc(this->hero, sn, this->skills[sn] + sm);
+        skillWidgets[sn]->setToolTip(infostr);
     }
 }
 
 void SkillDetailsWidget::on_submitButton_clicked()
 {
-    for (int s = 0; s < NUM_SPELLS; s++) {
-        int lvl = skillWidgets[s]->text().toInt();
+    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        int lvl = skillWidgets[sn]->text().toInt();
         if (lvl < 0)
             lvl = 0;
         if (lvl > MAXSPLLEVEL)
             lvl = MAXSPLLEVEL;
-        this->hero->setSkillLvl(s, lvl);
+        this->hero->setSkillLvlBase(sn, lvl);
     }
 
     this->setVisible(false);

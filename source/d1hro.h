@@ -77,7 +77,8 @@ public:
     int getAcidResist() const;
 
     int getSkillLvl(int sn) const;
-    void setSkillLvl(int sn, int level);
+    int getSkillLvlBase(int sn) const;
+    void setSkillLvlBase(int sn, int level);
 
 	/*
 	BYTE _pRank;
