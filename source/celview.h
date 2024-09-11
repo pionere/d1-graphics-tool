@@ -64,6 +64,20 @@ private:
     QPoint lastPos;
 };
 
+class ItemAction : public QAction {
+    Q_OBJECT
+
+public:
+    explicit QAction(D1Hero *hero, int ii, const QString &text, int pi);
+
+private slots:
+    void on_action_triggered();
+private:
+    D1Hero *hero;
+    int ii;
+    int pi;
+}
+
 class CelView : public QWidget {
     Q_OBJECT
 
@@ -76,7 +90,6 @@ public:
     void setHero(D1Hero *hero);
 
     CelScene *getCelScene() const;
-    int getCurrentFrameIndex() const;
 
     void framePixelClicked(const QPoint &pos, int flags);
     void framePixelHovered(const QPoint &pos) const;

@@ -377,20 +377,6 @@ void CelView::toggleBottomPanel()
     this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
 }
 
-class ItemAction : QAction {
-    Q_OBJECT
-
-public:
-    explicit QAction(D1Hero *hero, int ii, const QString &text, int pi);
-
-private slots:
-    void on_action_triggered();
-private:
-    D1Hero *hero;
-    int ii;
-    int pi;
-}
-
 ItemAction::ItemAction(D1Hero *h, int ii, const QString &text, int pi)
     : QAction()
     , hero(h)
