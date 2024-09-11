@@ -247,7 +247,7 @@ static int GetItemBonusFlags(int itype, int misc_id)
     return flgs;
 }
 
-static QString AffixName(AffixData *affix)
+static QString AffixName(const AffixData *affix)
 {
     QString result = "";
     switch (affix->PLPower) {
