@@ -33,7 +33,7 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
         QLabel *label = new QLabel(spelldata[sn].sNameText);
         this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
         skillWidgets[sn] = new LineEditWidget(this);
-        skillWidgets[sn].setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
+        skillWidgets[sn]->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
         this->ui->heroSkillGridLayout->addWidget(skillWidgets[sn], row, 2 * column + 1);
 
         if (++column == COLUMNS) {
