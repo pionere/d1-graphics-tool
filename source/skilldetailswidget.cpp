@@ -25,9 +25,15 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
     int row = 0, column = 0;
     constexpr int COLUMNS = 2;
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
+            skillWidgets[sn] = nullptr;
+            continue;
+        }
+
         QLabel *label = new QLabel(spelldata[sn].sNameText);
         this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
         skillWidgets[sn] = new LineEditWidget(this);
+        skillWidgets[sn].setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
         this->ui->heroSkillGridLayout->addWidget(skillWidgets[sn], row, 2 * column + 1);
 
         if (++column == COLUMNS) {
@@ -57,20 +63,34 @@ void SkillDetailsWidget::initialize(D1Hero *h)
     this->setVisible(true);
 }
 
+void SkillDetailsWidget::displayFrame()
+{
+    this->updateFields();
+}
+
 void SkillDetailsWidget::updateFields()
 {
     // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
-        skillWidgets[sn]->setText(QString::number(this->skills[sn]));
-        int sm = this->hero->getSkillLvl(sn) - this->hero->getSkillLvlBase(sn);
-        GetSkillDesc(this->hero, sn, this->skills[sn] + sm);
-        skillWidgets[sn]->setToolTip(infostr);
+        if (skillWidgets[sn] == nullptr)
+            continue;
+        int sm = this->skills[sn];
+        skillWidgets[sn]->setText(QString::number(sm));
+        if (sm <= 0) {
+            skillWidgets[sn]->setToolTip("");
+        } else {
+            sm += this->hero->getSkillLvl(sn) - this->hero->getSkillLvlBase(sn);
+            GetSkillDesc(this->hero, sn, this->skills[sn] + sm);
+            skillWidgets[sn]->setToolTip(infostr);
+        }
     }
 }
 
 void SkillDetailsWidget::on_submitButton_clicked()
 {
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        if (skillWidgets[sn] == nullptr)
+            continue;
         int lvl = skillWidgets[sn]->text().toInt();
         if (lvl < 0)
             lvl = 0;

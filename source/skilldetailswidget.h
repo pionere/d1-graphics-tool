@@ -19,6 +19,7 @@ public:
     ~SkillDetailsWidget();
 
     void initialize(D1Hero *hero);
+    void displayFrame();
 
 private:
     void updateFields();

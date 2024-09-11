@@ -150,6 +150,7 @@ void MainWindow::updateWindow()
     // update menu options
 
     // update the view
+    this->sideView->displayFrame();
     if (this->celView != nullptr) {
         // this->celView->updateFields();
         this->celView->displayFrame();

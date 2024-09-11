@@ -130,24 +130,80 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="LineEditWidget" name="heroLevelEdit">
-        <property name="charWidth">
-         <number>2</number>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel">
-        <property name="text">
-         <string>Stat Points:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLabel" name="heroStatPtsLabel"/>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QPushButton" name="heroDecLevelButton">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="toolTip">
+           <string>Decrease level</string>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="heroLevelEdit">
+          <property name="charWidth">
+           <number>2</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="heroIncLevelButton">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="toolTip">
+           <string>Increase level</string>
+          </property>
+          <property name="text">
+           <string notr="true">+</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="minimumWidth">
+           <number>48</number>
+          </property>
+          <property name="text">
+           <string>Rank:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="heroRankEdit">
+          <property name="charWidth">
+           <number>1</number>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string>Stat Points:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="heroStatPtsLabel"/>
+        </item>
+       </layout>
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
@@ -160,61 +216,65 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLabel" name="heroLifeLabel"/>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="heroDecLifeButton">
-        <property name="minimumWidth">
-         <number>24</number>
-        </property>
-        <property name="maximumWidth">
-         <number>24</number>
-        </property>
-        <property name="toolTip">
-         <string>Decrease life</string>
-        </property>
-        <property name="text">
-         <string notr="true">-</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="heroRestoreLifeButton">
-        <property name="minimumWidth">
-         <number>24</number>
-        </property>
-        <property name="maximumWidth">
-         <number>24</number>
-        </property>
-        <property name="toolTip">
-         <string>Restore life</string>
-        </property>
-        <property name="text">
-         <string notr="true">*</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QLabel">
-        <property name="minimumWidth">
-         <number>48</number>
-        </property>
-        <property name="text">
-         <string>Mana:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="5">
-       <widget class="QLabel" name="heroManaLabel"/>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QPushButton" name="heroDecLifeButton">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="toolTip">
+           <string>Decrease life</string>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="heroLifeLabel"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="heroRestoreLifeButton">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="toolTip">
+           <string>Restore life</string>
+          </property>
+          <property name="text">
+           <string notr="true">*</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="minimumWidth">
+           <number>48</number>
+          </property>
+          <property name="text">
+           <string>Mana:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="heroManaLabel"/>
+        </item>
+       </layout>
       </item>
       <item row="3" column="0" colspan="6">
-       <layout class="QHBoxLayout" name="heroAttributesHorizontalLayout">
-        <property name="topMargin">
+       <layout class="QHBoxLayout">
+        <!--property name="topMargin">
          <number>0</number>
         </property>
         <property name="bottomMargin">
          <number>0</number>
-        </property>
+        </property-->
         <item>
          <widget class="QLabel">
           <property name="minimumWidth">
@@ -397,67 +457,378 @@
         </item>
        </layout>
       </item>
-      <item row="4" column="0" colspan="6">
-       <layout class="QHBoxLayout" name="heroResistsHorizontalLayout">
-        <property name="topMargin">
+      <item row="4" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Resists:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="5">
+       <layout class="QHBoxLayout">
+        <!--property name="topMargin">
          <number>0</number>
         </property>
         <property name="bottomMargin">
          <number>0</number>
-        </property>
+        </property-->
         <item>
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>48</number>
+         <widget class="QLabel" name="heroMagicResistLabel">
+          <property name="toolTip">
+           <string>Magic</string>
           </property>
-          <property name="text">
-           <string>Magic Res.:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="heroMagicResist"/>
-        </item>
-        <item>
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>48</number>
-          </property>
-          <property name="text">
-           <string>Fire Res.:</string>
+          <property name="styleSheet">
+           <string>color:blue;</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="heroFireResist"/>
-        </item>
-        <item>
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>48</number>
+         <widget class="QLabel" name="heroFireResistLabel">
+          <property name="toolTip">
+           <string>Fire</string>
           </property>
-          <property name="text">
-           <string>Lght. Res.:</string>
+          <property name="styleSheet">
+           <string>color:orange;</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="heroLightningResist"/>
-        </item>
-        <item>
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>48</number>
+         <widget class="QLabel" name="heroLightningResistLabel">
+          <property name="toolTip">
+           <string>Lightning</string>
           </property>
-          <property name="text">
-           <string>Acid Res.:</string>
+          <property name="styleSheet">
+           <string>color:yellow;</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="heroAcidResist"/>
+         <widget class="QLabel" name="heroAcidResistLabel">
+          <property name="toolTip">
+           <string>Acid</string>
+          </property>
+          <property name="styleSheet">
+           <string>color:green;</string>
+          </property>
+         </widget>
         </item>
        </layout>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Speed:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" colspan="5">
+       <layout class="QHBoxLayout">
+        <!--property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property-->
+        <item>
+         <widget class="QLabel" name="heroWalkSpeedLabel">
+          <property name="toolTip">
+           <string>Walk</string>
+          </property>
+          <property name="styleSheet">
+           <string>color:gray;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="heroBaseAttackSpeedLabel">
+          <property name="toolTip">
+           <string>Attack</string>
+          </property>
+          <property name="styleSheet">
+           <string>color:red;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="heroBaseCastSpeedLabel">
+          <property name="toolTip">
+           <string>Cast</string>
+          </property>
+          <property name="styleSheet">
+           <string>color:cyan;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="heroRecoverySpeedLabel">
+          <property name="toolTip">
+           <string>Recovery</string>
+          </property>
+          <property name="styleSheet">
+           <string>color:brown;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="heroArrowVelBonusLabel">
+          <property name="toolTip">
+           <string>Arrow</string>
+          </property>
+          <property name="styleSheet">
+           <string>color:purple;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Light:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLabel" name="heroLightRadLabel">
+        <property name="toolTip">
+         <string>Light radius</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Get Hit:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QLabel" name="heroGetHitLabel">
+        <property name="toolTip">
+         <string>Hit damage modifier</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Armor:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QLabel" name="heroACLabel"/>
+      </item>
+      <item row="6" column="2">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Evasion:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QLabel" name="heroEvasionLabel"/>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Leech:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1" colspan="5">
+       <layout class="QHBoxLayout">
+        <!--property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property-->
+        <item>
+         <widget class="QLabel" name="heroLifeStealLabel">
+          <property name="toolTip">
+           <string>Life</string>
+          </property>
+          <property name="styleSheet">
+           <string>color:red;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="heroManaStealLabel">
+          <property name="toolTip">
+           <string>Mana</string>
+          </property>
+          <property name="styleSheet">
+           <string>color:blue;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Hit Chance:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QLabel" name="heroHitChanceLabel"/>
+      </item>
+      <item row="8" column="2">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Block Chance:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <widget class="QLabel" name="heroBlockChanceLabel"/>
+      </item>
+      <item row="8" column="4">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Crit. Chance:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="5">
+       <widget class="QLabel" name="heroCritChanceLabel"/>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Damage:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QLabel" name="heroTotalDamLabel">
+        <property name="toolTip">
+         <string>Total Damage</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="2">
+       <widget class="QLabel" name="heroSlashDamLabel">
+        <property name="toolTip">
+         <string>Slash Damage</string>
+        </property>
+        <property name="styleSheet">
+         <string>color:aquamarine;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="3">
+       <widget class="QLabel" name="heroBluntDamLabel">
+        <property name="toolTip">
+         <string>Blunt Damage</string>
+        </property>
+        <property name="styleSheet">
+         <string>color:maroon;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="4">
+       <widget class="QLabel" name="heroPierceDamLabel">
+        <property name="toolTip">
+         <string>Pierce Damage</string>
+        </property>
+        <property name="styleSheet">
+         <string>color:olive;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QLabel" name="heroMagicDamLabel">
+        <property name="toolTip">
+         <string>Magic Damage</string>
+        </property>
+        <property name="styleSheet">
+         <string>color:blue;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="2">
+       <widget class="QLabel" name="heroFireDamLabel">
+        <property name="toolTip">
+         <string>Fire Damage</string>
+        </property>
+        <property name="styleSheet">
+         <string>color:orange;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="3">
+       <widget class="QLabel" name="heroLightningDamLabel">
+        <property name="toolTip">
+         <string>Lightning Damage</string>
+        </property>
+        <property name="styleSheet">
+         <string>color:yellow;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="4">
+       <widget class="QLabel" name="heroAcidDamLabel">
+        <property name="toolTip">
+         <string>Acid Damage</string>
+        </property>
+        <property name="styleSheet">
+         <string>color:green;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Charge:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="QLabel" name="heroChargeDamLabel">
+        <property name="toolTip">
+         <string>Charge Damage</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

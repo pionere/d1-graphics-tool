@@ -216,6 +216,18 @@ void CelView::updateLabel()
     CelView::setLabelContent(this->ui->heroLabel, this->hero->getFilePath(), this->hero->isModified());
 }
 
+static void displayDamage(QLabel *label, int minDam, int maxDam)
+{
+    if (maxDam != 0) {
+        if (minDam != maxDam)
+            label->setText(QString("%1-%2").arg(minDam).arg(maxDam));
+        else
+            label->setText(QString("%1").arg(minDam));
+    } else {
+        label->setText(QString("-"));
+    }
+}
+
 void CelView::updateFields()
 {
     int hc, bv;
@@ -265,10 +277,35 @@ void CelView::updateFields()
     label->setText(QString::number(this->hero->getMana()));
     label->setToolTip(QString::number(this->hero->getBaseMana()));
 
-    this->ui->heroMagicResist->setText(QString("%1%").arg(this->hero->getMagicResist()));
-    this->ui->heroFireResist->setText(QString("%1%").arg(this->hero->getFireResist()));
-    this->ui->heroLightningResist->setText(QString("%1%").arg(this->hero->getLightningResist()));
-    this->ui->heroAcidResist->setText(QString("%1%").arg(this->hero->getAcidResist()));
+    this->ui->heroMagicResistLabel->setText(QString("%1%").arg(this->hero->getMagicResist()));
+    this->ui->heroFireResistLabel->setText(QString("%1%").arg(this->hero->getFireResist()));
+    this->ui->heroLightningResistLabel->setText(QString("%1%").arg(this->hero->getLightningResist()));
+    this->ui->heroAcidResistLabel->setText(QString("%1%").arg(this->hero->getAcidResist()));
+
+    this->ui->heroWalkSpeedLabel->setText(QString::number(this->hero->getWalkSpeed()));
+    this->ui->heroBaseAttackSpeedLabel->setText(QString::number(this->hero->getBaseAttackSpeed()));
+    this->ui->heroBaseCastSpeedLabel->setText(QString::number(this->hero->getBaseCastSpeed()));
+    this->ui->heroRecoverySpeedLabel->setText(QString::number(this->hero->getRecoverySpeed()));
+    this->ui->heroLightRadLabel->setText(QString::number(this->hero->getLightRad()));
+    this->ui->heroEvasionLabel->setText(QString::number(this->hero->getEvasion()));
+    this->ui->heroACLabel->setText(QString::number(this->hero->getAC()));
+    this->ui->heroBlockChanceLabel->setText(QString("%1%").arg(this->hero->getBlockChance()));
+    this->ui->heroGetHitLabel->setText(QString::number(this->hero->getGetHit()));
+    this->ui->heroLifeStealLabel->setText(QString("%1%").arg((this->hero->getLifeSteal() * 100 + 64) >> 7));
+    this->ui->heroManaStealLabel->setText(QString("%1%").arg((this->hero->getManaSteal() * 100 + 64) >> 7));
+    this->ui->heroArrowVelBonusLabel->setText(QString::number(this->hero->getArrowVelBonus()));
+    this->ui->heroHitChanceLabel->setText(QString("%1%").arg(this->hero->getHitChance()));
+    this->ui->heroCritChanceLabel->setText(QString("%1%").arg(this->hero->getCritChance() * 100 / 200));
+
+    displayDamage(this->ui->heroTotalDamLabel, this->hero->getTotalMinDam(), this->hero->getTotalMaxDam());
+    displayDamage(this->ui->heroSlashDamLabel, this->hero->getSlMaxDam(), this->hero->getSlMaxDam());
+    displayDamage(this->ui->heroBluntDamLabel, this->hero->getBlMinDam(), this->hero->getBlMaxDam());
+    displayDamage(this->ui->heroPierceDamLabel, this->hero->getPcMinDam(), this->hero->getPcMaxDam());
+    displayDamage(this->ui->heroChargeDamLabel, this->hero->getChMinDam(), this->hero->getChMaxDam());
+    displayDamage(this->ui->heroFireDamLabel, this->hero->getFMinDam(), this->hero->getFMaxDam());
+    displayDamage(this->ui->heroLightningDamLabel, this->hero->getLMinDam(), this->hero->getLMaxDam());
+    displayDamage(this->ui->heroMagicDamLabel, this->hero->getMMinDam(), this->hero->getMMaxDam());
+    displayDamage(this->ui->heroAcidDamLabel, this->hero->getAMinDam(), this->hero->getAMaxDam());
 }
 
 CelScene *CelView::getCelScene() const

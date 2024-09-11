@@ -19,6 +19,7 @@ public:
     ~ItemDetailsWidget();
 
     void initialize(D1Hero *hero, int invIdx); // inv_item
+    void displayFrame();
 
 private:
     void updateFields();

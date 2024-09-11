@@ -534,6 +534,8 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
         }
     }
     memcpy(pi, is, sizeof(ItemStruct));
+    CalcPlrInv(this->pnum, false);
+    this->modified = true;
     // LogErrorF("D1Hero::addItem done");
     return true;
 }
@@ -632,6 +634,19 @@ void D1Hero::setLevel(int level)
 
     CalcPlrInv(this->pnum, false);
 
+    this->modified = true;
+}
+
+int D1Hero::getRank() const
+{
+    return players[this->pnum]._pRank;
+}
+
+void D1Hero::setRank(int rank)
+{
+    if (players[this->pnum]._pRank == rank)
+        return;
+    players[this->pnum]._pRank = rank;
     this->modified = true;
 }
 
@@ -790,6 +805,174 @@ void D1Hero::setSkillLvlBase(int sn, int level)
 
     players[this->pnum]._pSkillLvlBase[sn] = level;
     this->modified = true;
+}
+
+int D1Hero::getWalkSpeed() const
+{
+    return players[this->pnum]._pIWalkSpeed;
+}
+
+int D1Hero::getBaseAttackSpeed() const
+{
+    return players[this->pnum]._pIBaseAttackSpeed;
+}
+
+int D1Hero::getBaseCastSpeed() const
+{
+    return players[this->pnum]._pIBaseCastSpeed;
+}
+
+int D1Hero::getRecoverySpeed() const
+{
+    return players[this->pnum]._pIRecoverySpeed;
+}
+
+int D1Hero::getLightRad() const
+{
+    return players[this->pnum]._pLightRad;
+}
+
+int D1Hero::getEvasion() const
+{
+    return players[this->pnum]._pIEvasion;
+}
+
+int D1Hero::getAC() const
+{
+    return players[this->pnum]._pIAC;
+}
+
+int D1Hero::getBlockChance() const
+{
+    return players[this->pnum]._pIBlockChance;
+}
+
+int D1Hero::getGetHit() const
+{
+    return players[this->pnum]._pIGetHit;
+}
+
+int D1Hero::getLifeSteal() const
+{
+    return players[this->pnum]._pILifeSteal;
+}
+
+int D1Hero::getManaSteal() const
+{
+    return players[this->pnum]._pIManaSteal;
+}
+
+int D1Hero::getArrowVelBonus() const
+{
+    return players[this->pnum]._pIArrowVelBonus;
+}
+
+int D1Hero::getHitChance() const
+{
+    return players[this->pnum]._pIHitChance; // _pIBaseHitBonus
+}
+
+int D1Hero::getCritChance() const
+{
+    return players[this->pnum]._pICritChance;
+}
+
+int D1Hero::getSlMinDam() const
+{
+    return players[this->pnum]._pISlMinDam >> (6 + 1);
+}
+
+int D1Hero::getSlMaxDam() const
+{
+    return players[this->pnum]._pISlMaxDam >> (6 + 1);
+}
+
+int D1Hero::getBlMinDam() const
+{
+    return players[this->pnum]._pIBlMinDam >> (6 + 1);
+}
+
+int D1Hero::getBlMaxDam() const
+{
+    return players[this->pnum]._pIBlMaxDam >> (6 + 1);
+}
+
+int D1Hero::getPcMinDam() const
+{
+    return players[this->pnum]._pIPcMinDam >> (6 + 1);
+}
+
+int D1Hero::getPcMaxDam() const
+{
+    return players[this->pnum]._pIPcMaxDam >> (6 + 1);
+}
+
+int D1Hero::getChMinDam() const
+{
+    return players[this->pnum]._pIChMinDam >> 6;
+}
+
+int D1Hero::getChMaxDam() const
+{
+    return players[this->pnum]._pIChMaxDam >> 6;
+}
+
+int D1Hero::getFMinDam() const
+{
+    return players[this->pnum]._pIFMinDam >> 6;
+}
+
+int D1Hero::getFMaxDam() const
+{
+    return players[this->pnum]._pIFMaxDam >> 6;
+}
+
+int D1Hero::getLMinDam() const
+{
+    return players[this->pnum]._pILMinDam >> 6;
+}
+
+int D1Hero::getLMaxDam() const
+{
+    return players[this->pnum]._pILMaxDam >> 6;
+}
+
+int D1Hero::getMMinDam() const
+{
+    return players[this->pnum]._pIMMinDam >> 6;
+}
+
+int D1Hero::getMMaxDam() const
+{
+    return players[this->pnum]._pIMMaxDam >> 6;
+}
+
+int D1Hero::getAMinDam() const
+{
+    return players[this->pnum]._pIAMinDam >> 6;
+}
+
+int D1Hero::getAMaxDam() const
+{
+    return players[this->pnum]._pIAMaxDam >> 6;
+}
+
+int D1Hero::getTotalMinDam() const
+{
+    int mindam;
+    PlayerStruct *p = &players[this->pnum];
+	mindam = (p->_pIFMinDam + p->_pILMinDam + p->_pIMMinDam + p->_pIAMinDam) >> 6;
+	mindam += (p->_pISlMinDam + p->_pIBlMinDam + p->_pIPcMinDam) >> (6 + 1); // +1 is a temporary(?) adjustment for backwards compatibility
+    return mindam;
+}
+
+int D1Hero::getTotalMaxDam() const
+{
+    int maxdam;
+    PlayerStruct *p = &players[this->pnum];
+	maxdam = (p->_pIFMaxDam + p->_pILMaxDam + p->_pIMMaxDam + p->_pIAMaxDam) >> 6;
+	maxdam += (p->_pISlMaxDam + p->_pIBlMaxDam + p->_pIPcMaxDam) >> (6 + 1);
+    return maxdam;
 }
 
 void D1Hero::rebalance()

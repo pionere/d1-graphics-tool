@@ -45,6 +45,8 @@ public:
 
     int getLevel() const;
     void setLevel(int level);
+    int getRank() const;
+    void setRank(int rank);
     int getStatPoints() const;
 
     int getStrength() const;
@@ -80,9 +82,39 @@ public:
     int getSkillLvlBase(int sn) const;
     void setSkillLvlBase(int sn, int level);
 
+    int getWalkSpeed() const;
+    int getBaseAttackSpeed() const;
+    int getBaseCastSpeed() const;
+    int getRecoverySpeed() const;
+    int getLightRad() const;
+    int getEvasion() const;
+    int getAC() const;
+    int getBlockChance() const;
+    int getGetHit() const;
+    int getLifeSteal() const;
+    int getManaSteal() const;
+    int getArrowVelBonus() const;
+    int getHitChance() const;
+    int getCritChance() const;
+    int getSlMinDam() const;
+    int getSlMaxDam() const;
+    int getBlMinDam() const;
+    int getBlMaxDam() const;
+    int getPcMinDam() const;
+    int getPcMaxDam() const;
+    int getChMinDam() const;
+    int getChMaxDam() const;
+    int getFMinDam() const;
+    int getFMaxDam() const;
+    int getLMinDam() const;
+    int getLMaxDam() const;
+    int getMMinDam() const;
+    int getMMaxDam() const;
+    int getAMinDam() const;
+    int getAMaxDam() const;
+    int getTotalMinDam() const;
+    int getTotalMaxDam() const;
 	/*
-	BYTE _pRank;
-	BYTE _pLightRad;
 	unsigned _pExperience;
 	unsigned _pNextExper;
 	BYTE _pAtkSkill;         // the selected attack skill for the primary action
@@ -94,48 +126,7 @@ public:
 	BYTE _pAltMoveSkill;     // the selected movement skill for the secondary action
 	BYTE _pAltMoveSkillType; // the (RSPLTYPE_)type of the movement skill for the secondary action
 	BYTE _pSkillLvlBase[64]; // the skill levels of the player if they would not wear an item
-	BYTE _pSkillActivity[64];
-	unsigned _pSkillExp[64];
-	uint64_t _pMemSkills;  // Bitmask of learned skills
-	uint64_t _pAblSkills;  // Bitmask of abilities
-	uint64_t _pInvSkills;  // Bitmask of skills available via items in inventory (scrolls or runes)
-	ItemStruct _pInvBody[NUM_INVLOC];
-	ItemStruct _pInvList[NUM_INV_GRID_ELEM];
-	BYTE _pSkillLvl[64]; // the skill levels of the player
-	BYTE _pAlign_B0;
-	int _pISlMinDam; // min slash-damage (swords, axes)
-	int _pISlMaxDam; // max slash-damage (swords, axes)
-	int _pIBlMinDam; // min blunt-damage (maces, axes)
-	int _pIBlMaxDam; // max blunt-damage (maces, axes)
-	int _pIPcMinDam; // min puncture-damage (bows, daggers)
-	int _pIPcMaxDam; // max puncture-damage (bows, daggers)
-	int _pIChMinDam; // min charge-damage (shield charge)
-	int _pIChMaxDam; // max charge-damage (shield charge)
-	int _pIEvasion;
-	int _pIAC;
-	int _pIHitChance;
-	BYTE _pSkillFlags;    // Bitmask of allowed skill-types (SFLAG_*)
-	BYTE _pIBaseHitBonus; // indicator whether the base BonusToHit of the items is positive/negative/neutral
-	BYTE _pICritChance; // 200 == 100%
-	BYTE _pIBlockChance;
-	uint64_t _pISpells; // Bitmask of skills available via equipped items (staff)
-	unsigned _pIFlags;
-	BYTE _pIWalkSpeed;
-	BYTE _pIRecoverySpeed;
-	BYTE _pIBaseCastSpeed;
-	int _pIGetHit;
-	BYTE _pIBaseAttackSpeed;
-	int8_t _pIArrowVelBonus; // _pISplCost in vanilla code
-	BYTE _pILifeSteal;
-	BYTE _pIManaSteal;
-	int _pIFMinDam; // min fire damage (item's added fire damage)
-	int _pIFMaxDam; // max fire damage (item's added fire damage)
-	int _pILMinDam; // min lightning damage (item's added lightning damage)
-	int _pILMaxDam; // max lightning damage (item's added lightning damage)
-	int _pIMMinDam; // min magic damage (item's added magic damage)
-	int _pIMMaxDam; // max magic damage (item's added magic damage)
-	int _pIAMinDam; // min acid damage (item's added acid damage)
-	int _pIAMaxDam; // max acid damage (item's added acid damage)*/
+	BYTE _pSkillActivity[64];*/
 
 private:
     D1Hero() = default;

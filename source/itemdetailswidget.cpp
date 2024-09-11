@@ -90,6 +90,11 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
     this->setVisible(true);
 }
 
+void ItemDetailsWidget::displayFrame()
+{
+    this->updateFields();
+}
+
 void ItemDetailsWidget::updateFields()
 {
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;

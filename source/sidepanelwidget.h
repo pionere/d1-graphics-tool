@@ -21,6 +21,7 @@ public:
     ~SidePanelWidget();
 
     void initialize(D1Hero *hero, int mode);
+    void displayFrame();
     void showHeroItem(D1Hero *hero, int ii);
     void showHeroSkills(D1Hero *hero);
 

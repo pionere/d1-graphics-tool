@@ -59,6 +59,14 @@ void SidePanelWidget::initialize(D1Hero *h, int m)
     layout->addWidget(w, 0, Qt::AlignTop);
 }
 
+void SidePanelWidget::displayFrame()
+{
+    if (this->itemDetails != nullptr)
+        this->itemDetails->displayFrame();
+    if (this->skillDetails != nullptr)
+        this->skillDetails->displayFrame();
+}
+
 void SidePanelWidget::showHeroItem(D1Hero *h, int ii)
 {
     // LogErrorF("SidePanelWidget::showHeroItem 0 %d", ii);
