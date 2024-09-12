@@ -37,6 +37,7 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
         skillWidgets[sn] = new QSpinBox(this);
         // skillWidgets[sn]->setMinimum(0);
         skillWidgets[sn]->setMaximum(MAXSPLLEVEL);
+        skillWidgets[sn]->setMaximumWidth(36);
         skillWidgets[sn]->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
         this->ui->heroSkillGridLayout->addWidget(skillWidgets[sn], row, 2 * column + 1);
 
@@ -89,6 +90,22 @@ void SkillDetailsWidget::updateFields()
             skillWidgets[sn]->setToolTip(infostr);
         }
     }
+}
+
+void SkillDetailsWidget::on_resetButton_clicked()
+{
+    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        this->skills[sn] = 0;
+    }
+    this->updateFields();
+}
+
+void SkillDetailsWidget::on_maxButton_clicked()
+{
+    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        this->skills[sn] = MAXSPLLEVEL;
+    }
+    this->updateFields();
 }
 
 void SkillDetailsWidget::on_submitButton_clicked()

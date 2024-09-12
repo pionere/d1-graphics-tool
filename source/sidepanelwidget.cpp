@@ -28,37 +28,43 @@ void SidePanelWidget::initialize(D1Hero *h, int m)
         return;
     }
     this->mode = m;
-    // clear the layout
-    QVBoxLayout *layout = this->ui->panelVBoxLayout;
-    /*QLayoutItem *child;
-    while ((child = layout->takeAt(0)) != nullptr) {
-        child->widget()->deleteLater(); // delete the widget
-        delete child;           // delete the layout item
-    }*/
-    for (int i = layout->count() - 1; i >= 0; i--) {
-        QWidget *w = layout->itemAt(i)->widget();
-        if (w != nullptr) {
-            w->deleteLater();
-        }
+    if (this->heroDetails != nullptr) {
+        this->heroDetails->setVisible(false);
     }
+    if (this->itemDetails != nullptr) {
+        this->itemDetails->setVisible(false);
+    }
+    if (this->skillDetails != nullptr) {
+        this->skillDetails->setVisible(false);
+    }
+    if (this->monsterDetails != nullptr) {
+        this->monsterDetails->setVisible(false);
+    }
+
     QWidget *w;
     switch (this->mode) {
     case 0:
+        if (this->heroDetails == nullptr) {
+            this->heroDetails = new HeroDetailsWidget(this);
+        }
+        w = this->heroDetails;
+        break;
+    case 1:
         if (this->itemDetails == nullptr) {
             this->itemDetails = new ItemDetailsWidget(this);
         }
         w = this->itemDetails;
         break;
-    case 1:
-        // if (this->skillDetails == nullptr) {
+    case 2:
+        if (this->skillDetails == nullptr) {
             this->skillDetails = new SkillDetailsWidget(this);
-        // }
+        }
         w = this->skillDetails;
         break;
-    case 2:
-        // if (this->monsterDetails == nullptr) {
+    case 3:
+        if (this->monsterDetails == nullptr) {
             this->monsterDetails = new MonsterDetailsWidget(this);
-        // }
+        }
         w = this->monsterDetails;
         break;
     }
@@ -67,16 +73,29 @@ void SidePanelWidget::initialize(D1Hero *h, int m)
 
 void SidePanelWidget::displayFrame()
 {
-    if (this->itemDetails != nullptr)
+    if (this->heroDetails != nullptr && this->heroDetails->isVisible())
+        this->heroDetails->displayFrame();
+    if (this->itemDetails != nullptr && this->itemDetails->isVisible())
         this->itemDetails->displayFrame();
-    if (this->skillDetails != nullptr)
+    if (this->skillDetails != nullptr && this->skillDetails->isVisible())
         this->skillDetails->displayFrame();
+    if (this->monsterDetails != nullptr && this->monsterDetails->isVisible())
+        this->monsterDetails->displayFrame();
+}
+
+void SidePanelWidget::showHero(D1Hero *h)
+{
+    // LogErrorF("SidePanelWidget::showHeroItem 0 %d", ii);
+    this->initialize(h, 0);
+    // LogErrorF("SidePanelWidget::showHeroItem 1 %d", ii);
+    this->heroDetails->initialize(h);
+    // LogErrorF("SidePanelWidget::showHeroItem 2 %d", ii);
 }
 
 void SidePanelWidget::showHeroItem(D1Hero *h, int ii)
 {
     // LogErrorF("SidePanelWidget::showHeroItem 0 %d", ii);
-    this->initialize(h, 0);
+    this->initialize(h, 1);
     // LogErrorF("SidePanelWidget::showHeroItem 1 %d", ii);
     this->itemDetails->initialize(h, ii);
     // LogErrorF("SidePanelWidget::showHeroItem 2 %d", ii);
@@ -85,7 +104,7 @@ void SidePanelWidget::showHeroItem(D1Hero *h, int ii)
 void SidePanelWidget::showHeroSkills(D1Hero *h)
 {
     // LogErrorF("SidePanelWidget::showHeroSkills 0 %d", ii);
-    this->initialize(h, 1);
+    this->initialize(h, 2);
     // LogErrorF("SidePanelWidget::showHeroSkills 1 %d", ii);
     this->skillDetails->initialize(h);
     // LogErrorF("SidePanelWidget::showHeroSkills 2 %d", ii);
@@ -94,7 +113,7 @@ void SidePanelWidget::showHeroSkills(D1Hero *h)
 void SidePanelWidget::showMonsters(D1Hero *h)
 {
     // LogErrorF("SidePanelWidget::showMonsters 0 %d", ii);
-    this->initialize(h, 2);
+    this->initialize(h, 3);
     // LogErrorF("SidePanelWidget::showMonsters 1 %d", ii);
     this->monsterDetails->initialize(h);
     // LogErrorF("SidePanelWidget::showMonsters 2 %d", ii);

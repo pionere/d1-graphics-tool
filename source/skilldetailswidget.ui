@@ -34,6 +34,26 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
+      <widget class="QPushButton" name="resetButton">
+       <property name="toolTip">
+        <string>Set skills to zero</string>
+       </property>
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="maxButton">
+       <property name="toolTip">
+        <string>Set skills to maximum</string>
+       </property>
+       <property name="text">
+        <string>Max</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

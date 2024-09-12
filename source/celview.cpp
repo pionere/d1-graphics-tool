@@ -157,14 +157,17 @@ CelView::CelView(QWidget *parent)
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
 
+    this->mainHeroDetails = new HeroDetailsWidget(this);
+    this->ui->heroVBoxLayout->addWidget(this->mainHeroDetails);
+
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
     // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
-    QObject::connect(this->ui->heroNameEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroNameEdit_escPressed()));
-    QObject::connect(this->ui->heroLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroLevelEdit_escPressed()));
-    QObject::connect(this->ui->heroRankEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroRankEdit_escPressed()));
+    // QObject::connect(this->ui->heroNameEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroNameEdit_escPressed()));
+    // QObject::connect(this->ui->heroLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroLevelEdit_escPressed()));
+    // QObject::connect(this->ui->heroRankEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroRankEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -181,12 +184,14 @@ CelView::~CelView()
 void CelView::initialize(D1Pal *p, D1Hero *h, bool bottomPanelHidden)
 {
     this->pal = p;
-    this->hero = h;
+    // this->hero = h;
     this->hoverItem = INVITEM_NONE;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
-    this->updateFields();
+    // this->mainHeroDetails->initialize(h);
+    this->setHero(h);
+    // this->updateFields();
 }
 
 void CelView::setPal(D1Pal *p)
@@ -197,6 +202,7 @@ void CelView::setPal(D1Pal *p)
 void CelView::setHero(D1Hero *h)
 {
     this->hero = h;
+    this->mainHeroDetails->initialize(h);
 }
 
 void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
@@ -217,7 +223,7 @@ void CelView::updateLabel()
     CelView::setLabelContent(this->ui->heroLabel, this->hero->getFilePath(), this->hero->isModified());
 }
 
-static void displayDamage(QLabel *label, int minDam, int maxDam)
+/*static void displayDamage(QLabel *label, int minDam, int maxDam)
 {
     if (maxDam != 0) {
         if (minDam != maxDam)
@@ -229,7 +235,7 @@ static void displayDamage(QLabel *label, int minDam, int maxDam)
     }
 }
 
-void CelView::updateFields()
+/*void CelView::updateFields()
 {
     int hc, bv;
     QLabel *label;
@@ -311,7 +317,7 @@ void CelView::updateFields()
     displayDamage(this->ui->heroLightningDamLabel, this->hero->getLMinDam(), this->hero->getLMaxDam());
     displayDamage(this->ui->heroMagicDamLabel, this->hero->getMMinDam(), this->hero->getMMaxDam());
     displayDamage(this->ui->heroAcidDamLabel, this->hero->getAMinDam(), this->hero->getAMaxDam());
-}
+}*/
 
 CelScene *CelView::getCelScene() const
 {
@@ -384,7 +390,8 @@ void CelView::framePixelHovered(const QPoint &pos)
 void CelView::displayFrame()
 {
     // LogErrorF("CelView::displayFrame 0");
-    this->updateFields();
+    // this->updateFields();
+    this->mainHeroDetails->displayFrame();
     // LogErrorF("CelView::displayFrame 1");
     this->celScene.clear();
     // LogErrorF("CelView::displayFrame 2");
@@ -487,150 +494,6 @@ void CelView::ShowContextMenu(const QPoint &pos)
     }
 }
 
-void CelView::on_framesGroupCheckBox_clicked()
-{
-    // update frameIndexEdit and frameNumberEdit
-    this->updateFields();
-}
-
-void CelView::on_heroNameEdit_returnPressed()
-{
-    QString name = this->ui->heroNameEdit->text();
-
-    this->hero->setName(name);
-    this->ui->heroNameEdit->setText(this->hero->getName());
-
-    this->on_heroNameEdit_escPressed();
-}
-
-void CelView::on_heroNameEdit_escPressed()
-{
-    // update heroNameEdit
-    this->updateFields();
-    this->ui->heroNameEdit->clearFocus();
-}
-
-void CelView::on_heroClassComboBox_activated(int index)
-{
-    this->hero->setClass(index);
-    this->updateFields();
-}
-
-void CelView::on_heroDecLevelButton_clicked()
-{
-    this->hero->setLevel(this->hero->getLevel() - 1);
-    this->updateFields();
-}
-
-void CelView::on_heroIncLevelButton_clicked()
-{
-    this->hero->setLevel(this->hero->getLevel() + 1);
-    this->updateFields();
-}
-
-void CelView::on_heroLevelEdit_returnPressed()
-{
-    int level = this->ui->heroLevelEdit->text().toShort();
-
-    this->hero->setLevel(level);
-
-    this->on_heroLevelEdit_escPressed();
-}
-
-void CelView::on_heroLevelEdit_escPressed()
-{
-    // update heroLevelEdit
-    this->updateFields();
-    this->ui->heroLevelEdit->clearFocus();
-}
-
-void CelView::on_heroRankEdit_returnPressed()
-{
-    int rank = this->ui->heroRankEdit->text().toShort();
-
-    if (rank >= 0 && rank <= 3) {
-        this->hero->setRank(rank);
-    }
-
-    this->on_heroRankEdit_escPressed();
-}
-
-void CelView::on_heroRankEdit_escPressed()
-{
-    // update heroRankEdit
-    this->updateFields();
-    this->ui->heroRankEdit->clearFocus();
-}
-
-void CelView::on_heroSkillsButton_clicked()
-{
-    dMainWindow().heroSkillsClicked();
-}
-
-void CelView::on_heroMonstersButton_clicked()
-{
-    dMainWindow().heroMonstersClicked();
-}
-
-void CelView::on_heroDecLifeButton_clicked()
-{
-    this->hero->decLife();
-    this->updateFields();
-}
-
-void CelView::on_heroRestoreLifeButton_clicked()
-{
-    this->hero->restoreLife();
-    this->updateFields();
-}
-
-void CelView::on_heroAddStrengthButton_clicked()
-{
-    this->hero->addStrength();
-    this->updateFields();
-}
-
-void CelView::on_heroAddDexterityButton_clicked()
-{
-    this->hero->addDexterity();
-    this->updateFields();
-}
-
-void CelView::on_heroAddMagicButton_clicked()
-{
-    this->hero->addMagic();
-    this->updateFields();
-}
-
-void CelView::on_heroAddVitalityButton_clicked()
-{
-    this->hero->addVitality();
-    this->updateFields();
-}
-
-void CelView::on_heroSubStrengthButton_clicked()
-{
-    this->hero->subStrength();
-    this->updateFields();
-}
-
-void CelView::on_heroSubDexterityButton_clicked()
-{
-    this->hero->subDexterity();
-    this->updateFields();
-}
-
-void CelView::on_heroSubMagicButton_clicked()
-{
-    this->hero->subMagic();
-    this->updateFields();
-}
-
-void CelView::on_heroSubVitalityButton_clicked()
-{
-    this->hero->subVitality();
-    this->updateFields();
-}
 
 /*void CelView::dragEnterEvent(QDragEnterEvent *event)
 {

@@ -26,6 +26,9 @@ private:
     void updateFields();
 
 private slots:
+    void on_resetButton_clicked();
+    void on_maxButton_clicked();
+
     void on_submitButton_clicked();
     void on_cancelButton_clicked();
 

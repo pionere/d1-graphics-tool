@@ -105,16 +105,15 @@
      </item>
      <item>
       <widget class="QSpinBox" name="plrCountSpinBox">
-       <item>
+       <property name="toolTip">
+        <string>Players</string>
+       </property>
         <property name="minimum">
          <number>1</number>
         </property>
-       </item>
-       <item>
         <property name="maximum">
          <number>4</number>
         </property>
-       </item>
       </widget>
      </item>
      <item>

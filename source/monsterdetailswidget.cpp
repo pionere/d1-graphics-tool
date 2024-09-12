@@ -117,7 +117,7 @@ void MonsterDetailsWidget::updateFields()
                 if (AllLevels[n].dType != loc) continue;
                 int m;
                 for (m = 0; AllLevels[n].dMonTypes[m] != MT_INVALID; m++) {
-                    if (m == i) break;
+                    if (AllLevels[n].dMonTypes[m] == i) break;
                 }
                 if (AllLevels[n].dMonTypes[m] != MT_INVALID) break;
             }
@@ -181,7 +181,7 @@ void MonsterDetailsWidget::updateFields()
     else
         InitLvlMonster(type, lvl, numplrs, difficulty, lvlbonus);
 
-    MonsterStruct *mon = &monsters[0];
+    MonsterStruct *mon = &monsters[MAX_MINIONS];
 
     const char* color = "black";
     if (mon->_mNameColor == COL_BLUE)

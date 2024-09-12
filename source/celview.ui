@@ -16,7 +16,7 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <layout class="QVBoxLayout">
+  <layout class="QVBoxLayout" name="heroVBoxLayout">
    <item>
     <widget class="QLabel" name="heroLabel"/>
    </item>
@@ -47,7 +47,7 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <layout class="QGridLayout">
+     <!--layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">
@@ -290,12 +290,6 @@
       </item>
       <item row="3" column="0" colspan="6">
        <layout class="QHBoxLayout">
-        <!--property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property-->
         <item>
          <widget class="QLabel">
           <property name="minimumWidth">
@@ -544,12 +538,6 @@
       </item>
       <item row="5" column="1" colspan="5">
        <layout class="QHBoxLayout">
-        <!--property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property-->
         <item>
          <widget class="QLabel" name="heroWalkSpeedLabel">
           <property name="toolTip">
@@ -674,12 +662,6 @@
       </item>
       <item row="8" column="1" colspan="5">
        <layout class="QHBoxLayout">
-        <!--property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property-->
         <item>
          <widget class="QLabel" name="heroLifeStealLabel">
           <property name="toolTip">
@@ -845,7 +827,7 @@
         </property>
        </widget>
       </item>
-     </layout>
+     </layout-->
     </widget>
    </item>
   </layout>

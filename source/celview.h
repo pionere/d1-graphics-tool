@@ -17,6 +17,7 @@
 
 #include "d1hro.h"
 #include "d1pal.h"
+#include "herodetailswidget.h"
 #include "pushbuttonwidget.h"
 
 #define CEL_SCENE_SPACING 8
@@ -99,12 +100,12 @@ public:
 
     void displayFrame();
     void toggleBottomPanel();
+    void updateLabel();
 
     static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 
 private:
     void updateFields();
-    void updateLabel();
     int invItemIdx(QPoint &pos) const;
     bool framePos(const QPoint &pos) const;
 
@@ -113,9 +114,7 @@ signals:
     void palModified();
 
 private slots:
-    void on_framesGroupCheckBox_clicked();
-
-    void on_heroNameEdit_returnPressed();
+    /*void on_heroNameEdit_returnPressed();
     void on_heroNameEdit_escPressed();
     void on_heroClassComboBox_activated(int index);
     void on_heroDecLevelButton_clicked();
@@ -137,7 +136,7 @@ private slots:
     void on_heroAddStrengthButton_clicked();
     void on_heroAddDexterityButton_clicked();
     void on_heroAddMagicButton_clicked();
-    void on_heroAddVitalityButton_clicked();
+    void on_heroAddVitalityButton_clicked();*/
 
     //void dragEnterEvent(QDragEnterEvent *event) override;
     //void dragMoveEvent(QDragMoveEvent *event) override;
@@ -148,6 +147,7 @@ private slots:
 private:
     Ui::CelView *ui;
     CelScene celScene = CelScene(this);
+    HeroDetailsWidget *mainHeroDetails;
 
     D1Pal *pal;
     D1Hero *hero;

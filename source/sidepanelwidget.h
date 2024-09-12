@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QMouseEvent>
 
+#include "herodetailswidget.h"
 #include "itemdetailswidget.h"
 #include "monsterdetailswidget.h"
 #include "skilldetailswidget.h"
@@ -32,6 +33,7 @@ private:
 
     int mode;
     D1Hero *hero;
+    HeroDetailsWidget *heroDetails = nullptr;
     ItemDetailsWidget *itemDetails = nullptr;
     SkillDetailsWidget *skillDetails = nullptr;
     MonsterDetailsWidget *monsterDetails = nullptr;

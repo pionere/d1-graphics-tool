@@ -85,6 +85,9 @@ set(PROJECT_SOURCES
         source/dungeon/player.cpp
         source/dungeon/questdat.cpp
         source/dungeon/spelldat.cpp
+        source/herodetailswidget.cpp
+        source/herodetailswidget.h
+        source/herodetailswidget.ui
         source/itemdetailswidget.cpp
         source/itemdetailswidget.h
         source/itemdetailswidget.ui

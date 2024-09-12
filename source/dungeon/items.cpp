@@ -11,6 +11,8 @@ ItemStruct items[MAXITEMS + 1];
 //BYTE* itemanims[NUM_IFILE];
 int numitems;
 
+int affix_rnd[6];
+
 static inline unsigned items_get_currlevel()
 {
 	return currLvl._dLevel;
@@ -1398,7 +1400,7 @@ static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygo
 			pres = l[random_low(23, nl)];
 			items[ii]._iMagical = ITEM_QUALITY_MAGIC;
 			items[ii]._iPrePower = pres->PLPower;
-			items[ii]._ix = SaveItemPower(
+			affix_rnd[0] = SaveItemPower(
 			    ii,
 			    pres->PLPower,
 			    pres->PLParam1,
@@ -1424,7 +1426,7 @@ static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygo
 			sufs = l[random_low(23, nl)];
 			items[ii]._iMagical = ITEM_QUALITY_MAGIC;
 			items[ii]._iSufPower = sufs->PLPower;
-			items[ii]._iy = SaveItemPower(
+			affix_rnd[1] = SaveItemPower(
 			    ii,
 			    sufs->PLPower,
 			    sufs->PLParam1,
@@ -1675,18 +1677,18 @@ static void GetUniqueItem(int ii, int uid)
 	const UniqItemData* ui;
 
 	ui = &UniqueItemList[uid];
-	SaveItemPower(ii, ui->UIPower1, ui->UIParam1a, ui->UIParam1b, 0, 0, 1);
+	affix_rnd[0] = SaveItemPower(ii, ui->UIPower1, ui->UIParam1a, ui->UIParam1b, 0, 0, 1);
 
 	if (ui->UIPower2 != IPL_INVALID) {
-		SaveItemPower(ii, ui->UIPower2, ui->UIParam2a, ui->UIParam2b, 0, 0, 1);
+		affix_rnd[1] = SaveItemPower(ii, ui->UIPower2, ui->UIParam2a, ui->UIParam2b, 0, 0, 1);
 	if (ui->UIPower3 != IPL_INVALID) {
-		SaveItemPower(ii, ui->UIPower3, ui->UIParam3a, ui->UIParam3b, 0, 0, 1);
+		affix_rnd[2] = SaveItemPower(ii, ui->UIPower3, ui->UIParam3a, ui->UIParam3b, 0, 0, 1);
 	if (ui->UIPower4 != IPL_INVALID) {
-		SaveItemPower(ii, ui->UIPower4, ui->UIParam4a, ui->UIParam4b, 0, 0, 1);
+		affix_rnd[3] = SaveItemPower(ii, ui->UIPower4, ui->UIParam4a, ui->UIParam4b, 0, 0, 1);
 	if (ui->UIPower5 != IPL_INVALID) {
-		SaveItemPower(ii, ui->UIPower5, ui->UIParam5a, ui->UIParam5b, 0, 0, 1);
+		affix_rnd[4] = SaveItemPower(ii, ui->UIPower5, ui->UIParam5a, ui->UIParam5b, 0, 0, 1);
 	if (ui->UIPower6 != IPL_INVALID) {
-		SaveItemPower(ii, ui->UIPower6, ui->UIParam6a, ui->UIParam6b, 0, 0, 1);
+		affix_rnd[5] = SaveItemPower(ii, ui->UIPower6, ui->UIParam6a, ui->UIParam6b, 0, 0, 1);
 	}}}}}
 
 	items[ii]._iCurs = ui->UICurs;

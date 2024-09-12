@@ -345,7 +345,7 @@ void ItemSelectorDialog::updateFields()
     this->itemProps->setVisible(this->is->_itype != ITYPE_NONE);
 
     // update whish-lists
-	int flgs = GetItemBonusFlags(this->is->_itype, this->is->_iMiscId);
+	int flgs = GetItemBonusFlags(AllItemsList[idx].itype /* this->is->_itype*/, IMISC_NONE/* this->is->_iMiscId*/);
     int source = (ci & CF_TOWN) >> 8;
     int range = source == CFL_NONE ? IAR_DROP : (source == CFL_CRAFTED ? IAR_CRAFT : IAR_SHOP);
     int lvl = ci & CF_LEVEL;
@@ -374,8 +374,28 @@ void ItemSelectorDialog::updateFields()
         }
     }
 
-    preComboBox->setCurrentIndex(preComboBox->findData(this->wishPre));
-    sufComboBox->setCurrentIndex(sufComboBox->findData(this->wishSuf));
+    si = preComboBox->findData(this->wishPre);
+    if (si < 0) si = 0;
+    preComboBox->setCurrentIndex(si);
+    si = sufComboBox->findData(this->wishSuf);
+    if (si < 0) si = 0;
+    sufComboBox->setCurrentIndex(si);
+
+    si = this->ui->itemPrefixComboBox->currentData().value<int>();
+    this->ui->itemPrefixLimitedCheckBox->setVisible(si >= 0);
+    this->ui->itemPrefixLimitSlider->setVisible(si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2);
+    if (si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2) {
+        this->ui->itemPrefixLimitSlider->setMinimum(PL_Prefix[si].PLParam1);
+        this->ui->itemPrefixLimitSlider->setMaximum(PL_Prefix[si].PLParam2);
+    }
+
+    si = this->ui->itemSuffixComboBox->currentData().value<int>();
+    this->ui->itemSuffixLimitedCheckBox->setVisible(si >= 0);
+    this->ui->itemSuffixLimitSlider->setVisible(si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2);
+    if (si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2) {
+        this->ui->itemSuffixLimitSlider->setMinimum(PL_Suffix[si].PLParam1);
+        this->ui->itemSuffixLimitSlider->setMaximum(PL_Suffix[si].PLParam2);
+    }
 }
 
 void ItemSelectorDialog::on_itemTypeComboBox_activated(int index)
@@ -430,13 +450,13 @@ void ItemSelectorDialog::on_itemLevelEdit_escPressed()
 void ItemSelectorDialog::on_itemSourceComboBox_activated(int index)
 {
     this->is->_iCreateInfo = (this->is->_iCreateInfo & ~CF_TOWN) | (index << 8);
-    // this->updateFields();
+    this->updateFields();
 }
 
 void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
 {
     this->is->_iCreateInfo = (this->is->_iCreateInfo & ~CF_DROP_QUALITY) | (index << 11);
-    // this->updateFields();
+    this->updateFields();
 }
 
 void ItemSelectorDialog::on_itemPrefixComboBox_activated(int index)
@@ -479,14 +499,14 @@ start:
         const AffixData *affix = &PL_Prefix[preIdx];
         if (items[MAXITEMS]._iPrePower != affix->PLPower)
             goto restart;
-        if (items[MAXITEMS]._ix < affix->PLParam1 || items[MAXITEMS]._ix > affix->PLParam2)
+        if (affix_rnd[0] < affix->PLParam1 || affix_rnd[0] > affix->PLParam2)
             goto restart;
     }
     if (sufIdx >= 0) {
         const AffixData *affix = &PL_Suffix[sufIdx];
         if (items[MAXITEMS]._iSufPower != affix->PLPower)
             goto restart;
-        if (items[MAXITEMS]._iy < affix->PLParam1 || items[MAXITEMS]._iy > affix->PLParam2)
+        if (affix_rnd[1] < affix->PLParam1 || affix_rnd[1] > affix->PLParam2)
             goto restart;
     }
     goto done;

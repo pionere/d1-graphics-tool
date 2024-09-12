@@ -4,7 +4,6 @@
 #include <QMessageBox>
 #include <QString>
 
-#include "lineeditwidget.h"
 #include "ui_itempropertieswidget.h"
 
 #include "dungeon/all.h"

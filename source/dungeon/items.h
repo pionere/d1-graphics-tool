@@ -23,6 +23,8 @@ extern int itemactive[MAXITEMS];
 extern ItemStruct items[MAXITEMS + 1];
 extern int numitems;
 
+extern int affix_rnd[6];
+
 void CalcPlrItemVals(int pnum, bool Loadgfx);
 void CalcPlrSpells(int pnum);
 void CalcPlrScrolls(int pnum);
