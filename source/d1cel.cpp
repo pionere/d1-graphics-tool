@@ -92,7 +92,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             return false;
         }
 
-        // Going through all CELs
+        // Going through all groups
+        int cursor = 0;
         for (unsigned int i = 0; i * 4 < firstDword; i++) {
             device->seek(i * 4);
             quint32 celOffset;
@@ -111,12 +112,12 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (fileSize < (celOffset + celFrameCount * 4 + 4 + 4))
                 return false;
 
-            gfx.groupFrameIndices.push_back(std::pair<int, int>(frameOffsets.size(), frameOffsets.size() + celFrameCount - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + celFrameCount - 1));
 
             // Going through all frames of the CEL
             for (unsigned int j = 1; j <= celFrameCount; j++) {
-                quint32 celFrameStartOffset = 0;
-                quint32 celFrameEndOffset = 0;
+                quint32 celFrameStartOffset;
+                quint32 celFrameEndOffset;
 
                 device->seek(celOffset + j * 4);
                 in >> celFrameStartOffset;
@@ -126,6 +127,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                     std::pair<quint32, quint32>(celOffset + celFrameStartOffset,
                         celOffset + celFrameEndOffset));
             }
+            cursor += celFrameCount;
         }
     }
 

@@ -5,6 +5,7 @@
 #include <QString>
 
 #include "celview.h"
+#include "mainwindow.h"
 #include "ui_herodetailswidget.h"
 
 #include "dungeon/all.h"
