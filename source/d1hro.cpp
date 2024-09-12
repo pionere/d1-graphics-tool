@@ -1057,7 +1057,8 @@ int D1Hero::getTotalMaxDam() const
 
 int D1Hero::getTotalMinDam(const MonsterStruct *mon) const
 {
-	int dam;
+	int dam, damsl, dambl, dampc;
+	bool tmac;
 
 	dam = 0;
 	tmac = (plr._pIFlags & ISPL_PENETRATE_PHYS) != 0;
@@ -1089,7 +1090,8 @@ int D1Hero::getTotalMinDam(const MonsterStruct *mon) const
 
 int D1Hero::getTotalMaxDam(const MonsterStruct *mon) const
 {
-	int dam;
+	int dam, damsl, dambl, dampc;
+	bool tmac;
 
 	dam = 0;
 	tmac = (plr._pIFlags & ISPL_PENETRATE_PHYS) != 0;
