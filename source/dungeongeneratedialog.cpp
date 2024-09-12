@@ -29,6 +29,8 @@ DungeonGenerateDialog::DungeonGenerateDialog(QWidget *parent)
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->lvlLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_lvlLineEdit_escPressed()));
+    QObject::connect(this->ui->seedLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_seedLineEdit_escPressed()));
+    QObject::connect(this->ui->questSeedLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_questSeedLineEdit_escPressed()));
 }
 
 DungeonGenerateDialog::~DungeonGenerateDialog()
@@ -95,16 +97,58 @@ void DungeonGenerateDialog::on_lvlLineEdit_escPressed()
     this->on_lvlTypeComboBox_activated(this->ui->lvlTypeComboBox->currentIndex());
 }
 
+void DungeonGenerateDialog::on_seedLineEdit_returnPressed()
+{
+    bool ok;
+    QString seedTxt = this->ui->seedLineEdit->text();
+    int seed = seedTxt.toInt(&ok);
+    if (ok || seedTxt.isEmpty()) {
+        this->dunSeed = seed;
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
+    }
+    
+    this->on_seedLineEdit_escPressed();
+}
+
+void DungeonGenerateDialog::on_seedLineEdit_escPressed()
+{
+    this->ui->seedLineEdit->setText(QString::number(this->dunSeed));
+    this->ui->seedLineEdit->clearFocus();
+}
+
 void DungeonGenerateDialog::on_actionGenerateSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
-    this->ui->seedLineEdit->setText(QString::number((int)gen->generate()));
+    this->dunSeed = (int)gen->generate();
+    this->ui->seedLineEdit->setText(QString::number(this->dunSeed));
+}
+
+void DungeonGenerateDialog::on_questSeedLineEdit_returnPressed()
+{
+    bool ok;
+    QString seedTxt = this->ui->questSeedLineEdit->text();
+    int seed = seedTxt.toInt(&ok);
+    if (ok || seedTxt.isEmpty()) {
+        this->questSeed = seed;
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to parse the quest-seed to a 32-bit integer.");
+    }
+    
+    this->on_questSeedLineEdit_escPressed();
+}
+
+void DungeonGenerateDialog::on_questSeedLineEdit_escPressed()
+{
+    this->ui->questSeedLineEdit->setText(QString::number(this->dunSeed));
+    this->ui->questSeedLineEdit->clearFocus();
 }
 
 void DungeonGenerateDialog::on_actionGenerateQuestSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
-    this->ui->questSeedLineEdit->setText(QString::number((int)gen->generate()));
+    this->questSeed = (int)gen->generate();
+    this->ui->questSeedLineEdit->setText(QString::number(this->questSeed));
 }
 
 void DungeonGenerateDialog::on_generateButton_clicked()
@@ -121,19 +165,8 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.useTileset = this->ui->tilesetCheckBox->isChecked();
     params.patchDunFiles = this->ui->patchDunCheckBox->isChecked();
     params.extraQuestRnd = this->ui->extraRndCheckBox->isChecked();	
-    bool ok;
-    QString seedTxt = this->ui->seedLineEdit->text();
-    params.seed = seedTxt.toInt(&ok);
-    if (!ok && !seedTxt.isEmpty()) {
-        QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
-        return;
-    }
-    seedTxt = this->ui->questSeedLineEdit->text();
-    params.seedQuest = seedTxt.toInt(&ok);
-    if (!ok && !seedTxt.isEmpty()) {
-        QMessageBox::critical(this, "Error", "Failed to parse the quest-seed to a 32-bit integer.");
-        return;
-    }
+    params.seed = this->dunSeed;
+    params.seedQuest = this->questSeed;
     params.entryMode = this->ui->entryComboBox->currentData().value<int>();
     params.extraRounds = this->ui->extraRoundsLineEdit->text().toInt();
 
