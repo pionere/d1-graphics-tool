@@ -26,7 +26,7 @@ void LineEditWidget::setCharWidth(int value)
 
     maxWidth += textmargins.left() + textmargins.right();
 
-    maxWidth += this->frameSize().x() - this->width();
+    maxWidth += this->frameSize().width() - this->width();
 
     this->setMinimumWidth(maxWidth);
     this->setMaximumWidth(maxWidth);

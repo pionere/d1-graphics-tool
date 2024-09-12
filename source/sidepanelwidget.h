@@ -22,11 +22,14 @@ public:
     explicit SidePanelWidget(QWidget *parent);
     ~SidePanelWidget();
 
-    void initialize(D1Hero *hero, int mode);
     void displayFrame();
+    void showHero(D1Hero *hero);
     void showHeroItem(D1Hero *hero, int ii);
     void showHeroSkills(D1Hero *hero);
     void showMonsters(D1Hero *hero);
+
+private:
+    void initialize(D1Hero *hero, int mode);
 
 private:
     Ui::SidePanelWidget *ui;

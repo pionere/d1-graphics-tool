@@ -68,6 +68,7 @@ void SidePanelWidget::initialize(D1Hero *h, int m)
         w = this->monsterDetails;
         break;
     }
+    QVBoxLayout *layout = this->ui->panelVBoxLayout;
     layout->addWidget(w, 0, Qt::AlignTop);
 }
 
@@ -85,11 +86,11 @@ void SidePanelWidget::displayFrame()
 
 void SidePanelWidget::showHero(D1Hero *h)
 {
-    // LogErrorF("SidePanelWidget::showHeroItem 0 %d", ii);
+    // LogErrorF("SidePanelWidget::showHero 0 %d", ii);
     this->initialize(h, 0);
-    // LogErrorF("SidePanelWidget::showHeroItem 1 %d", ii);
+    // LogErrorF("SidePanelWidget::showHero 1 %d", ii);
     this->heroDetails->initialize(h);
-    // LogErrorF("SidePanelWidget::showHeroItem 2 %d", ii);
+    // LogErrorF("SidePanelWidget::showHero 2 %d", ii);
 }
 
 void SidePanelWidget::showHeroItem(D1Hero *h, int ii)
