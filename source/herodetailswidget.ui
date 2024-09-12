@@ -289,7 +289,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="heroStrengthLabel"/>
+        <widget class="LineEditWidget" name="heroStrengthEdit">
+         <property name="charWidth">
+          <number>3</number>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="heroAddStrengthButton">
@@ -334,7 +341,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="heroDexterityLabel"/>
+        <widget class="LineEditWidget" name="heroDexterityEdit">
+         <property name="charWidth">
+          <number>3</number>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="heroAddDexterityButton">
@@ -379,7 +393,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="heroMagicLabel"/>
+        <widget class="LineEditWidget" name="heroMagicEdit">
+         <property name="charWidth">
+          <number>3</number>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="heroAddMagicButton">
@@ -424,7 +445,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="heroVitalityLabel"/>
+        <widget class="LineEditWidget" name="heroVitalityEdit">
+         <property name="charWidth">
+          <number>3</number>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="heroAddVitalityButton">

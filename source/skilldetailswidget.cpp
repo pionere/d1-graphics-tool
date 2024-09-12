@@ -103,7 +103,7 @@ void SkillDetailsWidget::on_resetButton_clicked()
 void SkillDetailsWidget::on_maxButton_clicked()
 {
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
-        this->skills[sn] = MAXSPLLEVEL;
+        this->skills[sn] = spelldata[sn].sBookLvl == SPELL_NA ? 0 : MAXSPLLEVEL;
     }
     this->updateFields();
 }

@@ -19,6 +19,12 @@ MonsterDetailsWidget::MonsterDetailsWidget(SidePanelWidget *parent)
     , ui(new Ui::MonsterDetailsWidget())
 {
     ui->setupUi(this);
+
+    QHBoxLayout *layout = this->ui->seedWithRefreshButtonLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &ItemSelectorDialog::on_actionGenerateSeed_triggered);
+    layout->addStretch();
+
+    QObject::connect(this->ui->dunSeedEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunSeedEdit_escPressed()));
 }
 
 MonsterDetailsWidget::~MonsterDetailsWidget()
@@ -105,10 +111,12 @@ static void MonResistText(unsigned resist, unsigned idx, QProgressBar *label)
 
 void MonsterDetailsWidget::updateFields()
 {
+    this->ui->dunSeedEdit->setText(QString::number(this->dunSeed));
+
     QComboBox *typesComboBox = this->ui->monTypeComboBox;
     typesComboBox->clear();
     
-    int loc = this->ui->monLocationComboBox->currentIndex();
+    int loc = this->ui->dunTypeComboBox->currentIndex();
     int mi = typesComboBox->currentData().value<int>();
     for (int i = 0; i < NUM_MTYPES; i++) {
         if (loc != DTYPE_TOWN) {
@@ -176,6 +184,7 @@ void MonsterDetailsWidget::updateFields()
     this->ui->dunLevelEdit->setText(QString::number(lvl));
     this->ui->dunLevelBonusEdit->setText(QString::number(lvlbonus));
 
+    SetRndSeed(this->dunSeed);
     if (type < 0)
         InitUniqMonster(-(type + 1), lvl, numplrs, difficulty, lvlbonus);
     else
@@ -229,7 +238,29 @@ void MonsterDetailsWidget::updateFields()
     this->adjustSize(); // not sure why this is necessary...
 }
 
-void MonsterDetailsWidget::on_monLocationComboBox_activated(int index)
+
+void MonsterDetailsWidget::on_dunSeedEdit_returnPressed()
+{
+    this->dunSeed = this->ui->dunSeedEdit->text().toInt();
+
+    this->on_dunSeedEdit_escPressed();
+}
+
+void MonsterDetailsWidget::on_dunSeedEdit_escPressed()
+{
+    // update dunLevelEdit
+    this->updateFields();
+    this->ui->dunSeedEdit->clearFocus();
+}
+
+void MonsterDetailsWidget::on_actionGenerateSeed_triggered()
+{
+    QRandomGenerator *gen = QRandomGenerator::global();
+    this->dunSeed = (int)gen->generate();
+    this->updateFields();
+}
+
+void MonsterDetailsWidget::on_dunTypeComboBox_activated(int index)
 {
     this->updateFields();
 }

@@ -660,6 +660,21 @@ int D1Hero::getStrength() const
     return players[this->pnum]._pStrength;
 }
 
+void D1Hero::setStrength(int value)
+{
+    value += players[this->pnum]._pBaseStr - players[this->pnum]._pStrength;
+
+    if (value < StrengthTbl[players[this->pnum]._pClass])
+        value = StrengthTbl[players[this->pnum]._pClass];
+
+    while (value > players[this->pnum]._pBaseStr && players[this->pnum]._pStatPts > 0) {
+        this->addStrength();
+    }
+    while (value < players[this->pnum]._pBaseStr) {
+        this->subStrength();
+    }
+}
+
 int D1Hero::getBaseStrength() const
 {
     return players[this->pnum]._pBaseStr;
@@ -680,6 +695,21 @@ void D1Hero::subStrength()
 int D1Hero::getDexterity() const
 {
     return players[this->pnum]._pDexterity;
+}
+
+void D1Hero::setDexterity(int value)
+{
+    value += players[this->pnum]._pBaseDex - players[this->pnum]._pDexterity;
+
+    if (value < DexterityTbl[players[this->pnum]._pClass])
+        value = DexterityTbl[players[this->pnum]._pClass];
+
+    while (value > players[this->pnum]._pBaseDex && players[this->pnum]._pStatPts > 0) {
+        this->addDexterity();
+    }
+    while (value < players[this->pnum]._pBaseDex) {
+        this->subDexterity();
+    }
 }
 
 int D1Hero::getBaseDexterity() const
@@ -704,6 +734,21 @@ int D1Hero::getMagic() const
     return players[this->pnum]._pMagic;
 }
 
+void D1Hero::setMagic(int value)
+{
+    value += players[this->pnum]._pBaseMag - players[this->pnum]._pMagic;
+
+    if (value < MagicTbl[players[this->pnum]._pClass])
+        value = MagicTbl[players[this->pnum]._pClass];
+
+    while (value > players[this->pnum]._pBaseMag && players[this->pnum]._pStatPts > 0) {
+        this->addMagic();
+    }
+    while (value < players[this->pnum]._pBaseMag) {
+        this->subMagic();
+    }
+}
+
 int D1Hero::getBaseMagic() const
 {
     return players[this->pnum]._pBaseMag;
@@ -724,6 +769,21 @@ void D1Hero::subMagic()
 int D1Hero::getVitality() const
 {
     return players[this->pnum]._pVitality;
+}
+
+void D1Hero::setVitality(int value)
+{
+    value += players[this->pnum]._pBaseVit - players[this->pnum]._pVitality;
+
+    if (value < VitalityTbl[players[this->pnum]._pClass])
+        value = VitalityTbl[players[this->pnum]._pClass];
+
+    while (value > players[this->pnum]._pBaseVit && players[this->pnum]._pStatPts > 0) {
+        this->addVitality();
+    }
+    while (value < players[this->pnum]._pBaseVit) {
+        this->subVitality();
+    }
 }
 
 int D1Hero::getBaseVitality() const

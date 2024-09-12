@@ -41,6 +41,8 @@ private slots:
 
     void on_itemPrefixComboBox_activated(int index);
     void on_itemSuffixComboBox_activated(int index);
+    void on_itemPrefixLimitedCheckBox_clicked();
+    void on_itemSuffixLimitedCheckBox_clicked();
 
     void on_generateButton_clicked();
 
@@ -56,6 +58,6 @@ private:
     int itemType;
     ItemStruct *is = nullptr;
 
-    int wishPre;
-    int wishSuf;
+    int wishPre = -1;
+    int wishSuf = -1;
 };

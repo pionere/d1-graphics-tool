@@ -20,6 +20,11 @@ HeroDetailsWidget::HeroDetailsWidget(QWidget *parent)
     QObject::connect(this->ui->heroNameEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroNameEdit_escPressed()));
     QObject::connect(this->ui->heroLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroLevelEdit_escPressed()));
     QObject::connect(this->ui->heroRankEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroRankEdit_escPressed()));
+
+    QObject::connect(this->ui->heroStrengthEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroStrengthEdit_escPressed()));
+    QObject::connect(this->ui->heroDexterityEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroDexterityEdit_escPressed()));
+    QObject::connect(this->ui->heroMagicEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroMagicEdit_escPressed()));
+    QObject::connect(this->ui->heroVitalityEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroVitalityEdit_escPressed()));
 }
 
 HeroDetailsWidget::~HeroDetailsWidget()
@@ -82,22 +87,22 @@ void HeroDetailsWidget::updateFields()
     this->ui->heroAddMagicButton->setEnabled(statPts > 0);
     this->ui->heroAddVitalityButton->setEnabled(statPts > 0);
 
-    label = this->ui->heroStrengthLabel;
+    label = this->ui->heroStrengthEdit;
     label->setText(QString::number(this->hero->getStrength()));
     bv = this->hero->getBaseStrength();
     label->setToolTip(QString::number(bv));
     this->ui->heroSubStrengthButton->setEnabled(bv > StrengthTbl[hc]);
-    label = this->ui->heroDexterityLabel;
+    label = this->ui->heroDexterityEdit;
     label->setText(QString::number(this->hero->getDexterity()));
     bv = this->hero->getBaseDexterity();
     label->setToolTip(QString::number(bv));
     this->ui->heroSubDexterityButton->setEnabled(bv > DexterityTbl[hc]);
-    label = this->ui->heroMagicLabel;
+    label = this->ui->heroMagicEdit;
     label->setText(QString::number(this->hero->getMagic()));
     bv = this->hero->getBaseMagic();
     label->setToolTip(QString::number(bv));
     this->ui->heroSubMagicButton->setEnabled(bv > MagicTbl[hc]);
-    label = this->ui->heroVitalityLabel;
+    label = this->ui->heroVitalityEdit;
     label->setText(QString::number(this->hero->getVitality()));
     bv = this->hero->getBaseVitality();
     label->setToolTip(QString::number(bv));
@@ -232,33 +237,31 @@ void HeroDetailsWidget::on_heroRestoreLifeButton_clicked()
     this->updateFields();
 }
 
-void HeroDetailsWidget::on_heroAddStrengthButton_clicked()
-{
-    this->hero->addStrength();
-    this->updateFields();
-}
-
-void HeroDetailsWidget::on_heroAddDexterityButton_clicked()
-{
-    this->hero->addDexterity();
-    this->updateFields();
-}
-
-void HeroDetailsWidget::on_heroAddMagicButton_clicked()
-{
-    this->hero->addMagic();
-    this->updateFields();
-}
-
-void HeroDetailsWidget::on_heroAddVitalityButton_clicked()
-{
-    this->hero->addVitality();
-    this->updateFields();
-}
-
 void HeroDetailsWidget::on_heroSubStrengthButton_clicked()
 {
     this->hero->subStrength();
+    this->updateFields();
+}
+
+void HeroDetailsWidget::on_heroStrengthEdit_returnPressed()
+{
+    int str = this->ui->heroStrengthEdit->text().toInt();
+
+    this->hero->setStrength(str);
+
+    this->on_heroStrengthEdit_escPressed();
+}
+
+void HeroDetailsWidget::on_heroStrengthEdit_escPressed()
+{
+    // update heroStrengthEdit
+    this->updateFields();
+    this->ui->heroStrengthEdit->clearFocus();
+}
+
+void HeroDetailsWidget::on_heroAddStrengthButton_clicked()
+{
+    this->hero->addStrength();
     this->updateFields();
 }
 
@@ -268,14 +271,80 @@ void HeroDetailsWidget::on_heroSubDexterityButton_clicked()
     this->updateFields();
 }
 
+void HeroDetailsWidget::on_heroDexterityEdit_returnPressed()
+{
+    int dex = this->ui->heroDexterityEdit->text().toInt();
+
+    this->hero->setDexterity(dex);
+
+    this->on_heroDexterityEdit_escPressed();
+}
+
+void HeroDetailsWidget::on_heroDexterityEdit_escPressed()
+{
+    // update heroDexterityEdit
+    this->updateFields();
+    this->ui->heroDexterityEdit->clearFocus();
+}
+
+void HeroDetailsWidget::on_heroAddDexterityButton_clicked()
+{
+    this->hero->addDexterity();
+    this->updateFields();
+}
+
 void HeroDetailsWidget::on_heroSubMagicButton_clicked()
 {
     this->hero->subMagic();
     this->updateFields();
 }
 
+void HeroDetailsWidget::on_heroMagicEdit_returnPressed()
+{
+    int mag = this->ui->heroMagicEdit->text().toInt();
+
+    this->hero->setMagic(mag);
+
+    this->on_heroMagicEdit_escPressed();
+}
+
+void HeroDetailsWidget::on_heroMagicEdit_escPressed()
+{
+    // update heroMagicEdit
+    this->updateFields();
+    this->ui->heroMagicEdit->clearFocus();
+}
+
+void HeroDetailsWidget::on_heroAddMagicButton_clicked()
+{
+    this->hero->addMagic();
+    this->updateFields();
+}
+
 void HeroDetailsWidget::on_heroSubVitalityButton_clicked()
 {
     this->hero->subVitality();
+    this->updateFields();
+}
+
+void HeroDetailsWidget::on_heroVitalityEdit_returnPressed()
+{
+    int vit = this->ui->heroVitalityEdit->text().toInt();
+
+    this->hero->setVitality(vit);
+
+    this->on_heroVitalityEdit_escPressed();
+}
+
+void HeroDetailsWidget::on_heroVitalityEdit_escPressed()
+{
+    // update heroVitalityEdit
+    this->updateFields();
+    this->ui->heroVitalityEdit->clearFocus();
+}
+
+void HeroDetailsWidget::on_heroAddVitalityButton_clicked()
+{
+    this->hero->addVitality();
     this->updateFields();
 }

@@ -38,12 +38,20 @@ private slots:
     void on_heroDecLifeButton_clicked();
     void on_heroRestoreLifeButton_clicked();
     void on_heroSubStrengthButton_clicked();
-    void on_heroSubDexterityButton_clicked();
-    void on_heroSubMagicButton_clicked();
-    void on_heroSubVitalityButton_clicked();
+    void on_heroStrengthEdit_returnPressed();
+    void on_heroStrengthEdit_escPressed();
     void on_heroAddStrengthButton_clicked();
+    void on_heroSubDexterityButton_clicked();
+    void on_heroDexterityEdit_returnPressed();
+    void on_heroDexterityEdit_escPressed();
     void on_heroAddDexterityButton_clicked();
+    void on_heroSubMagicButton_clicked();
+    void on_heroMagicEdit_returnPressed();
+    void on_heroMagicEdit_escPressed();
     void on_heroAddMagicButton_clicked();
+    void on_heroSubVitalityButton_clicked();
+    void on_heroVitalityEdit_returnPressed();
+    void on_heroVitalityEdit_escPressed();
     void on_heroAddVitalityButton_clicked();
 
 private:

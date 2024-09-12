@@ -50,18 +50,22 @@ public:
     int getStatPoints() const;
 
     int getStrength() const;
+    void setStrength(int value);
     int getBaseStrength() const;
     void addStrength();
     void subStrength();
     int getDexterity() const;
+    void setDexterity(int value);
     int getBaseDexterity() const;
     void addDexterity();
     void subDexterity();
     int getMagic() const;
+    void setMagic(int value);
     int getBaseMagic() const;
     void addMagic();
     void subMagic();
     int getVitality() const;
+    void setVitality(int value);
     int getBaseVitality() const;
     void addVitality();
     void subVitality();

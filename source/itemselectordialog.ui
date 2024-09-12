@@ -198,7 +198,11 @@
        <widget class="QCheckBox" name="itemPrefixLimitedCheckBox"/>
       </item>
       <item row="0" column="3">
-       <widget class="QSlider" name="itemPrefixLimitSlider"/>
+       <widget class="QSlider" name="itemPrefixLimitSlider">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
@@ -217,7 +221,11 @@
        <widget class="QCheckBox" name="itemSuffixLimitedCheckBox"/>
       </item>
       <item row="1" column="3">
-       <widget class="QSlider" name="itemSuffixLimitSlider"/>
+       <widget class="QSlider" name="itemSuffixLimitSlider">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

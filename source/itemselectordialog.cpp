@@ -383,7 +383,7 @@ void ItemSelectorDialog::updateFields()
 
     si = this->ui->itemPrefixComboBox->currentData().value<int>();
     this->ui->itemPrefixLimitedCheckBox->setVisible(si >= 0);
-    this->ui->itemPrefixLimitSlider->setVisible(si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2);
+    this->ui->itemPrefixLimitSlider->setVisible(this->ui->itemPrefixLimitedCheckBox->isChecked() && si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2);
     if (si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2) {
         this->ui->itemPrefixLimitSlider->setMinimum(PL_Prefix[si].PLParam1);
         this->ui->itemPrefixLimitSlider->setMaximum(PL_Prefix[si].PLParam2);
@@ -391,7 +391,7 @@ void ItemSelectorDialog::updateFields()
 
     si = this->ui->itemSuffixComboBox->currentData().value<int>();
     this->ui->itemSuffixLimitedCheckBox->setVisible(si >= 0);
-    this->ui->itemSuffixLimitSlider->setVisible(si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2);
+    this->ui->itemSuffixLimitSlider->setVisible(this->ui->itemSuffixLimitedCheckBox->isChecked() && si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2);
     if (si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2) {
         this->ui->itemSuffixLimitSlider->setMinimum(PL_Suffix[si].PLParam1);
         this->ui->itemSuffixLimitSlider->setMaximum(PL_Suffix[si].PLParam2);
@@ -431,7 +431,8 @@ void ItemSelectorDialog::on_itemSeedEdit_escPressed()
 void ItemSelectorDialog::on_actionGenerateSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
-    this->ui->itemSeedEdit->setText(QString::number((int)gen->generate()));
+    this->is->_iSeed = (int)gen->generate();
+    this->updateFields();
 }
 
 void ItemSelectorDialog::on_itemLevelEdit_returnPressed()
@@ -462,13 +463,23 @@ void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
 void ItemSelectorDialog::on_itemPrefixComboBox_activated(int index)
 {
     this->wishPre = this->ui->itemIdxComboBox->currentData().value<int>();
-    // this->updateFields();
+    this->updateFields();
 }
 
 void ItemSelectorDialog::on_itemSuffixComboBox_activated(int index)
 {
     this->wishSuf = this->ui->itemIdxComboBox->currentData().value<int>();
-    // this->updateFields();
+    this->updateFields();
+}
+
+void ItemSelectorDialog::on_itemPrefixLimitedCheckBox_clicked()
+{
+    this->updateFields();
+}
+
+void ItemSelectorDialog::on_itemSuffixLimitedCheckBox_clicked()
+{
+    this->updateFields();
 }
 
 bool ItemSelectorDialog::recreateItem()
@@ -497,17 +508,25 @@ start:
 
     if (preIdx >= 0) {
         const AffixData *affix = &PL_Prefix[preIdx];
-        if (items[MAXITEMS]._iPrePower != affix->PLPower)
+        if (items[MAXITEMS]._iPrePower != affix->PLPower) {
+            LogErrorF("missed prefix %d vs %d (%d)", items[MAXITEMS]._iPrePower, affix->PLPower, preIdx);
             goto restart;
-        if (affix_rnd[0] < affix->PLParam1 || affix_rnd[0] > affix->PLParam2)
+        }
+        if (affix_rnd[0] < affix->PLParam1 || affix_rnd[0] > affix->PLParam2) {
+            LogErrorF("missed preval %d vs [%d:%d]", affix_rnd[0], affix->PLParam1, affix->PLParam2);
             goto restart;
+        }
     }
     if (sufIdx >= 0) {
         const AffixData *affix = &PL_Suffix[sufIdx];
-        if (items[MAXITEMS]._iSufPower != affix->PLPower)
+        if (items[MAXITEMS]._iSufPower != affix->PLPower) {
+            LogErrorF("missed prefix %d vs %d (%d)", items[MAXITEMS]._iPrePower, affix->PLPower, sufIdx);
             goto restart;
-        if (affix_rnd[1] < affix->PLParam1 || affix_rnd[1] > affix->PLParam2)
+        }
+        if (affix_rnd[1] < affix->PLParam1 || affix_rnd[1] > affix->PLParam2) {
+            LogErrorF("missed sufval %d vs [%d:%d]", affix_rnd[1], affix->PLParam1, affix->PLParam2);
             goto restart;
+        }
     }
     goto done;
 restart:
