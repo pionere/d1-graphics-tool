@@ -9,6 +9,7 @@
 #include "saveasdialog.h"
 
 struct ItemStruct;
+struct MonsterStruct;
 
 class D1Hero : public QObject {
     Q_OBJECT
@@ -119,6 +120,8 @@ public:
     int getAMaxDam() const;
     int getTotalMinDam() const;
     int getTotalMaxDam() const;
+    int getTotalMinDam(const MonsterStruct *mon) const;
+    int getTotalMaxDam(const MonsterStruct *mon) const;
 	/*
 	unsigned _pExperience;
 	unsigned _pNextExper;

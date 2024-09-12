@@ -192,4 +192,102 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
     }
 }
 
+unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrates)
+{
+	unsigned dam;
+	BYTE resist;
+
+	switch (mRes) {
+	case MISR_NONE:
+		resist = MORT_NONE;
+		break;
+	case MISR_SLASH:
+		mor &= MORS_SLASH_IMMUNE;
+		resist = mor >> MORS_IDX_SLASH;
+		break;
+	case MISR_BLUNT:
+		mor &= MORS_BLUNT_IMMUNE;
+		resist = mor >> MORS_IDX_BLUNT;
+		break;
+	case MISR_PUNCTURE:
+		mor &= MORS_PUNCTURE_IMMUNE;
+		resist = mor >> MORS_IDX_PUNCTURE;
+		break;
+	case MISR_FIRE:
+		mor &= MORS_FIRE_IMMUNE;
+		resist = mor >> MORS_IDX_FIRE;
+		break;
+	case MISR_LIGHTNING:
+		mor &= MORS_LIGHTNING_IMMUNE;
+		resist = mor >> MORS_IDX_LIGHTNING;
+		break;
+	case MISR_MAGIC:
+		mor &= MORS_MAGIC_IMMUNE;
+		resist = mor >> MORS_IDX_MAGIC;
+		break;
+	case MISR_ACID:
+		mor &= MORS_ACID_IMMUNE;
+		resist = mor >> MORS_IDX_ACID;
+		break;
+	default:
+		ASSUME_UNREACHABLE
+		resist = MORT_NONE;
+		break;
+	}
+    dam = damage;
+	switch (resist) {
+	case MORT_NONE:
+		break;
+	case MORT_PROTECTED:
+		if (!penetrates) {
+			dam >>= 1;
+			dam += dam >> 2;
+		}
+		break;
+	case MORT_RESIST:
+		dam >>= penetrates ? 1 : 2;
+		break;
+	case MORT_IMMUNE:
+		dam = 0;
+		break;
+	default: ASSUME_UNREACHABLE;
+	}
+	return dam;
+}
+
+unsigned CalcPlrDam(int pnum, BYTE mRes, unsigned damage)
+{
+	int dam;
+	int8_t resist;
+
+	switch (mRes) {
+	case MISR_NONE:
+	case MISR_SLASH: // TODO: add plr._pSlash/Blunt/PunctureResist
+	case MISR_BLUNT:
+	case MISR_PUNCTURE:
+		resist = 0;
+		break;
+	case MISR_FIRE:
+		resist = plr._pFireResist;
+		break;
+	case MISR_LIGHTNING:
+		resist = plr._pLghtResist;
+		break;
+	case MISR_MAGIC:
+		resist = plr._pMagResist;
+		break;
+	case MISR_ACID:
+		resist = plr._pAcidResist;
+		break;
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+
+	dam = damage;
+	if (resist != 0)
+		dam -= dam * resist / 100;
+	return dam;
+}
+
 DEVILUTION_END_NAMESPACE

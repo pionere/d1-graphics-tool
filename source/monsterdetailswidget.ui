@@ -572,6 +572,77 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
+      <item row="1" column="0">
+       <widget class="QLabel" name="plrHitChance">
+        <property name="toolTip">
+         <string>Chance to hit the monster</string>
+        </property>
+       </widget>
+       </item>
+      <item row="1" column="1">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Hit chance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="monHitChance">
+        <property name="toolTip">
+         <string>Chance to hit the player</string>
+        </property>
+       </widget>
+      </item>
+
+      <item row="2" column="0">
+       <widget class="QLabel" name="plrDamage">
+        <property name="toolTip">
+         <string>Possible damage to the monster</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Damage</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="monDamage">
+        <property name="toolTip">
+         <string>Possible damage to the player</string>
+        </property>
+       </widget>
+      </item>
+
+      <item row="3" column="0">
+       <widget class="QLabel" name="plrBlockChance">
+        <property name="toolTip">
+         <string>Chance to block the attack of the player</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Block chance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="monBlockChance">
+        <property name="toolTip">
+         <string>Chance to block the attack of the monster</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout">
      <item>
       <spacer>

@@ -1039,20 +1039,86 @@ int D1Hero::getAMaxDam() const
 
 int D1Hero::getTotalMinDam() const
 {
-    int mindam;
+    int mindam = 0;
     PlayerStruct *p = &players[this->pnum];
-	mindam = (p->_pIFMinDam + p->_pILMinDam + p->_pIMMinDam + p->_pIAMinDam) >> 6;
+	mindam += (p->_pIFMinDam + p->_pILMinDam + p->_pIMMinDam + p->_pIAMinDam) >> 6;
 	mindam += (p->_pISlMinDam + p->_pIBlMinDam + p->_pIPcMinDam) >> (6 + 1); // +1 is a temporary(?) adjustment for backwards compatibility
     return mindam;
 }
 
 int D1Hero::getTotalMaxDam() const
 {
-    int maxdam;
+    int maxdam = 0;
     PlayerStruct *p = &players[this->pnum];
-	maxdam = (p->_pIFMaxDam + p->_pILMaxDam + p->_pIMMaxDam + p->_pIAMaxDam) >> 6;
+	maxdam += (p->_pIFMaxDam + p->_pILMaxDam + p->_pIMMaxDam + p->_pIAMaxDam) >> 6;
 	maxdam += (p->_pISlMaxDam + p->_pIBlMaxDam + p->_pIPcMaxDam) >> (6 + 1);
     return maxdam;
+}
+
+int D1Hero::getTotalMinDam(const MonsterStruct *mon) const
+{
+	int dam;
+
+	dam = 0;
+	tmac = (plr._pIFlags & ISPL_PENETRATE_PHYS) != 0;
+	damsl = plr._pISlMinDam;
+	if (damsl != 0)
+		dam += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, damsl, tmac);
+	dambl = plr._pIBlMinDam;
+	if (dambl != 0)
+		dam += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, dambl, tmac);
+	dampc = plr._pIPcMinDam;
+	if (dampc != 0)
+		dam += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, dampc, tmac);
+
+	int fdam = plr._pIFMinDam;
+	if (fdam != 0)
+		fdam = CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, fdam, false);
+	int ldam = plr._pILMinDam;
+	if (ldam != 0)
+		ldam = CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, ldam, false);
+	int mdam = plr._pIMMinDam;
+	if (mdam != 0)
+		mdam = CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, mdam, false);
+	int adam = plr._pIAMinDam;
+	if (adam != 0)
+		adam = CalcMonsterDam(mon->_mMagicRes, MISR_ACID, adam, false);
+
+	return dam >> 6;
+}
+
+int D1Hero::getTotalMaxDam(const MonsterStruct *mon) const
+{
+	int dam;
+
+	dam = 0;
+	tmac = (plr._pIFlags & ISPL_PENETRATE_PHYS) != 0;
+	damsl = plr._pISlMaxDam;
+	if (damsl != 0)
+		dam += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, damsl, tmac);
+	dambl = plr._pIBlMaxDam;
+	if (dambl != 0)
+		dam += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, dambl, tmac);
+	dampc = plr._pIPcMaxDam;
+	if (dampc != 0)
+		dam += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, dampc, tmac);
+
+	int fdam = plr._pIFMaxDam;
+	if (fdam != 0)
+		fdam = CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, fdam, false);
+	int ldam = plr._pILMaxDam;
+	if (ldam != 0)
+		ldam = CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, ldam, false);
+	int mdam = plr._pIMMaxDam;
+	if (mdam != 0)
+		mdam = CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, mdam, false);
+	int adam = plr._pIAMaxDam;
+	if (adam != 0)
+		adam = CalcMonsterDam(mon->_mMagicRes, MISR_ACID, adam, false);
+
+	dam += fdam + ldam + mdam + adam;
+
+	return dam >> 6;
 }
 
 void D1Hero::rebalance()

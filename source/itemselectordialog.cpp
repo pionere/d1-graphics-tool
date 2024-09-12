@@ -359,18 +359,20 @@ void ItemSelectorDialog::updateFields()
     sufComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
 
     int si;
-    si = 0;
-    for (const AffixData *pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++, si++) {
-        if ((flgs & pres->PLIType)
-			 && pres->PLRanges[range].from <= lvl && pres->PLRanges[range].to >= lvl) {
-            preComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(pres)).arg(pres->PLParam1).arg(pres->PLParam2), QVariant::fromValue(si));
+    if ((ci & ~CF_LEVEL) != 0) {
+        si = 0;
+        for (const AffixData *pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++, si++) {
+            if ((flgs & pres->PLIType)
+                && pres->PLRanges[range].from <= lvl && pres->PLRanges[range].to >= lvl) {
+                preComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(pres)).arg(pres->PLParam1).arg(pres->PLParam2), QVariant::fromValue(si));
+            }
         }
-    }
-    si = 0;
-    for (const AffixData *sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++, si++) {
-        if ((flgs & sufs->PLIType)
-			 && sufs->PLRanges[range].from <= lvl && sufs->PLRanges[range].to >= lvl) {
-            sufComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(sufs)).arg(sufs->PLParam1).arg(sufs->PLParam2), QVariant::fromValue(si));
+        si = 0;
+        for (const AffixData *sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++, si++) {
+            if ((flgs & sufs->PLIType)
+                && sufs->PLRanges[range].from <= lvl && sufs->PLRanges[range].to >= lvl) {
+                sufComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(sufs)).arg(sufs->PLParam1).arg(sufs->PLParam2), QVariant::fromValue(si));
+            }
         }
     }
 
@@ -383,10 +385,13 @@ void ItemSelectorDialog::updateFields()
 
     si = this->ui->itemPrefixComboBox->currentData().value<int>();
     this->ui->itemPrefixLimitedCheckBox->setVisible(si >= 0);
+    Qt::CheckState cs = this->ui->itemPrefixLimitedCheckBox->checkState();
+    this->ui->itemPrefixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:"));
     this->ui->itemPrefixLimitSlider->setVisible(this->ui->itemPrefixLimitedCheckBox->isChecked() && si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2);
     if (si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2) {
         this->ui->itemPrefixLimitSlider->setMinimum(PL_Prefix[si].PLParam1);
         this->ui->itemPrefixLimitSlider->setMaximum(PL_Prefix[si].PLParam2);
+        this->ui->itemPrefixLimitSlider->setToolTip(QString::number(this->ui->itemPrefixLimitSlider->value()));
     }
 
     si = this->ui->itemSuffixComboBox->currentData().value<int>();
@@ -395,6 +400,7 @@ void ItemSelectorDialog::updateFields()
     if (si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2) {
         this->ui->itemSuffixLimitSlider->setMinimum(PL_Suffix[si].PLParam1);
         this->ui->itemSuffixLimitSlider->setMaximum(PL_Suffix[si].PLParam2);
+        this->ui->itemSuffixLimitSlider->setToolTip(QString::number(this->ui->itemSuffixLimitSlider->value()));
     }
 }
 
@@ -489,6 +495,16 @@ void ItemSelectorDialog::on_itemSuffixLimitedCheckBox_clicked()
     this->updateFields();
 }
 
+void ItemSelectorDialog::on_itemPrefixLimitSlider_sliderMoved(int value)
+{
+    this->ui->itemPrefixLimitSlider->setToolTip(QString::number(value));
+}
+
+void ItemSelectorDialog::on_itemSuffixLimitSlider_sliderMoved(int value)
+{
+    this->ui->itemSuffixLimitSlider->setToolTip(QString::number(value));
+}
+
 bool ItemSelectorDialog::recreateItem()
 {
     /*bool ok;
@@ -510,29 +526,67 @@ bool ItemSelectorDialog::recreateItem()
 
     int preIdx = this->ui->itemPrefixComboBox->currentData().value<int>();
     int sufIdx = this->ui->itemSuffixComboBox->currentData().value<int>();
+
+    typedef UIAffixData {
+        bool active;
+        BYTE power;
+        int param1;
+        int param2;
+    } UIAffixData;
+    UIAffixData prefix = { false, 0 };
+    UIAffixData suffix = { false, 0 };
+    prefix.active = preIdx >= 0;
+    if (prefix.active) {
+        const AffixData *affix = &PL_Prefix[preIdx];
+        prefix.power = affix->PLPower;
+        prefix.param1 = affix->PLParam1;
+        prefix.param2 = affix->PLParam2;
+        if (this->ui->itemPrefixLimitSlider->isVisible()) {
+            int val = suffix.param1 = this->ui->itemPrefixLimitSlider->value();
+            if (this->ui->itemPrefixLimitedCheckBox->checkState() == Qt::PartiallyChecked) {
+                prefix.param1 = val;
+            } else {
+                prefix.param2 = val;
+            }
+        }
+    }
+    suffix.active = sufIdx >= 0;
+    if (suffix.active) {
+        const AffixData *affix = &PL_Suffix[sufIdx];
+        suffix.power = affix->PLPower;
+        suffix.param1 = affix->PLParam1;
+        suffix.param2 = affix->PLParam2;
+        if (this->ui->itemSuffixLimitSlider->isVisible()) {
+            int val = suffix.param1 = this->ui->itemSuffixLimitSlider->value();
+            if (this->ui->itemSuffixLimitedCheckBox->checkState() == Qt::PartiallyChecked) {
+                suffix.param1 = val;
+            } else {
+                suffix.param2 = val;
+            }
+        }
+    }
+
     int counter = 0;
 start:
     RecreateItem(seed, wIdx, wCI);
 
-    if (preIdx >= 0) {
-        const AffixData *affix = &PL_Prefix[preIdx];
-        if (items[MAXITEMS]._iPrePower != affix->PLPower) {
-            LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, preIdx, seed);
+    if (prefix.active) {
+        if (items[MAXITEMS]._iPrePower != prefix.power) {
+            // LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, preIdx, seed);
             goto restart;
         }
-        if (affix_rnd[0] < affix->PLParam1 || affix_rnd[0] > affix->PLParam2) {
-            LogErrorF("missed preval %d vs [%d:%d]", affix_rnd[0], affix->PLParam1, affix->PLParam2);
+        if (affix_rnd[0] < prefix.param1 || affix_rnd[0] > prefix.param2) {
+            // LogErrorF("missed preval %d vs [%d:%d]", affix_rnd[0], affix->PLParam1, affix->PLParam2);
             goto restart;
         }
     }
-    if (sufIdx >= 0) {
-        const AffixData *affix = &PL_Suffix[sufIdx];
-        if (items[MAXITEMS]._iSufPower != affix->PLPower) {
-            LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, sufIdx);
+    if (suffix.active) {
+        if (items[MAXITEMS]._iSufPower != suffix.power) {
+            // LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, sufIdx);
             goto restart;
         }
-        if (affix_rnd[1] < affix->PLParam1 || affix_rnd[1] > affix->PLParam2) {
-            LogErrorF("missed sufval %d vs [%d:%d]", affix_rnd[1], affix->PLParam1, affix->PLParam2);
+        if (affix_rnd[1] < suffix.param1 || affix_rnd[1] > suffix.param2) {
+            // LogErrorF("missed sufval %d vs [%d:%d]", affix_rnd[1], affix->PLParam1, affix->PLParam2);
             goto restart;
         }
     }

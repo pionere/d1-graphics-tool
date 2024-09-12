@@ -43,6 +43,8 @@ private slots:
     void on_itemSuffixComboBox_activated(int index);
     void on_itemPrefixLimitedCheckBox_clicked();
     void on_itemSuffixLimitedCheckBox_clicked();
+    void on_itemPrefixLimitSlider_sliderMoved(int value);
+    void on_itemSuffixLimitSlider_sliderMoved(int value);
 
     void on_generateButton_clicked();
 

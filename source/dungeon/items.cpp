@@ -2176,33 +2176,6 @@ static int RndHealerItem(unsigned lvl)
 #endif
 }
 
-void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI)
-{
-	if (wIndex == IDI_GOLD) {
-		SetItemData(MAXITEMS, IDI_GOLD);
-		//items[MAXITEMS]._iSeed = iseed;
-		//items[MAXITEMS]._iCreateInfo = wCI;
-	} else {
-		if ((wCI & ~CF_LEVEL) == 0) {
-			SetItemData(MAXITEMS, wIndex);
-			//items[MAXITEMS]._iSeed = iseed;
-			//items[MAXITEMS]._iCreateInfo = wCI;
-		} else {
-			if (wCI & CF_TOWN) {
-				RecreateTownItem(MAXITEMS, iseed, wIndex, wCI);
-			//	items[MAXITEMS]._iSeed = iseed;
-			//	items[MAXITEMS]._iCreateInfo = wCI;
-			//} else if ((wCI & CF_USEFUL) == CF_USEFUL) {
-			//	SetupAllUseful(MAXITEMS, iseed, wCI & CF_LEVEL);
-			} else {
-				SetupAllItems(MAXITEMS, wIndex, iseed, wCI & CF_LEVEL, (wCI & CF_DROP_QUALITY) >> 11); //, onlygood);
-			}
-		}
-	}
-	items[MAXITEMS]._iSeed = iseed;
-	items[MAXITEMS]._iCreateInfo = wCI;
-}
-
 void RespawnItem(int ii)
 {
 	ItemStruct* is;
@@ -2397,4 +2370,31 @@ void RecreateTownItem(int ii, int iseed, uint16_t idx, uint16_t icreateinfo)
 		ASSUME_UNREACHABLE;
 		break;
 	}
+}
+
+void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI)
+{
+	if (wIndex == IDI_GOLD) {
+		SetItemData(MAXITEMS, IDI_GOLD);
+		//items[MAXITEMS]._iSeed = iseed;
+		//items[MAXITEMS]._iCreateInfo = wCI;
+	} else {
+		if ((wCI & ~CF_LEVEL) == 0) {
+			SetItemData(MAXITEMS, wIndex);
+			//items[MAXITEMS]._iSeed = iseed;
+			//items[MAXITEMS]._iCreateInfo = wCI;
+		} else {
+			if (wCI & CF_TOWN) {
+				RecreateTownItem(MAXITEMS, iseed, wIndex, wCI);
+			//	items[MAXITEMS]._iSeed = iseed;
+			//	items[MAXITEMS]._iCreateInfo = wCI;
+			//} else if ((wCI & CF_USEFUL) == CF_USEFUL) {
+			//	SetupAllUseful(MAXITEMS, iseed, wCI & CF_LEVEL);
+			} else {
+				SetupAllItems(MAXITEMS, wIndex, iseed, wCI & CF_LEVEL, (wCI & CF_DROP_QUALITY) >> 11); //, onlygood);
+			}
+		}
+	}
+	items[MAXITEMS]._iSeed = iseed;
+	items[MAXITEMS]._iCreateInfo = wCI;
 }

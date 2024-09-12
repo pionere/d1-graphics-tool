@@ -180,7 +180,7 @@
    </item>
    <item>
     <widget class="QGroupBox">
-     <layout class="QGridLayout">
+     <layout class="QGridLayout" columnstretch="4,1">
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">
@@ -195,10 +195,17 @@
        <widget class="QComboBox" name="itemPrefixComboBox"/>
       </item>
       <item row="0" column="2">
-       <widget class="QCheckBox" name="itemPrefixLimitedCheckBox"/>
+       <widget class="QCheckBox" name="itemPrefixLimitedCheckBox">
+        <property name="tristate">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item row="0" column="3">
        <widget class="QSlider" name="itemPrefixLimitSlider">
+        <property name="minimumWidth">
+         <number>100</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -218,14 +225,28 @@
        <widget class="QComboBox" name="itemSuffixComboBox"/>
       </item>
       <item row="1" column="2">
-       <widget class="QCheckBox" name="itemSuffixLimitedCheckBox"/>
+       <widget class="QCheckBox" name="itemSuffixLimitedCheckBox">
+        <property name="tristate">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item row="1" column="3">
        <widget class="QSlider" name="itemSuffixLimitSlider">
+        <property name="minimumWidth">
+         <number>100</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
+      </item>
+      <item row="1" column="4">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
