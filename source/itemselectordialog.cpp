@@ -360,24 +360,24 @@ void ItemSelectorDialog::updateFields()
 
     int si;
     si = 0;
-    for (const AffixData *pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++) {
+    for (const AffixData *pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++, si++) {
         if ((flgs & pres->PLIType)
 			 && pres->PLRanges[range].from <= lvl && pres->PLRanges[range].to >= lvl) {
             preComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(pres)).arg(pres->PLParam1).arg(pres->PLParam2), QVariant::fromValue(si));
         }
     }
     si = 0;
-    for (const AffixData *sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++) {
+    for (const AffixData *sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++, si++) {
         if ((flgs & sufs->PLIType)
 			 && sufs->PLRanges[range].from <= lvl && sufs->PLRanges[range].to >= lvl) {
             sufComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(sufs)).arg(sufs->PLParam1).arg(sufs->PLParam2), QVariant::fromValue(si));
         }
     }
 
-    si = preComboBox->findData(this->wishPre);
+    si = preComboBox->findData(QVariant::fromValue(this->wishPre));
     if (si < 0) si = 0;
     preComboBox->setCurrentIndex(si);
-    si = sufComboBox->findData(this->wishSuf);
+    si = sufComboBox->findData(QVariant::fromValue(this->wishSuf));
     if (si < 0) si = 0;
     sufComboBox->setCurrentIndex(si);
 
@@ -469,13 +469,13 @@ void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
 
 void ItemSelectorDialog::on_itemPrefixComboBox_activated(int index)
 {
-    this->wishPre = this->ui->itemPrefixComboBox->currentData().value<int>();
+    this->wishPre = this->ui->itemPrefixComboBox->itemData(index).value<int>();
     this->updateFields();
 }
 
 void ItemSelectorDialog::on_itemSuffixComboBox_activated(int index)
 {
-    this->wishSuf = this->ui->itemSuffixComboBox->currentData().value<int>();
+    this->wishSuf = this->ui->itemSuffixComboBox->itemData(index).value<int>();
     this->updateFields();
 }
 
@@ -517,7 +517,7 @@ start:
     if (preIdx >= 0) {
         const AffixData *affix = &PL_Prefix[preIdx];
         if (items[MAXITEMS]._iPrePower != affix->PLPower) {
-            LogErrorF("missed prefix %d vs %d (%d)", items[MAXITEMS]._iPrePower, affix->PLPower, preIdx);
+            LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, preIdx, seed);
             goto restart;
         }
         if (affix_rnd[0] < affix->PLParam1 || affix_rnd[0] > affix->PLParam2) {
@@ -528,7 +528,7 @@ start:
     if (sufIdx >= 0) {
         const AffixData *affix = &PL_Suffix[sufIdx];
         if (items[MAXITEMS]._iSufPower != affix->PLPower) {
-            LogErrorF("missed prefix %d vs %d (%d)", items[MAXITEMS]._iPrePower, affix->PLPower, sufIdx);
+            LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, sufIdx);
             goto restart;
         }
         if (affix_rnd[1] < affix->PLParam1 || affix_rnd[1] > affix->PLParam2) {
