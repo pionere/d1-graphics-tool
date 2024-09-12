@@ -3,6 +3,7 @@
 #include <QWidget>
 
 #include "itempropertieswidget.h"
+#include "popupdialog.h"
 
 class SidePanelWidget;
 class D1Hero;
@@ -27,6 +28,7 @@ private:
 private slots:
     void on_invItemIndexComboBox_activated(int index);
 
+    void on_editNameButton_clicked();
     void on_discardItemButton_clicked();
     void on_addItemButton_clicked();
 
@@ -37,6 +39,8 @@ private:
     Ui::ItemDetailsWidget *ui;
     SidePanelWidget *view;
     ItemPropertiesWidget *itemProps;
+
+    PopupDialog *namePopupDialog = nullptr;
 
     D1Hero *hero;
     int invIdx;

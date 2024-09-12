@@ -114,10 +114,10 @@ void MonsterDetailsWidget::updateFields()
     this->ui->dunSeedEdit->setText(QString::number(this->dunSeed));
 
     QComboBox *typesComboBox = this->ui->monTypeComboBox;
+    int mi = typesComboBox->currentData().value<int>();
     typesComboBox->clear();
     
     int loc = this->ui->dunTypeComboBox->currentIndex();
-    int mi = typesComboBox->currentData().value<int>();
     for (int i = 0; i < NUM_MTYPES; i++) {
         if (loc != DTYPE_TOWN) {
             int n;

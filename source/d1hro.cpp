@@ -548,6 +548,21 @@ void D1Hero::swapItem(int dst_ii, int src_ii)
     }
 }
 
+void D1Hero::renameItem(int ii, QString &name)
+{
+    ItemStruct *pi = PlrItem(this->pnum, ii);
+
+    int len = name.length();
+    if (len > lengthof(pi->_iName) - 1)
+        len = lengthof(pi->_iName) - 1;
+
+    memcpy(pi->_iName, name.toLatin1().constData(), len);
+
+    pi->_iName[len] = '\0';
+
+    this->modified = true;
+}
+
 QString D1Hero::getFilePath() const
 {
     return this->filePath;

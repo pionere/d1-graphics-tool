@@ -112,6 +112,9 @@ set(PROJECT_SOURCES
         source/palettewidget.cpp
         source/palettewidget.h
         source/palettewidget.ui
+        source/popupdialog.cpp
+        source/popupdialog.h
+        source/popupdialog.ui
         source/progressdialog.cpp
         source/progressdialog.h
         source/progressdialog.ui

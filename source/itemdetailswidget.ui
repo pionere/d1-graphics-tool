@@ -19,6 +19,22 @@
       <widget class="QComboBox" name="invItemIndexComboBox"/>
      </item>
      <item>
+      <widget class="QPushButton" name="editNameButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="toolTip">
+        <string>Rename item</string>
+       </property>
+       <property name="text">
+        <string notr="true">*</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

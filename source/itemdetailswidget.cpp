@@ -28,6 +28,7 @@ ItemDetailsWidget::ItemDetailsWidget(SidePanelWidget *parent)
 ItemDetailsWidget::~ItemDetailsWidget()
 {
     delete ui;
+    delete this->namePopupDialog;
 }
 
 void ItemDetailsWidget::initialize(D1Hero *h, int ii)
@@ -103,9 +104,11 @@ void ItemDetailsWidget::updateFields()
     int ii = itemsComboBox->currentData().value<int>();
     this->ui->discardItemButton->setEnabled(ii >= 0);
     // LogErrorF("updateFields 0 %d", ii);
-    const ItemStruct* pi = ii == -1 ? nullptr : (ii == -2 ? this->hero->item(this->invIdx) : this->hero->item(ii));
+    ii = ii == -1 ? INVITEM_NONE : (ii == -2 ? this->invIdx : ii);
+    const ItemStruct* pi = ii == INVITEM_NONE ? nullptr : this->hero->item(ii);
 
     if (pi != nullptr && pi->_itype != ITYPE_NONE) {
+        this->ui->editNameButton->setVisible(true);
         QString text;
         // LogErrorF("updateFields 1 %d", pi->_itype);
         text.clear();
@@ -186,6 +189,7 @@ void ItemDetailsWidget::updateFields()
         this->ui->itemPropertiesBox->adjustSize();
         this->itemProps->setVisible(true);
     } else {
+        this->ui->editNameButton->setVisible(false);
         this->ui->itemDetailsGroupBox->setVisible(false);
         this->itemProps->setVisible(false);
     }
@@ -194,6 +198,24 @@ void ItemDetailsWidget::updateFields()
 void ItemDetailsWidget::on_invItemIndexComboBox_activated(int index)
 {
     this->updateFields();
+}
+
+void ItemDetailsWidget::on_editNameButton_clicked()
+{
+    if (this->namePopupDialog == nullptr) {
+        this->namePopupDialog = new PopupDialog(this);
+    }
+    std::function<void(QString)> func = [this](QString text) {
+        QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
+        int ii = itemsComboBox->currentData().value<int>();
+
+        ii = ii == -1 ? INVITEM_NONE : (ii == -2 ? this->invIdx : ii);
+        if (ii != INVITEM_NONE) {
+            this->hero->renameItem(ii, text);
+        }
+    };
+    this->namePopupDialog->initialize(tr("Name"), this->ui->invItemIndexComboBox->currentText(), std::move(func));
+    this->namePopupDialog->show();
 }
 
 void ItemDetailsWidget::on_discardItemButton_clicked()

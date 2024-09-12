@@ -469,13 +469,13 @@ void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
 
 void ItemSelectorDialog::on_itemPrefixComboBox_activated(int index)
 {
-    this->wishPre = this->ui->itemIdxComboBox->currentData().value<int>();
+    this->wishPre = this->ui->itemPrefixComboBox->currentData().value<int>();
     this->updateFields();
 }
 
 void ItemSelectorDialog::on_itemSuffixComboBox_activated(int index)
 {
-    this->wishSuf = this->ui->itemIdxComboBox->currentData().value<int>();
+    this->wishSuf = this->ui->itemSuffixComboBox->currentData().value<int>();
     this->updateFields();
 }
 

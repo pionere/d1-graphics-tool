@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PopupDialog</class>
+ <widget class="QDialog">
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="LineEditWidget" name="textLineEdit">
+     <property name="charWidth">
+      <number>16</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="4" margin="4"/>
+ <resources/>
+ <connections/>
+ <buttongroups/>
+</ui>
