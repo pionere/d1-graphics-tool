@@ -21,7 +21,7 @@ MonsterDetailsWidget::MonsterDetailsWidget(SidePanelWidget *parent)
     ui->setupUi(this);
 
     QHBoxLayout *layout = this->ui->seedWithRefreshButtonLayout;
-    PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &ItemSelectorDialog::on_actionGenerateSeed_triggered);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &MonsterDetailsWidget::on_actionGenerateSeed_triggered);
     layout->addStretch();
 
     QObject::connect(this->ui->dunSeedEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunSeedEdit_escPressed()));

@@ -60,6 +60,7 @@ void HeroDetailsWidget::updateFields()
 {
     int hc, bv;
     QLabel *label;
+    LineEditWidget *lineEdit;
 
     QObject *view = this->parent();
     CelView *celView = qobject_cast<CelView *>(view);
@@ -87,25 +88,25 @@ void HeroDetailsWidget::updateFields()
     this->ui->heroAddMagicButton->setEnabled(statPts > 0);
     this->ui->heroAddVitalityButton->setEnabled(statPts > 0);
 
-    label = this->ui->heroStrengthEdit;
-    label->setText(QString::number(this->hero->getStrength()));
+    lineEdit = this->ui->heroStrengthEdit;
+    lineEdit->setText(QString::number(this->hero->getStrength()));
     bv = this->hero->getBaseStrength();
-    label->setToolTip(QString::number(bv));
+    lineEdit->setToolTip(QString::number(bv));
     this->ui->heroSubStrengthButton->setEnabled(bv > StrengthTbl[hc]);
-    label = this->ui->heroDexterityEdit;
-    label->setText(QString::number(this->hero->getDexterity()));
+    lineEdit = this->ui->heroDexterityEdit;
+    lineEdit->setText(QString::number(this->hero->getDexterity()));
     bv = this->hero->getBaseDexterity();
-    label->setToolTip(QString::number(bv));
+    lineEdit->setToolTip(QString::number(bv));
     this->ui->heroSubDexterityButton->setEnabled(bv > DexterityTbl[hc]);
-    label = this->ui->heroMagicEdit;
-    label->setText(QString::number(this->hero->getMagic()));
+    lineEdit = this->ui->heroMagicEdit;
+    lineEdit->setText(QString::number(this->hero->getMagic()));
     bv = this->hero->getBaseMagic();
-    label->setToolTip(QString::number(bv));
+    lineEdit->setToolTip(QString::number(bv));
     this->ui->heroSubMagicButton->setEnabled(bv > MagicTbl[hc]);
-    label = this->ui->heroVitalityEdit;
-    label->setText(QString::number(this->hero->getVitality()));
+    lineEdit = this->ui->heroVitalityEdit;
+    lineEdit->setText(QString::number(this->hero->getVitality()));
     bv = this->hero->getBaseVitality();
-    label->setToolTip(QString::number(bv));
+    lineEdit->setToolTip(QString::number(bv));
     this->ui->heroSubVitalityButton->setEnabled(bv > VitalityTbl[hc]);
 
     label = this->ui->heroLifeLabel;

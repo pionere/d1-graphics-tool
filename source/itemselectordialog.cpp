@@ -417,7 +417,14 @@ void ItemSelectorDialog::on_itemIdxComboBox_activated(int index)
 
 void ItemSelectorDialog::on_itemSeedEdit_returnPressed()
 {
-    this->is->_iSeed = this->ui->itemSeedEdit->text().toInt();
+    bool ok;
+    QString seedTxt = this->ui->itemSeedEdit->text();
+    int seed = seedTxt.toInt(&ok);
+    if (ok || seedTxt.isEmpty()) {
+        this->is->_iSeed = seed;
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
+    }
 
     this->on_itemSeedEdit_escPressed();
 }
@@ -484,19 +491,20 @@ void ItemSelectorDialog::on_itemSuffixLimitedCheckBox_clicked()
 
 bool ItemSelectorDialog::recreateItem()
 {
-    bool ok;
+    /*bool ok;
     QString seedTxt = this->ui->itemSeedEdit->text();
     int seed = seedTxt.toInt(&ok);
     if (!ok && !seedTxt.isEmpty()) {
         QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
         return false;
     }
-    /*int wCI = this->ui->itemLevelEdit->text().toShort();
+    int wCI = this->ui->itemLevelEdit->text().toShort();
     wCI &= CF_LEVEL;
     wCI |= this->ui->itemSourceComboBox->currentIndex() << 8;
     wCI |= this->ui->itemQualityComboBox->currentIndex() << 11;
 
     int wIdx = this->ui->itemIdxComboBox->currentData().value<int>();*/
+    int seed = this->is->_iSeed;
     int wCI = this->is->_iCreateInfo;
     int wIdx = this->is->_iIdx;
 
