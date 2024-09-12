@@ -386,7 +386,7 @@ void ItemSelectorDialog::updateFields()
     si = this->ui->itemPrefixComboBox->currentData().value<int>();
     this->ui->itemPrefixLimitedCheckBox->setVisible(si >= 0);
     Qt::CheckState cs = this->ui->itemPrefixLimitedCheckBox->checkState();
-    this->ui->itemPrefixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:"));
+    this->ui->itemPrefixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
     this->ui->itemPrefixLimitSlider->setVisible(this->ui->itemPrefixLimitedCheckBox->isChecked() && si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2);
     if (si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2) {
         this->ui->itemPrefixLimitSlider->setMinimum(PL_Prefix[si].PLParam1);
@@ -527,7 +527,7 @@ bool ItemSelectorDialog::recreateItem()
     int preIdx = this->ui->itemPrefixComboBox->currentData().value<int>();
     int sufIdx = this->ui->itemSuffixComboBox->currentData().value<int>();
 
-    typedef UIAffixData {
+    typedef struct UIAffixData {
         bool active;
         BYTE power;
         int param1;

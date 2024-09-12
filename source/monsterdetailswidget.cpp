@@ -249,27 +249,27 @@ void MonsterDetailsWidget::updateFields()
 
     // player vs. monster info
     int hper, mindam, maxdam;
-    hper = plr._pIHitChance - mon->_mArmorClass;
+    hper = this->hero->getHitChance() - mon->_mArmorClass;
     hper = CheckHit(hper);
     this->ui->plrHitChance->setText(QString("%1%").arg(hper));
-    hper = 30 + mon->_mHit + (2 * mon->_mLevel) - plr._pIAC;
+    hper = 30 + mon->_mHit + (2 * mon->_mLevel) - this->hero->getAC();
     hper = CheckHit(hper);
     this->ui->monHitChance->setText(QString("%1%").arg(hper));
 
     displayDamage(this->ui->plrDamage, this->hero->getTotalMinDam(mon), this->hero->getTotalMaxDam(mon));
-    mindam = mon->_mMinDamage << 6;
-    maxdam = mon->_mMaxDamage << 6;
-    mindam += plr._pIGetHit;
-    maxdam += plr._pIGetHit;
-    if (mindam < 64)
-        mindam = 64;
-    if (maxdam < 64)
-        maxdam = 64;
-    displayDamage(this->ui->monDamage, minDam >> 6, maxDam >> 6);
+    mindam = mon->_mMinDamage;
+    maxdam = mon->_mMaxDamage;
+    mindam += this->hero->getGetHit();
+    maxdam += this->hero->getGetHit();
+    if (mindam < 1)
+        mindam = 1;
+    if (maxdam < 1)
+        maxdam = 1;
+    displayDamage(this->ui->monDamage, mindam, maxdam);
 
     hper = 0;
     this->ui->plrBlockChance->setText(QString("%1%").arg(hper));
-    hper = plr._pIBlockChance - (mon->_mLevel << 1);
+    hper = this->hero->getBlockChance() - (mon->_mLevel << 1);
     this->ui->monBlockChance->setText(QString("%1%").arg(hper));
 
     this->adjustSize(); // not sure why this is necessary...
