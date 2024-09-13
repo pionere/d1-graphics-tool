@@ -109,7 +109,7 @@ static void displayDamage(QLabel *label, int minDam, int maxDam)
 {
     if (maxDam != 0) {
         if (minDam != maxDam)
-            label->setText(QString("%1-%2").arg(minDam).arg(maxDam));
+            label->setText(QString("%1 - %2").arg(minDam).arg(maxDam));
         else
             label->setText(QString("%1").arg(minDam));
     } else {
@@ -128,7 +128,7 @@ static RANGE monLevelRange(int mtype, int dtype)
                 if (AllLevels[n].dMonTypes[m] == mtype) {
                     if (result.from == DLV_INVALID)
                         result.from = n;
-                    result.to == n;
+                    result.to = n;
                     break;
                 }
             }
@@ -139,10 +139,11 @@ static RANGE monLevelRange(int mtype, int dtype)
     return result;
 }
 
-static int uniqMonLevel(const UniqMonData &mon)
+static int uniqMonLevel(int uniqindex)
 {
+    const UniqMonData &mon = uniqMonData[uniqindex];
     int ml = mon.muLevelIdx;
-    switch (i) {
+    switch (uniqindex) {
     case UMT_GARBUD:                          break;
     case UMT_SKELKING:   ml = DLV_CATHEDRAL3; break;
     case UMT_ZHAR:                            break;
@@ -195,7 +196,7 @@ void MonsterDetailsWidget::updateFields()
         if (mon.mtype == MT_INVALID)
             break;
         if (dtype != DTYPE_TOWN) {
-            int ml = uniqMonLevel(mon);
+            int ml = uniqMonLevel(i);
             switch (dtype) {
             case DTYPE_CATHEDRAL: if (ml < DLV_CATHEDRAL1 || ml > DLV_CATHEDRAL4) continue; break;
             case DTYPE_CATACOMBS: if (ml < DLV_CATACOMBS1 || ml > DLV_CATACOMBS4) continue; break;
@@ -214,7 +215,7 @@ void MonsterDetailsWidget::updateFields()
 
     int type = typesComboBox->currentData().value<int>();
     if (type < 0) {
-        int lvl = uniqMonLevel(uniqMonData[-(type + 1)]);
+        int lvl = uniqMonLevel(-(type + 1));
         typesComboBox->setToolTip(tr("Dungeon Level %1").arg(lvl));
     } else {
         RANGE range = monLevelRange(type, dtype);
@@ -225,7 +226,6 @@ void MonsterDetailsWidget::updateFields()
     this->ui->minionCheckBox->setVisible(minion);
     minion &= this->ui->minionCheckBox->isChecked();
 
-    int lvl = this->dunLevel;
     int numplrs = this->ui->plrCountSpinBox->value();
     int difficulty = this->ui->difficutlyComboBox->currentIndex();
     int lvlbonus = this->dunLevelBonus;
@@ -233,9 +233,9 @@ void MonsterDetailsWidget::updateFields()
     this->ui->dunLevelBonusEdit->setText(QString::number(lvlbonus));
 
     if (type < 0)
-        InitUniqMonster(-(type + 1), lvl, numplrs, difficulty, lvlbonus, minion);
+        InitUniqMonster(-(type + 1), numplrs, difficulty, lvlbonus, minion);
     else
-        InitLvlMonster(type, lvl, numplrs, difficulty, lvlbonus);
+        InitLvlMonster(type, numplrs, difficulty, lvlbonus);
 
     MonsterStruct *mon = &monsters[MAX_MINIONS];
 
@@ -353,10 +353,10 @@ void MonsterDetailsWidget::updateFields()
         hper = CheckHit(hper);
     } else if (missile != -1 && (missiledata[missile].mdFlags & MIF_AREA)) {
         hper = 40 + 2 * mon->_mLevel;
-		hper -= 2 * plr._pLevel;
+        hper -= 2 * this->hero->getLevel();
     } else if (missile != -1 && missile != MIS_SWAMPC) {
         hper = 50 + mon->_mMagic;
-		hper -= plr._pIEvasion;
+        hper -= this->hero->getEvasion();
     }
     if (!special) {
         this->ui->monHitChance->setText(QString("%1%").arg(hper));

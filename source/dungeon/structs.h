@@ -381,6 +381,19 @@ typedef struct PlayerStruct {
 // missiles
 //////////////////////////////////////////////////
 
+typedef struct MissileData {
+	int (*mAddProc)(int, int, int, int, int, int, int, int, int);
+	void (*mProc)(int);
+	BYTE mdFlags; // missile_flags
+	BYTE mResist; // missile_resistance
+	BYTE mFileNum; // missile_gfx_id
+	BOOLEAN mDrawFlag;
+	int mlSFX; // sound effect when a missile is launched (_sfx_id)
+	int miSFX; // sound effect on impact (_sfx_id)
+	BYTE mlSFXCnt; // number of launch sound effects to choose from
+	BYTE miSFXCnt; // number of impact sound effects to choose from
+} MissileData;
+
 typedef struct MisFileData {
 	int mfAnimFAmt;
 	const char* mfName;

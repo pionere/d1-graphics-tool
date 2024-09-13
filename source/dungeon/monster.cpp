@@ -396,7 +396,7 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 }
 
 
-int InitLvlMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus)
+int InitLvlMonster(int type, int numplrs, int difficulty, int lvlbonus)
 {
     int mnum = MAX_MINIONS;
     int mtidx = 0;
@@ -410,9 +410,9 @@ int InitLvlMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus)
     return mnum;
 }
 
-void InitUniqMonster(int uniqindex, int lvl, int numplrs, int difficulty, int lvlbonus, bool minion)
+void InitUniqMonster(int uniqindex, int numplrs, int difficulty, int lvlbonus, bool minion)
 {
-    int mnum = InitLvlMonster(uniqMonData[uniqindex].mtype, lvl, numplrs, difficulty, lvlbonus);
+    int mnum = InitLvlMonster(uniqMonData[uniqindex].mtype, numplrs, difficulty, lvlbonus);
     int flags = InitUniqueMonster(mnum, uniqindex);
     int mtidx = 0;
     if (minion) {

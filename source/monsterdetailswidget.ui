@@ -136,6 +136,13 @@
       <widget class="QComboBox" name="monTypeComboBox"/>
      </item>
      <item>
+      <widget class="QCheckBox" name="minionCheckBox">
+       <property name="toolTip">
+        <string>Minion</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

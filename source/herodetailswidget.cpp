@@ -48,7 +48,7 @@ static void displayDamage(QLabel *label, int minDam, int maxDam)
 {
     if (maxDam != 0) {
         if (minDam != maxDam)
-            label->setText(QString("%1-%2").arg(minDam).arg(maxDam));
+            label->setText(QString("%1 - %2").arg(minDam).arg(maxDam));
         else
             label->setText(QString("%1").arg(minDam));
     } else {
