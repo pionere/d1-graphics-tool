@@ -4,6 +4,7 @@
  * Implementation of missile functionality.
  */
 #include "all.h"
+#include "misproc.h"
 
 #include "../d1hro.h"
 
