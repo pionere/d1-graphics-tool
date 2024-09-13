@@ -387,19 +387,29 @@ void ItemSelectorDialog::updateFields()
     this->ui->itemPrefixLimitedCheckBox->setVisible(si >= 0);
     Qt::CheckState cs = this->ui->itemPrefixLimitedCheckBox->checkState();
     this->ui->itemPrefixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
-    this->ui->itemPrefixLimitSlider->setVisible(this->ui->itemPrefixLimitedCheckBox->isChecked() && si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2);
+    this->ui->itemPrefixLimitSlider->setVisible(cs != Qt::Unchecked && si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2);
     if (si >= 0 && PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2) {
         this->ui->itemPrefixLimitSlider->setMinimum(PL_Prefix[si].PLParam1);
         this->ui->itemPrefixLimitSlider->setMaximum(PL_Prefix[si].PLParam2);
+        if (this->resetSlider & 1) {
+            this->resetSlider &= ~1;
+            this->ui->itemPrefixLimitSlider->setValue(cs == Qt::Checked ? PL_Prefix[si].PLParam2 : PL_Prefix[si].PLParam1);
+        }
         this->ui->itemPrefixLimitSlider->setToolTip(QString::number(this->ui->itemPrefixLimitSlider->value()));
     }
 
     si = this->ui->itemSuffixComboBox->currentData().value<int>();
     this->ui->itemSuffixLimitedCheckBox->setVisible(si >= 0);
-    this->ui->itemSuffixLimitSlider->setVisible(this->ui->itemSuffixLimitedCheckBox->isChecked() && si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2);
+    cs = this->ui->itemSuffixLimitedCheckBox->checkState();
+    this->ui->itemSuffixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
+    this->ui->itemSuffixLimitSlider->setVisible(cs != Qt::Unchecked && si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2);
     if (si >= 0 && PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2) {
         this->ui->itemSuffixLimitSlider->setMinimum(PL_Suffix[si].PLParam1);
         this->ui->itemSuffixLimitSlider->setMaximum(PL_Suffix[si].PLParam2);
+        if (this->resetSlider & 2) {
+            this->resetSlider &= ~2;
+            this->ui->itemSuffixLimitSlider->setValue(cs == Qt::Checked ? PL_Suffix[si].PLParam2 : PL_Suffix[si].PLParam1);
+        }
         this->ui->itemSuffixLimitSlider->setToolTip(QString::number(this->ui->itemSuffixLimitSlider->value()));
     }
 }
@@ -476,12 +486,14 @@ void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
 void ItemSelectorDialog::on_itemPrefixComboBox_activated(int index)
 {
     this->wishPre = this->ui->itemPrefixComboBox->itemData(index).value<int>();
+    this->resetSlider |= 1;
     this->updateFields();
 }
 
 void ItemSelectorDialog::on_itemSuffixComboBox_activated(int index)
 {
     this->wishSuf = this->ui->itemSuffixComboBox->itemData(index).value<int>();
+    this->resetSlider |= 2;
     this->updateFields();
 }
 

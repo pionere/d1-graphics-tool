@@ -180,7 +180,7 @@
    </item>
    <item>
     <widget class="QGroupBox">
-     <layout class="QGridLayout" columnstretch="4,1">
+     <layout class="QGridLayout" columnstretch="0,0,0,0,1">
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">

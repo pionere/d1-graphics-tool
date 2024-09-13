@@ -120,10 +120,9 @@ static void displayDamage(QLabel *label, int minDam, int maxDam)
 static RANGE monLevelRange(int mtype, int dtype)
 {
     RANGE result = { DLV_INVALID, DLV_INVALID };
-    if (dtype != DTYPE_TOWN) {
-        int n;
-        for (n = 0; n < NUM_FIXLVLS; n++) {
-            if (AllLevels[n].dType != dtype) continue;
+    //if (dtype != DTYPE_TOWN) {
+        for (int n = 0; n < NUM_FIXLVLS; n++) {
+            if (dtype != DTYPE_TOWN && AllLevels[n].dType != dtype) continue;
             for (int m = 0; AllLevels[n].dMonTypes[m] != MT_INVALID; m++) {
                 if (AllLevels[n].dMonTypes[m] == mtype) {
                     if (result.from == DLV_INVALID)
@@ -133,9 +132,9 @@ static RANGE monLevelRange(int mtype, int dtype)
                 }
             }
         }
-    } else {
-        result = { 0, NUM_FIXLVLS - 1};
-    }
+    //} else {
+    //    result = { 0, NUM_FIXLVLS - 1};
+    // }
     return result;
 }
 
@@ -404,6 +403,10 @@ void MonsterDetailsWidget::updateFields()
     hper = 0;
     if (hth || (missile != -1 && !(missiledata[missile].mdFlags & MIF_NOBLOCK))) {
         hper = this->hero->getBlockChance() - (mon->_mLevel << 1);
+        if (hper < 0)
+            hper = 0;
+        if (hper > 100)
+            hper = 100;
     }
     this->ui->monBlockChance->setText(QString("%1%").arg(hper));
 

@@ -62,4 +62,5 @@ private:
 
     int wishPre = -1;
     int wishSuf = -1;
+    int resetSlider = 0;
 };

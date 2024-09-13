@@ -24,6 +24,51 @@ static double tickToSec(int tickCount)
 	return tickCount / (double)gnTicksRate;
 }
 
+static void CalcHealHp(D1Hero *hero, int sn, int spllvl, int *mind, int *maxd)
+{
+    int i;
+	int minhp = 1;
+    int maxhp = 10;
+	for (i = spllvl; i > 0; i--) {
+		minhp += 1;
+        maxhp += 6;
+	}
+	for (i = hero->getLevel(); i > 0; i--) {
+		minhp += 1;
+        maxhp += 4;
+	}
+    if (sn == SPL_HEAL) {
+        switch (hero->getClass()) {
+        case PC_WARRIOR: minhp <<= 1; maxhp <<= 1;               break;
+#ifdef HELLFIRE
+        case PC_BARBARIAN:
+        case PC_MONK:    minhp <<= 1; maxhp <<= 1;               break;
+        case PC_BARD:
+#endif
+        case PC_ROGUE: minhp += minhp >> 1; maxhp += maxhp >> 1; break;
+        case PC_SORCERER: break;
+        default:
+            ASSUME_UNREACHABLE
+        }
+    } else {
+        switch (hero->getClass()) {
+        case PC_WARRIOR:   minhp <<= 1; maxhp <<= 1;             break;
+#ifdef HELLFIRE
+        case PC_MONK:      minhp *= 3;  maxhp *= 3;              break;
+        case PC_BARBARIAN: minhp <<= 1; maxhp <<= 1;             break;
+        case PC_BARD:
+#endif
+        case PC_ROGUE: minhp += minhp >> 1; maxhp += maxhp >> 1; break;
+        case PC_SORCERER: break;
+        default:
+            ASSUME_UNREACHABLE
+        }
+    }
+
+    *mind = minhp;
+    *maxd = maxhp;
+}
+
 void GetSkillDesc(D1Hero *hero, int sn, int sl)
 {
 	int k, magic, mind, maxd = 0, dur = 0;
@@ -63,22 +108,13 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	case SPL_WALK:
 	case SPL_BLOCK:
 	case SPL_ATTACK:
-	case SPL_WHIPLASH:
-	case SPL_WALLOP:
-	case SPL_SWIPE:
+	case SPL_SWAMP:
 	case SPL_RATTACK:
-	case SPL_POINT_BLANK:
-	case SPL_FAR_SHOT:
-	case SPL_PIERCE_SHOT:
-	case SPL_MULTI_SHOT:
-	case SPL_CHARGE:
 	case SPL_INFRA:
 	case SPL_TELEKINESIS:
 	case SPL_TELEPORT:
 	case SPL_RNDTELEPORT:
 	case SPL_TOWN:
-	case SPL_HEAL:
-	case SPL_HEALOTHER:
 	case SPL_RESURRECT:
 	case SPL_IDENTIFY:
 	case SPL_REPAIR:
@@ -90,6 +126,44 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	case SPL_RUNESTONE:
 #endif
 		break;
+	case SPL_HEAL:
+	case SPL_HEALOTHER:
+        CalcHealHp(hero, sn, sl, &mind, &maxd);
+        snprintf(infostr, sizeof(infostr), "Heal: %d-%d", mind, maxd);
+        return;
+	case SPL_CHARGE:
+        mind = hero->getChMinDam(); // myplr._pIChMinDam
+        maxd = hero->getChMaxDam(); // myplr._pIChMaxDam
+        // hper = sl * 16 - mon->_mArmorClass;
+        break;
+	case SPL_SWIPE:
+        k = (100 * (48 + sl)) >> 6;
+        snprintf(infostr, sizeof(infostr), "Dam Mpl.: %d%%", k);
+        return;
+	case SPL_WALLOP:
+        k = (100 * (112 + sl)) >> 6;
+        snprintf(infostr, sizeof(infostr), "Dam Mpl.: %d%%", k);
+        return;
+	case SPL_WHIPLASH:
+        k = (100 * (24 + sl)) >> 6;
+        snprintf(infostr, sizeof(infostr), "Dam Mpl.: %d%%", k);
+        return;
+	case SPL_POINT_BLANK:
+        k = (100 * (64 + 32 /*- 16 * mis->_miVar7*/ + sl)) >> 6;
+        snprintf(infostr, sizeof(infostr), "Dam Mpl. <= %d%%", k);
+        return;
+	case SPL_FAR_SHOT:
+        k = (100 * (/*8 * mis->_miVar7*/ - 16 + sl)) >> 5;
+        snprintf(infostr, sizeof(infostr), "Dam Mpl. >= %d%%", k);
+        return;
+	case SPL_PIERCE_SHOT:
+        k = (100 * (32 + sl)) >> 6;
+        snprintf(infostr, sizeof(infostr), "Dam Mpl.: %d%%", k);
+        return;
+	case SPL_MULTI_SHOT:
+        k = (100 * (16 + sl)) >> 6;
+        snprintf(infostr, sizeof(infostr), "Dam Mpl.: %d%%", k);
+        return;
 	case SPL_MANASHIELD:
 		k = (std::min(sl + 1, 16) * 100) >> 6;
 		snprintf(infostr, sizeof(infostr), "Dam Red.: %d%%", k);
@@ -97,7 +171,7 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	case SPL_ATTRACT:
 		k = 4 + (sl >> 2);
 		if (k > 9)
-				k = 9;
+			k = 9;
 		snprintf(infostr, sizeof(infostr), "Range: %d", k);
 		return;
 	case SPL_RAGE:
@@ -113,7 +187,7 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 			dur = 0;
 		if (dur > 239)
 			dur = 239;
-		snprintf(infostr, sizeof(infostr), "Dur <= %.1f", tickToSec(dur));
+		snprintf(infostr, sizeof(infostr), "Dur <= %.1fs", tickToSec(dur));
 		return;
 #ifdef HELLFIRE
 	case SPL_FIRERING:
@@ -138,6 +212,7 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	case SPL_BLOODBOIL:
 		mind = (magic >> 2) + (sl << 2) + 10;
 		maxd = (magic >> 2) + (sl << 3) + 10;
+	case SPL_SWAMP:
 		dur = (lengthof(BloodBoilLocs) + sl * 2) * misfiledata[MFILE_BLODBURS].mfAnimFrameLen[0] * misfiledata[MFILE_BLODBURS].mfAnimLen[0] / 2;
 		break;
 	case SPL_CHAIN:
@@ -163,9 +238,15 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 		maxd = ((magic + (sl << 4)) * 30) >> 6;
 		break;
 	case SPL_GOLEM:
-		mind = 2 * sl + 8;
-		maxd = 2 * sl + 16;
-		break;
+		sl = sl > 0 ? sl - 1 : 0;
+		k = monsterdata[MT_GOLEM].mLevel;
+		sl = k + sl;
+		// mon->_mLevel = sl;
+		dur = (sl * monsterdata[MT_GOLEM].mMinHP / k) << 6;
+		mind = sl * monsterdata[MT_GOLEM].mMinDamage / k;
+		maxd = sl * monsterdata[MT_GOLEM].mMaxDamage / k;
+        snprintf(infostr, sizeof(infostr), "Lvl: %d Hp: %d Dam: %d-%d", sl, dur, mind, maxd);
+		return;
 	case SPL_ELEMENTAL:
 		mind = (magic >> 3) + 2 * sl + 4;
 		maxd = (magic >> 3) + 4 * sl + 20;
@@ -224,9 +305,9 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	infostr[0] = '\0';
 	if (dur != 0) {
 		if (maxd != 0)
-			snprintf(infostr, sizeof(infostr), "Dam: %d-%d Dur:%.1f", mind, maxd, tickToSec(dur));
+			snprintf(infostr, sizeof(infostr), "Dam: %d-%d Dur: %.1fs", mind, maxd, tickToSec(dur));
 		else
-			snprintf(infostr, sizeof(infostr), "Dur:%.1f", tickToSec(dur));
+			snprintf(infostr, sizeof(infostr), "Dur: %.1fs", tickToSec(dur));
 	} else if (maxd != 0) {
 		snprintf(infostr, sizeof(infostr), "Dam: %d-%d", mind, maxd);
 	}
