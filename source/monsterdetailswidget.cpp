@@ -20,7 +20,6 @@ MonsterDetailsWidget::MonsterDetailsWidget(SidePanelWidget *parent)
 {
     ui->setupUi(this);
 
-    QObject::connect(this->ui->dunLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunLevelEdit_escPressed()));
     QObject::connect(this->ui->dunLevelBonusEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunLevelBonusEdit_escPressed()));
 }
 
@@ -231,7 +230,6 @@ void MonsterDetailsWidget::updateFields()
     int difficulty = this->ui->difficutlyComboBox->currentIndex();
     int lvlbonus = this->dunLevelBonus;
 
-    this->ui->dunLevelEdit->setText(QString::number(lvl));
     this->ui->dunLevelBonusEdit->setText(QString::number(lvlbonus));
 
     if (type < 0)
@@ -421,20 +419,6 @@ void MonsterDetailsWidget::on_dunTypeComboBox_activated(int index)
 void MonsterDetailsWidget::on_monTypeComboBox_activated(int index)
 {
     this->updateFields();
-}
-
-void MonsterDetailsWidget::on_dunLevelEdit_returnPressed()
-{
-    this->dunLevel = this->ui->dunLevelEdit->text().toShort();
-
-    this->on_dunLevelEdit_escPressed();
-}
-
-void MonsterDetailsWidget::on_dunLevelEdit_escPressed()
-{
-    // update dunLevelEdit
-    this->updateFields();
-    this->ui->dunLevelEdit->clearFocus();
 }
 
 void MonsterDetailsWidget::on_dunLevelBonusEdit_returnPressed()

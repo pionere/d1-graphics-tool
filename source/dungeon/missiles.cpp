@@ -20,7 +20,7 @@ static int gnTicksRate = SPEED_NORMAL;
 
 static double tickToSec(int tickCount)
 {
-    return tickCount / (double)gnTicksRate;
+	return tickCount / (double)gnTicksRate;
 }
 
 void GetSkillDesc(D1Hero *hero, int sn, int sl)
@@ -28,14 +28,14 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	int k, magic, mind, maxd = 0, dur = 0;
 
 	// assert((unsigned)sn < NUM_SPELLS);
-    magic = hero->getMagic(); //  myplr._pMagic;
+	magic = hero->getMagic(); //  myplr._pMagic;
 #ifdef HELLFIRE
 	if (SPELL_RUNE(sn))
 		sl += hero->getDexterity() /*myplr._pDexterity*/ >> 3;
 #endif
 	switch (sn) {
 	case SPL_GUARDIAN:
-		dur = sl + (hero->_pLevel >> 1);
+		dur = sl + (hero->getLevel() >> 1);
 	case SPL_FIREBOLT:
 		k = (magic >> 3) + sl;
 		mind = k + 1;
@@ -90,8 +90,8 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 #endif
 		break;
 	case SPL_MANASHIELD:
-		k = (std::min(sl + 1, (BYTE)16) * 100) >> 6;
-		snprintf(infostr, sizeof(infostr), "Dam Red.: %d%", k);
+		k = (std::min(sl + 1, 16) * 100) >> 6;
+		snprintf(infostr, sizeof(infostr), "Dam Red.: %d%%", k);
 		return;
 	case SPL_ATTRACT:
 		k = 4 + (sl >> 2);
@@ -109,10 +109,10 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 		dur = (sl + 1) << (7 + 6);
 		dur >>= 5;
 		if (dur < 15)
-			dur = 0
+			dur = 0;
 		if (dur > 239)
 			dur = 239;
-		snprintf(infostr, sizeof(infostr), "Dur <= %.1d", tickToSec(dur));
+		snprintf(infostr, sizeof(infostr), "Dur <= %.1f", tickToSec(dur));
 		return;
 #ifdef HELLFIRE
 	case SPL_FIRERING:
@@ -223,9 +223,9 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	infostr[0] = '\0';
 	if (dur != 0) {
 		if (maxd != 0)
-			snprintf(infostr, sizeof(infostr), "Dam: %d-%d Dur:%.1d", mind, maxd, tickToSec(dur));
+			snprintf(infostr, sizeof(infostr), "Dam: %d-%d Dur:%.1f", mind, maxd, tickToSec(dur));
 		else
-			snprintf(infostr, sizeof(infostr), "Dur:%.1d", tickToSec(dur));
+			snprintf(infostr, sizeof(infostr), "Dur:%.1f", tickToSec(dur));
 	} else if (maxd != 0) {
 		snprintf(infostr, sizeof(infostr), "Dam: %d-%d", mind, maxd);
 	}
@@ -328,5 +328,122 @@ unsigned CalcPlrDam(int pnum, BYTE mRes, unsigned damage)
 		dam -= dam * resist / 100;
 	return dam;
 }
+
+#ifdef HELLFIRE
+int AddFireRune(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddLightRune(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddNovaRune(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddWaveRune(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddStoneRune(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddHorkSpawn(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+//int AddLightwall(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddFireexp(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddRingC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+//int AddFireball2(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+#endif
+int AddArrow(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddFirebolt(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddMage(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddMagmaball(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddLightball(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddPoison(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddWind(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddAcid(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddAcidpud(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+//int AddKrull(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddFirewall(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+//int AddFireball(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddLightningC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddLightning(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddBloodBoilC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddBloodBoil(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddBleed(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddMisexp(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddFlash(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddFlash2(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddFireWave(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddMeteor(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddChain(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddRhino(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddCharge(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+//int AddFireman(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+//int AddFlare(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddStone(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddShroud(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddGuardian(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddGolem(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddHeal(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddHealOther(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddElemental(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddWallC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddFireWaveC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddNovaC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddOpItem(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddDisarm(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddInferno(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddInfernoC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+//int AddFireTrap(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddBarrelExp(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddCboltC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddCbolt(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddResurrect(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddAttract(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddTelekinesis(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddTown(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddPortal(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddApocaC2(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddManashield(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddInfra(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+int AddRage(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl) { }
+void MI_Dummy(int mi) { }
+void MI_Arrow(int mi) { }
+void MI_AsArrow(int mi) { }
+void MI_Firebolt(int mi) { }
+void MI_Lightball(int mi) { }
+void MI_Poison(int mi) { }
+void MI_Mage(int mi) { }
+void MI_Wind(int mi) { }
+//void MI_Krull(int mi) { }
+void MI_Acid(int mi) { }
+void MI_Acidpud(int mi) { }
+void MI_Firewall(int mi) { }
+//void MI_Fireball(int mi) { }
+#ifdef HELLFIRE
+void MI_HorkSpawn(int mi) { }
+void MI_Rune(int mi) { }
+//void MI_Lightwall(int mi) { }
+#endif
+void MI_LightningC(int mi) { }
+void MI_Lightning(int mi) { }
+void MI_BloodBoilC(int mi) { }
+void MI_BloodBoil(int mi) { }
+void MI_SwampC(int mi) { }
+void MI_Bleed(int mi) { }
+void MI_Portal(int mi) { }
+void MI_Flash(int mi) { }
+void MI_Flash2(int mi) { }
+void MI_FireWave(int mi) { }
+void MI_Meteor(int mi) { }
+void MI_Guardian(int mi) { }
+void MI_Chain(int mi) { }
+void MI_Misexp(int mi) { }
+void MI_MiniExp(int mi) { }
+void MI_LongExp(int mi) { }
+void MI_Acidsplat(int mi) { }
+void MI_Stone(int mi) { }
+void MI_Shroud(int mi) { }
+void MI_Rhino(int mi) { }
+void MI_Charge(int mi) { }
+//void MI_Fireman(int mi) { }
+void MI_WallC(int mi) { }
+void MI_ApocaC(int mi) { }
+void MI_Inferno(int mi) { }
+void MI_InfernoC(int mi) { }
+//void MI_FireTrap(int mi) { }
+void MI_Cbolt(int mi) { }
+void MI_Elemental(int mi) { }
+void MI_Resurrect(int mi) { }
 
 DEVILUTION_END_NAMESPACE
