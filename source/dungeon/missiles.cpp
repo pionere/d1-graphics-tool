@@ -108,7 +108,6 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	case SPL_WALK:
 	case SPL_BLOCK:
 	case SPL_ATTACK:
-	case SPL_SWAMP:
 	case SPL_RATTACK:
 	case SPL_INFRA:
 	case SPL_TELEKINESIS:
