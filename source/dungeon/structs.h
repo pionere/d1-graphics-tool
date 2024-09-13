@@ -488,6 +488,7 @@ typedef struct MonsterStruct {
 	int _mAnimLen;   // Number of frames in current animation
 	int _mAnimFrame; // Current frame of animation.
 	int _mmaxhp;
+	int _mhitpoints;
 	int32_t _mRndSeed;
 	BYTE _muniqtype;
 	BYTE _muniqtrans;

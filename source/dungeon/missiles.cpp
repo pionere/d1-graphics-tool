@@ -9,9 +9,23 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+static const BYTE BloodBoilLocs[][2] = {
+	// clang-format off
+	{ 3, 4 },  { 2, 1 },  { 3, 3 },  { 1, 1 },  { 2, 3 }, { 1, 0 },  { 4, 3 },  { 2, 2 },  { 3, 0 },  { 1, 2 }, 
+	{ 2, 4 },  { 0, 1 },  { 4, 2 },  { 0, 3 },  { 2, 0 }, { 3, 2 },  { 1, 4 },  { 4, 1 },  { 0, 2 },  { 3, 1 }, { 1, 3 }
+	// clang-format on
+};
+
+static int gnTicksRate = SPEED_NORMAL;
+
+static double tickToSec(int tickCount)
+{
+    return tickCount / (double)gnTicksRate;
+}
+
 void GetSkillDesc(D1Hero *hero, int sn, int sl)
 {
-	int k, magic, mind, maxd;
+	int k, magic, mind, maxd = 0, dur = 0;
 
 	// assert((unsigned)sn < NUM_SPELLS);
     magic = hero->getMagic(); //  myplr._pMagic;
@@ -20,8 +34,9 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 		sl += hero->getDexterity() /*myplr._pDexterity*/ >> 3;
 #endif
 	switch (sn) {
-	case SPL_FIREBOLT:
 	case SPL_GUARDIAN:
+		dur = sl + (hero->_pLevel >> 1);
+	case SPL_FIREBOLT:
 		k = (magic >> 3) + sl;
 		mind = k + 1;
 		maxd = k + 10;
@@ -56,12 +71,7 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	case SPL_PIERCE_SHOT:
 	case SPL_MULTI_SHOT:
 	case SPL_CHARGE:
-	case SPL_RAGE:
-	case SPL_SHROUD:
-	case SPL_STONE:
 	case SPL_INFRA:
-	case SPL_MANASHIELD:
-	case SPL_ATTRACT:
 	case SPL_TELEKINESIS:
 	case SPL_TELEPORT:
 	case SPL_RNDTELEPORT:
@@ -78,15 +88,39 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	case SPL_WHITTLE:
 	case SPL_RUNESTONE:
 #endif
-		mind = -1;
-		maxd = -1;
 		break;
+	case SPL_MANASHIELD:
+		k = (std::min(sl + 1, (BYTE)16) * 100) >> 6;
+		snprintf(infostr, sizeof(infostr), "Dam Red.: %d%", k);
+		return;
+	case SPL_ATTRACT:
+		k = 4 + (sl >> 2);
+		if (k > 9)
+				k = 9;
+		snprintf(infostr, sizeof(infostr), "Range: %d", k);
+		return;
+	case SPL_RAGE:
+		dur = 32 * sl + 245;
+		break;
+	case SPL_SHROUD:
+		dur = 32 * sl + 160;
+		break;
+	case SPL_STONE:
+		dur = (sl + 1) << (7 + 6);
+		dur >>= 5;
+		if (dur < 15)
+			dur = 0
+		if (dur > 239)
+			dur = 239;
+		snprintf(infostr, sizeof(infostr), "Dur <= %.1d", tickToSec(dur));
+		return;
 #ifdef HELLFIRE
 	case SPL_FIRERING:
 #endif
 	case SPL_FIREWALL:
 		mind = ((magic >> 3) + sl + 5) << (-3 + 5);
 		maxd = ((magic >> 3) + sl * 2 + 10) << (-3 + 5);
+		dur = 64 * sl + 160;
 		break;
 	case SPL_FIREBALL:
 		mind = (magic >> 2) + 10;
@@ -103,6 +137,7 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	case SPL_BLOODBOIL:
 		mind = (magic >> 2) + (sl << 2) + 10;
 		maxd = (magic >> 2) + (sl << 3) + 10;
+		dur = (lengthof(BloodBoilLocs) + sl * 2) * misfiledata[MFILE_BLODBURS].mfAnimFrameLen[0] * misfiledata[MFILE_BLODBURS].mfAnimLen[0] / 2;
 		break;
 	case SPL_CHAIN:
 		mind = 1;
@@ -185,11 +220,15 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 		break;
 	}
 
-    if (mind != -1) {
-        snprintf(infostr, sizeof(infostr), "Dam: %d-%d", mind, maxd);
-    } else {
-        infostr[0] = '\0';
-    }
+	infostr[0] = '\0';
+	if (dur != 0) {
+		if (maxd != 0)
+			snprintf(infostr, sizeof(infostr), "Dam: %d-%d Dur:%.1d", mind, maxd, tickToSec(dur));
+		else
+			snprintf(infostr, sizeof(infostr), "Dur:%.1d", tickToSec(dur));
+	} else if (maxd != 0) {
+		snprintf(infostr, sizeof(infostr), "Dam: %d-%d", mind, maxd);
+	}
 }
 
 unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrates)

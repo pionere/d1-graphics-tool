@@ -270,13 +270,14 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	// mon->_mAFNum = cmon->cmAFNum;
 	// mon->_mAFNum2 = cmon->cmAFNum2;
 	// mon->_mAlign_0 = cmon->cmAlign_0;
-	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP) << 6;
+	mon->_mmaxhp = cmon->cmMaxHP;
+    mon->_mhitpoints = cmon->cmMinHP;
 	mon->_mAnimFrameLen = cmon->cmAnims[MA_STAND].maFrameLen;
-	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
+	// mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
 	mon->_mAnimLen = cmon->cmAnims[MA_STAND].maFrames;
-	mon->_mAnimFrame = mon->_mAnimLen == 0 ? 1 : RandRangeLow(1, mon->_mAnimLen);
+	// mon->_mAnimFrame = mon->_mAnimLen == 0 ? 1 : RandRangeLow(1, mon->_mAnimLen);
 	mon->_mmode = MM_STAND;
-	mon->_mRndSeed = NextRndSeed();
+	// mon->_mRndSeed = NextRndSeed();
 
 	mon->_muniqtype = 0;
 	mon->_muniqtrans = 0;
@@ -287,6 +288,33 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_mleaderflag = MLEADER_NONE;
 	mon->_mpacksize = 0;
 	mon->_mvid = NO_VISION;
+}
+
+static int PlaceMonster(int mtidx, int x, int y)
+{
+    int mnum = MAX_MINIONS + 1;
+    InitMonster(mnum, 0, mtidx, x, y);
+    return mnum;
+}
+
+static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
+{
+    int xp = 0, yp = 0, mnum;
+
+    mnum = PlaceMonster(mtidx, xp, yp);
+    if (leaderf) {
+        // assert(leaderf & UMF_GROUP);
+        monsters[mnum]._mNameColor = COL_BLUE;
+        monsters[mnum]._mmaxhp *= 2;
+        monsters[mnum]._mhitpoints = monsters[mnum]._mmaxhp;
+        monsters[mnum]._mAI.aiInt = monsters[leader]._mAI.aiInt;
+
+        if (leaderf & UMF_LEADER) {
+            monsters[mnum]._mleader = leader;
+            monsters[mnum]._mleaderflag = MLEADER_PRESENT;
+            monsters[mnum]._mAI = monsters[leader]._mAI;
+        }
+    }
 }
 
 static unsigned InitUniqueMonster(int mnum, int uniqindex)
@@ -310,7 +338,7 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 
 	mon->_mExp *= 2;
 	mon->_mName = uniqm->mName;
-	mon->_mmaxhp = uniqm->mmaxhp;
+	mon->_mhitpoints = mon->_mmaxhp = uniqm->mmaxhp;
 
 	mon->_mAI = uniqm->mAI;
 	mon->_mMinDamage = uniqm->mMinDamage;
@@ -355,7 +383,7 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	// mon->_mExp = (mon->_mExp * mpl) >> 1;
 
 	mon->_mmaxhp <<= 6;*/
-	mon->_mmaxhp = (mon->_mmaxhp * mpl) << (6 - 1);
+	mon->_mhitpoints = mon->_mmaxhp = (mon->_mmaxhp * mpl) << (6 - 1);
 
 	unsigned flags = uniqm->mUnqFlags;
 	if (flags & UMF_NODROP)
@@ -368,20 +396,27 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 }
 
 
-void InitLvlMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus)
+int InitLvlMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus)
 {
+    int mnum = MAX_MINIONS;
+    int mtidx = 0;
     monstimgtot = MAX_LVLMIMAGE;
     nummtypes = 0;
     gnDifficulty = difficulty;
     currLvl._dLevelPlyrs = numplrs;
     currLvl._dLevelBonus = lvlbonus;
     AddMonsterType(type, false);
-    InitMonster(MAX_MINIONS, 0, 0, 0, 0);
-    
+    InitMonster(mnum, 0, mtidx, 0, 0);
+    return mnum;
 }
 
-void InitUniqMonster(int uniqindex, int lvl, int numplrs, int difficulty, int lvlbonus)
+void InitUniqMonster(int uniqindex, int lvl, int numplrs, int difficulty, int lvlbonus, bool minion)
 {
-    InitLvlMonster(uniqMonData[uniqindex].mtype, lvl, numplrs, difficulty, lvlbonus);
-    InitUniqueMonster(MAX_MINIONS, uniqindex);
+    int mnum = InitLvlMonster(uniqMonData[uniqindex].mtype, lvl, numplrs, difficulty, lvlbonus);
+    int flags = InitUniqueMonster(mnum, uniqindex);
+    int mtidx = 0;
+    if (minion) {
+        PlaceGroup(mtidx, MON_PACK_SIZE - 1, flags, mnum);
+        memcpy(&monsters[mnum], &monsters[mnum + 1], sizeof(MonsterStruct));
+    }
 }

@@ -12,7 +12,7 @@ extern MonsterStruct monsters[MAXMONSTERS];
 // extern MapMonData mapMonTypes[MAX_LVLMTYPES];
 // extern int nummtypes;
 
-void InitUniqMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus);
+void InitUniqMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus, bool minion);
 void InitLvlMonster(int type, int lvl, int numplrs, int difficulty, int lvlbonus);
 
 // void InitLvlMonsters();

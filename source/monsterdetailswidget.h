@@ -25,14 +25,8 @@ private:
 private slots:
     void on_difficutlyComboBox_activated(int index);
     void on_plrCountSpinBox_valueChanged(int value);
-    void on_dunSeedEdit_returnPressed();
-    void on_dunSeedEdit_escPressed();
-    void on_actionGenerateSeed_triggered();
 
     void on_dunTypeComboBox_activated(int index);
-
-    void on_dunLevelEdit_returnPressed();
-    void on_dunLevelEdit_escPressed();
 
     void on_dunLevelBonusEdit_returnPressed();
     void on_dunLevelBonusEdit_escPressed();
@@ -45,7 +39,5 @@ private:
     Ui::MonsterDetailsWidget *ui;
 
     D1Hero *hero;
-    int dunSeed = 0;
-    int dunLevel = 0;
     int dunLevelBonus = 0;
 };

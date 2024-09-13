@@ -555,7 +555,7 @@ void D1Hero::renameItem(int ii, QString &name)
     int len = name.length();
     if (len > lengthof(pi->_iName) - 1)
         len = lengthof(pi->_iName) - 1;
-
+    // LogErrorF("D1Hero::renameItem '%s' -> '%s' (%d)", pi->_iName, text.toLatin1().constData(), len);
     memcpy(pi->_iName, name.toLatin1().constData(), len);
 
     pi->_iName[len] = '\0';

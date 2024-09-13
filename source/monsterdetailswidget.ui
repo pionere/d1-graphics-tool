@@ -45,20 +45,6 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="seedWithRefreshButtonLayout">
-       <item>
-        <widget class="LineEditWidget" name="dunSeedEdit">
-         <property name="toolTip">
-          <string>Seed</string>
-         </property>
-         <property name="charWidth">
-          <number>10</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -75,19 +61,6 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="LineEditWidget" name="dunLevelEdit">
-       <property name="charWidth">
-        <number>3</number>
-       </property>
-       <property name="toolTip">
-        <string>Dungeon Level</string>
-       </property>
-       <property name="alignment">
-        <enum>Qt::AlignCenter</enum>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="QComboBox" name="dunTypeComboBox">

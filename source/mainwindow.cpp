@@ -310,6 +310,9 @@ void MainWindow::selectHeroItem(int ii)
 void MainWindow::addHeroItem(int ii, ItemStruct *is)
 {
     if (this->hero->addItem(ii, is)) {
+        if (this->itemSelectorDialog != nullptr) {
+            this->itemSelectorDialog->initialize(this->hero, ii);
+        }
         this->updateWindow();
     }
 }

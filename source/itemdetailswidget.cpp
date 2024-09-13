@@ -208,10 +208,11 @@ void ItemDetailsWidget::on_editNameButton_clicked()
     std::function<void(QString)> func = [this](QString text) {
         QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
         int ii = itemsComboBox->currentData().value<int>();
-
         ii = ii == -1 ? INVITEM_NONE : (ii == -2 ? this->invIdx : ii);
         if (ii != INVITEM_NONE) {
             this->hero->renameItem(ii, text);
+            const ItemStruct* is = this->hero->item(ii);
+            itemsComboBox->setItemText(itemsComboBox->currentIndex(), ItemName(is));
         }
     };
     this->namePopupDialog->initialize(tr("Name"), this->ui->invItemIndexComboBox->currentText(), std::move(func));
