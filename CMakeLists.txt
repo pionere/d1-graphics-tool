@@ -85,6 +85,8 @@ set(PROJECT_SOURCES
         source/d1cpp.h
         source/d1dun.cpp
         source/d1dun.h
+        source/d1font.cpp
+        source/d1font.h
         source/d1gfx.cpp
         source/d1gfx.h
         source/d1gfxset.cpp
