@@ -121,10 +121,11 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
             // Going through all frames of the group
             for (unsigned j = 1; j <= cl2GroupFrameCount; j++) {
-                device->seek(cl2GroupOffset + j * 4);
                 quint32 cl2FrameStartOffset;
-                in >> cl2FrameStartOffset;
                 quint32 cl2FrameEndOffset;
+
+                device->seek(cl2GroupOffset + j * 4);
+                in >> cl2FrameStartOffset;
                 in >> cl2FrameEndOffset;
 
                 frameOffsets.push_back(
