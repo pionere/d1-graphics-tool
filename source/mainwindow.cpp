@@ -454,13 +454,12 @@ void MainWindow::reloadConfig()
 void MainWindow::gfxChanged(D1Gfx *gfx)
 {
     this->gfx = gfx;
+    if (this->tileset != nullptr) {
+        this->tileset->gfx = gfx;
+    }
     if (this->palHits != nullptr) {
         this->palHits->setGfx(gfx);
     }
-    // if (this->tileset != nullptr) {
-    //    this->tileset->gfx = gfx;
-    //    this->tileset->min->setGfx(gfx);
-    // }
     if (this->gfxset != nullptr) {
         this->gfxset->setGfx(gfx);
     }
