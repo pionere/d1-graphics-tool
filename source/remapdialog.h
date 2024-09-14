@@ -22,7 +22,7 @@ public:
     explicit RemapDialog(QWidget *parent);
     ~RemapDialog();
 
-    void initialize(PaletteWidget *palWidget);
+    void initialize(const PaletteWidget *palWidget);
 
 private slots:
     void on_remapButton_clicked();
