@@ -104,6 +104,9 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             quint32 cl2GroupOffset;
             in >> cl2GroupOffset;
 
+            if (fileSize < (cl2GroupOffset + 4))
+                return false;
+
             device->seek(cl2GroupOffset);
             quint32 cl2GroupFrameCount;
             in >> cl2GroupFrameCount;
@@ -111,6 +114,9 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (cl2GroupFrameCount == 0) {
                 continue;
             }
+            if (fileSize < (cl2GroupOffset + cl2GroupFrameCount * 4 + 4 + 4))
+                return false;
+
             gfx.groupFrameIndices.push_back(std::pair<int, int>(frameOffsets.size(), frameOffsets.size() + cl2GroupFrameCount - 1));
 
             // Going through all frames of the group
