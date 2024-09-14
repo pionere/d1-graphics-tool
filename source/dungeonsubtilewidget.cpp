@@ -125,6 +125,18 @@ static void MonResistText(unsigned resist, unsigned idx, QProgressBar *label)
     label->setToolTip(tooltip.arg(type));
 }
 
+static void displayDamage(QLabel *label, int minDam, int maxDam)
+{
+    if (maxDam != 0) {
+        if (minDam != maxDam)
+            label->setText(QString("%1 - %2").arg(minDam).arg(maxDam));
+        else
+            label->setText(QString("%1").arg(minDam));
+    } else {
+        label->setText(QString("-"));
+    }
+}
+
 void DungeonSubtileWidget::dungeonModified()
 {
     if (this->isHidden())
@@ -145,9 +157,9 @@ void DungeonSubtileWidget::dungeonModified()
         this->ui->monsterInt->setText(QString::number(mon->_mAI.aiInt));
 
         this->ui->monsterHit->setText(QString::number(mon->_mHit));
-        this->ui->monsterDamage->setText(QString("%1 - %2").arg(mon->_mMinDamage).arg(mon->_mMaxDamage));
+        displayDamage(this->ui->monsterDamage, mon->_mMinDamage, mon->_mMaxDamage);
         this->ui->monsterHit2->setText(QString::number(mon->_mHit2));
-        this->ui->monsterDamage2->setText(QString("%1 - %2").arg(mon->_mMinDamage2).arg(mon->_mMaxDamage2));
+        displayDamage(this->ui->monsterDamage2, mon->_mMinDamage2, mon->_mMaxDamage2);
         this->ui->monsterMagic->setText(QString::number(mon->_mMagic));
 
         this->ui->monsterHp->setText(QString::number(mon->_mmaxhp >> 6));

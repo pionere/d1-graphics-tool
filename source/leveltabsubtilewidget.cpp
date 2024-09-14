@@ -149,6 +149,11 @@ void LevelTabSubtileWidget::setTileset(D1Tileset *ts)
     // this->ui->specCelComboBox->setEnabled(specNum != 0);
 }
 
+void LevelTabSubtileWidget::setGfx(D1Gfx *g)
+{
+    this->gfx = g;
+}
+
 void LevelTabSubtileWidget::updateFields()
 {
     this->onUpdate = true;
@@ -514,6 +519,11 @@ void LevelTabSubtileWidget::on_smp7_clicked()
 
 void LevelTabSubtileWidget::setFrameReference(int subtileIndex, int index, int frameRef)
 {
+    if (frameRef < 0)
+        frameRef = 0;
+    if (frameRef > this->gfx->getFrameCount())
+        frameRef = this->gfx->getFrameCount();
+
     // Build min editing command and connect it to the views widget
     // to update the label and refresh the view when undo/redo is performed
     EditMinCommand *command = new EditMinCommand(this->min, subtileIndex, index, frameRef);
@@ -529,9 +539,6 @@ void LevelTabSubtileWidget::on_framesPrevButton_clicked()
     std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIdx);
     int frameRef = frameReferences[index] - 1;
 
-    if (frameRef < 0) {
-        frameRef = 0;
-    }
     this->setFrameReference(subtileIdx, index, frameRef);
 }
 
@@ -550,8 +557,6 @@ void LevelTabSubtileWidget::on_framesComboBox_currentTextChanged(const QString &
         return; // on update or side effect of combobox activated -> ignore
 
     int frameRef = this->ui->framesComboBox->currentText().toInt();
-    if (frameRef < 0 || frameRef > this->gfx->getFrameCount())
-        return; // invalid value -> ignore
 
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     this->setFrameReference(subtileIdx, index, frameRef);
@@ -564,8 +569,5 @@ void LevelTabSubtileWidget::on_framesNextButton_clicked()
     std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIdx);
     int frameRef = frameReferences[index] + 1;
 
-    if (frameRef > this->gfx->getFrameCount()) {
-        frameRef = this->gfx->getFrameCount();
-    }
     this->setFrameReference(subtileIdx, index, frameRef);
 }

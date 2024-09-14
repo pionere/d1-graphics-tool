@@ -63,6 +63,11 @@ void LevelTabFrameWidget::setTileset(D1Tileset *ts)
     this->gfx = ts->gfx;
 }
 
+void LevelTabFrameWidget::setGfx(D1Gfx *g)
+{
+    this->gfx = g;
+}
+
 void LevelTabFrameWidget::updateFields()
 {
     bool hasFrame = this->gfx->getFrameCount() != 0;

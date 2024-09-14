@@ -48,6 +48,7 @@ public:
     void initialize(D1Pal *pal, D1Tileset *tileset, D1Dun *dun, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
     void setTileset(D1Tileset *tileset);
+    void setGfx(D1Gfx *gfx);
     void setDungeon(D1Dun *dun);
 
     CelScene *getCelScene() const;

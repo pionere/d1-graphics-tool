@@ -6,6 +6,7 @@
 #include <QWidget>
 
 class LevelCelView;
+class D1Gfx;
 class D1Til;
 class D1Min;
 class D1Tla;
@@ -63,6 +64,7 @@ public:
 
     void initialize(LevelCelView *v, QUndoStack *undoStack);
     void setTileset(D1Tileset *ts);
+    void setGfx(D1Gfx *g);
     void updateFields();
 
     void selectSubtile(int index);
