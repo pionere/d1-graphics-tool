@@ -24,6 +24,9 @@ public:
 
     void initialize(const PaletteWidget *palWidget);
 
+private:
+    void updateFields();
+
 private slots:
     void on_remapButton_clicked();
     void on_remapCancelButton_clicked();
