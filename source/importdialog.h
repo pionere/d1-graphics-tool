@@ -53,6 +53,7 @@ private slots:
     void on_fontRangeFromEdit_escPressed();
     void on_fontRangeToEdit_returnPressed();
     void on_fontRangeToEdit_escPressed();
+    void on_fontRangeHexCheckBox_clicked();
     void on_fontColorEdit_returnPressed();
     void on_fontColorEdit_escPressed();
 

@@ -31,9 +31,9 @@ void ImportDialog::initialize(bool dm, const PaletteWidget *palWidget)
         this->font_color = 0;
 
     this->ui->fileTypeDUNRadioButton->setVisible(dm);
-    if (!dm && this->ui->fileTypeDUNRadioButton->isChecked()) {
+    // if (!dm && this->ui->fileTypeDUNRadioButton->isChecked()) {
         this->ui->fileTypeAutoRadioButton->setChecked(true);
-    }
+    // }
 
     this->updateFields();
 }
@@ -49,8 +49,8 @@ void ImportDialog::updateFields()
     if (hasInputFile && isFont) {
         this->ui->fontColorEdit->setText(QString::number(this->font_color));
         this->ui->fontSizeEdit->setText(QString::number(this->font_size));
-        this->ui->fontRangeFromEdit->setText(QString::number(this->font_rangeFrom));
-        this->ui->fontRangeToEdit->setText(QString::number(this->font_rangeTo));
+        this->ui->fontRangeFromEdit->setText(QString::number(this->font_rangeFrom, this->ui->fontRangeHexCheckBox->isChecked() ? 16 : 10));
+        this->ui->fontRangeToEdit->setText(QString::number(this->font_rangeTo, this->ui->fontRangeHexCheckBox->isChecked() ? 16 : 10));
     } else {
         this->ui->fontColorEdit->setText("");
         this->ui->fontSizeEdit->setText("");
@@ -68,7 +68,7 @@ void ImportDialog::on_inputFileBrowseButton_clicked()
         filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)");
     } else {
         title = tr("Load Graphics");
-        filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;TTF/OTF Files (*.ttf *.TTF *.otf *.OTF);;");
+        filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;TTF/OTF Files (*.ttf *.TTF *.otf *.OTF)");
     }
 
     QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
@@ -122,7 +122,8 @@ void ImportDialog::on_fontSizeEdit_escPressed()
 
 void ImportDialog::on_fontRangeFromEdit_returnPressed()
 {
-    this->font_rangeFrom = this->ui->fontRangeFromEdit->text().toUShort();
+    bool ok;
+    this->font_rangeFrom = this->ui->fontRangeFromEdit->text().toUShort(&ok, this->ui->fontRangeHexCheckBox->isChecked() ? 16 : 10);
     if (this->font_rangeTo < this->font_rangeFrom) {
         this->font_rangeTo = this->font_rangeFrom;
     }
@@ -139,7 +140,8 @@ void ImportDialog::on_fontRangeFromEdit_escPressed()
 
 void ImportDialog::on_fontRangeToEdit_returnPressed()
 {
-    this->font_rangeTo = this->ui->fontRangeToEdit->text().toUShort();
+    bool ok;
+    this->font_rangeTo = this->ui->fontRangeToEdit->text().toUShort(&ok, this->ui->fontRangeHexCheckBox->isChecked() ? 16 : 10);
     if (this->font_rangeTo < this->font_rangeFrom) {
         this->font_rangeFrom = this->font_rangeTo;
     }
@@ -152,6 +154,11 @@ void ImportDialog::on_fontRangeToEdit_escPressed()
     // update fontRangeToEdit
     this->updateFields();
     this->ui->fontRangeToEdit->clearFocus();
+}
+
+void ImportDialog::on_fontRangeHexCheckBox_clicked()
+{
+    this->updateFields();
 }
 
 void ImportDialog::on_fontColorEdit_returnPressed()
@@ -195,6 +202,8 @@ void ImportDialog::on_importButton_clicked()
     params.fontRangeFrom = font_rangeFrom;
     params.fontRangeTo = this->font_rangeTo;
     params.fontColor = this->font_color;
+
+    this->close();
 
     dMainWindow().importFile(params);
 }

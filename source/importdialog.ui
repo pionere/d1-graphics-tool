@@ -142,7 +142,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
+      <item row="0" column="5">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -189,6 +189,13 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="4">
+       <widget class="QCheckBox" name="fontRangeHexCheckBox">
+        <property name="toolTip">
+         <string>Hex format</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="0">
        <widget class="QLabel">
         <property name="text">
@@ -200,6 +207,9 @@
        <widget class="LineEditWidget" name="fontColorEdit">
         <property name="charWidth">
          <number>3</number>
+        </property>
+        <property name="toolTip">
+         <string>Palette Index</string>
         </property>
         <property name="alignment">
          <enum>Qt::AlignCenter</enum>
