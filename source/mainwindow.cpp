@@ -467,9 +467,9 @@ void MainWindow::gfxChanged(D1Gfx *gfx)
     if (this->celView != nullptr) {
         this->celView->setGfx(gfx);
     }
-    // if (this->levelCelView != nullptr) {
-    //    this->levelCelView->setGfx(gfx);
-    // }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->setGfx(gfx);
+    }
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->setGfx(gfx);
     }

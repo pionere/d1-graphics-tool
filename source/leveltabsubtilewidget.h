@@ -73,6 +73,7 @@ public:
 
     void initialize(LevelCelView *v, QUndoStack *undoStack);
     void setTileset(D1Tileset *ts);
+    void setGfx(D1Gfx *g);
     void updateFields();
 
     void selectFrame(int index);

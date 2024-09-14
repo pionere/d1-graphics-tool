@@ -149,6 +149,11 @@ void LevelTabSubtileWidget::setTileset(D1Tileset *ts)
     // this->ui->specCelComboBox->setEnabled(specNum != 0);
 }
 
+void LevelTabSubtileWidget::setGfx(D1Gfx *g)
+{
+    this->gfx = g;
+}
+
 void LevelTabSubtileWidget::updateFields()
 {
     this->onUpdate = true;

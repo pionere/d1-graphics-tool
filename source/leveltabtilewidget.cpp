@@ -91,6 +91,10 @@ void LevelTabTileWidget::initialize(LevelCelView *v, QUndoStack *us)
     this->undoStack = us;
 }
 
+void LevelTabTileWidget::setGfx(D1Gfx *g)
+{
+}
+
 void LevelTabTileWidget::setTileset(D1Tileset *ts)
 {
     this->til = ts->til;

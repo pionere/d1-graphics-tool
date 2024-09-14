@@ -170,6 +170,19 @@ void LevelCelView::setTileset(D1Tileset *ts)
     this->tabFrameWidget.setTileset(ts);
 }
 
+void LevelCelView::setGfx(D1Gfx *g)
+{
+    this->gfx = g;
+
+    if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
+        this->currentFrameIndex = 0;
+    }
+
+    this->tabTileWidget.setGfx(g);
+    this->tabSubtileWidget.setGfx(g);
+    this->tabFrameWidget.setGfx(g);
+}
+
 void LevelCelView::setDungeon(D1Dun *dun)
 {
     // stop playback
