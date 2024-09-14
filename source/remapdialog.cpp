@@ -17,7 +17,7 @@ RemapDialog::~RemapDialog()
     delete ui;
 }
 
-void RemapDialog::initialize(PaletteWidget *palWidget)
+void RemapDialog::initialize(const PaletteWidget *palWidget)
 {
     std::pair<int, int> currentColors = palWidget->getCurrentSelection();
 
