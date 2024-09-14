@@ -51,13 +51,13 @@ void ImportDialog::updateFields()
         this->ui->fontSizeEdit->setText(QString::number(this->font_size));
         this->ui->fontRangeFromEdit->setText(QString::number(this->font_rangeFrom, this->font_rangeHex ? 16 : 10));
         this->ui->fontRangeToEdit->setText(QString::number(this->font_rangeTo, this->font_rangeHex ? 16 : 10));
-        this->ui->fontRangeToEdit->setChecked(this->font_rangeHex);
+        this->ui->fontRangeHexCheckBox->setChecked(this->font_rangeHex);
     } else {
         this->ui->fontColorEdit->setText("");
         this->ui->fontSizeEdit->setText("");
         this->ui->fontRangeFromEdit->setText("");
         this->ui->fontRangeToEdit->setText("");
-        this->ui->fontRangeToEdit->setChecked(false);
+        this->ui->fontRangeHexCheckBox->setChecked(false);
     }
 }
 
