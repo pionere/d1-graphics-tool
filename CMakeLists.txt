@@ -161,6 +161,9 @@ set(PROJECT_SOURCES
         source/gfxsetview.cpp
         source/gfxsetview.h
         source/gfxsetview.ui
+        source/importdialog.cpp
+        source/importdialog.h
+        source/importdialog.ui
         source/levelcelview.cpp
         source/levelcelview.h
         source/levelcelview.ui

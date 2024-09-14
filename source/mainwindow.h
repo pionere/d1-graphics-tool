@@ -23,6 +23,7 @@
 #include "d1trn.h"
 #include "exportdialog.h"
 #include "gfxsetview.h"
+#include "importdialog.h"
 #include "levelcelview.h"
 #include "mergeframesdialog.h"
 #include "openasdialog.h"
@@ -116,6 +117,7 @@ public:
     void openFiles(const QStringList &filePaths);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
+    void importFile(const ImportParam &params);
     void saveFile(const SaveAsParam &params);
     void updateTrns(const std::vector<D1Trn *> &newTrns);
     void resize(const ResizeParam &params);
@@ -198,7 +200,7 @@ private slots:
 
     void on_actionOpen_triggered();
     void on_actionOpenAs_triggered();
-    void on_actionLoad_triggered();
+    void on_actionImport_triggered();
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
     void on_actionClose_triggered();
@@ -353,6 +355,7 @@ private:
     OpenAsDialog *openAsDialog = nullptr;
     SaveAsDialog *saveAsDialog = nullptr;
     SettingsDialog *settingsDialog = nullptr;
+    ImportDialog *importDialog = nullptr;
     ExportDialog *exportDialog = nullptr;
     ResizeDialog *resizeDialog = nullptr;
     UpscaleDialog *upscaleDialog = nullptr;

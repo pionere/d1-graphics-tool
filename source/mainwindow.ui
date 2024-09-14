@@ -68,7 +68,7 @@
     <addaction name="menuNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionOpenAs"/>
-    <addaction name="actionLoad"/>
+    <addaction name="actionImport"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="actionClose"/>
@@ -504,9 +504,9 @@
     <string notr="true">Ctrl+Shift+O</string>
    </property>
   </action>
-  <action name="actionLoad">
+  <action name="actionImport">
    <property name="text">
-    <string>Load</string>
+    <string>Import</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+L</string>
