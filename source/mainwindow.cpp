@@ -27,6 +27,7 @@
 #include "d1cel.h"
 #include "d1celtileset.h"
 #include "d1cl2.h"
+#include "d1font.h"
 #include "d1pcx.h"
 #include "d1smk.h"
 #include "d1trs.h"
@@ -811,7 +812,9 @@ void MainWindow::importFile(const ImportParam &params)
         D1Gfx *gfx = new D1Gfx();
         gfx->setPalette(this->trnBase->getResultingPalette());
 
-        if ((fileType == IMPORT_FILE_TYPE::CEL && D1Cel::load(*gfx, gfxFilePath, openParams)) || D1Cl2::load(*gfx, gfxFilePath, openParams)) {
+        if ((fileType == IMPORT_FILE_TYPE::CEL && D1Cel::load(*gfx, gfxFilePath, openParams))
+         || (fileType == IMPORT_FILE_TYPE::FONT && D1Font::load(*gfx, gfxFilePath, params))
+         || D1Cl2::load(*gfx, gfxFilePath, openParams)) {
             delete this->gfx;
             this->gfxChanged(gfx);
         } else {
