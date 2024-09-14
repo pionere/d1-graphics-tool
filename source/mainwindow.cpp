@@ -85,6 +85,7 @@ MainWindow::~MainWindow()
     delete this->openAsDialog;
     delete this->saveAsDialog;
     delete this->settingsDialog;
+    delete this->importDialog;
     delete this->exportDialog;
     delete this->resizeDialog;
     delete this->upscaleDialog;
@@ -717,37 +718,44 @@ void MainWindow::on_actionOpen_triggered()
     }
 }
 
-void MainWindow::on_actionLoad_triggered()
+void MainWindow::on_actionImport_triggered()
 {
-    QString title;
-    QString filter;
-    if (this->levelCelView != nullptr) {
-        title = tr("Load Dungeon");
-        filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)");
-    } else {
-        // assert(this->celView != nullptr);
-        title = tr("Load Graphics");
-        filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
+    if (this->importDialog == nullptr) {
+        this->importDialog = new ImportDialog(this);
     }
+    this->importDialog->initialize(this->levelCelView != nullptr);
+    this->importDialog->show();
+}
 
-    QString gfxFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
-    if (gfxFilePath.isEmpty()) {
-        return;
-    }
+void MainWindow::importFile(const ImportParam &params)
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Importing..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
+    QString gfxFilePath = params.filePath;
 
     QString fileLower = gfxFilePath.toLower();
-    OpenAsParam params = OpenAsParam();
-    if (fileLower.endsWith("dun")) { // .dun or .rdun
-        params.dunFilePath = gfxFilePath;
+    IMPORT_FILE_TYPE fileType = params.fileType;
+    if (fileType == IMPORT_FILE_TYPE::AUTODETECT) {
+        if (fileLower.endsWith("dun")) // .dun or .rdun
+            fileType = IMPORT_FILE_TYPE::DUNGEON;
+        else if (fileLower.endsWith(".cel"))
+            fileType = IMPORT_FILE_TYPE::CEL;
+        else
+            fileType = IMPORT_FILE_TYPE::CL2;
+    }
+    if (fileType == IMPORT_FILE_TYPE::DUNGEON && this->levelCelView == nullptr)
+        fileType = IMPORT_FILE_TYPE::CL2;
+
+    OpenAsParam openParams = OpenAsParam();
+    if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
+        openParams.dunFilePath = gfxFilePath;
     } else {
-        params.celFilePath = gfxFilePath;
+        openParams.celFilePath = gfxFilePath;
     }
 
-    if (!params.dunFilePath.isEmpty()) {
+    if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
         D1Dun *dun = new D1Dun();
-        if (dun->load(params.dunFilePath, params)) {
+        if (dun->load(openParams.dunFilePath, openParams)) {
             dun->initialize(this->pal, this->tileset);
             // TODO: this->dunChanged(dun)
             delete this->dun;
@@ -771,11 +779,10 @@ void MainWindow::on_actionLoad_triggered()
         D1Gfx *gfx = new D1Gfx();
         gfx->setPalette(this->trnBase->getResultingPalette());
 
-        if ((fileLower.endsWith(".cel") && D1Cel::load(*gfx, gfxFilePath, params)) || D1Cl2::load(*gfx, gfxFilePath, params)) {
+        if ((fileType == IMPORT_FILE_TYPE::CEL && D1Cel::load(*gfx, gfxFilePath, openParams)) || D1Cl2::load(*gfx, gfxFilePath, openParams)) {
             delete this->gfx;
-            // this->gfx = gfx;
             this->gfxChanged(gfx);
-        } else /* if (fileLower.endsWith(".cl2"))*/ {
+        } else {
             delete gfx;
             dProgressFail() << tr("Failed loading GFX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
         }
@@ -1488,7 +1495,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuData->setEnabled(fileType == FILE_CONTENT::CPP);
     this->ui->actionExport->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionDiff->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
-    this->ui->actionLoad->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
+    this->ui->actionImport->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
@@ -1843,7 +1850,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuData->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
     this->ui->actionDiff->setEnabled(false);
-    this->ui->actionLoad->setEnabled(false);
+    this->ui->actionImport->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
     this->ui->actionSaveAs->setEnabled(false);
     this->ui->actionClose->setEnabled(false);
