@@ -71,4 +71,5 @@ private:
     int font_size = 22;
     int font_rangeFrom = 0;
     int font_rangeTo = 255;
+    bool font_rangeHex = false;
 };
