@@ -39,7 +39,7 @@ private:
     void updateFields();
 
 private slots:
-    void on_filePathBrowseButton_clicked();
+    void on_inputFileBrowseButton_clicked();
 
     void on_fileTypeCELRadioButton_toggled(bool checked);
     void on_fileTypeCL2RadioButton_toggled(bool checked);

@@ -118,7 +118,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             return false;
         }
 
-        // Going through all CELs
+        // Going through all groups
+        int cursor = 0;
         for (unsigned int i = 0; i * 4 < firstDword; i++) {
             device->seek(i * 4);
             quint32 celOffset;
@@ -137,7 +138,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (fileSize < (celOffset + celFrameCount * 4 + 4 + 4))
                 return false;
 
-            gfx.groupFrameIndices.push_back(std::pair<int, int>(frameOffsets.size(), frameOffsets.size() + celFrameCount - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + celFrameCount - 1));
 
             // Going through all frames of the CEL
             for (unsigned int j = 1; j <= celFrameCount; j++) {
@@ -152,6 +153,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                     std::pair<quint32, quint32>(celOffset + celFrameStartOffset,
                         celOffset + celFrameEndOffset));
             }
+            cursor += celFrameCount;
         }
     }
 
@@ -174,13 +176,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
         }
-		/*if (gfx.frames.size() == 173) {
-			for (int y = 136; y < 140; y++) {
-				for (int x = 30; x < 116; x += 2) {
-					LogErrorFFF("%d,%d:%d (%d,%d)->", x, x+1, y, frame->getPixel(x, y).getPaletteIndex(), frame->getPixel(x + 1, y).getPaletteIndex());
-                }
-            }
-        }*/
 
         gfx.frames.append(frame);
     }

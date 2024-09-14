@@ -176,7 +176,7 @@ void ImportDialog::on_importButton_clicked()
 {
     ImportParam params;
     params.filePath = this->ui->inputFileEdit->text();
-    if (params.outFolder.isEmpty()) {
+    if (params.filePath.isEmpty()) {
         QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
         return;
     }
@@ -193,15 +193,15 @@ void ImportDialog::on_importButton_clicked()
         params.fileType = IMPORT_FILE_TYPE::AUTODETECT;
     }
 
-    param.fontSize = this->font_size;
-    param.fontRangeFrom = font_rangeFrom;
-    param.fontRangeTo = this->font_rangeTo;
-    param.fontColor = this->font_color;
+    params.fontSize = this->font_size;
+    params.fontRangeFrom = font_rangeFrom;
+    params.fontRangeTo = this->font_rangeTo;
+    params.fontColor = this->font_color;
 
     dMainWindow().importFile(params);
 }
 
-void ImportDialog::on_exportCancelButton_clicked()
+void ImportDialog::on_importCancelButton_clicked()
 {
     this->close();
 }

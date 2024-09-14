@@ -99,6 +99,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         }
     } else {
         // Going through all groups
+        int cursor = 0;
         for (unsigned i = 0; i * 4 < firstDword; i++) {
             device->seek(i * 4);
             quint32 cl2GroupOffset;
@@ -111,7 +112,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (cl2GroupFrameCount == 0) {
                 continue;
             }
-            gfx.groupFrameIndices.push_back(std::pair<int, int>(frameOffsets.size(), frameOffsets.size() + cl2GroupFrameCount - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + cl2GroupFrameCount - 1));
 
             // Going through all frames of the group
             for (unsigned j = 1; j <= cl2GroupFrameCount; j++) {
@@ -125,6 +126,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                     std::pair<quint32, quint32>(cl2GroupOffset + cl2FrameStartOffset,
                         cl2GroupOffset + cl2FrameEndOffset));
             }
+            cursor += cl2GroupFrameCount;
         }
     }
 

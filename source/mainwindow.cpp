@@ -775,6 +775,8 @@ void MainWindow::importFile(const ImportParam &params)
         else
             fileType = IMPORT_FILE_TYPE::CL2;
     }
+    if (fileType == IMPORT_FILE_TYPE::DUNGEON && this->levelCelView == nullptr)
+        fileType = IMPORT_FILE_TYPE::CL2;
 
     OpenAsParam openParams = OpenAsParam();
     if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
@@ -1880,7 +1882,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuData->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
     this->ui->actionDiff->setEnabled(false);
-    this->ui->actionLoad->setEnabled(false);
+    this->ui->actionImport->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
     this->ui->actionSaveAs->setEnabled(false);
     this->ui->actionClose->setEnabled(false);
