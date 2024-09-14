@@ -49,13 +49,15 @@ void ImportDialog::updateFields()
     if (hasInputFile && isFont) {
         this->ui->fontColorEdit->setText(QString::number(this->font_color));
         this->ui->fontSizeEdit->setText(QString::number(this->font_size));
-        this->ui->fontRangeFromEdit->setText(QString::number(this->font_rangeFrom, this->ui->fontRangeHexCheckBox->isChecked() ? 16 : 10));
-        this->ui->fontRangeToEdit->setText(QString::number(this->font_rangeTo, this->ui->fontRangeHexCheckBox->isChecked() ? 16 : 10));
+        this->ui->fontRangeFromEdit->setText(QString::number(this->font_rangeFrom, this->font_rangeHex ? 16 : 10));
+        this->ui->fontRangeToEdit->setText(QString::number(this->font_rangeTo, this->font_rangeHex ? 16 : 10));
+        this->ui->fontRangeToEdit->setChecked(this->font_rangeHex);
     } else {
         this->ui->fontColorEdit->setText("");
         this->ui->fontSizeEdit->setText("");
         this->ui->fontRangeFromEdit->setText("");
         this->ui->fontRangeToEdit->setText("");
+        this->ui->fontRangeToEdit->setChecked(false);
     }
 }
 
@@ -64,10 +66,10 @@ void ImportDialog::on_inputFileBrowseButton_clicked()
     QString title;
     QString filter;
     if (this->dunMode) {
-        title = tr("Load Dungeon");
-        filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)");
+        title = tr("Select Dungeon or Graphics");
+        filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN);;CEL Files (*.cel *.CEL)");
     } else {
-        title = tr("Load Graphics");
+        title = tr("Select Graphics");
         filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;TTF/OTF Files (*.ttf *.TTF *.otf *.OTF)");
     }
 
@@ -123,7 +125,7 @@ void ImportDialog::on_fontSizeEdit_escPressed()
 void ImportDialog::on_fontRangeFromEdit_returnPressed()
 {
     bool ok;
-    this->font_rangeFrom = this->ui->fontRangeFromEdit->text().toUShort(&ok, this->ui->fontRangeHexCheckBox->isChecked() ? 16 : 10);
+    this->font_rangeFrom = this->ui->fontRangeFromEdit->text().toUShort(&ok, this->font_rangeHex ? 16 : 10);
     if (this->font_rangeTo < this->font_rangeFrom) {
         this->font_rangeTo = this->font_rangeFrom;
     }
@@ -141,7 +143,7 @@ void ImportDialog::on_fontRangeFromEdit_escPressed()
 void ImportDialog::on_fontRangeToEdit_returnPressed()
 {
     bool ok;
-    this->font_rangeTo = this->ui->fontRangeToEdit->text().toUShort(&ok, this->ui->fontRangeHexCheckBox->isChecked() ? 16 : 10);
+    this->font_rangeTo = this->ui->fontRangeToEdit->text().toUShort(&ok, this->font_rangeHex ? 16 : 10);
     if (this->font_rangeTo < this->font_rangeFrom) {
         this->font_rangeFrom = this->font_rangeTo;
     }
@@ -158,6 +160,8 @@ void ImportDialog::on_fontRangeToEdit_escPressed()
 
 void ImportDialog::on_fontRangeHexCheckBox_clicked()
 {
+    this->font_rangeHex = this->ui->fontRangeHexCheckBox->isChecked();
+
     this->updateFields();
 }
 

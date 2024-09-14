@@ -74,9 +74,9 @@ set(PROJECT_SOURCES
         source/d1celframe.cpp
         source/d1celframe.h
         source/d1celtileset.cpp
+        source/d1celtileset.h
         source/d1celtilesetframe.cpp
         source/d1celtilesetframe.h
-        source/d1celtileset.h
         source/d1cl2.cpp
         source/d1cl2.h
         source/d1cl2frame.cpp
