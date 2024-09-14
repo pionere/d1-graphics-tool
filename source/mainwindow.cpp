@@ -107,8 +107,8 @@ void MainWindow::remapColors(const RemapParam &params)
     int index = params.colorTo.first;
     const int dc = params.colorTo.first == params.colorTo.second ? 0 : (params.colorTo.first < params.colorTo.second ? 1 : -1);
     for (int i = params.colorFrom.first; i <= params.colorFrom.second; i++, index += dc) {
-        D1GfxPixel source = (i == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(i);
-        D1GfxPixel replacement = (index == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
+        D1GfxPixel source = ((unsigned)i >= D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(i);
+        D1GfxPixel replacement = ((unsigned)index >= D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
         replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(source, replacement));
     }
 

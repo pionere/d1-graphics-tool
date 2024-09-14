@@ -45,7 +45,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>From</string>
+           <string>(Palette-)Index of the first color</string>
           </property>
           <property name="alignment">
            <enum>Qt::AlignCenter</enum>
@@ -74,7 +74,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>To</string>
+           <string>(Palette-)Index of the last color</string>
           </property>
           <property name="alignment">
            <enum>Qt::AlignCenter</enum>
@@ -123,7 +123,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>From</string>
+           <string>(Palette-)Index of the first replacement color</string>
           </property>
           <property name="alignment">
            <enum>Qt::AlignCenter</enum>
@@ -152,7 +152,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>To</string>
+           <string>(Palette-)Index of the last replacement color</string>
           </property>
           <property name="alignment">
            <enum>Qt::AlignCenter</enum>
@@ -201,7 +201,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>From</string>
+           <string>The first frame to be changed</string>
           </property>
           <property name="text">
            <string notr="true">0</string>
@@ -233,7 +233,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>To</string>
+           <string>The last frame to be changed</string>
           </property>
           <property name="text">
            <string notr="true">0</string>
