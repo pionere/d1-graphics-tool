@@ -26,7 +26,9 @@ ImportDialog::~ImportDialog()
 void ImportDialog::initialize(bool dm, const PaletteWidget *palWidget)
 {
     this->dunMode = dm;
-    this->color = palWidget->getCurrentSelection().first;
+    this->font_color = palWidget->getCurrentSelection().first;
+    if (this->font_color < 0)
+        this->font_color = 0;
 
     this->ui->fileTypeDUNRadioButton->setVisible(dm);
     if (!dm && this->ui->fileTypeDUNRadioButton->isChecked()) {
@@ -121,10 +123,8 @@ void ImportDialog::on_fontSizeEdit_escPressed()
 void ImportDialog::on_fontRangeFromEdit_returnPressed()
 {
     this->font_rangeFrom = this->ui->fontRangeFromEdit->text().toUShort();
-    if (this->font_rangeFrom == USHRT_MAX)
-        this->font_rangeFrom = USHRT_MAX - 1;
-    if (this->font_rangeTo <= this->font_rangeFrom) {
-        this->font_rangeTo = this->font_rangeFrom + 1;
+    if (this->font_rangeTo < this->font_rangeFrom) {
+        this->font_rangeTo = this->font_rangeFrom;
     }
 
     this->on_fontRangeFromEdit_escPressed();
@@ -140,10 +140,8 @@ void ImportDialog::on_fontRangeFromEdit_escPressed()
 void ImportDialog::on_fontRangeToEdit_returnPressed()
 {
     this->font_rangeTo = this->ui->fontRangeToEdit->text().toUShort();
-    if (this->font_rangeTo == 0)
-        this->font_rangeTo = 1;
-    if (this->font_rangeTo <= this->font_rangeFrom) {
-        this->font_rangeFrom = this->font_rangeTo - 1;
+    if (this->font_rangeTo < this->font_rangeFrom) {
+        this->font_rangeFrom = this->font_rangeTo;
     }
 
     this->on_fontRangeToEdit_escPressed();

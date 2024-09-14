@@ -69,5 +69,5 @@ private:
     int font_color;
     int font_size = 22;
     int font_rangeFrom = 0;
-    int font_rangeTo = 256;
+    int font_rangeTo = 255;
 };

@@ -20,9 +20,13 @@ RemapDialog::~RemapDialog()
 void RemapDialog::initialize(const PaletteWidget *palWidget)
 {
     std::pair<int, int> currentColors = palWidget->getCurrentSelection();
-
-    this->ui->colorFrom0LineEdit->setText(QString::number(currentColors.first));
-    this->ui->colorFrom1LineEdit->setText(QString::number(currentColors.second));
+    if ((unsigned)currentColors.first < D1PAL_COLORS) {
+        this->ui->colorFrom0LineEdit->setText(QString::number(currentColors.first));
+        this->ui->colorFrom1LineEdit->setText(QString::number(currentColors.second));
+    } else {
+        this->ui->colorFrom0LineEdit->setText("");
+        this->ui->colorFrom1LineEdit->setText("");
+    }
     this->ui->colorTo0LineEdit->setText("");
     this->ui->colorTo1LineEdit->setText("");
     // this->ui->range0LineEdit->setText("");
