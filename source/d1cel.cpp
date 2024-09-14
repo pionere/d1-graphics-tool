@@ -92,7 +92,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             return false;
         }
 
-        // Going through all CELs
+        // Going through all groups
         for (unsigned int i = 0; i * 4 < firstDword; i++) {
             device->seek(i * 4);
             quint32 celOffset;
