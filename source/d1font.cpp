@@ -5,6 +5,7 @@
 #include <QDataStream>
 #include <QDir>
 #include <QFont>
+#include <QFontDatabase>
 #include <QFontMetrics>
 #include <QMessageBox>
 #include <QPainter>
@@ -17,13 +18,13 @@ bool D1Font::load(D1Gfx &gfx, const QString &filePath, const ImportParam &params
 
     int fontId = QFontDatabase::addApplicationFont(filePath);
     if (fontId == -1) {
-        dProgressErr() <<  tr("Font could not be loaded.");
+        dProgressErr() <<  QApplication::tr("Font could not be loaded.");
         return false;
     }
 
     QStringList families = QFontDatabase::applicationFontFamilies(fontId);
     if (families.size() == 0) {
-        dProgressErr() <<  tr("No font families loaded.");
+        dProgressErr() <<  QApplication::tr("No font families loaded.");
         QFontDatabase::removeApplicationFont(fontId);
         return false;
     }
