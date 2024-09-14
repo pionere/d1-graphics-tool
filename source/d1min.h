@@ -52,5 +52,4 @@ private:
     int subtileHeight;
     std::vector<std::vector<unsigned>> frameReferences;
     D1Tileset *tileset = nullptr;
-    D1Gfx *gfx = nullptr;
 };

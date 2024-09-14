@@ -33,7 +33,6 @@ bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CE
     this->clear();
     this->minFilePath = filePath;
     this->tileset = ts;
-    this->gfx = ts->gfx;
 
     bool changed = !file.isOpen();
 
@@ -77,7 +76,7 @@ bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CE
     if (params.upscaled == OPEN_UPSCALED_TYPE::AUTODETECT) {
         upscaled = width != 2;
     }
-    this->gfx->upscaled = upscaled; // setUpscaled
+    this->tileset->gfx->upscaled = upscaled; // setUpscaled
 
     this->subtileWidth = width;
     this->subtileHeight = height;
@@ -153,7 +152,7 @@ bool D1Min::save(const SaveAsParam &params)
         return false;
     }
 
-    bool upscaled = this->gfx->isUpscaled();
+    bool upscaled = this->tileset->gfx->isUpscaled();
     // update upscaled info -- done by d1celtileset
     // if (params.upscaled != SAVE_UPSCALED_TYPE::AUTODETECT) {
     //    upscaled = params.upscaled == SAVE_UPSCALED_TYPE::TRUE;
@@ -186,6 +185,7 @@ bool D1Min::save(const SaveAsParam &params)
     // write to file
     QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
+    const D1Gfx *gfx = this->tileset->gfx;
     for (unsigned i = 0; i < this->frameReferences.size(); i++) {
         std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
         int subtileNumberOfCelFrames = frameReferencesList.size();
@@ -194,7 +194,7 @@ bool D1Min::save(const SaveAsParam &params)
             if (!upscaled) {
                 writeWord = frameReferencesList[j];
                 if (writeWord != 0) {
-                    writeWord |= ((quint16)this->gfx->getFrame(writeWord - 1)->getFrameType()) << 12;
+                    writeWord |= ((quint16)gfx->getFrame(writeWord - 1)->getFrameType()) << 12;
                 }
             } else {
                 int width = this->subtileWidth;
@@ -222,7 +222,6 @@ void D1Min::clear()
     this->subtileWidth = 2;
     this->subtileHeight = 5;
     // this->tileset = nullptr;
-    // this->gfx = nullptr;
     this->modified = true;
 }
 
@@ -240,9 +239,10 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
 
     unsigned dx = 0, dy = 0;
     const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
+    const D1Gfx *gfx = this->tileset->gfx;
     for (unsigned frameRef : frameRefs) {
         if (frameRef > 0) {
-            subtilePainter.drawImage(dx, dy, this->gfx->getFrameImage(frameRef - 1));
+            subtilePainter.drawImage(dx, dy, gfx->getFrameImage(frameRef - 1));
         }
 
         dx += MICRO_WIDTH;
@@ -290,11 +290,12 @@ QImage D1Min::getFloorImage(int subtileIndex) const
     QPainter subtilePainter(&subtile);
 
     unsigned dx = 0, dy = 0;
+    const D1Gfx *gfx = this->tileset->gfx;
     for (unsigned i = firstFrame; i < numFrame; i++) {
         unsigned frameRef = frameRefs[i];
 
         if (frameRef > 0) {
-            subtilePainter.drawImage(dx, dy, this->gfx->getFrameImage(frameRef - 1));
+            subtilePainter.drawImage(dx, dy, gfx->getFrameImage(frameRef - 1));
         }
 
         dx += MICRO_WIDTH;
@@ -317,9 +318,10 @@ std::vector<std::vector<D1GfxPixel>> D1Min::getSubtilePixelImage(int subtileInde
 
     unsigned dx = 0, dy = 0;
     const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
+    const D1Gfx *gfx = this->tileset->gfx;
     for (unsigned frameRef : frameRefs) {
         if (frameRef > 0) {
-            D1PixelImage::drawImage(subtile, dx, dy, this->gfx->getFramePixelImage(frameRef - 1));
+            D1PixelImage::drawImage(subtile, dx, dy, gfx->getFramePixelImage(frameRef - 1));
         }
 
         dx += MICRO_WIDTH;
@@ -334,7 +336,7 @@ std::vector<std::vector<D1GfxPixel>> D1Min::getSubtilePixelImage(int subtileInde
 
 void D1Min::getFrameUses(std::vector<bool> &frameUses) const
 {
-    frameUses.resize(this->gfx->getFrameCount());
+    frameUses.resize(this->tileset->gfx->getFrameCount());
     for (const std::vector<unsigned> &frameRefs : this->frameReferences) {
         for (unsigned frameRef : frameRefs) {
             if (frameRef != 0) {
