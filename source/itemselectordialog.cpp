@@ -31,16 +31,16 @@ ItemSelectorDialog::ItemSelectorDialog(QWidget *parent)
     QObject::connect(this->ui->itemSeedEdit, SIGNAL(cancel_signal()), this, SLOT(on_itemSeedEdit_escPressed()));
     QObject::connect(this->ui->itemLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_itemLevelEdit_escPressed()));
 
-    this->ui->itemTypeComboBox->view()->setElideMode(Qt::ElideNone);
-    this->ui->itemLocComboBox->view()->setElideMode(Qt::ElideNone);
-    this->ui->itemIdxComboBox->view()->setElideMode(Qt::ElideNone);
+    this->ui->itemTypeComboBox->view()->setTextElideMode(Qt::ElideNone);
+    this->ui->itemLocComboBox->view()->setTextElideMode(Qt::ElideNone);
+    this->ui->itemIdxComboBox->view()->setTextElideMode(Qt::ElideNone);
 
-    this->ui->itemSourceComboBox->view()->setElideMode(Qt::ElideNone);
-    this->ui->itemQualityComboBox->view()->setElideMode(Qt::ElideNone);
+    this->ui->itemSourceComboBox->view()->setTextElideMode(Qt::ElideNone);
+    this->ui->itemQualityComboBox->view()->setTextElideMode(Qt::ElideNone);
 
-    this->ui->itemUniquesComboBox->view()->setElideMode(Qt::ElideNone);
-    this->ui->itemPrefixComboBox->view()->setElideMode(Qt::ElideNone);
-    this->ui->itemSuffixComboBox->view()->setElideMode(Qt::ElideNone);
+    this->ui->itemUniquesComboBox->view()->setTextElideMode(Qt::ElideNone);
+    this->ui->itemPrefixComboBox->view()->setTextElideMode(Qt::ElideNone);
+    this->ui->itemSuffixComboBox->view()->setTextElideMode(Qt::ElideNone);
 }
 
 ItemSelectorDialog::~ItemSelectorDialog()
