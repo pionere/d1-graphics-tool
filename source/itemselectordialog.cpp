@@ -29,6 +29,17 @@ ItemSelectorDialog::ItemSelectorDialog(QWidget *parent)
 
     QObject::connect(this->ui->itemSeedEdit, SIGNAL(cancel_signal()), this, SLOT(on_itemSeedEdit_escPressed()));
     QObject::connect(this->ui->itemLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_itemLevelEdit_escPressed()));
+
+    this->ui->itemTypeComboBox->view()->setElideMode(Qt::ElideNone);
+    this->ui->itemLocComboBox->view()->setElideMode(Qt::ElideNone);
+    this->ui->itemIdxComboBox->view()->setElideMode(Qt::ElideNone);
+
+    this->ui->itemSourceComboBox->view()->setElideMode(Qt::ElideNone);
+    this->ui->itemQualityComboBox->view()->setElideMode(Qt::ElideNone);
+
+    this->ui->itemUniquesComboBox->view()->setElideMode(Qt::ElideNone);
+    this->ui->itemPrefixComboBox->view()->setElideMode(Qt::ElideNone);
+    this->ui->itemSuffixComboBox->view()->setElideMode(Qt::ElideNone);
 }
 
 ItemSelectorDialog::~ItemSelectorDialog()
@@ -583,6 +594,13 @@ void ItemSelectorDialog::on_itemSourceComboBox_activated(int index)
 void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
 {
     this->is->_iCreateInfo = (this->is->_iCreateInfo & ~CF_DROP_QUALITY) | (index << 11);
+    this->updateFields();
+}
+
+void ItemSelectorDialog::on_itemUniquesComboBox_activated(int index)
+{
+    this->wishUniq = this->ui->itemUniquesComboBox->itemData(index).value<int>();
+    this->resetSlider |= 1 | 2;
     this->updateFields();
 }
 

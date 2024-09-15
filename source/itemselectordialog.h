@@ -39,6 +39,7 @@ private slots:
     void on_itemSourceComboBox_activated(int index);
     void on_itemQualityComboBox_activated(int index);
 
+    void on_itemUniquesComboBox_activated(int index);
     void on_itemPrefixComboBox_activated(int index);
     void on_itemSuffixComboBox_activated(int index);
     void on_itemPrefixLimitedCheckBox_clicked();
