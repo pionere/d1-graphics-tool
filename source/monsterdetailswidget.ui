@@ -551,7 +551,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignCenter">>
     <widget class="QGroupBox">
      <layout class="QGridLayout">
       <item row="1" column="0">

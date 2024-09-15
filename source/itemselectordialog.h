@@ -60,6 +60,7 @@ private:
     int itemType;
     ItemStruct *is = nullptr;
 
+    int wishUniq = -1;
     int wishPre = -1;
     int wishSuf = -1;
     int resetSlider = 0;

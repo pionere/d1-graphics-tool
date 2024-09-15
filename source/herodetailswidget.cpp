@@ -137,7 +137,7 @@ void HeroDetailsWidget::updateFields()
     this->ui->heroCritChanceLabel->setText(QString("%1%").arg(this->hero->getCritChance() * 100 / 200));
 
     displayDamage(this->ui->heroTotalDamLabel, this->hero->getTotalMinDam(), this->hero->getTotalMaxDam());
-    displayDamage(this->ui->heroSlashDamLabel, this->hero->getSlMaxDam(), this->hero->getSlMaxDam());
+    displayDamage(this->ui->heroSlashDamLabel, this->hero->getSlMinDam(), this->hero->getSlMaxDam());
     displayDamage(this->ui->heroBluntDamLabel, this->hero->getBlMinDam(), this->hero->getBlMaxDam());
     displayDamage(this->ui->heroPierceDamLabel, this->hero->getPcMinDam(), this->hero->getPcMaxDam());
     displayDamage(this->ui->heroChargeDamLabel, this->hero->getChMinDam(), this->hero->getChMaxDam());
@@ -167,19 +167,19 @@ void HeroDetailsWidget::on_heroNameEdit_escPressed()
 void HeroDetailsWidget::on_heroClassComboBox_activated(int index)
 {
     this->hero->setClass(index);
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroDecLevelButton_clicked()
 {
     this->hero->setLevel(this->hero->getLevel() - 1);
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroIncLevelButton_clicked()
 {
     this->hero->setLevel(this->hero->getLevel() + 1);
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroLevelEdit_returnPressed()
@@ -194,7 +194,7 @@ void HeroDetailsWidget::on_heroLevelEdit_returnPressed()
 void HeroDetailsWidget::on_heroLevelEdit_escPressed()
 {
     // update heroLevelEdit
-    this->updateFields();
+    dMainWindow().updateWindow();
     this->ui->heroLevelEdit->clearFocus();
 }
 
@@ -229,7 +229,7 @@ void HeroDetailsWidget::on_heroMonstersButton_clicked()
 void HeroDetailsWidget::on_heroDecLifeButton_clicked()
 {
     this->hero->decLife();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroRestoreLifeButton_clicked()
@@ -241,7 +241,7 @@ void HeroDetailsWidget::on_heroRestoreLifeButton_clicked()
 void HeroDetailsWidget::on_heroSubStrengthButton_clicked()
 {
     this->hero->subStrength();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroStrengthEdit_returnPressed()
@@ -256,20 +256,20 @@ void HeroDetailsWidget::on_heroStrengthEdit_returnPressed()
 void HeroDetailsWidget::on_heroStrengthEdit_escPressed()
 {
     // update heroStrengthEdit
-    this->updateFields();
+    dMainWindow().updateWindow();
     this->ui->heroStrengthEdit->clearFocus();
 }
 
 void HeroDetailsWidget::on_heroAddStrengthButton_clicked()
 {
     this->hero->addStrength();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroSubDexterityButton_clicked()
 {
     this->hero->subDexterity();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroDexterityEdit_returnPressed()
@@ -284,20 +284,20 @@ void HeroDetailsWidget::on_heroDexterityEdit_returnPressed()
 void HeroDetailsWidget::on_heroDexterityEdit_escPressed()
 {
     // update heroDexterityEdit
-    this->updateFields();
+    dMainWindow().updateWindow();
     this->ui->heroDexterityEdit->clearFocus();
 }
 
 void HeroDetailsWidget::on_heroAddDexterityButton_clicked()
 {
     this->hero->addDexterity();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroSubMagicButton_clicked()
 {
     this->hero->subMagic();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroMagicEdit_returnPressed()
@@ -312,20 +312,20 @@ void HeroDetailsWidget::on_heroMagicEdit_returnPressed()
 void HeroDetailsWidget::on_heroMagicEdit_escPressed()
 {
     // update heroMagicEdit
-    this->updateFields();
+    dMainWindow().updateWindow();
     this->ui->heroMagicEdit->clearFocus();
 }
 
 void HeroDetailsWidget::on_heroAddMagicButton_clicked()
 {
     this->hero->addMagic();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroSubVitalityButton_clicked()
 {
     this->hero->subVitality();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_heroVitalityEdit_returnPressed()
@@ -340,12 +340,12 @@ void HeroDetailsWidget::on_heroVitalityEdit_returnPressed()
 void HeroDetailsWidget::on_heroVitalityEdit_escPressed()
 {
     // update heroVitalityEdit
-    this->updateFields();
+    dMainWindow().updateWindow();
     this->ui->heroVitalityEdit->clearFocus();
 }
 
 void HeroDetailsWidget::on_heroAddVitalityButton_clicked()
 {
     this->hero->addVitality();
-    this->updateFields();
+    dMainWindow().updateWindow();
 }

@@ -27,7 +27,7 @@
         <number>24</number>
        </property>
        <property name="toolTip">
-        <string>Rename item</string>
+        <string>Rename the current item</string>
        </property>
        <property name="text">
         <string notr="true">*</string>

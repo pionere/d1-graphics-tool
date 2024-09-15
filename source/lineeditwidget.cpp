@@ -2,6 +2,8 @@
 
 #include <QFontMetrics>
 
+#include "dungeon/interfac.h"
+
 LineEditWidget::LineEditWidget(QWidget *parent)
     : QLineEdit(parent)
 {
@@ -12,6 +14,7 @@ LineEditWidget::LineEditWidget(const QString &contents, QWidget *parent)
 {
 }
 
+static bool done = false;
 void LineEditWidget::setCharWidth(int value)
 {
     int maxWidth = this->fontMetrics().horizontalAdvance('w');
@@ -27,6 +30,13 @@ void LineEditWidget::setCharWidth(int value)
     maxWidth += textmargins.left() + textmargins.right();
 
     maxWidth += this->frameSize().width() - this->width();
+
+    if (!done) {
+        done = true;
+        LogErrorF("crx:%d crw:%d w:%d fw:%d m (%d:%d, %d:%d)", this->cursorRect().x(), this->cursorRect().w(), this->width(), this->frameSize().width(), margins.left(), margins.right(), textmargins.left(), textmargins.right());
+        LogErrorF("grx:%d grw:%d rx:%d rw:%d hrx:%d hrw:%d orx:%d orw:%d", this->normalGeometry().x(), this->normalGeometry().w(), this->rect().x(), this->rect().w(), this->childrenRect().x(), this->childrenRect().w(), this->contentsRect().x(), this->contentsRect().w());
+    }
+    maxWidth += 2 * 4;
 
     this->setMinimumWidth(maxWidth);
     this->setMaximumWidth(maxWidth);

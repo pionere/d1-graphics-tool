@@ -31,6 +31,16 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
         }
 
         QLabel *label = new QLabel(spelldata[sn].sNameText);
+        int rs = missiledata[spelldata[sn].sMissile].mResist;
+        if (rs == MISR_FIRE) {
+            label->setStyleSheet("color:orange;");
+        } else if (rs == MISR_MAGIC) {
+            label->setStyleSheet("color:blue;");
+        } else if (rs == MISR_LIGHTNING) {
+            label->setStyleSheet("color:yellow;");
+        } else if (rs == MISR_ACID) {
+            label->setStyleSheet("color:green;");
+        }        
         this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
         // skillWidgets[sn] = new LineEditWidget(this);
         // skillWidgets[sn]->setCharWidth(2);

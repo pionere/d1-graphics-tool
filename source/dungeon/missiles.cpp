@@ -81,7 +81,7 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 #endif
 	switch (sn) {
 	case SPL_GUARDIAN:
-		dur = sl + (hero->getLevel() >> 1);
+		dur = (sl + (hero->getLevel() >> 1)) * misfiledata[MFILE_GUARD].mfAnimLen[1];
 	case SPL_FIREBOLT:
 		k = (magic >> 3) + sl;
 		mind = k + 1;
@@ -241,7 +241,7 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 		k = monsterdata[MT_GOLEM].mLevel;
 		sl = k + sl;
 		// mon->_mLevel = sl;
-		dur = (sl * monsterdata[MT_GOLEM].mMinHP / k) << 6;
+		dur = sl * monsterdata[MT_GOLEM].mMinHP / k;
 		mind = sl * monsterdata[MT_GOLEM].mMinDamage / k;
 		maxd = sl * monsterdata[MT_GOLEM].mMaxDamage / k;
         snprintf(infostr, sizeof(infostr), "Lvl: %d Hp: %d Dam: %d-%d", sl, dur, mind, maxd);

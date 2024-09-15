@@ -349,7 +349,6 @@ void MonsterDetailsWidget::updateFields()
     hper = 0;
     if (hth || (missile != -1 && (missiledata[missile].mdFlags & MIF_ARROW))) {
         hper = 30 + mon->_mHit + (2 * mon->_mLevel) - this->hero->getAC();
-        hper = CheckHit(hper);
     } else if (missile != -1 && (missiledata[missile].mdFlags & MIF_AREA)) {
         hper = 40 + 2 * mon->_mLevel;
         hper -= 2 * this->hero->getLevel();
@@ -357,6 +356,7 @@ void MonsterDetailsWidget::updateFields()
         hper = 50 + mon->_mMagic;
         hper -= this->hero->getEvasion();
     }
+    hper = CheckHit(hper);
     if (!special) {
         this->ui->monHitChance->setText(QString("%1%").arg(hper));
     } else {
