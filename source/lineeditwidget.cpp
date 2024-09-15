@@ -33,8 +33,8 @@ void LineEditWidget::setCharWidth(int value)
 
     if (!done) {
         done = true;
-        LogErrorF("crx:%d crw:%d w:%d fw:%d m (%d:%d, %d:%d)", this->cursorRect().x(), this->cursorRect().w(), this->width(), this->frameSize().width(), margins.left(), margins.right(), textmargins.left(), textmargins.right());
-        LogErrorF("grx:%d grw:%d rx:%d rw:%d hrx:%d hrw:%d orx:%d orw:%d", this->normalGeometry().x(), this->normalGeometry().w(), this->rect().x(), this->rect().w(), this->childrenRect().x(), this->childrenRect().w(), this->contentsRect().x(), this->contentsRect().w());
+        LogErrorF("crx:%d crw:%d w:%d fw:%d m (%d:%d, %d:%d)", this->cursorRect().x(), this->cursorRect().width(), this->width(), this->frameSize().width(), margins.left(), margins.right(), textmargins.left(), textmargins.right());
+        LogErrorF("grx:%d grw:%d rx:%d rw:%d hrx:%d hrw:%d orx:%d orw:%d", this->normalGeometry().x(), this->normalGeometry().width(), this->rect().x(), this->rect().width(), this->childrenRect().x(), this->childrenRect().width(), this->contentsRect().x(), this->contentsRect().width());
     }
     maxWidth += 2 * 4;
 

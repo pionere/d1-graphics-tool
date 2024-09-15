@@ -464,6 +464,7 @@ void ItemSelectorDialog::updateFields()
     if (si >= 0 && (uniqIdx >= 0 || (PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2))) {
         int minval, maxval;
         if (uniqIdx >= 0) {
+            const UniqItemData* ui = &UniqueItemList[uniqIdx];
             switch (si) {
             case 0: minval = ui->UIParam1a; maxval = ui->UIParam1b; break;
             case 1: minval = ui->UIParam2a; maxval = ui->UIParam2b; break;
@@ -491,7 +492,9 @@ void ItemSelectorDialog::updateFields()
     this->ui->itemSuffixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
     this->ui->itemSuffixLimitSlider->setVisible(cs != Qt::Unchecked && si >= 0 && (uniqIdx >= 0 || (PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2)));
     if (si >= 0 && (uniqIdx >= 0 || (PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2))) {
+        int minval, maxval;
         if (uniqIdx >= 0) {
+            const UniqItemData* ui = &UniqueItemList[uniqIdx];
             switch (si) {
             case 0: minval = ui->UIParam1a; maxval = ui->UIParam1b; break;
             case 1: minval = ui->UIParam2a; maxval = ui->UIParam2b; break;
