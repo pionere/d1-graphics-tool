@@ -1,5 +1,6 @@
 #include "itemselectordialog.h"
 
+#include <QAbstractItemView>
 #include <QAction>
 #include <QApplication>
 #include <QMenu>
