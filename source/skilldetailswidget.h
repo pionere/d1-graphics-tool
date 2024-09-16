@@ -19,7 +19,7 @@ class SkillPushButton : public QPushButton {
 
 public:
     explicit SkillPushButton(int sn, QWidget *parent);
-    ~SkillPushButton();
+    ~SkillPushButton() = default;
 
 private slots:
     void on_btn_clicked();
