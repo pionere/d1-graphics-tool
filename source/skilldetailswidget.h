@@ -25,7 +25,7 @@ private slots:
 
 private:
     int sn;
-}
+};
 
 class SkillDetailsWidget : public QWidget {
     Q_OBJECT

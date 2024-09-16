@@ -155,22 +155,22 @@ SkillPushButton::SkillPushButton(int sn)
     if (spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED)) {
         int rs = GetMissileResist(spelldata[sn].sMissile);
         if (rs == MISR_FIRE) {
-            type = "color:red;");
+            type = "color:red;";
         }
         else if (rs == MISR_MAGIC) {
-            type = "color:blue;");
+            type = "color:blue;";
         }
         else if (rs == MISR_LIGHTNING) {
-            type = "color:#FFBF00;"); // amber
+            type = "color:#FFBF00;"; // amber
         }
         else if (rs == MISR_ACID) {
-            type = "color:green;");
+            type = "color:green;";
         }
         else if (rs == MISR_PUNCTURE) {
-            type = "color:olive;");
+            type = "color:olive;";
         }
         else if (rs == MISR_BLUNT) {
-            type = "color:maroon;");
+            type = "color:maroon;";
         }
     }
     this->setStyleSheet(style.arg(type));

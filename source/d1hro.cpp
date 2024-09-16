@@ -1123,7 +1123,7 @@ int D1Hero::getTotalMaxDam(const MonsterStruct *mon) const
 	return dam >> 6;
 }
 
-int getItemFlags() const
+int D1Hero::getItemFlags() const
 {
     return players[this->pnum]._pIFlags;
 }
