@@ -12,6 +12,21 @@ namespace Ui {
 class SkillDetailsWidget;
 } // namespace Ui
 
+
+class SkillPushButton : public QPushButton {
+    Q_OBJECT
+
+public:
+    explicit SkillPushButton(int sn, QWidget *parent);
+    ~SkillPushButton();
+
+private slots:
+    void on_btn_clicked();
+
+private:
+    int sn;
+}
+
 class SkillDetailsWidget : public QWidget {
     Q_OBJECT
 
@@ -21,6 +36,8 @@ public:
 
     void initialize(D1Hero *hero);
     void displayFrame();
+
+    void on_skill_clicked(int sn);
 
 private:
     void updateFields();

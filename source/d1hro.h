@@ -122,6 +122,9 @@ public:
     int getTotalMaxDam() const;
     int getTotalMinDam(const MonsterStruct *mon) const;
     int getTotalMaxDam(const MonsterStruct *mon) const;
+
+    int getItemFlags() const;
+    int getSkillCost(int sn) const;
 	/*
 	unsigned _pExperience;
 	unsigned _pNextExper;

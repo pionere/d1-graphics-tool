@@ -164,6 +164,32 @@ void HeroDetailsWidget::updateFields()
     displayDamage(this->ui->heroLightningDamLabel, this->hero->getLMinDam(), this->hero->getLMaxDam());
     displayDamage(this->ui->heroMagicDamLabel, this->hero->getMMinDam(), this->hero->getMMaxDam());
     displayDamage(this->ui->heroAcidDamLabel, this->hero->getAMinDam(), this->hero->getAMaxDam());
+
+    int flags = this->hero->getItemFlags();
+    this->ui->heroDrainLineCheckBox->setChecked((flags & ISPL_DRAINLIFE) != 0);
+    this->ui->heroKnockbackCheckBox->setChecked((flags & ISPL_KNOCKBACK) != 0);
+    this->ui->heroPenPhysCheckBox->setChecked((flags & ISPL_PENETRATE_PHYS) != 0);
+    this->ui->heroNoBleedCheckBox->setChecked((flags & ISPL_NO_BLEED) != 0);
+    this->ui->heroBleedCheckBox->setChecked((flags & ISPL_BLEED) != 0);
+    this->ui->heroStunCheckBox->setChecked((flags & ISPL_STUN) != 0);
+    this->ui->heroNoManaCheckBox->setChecked((flags & ISPL_NOMANA) != 0);
+    
+
+	ISPL_NONE           = 0x00000000,
+	      = 0x00008000,
+	      = 0x00010000, // knock back on hit
+	// ISPL_ALLRESZERO     = 0x00100000,
+	// ISPL_LIFETOMANA     = 0x00200000,
+	// ISPL_MANATOLIFE     = 0x00400000,
+	// ISPL_PENETRATE_PHYS = 0x00800000,
+	ISPL_NO_BLEED       = 0x10000000, // immune to bleeding
+	ISPL_BLEED          = 0x20000000, // increased chance to bleed
+	ISPL_STUN           = 0x40000000, // increased chance to stun
+	ISPL_NOMANA         = 0x80000000,
+	ISPL_HITFLAGS_MASK  = 0xFFFF0000, // mask to prepare hitflags from pIFlags
+	ISPL_FAKE_FORCE_STUN= 0x00000001, // fake flag to indicate hits with forced stun effect (against players)
+	ISPL_FAKE_CAN_BLEED = 0x00000002, // fake flag to indicate hits which might cause bleeding
+
 }
 
 void HeroDetailsWidget::on_heroNameEdit_returnPressed()

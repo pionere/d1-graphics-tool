@@ -349,7 +349,7 @@ static QString ItemColor(const ItemStruct* is)
         if (is->_iMagical == ITEM_QUALITY_MAGIC)
             color = QString("color:blue;");
         if (is->_iMagical == ITEM_QUALITY_UNIQUE)
-            return QString("color:beer;");
+            return QString("color:#FBB117;"); // beer
     }
     return color;
 }

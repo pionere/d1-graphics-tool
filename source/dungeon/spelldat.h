@@ -20,15 +20,6 @@ DEVILUTION_BEGIN_NAMESPACE
 /* The cooldown period of the rage skill. */
 #define RAGE_COOLDOWN_TICK 1200
 
-#define SPELL_MASK(sn)     ((uint64_t)1 << (sn - 1))
-
-#ifdef HELLFIRE
-static_assert((int)SPL_RUNESTONE + 1 == (int)NUM_SPELLS, "SPELL_RUNE expects ordered spell_id enum");
-#define SPELL_RUNE(sn) (sn >= SPL_RUNEFIRE)
-#else
-#define SPELL_RUNE(sn) (FALSE)
-#endif
-
 extern const SpellData spelldata[NUM_SPELLS];
 
 DEVILUTION_END_NAMESPACE

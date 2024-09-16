@@ -395,15 +395,13 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	return flags;
 }
 
-
-int InitLvlMonster(int type, int numplrs, int difficulty, int lvlBonus)
+static int InitBaseMonster(int type, int numplrs, int lvlBonus)
 {
     int mnum = MAX_MINIONS;
     int mtidx = 0;
     monstimgtot = MAX_LVLMIMAGE;
     nummtypes = 0;
     currLvl._dLevelPlyrs = numplrs;
-    gnDifficulty = difficulty;
     if (gnDifficulty == DIFF_NIGHTMARE) {
         lvlBonus += NIGHTMARE_LEVEL_BONUS;
     } else if (gnDifficulty == DIFF_HELL) {
@@ -415,13 +413,27 @@ int InitLvlMonster(int type, int numplrs, int difficulty, int lvlBonus)
     return mnum;
 }
 
+void InitLvlMonster(int type, int numplrs, int difficulty, int lvlBonus)
+{
+    int prevDifficulty = gnDifficulty;
+    gnDifficulty = difficulty;
+
+    InitBaseMonster(type, numplrs, lvlBonus);
+
+    gnDifficulty = prevDifficulty;
+}
+
 void InitUniqMonster(int uniqindex, int numplrs, int difficulty, int lvlbonus, bool minion)
 {
-    int mnum = InitLvlMonster(uniqMonData[uniqindex].mtype, numplrs, difficulty, lvlbonus);
+    int prevDifficulty = gnDifficulty;
+    gnDifficulty = difficulty;
+
+    int mnum = InitBaseMonster(uniqMonData[uniqindex].mtype, numplrs, lvlbonus);
     int flags = InitUniqueMonster(mnum, uniqindex);
     int mtidx = 0;
     if (minion) {
         PlaceGroup(mtidx, MON_PACK_SIZE - 1, flags, mnum);
         memcpy(&monsters[mnum], &monsters[mnum + 1], sizeof(MonsterStruct));
     }
+    gnDifficulty = prevDifficulty;
 }

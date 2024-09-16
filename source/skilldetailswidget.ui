@@ -19,7 +19,210 @@
       </item>
       <item>
        <widget class="QGroupBox" name="skillPropertiesBox">
-        <layout class="QHBoxLayout" name="skillProperties"/>
+        <layout class="QGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>48</number>
+           </property>
+           <property name="text">
+            <string>Name:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="skillName"/>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>48</number>
+           </property>
+           <property name="text">
+            <string>AnimType:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QComboBox" name="skillType">
+           <item>
+            <property name="text">
+             <string>Fire</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Lightning</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Magic</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>48</number>
+           </property>
+           <property name="text">
+            <string>Cost:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QLabel" name="skillManaCost"/>
+         </item>
+         <item row="1" column="1" colspan="5">
+          <layout class="QHBoxLayout">
+           <item>
+            <widget class="QCheckBox" name="misBaseAreaCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Area damage (alternative hit chance calculation)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misBaseNoBlockCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>can not be blocked</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misBaseDotCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Damage Over Time (Get-Hit is ineffective)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misBaseLeadCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Leads monsters to the player</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misBaseShroudCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Interacts with Shroud</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misBaseArrowCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Arrow Missile</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="1" colspan="5">
+          <layout class="QHBoxLayout">
+           <item>
+            <widget class="QCheckBox" name="misAreaCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Area damage (alternative hit chance calculation)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misNoBlockCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>can not be blocked</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misDotCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Damage Over Time (Get-Hit is ineffective)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misLeadCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Leads monsters to the player</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misShroudCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Interacts with Shroud</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="misArrowCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Arrow Missile</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </widget>
       </item>
       <item>

@@ -33,5 +33,6 @@
 #include "player.h"
 #include "questdat.h"
 #include "spelldat.h"
+#include "spells.h"
 
 #endif /* __ALL_H__ */

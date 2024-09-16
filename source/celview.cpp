@@ -451,10 +451,18 @@ void CelView::ShowContextMenu(const QPoint &pos)
         const ItemStruct* is;
 
         is = this->hero->item(ii);
-        action = new ItemAction(this->hero, ii, ItemName(is), ii);
-        action->setChecked(true);
-        action->setDisabled(true);
+
+        action = new ItemAction(this->hero, ii, tr("None"), INVITEM_NONE);
         actions.append(action);
+        if (is->_itype == ITYPE_NONE) {
+            action->setChecked(true);
+            action->setDisabled(true);
+        } else {
+            action = new ItemAction(this->hero, ii, ItemName(is), ii);
+            action->setChecked(true);
+            action->setDisabled(true);
+            actions.append(action);
+        }
 
         for (int i = INVITEM_INV_FIRST; i < NUM_INVELEM; i++) {
             is = this->hero->item(i);

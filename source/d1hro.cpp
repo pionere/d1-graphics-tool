@@ -1123,6 +1123,16 @@ int D1Hero::getTotalMaxDam(const MonsterStruct *mon) const
 	return dam >> 6;
 }
 
+int getItemFlags() const
+{
+    return players[this->pnum]._pIFlags;
+}
+
+int D1Hero::getSkillCost(int sn) const
+{
+    return GetManaAmount(this->pnum, sn);
+}
+
 void D1Hero::rebalance()
 {
     // validate the player ?
