@@ -485,42 +485,78 @@
      <item row="4" column="1" colspan="5">
       <layout class="QHBoxLayout">
        <item>
-        <widget class="QLabel" name="heroMagicResistLabel">
-         <property name="toolTip">
-          <string>Magic</string>
+        <widget class="QProgressBar" name="heroMagicResist">
+         <property name="fixedWidth">
+          <number>38</number>
          </property>
-         <property name="styleSheet">
-          <string>color:blue;</string>
+         <property name="minimum">
+          <number>0</number>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="heroFireResistLabel">
-         <property name="toolTip">
-          <string>Fire</string>
+         <property name="maximum">
+          <number>100</number>
          </property>
-         <property name="styleSheet">
-          <string>color:orange;</string>
+         <property name="textVisible">
+          <bool>true</bool>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="heroLightningResistLabel">
-         <property name="toolTip">
-          <string>Lightning</string>
-         </property>
-         <property name="styleSheet">
-          <string>color:yellow;</string>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="heroAcidResistLabel">
-         <property name="toolTip">
-          <string>Acid</string>
+        <widget class="QProgressBar" name="heroFireResist">
+         <property name="fixedWidth">
+          <number>38</number>
          </property>
-         <property name="styleSheet">
-          <string>color:green;</string>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="textVisible">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="heroLightningResist">
+         <property name="fixedWidth">
+          <number>38</number>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="textVisible">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="heroAcidResist">
+         <property name="fixedWidth">
+          <number>38</number>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="textVisible">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
          </property>
         </widget>
        </item>
@@ -746,7 +782,7 @@
         <string>Slash Damage</string>
        </property>
        <property name="styleSheet">
-        <string>color:aquamarine;</string>
+        <string>color:copper;</string>
        </property>
       </widget>
      </item>

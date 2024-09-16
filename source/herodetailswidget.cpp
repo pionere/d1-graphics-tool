@@ -56,6 +56,25 @@ static void displayDamage(QLabel *label, int minDam, int maxDam)
     }
 }
 
+static void HeroResistText(int misr, int res, QProgressBar *label)
+{
+    QString tooltip = QApplication::tr("Resistance to %1 damage");
+
+    QString type;
+    switch (idx) {
+    case MISR_SLASH:     type = QApplication::tr("slash");     break;
+    case MISR_BLUNT:     type = QApplication::tr("blunt");     break;
+    case MISR_PUNCTURE:  type = QApplication::tr("puncture");  break;
+    case MISR_FIRE:      type = QApplication::tr("fire");      break;
+    case MISR_LIGHTNING: type = QApplication::tr("lightning"); break;
+    case MISR_MAGIC:     type = QApplication::tr("magic");     break;
+    case MISR_ACID:      type = QApplication::tr("acid");      break;
+    }
+
+    label->setValue(res);
+    label->setTooltip(tooltip.arg(type));
+}
+
 void HeroDetailsWidget::updateFields()
 {
     int hc, bv;
@@ -116,10 +135,10 @@ void HeroDetailsWidget::updateFields()
     label->setText(QString::number(this->hero->getMana()));
     label->setToolTip(QString::number(this->hero->getBaseMana()));
 
-    this->ui->heroMagicResistLabel->setText(QString("%1%").arg(this->hero->getMagicResist()));
-    this->ui->heroFireResistLabel->setText(QString("%1%").arg(this->hero->getFireResist()));
-    this->ui->heroLightningResistLabel->setText(QString("%1%").arg(this->hero->getLightningResist()));
-    this->ui->heroAcidResistLabel->setText(QString("%1%").arg(this->hero->getAcidResist()));
+    HeroResistText(MISR_MAGIC, this->hero->getMagicResist(), this->ui->heroMagicResist);
+    HeroResistText(MISR_FIRE, this->hero->getFireResist(), this->ui->heroFireResist);
+    HeroResistText(MISR_LIGHTNING, this->hero->getLightningResist(), this->ui->heroLightningResist);
+    HeroResistText(MISR_ACID, this->hero->getAcidResist(), this->ui->heroAcidResist);
 
     this->ui->heroWalkSpeedLabel->setText(QString::number(this->hero->getWalkSpeed()));
     this->ui->heroBaseAttackSpeedLabel->setText(QString::number(this->hero->getBaseAttackSpeed()));

@@ -180,7 +180,7 @@
    </item>
    <item>
     <widget class="QGroupBox">
-     <layout class="QGridLayout" columnstretch="0,0,0,0,1">
+     <layout class="QGridLayout" columnstretch="0,1,0,0">
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">
@@ -254,13 +254,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="4">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </widget>
    </item>
@@ -300,7 +293,11 @@
      </item>
      <item>
       <widget class="QGroupBox" name="itemPropertiesBox">
-       <layout class="QHBoxLayout" name="itemProperties"/>
+       <layout class="QVBoxLayout" name="itemProperties">
+        <item>
+         <widget class="QLabel" name ="itemName"/>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>

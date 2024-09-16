@@ -372,6 +372,8 @@ void ItemSelectorDialog::updateFields()
     this->ui->itemQualityComboBox->setCurrentIndex((ci & CF_DROP_QUALITY) >> 11);
     this->ui->itemQualityComboBox->setEnabled(drop);
 
+
+    this->ui->itemName->setText(this->is->_itype != ITYPE_NONE ? ItemName(this->is) : "");
     this->itemProps->initialize(this->is);
     this->itemProps->adjustSize();
     this->ui->itemPropertiesBox->adjustSize();
@@ -383,6 +385,7 @@ void ItemSelectorDialog::updateFields()
     int range = source == CFL_NONE ? IAR_DROP : (source == CFL_CRAFTED ? IAR_CRAFT : IAR_SHOP);
     int lvl = ci & CF_LEVEL;
     int si;
+    bool active;
 
     // update possible uniques
     QComboBox *uniqComboBox = this->ui->itemUniquesComboBox;
@@ -469,11 +472,12 @@ void ItemSelectorDialog::updateFields()
     sufComboBox->setCurrentIndex(si);
 
     si = preComboBox->currentData().value<int>();
-    this->ui->itemPrefixLimitedCheckBox->setVisible(si >= 0);
+    this->ui->itemPrefixLimitedCheckBox->setEnabled(si >= 0);
+    bool active = si >= 0 && (uniqIdx >= 0 || (PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2));
     Qt::CheckState cs = this->ui->itemPrefixLimitedCheckBox->checkState();
     this->ui->itemPrefixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
-    this->ui->itemPrefixLimitSlider->setVisible(cs != Qt::Unchecked && si >= 0 && (uniqIdx >= 0 || (PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2)));
-    if (si >= 0 && (uniqIdx >= 0 || (PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2))) {
+    this->ui->itemPrefixLimitSlider->setEnabled(cs != Qt::Unchecked && active);
+    if (active) {
         int minval, maxval;
         if (uniqIdx >= 0) {
             const UniqItemData* ui = &UniqueItemList[uniqIdx];
@@ -496,14 +500,19 @@ void ItemSelectorDialog::updateFields()
             this->ui->itemPrefixLimitSlider->setValue(cs == Qt::Checked ? maxval : minval);
         }
         this->ui->itemPrefixLimitSlider->setToolTip(QString::number(this->ui->itemPrefixLimitSlider->value()));
+    } else {
+        int minval = this->ui->itemPrefixLimitSlider->minimum();
+        this->ui->itemPrefixLimitSlider->setValue(minval);
+        this->ui->itemPrefixLimitSlider->setToolTip("");
     }
 
     si = sufComboBox->currentData().value<int>();
-    this->ui->itemSuffixLimitedCheckBox->setVisible(si >= 0);
+    this->ui->itemSuffixLimitedCheckBox->setEnabled(si >= 0);
+    active = si >= 0 && (uniqIdx >= 0 || (PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2));
     cs = this->ui->itemSuffixLimitedCheckBox->checkState();
     this->ui->itemSuffixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
-    this->ui->itemSuffixLimitSlider->setVisible(cs != Qt::Unchecked && si >= 0 && (uniqIdx >= 0 || (PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2)));
-    if (si >= 0 && (uniqIdx >= 0 || (PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2))) {
+    this->ui->itemSuffixLimitSlider->setEnabled(cs != Qt::Unchecked && active);
+    if (active) {
         int minval, maxval;
         if (uniqIdx >= 0) {
             const UniqItemData* ui = &UniqueItemList[uniqIdx];
@@ -526,6 +535,10 @@ void ItemSelectorDialog::updateFields()
             this->ui->itemSuffixLimitSlider->setValue(cs == Qt::Checked ? maxval : minval);
         }
         this->ui->itemSuffixLimitSlider->setToolTip(QString::number(this->ui->itemSuffixLimitSlider->value()));
+    } else {
+        int minval = this->ui->itemSuffixLimitSlider->minimum();
+        this->ui->itemSuffixLimitSlider->setValue(minval);
+        this->ui->itemSuffixLimitSlider->setToolTip("");
     }
 }
 

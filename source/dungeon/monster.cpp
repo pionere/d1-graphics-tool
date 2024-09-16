@@ -396,15 +396,20 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 }
 
 
-int InitLvlMonster(int type, int numplrs, int difficulty, int lvlbonus)
+int InitLvlMonster(int type, int numplrs, int difficulty, int lvlBonus)
 {
     int mnum = MAX_MINIONS;
     int mtidx = 0;
     monstimgtot = MAX_LVLMIMAGE;
     nummtypes = 0;
-    gnDifficulty = difficulty;
     currLvl._dLevelPlyrs = numplrs;
-    currLvl._dLevelBonus = lvlbonus;
+    gnDifficulty = difficulty;
+    if (gnDifficulty == DIFF_NIGHTMARE) {
+        lvlBonus += NIGHTMARE_LEVEL_BONUS;
+    } else if (gnDifficulty == DIFF_HELL) {
+        lvlBonus += HELL_LEVEL_BONUS;
+    }
+    currLvl._dLevelBonus = lvlBonus;
     AddMonsterType(type, false);
     InitMonster(mnum, 0, mtidx, 0, 0);
     return mnum;
