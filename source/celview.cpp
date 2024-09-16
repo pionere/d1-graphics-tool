@@ -447,9 +447,17 @@ void CelView::ShowContextMenu(const QPoint &pos)
     int ii = this->hoverItem;
     if (ii != INVITEM_NONE) {
         QList<QAction*> actions;
+        ItemAction *action;
+        const ItemStruct* is;
+
+        is = this->hero->item(ii);
+        action = new ItemAction(this->hero, ii, ItemName(is), ii);
+        action->setChecked(true);
+        action->setDisabled(true);
+        actions.append(action);
 
         for (int i = INVITEM_INV_FIRST; i < NUM_INVELEM; i++) {
-            const ItemStruct* is = this->hero->item(i);
+            is = this->hero->item(i);
             if (is->_itype == ITYPE_NONE || is->_itype == ITYPE_PLACEHOLDER) {
                 continue;
             }
@@ -480,15 +488,15 @@ void CelView::ShowContextMenu(const QPoint &pos)
                     continue;
                 break;
             }
-            ItemAction *action = new ItemAction(this->hero, ii, ItemName(is), i);
+            action = new ItemAction(this->hero, ii, ItemName(is), i);
             actions.append(action);
         }
-        if (!actions.isEmpty()) {
+        // if (!actions.isEmpty()) {
             QMenu contextMenu(this);
-            contextMenu.setToolTipsVisible(true);
+            // contextMenu.setToolTipsVisible(true);
             contextMenu.addActions(actions);
             contextMenu.exec(mapToGlobal(pos));
-        }
+        // }
 
         qDeleteAll(actions);
     }

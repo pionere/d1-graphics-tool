@@ -16,7 +16,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="invItemIndexComboBox"/>
+      <widget class="QComboBox" name="invItemIndexComboBox">
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="editNameButton">

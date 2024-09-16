@@ -31,7 +31,7 @@ ItemSelectorDialog::ItemSelectorDialog(QWidget *parent)
     QObject::connect(this->ui->itemSeedEdit, SIGNAL(cancel_signal()), this, SLOT(on_itemSeedEdit_escPressed()));
     QObject::connect(this->ui->itemLevelEdit, SIGNAL(cancel_signal()), this, SLOT(on_itemLevelEdit_escPressed()));
 
-    this->ui->itemTypeComboBox->view()->setTextElideMode(Qt::ElideNone);
+    /*this->ui->itemTypeComboBox->view()->setTextElideMode(Qt::ElideNone);
     this->ui->itemLocComboBox->view()->setTextElideMode(Qt::ElideNone);
     this->ui->itemIdxComboBox->view()->setTextElideMode(Qt::ElideNone);
 
@@ -40,7 +40,7 @@ ItemSelectorDialog::ItemSelectorDialog(QWidget *parent)
 
     this->ui->itemUniquesComboBox->view()->setTextElideMode(Qt::ElideNone);
     this->ui->itemPrefixComboBox->view()->setTextElideMode(Qt::ElideNone);
-    this->ui->itemSuffixComboBox->view()->setTextElideMode(Qt::ElideNone);
+    this->ui->itemSuffixComboBox->view()->setTextElideMode(Qt::ElideNone);*/
 }
 
 ItemSelectorDialog::~ItemSelectorDialog()
@@ -342,6 +342,18 @@ static void addUniqueOption(int power, int paramA, int paramB, int idx, QComboBo
     }
 }
 
+static QString ItemColor(const ItemStruct* is)
+{
+    QString color;
+    if (is->_itype != ITYPE_NONE) {
+        if (is->_iMagical == ITEM_QUALITY_MAGIC)
+            color = QString("color:blue;");
+        if (is->_iMagical == ITEM_QUALITY_UNIQUE)
+            return QString("color:beer;");
+    }
+    return color;
+}
+
 void ItemSelectorDialog::updateFields()
 {
     // QComboBox *typeComboBox = this->ui->itemTypeComboBox;
@@ -373,6 +385,7 @@ void ItemSelectorDialog::updateFields()
     this->ui->itemQualityComboBox->setEnabled(drop);
 
     this->ui->itemName->setText(this->is->_itype != ITYPE_NONE ? ItemName(this->is) : "");
+    this->ui->itemName->setStyleSheet(ItemColor(this->is));
     this->itemProps->initialize(this->is);
     this->itemProps->adjustSize();
     this->ui->itemPropertiesBox->adjustSize();
@@ -748,7 +761,20 @@ bool ItemSelectorDialog::recreateItem()
 start:
     RecreateItem(seed, wIdx, wCI);
 
-    if (uniqIdx == -1) {
+    if (uniqIdx >= 0) {
+        if (items[MAXITEMS]._iMagical != ITEM_QUALITY_UNIQUE || items[MAXITEMS]._iUid != uniqIdx) {
+            goto restart;
+        }
+        if (prefix.active) {
+            if (affix_rnd[preIdx] < prefix.param1 || affix_rnd[preIdx] > prefix.param2) goto restart;
+        }
+        if (suffix.active) {
+            if (affix_rnd[sufIdx] < suffix.param1 || affix_rnd[sufIdx] > suffix.param2) goto restart;
+        }
+    } else {
+        if (uniqIdx == -2 && items[MAXITEMS]._iMagical == ITEM_QUALITY_UNIQUE) {
+            goto restart;
+        }
         if (prefix.active) {
             if (items[MAXITEMS]._iPrePower != prefix.power) {
                 // LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, preIdx, seed);
@@ -766,22 +792,6 @@ start:
             }
             if (suffix.power != IPL_INVALID && (affix_rnd[1] < suffix.param1 || affix_rnd[1] > suffix.param2)) {
                 // LogErrorF("missed sufval %d vs [%d:%d]", affix_rnd[1], affix->PLParam1, affix->PLParam2);
-                goto restart;
-            }
-        }
-    } else {
-        if (uniqIdx >= 0) {
-            if (items[MAXITEMS]._iMagical != ITEM_QUALITY_UNIQUE || items[MAXITEMS]._iUid != uniqIdx) {
-                goto restart;
-            }
-            if (prefix.active) {
-                if (affix_rnd[preIdx] < prefix.param1 || affix_rnd[preIdx] > prefix.param2) goto restart;
-            }
-            if (suffix.active) {
-                if (affix_rnd[sufIdx] < suffix.param1 || affix_rnd[sufIdx] > suffix.param2) goto restart;
-            }
-        } else {
-            if (items[MAXITEMS]._iMagical == ITEM_QUALITY_UNIQUE) {
                 goto restart;
             }
         }

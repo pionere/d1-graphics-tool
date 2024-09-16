@@ -410,7 +410,7 @@ void MonsterDetailsWidget::updateFields()
     }
     this->ui->monBlockChance->setText(QString("%1%").arg(hper));
 
-    this->adjustSize(); // not sure why this is necessary...
+    // this->adjustSize(); // not sure why this is necessary...
 }
 
 

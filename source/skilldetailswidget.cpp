@@ -51,7 +51,7 @@ static int GetMissileResist(int mn)
     case MIS_LIGHTNINGC: mn = MIS_LIGHTNING; break;
     case MIS_LIGHTNING: break;
     case MIS_LIGHTNINGC2: mn = MIS_LIGHTNING; break;
-    case MIS_LIGHTNING2:
+    case MIS_LIGHTNING2: break;
     case MIS_BLOODBOILC: mn = MIS_BLOODBOIL; break;
     case MIS_BLOODBOIL: break;
     case MIS_SWAMPC: mn = MIS_SWAMP; break;
@@ -71,9 +71,9 @@ static int GetMissileResist(int mn)
         //case MIS_FARROW:
         //case MIS_DOOMSERP:
     case MIS_STONE:
-    case MIS_SHROUD:
+    case MIS_SHROUD: break;
         //case MIS_INVISIBL:
-    case MIS_GUARDIAN:
+    case MIS_GUARDIAN: mn = MIS_FIREBOLT; break;
     case MIS_GOLEM:
         //case MIS_ETHEREALIZE:
     case MIS_BLEED: break;
@@ -93,7 +93,7 @@ static int GetMissileResist(int mn)
         //case MIS_LARROW:
     case MIS_OPITEM:
     case MIS_REPAIR:
-    case MIS_DISARM:
+    case MIS_DISARM: break;
     case MIS_INFERNOC: mn = MIS_FIREWALL; break;
     case MIS_INFERNO:
         //case MIS_FIRETRAP:
@@ -115,7 +115,7 @@ static int GetMissileResist(int mn)
         //case MIS_FIRENOVAC:
         //case MIS_FIREBALL2:
         //case MIS_REFLECT:
-    case MIS_FIRERING:
+    case MIS_FIRERING: break;
         //case MIS_MANATRAP:
         //case MIS_LIGHTRING:
     case MIS_RUNEFIRE: mn = MIS_FIREEXP; break;
@@ -159,11 +159,11 @@ SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
         QLabel *label = new QLabel(spelldata[sn].sNameText);
         int rs = GetMissileResist(spelldata[sn].sMissile);
         if (rs == MISR_FIRE) {
-            label->setStyleSheet("color:orange;");
+            label->setStyleSheet("color:red;");
         } else if (rs == MISR_MAGIC) {
             label->setStyleSheet("color:blue;");
         } else if (rs == MISR_LIGHTNING) {
-            label->setStyleSheet("color:yellow;");
+            label->setStyleSheet("color:amber;");
         } else if (rs == MISR_ACID) {
             label->setStyleSheet("color:green;");
         } else if (rs == MISR_PUNCTURE) {

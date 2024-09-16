@@ -23,7 +23,11 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="itemTypeComboBox"/>
+       <widget class="QComboBox" name="itemTypeComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
       <item row="0" column="4">
        <widget class="QLabel">
@@ -36,7 +40,11 @@
        </widget>
       </item>
       <item row="0" column="5">
-       <widget class="QComboBox" name="itemLocComboBox"/>
+       <widget class="QComboBox" name="itemLocComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
@@ -70,7 +78,11 @@
        </widget>
       </item>
       <item row="1" column="3">
-       <widget class="QComboBox" name="itemIdxComboBox"/>
+       <widget class="QComboBox" name="itemIdxComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
@@ -104,6 +116,9 @@
       </item>
       <item row="2" column="3">
        <widget class="QComboBox" name="itemSourceComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
         <item>
          <property name="text">
           <string>Drop</string>
@@ -153,6 +168,9 @@
       </item>
       <item row="2" column="5">
        <widget class="QComboBox" name="itemQualityComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
         <item>
          <property name="text">
           <string>None</string>
@@ -192,7 +210,11 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="itemUniquesComboBox"/>
+       <widget class="QComboBox" name="itemUniquesComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
@@ -205,7 +227,11 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="itemPrefixComboBox"/>
+       <widget class="QComboBox" name="itemPrefixComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="2">
        <widget class="QCheckBox" name="itemPrefixLimitedCheckBox">
@@ -235,7 +261,11 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="itemSuffixComboBox"/>
+       <widget class="QComboBox" name="itemSuffixComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
       <item row="2" column="2">
        <widget class="QCheckBox" name="itemSuffixLimitedCheckBox">
@@ -294,7 +324,7 @@
      <item>
       <widget class="QGroupBox" name="itemPropertiesBox">
        <layout class="QVBoxLayout" name="itemProperties">
-        <item>
+        <item alignment="Qt::AlignCenter">
          <widget class="QLabel" name ="itemName"/>
         </item>
        </layout>
