@@ -372,7 +372,6 @@ void ItemSelectorDialog::updateFields()
     this->ui->itemQualityComboBox->setCurrentIndex((ci & CF_DROP_QUALITY) >> 11);
     this->ui->itemQualityComboBox->setEnabled(drop);
 
-
     this->ui->itemName->setText(this->is->_itype != ITYPE_NONE ? ItemName(this->is) : "");
     this->itemProps->initialize(this->is);
     this->itemProps->adjustSize();
@@ -385,7 +384,6 @@ void ItemSelectorDialog::updateFields()
     int range = source == CFL_NONE ? IAR_DROP : (source == CFL_CRAFTED ? IAR_CRAFT : IAR_SHOP);
     int lvl = ci & CF_LEVEL;
     int si;
-    bool active;
 
     // update possible uniques
     QComboBox *uniqComboBox = this->ui->itemUniquesComboBox;

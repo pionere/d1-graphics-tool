@@ -61,7 +61,7 @@ static void HeroResistText(int misr, int res, QProgressBar *label)
     QString tooltip = QApplication::tr("Resistance to %1 damage");
 
     QString type;
-    switch (idx) {
+    switch (misr) {
     case MISR_SLASH:     type = QApplication::tr("slash");     break;
     case MISR_BLUNT:     type = QApplication::tr("blunt");     break;
     case MISR_PUNCTURE:  type = QApplication::tr("puncture");  break;
@@ -72,7 +72,7 @@ static void HeroResistText(int misr, int res, QProgressBar *label)
     }
 
     label->setValue(res);
-    label->setTooltip(tooltip.arg(type));
+    label->setToolTip(tooltip.arg(type));
 }
 
 void HeroDetailsWidget::updateFields()
