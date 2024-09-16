@@ -262,6 +262,25 @@
       <item row="10" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <item>
+         <widget class="QProgressBar" name="monsterResMagic">
+          <property name="fixedWidth">
+           <number>38</number>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QProgressBar" name="monsterResFire">
           <property name="fixedWidth">
            <number>38</number>
@@ -282,25 +301,6 @@
         </item>
         <item>
          <widget class="QProgressBar" name="monsterResLight">
-          <property name="fixedWidth">
-           <number>38</number>
-          </property>
-          <property name="minimum">
-           <number>0</number>
-          </property>
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="textVisible">
-           <bool>true</bool>
-          </property>
-          <property name="alignment">
-           <enum>Qt::AlignCenter</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QProgressBar" name="monsterResMagic">
           <property name="fixedWidth">
            <number>38</number>
           </property>
@@ -361,7 +361,7 @@
            <bool>false</bool>
           </property>
           <property name="toolTip">
-           <string>Hidden</string>
+           <string>Can hide</string>
           </property>
          </widget>
         </item>
