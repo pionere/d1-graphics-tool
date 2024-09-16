@@ -799,8 +799,11 @@ start:
     goto done;
 restart:
     counter++;
-    seed = NextRndSeed();
-    goto start;
+    if (counter != 0) {
+        seed++;// seed = NextRndSeed();
+        goto start;
+    }
+    QMessageBox::critical(this, "Error", tr("Failed to create item with the required attributes."));
 done:
 
     items[MAXITEMS]._iIdentified = TRUE;

@@ -145,7 +145,7 @@ static int GetMissileResist(int mn)
     return missiledata[GetBaseMissile(mn)].mResist;
 }
 
-SkillPushButton::SkillPushButton(int sn)
+SkillPushButton::SkillPushButton(int sn, QWidget *parent)
     : QPushButton(spelldata[sn].sNameText, parent)
     , sn(sn)
 {
