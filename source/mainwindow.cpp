@@ -1015,6 +1015,7 @@ void MainWindow::on_actionClose_triggered()
 {
     this->undoStack->clear();
 
+    MemFree(this->sideView);
     MemFree(this->celView);
     MemFree(this->palWidget);
     MemFree(this->trnUniqueWidget);

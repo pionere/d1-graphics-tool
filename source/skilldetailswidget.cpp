@@ -175,7 +175,7 @@ SkillPushButton::SkillPushButton(int sn, QWidget *parent)
     }
     this->setStyleSheet(style.arg(type));*/
 
-    QObject::connect(this, SIGNAL(clicked_signal()), this, SLOT(on_btn_clicked()));
+    QObject::connect(this, SIGNAL(clicked()), this, SLOT(on_btn_clicked()));
 }
 
 void SkillPushButton::on_btn_clicked()

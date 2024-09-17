@@ -191,7 +191,7 @@ void HeroDetailsWidget::on_gameHellfireCheckBox_clicked()
 {
     IsHellfireGame = this->ui->gameHellfireCheckBox->isChecked();
 
-    // TODO: eliminate hellfire only items?
+    this->hero->update(); // update items
 
     this->updateFields();
 }
@@ -200,7 +200,7 @@ void HeroDetailsWidget::on_gameDifficultyComboBox_activated(int index)
 {
     gnDifficulty = index;
 
-    this->hero->update();
+    this->hero->update(); // update resists
 
     dMainWindow().updateWindow();
 }
@@ -225,8 +225,10 @@ void HeroDetailsWidget::on_heroNameEdit_escPressed()
 void HeroDetailsWidget::on_heroClassComboBox_activated(int index)
 {
     this->hero->setClass(index);
-    if (!isHeroStandardClass(index))
+    if (!isHeroStandardClass(index) && !IsHellfireGame) {
         IsHellfireGame = true;
+        this->hero->update(); // update items
+    }
 
     dMainWindow().updateWindow();
 }

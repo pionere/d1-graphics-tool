@@ -379,9 +379,9 @@ void MonsterDetailsWidget::updateFields()
             // mindam = mon->_mMinDamage;
 	        maxdam = mon->_mMaxDamage << 1;
         } else if (missile == MIS_CBOLTC) {
-            mindam = maxdam = 15 << (6 + gnDifficulty); // FIXME
+            mindam = maxdam = 15 << gnDifficulty; // FIXME
         } else if (missile == MIS_APOCAC2) {
-            mindam = maxdam = 40 << (6 + gnDifficulty);
+            mindam = maxdam = 40 << gnDifficulty;
         }
 
         if (hth || !(missiledata[missile].mdFlags & MIF_DOT)) {
@@ -398,8 +398,6 @@ void MonsterDetailsWidget::updateFields()
     displayDamage(this->ui->monDamage, mindam, maxdam);
 
     hper = 0;
-    this->ui->plrBlockChance->setText(QString("%1%").arg(hper));
-    hper = 0;
     if (hth || (missile != -1 && !(missiledata[missile].mdFlags & MIF_NOBLOCK))) {
         hper = this->hero->getBlockChance() - (mon->_mLevel << 1);
         if (hper < 0)
@@ -407,6 +405,8 @@ void MonsterDetailsWidget::updateFields()
         if (hper > 100)
             hper = 100;
     }
+    this->ui->plrBlockChance->setText(QString("%1%").arg(hper));
+    hper = 0;
     this->ui->monBlockChance->setText(QString("%1%").arg(hper));
 
     // this->adjustSize(); // not sure why this is necessary...

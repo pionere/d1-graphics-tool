@@ -349,9 +349,9 @@ static QString ItemColor(const ItemStruct* is)
     QString color;
     if (is->_itype != ITYPE_NONE) {
         if (is->_iMagical == ITEM_QUALITY_MAGIC)
-            color = QString("color:#797fa0;"); // blue
+            color = QString("color:#58638d;"); // blue
         if (is->_iMagical == ITEM_QUALITY_UNIQUE)
-            return QString("color:#FBB117;"); // beer #ddc47e
+            return QString("color:#ccb775;"); // beer #ddc47e
     }
     return color;
 }
