@@ -274,16 +274,14 @@ void SkillDetailsWidget::updateFields()
     if ((unsigned)sn < NUM_SPELLS) {
         this->ui->skillName->setText(spelldata[sn].sNameText);
         this->ui->skillType->setCurrentIndex(spelldata[sn].sType);
-
+        int lvl = this->hero->getSkillLvl(sn);
+        this->ui->skillLevel->setText(QString::number(lvl));
         this->ui->skillManaCost->setText(QString::number(this->hero->getSkillCost(sn)));
 
-        int sm = this->skills[sn];
-        sm += this->hero->getSkillLvl(sn) - this->hero->getSkillLvlBase(sn);
-        GetSkillDesc(this->hero, sn, this->skills[sn] + sm);
-        skillWidgets[sn]->setToolTip(infostr);
-        this->ui->skillDesc->setText()
+        GetSkillDesc(this->hero, sn, lvl);
+        this->ui->skillDesc->setText(infostr);
 
-            int mn = spelldata[sn].sMissile;
+        int mn = spelldata[sn].sMissile;
         unsigned flags = missiledata[mn].mdFlags;
         this->ui->misAreaCheckBox->setChecked((flags & MIF_AREA) != 0);
         this->ui->misNoBlockCheckBox->setChecked((flags & MIF_NOBLOCK) != 0);
