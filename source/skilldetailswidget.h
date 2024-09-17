@@ -58,4 +58,5 @@ private:
     // LineEditWidget *skillWidgets[64];
     QSpinBox *skillWidgets[64];
     int skills[64];
+    int currentSkill = -1;
 };

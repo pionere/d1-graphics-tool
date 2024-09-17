@@ -46,6 +46,8 @@ private slots:
     void on_itemSuffixLimitedCheckBox_clicked();
     void on_itemPrefixLimitSlider_sliderMoved(int value);
     void on_itemSuffixLimitSlider_sliderMoved(int value);
+    void on_itemACLimitedCheckBox_clicked();
+    void on_itemACLimitSlider_sliderMoved(int value);
 
     void on_generateButton_clicked();
 
@@ -59,6 +61,7 @@ private:
     D1Hero *hero;
     int invIdx;
     int itemType;
+    int itemSeed;
     ItemStruct *is = nullptr;
 
     int wishUniq = -1;

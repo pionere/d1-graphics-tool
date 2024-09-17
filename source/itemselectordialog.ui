@@ -284,6 +284,33 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>AC:</string>
+        </property>
+       </widget>
+       <item row="3" column="2">
+        <widget class="QCheckBox" name="itemACLimitedCheckBox">
+         <property name="tristate">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="QSlider" name="itemACLimitSlider">
+         <property name="minimumWidth">
+          <number>100</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </item>
      </layout>
     </widget>
    </item>

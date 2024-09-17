@@ -11,6 +11,7 @@ ItemStruct items[MAXITEMS + 1];
 //BYTE* itemanims[NUM_IFILE];
 int numitems;
 
+int ac_rnd;
 int affix_rnd[6];
 
 static inline unsigned items_get_currlevel()
@@ -762,7 +763,7 @@ void SetItemData(int ii, int idata)
 	is->_iMinMag = ids->iMinMag;
 	is->_iMinDex = ids->iMinDex;
 	is->_iUsable = ids->iUsable;
-	is->_iAC = ids->iMinAC == ids->iMaxAC ? ids->iMinAC : RandRangeLow(ids->iMinAC, ids->iMaxAC);
+	ac_rnd = is->_iAC = ids->iMinAC == ids->iMaxAC ? ids->iMinAC : RandRangeLow(ids->iMinAC, ids->iMaxAC);
 	is->_iDurability = ids->iUsable ? 1 : ids->iDurability; // STACK
 	is->_iMaxDur = ids->iDurability;
 	is->_ivalue = ids->iValue;

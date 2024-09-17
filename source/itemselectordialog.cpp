@@ -62,11 +62,13 @@ void ItemSelectorDialog::initialize(D1Hero *h, int ii)
         memcpy(this->is, pi, sizeof(ItemStruct));
 
         this->itemType = pi->_itype;
+        this->itemSeed = pi->_iSeed;
     } else {
         memset(this->is, 0, sizeof(ItemStruct));
         this->is->_iCreateInfo = 1 | (CFL_NONE << 8) | (CFDQ_NORMAL << 11);
 
         this->itemType = ITYPE_NONE;
+        this->itemSeed = 0;
     }
 
     QComboBox *locComboBox = this->ui->itemLocComboBox;
@@ -347,9 +349,9 @@ static QString ItemColor(const ItemStruct* is)
     QString color;
     if (is->_itype != ITYPE_NONE) {
         if (is->_iMagical == ITEM_QUALITY_MAGIC)
-            color = QString("color:blue;");
+            color = QString("color:#797fa0;"); // blue
         if (is->_iMagical == ITEM_QUALITY_UNIQUE)
-            return QString("color:#FBB117;"); // beer
+            return QString("color:#FBB117;"); // beer #ddc47e
     }
     return color;
 }
@@ -371,9 +373,10 @@ void ItemSelectorDialog::updateFields()
         this->is->_itype = ITYPE_NONE;
         if (!drop)
             this->is->_iCreateInfo &= CF_LEVEL;
+        this->resetSlider = 7;
     }
     int ci = this->is->_iCreateInfo;
-    this->ui->itemSeedEdit->setText(QString::number(this->is->_iSeed));
+    this->ui->itemSeedEdit->setText(QString::number(this->itemSeed));
     this->ui->itemLevelEdit->setText(QString::number(ci & CF_LEVEL));
     static_assert(((int)CF_TOWN & ((1 << 8) - 1)) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted I.");
     static_assert((((int)CF_TOWN >> 8) & ((((int)CF_TOWN >> 8) + 1))) == 0, "ItemSelectorDialog hardcoded CF_TOWN must be adjusted II.");
@@ -397,6 +400,26 @@ void ItemSelectorDialog::updateFields()
     int range = source == CFL_NONE ? IAR_DROP : (source == CFL_CRAFTED ? IAR_CRAFT : IAR_SHOP);
     int lvl = ci & CF_LEVEL;
     int si;
+    bool active;
+    Qt::CheckState cs;
+
+    // add possible AC range
+    active = AllItemsList[idx].iMinAC != AllItemsList[idx].iMaxAC;
+    cs = this->ui->itemACLimitedCheckBox->checkState();
+    this->ui->itemACLimitedCheckBox->setEnabled(active);
+    this->ui->itemACLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
+    this->ui->itemACLimitSlider->setEnabled(cs != Qt::Unchecked && active);
+    if (active) {
+        int minval, maxval;
+        minval = AllItemsList[idx].iMinAC;
+        maxval = AllItemsList[idx].iMaxAC;
+        this->ui->itemACLimitSlider->setMinimum(minval);
+        this->ui->itemACLimitSlider->setMaximum(maxval);
+        if (this->resetSlider & 4) {
+            this->resetSlider &= ~4;
+            this->ui->itemACLimitSlider->setValue(cs == Qt::Checked ? maxval : minval);
+        }
+    }
 
     // update possible uniques
     QComboBox *uniqComboBox = this->ui->itemUniquesComboBox;
@@ -432,17 +455,20 @@ void ItemSelectorDialog::updateFields()
         sufComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
 
         if ((ci & ~CF_LEVEL) != 0) {
+            int alvl = lvl;
+            if (flgs != PLT_MISC) // items[ii]._itype != ITYPE_RING && items[ii]._itype != ITYPE_AMULET)
+                alvl = alvl > AllItemsList[idx].iMinMLvl ? alvl - AllItemsList[idx].iMinMLvl : 0;
             si = 0;
             for (const AffixData *pres = PL_Prefix; pres->PLPower != IPL_INVALID; pres++, si++) {
                 if ((flgs & pres->PLIType)
-                    && pres->PLRanges[range].from <= lvl && pres->PLRanges[range].to >= lvl) {
+                    && pres->PLRanges[range].from <= alvl && pres->PLRanges[range].to >= alvl) {
                     preComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(pres)).arg(pres->PLParam1).arg(pres->PLParam2), QVariant::fromValue(si));
                 }
             }
             si = 0;
             for (const AffixData *sufs = PL_Suffix; sufs->PLPower != IPL_INVALID; sufs++, si++) {
                 if ((flgs & sufs->PLIType)
-                    && sufs->PLRanges[range].from <= lvl && sufs->PLRanges[range].to >= lvl) {
+                    && sufs->PLRanges[range].from <= alvl && sufs->PLRanges[range].to >= alvl) {
                     sufComboBox->addItem(QString("%1 (%2-%3)").arg(AffixName(sufs)).arg(sufs->PLParam1).arg(sufs->PLParam2), QVariant::fromValue(si));
                 }
             }
@@ -484,8 +510,8 @@ void ItemSelectorDialog::updateFields()
 
     si = preComboBox->currentData().value<int>();
     this->ui->itemPrefixLimitedCheckBox->setEnabled(si >= 0);
-    bool active = si >= 0 && (uniqIdx >= 0 || (PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2));
-    Qt::CheckState cs = this->ui->itemPrefixLimitedCheckBox->checkState();
+    active = si >= 0 && (uniqIdx >= 0 || (PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2));
+    cs = this->ui->itemPrefixLimitedCheckBox->checkState();
     this->ui->itemPrefixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
     this->ui->itemPrefixLimitSlider->setEnabled(cs != Qt::Unchecked && active);
     if (active) {
@@ -576,7 +602,7 @@ void ItemSelectorDialog::on_itemSeedEdit_returnPressed()
     QString seedTxt = this->ui->itemSeedEdit->text();
     int seed = seedTxt.toInt(&ok);
     if (ok || seedTxt.isEmpty()) {
-        this->is->_iSeed = seed;
+        this->itemSeed = seed;
     } else {
         QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
     }
@@ -593,7 +619,7 @@ void ItemSelectorDialog::on_itemSeedEdit_escPressed()
 void ItemSelectorDialog::on_actionGenerateSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
-    this->is->_iSeed = (int)gen->generate();
+    this->itemSeed = (int)gen->generate();
     this->updateFields();
 }
 
@@ -625,7 +651,7 @@ void ItemSelectorDialog::on_itemQualityComboBox_activated(int index)
 void ItemSelectorDialog::on_itemUniquesComboBox_activated(int index)
 {
     this->wishUniq = this->ui->itemUniquesComboBox->itemData(index).value<int>();
-    this->resetSlider |= 1 | 2;
+    this->resetSlider = 7;
     this->updateFields();
 }
 
@@ -663,6 +689,16 @@ void ItemSelectorDialog::on_itemSuffixLimitSlider_sliderMoved(int value)
     this->ui->itemSuffixLimitSlider->setToolTip(QString::number(value));
 }
 
+void ItemSelectorDialog::on_itemACLimitedCheckBox_clicked()
+{
+    this->updateFields();
+}
+
+void ItemSelectorDialog::on_itemACLimitSlider_sliderMoved(int value)
+{
+    this->ui->itemACLimitSlider->setToolTip(QString::number(value));
+}
+
 bool ItemSelectorDialog::recreateItem()
 {
     /*bool ok;
@@ -678,13 +714,24 @@ bool ItemSelectorDialog::recreateItem()
     wCI |= this->ui->itemQualityComboBox->currentIndex() << 11;
 
     int wIdx = this->ui->itemIdxComboBox->currentData().value<int>();*/
-    int seed = this->is->_iSeed;
+    int seed = this->itemSeed;
     int wCI = this->is->_iCreateInfo;
     int wIdx = this->is->_iIdx;
 
     int uniqIdx = this->ui->itemUniquesComboBox->currentData().value<int>();
     int preIdx = this->ui->itemPrefixComboBox->currentData().value<int>();
     int sufIdx = this->ui->itemSuffixComboBox->currentData().value<int>();
+    int acLowest = 0, acHighest = INT_MAX;
+    if (this->ui->itemACLimitSlider->isEnabled()) {
+        acLowest = AllItemsList[wIdx].iMinAC;
+        acHighest = AllItemsList[wIdx].iMaxAC;
+        int val = this->ui->itemACLimitSlider->value();
+        if (this->ui->itemACLimitedCheckBox->checkState() == Qt::PartiallyChecked) {
+            acLowest = val;
+        } else {
+            acHighest = val;
+        }
+    }
 
     typedef struct UIAffixData {
         bool active;
@@ -713,7 +760,7 @@ bool ItemSelectorDialog::recreateItem()
                 prefix.param1 = affix->PLParam1;
                 prefix.param2 = affix->PLParam2;
             }
-            if (this->ui->itemPrefixLimitSlider->isVisible()) {
+            if (this->ui->itemPrefixLimitSlider->isEnabled()) {
                 int val = this->ui->itemPrefixLimitSlider->value();
                 if (this->ui->itemPrefixLimitedCheckBox->checkState() == Qt::PartiallyChecked) {
                     prefix.param1 = val;
@@ -744,7 +791,7 @@ bool ItemSelectorDialog::recreateItem()
                 suffix.param1 = affix->PLParam1;
                 suffix.param2 = affix->PLParam2;
             }
-            if (this->ui->itemSuffixLimitSlider->isVisible()) {
+            if (this->ui->itemSuffixLimitSlider->isEnabled()) {
                 int val = this->ui->itemSuffixLimitSlider->value();
                 if (this->ui->itemSuffixLimitedCheckBox->checkState() == Qt::PartiallyChecked) {
                     suffix.param1 = val;
@@ -761,6 +808,9 @@ bool ItemSelectorDialog::recreateItem()
 start:
     RecreateItem(seed, wIdx, wCI);
 
+    if (ac_rnd < acLowest || ac_rnd > acHighest) {
+        goto restart;
+    }
     if (uniqIdx >= 0) {
         if (items[MAXITEMS]._iMagical != ITEM_QUALITY_UNIQUE || items[MAXITEMS]._iUid != uniqIdx) {
             goto restart;

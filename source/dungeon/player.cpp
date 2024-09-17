@@ -4,6 +4,7 @@
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
 #include "all.h"
+#include <time.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -202,7 +203,7 @@ void CreatePlayer(int pnum, const _uiheroinfo& heroinfo)
 	int i; // , pnum = 0;
 
 	memset(&plr, 0, sizeof(PlayerStruct));
-	//SetRndSeed(SDL_GetTicks());
+	SetRndSeed(time(NULL));
 
 	plr._pLevel = heroinfo.hiLevel;
 	plr._pClass = heroinfo.hiClass;

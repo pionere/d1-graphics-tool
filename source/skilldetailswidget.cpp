@@ -149,7 +149,7 @@ SkillPushButton::SkillPushButton(int sn, QWidget *parent)
     : QPushButton(spelldata[sn].sNameText, parent)
     , sn(sn)
 {
-    QString style = "border: none;%1";
+    /*QString style = "border: none;%1";
 
     const char *type = "";
     if (spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED)) {
@@ -173,7 +173,7 @@ SkillPushButton::SkillPushButton(int sn, QWidget *parent)
             type = "color:maroon;";
         }
     }
-    this->setStyleSheet(style.arg(type));
+    this->setStyleSheet(style.arg(type));*/
 
     QObject::connect(this, SIGNAL(clicked_signal()), this, SLOT(on_btn_clicked()));
 }
@@ -262,47 +262,52 @@ void SkillDetailsWidget::displayFrame()
 
 void SkillDetailsWidget::updateFields()
 {
+    int sn;
     // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
-    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+    for (sn = 0; sn < NUM_SPELLS; sn++) {
         if (skillWidgets[sn] == nullptr)
             continue;
+        skillWidgets[sn]->setValue(this->skills[sn]);
+    }
+
+    sn = this->currentSkill;
+    if ((unsigned)sn < NUM_SPELLS) {
+        this->ui->skillName->setText(spelldata[sn].sNameText);
+        this->ui->skillType->setCurrentIndex(spelldata[sn].sType);
+
+        this->ui->skillManaCost->setText(QString::number(this->hero->getSkillCost(sn)));
+
         int sm = this->skills[sn];
-        // skillWidgets[sn]->setText(QString::number(sm));
-        skillWidgets[sn]->setValue(sm);
-        if (sm <= 0) {
-            skillWidgets[sn]->setToolTip("");
-        } else {
-            sm += this->hero->getSkillLvl(sn) - this->hero->getSkillLvlBase(sn);
-            GetSkillDesc(this->hero, sn, this->skills[sn] + sm);
-            skillWidgets[sn]->setToolTip(infostr);
-        }
+        sm += this->hero->getSkillLvl(sn) - this->hero->getSkillLvlBase(sn);
+        GetSkillDesc(this->hero, sn, this->skills[sn] + sm);
+        skillWidgets[sn]->setToolTip(infostr);
+        this->ui->skillDesc->setText()
+
+            int mn = spelldata[sn].sMissile;
+        unsigned flags = missiledata[mn].mdFlags;
+        this->ui->misAreaCheckBox->setChecked((flags & MIF_AREA) != 0);
+        this->ui->misNoBlockCheckBox->setChecked((flags & MIF_NOBLOCK) != 0);
+        this->ui->misDotCheckBox->setChecked((flags & MIF_DOT) != 0);
+        this->ui->misLeadCheckBox->setChecked((flags & MIF_LEAD) != 0);
+        this->ui->misShroudCheckBox->setChecked((flags & MIF_SHROUD) != 0);
+        this->ui->misArrowCheckBox->setChecked((flags & MIF_ARROW) != 0);
+
+        int bmn = GetBaseMissile(mn);
+        flags = missiledata[bmn].mdFlags;
+        this->ui->misBaseAreaCheckBox->setChecked((flags & MIF_AREA) != 0);
+        this->ui->misBaseNoBlockCheckBox->setChecked((flags & MIF_NOBLOCK) != 0);
+        this->ui->misBaseDotCheckBox->setChecked((flags & MIF_DOT) != 0);
+        this->ui->misBaseLeadCheckBox->setChecked((flags & MIF_LEAD) != 0);
+        this->ui->misBaseShroudCheckBox->setChecked((flags & MIF_SHROUD) != 0);
+        this->ui->misBaseArrowCheckBox->setChecked((flags & MIF_ARROW) != 0);
     }
 }
 
 void SkillDetailsWidget::on_skill_clicked(int sn)
 {
-    this->ui->skillName->setText(spelldata[sn].sNameText);
-    this->ui->skillType->setCurrentIndex(spelldata[sn].sType);
+    this->currentSkill = sn;
 
-    this->ui->skillManaCost->setText(QString::number(this->hero->getSkillCost(sn)));
-
-    int mn = spelldata[sn].sMissile;
-    unsigned flags = missiledata[mn].mdFlags;
-    this->ui->misAreaCheckBox->setChecked((flags & MIF_AREA) != 0);
-    this->ui->misNoBlockCheckBox->setChecked((flags & MIF_NOBLOCK) != 0);
-    this->ui->misDotCheckBox->setChecked((flags & MIF_DOT) != 0);
-    this->ui->misLeadCheckBox->setChecked((flags & MIF_LEAD) != 0);
-    this->ui->misShroudCheckBox->setChecked((flags & MIF_SHROUD) != 0);
-    this->ui->misArrowCheckBox->setChecked((flags & MIF_ARROW) != 0);
-
-    int bmn = GetBaseMissile(mn);
-    flags = missiledata[bmn].mdFlags;
-    this->ui->misBaseAreaCheckBox->setChecked((flags & MIF_AREA) != 0);
-    this->ui->misBaseNoBlockCheckBox->setChecked((flags & MIF_NOBLOCK) != 0);
-    this->ui->misBaseDotCheckBox->setChecked((flags & MIF_DOT) != 0);
-    this->ui->misBaseLeadCheckBox->setChecked((flags & MIF_LEAD) != 0);
-    this->ui->misBaseShroudCheckBox->setChecked((flags & MIF_SHROUD) != 0);
-    this->ui->misBaseArrowCheckBox->setChecked((flags & MIF_ARROW) != 0);
+    this->updateFields();
 }
 
 void SkillDetailsWidget::on_resetButton_clicked()
