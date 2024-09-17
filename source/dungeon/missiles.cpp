@@ -312,6 +312,21 @@ void GetSkillDesc(D1Hero *hero, int sn, int sl)
 	}
 }
 
+int GetMissileHitChance(int mtype, const MonsterStruct *mon, const D1Hero *hero)
+{
+    int hper;
+    if (missiledata[mtype].mdFlags & MIF_ARROW) {
+        hper = 30 + mon->_mHit + (2 * mon->_mLevel) - hero->getAC();
+    } else if (missiledata[mtype].mdFlags & MIF_AREA) {
+        hper = 40 + 2 * mon->_mLevel;
+        hper -= 2 * hero->getLevel();
+    } else {
+        hper = 50 + mon->_mMagic;
+        hper -= hero->getEvasion();
+    }
+    return hper;
+}
+
 unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrates)
 {
 	unsigned dam;

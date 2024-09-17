@@ -532,11 +532,35 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QLabel" name="monHitChance">
-        <property name="toolTip">
-         <string>Chance to hit the player</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel" name="monHitChance">
+          <property name="toolTip">
+           <string>Chance to hit the player in h2h combat</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="monHitChanceSep">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="text">
+           <string notr="true">|</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="monHitChance2">
+          <property name="toolTip">
+           <string>Chance to hit the player using special/missile attack</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
 
       <item row="2" column="0">
@@ -554,11 +578,35 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QLabel" name="monDamage">
-        <property name="toolTip">
-         <string>Possible damage to the player</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel" name="monDamage">
+          <property name="toolTip">
+           <string>Possible h2h damage to the player</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="monDamageSep">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="text">
+           <string notr="true">-</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="monDamage2">
+          <property name="toolTip">
+           <string>Possible missile/special damage to the player</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
 
       <item row="3" column="0">

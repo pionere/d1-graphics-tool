@@ -284,7 +284,7 @@ void MonsterDetailsWidget::updateFields()
     int hper, mindam, maxdam;
     bool hth = false;
     bool special = false; // special (hit2/dam2 + afnum2)
-    int missile = -1;
+    int mtype = -1;
     bool ranged_special; // aiParam1 + afnum2
     switch (mon->_mAI.aiType) {
     case AI_LACHDAN:
@@ -319,72 +319,78 @@ void MonsterDetailsWidget::updateFields()
         special = mon->_mAI.aiParam1;
         break;
     case AI_SKELBOW:
-        missile = MIS_ARROW;
+        mtype = MIS_ARROW;
         break;
     case AI_RANGED: // special ranged / ranged if aiParam2
     case AI_LAZHELP: // AI_RANGED
         ranged_special = mon->_mAI.aiParam2;
-        missile = mon->_mAI.aiParam1;
+        mtype = mon->_mAI.aiParam1;
         break;
     case AI_ROUNDRANGED: // special ranged / hth
     case AI_ROUNDRANGED2: // AI_ROUNDRANGED
         hth = true;
         ranged_special = true;
-        missile = mon->_mAI.aiParam1;
+        mtype = mon->_mAI.aiParam1;
         break;
     case AI_ZHAR: // AI_COUNSLR
     case AI_COUNSLR: // ranged + MIS_FLASH
     case AI_LAZARUS: // AI_COUNSLR
-        missile = mon->_mAI.aiParam1; // + MIS_FLASH
+        mtype = mon->_mAI.aiParam1; // + MIS_FLASH
         break;
     case AI_MAGE:
-        missile = MIS_MAGE; // + MIS_FLASH + param1
+        mtype = MIS_MAGE; // + MIS_FLASH + param1
         break;
     }
 
     hper = this->hero->getHitChance() - mon->_mArmorClass;
     hper = CheckHit(hper);
     this->ui->plrHitChance->setText(QString("%1%").arg(hper));
-    hper = 0;
-    if (hth || (missile != -1 && (missiledata[missile].mdFlags & MIF_ARROW))) {
-        hper = 30 + mon->_mHit + (2 * mon->_mLevel) - this->hero->getAC();
-    } else if (missile != -1 && (missiledata[missile].mdFlags & MIF_AREA)) {
-        hper = 40 + 2 * mon->_mLevel;
-        hper -= 2 * this->hero->getLevel();
-    } else if (missile != -1 && missile != MIS_SWAMPC) {
-        hper = 50 + mon->_mMagic;
-        hper -= this->hero->getEvasion();
-    }
+    hper = hth ? 30 + mon->_mHit + (2 * mon->_mLevel) - this->hero->getAC() : 0;
+    int hper2 = mtype == -1 ? (special ? 30 + mon->_mHit2 + (2 * mon->_mLevel) - this->hero->getAC() : -1) : GetMissileHitChance(mtype, mon, this->hero);
     hper = CheckHit(hper);
-    if (!special) {
-        this->ui->monHitChance->setText(QString("%1%").arg(hper));
-    } else {
-        int hper2 = 30 + mon->_mHit + (2 * mon->_mLevel) - this->hero->getAC();
+    this->ui->monHitChance->setText(QString("%1%").arg(hper));
+    this->ui->monHitChanceSep->setVisible(hper2 != -1);
+    if (hper2 != -1) {
         hper2 = CheckHit(hper2);
-        this->ui->monHitChance->setText(QString("%1% / %2%").arg(hper).arg(hper2));
+        this->ui->monHitChance2->setText(QString("%1%").arg(hper2));
     }
 
     displayDamage(this->ui->plrDamage, this->hero->getTotalMinDam(mon), this->hero->getTotalMaxDam(mon));
     mindam = 0;
     maxdam = 0;
-    if (hth || (missile != -1 && missile != MIS_SWAMPC)) {
+    if (hth || (mtype != -1 && mtype != MIS_SWAMPC)) {
         mindam = mon->_mMinDamage;
         maxdam = mon->_mMaxDamage;
-        if (missile == MIS_BLOODBOILC) {
-            mindam = mon->_mLevel >> 1;
-            maxdam = mon->_mLevel;
-        } else if (missile == MIS_FLASH) {
-            mindam = maxdam = mon->_mLevel << 1;
-        } else if (missile == MIS_LIGHTNINGC || missile == MIS_LIGHTNINGC2) {
-            // mindam = mon->_mMinDamage;
-	        maxdam = mon->_mMaxDamage << 1;
-        } else if (missile == MIS_CBOLTC) {
-            mindam = maxdam = 15 << gnDifficulty; // FIXME
-        } else if (missile == MIS_APOCAC2) {
-            mindam = maxdam = 40 << gnDifficulty;
+        this->ui->monDamageSep->setVisible(mtype != -1);
+        if (mtype != -1) {
+            int mindam2 = mindam;
+            int maxdam2 = maxdam;
+            if (mtype == MIS_BLOODBOILC) {
+                mindam2 = mon->_mLevel >> 1;
+                maxdam2 = mon->_mLevel;
+            } else if (mtype == MIS_FLASH) {
+                mindam2 = maxdam2 = mon->_mLevel << 1;
+            } else if (mtype == MIS_LIGHTNINGC || mtype == MIS_LIGHTNINGC2) {
+                // mindam = mon->_mMinDamage;
+                maxdam2 = maxdam2 << 1;
+            } else if (mtype == MIS_CBOLTC) {
+                mindam2 = maxdam2 = 15 << gnDifficulty; // FIXME
+            } else if (mtype == MIS_APOCAC2) {
+                mindam2 = maxdam2 = 40 << gnDifficulty;
+            }
+            if (!(missiledata[mtype].mdFlags & MIF_DOT)) {
+                mindam2 += this->hero->getGetHit();
+                maxdam2 += this->hero->getGetHit();
+            }
+            if (mindam2 < 1)
+                mindam2 = 1;
+            if (maxdam2 < 1)
+                maxdam2 = 1;
+
+            displayDamage(this->ui->monDamage2, mindam2, maxdam2);
         }
 
-        if (hth || !(missiledata[missile].mdFlags & MIF_DOT)) {
+        if (hth) {
             mindam += this->hero->getGetHit();
             maxdam += this->hero->getGetHit();
         }
@@ -392,13 +398,15 @@ void MonsterDetailsWidget::updateFields()
             mindam = 1;
         if (maxdam < 1)
             maxdam = 1;
-        // if (hth && (missile != -1 && missile != MIS_SWAMPC)) { FIXME
-        // if (hth && MOFILE_MAGMA (hit + 10, dam - 2), MOFILE_THIN (hit - 20, dam + 4)) {
+
+        // if (hth && MOFILE_MAGMA (hit + 10, dam - 2), MOFILE_THIN (hit - 20, dam + 4)) {  // FIXME
+    } else {
+        this->ui->monDamageSep->setVisible(false);
     }
     displayDamage(this->ui->monDamage, mindam, maxdam);
 
     hper = 0;
-    if (hth || (missile != -1 && !(missiledata[missile].mdFlags & MIF_NOBLOCK))) {
+    if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
         hper = this->hero->getBlockChance() - (mon->_mLevel << 1);
         if (hper < 0)
             hper = 0;

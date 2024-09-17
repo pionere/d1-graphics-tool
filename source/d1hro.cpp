@@ -533,8 +533,8 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
         pi = PlrItem(this->pnum, dst_ii);
         if (memcmp(pi, is, sizeof(ItemStruct)) == 0)
             return false;
-        if (si->_itype != ITYPE_NONE) {
-            if (TWOHAND_WIELD(&plr, si)) {
+        if (is->_itype != ITYPE_NONE) {
+            if (TWOHAND_WIELD(&plr, is)) {
                 if (dst_ii == INVLOC_HAND_LEFT) {
                     ItemStruct *ri = PlrItem(this->pnum, INVLOC_HAND_RIGHT);
                     if (ri->_itype != ITYPE_NONE) {
