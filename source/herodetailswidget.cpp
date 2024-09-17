@@ -196,7 +196,7 @@ void HeroDetailsWidget::on_gameHellfireCheckBox_clicked()
     this->updateFields();
 }
 
-void HeroDetailsWidget::on_gameDifficutlyComboBox_activated(int index)
+void HeroDetailsWidget::on_gameDifficultyComboBox_activated(int index)
 {
     gnDifficulty = index;
 

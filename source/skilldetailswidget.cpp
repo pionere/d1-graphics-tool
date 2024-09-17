@@ -190,7 +190,7 @@ void SkillPushButton::on_btn_clicked()
     }
 }
 
-SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
+SkillDetailsWidget::SkillDetailsWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::SkillDetailsWidget())
 {

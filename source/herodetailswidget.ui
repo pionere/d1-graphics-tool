@@ -49,7 +49,7 @@
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QComboBox" name="gameDifficutlyComboBox">
+       <widget class="QComboBox" name="gameDifficultyComboBox">
         <item>
          <property name="text">
           <string>Normal</string>
