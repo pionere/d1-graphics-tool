@@ -428,7 +428,7 @@ void ItemSelectorDialog::updateFields()
     uniqComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
 
     if ((ci & ~CF_LEVEL) != 0) {
-        for (int i = 0; i < NUM_UITEM; i++) {
+        for (int i = 0; i < (IsHellfireGame ? NUM_UITEM : NUM_UITEM_DIABLO); i++) {
             const UniqItemData &uid = UniqueItemList[i];
             if (uid.UIUniqType == AllItemsList[idx].iUniqType && uid.UIMinLvl <= lvl) {
                 uniqComboBox->addItem(uid.UIName, QVariant::fromValue(i));
@@ -813,13 +813,23 @@ start:
     }
     if (uniqIdx >= 0) {
         if (items[MAXITEMS]._iMagical != ITEM_QUALITY_UNIQUE || items[MAXITEMS]._iUid != uniqIdx) {
+            // if (items[MAXITEMS]._iMagical != ITEM_QUALITY_UNIQUE)
+                // LogErrorF("missed uniq-quality %d vs [%d%d] (%d) seed%d", affix_rnd[preIdx], prefix.param1, prefix.param2, preIdx, seed);
+            // else
+            //     LogErrorF("missed uniq-index %d vs %d seed%d", items[MAXITEMS]._iUid, uniqIdx, seed);
             goto restart;
         }
         if (prefix.active) {
-            if (affix_rnd[preIdx] < prefix.param1 || affix_rnd[preIdx] > prefix.param2) goto restart;
+            if (affix_rnd[preIdx] < prefix.param1 || affix_rnd[preIdx] > prefix.param2) {
+                // LogErrorF("missed uniq-prefix %d vs [%d%d] (%d) seed%d", affix_rnd[preIdx], prefix.param1, prefix.param2, preIdx, seed);
+                goto restart;
+            }
         }
         if (suffix.active) {
-            if (affix_rnd[sufIdx] < suffix.param1 || affix_rnd[sufIdx] > suffix.param2) goto restart;
+            if (affix_rnd[sufIdx] < suffix.param1 || affix_rnd[sufIdx] > suffix.param2) {
+                // LogErrorF("missed uniq-suffix %d vs [%d%d] (%d) seed%d", affix_rnd[sufIdx], suffix.param1, suffix.param2, sufIdx, seed);
+                goto restart;
+            }
         }
     } else {
         if (uniqIdx == -2 && items[MAXITEMS]._iMagical == ITEM_QUALITY_UNIQUE) {
@@ -874,11 +884,11 @@ void ItemSelectorDialog::on_generateButton_clicked()
 
 void ItemSelectorDialog::on_submitButton_clicked()
 {
-    if (this->recreateItem()) {
+    //if (this->recreateItem()) {
         dMainWindow().addHeroItem(this->invIdx, this->is);
 
         this->close();
-    }
+    // }
 }
 
 void ItemSelectorDialog::on_cancelButton_clicked()

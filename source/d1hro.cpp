@@ -95,6 +95,11 @@ void D1Hero::setPalette(D1Pal *pal)
     this->palette = pal;
 }
 
+void D1Hero::update()
+{
+    CalcPlrInv(this->pnum, false);
+}
+
 static QPainter *InvPainter = nullptr;
 static D1Pal *InvPal = nullptr;
 static BYTE light_trn_index = 0;

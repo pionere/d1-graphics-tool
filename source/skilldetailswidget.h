@@ -6,7 +6,6 @@
 
 #include "lineeditwidget.h"
 
-class SidePanelWidget;
 class D1Hero;
 
 namespace Ui {
@@ -32,7 +31,7 @@ class SkillDetailsWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SkillDetailsWidget(SidePanelWidget *parent);
+    explicit SkillDetailsWidget(QWidget *parent);
     ~SkillDetailsWidget();
 
     void initialize(D1Hero *hero);
@@ -52,7 +51,6 @@ private slots:
 
 private:
     Ui::SkillDetailsWidget *ui;
-    SidePanelWidget *view;
 
     D1Hero *hero;
     // LineEditWidget *skillWidgets[64];

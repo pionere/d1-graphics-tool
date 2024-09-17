@@ -25,6 +25,7 @@ public:
 
     D1Pal *getPalette() const;
     void setPalette(D1Pal *pal);
+    void update();
 
     QImage getEquipmentImage(int ii) const;
     const ItemStruct *item(int ii) const;

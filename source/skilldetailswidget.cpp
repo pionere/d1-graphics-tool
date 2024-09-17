@@ -183,14 +183,16 @@ void SkillPushButton::on_btn_clicked()
     QObject *view = this->parent();
     SkillDetailsWidget *celView = qobject_cast<SkillDetailsWidget *>(view);
     if (celView != nullptr) {
+        QMessageBox::critical(this, "Error", "Details widget!");
         celView->on_skill_clicked(this->sn);
+    } else {
+        QMessageBox::critical(this, "Error", "Not a details widget.");
     }
 }
 
 SkillDetailsWidget::SkillDetailsWidget(SidePanelWidget *parent)
     : QWidget(parent)
     , ui(new Ui::SkillDetailsWidget())
-    , view(parent)
 {
     ui->setupUi(this);
 

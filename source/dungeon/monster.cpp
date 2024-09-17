@@ -413,21 +413,13 @@ static int InitBaseMonster(int type, int numplrs, int lvlBonus)
     return mnum;
 }
 
-void InitLvlMonster(int type, int numplrs, int difficulty, int lvlBonus)
+void InitLvlMonster(int type, int numplrs, int lvlBonus)
 {
-    int prevDifficulty = gnDifficulty;
-    gnDifficulty = difficulty;
-
     InitBaseMonster(type, numplrs, lvlBonus);
-
-    gnDifficulty = prevDifficulty;
 }
 
-void InitUniqMonster(int uniqindex, int numplrs, int difficulty, int lvlbonus, bool minion)
+void InitUniqMonster(int uniqindex, int numplrs, int lvlbonus, bool minion)
 {
-    int prevDifficulty = gnDifficulty;
-    gnDifficulty = difficulty;
-
     int mnum = InitBaseMonster(uniqMonData[uniqindex].mtype, numplrs, lvlbonus);
     int flags = InitUniqueMonster(mnum, uniqindex);
     int mtidx = 0;
@@ -435,5 +427,4 @@ void InitUniqMonster(int uniqindex, int numplrs, int difficulty, int lvlbonus, b
         PlaceGroup(mtidx, MON_PACK_SIZE - 1, flags, mnum);
         memcpy(&monsters[mnum], &monsters[mnum + 1], sizeof(MonsterStruct));
     }
-    gnDifficulty = prevDifficulty;
 }

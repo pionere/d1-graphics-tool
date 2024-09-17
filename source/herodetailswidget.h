@@ -22,6 +22,9 @@ private:
     void updateFields();
 
 private slots:
+    void on_gameHellfireCheckBox_clicked();
+    void on_gameDifficutlyComboBox_activated(int index);
+
     void on_heroNameEdit_returnPressed();
     void on_heroNameEdit_escPressed();
     void on_heroClassComboBox_activated(int index);

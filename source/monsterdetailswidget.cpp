@@ -226,15 +226,14 @@ void MonsterDetailsWidget::updateFields()
     minion &= this->ui->minionCheckBox->isChecked();
 
     int numplrs = this->ui->plrCountSpinBox->value();
-    int difficulty = this->ui->difficutlyComboBox->currentIndex();
     int lvlbonus = this->dunLevelBonus;
 
     this->ui->dunLevelBonusEdit->setText(QString::number(lvlbonus));
 
     if (type < 0)
-        InitUniqMonster(-(type + 1), numplrs, difficulty, lvlbonus, minion);
+        InitUniqMonster(-(type + 1), numplrs, lvlbonus, minion);
     else
-        InitLvlMonster(type, numplrs, difficulty, lvlbonus);
+        InitLvlMonster(type, numplrs, lvlbonus);
 
     MonsterStruct *mon = &monsters[MAX_MINIONS];
 
