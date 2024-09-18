@@ -24,7 +24,7 @@ static double tickToSec(int tickCount)
 	return tickCount / (double)gnTicksRate;
 }
 
-static void CalcHealHp(D1Hero *hero, int sn, int spllvl, int *mind, int *maxd)
+static void CalcHealHp(const D1Hero *hero, int sn, int spllvl, int *mind, int *maxd)
 {
     int i;
 	int minhp = 1;
@@ -69,7 +69,7 @@ static void CalcHealHp(D1Hero *hero, int sn, int spllvl, int *mind, int *maxd)
     *maxd = maxhp;
 }
 
-void GetSkillDesc(D1Hero *hero, int sn, int sl)
+void GetSkillDesc(const D1Hero *hero, int sn, int sl)
 {
 	int k, magic, mind, maxd = 0, dur = 0;
 
@@ -390,7 +390,7 @@ unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrate
 	return dam;
 }
 
-unsigned CalcPlrDam(D1Hero *hero, BYTE mRes, unsigned damage)
+unsigned CalcPlrDam(const D1Hero *hero, BYTE mRes, unsigned damage)
 {
 	int dam;
 	int8_t resist;

@@ -183,7 +183,7 @@ typedef struct MonsterDamage {
     int maxMis;
     int chanceMis;
     BYTE resMis;
-    bool noBlockMis;
+    bool blockMis;
 
 } MonsterDamage;
 
@@ -402,7 +402,7 @@ void MonsterDetailsWidget::updateFields()
     bool minion;
     if (unique) {
         type = -(type + 1);
-        int lvl = uniqMonLevel();
+        int lvl = uniqMonLevel(type);
         typesComboBox->setToolTip(tr("Dungeon Level %1").arg(lvl));
         minion = (uniqMonData[type].mUnqFlags & UMF_GROUP) != 0;
         this->ui->minionCheckBox->setVisible(minion);
@@ -638,7 +638,7 @@ void MonsterDetailsWidget::updateFields()
     maxdam = 0;
     if (monDamage.hth) {
         mindam = monDamage.minHth;
-        maxdam = monDamage.maxnHth;
+        maxdam = monDamage.maxHth;
     }
     displayDamage(this->ui->monDamage, mindam, maxdam);
 
