@@ -29,6 +29,21 @@ private:
     SkillDetailsWidget *sdw;
 };
 
+class SkillSpinBox : public QSpinBox {
+    Q_OBJECT
+
+public:
+    explicit SkillSpinBox(int sn, SkillDetailsWidget *parent);
+    ~SkillSpinBox() = default;
+
+private slots:
+    void on_value_changed();
+
+private:
+    int sn;
+    SkillDetailsWidget *sdw;
+};
+
 class SkillDetailsWidget : public QWidget {
     Q_OBJECT
 
@@ -40,6 +55,7 @@ public:
     void displayFrame();
 
     void on_skill_clicked(int sn);
+    void on_skill_changed(int sn, int value);
 
 private:
     void updateFields();
@@ -56,7 +72,7 @@ private:
 
     D1Hero *hero;
     // LineEditWidget *skillWidgets[64];
-    QSpinBox *skillWidgets[64];
+    SkillSpinBox *skillWidgets[64];
     int skills[64];
     int currentSkill = -1;
 };

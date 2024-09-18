@@ -945,6 +945,30 @@ void D1Hero::setSkillLvlBase(int sn, int level)
     this->modified = true;
 }
 
+uint64_t D1Hero::getFixedSkills() const
+{
+    return plr._pAblSkills | plr._pInvSkills | plr._pISpells;
+}
+
+uint64_t D1Hero::getSkills() const
+{
+    return plr._pAblSkills | plr._pMemSkills | plr._pInvSkills | plr._pISpells;
+}
+
+int D1Hero::getSkillSources(int sn) const
+{
+    int result = 0;
+    if (plr._pAblSkills & SPELL_MASK(sn))
+        result |= 1 << RSPLTYPE_ABILITY;
+    if (plr._pMemSkills & SPELL_MASK(sn))
+        result |= 1 << RSPLTYPE_SPELL;
+    if (plr._pInvSkills & SPELL_MASK(sn))
+        result |= 1 << RSPLTYPE_INV;
+    if (plr._pISpells & SPELL_MASK(sn))
+        result |= 1 << RSPLTYPE_CHARGES;
+    return result;
+}
+
 int D1Hero::getWalkSpeed() const
 {
     return players[this->pnum]._pIWalkSpeed;
@@ -1188,7 +1212,7 @@ int D1Hero::getItemFlags() const
 
 int D1Hero::getSkillCost(int sn) const
 {
-    return GetManaAmount(this->pnum, sn);
+    return GetManaAmount(this->pnum, sn) >> 6;
 }
 
 void D1Hero::rebalance()

@@ -187,20 +187,6 @@ typedef struct MonsterDamage {
 
 } MonsterDamage;
 
-static const char *GetElementColor(int rs)
-{
-    const char *type = "";
-    switch (rs) {
-    case MISR_FIRE:      type = "color:red;";     break;
-    case MISR_MAGIC:     type = "color:blue;";    break;
-    case MISR_LIGHTNING: type = "color:#FFBF00;"; break; // amber
-    case MISR_ACID:      type = "color:green;";   break;
-    case MISR_PUNCTURE:  type = "color:olive;";   break;
-    case MISR_BLUNT:     type = "color:maroon;";  break;
-    }
-    return type;
-}
-
 static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *hero)
 {
     bool hth = false;
@@ -309,7 +295,7 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
         } else if (mtype == MIS_APOCAC2) {
             mindam = maxdam = 40 << gnDifficulty;
         }
-        result.resMis = missiledata[GetBaseMissile(mtype)].mResist;
+        result.resMis = GetSkillElement(mtype);
         result.blockMis = !(missiledata[mtype].mdFlags & MIF_NOBLOCK);
         mindam = CalcPlrDam(hero, result.resMis, mindam);
         maxdam = CalcPlrDam(hero, result.resMis, maxdam);
@@ -550,7 +536,6 @@ void MonsterDetailsWidget::updateFields()
         hper = monDamage.mis ? monDamage.chanceMis : monDamage.chanceSpec;
         hper = CheckHit(hper);
         this->ui->monHitChance2->setText(QString("%1%").arg(hper));
-        this->ui->monHitChance2->setStyleSheet(GetElementColor(monDamage.mis ? monDamage.resMis : MISR_NONE));
     }
 
     displayDamage(this->ui->plrDamage, this->hero->getTotalMinDam(mon), this->hero->getTotalMaxDam(mon));
@@ -633,6 +618,7 @@ void MonsterDetailsWidget::updateFields()
             maxdam = monDamage.maxSpec;
         }
         displayDamage(this->ui->monDamage2, mindam, maxdam);
+        this->ui->monDamage2->setStyleSheet(GetElementColor(monDamage.mis ? monDamage.resMis : MISR_NONE));
     }
     mindam = 0;
     maxdam = 0;

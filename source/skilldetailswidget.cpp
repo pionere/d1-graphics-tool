@@ -14,42 +14,16 @@
 
 #include "dungeon/all.h"
 
-
-static int GetMissileResist(int mn)
-{
-    return missiledata[GetBaseMissile(mn)].mResist;
-}
-
 SkillPushButton::SkillPushButton(int sn, SkillDetailsWidget *parent)
     : QPushButton(spelldata[sn].sNameText, parent)
     , sn(sn)
     , sdw(parent)
 {
-    /*QString style = "border: none;%1";
+    QString style = "border: none;%1";
 
-    const char *type = "";
-    if (spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED)) {
-        int rs = GetMissileResist(spelldata[sn].sMissile);
-        if (rs == MISR_FIRE) {
-            type = "color:red;";
-        }
-        else if (rs == MISR_MAGIC) {
-            type = "color:blue;";
-        }
-        else if (rs == MISR_LIGHTNING) {
-            type = "color:#FFBF00;"; // amber
-        }
-        else if (rs == MISR_ACID) {
-            type = "color:green;";
-        }
-        else if (rs == MISR_PUNCTURE) {
-            type = "color:olive;";
-        }
-        else if (rs == MISR_BLUNT) {
-            type = "color:maroon;";
-        }
-    }
-    this->setStyleSheet(style.arg(type));*/
+    const char *color = GetElementColor(GetSkillElement(sn));
+
+    this->setStyleSheet(style.arg(color));
 
     QObject::connect(this, SIGNAL(clicked()), this, SLOT(on_btn_clicked()));
 }
@@ -57,6 +31,24 @@ SkillPushButton::SkillPushButton(int sn, SkillDetailsWidget *parent)
 void SkillPushButton::on_btn_clicked()
 {
     this->sdw->on_skill_clicked(this->sn);
+}
+
+SkillSpinBox::SkillSpinBox(int sn, SkillDetailsWidget *parent)
+    : QSpinBox(parent)
+    , sn(sn)
+    , sdw(parent)
+{
+    // this->setMinimum(0);
+    this->setMaximum(MAXSPLLEVEL);
+    this->setMaximumWidth(36);
+    this->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
+
+    QObject::connect(this, SIGNAL(valueChanged()), this, SLOT(on_value_changed()));
+}
+
+void SkillSpinBox::on_value_changed(int value)
+{
+    this->sdw->on_skill_changed(this->sn, value);
 }
 
 SkillDetailsWidget::SkillDetailsWidget(QWidget *parent)
@@ -74,30 +66,9 @@ SkillDetailsWidget::SkillDetailsWidget(QWidget *parent)
             continue;
         }
 
-        /*QLabel *label = new QLabel(spelldata[sn].sNameText);
-        int rs = GetMissileResist(spelldata[sn].sMissile);
-        if (rs == MISR_FIRE) {
-            label->setStyleSheet("color:red;");
-        } else if (rs == MISR_MAGIC) {
-            label->setStyleSheet("color:blue;");
-        } else if (rs == MISR_LIGHTNING) {
-            label->setStyleSheet("color:#FFBF00;"); // amber
-        } else if (rs == MISR_ACID) {
-            label->setStyleSheet("color:green;");
-        } else if (rs == MISR_PUNCTURE) {
-            label->setStyleSheet("color:olive;");
-        } else if (rs == MISR_BLUNT) {
-            label->setStyleSheet("color:maroon;");
-        }*/
         SkillPushButton *label = new SkillPushButton(sn, this);
         this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
-        // skillWidgets[sn] = new LineEditWidget(this);
-        // skillWidgets[sn]->setCharWidth(2);
-        skillWidgets[sn] = new QSpinBox(this);
-        // skillWidgets[sn]->setMinimum(0);
-        skillWidgets[sn]->setMaximum(MAXSPLLEVEL);
-        skillWidgets[sn]->setMaximumWidth(36);
-        skillWidgets[sn]->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
+        skillWidgets[sn] = new SkillSpinBox(sn, this);
         this->ui->heroSkillGridLayout->addWidget(skillWidgets[sn], row, 2 * column + 1);
         if (++column == COLUMNS) {
             row++;
@@ -131,6 +102,18 @@ void SkillDetailsWidget::displayFrame()
     this->updateFields();
 }
 
+static QString GetAnimTypeText(int type)
+{
+    QString result = QApplication::tr("N/A");
+    switch (type) {
+    case STYPE_FIRE:      result = QApplication::tr("Fire");      break;
+    case STYPE_LIGHTNING: result = QApplication::tr("Lightning"); break;
+    case STYPE_MAGIC:     result = QApplication::tr("Magic");     break;
+    case STYPE_NONE:      result = QApplication::tr("None");      break;
+    }
+    return result;
+}
+
 void SkillDetailsWidget::updateFields()
 {
     int sn;
@@ -144,16 +127,37 @@ void SkillDetailsWidget::updateFields()
     sn = this->currentSkill;
     if ((unsigned)sn < NUM_SPELLS) {
         this->ui->skillName->setText(spelldata[sn].sNameText);
-        this->ui->skillType->setCurrentIndex(spelldata[sn].sType);
-        int lvl = this->hero->getSkillLvl(sn);
-        this->ui->skillLevel->setText(QString::number(lvl));
+        this->ui->skillAnimType->setText(GetAnimTypeText(spelldata[sn].sType));
+        int lvl = -1;
+        if ((this->hero->getFixedSkills() & SPELL_MASK(sn)) || this->skills[sn] != 0) {
+            lvl = this->skills[sn] + this->hero->getSkillLvl(sn) - this->hero->getSkillLvlBase(sn);
+            if (lvl < 0)
+                lvl = 0;
+        }
+        this->ui->skillLevel->setText(lvl >= 0 ? QString::number(lvl) : QString());
         this->ui->skillManaCost->setText(QString::number(this->hero->getSkillCost(sn)));
 
-        GetSkillDesc(this->hero, sn, lvl);
-        this->ui->skillDesc->setText(infostr);
+        QString desc = tr("Not available");
+        if (lvl >= 0) {
+            GetSkillDesc(this->hero, sn, lvl);
+            desc = infostr;
+        }
+        this->ui->skillDesc->setText(desc);
+        int sources = this->hero->getSkillSources(sn);
+        if (this->skills[sn] != 0)
+            sources |= (1 << RSPLTYPE_SPELL);
+        else
+            sources &= ~(1 << RSPLTYPE_SPELL);
+        this->ui->sourceAbilityCheckBox->setChecked((sources & (1 << RSPLTYPE_ABILITY)) != 0);
+        this->ui->sourceMemCheckBox->setChecked((sources & (1 << RSPLTYPE_SPELL)) != 0);
+        this->ui->sourceInvCheckBox->setChecked((sources & (1 << RSPLTYPE_INV)) != 0);
+        this->ui->sourceItemCheckBox->setChecked((sources & (1 << RSPLTYPE_CHARGES)) != 0);
 
-        int mn = spelldata[sn].sMissile;
-        unsigned flags = missiledata[mn].mdFlags;
+        int mn = -1;
+        if (spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED)) {
+            mn = spelldata[sn].sMissile;
+        }
+        unsigned flags = mn >= 0 ? missiledata[mn].mdFlags : 0;
         this->ui->misAreaCheckBox->setChecked((flags & MIF_AREA) != 0);
         this->ui->misNoBlockCheckBox->setChecked((flags & MIF_NOBLOCK) != 0);
         this->ui->misDotCheckBox->setChecked((flags & MIF_DOT) != 0);
@@ -161,8 +165,7 @@ void SkillDetailsWidget::updateFields()
         this->ui->misShroudCheckBox->setChecked((flags & MIF_SHROUD) != 0);
         this->ui->misArrowCheckBox->setChecked((flags & MIF_ARROW) != 0);
 
-        int bmn = GetBaseMissile(mn);
-        flags = missiledata[bmn].mdFlags;
+        flags = mn >= 0 ? missiledata[GetBaseMissile(mn)].mdFlags : 0;
         this->ui->misBaseAreaCheckBox->setChecked((flags & MIF_AREA) != 0);
         this->ui->misBaseNoBlockCheckBox->setChecked((flags & MIF_NOBLOCK) != 0);
         this->ui->misBaseDotCheckBox->setChecked((flags & MIF_DOT) != 0);
@@ -175,6 +178,13 @@ void SkillDetailsWidget::updateFields()
 void SkillDetailsWidget::on_skill_clicked(int sn)
 {
     this->currentSkill = sn;
+
+    this->updateFields();
+}
+
+void SkillDetailsWidget::on_skill_changed(int sn, int value)
+{
+    this->skills[sn] = value;
 
     this->updateFields();
 }

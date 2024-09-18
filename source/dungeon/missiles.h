@@ -20,6 +20,8 @@ int GetMissileHitChance(int mtype, const MonsterStruct *mon, const D1Hero *hero)
 unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrates);
 unsigned CalcPlrDam(const D1Hero *hero, BYTE mRes, unsigned damage);
 int GetBaseMissile(int mtype);
+BYTE GetSkillElement(int sn);
+const char *GetElementColor(BYTE mRes);
 
 inline int CheckHit(int hitper)
 {

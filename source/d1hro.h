@@ -88,6 +88,9 @@ public:
     int getSkillLvl(int sn) const;
     int getSkillLvlBase(int sn) const;
     void setSkillLvlBase(int sn, int level);
+    uint64_t getSkills() const;
+    uint64_t getFixedSkills() const;
+    int getSkillSources(int sn) const;
 
     int getWalkSpeed() const;
     int getBaseAttackSpeed() const;

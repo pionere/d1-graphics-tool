@@ -44,28 +44,7 @@
           </widget>
          </item>
          <item row="0" column="3">
-          <widget class="QComboBox" name="skillType">
-           <item>
-            <property name="text">
-             <string>Fire</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Lightning</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Magic</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>None</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QLabel" name="skillAnimType"/>
          </item>
          <item row="0" column="4">
           <widget class="QLabel">
@@ -103,8 +82,72 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1" colspan="5">
+         <item row="1" column="1" colspan="3">
           <widget class="QLabel" name="skillDesc"/>
+         </item>
+         <item row="1" column="4">
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>48</number>
+           </property>
+           <property name="text">
+            <string>Source:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="5" colspan="3">
+          <layout class="QHBoxLayout">
+           <item>
+            <widget class="QCheckBox" name="sourceAbilityCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>From ability</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="sourceMemCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>From memory</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="sourceInvCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>From inventory (scroll / rune)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="sourceItemCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>From equipment</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>48</number>
+           </property>
+           <property name="text">
+            <string>Desc.:</string>
+           </property>
+          </widget>
          </item>
          <item row="2" column="1" colspan="5">
           <layout class="QHBoxLayout">

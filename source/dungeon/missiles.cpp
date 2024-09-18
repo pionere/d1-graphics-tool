@@ -511,7 +511,7 @@ int GetBaseMissile(int mtype)
     case MIS_BARRELEX: break;
         //case MIS_FIREMAN:	// TODO: Check beta
         //case MIS_KRULL:		// TODO: Check beta
-    case MIS_CBOLTC: mtype = MIS_FIREWALL; break;
+    case MIS_CBOLTC: mtype = MIS_CBOLT; break;
     case MIS_CBOLT:
     case MIS_ELEMENTAL:
         //case MIS_BONESPIRIT:
@@ -549,6 +549,31 @@ int GetBaseMissile(int mtype)
 #endif
     }
     return mtype;
+}
+
+BYTE GetSkillElement(int sn)
+{
+    BYTE res = MISR_NONE;
+    if (spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED)) {
+        int mn = spelldata[sn].sMissile;
+        mn = GetBaseMissile(mn);
+        res = missiledata[mn].mResist;
+    }
+    return res;
+}
+
+const char *GetElementColor(BYTE mRes)
+{
+    const char *color = "";
+    switch (mRes) {
+    case MISR_FIRE:      color = "color:red;";     break;
+    case MISR_MAGIC:     color = "color:blue;";    break;
+    case MISR_LIGHTNING: color = "color:#FFBF00;"; break; // amber
+    case MISR_ACID:      color = "color:green;";   break;
+    case MISR_PUNCTURE:  color = "color:olive;";   break;
+    case MISR_BLUNT:     color = "color:maroon;";  break;
+    }
+    return color;
 }
 
 #ifdef HELLFIRE
