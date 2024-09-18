@@ -1443,7 +1443,7 @@ bool D1Hero::save(const SaveAsParam &params)
     QDataStream out(&outFile);
     bool result = out.writeRawData((char *)&pps, sizeof(PkPlayerStruct)) == sizeof(PkPlayerStruct);
     if (result) {
-        out << (qbyte)IsHellfireGame;
+        out << (quint8)IsHellfireGame;
 
         this->filePath = filePath; //  D1Hero::load(gfx, filePath);
         this->modified = false;

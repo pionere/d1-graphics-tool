@@ -105,8 +105,7 @@ void ItemDetailsWidget::updateFields()
 
     this->ui->discardItemButton->setEnabled(ii >= INVITEM_INV_FIRST && ii < NUM_INVELEM);
     // LogErrorF("updateFields 0 %d", ii);
-    const ItemStruct* pi = ii == INVITEM_NONE ? nullptr : this->hero->item(ii);
-
+    pi = ii == INVITEM_NONE ? nullptr : this->hero->item(ii);
     if (pi != nullptr && pi->_itype != ITYPE_NONE) {
         this->ui->editNameButton->setVisible(true);
         QString text;
