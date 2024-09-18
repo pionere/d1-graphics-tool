@@ -551,15 +551,10 @@ int GetBaseMissile(int mtype)
     return mtype;
 }
 
-BYTE GetSkillElement(int sn)
+BYTE GetMissileElement(int mtype)
 {
-    BYTE res = MISR_NONE;
-    if (spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED)) {
-        int mn = spelldata[sn].sMissile;
-        mn = GetBaseMissile(mn);
-        res = missiledata[mn].mResist;
-    }
-    return res;
+    mtype = GetBaseMissile(mtype);
+    return missiledata[mtype].mResist;
 }
 
 const char *GetElementColor(BYTE mRes)

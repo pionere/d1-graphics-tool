@@ -37,7 +37,7 @@ public:
     ~SkillSpinBox() = default;
 
 private slots:
-    void on_value_changed();
+    void on_value_changed(int value);
 
 private:
     int sn;

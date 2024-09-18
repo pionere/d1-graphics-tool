@@ -32,4 +32,13 @@ int GetManaAmount(int pnum, int sn)
 	return ma;
 }
 
+BYTE GetSkillElement(int sn)
+{
+    BYTE res = MISR_NONE;
+    if (spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED)) {
+        res = GetMissileElement(spelldata[sn].sMissile);
+    }
+    return res;
+}
+
 DEVILUTION_END_NAMESPACE

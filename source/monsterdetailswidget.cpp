@@ -295,7 +295,7 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
         } else if (mtype == MIS_APOCAC2) {
             mindam = maxdam = 40 << gnDifficulty;
         }
-        result.resMis = GetSkillElement(mtype);
+        result.resMis = GetMissileElement(mtype);
         result.blockMis = !(missiledata[mtype].mdFlags & MIF_NOBLOCK);
         mindam = CalcPlrDam(hero, result.resMis, mindam);
         maxdam = CalcPlrDam(hero, result.resMis, maxdam);
