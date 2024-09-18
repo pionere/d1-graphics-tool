@@ -88,7 +88,7 @@ static void MonResistText(unsigned resist, unsigned idx, QProgressBar *label)
         tooltip = QApplication::tr("Immune to %1 damage");
         break;
     default:
-        tooltip =QApplication::tr( "???");
+        tooltip = QApplication::tr( "???");
         break;
     }
     QString type;
@@ -402,13 +402,19 @@ void MonsterDetailsWidget::updateFields()
 
     int numplrs = this->ui->plrCountSpinBox->value();
     int lvlbonus = this->dunLevelBonus;
-
     this->ui->dunLevelBonusEdit->setText(QString::number(lvlbonus));
+    bool lvlrel = this->ui->dunLevelBonusCheckBox->isChecked();
+    this->ui->dunLevelBonusCheckBox->setToolTip(lvlrel ? tr("Level Bonus is relative") : tr("Level Bonus is absolute"));
 
-    if (unique)
+    if (unique) {
+        if (lvlrel)
+            lblbonus -= uniqMonData[type].muLevel;
         InitUniqMonster(type, numplrs, lvlbonus, minion);
-    else
+    } else {
+        if (lvlrel)
+            lblbonus -= monsterdata[type].mLevel;
         InitLvlMonster(type, numplrs, lvlbonus);
+    }
 
     MonsterStruct *mon = &monsters[MAX_MINIONS];
 
@@ -632,10 +638,11 @@ void MonsterDetailsWidget::updateFields()
     // if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
     if (monDamage.hth /*|| monDamage.spec*/ || (monDamage.mis && monDamage.blockMis)) {
         hper = this->hero->getBlockChance() - (mon->_mLevel << 1);
-        if (hper < 0)
+        /*if (hper < 0)
             hper = 0;
         if (hper > 100)
-            hper = 100;
+            hper = 100;*/
+        hper = CheckHit(hper);
     }
     if ((monDamage.hth /*|| monDamage.spec*/) && monDamage.mis && !monDamage.blockMis) {
         this->ui->plrBlockChance->setText(QString("%1% | 0%").arg(hper));

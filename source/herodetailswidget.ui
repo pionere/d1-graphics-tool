@@ -834,7 +834,7 @@
         <string>Slash Damage</string>
        </property>
        <property name="styleSheet">
-        <string>color:copper;</string>
+        <string>color:#B87333;</string>
        </property>
       </widget>
      </item>
@@ -884,7 +884,7 @@
         <string>Lightning Damage</string>
        </property>
        <property name="styleSheet">
-        <string>color:#FFBF00;</string>
+        <string>color:#FBB117;</string>
        </property>
       </widget>
      </item>

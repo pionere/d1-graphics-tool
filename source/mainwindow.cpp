@@ -109,8 +109,8 @@ void MainWindow::setPal(const QString &path)
     // update entities
     // update the widgets
     // - views
-    if (this->celView != nullptr) {
-        this->celView->setPal(pal);
+    if (this->heroView != nullptr) {
+        this->heroView->setPal(pal);
     }
     // - palWidget
     this->palWidget->updatePathComboBoxOptions(this->pals.keys(), path);
@@ -151,9 +151,9 @@ void MainWindow::updateWindow()
 
     // update the view
     this->sideView->displayFrame();
-    if (this->celView != nullptr) {
-        // this->celView->updateFields();
-        this->celView->displayFrame();
+    if (this->heroView != nullptr) {
+        // this->heroView->updateFields();
+        this->heroView->displayFrame();
     }
 }
 
@@ -237,8 +237,8 @@ void MainWindow::pointHovered(const QPoint &pos)
 void MainWindow::colorModified()
 {
     // update the view
-    if (this->celView != nullptr) {
-        this->celView->displayFrame();
+    if (this->heroView != nullptr) {
+        this->heroView->displayFrame();
     }
 }
 
@@ -551,7 +551,7 @@ void MainWindow::on_actionLoad_triggered()
 {
     QString title;
     QString filter;
-    // assert(this->celView != nullptr);
+    // assert(this->heroView != nullptr);
     title = tr("Load Hero");
     filter = tr("hro Files (*.hro *.HRO)");
 
@@ -757,9 +757,9 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
 
     QString baseDir;
     if (!filePath.isEmpty()) {
-        QFileInfo celFileInfo = QFileInfo(filePath);
+        QFileInfo fileInfo = QFileInfo(filePath);
 
-        baseDir = celFileInfo.absolutePath();
+        baseDir = fileInfo.absolutePath();
     }
 
     result->baseDir = baseDir;
@@ -807,16 +807,16 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     QWidget *view;
         // build a CelView
-        this->celView = new CelView(this);
-        this->celView->initialize(this->pal, this->hero, this->bottomPanelHidden);
+        this->heroView = new CelView(this);
+        this->heroView->initialize(this->pal, this->hero, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
-        QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+        QObject::connect(this->heroView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
-        QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
+        QObject::connect(this->heroView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
 
-        view = this->celView;
+        view = this->heroView;
 
     // Add the view to the main frame
     this->ui->mainFrameLayout->addWidget(view);
@@ -826,9 +826,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->sideFrameLayout->addWidget(this->sideView);
 
     // Initialize palette widgets
-    this->palWidget->initialize(this->pal, this->celView);
-    this->trnUniqueWidget->initialize(this->trnUnique, this->celView);
-    this->trnBaseWidget->initialize(this->trnBase, this->celView);
+    this->palWidget->initialize(this->pal, this->heroView);
+    this->trnUniqueWidget->initialize(this->trnUnique, this->heroView);
+    this->trnBaseWidget->initialize(this->trnBase, this->heroView);
 
     // setup default options in the palette widgets
     // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
@@ -1016,7 +1016,7 @@ void MainWindow::on_actionClose_triggered()
     this->undoStack->clear();
 
     MemFree(this->sideView);
-    MemFree(this->celView);
+    MemFree(this->heroView);
     MemFree(this->palWidget);
     MemFree(this->trnUniqueWidget);
     MemFree(this->trnBaseWidget);
@@ -1113,8 +1113,8 @@ void MainWindow::on_actionTogglePalTrn_triggered()
 void MainWindow::on_actionToggleBottomPanel_triggered()
 {
     this->bottomPanelHidden = !this->bottomPanelHidden;
-    if (this->celView != nullptr) {
-        this->celView->toggleBottomPanel();
+    if (this->heroView != nullptr) {
+        this->heroView->toggleBottomPanel();
     }
 }
 

@@ -43,11 +43,12 @@ SkillSpinBox::SkillSpinBox(int sn, SkillDetailsWidget *parent)
     this->setMaximumWidth(36);
     this->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
 
-    QObject::connect(this, SIGNAL(valueChanged()), this, SLOT(on_value_changed()));
+    QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(on_value_changed));
 }
 
 void SkillSpinBox::on_value_changed(int value)
 {
+    QMessageBox::critical(this, "Error", "SkillSpinBox new value %1.".arg(value));
     this->sdw->on_skill_changed(this->sn, value);
 }
 

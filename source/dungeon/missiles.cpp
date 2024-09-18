@@ -563,7 +563,7 @@ const char *GetElementColor(BYTE mRes)
     switch (mRes) {
     case MISR_FIRE:      color = "color:red;";     break;
     case MISR_MAGIC:     color = "color:blue;";    break;
-    case MISR_LIGHTNING: color = "color:#FFBF00;"; break; // amber
+    case MISR_LIGHTNING: color = "color:#FBB117;"; break; // amber
     case MISR_ACID:      color = "color:green;";   break;
     case MISR_PUNCTURE:  color = "color:olive;";   break;
     case MISR_BLUNT:     color = "color:maroon;";  break;

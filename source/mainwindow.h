@@ -196,7 +196,7 @@ private:
     QAction *undoAction;
     QAction *redoAction;
 
-    CelView *celView = nullptr;
+    CelView *heroView = nullptr;
     SidePanelWidget *sideView = nullptr;
 
     PaletteWidget *palWidget = nullptr;

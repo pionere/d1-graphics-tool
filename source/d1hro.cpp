@@ -44,8 +44,12 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
 
     const QByteArray fileData = file.readAll();
 
-    if (fileData.size() != sizeof(PkPlayerStruct))
+    if (fileData.size() < sizeof(PkPlayerStruct))
         return false;
+
+    if (fileData.size() > sizeof(PkPlayerStruct)) {
+        IsHellfireGame = fileData[sizeof(PkPlayerStruct)] != 0;
+    }
 
     UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
 
@@ -1439,6 +1443,8 @@ bool D1Hero::save(const SaveAsParam &params)
     QDataStream out(&outFile);
     bool result = out.writeRawData((char *)&pps, sizeof(PkPlayerStruct)) == sizeof(PkPlayerStruct);
     if (result) {
+        out << (qbyte)IsHellfireGame;
+
         this->filePath = filePath; //  D1Hero::load(gfx, filePath);
         this->modified = false;
     }
