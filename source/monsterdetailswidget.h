@@ -32,6 +32,7 @@ private slots:
     void on_dunLevelBonusEdit_escPressed();
 
     void on_monTypeComboBox_activated(int index);
+    void on_minionCheckBox_clicked();
 
     void on_closeButton_clicked();
 

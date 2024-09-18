@@ -18,7 +18,8 @@ struct MonsterStruct;
 void GetSkillDesc(D1Hero *hero, int sn, int sl);
 int GetMissileHitChance(int mtype, const MonsterStruct *mon, const D1Hero *hero);
 unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrates);
-unsigned CalcPlrDam(int pnum, BYTE mRes, unsigned damage);
+unsigned CalcPlrDam(D1Hero *hero, BYTE mRes, unsigned damage);
+int GetBaseMissile(int mtype);
 
 inline int CheckHit(int hitper)
 {

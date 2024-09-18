@@ -14,140 +14,16 @@
 
 #include "dungeon/all.h"
 
-static int GetBaseMissile(int mn)
-{
-    switch (mn) {
-    case MIS_ARROW:
-    case MIS_PBARROW:
-    case MIS_ASARROW:
-    case MIS_MLARROW:
-    case MIS_PCARROW:
-    case MIS_FIREBOLT:
-    case MIS_FIREBALL:
-    case MIS_HBOLT:
-    case MIS_FLARE:
-    case MIS_SNOWWICH:
-    case MIS_HLSPWN:
-    case MIS_SOLBRNR:
-    case MIS_MAGE:
-    case MIS_MAGMABALL:
-    case MIS_ACID:
-    case MIS_ACIDPUD:
-    case MIS_EXACIDP:
-    case MIS_EXFIRE:
-    case MIS_EXFBALL:
-    case MIS_EXLGHT:
-    case MIS_EXMAGIC:
-    case MIS_EXACID:
-    case MIS_EXHOLY:
-    case MIS_EXFLARE:
-    case MIS_EXSNOWWICH:
-    case MIS_EXHLSPWN:
-    case MIS_EXSOLBRNR:
-    case MIS_EXMAGE:
-    case MIS_POISON:
-    case MIS_WIND:
-    case MIS_LIGHTBALL: break;
-    case MIS_LIGHTNINGC: mn = MIS_LIGHTNING; break;
-    case MIS_LIGHTNING: break;
-    case MIS_LIGHTNINGC2: mn = MIS_LIGHTNING; break;
-    case MIS_LIGHTNING2: break;
-    case MIS_BLOODBOILC: mn = MIS_BLOODBOIL; break;
-    case MIS_BLOODBOIL: break;
-    case MIS_SWAMPC: mn = MIS_SWAMP; break;
-    case MIS_SWAMP:
-    case MIS_TOWN:
-    case MIS_RPORTAL:
-    case MIS_FLASH:
-    case MIS_FLASH2:
-    case MIS_CHAIN:
-        //case MIS_BLODSTAR:	// TODO: Check beta
-        //case MIS_BONE:		// TODO: Check beta
-        //case MIS_METLHIT:	// TODO: Check beta
-    case MIS_RHINO:
-    case MIS_CHARGE:
-    case MIS_TELEPORT:
-    case MIS_RNDTELEPORT:
-        //case MIS_FARROW:
-        //case MIS_DOOMSERP:
-    case MIS_STONE:
-    case MIS_SHROUD: break;
-        //case MIS_INVISIBL:
-    case MIS_GUARDIAN: mn = MIS_FIREBOLT; break;
-    case MIS_GOLEM:
-        //case MIS_ETHEREALIZE:
-    case MIS_BLEED: break;
-        //case MIS_EXAPOCA:
-    case MIS_FIREWALLC: mn = MIS_FIREWALL; break;
-    case MIS_FIREWALL: break;
-    case MIS_FIREWAVEC: mn = MIS_FIREWAVE; break;
-    case MIS_FIREWAVE:
-    case MIS_METEOR: break;
-    case MIS_LIGHTNOVAC: mn = MIS_LIGHTBALL; break;
-        //case MIS_APOCAC:
-    case MIS_HEAL:
-    case MIS_HEALOTHER:
-    case MIS_RESURRECT:
-    case MIS_ATTRACT:
-    case MIS_TELEKINESIS:
-        //case MIS_LARROW:
-    case MIS_OPITEM:
-    case MIS_REPAIR:
-    case MIS_DISARM: break;
-    case MIS_INFERNOC: mn = MIS_FIREWALL; break;
-    case MIS_INFERNO:
-        //case MIS_FIRETRAP:
-    case MIS_BARRELEX: break;
-        //case MIS_FIREMAN:	// TODO: Check beta
-        //case MIS_KRULL:		// TODO: Check beta
-    case MIS_CBOLTC: mn = MIS_FIREWALL; break;
-    case MIS_CBOLT:
-    case MIS_ELEMENTAL:
-        //case MIS_BONESPIRIT:
-    case MIS_APOCAC2:
-    case MIS_EXAPOCA2:
-    case MIS_MANASHIELD:
-    case MIS_INFRA:
-    case MIS_RAGE: break;
-#ifdef HELLFIRE
-        //case MIS_LIGHTWALLC:
-        //case MIS_LIGHTWALL:
-        //case MIS_FIRENOVAC:
-        //case MIS_FIREBALL2:
-        //case MIS_REFLECT:
-    case MIS_FIRERING: mn = MIS_FIREWALL;  break;
-        //case MIS_MANATRAP:
-        //case MIS_LIGHTRING:
-    case MIS_RUNEFIRE: mn = MIS_FIREEXP; break;
-    case MIS_RUNELIGHT: mn = MIS_LIGHTNING; break;
-    case MIS_RUNENOVA: mn = MIS_LIGHTBALL; break;
-    case MIS_RUNEWAVE: mn = MIS_FIREWAVE; break;
-    case MIS_RUNESTONE: mn = MIS_STONE; break;
-    case MIS_FIREEXP:
-    case MIS_HORKDMN:
-    case MIS_PSYCHORB:
-    case MIS_LICH:
-    case MIS_BONEDEMON:
-    case MIS_ARCHLICH:
-    case MIS_NECROMORB:
-    case MIS_EXPSYCHORB:
-    case MIS_EXLICH:
-    case MIS_EXBONEDEMON:
-    case MIS_EXARCHLICH:
-    case MIS_EXNECROMORB: break;
-#endif
-    }
-    return mn;
-}
 
 static int GetMissileResist(int mn)
 {
     return missiledata[GetBaseMissile(mn)].mResist;
 }
 
-SkillPushButton::SkillPushButton(int sn, QWidget *parent)
+SkillPushButton::SkillPushButton(int sn, SkillDetailsWidget *parent)
     : QPushButton(spelldata[sn].sNameText, parent)
     , sn(sn)
+    , sdw(parent)
 {
     /*QString style = "border: none;%1";
 
@@ -180,14 +56,7 @@ SkillPushButton::SkillPushButton(int sn, QWidget *parent)
 
 void SkillPushButton::on_btn_clicked()
 {
-    QObject *view = this->parent();
-    SkillDetailsWidget *celView = qobject_cast<SkillDetailsWidget *>(view);
-    if (celView != nullptr) {
-        QMessageBox::critical(this, "Error", "Details widget!");
-        celView->on_skill_clicked(this->sn);
-    } else {
-        QMessageBox::critical(this, "Error", "Not a details widget.");
-    }
+    this->sdw->on_skill_clicked(this->sn);
 }
 
 SkillDetailsWidget::SkillDetailsWidget(QWidget *parent)

@@ -383,7 +383,7 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	// mon->_mExp = (mon->_mExp * mpl) >> 1;
 
 	mon->_mmaxhp <<= 6;*/
-	mon->_mhitpoints = mon->_mmaxhp = (mon->_mmaxhp * mpl) << (6 - 1);
+	mon->_mhitpoints = mon->_mmaxhp = (mon->_mmaxhp * mpl) >> 1;
 
 	unsigned flags = uniqm->mUnqFlags;
 	if (flags & UMF_NODROP)

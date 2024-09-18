@@ -193,7 +193,7 @@ void HeroDetailsWidget::on_gameHellfireCheckBox_clicked()
 
     this->hero->update(); // update items
 
-    this->updateFields();
+    dMainWindow().updateWindow();
 }
 
 void HeroDetailsWidget::on_gameDifficultyComboBox_activated(int index)

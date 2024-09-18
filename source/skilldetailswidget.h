@@ -12,12 +12,13 @@ namespace Ui {
 class SkillDetailsWidget;
 } // namespace Ui
 
+class SkillDetailsWidget;
 
 class SkillPushButton : public QPushButton {
     Q_OBJECT
 
 public:
-    explicit SkillPushButton(int sn, QWidget *parent);
+    explicit SkillPushButton(int sn, SkillDetailsWidget *parent);
     ~SkillPushButton() = default;
 
 private slots:
@@ -25,6 +26,7 @@ private slots:
 
 private:
     int sn;
+    SkillDetailsWidget *sdw;
 };
 
 class SkillDetailsWidget : public QWidget {

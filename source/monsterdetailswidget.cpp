@@ -122,6 +122,7 @@ static RANGE monLevelRange(int mtype, int dtype)
     RANGE result = { DLV_INVALID, DLV_INVALID };
     //if (dtype != DTYPE_TOWN) {
         for (int n = 0; n < NUM_FIXLVLS; n++) {
+            if (!IsHellfireGame && AllLevels[n].dType > DTYPE_HELL) continue;
             if (dtype != DTYPE_TOWN && AllLevels[n].dType != dtype) continue;
             for (int m = 0; AllLevels[n].dMonTypes[m] != MT_INVALID; m++) {
                 if (AllLevels[n].dMonTypes[m] == mtype) {
@@ -165,123 +166,43 @@ static int uniqMonLevel(int uniqindex)
     return ml;
 }
 
-void MonsterDetailsWidget::updateFields()
+typedef struct MonsterDamage {
+    bool hth;
+    bool spec;
+    bool mis;
+
+    int minHth;
+    int maxHth;
+    int chanceHth;
+
+    int minSpec;
+    int maxSpec;
+    int chanceSpec;
+
+    int minMis;
+    int maxMis;
+    int chanceMis;
+    BYTE resMis;
+    bool noBlockMis;
+
+} MonsterDamage;
+
+static const char *GetElementColor(int rs)
 {
-    QComboBox *typesComboBox = this->ui->monTypeComboBox;
-    int mi = typesComboBox->currentData().value<int>();
-    typesComboBox->clear();
-    
-    int dtype = this->ui->dunTypeComboBox->currentIndex();
-    for (int i = 0; i < NUM_MTYPES; i++) {
-        RANGE range = monLevelRange(i, dtype);
-        if (range.from == DLV_INVALID)
-            continue;
-        /*if (loc != DTYPE_TOWN) {
-            int n;
-            for (n = 0; n < NUM_FIXLVLS; n++) {
-                if (AllLevels[n].dType != loc) continue;
-                int m;
-                for (m = 0; AllLevels[n].dMonTypes[m] != MT_INVALID; m++) {
-                    if (AllLevels[n].dMonTypes[m] == i) break;
-                }
-                if (AllLevels[n].dMonTypes[m] != MT_INVALID) break;
-            }
-            if (n >= NUM_FIXLVLS) continue;
-        }*/
-        typesComboBox->addItem(monsterdata[i].mName, QVariant::fromValue(i));
+    const char *type = "";
+    switch (rs) {
+    case MISR_FIRE:      type = "color:red;";     break;
+    case MISR_MAGIC:     type = "color:blue;";    break;
+    case MISR_LIGHTNING: type = "color:#FFBF00;"; break; // amber
+    case MISR_ACID:      type = "color:green;";   break;
+    case MISR_PUNCTURE:  type = "color:olive;";   break;
+    case MISR_BLUNT:     type = "color:maroon;";  break;
     }
-    for (int i = 0; ; i++) {
-        const UniqMonData &mon = uniqMonData[i];
-        if (mon.mtype == MT_INVALID)
-            break;
-        if (dtype != DTYPE_TOWN) {
-            int ml = uniqMonLevel(i);
-            switch (dtype) {
-            case DTYPE_CATHEDRAL: if (ml < DLV_CATHEDRAL1 || ml > DLV_CATHEDRAL4) continue; break;
-            case DTYPE_CATACOMBS: if (ml < DLV_CATACOMBS1 || ml > DLV_CATACOMBS4) continue; break;
-            case DTYPE_CAVES:     if (ml < DLV_CAVES1 || ml > DLV_CAVES4)         continue; break;
-            case DTYPE_HELL:      if (ml < DLV_HELL1 || ml > DLV_HELL4)           continue; break;
-            case DTYPE_CRYPT:     if (ml < DLV_CRYPT1 || ml > DLV_CRYPT4)         continue; break;
-            case DTYPE_NEST:      if (ml < DLV_NEST1 || ml > DLV_NEST4)           continue; break;
-            }
-        }
-        typesComboBox->addItem(QString("**%1**").arg(mon.mName), QVariant::fromValue(-(i + 1)));
-    }
-    // typesComboBox->adjustSize();
-    mi = typesComboBox->findData(mi);
-    if (mi < 0) mi = 0;
-    typesComboBox->setCurrentIndex(mi);
+    return type;
+}
 
-    int type = typesComboBox->currentData().value<int>();
-    if (type < 0) {
-        int lvl = uniqMonLevel(-(type + 1));
-        typesComboBox->setToolTip(tr("Dungeon Level %1").arg(lvl));
-    } else {
-        RANGE range = monLevelRange(type, dtype);
-        typesComboBox->setToolTip(tr("Dungeon Level %1-%2").arg(range.from).arg(range.to));
-    }
-
-    bool minion = type < 0 && (uniqMonData[-(type + 1)].mUnqFlags & UMF_GROUP) != 0;
-    this->ui->minionCheckBox->setVisible(minion);
-    minion &= this->ui->minionCheckBox->isChecked();
-
-    int numplrs = this->ui->plrCountSpinBox->value();
-    int lvlbonus = this->dunLevelBonus;
-
-    this->ui->dunLevelBonusEdit->setText(QString::number(lvlbonus));
-
-    if (type < 0)
-        InitUniqMonster(-(type + 1), numplrs, lvlbonus, minion);
-    else
-        InitLvlMonster(type, numplrs, lvlbonus);
-
-    MonsterStruct *mon = &monsters[MAX_MINIONS];
-
-    const char* color = "black";
-    if (mon->_mNameColor == COL_BLUE)
-        color = "blue";
-    else if (mon->_mNameColor == COL_GOLD)
-        color = "orange";
-    this->ui->monsterName->setText(QString("<u><font color='%1'>%2</font></u>").arg(color).arg(mon->_mName));
-    this->ui->monsterLevel->setText(tr("(Level %1)").arg(mon->_mLevel));
-    this->ui->monsterExp->setText(QString::number(mon->_mExp));
-    this->ui->monsterStatus->setText(MonLeaderText(mon->_mleaderflag, mon->_mpacksize));
-
-    // MonsterAI _mAI;
-    this->ui->monsterInt->setText(QString::number(mon->_mAI.aiInt));
-
-    this->ui->monsterHit->setText(QString::number(mon->_mHit));
-    displayDamage(this->ui->monsterDamage, mon->_mMinDamage, mon->_mMaxDamage);
-    this->ui->monsterHit2->setText(QString::number(mon->_mHit2));
-    displayDamage(this->ui->monsterDamage2, mon->_mMinDamage2, mon->_mMaxDamage2);
-    this->ui->monsterMagic->setText(QString::number(mon->_mMagic));
-
-    displayDamage(this->ui->monsterHp, mon->_mhitpoints, mon->_mmaxhp);
-    this->ui->monsterArmorClass->setText(QString::number(mon->_mArmorClass));
-    this->ui->monsterEvasion->setText(QString::number(mon->_mEvasion));
-
-    unsigned res = mon->_mMagicRes;
-    MonResistText(res, MORS_IDX_SLASH, this->ui->monsterResSlash);
-    MonResistText(res, MORS_IDX_BLUNT, this->ui->monsterResBlunt);
-    MonResistText(res, MORS_IDX_PUNCTURE, this->ui->monsterResPunct);
-    MonResistText(res, MORS_IDX_FIRE, this->ui->monsterResFire);
-    MonResistText(res, MORS_IDX_LIGHTNING, this->ui->monsterResLight);
-    MonResistText(res, MORS_IDX_MAGIC, this->ui->monsterResMagic);
-    MonResistText(res, MORS_IDX_ACID, this->ui->monsterResAcid);
-
-    unsigned flags = mon->_mFlags;
-    this->ui->monsterHiddenCheckBox->setChecked((flags & MFLAG_HIDDEN) != 0);
-    this->ui->monsterGargCheckBox->setChecked((flags & MFLAG_GARG_STONE) != 0);
-    this->ui->monsterStealCheckBox->setChecked((flags & MFLAG_LIFESTEAL) != 0);
-    this->ui->monsterOpenCheckBox->setChecked((flags & MFLAG_CAN_OPEN_DOOR) != 0);
-    this->ui->monsterSearchCheckBox->setChecked((flags & MFLAG_SEARCH) != 0);
-    this->ui->monsterNoStoneCheckBox->setChecked((flags & MFLAG_NOSTONE) != 0);
-    this->ui->monsterBleedCheckBox->setChecked((flags & MFLAG_CAN_BLEED) != 0);
-    this->ui->monsterNoDropCheckBox->setChecked((flags & MFLAG_NODROP) != 0);
-    this->ui->monsterKnockbackCheckBox->setChecked((flags & MFLAG_KNOCKBACK) != 0);
-
-    // player vs. monster info
-    int hper, mindam, maxdam;
+static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *hero)
+{
     bool hth = false;
     bool special = false; // special (hit2/dam2 + afnum2)
     int mtype = -1;
@@ -342,29 +263,309 @@ void MonsterDetailsWidget::updateFields()
         break;
     }
 
+    MonsterDamage result = { 0 };
+    if (hth) {
+        result.hth = true;
+        int mindam = mon->_mMinDamage;
+        int maxdam = mon->_mMaxDamage;
+        mindam += hero->getGetHit();
+        maxdam += hero->getGetHit();
+        if (mindam < 1)
+            mindam = 1;
+        if (maxdam < 1)
+            maxdam = 1;
+        result.minHth = mindam;
+        result.maxHth = maxdam;
+        result.chanceHth = 30 + mon->_mHit + (2 * mon->_mLevel) - hero->getAC();
+    }
+    if (special) {
+        result.spec = true;
+        int mindam = mon->_mMinDamage2;
+        int maxdam = mon->_mMaxDamage2;
+        mindam += hero->getGetHit();
+        maxdam += hero->getGetHit();
+        if (mindam < 1)
+            mindam = 1;
+        if (maxdam < 1)
+            maxdam = 1;
+        result.minSpec = mindam;
+        result.maxSpec = maxdam;
+        result.chanceSpec = 30 + mon->_mHit2 + (2 * mon->_mLevel) - hero->getAC();
+    }
+    if (mtype != -1 && mtype != MIS_SWAMPC) {
+        result.mis = true;
+        int mindam = mon->_mMinDamage;
+        int maxdam = mon->_mMaxDamage;
+        if (mtype == MIS_BLOODBOILC) {
+            mindam = mon->_mLevel >> 1;
+            maxdam = mon->_mLevel;
+        } else if (mtype == MIS_FLASH) {
+            mindam = maxdam = mon->_mLevel << 1;
+        } else if (mtype == MIS_LIGHTNINGC || mtype == MIS_LIGHTNINGC2) {
+            // mindam = mon->_mMinDamage;
+            maxdam = maxdam << 1;
+        } else if (mtype == MIS_CBOLTC) {
+            mindam = maxdam; //  15 << gnDifficulty; // FIXME
+        } else if (mtype == MIS_APOCAC2) {
+            mindam = maxdam = 40 << gnDifficulty;
+        }
+        result.resMis = missiledata[GetBaseMissile(mtype)].mResist;
+        result.blockMis = !(missiledata[mtype].mdFlags & MIF_NOBLOCK);
+        mindam = CalcPlrDam(hero, result.resMis, mindam);
+        maxdam = CalcPlrDam(hero, result.resMis, maxdam);
+        if (maxdam != 0) {
+            if (!(missiledata[mtype].mdFlags & MIF_DOT)) {
+                mindam += hero->getGetHit();
+                maxdam += hero->getGetHit();
+                if (mindam < 1)
+                    mindam = 1;
+                if (maxdam < 1)
+                    maxdam = 1;
+            }
+        }
+
+        result.minMis = mindam;
+        result.maxMis = maxdam;
+        result.chanceMis = GetMissileHitChance(mtype, mon, hero);
+    }
+
+    return result;
+}
+
+void MonsterDetailsWidget::updateFields()
+{
+    int mi;
+    QComboBox *dunComboBox = this->ui->dunTypeComboBox;
+    mi = dunComboBox->currentData().value<int>();
+    if (IsHellfireGame) {
+        if (dunComboBox->count() == DTYPE_HELL + 1) {
+            dunComboBox->addItem(tr("(L5) Crypt"), QVariant::fromValue(DTYPE_CRYPT));
+            dunComboBox->addItem(tr("(L6) Nest"), QVariant::fromValue(DTYPE_NEST));
+        }
+    } else {
+        while (dunComboBox->count() > DTYPE_HELL + 1) {
+            dunComboBox->removeItem(DTYPE_HELL + 1);
+        }
+    }
+    mi = dunComboBox->findData(mi);
+    if (mi < 0) mi = 0;
+    dunComboBox->setCurrentIndex(mi);
+
+    QComboBox *typesComboBox = this->ui->monTypeComboBox;
+    mi = typesComboBox->currentData().value<int>();
+    typesComboBox->clear();
+    
+    int dtype = this->ui->dunTypeComboBox->currentIndex();
+    for (int i = 0; i < NUM_MTYPES; i++) {
+        RANGE range = monLevelRange(i, dtype);
+        if (range.from == DLV_INVALID)
+            continue;
+        /*if (loc != DTYPE_TOWN) {
+            int n;
+            for (n = 0; n < NUM_FIXLVLS; n++) {
+                if (AllLevels[n].dType != loc) continue;
+                int m;
+                for (m = 0; AllLevels[n].dMonTypes[m] != MT_INVALID; m++) {
+                    if (AllLevels[n].dMonTypes[m] == i) break;
+                }
+                if (AllLevels[n].dMonTypes[m] != MT_INVALID) break;
+            }
+            if (n >= NUM_FIXLVLS) continue;
+        }*/
+        typesComboBox->addItem(monsterdata[i].mName, QVariant::fromValue(i + 1));
+    }
+    for (int i = 0; ; i++) {
+        const UniqMonData &mon = uniqMonData[i];
+        if (mon.mtype == MT_INVALID)
+            break;
+        int ml = uniqMonLevel(i);
+        if (!IsHellfireGame && ml > DLV_HELL4) continue;
+        if (dtype != DTYPE_TOWN) {
+            switch (dtype) {
+            case DTYPE_CATHEDRAL: if (ml < DLV_CATHEDRAL1 || ml > DLV_CATHEDRAL4) continue; break;
+            case DTYPE_CATACOMBS: if (ml < DLV_CATACOMBS1 || ml > DLV_CATACOMBS4) continue; break;
+            case DTYPE_CAVES:     if (ml < DLV_CAVES1 || ml > DLV_CAVES4)         continue; break;
+            case DTYPE_HELL:      if (ml < DLV_HELL1 || ml > DLV_HELL4)           continue; break;
+            case DTYPE_CRYPT:     if (ml < DLV_CRYPT1 || ml > DLV_CRYPT4)         continue; break;
+            case DTYPE_NEST:      if (ml < DLV_NEST1 || ml > DLV_NEST4)           continue; break;
+            }
+        }
+        typesComboBox->addItem(QString("**%1**").arg(mon.mName), QVariant::fromValue(-(i + 1)));
+    }
+    // typesComboBox->adjustSize();
+    mi = typesComboBox->findData(mi);
+    if (mi < 0) mi = 0;
+    typesComboBox->setCurrentIndex(mi);
+
+    int type = typesComboBox->currentData().value<int>();
+    bool unique = type < 0;
+    bool minion;
+    if (unique) {
+        type = -(type + 1);
+        int lvl = uniqMonLevel();
+        typesComboBox->setToolTip(tr("Dungeon Level %1").arg(lvl));
+        minion = (uniqMonData[type].mUnqFlags & UMF_GROUP) != 0;
+        this->ui->minionCheckBox->setVisible(minion);
+        minion &= this->ui->minionCheckBox->isChecked();
+    } else {
+        type = type - 1;
+        RANGE range = monLevelRange(type, dtype);
+        typesComboBox->setToolTip(tr("Dungeon Level %1-%2").arg(range.from).arg(range.to));
+        this->ui->minionCheckBox->setVisible(false);
+    }
+
+    int numplrs = this->ui->plrCountSpinBox->value();
+    int lvlbonus = this->dunLevelBonus;
+
+    this->ui->dunLevelBonusEdit->setText(QString::number(lvlbonus));
+
+    if (unique)
+        InitUniqMonster(type, numplrs, lvlbonus, minion);
+    else
+        InitLvlMonster(type, numplrs, lvlbonus);
+
+    MonsterStruct *mon = &monsters[MAX_MINIONS];
+
+    const char* color = "black";
+    if (mon->_mNameColor == COL_BLUE)
+        color = "blue";
+    else if (mon->_mNameColor == COL_GOLD)
+        color = "orange";
+    this->ui->monsterName->setText(QString("<u><font color='%1'>%2</font></u>").arg(color).arg(mon->_mName));
+    this->ui->monsterLevel->setText(tr("(Level %1)").arg(mon->_mLevel));
+    this->ui->monsterExp->setText(QString::number(mon->_mExp));
+    this->ui->monsterStatus->setText(MonLeaderText(mon->_mleaderflag, mon->_mpacksize));
+
+    // MonsterAI _mAI;
+    this->ui->monsterInt->setText(QString::number(mon->_mAI.aiInt));
+
+    this->ui->monsterHit->setText(QString::number(mon->_mHit));
+    displayDamage(this->ui->monsterDamage, mon->_mMinDamage, mon->_mMaxDamage);
+    this->ui->monsterHit2->setText(QString::number(mon->_mHit2));
+    displayDamage(this->ui->monsterDamage2, mon->_mMinDamage2, mon->_mMaxDamage2);
+    this->ui->monsterMagic->setText(QString::number(mon->_mMagic));
+
+    displayDamage(this->ui->monsterHp, mon->_mhitpoints, mon->_mmaxhp);
+    this->ui->monsterArmorClass->setText(QString::number(mon->_mArmorClass));
+    this->ui->monsterEvasion->setText(QString::number(mon->_mEvasion));
+
+    unsigned res = mon->_mMagicRes;
+    MonResistText(res, MORS_IDX_SLASH, this->ui->monsterResSlash);
+    MonResistText(res, MORS_IDX_BLUNT, this->ui->monsterResBlunt);
+    MonResistText(res, MORS_IDX_PUNCTURE, this->ui->monsterResPunct);
+    MonResistText(res, MORS_IDX_FIRE, this->ui->monsterResFire);
+    MonResistText(res, MORS_IDX_LIGHTNING, this->ui->monsterResLight);
+    MonResistText(res, MORS_IDX_MAGIC, this->ui->monsterResMagic);
+    MonResistText(res, MORS_IDX_ACID, this->ui->monsterResAcid);
+
+    unsigned flags = mon->_mFlags;
+    this->ui->monsterHiddenCheckBox->setChecked((flags & MFLAG_HIDDEN) != 0);
+    this->ui->monsterGargCheckBox->setChecked((flags & MFLAG_GARG_STONE) != 0);
+    this->ui->monsterStealCheckBox->setChecked((flags & MFLAG_LIFESTEAL) != 0);
+    this->ui->monsterOpenCheckBox->setChecked((flags & MFLAG_CAN_OPEN_DOOR) != 0);
+    this->ui->monsterSearchCheckBox->setChecked((flags & MFLAG_SEARCH) != 0);
+    this->ui->monsterNoStoneCheckBox->setChecked((flags & MFLAG_NOSTONE) != 0);
+    this->ui->monsterBleedCheckBox->setChecked((flags & MFLAG_CAN_BLEED) != 0);
+    this->ui->monsterNoDropCheckBox->setChecked((flags & MFLAG_NODROP) != 0);
+    this->ui->monsterKnockbackCheckBox->setChecked((flags & MFLAG_KNOCKBACK) != 0);
+
+    // player vs. monster info
+    int hper, mindam, maxdam;
+    /*bool hth = false;
+    bool special = false; // special (hit2/dam2 + afnum2)
+    int mtype = -1;
+    bool ranged_special; // aiParam1 + afnum2
+    switch (mon->_mAI.aiType) {
+    case AI_LACHDAN:
+        break;
+    case AI_ZOMBIE:
+    case AI_SKELSD:
+    case AI_SCAV:
+    case AI_RHINO: // + charge
+    case AI_FALLEN:
+    case AI_SKELKING:
+    case AI_BAT:   // + MIS_LIGHTNING if MT_XBAT
+    case AI_CLEAVER:
+    case AI_SNEAK:
+    //case AI_FIREMAN: // MIS_KRULL
+    case AI_GOLUM:
+    case AI_SNOTSPIL:
+    case AI_SNAKE:
+    case AI_WARLORD:
+#ifdef HELLFIRE
+    case AI_HORKDMN:
+#endif
+        hth = true;
+        break;  // hth  --  MOFILE_MAGMA (hit + 10, dam - 2), MOFILE_THIN (hit - 20, dam + 4)
+    case AI_FAT:
+        hth = true;
+        special = true;
+        break;
+    case AI_ROUND: // + special if aiParam1
+    case AI_GARG:  // + AI_ROUND
+    case AI_GARBUD: // + AI_ROUND
+        hth = true;
+        special = mon->_mAI.aiParam1;
+        break;
+    case AI_SKELBOW:
+        mtype = MIS_ARROW;
+        break;
+    case AI_RANGED: // special ranged / ranged if aiParam2
+    case AI_LAZHELP: // AI_RANGED
+        ranged_special = mon->_mAI.aiParam2;
+        mtype = mon->_mAI.aiParam1;
+        break;
+    case AI_ROUNDRANGED: // special ranged / hth
+    case AI_ROUNDRANGED2: // AI_ROUNDRANGED
+        hth = true;
+        ranged_special = true;
+        mtype = mon->_mAI.aiParam1;
+        break;
+    case AI_ZHAR: // AI_COUNSLR
+    case AI_COUNSLR: // ranged + MIS_FLASH
+    case AI_LAZARUS: // AI_COUNSLR
+        mtype = mon->_mAI.aiParam1; // + MIS_FLASH
+        break;
+    case AI_MAGE:
+        mtype = MIS_MAGE; // + MIS_FLASH + param1
+        break;
+    }*/
+
     hper = this->hero->getHitChance() - mon->_mArmorClass;
     hper = CheckHit(hper);
     this->ui->plrHitChance->setText(QString("%1%").arg(hper));
-    hper = hth ? 30 + mon->_mHit + (2 * mon->_mLevel) - this->hero->getAC() : 0;
-    int hper2 = mtype == -1 ? (special ? 30 + mon->_mHit2 + (2 * mon->_mLevel) - this->hero->getAC() : -1) : GetMissileHitChance(mtype, mon, this->hero);
-    hper = CheckHit(hper);
-    this->ui->monHitChance->setText(QString("%1%").arg(hper));
-    this->ui->monHitChanceSep->setVisible(hper2 != -1);
-    if (hper2 != -1) {
-        hper2 = CheckHit(hper2);
-        this->ui->monHitChance2->setText(QString("%1%").arg(hper2));
+    const MonsterDamage monDamage = GetMonsterDamage(mon, this->hero);
+    // hper = hth ? 30 + mon->_mHit + (2 * mon->_mLevel) - this->hero->getAC() : 0;
+    // int hper2 = mtype == -1 ? (special ? 30 + mon->_mHit2 + (2 * mon->_mLevel) - this->hero->getAC() : -1) : GetMissileHitChance(mtype, mon, this->hero);
+    if (monDamage.hth) {
+        hper = monDamage.chanceHth;
+        hper = CheckHit(hper);
+        this->ui->monHitChance->setText(QString("%1%").arg(hper));
+    } else {
+        this->ui->monHitChance->setText(QString("-"));
+    }
+    this->ui->monHitChanceSep->setVisible(monDamage.mis || monDamage.spec);
+    this->ui->monHitChance2->setVisible(monDamage.mis || monDamage.spec);
+    if (monDamage.mis || monDamage.spec) {
+        hper = monDamage.mis ? monDamage.chanceMis : monDamage.chanceSpec;
+        hper = CheckHit(hper);
+        this->ui->monHitChance2->setText(QString("%1%").arg(hper));
+        this->ui->monHitChance2->setStyleSheet(GetElementColor(monDamage.mis ? monDamage.resMis : MISR_NONE));
     }
 
     displayDamage(this->ui->plrDamage, this->hero->getTotalMinDam(mon), this->hero->getTotalMaxDam(mon));
-    mindam = 0;
+    /*mindam = 0;
     maxdam = 0;
     if (hth || (mtype != -1 && mtype != MIS_SWAMPC)) {
-        mindam = mon->_mMinDamage;
-        maxdam = mon->_mMaxDamage;
-        this->ui->monDamageSep->setVisible(mtype != -1);
+        if (hth) {
+            mindam = mon->_mMinDamage;
+            maxdam = mon->_mMaxDamage;
+        }
+        this->ui->monDamageSep->setVisible(mtype != -1 || special);
+        this->ui->monDamage2->setVisible(mtype != -1 || special);
         if (mtype != -1) {
-            int mindam2 = mindam;
-            int maxdam2 = maxdam;
+            int mindam2 = mon->_mMinDamage;
+            int maxdam2 = mon->_mMaxDamage;
             if (mtype == MIS_BLOODBOILC) {
                 mindam2 = mon->_mLevel >> 1;
                 maxdam2 = mon->_mLevel;
@@ -374,19 +575,35 @@ void MonsterDetailsWidget::updateFields()
                 // mindam = mon->_mMinDamage;
                 maxdam2 = maxdam2 << 1;
             } else if (mtype == MIS_CBOLTC) {
-                mindam2 = maxdam2 = 15 << gnDifficulty; // FIXME
+                mindam2 = maxdam2 = mon->_mMaxDamage; //  15 << gnDifficulty; // FIXME
             } else if (mtype == MIS_APOCAC2) {
                 mindam2 = maxdam2 = 40 << gnDifficulty;
             }
-            if (!(missiledata[mtype].mdFlags & MIF_DOT)) {
-                mindam2 += this->hero->getGetHit();
-                maxdam2 += this->hero->getGetHit();
+
+            mindam2 = CalcPlrDam(this->hero, missiledata[mtype].mResist, mindam2);
+            maxdam2 = CalcPlrDam(this->hero, missiledata[mtype].mResist, maxdam2);
+            if (maxdam2 != 0) {
+                if (!(missiledata[mtype].mdFlags & MIF_DOT)) {
+                    mindam2 += this->hero->getGetHit();
+                    maxdam2 += this->hero->getGetHit();
+                    if (mindam2 < 1)
+                        mindam2 = 1;
+                    if (maxdam2 < 1)
+                        maxdam2 = 1;
+                }
             }
+
+            displayDamage(this->ui->monDamage2, mindam2, maxdam2);
+        } else if (special) {
+            int mindam2 = mon->_mMinDamage2;
+            int maxdam2 = mon->_mMaxDamage2;
+
+            mindam2 += this->hero->getGetHit();
+            maxdam2 += this->hero->getGetHit();
             if (mindam2 < 1)
                 mindam2 = 1;
             if (maxdam2 < 1)
                 maxdam2 = 1;
-
             displayDamage(this->ui->monDamage2, mindam2, maxdam2);
         }
 
@@ -402,18 +619,43 @@ void MonsterDetailsWidget::updateFields()
         // if (hth && MOFILE_MAGMA (hit + 10, dam - 2), MOFILE_THIN (hit - 20, dam + 4)) {  // FIXME
     } else {
         this->ui->monDamageSep->setVisible(false);
+        this->ui->monDamage2->setVisible(false);
+    }
+    displayDamage(this->ui->monDamage, mindam, maxdam);*/
+    this->ui->monDamageSep->setVisible(monDamage.mis || monDamage.spec);
+    this->ui->monDamage2->setVisible(monDamage.mis || monDamage.spec);
+    if (monDamage.mis || monDamage.spec) {
+        if (monDamage.mis) {
+            mindam = monDamage.minMis;
+            maxdam = monDamage.maxMis;
+        } else /* if (monDamage.spec) */{
+            mindam = monDamage.minSpec;
+            maxdam = monDamage.maxSpec;
+        }
+        displayDamage(this->ui->monDamage2, mindam, maxdam);
+    }
+    mindam = 0;
+    maxdam = 0;
+    if (monDamage.hth) {
+        mindam = monDamage.minHth;
+        maxdam = monDamage.maxnHth;
     }
     displayDamage(this->ui->monDamage, mindam, maxdam);
 
     hper = 0;
-    if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
+    // if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
+    if (monDamage.hth /*|| monDamage.spec*/ || (monDamage.mis && monDamage.blockMis)) {
         hper = this->hero->getBlockChance() - (mon->_mLevel << 1);
         if (hper < 0)
             hper = 0;
         if (hper > 100)
             hper = 100;
     }
-    this->ui->plrBlockChance->setText(QString("%1%").arg(hper));
+    if ((monDamage.hth /*|| monDamage.spec*/) && monDamage.mis && !monDamage.blockMis) {
+        this->ui->plrBlockChance->setText(QString("%1% | 0%").arg(hper));
+    } else {
+        this->ui->plrBlockChance->setText(QString("%1%").arg(hper));
+    }
     hper = 0;
     this->ui->monBlockChance->setText(QString("%1%").arg(hper));
 
@@ -427,6 +669,11 @@ void MonsterDetailsWidget::on_dunTypeComboBox_activated(int index)
 }
 
 void MonsterDetailsWidget::on_monTypeComboBox_activated(int index)
+{
+    this->updateFields();
+}
+
+void MonsterDetailsWidget::on_minionCheckBox_clicked()
 {
     this->updateFields();
 }

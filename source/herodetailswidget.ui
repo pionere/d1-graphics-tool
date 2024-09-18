@@ -884,7 +884,7 @@
         <string>Lightning Damage</string>
        </property>
        <property name="styleSheet">
-        <string>color:yellow;</string>
+        <string>color:#FFBF00;</string>
        </property>
       </widget>
      </item>

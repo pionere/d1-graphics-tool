@@ -595,7 +595,7 @@
            <number>24</number>
           </property>
           <property name="text">
-           <string notr="true">-</string>
+           <string notr="true">|</string>
           </property>
          </widget>
         </item>

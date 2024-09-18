@@ -2373,7 +2373,8 @@ typedef enum _monster_id {
 	MT_NAKRUL,
 #endif
 	NUM_MTYPES, /// BUGFIX the count is off by one (fixed)
-	MT_INVALID = 0xFF
+	MT_INVALID = 0xFF,
+    NUM_MTYPES_DIABLO = MT_DIABLO
 } _monster_id;
 
 typedef enum _monster_gfx_id {
