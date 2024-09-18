@@ -44,4 +44,5 @@ private:
 
     D1Hero *hero;
     int invIdx;
+    int currentItem;
 };

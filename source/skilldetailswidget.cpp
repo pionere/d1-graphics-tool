@@ -48,7 +48,7 @@ SkillSpinBox::SkillSpinBox(int sn, SkillDetailsWidget *parent)
 
 void SkillSpinBox::on_value_changed(int value)
 {
-    QMessageBox::critical(this, "Error", "SkillSpinBox new value %1.".arg(value));
+    // QMessageBox::critical(this, "Error", tr("SkillSpinBox new value %1.").arg(value));
     this->sdw->on_skill_changed(this->sn, value);
 }
 

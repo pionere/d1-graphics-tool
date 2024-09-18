@@ -408,11 +408,11 @@ void MonsterDetailsWidget::updateFields()
 
     if (unique) {
         if (lvlrel)
-            lblbonus -= uniqMonData[type].muLevel;
+            lvlbonus -= uniqMonData[type].muLevel;
         InitUniqMonster(type, numplrs, lvlbonus, minion);
     } else {
         if (lvlrel)
-            lblbonus -= monsterdata[type].mLevel;
+            lvlbonus -= monsterdata[type].mLevel;
         InitLvlMonster(type, numplrs, lvlbonus);
     }
 
@@ -686,11 +686,6 @@ void MonsterDetailsWidget::on_dunLevelBonusEdit_escPressed()
 }
 
 void MonsterDetailsWidget::on_plrCountSpinBox_valueChanged(int value)
-{
-    this->updateFields();
-}
-
-void MonsterDetailsWidget::on_difficutlyComboBox_activated(int index)
 {
     this->updateFields();
 }

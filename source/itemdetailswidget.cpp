@@ -35,27 +35,39 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
 {
     this->hero = h;
     this->invIdx = ii;
-    // LogErrorF("ItemDetailsWidget init 0 %d", ii);
+    this->currentItem = ii;
+
+    // LogErrorF("ItemDetailsWidget init 5");
+    this->updateFields();
+    // LogErrorF("ItemDetailsWidget init 6");
+    this->setVisible(true);
+}
+
+void ItemDetailsWidget::displayFrame()
+{
+    this->updateFields();
+}
+
+void ItemDetailsWidget::updateFields()
+{
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
+
+    int ii = this->currentItem;
     itemsComboBox->clear();
-    itemsComboBox->addItem(tr("None"), QVariant::fromValue(-1));
+    itemsComboBox->addItem(tr("None"), QVariant::fromValue(INVITEM_NONE));
     // LogErrorF("ItemDetailsWidget init 1 %d", ii);
-    const ItemStruct* pi = h->item(ii);
+    const ItemStruct* pi = this->hero->item(this->invIdx);
     if (pi->_itype != ITYPE_NONE) {
         // LogErrorF("ItemDetailsWidget init 2 %s", ItemName(pi));
-        itemsComboBox->addItem(ItemName(pi), QVariant::fromValue(-2));
-
-        itemsComboBox->setCurrentIndex(1);
-    } else {
-        itemsComboBox->setCurrentIndex(0);
+        itemsComboBox->addItem(ItemName(pi), QVariant::fromValue(this->invIdx));
     }
     // LogErrorF("ItemDetailsWidget init 3");
     for (int i = INVITEM_INV_FIRST; i < NUM_INVELEM; i++) {
-        const ItemStruct* is = h->item(i);
+        const ItemStruct* is = this->hero->item(i);
         if (is->_itype == ITYPE_NONE || is->_itype == ITYPE_PLACEHOLDER) {
             continue;
         }
-        switch (ii) {
+        switch (this->invIdx) {
         case INVITEM_HEAD:
             if (is->_iLoc != ILOC_HELM)
                 continue;
@@ -85,26 +97,14 @@ void ItemDetailsWidget::initialize(D1Hero *h, int ii)
         // LogErrorF("ItemDetailsWidget init 4 %s (%d) %d", ItemName(is), is->_itype, i);
         itemsComboBox->addItem(ItemName(is), QVariant::fromValue(i));
     }
+    ii = itemsComboBox->findData(ii);
+    if (ii < 0) ii = 0;
+    itemsComboBox->setCurrentIndex(ii);
     itemsComboBox->adjustSize();
-    // LogErrorF("ItemDetailsWidget init 5");
-    this->updateFields();
-    // LogErrorF("ItemDetailsWidget init 6");
-    this->setVisible(true);
-}
+    ii = itemsComboBox->currentData().value<int>();
 
-void ItemDetailsWidget::displayFrame()
-{
-    this->updateFields();
-}
-
-void ItemDetailsWidget::updateFields()
-{
-    QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
-
-    int ii = itemsComboBox->currentData().value<int>();
-    this->ui->discardItemButton->setEnabled(ii >= 0);
+    this->ui->discardItemButton->setEnabled(ii >= INVITEM_INV_FIRST && ii < NUM_INVELEM);
     // LogErrorF("updateFields 0 %d", ii);
-    ii = ii == -1 ? INVITEM_NONE : (ii == -2 ? this->invIdx : ii);
     const ItemStruct* pi = ii == INVITEM_NONE ? nullptr : this->hero->item(ii);
 
     if (pi != nullptr && pi->_itype != ITYPE_NONE) {
@@ -197,6 +197,8 @@ void ItemDetailsWidget::updateFields()
 
 void ItemDetailsWidget::on_invItemIndexComboBox_activated(int index)
 {
+    this->currentItem = this->ui->invItemIndexComboBox->itemData(index).value<int>();
+
     this->updateFields();
 }
 
@@ -208,7 +210,6 @@ void ItemDetailsWidget::on_editNameButton_clicked()
     std::function<void(QString)> func = [this](QString text) {
         QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
         int ii = itemsComboBox->currentData().value<int>();
-        ii = ii == -1 ? INVITEM_NONE : (ii == -2 ? this->invIdx : ii);
         if (ii != INVITEM_NONE) {
             this->hero->renameItem(ii, text);
             const ItemStruct* is = this->hero->item(ii);
@@ -243,12 +244,6 @@ void ItemDetailsWidget::on_submitButton_clicked()
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
 
     int ii = itemsComboBox->currentData().value<int>();
-
-    if (ii == -1) {
-        ii = INVITEM_NONE;
-    } else if (ii == -2) {
-        ii = this->invIdx;
-    }
     //LogErrorF("ItemDetailsWidget swap %d:%d", this->invIdx, ii);
     this->hero->swapItem(this->invIdx, ii);
 

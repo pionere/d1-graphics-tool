@@ -23,7 +23,6 @@ private:
     void updateFields();
 
 private slots:
-    void on_difficutlyComboBox_activated(int index);
     void on_plrCountSpinBox_valueChanged(int value);
 
     void on_dunTypeComboBox_activated(int index);
