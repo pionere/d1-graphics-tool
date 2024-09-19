@@ -448,10 +448,6 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 		gfx++;
 
 		maxdam += wRight->_iAC << (6 + 1 - 1); // 2*AC - halved by resists, doubled by MissToPlr
-
-        QMessageBox::critical(nullptr, "Error", QApplication::tr("shield charge bonus %1 (dam%2).").arg(wRight->_iAC << (6 + 1 - 1)).arg(maxdam));
-	} else {
-        QMessageBox::critical(nullptr, "Error", QApplication::tr("no shield charge bonus type %1 stat %2 gfx %3.").arg(wRight->_itype).arg(wRight->_iStatFlag).arg(gfx));
     }
 
 	plr._pIChMinDam = maxdam >> 1;

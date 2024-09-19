@@ -149,7 +149,7 @@ void D1Hero::update()
     this->rebalance();
 
     // update hero-stats
-    this->calcInv()
+    this->calcInv();
 }
 
 static QPainter *InvPainter = nullptr;
