@@ -52,10 +52,10 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     if (fileData.size() < sizeof(PkPlayerStruct))
         return false;
 
-    this->isHellfire = fileData.size() > sizeof(PkPlayerStruct) ? fileData[sizeof(PkPlayerStruct)] != 0 : isHeroStandardClass(((const PkPlayerStruct*)fileData.constData())->pClass);
+    this->hellfire = fileData.size() > sizeof(PkPlayerStruct) ? fileData[sizeof(PkPlayerStruct)] != 0 : isHeroStandardClass(((const PkPlayerStruct*)fileData.constData())->pClass);
 
     bool gameHellfire = IsHellfireGame;
-    IsHellfireGame = this->isHellfire;
+    IsHellfireGame = this->hellfire;
 
     UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
 
@@ -84,10 +84,10 @@ void D1Hero::create(unsigned index)
 
     selhero_heroInfo.hiName[0] = '\0';
 
-    this->isHellfire = isHeroStandardClass(index);
+    this->hellfire = isHeroStandardClass(index);
 
     bool gameHellfire = IsHellfireGame;
-    IsHellfireGame = this->isHellfire;
+    IsHellfireGame = this->hellfire;
 
     CreatePlayer(this->pnum, selhero_heroInfo);
 
@@ -138,7 +138,7 @@ void D1Hero::update()
 {
     // update hero-items
     bool gameHellfire = IsHellfireGame;
-    IsHellfireGame = this->isHellfire;
+    IsHellfireGame = this->hellfire;
 
     RecreateHeroItems(&plr._pInvBody[0], NUM_INVLOC);
     RecreateHeroItems(&plr._pSpdList[0], MAXBELTITEMS);
@@ -678,13 +678,13 @@ void D1Hero::setModified(bool modified)
 
 bool D1Hero::isHellfire() const
 {
-    return this->isHellfire;
+    return this->hellfire;
 }
 
-void D1Hero::setHellfire(bool hellfire)
+void D1Hero::setHellfire(bool hf)
 {
-    if (this->isHellfire != hellfire) {
-        this->isHellfire = hellfire;
+    if (this->hellfire != hf) {
+        this->hellfire = hf;
         this->modified = true;
 
         this->update();
@@ -1460,7 +1460,7 @@ void D1Hero::rebalance()
 void D1Hero::calcInv()
 {
     bool gameHellfire = IsHellfireGame;
-    IsHellfireGame = this->isHellfire;
+    IsHellfireGame = this->hellfire;
 
     CalcPlrInv(this->pnum, false);
 

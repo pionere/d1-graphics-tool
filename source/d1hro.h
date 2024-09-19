@@ -18,7 +18,7 @@ public:
     ~D1Hero();
 
     static D1Hero* instance();
-    static bool isStandardClass();
+    static bool isStandardClass(int hc);
 
     bool load(const QString &filePath, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
@@ -154,6 +154,6 @@ private:
     int pnum;
     QString filePath;
     bool modified = false;
-    bool isHellfire = false;
+    bool hellfire = false;
     D1Pal *palette = nullptr;
 };
