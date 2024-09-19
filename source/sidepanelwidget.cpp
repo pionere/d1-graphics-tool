@@ -5,7 +5,8 @@
 #include "d1hro.h"
 #include "ui_sidepanelwidget.h"
 
-#include "dungeon/interfac.h"
+// #include "dungeon/interfac.h"
+#include "dungeon/all.h"
 
 SidePanelWidget::SidePanelWidget(QWidget *parent)
     : QDialog(parent)
@@ -116,7 +117,7 @@ void SidePanelWidget::showMonsters(D1Hero *h)
     // LogErrorF("SidePanelWidget::showMonsters 0 %d", ii);
     this->initialize(h, 3);
     // LogErrorF("SidePanelWidget::showMonsters 1 %d", ii);
-    QMessageBox::critical(nullptr, "Error", QApplication::tr("SidePanelWidget::showMonsters meteor%1").arg(this->hero->getSkillLvl(SPL_METEOR)));
+    QMessageBox::critical(this, "Error", tr("SidePanelWidget::showMonsters meteor%1").arg(this->hero->getSkillLvl(SPL_METEOR)));
     this->monsterDetails->initialize(h);
     // LogErrorF("SidePanelWidget::showMonsters 2 %d", ii);
 }

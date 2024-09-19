@@ -58,10 +58,11 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     IsHellfireGame = this->hellfire;
 
     UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
-
     plr._pDunLevel = DLV_CATHEDRAL1;
 
     IsHellfireGame = gameHellfire;
+
+    this->calcInv();
 
     this->filePath = filePath;
     this->modified = false;
@@ -92,6 +93,7 @@ void D1Hero::create(unsigned index)
     IsHellfireGame = this->hellfire;
 
     CreatePlayer(this->pnum, selhero_heroInfo);
+    plr._pDunLevel = DLV_CATHEDRAL1;
 
     IsHellfireGame = gameHellfire;
 
