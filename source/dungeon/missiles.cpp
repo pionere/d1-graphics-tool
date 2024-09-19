@@ -207,7 +207,7 @@ void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon
         case SPL_MULTI_SHOT:
             mind = (mind * (16 + sl)) >> 6;
             maxd = (maxd * (16 + sl)) >> 6;
-            break
+            break;
         }
 
 		int fdam = hero->getFMaxDam(); // myplr._pIFMaxDam;
