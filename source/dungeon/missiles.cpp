@@ -7,6 +7,7 @@
 #include "misproc.h"
 
 #include <QApplication>
+#include <QMessageBox>
 
 #include "../d1hro.h"
 
@@ -160,7 +161,7 @@ void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon
 	case SPL_ATTRACT:
 	case SPL_SHROUD:
 	case SPL_SWAMP:
-        QMessageBox::critical(this, "Error", QApplication::tr("Unhandled missile skill %1 in GetDamageAmt(hero).").arg(sn));
+        QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled missile skill %1 in GetDamageAmt(hero).").arg(sn));
 		break;
 	case SPL_CHARGE:
         mind = hero->getChMinDam(); // myplr._pIChMinDam

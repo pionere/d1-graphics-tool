@@ -358,7 +358,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
             maxdam = (maxdam * (24 + sl)) >> 6;
             break;
         default:
-            QMessageBox::critical(this, "Error", QApplication::tr("Unhandled h2h skill %1 in GetPlayerDamage.").arg(sn));
+            QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetPlayerDamage.").arg(sn));
             break;
         }
         result.minHth = mindam;
