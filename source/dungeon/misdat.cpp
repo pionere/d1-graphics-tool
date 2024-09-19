@@ -60,7 +60,7 @@ const MissileData missiledata[] = {
 /*MIS_BONE*///      { NULL,            NULL,           0,                                             MISR_NONE,      MFILE_BONE,     TRUE,      SFX_NONE,    SFX_NONE,           1,        1, ALIGN32 },
 /*MIS_METLHIT*///   { NULL,            NULL,           0,                                             MISR_NONE,      MFILE_METLHIT,  TRUE,      SFX_NONE,    SFX_NONE,           1,        1, ALIGN32 },
 /*MIS_RHINO*/       { &AddRhino,       &MI_Rhino,      0,                                             MISR_NONE,      MFILE_NONE,     TRUE,      SFX_NONE,    SFX_NONE,           1,        1, ALIGN32 },
-/*MIS_CHARGE*/      { &AddCharge,      &MI_Charge,     0,                                             MISR_NONE,      MFILE_NONE,     TRUE,      SFX_NONE,    SFX_NONE,           1,        1, ALIGN32 },
+/*MIS_CHARGE*/      { &AddCharge,      &MI_Charge,     0,                                             MISR_BLUNT,     MFILE_NONE,     TRUE,      SFX_NONE,    SFX_NONE,           1,        1, ALIGN32 },
 /*MIS_TELEPORT*/    { &AddTeleport,    &MI_Dummy,      0,                                             MISR_NONE,      MFILE_NONE,     FALSE,     LS_ELEMENTL, SFX_NONE,           1,        1, ALIGN32 },
 /*MIS_RNDTELEPORT*/ { &AddRndTeleport, &MI_Dummy,      0,                                             MISR_NONE,      MFILE_NONE,     FALSE,     LS_TELEPORT, SFX_NONE,           1,        1, ALIGN32 },
 /*MIS_FARROW*///    { NULL,            NULL,           0,                                             MISR_FIRE,      MFILE_FARROW,   TRUE,      SFX_NONE,    SFX_NONE,           1,        1, ALIGN32 },

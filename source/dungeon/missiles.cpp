@@ -69,6 +69,285 @@ static void CalcHealHp(const D1Hero *hero, int sn, int spllvl, int *mind, int *m
     *maxd = maxhp;
 }
 
+void GetMissileDamage(int mtype, const MonsterStruct *mon, int *mindam, int *maxdam)
+{
+    int mind = mon->_mMinDamage;
+    int maxd = mon->_mMaxDamage;
+    // if (mtype == MIS_BLOODBOILC) {
+    if (mtype == MIS_BLOODBOIL) {
+        mind = mon->_mLevel >> 1;
+        maxd = mon->_mLevel;
+    } else if (mtype == MIS_FLASH) {
+        mind = maxd = mon->_mLevel << 1;
+    // } else if (mtype == MIS_LIGHTNINGC || mtype == MIS_LIGHTNINGC2) {
+    } else if (mtype == MIS_LIGHTNING) {
+        // mind = mon->_mMinDamage;
+        maxd = maxd << 1;
+    //} else if (mtype == MIS_CBOLTC) {
+    } else if (mtype == MIS_CBOLT) {
+        mind = maxd; //  15 << gnDifficulty; // FIXME
+    } else if (mtype == MIS_APOCAC2) {
+        mind = maxd = 40 << gnDifficulty;
+    }
+    *mindam = mind;
+    *maxdam = maxd;
+}
+
+void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon, int *mindam, int *maxdam)
+{
+	int k, magic, mind, maxd = 0;
+
+	// assert((unsigned)sn < NUM_SPELLS);
+	magic = hero->getMagic(); //  myplr._pMagic;
+#ifdef HELLFIRE
+	if (SPELL_RUNE(sn))
+		sl += hero->getDexterity() /*myplr._pDexterity*/ >> 3;
+#endif
+	switch (sn) {
+	case SPL_GUARDIAN:
+	case SPL_FIREBOLT:
+		k = (magic >> 3) + sl;
+		mind = k + 1;
+		maxd = k + 10;
+		break;
+#ifdef HELLFIRE
+	case SPL_RUNELIGHT:
+#endif
+	case SPL_LIGHTNING:
+		mind = 1;
+		maxd = ((magic + (sl << 3)) * (6 + (sl >> 1))) >> 3;
+		break;
+	case SPL_FLASH:
+		mind = magic >> 1;
+		for (k = 0; k < sl; k++)
+			mind += mind >> 3;
+
+		mind *= misfiledata[MFILE_BLUEXFR].mfAnimLen[0];
+		maxd = mind << 3;
+		mind >>= 6;
+		maxd >>= 6;
+		break;
+	case SPL_NULL:
+	case SPL_WALK:
+	case SPL_BLOCK:
+	case SPL_ATTACK:
+	case SPL_RATTACK:
+	case SPL_INFRA:
+	case SPL_TELEKINESIS:
+	case SPL_TELEPORT:
+	case SPL_RNDTELEPORT:
+	case SPL_TOWN:
+	case SPL_RESURRECT:
+	case SPL_IDENTIFY:
+	case SPL_REPAIR:
+	case SPL_RECHARGE:
+	case SPL_DISARM:
+	case SPL_RAGE:
+	case SPL_STONE:
+	case SPL_SWIPE:
+	case SPL_WALLOP:
+	case SPL_WHIPLASH:
+#ifdef HELLFIRE
+	case SPL_BUCKLE:
+	case SPL_WHITTLE:
+	case SPL_RUNESTONE:
+#endif
+	case SPL_HEAL:
+	case SPL_HEALOTHER:
+	case SPL_MANASHIELD:
+	case SPL_ATTRACT:
+	case SPL_SHROUD:
+	case SPL_SWAMP:
+        QMessageBox::critical(this, "Error", tr("Unhandled missile skill %1 in GetDamageAmt(hero).").arg(sn));
+		break;
+	case SPL_CHARGE:
+        mind = hero->getChMinDam(); // myplr._pIChMinDam
+        maxd = hero->getChMaxDam(); // myplr._pIChMaxDam
+        // hper = sl * 16 - mon->_mArmorClass;
+        break;
+	case SPL_POINT_BLANK:
+	case SPL_FAR_SHOT:
+	case SPL_PIERCE_SHOT:
+    case SPL_MULTI_SHOT: {
+        bool tmac = (hero->getItemFlags() & ISPL_PENETRATE_PHYS) != 0; // myplr._pIFlags
+        mind = 0;
+        maxd = 0;
+        int sldam = hero->getSlMaxDam(); // myplr._pISlMaxDam;
+        if (sldam != 0) {
+            maxd += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, sldam, tmac);
+            mind += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, hero->getSlMinDam(), tmac); // plr._pISlMinDam
+        }
+        int bldam = hero->getBlMaxDam(); // myplr._pIBlMaxDam;
+        if (bldam != 0) {
+            maxd += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, bldam, tmac);
+            mind += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, hero->getBlMinDam(), tmac); // myplr._pIBlMaxDam;
+        }
+        int pcdam = hero->getPcMaxDam(); // myplr._pIPcMaxDam;
+        if (pcdam != 0) {
+            maxd += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, pcdam, tmac);
+            mind += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, hero->getPcMinDam(), tmac); // myplr._pIPcMinDam;
+        }
+
+        switch (sn) {
+        case SPL_POINT_BLANK:
+            mind = (mind * (64 + 32 /*- 16 * mis->_miVar7*/ + sl)) >> 6;
+            maxd = (mind * (64 + 32 /*- 16 * mis->_miVar7*/ + sl)) >> 6;
+            break;
+        case SPL_FAR_SHOT:
+            mind = (mind * (/*8 * mis->_miVar7*/ -16 + sl)) >> 5;
+            maxd = (maxd * (/*8 * mis->_miVar7*/ -16 + sl)) >> 5;
+            break;
+        case SPL_PIERCE_SHOT:
+            mind = (mind * (32 + sl)) >> 6;
+            maxd = (maxd * (32 + sl)) >> 6;
+            break;
+        case SPL_MULTI_SHOT:
+            mind = (mind * (16 + sl)) >> 6;
+            maxd = (maxd * (16 + sl)) >> 6;
+            break
+        }
+
+		int fdam = hero->getFMaxDam(); // myplr._pIFMaxDam;
+		if (fdam != 0) {
+			maxd += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, fdam, false);
+			mind += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, hero->getFMinDam(), false); // plr._pIFMinDam
+		}
+		int ldam = hero->getLMaxDam(); // myplr._pILMaxDam;
+		if (ldam != 0) {
+			maxd += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, ldam, false);
+			mind += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, hero->getLMinDam(), false); // plr._pILMinDam
+		}
+		int mdam = hero->getMMaxDam(); // myplr._pIMMaxDam;
+		if (mdam != 0) {
+			maxd += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, mdam, false);
+			mind += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, hero->getMMinDam(), false); // plr._pIMMinDam
+		}
+		int adam = hero->getAMaxDam(); // myplr._pIAMaxDam;
+		if (adam != 0) {
+			maxd += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, adam, false);
+			mind += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, hero->getAMinDam(), false); // plr._pIAMinDam
+		}
+        *mindam = mind;
+        *maxdam = maxd;
+    } return;
+#ifdef HELLFIRE
+	case SPL_FIRERING:
+#endif
+	case SPL_FIREWALL:
+		mind = ((magic >> 3) + sl + 5) << (-3 + 5);
+		maxd = ((magic >> 3) + sl * 2 + 10) << (-3 + 5);
+		break;
+	case SPL_FIREBALL:
+		mind = (magic >> 2) + 10;
+		maxd = mind + 10;
+		for (k = 0; k < sl; k++) {
+			mind += mind >> 3;
+			maxd += maxd >> 3;
+		}
+		break;
+	case SPL_METEOR:
+		mind = (magic >> 2) + (sl << 3) + 40;
+		maxd = (magic >> 2) + (sl << 4) + 40;
+		break;
+	case SPL_BLOODBOIL:
+		mind = (magic >> 2) + (sl << 2) + 10;
+		maxd = (magic >> 2) + (sl << 3) + 10;
+	case SPL_CHAIN:
+		mind = 1;
+		maxd = magic;
+		break;
+#ifdef HELLFIRE
+	case SPL_RUNEWAVE:
+#endif
+	case SPL_WAVE:
+		mind = ((magic >> 3) + 2 * sl + 1) * 4;
+		maxd = ((magic >> 3) + 4 * sl + 2) * 4;
+		break;
+#ifdef HELLFIRE
+	case SPL_RUNENOVA:
+#endif
+	case SPL_NOVA:
+		mind = 1;
+		maxd = (magic >> 1) + (sl << 5);
+		break;
+	case SPL_INFERNO:
+		mind = (magic * 20) >> 6;
+		maxd = ((magic + (sl << 4)) * 30) >> 6;
+		break;
+	case SPL_GOLEM:
+		sl = sl > 0 ? sl - 1 : 0;
+		k = monsterdata[MT_GOLEM].mLevel;
+		sl = k + sl;
+		// mon->_mLevel = sl;
+		mind = sl * monsterdata[MT_GOLEM].mMinDamage / k;
+		maxd = sl * monsterdata[MT_GOLEM].mMaxDamage / k;
+		break;
+	case SPL_ELEMENTAL:
+		mind = (magic >> 3) + 2 * sl + 4;
+		maxd = (magic >> 3) + 4 * sl + 20;
+		for (k = 0; k < sl; k++) {
+			mind += mind >> 3;
+			maxd += maxd >> 3;
+		}
+		break;
+	case SPL_CBOLT:
+		mind = 1;
+		maxd = (magic >> 2) + (sl << 2);
+		break;
+	case SPL_HBOLT:
+		mind = (magic >> 2) + sl;
+		maxd = mind + 9;
+		break;
+	case SPL_FLARE:
+		mind = (magic * (sl + 1)) >> 3;
+		maxd = mind;
+		break;
+	case SPL_POISON:
+		mind = ((magic >> 4) + sl + 2) << (-3 + 5);
+		maxd = ((magic >> 4) + sl + 4) << (-3 + 5);
+		break;
+	case SPL_WIND:
+		mind = (magic >> 3) + 7 * sl + 1;
+		maxd = (magic >> 3) + 8 * sl + 1;
+		// (dam * 2 * misfiledata[MFILE_WIND].mfAnimLen[0] / 16) << (-3 + 5)
+		mind = mind * 3;
+		maxd = maxd * 3;
+		break;
+#ifdef HELLFIRE
+	/*case SPL_LIGHTWALL:
+		mind = 1;
+		maxd = ((magic >> 1) + sl) << (-3 + 5);
+		break;
+	case SPL_RUNEWAVE:
+	case SPL_IMMOLAT:
+		mind = 1 + (magic >> 3);
+		maxd = mind + 4;
+		for (k = 0; k < sl; k++) {
+			mind += mind >> 3;
+			maxd += maxd >> 3;
+		}
+		break;*/
+	case SPL_RUNEFIRE:
+		mind = 1 + (magic >> 1) + 16 * sl;
+		maxd = 1 + (magic >> 1) + 32 * sl;
+		break;
+#endif
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+
+    int mtype = spelldata[sn].sMissile;
+    // mtype = GetBaseMissile(mtype);
+    BYTE mRes = GetMissileElement(mtype);
+
+    mind = CalcMonsterDam(mon->_mMagicRes, mRes, mind, false);
+    maxd = CalcMonsterDam(mon->_mMagicRes, mRes, maxd, false);
+
+    *mindam = mind;
+    *maxdam = maxd;
+}
+
 void GetSkillDesc(const D1Hero *hero, int sn, int sl)
 {
 	int k, magic, mind, maxd = 0, dur = 0;
@@ -317,12 +596,30 @@ int GetMissileHitChance(int mtype, const MonsterStruct *mon, const D1Hero *hero)
     int hper;
     if (missiledata[mtype].mdFlags & MIF_ARROW) {
         hper = 30 + mon->_mHit + (2 * mon->_mLevel) - hero->getAC();
+        // hper -= mis->_miVar7 << 1; // MISDIST
     } else if (missiledata[mtype].mdFlags & MIF_AREA) {
         hper = 40 + 2 * mon->_mLevel;
         hper -= 2 * hero->getLevel();
     } else {
         hper = 50 + mon->_mMagic;
         hper -= hero->getEvasion();
+    }
+    return hper;
+}
+
+int GetMissileHitChance(int mtype, const D1Hero *hero, const MonsterStruct *mon)
+{
+    int hper;
+    if (missiledata[mtype].mdFlags & MIF_ARROW) {
+        hper = hero->getHitChance() - mon->_mArmorClass;
+        // hper -= ((mis->_miVar7 - 4) * (mis->_miVar7 - 4) >> 1); // MISDIST
+    } else if (missiledata[mtype].mdFlags & MIF_AREA) {
+        hper = 40 + 2 * hero->getLevel();
+        hper -= 2 * mon->_mLevel;
+    } else {
+        hper = 50 + hero->getMagic();
+        hper -= 2 * mon->_mLevel + mon->_mEvasion;
+        // hper -= dist; // TODO: either don't care about it, or set it!
     }
     return hper;
 }

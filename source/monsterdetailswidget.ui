@@ -524,6 +524,9 @@
    <item alignment="Qt::AlignCenter">>
     <widget class="QGroupBox">
      <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QComboBox" name="heroSkillsComboBox"/>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="plrHitChance">
         <property name="toolTip">

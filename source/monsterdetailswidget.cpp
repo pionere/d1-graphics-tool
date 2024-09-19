@@ -280,23 +280,11 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
     }
     if (mtype != -1 && mtype != MIS_SWAMPC) {
         result.mis = true;
-        int mindam = mon->_mMinDamage;
-        int maxdam = mon->_mMaxDamage;
-        if (mtype == MIS_BLOODBOILC) {
-            mindam = mon->_mLevel >> 1;
-            maxdam = mon->_mLevel;
-        } else if (mtype == MIS_FLASH) {
-            mindam = maxdam = mon->_mLevel << 1;
-        } else if (mtype == MIS_LIGHTNINGC || mtype == MIS_LIGHTNINGC2) {
-            // mindam = mon->_mMinDamage;
-            maxdam = maxdam << 1;
-        } else if (mtype == MIS_CBOLTC) {
-            mindam = maxdam; //  15 << gnDifficulty; // FIXME
-        } else if (mtype == MIS_APOCAC2) {
-            mindam = maxdam = 40 << gnDifficulty;
-        }
+        mtype = GetBaseMissile(mtype);
         result.resMis = GetMissileElement(mtype);
         result.blockMis = !(missiledata[mtype].mdFlags & MIF_NOBLOCK);
+        int mindam, maxdam;
+        GetMissileDamage(mtype, mon, &mindam, &maxdam);
         mindam = CalcPlrDam(hero, result.resMis, mindam);
         maxdam = CalcPlrDam(hero, result.resMis, maxdam);
         if (maxdam != 0) {
@@ -309,7 +297,6 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
                     maxdam = 1;
             }
         }
-
         result.minMis = mindam;
         result.maxMis = maxdam;
         result.chanceMis = GetMissileHitChance(mtype, mon, hero);
@@ -318,9 +305,72 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
     return result;
 }
 
+typedef struct PlayerDamage {
+    bool hth;
+    bool mis;
+
+    int minHth;
+    int maxHth;
+    int chanceHth;
+
+    int minMis;
+    int maxMis;
+    int chanceMis;
+    BYTE resMis;
+} PlayerDamage;
+
+static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStruct *mon)
+{
+    int sl = hero->getSkillLvl(sn);
+    bool mis = spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED);
+    bool hth = !mis;
+    PlayerDamage result = { 0 };
+    if (mis) {
+        int mtype = spelldata[sn].sMissile;
+        mtype = GetBaseMissile(mtype);
+        result.resMis = GetMissileElement(mtype);
+        int mindam, maxdam;
+        GetSkillDamage(sn, sl, hero, mon, &mindam, &maxdam);
+        result.minMis = mindam;
+        result.maxMis = maxdam;
+        result.chanceMis = GetMissileHitChance(mtype, hero, mon);
+    }
+
+    if (hth) {
+        result.chanceHth = hero->getHitChance() - mon->_mArmorClass;
+        int mindam, maxdam;
+        mindam = hero->getTotalMinDam(mon);
+        maxdam = hero->getTotalMaxDam(mon);
+
+        switch (sn) {
+        case SPL_ATTACK:
+            break;
+        case SPL_SWIPE:
+            mindam = (mindam * (48 + sl)) >> 6;
+            maxdam = (maxdam * (48 + sl)) >> 6;
+            break;
+        case SPL_WALLOP:
+            mindam = (mindam * (112 + sl)) >> 6;
+            maxdam = (maxdam * (112 + sl)) >> 6;
+            break;
+        case SPL_WHIPLASH:
+            mindam = (mindam * (24 + sl)) >> 6;
+            maxdam = (maxdam * (24 + sl)) >> 6;
+            break;
+        default:
+            QMessageBox::critical(this, "Error", tr("Unhandled h2h skill %1 in GetPlayerDamage.").arg(sn));
+            break;
+        }
+        result.minHth = mindam;
+        result.maxHth = maxdam;
+    }
+    return result;
+}
+
 void MonsterDetailsWidget::updateFields()
 {
     int mi;
+    // update dun-type combobox
     QComboBox *dunComboBox = this->ui->dunTypeComboBox;
     mi = dunComboBox->currentData().value<int>();
     if (IsHellfireGame) {
@@ -463,72 +513,10 @@ void MonsterDetailsWidget::updateFields()
 
     // player vs. monster info
     int hper, mindam, maxdam;
-    /*bool hth = false;
-    bool special = false; // special (hit2/dam2 + afnum2)
-    int mtype = -1;
-    bool ranged_special; // aiParam1 + afnum2
-    switch (mon->_mAI.aiType) {
-    case AI_LACHDAN:
-        break;
-    case AI_ZOMBIE:
-    case AI_SKELSD:
-    case AI_SCAV:
-    case AI_RHINO: // + charge
-    case AI_FALLEN:
-    case AI_SKELKING:
-    case AI_BAT:   // + MIS_LIGHTNING if MT_XBAT
-    case AI_CLEAVER:
-    case AI_SNEAK:
-    //case AI_FIREMAN: // MIS_KRULL
-    case AI_GOLUM:
-    case AI_SNOTSPIL:
-    case AI_SNAKE:
-    case AI_WARLORD:
-#ifdef HELLFIRE
-    case AI_HORKDMN:
-#endif
-        hth = true;
-        break;  // hth  --  MOFILE_MAGMA (hit + 10, dam - 2), MOFILE_THIN (hit - 20, dam + 4)
-    case AI_FAT:
-        hth = true;
-        special = true;
-        break;
-    case AI_ROUND: // + special if aiParam1
-    case AI_GARG:  // + AI_ROUND
-    case AI_GARBUD: // + AI_ROUND
-        hth = true;
-        special = mon->_mAI.aiParam1;
-        break;
-    case AI_SKELBOW:
-        mtype = MIS_ARROW;
-        break;
-    case AI_RANGED: // special ranged / ranged if aiParam2
-    case AI_LAZHELP: // AI_RANGED
-        ranged_special = mon->_mAI.aiParam2;
-        mtype = mon->_mAI.aiParam1;
-        break;
-    case AI_ROUNDRANGED: // special ranged / hth
-    case AI_ROUNDRANGED2: // AI_ROUNDRANGED
-        hth = true;
-        ranged_special = true;
-        mtype = mon->_mAI.aiParam1;
-        break;
-    case AI_ZHAR: // AI_COUNSLR
-    case AI_COUNSLR: // ranged + MIS_FLASH
-    case AI_LAZARUS: // AI_COUNSLR
-        mtype = mon->_mAI.aiParam1; // + MIS_FLASH
-        break;
-    case AI_MAGE:
-        mtype = MIS_MAGE; // + MIS_FLASH + param1
-        break;
-    }*/
-
     hper = this->hero->getHitChance() - mon->_mArmorClass;
     hper = CheckHit(hper);
     this->ui->plrHitChance->setText(QString("%1%").arg(hper));
     const MonsterDamage monDamage = GetMonsterDamage(mon, this->hero);
-    // hper = hth ? 30 + mon->_mHit + (2 * mon->_mLevel) - this->hero->getAC() : 0;
-    // int hper2 = mtype == -1 ? (special ? 30 + mon->_mHit2 + (2 * mon->_mLevel) - this->hero->getAC() : -1) : GetMissileHitChance(mtype, mon, this->hero);
     if (monDamage.hth) {
         hper = monDamage.chanceHth;
         hper = CheckHit(hper);
@@ -544,75 +532,40 @@ void MonsterDetailsWidget::updateFields()
         this->ui->monHitChance2->setText(QString("%1%").arg(hper));
     }
 
-    displayDamage(this->ui->plrDamage, this->hero->getTotalMinDam(mon), this->hero->getTotalMaxDam(mon));
-    /*mindam = 0;
-    maxdam = 0;
-    if (hth || (mtype != -1 && mtype != MIS_SWAMPC)) {
-        if (hth) {
-            mindam = mon->_mMinDamage;
-            maxdam = mon->_mMaxDamage;
-        }
-        this->ui->monDamageSep->setVisible(mtype != -1 || special);
-        this->ui->monDamage2->setVisible(mtype != -1 || special);
-        if (mtype != -1) {
-            int mindam2 = mon->_mMinDamage;
-            int maxdam2 = mon->_mMaxDamage;
-            if (mtype == MIS_BLOODBOILC) {
-                mindam2 = mon->_mLevel >> 1;
-                maxdam2 = mon->_mLevel;
-            } else if (mtype == MIS_FLASH) {
-                mindam2 = maxdam2 = mon->_mLevel << 1;
-            } else if (mtype == MIS_LIGHTNINGC || mtype == MIS_LIGHTNINGC2) {
-                // mindam = mon->_mMinDamage;
-                maxdam2 = maxdam2 << 1;
-            } else if (mtype == MIS_CBOLTC) {
-                mindam2 = maxdam2 = mon->_mMaxDamage; //  15 << gnDifficulty; // FIXME
-            } else if (mtype == MIS_APOCAC2) {
-                mindam2 = maxdam2 = 40 << gnDifficulty;
+    // update skill combobox
+    QComboBox *skillsComboBox = this->ui->heroSkillsComboBox;
+    mi = skillsComboBox->currentData().value<int>();
+    skillsComboBox->clear();
+    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+        if (sn != SPL_ATTACK) {
+            if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
+                continue;
             }
-
-            mindam2 = CalcPlrDam(this->hero, missiledata[mtype].mResist, mindam2);
-            maxdam2 = CalcPlrDam(this->hero, missiledata[mtype].mResist, maxdam2);
-            if (maxdam2 != 0) {
-                if (!(missiledata[mtype].mdFlags & MIF_DOT)) {
-                    mindam2 += this->hero->getGetHit();
-                    maxdam2 += this->hero->getGetHit();
-                    if (mindam2 < 1)
-                        mindam2 = 1;
-                    if (maxdam2 < 1)
-                        maxdam2 = 1;
-                }
+            if (this->hero->getSkillLvl(sn) == 0 && !(this->hero->getFixedSkills() & SPELL_MASK(sn)) && !SPELL_RUNE(sn)) {
+                continue;
             }
-
-            displayDamage(this->ui->monDamage2, mindam2, maxdam2);
-        } else if (special) {
-            int mindam2 = mon->_mMinDamage2;
-            int maxdam2 = mon->_mMaxDamage2;
-
-            mindam2 += this->hero->getGetHit();
-            maxdam2 += this->hero->getGetHit();
-            if (mindam2 < 1)
-                mindam2 = 1;
-            if (maxdam2 < 1)
-                maxdam2 = 1;
-            displayDamage(this->ui->monDamage2, mindam2, maxdam2);
         }
-
-        if (hth) {
-            mindam += this->hero->getGetHit();
-            maxdam += this->hero->getGetHit();
-        }
-        if (mindam < 1)
-            mindam = 1;
-        if (maxdam < 1)
-            maxdam = 1;
-
-        // if (hth && MOFILE_MAGMA (hit + 10, dam - 2), MOFILE_THIN (hit - 20, dam + 4)) {  // FIXME
-    } else {
-        this->ui->monDamageSep->setVisible(false);
-        this->ui->monDamage2->setVisible(false);
+        skillsComboBox->addItem(spelldata[sn].sNameText, QVariant::fromValue(sn));
     }
-    displayDamage(this->ui->monDamage, mindam, maxdam);*/
+    mi = skillsComboBox->findData(mi);
+    if (mi < 0) mi = 0;
+    skillsComboBox->setCurrentIndex(mi);
+
+    int sn = skillsComboBox->currentData().value<int>();
+    const PlayerDamage plrDam = GetPlayerDamage(this->hero, sn, mon);
+
+    this->ui->plrDamageSep->setVisible(plrDam.mis);
+    this->ui->plrDamage2->setVisible(plrDam.mis);
+    if (plrDam.mis) {
+        mindam = plrDam.minMis;
+        maxdam = plrDam.maxMis;
+        displayDamage(this->ui->plrDamage2, mindam, maxdam);
+        this->ui->plrDamage2->setStyleSheet(GetElementColor(plrDam.resMis));
+    }
+    mindam = plrDam.minHth;
+    maxdam = plrDam.maxHth;
+    displayDamage(this->ui->plrDamage, mindam, maxdam);
+
     this->ui->monDamageSep->setVisible(monDamage.mis || monDamage.spec);
     this->ui->monDamage2->setVisible(monDamage.mis || monDamage.spec);
     if (monDamage.mis || monDamage.spec) {
@@ -626,12 +579,8 @@ void MonsterDetailsWidget::updateFields()
         displayDamage(this->ui->monDamage2, mindam, maxdam);
         this->ui->monDamage2->setStyleSheet(GetElementColor(monDamage.mis ? monDamage.resMis : MISR_NONE));
     }
-    mindam = 0;
-    maxdam = 0;
-    if (monDamage.hth) {
-        mindam = monDamage.minHth;
-        maxdam = monDamage.maxHth;
-    }
+    mindam = monDamage.minHth;
+    maxdam = monDamage.maxHth;
     displayDamage(this->ui->monDamage, mindam, maxdam);
 
     hper = 0;
