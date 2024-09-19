@@ -299,7 +299,7 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
         }
         result.minMis = mindam;
         result.maxMis = maxdam;
-        result.chanceMis = GetMissileHitChance(mtype, mon, hero);
+        result.chanceMis = GetMonMisHitChance(mtype, mon, hero);
     }
 
     return result;
@@ -333,7 +333,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
         GetSkillDamage(sn, sl, hero, mon, &mindam, &maxdam);
         result.minMis = mindam;
         result.maxMis = maxdam;
-        result.chanceMis = GetMissileHitChance(mtype, hero, mon);
+        result.chanceMis = GetPlrMisHitChance(mtype, hero, mon);
     }
 
     if (hth) {
@@ -358,7 +358,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
             maxdam = (maxdam * (24 + sl)) >> 6;
             break;
         default:
-            QMessageBox::critical(this, "Error", tr("Unhandled h2h skill %1 in GetPlayerDamage.").arg(sn));
+            QMessageBox::critical(this, "Error", QApplication::tr("Unhandled h2h skill %1 in GetPlayerDamage.").arg(sn));
             break;
         }
         result.minHth = mindam;
@@ -635,6 +635,11 @@ void MonsterDetailsWidget::on_dunLevelBonusEdit_escPressed()
 }
 
 void MonsterDetailsWidget::on_plrCountSpinBox_valueChanged(int value)
+{
+    this->updateFields();
+}
+
+void MonsterDetailsWidget::on_heroSkillsComboBox_activated(int index)
 {
     this->updateFields();
 }

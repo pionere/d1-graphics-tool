@@ -33,6 +33,8 @@ private slots:
     void on_monTypeComboBox_activated(int index);
     void on_minionCheckBox_clicked();
 
+    void on_heroSkillsComboBox_activated(int index);
+
     void on_closeButton_clicked();
 
 private:

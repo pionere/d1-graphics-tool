@@ -528,12 +528,36 @@
        <widget class="QComboBox" name="heroSkillsComboBox"/>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="plrHitChance">
-        <property name="toolTip">
-         <string>Chance to hit the monster</string>
-        </property>
-       </widget>
-       </item>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel" name="plrHitChance">
+          <property name="toolTip">
+           <string>Chance to hit the monster in h2h combat</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="plrHitChanceSep">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="text">
+           <string notr="true">|</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="plrHitChance2">
+          <property name="toolTip">
+           <string>Chance to hit the monster using spell/missile attack</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
       <item row="1" column="1">
        <widget class="QLabel">
         <property name="text">
@@ -574,11 +598,35 @@
       </item>
 
       <item row="2" column="0">
-       <widget class="QLabel" name="plrDamage">
-        <property name="toolTip">
-         <string>Possible damage to the monster</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel" name="plrDamage">
+          <property name="toolTip">
+           <string>Possible h2h damage to the monster</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="plrDamageSep">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="text">
+           <string notr="true">|</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="plrDamage2">
+          <property name="toolTip">
+           <string>Possible spell/missile damage to the monster</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="2" column="1">
        <widget class="QLabel">
@@ -612,7 +660,7 @@
         <item>
          <widget class="QLabel" name="monDamage2">
           <property name="toolTip">
-           <string>Possible missile/special damage to the player</string>
+           <string>Possible special/missile damage to the player</string>
           </property>
          </widget>
         </item>

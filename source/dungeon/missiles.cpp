@@ -6,6 +6,8 @@
 #include "all.h"
 #include "misproc.h"
 
+#include <QApplication>
+
 #include "../d1hro.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -158,7 +160,7 @@ void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon
 	case SPL_ATTRACT:
 	case SPL_SHROUD:
 	case SPL_SWAMP:
-        QMessageBox::critical(this, "Error", tr("Unhandled missile skill %1 in GetDamageAmt(hero).").arg(sn));
+        QMessageBox::critical(this, "Error", QApplication::tr("Unhandled missile skill %1 in GetDamageAmt(hero).").arg(sn));
 		break;
 	case SPL_CHARGE:
         mind = hero->getChMinDam(); // myplr._pIChMinDam
@@ -591,7 +593,7 @@ void GetSkillDesc(const D1Hero *hero, int sn, int sl)
 	}
 }
 
-int GetMissileHitChance(int mtype, const MonsterStruct *mon, const D1Hero *hero)
+int GetMonMisHitChance(int mtype, const MonsterStruct *mon, const D1Hero *hero)
 {
     int hper;
     if (missiledata[mtype].mdFlags & MIF_ARROW) {
@@ -607,7 +609,7 @@ int GetMissileHitChance(int mtype, const MonsterStruct *mon, const D1Hero *hero)
     return hper;
 }
 
-int GetMissileHitChance(int mtype, const D1Hero *hero, const MonsterStruct *mon)
+int GetPlrMisHitChance(int mtype, const D1Hero *hero, const MonsterStruct *mon)
 {
     int hper;
     if (missiledata[mtype].mdFlags & MIF_ARROW) {
