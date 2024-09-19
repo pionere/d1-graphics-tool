@@ -537,7 +537,7 @@ void MonsterDetailsWidget::updateFields()
     mi = skillsComboBox->currentData().value<int>();
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Selected skill %1.").arg(mi));
     skillsComboBox->clear();
-    for (int sn = 0; sn < IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO; sn++) {
+    for (int sn = 0; sn < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); sn++) {
         if (sn != SPL_ATTACK) {
             if (!HasSkillDamage(sn)) continue;
             /*if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {

@@ -52,7 +52,7 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     if (fileData.size() < sizeof(PkPlayerStruct))
         return false;
 
-    this->hellfire = fileData.size() > sizeof(PkPlayerStruct) ? fileData[sizeof(PkPlayerStruct)] != 0 : isHeroStandardClass(((const PkPlayerStruct*)fileData.constData())->pClass);
+    this->hellfire = fileData.size() > sizeof(PkPlayerStruct) ? fileData[sizeof(PkPlayerStruct)] != 0 : D1Hero::isStandardClass(((const PkPlayerStruct*)fileData.constData())->pClass);
 
     bool gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hellfire;
@@ -84,7 +84,7 @@ void D1Hero::create(unsigned index)
 
     selhero_heroInfo.hiName[0] = '\0';
 
-    this->hellfire = isHeroStandardClass(index);
+    this->hellfire = D1Hero::isStandardClass(index);
 
     bool gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hellfire;
