@@ -26,6 +26,7 @@ private slots:
     void on_plrCountSpinBox_valueChanged(int value);
 
     void on_dunTypeComboBox_activated(int index);
+    void on_dunLevelBonusCheckBox_clicked();
 
     void on_dunLevelBonusEdit_returnPressed();
     void on_dunLevelBonusEdit_escPressed();

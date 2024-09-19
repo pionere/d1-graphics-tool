@@ -103,7 +103,11 @@
       </spacer>
      </item>
      <item>
-      <widget class="QComboBox" name="monTypeComboBox"/>
+      <widget class="QComboBox" name="monTypeComboBox">
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QCheckBox" name="minionCheckBox">
@@ -525,7 +529,11 @@
     <widget class="QGroupBox">
      <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QComboBox" name="heroSkillsComboBox"/>
+       <widget class="QComboBox" name="heroSkillsComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <layout class="QHBoxLayout">

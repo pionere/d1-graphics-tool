@@ -535,8 +535,10 @@ void MonsterDetailsWidget::updateFields()
     // update skill combobox
     QComboBox *skillsComboBox = this->ui->heroSkillsComboBox;
     mi = skillsComboBox->currentData().value<int>();
+    QMessageBox::critical(nullptr, "Error", QApplication::tr("Selected skill %1.").arg(mi));
     skillsComboBox->clear();
-    for (int sn = 0; sn < NUM_SPELLS; sn++) {
+    for (int sn = 0; sn < IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO; sn++) {
+        if (!HasSkillDamage(sn)) continue;
         if (sn != SPL_ATTACK) {
             if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
                 continue;
@@ -548,10 +550,12 @@ void MonsterDetailsWidget::updateFields()
         skillsComboBox->addItem(spelldata[sn].sNameText, QVariant::fromValue(sn));
     }
     mi = skillsComboBox->findData(mi);
+    QMessageBox::critical(nullptr, "Error", QApplication::tr("Skill index %1.").arg(mi));
     if (mi < 0) mi = 0;
     skillsComboBox->setCurrentIndex(mi);
 
     int sn = skillsComboBox->currentData().value<int>();
+    QMessageBox::critical(nullptr, "Error", QApplication::tr("Using skill %1.").arg(sn));
     const PlayerDamage plrDam = GetPlayerDamage(this->hero, sn, mon);
 
     this->ui->plrDamageSep->setVisible(plrDam.mis);
@@ -610,6 +614,11 @@ void MonsterDetailsWidget::on_dunTypeComboBox_activated(int index)
     this->updateFields();
 }
 
+void MonsterDetailsWidget::on_dunLevelBonusCheckBox_clicked()
+{
+    this->updateFields();
+}
+
 void MonsterDetailsWidget::on_monTypeComboBox_activated(int index)
 {
     this->updateFields();
@@ -641,6 +650,8 @@ void MonsterDetailsWidget::on_plrCountSpinBox_valueChanged(int value)
 
 void MonsterDetailsWidget::on_heroSkillsComboBox_activated(int index)
 {
+    QMessageBox::critical(nullptr, "Error", QApplication::tr("heroSkillsComboBox new index %1.").arg(index));
+
     this->updateFields();
 }
 

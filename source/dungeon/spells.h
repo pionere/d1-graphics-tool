@@ -23,6 +23,7 @@ extern "C" {
 #endif
 
 int GetManaAmount(int pnum, int sn);
+bool HasSkillDamage(int sn);
 BYTE GetSkillElement(int sn);
 
 inline void IncreasePlrSkillLvl(int pnum, int sn)

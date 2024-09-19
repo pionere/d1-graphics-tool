@@ -50,7 +50,7 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     if (fileData.size() > sizeof(PkPlayerStruct)) {
         IsHellfireGame = fileData[sizeof(PkPlayerStruct)] != 0;
     }
-
+    QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File %1 vs %2 hell %3").arg(fileData.size()).arg(sizeof(PkPlayerStruct)).arg(IsHellfireGame));
     UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
 
     this->filePath = filePath;
@@ -102,8 +102,18 @@ void D1Hero::setPalette(D1Pal *pal)
 static void RecreateHeroItems(ItemStruct *is, int numItems)
 {
     for (int i = 0; i < numItems; i++, is++) {
-        if (is->_itype != ITYPE_NONE) {
+        if (is->_itype != ITYPE_NONE && is->_itype != ITYPE_PLACEHOLDER && is->_itype != ITYPE_GOLD && is->_iMiscId != IMISC_EAR) {
+            auto tmpId = is->_iIdentified;
+            auto tmpDur = is->_iDurability;
+            auto tmpMaxDur = is->_iMaxDur;
+            auto tmpCh = is->_iCharges;
+            auto tmpMaxCh = is->_iMaxCharges;
             RecreateItem(is->_iSeed, is->_iIdx, is->_iCreateInfo);
+            items[MAXITEMS]._iIdentified = tmpId;
+            items[MAXITEMS]._iDurability = tmpDur;
+            items[MAXITEMS]._iMaxDur = tmpMaxDur;
+            items[MAXITEMS]._iCharges = tmpCh;
+            items[MAXITEMS]._iMaxCharges = tmpMaxCh;
             memcpy(is, &items[MAXITEMS], sizeof(ItemStruct));
         }
     }

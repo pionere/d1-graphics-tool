@@ -32,6 +32,82 @@ int GetManaAmount(int pnum, int sn)
 	return ma;
 }
 
+bool HasSkillDamage(int sn)
+{
+    bool result = false;
+    switch (sn) {
+    case SPL_NULL:
+    case SPL_WALK:
+    case SPL_BLOCK:
+    case SPL_RAGE:
+    case SPL_SHROUD:
+    case SPL_SWAMP:
+    case SPL_STONE:
+    case SPL_INFRA:
+    case SPL_MANASHIELD:
+    case SPL_ATTRACT:
+    case SPL_TELEKINESIS:
+    case SPL_TELEPORT:
+    case SPL_RNDTELEPORT:
+    case SPL_TOWN:
+    case SPL_HEAL:
+    case SPL_HEALOTHER:
+    case SPL_RESURRECT:
+    case SPL_IDENTIFY:
+    case SPL_OIL:
+    case SPL_REPAIR:
+    case SPL_RECHARGE:
+    case SPL_DISARM:
+#ifdef HELLFIRE
+    case SPL_BUCKLE:
+    case SPL_WHITTLE:
+#endif
+         result = false; break;
+    case SPL_ATTACK:
+    case SPL_WHIPLASH:
+    case SPL_WALLOP:
+    case SPL_SWIPE:
+    case SPL_RATTACK:
+    case SPL_POINT_BLANK:
+    case SPL_FAR_SHOT:
+    case SPL_PIERCE_SHOT:
+    case SPL_MULTI_SHOT:
+    case SPL_CHARGE:
+    case SPL_FIREBOLT:
+    case SPL_CBOLT:
+    case SPL_HBOLT:
+    case SPL_LIGHTNING:
+    case SPL_FLASH:
+    case SPL_FIREWALL:
+    case SPL_FIREBALL:
+    case SPL_METEOR:
+    case SPL_BLOODBOIL:
+    case SPL_CHAIN:
+    case SPL_WAVE:
+    case SPL_NOVA:
+    case SPL_INFERNO:
+    case SPL_ELEMENTAL:
+    case SPL_FLARE:
+    case SPL_POISON:
+    case SPL_WIND:
+    case SPL_GUARDIAN:
+    case SPL_GOLEM:
+#ifdef HELLFIRE
+	//case SPL_LIGHTWALL:
+	//case SPL_IMMOLAT:
+    case SPL_FIRERING:
+    case SPL_RUNEFIRE:
+    case SPL_RUNELIGHT:
+    case SPL_RUNENOVA:
+    case SPL_RUNEWAVE:
+    case SPL_RUNESTONE:
+#endif
+        result = true; break;
+    }
+
+    return result;
+}
+
 BYTE GetSkillElement(int sn)
 {
     BYTE res = MISR_NONE;

@@ -772,68 +772,68 @@ int GetBaseMissile(int mtype)
     case MIS_FLASH:
     case MIS_FLASH2:
     case MIS_CHAIN:
-        //case MIS_BLODSTAR:	// TODO: Check beta
-        //case MIS_BONE:		// TODO: Check beta
-        //case MIS_METLHIT:	// TODO: Check beta
+    //case MIS_BLODSTAR:	// TODO: Check beta
+    //case MIS_BONE:		// TODO: Check beta
+    //case MIS_METLHIT:	// TODO: Check beta
     case MIS_RHINO:
     case MIS_CHARGE:
     case MIS_TELEPORT:
     case MIS_RNDTELEPORT:
-        //case MIS_FARROW:
-        //case MIS_DOOMSERP:
+    //case MIS_FARROW:
+    //case MIS_DOOMSERP:
     case MIS_STONE:
     case MIS_SHROUD: break;
-        //case MIS_INVISIBL:
+    //case MIS_INVISIBL:
     case MIS_GUARDIAN: mtype = MIS_FIREBOLT; break;
     case MIS_GOLEM:
-        //case MIS_ETHEREALIZE:
+    //case MIS_ETHEREALIZE:
     case MIS_BLEED: break;
-        //case MIS_EXAPOCA:
+    //case MIS_EXAPOCA:
     case MIS_FIREWALLC: mtype = MIS_FIREWALL; break;
     case MIS_FIREWALL: break;
     case MIS_FIREWAVEC: mtype = MIS_FIREWAVE; break;
     case MIS_FIREWAVE:
     case MIS_METEOR: break;
     case MIS_LIGHTNOVAC: mtype = MIS_LIGHTBALL; break;
-        //case MIS_APOCAC:
+    //case MIS_APOCAC:
     case MIS_HEAL:
     case MIS_HEALOTHER:
     case MIS_RESURRECT:
     case MIS_ATTRACT:
     case MIS_TELEKINESIS:
-        //case MIS_LARROW:
+    //case MIS_LARROW:
     case MIS_OPITEM:
     case MIS_REPAIR:
     case MIS_DISARM: break;
     case MIS_INFERNOC: mtype = MIS_FIREWALL; break;
     case MIS_INFERNO:
-        //case MIS_FIRETRAP:
+    //case MIS_FIRETRAP:
     case MIS_BARRELEX: break;
-        //case MIS_FIREMAN:	// TODO: Check beta
-        //case MIS_KRULL:		// TODO: Check beta
+    //case MIS_FIREMAN:	// TODO: Check beta
+    //case MIS_KRULL:		// TODO: Check beta
     case MIS_CBOLTC: mtype = MIS_CBOLT; break;
     case MIS_CBOLT:
     case MIS_ELEMENTAL:
-        //case MIS_BONESPIRIT:
+    //case MIS_BONESPIRIT:
     case MIS_APOCAC2:
     case MIS_EXAPOCA2:
     case MIS_MANASHIELD:
     case MIS_INFRA:
     case MIS_RAGE: break;
 #ifdef HELLFIRE
-        //case MIS_LIGHTWALLC:
-        //case MIS_LIGHTWALL:
-        //case MIS_FIRENOVAC:
-        //case MIS_FIREBALL2:
-        //case MIS_REFLECT:
-    case MIS_FIRERING: mtype = MIS_FIREWALL;  break;
-        //case MIS_MANATRAP:
-        //case MIS_LIGHTRING:
-    case MIS_RUNEFIRE: mtype = MIS_FIREEXP; break;
+    //case MIS_LIGHTWALLC:
+    //case MIS_LIGHTWALL:
+    //case MIS_FIRENOVAC:
+    //case MIS_FIREBALL2:
+    //case MIS_REFLECT:
+    case MIS_FIRERING:  mtype = MIS_FIREWALL;  break;
+    //case MIS_MANATRAP:
+    //case MIS_LIGHTRING:
+    case MIS_RUNEFIRE:  mtype = MIS_FIREEXP;   break;
     case MIS_RUNELIGHT: mtype = MIS_LIGHTNING; break;
-    case MIS_RUNENOVA: mtype = MIS_LIGHTBALL; break;
-    case MIS_RUNEWAVE: mtype = MIS_FIREWAVE; break;
-    case MIS_RUNESTONE: mtype = MIS_STONE; break;
+    case MIS_RUNENOVA:  mtype = MIS_LIGHTBALL; break;
+    case MIS_RUNEWAVE:  mtype = MIS_FIREWAVE;  break;
+    case MIS_RUNESTONE: mtype = MIS_STONE;     break;
     case MIS_FIREEXP:
     case MIS_HORKDMN:
     case MIS_PSYCHORB:
