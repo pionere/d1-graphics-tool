@@ -326,6 +326,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
     bool hth = !mis;
     PlayerDamage result = { 0 };
     if (mis) {
+        result.mis = true;
         int mtype = spelldata[sn].sMissile;
         mtype = GetBaseMissile(mtype);
         result.resMis = GetMissileElement(mtype);
@@ -337,6 +338,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
     }
 
     if (hth) {
+        result.hth = true;
         result.chanceHth = hero->getHitChance() - mon->_mArmorClass;
         int mindam, maxdam;
         mindam = hero->getTotalMinDam(mon);
@@ -369,6 +371,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
 
 void MonsterDetailsWidget::updateFields()
 {
+    QMessageBox::critical(nullptr, "Error", QApplication::tr("MonsterDetailsWidget::updateFields meteor%1").arg(this->hero->getSkillLvl(SPL_METEOR)));
     int mi;
     // update dun-type combobox
     QComboBox *dunComboBox = this->ui->dunTypeComboBox;
@@ -538,7 +541,8 @@ void MonsterDetailsWidget::updateFields()
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Selected skill %1.").arg(mi));
     skillsComboBox->clear();
     for (int sn = 0; sn < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); sn++) {
-        if (sn != SPL_ATTACK) {
+        if ((spelldata[sn].sUseFlags & this->hero->getSkillFlags()) != spelldata[sn].sUseFlags) continue;
+        // if (sn != SPL_ATTACK) {
             if (!HasSkillDamage(sn)) continue;
             /*if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
                 continue;
@@ -546,7 +550,7 @@ void MonsterDetailsWidget::updateFields()
             if (this->hero->getSkillLvl(sn) == 0 && !(this->hero->getFixedSkills() & SPELL_MASK(sn)) && !SPELL_RUNE(sn)) {
                 continue;
             }
-        }
+        // }
         skillsComboBox->addItem(spelldata[sn].sNameText, QVariant::fromValue(sn));
     }
     mi = skillsComboBox->findData(mi);
@@ -555,7 +559,7 @@ void MonsterDetailsWidget::updateFields()
     skillsComboBox->setCurrentIndex(mi);
 
     int sn = skillsComboBox->currentData().value<int>();
-    QMessageBox::critical(nullptr, "Error", QApplication::tr("Using skill %1.").arg(sn));
+    // QMessageBox::critical(nullptr, "Error", QApplication::tr("Using skill meteor %1.").arg(this->hero->getSkillLvl(SPL_METEOR)));
     const PlayerDamage plrDam = GetPlayerDamage(this->hero, sn, mon);
 
     this->ui->plrDamageSep->setVisible(plrDam.mis);

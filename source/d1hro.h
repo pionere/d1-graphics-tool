@@ -130,6 +130,7 @@ public:
     int getTotalMinDam(const MonsterStruct *mon) const;
     int getTotalMaxDam(const MonsterStruct *mon) const;
 
+    int getSkillFlags() const;
     int getItemFlags() const;
     int getSkillCost(int sn) const;
 	/*

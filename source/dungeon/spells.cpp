@@ -61,6 +61,7 @@ bool HasSkillDamage(int sn)
 #ifdef HELLFIRE
     case SPL_BUCKLE:
     case SPL_WHITTLE:
+    case SPL_RUNESTONE:
 #endif
          result = false; break;
     case SPL_ATTACK:
@@ -100,7 +101,6 @@ bool HasSkillDamage(int sn)
     case SPL_RUNELIGHT:
     case SPL_RUNENOVA:
     case SPL_RUNEWAVE:
-    case SPL_RUNESTONE:
 #endif
         result = true; break;
     }

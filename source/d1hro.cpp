@@ -59,6 +59,8 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
 
     UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
 
+    plr._pDunLevel = DLV_CATHEDRAL1;
+
     IsHellfireGame = gameHellfire;
 
     this->filePath = filePath;
@@ -1255,6 +1257,11 @@ int D1Hero::getTotalMaxDam(const MonsterStruct *mon) const
 	dam += fdam + ldam + mdam + adam;
 
 	return dam >> 6;
+}
+
+int D1Hero::getSkillFlags() const
+{
+    return players[this->pnum]._pSkillFlags;
 }
 
 int D1Hero::getItemFlags() const
