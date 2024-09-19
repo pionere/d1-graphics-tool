@@ -805,8 +805,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     palLayout->addWidget(this->trnUniqueWidget);
     palLayout->addWidget(this->trnBaseWidget);
 
+    // initialize context
+    IsHellfireGame = this->hero->isHellfire();
+    gnDifficulty = this->hero->getRank();
+
     QWidget *view;
-        // build a CelView
+        // build a HeroView
         this->heroView = new CelView(this);
         this->heroView->initialize(this->pal, this->hero, this->bottomPanelHidden);
 

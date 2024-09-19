@@ -104,7 +104,6 @@ bool HasSkillDamage(int sn)
 #endif
         result = true; break;
     }
-
     return result;
 }
 

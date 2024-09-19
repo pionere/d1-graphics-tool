@@ -32,16 +32,11 @@ HeroDetailsWidget::~HeroDetailsWidget()
     delete ui;
 }
 
-static bool isHeroStandardClass(int hc)
-{
-    return hc == PC_WARRIOR || hc == PC_ROGUE || hc == PC_SORCERER;
-}
-
 void HeroDetailsWidget::initialize(D1Hero *h)
 {
     this->hero = h;
-    IsHellfireGame = !isHeroStandardClass(h->getClass());
-    gnDifficulty = h->getRank();
+    // IsHellfireGame = !isHeroStandardClass(h->isHellfire());
+    // gnDifficulty = h->getRank();
 
     this->updateFields();
 }
@@ -97,8 +92,8 @@ void HeroDetailsWidget::updateFields()
 
     hc = this->hero->getClass();
     // set context-fields
-    this->ui->gameHellfireCheckBox->setChecked(IsHellfireGame);
-    this->ui->gameHellfireCheckBox->setEnabled(isHeroStandardClass(hc));
+    this->ui->gameHellfireCheckBox->setChecked(this->hero->isHellfire());
+    this->ui->gameHellfireCheckBox->setEnabled(D1Hero::isStandardClass(hc));
     this->ui->gameDifficultyComboBox->setCurrentIndex(gnDifficulty);
 
     // set hero-fields
@@ -191,7 +186,7 @@ void HeroDetailsWidget::on_gameHellfireCheckBox_clicked()
 {
     IsHellfireGame = this->ui->gameHellfireCheckBox->isChecked();
 
-    this->hero->update(); // update items
+    this->hero->setHellfire(IsHellfireGame);
 
     dMainWindow().updateWindow();
 }
@@ -225,9 +220,9 @@ void HeroDetailsWidget::on_heroNameEdit_escPressed()
 void HeroDetailsWidget::on_heroClassComboBox_activated(int index)
 {
     this->hero->setClass(index);
-    if (!isHeroStandardClass(index) && !IsHellfireGame) {
+
+    if (!IsHellfireGame && this->hero->isHellfire()) {
         IsHellfireGame = true;
-        this->hero->update(); // update items
     }
 
     dMainWindow().updateWindow();

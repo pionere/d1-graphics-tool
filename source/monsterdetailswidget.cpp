@@ -535,14 +535,14 @@ void MonsterDetailsWidget::updateFields()
     // update skill combobox
     QComboBox *skillsComboBox = this->ui->heroSkillsComboBox;
     mi = skillsComboBox->currentData().value<int>();
-    QMessageBox::critical(nullptr, "Error", QApplication::tr("Selected skill %1.").arg(mi));
+    // QMessageBox::critical(nullptr, "Error", QApplication::tr("Selected skill %1.").arg(mi));
     skillsComboBox->clear();
     for (int sn = 0; sn < IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO; sn++) {
-        if (!HasSkillDamage(sn)) continue;
         if (sn != SPL_ATTACK) {
-            if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
+            if (!HasSkillDamage(sn)) continue;
+            /*if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
                 continue;
-            }
+            }*/
             if (this->hero->getSkillLvl(sn) == 0 && !(this->hero->getFixedSkills() & SPELL_MASK(sn)) && !SPELL_RUNE(sn)) {
                 continue;
             }
@@ -550,7 +550,7 @@ void MonsterDetailsWidget::updateFields()
         skillsComboBox->addItem(spelldata[sn].sNameText, QVariant::fromValue(sn));
     }
     mi = skillsComboBox->findData(mi);
-    QMessageBox::critical(nullptr, "Error", QApplication::tr("Skill index %1.").arg(mi));
+    // QMessageBox::critical(nullptr, "Error", QApplication::tr("Skill index %1.").arg(mi));
     if (mi < 0) mi = 0;
     skillsComboBox->setCurrentIndex(mi);
 

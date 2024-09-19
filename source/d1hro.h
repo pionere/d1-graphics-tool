@@ -18,6 +18,7 @@ public:
     ~D1Hero();
 
     static D1Hero* instance();
+    static bool isStandardClass();
 
     bool load(const QString &filePath, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
@@ -39,6 +40,8 @@ public:
     void setFilePath(const QString &filePath);
     bool isModified() const;
     void setModified(bool modified = true);
+    bool isHellfire() const;
+    void setHellfire(bool hellfire);
 
     const char* getName() const;
     void setName(const QString &name);
@@ -146,9 +149,11 @@ public:
 private:
     D1Hero() = default;
     void rebalance();
+    void calcInv();
 
     int pnum;
     QString filePath;
     bool modified = false;
+    bool isHellfire = false;
     D1Pal *palette = nullptr;
 };

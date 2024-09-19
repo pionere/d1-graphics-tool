@@ -29,6 +29,11 @@ D1Hero* D1Hero::instance()
     return nullptr;
 }
 
+bool D1Hero::isStandardClass(int hc)
+{
+    return hc == PC_WARRIOR || hc == PC_ROGUE || hc == PC_SORCERER;
+}
+
 D1Hero::~D1Hero()
 {
     plr._pActive = FALSE;
@@ -47,11 +52,14 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     if (fileData.size() < sizeof(PkPlayerStruct))
         return false;
 
-    if (fileData.size() > sizeof(PkPlayerStruct)) {
-        IsHellfireGame = fileData[sizeof(PkPlayerStruct)] != 0;
-    }
-    QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("File %1 vs %2 hell %3").arg(fileData.size()).arg(sizeof(PkPlayerStruct)).arg(IsHellfireGame));
+    this->isHellfire = fileData.size() > sizeof(PkPlayerStruct) ? fileData[sizeof(PkPlayerStruct)] != 0 : isHeroStandardClass(((const PkPlayerStruct*)fileData.constData())->pClass);
+
+    bool gameHellfire = IsHellfireGame;
+    IsHellfireGame = this->isHellfire;
+
     UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
+
+    IsHellfireGame = gameHellfire;
 
     this->filePath = filePath;
     this->modified = false;
@@ -76,9 +84,16 @@ void D1Hero::create(unsigned index)
 
     selhero_heroInfo.hiName[0] = '\0';
 
+    this->isHellfire = isHeroStandardClass(index);
+
+    bool gameHellfire = IsHellfireGame;
+    IsHellfireGame = this->isHellfire;
+
     CreatePlayer(this->pnum, selhero_heroInfo);
 
-    CalcPlrInv(this->pnum, false);
+    IsHellfireGame = gameHellfire;
+
+    this->calcInv();
 
     this->filePath.clear();
     this->modified = true;
@@ -122,14 +137,19 @@ static void RecreateHeroItems(ItemStruct *is, int numItems)
 void D1Hero::update()
 {
     // update hero-items
+    bool gameHellfire = IsHellfireGame;
+    IsHellfireGame = this->isHellfire;
+
     RecreateHeroItems(&plr._pInvBody[0], NUM_INVLOC);
     RecreateHeroItems(&plr._pSpdList[0], MAXBELTITEMS);
     RecreateHeroItems(&plr._pInvList[0], NUM_INV_GRID_ELEM);
+
+    IsHellfireGame = gameHellfire;
     // - enforce TWOHAND/ONEHAND rules
     this->rebalance();
 
     // update hero-stats
-    CalcPlrInv(this->pnum, false);
+    this->calcInv()
 }
 
 static QPainter *InvPainter = nullptr;
@@ -606,7 +626,7 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
         }
     }
     memcpy(pi, is, sizeof(ItemStruct));
-    CalcPlrInv(this->pnum, false);
+    this->calcInv();
     this->modified = true;
     // LogErrorF("D1Hero::addItem done");
     return true;
@@ -615,7 +635,7 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
 void D1Hero::swapItem(int dst_ii, int src_ii)
 {
     if (SwapPlrItem(this->pnum, dst_ii, src_ii)) {
-        CalcPlrInv(this->pnum, false);
+        this->calcInv();
         this->modified = true;
     }
 }
@@ -656,6 +676,21 @@ void D1Hero::setModified(bool modified)
     this->modified = modified;
 }
 
+bool D1Hero::isHellfire() const
+{
+    return this->isHellfire;
+}
+
+void D1Hero::setHellfire(bool hellfire)
+{
+    if (this->isHellfire != hellfire) {
+        this->isHellfire = hellfire;
+        this->modified = true;
+
+        this->update();
+    }
+}
+
 const char* D1Hero::getName() const
 {
     return players[this->pnum]._pName;
@@ -688,10 +723,13 @@ void D1Hero::setClass(int cls)
     if (players[this->pnum]._pClass == cls)
         return;
     players[this->pnum]._pClass = cls;
+    if (!D1Hero::isStandardClass(cls)) {
+        this->setHellfire(true);
+    }
 
     this->rebalance();
 
-    CalcPlrInv(this->pnum, false);
+    this->calcInv();
 
     this->modified = true;
 }
@@ -724,7 +762,7 @@ void D1Hero::setLevel(int level)
     }
     players[this->pnum]._pExperience = PlrExpLvlsTbl[level - 1];
 
-    CalcPlrInv(this->pnum, false);
+    this->calcInv();
 
     this->modified = true;
 }
@@ -1416,7 +1454,17 @@ void D1Hero::rebalance()
         }
     }
 
-    // CalcPlrInv(this->pnum, false); ?
+    // this->calcInv(); ?
+}
+
+void D1Hero::calcInv()
+{
+    bool gameHellfire = IsHellfireGame;
+    IsHellfireGame = this->isHellfire;
+
+    CalcPlrInv(this->pnum, false);
+
+    IsHellfireGame = gameHellfire;
 }
 
 bool D1Hero::save(const SaveAsParam &params)
