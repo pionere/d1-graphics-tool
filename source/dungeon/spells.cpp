@@ -143,7 +143,7 @@ BYTE GetSkillElement(int sn)
 
 void GetSkillName(int sn)
 {
-    snprintf(infostr, sizeof(infostr), SPELL_RUNE(sn) ? "%s (rune)", "%s", spelldata[sn].sNameText);
+    snprintf(infostr, sizeof(infostr), SPELL_RUNE(sn) ? "%s (rune)" : "%s", spelldata[sn].sNameText);
 }
 
 DEVILUTION_END_NAMESPACE
