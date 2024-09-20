@@ -437,7 +437,7 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 			bf = true;
 	}
 #endif*/
-	maxdam = plr._pMaxHP >> (2 - 1 + 1); // ~1/4 hp - halved by resists, doubled by MissToPlr
+	maxdam = plr._pMaxHP >> (2 + 1 - 1); // ~1/4 hp - halved by resists, doubled by MissToPlr
 	if (wRight->_itype == ITYPE_SHIELD && wRight->_iStatFlag
 	 && (gfx == ANIM_ID_UNARMED || gfx == ANIM_ID_SWORD || gfx == ANIM_ID_MACE)) {
 		tac += ((plr._pDexterity - (1 << 7)) * wRight->_iAC) >> 7;
@@ -447,7 +447,7 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 		static_assert((int)ANIM_ID_MACE + 1 == (int)ANIM_ID_MACE_SHIELD, "CalcPlrItemVals uses inc to set gfx with shield III.");
 		gfx++;
 
-		maxdam += wRight->_iAC << (6 + 1 - 1); // 2*AC - halved by resists, doubled by MissToPlr
+		maxdam += wRight->_iAC << (6 + 1 + 1 - 1); // 2*AC - halved by resists, doubled by MissToPlr
     }
 
 	plr._pIChMinDam = maxdam >> 1;
@@ -542,7 +542,7 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 	plr._pICritChance = cc;
 
 	// calculate block chance
-	plr._pIBlockChance = (plr._pSkillFlags & SFLAG_BLOCK) ? std::min(UCHAR_MAX, (std::min(plr._pStrength, plr._pDexterity)/* >> 1*/)) : 0;
+	plr._pIBlockChance = (plr._pSkillFlags & SFLAG_BLOCK) ? std::min(plr._pStrength, plr._pDexterity) : 0;
 
 	// calculate walk speed
 	plr._pIWalkSpeed = WalkSpeed(plr._pIFlags);

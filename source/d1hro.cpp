@@ -54,11 +54,11 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
 
     this->hellfire = fileData.size() > sizeof(PkPlayerStruct) ? fileData[sizeof(PkPlayerStruct)] != 0 : D1Hero::isStandardClass(((const PkPlayerStruct*)fileData.constData())->pClass);
 
-    bool gameHellfire = IsHellfireGame;
+    auto gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hellfire;
 
     UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
-    plr._pDunLevel = DLV_CATHEDRAL1;
+    // plr._pDunLevel = DLV_CATHEDRAL1;
 
     IsHellfireGame = gameHellfire;
 
@@ -89,11 +89,11 @@ void D1Hero::create(unsigned index)
 
     this->hellfire = D1Hero::isStandardClass(index);
 
-    bool gameHellfire = IsHellfireGame;
+    auto gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hellfire;
 
     CreatePlayer(this->pnum, selhero_heroInfo);
-    plr._pDunLevel = DLV_CATHEDRAL1;
+    // plr._pDunLevel = DLV_CATHEDRAL1;
 
     IsHellfireGame = gameHellfire;
 
@@ -141,7 +141,7 @@ static void RecreateHeroItems(ItemStruct *is, int numItems)
 void D1Hero::update()
 {
     // update hero-items
-    bool gameHellfire = IsHellfireGame;
+    auto gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hellfire;
 
     RecreateHeroItems(&plr._pInvBody[0], NUM_INVLOC);
@@ -766,7 +766,7 @@ void D1Hero::setLevel(int level)
     }
     players[this->pnum]._pExperience = PlrExpLvlsTbl[level - 1];
 
-    this->calcInv();
+    this->calcInv(); // update item-stats, damage, etc...
 
     this->modified = true;
 }
@@ -802,6 +802,7 @@ void D1Hero::setStrength(int value)
     while (value < players[this->pnum]._pBaseStr) {
         this->subStrength();
     }
+    this->calcInv(); // update item-stats
 }
 
 int D1Hero::getBaseStrength() const
@@ -839,6 +840,7 @@ void D1Hero::setDexterity(int value)
     while (value < players[this->pnum]._pBaseDex) {
         this->subDexterity();
     }
+    this->calcInv(); // update item-stats
 }
 
 int D1Hero::getBaseDexterity() const
@@ -876,6 +878,7 @@ void D1Hero::setMagic(int value)
     while (value < players[this->pnum]._pBaseMag) {
         this->subMagic();
     }
+    this->calcInv(); // update item-stats
 }
 
 int D1Hero::getBaseMagic() const
@@ -913,6 +916,7 @@ void D1Hero::setVitality(int value)
     while (value < players[this->pnum]._pBaseVit) {
         this->subVitality();
     }
+    this->calcInv(); // update damage
 }
 
 int D1Hero::getBaseVitality() const
@@ -998,6 +1002,7 @@ void D1Hero::setSkillLvlBase(int sn, int level)
         return;
 
     players[this->pnum]._pSkillLvlBase[sn] = level;
+    this->calcInv(); // update _pSkillLvl
     this->modified = true;
 }
 
@@ -1468,12 +1473,15 @@ void D1Hero::rebalance()
 
 void D1Hero::calcInv()
 {
-    bool gameHellfire = IsHellfireGame;
-    IsHellfireGame = this->hellfire;
+    // bool gameHellfire = IsHellfireGame;
+    // IsHellfireGame = this->hellfire;
+    auto dunLevel = plr._pDunLevel;
+    plr._pDunLevel = DLV_CATHEDRAL1;
 
     CalcPlrInv(this->pnum, false);
 
-    IsHellfireGame = gameHellfire;
+    plr._pDunLevel = dunLevel;
+    // IsHellfireGame = gameHellfire;
 }
 
 bool D1Hero::save(const SaveAsParam &params)

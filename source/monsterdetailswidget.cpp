@@ -371,7 +371,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
 
 void MonsterDetailsWidget::updateFields()
 {
-    QMessageBox::critical(nullptr, "Error", QApplication::tr("MonsterDetailsWidget::updateFields meteor%1").arg(this->hero->getSkillLvl(SPL_METEOR)));
+    // QMessageBox::critical(nullptr, "Error", QApplication::tr("MonsterDetailsWidget::updateFields meteor%1").arg(this->hero->getSkillLvl(SPL_METEOR)));
     int mi;
     // update dun-type combobox
     QComboBox *dunComboBox = this->ui->dunTypeComboBox;
@@ -515,27 +515,7 @@ void MonsterDetailsWidget::updateFields()
     this->ui->monsterKnockbackCheckBox->setChecked((flags & MFLAG_KNOCKBACK) != 0);
 
     // player vs. monster info
-    int hper, mindam, maxdam;
-    hper = this->hero->getHitChance() - mon->_mArmorClass;
-    hper = CheckHit(hper);
-    this->ui->plrHitChance->setText(QString("%1%").arg(hper));
-    const MonsterDamage monDamage = GetMonsterDamage(mon, this->hero);
-    if (monDamage.hth) {
-        hper = monDamage.chanceHth;
-        hper = CheckHit(hper);
-        this->ui->monHitChance->setText(QString("%1%").arg(hper));
-    } else {
-        this->ui->monHitChance->setText(QString("-"));
-    }
-    this->ui->monHitChanceSep->setVisible(monDamage.mis || monDamage.spec);
-    this->ui->monHitChance2->setVisible(monDamage.mis || monDamage.spec);
-    if (monDamage.mis || monDamage.spec) {
-        hper = monDamage.mis ? monDamage.chanceMis : monDamage.chanceSpec;
-        hper = CheckHit(hper);
-        this->ui->monHitChance2->setText(QString("%1%").arg(hper));
-    }
-
-    // update skill combobox
+    // - update skill combobox
     QComboBox *skillsComboBox = this->ui->heroSkillsComboBox;
     mi = skillsComboBox->currentData().value<int>();
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Selected skill %1.").arg(mi));
@@ -558,9 +538,40 @@ void MonsterDetailsWidget::updateFields()
     if (mi < 0) mi = 0;
     skillsComboBox->setCurrentIndex(mi);
 
+    int hper, mindam, maxdam;
     int sn = skillsComboBox->currentData().value<int>();
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Using skill meteor %1.").arg(this->hero->getSkillLvl(SPL_METEOR)));
     const PlayerDamage plrDam = GetPlayerDamage(this->hero, sn, mon);
+    if (plrDam.hth) {
+        hper = plrDam.chanceHth;
+        hper = CheckHit(hper);
+        this->ui->plrHitChance->setText(QString("%1%").arg(hper));
+    } else {
+        this->ui->monHitChance->setText(QString("-"));
+    }
+    this->ui->plrHitChanceSep->setVisible(plrDam.mis);
+    this->ui->plrHitChance2->setVisible(plrDam.mis);
+    if (plrDam.mis) {
+        hper = plrDam.chanceMis;
+        hper = CheckHit(hper);
+        this->ui->plrHitChance2->setText(QString("%1%").arg(hper));
+    }
+
+    const MonsterDamage monDamage = GetMonsterDamage(mon, this->hero);
+    if (monDamage.hth) {
+        hper = monDamage.chanceHth;
+        hper = CheckHit(hper);
+        this->ui->monHitChance->setText(QString("%1%").arg(hper));
+    } else {
+        this->ui->monHitChance->setText(QString("-"));
+    }
+    this->ui->monHitChanceSep->setVisible(monDamage.mis || monDamage.spec);
+    this->ui->monHitChance2->setVisible(monDamage.mis || monDamage.spec);
+    if (monDamage.mis || monDamage.spec) {
+        hper = monDamage.mis ? monDamage.chanceMis : monDamage.chanceSpec;
+        hper = CheckHit(hper);
+        this->ui->monHitChance2->setText(QString("%1%").arg(hper));
+    }
 
     this->ui->plrDamageSep->setVisible(plrDam.mis);
     this->ui->plrDamage2->setVisible(plrDam.mis);
@@ -654,7 +665,7 @@ void MonsterDetailsWidget::on_plrCountSpinBox_valueChanged(int value)
 
 void MonsterDetailsWidget::on_heroSkillsComboBox_activated(int index)
 {
-    QMessageBox::critical(nullptr, "Error", QApplication::tr("heroSkillsComboBox new index %1.").arg(index));
+    // QMessageBox::critical(nullptr, "Error", QApplication::tr("heroSkillsComboBox new index %1.").arg(index));
 
     this->updateFields();
 }

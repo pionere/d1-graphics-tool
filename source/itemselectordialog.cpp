@@ -428,7 +428,7 @@ void ItemSelectorDialog::updateFields()
     uniqComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
 
     if ((ci & ~CF_LEVEL) != 0) {
-        for (int i = 0; i < (IsHellfireGame ? NUM_UITEM : NUM_UITEM_DIABLO); i++) {
+        for (int i = 0; i < (this->hero->isHellfire() ? NUM_UITEM : NUM_UITEM_DIABLO); i++) {
             const UniqItemData &uid = UniqueItemList[i];
             if (uid.UIUniqType == AllItemsList[idx].iUniqType && uid.UIMinLvl <= lvl) {
                 uniqComboBox->addItem(uid.UIName, QVariant::fromValue(i));
@@ -805,6 +805,8 @@ bool ItemSelectorDialog::recreateItem()
     }
 
     int counter = 0;
+    auto gameHellfire = IsHellfireGame;
+    IsHellfireGame = this->hero->isHellfire();
 start:
     RecreateItem(seed, wIdx, wCI);
 
@@ -871,6 +873,7 @@ done:
     if (counter != 0) {
         dProgress() << tr("Succeeded after %1 iterations.").arg(counter + 1);
     }
+    IsHellfireGame = gameHellfire;
     return true;
 }
 

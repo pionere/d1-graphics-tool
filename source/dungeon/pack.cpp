@@ -88,7 +88,7 @@ void UnPackPkItem(const PkItemStruct* src)
 		} else if (idx == IDI_CAMPAIGNMAP) {
 			items[MAXITEMS]._ivalue = src->wValue;
 		}
-		items[MAXITEMS]._iIdentified = src->bId;
+		items[MAXITEMS]._iIdentified = true; // FIXME: REMOVEME src->bId;
 		items[MAXITEMS]._iDurability = src->bDur;
 		items[MAXITEMS]._iMaxDur = src->bMDur;
 		items[MAXITEMS]._iCharges = src->bCh;
