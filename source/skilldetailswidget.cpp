@@ -15,10 +15,13 @@
 #include "dungeon/all.h"
 
 SkillPushButton::SkillPushButton(int sn, SkillDetailsWidget *parent)
-    : QPushButton(spelldata[sn].sNameText, parent)
+    : QPushButton(parent)
     , sn(sn)
     , sdw(parent)
 {
+    GetSkillName(sn);
+    this->setText(infostr);
+
     QString style = "border: none;%1";
 
     const char *color = GetElementColor(GetSkillElement(sn));
@@ -48,7 +51,7 @@ SkillSpinBox::SkillSpinBox(int sn, SkillDetailsWidget *parent)
 
 void SkillSpinBox::on_value_changed(int value)
 {
-    // QMessageBox::critical(this, "Error", tr("SkillSpinBox new value %1.").arg(value));
+    QMessageBox::critical(this, "Error", tr("SkillSpinBox new value %1.").arg(value));
     this->sdw->on_skill_changed(this->sn, value);
 }
 
@@ -127,7 +130,8 @@ void SkillDetailsWidget::updateFields()
 
     sn = this->currentSkill;
     if ((unsigned)sn < NUM_SPELLS) {
-        this->ui->skillName->setText(spelldata[sn].sNameText);
+        GetSkillName(sn);
+        this->ui->skillName->setText(infostr);
         this->ui->skillAnimType->setText(GetAnimTypeText(spelldata[sn].sType));
         int lvl = -1;
         if ((this->hero->getFixedSkills() & SPELL_MASK(sn)) || this->skills[sn] != 0) {
@@ -136,7 +140,7 @@ void SkillDetailsWidget::updateFields()
                 lvl = 0;
         }
         this->ui->skillLevel->setText(lvl >= 0 ? QString::number(lvl) : QString());
-        this->ui->skillManaCost->setText(QString::number(this->hero->getSkillCost(sn)));
+        this->ui->skillManaCost->setText(lvl >= 0 ? QString::number(GetSkillCost(sn, lvl, this->hero->getLevel())) : QString());
 
         QString desc = tr("Not available");
         if (lvl >= 0) {

@@ -341,28 +341,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
         result.hth = true;
         result.chanceHth = hero->getHitChance() - mon->_mArmorClass;
         int mindam, maxdam;
-        mindam = hero->getTotalMinDam(mon);
-        maxdam = hero->getTotalMaxDam(mon);
-
-        switch (sn) {
-        case SPL_ATTACK:
-            break;
-        case SPL_SWIPE:
-            mindam = (mindam * (48 + sl)) >> 6;
-            maxdam = (maxdam * (48 + sl)) >> 6;
-            break;
-        case SPL_WALLOP:
-            mindam = (mindam * (112 + sl)) >> 6;
-            maxdam = (maxdam * (112 + sl)) >> 6;
-            break;
-        case SPL_WHIPLASH:
-            mindam = (mindam * (24 + sl)) >> 6;
-            maxdam = (maxdam * (24 + sl)) >> 6;
-            break;
-        default:
-            QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetPlayerDamage.").arg(sn));
-            break;
-        }
+        hero->getRealDamage(sn, mon, &mindam, &maxdam);
         result.minHth = mindam;
         result.maxHth = maxdam;
     }
@@ -531,7 +510,8 @@ void MonsterDetailsWidget::updateFields()
                 continue;
             }
         // }
-        skillsComboBox->addItem(spelldata[sn].sNameText, QVariant::fromValue(sn));
+        GetSkillName(sn);
+        skillsComboBox->addItem(infostr, QVariant::fromValue(sn));
     }
     mi = skillsComboBox->findData(mi);
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Skill index %1.").arg(mi));
@@ -547,7 +527,7 @@ void MonsterDetailsWidget::updateFields()
         hper = CheckHit(hper);
         this->ui->plrHitChance->setText(QString("%1%").arg(hper));
     } else {
-        this->ui->monHitChance->setText(QString("-"));
+        this->ui->plrHitChance->setText(QString("-"));
     }
     this->ui->plrHitChanceSep->setVisible(plrDam.mis);
     this->ui->plrHitChance2->setVisible(plrDam.mis);

@@ -20,6 +20,8 @@ void CreatePlayer(int pnum, const _uiheroinfo& heroinfo);
 void InitPlayer(int pnum);
 void ClrPlrPath(int pnum);
 
+void GetPlayerDamage(int pnum, int sn, const MonsterStruct *mon, int *mindam, int *maxdam);
+
 void IncreasePlrStr(int pnum);
 void IncreasePlrMag(int pnum);
 void IncreasePlrDex(int pnum);

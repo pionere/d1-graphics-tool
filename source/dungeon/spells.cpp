@@ -32,6 +32,31 @@ int GetManaAmount(int pnum, int sn)
 	return ma;
 }
 
+int GetSkillCost(int sn, int sl, int pl)
+{
+	// mana amount, spell level, adjustment, min mana
+	int ma, sl, adj, mm;
+
+	ma = spelldata[sn].sManaCost;
+	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
+		ma += 2 * pl;
+	}
+
+	sl = sl - 1;
+	if (sl < 0)
+		sl = 0;
+	adj = sl * spelldata[sn].sManaAdj;
+	adj >>= 1;
+	ma -= adj;
+	mm = spelldata[sn].sMinMana;
+	if (mm > ma)
+		ma = mm;
+	// ma <<= 6;
+
+	//return ma * (100 - plr._pISplCost) / 100;
+	return ma;
+}
+
 bool HasSkillDamage(int sn)
 {
     bool result = false;
@@ -114,6 +139,11 @@ BYTE GetSkillElement(int sn)
         res = GetMissileElement(spelldata[sn].sMissile);
     }
     return res;
+}
+
+void GetSkillName(int sn)
+{
+    snprintf(infostr, sizeof(infostr), SPELL_RUNE(sn) ? "%s (rune)", "%s", spelldata[sn].sNameText);
 }
 
 DEVILUTION_END_NAMESPACE

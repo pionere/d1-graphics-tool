@@ -164,8 +164,10 @@ void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon
         QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled missile skill %1 in GetDamageAmt(hero).").arg(sn));
 		break;
 	case SPL_CHARGE:
-        mind = hero->getChMinDam(); // myplr._pIChMinDam
-        maxd = hero->getChMaxDam(); // myplr._pIChMaxDam
+        mind = hero->getChMinDam() * 2; // myplr._pIChMinDam
+        maxd = hero->getChMaxDam() * 2; // myplr._pIChMaxDam
+        mind = ((64 /*+ dist*/) * mind) >> 5;
+        maxd = ((64 /*+ dist*/) * maxd) >> 5;
         // hper = sl * 16 - mon->_mArmorClass;
         break;
 	case SPL_POINT_BLANK:
@@ -415,6 +417,8 @@ void GetSkillDesc(const D1Hero *hero, int sn, int sl)
 	case SPL_CHARGE:
         mind = hero->getChMinDam(); // myplr._pIChMinDam
         maxd = hero->getChMaxDam(); // myplr._pIChMaxDam
+        // mind = ((64 /*+ dist*/) * mind) >> 5;
+        // maxd = ((64 /*+ dist*/) * maxd) >> 5;
         // hper = sl * 16 - mon->_mArmorClass;
         break;
 	case SPL_SWIPE:

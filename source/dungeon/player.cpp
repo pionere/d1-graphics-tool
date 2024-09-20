@@ -6,6 +6,9 @@
 #include "all.h"
 #include <time.h>
 
+#include <QApplication>
+#include <QMessageBox>
+
 DEVILUTION_BEGIN_NAMESPACE
 
 int mypnum;
@@ -322,6 +325,84 @@ void ClrPlrPath(int pnum)
 
 	plr._pWalkpath[0] = DIR_NONE;
 	//memset(plr._pWalkpath, DIR_NONE, sizeof(plr._pWalkpath));
+}
+
+void GetPlayerDamage(int pnum, int sn, const MonsterStruct *mon, int *mindam, int *maxdam)
+{
+    int mind, maxd;
+    bool tmac;
+
+    mind = 0;
+    maxd = 0;
+    tmac = (plr._pIFlags & ISPL_PENETRATE_PHYS) != 0;
+    damsl = plr._pISlMaxDam;
+    if (damsl != 0) {
+        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, damsl, tmac);
+        mind += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, plr._pISlMinDam, tmac);
+    }
+    dambl = plr._pIBlMaxDam;
+    if (dambl != 0) {
+        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, dambl, tmac);
+        mind += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, plr._pIBlMinDam, tmac);
+    }
+    dampc = plr._pIPcMaxDam;
+    if (dampc != 0) {
+        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, dampc, tmac);
+        mind += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, plr._pIPcMinDam, tmac);
+    }
+
+    // tmp = sn == SPL_SWIPE ? 800 : 200;
+    // if (random_low(6, tmp) < plr._pICritChance) {
+    //    dam <<= 1;
+    // }
+
+    switch (sn) {
+    case SPL_ATTACK:
+        break;
+    case SPL_SWIPE:
+        mind = (mind * (48 + sl)) >> 6;
+        maxd = (maxd * (48 + sl)) >> 6;
+        break;
+    case SPL_WALLOP:
+        mind = (mind * (112 + sl)) >> 6;
+        maxd = (maxd * (112 + sl)) >> 6;
+        break;
+    case SPL_WHIPLASH:
+        mind = (mind * (24 + sl)) >> 6;
+        maxd = (maxd * (24 + sl)) >> 6;
+        break;
+    default:
+        QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetPlayerDamage.").arg(sn));
+        ASSUME_UNREACHABLE
+        break;
+    }
+
+    int fdam = plr._pIFMaxDam;
+    if (fdam != 0) {
+        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, fdam, false);
+        mind += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, plr._pIFMinDam, false);
+    }
+    int ldam = plr._pILMaxDam;
+    if (ldam != 0) {
+        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, ldam, false);
+        mind += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, plr._pILMinDam, false);
+    }
+    int mdam = plr._pIMMaxDam;
+    if (mdam != 0) {
+        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, mdam, false);
+        mind += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, plr._pIMMinDam, false);
+    }
+    int adam = plr._pIAMaxDam;
+    if (adam != 0) {
+        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, adam, false);
+        mind += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, plr._pIAMinDam, false);
+    }
+
+    mind >>= 6;
+    maxd >>= 6;
+
+    *mindam = mind;
+    *maxdam = maxd;
 }
 
 void IncreasePlrStr(int pnum)
