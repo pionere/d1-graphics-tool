@@ -195,12 +195,12 @@ void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon
 
         switch (sn) {
         case SPL_POINT_BLANK:
-            mind = (mind * (64 + 32 /*- 16 * mis->_miVar7*/ + sl)) >> 6;
-            maxd = (mind * (64 + 32 /*- 16 * mis->_miVar7*/ + sl)) >> 6;
+            mind = (mind * (64 + /*32 - 16 * mis->_miVar7 +*/ sl)) >> 6;
+            maxd = (mind * (64 + /*32 - 16 * mis->_miVar7 +*/ sl)) >> 6;
             break;
         case SPL_FAR_SHOT:
-            mind = (mind * (/*8 * mis->_miVar7*/ -16 + sl)) >> 5;
-            maxd = (maxd * (/*8 * mis->_miVar7*/ -16 + sl)) >> 5;
+            mind = (mind * (/*8 * mis->_miVar7 - 16 +*/ sl)) >> 5;
+            maxd = (maxd * (/*8 * mis->_miVar7 - 16 +*/ sl)) >> 5;
             break;
         case SPL_PIERCE_SHOT:
             mind = (mind * (32 + sl)) >> 6;
@@ -434,11 +434,11 @@ void GetSkillDesc(const D1Hero *hero, int sn, int sl)
         snprintf(infostr, sizeof(infostr), "Dam Mpl.: %d%%", k);
         return;
 	case SPL_POINT_BLANK:
-        k = (100 * (64 + 32 /*- 16 * mis->_miVar7*/ + sl)) >> 6;
+        k = (100 * (64 + /*32 - 16 * mis->_miVar7 +*/ sl)) >> 6;
         snprintf(infostr, sizeof(infostr), "Dam Mpl. <= %d%%", k);
         return;
 	case SPL_FAR_SHOT:
-        k = (100 * (/*8 * mis->_miVar7*/ - 16 + sl)) >> 5;
+        k = (100 * (/*8 * mis->_miVar7 - 16 +*/ sl)) >> 5;
         snprintf(infostr, sizeof(infostr), "Dam Mpl. >= %d%%", k);
         return;
 	case SPL_PIERCE_SHOT:

@@ -93,6 +93,7 @@ void D1Hero::create(unsigned index)
     IsHellfireGame = this->hellfire;
 
     CreatePlayer(this->pnum, selhero_heroInfo);
+    InitPlayer(this->pnum);
     // plr._pDunLevel = DLV_CATHEDRAL1;
 
     IsHellfireGame = gameHellfire;
