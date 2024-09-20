@@ -190,16 +190,22 @@ typedef struct MonsterDamage {
 static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *hero)
 {
     bool hth = false;
-    bool special = false; // special (hit2/dam2 + afnum2)
+    bool special = false; // hit2/dam2 + afnum2
+    bool charge = false;  // (hit * 8)/dam2
     int mtype = -1;
     bool ranged_special; // aiParam1 + afnum2
     switch (mon->_mAI.aiType) {
     case AI_LACHDAN:
         break;
+    case AI_RHINO: // + charge
+    case AI_SNAKE: // + charge
+        hth = true;
+        charge = true;
+        special = true;
+        break;
     case AI_ZOMBIE:
     case AI_SKELSD:
     case AI_SCAV:
-    case AI_RHINO: // + charge
     case AI_FALLEN:
     case AI_SKELKING:
     case AI_BAT:   // + MIS_LIGHTNING if MT_XBAT
@@ -208,7 +214,6 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
     //case AI_FIREMAN: // MIS_KRULL
     case AI_GOLUM:
     case AI_SNOTSPIL:
-    case AI_SNAKE:
     case AI_WARLORD:
 #ifdef HELLFIRE
     case AI_HORKDMN:
@@ -276,7 +281,8 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
             maxdam = 1;
         result.minSpec = mindam;
         result.maxSpec = maxdam;
-        result.chanceSpec = 30 + mon->_mHit2 + (2 * mon->_mLevel) - hero->getAC();
+        result.chanceSpec = 30 + (2 * mon->_mLevel) - hero->getAC();
+        result.chanceSpec += charge ? mon->_mHit * 8 : mon->_mHit2;
     }
     if (mtype != -1 && mtype != MIS_SWAMPC) {
         result.mis = true;
@@ -335,6 +341,8 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
         result.minMis = mindam;
         result.maxMis = maxdam;
         result.chanceMis = GetPlrMisHitChance(mtype, hero, mon);
+        if (sn == SPL_CHARGE)
+            result.chanceMis = sl * 16 - mon->_mArmorClass;
     }
 
     if (hth) {

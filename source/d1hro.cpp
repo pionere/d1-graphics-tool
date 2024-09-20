@@ -561,11 +561,12 @@ const ItemStruct *D1Hero::item(int ii) const
     return PlrItem(this->pnum, ii);
 }
 
-bool D1Hero::addItem(int dst_ii, ItemStruct *is)
+bool D1Hero::addInvItem(int dst_ii, ItemStruct *is)
 {
-    // LogErrorF("D1Hero::addItem %d type %d", dst_ii, is->_itype);
-    if (is->_itype == ITYPE_NONE)
-        return false;
+    // LogErrorF("D1Hero::addInvItem %d type %d", dst_ii, is->_itype);
+    if (is->_itype == ITYPE_NONE) {
+        return this->swapInvItem(dst_ii, INVITEM_NONE);
+    }
     ItemStruct *pi;
     if (dst_ii < NUM_INVLOC) {
         pi = PlrItem(this->pnum, dst_ii);
@@ -577,12 +578,12 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
                     ItemStruct *ri = PlrItem(this->pnum, INVLOC_HAND_RIGHT);
                     if (ri->_itype != ITYPE_NONE) {
                         // non-empty right + new two handed weapon -> move the right item to the inventory
-                        this->swapItem(INVLOC_HAND_RIGHT, INVITEM_NONE);
+                        this->swapInvItem(INVLOC_HAND_RIGHT, INVITEM_NONE);
                     }
                 } else /*if (dst_ii == INVLOC_HAND_RIGHT) */{
                     if (pi->_itype != ITYPE_NONE) {
                         // non-empty right + new two handed weapon -> move the right item to the inventory
-                        this->swapItem(INVLOC_HAND_RIGHT, INVITEM_NONE);
+                        this->swapInvItem(INVLOC_HAND_RIGHT, INVITEM_NONE);
                     }
                     // new two handed weapon to the right -> force to the left hand
                     pi = PlrItem(this->pnum, INVLOC_HAND_LEFT);
@@ -598,7 +599,7 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
                     ItemStruct *li = PlrItem(this->pnum, INVLOC_HAND_LEFT);
                     if (li->_itype != ITYPE_NONE && TWOHAND_WIELD(&plr, li)) {
                         // two handed + new weapon -> move the two handed to the inventory
-                        this->swapItem(INVLOC_HAND_LEFT, INVITEM_NONE);
+                        this->swapInvItem(INVLOC_HAND_LEFT, INVITEM_NONE);
                     } else if (li->_itype == ITYPE_NONE && pi->_iClass == ICLASS_WEAPON) {
                         // empty left + new weapon -> force to the left hand
                         pi = li;
@@ -632,16 +633,18 @@ bool D1Hero::addItem(int dst_ii, ItemStruct *is)
     memcpy(pi, is, sizeof(ItemStruct));
     this->calcInv();
     this->modified = true;
-    // LogErrorF("D1Hero::addItem done");
+    // LogErrorF("D1Hero::addInvItem done");
     return true;
 }
 
-void D1Hero::swapItem(int dst_ii, int src_ii)
+bool D1Hero::swapInvItem(int dst_ii, int src_ii)
 {
-    if (SwapPlrItem(this->pnum, dst_ii, src_ii)) {
+    bool result = SwapPlrItem(this->pnum, dst_ii, src_ii);
+    if (result) {
         this->calcInv();
         this->modified = true;
     }
+    return result;
 }
 
 void D1Hero::renameItem(int ii, QString &name)
@@ -1371,32 +1374,32 @@ void D1Hero::rebalance()
     ItemStruct *li = PlrItem(this->pnum, INVLOC_HAND_LEFT);
     if (ri->_itype != ITYPE_NONE) {
         if (TWOHAND_WIELD(&plr, ri)) {
-            this->swapItem(INVLOC_HAND_RIGHT, INVITEM_NONE);
+            this->swapInvItem(INVLOC_HAND_RIGHT, INVITEM_NONE);
         } else {
             if (li->_itype != ITYPE_NONE) {
                 if (TWOHAND_WIELD(&plr, li)) {
                     // twohand left + non-empty right -> move right to the inventory
-                    this->swapItem(INVLOC_HAND_RIGHT, INVITEM_NONE);
+                    this->swapInvItem(INVLOC_HAND_RIGHT, INVITEM_NONE);
                 } else if (li->_iClass != ICLASS_WEAPON) {
                     if (ri->_iClass != ICLASS_WEAPON) {
                         // shield left + shield right -> move left to the inventory
-                        this->swapItem(INVLOC_HAND_LEFT, INVITEM_NONE);
+                        this->swapInvItem(INVLOC_HAND_LEFT, INVITEM_NONE);
                     } else {
                         // shield left + weapon right -> swap hands
-                        this->swapItem(INVLOC_HAND_RIGHT, INVLOC_HAND_LEFT);
+                        this->swapInvItem(INVLOC_HAND_RIGHT, INVLOC_HAND_LEFT);
                     }
                 }
             } else {
                 if (ri->_iClass == ICLASS_WEAPON) {
                     // empty left + weapon right -> move the weapon to the left
-                    this->swapItem(INVLOC_HAND_RIGHT, INVLOC_HAND_LEFT);
+                    this->swapInvItem(INVLOC_HAND_RIGHT, INVLOC_HAND_LEFT);
                 }
             }
         }
     } else {
         if (li->_itype != ITYPE_NONE && li->_iClass != ICLASS_WEAPON) {
             // shield left + empty right -> move shield to the right hand
-            this->swapItem(INVLOC_HAND_RIGHT, INVLOC_HAND_LEFT);
+            this->swapInvItem(INVLOC_HAND_RIGHT, INVLOC_HAND_LEFT);
         }
     }
 

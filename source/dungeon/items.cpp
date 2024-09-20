@@ -2260,6 +2260,8 @@ bool SwapPlrItem(int pnum, int dst_ii, int src_ii)
     }
 
     ItemStruct* di = PlrItem(pnum, dst_ii);
+    if (si->_itype == ITYPE_NONE && di->_itype == ITYPE_NONE)
+        return false;
     // LogErrorF("SwapPlrItem swap 3 %d / %d", dst_ii, di != nullptr);
     BubbleSwapItem(si, di);
     // LogErrorF("SwapPlrItem swap done");

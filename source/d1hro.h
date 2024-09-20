@@ -30,8 +30,8 @@ public:
 
     QImage getEquipmentImage(int ii) const;
     const ItemStruct *item(int ii) const;
-    bool addItem(int dst_ii, ItemStruct *is);
-    void swapItem(int dst_ii, int src_ii);
+    bool addInvItem(int dst_ii, ItemStruct *is);
+    bool swapInvItem(int dst_ii, int src_ii);
     void renameItem(int ii, QString &text);
 
     void compareTo(const D1Hero *hero, QString header) const;

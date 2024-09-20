@@ -437,7 +437,7 @@ ItemAction::ItemAction(D1Hero *h, int ii, const QString &text, int pi)
 
 void ItemAction::on_action_triggered()
 {
-    this->hero->swapItem(this->ii, this->pi);
+    this->hero->swapInvItem(this->ii, this->pi);
 
     dMainWindow().updateWindow();
 }

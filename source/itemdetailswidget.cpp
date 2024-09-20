@@ -226,7 +226,7 @@ void ItemDetailsWidget::on_discardItemButton_clicked()
 
     int ii = itemsComboBox->currentData().value<int>();
 
-    this->hero->swapItem(ii, INVITEM_NONE);
+    this->hero->swapInvItem(ii, INVITEM_NONE);
 
     // updateComboBox ...
     this->initialize(this->hero, this->invIdx);
@@ -244,7 +244,7 @@ void ItemDetailsWidget::on_submitButton_clicked()
 
     int ii = itemsComboBox->currentData().value<int>();
     //LogErrorF("ItemDetailsWidget swap %d:%d", this->invIdx, ii);
-    this->hero->swapItem(this->invIdx, ii);
+    this->hero->swapInvItem(this->invIdx, ii);
 
     this->setVisible(false);
     //LogErrorF("ItemDetailsWidget swap 2");
