@@ -340,8 +340,11 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
     if (hth) {
         result.hth = true;
         result.chanceHth = hero->getHitChance() - mon->_mArmorClass;
+        if (sn == SPL_SWIPE) {
+            result.chanceHth -= 30 - sl * 2;
+        }
         int mindam, maxdam;
-        hero->getRealDamage(sn, mon, &mindam, &maxdam);
+        hero->getRealDamage(sn, sl, mon, &mindam, &maxdam);
         result.minHth = mindam;
         result.maxHth = maxdam;
     }

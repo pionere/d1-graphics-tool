@@ -327,9 +327,9 @@ void ClrPlrPath(int pnum)
 	//memset(plr._pWalkpath, DIR_NONE, sizeof(plr._pWalkpath));
 }
 
-void GetPlayerDamage(int pnum, int sn, const MonsterStruct *mon, int *mindam, int *maxdam)
+void GetPlayerDamage(int pnum, int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam)
 {
-    int mind, maxd;
+	int mind, maxd, damsl, dambl, dampc;
     bool tmac;
 
     mind = 0;

@@ -32,17 +32,17 @@ int GetManaAmount(int pnum, int sn)
 	return ma;
 }
 
-int GetSkillCost(int sn, int sl, int pl)
+int GetSkillCost(int sn, int sklvl, int plvl)
 {
 	// mana amount, spell level, adjustment, min mana
 	int ma, sl, adj, mm;
 
 	ma = spelldata[sn].sManaCost;
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-		ma += 2 * pl;
+		ma += 2 * plvl;
 	}
 
-	sl = sl - 1;
+	sl = sklvl - 1;
 	if (sl < 0)
 		sl = 0;
 	adj = sl * spelldata[sn].sManaAdj;

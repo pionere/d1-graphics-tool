@@ -127,7 +127,7 @@ public:
     int getAMaxDam() const;
     int getTotalMinDam() const;
     int getTotalMaxDam() const;
-    int getRealDamage(int sn, const MonsterStruct *mon, int *mindam, int *maxdam) const;
+    void getRealDamage(int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam) const;
 
     int getSkillFlags() const;
     int getItemFlags() const;

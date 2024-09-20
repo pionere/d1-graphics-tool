@@ -23,7 +23,7 @@ extern "C" {
 #endif
 
 int GetManaAmount(int pnum, int sn);
-int GetSkillCost(int sn, int sl);
+int GetSkillCost(int sn, int sl, int pl);
 bool HasSkillDamage(int sn);
 BYTE GetSkillElement(int sn);
 void GetSkillName(int sn);
