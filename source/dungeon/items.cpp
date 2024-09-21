@@ -539,7 +539,7 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 	plr._pIBlMaxDam = maxbl;
 	plr._pIPcMinDam = minpc;
 	plr._pIPcMaxDam = maxpc;
-	plr._pICritChance = std::min(UCHAR_MAX, cc);
+	plr._pICritChance = std::min((unsigned)UCHAR_MAX, cc);
 
 	// calculate block chance
 	plr._pIBlockChance = (plr._pSkillFlags & SFLAG_BLOCK) ? std::min(plr._pStrength, plr._pDexterity) : 0;
@@ -1105,7 +1105,7 @@ int GetItemSpell(int idx)
 		}
 	}
 	// assert(ns > 0);
-	if ((unsigned)idx < ns)
+	if ((unsigned)idx < (unsigned)ns)
 		return ns;
 	return ss[idx];
 }

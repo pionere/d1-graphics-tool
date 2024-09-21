@@ -57,7 +57,7 @@ void SkillSpinBox::stepBy(int steps)
     if (steps < -1 || steps > 1 || (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier))
         next_value = steps < 0 ? 0 : MAXSPLLEVEL;
     else
-        next_value += steps;
+        next_value = current_value + steps;
     this->setValue(next_value);
 }
 
