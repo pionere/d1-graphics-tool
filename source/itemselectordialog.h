@@ -17,9 +17,10 @@ class AffixSliderWidget : public SliderWidget {
     Q_OBJECT
 
 public:
+    AffixSliderWidget(QWidget *parent = nullptr);
     ~AffixSliderWidget();
 
-    void changeValue(int value) override;
+    void changeValue(int value);
     void setLimitMode(int mode);
 
 private slots:
