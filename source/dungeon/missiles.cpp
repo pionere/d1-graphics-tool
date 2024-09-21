@@ -134,7 +134,6 @@ void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon
 	case SPL_WALK:
 	case SPL_BLOCK:
 	case SPL_ATTACK:
-	case SPL_RATTACK:
 	case SPL_INFRA:
 	case SPL_TELEKINESIS:
 	case SPL_TELEPORT:
@@ -170,6 +169,7 @@ void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon
         maxd = ((64 /*+ dist*/) * maxd) >> 5;
         // hper = sl * 16 - mon->_mArmorClass;
         break;
+	case SPL_RATTACK:
 	case SPL_POINT_BLANK:
 	case SPL_FAR_SHOT:
 	case SPL_PIERCE_SHOT:
@@ -194,6 +194,8 @@ void GetSkillDamage(int sn, int sl, const D1Hero *hero, const MonsterStruct *mon
         }
 
         switch (sn) {
+        case SPL_RATTACK:
+            break;
         case SPL_POINT_BLANK:
             mind = (mind * (64 + /*32 - 16 * mis->_miVar7 +*/ sl)) >> 6;
             maxd = (mind * (64 + /*32 - 16 * mis->_miVar7 +*/ sl)) >> 6;

@@ -36,6 +36,9 @@ public:
     explicit SkillSpinBox(int sn, SkillDetailsWidget *parent);
     ~SkillSpinBox() = default;
 
+    void stepBy(int steps) override;
+    void changeValue(int value);
+
 private slots:
     void on_value_changed(int value);
 

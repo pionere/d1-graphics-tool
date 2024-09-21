@@ -103,7 +103,8 @@ void ItemDetailsWidget::updateFields()
     itemsComboBox->adjustSize();
     ii = itemsComboBox->currentData().value<int>();
 
-    this->ui->discardItemButton->setEnabled(ii >= INVITEM_INV_FIRST && ii < NUM_INVELEM);
+    // this->ui->discardItemButton->setEnabled(ii >= INVITEM_INV_FIRST && ii < NUM_INVELEM);
+    this->ui->discardItemButton->setEnabled(ii != INVITEM_NONE);
     // LogErrorF("updateFields 0 %d", ii);
     pi = ii == INVITEM_NONE ? nullptr : this->hero->item(ii);
     if (pi != nullptr && pi->_itype != ITYPE_NONE) {

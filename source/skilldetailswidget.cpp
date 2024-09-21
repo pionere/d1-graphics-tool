@@ -45,8 +45,27 @@ SkillSpinBox::SkillSpinBox(int sn, SkillDetailsWidget *parent)
     this->setMaximum(MAXSPLLEVEL);
     this->setMaximumWidth(36);
     this->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
+    this->setKeyboardTracking(false);
 
     QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(on_value_changed(int)));
+}
+
+void SkillSpinBox::stepBy(int steps)
+{
+    int current_value = this->value();
+    int next_value;
+    if (steps < -1 || steps > 1 || (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier))
+        next_value = steps < 0 ? 0 : MAXSPLLEVEL;
+    else
+        next_value += steps;
+    this->setValue(next_value);
+}
+
+void SkillSpinBox::changeValue(int value)
+{
+    this->blockSignals(true);
+    this->setValue(value);
+    this->blockSignals(false);
 }
 
 void SkillSpinBox::on_value_changed(int value)
@@ -68,14 +87,14 @@ SkillDetailsWidget::SkillDetailsWidget(QWidget *parent)
     constexpr int COLUMNS = 3;
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
         if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
-            skillWidgets[sn] = nullptr;
+            this->skillWidgets[sn] = nullptr;
             continue;
         }
 
         SkillPushButton *label = new SkillPushButton(sn, this);
         this->ui->heroSkillGridLayout->addWidget(label, row, 2 * column);
-        skillWidgets[sn] = new SkillSpinBox(sn, this);
-        this->ui->heroSkillGridLayout->addWidget(skillWidgets[sn], row, 2 * column + 1);
+        this->skillWidgets[sn] = new SkillSpinBox(sn, this);
+        this->ui->heroSkillGridLayout->addWidget(this->skillWidgets[sn], row, 2 * column + 1);
         if (++column == COLUMNS) {
             row++;
             column = 0;
@@ -125,9 +144,10 @@ void SkillDetailsWidget::updateFields()
     int sn;
     // static_assert(lengthof(this->skills) >= NUM_SPELLS, "too many skills to fit to the array");
     for (sn = 0; sn < NUM_SPELLS; sn++) {
-        if (skillWidgets[sn] == nullptr)
+        if (this->skillWidgets[sn] == nullptr)
             continue;
-        skillWidgets[sn]->setValue(this->skills[sn]);
+        this->skillWidgets[sn]->changeValue(this->skills[sn]);
+        this->skillWidgets[sn]->setEnabled(this->hero->isHellfire() || sn < NUM_SPELLS_DIABLO);
     }
 
     sn = this->currentSkill;
@@ -207,7 +227,7 @@ void SkillDetailsWidget::on_resetButton_clicked()
 void SkillDetailsWidget::on_maxButton_clicked()
 {
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
-        this->skills[sn] = spelldata[sn].sBookLvl == SPELL_NA ? 0 : MAXSPLLEVEL;
+        this->skills[sn] = ((this->hero->isHellfire() || sn < NUM_SPELLS_DIABLO) && spelldata[sn].sBookLvl != SPELL_NA) ? MAXSPLLEVEL : 0;
     }
     this->updateFields();
 }
@@ -215,10 +235,10 @@ void SkillDetailsWidget::on_maxButton_clicked()
 void SkillDetailsWidget::on_submitButton_clicked()
 {
     for (int sn = 0; sn < NUM_SPELLS; sn++) {
-        if (skillWidgets[sn] == nullptr)
+        if (this->skillWidgets[sn] == nullptr)
             continue;
-        // int lvl = skillWidgets[sn]->text().toInt();
-        int lvl = skillWidgets[sn]->value();
+        // int lvl = this->skillWidgets[sn]->text().toInt();
+        int lvl = this->skillWidgets[sn]->value();
         // if (lvl < 0)
         //     lvl = 0;
         // if (lvl > MAXSPLLEVEL)

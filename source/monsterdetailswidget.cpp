@@ -596,12 +596,15 @@ void MonsterDetailsWidget::updateFields()
     hper = 0;
     // if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
     if (monDamage.hth /*|| monDamage.spec*/ || (monDamage.mis && monDamage.blockMis)) {
-        hper = this->hero->getBlockChance() - (mon->_mLevel << 1);
-        /*if (hper < 0)
-            hper = 0;
-        if (hper > 100)
-            hper = 100;*/
-        hper = CheckHit(hper);
+        hper = this->hero->getBlockChance();
+        if (hper != 0) {
+            hper -= (mon->_mLevel << 1);
+            /*if (hper < 0)
+                hper = 0;
+            if (hper > 100)
+                hper = 100;*/
+            hper = CheckHit(hper);
+        }
     }
     if ((monDamage.hth /*|| monDamage.spec*/) && monDamage.mis && !monDamage.blockMis) {
         this->ui->plrBlockChance->setText(QString("%1% | 0%").arg(hper));

@@ -66,6 +66,8 @@ private:
 
     int wishUniq = -1;
     int wishPre = -1;
+    int preLimitMode = 0;
     int wishSuf = -1;
+    int sufLimitMode = 0;
     int resetSlider = 0;
 };

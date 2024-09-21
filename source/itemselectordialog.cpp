@@ -15,6 +15,9 @@
 
 #include "dungeon/all.h"
 
+#define AFFIX_ANY   -1
+#define AFFIX_NONE  -2
+
 ItemSelectorDialog::ItemSelectorDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::ItemSelectorDialog())
@@ -335,13 +338,15 @@ static QString AffixName(const AffixData *affix)
 
 static void addUniqueOption(int power, int paramA, int paramB, int idx, QComboBox *preComboBox, QComboBox *sufComboBox)
 {
-    if (paramA == paramB)
-        return;
-    if (preComboBox->count() == 0) {
-        preComboBox->addItem(QString("%1 (%2-%3)").arg(AffixPowerName(power)).arg(paramA).arg(paramB), QVariant::fromValue(idx));
-    } else {
-        sufComboBox->addItem(QString("%1 (%2-%3)").arg(AffixPowerName(power)).arg(paramA).arg(paramB), QVariant::fromValue(idx));
+    QComboBox *comboBox = preComboBox->count() == 0 ? preComboBox : sufComboBox;
+    if (power == IPL_SKILLLVL && paramA == paramB) {
+        paramA = 0;
+        paramB = GetItemSpell(-1) - 1;
     }
+    if (paramA == paramB) {
+        return;
+    }
+    comboBox->addItem(QString("%1 (%2-%3)").arg(AffixPowerName(power)).arg(paramA).arg(paramB), QVariant::fromValue(idx));
 }
 
 static QString ItemColor(const ItemStruct* is)
@@ -399,7 +404,7 @@ void ItemSelectorDialog::updateFields()
     int source = (ci & CF_TOWN) >> 8;
     int range = source == CFL_NONE ? IAR_DROP : (source == CFL_CRAFTED ? IAR_CRAFT : IAR_SHOP);
     int lvl = ci & CF_LEVEL;
-    int si;
+    int si, limitMode;
     bool active;
     Qt::CheckState cs;
 
@@ -451,8 +456,8 @@ void ItemSelectorDialog::updateFields()
 
     int uniqIdx = uniqComboBox->currentData().value<int>();
     if (uniqIdx < 0) {
-        preComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
-        sufComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
+        preComboBox->addItem(tr("Any"), QVariant::fromValue(AFFIX_ANY));
+        sufComboBox->addItem(tr("Any"), QVariant::fromValue(AFFIX_ANY));
 
         if ((ci & ~CF_LEVEL) != 0) {
             int alvl = lvl;
@@ -473,8 +478,8 @@ void ItemSelectorDialog::updateFields()
                 }
             }
         }
-        preComboBox->addItem(tr("None"), QVariant::fromValue(-2));
-        sufComboBox->addItem(tr("None"), QVariant::fromValue(-2));
+        preComboBox->addItem(tr("None"), QVariant::fromValue(AFFIX_NONE));
+        sufComboBox->addItem(tr("None"), QVariant::fromValue(AFFIX_NONE));
     } else {
         // if ((ci & ~CF_LEVEL) != 0) {
             const UniqItemData* ui = &UniqueItemList[uniqIdx];
@@ -492,9 +497,9 @@ void ItemSelectorDialog::updateFields()
             }}}}}
         // }
         if (preComboBox->count() == 0)
-            preComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
+            preComboBox->addItem(tr("Any"), QVariant::fromValue(AFFIX_ANY));
         if (sufComboBox->count() == 0)
-            sufComboBox->addItem(tr("Any"), QVariant::fromValue(-1));
+            sufComboBox->addItem(tr("Any"), QVariant::fromValue(AFFIX_ANY));
     }
     preComboBox->setEnabled(drop);
     sufComboBox->setEnabled(drop);
@@ -509,74 +514,110 @@ void ItemSelectorDialog::updateFields()
     sufComboBox->setCurrentIndex(si);
 
     si = preComboBox->currentData().value<int>();
-    active = si >= 0 && (uniqIdx >= 0 || (PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2));
+    active = (si != AFFIX_ANY && si != AFFIX_NONE) && (uniqIdx >= 0 || PL_Prefix[si].PLPower == IPL_SKILLLVL || (PL_Prefix[si].PLParam1 != PL_Prefix[si].PLParam2));
     this->ui->itemPrefixLimitedCheckBox->setEnabled(active);
     cs = this->ui->itemPrefixLimitedCheckBox->checkState();
     this->ui->itemPrefixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
-    this->ui->itemPrefixLimitSlider->setEnabled(cs != Qt::Unchecked && active);
+    active &= cs != Qt::Unchecked;
+    limitMode = cs == Qt::Unchecked ? 0 : cs == Qt::PartiallyChecked ? 1 : cs == Qt::Checked ? 2 : cs;
     if (active) {
         int minval, maxval;
         if (uniqIdx >= 0) {
             const UniqItemData* ui = &UniqueItemList[uniqIdx];
+            int power;
             switch (si) {
-            case 0: minval = ui->UIParam1a; maxval = ui->UIParam1b; break;
-            case 1: minval = ui->UIParam2a; maxval = ui->UIParam2b; break;
-            case 2: minval = ui->UIParam3a; maxval = ui->UIParam3b; break;
-            case 3: minval = ui->UIParam4a; maxval = ui->UIParam4b; break;
-            case 4: minval = ui->UIParam5a; maxval = ui->UIParam5b; break;
-            case 5: minval = ui->UIParam6a; maxval = ui->UIParam6b; break;
+            case 0: power = ui->UIPower1; minval = ui->UIParam1a; maxval = ui->UIParam1b; break;
+            case 1: power = ui->UIPower2; minval = ui->UIParam2a; maxval = ui->UIParam2b; break;
+            case 2: power = ui->UIPower3; minval = ui->UIParam3a; maxval = ui->UIParam3b; break;
+            case 3: power = ui->UIPower4; minval = ui->UIParam4a; maxval = ui->UIParam4b; break;
+            case 4: power = ui->UIPower5; minval = ui->UIParam5a; maxval = ui->UIParam5b; break;
+            case 5: power = ui->UIPower6; minval = ui->UIParam6a; maxval = ui->UIParam6b; break;
             }
+            if (power == IPL_SKILLLVL && limitMode == 1) {
+                minval = 0;
+                maxval = GetItemSpell(-1) - 1;
+                limitMode = 3;
+            }
+        } else if (PL_Prefix[si].PLPower == IPL_SKILLLVL && limitMode == 1) {
+            minval = 0;
+            maxval = GetItemSpell(-1) - 1;
+            limitMode = 3;
         } else {
             minval = PL_Prefix[si].PLParam1;
             maxval = PL_Prefix[si].PLParam2;
         }
-        this->ui->itemPrefixLimitSlider->setMinimum(minval);
-        this->ui->itemPrefixLimitSlider->setMaximum(maxval);
-        if (this->resetSlider & 1) {
-            this->resetSlider &= ~1;
-            this->ui->itemPrefixLimitSlider->setValue(cs == Qt::Checked ? maxval : minval);
+        active &= minval != maxval;
+        if (active) {
+            this->ui->itemPrefixLimitSlider->setMinimum(minval);
+            this->ui->itemPrefixLimitSlider->setMaximum(maxval);
+            if (this->resetSlider & 1) {
+                this->resetSlider &= ~1;
+                this->ui->itemPrefixLimitSlider->setValue(limitMode == 2 ? maxval : minval);
+            }
+            this->preLimitMode = limitMode;
+            this->on_itemPrefixLimitSlider_sliderMoved(this->ui->itemPrefixLimitSlider->value());
         }
-        this->ui->itemPrefixLimitSlider->setToolTip(QString::number(this->ui->itemPrefixLimitSlider->value()));
-    } else {
+    }
+    this->ui->itemPrefixLimitSlider->setEnabled(active);
+    if (!active) {
         int minval = this->ui->itemPrefixLimitSlider->minimum();
         this->ui->itemPrefixLimitSlider->setValue(minval);
         this->ui->itemPrefixLimitSlider->setToolTip("");
+        limitMode = 0;
     }
+    this->ui->itemPrefixLimitedCheckBox->setToolTip(limitMode == 0 ? tr("unrestricted") : (limitMode == 1 ? tr("lower limited to:") : (limitMode == 2 ? tr("upper limited to:") : tr("limited to:"))));
 
     si = sufComboBox->currentData().value<int>();
-    active = si >= 0 && (uniqIdx >= 0 || (PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2));
+    active = (si != AFFIX_ANY && si != AFFIX_NONE) && (uniqIdx >= 0 || PL_Suffix[si].PLPower == IPL_SKILLLVL || (PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2));
     this->ui->itemSuffixLimitedCheckBox->setEnabled(active);
     cs = this->ui->itemSuffixLimitedCheckBox->checkState();
-    this->ui->itemSuffixLimitedCheckBox->setToolTip(cs == Qt::Unchecked ? tr("unrestricted") : (cs == Qt::PartiallyChecked ? tr("lower limited to:") : tr("upper limited to:")));
-    this->ui->itemSuffixLimitSlider->setEnabled(cs != Qt::Unchecked && active);
+    active &= cs != Qt::Unchecked;
+    limitMode = cs == Qt::Unchecked ? 0 : cs == Qt::PartiallyChecked ? 1 : cs == Qt::Checked ? 2 : cs;
     if (active) {
         int minval, maxval;
         if (uniqIdx >= 0) {
             const UniqItemData* ui = &UniqueItemList[uniqIdx];
+            int power;
             switch (si) {
-            case 0: minval = ui->UIParam1a; maxval = ui->UIParam1b; break;
-            case 1: minval = ui->UIParam2a; maxval = ui->UIParam2b; break;
-            case 2: minval = ui->UIParam3a; maxval = ui->UIParam3b; break;
-            case 3: minval = ui->UIParam4a; maxval = ui->UIParam4b; break;
-            case 4: minval = ui->UIParam5a; maxval = ui->UIParam5b; break;
-            case 5: minval = ui->UIParam6a; maxval = ui->UIParam6b; break;
+            case 0: power = ui->UIPower1; minval = ui->UIParam1a; maxval = ui->UIParam1b; break;
+            case 1: power = ui->UIPower2; minval = ui->UIParam2a; maxval = ui->UIParam2b; break;
+            case 2: power = ui->UIPower3; minval = ui->UIParam3a; maxval = ui->UIParam3b; break;
+            case 3: power = ui->UIPower4; minval = ui->UIParam4a; maxval = ui->UIParam4b; break;
+            case 4: power = ui->UIPower5; minval = ui->UIParam5a; maxval = ui->UIParam5b; break;
+            case 5: power = ui->UIPower6; minval = ui->UIParam6a; maxval = ui->UIParam6b; break;
             }
+            if (power == IPL_SKILLLVL && limitMode == 1) {
+                minval = 0;
+                maxval = GetItemSpell(-1) - 1;
+                limitMode = 3;
+            }
+        } else if (PL_Prefix[si].PLPower == IPL_SKILLLVL && limitMode == 1) {
+            minval = 0;
+            maxval = GetItemSpell(-1) - 1;
+            limitMode = 3;
         } else {
             minval = PL_Suffix[si].PLParam1;
             maxval = PL_Suffix[si].PLParam2;
         }
-        this->ui->itemSuffixLimitSlider->setMinimum(minval);
-        this->ui->itemSuffixLimitSlider->setMaximum(maxval);
-        if (this->resetSlider & 2) {
-            this->resetSlider &= ~2;
-            this->ui->itemSuffixLimitSlider->setValue(cs == Qt::Checked ? maxval : minval);
+        active &= minval != maxval;
+        if (active) {
+            this->ui->itemSuffixLimitSlider->setMinimum(minval);
+            this->ui->itemSuffixLimitSlider->setMaximum(maxval);
+            if (this->resetSlider & 2) {
+                this->resetSlider &= ~2;
+                this->ui->itemSuffixLimitSlider->setValue(limitMode == 2 ? maxval : minval);
+            }
+            this->sufLimitMode = limitMode;
+            this->on_itemSuffixLimitSlider_sliderMoved(this->ui->itemSuffixLimitSlider->value());
         }
-        this->ui->itemSuffixLimitSlider->setToolTip(QString::number(this->ui->itemSuffixLimitSlider->value()));
-    } else {
+    }
+    this->ui->itemSuffixLimitSlider->setEnabled(active);
+    if (!active) {
         int minval = this->ui->itemSuffixLimitSlider->minimum();
         this->ui->itemSuffixLimitSlider->setValue(minval);
         this->ui->itemSuffixLimitSlider->setToolTip("");
     }
+    this->ui->itemSuffixLimitedCheckBox->setToolTip(limitMode == 0 ? tr("unrestricted") : (limitMode == 1 ? tr("lower limited to:") : (limitMode == 2 ? tr("upper limited to:") : tr("limited to:"))));
 }
 
 void ItemSelectorDialog::on_itemTypeComboBox_activated(int index)
@@ -681,12 +722,20 @@ void ItemSelectorDialog::on_itemSuffixLimitedCheckBox_clicked()
 
 void ItemSelectorDialog::on_itemPrefixLimitSlider_sliderMoved(int value)
 {
-    this->ui->itemPrefixLimitSlider->setToolTip(QString::number(value));
+    if (this->preLimitMode != 3) {
+        this->ui->itemPrefixLimitSlider->setToolTip(QString::number(value));
+    } else {
+        this->ui->itemPrefixLimitSlider->setToolTip(spelldata[GetItemSpell(value)].sNameText);
+    }
 }
 
 void ItemSelectorDialog::on_itemSuffixLimitSlider_sliderMoved(int value)
 {
-    this->ui->itemSuffixLimitSlider->setToolTip(QString::number(value));
+    if (this->sufLimitMode != 3) {
+        this->ui->itemSuffixLimitSlider->setToolTip(QString::number(value));
+    } else {
+        this->ui->itemSuffixLimitSlider->setToolTip(spelldata[GetItemSpell(value)].sNameText);
+    }
 }
 
 void ItemSelectorDialog::on_itemACLimitedCheckBox_clicked()
@@ -741,9 +790,9 @@ bool ItemSelectorDialog::recreateItem()
     } UIAffixData;
     UIAffixData prefix = { false, 0 };
     UIAffixData suffix = { false, 0 };
-    prefix.active = preIdx != -1;
+    prefix.active = preIdx != AFFIX_ANY;
     if (prefix.active) {
-        if (preIdx >= 0) {
+        if (preIdx != AFFIX_NONE) {
             if (uniqIdx >= 0) {
                 const UniqItemData* ui = &UniqueItemList[uniqIdx];
                 switch (preIdx) {
@@ -762,7 +811,11 @@ bool ItemSelectorDialog::recreateItem()
             }
             if (this->ui->itemPrefixLimitSlider->isEnabled()) {
                 int val = this->ui->itemPrefixLimitSlider->value();
-                if (this->ui->itemPrefixLimitedCheckBox->checkState() == Qt::PartiallyChecked) {
+                Qt::CheckState cs = this->ui->itemPrefixLimitedCheckBox->checkState();
+                if (prefix.power == IPL_SKILLLVL && cs == Qt::PartiallyChecked) {
+                    prefix.param1 = GetItemSpell(val);
+                    prefix.param2 = MAXSPLLEVEL + 1;
+                } else if (cs == Qt::PartiallyChecked) {
                     prefix.param1 = val;
                 } else {
                     prefix.param2 = val;
@@ -772,9 +825,9 @@ bool ItemSelectorDialog::recreateItem()
             prefix.power = IPL_INVALID;
         }
     }
-    suffix.active = sufIdx != -1;
+    suffix.active = sufIdx != AFFIX_ANY;
     if (suffix.active) {
-        if (sufIdx >= 0) {
+        if (sufIdx != AFFIX_NONE) {
             if (uniqIdx >= 0) {
                 const UniqItemData* ui = &UniqueItemList[uniqIdx];
                 switch (sufIdx) {
@@ -793,7 +846,11 @@ bool ItemSelectorDialog::recreateItem()
             }
             if (this->ui->itemSuffixLimitSlider->isEnabled()) {
                 int val = this->ui->itemSuffixLimitSlider->value();
-                if (this->ui->itemSuffixLimitedCheckBox->checkState() == Qt::PartiallyChecked) {
+                Qt::CheckState cs = this->ui->itemSuffixLimitedCheckBox->checkState();
+                if (suffix.power == IPL_SKILLLVL && cs == Qt::PartiallyChecked) {
+                    suffix.param1 = GetItemSpell(val);
+                    suffix.param2 = MAXSPLLEVEL + 1;
+                } else if (cs == Qt::PartiallyChecked) {
                     suffix.param1 = val;
                 } else {
                     suffix.param2 = val;
@@ -822,13 +879,23 @@ start:
             goto restart;
         }
         if (prefix.active) {
-            if (affix_rnd[preIdx] < prefix.param1 || affix_rnd[preIdx] > prefix.param2) {
+            if (prefix.power == IPL_SKILLLVL && prefix.param2 == MAXSPLLEVEL + 1) {
+                if (items[MAXITEMS]._iPLSkill != prefix.param1) {
+                    // LogErrorF("missed uniq-prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPLSkill, prefix.param1, preIdx, seed);
+                    goto restart;
+                }
+            } else if (affix_rnd[preIdx] < prefix.param1 || affix_rnd[preIdx] > prefix.param2) {
                 // LogErrorF("missed uniq-prefix %d vs [%d%d] (%d) seed%d", affix_rnd[preIdx], prefix.param1, prefix.param2, preIdx, seed);
                 goto restart;
             }
         }
         if (suffix.active) {
-            if (affix_rnd[sufIdx] < suffix.param1 || affix_rnd[sufIdx] > suffix.param2) {
+            if (suffix.power == IPL_SKILLLVL && suffix.param2 == MAXSPLLEVEL + 1) {
+                if (items[MAXITEMS]._iPLSkill != suffix.param1) {
+                    // LogErrorF("missed uniq-suffix %d vs %d (%d) seed%d", items[MAXITEMS]._iPLSkill, suffix.param1, sufIdx, seed);
+                    goto restart;
+                }
+            } else if (affix_rnd[sufIdx] < suffix.param1 || affix_rnd[sufIdx] > suffix.param2) {
                 // LogErrorF("missed uniq-suffix %d vs [%d%d] (%d) seed%d", affix_rnd[sufIdx], suffix.param1, suffix.param2, sufIdx, seed);
                 goto restart;
             }
@@ -839,22 +906,36 @@ start:
         }
         if (prefix.active) {
             if (items[MAXITEMS]._iPrePower != prefix.power) {
-                // LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, preIdx, seed);
+                // LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, prefix.power, preIdx, seed);
                 goto restart;
             }
-            if (prefix.power != IPL_INVALID && (affix_rnd[0] < prefix.param1 || affix_rnd[0] > prefix.param2)) {
-                // LogErrorF("missed preval %d vs [%d:%d]", affix_rnd[0], affix->PLParam1, affix->PLParam2);
-                goto restart;
+            if (prefix.power != IPL_INVALID) {
+                if (prefix.power == IPL_SKILLLVL && prefix.param2 == MAXSPLLEVEL + 1) {
+                    if (items[MAXITEMS]._iPLSkill != prefix.param1) {
+                        // LogErrorF("missed preval %d vs %d (%d) seed%d", items[MAXITEMS]._iPLSkill, prefix.param1, preIdx, seed);
+                        goto restart;
+                    }
+                } else if (affix_rnd[0] < prefix.param1 || affix_rnd[0] > prefix.param2) {
+                    // LogErrorF("missed preval %d vs [%d:%d]", affix_rnd[0], prefix.param1, prefix.param2);
+                    goto restart;
+                }
             }
         }
         if (suffix.active) {
             if (items[MAXITEMS]._iSufPower != suffix.power) {
-                // LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, affix->PLPower, sufIdx);
+                // LogErrorF("missed prefix %d vs %d (%d) seed%d", items[MAXITEMS]._iPrePower, suffix.power, sufIdx);
                 goto restart;
             }
-            if (suffix.power != IPL_INVALID && (affix_rnd[1] < suffix.param1 || affix_rnd[1] > suffix.param2)) {
-                // LogErrorF("missed sufval %d vs [%d:%d]", affix_rnd[1], affix->PLParam1, affix->PLParam2);
-                goto restart;
+            if (suffix.power != IPL_INVALID) {
+                if (suffix.power == IPL_SKILLLVL && suffix.param2 == MAXSPLLEVEL + 1) {
+                    if (items[MAXITEMS]._iPLSkill != suffix.param1) {
+                        // LogErrorF("missed sufval %d vs %d (%d) seed%d", items[MAXITEMS]._iPLSkill, suffix.param1, sufIdx, seed);
+                        goto restart;
+                    }
+                } else if (affix_rnd[1] < suffix.param1 || affix_rnd[1] > suffix.param2) {
+                    // LogErrorF("missed sufval %d vs [%d:%d]", affix_rnd[1], suffix.param1, suffix.param2);
+                    goto restart;
+                }
             }
         }
     }

@@ -26,6 +26,8 @@ extern int numitems;
 extern int ac_rnd;
 extern int affix_rnd[6];
 
+int GetItemSpell(int idx);
+
 void CalcPlrItemVals(int pnum, bool Loadgfx);
 void CalcPlrSpells(int pnum);
 void CalcPlrScrolls(int pnum);

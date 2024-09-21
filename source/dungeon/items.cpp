@@ -539,7 +539,7 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 	plr._pIBlMaxDam = maxbl;
 	plr._pIPcMinDam = minpc;
 	plr._pIPcMaxDam = maxpc;
-	plr._pICritChance = cc;
+	plr._pICritChance = std::min(UCHAR_MAX, cc);
 
 	// calculate block chance
 	plr._pIBlockChance = (plr._pSkillFlags & SFLAG_BLOCK) ? std::min(plr._pStrength, plr._pDexterity) : 0;
@@ -1081,14 +1081,33 @@ static int GetItemSpell()
 
 	ns = 0;
 	for (bs = 0; bs < (IsHellfireGame ? NUM_SPELLS : NUM_SPELLS_DIABLO); bs++) {
-		if (spelldata[bs].sManaCost != 0 // TODO: use sSkillFlags ?
-		 && (IsMultiGame || bs != SPL_RESURRECT)) {
+		if (spelldata[bs].sManaCost != 0) { // TODO: use sSkillFlags ?
+			// assert(!IsMultiGame || bs != SPL_RESURRECT);
 			ss[ns] = bs;
 			ns++;
 		}
 	}
 	// assert(ns > 0);
 	return ss[random_low(19, ns)];
+}
+
+int GetItemSpell(int idx)
+{
+	int ns, bs;
+	BYTE ss[NUM_SPELLS];
+
+	ns = 0;
+	for (bs = 0; bs < NUM_SPELLS; bs++) {
+		if (spelldata[bs].sManaCost != 0) { // TODO: use sSkillFlags ?
+			// assert(!IsMultiGame || bs != SPL_RESURRECT);
+			ss[ns] = bs;
+			ns++;
+		}
+	}
+	// assert(ns > 0);
+	if ((unsigned)idx < ns)
+		return ns;
+	return ss[idx];
 }
 
 static void GetItemAttrs(int ii, int idata, unsigned lvl)
