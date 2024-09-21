@@ -1,5 +1,7 @@
 #include "affixsliderwidget.h"
 
+#include <QToolTip>
+
 AffixSliderWidget::AffixSliderWidget(QWidget *parent)
     : SliderWidget(parent)
 {

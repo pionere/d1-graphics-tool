@@ -29,6 +29,10 @@
 #include "d1hro.h"
 #include "ui_mainwindow.h"
 
+#if (defined (_WIN32) || defined (_WIN64))
+#include "Shlobj.h"
+#endif
+
 #include "dungeon/all.h"
 
 static MainWindow *theMainWindow;
@@ -784,6 +788,11 @@ void MainWindow::openFile(const OpenAsParam &params)
     MainWindow::loadFile(params, this, &fileContent);
     if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
         return;
+
+#if (defined (_WIN32) || defined (_WIN64))
+    // SHAddToRecentDocs(SHARD_PATHA, params.filePath.toLatin1().constData());
+    SHAddToRecentDocs(SHARD_PATHA, params.filePath.toStdWString().data());
+#endif
     const FILE_CONTENT fileType = fileContent.fileType;
     const QString &baseDir = fileContent.baseDir;
     this->pal = fileContent.pal;
