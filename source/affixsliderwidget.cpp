@@ -1,0 +1,42 @@
+#include "affixsliderwidget.h"
+
+AffixSliderWidget::AffixSliderWidget(QWidget *parent)
+    : SliderWidget(parent)
+{
+}
+
+void AffixSliderWidget::on_valueChanged(int value)
+{
+    this->updateToolTip();
+    QToolTip::showText(this->ui->itemPrefixLimitSlider->mapToGlobal(QPoint(0, 0)), this->toolTip());
+}
+
+void AffixSliderWidget::changeValue(int value)
+{
+    SliderWidget::changeValue(value);
+    this->updateToolTip();
+}
+
+void AffixSliderWidget::setLimitMode(int mode)
+{
+    this->limitMode = mode;
+    this->setEnabled(mode >= 0);
+    if (mode < 0) {
+        int minval = this->minimum();
+        this->changeValue(minval);
+    } else {
+        this->updateToolTip();
+    }
+}
+
+void AffixSliderWidget::updateToolTip()
+{
+    int val = this->value();
+    QString text;
+    if (this->limitMode == 3) {
+        text = spelldata[GetItemSpell(val)].sNameText;
+    } else if (this->limitMode >= 0) {
+        text = QString::number(val);
+    }
+    this->setToolTip(text);
+}
