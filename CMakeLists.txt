@@ -134,6 +134,8 @@ set(PROJECT_SOURCES
         source/skilldetailswidget.cpp
         source/skilldetailswidget.h
         source/skilldetailswidget.ui
+        source/sliderwidget.cpp
+        source/sliderwidget.h
         source/spinboxwidget.cpp
         source/spinboxwidget.h
 )

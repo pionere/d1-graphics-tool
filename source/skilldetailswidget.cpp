@@ -44,7 +44,6 @@ SkillSpinBox::SkillSpinBox(int sn, SkillDetailsWidget *parent)
     // this->setMinimum(0);
     this->setMaximum(MAXSPLLEVEL);
     this->setMaximumWidth(36);
-    this->setEnabled(spelldata[sn].sBookLvl != SPELL_NA);
     this->setKeyboardTracking(false);
 
     QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(on_value_changed(int)));
@@ -70,9 +69,9 @@ void SkillSpinBox::changeValue(int value)
 
 void SkillSpinBox::on_value_changed(int value)
 {
-    bool userInput = sender() == nullptr;
+    // bool userInput = sender() == nullptr;
     // QMessageBox::critical(this, "Error", tr("SkillSpinBox new value %1 sender %2.").arg(value).arg(userInput));
-    if (userInput)
+    // if (userInput)
         this->sdw->on_skill_changed(this->sn, value);
 }
 
@@ -147,7 +146,7 @@ void SkillDetailsWidget::updateFields()
         if (this->skillWidgets[sn] == nullptr)
             continue;
         this->skillWidgets[sn]->changeValue(this->skills[sn]);
-        this->skillWidgets[sn]->setEnabled(this->hero->isHellfire() || sn < NUM_SPELLS_DIABLO);
+        this->skillWidgets[sn]->setEnabled(spelldata[sn].sBookLvl != SPELL_NA && (this->hero->isHellfire() || sn < NUM_SPELLS_DIABLO));
     }
 
     sn = this->currentSkill;

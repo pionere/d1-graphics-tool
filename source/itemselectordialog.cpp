@@ -422,7 +422,7 @@ void ItemSelectorDialog::updateFields()
         this->ui->itemACLimitSlider->setMaximum(maxval);
         if (this->resetSlider & 4) {
             this->resetSlider &= ~4;
-            this->ui->itemACLimitSlider->setValue(cs == Qt::Checked ? maxval : minval);
+            this->ui->itemACLimitSlider->changeValue(cs == Qt::Checked ? maxval : minval);
         }
     }
 
@@ -553,16 +553,16 @@ void ItemSelectorDialog::updateFields()
             this->ui->itemPrefixLimitSlider->setMaximum(maxval);
             if (this->resetSlider & 1) {
                 this->resetSlider &= ~1;
-                this->ui->itemPrefixLimitSlider->setValue(limitMode == 2 ? maxval : minval);
+                this->ui->itemPrefixLimitSlider->changeValue(limitMode == 2 ? maxval : minval);
             }
             this->preLimitMode = limitMode;
-            this->on_itemPrefixLimitSlider_sliderMoved(this->ui->itemPrefixLimitSlider->value());
+            this->on_itemPrefixLimitSlider_valueChanged(this->ui->itemPrefixLimitSlider->value());
         }
     }
     this->ui->itemPrefixLimitSlider->setEnabled(active);
     if (!active) {
         int minval = this->ui->itemPrefixLimitSlider->minimum();
-        this->ui->itemPrefixLimitSlider->setValue(minval);
+        this->ui->itemPrefixLimitSlider->changeValue(minval);
         this->ui->itemPrefixLimitSlider->setToolTip("");
         limitMode = 0;
     }
@@ -606,16 +606,16 @@ void ItemSelectorDialog::updateFields()
             this->ui->itemSuffixLimitSlider->setMaximum(maxval);
             if (this->resetSlider & 2) {
                 this->resetSlider &= ~2;
-                this->ui->itemSuffixLimitSlider->setValue(limitMode == 2 ? maxval : minval);
+                this->ui->itemSuffixLimitSlider->changeValue(limitMode == 2 ? maxval : minval);
             }
             this->sufLimitMode = limitMode;
-            this->on_itemSuffixLimitSlider_sliderMoved(this->ui->itemSuffixLimitSlider->value());
+            this->on_itemSuffixLimitSlider_valueChanged(this->ui->itemSuffixLimitSlider->value());
         }
     }
     this->ui->itemSuffixLimitSlider->setEnabled(active);
     if (!active) {
         int minval = this->ui->itemSuffixLimitSlider->minimum();
-        this->ui->itemSuffixLimitSlider->setValue(minval);
+        this->ui->itemSuffixLimitSlider->changeValue(minval);
         this->ui->itemSuffixLimitSlider->setToolTip("");
     }
     this->ui->itemSuffixLimitedCheckBox->setToolTip(limitMode == 0 ? tr("unrestricted") : (limitMode == 1 ? tr("lower limited to:") : (limitMode == 2 ? tr("upper limited to:") : tr("limited to:"))));
@@ -721,22 +721,28 @@ void ItemSelectorDialog::on_itemSuffixLimitedCheckBox_clicked()
     this->updateFields();
 }
 
-void ItemSelectorDialog::on_itemPrefixLimitSlider_sliderMoved(int value)
+void ItemSelectorDialog::on_itemPrefixLimitSlider_valueChanged(int value)
 {
+    QString text;
     if (this->preLimitMode != 3) {
-        this->ui->itemPrefixLimitSlider->setToolTip(QString::number(value));
+        text = QString::number(value);
     } else {
-        this->ui->itemPrefixLimitSlider->setToolTip(spelldata[GetItemSpell(value)].sNameText);
+        text = spelldata[GetItemSpell(value)].sNameText;
     }
+    this->ui->itemPrefixLimitSlider->setToolTip(text);
+    QToolTip::showText(this->ui->itemPrefixLimitSlider->mapToGlobal(QPoint(0, 0)), text);
 }
 
-void ItemSelectorDialog::on_itemSuffixLimitSlider_sliderMoved(int value)
+void ItemSelectorDialog::on_itemSuffixLimitSlider_valueChanged(int value)
 {
+    QString text;
     if (this->sufLimitMode != 3) {
-        this->ui->itemSuffixLimitSlider->setToolTip(QString::number(value));
+        text = QString::number(value);
     } else {
-        this->ui->itemSuffixLimitSlider->setToolTip(spelldata[GetItemSpell(value)].sNameText);
+        text = spelldata[GetItemSpell(value)].sNameText;
     }
+    this->ui->itemSuffixLimitSlider->setToolTip(text);
+    QToolTip::showText(this->ui->itemSuffixLimitSlider->mapToGlobal(QPoint(0, 0)), text);
 }
 
 void ItemSelectorDialog::on_itemACLimitedCheckBox_clicked()
@@ -744,7 +750,7 @@ void ItemSelectorDialog::on_itemACLimitedCheckBox_clicked()
     this->updateFields();
 }
 
-void ItemSelectorDialog::on_itemACLimitSlider_sliderMoved(int value)
+void ItemSelectorDialog::on_itemACLimitSlider_valueChanged(int value)
 {
     this->ui->itemACLimitSlider->setToolTip(QString::number(value));
 }

@@ -241,7 +241,7 @@
        </widget>
       </item>
       <item row="1" column="3">
-       <widget class="QSlider" name="itemPrefixLimitSlider">
+       <widget class="SliderWidget" name="itemPrefixLimitSlider">
         <property name="minimumWidth">
          <number>100</number>
         </property>
@@ -275,7 +275,7 @@
        </widget>
       </item>
       <item row="2" column="3">
-       <widget class="QSlider" name="itemSuffixLimitSlider">
+       <widget class="SliderWidget" name="itemSuffixLimitSlider">
         <property name="minimumWidth">
          <number>100</number>
         </property>
@@ -302,7 +302,7 @@
        </widget>
       </item>
       <item row="3" column="3">
-       <widget class="QSlider" name="itemACLimitSlider">
+       <widget class="SliderWidget" name="itemACLimitSlider">
         <property name="minimumWidth">
          <number>100</number>
         </property>
