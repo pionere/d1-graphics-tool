@@ -32,7 +32,7 @@ private slots:
     void on_discardItemButton_clicked();
     void on_addItemButton_clicked();
 
-    void on_submitButton_clicked();
+    void on_selectButton_clicked();
     void on_cancelButton_clicked();
 
 private:

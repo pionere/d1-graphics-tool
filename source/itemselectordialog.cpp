@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QStyle>
+#include <QToolTip>
 #include <QWidgetAction>
 
 #include "d1hro.h"

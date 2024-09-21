@@ -239,7 +239,7 @@ void ItemDetailsWidget::on_addItemButton_clicked()
     dMainWindow().selectHeroItem(this->invIdx);
 }
 
-void ItemDetailsWidget::on_submitButton_clicked()
+void ItemDetailsWidget::on_selectButton_clicked()
 {
     QComboBox *itemsComboBox = this->ui->invItemIndexComboBox;
 

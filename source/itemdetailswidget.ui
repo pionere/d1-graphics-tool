@@ -278,9 +278,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="submitButton">
+      <widget class="QPushButton" name="selectButton">
        <property name="text">
-        <string>Submit</string>
+        <string>Select</string>
        </property>
       </widget>
      </item>
