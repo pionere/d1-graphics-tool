@@ -19,6 +19,47 @@
 #define AFFIX_ANY   -1
 #define AFFIX_NONE  -2
 
+AffixSliderWidget::AffixSliderWidget(QWidget *parent)
+    : SliderWidget(parent)
+{
+}
+
+void AffixSliderWidget::on_valueChanged(int value)
+{
+    this->updateToolTip();
+    QToolTip::showText(this->ui->itemPrefixLimitSlider->mapToGlobal(QPoint(0, 0)), this->toolTip());
+}
+
+void AffixSliderWidget::changeValue(int value)
+{
+    SliderWidget::changeValue(value);
+    this->updateToolTip();
+}
+
+void AffixSliderWidget::setLimitMode(int mode)
+{
+    this->limitMode = mode;
+    this->setEnabled(mode >= 0);
+    if (mode < 0) {
+        int minval = this->minimum();
+        this->changeValue(minval);
+    } else {
+        this->updateToolTip();
+    }
+}
+
+void AffixSliderWidget::updateToolTip()
+{
+    int val = this->value();
+    QString text;
+    if (this->limitMode == 3) {
+        text = spelldata[GetItemSpell(val)].sNameText;
+    } else if (this->limitMode >= 0) {
+        text = QString::number(val);
+    }
+    this->setToolTip(text);
+}
+
 ItemSelectorDialog::ItemSelectorDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::ItemSelectorDialog())
@@ -556,18 +597,10 @@ void ItemSelectorDialog::updateFields()
                 this->resetSlider &= ~1;
                 this->ui->itemPrefixLimitSlider->changeValue(limitMode == 2 ? maxval : minval);
             }
-            this->preLimitMode = limitMode;
-            this->on_itemPrefixLimitSlider_valueChanged(this->ui->itemPrefixLimitSlider->value());
         }
     }
-    this->ui->itemPrefixLimitSlider->setEnabled(active);
-    if (!active) {
-        int minval = this->ui->itemPrefixLimitSlider->minimum();
-        this->ui->itemPrefixLimitSlider->changeValue(minval);
-        this->ui->itemPrefixLimitSlider->setToolTip("");
-        limitMode = 0;
-    }
-    this->ui->itemPrefixLimitedCheckBox->setToolTip(limitMode == 0 ? tr("unrestricted") : (limitMode == 1 ? tr("lower limited to:") : (limitMode == 2 ? tr("upper limited to:") : tr("limited to:"))));
+    this->ui->itemPrefixLimitSlider->setLimitMode(active ? limitMode : -1);
+    this->ui->itemPrefixLimitedCheckBox->setToolTip((!active || limitMode == 0) ? tr("unrestricted") : (limitMode == 1 ? tr("lower limited to:") : (limitMode == 2 ? tr("upper limited to:") : tr("limited to:"))));
 
     si = sufComboBox->currentData().value<int>();
     active = (si != AFFIX_ANY && si != AFFIX_NONE) && (uniqIdx >= 0 || PL_Suffix[si].PLPower == IPL_SKILLLVL || (PL_Suffix[si].PLParam1 != PL_Suffix[si].PLParam2));
@@ -609,16 +642,9 @@ void ItemSelectorDialog::updateFields()
                 this->resetSlider &= ~2;
                 this->ui->itemSuffixLimitSlider->changeValue(limitMode == 2 ? maxval : minval);
             }
-            this->sufLimitMode = limitMode;
-            this->on_itemSuffixLimitSlider_valueChanged(this->ui->itemSuffixLimitSlider->value());
         }
     }
-    this->ui->itemSuffixLimitSlider->setEnabled(active);
-    if (!active) {
-        int minval = this->ui->itemSuffixLimitSlider->minimum();
-        this->ui->itemSuffixLimitSlider->changeValue(minval);
-        this->ui->itemSuffixLimitSlider->setToolTip("");
-    }
+    this->ui->itemSuffixLimitSlider->setLimitMode(active ? limitMode : -1);
     this->ui->itemSuffixLimitedCheckBox->setToolTip(limitMode == 0 ? tr("unrestricted") : (limitMode == 1 ? tr("lower limited to:") : (limitMode == 2 ? tr("upper limited to:") : tr("limited to:"))));
 }
 
@@ -722,7 +748,7 @@ void ItemSelectorDialog::on_itemSuffixLimitedCheckBox_clicked()
     this->updateFields();
 }
 
-void ItemSelectorDialog::on_itemPrefixLimitSlider_valueChanged(int value)
+/*void ItemSelectorDialog::on_itemPrefixLimitSlider_valueChanged(int value)
 {
     QString text;
     if (this->preLimitMode != 3) {
@@ -744,7 +770,7 @@ void ItemSelectorDialog::on_itemSuffixLimitSlider_valueChanged(int value)
     }
     this->ui->itemSuffixLimitSlider->setToolTip(text);
     QToolTip::showText(this->ui->itemSuffixLimitSlider->mapToGlobal(QPoint(0, 0)), text);
-}
+}*/
 
 void ItemSelectorDialog::on_itemACLimitedCheckBox_clicked()
 {

@@ -3,6 +3,7 @@
 #include <QDialog>
 
 #include "itempropertieswidget.h"
+#include "sliderwidget.h"
 
 class D1Hero;
 struct ItemStruct;
@@ -10,6 +11,25 @@ struct ItemStruct;
 namespace Ui {
 class ItemSelectorDialog;
 } // namespace Ui
+
+
+class AffixSliderWidget : public SliderWidget {
+    Q_OBJECT
+
+public:
+    ~AffixSliderWidget();
+
+    void changeValue(int value) override;
+    void setLimitMode(int mode);
+
+private slots:
+    void on_valueChanged(int value);
+
+private:
+    void updateToolTip();
+
+    int limitMode = 0;
+};
 
 class ItemSelectorDialog : public QDialog {
     Q_OBJECT
@@ -44,8 +64,8 @@ private slots:
     void on_itemSuffixComboBox_activated(int index);
     void on_itemPrefixLimitedCheckBox_clicked();
     void on_itemSuffixLimitedCheckBox_clicked();
-    void on_itemPrefixLimitSlider_valueChanged(int value);
-    void on_itemSuffixLimitSlider_valueChanged(int value);
+    // void on_itemPrefixLimitSlider_valueChanged(int value);
+    // void on_itemSuffixLimitSlider_valueChanged(int value);
     void on_itemACLimitedCheckBox_clicked();
     void on_itemACLimitSlider_valueChanged(int value);
 
@@ -66,8 +86,8 @@ private:
 
     int wishUniq = -1;
     int wishPre = -1;
-    int preLimitMode = 0;
+    // int preLimitMode = 0;
     int wishSuf = -1;
-    int sufLimitMode = 0;
+    // int sufLimitMode = 0;
     int resetSlider = 0;
 };

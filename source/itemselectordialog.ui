@@ -241,7 +241,7 @@
        </widget>
       </item>
       <item row="1" column="3">
-       <widget class="SliderWidget" name="itemPrefixLimitSlider">
+       <widget class="AffixSliderWidget" name="itemPrefixLimitSlider">
         <property name="minimumWidth">
          <number>100</number>
         </property>
@@ -275,7 +275,7 @@
        </widget>
       </item>
       <item row="2" column="3">
-       <widget class="SliderWidget" name="itemSuffixLimitSlider">
+       <widget class="AffixSliderWidget" name="itemSuffixLimitSlider">
         <property name="minimumWidth">
          <number>100</number>
         </property>
