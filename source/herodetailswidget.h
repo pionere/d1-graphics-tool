@@ -23,6 +23,7 @@ private:
 
 private slots:
     void on_gameHellfireCheckBox_clicked();
+    void on_gameMultiCheckBox_clicked();
     void on_gameDifficultyComboBox_activated(int index);
 
     void on_heroNameEdit_returnPressed();

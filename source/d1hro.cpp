@@ -53,14 +53,18 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
         return false;
 
     this->hellfire = fileData.size() > sizeof(PkPlayerStruct) ? fileData[sizeof(PkPlayerStruct)] != 0 : D1Hero::isStandardClass(((const PkPlayerStruct*)fileData.constData())->pClass);
+    this->multi = fileData.size() > (sizeof(PkPlayerStruct) + 1) ? fileData[sizeof(PkPlayerStruct) + 1] != 0 : false;
 
     auto gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hellfire;
+    auto gameMulti = IsMultiGame;
+    IsMultiGame = this->multi;
 
     UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
     // plr._pDunLevel = DLV_CATHEDRAL1;
 
     IsHellfireGame = gameHellfire;
+    IsMultiGame = gameMulti;
 
     this->calcInv();
 
@@ -88,14 +92,18 @@ void D1Hero::create(unsigned index)
     selhero_heroInfo.hiName[0] = '\0';
 
     this->hellfire = D1Hero::isStandardClass(index);
+    this->multi = false;
 
     auto gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hellfire;
+    auto gameMulti = IsMultiGame;
+    IsMultiGame = this->multi;
 
     CreatePlayer(this->pnum, selhero_heroInfo);
     InitPlayer(this->pnum);
     // plr._pDunLevel = DLV_CATHEDRAL1;
 
+    IsMultiGame = gameMulti;
     IsHellfireGame = gameHellfire;
 
     this->calcInv();
@@ -144,11 +152,14 @@ void D1Hero::update()
     // update hero-items
     auto gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hellfire;
+    auto gameMulti = IsMultiGame;
+    IsMultiGame = this->multi;
 
     RecreateHeroItems(&plr._pInvBody[0], NUM_INVLOC);
     RecreateHeroItems(&plr._pSpdList[0], MAXBELTITEMS);
     RecreateHeroItems(&plr._pInvList[0], NUM_INV_GRID_ELEM);
 
+    IsMultiGame = gameMulti;
     IsHellfireGame = gameHellfire;
     // - enforce TWOHAND/ONEHAND rules
     this->rebalance();
@@ -693,6 +704,21 @@ void D1Hero::setHellfire(bool hf)
 {
     if (this->hellfire != hf) {
         this->hellfire = hf;
+        this->modified = true;
+
+        this->update();
+    }
+}
+
+bool D1Hero::isMulti() const
+{
+    return this->multi;
+}
+
+void D1Hero::setMulti(bool ml)
+{
+    if (this->multi != ml) {
+        this->multi = ml;
         this->modified = true;
 
         this->update();
@@ -1409,15 +1435,12 @@ void D1Hero::rebalance()
 
 void D1Hero::calcInv()
 {
-    // bool gameHellfire = IsHellfireGame;
-    // IsHellfireGame = this->hellfire;
     auto dunLevel = plr._pDunLevel;
     plr._pDunLevel = DLV_CATHEDRAL1;
 
     CalcPlrInv(this->pnum, false);
 
     plr._pDunLevel = dunLevel;
-    // IsHellfireGame = gameHellfire;
 }
 
 bool D1Hero::save(const SaveAsParam &params)
@@ -1455,6 +1478,7 @@ bool D1Hero::save(const SaveAsParam &params)
     bool result = out.writeRawData((char *)&pps, sizeof(PkPlayerStruct)) == sizeof(PkPlayerStruct);
     if (result) {
         out << (quint8)IsHellfireGame;
+        out << (quint8)IsMultiGame;
 
         this->filePath = filePath; //  D1Hero::load(gfx, filePath);
         this->modified = false;

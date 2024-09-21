@@ -13,7 +13,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QSpinBox" name="plrCountSpinBox">
+      <widget class="SpinBoxWidget" name="plrCountSpinBox">
        <property name="toolTip">
         <string>Players</string>
        </property>

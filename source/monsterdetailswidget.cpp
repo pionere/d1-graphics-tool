@@ -442,7 +442,11 @@ void MonsterDetailsWidget::updateFields()
         typesComboBox->setToolTip(tr("Dungeon Level %1-%2").arg(range.from).arg(range.to));
         this->ui->minionCheckBox->setVisible(false);
     }
-
+    bool multi = this->hero->isMulti();
+    this->ui->plrCountSpinBox->setEnabled(multi);
+    if (!multi) {
+        this->ui->plrCountSpinBox->changeValue(1);
+    }
     int numplrs = this->ui->plrCountSpinBox->value();
     int lvlbonus = this->dunLevelBonus;
     this->ui->dunLevelBonusEdit->setText(QString::number(lvlbonus));
@@ -593,9 +597,9 @@ void MonsterDetailsWidget::updateFields()
     maxdam = monDamage.maxHth;
     displayDamage(this->ui->monDamage, mindam, maxdam);
 
-    hper = 0;
+    hper = -1;
     // if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
-    if (monDamage.hth /*|| monDamage.spec*/ || (monDamage.mis && monDamage.blockMis)) {
+    if ((this->hero->getSkillFlags() & SFLAG_BLOCK) && (monDamage.hth /*|| monDamage.spec*/ || (monDamage.mis && monDamage.blockMis))) {
         hper = this->hero->getBlockChance();
         if (hper != 0) {
             hper -= (mon->_mLevel << 1);
@@ -606,7 +610,9 @@ void MonsterDetailsWidget::updateFields()
             hper = CheckHit(hper);
         }
     }
-    if ((monDamage.hth /*|| monDamage.spec*/) && monDamage.mis && !monDamage.blockMis) {
+    if (hper < 0) {
+        this->ui->plrBlockChance->setText(QString("-"));
+    } else if ((monDamage.hth /*|| monDamage.spec*/) && monDamage.mis && !monDamage.blockMis) {
         this->ui->plrBlockChance->setText(QString("%1% | 0%").arg(hper));
     } else {
         this->ui->plrBlockChance->setText(QString("%1%").arg(hper));

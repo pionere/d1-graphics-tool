@@ -536,6 +536,7 @@ void ItemSelectorDialog::updateFields()
             if (power == IPL_SKILLLVL && limitMode == 1) {
                 minval = 0;
                 maxval = GetItemSpell(-1) - 1;
+                // QMessageBox::critical(this, "Error", tr("skilllevel %1 ... %2.").arg(minval).arg(maxval));
                 limitMode = 3;
             }
         } else if (PL_Prefix[si].PLPower == IPL_SKILLLVL && limitMode == 1) {
@@ -864,6 +865,8 @@ bool ItemSelectorDialog::recreateItem()
     int counter = 0;
     auto gameHellfire = IsHellfireGame;
     IsHellfireGame = this->hero->isHellfire();
+    auto gameMulti = IsMultiGame;
+    IsMultiGame = this->hero->isMulti();
 start:
     RecreateItem(seed, wIdx, wCI);
 
@@ -954,6 +957,7 @@ done:
     if (counter != 0) {
         dProgress() << tr("Succeeded after %1 iterations.").arg(counter + 1);
     }
+    IsMultiGame = gameMulti;
     IsHellfireGame = gameHellfire;
     return true;
 }

@@ -35,8 +35,6 @@ HeroDetailsWidget::~HeroDetailsWidget()
 void HeroDetailsWidget::initialize(D1Hero *h)
 {
     this->hero = h;
-    // IsHellfireGame = !isHeroStandardClass(h->isHellfire());
-    // gnDifficulty = h->getRank();
 
     this->updateFields();
 }
@@ -94,6 +92,7 @@ void HeroDetailsWidget::updateFields()
     // set context-fields
     this->ui->gameHellfireCheckBox->setChecked(this->hero->isHellfire());
     this->ui->gameHellfireCheckBox->setEnabled(D1Hero::isStandardClass(hc));
+    this->ui->gameMultiCheckBox->setChecked(this->hero->isMulti());
     this->ui->gameDifficultyComboBox->setCurrentIndex(gnDifficulty);
 
     // set hero-fields
@@ -187,6 +186,15 @@ void HeroDetailsWidget::on_gameHellfireCheckBox_clicked()
     IsHellfireGame = this->ui->gameHellfireCheckBox->isChecked();
 
     this->hero->setHellfire(IsHellfireGame);
+
+    dMainWindow().updateWindow();
+}
+
+void HeroDetailsWidget::on_gameMultiCheckBox_clicked()
+{
+    IsMultiGame = this->ui->gameMultiCheckBox->isChecked();
+
+    this->hero->setMulti(IsMultiGame);
 
     dMainWindow().updateWindow();
 }

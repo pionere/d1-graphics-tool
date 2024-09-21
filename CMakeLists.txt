@@ -134,6 +134,8 @@ set(PROJECT_SOURCES
         source/skilldetailswidget.cpp
         source/skilldetailswidget.h
         source/skilldetailswidget.ui
+        source/spinboxwidget.cpp
+        source/spinboxwidget.h
 )
 
 qt_add_resources(RESOURCES

@@ -42,6 +42,8 @@ public:
     void setModified(bool modified = true);
     bool isHellfire() const;
     void setHellfire(bool hellfire);
+    bool isMulti() const;
+    void setMulti(bool multi);
 
     const char* getName() const;
     void setName(const QString &name);
@@ -154,5 +156,6 @@ private:
     QString filePath;
     bool modified = false;
     bool hellfire = false;
+    bool multi = false;
     D1Pal *palette = nullptr;
 };

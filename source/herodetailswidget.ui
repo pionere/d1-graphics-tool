@@ -44,11 +44,28 @@
          <number>60</number>
         </property>
         <property name="text">
-         <string>Difficulty:</string>
+         <string>Multi:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="3">
+       <widget class="QCheckBox" name="gameMultiCheckBox">
+        <property name="toolTip">
+         <string>Check if it is for a multiplayer game</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>60</number>
+        </property>
+        <property name="text">
+         <string>Difficulty:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
        <widget class="QComboBox" name="gameDifficultyComboBox">
         <item>
          <property name="text">

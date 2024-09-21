@@ -1105,7 +1105,7 @@ int GetItemSpell(int idx)
 		}
 	}
 	// assert(ns > 0);
-	if ((unsigned)idx < (unsigned)ns)
+	if ((unsigned)idx >= (unsigned)ns)
 		return ns;
 	return ss[idx];
 }
