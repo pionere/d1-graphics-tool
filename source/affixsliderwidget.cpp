@@ -2,6 +2,8 @@
 
 #include <QToolTip>
 
+#include "dungeon/all.h"
+
 AffixSliderWidget::AffixSliderWidget(QWidget *parent)
     : SliderWidget(parent)
 {
