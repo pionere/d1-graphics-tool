@@ -9,7 +9,6 @@
 #include <QUndoStack>
 #include <QWidget>
 
-#include "celview.h"
 #include "d1pal.h"
 #include "d1trn.h"
 
@@ -108,8 +107,8 @@ public:
     void setTrn(D1Trn *t);
     bool isTrnWidget();
 
-    void initialize(D1Pal *p, CelView *cv);
-    void initialize(D1Trn *t, CelView *cv);
+    void initialize(D1Pal *p);
+    void initialize(D1Trn *t);
 
     void initializeUi();
     // void initializePathComboBox();
@@ -187,8 +186,6 @@ private:
     QUndoStack *undoStack;
     Ui::PaletteWidget *ui;
     bool isTrn;
-
-    CelView *celView;
 
     PaletteScene scene = PaletteScene(this);
 

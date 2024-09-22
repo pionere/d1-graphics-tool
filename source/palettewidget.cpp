@@ -324,22 +324,20 @@ bool PaletteWidget::isTrnWidget()
     return this->isTrn;
 }
 
-void PaletteWidget::initialize(D1Pal *p, CelView *cv)
+void PaletteWidget::initialize(D1Pal *p)
 {
     this->isTrn = false;
     this->pal = p;
     this->trn = nullptr;
-    this->celView = cv;
 
     this->initializeUi();
 }
 
-void PaletteWidget::initialize(D1Trn *t, CelView *cv)
+void PaletteWidget::initialize(D1Trn *t)
 {
     this->isTrn = true;
     this->pal = nullptr;
     this->trn = t;
-    this->celView = cv;
 
     this->initializeUi();
 }

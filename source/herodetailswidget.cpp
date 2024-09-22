@@ -4,7 +4,7 @@
 #include <QMessageBox>
 #include <QString>
 
-#include "celview.h"
+#include "heroview.h"
 #include "mainwindow.h"
 #include "ui_herodetailswidget.h"
 
@@ -82,9 +82,9 @@ void HeroDetailsWidget::updateFields()
     LineEditWidget *lineEdit;
 
     QObject *view = this->parent();
-    CelView *celView = qobject_cast<CelView *>(view);
-    if (celView != nullptr) {
-        celView->updateLabel();
+    HeroView *heroView = qobject_cast<HeroView *>(view);
+    if (heroView != nullptr) {
+        heroView->updateLabel();
     }
     // this->updateLabel();
 
