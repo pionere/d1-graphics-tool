@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CelView</class>
+ <class>HeroView</class>
  <widget class="QWidget">
   <property name="geometry">
    <rect>
@@ -21,7 +21,7 @@
     <widget class="QLabel" name="heroLabel"/>
    </item>
    <item>
-    <widget class="QGraphicsView" name="celGraphicsView">
+    <widget class="QGraphicsView" name="heroGraphicsView">
      <!--property name="minimumSize">
       <size>
        <width>294</width>

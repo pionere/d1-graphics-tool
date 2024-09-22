@@ -66,7 +66,7 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
         this->hellfire = hss->isHellfire != 0;
         this->multi = hss->isMulti != 0;
     } else {
-        this->hellfire = D1Hero::isStandardClass(hss->pps.pClass);
+        this->hellfire = !D1Hero::isStandardClass(hss->pps.pClass);
     }
 
     auto gameHellfire = IsHellfireGame;

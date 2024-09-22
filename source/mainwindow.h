@@ -9,10 +9,10 @@
 #include <QTranslator>
 #include <QUndoCommand>
 
-#include "celview.h"
 #include "d1hro.h"
 #include "d1pal.h"
 #include "d1trn.h"
+#include "heroview.h"
 #include "itemselectordialog.h"
 #include "openasdialog.h"
 #include "palettewidget.h"
@@ -196,7 +196,7 @@ private:
     QAction *undoAction;
     QAction *redoAction;
 
-    CelView *heroView = nullptr;
+    HeroView *heroView = nullptr;
     SidePanelWidget *sideView = nullptr;
 
     PaletteWidget *palWidget = nullptr;

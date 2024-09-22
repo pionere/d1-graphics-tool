@@ -629,7 +629,8 @@ int GetPlrMisHitChance(int mtype, int dist, const D1Hero *hero, const MonsterStr
     int hper;
     if (missiledata[mtype].mdFlags & MIF_ARROW) {
         hper = hero->getHitChance() - mon->_mArmorClass;
-        hper -= ((dist - 4) * (dist - 4) >> 1); // MISDIST
+        // hper -= ((dist - 4) * (dist - 4) >> 1); // MISDIST
+        hper -= abs(dist - 6);
     } else if (missiledata[mtype].mdFlags & MIF_AREA) {
         hper = 40 + 2 * hero->getLevel();
         hper -= 2 * mon->_mLevel;

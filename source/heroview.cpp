@@ -1,4 +1,4 @@
-#include "celview.h"
+#include "heroview.h"
 
 #include <algorithm>
 
@@ -13,16 +13,16 @@
 #include "config.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
-#include "ui_celview.h"
+#include "ui_heroview.h"
 
 #include "dungeon/all.h"
 
-CelScene::CelScene(QWidget *v)
+HeroScene::HeroScene(QWidget *v)
     : QGraphicsScene(v)
 {
 }
 
-void CelScene::keyPressEvent(QKeyEvent *event)
+void HeroScene::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
         this->panning = true;
@@ -32,7 +32,7 @@ void CelScene::keyPressEvent(QKeyEvent *event)
     QGraphicsScene::keyPressEvent(event);
 }
 
-void CelScene::keyReleaseEvent(QKeyEvent *event)
+void HeroScene::keyReleaseEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Control && !this->leftMousePressed) {
         this->panning = false;
@@ -42,7 +42,7 @@ void CelScene::keyReleaseEvent(QKeyEvent *event)
     QGraphicsScene::keyReleaseEvent(event);
 }
 
-void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
+void HeroScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
 {
     if (!(event->buttons() & Qt::LeftButton)) {
         return;
@@ -70,19 +70,19 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, int flags)
     }
     // emit this->framePixelClicked(this->lastPos, first);
     QObject *view = this->parent();
-    CelView *celView = qobject_cast<CelView *>(view);
-    if (celView != nullptr) {
-        celView->framePixelClicked(currPos, flags);
+    HeroView *heroView = qobject_cast<HeroView *>(view);
+    if (heroView != nullptr) {
+        heroView->framePixelClicked(currPos, flags);
         return;
     }
 }
 
-void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void HeroScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     this->mouseEvent(event, FIRST_CLICK);
 }
 
-void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void HeroScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         this->leftMousePressed = false;
@@ -94,25 +94,25 @@ void CelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsScene::mouseReleaseEvent(event);
 }
 
-void CelScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void HeroScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     this->mouseEvent(event, FIRST_CLICK | DOUBLE_CLICK);
 }
 
-void CelScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
+void HeroScene::mouseHoverEvent(QGraphicsSceneMouseEvent *event)
 {
     // emit this->framePixelHovered(this->lastPos);
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());
     QObject *view = this->parent();
-    CelView *celView = qobject_cast<CelView *>(view);
-    if (celView != nullptr) {
-        celView->framePixelHovered(currPos);
+    HeroView *heroView = qobject_cast<HeroView *>(view);
+    if (heroView != nullptr) {
+        heroView->framePixelHovered(currPos);
         return;
     }
 }
 
-void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void HeroScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (this->panning) {
         QGraphicsScene::mouseMoveEvent(event);
@@ -124,12 +124,12 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     this->mouseHoverEvent(event);
 }
 
-/*void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+/*void HeroScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     this->dragMoveEvent(event);
 }
 
-void CelScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
+void HeroScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (MainWindow::hasHeroUrl(event->mimeData())) {
         event->acceptProposedAction();
@@ -138,7 +138,7 @@ void CelScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
     }
 }
 
-void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
+void HeroScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     event->acceptProposedAction();
 
@@ -149,20 +149,20 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     dMainWindow().openFiles(filePaths);
 }*/
 
-CelView::CelView(QWidget *parent)
+HeroView::HeroView(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::CelView())
+    , ui(new Ui::HeroView())
 {
     this->ui->setupUi(this);
-    this->ui->celGraphicsView->setScene(&this->celScene);
-    this->ui->celGraphicsView->setMouseTracking(true);
+    this->ui->heroGraphicsView->setScene(&this->heroScene);
+    this->ui->heroGraphicsView->setMouseTracking(true);
 
     this->mainHeroDetails = new HeroDetailsWidget(this);
     this->ui->heroVBoxLayout->addWidget(this->mainHeroDetails);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
-    // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
-    // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);
+    // QObject::connect(&this->heroScene, &HeroScene::framePixelClicked, this, &HeroView::framePixelClicked);
+    // QObject::connect(&this->heroScene, &HeroScene::framePixelHovered, this, &HeroView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
     // QObject::connect(this->ui->heroNameEdit, SIGNAL(cancel_signal()), this, SLOT(on_heroNameEdit_escPressed()));
@@ -176,12 +176,12 @@ CelView::CelView(QWidget *parent)
     setAcceptDrops(true);
 }
 
-CelView::~CelView()
+HeroView::~HeroView()
 {
     delete ui;
 }
 
-void CelView::initialize(D1Pal *p, D1Hero *h, bool bottomPanelHidden)
+void HeroView::initialize(D1Pal *p, D1Hero *h, bool bottomPanelHidden)
 {
     this->pal = p;
     // this->hero = h;
@@ -194,18 +194,18 @@ void CelView::initialize(D1Pal *p, D1Hero *h, bool bottomPanelHidden)
     // this->updateFields();
 }
 
-void CelView::setPal(D1Pal *p)
+void HeroView::setPal(D1Pal *p)
 {
     this->pal = p;
 }
 
-void CelView::setHero(D1Hero *h)
+void HeroView::setHero(D1Hero *h)
 {
     this->hero = h;
     this->mainHeroDetails->initialize(h);
 }
 
-void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
+void HeroView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
 {
     label->setToolTip(filePath);
 
@@ -218,9 +218,9 @@ void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modif
 }
 
 // Displaying CEL file path information
-void CelView::updateLabel()
+void HeroView::updateLabel()
 {
-    CelView::setLabelContent(this->ui->heroLabel, this->hero->getFilePath(), this->hero->isModified());
+    HeroView::setLabelContent(this->ui->heroLabel, this->hero->getFilePath(), this->hero->isModified());
 }
 
 /*static void displayDamage(QLabel *label, int minDam, int maxDam)
@@ -235,7 +235,7 @@ void CelView::updateLabel()
     }
 }
 
-/*void CelView::updateFields()
+/*void HeroView::updateFields()
 {
     int hc, bv;
     QLabel *label;
@@ -319,12 +319,12 @@ void CelView::updateLabel()
     displayDamage(this->ui->heroAcidDamLabel, this->hero->getAMinDam(), this->hero->getAMaxDam());
 }*/
 
-CelScene *CelView::getCelScene() const
+HeroScene *HeroView::getHeroScene() const
 {
-    return const_cast<CelScene *>(&this->celScene);
+    return const_cast<HeroScene *>(&this->heroScene);
 }
 
-int CelView::invItemIdx(QPoint &pos) const
+int HeroView::invItemIdx(QPoint &pos) const
 {
     constexpr int gnWndInvX = 0;
     constexpr int gnWndInvY = 0;
@@ -348,7 +348,7 @@ int CelView::invItemIdx(QPoint &pos) const
     return INVITEM_NONE;
 }
 
-void CelView::framePixelClicked(const QPoint &pos, int flags)
+void HeroView::framePixelClicked(const QPoint &pos, int flags)
 {
     QPoint tpos = pos;
     int idx = this->invItemIdx(tpos);
@@ -357,7 +357,7 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
     }
 }
 
-bool CelView::framePos(const QPoint &p) const
+bool HeroView::framePos(const QPoint &p) const
 {
     constexpr int INV_WIDTH = SPANEL_WIDTH; // same as D1Hero::getEquipmentImage
     constexpr int INV_HEIGHT = 178;
@@ -369,7 +369,7 @@ bool CelView::framePos(const QPoint &p) const
     return true;
 }
 
-void CelView::framePixelHovered(const QPoint &pos)
+void HeroView::framePixelHovered(const QPoint &pos)
 {
     QPoint tpos = pos;
     int idx = this->invItemIdx(tpos);
@@ -387,40 +387,40 @@ void CelView::framePixelHovered(const QPoint &pos)
     dMainWindow().pointHovered(tpos);
 }
 
-void CelView::displayFrame()
+void HeroView::displayFrame()
 {
-    // LogErrorF("CelView::displayFrame 0");
+    // LogErrorF("HeroView::displayFrame 0");
     // this->updateFields();
     this->mainHeroDetails->displayFrame();
-    // LogErrorF("CelView::displayFrame 1");
-    this->celScene.clear();
-    // LogErrorF("CelView::displayFrame 2");
+    // LogErrorF("HeroView::displayFrame 1");
+    this->heroScene.clear();
+    // LogErrorF("HeroView::displayFrame 2");
     // Getting the current frame to display
-    QImage celFrame = this->hero->getEquipmentImage(this->hoverItem);
-    // LogErrorF("CelView::displayFrame 3 %dx%d", celFrame.width(), celFrame.height());
-    this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
+    QImage invFrame = this->hero->getEquipmentImage(this->hoverItem);
+    // LogErrorF("HeroView::displayFrame 3 %dx%d", invFrame.width(), invFrame.height());
+    this->heroScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     // Building background of the width/height of the CEL frame
-    QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
-    celFrameBackground.fill(QColor(Config::getGraphicsTransparentColor()));
+    QImage invFrameBackground = QImage(invFrame.width(), invFrame.height(), QImage::Format_ARGB32);
+    invFrameBackground.fill(QColor(Config::getGraphicsTransparentColor()));
 
     // Resize the scene rectangle to include some padding around the CEL frame
-    this->celScene.setSceneRect(0, 0,
-        CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_MARGIN,
-        CEL_SCENE_MARGIN + celFrame.height() + CEL_SCENE_MARGIN);
-    // ui->celGraphicsView->adjustSize();
+    this->heroScene.setSceneRect(0, 0,
+        CEL_SCENE_MARGIN + invFrame.width() + CEL_SCENE_MARGIN,
+        CEL_SCENE_MARGIN + invFrame.height() + CEL_SCENE_MARGIN);
+    // ui->heroGraphicsView->adjustSize();
 
     // Add the backgrond and CEL frame while aligning it in the center
-    this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
+    this->heroScene.addPixmap(QPixmap::fromImage(invFrameBackground))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    this->celScene.addPixmap(QPixmap::fromImage(celFrame))
+    this->heroScene.addPixmap(QPixmap::fromImage(invFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    // LogErrorF("CelView::displayFrame 4");
+    // LogErrorF("HeroView::displayFrame 4");
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
 }
 
-void CelView::toggleBottomPanel()
+void HeroView::toggleBottomPanel()
 {
     this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
 }
@@ -442,7 +442,7 @@ void ItemAction::on_action_triggered()
     dMainWindow().updateWindow();
 }
 
-void CelView::ShowContextMenu(const QPoint &pos)
+void HeroView::ShowContextMenu(const QPoint &pos)
 {
     int ii = this->hoverItem;
     if (ii != INVITEM_NONE) {
@@ -511,19 +511,19 @@ void CelView::ShowContextMenu(const QPoint &pos)
 }
 
 
-/*void CelView::dragEnterEvent(QDragEnterEvent *event)
+/*void HeroView::dragEnterEvent(QDragEnterEvent *event)
 {
     this->dragMoveEvent(event);
 }
 
-void CelView::dragMoveEvent(QDragMoveEvent *event)
+void HeroView::dragMoveEvent(QDragMoveEvent *event)
 {
     if (MainWindow::hasImageUrl(event->mimeData())) {
         event->acceptProposedAction();
     }
 }
 
-void CelView::dropEvent(QDropEvent *event)
+void HeroView::dropEvent(QDropEvent *event)
 {
     event->acceptProposedAction();
 

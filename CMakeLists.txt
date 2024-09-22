@@ -48,9 +48,6 @@ include_directories(source)
 set(PROJECT_SOURCES
         source/affixsliderwidget.cpp
         source/affixsliderwidget.h
-        source/celview.cpp
-        source/celview.h
-        source/celview.ui
         source/config.cpp
         source/config.h
         source/d1cel.cpp
@@ -91,6 +88,9 @@ set(PROJECT_SOURCES
         source/herodetailswidget.cpp
         source/herodetailswidget.h
         source/herodetailswidget.ui
+        source/heroview.cpp
+        source/heroview.h
+        source/heroview.ui
         source/itemdetailswidget.cpp
         source/itemdetailswidget.h
         source/itemdetailswidget.ui

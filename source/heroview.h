@@ -24,7 +24,7 @@
 #define CEL_SCENE_MARGIN 0
 
 namespace Ui {
-class CelView;
+class HeroView;
 } // namespace Ui
 
 enum class IMAGE_FILE_MODE;
@@ -35,11 +35,11 @@ typedef enum _mouse_click_flags {
     SHIFT_CLICK  = 1 << 2,
 } _mouse_click_flags;
 
-class CelScene : public QGraphicsScene {
+class HeroScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
-    CelScene(QWidget *view);
+    HeroScene(QWidget *view);
 
 private:
     void mouseEvent(QGraphicsSceneMouseEvent *event, int flags);
@@ -82,18 +82,18 @@ private:
     int pi;
 };
 
-class CelView : public QWidget {
+class HeroView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit CelView(QWidget *parent);
-    ~CelView();
+    explicit HeroView(QWidget *parent);
+    ~HeroView();
 
     void initialize(D1Pal *pal, D1Hero *hero, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
     void setHero(D1Hero *hero);
 
-    CelScene *getCelScene() const;
+    HeroScene *getHeroScene() const;
 
     void framePixelClicked(const QPoint &pos, int flags);
     void framePixelHovered(const QPoint &pos);
@@ -145,8 +145,8 @@ private slots:
     void ShowContextMenu(const QPoint &pos);
 
 private:
-    Ui::CelView *ui;
-    CelScene celScene = CelScene(this);
+    Ui::HeroView *ui;
+    HeroScene heroScene = HeroScene(this);
     HeroDetailsWidget *mainHeroDetails;
 
     D1Pal *pal;
