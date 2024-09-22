@@ -7,7 +7,7 @@ class AffixSliderWidget : public SliderWidget {
 
 public:
     AffixSliderWidget(QWidget *parent = nullptr);
-    ~AffixSliderWidget();
+    ~AffixSliderWidget() = default;
 
     void changeValue(int value);
     void setLimitMode(int mode);
