@@ -187,7 +187,7 @@ typedef struct MonsterDamage {
 
 } MonsterDamage;
 
-static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *hero)
+static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, int dist, const D1Hero *hero)
 {
     bool hth = false;
     bool special = false; // hit2/dam2 + afnum2
@@ -305,7 +305,7 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, const D1Hero *he
         }
         result.minMis = mindam;
         result.maxMis = maxdam;
-        result.chanceMis = GetMonMisHitChance(mtype, mon, hero);
+        result.chanceMis = GetMonMisHitChance(mtype, dist, mon, hero);
     }
 
     return result;
@@ -325,7 +325,7 @@ typedef struct PlayerDamage {
     BYTE resMis;
 } PlayerDamage;
 
-static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStruct *mon)
+static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, int dist, const MonsterStruct *mon)
 {
     int sl = hero->getSkillLvl(sn);
     bool mis = spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED);
@@ -337,10 +337,10 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, const MonsterStr
         mtype = GetBaseMissile(mtype);
         result.resMis = GetMissileElement(mtype);
         int mindam, maxdam;
-        GetSkillDamage(sn, sl, hero, mon, &mindam, &maxdam);
+        GetSkillDamage(sn, sl, dist, hero, mon, &mindam, &maxdam);
         result.minMis = mindam;
         result.maxMis = maxdam;
-        result.chanceMis = GetPlrMisHitChance(mtype, hero, mon);
+        result.chanceMis = GetPlrMisHitChance(mtype, dist, hero, mon);
         if (sn == SPL_CHARGE)
             result.chanceMis = sl * 16 - mon->_mArmorClass;
     }
@@ -533,10 +533,13 @@ void MonsterDetailsWidget::updateFields()
     if (mi < 0) mi = 0;
     skillsComboBox->setCurrentIndex(mi);
 
+    int dist = this->ui->plrDistSpinBox->value();
+    this->ui->plrDistSpinBox->setToolTip(tr("Distance to target in ticks. Charge distance to target: %2").arg(dist * this->hero->hero->getChargeSpeed()));
+
     int hper, mindam, maxdam;
     int sn = skillsComboBox->currentData().value<int>();
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Using skill meteor %1.").arg(this->hero->getSkillLvl(SPL_METEOR)));
-    const PlayerDamage plrDam = GetPlayerDamage(this->hero, sn, mon);
+    const PlayerDamage plrDam = GetPlayerDamage(this->hero, sn, dist, mon);
     if (plrDam.hth) {
         hper = plrDam.chanceHth;
         hper = CheckHit(hper);
@@ -552,7 +555,7 @@ void MonsterDetailsWidget::updateFields()
         this->ui->plrHitChance2->setText(QString("%1%").arg(hper));
     }
 
-    const MonsterDamage monDamage = GetMonsterDamage(mon, this->hero);
+    const MonsterDamage monDamage = GetMonsterDamage(mon, dist, this->hero);
     if (monDamage.hth) {
         hper = monDamage.chanceHth;
         hper = CheckHit(hper);

@@ -5,11 +5,6 @@
  * Various global enumerators.
  */
 
-typedef enum _bool_value {
-	FALSE,
-	TRUE
-} _bool_value;
-
 typedef enum window_messages {
 	DVL_DWM_NEXTLVL, // dungeon -> next level
 	DVL_DWM_PREVLVL, // dungeon -> previous level

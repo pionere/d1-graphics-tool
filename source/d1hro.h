@@ -98,6 +98,7 @@ public:
     int getSkillSources(int sn) const;
 
     int getWalkSpeed() const;
+    int getChargeSpeed() const;
     int getBaseAttackSpeed() const;
     int getBaseCastSpeed() const;
     int getRecoverySpeed() const;

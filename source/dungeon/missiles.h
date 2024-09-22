@@ -16,10 +16,10 @@ class D1Hero;
 struct MonsterStruct;
 
 void GetMissileDamage(int mtype, const MonsterStruct *source, int *mindam, int *maxdam);
-void GetSkillDamage(int sn, int sl, const D1Hero *source, const MonsterStruct *target, int *mindam, int *maxdam);
+void GetSkillDamage(int sn, int sl, int dist, const D1Hero *source, const MonsterStruct *target, int *mindam, int *maxdam);
 void GetSkillDesc(const D1Hero *hero, int sn, int sl);
-int GetMonMisHitChance(int mtype, const MonsterStruct *mon, const D1Hero *hero);
-int GetPlrMisHitChance(int mtype, const D1Hero *hero, const MonsterStruct *mon);
+int GetMonMisHitChance(int mtype, int dist, const MonsterStruct *mon, const D1Hero *hero);
+int GetPlrMisHitChance(int mtype, int dist, const D1Hero *hero, const MonsterStruct *mon);
 unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrates);
 unsigned CalcPlrDam(const D1Hero *hero, BYTE mRes, unsigned damage);
 int GetBaseMissile(int mtype);

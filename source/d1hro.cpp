@@ -1065,6 +1065,21 @@ int D1Hero::getWalkSpeed() const
     return players[this->pnum]._pIWalkSpeed;
 }
 
+int D1Hero::getChargeSpeed() const
+{
+    int result = 2;
+    if (players[this->pnum]._pIWalkSpeed != 0) {
+        if (players[this->pnum]._pIWalkSpeed == 3) {
+            // ISPL_FASTESTWALK
+            result = 4;
+        } else {
+            // (ISPL_FASTERWALK | ISPL_FASTWALK)
+            result = 3;
+        }
+    }
+    return result;
+}
+
 int D1Hero::getBaseAttackSpeed() const
 {
     return players[this->pnum]._pIBaseAttackSpeed;

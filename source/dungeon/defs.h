@@ -133,6 +133,13 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
     && y >= 0                 \
     && y < MAXDUNY)
 
+#ifndef TRUE
+#define TRUE true
+#endif
+#ifndef FALSE
+#define FALSE false
+#endif
+
 #ifdef _MSC_VER
 #define ASSUME_UNREACHABLE __assume(0);
 #elif defined(__clang__)
