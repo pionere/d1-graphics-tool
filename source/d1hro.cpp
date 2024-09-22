@@ -74,7 +74,7 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     auto gameMulti = IsMultiGame;
     IsMultiGame = this->multi;
 
-    UnPackPlayer(hss->pps, this->pnum);
+    UnPackPlayer(&hss->pps, this->pnum);
     // plr._pDunLevel = DLV_CATHEDRAL1;
 
     if (fileData.size() == sizeof(HeroSaveStruct)) {
