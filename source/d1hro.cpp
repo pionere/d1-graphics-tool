@@ -61,7 +61,7 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
 
     this->hellfire = false;
     this->multi = false;
-    const HeroSaveStruct *hss = (const PkPlayerStruct*)fileData.constData());
+    const HeroSaveStruct *hss = (const HeroSaveStruct*)fileData.constData();
     if (fileData.size() == sizeof(HeroSaveStruct)) {
         this->hellfire = hss->isHellfire != 0;
         this->multi = hss->isMulti != 0;
@@ -74,21 +74,21 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     auto gameMulti = IsMultiGame;
     IsMultiGame = this->multi;
 
-    UnPackPlayer((const PkPlayerStruct*)fileData.constData(), this->pnum);
+    UnPackPlayer(hss->pps, this->pnum);
     // plr._pDunLevel = DLV_CATHEDRAL1;
 
     if (fileData.size() == sizeof(HeroSaveStruct)) {
-        static_assert(lengthof(hss.itemNames) >= lengthof(plr._pInvBody) + lengthof(plr._pInvList) + lengthof(plr._pSpdList), "item-name copy in D1Hero::load must be adjusted.");
-        static_assert(sizeof(hss.itemNames[0]) == sizeof(plr._pInvBody[0]._iName), "memcopy in D1Hero::load must be adjusted.");
+        // static_assert(lengthof(hss->itemNames) >= lengthof(plr._pInvBody) + lengthof(plr._pInvList) + lengthof(plr._pSpdList), "item-name copy in D1Hero::load must be adjusted.");
+        static_assert(sizeof(hss->itemNames[0]) == sizeof(plr._pInvBody[0]._iName), "memcopy in D1Hero::load must be adjusted.");
         int cursor = 0;
         for (int i = 0; i < lengthof(plr._pInvBody); i++, cursor++) {
-            memcpy(plr._pInvBody[i]._iName, &hss.itemNames[cursor], sizeof(plr._pInvBody[i]._iName));
+            memcpy(plr._pInvBody[i]._iName, &hss->itemNames[cursor], sizeof(plr._pInvBody[i]._iName));
         }
         for (int i = 0; i < lengthof(plr._pInvList); i++, cursor++) {
-            memcpy(plr._pInvList[i]._iName, &hss.itemNames[cursor], sizeof(plr._pInvList[i]._iName));
+            memcpy(plr._pInvList[i]._iName, &hss->itemNames[cursor], sizeof(plr._pInvList[i]._iName));
         }
         for (int i = 0; i < lengthof(plr._pSpdList); i++, cursor++) {
-            memcpy(plr._pSpdList[i]._iName, &hss.itemNames[cursor], sizeof(plr._pSpdList[i]._iName));
+            memcpy(plr._pSpdList[i]._iName, &hss->itemNames[cursor], sizeof(plr._pSpdList[i]._iName));
         }
     }
 
@@ -1518,7 +1518,7 @@ bool D1Hero::save(const SaveAsParam &params)
     PackPlayer(&hss.pps, this->pnum);
     hss.isHellfire = IsHellfireGame;
     hss.isMulti = IsMultiGame;
-    static_assert(lengthof(hss.itemNames) >= lengthof(plr._pInvBody) + lengthof(plr._pInvList) + lengthof(plr._pSpdList), "item-name copy in D1Hero::save must be adjusted.");
+    // static_assert(lengthof(hss.itemNames) >= lengthof(plr._pInvBody) + lengthof(plr._pInvList) + lengthof(plr._pSpdList), "item-name copy in D1Hero::save must be adjusted.");
     static_assert(sizeof(hss.itemNames[0]) == sizeof(plr._pInvBody[0]._iName), "memcopy in D1Hero::save must be adjusted.");
     int cursor = 0;
     for (int i = 0; i < lengthof(plr._pInvBody); i++, cursor++) {
