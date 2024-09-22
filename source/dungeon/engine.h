@@ -103,7 +103,9 @@ template <unsigned N1, unsigned N2>
 inline void copy_cstr(char (&dest)[N1], const char (&src)[N2])
 {
 	static_assert(N1 >= N2, "String does not fit the destination.");
-	memcpy(dest, src, std::min(N1, (unsigned)(((N2 + sizeof(int) - 1) / sizeof(int)) * sizeof(int))));
+	constexpr unsigned src_len = (((N2 + sizeof(int) - 1) / sizeof(int)) * sizeof(int);
+	constexpr unsigned len = N1 >= src_len ? src_len : N1;
+	memcpy(dest, src, len);
 }
 
 /*

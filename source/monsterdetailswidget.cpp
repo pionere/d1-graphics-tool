@@ -673,6 +673,11 @@ void MonsterDetailsWidget::on_heroSkillsComboBox_activated(int index)
     this->updateFields();
 }
 
+void MonsterDetailsWidget::on_plrDistSpinBox_valueChanged(int value)
+{
+    this->updateFields();
+}
+
 void MonsterDetailsWidget::on_closeButton_clicked()
 {
     this->setVisible(false);

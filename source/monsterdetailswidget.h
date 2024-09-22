@@ -35,6 +35,7 @@ private slots:
     void on_minionCheckBox_clicked();
 
     void on_heroSkillsComboBox_activated(int index);
+    void on_plrDistSpinBox_valueChanged(int value);
 
     void on_closeButton_clicked();
 
