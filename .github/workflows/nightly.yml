@@ -55,23 +55,23 @@ jobs:
     - name: Package
       run: |
         mkdir dist
-        copy build\Release\D1GraphicsTool.exe dist
+        copy build\Release\D1HeroPlanner.exe dist
         cd dist
-        windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
+        windeployqt D1HeroPlanner.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
       shell: cmd
 
     - name: Create zip
       uses: thedoctor0/zip-release@main
       with:
         type: 'zip'
-        filename: '../D1GraphicsTool.zip'
+        filename: '../D1HeroPlanner.zip'
         directory: 'dist'
 
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        path: D1GraphicsTool.zip
-        name: D1GraphicsTool-Windows-x64.zip
+        path: D1HeroPlanner.zip
+        name: D1HeroPlanner-Windows-x64.zip
 
   #  cmake 32bit
   build_win_x86:
@@ -100,23 +100,23 @@ jobs:
     - name: Package
       run: |
         mkdir dist
-        copy build\Release\D1GraphicsTool.exe dist
+        copy build\Release\D1HeroPlanner.exe dist
         cd dist
-        windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
+        windeployqt D1HeroPlanner.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
       shell: cmd
 
     - name: Create zip
       uses: thedoctor0/zip-release@main
       with:
         type: 'zip'
-        filename: '../D1GraphicsTool.zip'
+        filename: '../D1HeroPlanner.zip'
         directory: 'dist'
 
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        path: D1GraphicsTool.zip
-        name: D1GraphicsTool-Windows-x86.zip
+        path: D1HeroPlanner.zip
+        name: D1HeroPlanner-Windows-x86.zip
 
   #  linux 64bit
   build_linux_x64:
@@ -140,14 +140,14 @@ jobs:
 
     - name: Create zip
       run: |
-        mv build/d1graphicstool*.deb build/D1GraphicsTool-Linux-x64.deb
-        zip -j -q D1GraphicsTool.zip build/D1GraphicsTool build/D1GraphicsTool-Linux-x64.deb
+        mv build/d1graphicstool*.deb build/D1HeroPlanner-Linux-x64.deb
+        zip -j -q D1HeroPlanner.zip build/D1HeroPlanner build/D1HeroPlanner-Linux-x64.deb
 
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        path: D1GraphicsTool.zip
-        name: D1GraphicsTool-Linux-x64.zip
+        path: D1HeroPlanner.zip
+        name: D1HeroPlanner-Linux-x64.zip
 
   release:
     needs: [build_check, build_win_x64, build_win_x86, build_linux_x64]
@@ -156,24 +156,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # x86 builds
-    - name: Download Win D1GraphicsTool artifact
+    - name: Download Win D1HeroPlanner artifact
       uses: actions/download-artifact@v4
       with:
-        name: D1GraphicsTool-Windows-x86.zip
-    - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Windows-x86.zip
+        name: D1HeroPlanner-Windows-x86.zip
+    - run: mv ${{github.workspace}}/D1HeroPlanner.zip ${{github.workspace}}/D1HeroPlanner-Windows-x86.zip
 
     # x64 builds
-    - name: Download Win D1GraphicsTool artifact
+    - name: Download Win D1HeroPlanner artifact
       uses: actions/download-artifact@v4
       with:
-        name: D1GraphicsTool-Windows-x64.zip
-    - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Windows-x64.zip
+        name: D1HeroPlanner-Windows-x64.zip
+    - run: mv ${{github.workspace}}/D1HeroPlanner.zip ${{github.workspace}}/D1HeroPlanner-Windows-x64.zip
 
-    - name: Download Linux D1GraphicsTool artifact
+    - name: Download Linux D1HeroPlanner artifact
       uses: actions/download-artifact@v4
       with:
-        name: D1GraphicsTool-Linux-x64.zip
-    - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Linux-x64.zip
+        name: D1HeroPlanner-Linux-x64.zip
+    - run: mv ${{github.workspace}}/D1HeroPlanner.zip ${{github.workspace}}/D1HeroPlanner-Linux-x64.zip
 
     - name: Create release notes
       run: |
@@ -181,12 +181,12 @@ jobs:
         echo ''                             >> RELEASE_NOTE.md
         echo 'For the list of changes see [changelog](CHANGELOG.md).' >> RELEASE_NOTE.md
         echo ''                             >> RELEASE_NOTE.md
-        echo '### **D1GraphicsTool**'       >> RELEASE_NOTE.md
+        echo '### **D1HeroPlanner**'       >> RELEASE_NOTE.md
         echo '_Filename_ | _Description_'   >> RELEASE_NOTE.md
         echo '------------ | -------------' >> RELEASE_NOTE.md
-        echo '[D1GraphicsTool-Windows-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x64.zip)   | D1GraphicsTool for `Windows x64`' >> RELEASE_NOTE.md
-        echo '[D1GraphicsTool-Windows-x86.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x86.zip)   | D1GraphicsTool for `Windows x86`' >> RELEASE_NOTE.md
-        echo '[D1GraphicsTool-Linux-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Linux-x64.zip)   | D1GraphicsTool for `Linux x64`' >> RELEASE_NOTE.md
+        echo '[D1HeroPlanner-Windows-x64.zip](../../releases/download/dgt-nightly/D1HeroPlanner-Windows-x64.zip)   | D1HeroPlanner for `Windows x64`' >> RELEASE_NOTE.md
+        echo '[D1HeroPlanner-Windows-x86.zip](../../releases/download/dgt-nightly/D1HeroPlanner-Windows-x86.zip)   | D1HeroPlanner for `Windows x86`' >> RELEASE_NOTE.md
+        echo '[D1HeroPlanner-Linux-x64.zip](../../releases/download/dgt-nightly/D1HeroPlanner-Linux-x64.zip)   | D1HeroPlanner for `Linux x64`' >> RELEASE_NOTE.md
 
     #- name: Show content of workspace
     #  run: find $RUNNER_WORKSPACE
@@ -215,9 +215,9 @@ jobs:
         draft: false
         prerelease: true
         files: |
-          ${{github.workspace}}/D1GraphicsTool-Windows-x64.zip
-          ${{github.workspace}}/D1GraphicsTool-Windows-x86.zip
-          ${{github.workspace}}/D1GraphicsTool-Linux-x64.zip
+          ${{github.workspace}}/D1HeroPlanner-Windows-x64.zip
+          ${{github.workspace}}/D1HeroPlanner-Windows-x86.zip
+          ${{github.workspace}}/D1HeroPlanner-Linux-x64.zip
         fail_on_unmatched_files: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

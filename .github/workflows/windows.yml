@@ -7,6 +7,9 @@ on: [ push, pull_request ]
 #  pull_request:
 #    branches: [ "master" ]
 
+env:
+  PROJECT_NAME: 'D1HeroPlanner'
+
 jobs:
   build:
 
@@ -32,21 +35,21 @@ jobs:
     - name: Package
       run: |
         mkdir dist
-        copy build\Release\D1GraphicsTool.exe dist
+        copy build\Release\${{ env.PROJECT_NAME }}.exe dist
         cd dist
-        windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
+        windeployqt ${{ env.PROJECT_NAME }}.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
       shell: cmd
 
     - name: Upload
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v4
       with:
-        name: D1GraphicsTool-Windows-x64
+        name: ${{ env.PROJECT_NAME }}-Windows-x64
         path: dist
 
     - name: Upload bin
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v4
       with:
-        name: D1GraphicsTool.exe
-        path: build\Release\D1GraphicsTool.exe
+        name: ${{ env.PROJECT_NAME }}.exe
+        path: build\Release\${{ env.PROJECT_NAME }}.exe
