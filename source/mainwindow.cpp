@@ -839,9 +839,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->sideFrameLayout->addWidget(this->sideView);
 
     // Initialize palette widgets
-    this->palWidget->initialize(this->pal, this->heroView);
-    this->trnUniqueWidget->initialize(this->trnUnique, this->heroView);
-    this->trnBaseWidget->initialize(this->trnBase, this->heroView);
+    this->palWidget->initialize(this->pal);
+    this->trnUniqueWidget->initialize(this->trnUnique);
+    this->trnBaseWidget->initialize(this->trnBase);
 
     // setup default options in the palette widgets
     // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
