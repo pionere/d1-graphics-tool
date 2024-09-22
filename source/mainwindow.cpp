@@ -29,11 +29,11 @@
 #include "d1hro.h"
 #include "ui_mainwindow.h"
 
-#include "dungeon/all.h"
-
 #if (defined (_WIN32) || defined (_WIN64))
 #include "Shlobj.h"
 #endif
+
+#include "dungeon/all.h"
 
 static MainWindow *theMainWindow;
 
