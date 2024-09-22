@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>null.trn</file>
         <file>default.pal</file>
-        <file>D1GraphicsTool.qss</file>
+        <file>D1HeroPlanner.qss</file>
         <file>GRBSquare.png</file>
         <file>RGBSquare.png</file>
         <file>RGBWheel.png</file>
