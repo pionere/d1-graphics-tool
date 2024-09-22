@@ -171,7 +171,7 @@ void GetSkillDamage(int sn, int sl, int dist, const D1Hero *hero, const MonsterS
 		maxd = hero->getChMaxDam(); // myplr._pIChMaxDam
 		mind = ((64 + dist) * mind) >> 5;
 		maxd = ((64 + dist) * maxd) >> 5;
-		if (max < 0) {
+		if (maxd < 0) {
 			mind = 0;
 			maxd = 0;
 		}

@@ -534,7 +534,7 @@ void MonsterDetailsWidget::updateFields()
     skillsComboBox->setCurrentIndex(mi);
 
     int dist = this->ui->plrDistSpinBox->value();
-    this->ui->plrDistSpinBox->setToolTip(tr("Distance to target in ticks. Charge distance to target: %2").arg(dist * this->hero->hero->getChargeSpeed()));
+    this->ui->plrDistSpinBox->setToolTip(tr("Distance to target in ticks. Charge distance to target: %2").arg(dist * this->hero->getChargeSpeed()));
 
     int hper, mindam, maxdam;
     int sn = skillsComboBox->currentData().value<int>();

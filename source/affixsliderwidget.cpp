@@ -12,7 +12,7 @@ AffixSliderWidget::AffixSliderWidget(QWidget *parent)
 void AffixSliderWidget::on_valueChanged(int value)
 {
     this->updateToolTip();
-    QToolTip::showText(this->ui->itemPrefixLimitSlider->mapToGlobal(QPoint(0, 0)), this->toolTip());
+    QToolTip::showText(this->mapToGlobal(QPoint(0, 0)), this->toolTip());
 }
 
 void AffixSliderWidget::changeValue(int value)
