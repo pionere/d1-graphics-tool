@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(D1GraphicsTool VERSION 0.5.0 LANGUAGES CXX)
+project(D1HeroPlanner VERSION 0.5.0 LANGUAGES CXX)
 string(TOLOWER ${PROJECT_NAME} project_name)
 
 set(BIN_TARGET ${PROJECT_NAME})
@@ -148,14 +148,14 @@ qt_add_resources(RESOURCES
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${BIN_TARGET}
-        resources/D1GraphicsTool.rc
+        resources/D1HeroPlanner.rc
         ${RESOURCES}
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 else()
     add_executable(${BIN_TARGET}
-        resources/D1GraphicsTool.rc
+        resources/D1HeroPlanner.rc
         ${RESOURCES}
         ${PROJECT_SOURCES}
     )
@@ -204,7 +204,7 @@ if(CPACK AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
   # -G DEB
   set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} https://github.com/pionere/d1-graphics-tool")
   set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/pionere/d1-graphics-tool")
-  set(CPACK_PACKAGE_DESCRIPTION "Diablo 1 Graphics Tool to manipulate asset files (CEL/CL2/DUN etc.) of Diablo 1.")
+  set(CPACK_PACKAGE_DESCRIPTION "Diablo 1 Hero Planner to design character-builds for Devilx.")
   #set(CPACK_DEBIAN_PACKAGE_SECTION "graphics")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
   #if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

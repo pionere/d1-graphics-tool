@@ -7,6 +7,7 @@
 AffixSliderWidget::AffixSliderWidget(QWidget *parent)
     : SliderWidget(parent)
 {
+    QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(on_valueChanged(int)));
 }
 
 void AffixSliderWidget::on_valueChanged(int value)

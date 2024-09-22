@@ -21,8 +21,8 @@
 #include "settingsdialog.h"
 #include "sidepanelwidget.h"
 
-#define D1_GRAPHICS_TOOL_TITLE "Diablo 1 Hero Planner"
-#define D1_GRAPHICS_TOOL_VERSION "0.5.0"
+#define D1_HERO_PLANNER_TITLE "Diablo 1 Hero Planner"
+#define D1_HERO_PLANNER_VERSION "0.5.0"
 
 #define MemFree(p)   \
     {                \

@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     Config::loadConfiguration();
 
     { // load style-sheet
-        const char *qssName = ":/D1GraphicsTool.qss";
+        const char *qssName = ":/D1HeroPlanner.qss";
         QFile file(qssName);
         if (!file.open(QIODevice::ReadOnly)) {
             qDebug() << QApplication::tr("Failed to read file: %1.").arg(qssName);

@@ -49,7 +49,7 @@ MainWindow::MainWindow()
 
     theMainWindow = this;
 
-    this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
+    this->setWindowTitle(D1_HERO_PLANNER_TITLE);
 
     // initialize the progress widget
     this->ui->statusBar->insertWidget(0, &this->progressWidget);
@@ -1444,7 +1444,7 @@ void MainWindow::updateTrns(const std::vector<D1Trn *> &newTrns)
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, tr("About"), QStringLiteral("%1 %2 (%3) (%4-bit)").arg(D1_GRAPHICS_TOOL_TITLE).arg(D1_GRAPHICS_TOOL_VERSION).arg(OS_TYPE).arg(sizeof(void *) == 8 ? "64" : "32"));
+    QMessageBox::about(this, tr("About"), QStringLiteral("%1 %2 (%3) (%4-bit)").arg(D1_HERO_PLANNER_TITLE).arg(D1_HERO_PLANNER_VERSION).arg(OS_TYPE).arg(sizeof(void *) == 8 ? "64" : "32"));
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()
