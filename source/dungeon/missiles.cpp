@@ -205,12 +205,12 @@ void GetSkillDamage(int sn, int sl, int dist, const D1Hero *hero, const MonsterS
 		case SPL_RATTACK:
 			break;
 		case SPL_POINT_BLANK:
-			mind = (mind * (64 + /*32 - 16 * mis->_miVar7 +*/ sl)) >> 6;
-			maxd = (mind * (64 + /*32 - 16 * mis->_miVar7 +*/ sl)) >> 6;
+			mind = (mind * (64 + 32 - 16 * dist + sl)) >> 6;
+			maxd = (mind * (64 + 32 - 16 * dist + sl)) >> 6;
 			break;
 		case SPL_FAR_SHOT:
-			mind = (mind * (/*8 * mis->_miVar7 - 16 +*/ sl)) >> 5;
-			maxd = (maxd * (/*8 * mis->_miVar7 - 16 +*/ sl)) >> 5;
+			mind = (mind * (8 * dist - 16 + sl)) >> 5;
+			maxd = (maxd * (8 * dist - 16 + sl)) >> 5;
 			break;
 		case SPL_PIERCE_SHOT:
 			mind = (mind * (32 + sl)) >> 6;
