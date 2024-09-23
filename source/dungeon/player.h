@@ -20,7 +20,7 @@ void CreatePlayer(int pnum, const _uiheroinfo& heroinfo);
 void InitPlayer(int pnum);
 void ClrPlrPath(int pnum);
 
-int GetChargeSpeed(itn pnum);
+int GetChargeSpeed(int pnum);
 void GetMonByPlrDamage(int pnum, int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam);
 void GetPlrByPlrDamage(int offp, int sn, int sl, int defp, int *mindam, int *maxdam);
 

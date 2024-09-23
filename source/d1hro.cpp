@@ -1292,7 +1292,7 @@ void D1Hero::getPlrDamage(int sn, int sl, const D1Hero *target, int *mindam, int
 
 void D1Hero::getMonSkillDamage(int sn, int sl, int dist, const MonsterStruct *mon, int *mindam, int *maxdam) const
 {
-    SkillMonByPlrDamage(sn, sl, dist, this->pnum, mon, &mindam, &maxdam);
+    SkillMonByPlrDamage(sn, sl, dist, this->pnum, mon, mindam, maxdam);
 }
 
 void D1Hero::getPlrSkillDamage(int sn, int sl, int dist, const D1Hero *target, int *mindam, int *maxdam) const
@@ -1300,7 +1300,7 @@ void D1Hero::getPlrSkillDamage(int sn, int sl, int dist, const D1Hero *target, i
     SkillPlrByPlrDamage(sn, sl, dist, this->pnum, target->pnum, mindam, maxdam);
 }
 
-int D1Hero::calcPlrDam(BYTE mRes, unsigned damage)
+int D1Hero::calcPlrDam(unsigned mRes, unsigned damage)
 {
     return CalcPlrDam(this->pnum, mRes, damage);
 }
