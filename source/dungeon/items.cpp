@@ -731,6 +731,9 @@ recheck:
 
 void CalcPlrInv(int pnum, bool Loadgfx)
 {
+    auto dunLevel = plr._pDunLevel;
+    plr._pDunLevel = DLV_CATHEDRAL1;
+
 	CalcItemReqs(pnum);
 	CalcPlrItemVals(pnum, Loadgfx);
 	//if (pnum == mypnum) {
@@ -739,6 +742,7 @@ void CalcPlrInv(int pnum, bool Loadgfx)
 		CalcPlrScrolls(pnum);
 		//CalcPlrCharges(pnum);
 	//}
+    plr._pDunLevel = dunLevel;
 }
 
 void SetItemData(int ii, int idata)
@@ -1766,45 +1770,6 @@ static void SetupAllItems(int ii, int idx, int32_t iseed, unsigned lvl, unsigned
 		assert(items[ii]._iLoc != ILOC_UNEQUIPABLE);
 		GetUniqueItem(ii, iseed);
 	}*/
-}
-
-void CreateRndItem(int x, int y, unsigned quality)
-{
-	int idx, ii;
-	unsigned lvl;
-
-	lvl = items_get_currlevel();
-
-	if (quality == CFDQ_GOOD)
-		idx = RndUItem(lvl);
-	else
-		idx = RndAllItems(lvl);
-
-	if (numitems >= MAXITEMS)
-		return; // should never be the case
-	ii = itemactive[numitems];
-	numitems++;
-
-	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
-}
-
-void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
-{
-	int idx, ii;
-	unsigned lvl;
-
-	lvl = items_get_currlevel();
-
-	if (itype != ITYPE_GOLD)
-		idx = RndTypeItems(itype, imisc, lvl);
-	else
-		idx = IDI_GOLD;
-	if (numitems >= MAXITEMS)
-		return; // should never be the case
-	ii = itemactive[numitems];
-	numitems++;
-
-	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
 }
 
 static void PrintEquipmentPower(BYTE plidx, const ItemStruct* is)

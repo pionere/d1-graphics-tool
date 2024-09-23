@@ -1507,12 +1507,7 @@ void D1Hero::rebalance()
 
 void D1Hero::calcInv()
 {
-    auto dunLevel = plr._pDunLevel;
-    plr._pDunLevel = DLV_CATHEDRAL1;
-
     CalcPlrInv(this->pnum, false);
-
-    plr._pDunLevel = dunLevel;
 }
 
 bool D1Hero::save(const SaveAsParam &params)
