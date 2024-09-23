@@ -24,7 +24,7 @@ int HeroSkillsComboBox::update()
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Selected skill %1.").arg(mi));
     this->clear();
     numspells = (IsHellfireGame && this->hero->isHellfire()) ? NUM_SPELLS : NUM_SPELLS_DIABLO;
-    QMessageBox::critical(nullptr, "Error", tr("Selected skill %1 of %2.").arg(mi).arg(numspells));
+    // QMessageBox::critical(nullptr, "Error", tr("Selected skill %1 of %2.").arg(mi).arg(numspells));
     for (int sn = 0; sn < numspells; sn++) {
         if ((spelldata[sn].sUseFlags & this->hero->getSkillFlags()) != spelldata[sn].sUseFlags) continue;
         // if (sn != SPL_ATTACK) {
@@ -39,7 +39,7 @@ int HeroSkillsComboBox::update()
         GetSkillName(sn);
         this->addItem(infostr, QVariant::fromValue(sn));
     }
-    QMessageBox::critical(nullptr, "Error", tr("Added %1 skills.").arg(this->count()));
+    // QMessageBox::critical(nullptr, "Error", tr("Added %1 skills.").arg(this->count()));
     mi = this->findData(mi);
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Skill index %1.").arg(mi));
     if (mi < 0) mi = 0;
