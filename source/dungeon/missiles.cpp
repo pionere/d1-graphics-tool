@@ -308,10 +308,10 @@ static void SkillPlrDamage(int sn, int sl, int dist, int mypnum, const MonsterSt
 				maxd += CalcPlrDam(pnum, MISR_ACID, adam);
 				mind += CalcPlrDam(pnum, MISR_ACID, myplr._pIAMinDam);
 			}
-
-			mind >>= 6;
-			maxd >>= 6;
 		}
+
+		mind >>= 6;
+		maxd >>= 6;
 
 		*mindam = mind;
 		*maxdam = maxd;

@@ -169,7 +169,7 @@ endif()
 target_link_libraries(${BIN_TARGET} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 
 set_target_properties(${BIN_TARGET} PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER d1-graphics-tool.pionere.net
+    MACOSX_BUNDLE_GUI_IDENTIFIER d1-hero-planner.pionere.net
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
@@ -190,12 +190,12 @@ if(CPACK AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
   # Common *nix files
   set(CPACK_STRIP_FILES TRUE)
   install(TARGETS ${BIN_TARGET} DESTINATION bin)
-  set(desktop_file "${PROJECT_SOURCE_DIR}/resources/nix/d1gt.desktop")
+  set(desktop_file "${PROJECT_SOURCE_DIR}/resources/nix/d1hp.desktop")
 
   find_program(DFI desktop-file-install)
   if(DFI)
     execute_process(COMMAND ${DFI} --dir=${CMAKE_BINARY_DIR} --set-key=Exec --set-value=${BIN_TARGET} ${desktop_file})
-    set(desktop_file "${CMAKE_BINARY_DIR}/d1gt.desktop")
+    set(desktop_file "${CMAKE_BINARY_DIR}/d1hp.desktop")
   endif()
 
   install(FILES "${desktop_file}"
@@ -203,12 +203,12 @@ if(CPACK AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
   )
   install(FILES "${PROJECT_SOURCE_DIR}/resources/icon.svg"
     DESTINATION "share/icons/hicolor/512x512/apps"
-    RENAME "d1gt.svg"
+    RENAME "d1hp.svg"
   )
 
   # -G DEB
-  set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} https://github.com/pionere/d1-graphics-tool")
-  set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/pionere/d1-graphics-tool")
+  set(CPACK_PACKAGE_CONTACT "${PROJECT_NAME} https://github.com/pionere/d1-hero-planner")
+  set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/pionere/d1-hero-planner")
   set(CPACK_PACKAGE_DESCRIPTION "Diablo 1 Hero Planner to design character-builds for Devilx.")
   #set(CPACK_DEBIAN_PACKAGE_SECTION "graphics")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)

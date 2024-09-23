@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=D1-Hero-Planner
+GenericName=D1-Hero-Planner
+Comment=Manipulate Diablo I heros
+Exec=D1HeroPlanner
+Icon=d1hp
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Graphics;2DGraphics;Viewer;

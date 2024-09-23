@@ -482,7 +482,7 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 		btohit += 20 + (plr._pDexterity >> 1);
 	} else {
 		// assert(wt == SFLAG_RANGED);
-		btohit += plr._pDexterity;
+		btohit += (plr._pDexterity >> 1);
 	}
 	plr._pIHitChance = btohit;
 
