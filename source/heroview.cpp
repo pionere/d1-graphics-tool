@@ -556,6 +556,9 @@ void HeroView::ShowContextMenu(const QPoint &pos)
         // }
 
         qDeleteAll(actions);
+
+        this->hoverItem = INVITEM_NONE;
+        this->displayFrame();
     }
 }
 
