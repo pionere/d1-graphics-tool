@@ -479,10 +479,12 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 	plr._pIAC = tac + plr._pIEvasion;
 	btohit += 50; // + plr._pLevel;
 	if (wt == SFLAG_MELEE) {
-		btohit += 20 + (plr._pDexterity >> 1);
+		// btohit += 20 + (plr._pDexterity >> 1);
+        btohit += 20 + plr._pDexterity;
 	} else {
 		// assert(wt == SFLAG_RANGED);
-		btohit += (plr._pDexterity >> 1);
+		// btohit += (plr._pDexterity >> 1);
+        btohit += plr._pDexterity;
 	}
 	plr._pIHitChance = btohit;
 
