@@ -614,7 +614,6 @@ void MonsterDetailsWidget::updateFields()
     mindam = plrDam.minHth;
     maxdam = plrDam.maxHth;
     displayDamage(this->ui->plrDamage, mindam, maxdam);
-    this->ui->plrDamage->setStyleSheet(GetElementColor(plrDam.resHth));
 
     this->ui->monDamageSep->setVisible(monDamage.mis);
     this->ui->monDamage2->setVisible(monDamage.mis);
@@ -622,11 +621,12 @@ void MonsterDetailsWidget::updateFields()
         mindam = monDamage.minMis;
         maxdam = monDamage.maxMis;
         displayDamage(this->ui->monDamage2, mindam, maxdam);
-        this->ui->monDamage2->setStyleSheet(GetElementColor(monDamage.mis ? monDamage.resMis : MISR_NONE));
+        this->ui->monDamage2->setStyleSheet(GetElementColor(monDamage.resMis));
     }
     mindam = monDamage.minHth;
     maxdam = monDamage.maxHth;
     displayDamage(this->ui->monDamage, mindam, maxdam);
+    this->ui->monDamage->setStyleSheet(GetElementColor(monDamage.resHth));
 
     hper = -1;
     if ((this->hero->getSkillFlags() & SFLAG_BLOCK) && ((monDamage.hth && monDamage.blockHth) || (monDamage.mis && monDamage.blockMis))) {
