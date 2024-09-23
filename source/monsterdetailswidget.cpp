@@ -31,6 +31,7 @@ MonsterDetailsWidget::~MonsterDetailsWidget()
 void MonsterDetailsWidget::initialize(D1Hero *h)
 {
     this->hero = h;
+    this->ui->heroSkillsComboBox->setHero(h);
 
     this->updateFields();
 
@@ -168,16 +169,13 @@ static int uniqMonLevel(int uniqindex)
 
 typedef struct MonsterDamage {
     bool hth;
-    bool spec;
     bool mis;
 
     int minHth;
     int maxHth;
     int chanceHth;
-
-    int minSpec;
-    int maxSpec;
-    int chanceSpec;
+    BYTE resHth;
+    bool blockHth;
 
     int minMis;
     int maxMis;
@@ -192,6 +190,7 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, int dist, const 
     bool hth = false;
     bool special = false; // hit2/dam2 + afnum2
     bool charge = false;  // (hit * 8)/dam2
+    bool flash = false;
     int mtype = -1;
     bool ranged_special; // aiParam1 + afnum2
     switch (mon->_mAI.aiType) {
@@ -248,15 +247,20 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, int dist, const 
     case AI_COUNSLR: // ranged + MIS_FLASH
     case AI_LAZARUS: // AI_COUNSLR
         mtype = mon->_mAI.aiParam1; // + MIS_FLASH
+        flash = true;
         break;
     case AI_MAGE:
         mtype = MIS_MAGE; // + MIS_FLASH + param1
+        flash = true;
         break;
     }
 
     MonsterDamage result = { 0 };
+    static_assert((int)MISR_NONE == 0, "GetMonsterDamage must initialize resHth and resMis");
     if (hth) {
         result.hth = true;
+        result.blockHth = true;
+        // result.resHth = MISR_NONE;
         int mindam = mon->_mMinDamage;
         int maxdam = mon->_mMaxDamage;
         mindam += hero->getGetHit();
@@ -269,8 +273,32 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, int dist, const 
         result.maxHth = maxdam;
         result.chanceHth = 30 + mon->_mHit + (2 * mon->_mLevel) - hero->getAC();
     }
+    if (flash) {
+        result.hth = true;
+        result.resHth = GetMissileElement(MIS_FLASH);
+        result.blockHth = !(missiledata[MIS_FLASH].mdFlags & MIF_NOBLOCK);
+        int mindam, maxdam;
+        GetMissileDamage(MIS_FLASH, mon, &mindam, &maxdam);
+        mindam = hero->calcPlrDam(result.resHth, mindam);
+        maxdam = hero->calcPlrDam(result.resHth, maxdam);
+        if (maxdam != 0) {
+            if (!(missiledata[MIS_FLASH].mdFlags & MIF_DOT)) {
+                mindam += hero->getGetHit();
+                maxdam += hero->getGetHit();
+                if (mindam < 1)
+                    mindam = 1;
+                if (maxdam < 1)
+                    maxdam = 1;
+            }
+        }
+        result.minHth = mindam;
+        result.maxHth = maxdam;
+        result.chanceHth = MissPlrHitByMonChance(MIS_FLASH, dist, mon, hero);
+    }
     if (special) {
-        result.spec = true;
+        result.mis = true;
+        // result.resMis = MISR_NONE;
+        result.blockMis = true;
         int mindam = mon->_mMinDamage2;
         int maxdam = mon->_mMaxDamage2;
         mindam += hero->getGetHit();
@@ -279,10 +307,10 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, int dist, const 
             mindam = 1;
         if (maxdam < 1)
             maxdam = 1;
-        result.minSpec = mindam;
-        result.maxSpec = maxdam;
-        result.chanceSpec = 30 + (2 * mon->_mLevel) - hero->getAC();
-        result.chanceSpec += charge ? mon->_mHit * 8 : mon->_mHit2;
+        result.minMis = mindam;
+        result.maxMis = maxdam;
+        result.chanceMis = 30 + (2 * mon->_mLevel) - hero->getAC();
+        result.chanceMis += charge ? mon->_mHit * 8 : mon->_mHit2;
     }
     if (mtype != -1 && mtype != MIS_SWAMPC) {
         result.mis = true;
@@ -333,6 +361,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, int dist, const 
     bool mis = spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED);
     bool hth = !mis;
     PlayerDamage result = { 0 };
+    static_assert((int)MISR_NONE == 0, "GetPlayerDamage must initialize resMis");
     if (mis) {
         result.mis = true;
         int mtype = spelldata[sn].sMissile;
@@ -566,10 +595,10 @@ void MonsterDetailsWidget::updateFields()
     } else {
         this->ui->monHitChance->setText(QString("-"));
     }
-    this->ui->monHitChanceSep->setVisible(monDamage.mis || monDamage.spec);
-    this->ui->monHitChance2->setVisible(monDamage.mis || monDamage.spec);
-    if (monDamage.mis || monDamage.spec) {
-        hper = monDamage.mis ? monDamage.chanceMis : monDamage.chanceSpec;
+    this->ui->monHitChanceSep->setVisible(monDamage.mis);
+    this->ui->monHitChance2->setVisible(monDamage.mis);
+    if (monDamage.mis) {
+        hper = monDamage.chanceMis;
         hper = CheckHit(hper);
         this->ui->monHitChance2->setText(QString("%1%").arg(hper));
     }
@@ -585,17 +614,13 @@ void MonsterDetailsWidget::updateFields()
     mindam = plrDam.minHth;
     maxdam = plrDam.maxHth;
     displayDamage(this->ui->plrDamage, mindam, maxdam);
+    this->ui->plrDamage->setStyleSheet(GetElementColor(plrDam.resHth));
 
-    this->ui->monDamageSep->setVisible(monDamage.mis || monDamage.spec);
-    this->ui->monDamage2->setVisible(monDamage.mis || monDamage.spec);
-    if (monDamage.mis || monDamage.spec) {
-        if (monDamage.mis) {
-            mindam = monDamage.minMis;
-            maxdam = monDamage.maxMis;
-        } else /* if (monDamage.spec) */{
-            mindam = monDamage.minSpec;
-            maxdam = monDamage.maxSpec;
-        }
+    this->ui->monDamageSep->setVisible(monDamage.mis);
+    this->ui->monDamage2->setVisible(monDamage.mis);
+    if (monDamage.mis) {
+        mindam = monDamage.minMis;
+        maxdam = monDamage.maxMis;
         displayDamage(this->ui->monDamage2, mindam, maxdam);
         this->ui->monDamage2->setStyleSheet(GetElementColor(monDamage.mis ? monDamage.resMis : MISR_NONE));
     }
@@ -604,8 +629,7 @@ void MonsterDetailsWidget::updateFields()
     displayDamage(this->ui->monDamage, mindam, maxdam);
 
     hper = -1;
-    // if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
-    if ((this->hero->getSkillFlags() & SFLAG_BLOCK) && (monDamage.hth /*|| monDamage.spec*/ || (monDamage.mis && monDamage.blockMis))) {
+    if ((this->hero->getSkillFlags() & SFLAG_BLOCK) && ((monDamage.hth && monDamage.blockHth) || (monDamage.mis && monDamage.blockMis))) {
         hper = this->hero->getBlockChance();
         if (hper != 0) {
             hper -= 2 * mon->_mLevel;
@@ -614,7 +638,7 @@ void MonsterDetailsWidget::updateFields()
     }
     if (hper < 0) {
         this->ui->plrBlockChance->setText(QString("-"));
-    } else if ((monDamage.hth /*|| monDamage.spec*/) && monDamage.mis && !monDamage.blockMis) {
+    } else if (monDamage.hth && monDamage.blockHth && monDamage.mis && !monDamage.blockMis) {
         this->ui->plrBlockChance->setText(QString("%1% | -").arg(hper));
     } else {
         this->ui->plrBlockChance->setText(QString("%1%").arg(hper));
