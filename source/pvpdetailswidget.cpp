@@ -63,9 +63,9 @@ void PvPDetailsWidget::on_pvpHerosComboBox_activated(int index)
 
 void PvPDetailsWidget::on_discardHeroButton_clicked()
 {
-    int index = this->ui->pvpHerosComboBox.currentIndex();
+    int index = this->ui->pvpHerosComboBox->currentIndex();
 
-    this->ui->pvpHerosComboBox.removeItem(index);
+    this->ui->pvpHerosComboBox->removeItem(index);
     D1Hero *currhero = this->heros.takeAt(index);
     delete currhero;
 
@@ -90,7 +90,7 @@ void PvPDetailsWidget::on_addHeroButton_clicked()
         D1Hero *newhero = D1Hero::instance();
         // newhero->setPalette(this->trnBase->getResultingPalette());
         if (newhero->load(filePath, params)) {
-            this->ui->pvpHerosComboBox.addItem(newhero->getName());
+            this->ui->pvpHerosComboBox->addItem(newhero->getName());
             this->heros.append(newhero);
 
             this->on_pvpHerosComboBox_activated(this->heros.count() - 1);
