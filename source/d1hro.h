@@ -134,7 +134,7 @@ public:
     void getPlrDamage(int sn, int sl, const D1Hero *hero, int *mindam, int *maxdam) const;
     void getMonSkillDamage(int sn, int sl, int dist, const MonsterStruct *mon, int *mindam, int *maxdam) const;
     void getPlrSkillDamage(int sn, int sl, int dist, const D1Hero *target, int *mindam, int *maxdam) const;
-    int calcPlrDam(unsigned mRes, unsigned damage);
+    int calcPlrDam(unsigned mRes, unsigned damage) const;
 
     int getSkillFlags() const;
     int getItemFlags() const;

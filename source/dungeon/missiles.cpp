@@ -741,6 +741,7 @@ int MissPlrHitByPlrChance(int mtype, int dist, const D1Hero *offHero, const D1He
 		hper -= defHero->getEvasion();
 		// hper -= dist; // TODO: either don't care about it, or set it!
 	}
+	return hper;
 }
 
 unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrates)

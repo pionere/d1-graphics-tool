@@ -1300,7 +1300,7 @@ void D1Hero::getPlrSkillDamage(int sn, int sl, int dist, const D1Hero *target, i
     SkillPlrByPlrDamage(sn, sl, dist, this->pnum, target->pnum, mindam, maxdam);
 }
 
-int D1Hero::calcPlrDam(unsigned mRes, unsigned damage)
+int D1Hero::calcPlrDam(unsigned mRes, unsigned damage) const
 {
     return CalcPlrDam(this->pnum, mRes, damage);
 }
