@@ -96,15 +96,15 @@ void GetMissileDamage(int mtype, const MonsterStruct *mon, int *mindam, int *max
 	*maxdam = maxd;
 }
 
-static void SkillPlrDamage(int sn, int sl, int dist, const D1Hero *hero, const MonsterStruct *mon, const D1Hero *defHero, int *mindam, int *maxdam)
+static void SkillPlrDamage(int sn, int sl, int dist, int mypnum, const MonsterStruct *mon, int pnum, int *mindam, int *maxdam)
 {
 	int k, magic, mind, maxd;
 
 	// assert((unsigned)sn < NUM_SPELLS);
-	magic = hero->getMagic(); //  myplr._pMagic;
+	magic = myplr._pMagic;
 #ifdef HELLFIRE
 	if (SPELL_RUNE(sn))
-		sl += hero->getDexterity() /*myplr._pDexterity*/ >> 3;
+		sl += myplr._pDexterity >> 3;
 #endif
 	switch (sn) {
 	case SPL_GUARDIAN:
@@ -160,15 +160,15 @@ static void SkillPlrDamage(int sn, int sl, int dist, const D1Hero *hero, const M
 	case SPL_ATTRACT:
 	case SPL_SHROUD:
 	case SPL_SWAMP:
-		QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled missile skill %1 in SkillPlrDamage(hero).").arg(sn));
+		QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled missile skill %1 in SkillPlrDamage.").arg(sn));
 		break;
 	case SPL_CHARGE:
-		dist *= hero->getChargeSpeed();
+		dist *= GetChargeSpeed(mypnum);
 		dist -= 24;
 		if (dist > 32)
 			dist = 32;
-		mind = hero->getChMinDam(); // myplr._pIChMinDam
-		maxd = hero->getChMaxDam(); // myplr._pIChMaxDam
+		mind = myplr._pIChMinDam;
+		maxd = myplr._pIChMaxDam;
 		mind = ((64 + dist) * mind) >> 5;
 		maxd = ((64 + dist) * maxd) >> 5;
 		if (maxd <= 0) {
@@ -182,24 +182,24 @@ static void SkillPlrDamage(int sn, int sl, int dist, const D1Hero *hero, const M
 	case SPL_FAR_SHOT:
 	case SPL_PIERCE_SHOT:
 	case SPL_MULTI_SHOT: {
-		bool tmac = (hero->getItemFlags() & ISPL_PENETRATE_PHYS) != 0; // myplr._pIFlags
+		bool tmac = (myplr._pIFlags & ISPL_PENETRATE_PHYS) != 0;
 		mind = 0;
 		maxd = 0;
 		if (mon != nullptr) {
-			int sldam = hero->getSlMaxDam(); // myplr._pISlMaxDam;
+			int sldam = myplr._pISlMaxDam;
 			if (sldam != 0) {
 				maxd += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, sldam, tmac);
-				mind += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, hero->getSlMinDam(), tmac); // myplr._pISlMinDam
+				mind += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, myplr._pISlMinDam, tmac);
 			}
-			int bldam = hero->getBlMaxDam(); // myplr._pIBlMaxDam;
+			int bldam = myplr._pIBlMaxDam;
 			if (bldam != 0) {
 				maxd += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, bldam, tmac);
-				mind += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, hero->getBlMinDam(), tmac); // myplr._pIBlMaxDam;
+				mind += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, myplr._pIBlMinDam, tmac);
 			}
-			int pcdam = hero->getPcMaxDam(); // myplr._pIPcMaxDam;
+			int pcdam = myplr._pIPcMaxDam;
 			if (pcdam != 0) {
 				maxd += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, pcdam, tmac);
-				mind += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, hero->getPcMinDam(), tmac); // myplr._pIPcMinDam;
+				mind += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, myplr._pIPcMinDam, tmac);
 			}
 
 			// if (random_(6, 200) < myplr._pICritChance) {
@@ -227,43 +227,43 @@ static void SkillPlrDamage(int sn, int sl, int dist, const D1Hero *hero, const M
 				break;
 			}
 
-			int fdam = hero->getFMaxDam(); // myplr._pIFMaxDam;
+			int fdam = myplr._pIFMaxDam;
 			if (fdam != 0) {
 				maxd += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, fdam, false);
-				mind += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, hero->getFMinDam(), false); // myplr._pIFMinDam
+				mind += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, myplr._pIFMinDam, false); // myplr._pIFMinDam
 			}
-			int ldam = hero->getLMaxDam(); // myplr._pILMaxDam;
+			int ldam = myplr._pILMaxDam;
 			if (ldam != 0) {
 				maxd += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, ldam, false);
-				mind += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, hero->getLMinDam(), false); // myplr._pILMinDam
+				mind += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, myplr._pILMinDam, false); // myplr._pILMinDam
 			}
-			int mdam = hero->getMMaxDam(); // myplr._pIMMaxDam;
+			int mdam = myplr._pIMMaxDam;
 			if (mdam != 0) {
 				maxd += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, mdam, false);
-				mind += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, hero->getMMinDam(), false); // myplr._pIMMinDam
+				mind += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, myplr._pIMMinDam, false); // myplr._pIMMinDam
 			}
-			int adam = hero->getAMaxDam(); // myplr._pIAMaxDam;
+			int adam = myplr._pIAMaxDam;
 			if (adam != 0) {
 				maxd += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, adam, false);
-				mind += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, hero->getAMinDam(), false); // myplr._pIAMinDam
+				mind += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, myplr._pIAMinDam, false); // 
 			}
 		} else {
-			int sldam = hero->getSlMaxDam();
+			int sldam = myplr._pISlMaxDam;
 			if (sldam != 0) {
-				maxd += CalcPlrDam(defHero, MISR_SLASH, sldam);
-				mind += CalcPlrDam(defHero, MISR_SLASH, hero->getSlMinDam());
+				maxd += CalcPlrDam(pnum, MISR_SLASH, sldam);
+				mind += CalcPlrDam(pnum, MISR_SLASH, myplr._pISlMinDam);
 			}
-			int bldam = hero->BlMaxDam();
+			int bldam = myplr._pIBlMaxDam;
 			if (bldam != 0) {
-				maxd += CalcPlrDam(defHero, MISR_BLUNT, bldam);
-				mind += CalcPlrDam(defHero, MISR_BLUNT, hero->getBlMinDam());
+				maxd += CalcPlrDam(pnum, MISR_BLUNT, bldam);
+				mind += CalcPlrDam(pnum, MISR_BLUNT, myplr._pIBlMinDam);
 			}
-			int pcdam = hero->PcMaxDam();
+			int pcdam = myplr._pIPcMaxDam;
 			if (pcdam != 0) {
-				maxd += CalcPlrDam(defHero, MISR_PUNCTURE, pcdam);
-				mind += CalcPlrDam(defHero, MISR_PUNCTURE, hero->getPcMinDam());
+				maxd += CalcPlrDam(pnum, MISR_PUNCTURE, pcdam);
+				mind += CalcPlrDam(pnum, MISR_PUNCTURE, myplr._pIPcMinDam);
 			}
-			// if (random_(6, 200) < hero->CritChance()) {
+			// if (random_(6, 200) < myplr._pICritChance) {
 			//	dam <<= 1;
 			// }
 			// add modifiers from arrow-type
@@ -288,25 +288,25 @@ static void SkillPlrDamage(int sn, int sl, int dist, const D1Hero *hero, const M
 				break;
 			}
 
-			int fdam = hero->getFMaxDam();
+			int fdam = myplr._pIFMaxDam;
 			if (fdam != 0) {
-				maxd += CalcPlrDam(defHero, MISR_FIRE, fdam);
-				mind += CalcPlrDam(defHero, MISR_FIRE, hero->getFMinDam());
+				maxd += CalcPlrDam(pnum, MISR_FIRE, fdam);
+				mind += CalcPlrDam(pnum, MISR_FIRE, myplr._pIFMinDam);
 			}
-			int ldam = hero->LMaxDam();
+			int ldam = myplr._pILMaxDam;
 			if (ldam != 0) {
-				maxd += CalcPlrDam(defHero, MISR_LIGHTNING, ldam);
-				mind += CalcPlrDam(defHero, MISR_LIGHTNING, hero->getLMinDam());
+				maxd += CalcPlrDam(pnum, MISR_LIGHTNING, ldam);
+				mind += CalcPlrDam(pnum, MISR_LIGHTNING, myplr._pILMinDam);
 			}
-			int mdam = hero->getMMaxDam();
+			int mdam = myplr._pIMMaxDam;
 			if (mdam != 0) {
-				maxd += CalcPlrDam(defHero, MISR_MAGIC, mdam);
-				mind += CalcPlrDam(defHero, MISR_MAGIC, hero->getMMinDam());
+				maxd += CalcPlrDam(pnum, MISR_MAGIC, mdam);
+				mind += CalcPlrDam(pnum, MISR_MAGIC, myplr._pIMMinDam);
 			}
-			int adam = hero->getAMaxDam();
+			int adam = myplr._pIAMaxDam;
 			if (adam != 0) {
-				maxd += CalcPlrDam(defHero, MISR_ACID, adam);
-				mind += CalcPlrDam(defHero, MISR_ACID, hero->getAMinDam());
+				maxd += CalcPlrDam(pnum, MISR_ACID, adam);
+				mind += CalcPlrDam(pnum, MISR_ACID, myplr._pIAMinDam);
 			}
 		}
 
@@ -428,20 +428,20 @@ static void SkillPlrDamage(int sn, int sl, int dist, const D1Hero *hero, const M
 		mind = CalcMonsterDam(mon->_mMagicRes, mRes, mind, false);
 		maxd = CalcMonsterDam(mon->_mMagicRes, mRes, maxd, false);
 	} else {
-		mind = CalcPlrDam(defHero, mRes, mind);
-		maxd = CalcPlrDam(defHero, mRes, maxd);
+		mind = CalcPlrDam(pnum, mRes, mind);
+		maxd = CalcPlrDam(pnum, mRes, maxd);
 	}
 
 	*mindam = mind;
 	*maxdam = maxd;
 }
 
-void SkillMonByPlrDamage(int sn, int sl, int dist, const D1Hero *hero, const MonsterStruct *mon, int *mindam, int *maxdam)
+void SkillMonByPlrDamage(int sn, int sl, int dist, int source, const MonsterStruct *mon, int *mindam, int *maxdam)
 {
-	SkillPlrDamage(sn, sl, dist, hero, mon, nullptr, mindam, maxdam);
+	SkillPlrDamage(sn, sl, dist, source, mon, MAX_PLRS, mindam, maxdam);
 }
 
-void SkillPlrByPlrDamage(int sn, int sl, int dist, const D1Hero *source, const D1Hero *target, int *mindam, int *maxdam)
+void SkillPlrByPlrDamage(int sn, int sl, int dist, int source, int target, int *mindam, int *maxdam)
 {
 	SkillPlrDamage(sn, sl, dist, source, nullptr, target, mindam, maxdam);
 }
@@ -806,7 +806,7 @@ unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrate
 	return dam;
 }
 
-unsigned CalcPlrDam(const D1Hero *hero, BYTE mRes, unsigned damage)
+unsigned CalcPlrDam(int pnum, BYTE mRes, unsigned damage)
 {
 	int dam;
 	int8_t resist;
@@ -819,16 +819,16 @@ unsigned CalcPlrDam(const D1Hero *hero, BYTE mRes, unsigned damage)
 		resist = 0;
 		break;
 	case MISR_FIRE:
-		resist = hero->getFireResist();
+		resist = plr._pFireResist;
 		break;
 	case MISR_LIGHTNING:
-		resist = hero->getLightningResist();
+		resist = plr._pLghtResist;
 		break;
 	case MISR_MAGIC:
-		resist = hero->getMagicResist();
+		resist = plr._pMagResist;
 		break;
 	case MISR_ACID:
-		resist = hero->getAcidResist();
+		resist = plr._pAcidResist;
 		break;
 	default:
 		ASSUME_UNREACHABLE

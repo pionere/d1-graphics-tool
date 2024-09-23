@@ -30,6 +30,10 @@ private slots:
     void on_discardHeroButton_clicked();
     void on_addHeroButton_clicked();
 
+    void on_offHeroSkillsComboBox_activated(int index);
+    void on_plrDistSpinBox_valueChanged(int value);
+    void on_defHeroSkillsComboBox_activated(int index);
+
     void on_closeButton_clicked();
 
 private:

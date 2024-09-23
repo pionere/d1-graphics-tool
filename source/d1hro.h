@@ -132,6 +132,9 @@ public:
     int getTotalMaxDam() const;
     void getMonDamage(int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam) const;
     void getPlrDamage(int sn, int sl, const D1Hero *hero, int *mindam, int *maxdam) const;
+    void getMonSkillDamage(int sn, int sl, int dist, const MonsterStruct *mon, int *mindam, int *maxdam) const;
+    void getPlrSkillDamage(int sn, int sl, int dist, const D1Hero *target, int *mindam, int *maxdam) const;
+    int calcPlrDam(BYTE mRes, unsigned damage);
 
     int getSkillFlags() const;
     int getItemFlags() const;

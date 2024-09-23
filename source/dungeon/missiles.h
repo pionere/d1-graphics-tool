@@ -16,14 +16,14 @@ class D1Hero;
 struct MonsterStruct;
 
 void GetMissileDamage(int mtype, const MonsterStruct *source, int *mindam, int *maxdam);
-void SkillMonByPlrDamage(int sn, int sl, int dist, const D1Hero *source, const MonsterStruct *target, int *mindam, int *maxdam);
-void SkillPlrByPlrDamage(int sn, int sl, int dist, const D1Hero *source, const D1Hero *target, int *mindam, int *maxdam);
+void SkillMonByPlrDamage(int sn, int sl, int dist, int source, const MonsterStruct *target, int *mindam, int *maxdam);
+void SkillPlrByPlrDamage(int sn, int sl, int dist, int source, int target, int *mindam, int *maxdam);
 void GetSkillDesc(const D1Hero *hero, int sn, int sl);
 int MissPlrHitByMonChance(int mtype, int dist, const MonsterStruct *mon, const D1Hero *hero);
 int MissMonHitByPlrChance(int mtype, int dist, const D1Hero *hero, const MonsterStruct *mon);
 int MissPlrHitByPlrChance(int mtype, int dist, const D1Hero *offHero, const D1Hero *defHero);
 unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned damage, bool penetrates);
-unsigned CalcPlrDam(const D1Hero *hero, BYTE mRes, unsigned damage);
+unsigned CalcPlrDam(int pnum, BYTE mRes, unsigned damage);
 int GetBaseMissile(int mtype);
 BYTE GetMissileElement(int mtype);
 const char *GetElementColor(BYTE mRes);

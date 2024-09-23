@@ -2,6 +2,8 @@
 
 #include <QComboBox>
 
+#include "d1hro.h"
+
 #include "dungeon/all.h"
 
 HeroSkillsComboBox::HeroSkillsComboBox(QWidget *parent)

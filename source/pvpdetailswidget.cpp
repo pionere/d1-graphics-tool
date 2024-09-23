@@ -45,6 +45,18 @@ void PvPDetailsWidget::displayFrame()
         this->ui->pvpHeroDetails->displayFrame();
 }
 
+static void displayDamage(QLabel *label, int minDam, int maxDam)
+{
+    if (maxDam != 0) {
+        if (minDam != maxDam)
+            label->setText(QString("%1 - %2").arg(minDam).arg(maxDam));
+        else
+            label->setText(QString("%1").arg(minDam));
+    } else {
+        label->setText(QString("-"));
+    }
+}
+
 typedef struct PlayerDamage {
     bool hth;
     bool mis;
@@ -74,7 +86,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *offHero, int sn, int dist, con
         result.resMis = GetMissileElement(mtype);
         result.blockMis = !(missiledata[mtype].mdFlags & MIF_NOBLOCK);
         int mindam, maxdam;
-        SkillPlrByPlrDamage(sn, sl, dist, offHero, defHero, &mindam, &maxdam);
+        offHero->getPlrSkillDamage(sn, sl, dist, defHero, &mindam, &maxdam);
         result.minMis = mindam;
         result.maxMis = maxdam;
         result.chanceMis = MissPlrHitByPlrChance(mtype, dist, offHero, defHero);
@@ -122,16 +134,16 @@ void PvPDetailsWidget::updateFields()
         if (offDmg.hth) {
             hper = offDmg.chanceHth;
             hper = CheckHit(hper);
-            this->ui->plrHitChance->setText(QString("%1%").arg(hper));
+            this->ui->offPlrHitChance->setText(QString("%1%").arg(hper));
         } else {
-            this->ui->plrHitChance->setText(QString("-"));
+            this->ui->offPlrHitChance->setText(QString("-"));
         }
-        this->ui->plrHitChanceSep->setVisible(offDmg.mis);
-        this->ui->plrHitChance2->setVisible(offDmg.mis);
+        this->ui->offPlrHitChanceSep->setVisible(offDmg.mis);
+        this->ui->offPlrHitChance2->setVisible(offDmg.mis);
         if (offDmg.mis) {
             hper = offDmg.chanceMis;
             hper = CheckHit(hper);
-            this->ui->plrHitChance2->setText(QString("%1%").arg(hper));
+            this->ui->offPlrHitChance2->setText(QString("%1%").arg(hper));
         }
 
         this->ui->offPlrDamageSep->setVisible(offDmg.mis);
@@ -149,16 +161,16 @@ void PvPDetailsWidget::updateFields()
         if (defDmg.hth) {
             hper = defDmg.chanceHth;
             hper = CheckHit(hper);
-            this->ui->plrHitChance->setText(QString("%1%").arg(hper));
+            this->ui->defPlrHitChance->setText(QString("%1%").arg(hper));
         } else {
-            this->ui->plrHitChance->setText(QString("-"));
+            this->ui->defPlrHitChance->setText(QString("-"));
         }
-        this->ui->plrHitChanceSep->setVisible(defDmg.mis);
-        this->ui->plrHitChance2->setVisible(defDmg.mis);
+        this->ui->defPlrHitChanceSep->setVisible(defDmg.mis);
+        this->ui->defPlrHitChance2->setVisible(defDmg.mis);
         if (defDmg.mis) {
             hper = defDmg.chanceMis;
             hper = CheckHit(hper);
-            this->ui->plrHitChance2->setText(QString("%1%").arg(hper));
+            this->ui->defPlrHitChance2->setText(QString("%1%").arg(hper));
         }
 
         this->ui->defPlrDamageSep->setVisible(defDmg.mis);
@@ -214,7 +226,7 @@ void PvPDetailsWidget::on_pvpHerosComboBox_activated(int index)
     D1Hero *currhero = this->heros[index];
 
     this->ui->pvpHeroDetails->initialize(currhero);
-    this->ui->defHeroSkillsComboBox->setHero(currHero);
+    this->ui->defHeroSkillsComboBox->setHero(currhero);
 
     this->displayFrame();
 }

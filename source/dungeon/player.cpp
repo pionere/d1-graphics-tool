@@ -327,6 +327,21 @@ void ClrPlrPath(int pnum)
 	//memset(plr._pWalkpath, DIR_NONE, sizeof(plr._pWalkpath));
 }
 
+int GetChargeSpeed(int pnum)
+{
+    int result = 2;
+    if (plr._pIWalkSpeed != 0) {
+        if (plr._pIWalkSpeed == 3) {
+            // ISPL_FASTESTWALK
+            result = 4;
+        } else {
+            // (ISPL_FASTERWALK | ISPL_FASTWALK)
+            result = 3;
+        }
+    }
+    return result;
+}
+
 void GetMonByPlrDamage(int pnum, int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam)
 {
 	int mind, maxd, damsl, dambl, dampc;
@@ -436,16 +451,16 @@ void GetPlrByPlrDamage(int offp, int sn, int sl, int pnum, int *mindam, int *max
 	case SPL_ATTACK:
 		break;
 	case SPL_SWIPE:
-		dam = (dam * (48 + sl)) >> 6;
-		dam = (dam * (48 + sl)) >> 6;
+		mind = (mind * (48 + sl)) >> 6;
+		maxd = (maxd * (48 + sl)) >> 6;
 		break;
 	case SPL_WALLOP:
-		dam = (dam * (112 + sl)) >> 6;
-		dam = (dam * (112 + sl)) >> 6;
+		mind = (mind * (112 + sl)) >> 6;
+		maxd = (maxd * (112 + sl)) >> 6;
 		break;
 	case SPL_WHIPLASH:
-		dam = (dam * (24 + sl)) >> 6;
-		dam = (dam * (24 + sl)) >> 6;
+		mind = (mind * (24 + sl)) >> 6;
+		maxd = (maxd * (24 + sl)) >> 6;
 		break;
 	default:
         QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetPlrByPlrDamage.").arg(sn));

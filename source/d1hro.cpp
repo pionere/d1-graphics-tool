@@ -1114,17 +1114,7 @@ int D1Hero::getWalkSpeed() const
 
 int D1Hero::getChargeSpeed() const
 {
-    int result = 2;
-    if (players[this->pnum]._pIWalkSpeed != 0) {
-        if (players[this->pnum]._pIWalkSpeed == 3) {
-            // ISPL_FASTESTWALK
-            result = 4;
-        } else {
-            // (ISPL_FASTERWALK | ISPL_FASTWALK)
-            result = 3;
-        }
-    }
-    return result;
+    return GetChargeSpeed(this->pnum);
 }
 
 int D1Hero::getBaseAttackSpeed() const
@@ -1295,9 +1285,24 @@ void D1Hero::getMonDamage(int sn, int sl, const MonsterStruct *mon, int *mindam,
     GetMonByPlrDamage(this->pnum, sn, sl, mon, mindam, maxdam);
 }
 
-void D1Hero::getPlrDamage(int sn, int sl, const D1Hero *hero, int *mindam, int *maxdam) const
+void D1Hero::getPlrDamage(int sn, int sl, const D1Hero *target, int *mindam, int *maxdam) const
 {
-    GetPlrByPlrDamage(this->pnum, sn, sl, hero, mindam, maxdam);
+    GetPlrByPlrDamage(this->pnum, sn, sl, target->pnum, mindam, maxdam);
+}
+
+void D1Hero::getMonSkillDamage(int sn, int sl, int dist, const MonsterStruct *mon, int *mindam, int *maxdam) const
+{
+    SkillMonByPlrDamage(sn, sl, dist, this->pnum, mon, &mindam, &maxdam);
+}
+
+void D1Hero::getPlrSkillDamage(int sn, int sl, int dist, const D1Hero *target, int *mindam, int *maxdam) const
+{
+    SkillPlrByPlrDamage(sn, sl, dist, this->pnum, target->pnum, mindam, maxdam);
+}
+
+int D1Hero::calcPlrDam(BYTE mRes, unsigned damage)
+{
+    return CalcPlrDam(this->pnum, mRes, damage);
 }
 
 int D1Hero::getSkillFlags() const
