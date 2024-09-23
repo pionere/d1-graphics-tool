@@ -305,7 +305,7 @@ static MonsterDamage GetMonsterDamage(const MonsterStruct *mon, int dist, const 
         }
         result.minMis = mindam;
         result.maxMis = maxdam;
-        result.chanceMis = GetMonMisHitChance(mtype, dist, mon, hero);
+        result.chanceMis = MissPlrHitByMonChance(mtype, dist, mon, hero);
     }
 
     return result;
@@ -323,6 +323,8 @@ typedef struct PlayerDamage {
     int maxMis;
     int chanceMis;
     BYTE resMis;
+    bool blockMis;
+
 } PlayerDamage;
 
 static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, int dist, const MonsterStruct *mon)
@@ -336,11 +338,12 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, int dist, const 
         int mtype = spelldata[sn].sMissile;
         mtype = GetBaseMissile(mtype);
         result.resMis = GetMissileElement(mtype);
+        result.blockMis = !(missiledata[mtype].mdFlags & MIF_NOBLOCK);
         int mindam, maxdam;
-        GetSkillDamage(sn, sl, dist, hero, mon, &mindam, &maxdam);
+        SkillMonByPlrDamage(sn, sl, dist, hero, mon, &mindam, &maxdam);
         result.minMis = mindam;
         result.maxMis = maxdam;
-        result.chanceMis = GetPlrMisHitChance(mtype, dist, hero, mon);
+        result.chanceMis = MissMonHitByPlrChance(mtype, dist, hero, mon);
         if (sn == SPL_CHARGE)
             result.chanceMis = sl * 16 - mon->_mArmorClass;
     }
@@ -352,7 +355,7 @@ static PlayerDamage GetPlayerDamage(const D1Hero *hero, int sn, int dist, const 
             result.chanceHth -= 30 - sl * 2;
         }
         int mindam, maxdam;
-        hero->getRealDamage(sn, sl, mon, &mindam, &maxdam);
+        hero->getMonDamage(sn, sl, mon, &mindam, &maxdam);
         result.minHth = mindam;
         result.maxHth = maxdam;
     }
@@ -510,7 +513,7 @@ void MonsterDetailsWidget::updateFields()
 
     // player vs. monster info
     // - update skill combobox
-    QComboBox *skillsComboBox = this->ui->heroSkillsComboBox;
+    /*QComboBox *skillsComboBox = this->ui->heroSkillsComboBox;
     mi = skillsComboBox->currentData().value<int>();
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Selected skill %1.").arg(mi));
     skillsComboBox->clear();
@@ -518,9 +521,9 @@ void MonsterDetailsWidget::updateFields()
         if ((spelldata[sn].sUseFlags & this->hero->getSkillFlags()) != spelldata[sn].sUseFlags) continue;
         // if (sn != SPL_ATTACK) {
             if (!HasSkillDamage(sn)) continue;
-            /*if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
+            / *if (spelldata[sn].sBookLvl == SPELL_NA && spelldata[sn].sStaffLvl == SPELL_NA && !SPELL_RUNE(sn)) {
                 continue;
-            }*/
+            }* /
             if (this->hero->getSkillLvl(sn) == 0 && !(this->hero->getFixedSkills() & SPELL_MASK(sn)) && !SPELL_RUNE(sn)) {
                 continue;
             }
@@ -531,13 +534,13 @@ void MonsterDetailsWidget::updateFields()
     mi = skillsComboBox->findData(mi);
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Skill index %1.").arg(mi));
     if (mi < 0) mi = 0;
-    skillsComboBox->setCurrentIndex(mi);
+    skillsComboBox->setCurrentIndex(mi);*/
 
     int dist = this->ui->plrDistSpinBox->value();
-    this->ui->plrDistSpinBox->setToolTip(tr("Distance to target in ticks. Charge distance to target: %2").arg(dist * this->hero->getChargeSpeed()));
+    this->ui->plrDistSpinBox->setToolTip(tr("Distance to target in ticks. Charge distance to target: %1").arg(dist * this->hero->getChargeSpeed()));
 
     int hper, mindam, maxdam;
-    int sn = skillsComboBox->currentData().value<int>();
+    int sn = this->ui->heroSkillsComboBox->update(); //  skillsComboBox->currentData().value<int>();
     // QMessageBox::critical(nullptr, "Error", QApplication::tr("Using skill meteor %1.").arg(this->hero->getSkillLvl(SPL_METEOR)));
     const PlayerDamage plrDam = GetPlayerDamage(this->hero, sn, dist, mon);
     if (plrDam.hth) {
@@ -605,18 +608,14 @@ void MonsterDetailsWidget::updateFields()
     if ((this->hero->getSkillFlags() & SFLAG_BLOCK) && (monDamage.hth /*|| monDamage.spec*/ || (monDamage.mis && monDamage.blockMis))) {
         hper = this->hero->getBlockChance();
         if (hper != 0) {
-            hper -= (mon->_mLevel << 1);
-            /*if (hper < 0)
-                hper = 0;
-            if (hper > 100)
-                hper = 100;*/
+            hper -= 2 * mon->_mLevel;
             hper = CheckHit(hper);
         }
     }
     if (hper < 0) {
         this->ui->plrBlockChance->setText(QString("-"));
     } else if ((monDamage.hth /*|| monDamage.spec*/) && monDamage.mis && !monDamage.blockMis) {
-        this->ui->plrBlockChance->setText(QString("%1% | 0%").arg(hper));
+        this->ui->plrBlockChance->setText(QString("%1% | -").arg(hper));
     } else {
         this->ui->plrBlockChance->setText(QString("%1%").arg(hper));
     }

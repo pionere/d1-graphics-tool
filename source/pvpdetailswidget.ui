@@ -52,6 +52,200 @@
       </item>
      </layout>
    </item>
+   <item alignment="Qt::AlignCenter">
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="HeroSkillsComboBox" name="offHeroSkillsComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="SpinBoxWidget" name="plrDistSpinBox">
+        <property name="toolTip">
+         <string>Distance</string>
+        </property>
+        <property name="minimum">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <number>32</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="HeroSkillsComboBox" name="defHeroSkillsComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel" name="offPlrHitChance">
+          <property name="toolTip">
+           <string>Chance to hit the other player in h2h combat</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="offPlrHitChanceSep">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="text">
+           <string notr="true">|</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="offPlrHitChance2">
+          <property name="toolTip">
+           <string>Chance to hit the other player using spell/missile attack</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Hit chance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel" name="defPlrHitChance">
+          <property name="toolTip">
+           <string>Chance to hit the player in h2h combat</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="defPlrHitChanceSep">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="text">
+           <string notr="true">|</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="defPlrHitChance2">
+          <property name="toolTip">
+           <string>Chance to hit the player using special/missile attack</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <item row="2" column="0">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel" name="offPlrDamage">
+          <property name="toolTip">
+           <string>Possible h2h damage to the other player</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="offPlrDamageSep">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="text">
+           <string notr="true">|</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="offPlrDamage2">
+          <property name="toolTip">
+           <string>Possible spell/missile damage to the other player</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Damage</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLabel" name="defPlrDamage">
+          <property name="toolTip">
+           <string>Possible h2h damage to the player</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="defPlrDamageSep">
+          <property name="minimumWidth">
+           <number>24</number>
+          </property>
+          <property name="maximumWidth">
+           <number>24</number>
+          </property>
+          <property name="text">
+           <string notr="true">|</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="defPlrDamage2">
+          <property name="toolTip">
+           <string>Possible special/missile damage to the player</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <item row="3" column="0">
+       <widget class="QLabel" name="offPlrBlockChance">
+        <property name="toolTip">
+         <string>Chance to block the attack of the other player</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Block chance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="defPlrBlockChance">
+        <property name="toolTip">
+         <string>Chance to block the attack of the player</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item>
     <layout class="QHBoxLayout">
      <item>

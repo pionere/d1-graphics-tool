@@ -397,6 +397,7 @@ void HeroView::displayFrame()
 
     // LogErrorF("HeroView::displayFrame 0");
     // this->updateFields();
+    this->updateLabel();
     this->ui->mainHeroDetails->displayFrame();
     // LogErrorF("HeroView::displayFrame 1");
     this->heroScene.clear();
@@ -423,7 +424,7 @@ void HeroView::displayFrame()
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     // LogErrorF("HeroView::displayFrame 4");
     // Notify PalView that the frame changed (used to refresh palette widget)
-    emit this->frameRefreshed();
+    // emit this->frameRefreshed();
 }
 
 void HeroView::toggleBottomPanel()

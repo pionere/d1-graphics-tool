@@ -88,6 +88,8 @@ set(PROJECT_SOURCES
         source/herodetailswidget.cpp
         source/herodetailswidget.h
         source/herodetailswidget.ui
+        source/heroskillscombobox.cpp
+        source/heroskillscombobox.h
         source/heroview.cpp
         source/heroview.h
         source/heroview.ui

@@ -1290,9 +1290,14 @@ int D1Hero::getTotalMaxDam() const
     return maxdam;
 }
 
-void D1Hero::getRealDamage(int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam) const
+void D1Hero::getMonDamage(int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam) const
 {
-    GetPlayerDamage(this->pnum, sn, sl, mon, mindam, maxdam);
+    GetMonByPlrDamage(this->pnum, sn, sl, mon, mindam, maxdam);
+}
+
+void D1Hero::getPlrDamage(int sn, int sl, const D1Hero *hero, int *mindam, int *maxdam) const
+{
+    GetPlrByPlrDamage(this->pnum, sn, sl, hero, mindam, maxdam);
 }
 
 int D1Hero::getSkillFlags() const

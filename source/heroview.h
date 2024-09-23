@@ -105,13 +105,13 @@ public:
     static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 
 private:
-    void updateFields();
+    // void updateFields();
     int invItemIdx(QPoint &pos) const;
     bool framePos(const QPoint &pos) const;
 
 signals:
-    void frameRefreshed();
-    void palModified();
+    // void frameRefreshed();
+    // void palModified();
 
 private slots:
     void on_gameHellfireCheckBox_clicked();

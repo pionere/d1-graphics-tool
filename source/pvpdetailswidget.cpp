@@ -22,11 +22,14 @@ PvPDetailsWidget::PvPDetailsWidget(QWidget *parent)
 PvPDetailsWidget::~PvPDetailsWidget()
 {
     delete ui;
+
+    qDeleteAll(this->heros);
 }
 
 void PvPDetailsWidget::initialize(D1Hero *h)
 {
     this->hero = h;
+    this->ui->offHeroSkillsComboBox->setHero(h);
 
     // LogErrorF("PvPDetailsWidget init 5");
     this->updateFields();
@@ -36,20 +39,174 @@ void PvPDetailsWidget::initialize(D1Hero *h)
 
 void PvPDetailsWidget::displayFrame()
 {
-    // this->updateFields();
+    this->updateFields();
 
     if (this->ui->pvpHeroDetails->isVisible())
         this->ui->pvpHeroDetails->displayFrame();
 }
 
+typedef struct PlayerDamage {
+    bool hth;
+    bool mis;
+
+    int minHth;
+    int maxHth;
+    int chanceHth;
+
+    int minMis;
+    int maxMis;
+    int chanceMis;
+    BYTE resMis;
+    bool blockMis;
+
+} PlayerDamage;
+
+static PlayerDamage GetPlayerDamage(const D1Hero *offHero, int sn, int dist, const D1Hero *defHero)
+{
+    int sl = offHero->getSkillLvl(sn);
+    bool mis = spelldata[sn].sType != STYPE_NONE || (spelldata[sn].sUseFlags & SFLAG_RANGED);
+    bool hth = !mis;
+    PlayerDamage result = { 0 };
+    if (mis) {
+        result.mis = true;
+        int mtype = spelldata[sn].sMissile;
+        mtype = GetBaseMissile(mtype);
+        result.resMis = GetMissileElement(mtype);
+        result.blockMis = !(missiledata[mtype].mdFlags & MIF_NOBLOCK);
+        int mindam, maxdam;
+        SkillPlrByPlrDamage(sn, sl, dist, offHero, defHero, &mindam, &maxdam);
+        result.minMis = mindam;
+        result.maxMis = maxdam;
+        result.chanceMis = MissPlrHitByPlrChance(mtype, dist, offHero, defHero);
+        if (sn == SPL_CHARGE)
+            result.chanceMis = sl * 16 - defHero->getAC();
+    }
+
+    if (hth) {
+        result.hth = true;
+        result.chanceHth = offHero->getHitChance() - defHero->getAC();
+        if (sn == SPL_SWIPE) {
+            result.chanceHth -= 30 - sl * 2;
+        }
+        int mindam, maxdam;
+        offHero->getPlrDamage(sn, sl, defHero, &mindam, &maxdam);
+        result.minHth = mindam;
+        result.maxHth = maxdam;
+    }
+    return result;
+}
+
 void PvPDetailsWidget::updateFields()
 {
-    this->ui->discardHeroButton->setEnabled(!this->heros.isEmpty());
-    this->ui->pvpHeroDetails->setVisible(!this->heros.isEmpty());
+    bool hasEnemy = !this->heros.isEmpty();
+    this->ui->discardHeroButton->setEnabled(hasEnemy);
+    this->ui->pvpHeroDetails->setVisible(hasEnemy);
 
     D1Hero *newhero = D1Hero::instance();
     this->ui->addHeroButton->setEnabled(newhero != nullptr);
     delete newhero;
+
+    if (hasEnemy) {
+        D1Hero *defHero = this->heros[this->ui->pvpHerosComboBox->currentIndex()];
+        D1Hero *offHero = this->hero;
+
+        int dist = this->ui->plrDistSpinBox->value();
+        this->ui->plrDistSpinBox->setToolTip(tr("Distance to target in ticks. Charge distance to target: %1 / %2").arg(dist * offHero->getChargeSpeed()).arg(dist * defHero->getChargeSpeed()));
+
+        int hper, mindam, maxdam;
+        int offSn = this->ui->offHeroSkillsComboBox->update();
+        PlayerDamage offDmg = GetPlayerDamage(offHero, offSn, dist, defHero);
+        int defSn = this->ui->defHeroSkillsComboBox->update();
+        PlayerDamage defDmg = GetPlayerDamage(defHero, defSn, dist, offHero);
+
+        if (offDmg.hth) {
+            hper = offDmg.chanceHth;
+            hper = CheckHit(hper);
+            this->ui->plrHitChance->setText(QString("%1%").arg(hper));
+        } else {
+            this->ui->plrHitChance->setText(QString("-"));
+        }
+        this->ui->plrHitChanceSep->setVisible(offDmg.mis);
+        this->ui->plrHitChance2->setVisible(offDmg.mis);
+        if (offDmg.mis) {
+            hper = offDmg.chanceMis;
+            hper = CheckHit(hper);
+            this->ui->plrHitChance2->setText(QString("%1%").arg(hper));
+        }
+
+        this->ui->offPlrDamageSep->setVisible(offDmg.mis);
+        this->ui->offPlrDamage2->setVisible(offDmg.mis);
+        if (offDmg.mis) {
+            mindam = offDmg.minMis;
+            maxdam = offDmg.maxMis;
+            displayDamage(this->ui->offPlrDamage2, mindam, maxdam);
+            this->ui->offPlrDamage2->setStyleSheet(GetElementColor(offDmg.resMis));
+        }
+        mindam = offDmg.minHth;
+        maxdam = offDmg.maxHth;
+        displayDamage(this->ui->offPlrDamage, mindam, maxdam);
+
+        if (defDmg.hth) {
+            hper = defDmg.chanceHth;
+            hper = CheckHit(hper);
+            this->ui->plrHitChance->setText(QString("%1%").arg(hper));
+        } else {
+            this->ui->plrHitChance->setText(QString("-"));
+        }
+        this->ui->plrHitChanceSep->setVisible(defDmg.mis);
+        this->ui->plrHitChance2->setVisible(defDmg.mis);
+        if (defDmg.mis) {
+            hper = defDmg.chanceMis;
+            hper = CheckHit(hper);
+            this->ui->plrHitChance2->setText(QString("%1%").arg(hper));
+        }
+
+        this->ui->defPlrDamageSep->setVisible(defDmg.mis);
+        this->ui->defPlrDamage2->setVisible(defDmg.mis);
+        if (defDmg.mis) {
+            mindam = defDmg.minMis;
+            maxdam = defDmg.maxMis;
+            displayDamage(this->ui->defPlrDamage2, mindam, maxdam);
+            this->ui->defPlrDamage2->setStyleSheet(GetElementColor(defDmg.resMis));
+        }
+        mindam = defDmg.minHth;
+        maxdam = defDmg.maxHth;
+        displayDamage(this->ui->defPlrDamage, mindam, maxdam);
+
+        hper = -1;
+        // if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
+        if ((offHero->getSkillFlags() & SFLAG_BLOCK) && (defDmg.hth || (defDmg.mis && defDmg.blockMis))) {
+            hper = offHero->getBlockChance();
+            if (hper != 0) {
+                hper -= 2 * defHero->getLevel();
+                hper = CheckHit(hper);
+            }
+        }
+        if (hper < 0) {
+            this->ui->offPlrBlockChance->setText(QString("-"));
+        } else if (defDmg.hth && defDmg.mis && !defDmg.blockMis) {
+            this->ui->offPlrBlockChance->setText(QString("%1% | -").arg(hper));
+        } else {
+            this->ui->offPlrBlockChance->setText(QString("%1%").arg(hper));
+        }
+
+        hper = -1;
+        // if (hth || (mtype != -1 && !(missiledata[mtype].mdFlags & MIF_NOBLOCK))) {
+        if ((defHero->getSkillFlags() & SFLAG_BLOCK) && (offDmg.hth || (offDmg.mis && offDmg.blockMis))) {
+            hper = defHero->getBlockChance();
+            if (hper != 0) {
+                hper -= 2 * offHero->getLevel();
+                hper = CheckHit(hper);
+            }
+        }
+        if (hper < 0) {
+            this->ui->defPlrBlockChance->setText(QString("-"));
+        } else if (offDmg.hth && offDmg.mis && !offDmg.blockMis) {
+            this->ui->defPlrBlockChance->setText(QString("%1% | -").arg(hper));
+        } else {
+            this->ui->defPlrBlockChance->setText(QString("%1%").arg(hper));
+        }
+    }
 }
 
 void PvPDetailsWidget::on_pvpHerosComboBox_activated(int index)
@@ -57,6 +214,7 @@ void PvPDetailsWidget::on_pvpHerosComboBox_activated(int index)
     D1Hero *currhero = this->heros[index];
 
     this->ui->pvpHeroDetails->initialize(currhero);
+    this->ui->defHeroSkillsComboBox->setHero(currHero);
 
     this->displayFrame();
 }
@@ -93,12 +251,28 @@ void PvPDetailsWidget::on_addHeroButton_clicked()
             this->ui->pvpHerosComboBox->addItem(newhero->getName());
             this->heros.append(newhero);
 
+            // this->updateFields();
             this->on_pvpHerosComboBox_activated(this->heros.count() - 1);
         } else {
             delete newhero;
             dProgressFail() << tr("Failed loading HRO file: %1.").arg(QDir::toNativeSeparators(filePath));
         }
     }
+}
+
+void PvPDetailsWidget::on_offHeroSkillsComboBox_activated(int index)
+{
+    this->updateFields();
+}
+
+void PvPDetailsWidget::on_plrDistSpinBox_valueChanged(int value)
+{
+    this->updateFields();
+}
+
+void PvPDetailsWidget::on_defHeroSkillsComboBox_activated(int index)
+{
+    this->updateFields();
 }
 
 void PvPDetailsWidget::on_closeButton_clicked()

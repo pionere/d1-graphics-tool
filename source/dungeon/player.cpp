@@ -327,7 +327,7 @@ void ClrPlrPath(int pnum)
 	//memset(plr._pWalkpath, DIR_NONE, sizeof(plr._pWalkpath));
 }
 
-void GetPlayerDamage(int pnum, int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam)
+void GetMonByPlrDamage(int pnum, int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam)
 {
 	int mind, maxd, damsl, dambl, dampc;
     bool tmac;
@@ -372,7 +372,7 @@ void GetPlayerDamage(int pnum, int sn, int sl, const MonsterStruct *mon, int *mi
         maxd = (maxd * (24 + sl)) >> 6;
         break;
     default:
-        QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetPlayerDamage.").arg(sn));
+        QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetMonByPlrDamage.").arg(sn));
         ASSUME_UNREACHABLE
         break;
     }
@@ -397,6 +397,82 @@ void GetPlayerDamage(int pnum, int sn, int sl, const MonsterStruct *mon, int *mi
         maxd += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, adam, false);
         mind += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, plr._pIAMinDam, false);
     }
+
+    mind >>= 6;
+    maxd >>= 6;
+
+    *mindam = mind;
+    *maxdam = maxd;
+}
+
+void GetPlrByPlrDamage(int offp, int sn, int sl, int pnum, int *mindam, int *maxdam)
+{
+	int mind, maxd, damsl, dambl, dampc;
+
+    mind = 0;
+    maxd = 0;
+	damsl = plx(offp)._pISlMaxDam;
+    if (damsl != 0) {
+        maxd += CalcPlrDam(pnum, MISR_SLASH, damsl);
+        mind += CalcPlrDam(pnum, MISR_SLASH, plx(offp)._pISlMinDam);
+    }
+	dambl = plx(offp)._pIBlMaxDam;
+    if (dambl != 0) {
+        maxd += CalcPlrDam(pnum, MISR_BLUNT, dambl);
+        mind += CalcPlrDam(pnum, MISR_BLUNT, plx(offp)._pIBlMinDam);
+    }
+	dampc = plx(offp)._pIPcMaxDam;
+    if (dampc != 0) {
+        maxd += CalcPlrDam(pnum, MISR_PUNCTURE, dampc);
+        mind += CalcPlrDam(pnum, MISR_PUNCTURE, plx(offp)._pIPcMinDam);
+    }
+
+	// tmp = sn == SPL_SWIPE ? 800 : 200;
+	// if (random_low(6, tmp) < plx(offp)._pICritChance) {
+	// 	dam <<= 1;
+	// }
+
+	switch (sn) {
+	case SPL_ATTACK:
+		break;
+	case SPL_SWIPE:
+		dam = (dam * (48 + sl)) >> 6;
+		dam = (dam * (48 + sl)) >> 6;
+		break;
+	case SPL_WALLOP:
+		dam = (dam * (112 + sl)) >> 6;
+		dam = (dam * (112 + sl)) >> 6;
+		break;
+	case SPL_WHIPLASH:
+		dam = (dam * (24 + sl)) >> 6;
+		dam = (dam * (24 + sl)) >> 6;
+		break;
+	default:
+        QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetPlrByPlrDamage.").arg(sn));
+		ASSUME_UNREACHABLE
+		break;
+	}
+
+	int fdam = plx(offp)._pIFMaxDam;
+	if (fdam != 0) {
+		maxd += CalcPlrDam(pnum, MISR_FIRE, fdam);
+		mind += CalcPlrDam(pnum, MISR_FIRE, plx(offp)._pIFMinDam);
+	}
+	int ldam = plx(offp)._pILMaxDam;
+	if (ldam != 0) {
+		maxd += CalcPlrDam(pnum, MISR_LIGHTNING, ldam);
+		mind += CalcPlrDam(pnum, MISR_LIGHTNING, plx(offp)._pILMinDam);
+	}
+	int mdam = plx(offp)._pIMMaxDam;
+	if (mdam != 0) {
+		maxd += CalcPlrDam(pnum, MISR_LIGHTNING, mdam);
+		mind += CalcPlrDam(pnum, MISR_LIGHTNING, plx(offp)._pIMMinDam);
+	}
+	int adam = plx(offp)._pIAMaxDam;
+	if (adam != 0) {
+		maxd += CalcPlrDam(pnum, MISR_ACID, adam);
+		mind += CalcPlrDam(pnum, MISR_ACID, plx(offp)._pIAMinDam);
+	}
 
     mind >>= 6;
     maxd >>= 6;

@@ -829,10 +829,10 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->heroView->initialize(this->pal, this->hero, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
-        QObject::connect(this->heroView, &HeroView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+        // QObject::connect(this->heroView, &HeroView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
-        QObject::connect(this->heroView, &HeroView::palModified, this->palWidget, &PaletteWidget::refresh);
+        // QObject::connect(this->heroView, &HeroView::palModified, this->palWidget, &PaletteWidget::refresh);
 
         view = this->heroView;
 
