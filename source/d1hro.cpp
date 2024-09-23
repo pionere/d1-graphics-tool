@@ -100,6 +100,24 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     this->filePath = filePath;
     this->modified = false;
 
+    int hc = plr._pClass;
+    switch (params.heroClass) {
+    case OPEN_HERO_CLASS::AUTODETECT:                   break;
+    case OPEN_HERO_CLASS::WARRIOR:   hc = PC_WARRIOR;   break;
+    case OPEN_HERO_CLASS::ROGUE:     hc = PC_ROGUE;     break;
+    case OPEN_HERO_CLASS::SORCERER:  hc = PC_SORCERER;  break;
+    case OPEN_HERO_CLASS::MONK:      hc = PC_MONK;      break;
+    case OPEN_HERO_CLASS::BARD:      hc = PC_BARD;      break;
+    case OPEN_HERO_CLASS::BARBARIAN: hc = PC_BARBARIAN; break;
+    }
+    if (hc != plr._pClass) {
+        this->setClass(hc);
+    }
+
+    if (params.heroType != OPEN_HERO_TYPE::AUTODETECT) {
+        this->setHellfire(params.heroType == OPEN_HERO_TYPE::HELLFIRE_HERO);
+    }
+
     return true;
 }
 

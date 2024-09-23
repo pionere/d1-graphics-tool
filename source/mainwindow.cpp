@@ -297,6 +297,11 @@ void MainWindow::heroMonstersClicked()
     this->sideView->showMonsters(this->hero);
 }
 
+void MainWindow::heroPvPClicked()
+{
+    this->sideView->showPvP(this->hero);
+}
+
 void MainWindow::heroItemClicked(int ii)
 {
     this->sideView->showHeroItem(this->hero, ii);

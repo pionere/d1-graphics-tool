@@ -22,9 +22,9 @@ SidePanelWidget::~SidePanelWidget()
     delete ui;
 }
 
-void SidePanelWidget::initialize(D1Hero *h, int m)
+void SidePanelWidget::initialize(/*D1Hero *h,*/ int m)
 {
-    this->hero = h;
+    // this->hero = h;
     if (this->mode == m) {
         return;
     }
@@ -40,6 +40,9 @@ void SidePanelWidget::initialize(D1Hero *h, int m)
     }
     if (this->monsterDetails != nullptr) {
         this->monsterDetails->setVisible(false);
+    }
+    if (this->pvpDetails != nullptr) {
+        this->pvpDetails->setVisible(false);
     }
 
     QWidget *w;
@@ -68,6 +71,12 @@ void SidePanelWidget::initialize(D1Hero *h, int m)
         }
         w = this->monsterDetails;
         break;
+    case 4:
+        if (this->pvpDetails == nullptr) {
+            this->pvpDetails = new PvPDetailsWidget(this);
+        }
+        w = this->pvpDetails;
+        break;
     }
     QVBoxLayout *layout = this->ui->panelVBoxLayout;
     layout->addWidget(w, 0, Qt::AlignTop);
@@ -83,12 +92,14 @@ void SidePanelWidget::displayFrame()
         this->skillDetails->displayFrame();
     if (this->monsterDetails != nullptr && this->monsterDetails->isVisible())
         this->monsterDetails->displayFrame();
+    if (this->pvpDetails != nullptr && this->pvpDetails->isVisible())
+        this->pvpDetails->displayFrame();
 }
 
 void SidePanelWidget::showHero(D1Hero *h)
 {
     // LogErrorF("SidePanelWidget::showHero 0 %d", ii);
-    this->initialize(h, 0);
+    this->initialize(0);
     // LogErrorF("SidePanelWidget::showHero 1 %d", ii);
     this->heroDetails->initialize(h);
     // LogErrorF("SidePanelWidget::showHero 2 %d", ii);
@@ -97,7 +108,7 @@ void SidePanelWidget::showHero(D1Hero *h)
 void SidePanelWidget::showHeroItem(D1Hero *h, int ii)
 {
     // LogErrorF("SidePanelWidget::showHeroItem 0 %d", ii);
-    this->initialize(h, 1);
+    this->initialize(1);
     // LogErrorF("SidePanelWidget::showHeroItem 1 %d", ii);
     this->itemDetails->initialize(h, ii);
     // LogErrorF("SidePanelWidget::showHeroItem 2 %d", ii);
@@ -106,7 +117,7 @@ void SidePanelWidget::showHeroItem(D1Hero *h, int ii)
 void SidePanelWidget::showHeroSkills(D1Hero *h)
 {
     // LogErrorF("SidePanelWidget::showHeroSkills 0 %d", ii);
-    this->initialize(h, 2);
+    this->initialize(2);
     // LogErrorF("SidePanelWidget::showHeroSkills 1 %d", ii);
     this->skillDetails->initialize(h);
     // LogErrorF("SidePanelWidget::showHeroSkills 2 %d", ii);
@@ -115,9 +126,19 @@ void SidePanelWidget::showHeroSkills(D1Hero *h)
 void SidePanelWidget::showMonsters(D1Hero *h)
 {
     // LogErrorF("SidePanelWidget::showMonsters 0 %d", ii);
-    this->initialize(h, 3);
+    this->initialize(3);
     // LogErrorF("SidePanelWidget::showMonsters 1 %d", ii);
     // QMessageBox::critical(this, "Error", tr("SidePanelWidget::showMonsters meteor%1").arg(this->hero->getSkillLvl(SPL_METEOR)));
     this->monsterDetails->initialize(h);
     // LogErrorF("SidePanelWidget::showMonsters 2 %d", ii);
+}
+
+void SidePanelWidget::showPvP(D1Hero *h)
+{
+    // LogErrorF("SidePanelWidget::showPvP 0 %d", ii);
+    this->initialize(4);
+    // LogErrorF("SidePanelWidget::showPvP 1 %d", ii);
+    // QMessageBox::critical(this, "Error", tr("SidePanelWidget::showPvP meteor%1").arg(this->hero->getSkillLvl(SPL_METEOR)));
+    this->pvpDetails->initialize(h);
+    // LogErrorF("SidePanelWidget::showPvP 2 %d", ii);
 }

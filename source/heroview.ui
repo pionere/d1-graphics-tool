@@ -16,7 +16,7 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <layout class="QVBoxLayout" name="heroVBoxLayout">
+  <layout class="QVBoxLayout">
    <item>
     <widget class="QLabel" name="heroLabel"/>
    </item>
@@ -47,6 +47,101 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <layout class="QVBoxLayout" name="heroVBoxLayout">
+      <item>
+       <widget class="QWidget">
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>60</number>
+           </property>
+           <property name="text">
+            <string>Hellfire:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="gameHellfireCheckBox">
+           <property name="toolTip">
+            <string>Check if it is for a hellfire game</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>60</number>
+           </property>
+           <property name="text">
+            <string>Multi:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="gameMultiCheckBox">
+           <property name="toolTip">
+            <string>Check if it is for a multiplayer game</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>60</number>
+           </property>
+           <property name="text">
+            <string>Difficulty:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="gameDifficultyComboBox">
+           <item>
+            <property name="text">
+             <string>Normal</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Nigthmare</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Hell</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="heroSkillsButton">
+           <property name="text">
+            <string>Skills</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="heroMonstersButton">
+           <property name="text">
+            <string>Monsters</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="heroPvPButton">
+           <property name="text">
+            <string>PvP</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="HeroDetailsWidget" name="mainHeroDetails"/>
+      </item>
+     </layout>
      <!--layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">

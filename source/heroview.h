@@ -114,6 +114,14 @@ signals:
     void palModified();
 
 private slots:
+    void on_gameHellfireCheckBox_clicked();
+    void on_gameMultiCheckBox_clicked();
+    void on_gameDifficultyComboBox_activated(int index);
+
+    void on_heroSkillsButton_clicked();
+    void on_heroMonstersButton_clicked();
+    void on_heroPvPButton_clicked();
+
     /*void on_heroNameEdit_returnPressed();
     void on_heroNameEdit_escPressed();
     void on_heroClassComboBox_activated(int index);

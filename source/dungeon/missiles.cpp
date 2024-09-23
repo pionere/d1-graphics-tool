@@ -171,7 +171,7 @@ void GetSkillDamage(int sn, int sl, int dist, const D1Hero *hero, const MonsterS
 		maxd = hero->getChMaxDam(); // myplr._pIChMaxDam
 		mind = ((64 + dist) * mind) >> 5;
 		maxd = ((64 + dist) * maxd) >> 5;
-		if (maxd < 0) {
+		if (maxd <= 0) {
 			mind = 0;
 			maxd = 0;
 		}
@@ -613,7 +613,7 @@ int GetMonMisHitChance(int mtype, int dist, const MonsterStruct *mon, const D1He
     int hper;
     if (missiledata[mtype].mdFlags & MIF_ARROW) {
         hper = 30 + mon->_mHit + (2 * mon->_mLevel) - hero->getAC();
-        hper -= dist << 1; // MISDIST
+        hper -= abs(dist - 6) << 1; // MISDIST
     } else if (missiledata[mtype].mdFlags & MIF_AREA) {
         hper = 40 + 2 * mon->_mLevel;
         hper -= 2 * hero->getLevel();
@@ -630,7 +630,7 @@ int GetPlrMisHitChance(int mtype, int dist, const D1Hero *hero, const MonsterStr
     if (missiledata[mtype].mdFlags & MIF_ARROW) {
         hper = hero->getHitChance() - mon->_mArmorClass;
         // hper -= ((dist - 4) * (dist - 4) >> 1); // MISDIST
-        hper -= abs(dist - 6);
+        hper -= abs(dist - 6) << 1;
     } else if (missiledata[mtype].mdFlags & MIF_AREA) {
         hper = 40 + 2 * hero->getLevel();
         hper -= 2 * mon->_mLevel;

@@ -18,7 +18,7 @@
    <property name="bottomMargin">
     <number>2</number>
    </property>
-   <item>
+   <!--item>
     <widget class="QGroupBox" name="contextGroupBox">
      <layout class="QGridLayout">
       <item row="0" column="0">
@@ -100,7 +100,7 @@
       </item>
      </layout>
     </widget>
-   </item>
+   </item-->
    <item>
     <layout class="QGridLayout">
      <item row="0" column="0">

@@ -157,8 +157,8 @@ HeroView::HeroView(QWidget *parent)
     this->ui->heroGraphicsView->setScene(&this->heroScene);
     this->ui->heroGraphicsView->setMouseTracking(true);
 
-    this->mainHeroDetails = new HeroDetailsWidget(this);
-    this->ui->heroVBoxLayout->addWidget(this->mainHeroDetails);
+    // this->mainHeroDetails = new HeroDetailsWidget(this);
+    // this->ui->heroVBoxLayout->addWidget(this->mainHeroDetails);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->heroScene, &HeroScene::framePixelClicked, this, &HeroView::framePixelClicked);
@@ -189,7 +189,7 @@ void HeroView::initialize(D1Pal *p, D1Hero *h, bool bottomPanelHidden)
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
-    // this->mainHeroDetails->initialize(h);
+    // this->ui->mainHeroDetails->initialize(h);
     this->setHero(h);
     // this->updateFields();
 }
@@ -202,7 +202,7 @@ void HeroView::setPal(D1Pal *p)
 void HeroView::setHero(D1Hero *h)
 {
     this->hero = h;
-    this->mainHeroDetails->initialize(h);
+    this->ui->mainHeroDetails->initialize(h);
 }
 
 void HeroView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
@@ -389,9 +389,15 @@ void HeroView::framePixelHovered(const QPoint &pos)
 
 void HeroView::displayFrame()
 {
+    // set context-fields
+    this->ui->gameHellfireCheckBox->setChecked(this->hero->isHellfire());
+    this->ui->gameHellfireCheckBox->setEnabled(D1Hero::isStandardClass(this->hero->getClass()));
+    this->ui->gameMultiCheckBox->setChecked(this->hero->isMulti());
+    this->ui->gameDifficultyComboBox->setCurrentIndex(gnDifficulty);
+
     // LogErrorF("HeroView::displayFrame 0");
     // this->updateFields();
-    this->mainHeroDetails->displayFrame();
+    this->ui->mainHeroDetails->displayFrame();
     // LogErrorF("HeroView::displayFrame 1");
     this->heroScene.clear();
     // LogErrorF("HeroView::displayFrame 2");
@@ -440,6 +446,48 @@ void ItemAction::on_action_triggered()
     this->hero->swapInvItem(this->ii, this->pi);
 
     dMainWindow().updateWindow();
+}
+
+void HeroView::on_gameHellfireCheckBox_clicked()
+{
+    IsHellfireGame = this->ui->gameHellfireCheckBox->isChecked();
+
+    this->hero->setHellfire(IsHellfireGame);
+
+    dMainWindow().updateWindow();
+}
+
+void HeroView::on_gameMultiCheckBox_clicked()
+{
+    IsMultiGame = this->ui->gameMultiCheckBox->isChecked();
+
+    this->hero->setMulti(IsMultiGame);
+
+    dMainWindow().updateWindow();
+}
+
+void HeroView::on_gameDifficultyComboBox_activated(int index)
+{
+    gnDifficulty = index;
+
+    this->hero->update(); // update resists
+
+    dMainWindow().updateWindow();
+}
+
+void HeroView::on_heroSkillsButton_clicked()
+{
+    dMainWindow().heroSkillsClicked();
+}
+
+void HeroView::on_heroMonstersButton_clicked()
+{
+    dMainWindow().heroMonstersClicked();
+}
+
+void HeroView::on_heroPvPButton_clicked()
+{
+    dMainWindow().heroPvPClicked();
 }
 
 void HeroView::ShowContextMenu(const QPoint &pos)

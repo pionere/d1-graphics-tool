@@ -16,15 +16,16 @@ public:
     ~HeroDetailsWidget();
 
     void initialize(D1Hero *h);
+    void setReadOnly();
     void displayFrame();
 
 private:
     void updateFields();
 
 private slots:
-    void on_gameHellfireCheckBox_clicked();
-    void on_gameMultiCheckBox_clicked();
-    void on_gameDifficultyComboBox_activated(int index);
+    //void on_gameHellfireCheckBox_clicked();
+    //void on_gameMultiCheckBox_clicked();
+    //void on_gameDifficultyComboBox_activated(int index);
 
     void on_heroNameEdit_returnPressed();
     void on_heroNameEdit_escPressed();
@@ -36,8 +37,8 @@ private slots:
     void on_heroRankEdit_returnPressed();
     void on_heroRankEdit_escPressed();
 
-    void on_heroSkillsButton_clicked();
-    void on_heroMonstersButton_clicked();
+    // void on_heroSkillsButton_clicked();
+    // void on_heroMonstersButton_clicked();
 
     void on_heroDecLifeButton_clicked();
     void on_heroRestoreLifeButton_clicked();
@@ -62,4 +63,5 @@ private:
     Ui::HeroDetailsWidget *ui;
 
     D1Hero *hero;
+    bool readOnly = false;
 };

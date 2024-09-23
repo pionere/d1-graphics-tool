@@ -39,6 +39,31 @@ void HeroDetailsWidget::initialize(D1Hero *h)
     this->updateFields();
 }
 
+void HeroDetailsWidget::setReadOnly()
+{
+    this->ui->heroNameEdit->setEnabled(false);
+    this->ui->heroClassComboBox->setEnabled(false);
+    this->ui->heroDecLevelButton->setVisible(false);
+    this->ui->heroIncLevelButton->setVisible(false);
+    this->ui->heroLevelEdit->setEnabled(false);
+    this->ui->heroRankEdit->setEnabled(false);
+
+    this->ui->heroDecLifeButton->setVisible(false);
+    this->ui->heroRestoreLifeButton->setVisible(false);
+    this->ui->heroSubStrengthButton->setVisible(false);
+    this->ui->heroStrengthEdit->setEnabled(false);
+    this->ui->heroAddStrengthButton->setVisible(false);
+    this->ui->heroSubDexterityButton->setVisible(false);
+    this->ui->heroDexterityEdit->setEnabled(false);
+    this->ui->heroAddDexterityButton->setVisible(false);
+    this->ui->heroSubMagicButton->setVisible(false);
+    this->ui->heroMagicEdit->setEnabled(false);
+    this->ui->heroAddMagicButton->setVisible(false);
+    this->ui->heroSubVitalityButton->setVisible(false);
+    this->ui->heroVitalityEdit->setEnabled(false);
+    this->ui->heroAddVitalityButton->setVisible(false);
+}
+
 void HeroDetailsWidget::displayFrame()
 {
     this->updateFields();
@@ -90,10 +115,10 @@ void HeroDetailsWidget::updateFields()
 
     hc = this->hero->getClass();
     // set context-fields
-    this->ui->gameHellfireCheckBox->setChecked(this->hero->isHellfire());
-    this->ui->gameHellfireCheckBox->setEnabled(D1Hero::isStandardClass(hc));
-    this->ui->gameMultiCheckBox->setChecked(this->hero->isMulti());
-    this->ui->gameDifficultyComboBox->setCurrentIndex(gnDifficulty);
+    //this->ui->gameHellfireCheckBox->setChecked(this->hero->isHellfire());
+    //this->ui->gameHellfireCheckBox->setEnabled(D1Hero::isStandardClass(hc));
+    //this->ui->gameMultiCheckBox->setChecked(this->hero->isMulti());
+    //this->ui->gameDifficultyComboBox->setCurrentIndex(gnDifficulty);
 
     // set hero-fields
     this->ui->heroNameEdit->setText(this->hero->getName());
@@ -181,7 +206,7 @@ void HeroDetailsWidget::updateFields()
     this->ui->heroNoManaCheckBox->setChecked((flags & ISPL_NOMANA) != 0);
 }
 
-void HeroDetailsWidget::on_gameHellfireCheckBox_clicked()
+/*void HeroDetailsWidget::on_gameHellfireCheckBox_clicked()
 {
     IsHellfireGame = this->ui->gameHellfireCheckBox->isChecked();
 
@@ -206,7 +231,7 @@ void HeroDetailsWidget::on_gameDifficultyComboBox_activated(int index)
     this->hero->update(); // update resists
 
     dMainWindow().updateWindow();
-}
+}*/
 
 void HeroDetailsWidget::on_heroNameEdit_returnPressed()
 {
@@ -282,7 +307,7 @@ void HeroDetailsWidget::on_heroRankEdit_escPressed()
     this->ui->heroRankEdit->clearFocus();
 }
 
-void HeroDetailsWidget::on_heroSkillsButton_clicked()
+/*void HeroDetailsWidget::on_heroSkillsButton_clicked()
 {
     dMainWindow().heroSkillsClicked();
 }
@@ -290,7 +315,7 @@ void HeroDetailsWidget::on_heroSkillsButton_clicked()
 void HeroDetailsWidget::on_heroMonstersButton_clicked()
 {
     dMainWindow().heroMonstersClicked();
-}
+}*/
 
 void HeroDetailsWidget::on_heroDecLifeButton_clicked()
 {
