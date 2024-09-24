@@ -24,8 +24,6 @@ static const BYTE BloodBoilLocs[][2] = {
 	// clang-format on
 };
 
-static int gnTicksRate = SPEED_NORMAL;
-
 static double tickToSec(int tickCount)
 {
 	return tickCount / (double)gnTicksRate;

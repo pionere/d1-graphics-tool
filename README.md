@@ -17,7 +17,7 @@ Go to the [releases page](https://github.com/pionere/d1-hero-planner/releases) t
 
 ## Features
 - Display and edit items of a hero.
-- Measure the offensive/defensive capablities against monsters or other heros.
+- Measure the offensive/defensive capabilities against monsters or other heros.
 
 # Legal
 
