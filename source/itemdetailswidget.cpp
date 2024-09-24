@@ -14,6 +14,8 @@
 
 #include "dungeon/all.h"
 
+Q_DECLARE_METATYPE(inv_item)
+
 ItemDetailsWidget::ItemDetailsWidget(SidePanelWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ItemDetailsWidget())
@@ -54,7 +56,7 @@ void ItemDetailsWidget::updateFields()
 
     int ii = this->currentItem;
     itemsComboBox->clear();
-    itemsComboBox->addItem(tr("None"), QVariant::fromValue((int)INVITEM_NONE));
+    itemsComboBox->addItem(tr("None"), QVariant::fromValue(INVITEM_NONE));
     // LogErrorF("ItemDetailsWidget init 1 %d", ii);
     const ItemStruct* pi = this->hero->item(this->invIdx);
     if (pi->_itype != ITYPE_NONE) {
