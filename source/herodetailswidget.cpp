@@ -157,7 +157,7 @@ static void HeroCastSpeedText(const D1Hero *hero, QLabel *label)
 
 static void HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
 {
-    QString tooltip = QApplication::tr("Recovery speed: %1 (%2)");
+    QString tooltip = QApplication::tr("Recovery speed: %1ms (%2)");
 
     int speed = hero->getRecoverySpeed();
     QString type;
@@ -169,7 +169,7 @@ static void HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
     default:type = QApplication::tr("N/A");     break;
     }
 
-    label->setText(QString::number((double)gnTicksRate / hero->getRecoverySpeedInTicks(), 'f', 2));
+    label->setText(QString::number((double)(hero->getRecoverySpeedInTicks() * 1000) / gnTicksRate, 'f', 2));
     label->setToolTip(tooltip.arg(type).arg(speed));
 }
 
@@ -188,8 +188,13 @@ static void HeroArrowSpeedText(const D1Hero *hero, QLabel *label)
     default:type = QApplication::tr("N/A");     break;
     }
 
-    label->setText(QString::number((double)(gnTicksRate * hero->getArrowVelocity()) / 64 , 'f', 2));
-    label->setToolTip(tooltip.arg(type).arg(velocity));
+    if (hero->getSkillFlags() & SFLAG_RANGED) {
+        label->setText(QString::number((double)(gnTicksRate * hero->getArrowVelocity()) / 64, 'f', 2));
+        label->setToolTip(tooltip.arg(type).arg(velocity));
+    } else {
+        label->setText("");
+        label->setToolTip("");
+    }
 }
 
 void HeroDetailsWidget::updateFields()
