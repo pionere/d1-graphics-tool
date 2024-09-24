@@ -944,8 +944,8 @@ restart:
     QMessageBox::critical(this, "Error", tr("Failed to create item with the required attributes."));
 done:
 
-    items[MAXITEMS]._iIdentified = TRUE;
     memcpy(this->is, &items[MAXITEMS], sizeof(ItemStruct));
+    this->is->_iIdentified = TRUE;
     if (counter != 0) {
         dProgress() << tr("Succeeded after %1 iterations.").arg(counter + 1);
     }

@@ -2259,8 +2259,10 @@ const char* ItemName(const ItemStruct* is)
 	const char* name;
 
 	name = is->_iName;
+#if 0
 	if (is->_iMagical == ITEM_QUALITY_UNIQUE && is->_iIdentified)
 		name = UniqueItemList[is->_iUid].UIName;
+#endif
 	return name;
 }
 
@@ -2332,7 +2334,7 @@ static void RecreateCraftedItem(int ii/*, int iseed*/, int idx, unsigned lvl)
 	//items[ii]._iCreateInfo = lvl | CF_CRAFTED;
 }
 
-void RecreateTownItem(int ii, int iseed, uint16_t idx, uint16_t icreateinfo)
+static void RecreateTownItem(int ii, int iseed, uint16_t idx, uint16_t icreateinfo)
 {
 	int loc;
 	unsigned lvl;
@@ -2390,4 +2392,8 @@ void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI)
 	}
 	items[MAXITEMS]._iSeed = iseed;
 	items[MAXITEMS]._iCreateInfo = wCI;
+
+    if (items[MAXITEMS]._iMagical == ITEM_QUALITY_UNIQUE) {
+        SStrCopy(items[MAXITEMS]._iName, UniqueItemList[items[MAXITEMS]._iUid].UIName, sizeof(items[MAXITEMS]._iName));
+    }
 }

@@ -175,8 +175,21 @@ static void HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
 
 static void HeroArrowSpeedText(const D1Hero *hero, QLabel *label)
 {
+    QString tooltip = QApplication::tr("Arrow velocity: %1 (%2)");
+
+    int velocity = hero->getArrowVelBonus();
+    QString type;
+    switch (velocity) {
+    case 0: type = QApplication::tr("Normal");  break;
+    case 1: type = QApplication::tr("Quick");   break;
+    case 2: type = QApplication::tr("Fast");    break;
+    case 4: type = QApplication::tr("Faster");  break;
+    case 8: type = QApplication::tr("Fastest"); break;
+    default:type = QApplication::tr("N/A");     break;
+    }
+
     label->setText(QString::number((double)(gnTicksRate * hero->getArrowVelocity()) / 64 , 'f', 2));
-    label->setToolTip(QString::number(hero->getArrowVelBonus()));
+    label->setToolTip(tooltip.arg(type).arg(velocity));
 }
 
 void HeroDetailsWidget::updateFields()

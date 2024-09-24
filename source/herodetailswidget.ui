@@ -669,7 +669,7 @@
           <string>Cast</string>
          </property>
          <property name="styleSheet">
-          <string>color:cyan;</string>
+          <string>color:#3090C7;</string>
          </property>
         </widget>
        </item>
