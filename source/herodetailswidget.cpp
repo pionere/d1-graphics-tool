@@ -142,7 +142,7 @@ static void HeroCastSpeedText(const D1Hero *hero, QLabel *label)
     QString tooltip = QApplication::tr("Cast speed: %1 (%2)");
 
     int speed = hero->getBaseCastSpeed();
-    QString tooltip;
+    QString type;
     switch (speed) {
     case 0: type = QApplication::tr("Normal");  break;
     case 1: type = QApplication::tr("Fast");    break;
@@ -160,7 +160,7 @@ static void HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
     QString tooltip = QApplication::tr("Recovery speed: %1 (%2)");
 
     int speed = hero->getRecoverySpeed();
-    QString tooltip;
+    QString type;
     switch (speed) {
     case 0: type = QApplication::tr("Normal");  break;
     case 1: type = QApplication::tr("Fast");    break;
