@@ -567,7 +567,7 @@ int GetWalkSpeedInTicks(int pnum)
 		}
 		break;
 	}
-    LogErrorF("walk ticks: %d with %d", result, plr._pIWalkSpeed);
+    LogErrorF("walk ticks: %d with %d len %d v8:%d", result, plr._pIWalkSpeed, plr._pAnimLen, plr._pVar8);
 	return result;
 }
 

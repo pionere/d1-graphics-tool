@@ -562,7 +562,7 @@ void MainWindow::on_actionLoad_triggered()
     QString filter;
     // assert(this->heroView != nullptr);
     title = tr("Load Hero");
-    filter = tr("hro Files (*.hro *.HRO)");
+    filter = tr("HRO Files (*.hro *.HRO)");
 
     QString filePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
     if (filePath.isEmpty()) {
@@ -1088,7 +1088,7 @@ QString MainWindow::FileContentTypeTxt(FILE_CONTENT fileType)
 
 void MainWindow::on_actionDiff_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), "hro Files (*.hro *.HRO)");
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), "HRO Files (*.hro *.HRO)");
     if (openFilePath.isEmpty()) {
         return;
     }

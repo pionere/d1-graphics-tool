@@ -251,7 +251,7 @@ void PvPDetailsWidget::on_discardHeroButton_clicked()
 
 void PvPDetailsWidget::on_addHeroButton_clicked()
 {
-    QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("hro Files (*.hro *.HRO)"));
+    QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("HRO Files (*.hro *.HRO)"));
 
     if (!filePath.isEmpty()) {
         OpenAsParam params = OpenAsParam();
