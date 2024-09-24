@@ -2730,34 +2730,9 @@
         <translation>Fájlok felülírása jóváhagyás kérése nélkül</translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="79"/>
-        <source>YES</source>
-        <translation>IGEN</translation>
-    </message>
-    <message>
         <location filename="../source/saveasdialog.ui" line="26"/>
         <source>File:</source>
         <translation>Fájl:</translation>
-    </message>
-    <message>
-        <location filename="../source/saveasdialog.ui" line="64"/>
-        <source>Hero Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/saveasdialog.ui" line="70"/>
-        <source>Hellfire:</source>
-        <translation type="unfinished">Hellfire:</translation>
-    </message>
-    <message>
-        <location filename="../source/saveasdialog.ui" line="89"/>
-        <source>NO</source>
-        <translation>NEM</translation>
-    </message>
-    <message>
-        <location filename="../source/saveasdialog.ui" line="99"/>
-        <source>Preserve</source>
-        <translation>Ne változzon</translation>
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="130"/>
@@ -2770,12 +2745,12 @@
         <translation>Mégse</translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="36"/>
+        <location filename="../source/saveasdialog.cpp" line="35"/>
         <source>HRO Files (*.hro *.HRO)</source>
         <translation>HRO Fájlok (*.hro *.HRO)</translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="37"/>
+        <location filename="../source/saveasdialog.cpp" line="36"/>
         <source>Save Hero as...</source>
         <translation>Hős mentése mint...</translation>
     </message>

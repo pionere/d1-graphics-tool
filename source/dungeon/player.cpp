@@ -567,7 +567,6 @@ int GetWalkSpeedInTicks(int pnum)
 		}
 		break;
 	}
-    LogErrorF("walk ticks: %d with %d len %d v8:%d", result, plr._pIWalkSpeed, plr._pAnimLen, plr._pVar8);
 	return result;
 }
 
@@ -601,7 +600,7 @@ int GetAttackSpeedInTicks(int pnum, int sn)
 	plr._pDestParam3 = sn;
 
 	StartAttack(pnum);
-    LogErrorF("attack start: v8:%d cnt%d v4:%d", plr._pVar8, plr._pAnimCnt, plr._pVar4);
+
 	int res = 0, result = 0;
 	while (true) {
 		bool stepAnim = false;
@@ -649,14 +648,12 @@ int GetAttackSpeedInTicks(int pnum, int sn)
 			if (plr._pAnimFrame <= plr._pAFNum)
 				res++;
 			result++;
-            LogErrorF("pp0: v8:%d cnt%d v4:%d", plr._pVar8, plr._pAnimCnt, plr._pVar4);
+
 			ProcessPlayer(pnum);
-            LogErrorF("pp1: v8:%d cnt%d v4:%d", plr._pVar8, plr._pAnimCnt, plr._pVar4);
 			continue;
 		}
 		break;
 	}
-    LogErrorF("attack ticks: %d | %d with %d len %dvs%d gfx%d af%d v8:%d", result, res, plr._pIBaseAttackSpeed, plr._pAnimLen, plr._pAnims[PGX_ATTACK].paFrames, plr._pgfxnum & 0xF, plr._pAFNum, plr._pVar8);
 	return result;
 }
 
@@ -720,7 +717,6 @@ int GetCastSpeedInTicks(int pnum, int sn)
 		}
 		break;
 	}
-    LogErrorF("cast ticks: %d | %d with %d", result, res, plr._pIBaseCastSpeed);
 	return result;
 }
 
@@ -775,7 +771,6 @@ int GetRecoverySpeedInTicks(int pnum)
 		}
 		break;
 	}
-    LogErrorF("recovery ticks: %d with %d", result, plr._pIRecoverySpeed);
 	return result;
 }
 
