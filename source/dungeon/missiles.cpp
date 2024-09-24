@@ -13,6 +13,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#define MIS_VELO_SHIFT      0
+#define MIS_BASE_VELO_SHIFT 16
+#define MIS_SHIFTEDVEL(x)   ((x) << MIS_VELO_SHIFT)
+
 static const BYTE BloodBoilLocs[][2] = {
 	// clang-format off
 	{ 3, 4 },  { 2, 1 },  { 3, 3 },  { 1, 1 },  { 2, 3 }, { 1, 0 },  { 4, 3 },  { 2, 2 },  { 3, 0 },  { 1, 2 }, 
@@ -989,6 +993,14 @@ const char *GetElementColor(BYTE mRes)
 	case MISR_BLUNT:     color = "color:maroon;";  break;
 	}
 	return color;
+}
+
+int GetArrowVelocity(int misource)
+{
+    int av = MIS_SHIFTEDVEL(32);
+    av += MIS_SHIFTEDVEL((int)plx(misource)._pIArrowVelBonus);
+
+    return av;
 }
 
 #ifdef HELLFIRE

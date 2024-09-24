@@ -53,3 +53,10 @@ jobs:
       with:
         name: ${{ env.PROJECT_NAME }}.exe
         path: build\Release\${{ env.PROJECT_NAME }}.exe
+
+    - name: Upload translations
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.PROJECT_NAME }}-Translations
+        path: languages

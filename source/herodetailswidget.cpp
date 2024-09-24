@@ -100,6 +100,76 @@ static void HeroResistText(int misr, int res, QProgressBar *label)
     label->setToolTip(tooltip.arg(type));
 }
 
+static QString HeroWalkSpeedText(const D1Hero *hero, QLabel *label)
+{
+    int speed = hero->getWalkSpeed();
+    QString tooltip;
+    switch (speed) {
+    case 0: tooltip = QApplication::tr("Normal");  break;
+    case 1: tooltip = QApplication::tr("Fast");    break;
+    case 2: tooltip = QApplication::tr("Faster");  break;
+    case 3: tooltip = QApplication::tr("Fastest"); break;
+    default:tooltip = QApplication::tr("N/A");     break;
+    }
+
+    label->setText(QString::number((double)gnTicksRate / hero->getWalkSpeedInTicks(), 'f', 2)); 
+    label->setToolTip(tooltip);
+}
+
+static QString HeroAttackSpeedText(const D1Hero *hero, QLabel *label)
+{
+    int speed = hero->getBaseAttackSpeed();
+    QString tooltip;
+    switch (speed) {
+    case 0: tooltip = QApplication::tr("Normal");  break;
+    case 1: tooltip = QApplication::tr("Fast");    break;
+    case 2: tooltip = QApplication::tr("Faster");  break;
+    case 3: tooltip = QApplication::tr("Fastest"); break;
+    default:tooltip = QApplication::tr("N/A");     break;
+    }
+
+    label->setText(QString::number((double)gnTicksRate / (hero->getAttackSpeedInTicks(/*(hero->getSkillFlags() & SFLAG_MELEE) ?*/ SPL_ATTACK /*: SPL_RATTACK*/)), 'f', 2)); 
+    label->setToolTip(tooltip);
+}
+
+static QString HeroCastSpeedText(const D1Hero *hero, QLabel *label)
+{
+    int speed = hero->getBaseCastSpeed();
+    QString tooltip;
+    switch (speed) {
+    case 0: tooltip = QApplication::tr("Normal");  break;
+    case 1: tooltip = QApplication::tr("Fast");    break;
+    case 2: tooltip = QApplication::tr("Faster");  break;
+    case 3: tooltip = QApplication::tr("Fastest"); break;
+    default:tooltip = QApplication::tr("N/A");     break;
+    }
+
+    label->setText(QString::number((double)gnTicksRate / hero->getCastSpeedInTicks(SPL_HEAL), 'f', 2));
+    label->setToolTip(tooltip);
+}
+
+static QString HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
+{
+    int speed = hero->getRecoverySpeed();
+    QString tooltip;
+    switch (speed) {
+    case 0: tooltip = QApplication::tr("Normal");  break;
+    case 1: tooltip = QApplication::tr("Fast");    break;
+    case 2: tooltip = QApplication::tr("Faster");  break;
+    case 3: tooltip = QApplication::tr("Fastest"); break;
+    default:tooltip = QApplication::tr("N/A");     break;
+    }
+
+    label->setText(QString::number((double)gnTicksRate / hero->getRecoverySpeedInTicks(), 'f', 2));
+    label->setToolTip(tooltip);
+}
+
+static QString HeroArrowSpeedText(const D1Hero *hero, QLabel *label)
+{
+    label->setText(QString::number((double)(gnTicksRate * hero->getArrowVelocity()) / 64 , 'f', 2));
+    label->setToolTip(QString::number(hero->getArrowVelBonus()));
+}
+
 void HeroDetailsWidget::updateFields()
 {
     int hc, bv;
@@ -171,10 +241,11 @@ void HeroDetailsWidget::updateFields()
     HeroResistText(MISR_LIGHTNING, this->hero->getLightningResist(), this->ui->heroLightningResist);
     HeroResistText(MISR_ACID, this->hero->getAcidResist(), this->ui->heroAcidResist);
 
-    this->ui->heroWalkSpeedLabel->setText(QString::number(this->hero->getWalkSpeed()));
-    this->ui->heroBaseAttackSpeedLabel->setText(QString::number(this->hero->getBaseAttackSpeed()));
-    this->ui->heroBaseCastSpeedLabel->setText(QString::number(this->hero->getBaseCastSpeed()));
-    this->ui->heroRecoverySpeedLabel->setText(QString::number(this->hero->getRecoverySpeed()));
+    HeroWalkSpeedText(this->hero, this->ui->heroWalkSpeedLabel);
+    HeroAttackSpeedText(this->hero, this->ui->heroBaseAttackSpeedLabel);
+    HeroCastSpeedText(this->hero, this->ui->heroBaseCastSpeedLabel);
+    HeroRecoverySpeedText(this->hero, this->ui->heroRecoverySpeedLabel);
+    HeroArrowSpeedText(this->hero, this->ui->heroArrowVelBonusLabel);
     this->ui->heroLightRadLabel->setText(QString::number(this->hero->getLightRad()));
     this->ui->heroEvasionLabel->setText(QString::number(this->hero->getEvasion()));
     this->ui->heroACLabel->setText(QString::number(this->hero->getAC()));
@@ -182,7 +253,6 @@ void HeroDetailsWidget::updateFields()
     this->ui->heroGetHitLabel->setText(QString::number(this->hero->getGetHit()));
     this->ui->heroLifeStealLabel->setText(QString("%1%").arg((this->hero->getLifeSteal() * 100 + 64) >> 7));
     this->ui->heroManaStealLabel->setText(QString("%1%").arg((this->hero->getManaSteal() * 100 + 64) >> 7));
-    this->ui->heroArrowVelBonusLabel->setText(QString::number(this->hero->getArrowVelBonus()));
     this->ui->heroHitChanceLabel->setText(QString("%1%").arg(this->hero->getHitChance()));
     this->ui->heroCritChanceLabel->setText(QString("%1%").arg(this->hero->getCritChance() * 100 / 200));
 

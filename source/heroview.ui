@@ -86,6 +86,30 @@
           </widget>
          </item>
          <item>
+          <widget class="QComboBox" name="gameSpeedComboBox">
+           <item>
+            <property name="text">
+             <string>Normal</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Fast</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Faster</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Fastest</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel">
            <property name="minimumWidth">
             <number>60</number>

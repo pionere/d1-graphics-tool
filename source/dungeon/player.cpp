@@ -13,6 +13,8 @@ DEVILUTION_BEGIN_NAMESPACE
 
 int mypnum;
 PlayerStruct players[MAX_PLRS];
+/** The current player while processing the players. */
+static BYTE gbGameLogicPnum;
 
 /* Data related to the player-animation types. */
 static const PlrAnimType PlrAnimTypes[NUM_PGTS] = {
@@ -196,6 +198,154 @@ const unsigned SkillExpLvlsTbl[MAXSPLLEVEL + 1] = {
 	1082908612,
 };
 
+static void SetPlrAnims(int pnum)
+{
+	int pc, gn;
+#if 0
+	if ((unsigned)pnum >= MAX_PLRS) {
+		dev_fatal("SetPlrAnims: illegal player %d", pnum);
+	}
+	plr._pAnims[PGX_STAND].paAnimWidth = 96 * ASSET_MPL;
+	plr._pAnims[PGX_WALK].paAnimWidth = 96 * ASSET_MPL;
+	plr._pAnims[PGX_ATTACK].paAnimWidth = 128 * ASSET_MPL;
+	plr._pAnims[PGX_FIRE].paAnimWidth = 96 * ASSET_MPL;
+	plr._pAnims[PGX_LIGHTNING].paAnimWidth = 96 * ASSET_MPL;
+	plr._pAnims[PGX_MAGIC].paAnimWidth = 96 * ASSET_MPL;
+	plr._pAnims[PGX_BLOCK].paAnimWidth = 96 * ASSET_MPL;
+	plr._pAnims[PGX_GOTHIT].paAnimWidth = 96 * ASSET_MPL;
+	plr._pAnims[PGX_DEATH].paAnimWidth = 128 * ASSET_MPL;
+#endif
+	pc = plr._pClass;
+	plr._pAFNum = PlrGFXAnimActFrames[pc][0];
+	plr._pSFNum = PlrGFXAnimActFrames[pc][1];
+
+	plr._pAnims[PGX_STAND].paFrames = PlrGFXAnimLens[pc][PA_STAND];
+	plr._pAnims[PGX_WALK].paFrames = PlrGFXAnimLens[pc][PA_WALK];
+	plr._pAnims[PGX_ATTACK].paFrames = PlrGFXAnimLens[pc][PA_ATTACK];
+	plr._pAnims[PGX_FIRE].paFrames = PlrGFXAnimLens[pc][PA_SPELL];
+	plr._pAnims[PGX_LIGHTNING].paFrames = PlrGFXAnimLens[pc][PA_SPELL];
+	plr._pAnims[PGX_MAGIC].paFrames = PlrGFXAnimLens[pc][PA_SPELL];
+	plr._pAnims[PGX_BLOCK].paFrames = PlrGFXAnimLens[pc][PA_BLOCK];
+	plr._pAnims[PGX_GOTHIT].paFrames = PlrGFXAnimLens[pc][PA_GOTHIT];
+	plr._pAnims[PGX_DEATH].paFrames = PlrGFXAnimLens[pc][PA_DEATH];
+
+	gn = plr._pgfxnum & 0xF;
+	switch (pc) {
+	case PC_WARRIOR:
+		if (gn == ANIM_ID_BOW) {
+			plr._pAnims[PGX_STAND].paFrames = 8;
+//			plr._pAnims[PGX_ATTACK].paAnimWidth = 96 * ASSET_MPL;
+			plr._pAFNum = 11;
+		} else if (gn == ANIM_ID_AXE) {
+			plr._pAnims[PGX_ATTACK].paFrames = 20;
+			plr._pAFNum = 10;
+		} else if (gn == ANIM_ID_STAFF) {
+			// plr._pAnims[PGX_ATTACK].paFrames = 16;
+			plr._pAFNum = 11;
+		}
+		break;
+	case PC_ROGUE:
+		if (gn == ANIM_ID_AXE) {
+			plr._pAnims[PGX_ATTACK].paFrames = 22;
+			plr._pAFNum = 13;
+		} else if (gn == ANIM_ID_BOW) {
+			plr._pAnims[PGX_ATTACK].paFrames = 12;
+			plr._pAFNum = 7;
+		} else if (gn == ANIM_ID_STAFF) {
+			plr._pAnims[PGX_ATTACK].paFrames = 16;
+			plr._pAFNum = 11;
+		}
+		break;
+	case PC_SORCERER:
+//		plr._pAnims[PGX_FIRE].paAnimWidth = 128 * ASSET_MPL;
+//		plr._pAnims[PGX_LIGHTNING].paAnimWidth = 128 * ASSET_MPL;
+//		plr._pAnims[PGX_MAGIC].paAnimWidth = 128 * ASSET_MPL;
+		if (gn == ANIM_ID_UNARMED) {
+			plr._pAnims[PGX_ATTACK].paFrames = 20;
+		} else if (gn == ANIM_ID_UNARMED_SHIELD) {
+			plr._pAFNum = 9;
+		} else if (gn == ANIM_ID_BOW) {
+			plr._pAnims[PGX_ATTACK].paFrames = 20;
+			plr._pAFNum = 16;
+		} else if (gn == ANIM_ID_AXE) {
+			plr._pAnims[PGX_ATTACK].paFrames = 24;
+			plr._pAFNum = 16;
+		}
+		break;
+#ifdef HELLFIRE
+	case PC_MONK:
+#if 0
+		plr._pAnims[PGX_STAND].paAnimWidth = 112 * ASSET_MPL;
+		plr._pAnims[PGX_WALK].paAnimWidth = 112 * ASSET_MPL;
+		plr._pAnims[PGX_ATTACK].paAnimWidth = 130 * ASSET_MPL;
+		plr._pAnims[PGX_FIRE].paAnimWidth = 114 * ASSET_MPL;
+		plr._pAnims[PGX_LIGHTNING].paAnimWidth = 114 * ASSET_MPL;
+		plr._pAnims[PGX_MAGIC].paAnimWidth = 114 * ASSET_MPL;
+		plr._pAnims[PGX_BLOCK].paAnimWidth = 98 * ASSET_MPL;
+		plr._pAnims[PGX_GOTHIT].paAnimWidth = 98 * ASSET_MPL;
+		plr._pAnims[PGX_DEATH].paAnimWidth = 160 * ASSET_MPL;
+#endif
+		switch (gn) {
+		case ANIM_ID_UNARMED:
+		case ANIM_ID_UNARMED_SHIELD:
+			plr._pAnims[PGX_ATTACK].paFrames = 12;
+			plr._pAFNum = 7;
+			break;
+		case ANIM_ID_BOW:
+			plr._pAnims[PGX_ATTACK].paFrames = 20;
+			plr._pAFNum = 14;
+			break;
+		case ANIM_ID_AXE:
+			plr._pAnims[PGX_ATTACK].paFrames = 23;
+			plr._pAFNum = 14;
+			break;
+		case ANIM_ID_STAFF:
+			plr._pAnims[PGX_ATTACK].paFrames = 13;
+			plr._pAFNum = 8;
+			break;
+		}
+		break;
+	case PC_BARD:
+		if (gn == ANIM_ID_AXE) {
+			plr._pAnims[PGX_ATTACK].paFrames = 22;
+			plr._pAFNum = 13;
+		} else if (gn == ANIM_ID_BOW) {
+			plr._pAnims[PGX_ATTACK].paFrames = 12;
+			plr._pAFNum = 11;
+		} else if (gn == ANIM_ID_STAFF) {
+			plr._pAnims[PGX_ATTACK].paFrames = 16;
+			plr._pAFNum = 11;
+		} else if (gn == ANIM_ID_SWORD_SHIELD || gn == ANIM_ID_SWORD) {
+			plr._pAnims[PGX_ATTACK].paFrames = 10; // TODO: check for onehanded swords or daggers?
+		}
+		break;
+	case PC_BARBARIAN:
+		if (gn == ANIM_ID_AXE) {
+			plr._pAnims[PGX_ATTACK].paFrames = 20;
+			plr._pAFNum = 8;
+		} else if (gn == ANIM_ID_BOW) {
+			plr._pAnims[PGX_STAND].paFrames = 8;
+//			plr._pAnims[PGX_ATTACK].paAnimWidth = 96 * ASSET_MPL;
+			plr._pAFNum = 11;
+		} else if (gn == ANIM_ID_STAFF) {
+			//plr._pAnims[PGX_ATTACK].paFrames = 16;
+			plr._pAFNum = 11;
+		} else if (gn == ANIM_ID_MACE || gn == ANIM_ID_MACE_SHIELD) {
+			plr._pAFNum = 8;
+		}
+		break;
+#endif
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+#if 0
+	if (currLvl._dType == DTYPE_TOWN) {
+		plr._pAnims[PGX_STAND].paFrames = 20;
+		//plr._pAnims[PGX_WALK].paFrames = 8;
+	}
+#endif
+}
 
 /**
  * @param c plr_classes value
@@ -325,6 +475,303 @@ void ClrPlrPath(int pnum)
 
 	plr._pWalkpath[0] = DIR_NONE;
 	//memset(plr._pWalkpath, DIR_NONE, sizeof(plr._pWalkpath));
+}
+
+static void ProcessPlayer(int pnum)
+{
+	plr._pAnimCnt++;
+	if (plr._pAnimCnt >= plr._pAnimFrameLen) {
+		// if (plr._pmode == PM_WALK || plr._pmode == PM_WALK2 || lastMode == PM_WALK || lastMode == PM_WALK2)
+		//	LogErrorF("step anim %d(%d) at %d:%d", plr._pAnimFrame, plr._pAnimCnt, plr._px, plr._py);
+		plr._pAnimCnt = 0;
+		plr._pAnimFrame++;
+		if (plr._pAnimFrame > plr._pAnimLen) {
+			plr._pAnimFrame = 1;
+		}
+	}
+}
+
+static void NewPlrAnim(int pnum, unsigned animIdx) //, int dir)
+{
+	PlrAnimStruct* anim;
+
+	anim = &plr._pAnims[animIdx];
+
+	// plr._pdir = dir;
+	// plr._pAnimData = anim->paAnimData[dir];
+	plr._pAnimLen = anim->paFrames;
+	plr._pAnimFrame = 1;
+	plr._pAnimCnt = (gbGameLogicProgress < GLP_PLAYERS_DONE && gbGameLogicPnum <= pnum) ? -1 : 0;
+	plr._pAnimFrameLen = PlrAnimFrameLens[animIdx];
+	// plr._pAnimWidth = anim->paAnimWidth;
+	// plr._pAnimXOffset = (anim->paAnimWidth - TILE_WIDTH) >> 1;
+}
+
+static void StartWalk(int pnum)
+{
+	// plr._pmode = PM_WALK;
+	plr._pVar8 = 0;
+
+	NewPlrAnim(pnum, PGX_WALK); //, dir);
+}
+
+static inline void PlrStepAnim(int pnum)
+{
+	plr._pAnimCnt++;
+	if (plr._pAnimCnt >= plr._pAnimFrameLen) {
+		// LogErrorF("skip anim %d(%d) at %d:%d", plr._pAnimFrame, plr._pAnimCnt, plr._px, plr._py);
+		plr._pAnimCnt = 0;
+		plr._pAnimFrame++;
+	}
+}
+
+int GetWalkSpeedInTicks(int pnum)
+{
+	gbGameLogicProgress = GLP_NONE;
+	gbGameLogicPnum = pnum;
+
+	SetPlrAnims(pnum);
+
+	StartWalk(pnum);
+
+	int result = 0;
+	while (true) {
+		bool stepAnim = false;
+
+		plr._pVar8++; // WALK_TICK
+		switch (plr._pIWalkSpeed) {
+		case 0:
+			stepAnim = false;
+			break;
+		case 1:
+			stepAnim = (plr._pVar8 & 3) == 2;
+			break;
+		case 2:
+			stepAnim = (plr._pVar8 & 1) == 1;
+			break;
+		case 3:
+			stepAnim = true;
+			break;
+		default:
+			ASSUME_UNREACHABLE
+			break;
+		}
+		if (stepAnim) {
+			PlrStepAnim(pnum);
+		}
+		if (plr._pAnimFrame < plr._pAnimLen) {
+			ProcessPlayer(pnum);
+
+			result++;
+			continue;
+		}
+		break;
+	}
+	return result;
+}
+
+static void StartAttack(int pnum)
+{
+	int sn, ss;
+
+	// plr._pmode = PM_ATTACK;
+	sn = plr._pDestParam3;
+	ss = plr._pIBaseAttackSpeed;
+	if (sn == SPL_WHIPLASH) {
+		ss += 3;
+		if (ss > 4)
+			ss = 4;
+	} else if (sn == SPL_WALLOP) {
+		ss -= 3;
+	}
+	plr._pVar4 = ss; // ATTACK_SPEED
+	plr._pVar8 = 0;  // ATTACK_TICK
+
+	NewPlrAnim(pnum, PGX_ATTACK); //, dir);
+}
+
+int GetAttackSpeedInTicks(int pnum, int sn)
+{
+	gbGameLogicProgress = GLP_NONE;
+	gbGameLogicPnum = pnum;
+
+	SetPlrAnims(pnum);
+
+	plr._pDestParam3 = sn;
+
+	StartAttack(pnum);
+
+	int res = 0, result = 0;
+	while (true) {
+		bool stepAnim = false;
+
+		plr._pVar8++;         // ATTACK_TICK
+		switch (plr._pVar4) { // ATTACK_SPEED
+		/*case -4:
+			if ((plr._pVar8 & 1) == 1)
+				plr._pAnimCnt--;
+			break;*/
+		case -3:
+			if ((plr._pVar8 % 3u) == 0)
+				plr._pAnimCnt--;
+			break;
+		case -2:
+			if ((plr._pVar8 & 3) == 2)
+				plr._pAnimCnt--;
+			break;
+		case -1:
+			if ((plr._pVar8 & 7) == 4)
+				plr._pAnimCnt--;
+			break;
+		case 0:
+			break;
+		case 1:
+			stepAnim = (plr._pVar8 & 7) == 4;
+			break;
+		case 2:
+			stepAnim = (plr._pVar8 & 3) == 2;
+			break;
+		case 3:
+			stepAnim = (plr._pVar8 & 1) == 1;
+			break;
+		case 4:
+			stepAnim = true;
+			break;
+		default:
+			ASSUME_UNREACHABLE
+			break;
+		}
+		if (stepAnim) {
+			PlrStepAnim(pnum);
+		}
+		if (plr._pAnimFrame < plr._pAnimLen) {
+			if (plr._pAnimFrame <= plr._pAFNum)
+				res++;
+			result++;
+
+			ProcessPlayer(pnum);
+			continue;
+		}
+		break;
+	}
+	return result;
+}
+
+static void StartSpell(int pnum)
+{
+	int animIdx;
+	const SpellData* sd;
+
+	plr._pVar8 = 0;                // SPELL_TICK
+	plr._pVar5 = plr._pDestParam3; // SPELL_NUM
+
+	sd = &spelldata[plr._pVar5]; // SPELL_NUM
+	animIdx = PGX_FIRE + sd->sType - STYPE_FIRE;
+
+	NewPlrAnim(pnum, animIdx); //, plr._pdir);
+}
+
+int GetCastSpeedInTicks(int pnum, int sn)
+{
+	gbGameLogicProgress = GLP_NONE;
+	gbGameLogicPnum = pnum;
+
+	SetPlrAnims(pnum);
+
+	plr._pDestParam3 = sn;
+
+	StartSpell(pnum);
+
+	int res = 0, result = 0;
+	while (true) {
+		bool stepAnim = false;
+
+		plr._pVar8++; // SPELL_TICK
+		switch (plr._pIBaseCastSpeed) {
+		case 0:
+			stepAnim = false;
+			break;
+		case 1:
+			stepAnim = (plr._pVar8 & 3) == 2;
+			break;
+		case 2:
+			stepAnim = (plr._pVar8 & 1) == 1;
+			break;
+		case 3:
+			stepAnim = true;
+			break;
+		default:
+			ASSUME_UNREACHABLE
+			break;
+		}
+		if (stepAnim) {
+			PlrStepAnim(pnum);
+		}
+		if (plr._pAnimFrame < plr._pAnimLen) {
+			if (plr._pAnimFrame <= plr._pSFNum)
+				res++;
+			result++;
+
+			ProcessPlayer(pnum);
+			continue;
+		}
+		break;
+	}
+	return result;
+}
+
+static void PlrStartGetHit(int pnum) // , int dir)
+{
+	NewPlrAnim(pnum, PGX_GOTHIT) //, dir);
+
+		plr._pVar8 = 0; // GOTHIT_TICK
+}
+
+int GetRecoverySpeedInTicks(int pnum)
+{
+	gbGameLogicProgress = GLP_NONE;
+	gbGameLogicPnum = pnum;
+
+	SetPlrAnims(pnum);
+
+	PlrStartGetHit(pnum);
+
+	int res = 0, result = 0;
+	while (true) {
+		bool stepAnim = false;
+
+		plr._pVar8++; // GOTHIT_TICK
+		switch (plr._pIRecoverySpeed) {
+		case 0:
+			stepAnim = false;
+			break;
+		case 1:
+			stepAnim = (plr._pVar8 & 3) == 2;
+			break;
+		case 2:
+			stepAnim = (plr._pVar8 & 1) == 1;
+			break;
+		case 3:
+			stepAnim = true;
+			break;
+		default:
+			ASSUME_UNREACHABLE
+			break;
+		}
+		if (stepAnim) {
+			PlrStepAnim(pnum);
+		}
+		if (plr._pAnimFrame < plr._pAnimLen) {
+			// if (plr._pAnimFrame <= plr._pSFNum)
+			res++;
+			result++;
+
+			ProcessPlayer(pnum);
+			continue;
+		}
+		break;
+	}
+	return result;
 }
 
 int GetChargeSpeed(int pnum)

@@ -10,31 +10,13 @@
 
 #include "../progressdialog.h"
 
-int ViewX;
-int ViewY;
 bool IsMultiGame;
 bool IsHellfireGame;
-bool HasTileset;
-bool PatchDunFiles;
-int ddLevelPlrs;
-int dnLevel;
-int dnType;
+BYTE gbGameLogicProgress;
+int gnTicksRate;
 QString assetPath;
 char infostr[256];
 char tempstr[256];
-
-typedef struct ObjStruct {
-    int otype;
-    int animFrame;
-    QString name;
-
-    bool operator==(const ObjStruct & oval) const {
-        return otype == oval.otype && animFrame == oval.animFrame && name == oval.name;
-    };
-    bool operator!=(const ObjStruct & oval) const {
-        return otype != oval.otype || animFrame != oval.animFrame || name != oval.name;
-    };
-} ObjStruct;
 
 void LogErrorF(const char* msg, ...)
 {

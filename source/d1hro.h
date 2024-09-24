@@ -98,10 +98,14 @@ public:
     int getSkillSources(int sn) const;
 
     int getWalkSpeed() const;
+    int getWalkSpeedInTicks() const;
     int getChargeSpeed() const;
     int getBaseAttackSpeed() const;
+    int getAttackSpeedInTicks(int sn) const;
     int getBaseCastSpeed() const;
+    int getCastSpeedInTicks(int sn) const;
     int getRecoverySpeed() const;
+    int getRecoverySpeedInTicks() const;
     int getLightRad() const;
     int getEvasion() const;
     int getAC() const;
@@ -110,6 +114,7 @@ public:
     int getLifeSteal() const;
     int getManaSteal() const;
     int getArrowVelBonus() const;
+    int getArrowVelocity() const;
     int getHitChance() const;
     int getCritChance() const;
     int getSlMinDam() const;

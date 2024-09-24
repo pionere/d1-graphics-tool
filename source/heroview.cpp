@@ -467,6 +467,17 @@ void HeroView::on_gameMultiCheckBox_clicked()
     dMainWindow().updateWindow();
 }
 
+void HeroView::on_gameSpeedComboBox_activated(int index)
+{
+    switch (index) {
+    case 0: gnTicksRate = SPEED_NORMAL;  break;
+    case 1: gnTicksRate = SPEED_FAST;    break;
+    case 2: gnTicksRate = SPEED_FASTER;  break;
+    case 3: gnTicksRate = SPEED_FASTEST; break;
+    }
+    dMainWindow().updateWindow();
+}
+
 void HeroView::on_gameDifficultyComboBox_activated(int index)
 {
     gnDifficulty = index;

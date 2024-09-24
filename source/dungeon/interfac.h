@@ -8,12 +8,10 @@
 
 #include <QString>
 
-extern int ViewX;
-extern int ViewY;
 extern bool IsMultiGame;
 extern bool IsHellfireGame;
-extern bool HasTileset;
-extern bool PatchDunFiles;
+extern BYTE gbGameLogicProgress;
+extern int gnTicksRate;
 extern QString assetPath;
 extern char infostr[256];
 extern char tempstr[256];

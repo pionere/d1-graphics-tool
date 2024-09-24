@@ -1112,6 +1112,11 @@ int D1Hero::getWalkSpeed() const
     return players[this->pnum]._pIWalkSpeed;
 }
 
+int D1Hero::getWalkSpeedInTicks() const
+{
+    return GetWalkSpeed(this->pnum);
+}
+
 int D1Hero::getChargeSpeed() const
 {
     return GetChargeSpeed(this->pnum);
@@ -1122,14 +1127,29 @@ int D1Hero::getBaseAttackSpeed() const
     return players[this->pnum]._pIBaseAttackSpeed;
 }
 
+int D1Hero::getAttackSpeedInTicks(int sn) const
+{
+    return GetAttackSpeedInTicks(this->pnum, sn);
+}
+
 int D1Hero::getBaseCastSpeed() const
 {
     return players[this->pnum]._pIBaseCastSpeed;
 }
 
+int D1Hero::getCastSpeedInTicks(int sn) const
+{
+    return GetCastSpeedInTicks(this->pnum, sn);
+}
+
 int D1Hero::getRecoverySpeed() const
 {
     return players[this->pnum]._pIRecoverySpeed;
+}
+
+int D1Hero::getRecoverySpeedInTicks() const
+{
+    return GetRecoverySpeedInTicks(this->pnum);
 }
 
 int D1Hero::getLightRad() const
@@ -1170,6 +1190,11 @@ int D1Hero::getManaSteal() const
 int D1Hero::getArrowVelBonus() const
 {
     return players[this->pnum]._pIArrowVelBonus;
+}
+
+int getArrowVelocity() const
+{
+    return GetArrowVelocity(this->pnum);
 }
 
 int D1Hero::getHitChance() const
