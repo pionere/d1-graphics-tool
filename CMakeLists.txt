@@ -124,11 +124,11 @@ set(PROJECT_SOURCES
         source/progressdialog.h
         source/progressdialog.ui
         source/progresswidget.ui
+        source/pushbuttonwidget.cpp
+        source/pushbuttonwidget.h
         source/pvpdetailswidget.cpp
         source/pvpdetailswidget.h
         source/pvpdetailswidget.ui
-        source/pushbuttonwidget.cpp
-        source/pushbuttonwidget.h
         source/saveasdialog.cpp
         source/saveasdialog.h
         source/saveasdialog.ui

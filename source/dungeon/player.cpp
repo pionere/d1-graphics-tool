@@ -601,7 +601,7 @@ int GetAttackSpeedInTicks(int pnum, int sn)
 	plr._pDestParam3 = sn;
 
 	StartAttack(pnum);
-
+    LogErrorF("attack start: v8:%d cnt%d v4:%d", plr._pVar8, plr._pAnimCnt, plr._pVar4);
 	int res = 0, result = 0;
 	while (true) {
 		bool stepAnim = false;
@@ -645,17 +645,18 @@ int GetAttackSpeedInTicks(int pnum, int sn)
 		if (stepAnim) {
 			PlrStepAnim(pnum);
 		}
+		if (plr._pAnimFrame <= plr._pAFNum)
+			res++;
+		result++;
 		if (plr._pAnimFrame < plr._pAnimLen) {
-			if (plr._pAnimFrame <= plr._pAFNum)
-				res++;
-			result++;
-
+            LogErrorF("pp0: v8:%d cnt%d v4:%d", plr._pVar8, plr._pAnimCnt, plr._pVar4);
 			ProcessPlayer(pnum);
+            LogErrorF("pp1: v8:%d cnt%d v4:%d", plr._pVar8, plr._pAnimCnt, plr._pVar4);
 			continue;
 		}
 		break;
 	}
-    LogErrorF("attack ticks: %d | %d with %d", result, res, plr._pIBaseAttackSpeed);
+    LogErrorF("attack ticks: %d | %d with %d len %d af%d v8:%d", result, res, plr._pIBaseAttackSpeed, plr._pAnimLen, plr._pAFNum, plr._pVar8);
 	return result;
 }
 

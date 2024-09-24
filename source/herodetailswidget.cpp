@@ -157,7 +157,7 @@ static void HeroCastSpeedText(const D1Hero *hero, QLabel *label)
 
 static void HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
 {
-    QString tooltip = QApplication::tr("Recovery speed: %1ms (%2)");
+    QString tooltip = QApplication::tr("Recovery speed: %1 (%2)");
 
     int speed = hero->getRecoverySpeed();
     QString type;
@@ -169,7 +169,7 @@ static void HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
     default:type = QApplication::tr("N/A");     break;
     }
 
-    label->setText(QString::number((hero->getRecoverySpeedInTicks() * 1000) / gnTicksRate));
+    label->setText(tr("%1ms").arg(QString::number((hero->getRecoverySpeedInTicks() * 1000) / gnTicksRate)));
     label->setToolTip(tooltip.arg(type).arg(speed));
 }
 

@@ -2000,80 +2000,6 @@
     </message>
 </context>
 <context>
-    <name>PaletteShowDialog</name>
-    <message>
-        <location filename="../source/paletteshowdialog.ui" line="6"/>
-        <source>Palette Colors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.ui" line="32"/>
-        <source>Image:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.ui" line="62"/>
-        <source>Zoom:</source>
-        <translation type="unfinished">Nagyítás:</translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.ui" line="123"/>
-        <location filename="../source/paletteshowdialog.cpp" line="30"/>
-        <source>Close</source>
-        <translation type="unfinished">Bezárás</translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="29"/>
-        <source>Open</source>
-        <translation type="unfinished">Megnyitás</translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="96"/>
-        <source>Non opaque pixels are ignored.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="128"/>
-        <source>GRB Square</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="130"/>
-        <source>RGB Square</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="132"/>
-        <source>RGB Wheel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="134"/>
-        <source>CIE Chromaticity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="136"/>
-        <source>CIExy Chromaticity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="165"/>
-        <source>Image files (%1)</source>
-        <translation type="unfinished">Kép fájlok (%1)</translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="166"/>
-        <source>Select Image File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/paletteshowdialog.cpp" line="174"/>
-        <source>Failed loading image file: %1.</source>
-        <translation>A(z) %1 kép-fájl betöltése sikertelen.</translation>
-    </message>
-</context>
-<context>
     <name>PaletteWidget</name>
     <message>
         <location filename="../source/palettewidget.ui" line="155"/>
@@ -2349,7 +2275,6 @@
     <message>
         <location filename="../source/d1pal.cpp" line="115"/>
         <location filename="../source/d1trn.cpp" line="35"/>
-        <location filename="../source/d1trs.cpp" line="54"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
@@ -2376,10 +2301,7 @@
     <message>
         <location filename="../source/d1hro.cpp" line="1561"/>
         <location filename="../source/d1pal.cpp" line="115"/>
-        <location filename="../source/d1pcx.cpp" line="307"/>
         <location filename="../source/d1trn.cpp" line="35"/>
-        <location filename="../source/d1trs.cpp" line="54"/>
-        <location filename="../source/d1wav.cpp" line="278"/>
         <location filename="../source/dungeon/engine.cpp" line="136"/>
         <location filename="../source/dungeon/engine.cpp" line="171"/>
         <source>Failed to open file: %1.</source>
@@ -2396,56 +2318,9 @@
         <translation>Ismeretlen</translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="54"/>
-        <source>Width setting is ignored when a PCX file is loaded.</source>
-        <translation>A PCX fájl betöltésekor a szélesség beállítás figyelmen kívül van hagyva.</translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="85"/>
-        <location filename="../source/d1wav.cpp" line="34"/>
         <location filename="../source/main.cpp" line="19"/>
         <source>Failed to read file: %1.</source>
         <translation>A(z) %1 fájl olvasása sikertelen.</translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="94"/>
-        <source>Invalid PCX file.</source>
-        <translation>Hibás PCX fájl.</translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="101"/>
-        <source>Invalid PCX header.</source>
-        <translation>Hibás PCX fejléc.</translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="105"/>
-        <source>Unsupported PCX format (number of bits per pixel).</source>
-        <translation>Nem támogatott formátum (bitek száma képpontonként).</translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="109"/>
-        <source>Unsupported PCX format (number of planes).</source>
-        <translation>Nem támogatott formátum (rétegszám).</translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="268"/>
-        <source>PCX format can not store the image due to its dimensions: %1x%2.</source>
-        <translation>A méretei miatt a kép nem tárolható PCX formátumban.</translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="299"/>
-        <source>Could not find a palette entry to use for the transparent colors.</source>
-        <translation>Nem sikerült paletta bejegyzést találni az átlátszó képpontok helyettesítésére</translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="387"/>
-        <source>Graphics:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1pcx.cpp" line="389"/>
-        <source>Palette:</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="1000"/>
@@ -2587,77 +2462,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1trs.cpp" line="250"/>
-        <source>Light%1.trn</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="42"/>
-        <source>Invalid WAV file.</source>
-        <translation>Hibás WAV fájl.</translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="50"/>
-        <source>Invalid WAV header.</source>
-        <translation>Hibás WAV fejléc.</translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="56"/>
-        <location filename="../source/d1wav.cpp" line="62"/>
-        <source>Unsupported number of channels (%1. Max. 2).</source>
-        <translation>Csatornák száma (%1) nem támogatott (max. 2).</translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="72"/>
-        <source>Invalid chunk length in the WAV file (%1. Min 8).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="77"/>
-        <source>Invalid chunk in the WAV header.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="83"/>
-        <source>Unrecognized content in the WAV file (length: %1).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="88"/>
-        <source>Ignored chunk &apos;%1&apos; in the WAV header.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="99"/>
-        <source>Mismatching content in the WAV file (length: %1).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="106"/>
-        <source>Failed to allocate memory (%1).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="125"/>
-        <source>Mismatching audio channels (%1 vs %2).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="127"/>
-        <source>Mismatching audio bit-depth (%1 vs %2).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="129"/>
-        <source>Mismatching audio bit-rate (%1 vs %2).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1wav.cpp" line="229"/>
-        <source>Out of memory.</source>
-        <translation>Nincs elég memória.</translation>
-    </message>
-    <message>
         <location filename="../source/dungeon/monster.cpp" line="329"/>
         <source>Bad Na-Krul placement. Received-Id:%1 instead of %2.</source>
         <translation type="unfinished"></translation>
@@ -2713,12 +2517,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/player.cpp" line="837"/>
+        <location filename="../source/dungeon/player.cpp" line="841"/>
         <source>Unhandled h2h skill %1 in GetMonByPlrDamage.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/player.cpp" line="913"/>
+        <location filename="../source/dungeon/player.cpp" line="917"/>
         <source>Unhandled h2h skill %1 in GetPlrByPlrDamage.</source>
         <translation type="unfinished"></translation>
     </message>
