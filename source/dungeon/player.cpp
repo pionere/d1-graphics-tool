@@ -567,6 +567,7 @@ int GetWalkSpeedInTicks(int pnum)
 		}
 		break;
 	}
+    LogErrorF("walk ticks: %d with %d", result, plr._pIWalkSpeed);
 	return result;
 }
 
@@ -654,6 +655,7 @@ int GetAttackSpeedInTicks(int pnum, int sn)
 		}
 		break;
 	}
+    LogErrorF("attack ticks: %d | %d with %d", result, res, plr._pIBaseAttackSpeed);
 	return result;
 }
 
@@ -717,6 +719,7 @@ int GetCastSpeedInTicks(int pnum, int sn)
 		}
 		break;
 	}
+    LogErrorF("cast ticks: %d | %d with %d", result, res, plr._pIBaseCastSpeed);
 	return result;
 }
 
@@ -771,6 +774,7 @@ int GetRecoverySpeedInTicks(int pnum)
 		}
 		break;
 	}
+    LogErrorF("recovery ticks: %d with %d", result, plr._pIRecoverySpeed);
 	return result;
 }
 

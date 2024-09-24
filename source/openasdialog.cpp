@@ -37,7 +37,7 @@ void OpenAsDialog::updateFields()
 
 void OpenAsDialog::on_inputFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("hro Files (*.hro *.HRO)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("HRO Files (*.hro *.HRO)"));
 
     if (openFilePath.isEmpty())
         return;

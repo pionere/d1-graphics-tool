@@ -361,7 +361,7 @@
     </message>
     <message>
         <location filename="../source/herodetailswidget.ui" line="672"/>
-        <source>color:cyan;</source>
+        <source>color:#3090C7;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -594,53 +594,63 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="92"/>
-        <location filename="../source/heroview.ui" line="126"/>
+        <location filename="../source/heroview.ui" line="94"/>
+        <source>Speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/heroview.ui" line="101"/>
+        <source>Game speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/heroview.ui" line="105"/>
+        <location filename="../source/heroview.ui" line="139"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="97"/>
+        <location filename="../source/heroview.ui" line="110"/>
         <source>Fast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="102"/>
+        <location filename="../source/heroview.ui" line="115"/>
         <source>Faster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="107"/>
+        <location filename="../source/heroview.ui" line="120"/>
         <source>Fastest</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="118"/>
+        <location filename="../source/heroview.ui" line="131"/>
         <source>Difficulty:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="131"/>
+        <location filename="../source/heroview.ui" line="144"/>
         <source>Nigthmare</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="136"/>
+        <location filename="../source/heroview.ui" line="149"/>
         <source>Hell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="144"/>
+        <location filename="../source/heroview.ui" line="157"/>
         <source>Skills</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="151"/>
+        <location filename="../source/heroview.ui" line="164"/>
         <source>Monsters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="158"/>
+        <location filename="../source/heroview.ui" line="171"/>
         <source>PvP</source>
         <translation type="unfinished"></translation>
     </message>
@@ -896,7 +906,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/itemdetailswidget.cpp" line="220"/>
+        <location filename="../source/itemdetailswidget.cpp" line="221"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1272,79 +1282,6 @@
         <location filename="../source/itemselectordialog.cpp" line="950"/>
         <source>Succeeded after %1 iterations.</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>LevelCelView</name>
-    <message numerus="yes">
-        <source>Frame %1 is used by subtile %2.</source>
-        <translation type="vanished">
-            <numerusform>Frame %1 is used by subtile %2.</numerusform>
-            <numerusform>Frame %1 is used by subtiles %2.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Subtile %1 is used by tile %2.</source>
-        <translation type="vanished">
-            <numerusform>Subtile %1 is used by tile %2.</numerusform>
-            <numerusform>Subtile %1 is used by tiles %2.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Special-Frame %1 is used by subtile %2.</source>
-        <translation type="vanished">
-            <numerusform>Special-Frame %1 is used by subtile %2.</numerusform>
-            <numerusform>Special-Frame %1 is used by subtiles %2.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Tile %1 has %n affected pixels.</source>
-        <translation type="vanished">
-            <numerusform>Tile %1 has %n affected pixel.</numerusform>
-            <numerusform>Tile %1 has %n affected pixels.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Subtile %1 has %n affected pixels.</source>
-        <translation type="vanished">
-            <numerusform>Subtile %1 has %n affected pixel.</numerusform>
-            <numerusform>Subtile %1 has %n affected pixels.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Frame %1 could be &apos;%2&apos; by changing %n pixel(s).</source>
-        <translation type="vanished">
-            <numerusform>Frame %1 could be &apos;%2&apos; by changing %n pixel.</numerusform>
-            <numerusform>Frame %1 could be &apos;%2&apos; by changing %n pixels.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>The difference between Frame %1 and Frame %2 is only %n pixel(s).</source>
-        <translation type="vanished">
-            <numerusform>The difference between Frame %1 and Frame %2 is only %n pixel.</numerusform>
-            <numerusform>The difference between Frame %1 and Frame %2 is only %n pixels.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>There are %n subtiles in the dungeon for monsters.</source>
-        <translation type="vanished">
-            <numerusform>There is %n subtile in the dungeon for monsters.</numerusform>
-            <numerusform>There are %n subtiles in the dungeon for monsters.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>There are %n subtiles in the dungeon for objects.</source>
-        <translation type="vanished">
-            <numerusform>There is %n subtile in the dungeon for objects.</numerusform>
-            <numerusform>There are %n subtiles in the dungeon for objects.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>There are %1 in the dungeon.</source>
-        <translation type="vanished">
-            <numerusform>There is %1 in the dungeon.</numerusform>
-            <numerusform>There are %1 in the dungeon.</numerusform>
-        </translation>
     </message>
 </context>
 <context>
@@ -2543,20 +2480,6 @@
         <source>Failed to create image with (%1:%2) dimensions.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message numerus="yes">
-        <source>Upscaled %n frame(s).</source>
-        <translation type="vanished">
-            <numerusform>Upscaled %1 frame.</numerusform>
-            <numerusform>Upscaled %1 frames.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Upscaled %n subtile(s).</source>
-        <translation type="vanished">
-            <numerusform>Upscaled %1 subtile.</numerusform>
-            <numerusform>Upscaled %1 subtiles.</numerusform>
-        </translation>
-    </message>
     <message>
         <location filename="../source/d1cl2frame.cpp" line="30"/>
         <source>Invalid CL2 frame data (0x00 found)</source>
@@ -2644,27 +2567,6 @@
         <source>frame-count is %1 (was %2)</source>
         <translation type="unfinished"></translation>
     </message>
-    <message numerus="yes">
-        <source>Reused %n frame(s).</source>
-        <translation type="vanished">
-            <numerusform>Reused %n frame.</numerusform>
-            <numerusform>Reused %n frames.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Reused %n subtile(s).</source>
-        <translation type="vanished">
-            <numerusform>Reused %n subtile.</numerusform>
-            <numerusform>Reused %n subtiles.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Removed %n tile(s).</source>
-        <translation type="obsolete">
-            <numerusform>Removed %n tile.</numerusform>
-            <numerusform>Removed %n tiles.</numerusform>
-        </translation>
-    </message>
     <message>
         <location filename="../source/progressdialog.cpp" line="270"/>
         <source>Process cancelled.</source>
@@ -2684,13 +2586,6 @@
         <location filename="../source/dungeon/engine.cpp" line="165"/>
         <source>Skipping file: %1.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message numerus="yes">
-        <source>Ignored the %1 undefined color(s) in the palette</source>
-        <translation type="vanished">
-            <numerusform>Ignored the undefined color %1 in the palette</numerusform>
-            <numerusform>Ignored the %1 undefined colors in the palette</numerusform>
-        </translation>
     </message>
     <message>
         <location filename="../source/d1trs.cpp" line="250"/>
@@ -2808,20 +2703,6 @@
         <source>???</source>
         <translation type="unfinished"></translation>
     </message>
-    <message numerus="yes">
-        <source>Not enough frames for the audio files. The last %n audio file(s) are ignored.</source>
-        <translation type="vanished">
-            <numerusform>Not enough frames for the audio files. The last audio file is ignored.</numerusform>
-            <numerusform>Not enough frames for the audio files. The last %n audio files are ignored.</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>Not enough tracks for the audio files. The last %n audio file(s) are ignored.</source>
-        <translation type="vanished">
-            <numerusform>Not enough tracks for the audio files. The last audio file is ignored.</numerusform>
-            <numerusform>Not enough tracks for the audio files. The last %n audio files are ignored.</numerusform>
-        </translation>
-    </message>
     <message>
         <location filename="../source/d1cel.cpp" line="149"/>
         <source>Frame %1 is invalid (size = %2. from %3 to %4)</source>
@@ -2891,44 +2772,80 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/herodetailswidget.cpp" line="108"/>
-        <location filename="../source/herodetailswidget.cpp" line="124"/>
-        <location filename="../source/herodetailswidget.cpp" line="140"/>
-        <location filename="../source/herodetailswidget.cpp" line="156"/>
-        <source>Normal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/herodetailswidget.cpp" line="109"/>
-        <location filename="../source/herodetailswidget.cpp" line="125"/>
-        <location filename="../source/herodetailswidget.cpp" line="141"/>
-        <location filename="../source/herodetailswidget.cpp" line="157"/>
-        <source>Fast</source>
+        <location filename="../source/herodetailswidget.cpp" line="105"/>
+        <source>Walk speed: %1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/herodetailswidget.cpp" line="110"/>
-        <location filename="../source/herodetailswidget.cpp" line="126"/>
-        <location filename="../source/herodetailswidget.cpp" line="142"/>
-        <location filename="../source/herodetailswidget.cpp" line="158"/>
-        <source>Faster</source>
+        <location filename="../source/herodetailswidget.cpp" line="128"/>
+        <location filename="../source/herodetailswidget.cpp" line="147"/>
+        <location filename="../source/herodetailswidget.cpp" line="165"/>
+        <location filename="../source/herodetailswidget.cpp" line="183"/>
+        <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/herodetailswidget.cpp" line="111"/>
-        <location filename="../source/herodetailswidget.cpp" line="127"/>
-        <location filename="../source/herodetailswidget.cpp" line="143"/>
-        <location filename="../source/herodetailswidget.cpp" line="159"/>
-        <source>Fastest</source>
+        <location filename="../source/herodetailswidget.cpp" line="130"/>
+        <location filename="../source/herodetailswidget.cpp" line="148"/>
+        <location filename="../source/herodetailswidget.cpp" line="166"/>
+        <location filename="../source/herodetailswidget.cpp" line="185"/>
+        <source>Fast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/herodetailswidget.cpp" line="112"/>
-        <location filename="../source/herodetailswidget.cpp" line="128"/>
-        <location filename="../source/herodetailswidget.cpp" line="144"/>
-        <location filename="../source/herodetailswidget.cpp" line="160"/>
+        <location filename="../source/herodetailswidget.cpp" line="131"/>
+        <location filename="../source/herodetailswidget.cpp" line="149"/>
+        <location filename="../source/herodetailswidget.cpp" line="167"/>
+        <location filename="../source/herodetailswidget.cpp" line="186"/>
+        <source>Faster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="113"/>
+        <location filename="../source/herodetailswidget.cpp" line="132"/>
+        <location filename="../source/herodetailswidget.cpp" line="150"/>
+        <location filename="../source/herodetailswidget.cpp" line="168"/>
+        <location filename="../source/herodetailswidget.cpp" line="187"/>
+        <source>Fastest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="114"/>
+        <location filename="../source/herodetailswidget.cpp" line="133"/>
+        <location filename="../source/herodetailswidget.cpp" line="151"/>
+        <location filename="../source/herodetailswidget.cpp" line="169"/>
+        <location filename="../source/herodetailswidget.cpp" line="188"/>
         <location filename="../source/skilldetailswidget.cpp" line="131"/>
         <source>N/A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="123"/>
+        <source>Attack speed: %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="129"/>
+        <location filename="../source/herodetailswidget.cpp" line="184"/>
+        <source>Quick</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="142"/>
+        <source>Cast speed: %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="160"/>
+        <source>Recovery speed: %1ms (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="178"/>
+        <source>Arrow velocity: %1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

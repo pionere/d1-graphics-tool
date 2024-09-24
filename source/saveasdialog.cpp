@@ -33,7 +33,7 @@ void SaveAsDialog::initialize(D1Hero *h)
 void SaveAsDialog::on_outputFileBrowseButton_clicked()
 {
     QString filePath = this->hero->getFilePath();
-    const QString filter = tr("hro Files (*.hro *.HRO)");
+    const QString filter = tr("HRO Files (*.hro *.HRO)");
     const QString title = tr("Save Hero as...");
 
     QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, title, filter);

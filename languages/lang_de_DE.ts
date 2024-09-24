@@ -361,7 +361,7 @@
     </message>
     <message>
         <location filename="../source/herodetailswidget.ui" line="672"/>
-        <source>color:cyan;</source>
+        <source>color:#3090C7;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -594,53 +594,63 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="92"/>
-        <location filename="../source/heroview.ui" line="126"/>
+        <location filename="../source/heroview.ui" line="94"/>
+        <source>Speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/heroview.ui" line="101"/>
+        <source>Game speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/heroview.ui" line="105"/>
+        <location filename="../source/heroview.ui" line="139"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="97"/>
+        <location filename="../source/heroview.ui" line="110"/>
         <source>Fast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="102"/>
+        <location filename="../source/heroview.ui" line="115"/>
         <source>Faster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="107"/>
+        <location filename="../source/heroview.ui" line="120"/>
         <source>Fastest</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="118"/>
+        <location filename="../source/heroview.ui" line="131"/>
         <source>Difficulty:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="131"/>
+        <location filename="../source/heroview.ui" line="144"/>
         <source>Nigthmare</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="136"/>
+        <location filename="../source/heroview.ui" line="149"/>
         <source>Hell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="144"/>
+        <location filename="../source/heroview.ui" line="157"/>
         <source>Skills</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="151"/>
+        <location filename="../source/heroview.ui" line="164"/>
         <source>Monsters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/heroview.ui" line="158"/>
+        <location filename="../source/heroview.ui" line="171"/>
         <source>PvP</source>
         <translation type="unfinished"></translation>
     </message>
@@ -896,7 +906,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/itemdetailswidget.cpp" line="220"/>
+        <location filename="../source/itemdetailswidget.cpp" line="221"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2762,44 +2772,80 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/herodetailswidget.cpp" line="108"/>
-        <location filename="../source/herodetailswidget.cpp" line="124"/>
-        <location filename="../source/herodetailswidget.cpp" line="140"/>
-        <location filename="../source/herodetailswidget.cpp" line="156"/>
-        <source>Normal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/herodetailswidget.cpp" line="109"/>
-        <location filename="../source/herodetailswidget.cpp" line="125"/>
-        <location filename="../source/herodetailswidget.cpp" line="141"/>
-        <location filename="../source/herodetailswidget.cpp" line="157"/>
-        <source>Fast</source>
+        <location filename="../source/herodetailswidget.cpp" line="105"/>
+        <source>Walk speed: %1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/herodetailswidget.cpp" line="110"/>
-        <location filename="../source/herodetailswidget.cpp" line="126"/>
-        <location filename="../source/herodetailswidget.cpp" line="142"/>
-        <location filename="../source/herodetailswidget.cpp" line="158"/>
-        <source>Faster</source>
+        <location filename="../source/herodetailswidget.cpp" line="128"/>
+        <location filename="../source/herodetailswidget.cpp" line="147"/>
+        <location filename="../source/herodetailswidget.cpp" line="165"/>
+        <location filename="../source/herodetailswidget.cpp" line="183"/>
+        <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/herodetailswidget.cpp" line="111"/>
-        <location filename="../source/herodetailswidget.cpp" line="127"/>
-        <location filename="../source/herodetailswidget.cpp" line="143"/>
-        <location filename="../source/herodetailswidget.cpp" line="159"/>
-        <source>Fastest</source>
+        <location filename="../source/herodetailswidget.cpp" line="130"/>
+        <location filename="../source/herodetailswidget.cpp" line="148"/>
+        <location filename="../source/herodetailswidget.cpp" line="166"/>
+        <location filename="../source/herodetailswidget.cpp" line="185"/>
+        <source>Fast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/herodetailswidget.cpp" line="112"/>
-        <location filename="../source/herodetailswidget.cpp" line="128"/>
-        <location filename="../source/herodetailswidget.cpp" line="144"/>
-        <location filename="../source/herodetailswidget.cpp" line="160"/>
+        <location filename="../source/herodetailswidget.cpp" line="131"/>
+        <location filename="../source/herodetailswidget.cpp" line="149"/>
+        <location filename="../source/herodetailswidget.cpp" line="167"/>
+        <location filename="../source/herodetailswidget.cpp" line="186"/>
+        <source>Faster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="113"/>
+        <location filename="../source/herodetailswidget.cpp" line="132"/>
+        <location filename="../source/herodetailswidget.cpp" line="150"/>
+        <location filename="../source/herodetailswidget.cpp" line="168"/>
+        <location filename="../source/herodetailswidget.cpp" line="187"/>
+        <source>Fastest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="114"/>
+        <location filename="../source/herodetailswidget.cpp" line="133"/>
+        <location filename="../source/herodetailswidget.cpp" line="151"/>
+        <location filename="../source/herodetailswidget.cpp" line="169"/>
+        <location filename="../source/herodetailswidget.cpp" line="188"/>
         <location filename="../source/skilldetailswidget.cpp" line="131"/>
         <source>N/A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="123"/>
+        <source>Attack speed: %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="129"/>
+        <location filename="../source/herodetailswidget.cpp" line="184"/>
+        <source>Quick</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="142"/>
+        <source>Cast speed: %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="160"/>
+        <source>Recovery speed: %1ms (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="178"/>
+        <source>Arrow velocity: %1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

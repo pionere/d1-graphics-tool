@@ -547,7 +547,7 @@ void MainWindow::openNew(OPEN_HERO_CLASS heroClass)
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("hro Files (*.hro *.HRO)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Hero"), tr("HRO Files (*.hro *.HRO)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
