@@ -91,8 +91,8 @@ void GetMissileDamage(int mtype, const MonsterStruct *mon, int *mindam, int *max
 		// mind = mon->_mMinDamage;
 		maxd = maxd << 1;
 	//} else if (mtype == MIS_CBOLTC) {
-	} else if (mtype == MIS_CBOLT) {
-		mind = maxd; //  15 << gnDifficulty; // FIXME
+	//} else if (mtype == MIS_CBOLT) {
+	//	mind = maxd; //  15 << gnDifficulty; // FIXME
 	} else if (mtype == MIS_APOCAC2) {
 		mind = maxd = 40 << gnDifficulty;
 	}

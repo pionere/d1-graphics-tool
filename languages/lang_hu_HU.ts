@@ -2277,12 +2277,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/player.cpp" line="842"/>
+        <location filename="../source/dungeon/player.cpp" line="837"/>
         <source>Unhandled h2h skill %1 in GetMonByPlrDamage.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/player.cpp" line="918"/>
+        <location filename="../source/dungeon/player.cpp" line="913"/>
         <source>Unhandled h2h skill %1 in GetPlrByPlrDamage.</source>
         <translation type="unfinished"></translation>
     </message>
