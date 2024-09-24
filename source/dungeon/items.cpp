@@ -584,8 +584,8 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 		//}
 		plr._pSkillLvl[i] = skillLvl;
 	}
-
-	/*if (plr._pmode == PM_DEATH || plr._pmode == PM_DYING) {
+#if 0
+	if (plr._pmode == PM_DEATH || plr._pmode == PM_DYING) {
 		PlrSetHp(pnum, 0);
 		PlrSetMana(pnum, 0);
 		gfx = ANIM_ID_UNARMED;
@@ -601,7 +601,10 @@ void CalcPlrItemVals(int pnum, bool Loadgfx)
 	}
 
 	if (pnum == mypnum)
-		gbRedrawFlags |= REDRAW_HP_FLASK | REDRAW_MANA_FLASK;*/
+		gbRedrawFlags |= REDRAW_HP_FLASK | REDRAW_MANA_FLASK;
+#else
+    plr._pgfxnum = gfx;
+#endif
 }
 
 void CalcPlrSpells(int pnum)
