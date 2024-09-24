@@ -560,9 +560,9 @@ int GetWalkSpeedInTicks(int pnum)
 			PlrStepAnim(pnum);
 		}
 		if (plr._pAnimFrame < plr._pAnimLen) {
-			ProcessPlayer(pnum);
-
 			result++;
+
+			ProcessPlayer(pnum);
 			continue;
 		}
 		break;
@@ -645,10 +645,10 @@ int GetAttackSpeedInTicks(int pnum, int sn)
 		if (stepAnim) {
 			PlrStepAnim(pnum);
 		}
-		if (plr._pAnimFrame <= plr._pAFNum)
-			res++;
-		result++;
 		if (plr._pAnimFrame < plr._pAnimLen) {
+			if (plr._pAnimFrame <= plr._pAFNum)
+				res++;
+			result++;
             LogErrorF("pp0: v8:%d cnt%d v4:%d", plr._pVar8, plr._pAnimCnt, plr._pVar4);
 			ProcessPlayer(pnum);
             LogErrorF("pp1: v8:%d cnt%d v4:%d", plr._pVar8, plr._pAnimCnt, plr._pVar4);
@@ -656,7 +656,7 @@ int GetAttackSpeedInTicks(int pnum, int sn)
 		}
 		break;
 	}
-    LogErrorF("attack ticks: %d | %d with %d len %d af%d v8:%d", result, res, plr._pIBaseAttackSpeed, plr._pAnimLen, plr._pAFNum, plr._pVar8);
+    LogErrorF("attack ticks: %d | %d with %d len %dvs%d gfx%d af%d v8:%d", result, res, plr._pIBaseAttackSpeed, plr._pAnimLen, plr._pAnims[PGX_ATTACK].paFrames, plr._pgfxnum & 0xF, plr._pAFNum, plr._pVar8);
 	return result;
 }
 
@@ -781,118 +781,118 @@ int GetRecoverySpeedInTicks(int pnum)
 
 int GetChargeSpeed(int pnum)
 {
-    int result = 2;
-    if (plr._pIWalkSpeed != 0) {
-        if (plr._pIWalkSpeed == 3) {
-            // ISPL_FASTESTWALK
-            result = 4;
-        } else {
-            // (ISPL_FASTERWALK | ISPL_FASTWALK)
-            result = 3;
-        }
-    }
-    return result;
+	int result = 2;
+	if (plr._pIWalkSpeed != 0) {
+		if (plr._pIWalkSpeed == 3) {
+			// ISPL_FASTESTWALK
+			result = 4;
+		} else {
+			// (ISPL_FASTERWALK | ISPL_FASTWALK)
+			result = 3;
+		}
+	}
+	return result;
 }
 
 void GetMonByPlrDamage(int pnum, int sn, int sl, const MonsterStruct *mon, int *mindam, int *maxdam)
 {
 	int mind, maxd, damsl, dambl, dampc;
-    bool tmac;
+	bool tmac;
 
-    mind = 0;
-    maxd = 0;
-    tmac = (plr._pIFlags & ISPL_PENETRATE_PHYS) != 0;
-    damsl = plr._pISlMaxDam;
-    if (damsl != 0) {
-        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, damsl, tmac);
-        mind += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, plr._pISlMinDam, tmac);
-    }
-    dambl = plr._pIBlMaxDam;
-    if (dambl != 0) {
-        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, dambl, tmac);
-        mind += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, plr._pIBlMinDam, tmac);
-    }
-    dampc = plr._pIPcMaxDam;
-    if (dampc != 0) {
-        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, dampc, tmac);
-        mind += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, plr._pIPcMinDam, tmac);
-    }
+	mind = 0;
+	maxd = 0;
+	tmac = (plr._pIFlags & ISPL_PENETRATE_PHYS) != 0;
+	damsl = plr._pISlMaxDam;
+	if (damsl != 0) {
+		maxd += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, damsl, tmac);
+		mind += CalcMonsterDam(mon->_mMagicRes, MISR_SLASH, plr._pISlMinDam, tmac);
+	}
+	dambl = plr._pIBlMaxDam;
+	if (dambl != 0) {
+		maxd += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, dambl, tmac);
+		mind += CalcMonsterDam(mon->_mMagicRes, MISR_BLUNT, plr._pIBlMinDam, tmac);
+	}
+	dampc = plr._pIPcMaxDam;
+	if (dampc != 0) {
+		maxd += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, dampc, tmac);
+		mind += CalcMonsterDam(mon->_mMagicRes, MISR_PUNCTURE, plr._pIPcMinDam, tmac);
+	}
 
-    // tmp = sn == SPL_SWIPE ? 800 : 200;
-    // if (random_low(6, tmp) < plr._pICritChance) {
-    //    dam <<= 1;
-    // }
+	// tmp = sn == SPL_SWIPE ? 800 : 200;
+	// if (random_low(6, tmp) < plr._pICritChance) {
+	//	dam <<= 1;
+	// }
 
-    switch (sn) {
-    case SPL_ATTACK:
-        break;
-    case SPL_SWIPE:
-        mind = (mind * (48 + sl)) >> 6;
-        maxd = (maxd * (48 + sl)) >> 6;
-        break;
-    case SPL_WALLOP:
-        mind = (mind * (112 + sl)) >> 6;
-        maxd = (maxd * (112 + sl)) >> 6;
-        break;
-    case SPL_WHIPLASH:
-        mind = (mind * (24 + sl)) >> 6;
-        maxd = (maxd * (24 + sl)) >> 6;
-        break;
-    default:
-        QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetMonByPlrDamage.").arg(sn));
-        ASSUME_UNREACHABLE
-        break;
-    }
+	switch (sn) {
+	case SPL_ATTACK:
+		break;
+	case SPL_SWIPE:
+		mind = (mind * (48 + sl)) >> 6;
+		maxd = (maxd * (48 + sl)) >> 6;
+		break;
+	case SPL_WALLOP:
+		mind = (mind * (112 + sl)) >> 6;
+		maxd = (maxd * (112 + sl)) >> 6;
+		break;
+	case SPL_WHIPLASH:
+		mind = (mind * (24 + sl)) >> 6;
+		maxd = (maxd * (24 + sl)) >> 6;
+		break;
+	default:
+		QMessageBox::critical(nullptr, "Error", QApplication::tr("Unhandled h2h skill %1 in GetMonByPlrDamage.").arg(sn));
+		ASSUME_UNREACHABLE
+		break;
+	}
 
-    int fdam = plr._pIFMaxDam;
-    if (fdam != 0) {
-        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, fdam, false);
-        mind += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, plr._pIFMinDam, false);
-    }
-    int ldam = plr._pILMaxDam;
-    if (ldam != 0) {
-        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, ldam, false);
-        mind += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, plr._pILMinDam, false);
-    }
-    int mdam = plr._pIMMaxDam;
-    if (mdam != 0) {
-        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, mdam, false);
-        mind += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, plr._pIMMinDam, false);
-    }
-    int adam = plr._pIAMaxDam;
-    if (adam != 0) {
-        maxd += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, adam, false);
-        mind += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, plr._pIAMinDam, false);
-    }
+	int fdam = plr._pIFMaxDam;
+	if (fdam != 0) {
+		maxd += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, fdam, false);
+		mind += CalcMonsterDam(mon->_mMagicRes, MISR_FIRE, plr._pIFMinDam, false);
+	}
+	int ldam = plr._pILMaxDam;
+	if (ldam != 0) {
+		maxd += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, ldam, false);
+		mind += CalcMonsterDam(mon->_mMagicRes, MISR_LIGHTNING, plr._pILMinDam, false);
+	}
+	int mdam = plr._pIMMaxDam;
+	if (mdam != 0) {
+		maxd += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, mdam, false);
+		mind += CalcMonsterDam(mon->_mMagicRes, MISR_MAGIC, plr._pIMMinDam, false);
+	}
+	int adam = plr._pIAMaxDam;
+	if (adam != 0) {
+		maxd += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, adam, false);
+		mind += CalcMonsterDam(mon->_mMagicRes, MISR_ACID, plr._pIAMinDam, false);
+	}
 
-    mind >>= 6;
-    maxd >>= 6;
+	mind >>= 6;
+	maxd >>= 6;
 
-    *mindam = mind;
-    *maxdam = maxd;
+	*mindam = mind;
+	*maxdam = maxd;
 }
 
 void GetPlrByPlrDamage(int offp, int sn, int sl, int pnum, int *mindam, int *maxdam)
 {
 	int mind, maxd, damsl, dambl, dampc;
 
-    mind = 0;
-    maxd = 0;
+	mind = 0;
+	maxd = 0;
 	damsl = plx(offp)._pISlMaxDam;
-    if (damsl != 0) {
-        maxd += CalcPlrDam(pnum, MISR_SLASH, damsl);
-        mind += CalcPlrDam(pnum, MISR_SLASH, plx(offp)._pISlMinDam);
-    }
+	if (damsl != 0) {
+		maxd += CalcPlrDam(pnum, MISR_SLASH, damsl);
+		mind += CalcPlrDam(pnum, MISR_SLASH, plx(offp)._pISlMinDam);
+	}
 	dambl = plx(offp)._pIBlMaxDam;
-    if (dambl != 0) {
-        maxd += CalcPlrDam(pnum, MISR_BLUNT, dambl);
-        mind += CalcPlrDam(pnum, MISR_BLUNT, plx(offp)._pIBlMinDam);
-    }
+	if (dambl != 0) {
+		maxd += CalcPlrDam(pnum, MISR_BLUNT, dambl);
+		mind += CalcPlrDam(pnum, MISR_BLUNT, plx(offp)._pIBlMinDam);
+	}
 	dampc = plx(offp)._pIPcMaxDam;
-    if (dampc != 0) {
-        maxd += CalcPlrDam(pnum, MISR_PUNCTURE, dampc);
-        mind += CalcPlrDam(pnum, MISR_PUNCTURE, plx(offp)._pIPcMinDam);
-    }
+	if (dampc != 0) {
+		maxd += CalcPlrDam(pnum, MISR_PUNCTURE, dampc);
+		mind += CalcPlrDam(pnum, MISR_PUNCTURE, plx(offp)._pIPcMinDam);
+	}
 
 	// tmp = sn == SPL_SWIPE ? 800 : 200;
 	// if (random_low(6, tmp) < plx(offp)._pICritChance) {
@@ -941,11 +941,11 @@ void GetPlrByPlrDamage(int offp, int sn, int sl, int pnum, int *mindam, int *max
 		mind += CalcPlrDam(pnum, MISR_ACID, plx(offp)._pIAMinDam);
 	}
 
-    mind >>= 6;
-    maxd >>= 6;
+	mind >>= 6;
+	maxd >>= 6;
 
-    *mindam = mind;
-    *maxdam = maxd;
+	*mindam = mind;
+	*maxdam = maxd;
 }
 
 void IncreasePlrStr(int pnum)

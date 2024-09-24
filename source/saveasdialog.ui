@@ -58,7 +58,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <!--item>
     <widget class="QGroupBox" name="heroSettingsGroupBox">
      <property name="title">
       <string>Hero Settings</string>
@@ -114,7 +114,7 @@
       </item>
      </layout>
     </widget>
-   </item>
+   </item-->
    <item>
     <layout class="QHBoxLayout">
      <item>

@@ -63,7 +63,7 @@ bool D1Hero::load(const QString &filePath, const OpenAsParam &params)
     this->multi = false;
     const HeroSaveStruct *hss = (const HeroSaveStruct*)fileData.constData();
     if (fileData.size() == sizeof(HeroSaveStruct)) {
-        this->hellfire = hss->isHellfire != 0;
+        this->hellfire = hss->isHellfire != 0 || !D1Hero::isStandardClass(hss->pps.pClass);
         this->multi = hss->isMulti != 0;
     } else {
         this->hellfire = !D1Hero::isStandardClass(hss->pps.pClass);
@@ -138,7 +138,7 @@ void D1Hero::create(unsigned index)
 
     selhero_heroInfo.hiName[0] = '\0';
 
-    this->hellfire = D1Hero::isStandardClass(index);
+    this->hellfire = !D1Hero::isStandardClass(index);
     this->multi = false;
 
     auto gameHellfire = IsHellfireGame;

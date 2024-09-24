@@ -2,181 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="es_ES">
 <context>
-    <name>ExportDialog</name>
-    <message>
-        <location filename="../source/exportdialog.ui" line="14"/>
-        <location filename="../source/exportdialog.ui" line="424"/>
-        <location filename="../source/exportdialog.cpp" line="853"/>
-        <source>Export</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="23"/>
-        <source>Output Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="36"/>
-        <source>Browse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="46"/>
-        <source>Output File(s) Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="52"/>
-        <source>Format:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="69"/>
-        <source>File(s):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="80"/>
-        <source>One</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="85"/>
-        <source>Multi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="103"/>
-        <source>Content Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="109"/>
-        <source>Type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="134"/>
-        <source>Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="139"/>
-        <source>Subtile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="144"/>
-        <source>Flat Tile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="149"/>
-        <source>2.5D Tile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="173"/>
-        <source>Placement:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="198"/>
-        <source>Grouped</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="203"/>
-        <source>One line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="208"/>
-        <source>One column</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="232"/>
-        <source>Range:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="259"/>
-        <source>From</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="291"/>
-        <source>To</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="320"/>
-        <source>Canvas:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="350"/>
-        <source>Palette index of the transparent pixels in the output image</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="379"/>
-        <source>Color of the transparent pixels in the output image</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="389"/>
-        <source>Pick</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="431"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="120"/>
-        <source>Select Output Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="190"/>
-        <source>Exporting 2.5d tiles...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="303"/>
-        <source>Exporting flat tiles...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="415"/>
-        <source>Exporting subtiles...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="530"/>
-        <source>Exporting frames...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="725"/>
-        <source>Exporting audio...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="809"/>
-        <source>Warning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="809"/>
-        <source>Output folder is missing, please choose an output folder.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>HeroDetailsWidget</name>
     <message>
         <location filename="../source/herodetailswidget.ui" line="112"/>
@@ -1551,17 +1376,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="565"/>
-        <source>hro Files (*.hro *.HRO)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/mainwindow.cpp" line="564"/>
         <source>Load Hero</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="550"/>
+        <location filename="../source/mainwindow.cpp" line="565"/>
         <source>HRO Files (*.hro *.HRO)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1618,44 +1439,6 @@
         <location filename="../source/mainwindow.cpp" line="1268"/>
         <location filename="../source/mainwindow.cpp" line="1354"/>
         <source>Save Translation File as...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>MergeFramesDialog</name>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="6"/>
-        <source>Merge Frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="35"/>
-        <source>From</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="67"/>
-        <source>To</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="91"/>
-        <source>Submit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="98"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.cpp" line="51"/>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.cpp" line="51"/>
-        <source>Mismatching frame-size (%1).</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2266,7 +2049,7 @@
     </message>
     <message>
         <location filename="../source/pvpdetailswidget.cpp" line="254"/>
-        <source>hro Files (*.hro *.HRO)</source>
+        <source>HRO Files (*.hro *.HRO)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2420,33 +2203,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="164"/>
-        <location filename="../source/exportdialog.cpp" line="695"/>
-        <source>%1 created.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="166"/>
-        <location filename="../source/exportdialog.cpp" line="697"/>
-        <source>Failed to create %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="692"/>
-        <source>track%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="756"/>
-        <source>Mismatching audio formats (ch%1,w%2,%3 vs. ch%1,w%2,%3).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="139"/>
-        <source>Failed to create image with (%1:%2) dimensions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/progressdialog.cpp" line="270"/>
         <source>Process cancelled.</source>
         <translation type="unfinished"></translation>
@@ -2522,12 +2278,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/player.cpp" line="841"/>
+        <location filename="../source/dungeon/player.cpp" line="842"/>
         <source>Unhandled h2h skill %1 in GetMonByPlrDamage.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/player.cpp" line="917"/>
+        <location filename="../source/dungeon/player.cpp" line="918"/>
         <source>Unhandled h2h skill %1 in GetPlrByPlrDamage.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2648,7 +2404,12 @@
     </message>
     <message>
         <location filename="../source/herodetailswidget.cpp" line="160"/>
-        <source>Recovery speed: %1ms (%2)</source>
+        <source>Recovery speed: %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="172"/>
+        <source>%1ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

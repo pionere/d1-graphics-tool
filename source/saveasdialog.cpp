@@ -27,7 +27,7 @@ void SaveAsDialog::initialize(D1Hero *h)
     QString filePath = this->hero->getFilePath();
     this->ui->outputFileEdit->setText(filePath);
     // reset fields
-    this->ui->hellfireHeroAutoRadioButton->setChecked(true);
+    // this->ui->hellfireHeroAutoRadioButton->setChecked(true);
 }
 
 void SaveAsDialog::on_outputFileBrowseButton_clicked()
@@ -51,13 +51,13 @@ void SaveAsDialog::on_saveButton_clicked()
     // main cel file
     params.filePath = this->ui->outputFileEdit->text();
     // heroSettingsGroupBox: hellfireHero
-    if (this->ui->hellfireHeroYesRadioButton->isChecked()) {
-        params.heroType = SAVE_HERO_TYPE::HELLFIRE_HERO;
-    } else if (this->ui->hellfireHeroNoRadioButton->isChecked()) {
-        params.heroType = SAVE_HERO_TYPE::DIABLO_HERO;
-    } else {
+    // if (this->ui->hellfireHeroYesRadioButton->isChecked()) {
+    //     params.heroType = SAVE_HERO_TYPE::HELLFIRE_HERO;
+    // } else if (this->ui->hellfireHeroNoRadioButton->isChecked()) {
+    //     params.heroType = SAVE_HERO_TYPE::DIABLO_HERO;
+    // } else {
         params.heroType = SAVE_HERO_TYPE::AUTODETECT;
-    }
+    // }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 
     this->close();

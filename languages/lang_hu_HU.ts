@@ -2,181 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="hu_HU">
 <context>
-    <name>ExportDialog</name>
-    <message>
-        <location filename="../source/exportdialog.ui" line="14"/>
-        <location filename="../source/exportdialog.ui" line="424"/>
-        <location filename="../source/exportdialog.cpp" line="853"/>
-        <source>Export</source>
-        <translation>Exportálás</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="23"/>
-        <source>Output Folder</source>
-        <translation>Kimeneti könyvtár</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="36"/>
-        <source>Browse</source>
-        <translation>Tallózás</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="46"/>
-        <source>Output File(s) Settings</source>
-        <translation>Kimeneti fájlok beállításai</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="52"/>
-        <source>Format:</source>
-        <translation>Formátum:</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="69"/>
-        <source>File(s):</source>
-        <translation>Fájlok:</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="80"/>
-        <source>One</source>
-        <translation>Egy</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="85"/>
-        <source>Multi</source>
-        <translation>Több</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="103"/>
-        <source>Content Settings</source>
-        <translation>Tartalmi beállítások</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="109"/>
-        <source>Type:</source>
-        <translation>Típus:</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="134"/>
-        <source>Frame</source>
-        <translation>Képkocka</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="139"/>
-        <source>Subtile</source>
-        <translation>Mező</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="144"/>
-        <source>Flat Tile</source>
-        <translation>Feszített lap</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="149"/>
-        <source>2.5D Tile</source>
-        <translation>2.5D-s lap</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="173"/>
-        <source>Placement:</source>
-        <translation>Elhelyezés:</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="198"/>
-        <source>Grouped</source>
-        <translation>Csoportosítva</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="203"/>
-        <source>One line</source>
-        <translation>Egy sorba</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="208"/>
-        <source>One column</source>
-        <translation>Egy oszlopba</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="232"/>
-        <source>Range:</source>
-        <translation>Korlátok:</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="259"/>
-        <source>From</source>
-        <translation>Kezdet</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="291"/>
-        <source>To</source>
-        <translation>Végső</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="320"/>
-        <source>Canvas:</source>
-        <translation>Háttér:</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="350"/>
-        <source>Palette index of the transparent pixels in the output image</source>
-        <translation>Paletta érték az átlátszó képpontok helyettesítésére</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="379"/>
-        <source>Color of the transparent pixels in the output image</source>
-        <translation>Az átlátszó képpontok színe a kimeneti képfájlban</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="389"/>
-        <source>Pick</source>
-        <translation>Választ</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.ui" line="431"/>
-        <source>Cancel</source>
-        <translation>Mégse</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="120"/>
-        <source>Select Output Folder</source>
-        <translation>Kimeneti könyvtár</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="190"/>
-        <source>Exporting 2.5d tiles...</source>
-        <translation>2.5D-s lapok exportálása...</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="303"/>
-        <source>Exporting flat tiles...</source>
-        <translation>Feszített lapok exportálása...</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="415"/>
-        <source>Exporting subtiles...</source>
-        <translation>Mezők exportálása...</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="530"/>
-        <source>Exporting frames...</source>
-        <translation>Képkockák exportálása...</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="725"/>
-        <source>Exporting audio...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="809"/>
-        <source>Warning</source>
-        <translation>Figyelmeztetés</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="809"/>
-        <source>Output folder is missing, please choose an output folder.</source>
-        <translation>Kimeneti könyvtár nincs beállítva. Kérlek adjál meg egyet.</translation>
-    </message>
-</context>
-<context>
     <name>HeroDetailsWidget</name>
     <message>
         <location filename="../source/herodetailswidget.ui" line="112"/>
@@ -1618,44 +1443,6 @@
     </message>
 </context>
 <context>
-    <name>MergeFramesDialog</name>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="6"/>
-        <source>Merge Frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="35"/>
-        <source>From</source>
-        <translation type="unfinished">Kezdet</translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="67"/>
-        <source>To</source>
-        <translation type="unfinished">Végső</translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="91"/>
-        <source>Submit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.ui" line="98"/>
-        <source>Cancel</source>
-        <translation type="unfinished">Mégse</translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.cpp" line="51"/>
-        <source>Error</source>
-        <translation type="unfinished">Hiba</translation>
-    </message>
-    <message>
-        <location filename="../source/mergeframesdialog.cpp" line="51"/>
-        <source>Mismatching frame-size (%1).</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>MonsterDetailsWidget</name>
     <message>
         <location filename="../source/monsterdetailswidget.ui" line="18"/>
@@ -2328,33 +2115,6 @@
         <translation>Kép fájlok (%1)</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="164"/>
-        <location filename="../source/exportdialog.cpp" line="695"/>
-        <source>%1 created.</source>
-        <translation>%1 létrehozva.</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="166"/>
-        <location filename="../source/exportdialog.cpp" line="697"/>
-        <source>Failed to create %1.</source>
-        <translation>A(z) %1 létrehozása sikertelen</translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="692"/>
-        <source>track%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="756"/>
-        <source>Mismatching audio formats (ch%1,w%2,%3 vs. ch%1,w%2,%3).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/exportdialog.cpp" line="139"/>
-        <source>Failed to create image with (%1:%2) dimensions.</source>
-        <translation>(%1:%2) méretű kép létrehozása sikertelen.</translation>
-    </message>
-    <message>
         <location filename="../source/d1cl2frame.cpp" line="30"/>
         <source>Invalid CL2 frame data (0x00 found)</source>
         <translation>Hibás CL2 képkocka (0x00-ás érték)</translation>
@@ -2517,12 +2277,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/player.cpp" line="841"/>
+        <location filename="../source/dungeon/player.cpp" line="842"/>
         <source>Unhandled h2h skill %1 in GetMonByPlrDamage.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/player.cpp" line="917"/>
+        <location filename="../source/dungeon/player.cpp" line="918"/>
         <source>Unhandled h2h skill %1 in GetPlrByPlrDamage.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2643,7 +2403,12 @@
     </message>
     <message>
         <location filename="../source/herodetailswidget.cpp" line="160"/>
-        <source>Recovery speed: %1ms (%2)</source>
+        <source>Recovery speed: %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/herodetailswidget.cpp" line="172"/>
+        <source>%1ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
