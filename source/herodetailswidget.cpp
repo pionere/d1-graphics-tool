@@ -102,66 +102,75 @@ static void HeroResistText(int misr, int res, QProgressBar *label)
 
 static void HeroWalkSpeedText(const D1Hero *hero, QLabel *label)
 {
+    QString tooltip = QApplication::tr("Walk speed: %1 (%2)");
+
     int speed = hero->getWalkSpeed();
-    QString tooltip;
+    QString type;
     switch (speed) {
-    case 0: tooltip = QApplication::tr("Normal");  break;
-    case 1: tooltip = QApplication::tr("Fast");    break;
-    case 2: tooltip = QApplication::tr("Faster");  break;
-    case 3: tooltip = QApplication::tr("Fastest"); break;
-    default:tooltip = QApplication::tr("N/A");     break;
+    case 0: type = QApplication::tr("Normal");  break;
+    case 1: type = QApplication::tr("Fast");    break;
+    case 2: type = QApplication::tr("Faster");  break;
+    case 3: type = QApplication::tr("Fastest"); break;
+    default:type = QApplication::tr("N/A");     break;
     }
 
     label->setText(QString::number((double)gnTicksRate / hero->getWalkSpeedInTicks(), 'f', 2));
-    label->setToolTip(tooltip);
+    label->setToolTip(tooltip.arg(type).arg(speed));
 }
 
 static void HeroAttackSpeedText(const D1Hero *hero, QLabel *label)
 {
+    QString tooltip = QApplication::tr("Attack speed: %1 (%2)");
+
     int speed = hero->getBaseAttackSpeed();
-    QString tooltip;
+    QString type;
     switch (speed) {
-    case 0: tooltip = QApplication::tr("Normal");  break;
-    case 1: tooltip = QApplication::tr("Fast");    break;
-    case 2: tooltip = QApplication::tr("Faster");  break;
-    case 3: tooltip = QApplication::tr("Fastest"); break;
-    default:tooltip = QApplication::tr("N/A");     break;
+    case 0: type = QApplication::tr("Normal");  break;
+    case 1: type = QApplication::tr("Quick");   break;
+    case 2: type = QApplication::tr("Fast");    break;
+    case 3: type = QApplication::tr("Faster");  break;
+    case 4: type = QApplication::tr("Fastest"); break;
+    default:type = QApplication::tr("N/A");     break;
     }
 
     label->setText(QString::number((double)gnTicksRate / hero->getAttackSpeedInTicks(SPL_ATTACK), 'f', 2));
-    label->setToolTip(tooltip);
+    label->setToolTip(tooltip.arg(type).arg(speed));
 }
 
 static void HeroCastSpeedText(const D1Hero *hero, QLabel *label)
 {
+    QString tooltip = QApplication::tr("Cast speed: %1 (%2)");
+
     int speed = hero->getBaseCastSpeed();
     QString tooltip;
     switch (speed) {
-    case 0: tooltip = QApplication::tr("Normal");  break;
-    case 1: tooltip = QApplication::tr("Fast");    break;
-    case 2: tooltip = QApplication::tr("Faster");  break;
-    case 3: tooltip = QApplication::tr("Fastest"); break;
-    default:tooltip = QApplication::tr("N/A");     break;
+    case 0: type = QApplication::tr("Normal");  break;
+    case 1: type = QApplication::tr("Fast");    break;
+    case 2: type = QApplication::tr("Faster");  break;
+    case 3: type = QApplication::tr("Fastest"); break;
+    default:type = QApplication::tr("N/A");     break;
     }
 
     label->setText(QString::number((double)gnTicksRate / hero->getCastSpeedInTicks(SPL_HEAL), 'f', 2));
-    label->setToolTip(tooltip);
+    label->setToolTip(tooltip.arg(type).arg(speed));
 }
 
 static void HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
 {
+    QString tooltip = QApplication::tr("Recovery speed: %1 (%2)");
+
     int speed = hero->getRecoverySpeed();
     QString tooltip;
     switch (speed) {
-    case 0: tooltip = QApplication::tr("Normal");  break;
-    case 1: tooltip = QApplication::tr("Fast");    break;
-    case 2: tooltip = QApplication::tr("Faster");  break;
-    case 3: tooltip = QApplication::tr("Fastest"); break;
-    default:tooltip = QApplication::tr("N/A");     break;
+    case 0: type = QApplication::tr("Normal");  break;
+    case 1: type = QApplication::tr("Fast");    break;
+    case 2: type = QApplication::tr("Faster");  break;
+    case 3: type = QApplication::tr("Fastest"); break;
+    default:type = QApplication::tr("N/A");     break;
     }
 
     label->setText(QString::number((double)gnTicksRate / hero->getRecoverySpeedInTicks(), 'f', 2));
-    label->setToolTip(tooltip);
+    label->setToolTip(tooltip.arg(type).arg(speed));
 }
 
 static void HeroArrowSpeedText(const D1Hero *hero, QLabel *label)

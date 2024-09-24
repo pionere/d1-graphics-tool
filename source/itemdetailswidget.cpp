@@ -214,7 +214,8 @@ void ItemDetailsWidget::on_editNameButton_clicked()
             this->hero->renameItem(ii, text);
             const ItemStruct* is = this->hero->item(ii);
             itemsComboBox->setItemText(itemsComboBox->currentIndex(), ItemName(is));
-            itemsComboBox->adjustSize();
+            // itemsComboBox->adjustSize();
+            dMainWindow().updateWindow();
         }
     };
     this->namePopupDialog->initialize(tr("Name"), this->ui->invItemIndexComboBox->currentText(), std::move(func));
