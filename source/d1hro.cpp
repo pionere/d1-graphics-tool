@@ -1114,7 +1114,7 @@ int D1Hero::getWalkSpeed() const
 
 int D1Hero::getWalkSpeedInTicks() const
 {
-    return GetWalkSpeed(this->pnum);
+    return GetWalkSpeedInTicks(this->pnum);
 }
 
 int D1Hero::getChargeSpeed() const
@@ -1192,7 +1192,7 @@ int D1Hero::getArrowVelBonus() const
     return players[this->pnum]._pIArrowVelBonus;
 }
 
-int getArrowVelocity() const
+int D1Hero::getArrowVelocity() const
 {
     return GetArrowVelocity(this->pnum);
 }

@@ -10,7 +10,7 @@
 
 extern bool IsMultiGame;
 extern bool IsHellfireGame;
-extern BYTE gbGameLogicProgress;
+extern uint8_t gbGameLogicProgress;
 extern int gnTicksRate;
 extern QString assetPath;
 extern char infostr[256];

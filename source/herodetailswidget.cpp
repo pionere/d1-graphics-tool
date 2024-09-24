@@ -100,7 +100,7 @@ static void HeroResistText(int misr, int res, QProgressBar *label)
     label->setToolTip(tooltip.arg(type));
 }
 
-static QString HeroWalkSpeedText(const D1Hero *hero, QLabel *label)
+static void HeroWalkSpeedText(const D1Hero *hero, QLabel *label)
 {
     int speed = hero->getWalkSpeed();
     QString tooltip;
@@ -112,11 +112,11 @@ static QString HeroWalkSpeedText(const D1Hero *hero, QLabel *label)
     default:tooltip = QApplication::tr("N/A");     break;
     }
 
-    label->setText(QString::number((double)gnTicksRate / hero->getWalkSpeedInTicks(), 'f', 2)); 
+    label->setText(QString::number((double)gnTicksRate / hero->getWalkSpeedInTicks(), 'f', 2));
     label->setToolTip(tooltip);
 }
 
-static QString HeroAttackSpeedText(const D1Hero *hero, QLabel *label)
+static void HeroAttackSpeedText(const D1Hero *hero, QLabel *label)
 {
     int speed = hero->getBaseAttackSpeed();
     QString tooltip;
@@ -128,11 +128,11 @@ static QString HeroAttackSpeedText(const D1Hero *hero, QLabel *label)
     default:tooltip = QApplication::tr("N/A");     break;
     }
 
-    label->setText(QString::number((double)gnTicksRate / (hero->getAttackSpeedInTicks(/*(hero->getSkillFlags() & SFLAG_MELEE) ?*/ SPL_ATTACK /*: SPL_RATTACK*/)), 'f', 2)); 
+    label->setText(QString::number((double)gnTicksRate / hero->getAttackSpeedInTicks(SPL_ATTACK), 'f', 2));
     label->setToolTip(tooltip);
 }
 
-static QString HeroCastSpeedText(const D1Hero *hero, QLabel *label)
+static void HeroCastSpeedText(const D1Hero *hero, QLabel *label)
 {
     int speed = hero->getBaseCastSpeed();
     QString tooltip;
@@ -148,7 +148,7 @@ static QString HeroCastSpeedText(const D1Hero *hero, QLabel *label)
     label->setToolTip(tooltip);
 }
 
-static QString HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
+static void HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
 {
     int speed = hero->getRecoverySpeed();
     QString tooltip;
@@ -164,7 +164,7 @@ static QString HeroRecoverySpeedText(const D1Hero *hero, QLabel *label)
     label->setToolTip(tooltip);
 }
 
-static QString HeroArrowSpeedText(const D1Hero *hero, QLabel *label)
+static void HeroArrowSpeedText(const D1Hero *hero, QLabel *label)
 {
     label->setText(QString::number((double)(gnTicksRate * hero->getArrowVelocity()) / 64 , 'f', 2));
     label->setToolTip(QString::number(hero->getArrowVelBonus()));

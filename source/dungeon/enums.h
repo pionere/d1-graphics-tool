@@ -4582,3 +4582,12 @@ typedef enum drlg_flag {
 	DRLG_FROZEN     = 0x80,
 } drlg_flag;
 
+typedef enum game_logic_progress {
+	GLP_NONE,
+	GLP_PLAYERS_DONE,
+	GLP_MONSTERS_DONE,
+	//GLP_TOWNERS_DONE,
+	//GLP_OBJECTS_DONE,
+	//GLP_MISSILES_DONE,
+	//GLP_ITEMS_DONE,
+} game_logic_progress;

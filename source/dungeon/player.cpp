@@ -722,9 +722,9 @@ int GetCastSpeedInTicks(int pnum, int sn)
 
 static void PlrStartGetHit(int pnum) // , int dir)
 {
-	NewPlrAnim(pnum, PGX_GOTHIT) //, dir);
+	NewPlrAnim(pnum, PGX_GOTHIT); //, dir);
 
-		plr._pVar8 = 0; // GOTHIT_TICK
+	plr._pVar8 = 0; // GOTHIT_TICK
 }
 
 int GetRecoverySpeedInTicks(int pnum)

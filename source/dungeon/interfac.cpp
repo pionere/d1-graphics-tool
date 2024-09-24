@@ -12,7 +12,7 @@
 
 bool IsMultiGame;
 bool IsHellfireGame;
-BYTE gbGameLogicProgress;
+uint8_t gbGameLogicProgress;
 int gnTicksRate;
 QString assetPath;
 char infostr[256];
