@@ -20,6 +20,7 @@
 #define AFFIX_NONE  -2
 
 Q_DECLARE_METATYPE(item_equip_type)
+Q_DECLARE_METATYPE(item_type)
 
 ItemSelectorDialog::ItemSelectorDialog(QWidget *parent)
     : QDialog(parent)
