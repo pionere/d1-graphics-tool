@@ -14,6 +14,8 @@
 
 #include "dungeon/all.h"
 
+Q_DECLARE_METATYPE(dungeon_type)
+
 MonsterDetailsWidget::MonsterDetailsWidget(SidePanelWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MonsterDetailsWidget())
