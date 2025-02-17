@@ -4,6 +4,13 @@
  * Various global structures.
  */
 
+#define ALIGNMENT(x86, x64)
+#define ALIGNMENT32(num)
+#define ALIGNMENT64(num)
+#define ALIGN
+#define ALIGN32
+#define ALIGN64
+
 typedef uint8_t BYTE;
 typedef uint8_t BOOLEAN;
 typedef uint32_t BOOL;
@@ -202,6 +209,86 @@ typedef struct PlrAnimType {
 	char patTxt[4]; // suffix to select the player animation CL2
 	int patGfxIdx;  // player_graphic_idx
 } PlrAnimType;
+
+//////////////////////////////////////////////////
+// missiles
+//////////////////////////////////////////////////
+
+typedef struct MissileData {
+	int (*mAddProc)(int, int, int, int, int, int, int, int, int);
+	void (*mProc)(int);
+	BYTE mdFlags; // missile_flags
+	BYTE mResist; // missile_resistance
+	BYTE mFileNum; // missile_gfx_id
+	BOOLEAN mDrawFlag;
+	int mlSFX; // sound effect when a missile is launched (_sfx_id)
+	int miSFX; // sound effect on impact (_sfx_id)
+	BYTE mlSFXCnt; // number of launch sound effects to choose from
+	BYTE miSFXCnt; // number of impact sound effects to choose from
+	BYTE mdPrSpeed; // speed of the projectile
+	ALIGNMENT32(2)
+} MissileData;
+
+
+typedef struct MisFileData {
+	int mfAnimFAmt;
+	const char* mfName;
+	const char* mfAnimTrans;
+	int mfFlags; // missile_anim_flags
+	BYTE mfAnimFrameLen[16];
+	BYTE mfAnimLen[16];
+	int mfAnimWidth;
+	int mfAnimXOffset; // could be calculated
+} MisFileData;
+
+typedef struct MissileStruct {
+	int _miType;   // missile_id
+	BYTE _miFlags; // missile_flags
+	BYTE _miResist; // missile_resistance
+	BYTE _miFileNum; // missile_gfx_id
+	BOOLEAN _miDrawFlag; // should be drawn
+	int _miUniqTrans; // use unique color-transformation when drawing
+	BOOLEAN _miDelFlag; // should be deleted
+	BOOLEAN _miLightFlag; // use light-transformation when drawing
+	BOOLEAN _miPreFlag; // should be drawn in the pre-phase
+	BOOLEAN _miAnimFlag;
+	BYTE* _miAnimData;
+	int _miAnimFrameLen; // Tick length of each frame in the current animation
+	int _miAnimLen;   // Number of frames in current animation
+	int _miAnimWidth;
+	int _miAnimXOffset;
+	int _miAnimCnt; // Increases by one each game tick, counting how close we are to _miAnimFrameLen
+	int _miAnimAdd;
+	int _miAnimFrame; // Current frame of animation.
+	int _misx;    // Initial tile X-position
+	int _misy;    // Initial tile Y-position
+	int _mix;     // Tile X-position where the missile should be drawn
+	int _miy;     // Tile Y-position where the missile should be drawn
+	int _mixoff;  // Pixel X-offset from tile position where the missile should be drawn
+	int _miyoff;  // Pixel Y-offset from tile position where the missile should be drawn
+	int _mixvel;  // Missile tile (X - Y)-velocity while moving. This gets added onto _mitxoff each game tick
+	int _miyvel;  // Missile tile (X + Y)-velocity while moving. This gets added onto _mityoff each game tick
+	int _mitxoff; // How far the missile has travelled in its lifespan along the (X - Y)-axis. mix/miy/mxoff/myoff get updated every game tick based on this
+	int _mityoff; // How far the missile has travelled in its lifespan along the (X + Y)-axis. mix/miy/mxoff/myoff get updated every game tick based on this
+	int _miDir;   // The direction of the missile
+	int _miSpllvl;
+	int _miSource; // missile_source_type
+	int _miCaster;
+	int _miMinDam;
+	int _miMaxDam;
+	// int _miRndSeed;
+	int _miRange;
+	unsigned _miLid; // light id of the missile
+	int _miVar1;
+	int _miVar2;
+	int _miVar3;
+	int _miVar4;
+	int _miVar5;
+	int _miVar6;
+	int _miVar7; // distance travelled in case of ARROW missiles
+	int _miVar8; // last target in case of non-DOT missiles
+	ALIGNMENT(10, 24)
+} MissileStruct;
 
 //////////////////////////////////////////////////
 // monster

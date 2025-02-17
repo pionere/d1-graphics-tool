@@ -264,6 +264,7 @@ private slots:
     void on_showItemsCheckBox_clicked();
     void on_showMonstersCheckBox_clicked();
     void on_showObjectsCheckBox_clicked();
+    void on_showMissilesCheckBox_clicked();
 
     void on_dunOverlayComboBox_activated(int index);
 
@@ -298,6 +299,10 @@ private slots:
     void on_dungeonItemAddButton_clicked();
     void on_dungeonRoomLineEdit_returnPressed();
     void on_dungeonRoomLineEdit_escPressed();
+    void on_dungeonMissileComboBox_activated(int index);
+    void on_dungeonMissileXOffSpinBox_valueChanged(int value);
+    void on_dungeonMissileYOffSpinBox_valueChanged(int value);
+    void on_dungeonMissileAddButton_clicked();
 
     void on_dunZoomOutButton_clicked();
     void on_dunZoomInButton_clicked();

@@ -9,6 +9,7 @@ enum class DUN_ENTITY_TYPE {
     OBJECT,
     MONSTER,
     ITEM,
+    MISSILE,
 };
 
 class AddResourceParam {

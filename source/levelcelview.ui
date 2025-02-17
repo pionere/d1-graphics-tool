@@ -999,6 +999,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QCheckBox" name="showMissilesCheckBox">
+          <property name="toolTip">
+           <string>Draw missiles</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <!--item row="2" column="4" colspan="2">
@@ -1441,6 +1448,70 @@
              <enum>Qt::Horizontal</enum>
             </property>
            </spacer>
+          </item>
+          <item row="2" column="5">
+           <widget class="QLabel">
+            <property name="text">
+             <string>Missile:</string>
+            </property>
+           </widget>
+          </item>
+          <!--item row="1" column="6">
+           <widget class="LineEditWidget" name="dungeonMissileLineEdit">
+            <property name="charWidth">
+             <number>5</number>
+            </property>
+            <property name="toolTip">
+             <string>Current missile at the selected position</string>
+            </property>
+            <property name="alignment">
+             <enum>Qt::AlignCenter</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="7">
+           <widget class="QCheckBox" name="dungeonMissileCheckBox">
+            <property name="toolTip">
+             <string>Current missile at the selected position is unique</string>
+            </property>
+           </widget>
+          </item-->
+          <item row="1" column="8">
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QComboBox" name="dungeonMissileComboBox">
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContents</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QHBoxLayout" name="dungeonMissileHBoxLayout"/>
+             </widget>
+            </item>
+            <!--item>
+             <widget class="QCheckBox" name="dungeonMissileAddButton"/>
+            </item-->
+           </layout>
+          </item>
+          <item row="1" column="9">
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QSpinBox" name="dungeonMissileXOffSpinBox">
+              <property name="toolTip">
+               <string>X-Offset of the missile at the selected position</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="dungeonMissileYOffSpinBox">
+              <property name="toolTip">
+               <string>Y-Offset of the missile at the selected position</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>

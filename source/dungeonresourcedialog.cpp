@@ -44,13 +44,16 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, bool unique
         case DUN_ENTITY_TYPE::ITEM:
             title = tr("Item parameters");
             break;
+        case DUN_ENTITY_TYPE::MISSILE:
+            title = tr("Missile parameters");
+            break;
         }
         this->setWindowTitle(title);
 
-        this->ui->baseTrnFileLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
-        this->ui->baseTrnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
-        this->ui->baseTrnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
-        this->ui->baseTrnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->baseTrnFileLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER || t == DUN_ENTITY_TYPE::MISSILE);
+        this->ui->baseTrnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER || t == DUN_ENTITY_TYPE::MISSILE);
+        this->ui->baseTrnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER || t == DUN_ENTITY_TYPE::MISSILE);
+        this->ui->baseTrnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER || t == DUN_ENTITY_TYPE::MISSILE);
 
         this->ui->uniqueTrnFileLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
         this->ui->uniqueTrnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
@@ -58,7 +61,7 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, bool unique
         this->ui->uniqueTrnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
 
         this->ui->uniqueMonCheckBox->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
-        this->ui->frameGroupLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->frameGroupLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER || t == DUN_ENTITY_TYPE::MISSILE);
 
         this->ui->frameLabel->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
         this->ui->frameLineEdit->setVisible(t == DUN_ENTITY_TYPE::OBJECT);

@@ -322,6 +322,35 @@ void LevelCelView::updateEntityOptions()
         comboBox->addItem(item.name, item.type);
     }
     comboBox->show();
+    // - missiles
+    comboBox = this->ui->dungeonMissileComboBox;
+    comboBox->hide();
+    comboBox->clear();
+    comboBox->addItem("", 0);
+    const std::vector<CustomMissileStruct> &customMissileTypes = this->dun->getCustomMissileTypes();
+    if (!customMissileTypes.empty()) {
+        for (const CustomMissileStruct &mis : customMissileTypes) {
+            comboBox->addItem(mis.name, mis.type);
+        }
+        comboBox->insertSeparator(INT_MAX);
+    }
+    //   - normal missiles
+    for (int i = 0; i < lengthof(DunMissConvTbl); i++) {
+        const DunMissileStruct &mis = DunMissileStruct[i];
+        if (mis.name != nullptr) {
+            // filter custom entries
+            unsigned n = 0;
+            for (; n < customMissileTypes.size(); n++) {
+                if (customMissileTypes[n].type == i) {
+                    break;
+                }
+            }
+            if (n >= customMissileTypes.size()) {
+                comboBox->addItem(mis.name, i);
+            }
+        }
+    }
+    comboBox->show();
     // update icon of assets
     QString assetPath = this->dun->getAssetPath();
     if (!assetPath.isEmpty()) {
@@ -3480,6 +3509,7 @@ void LevelCelView::displayFrame()
         params.showItems = this->ui->showItemsCheckBox->isChecked();
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();
+        params.showMissiles = this->ui->showMissilesCheckBox->isChecked();
         params.time = this->playCounter;
         QImage dunFrame = this->dun->getImage(params);
 
@@ -4387,6 +4417,12 @@ void LevelCelView::on_showObjectsCheckBox_clicked()
     this->displayFrame();
 }
 
+void LevelCelView::on_showMissilesCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
 void LevelCelView::on_dunOverlayComboBox_activated(int index)
 {
     // update the view
@@ -4636,13 +4672,12 @@ void LevelCelView::setMonsterOffset(const MapMonster &mon)
     }
 }
 
-void LevelCelView::on_dungeonMonsterXOffSpinBox_valueChanged(int value)
+static int getSpinValue(QSpinBox *spinBox, int value, int curVal)
 {
-    const int minVal = this->ui->dungeonMonsterXOffSpinBox->minimum();
-    const int maxVal = this->ui->dungeonMonsterXOffSpinBox->maximum();
-    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+    const int minVal = spinBox->minimum();
+    const int maxVal = spinBox->maximum();
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        if (value < mon.mox) {
+        if (value < curVal) {
             if (value < 0) {
                 value = minVal;
             } else {
@@ -4662,39 +4697,65 @@ void LevelCelView::on_dungeonMonsterXOffSpinBox_valueChanged(int value)
     if (value > maxVal) {
         value = maxVal;
     }
-    mon.mox = value;
+    return value;
+}
+
+void LevelCelView::on_dungeonMonsterXOffSpinBox_valueChanged(int value)
+{
+    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+    mon.mox = getSpinValue(this->ui->dungeonMonsterXOffSpinBox, value, mon.mox);
     this->setMonsterOffset(mon);
 }
 
 void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value)
 {
-    const int minVal = this->ui->dungeonMonsterYOffSpinBox->minimum();
-    const int maxVal = this->ui->dungeonMonsterYOffSpinBox->maximum();
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        if (value < mon.moy) {
-            if (value < 0) {
-                value = minVal;
-            } else {
-                value = 0;
-            }
-        } else {
-            if (value <= 0) {
-                value = 0;
-            } else {
-                value = maxVal;
-            }
-        }
-    }
-    if (value < minVal) {
-        value = minVal;
-    }
-    if (value > maxVal) {
-        value = maxVal;
-    }
-    mon.moy = value;
+    mon.moy = getSpinValue(this->ui->dungeonMonsterYOffSpinBox, value, mon.moy);
     this->setMonsterOffset(mon);
 }
+
+void LevelCelView::on_dungeonMissileComboBox_activated(int index)
+{
+    if (index < 0) {
+        return;
+    }
+    int misIndex = this->ui->dungeonMissileComboBox->itemData(index).value<int>();
+    MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
+    mis.type = misIndex;
+    bool change = this->dun->setMissileAt(this->currentDunPosX, this->currentDunPosY, mis);
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::setMissileOffset(const MapMissile &mis)
+{
+    bool change = this->dun->setMissileAt(this->currentDunPosX, this->currentDunPosY, mis);
+    // update the view
+    if (change) {
+        this->displayFrame();
+    } else {
+        this->updateFields();
+    }
+}
+
+void LevelCelView::on_dungeonMissileXOffSpinBox_valueChanged(int value)
+{
+    MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
+    mis.mix = getSpinValue(this->ui->dungeonMissileXOffSpinBox, value, mis.mix);
+    this->setMissileOffset(mis);
+}
+
+void LevelCelView::on_dungeonMissileYOffSpinBox_valueChanged(int value)
+{
+    MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
+    mis.miy = getSpinValue(this->ui->dungeonMissileYOffSpinBox, value, mis.miy);
+    this->setMissileOffset(mis);
+}
+
+void LevelCelView::on_dungeonMissileAddButton_clicked();
+
 
 void LevelCelView::on_dungeonItemLineEdit_returnPressed()
 {

@@ -84,6 +84,13 @@ typedef struct MapMonster {
     int moy;
 } MapMonster;
 
+typedef struct MapMissile {
+    int type;
+    int frameNum;
+    int mix;
+    int miy;
+} MapMissile;
+
 typedef struct DunObjectStruct {
     const char *name;
 } DunObjectStruct;
@@ -117,6 +124,19 @@ typedef struct CustomItemStruct {
     QString name;
 } CustomItemStruct;
 
+typedef struct DunMissileStruct {
+    const char *name;
+} DunMissileStruct;
+
+typedef struct CustomMissileStruct {
+    int type;
+    int width;
+    int animGroup;
+    QString path;
+    QString trnPath;
+    QString name;
+} CustomMissileStruct;
+
 typedef struct ObjectCacheEntry {
     int objectIndex;
     D1Gfx *objGfx;
@@ -137,6 +157,14 @@ typedef struct ItemCacheEntry {
     D1Gfx *itemGfx;
 } ItemCacheEntry;
 
+typedef struct MissileCacheEntry {
+    int misIndex;
+    D1Gfx *misGfx;
+    int misDir;
+    D1Pal *misPal;
+    D1Trn *misTrn;
+} MissileCacheEntry;
+
 class DunDrawParam {
 public:
     Qt::CheckState tileState;
@@ -144,6 +172,7 @@ public:
     bool showItems;
     bool showMonsters;
     bool showObjects;
+    bool showMissiles;
     unsigned time;
 };
 
@@ -164,6 +193,7 @@ public:
     QImage getObjectImage(int objectIndex, unsigned time);
     QImage getMonsterImage(DunMonsterType monType, unsigned time);
     QImage getItemImage(int itemIndex);
+    QImage getMissileImage(const MapMissile &mis, unsigned time);
 
     void setPal(D1Pal *pal);
 
@@ -187,6 +217,8 @@ public:
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;
     bool setRoomAt(int posx, int posy, int roomIndex);
+    MapMissile getMissileAt(int posx, int posy) const;
+    bool setMissileAt(int posx, int posy, const MapMissile &misType);
     Qt::CheckState getTileProtectionAt(int posx, int posy) const;
     bool setTileProtectionAt(int posx, int posy, Qt::CheckState protection);
     bool getSubtileObjProtectionAt(int posx, int posy) const;
@@ -204,6 +236,7 @@ public:
     QString getItemName(int itemIndex) const;
     QString getMonsterName(const DunMonsterType &monType) const;
     QString getObjectName(int objectIndex) const;
+    QString getMissileName(int misIndex) const;
 
     std::pair<int, int> collectSpace() const;
     void collectItems(std::vector<std::pair<int, int>> &items) const;
@@ -254,6 +287,7 @@ public:
     const std::vector<CustomObjectStruct> &getCustomObjectTypes() const;
     const std::vector<CustomMonsterStruct> &getCustomMonsterTypes() const;
     const std::vector<CustomItemStruct> &getCustomItemTypes() const;
+    const std::vector<CustomItemStruct> &getCustomMissileTypes() const;
     void clearAssets();
 
 private:
@@ -275,6 +309,7 @@ private:
     void loadObject(int objectIndex);
     void loadMonster(const DunMonsterType &monType);
     void loadItem(int itemIndex);
+    void loadMissile(int itemIndex);
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
     bool changeObjectAt(int posx, int posy, int objectIndex);
@@ -283,6 +318,7 @@ private:
     bool changeTileProtectionAt(int tilePosX, int tilePosY, Qt::CheckState protection);
     bool changeSubtileProtectionAt(int posx, int posy, int protection);
     bool needsProtectionAt(int posx, int posy) const;
+    bool hasContentAt(int posx, int posy) const;
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;
@@ -305,6 +341,7 @@ private:
     std::vector<std::vector<MapMonster>> monsters;
     std::vector<std::vector<int>> objects;
     std::vector<std::vector<int>> rooms;
+    std::vector<std::vector<MapMissile>> missiles;
 
     int defaultTile;
     QString assetPath;
@@ -312,13 +349,17 @@ private:
     std::vector<CustomObjectStruct> customObjectTypes;
     std::vector<CustomMonsterStruct> customMonsterTypes;
     std::vector<CustomItemStruct> customItemTypes;
+    std::vector<CustomMissileStruct> customMissileTypes;    
     std::vector<ObjectCacheEntry> objectCache;
     std::vector<MonsterCacheEntry> monsterCache;
     std::vector<ItemCacheEntry> itemCache;
+    std::vector<MissileCacheEntry> missileCache;
     std::vector<std::pair<D1Gfx *, unsigned>> objDataCache;
     std::vector<std::pair<D1Gfx *, unsigned>> monDataCache;
     std::vector<std::pair<D1Gfx *, unsigned>> itemDataCache;
+    std::vector<std::pair<D1Gfx *, unsigned>> missileDataCache;
 };
 
 extern const DunObjectStruct DunObjConvTbl[128];
 extern const DunMonsterStruct DunMonstConvTbl[128];
+extern const DunMissileStruct DunMissConvTbl[96];
