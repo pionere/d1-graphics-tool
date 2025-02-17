@@ -1336,6 +1336,8 @@ void GfxsetView::on_playStopButton_clicked()
 
         // restore the currentFrameIndex
         this->currentFrameIndex = this->origFrameIndex;
+        // update group-index because the user might have changed it in the meantime
+        this->updateGroupIndex();
         // restore palette
         dMainWindow().resetPaletteCycle();
         // change the label of the button
@@ -1343,11 +1345,13 @@ void GfxsetView::on_playStopButton_clicked()
         // enable the related fields
         this->ui->playDelayEdit->setReadOnly(false);
         this->ui->playComboBox->setEnabled(true);
+        this->ui->playFrameCheckBox->setEnabled(true);
         return;
     }
     // disable the related fields
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(false);
+    this->ui->playFrameCheckBox->setEnabled(false);
     // change the label of the button
     this->ui->playStopButton->setText(tr("Stop"));
     // preserve the currentFrameIndex
