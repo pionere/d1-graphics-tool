@@ -2210,7 +2210,7 @@ MapObject D1Dun::getObjectAt(int posx, int posy) const
     return this->objects[posy][posx];
 }
 
-bool D1Dun::setObjectAt(int posx, int posy, MapObject srcObj)
+bool D1Dun::setObjectAt(int posx, int posy, const MapObject &srcObj)
 {
     if (this->objects[posy][posx] == srcObj) {
         return false;
@@ -2547,10 +2547,20 @@ bool D1Dun::swapPositions(int mode, int posx0, int posy0, int posx1, int posy1)
     if (mode == -1 || mode == BEM_OBJECT) {
         for (int dy = 0; dy < (mode == -1 ? TILE_HEIGHT : 1); dy++) {
             for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
-                int objectIndex0 = this->getObjectAt(posx0 + dx, posy0 + dy);
-                int objectIndex1 = this->getObjectAt(posx1 + dx, posy1 + dy);
-                change |= this->setObjectAt(posx0 + dx, posy0 + dy, objectIndex1);
-                change |= this->setObjectAt(posx1 + dx, posy1 + dy, objectIndex0);
+                MapObject obj0 = this->getObjectAt(posx0 + dx, posy0 + dy);
+                MapObject obj1 = this->getObjectAt(posx1 + dx, posy1 + dy);
+                change |= this->setObjectAt(posx0 + dx, posy0 + dy, obj1);
+                change |= this->setObjectAt(posx1 + dx, posy1 + dy, obj0);
+            }
+        }
+    }
+    if (mode == -1) {
+        for (int dy = 0; dy < (mode == -1 ? TILE_HEIGHT : 1); dy++) {
+            for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
+                MapMissile mis0 = this->getMissileAt(posx0 + dx, posy0 + dy);
+                MapMissile mis1 = this->getMissileAt(posx1 + dx, posy1 + dy);
+                change |= this->setMissileAt(posx0 + dx, posy0 + dy, mis1);
+                change |= this->setMissileAt(posx1 + dx, posy1 + dy, mis0);
             }
         }
     }

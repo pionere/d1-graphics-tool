@@ -225,7 +225,7 @@ public:
     MapMonster getMonsterAt(int posx, int posy) const;
     bool setMonsterAt(int posx, int posy, const MapMonster &mapMon);
     int getObjectAt(int posx, int posy) const;
-    bool setObjectAt(int posx, int posy, int objectIndex);
+    bool setObjectAt(int posx, int posy, const MapObject &srcObj);
     int getRoomAt(int posx, int posy) const;
     bool setRoomAt(int posx, int posy, int roomIndex);
     MapMissile getMissileAt(int posx, int posy) const;
@@ -315,8 +315,9 @@ private:
     void drawLayer(QPainter &dungeon, const QImage &backImage, const DunDrawParam &params, int layer);
     void initVectors(int width, int height);
     void loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result);
-    void loadMonsterGfx(const QString &filePath, int width, int dir, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
+    void loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
     void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
+    void loadMissileGfx(const QString &filePath, int width, const QString &trnFilePath, MissileCacheEntry &result);
     void loadObject(int objectIndex);
     void loadMonster(const MapMonster &mapMon);
     void loadItem(int itemIndex);
@@ -330,7 +331,8 @@ private:
     bool changeSubtileProtectionAt(int posx, int posy, int protection);
     bool needsProtectionAt(int posx, int posy) const;
     bool hasContentAt(int posx, int posy) const;
-    static bool setMonster(MapMonster dstMon, monsterIndex, bool isUnique);
+    static bool setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique);
+    static bool setMapObject(MapObject &dstObj, int objectIndex);
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;

@@ -4566,16 +4566,29 @@ void LevelCelView::on_dungeonSubtileObjProtectionCheckBox_clicked()
     }
 }
 
+void LevelCelView::setObjectIndex(int objectIndex)
+{
+    MapObject obj = this->dun->getObjectAt(this->currentDunPosX, this->currentDunPosY);
+    obj.oType = objectIndex;
+
+    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, obj);
+
+    // update the view
+    if (change) {
+        this->displayFrame();
+    } else {
+        this->updateFields();
+    }
+}
+
 void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
 {
     int objectIndex = this->ui->dungeonObjectLineEdit->text().toUShort();
 
-    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
-    this->on_dungeonObjectLineEdit_escPressed();
-    if (change) {
-        // update the view
-        this->displayFrame();
-    }
+    // this->on_dungeonObjectLineEdit_escPressed();
+    this->ui->dungeonObjectLineEdit->clearFocus();
+
+    this->setObjectIndex(objectIndex);
 }
 
 void LevelCelView::on_dungeonObjectLineEdit_escPressed()
@@ -4592,12 +4605,7 @@ void LevelCelView::on_dungeonObjectComboBox_activated(int index)
         return;
     }
     int objectIndex = this->ui->dungeonObjectComboBox->itemData(index).value<int>();
-
-    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
-    if (change) {
-        // update the view
-        this->displayFrame();
-    }
+    this->setObjectIndex(objectIndex);
 }
 
 void LevelCelView::on_dungeonObjectAddButton_clicked()
