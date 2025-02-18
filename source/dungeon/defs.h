@@ -15,10 +15,14 @@
 #define ALIGN32
 #define ALIGN64
 #define ALIGNMENT
+#define ALIGNMENT32
+#define ALIGNMENT64
 #define ALIGN
 
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
+
+#define ASSET_MPL                1
 
 // MAXDUN = DSIZE + 2 * DBORDER
 // DSIZE = 2 * DMAX

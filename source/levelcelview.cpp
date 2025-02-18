@@ -336,7 +336,7 @@ void LevelCelView::updateEntityOptions()
     }
     //   - normal missiles
     for (int i = 0; i < lengthof(DunMissConvTbl); i++) {
-        const DunMissileStruct &mis = DunMissileStruct[i];
+        const DunMissileStruct &mis = DunMissConvTbl[i];
         if (mis.name != nullptr) {
             // filter custom entries
             unsigned n = 0;
@@ -449,7 +449,7 @@ void LevelCelView::updateFields()
             this->ui->dungeonMonsterYOffSpinBox->setRange(-limit, limit);
             this->ui->dungeonMonsterYOffSpinBox->setValue(mon.moy);
         }
-        int objectIndex = this->dun->getObjectAt(posx, posy);
+        int objectIndex = this->dun->getObjectAt(posx, posy).oType;
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         this->ui->dungeonRoomLineEdit->setText(QString::number(this->dun->getRoomAt(posx, posy)));
@@ -4602,9 +4602,9 @@ void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
 
 void LevelCelView::on_dungeonObjectLineEdit_escPressed()
 {
-    int objectIndex = this->dun->getObjectAt(this->currentDunPosX, this->currentDunPosY);
+    MapObject obj = this->dun->getObjectAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
+    this->ui->dungeonObjectLineEdit->setText(QString::number(obj.oType));
     this->ui->dungeonObjectLineEdit->clearFocus();
 }
 

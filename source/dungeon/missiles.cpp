@@ -1465,7 +1465,7 @@ static void SyncMissAnim(int mi)
 	mis->_miAnimWidth = mfd->mfAnimWidth * ASSET_MPL;
 	mis->_miAnimXOffset = mfd->mfAnimXOffset * ASSET_MPL;
 }
-
+#if 0
 static void SyncRhinoAnim(int mi)
 {
 	MissileStruct* mis;
@@ -1511,7 +1511,7 @@ static void SyncChargeAnim(int mi)
 	mis->_miAnimXOffset = (anim->paAnimWidth - TILE_WIDTH) >> 1;
 	mis->_miLightFlag = TRUE;
 }
-
+#endif
 static void SetMissAnim(int mi, int dir)
 {
 	missile[mi]._miDir = dir;
@@ -1520,7 +1520,7 @@ static void SetMissAnim(int mi, int dir)
 	missile[mi]._miAnimFrame = 1;
 	SyncMissAnim(mi);
 }
-
+#if 0
 void LoadMissileGFX(BYTE midx)
 {
 	char pszName[DATA_ARCHIVE_MAX_PATH];
@@ -1598,7 +1598,7 @@ void FreeMonMissileGFX()
 			FreeMissileGFX(i, misfiledata[i].mfAnimFAmt);
 	}
 }
-
+#endif
 void InitMissiles()
 {
 	int i;
@@ -2571,6 +2571,7 @@ int AddChain(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 
 int AddRhino(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	MissileStruct* mis;
 	// (micaster == MST_MONSTER);
 	// assert((unsigned)misource < MAXMONSTERS);
@@ -2581,6 +2582,7 @@ int AddRhino(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 	mis->_miDir = midir;
 	SyncRhinoAnim(mi);
 	//PutMissile(mi);
+#endif
 	return MIRES_DONE;
 }
 
@@ -2590,6 +2592,7 @@ int AddRhino(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
  */
 int AddCharge(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	MissileStruct* mis;
 	int pnum = misource, chv, aa;
 	// (micaster & MST_PLAYER);
@@ -2624,6 +2627,7 @@ int AddCharge(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, i
 	}
 	//mis->_miLid = mon->_mlid;
 	//PutMissile(mi);
+#endif
 	return MIRES_DONE;
 }
 
@@ -5052,7 +5056,7 @@ void ProcessMissiles()
 
 	DeleteMissiles();
 }
-
+#if 0
 void SyncMissilesAnim()
 {
 	int i, mi;
@@ -5067,5 +5071,5 @@ void SyncMissilesAnim()
 		}
 	}
 }
-
+#endif
 DEVILUTION_END_NAMESPACE

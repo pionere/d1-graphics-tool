@@ -782,6 +782,7 @@ void MakeLightTable()
 
 unsigned AddLight(int x, int y, int r)
 {
+    return NO_LIGHT;
 }
 
 void AddUnLight(unsigned lnum)

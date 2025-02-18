@@ -299,7 +299,7 @@ public:
     const std::vector<CustomObjectStruct> &getCustomObjectTypes() const;
     const std::vector<CustomMonsterStruct> &getCustomMonsterTypes() const;
     const std::vector<CustomItemStruct> &getCustomItemTypes() const;
-    const std::vector<CustomItemStruct> &getCustomMissileTypes() const;
+    const std::vector<CustomMissileStruct> &getCustomMissileTypes() const;
     void clearAssets();
 
 private:
