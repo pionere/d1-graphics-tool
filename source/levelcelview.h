@@ -187,7 +187,8 @@ private:
     void swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1);
     void swapTiles(unsigned tileIndex0, unsigned tileIndex1);
     void setMonsterType(int monsterIndex, bool monsterUnique);
-    void setMonsterOffset(const MapMonster &mon);
+    void setCurrentMonster(const MapMonster &mon);
+    void setCurrentMissile(const MapMissile &mon);
 
     void selectTilesetPath(QString path);
     void selectAssetPath(QString path);

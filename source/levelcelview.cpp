@@ -4609,13 +4609,9 @@ void LevelCelView::on_dungeonObjectAddButton_clicked()
 
 void LevelCelView::setMonsterType(int monsterIndex, bool monsterUnique)
 {
-    DunMonsterType monType = { monsterIndex, monsterUnique };
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType, mon.mox, mon.moy);
-    if (change) {
-        // update the view
-        this->displayFrame();
-    }
+    mon.moType = { monsterIndex, monsterUnique };
+    this->setCurrentMonster(mon);
 }
 
 void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
@@ -4661,9 +4657,9 @@ void LevelCelView::on_dungeonMonsterAddButton_clicked()
     this->dungeonResourceDialog.show();
 }
 
-void LevelCelView::setMonsterOffset(const MapMonster &mon)
+void LevelCelView::setCurrentMonster(const MapMonster &mon)
 {
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, mon.type, mon.mox, mon.moy);
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, mon);
     // update the view
     if (change) {
         this->displayFrame();
@@ -4704,14 +4700,14 @@ void LevelCelView::on_dungeonMonsterXOffSpinBox_valueChanged(int value)
 {
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
     mon.mox = getSpinValue(this->ui->dungeonMonsterXOffSpinBox, value, mon.mox);
-    this->setMonsterOffset(mon);
+    this->setCurrentMonster(mon);
 }
 
 void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value)
 {
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
     mon.moy = getSpinValue(this->ui->dungeonMonsterYOffSpinBox, value, mon.moy);
-    this->setMonsterOffset(mon);
+    this->setCurrentMonster(mon);
 }
 
 void LevelCelView::on_dungeonMissileComboBox_activated(int index)
@@ -4722,14 +4718,10 @@ void LevelCelView::on_dungeonMissileComboBox_activated(int index)
     int misIndex = this->ui->dungeonMissileComboBox->itemData(index).value<int>();
     MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
     mis.type = misIndex;
-    bool change = this->dun->setMissileAt(this->currentDunPosX, this->currentDunPosY, mis);
-    if (change) {
-        // update the view
-        this->displayFrame();
-    }
+    this->setCurrentMissile(mis);
 }
 
-void LevelCelView::setMissileOffset(const MapMissile &mis)
+void LevelCelView::setCurrentMissile(const MapMissile &mis)
 {
     bool change = this->dun->setMissileAt(this->currentDunPosX, this->currentDunPosY, mis);
     // update the view
@@ -4744,14 +4736,14 @@ void LevelCelView::on_dungeonMissileXOffSpinBox_valueChanged(int value)
 {
     MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
     mis.mix = getSpinValue(this->ui->dungeonMissileXOffSpinBox, value, mis.mix);
-    this->setMissileOffset(mis);
+    this->setCurrentMissile(mis);
 }
 
 void LevelCelView::on_dungeonMissileYOffSpinBox_valueChanged(int value)
 {
     MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
     mis.miy = getSpinValue(this->ui->dungeonMissileYOffSpinBox, value, mis.miy);
-    this->setMissileOffset(mis);
+    this->setCurrentMissile(mis);
 }
 
 void LevelCelView::on_dungeonMissileAddButton_clicked();

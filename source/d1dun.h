@@ -78,14 +78,22 @@ typedef struct DunMonsterType {
 } DunMonsterType;
 Q_DECLARE_METATYPE(DunMonsterType);
 
+typedef struct MapObject {
+    int oType;
+    int frameNum;
+} MapObject;
+
 typedef struct MapMonster {
-    DunMonsterType type;
+    DunMonsterType moType;
+    int moDir;
+    int frameNum;
     int mox;
     int moy;
 } MapMonster;
 
 typedef struct MapMissile {
-    int type;
+    int miType;
+    int miDir;
     int frameNum;
     int mix;
     int miy;
@@ -110,7 +118,6 @@ typedef struct DunMonsterStruct {
 typedef struct CustomMonsterStruct {
     DunMonsterType type;
     int width;
-    int animGroup;
     QString path;
     QString baseTrnPath;
     QString uniqueTrnPath;
@@ -131,7 +138,6 @@ typedef struct DunMissileStruct {
 typedef struct CustomMissileStruct {
     int type;
     int width;
-    int animGroup;
     QString path;
     QString trnPath;
     QString name;
@@ -146,7 +152,6 @@ typedef struct ObjectCacheEntry {
 typedef struct MonsterCacheEntry {
     DunMonsterType monType;
     D1Gfx *monGfx;
-    int monDir;
     D1Pal *monPal;
     D1Trn *monBaseTrn;
     D1Trn *monUniqueTrn;
@@ -159,10 +164,16 @@ typedef struct ItemCacheEntry {
 
 typedef struct MissileCacheEntry {
     int misIndex;
-    D1Gfx *misGfx;
-    int misDir;
+    D1Gfx *misGfx[16];
     D1Pal *misPal;
     D1Trn *misTrn;
+} MissileCacheEntry;
+
+typedef struct MissileDataEntry {
+    D1Gfx *midGfx[16];
+    QString midPath;
+    unsigned numgfxs;
+    unsigned numrefs;
 } MissileCacheEntry;
 
 class DunDrawParam {
@@ -212,13 +223,13 @@ public:
     int getItemAt(int posx, int posy) const;
     bool setItemAt(int posx, int posy, int itemIndex);
     MapMonster getMonsterAt(int posx, int posy) const;
-    bool setMonsterAt(int posx, int posy, const DunMonsterType monType, int xoff, int yoff);
+    bool setMonsterAt(int posx, int posy, const MapMonster &mapMon);
     int getObjectAt(int posx, int posy) const;
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;
     bool setRoomAt(int posx, int posy, int roomIndex);
     MapMissile getMissileAt(int posx, int posy) const;
-    bool setMissileAt(int posx, int posy, const MapMissile &misType);
+    bool setMissileAt(int posx, int posy, const MapMissile &mapMis);
     Qt::CheckState getTileProtectionAt(int posx, int posy) const;
     bool setTileProtectionAt(int posx, int posy, Qt::CheckState protection);
     bool getSubtileObjProtectionAt(int posx, int posy) const;
@@ -307,7 +318,7 @@ private:
     void loadMonsterGfx(const QString &filePath, int width, int dir, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
     void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
     void loadObject(int objectIndex);
-    void loadMonster(const DunMonsterType &monType);
+    void loadMonster(const MapMonster &mapMon);
     void loadItem(int itemIndex);
     void loadMissile(int itemIndex);
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
@@ -319,6 +330,7 @@ private:
     bool changeSubtileProtectionAt(int posx, int posy, int protection);
     bool needsProtectionAt(int posx, int posy) const;
     bool hasContentAt(int posx, int posy) const;
+    static bool setMonster(MapMonster dstMon, monsterIndex, bool isUnique);
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;
@@ -339,7 +351,7 @@ private:
     std::vector<std::vector<int>> subtileProtections;
     std::vector<std::vector<int>> items;
     std::vector<std::vector<MapMonster>> monsters;
-    std::vector<std::vector<int>> objects;
+    std::vector<std::vector<MapObject>> objects;
     std::vector<std::vector<int>> rooms;
     std::vector<std::vector<MapMissile>> missiles;
 
@@ -357,7 +369,7 @@ private:
     std::vector<std::pair<D1Gfx *, unsigned>> objDataCache;
     std::vector<std::pair<D1Gfx *, unsigned>> monDataCache;
     std::vector<std::pair<D1Gfx *, unsigned>> itemDataCache;
-    std::vector<std::pair<D1Gfx *, unsigned>> missileDataCache;
+    std::vector<MissileDataEntry> missileDataCache;
 };
 
 extern const DunObjectStruct DunObjConvTbl[128];

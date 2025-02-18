@@ -352,63 +352,63 @@ const DunMissileStruct DunMissConvTbl[96] = {
                { "Flash" }, // MIS_FLASH
                { nullptr }, // MIS_FLASH2
                { "Chain lightning" }, // MIS_CHAIN
-////           { "Necro Explosion" }, // MIS_BLODSTAR
-////           { "Necro Explosion" }, // MIS_BONE
-////           { "Necro Explosion" }, // MIS_METLHIT
+////           { nullptr }, // MIS_BLODSTAR
+////           { nullptr }, // MIS_BONE
+////           { nullptr }, // MIS_METLHIT
                { nullptr }, // MIS_RHINO
                { nullptr }, // MIS_CHARGE
                { nullptr }, // MIS_TELEPORT
                { nullptr }, // MIS_RNDTELEPORT
-////           { "Necro Explosion" }, // MIS_FARROW
-////           { "Necro Explosion" }, // MIS_DOOMSERP
+////           { nullptr }, // MIS_FARROW
+////           { nullptr }, // MIS_DOOMSERP
                { nullptr }, // MIS_STONE
                { "Shroud" }, // MIS_SHROUD
-////           { "Necro Explosion" }, // MIS_INVISIBL
+////           { nullptr }, // MIS_INVISIBL
                { "Guardian" }, // MIS_GUARDIAN
                { nullptr }, // MIS_GOLEM
-////           { "Necro Explosion" }, // MIS_ETHEREALIZE
+////           { nullptr }, // MIS_ETHEREALIZE
                { "Bleed" }, // MIS_BLEED
-////           { "Necro Explosion" }, // MIS_EXAPOCA
+////           { nullptr }, // MIS_EXAPOCA
                { "Firewall" }, // MIS_FIREWALLC
                { nullptr }, // MIS_FIREWALL
                { "Firewave" }, // MIS_FIREWAVEC
                { nullptr }, // MIS_FIREWAVE
                { "Meteor" }, // MIS_METEOR
                { "Nova" }, // MIS_LIGHTNOVAC
-////           { "Necro Explosion" }, // MIS_APOCAC
+////           { nullptr }, // MIS_APOCAC
                { nullptr }, // MIS_HEAL
                { nullptr }, // MIS_HEALOTHER
                { "Resurrect" }, // MIS_RESURRECT
                { "Attract" }, // MIS_ATTRACT
                { nullptr }, // MIS_TELEKINESIS
-////           { "Necro Explosion" }, // MIS_LARROW
+////           { nullptr }, // MIS_LARROW
                { nullptr }, // MIS_OPITEM
                { nullptr }, // MIS_REPAIR
                { nullptr }, // MIS_DISARM
                { "Inferno" }, // MIS_INFERNOC
                { nullptr }, // MIS_INFERNO
-////           { "Necro Explosion" }, // MIS_FIRETRAP
+////           { nullptr }, // MIS_FIRETRAP
                { "Barrel Explosion" }, // MIS_BARRELEX
-////           { "Necro Explosion" }, // MIS_FIREMAN
-////           { "Necro Explosion" }, // MIS_KRULL
+////           { nullptr }, // MIS_FIREMAN
+////           { nullptr }, // MIS_KRULL
                { "Charged bolt" }, // MIS_CBOLTC
                { nullptr }, // MIS_CBOLT
                { "Elemental" }, // MIS_ELEMENTAL
-////           { "Necro Explosion" }, // MIS_BONESPIRIT
+////           { nullptr }, // MIS_BONESPIRIT
                { "Apocalypse" }, // MIS_APOCAC2
                { "Apocalypse Explosion" }, // MIS_EXAPOCA2
                { nullptr }, // MIS_MANASHIELD
                { nullptr }, // MIS_INFRA
                { nullptr }, // MIS_RAGE
 
-////           { "Necro Explosion" }, // MIS_LIGHTWALLC
-////           { "Necro Explosion" }, // MIS_LIGHTWALL
-////           { "Necro Explosion" }, // MIS_FIRENOVAC
-////           { "Necro Explosion" }, // MIS_FIREBALL2
-////           { "Necro Explosion" }, // MIS_REFLECT
+////           { nullptr }, // MIS_LIGHTWALLC
+////           { nullptr }, // MIS_LIGHTWALL
+////           { nullptr }, // MIS_FIRENOVAC
+////           { nullptr }, // MIS_FIREBALL2
+////           { nullptr }, // MIS_REFLECT
                { "Fire Ring" }, // MIS_FIRERING
-////           { "Necro Explosion" }, // MIS_MANATRAP
-////           { "Necro Explosion" }, // MIS_LIGHTRING
+////           { nullptr }, // MIS_MANATRAP
+////           { nullptr }, // MIS_LIGHTRING
                { "Rune" }, // MIS_RUNEFIRE
                { nullptr }, // MIS_RUNELIGHT
                { nullptr }, // MIS_RUNENOVA
@@ -583,7 +583,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                     for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
                         in >> readWord;
-                        this->objects[y][x] = readWord;
+                        this->objects[y][x] = { readWord, 0 };
                     }
                 }
                 numLayers++;
@@ -766,10 +766,10 @@ bool D1Dun::save(const SaveAsParam &params)
             if (this->subtileProtections[y][x] != 0) {
                 layers |= 1 << 0;
             }
-            if (this->monsters[y][x].type.monIndex != 0) {
+            if (this->monsters[y][x].moType.monIndex != 0 || this->monsters[y][x].moType.monUnique) {
                 layers |= 1 << 1;
             }
-            if (this->objects[y][x] != 0) {
+            if (this->objects[y][x].oType != 0) {
                 layers |= 1 << 2;
             }
         }
@@ -965,7 +965,7 @@ bool D1Dun::save(const SaveAsParam &params)
         if (numLayers >= 2) {
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    writeWord = this->monsters[y][x].type.monIndex | (this->monsters[y][x].type.monUnique ? 1 << 15 : 0);
+                    writeWord = this->monsters[y][x].moType.monIndex | (this->monsters[y][x].moType.monUnique ? 1 << 15 : 0);
                     out << writeWord;
                 }
             }
@@ -975,7 +975,7 @@ bool D1Dun::save(const SaveAsParam &params)
         if (numLayers >= 3) {
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    writeWord = this->objects[y][x];
+                    writeWord = this->objects[y][x].oType;
                     out << writeWord;
                 }
             }
@@ -1071,20 +1071,24 @@ void D1Dun::compareTo(const LoadFileContent *fileContent) const
             }
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    if (this->objects[y][x] != dunB->objects[y][x]) {
+                    if (this->objects[y][x].oType != dunB->objects[y][x].oType) {
                         reportDiff(QApplication::tr("object %1:%2 is %3 (was %4)").arg(x).arg(y)
-                            .arg(this->objects[y][x] == 0 ? "-" : this->getObjectName(this->objects[y][x]))
-                            .arg(dunB->objects[y][x] == 0 ? "-" : this->getObjectName(dunB->objects[y][x])), header);
+                            .arg(this->objects[y][x].oType == 0 ? "-" : this->getObjectName(this->objects[y][x].oType))
+                            .arg(dunB->objects[y][x].oType == 0 ? "-" : this->getObjectName(dunB->objects[y][x].oType)), header);
                     }
 
                 }
             }
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    if (this->monsters[y][x].type != dunB->monsters[y][x].type) {
+                    const DunMonsterType &aMonster = this->monsters[y][x].moType;
+                    const DunMonsterType &bMonster = dunB->monsters[y][x].moType;
+                    if (this->monsters[y][x].moType != dunB->monsters[y][x].moType) {
+                        QString aMonsterName = (aMonster.monIndex || aMonster.monUnique) ? this->getMonsterName(aMonster) : QString("-");
+                        QString bMonsterName = (bMonster.monIndex || bMonster.monUnique) ? this->getMonsterName(bMonster) : QString("-");
                         reportDiff(QApplication::tr("monster %1:%2 is %3 (was %4)").arg(x).arg(y)
-                            .arg(this->monsters[y][x].type.monIndex == 0 ? "-" : this->getMonsterName(this->monsters[y][x].type))
-                            .arg(dunB->monsters[y][x].type.monIndex == 0 ? "-" : this->getMonsterName(dunB->monsters[y][x].type)), header);
+                            .arg(aMonsterName)
+                            .arg(bMonsterName), header);
                     }
 
                 }
@@ -1147,48 +1151,51 @@ void D1Dun::DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
     }
 }
 
-QImage D1Dun::getObjectImage(int objectIndex, unsigned time)
+QImage D1Dun::getObjectImage(const MapObject &mapObj)
 {
     const ObjectCacheEntry *objEntry = nullptr;
     for (const auto &obj : this->objectCache) {
-        if (obj.objectIndex == objectIndex) {
+        if (obj.objectIndex == mapObj.oType) {
             objEntry = &obj;
             break;
         }
     }
     if (objEntry == nullptr) {
-        this->loadObject(objectIndex);
+        this->loadObject(mapObj.oType);
         objEntry = &this->objectCache.back();
     }
     if (objEntry->objGfx != nullptr) {
-        int frameNum = objEntry->frameNum;
-        if (frameNum == 0) {
-            frameNum = 1 + (time % objEntry->objGfx->getFrameCount());
-        } else if (objEntry->objGfx->getFrameCount() < frameNum) {
-            frameNum = 1;
+        const int frameCount = objEntry->objGfx->getFrameCount();
+        if (frameCount != 0) {
+            int frameNum = mapObj.frameNum;
+            if (frameNum == 0)
+                frameNum = objEntry->frameNum;
+            if (frameNum == 0 || frameCount < frameNum) {
+                frameNum = 1;
+            }
+            return objEntry->objGfx->getFrameImage(frameNum - 1);
         }
-        return objEntry->objGfx->getFrameImage(frameNum - 1);
-    } else {
-        return QImage();
     }
+    return QImage();
 }
 
-QImage D1Dun::getMonsterImage(DunMonsterType monType, unsigned time)
+QImage D1Dun::getMonsterImage(const MapMonster &mapMon)
 {
     const MonsterCacheEntry *monEntry = nullptr;
     for (const auto &mon : this->monsterCache) {
-        if (mon.monType == monType) {
+        if (mon.monType == mapMon.moType) {
             monEntry = &mon;
             break;
         }
     }
     if (monEntry == nullptr) {
-        this->loadMonster(monType);
+        this->loadMonster(mapMon);
         monEntry = &this->monsterCache.back();
     }
-    if (monEntry->monGfx != nullptr) {
-        std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(monEntry->monDir);
-        int frameIdx = frameIndices.first + (time % (frameIndices.second - frameIndices.first + 1));
+    if (monEntry->monGfx != nullptr && monEntry->monGfx->getGroupCount() > mapMon.moDir) {
+        const std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(mapMon.moDir);
+        // int frameIdx = frameIndices.first + (time % (frameIndices.second - frameIndices.first + 1));
+        int frameIdx = frameIndices.first + ((unsigned)mapMon.frameNum % (unsigned)(frameIndices.second - frameIndices.first + 1));
         monEntry->monGfx->setPalette(monEntry->monPal);
         return monEntry->monGfx->getFrameImage(frameIdx);
     } else {
@@ -1217,30 +1224,33 @@ QImage D1Dun::getItemImage(int itemIndex)
     }
 }
 
-QImage D1Dun::getMissileImage(const MapMissile &mapmis, unsigned time)
+QImage D1Dun::getMissileImage(const MapMissile &mapMis)
 {
     const MissileCacheEntry *misEntry = nullptr;
     for (const auto &mis : this->missileCache) {
-        if (mis.misIndex == mapmis.type) {
+        if (mis.misIndex == mapMis.miType) {
             misEntry = &mis;
             break;
         }
     }
     if (misEntry == nullptr) {
-        this->loadMissile(mapmis.type);
+        this->loadMissile(mapMis.miType);
         misEntry = &this->missileCache.back();
     }
-    if (misEntry->misGfx != nullptr) {
-        int frameNum = mapmis.frameNum;
-        if (frameNum == 0) {
-            frameNum = 1 + (time % misEntry->misGfx->getFrameCount());
-        } else if (misEntry->misGfx->getFrameCount() < frameNum) {
-            frameNum = 1;
+    if ((unsigned)mapMis.miDir < lengthof(misEntry->misGfx)) {
+        D1Gfx *gfx = misEntry->misGfx[mapMis.miDir];
+        if (gfx != nullptr) {
+            const int frameCount = gfx->getFrameCount();
+            if (frameCount != 0) {
+                int frameNum = mapMis.frameNum;
+                if (frameNum == 0 || frameCount < frameNum) {
+                    frameNum = 1;
+                }
+                return gfx->getFrameImage(frameNum - 1);
+            }
         }
-        return misEntry->misGfx->getFrameImage(frameNum - 1);
-    } else {
-        return QImage();
     }
+    return QImage();
 }
 
 typedef enum _draw_mask {
@@ -1445,9 +1455,9 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
     }
     if (params.showObjects) {
         // draw the object
-        int objectIndex = this->objects[dunCursorY][dunCursorX];
-        if (objectIndex != 0) {
-            QImage objectImage = this->getObjectImage(objectIndex, params.time);
+        const MapObject &obj = this->objects[dunCursorY][dunCursorX];
+        if (obj.oType != 0) {
+            QImage objectImage = this->getObjectImage(obj);
             if (!objectImage.isNull()) {
                 dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
@@ -1479,14 +1489,14 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
     if (params.showMonsters) {
         // draw the monster
         const MapMonster &mon = this->monsters[dunCursorY][dunCursorX];
-        if (mon.type.monIndex != 0) {
-            QImage monImage = this->getMonsterImage(mon.type, params.time);
+        if (mon.moType.monIndex != 0 || mon.moType.monUnique) {
+            QImage monImage = this->getMonsterImage(mon);
             if (!monImage.isNull()) {
                 int xo = mon.mox;
                 int yo = mon.moy;
                 dungeon.drawImage(drawCursorX + ((int)backWidth - monImage.width()) / 2 + xo, drawCursorY - monImage.height() + yo, monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
-                QString text = this->getMonsterName(mon.type);
+                QString text = this->getMonsterName(mon.moType);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
@@ -1496,14 +1506,14 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
     if (params.showMissiles) {
         // draw the missile
         const MapMissile &mis = this->missiles[dunCursorY][dunCursorX];
-        if (mis.type != 0) {
+        if (mis.miType != 0) {
             QImage misImage = this->getMissileImage(mis, params.time);
             if (!misImage.isNull()) {
                 int xo = mis.mix;
                 int yo = mis.miy;
                 dungeon.drawImage(drawCursorX + ((int)backWidth - misImage.width()) / 2 + xo, drawCursorY - misImage.height() + yo, misImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
-                QString text = this->getMissileName(mis.type);
+                QString text = this->getMissileName(mis.miType);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
@@ -1962,10 +1972,10 @@ bool D1Dun::hasContentAt(int x, int y) const
     hasContent |= this->items[y][x] != 0;
     hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
     hasContent |= this->subtileProtections[y][x] != 0;
-    hasContent |= this->monsters[y][x].type.monIndex != 0;
-    hasContent |= this->objects[y][x] != 0;
+    hasContent |= this->monsters[y][x].moType.monIndex != 0 || this->monsters[y][x].moType.monUnique;
+    hasContent |= this->objects[y][x].oType != 0;
     hasContent |= this->rooms[y][x] != 0;
-    hasContent |= this->missiles[y][x] != 0;
+    hasContent |= this->missiles[y][x].miType != 0;
     return hasContent;
 }
 
@@ -2025,7 +2035,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<MapMonster> &monsRow : this->monsters) {
         monsRow.resize(newWidth);
     }
-    for (std::vector<int> &objsRow : this->objects) {
+    for (std::vector<MapObject> &objsRow : this->objects) {
         objsRow.resize(newWidth);
     }
     for (std::vector<MapMissile> &roomsRow : this->rooms) {
@@ -2185,29 +2195,27 @@ MapMonster D1Dun::getMonsterAt(int posx, int posy) const
     return this->monsters[posy][posx];
 }
 
-bool D1Dun::setMonsterAt(int posx, int posy, const DunMonsterType monType, int xoff, int yoff)
+bool D1Dun::setMonsterAt(int posx, int posy, const MapMonster &srcMon)
 {
-    if (this->monsters[posy][posx].type == monType && this->monsters[posy][posx].mox == xoff && this->monsters[posy][posx].moy == yoff) {
+    if (this->monsters[posy][posx] == srcMon) {
         return false;
     }
-    this->monsters[posy][posx].type = monType;
-    this->monsters[posy][posx].mox = xoff;
-    this->monsters[posy][posx].moy = yoff;
+    this->monsters[posy][posx] = srcMon;
     this->modified = true;
     return true;
 }
 
-int D1Dun::getObjectAt(int posx, int posy) const
+MapObject D1Dun::getObjectAt(int posx, int posy) const
 {
     return this->objects[posy][posx];
 }
 
-bool D1Dun::setObjectAt(int posx, int posy, int objectIndex)
+bool D1Dun::setObjectAt(int posx, int posy, MapObject srcObj)
 {
-    if (this->objects[posy][posx] == objectIndex) {
+    if (this->objects[posy][posx] == srcObj) {
         return false;
     }
-    this->objects[posy][posx] = objectIndex;
+    this->objects[posy][posx] = srcObj;
     this->modified = true;
     return true;
 }
@@ -2229,12 +2237,12 @@ bool D1Dun::setRoomAt(int posx, int posy, int roomIndex)
 
 MapMissile D1Dun::getMissileAt(int posx, int posy) const
 {
-    return this->rooms[posy][posx];
+    return this->missiles[posy][posx];
 }
 
 bool D1Dun::setMissileAt(int posx, int posy, const MapMissile &mis)
 {
-    if (this->missiles[posy][posx].type == mis.type && this->missiles[posy][posx].mix == mis.mix && this->missiles[posy][posx].miy == mis.miy) {
+    if (this->missiles[posy][posx].miType == mis) {
         return false;
     }
     this->missiles[posy][posx] = mis;
@@ -2531,8 +2539,8 @@ bool D1Dun::swapPositions(int mode, int posx0, int posy0, int posx1, int posy1)
             for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
                 MapMonster mon0 = this->getMonsterAt(posx0 + dx, posy0 + dy);
                 MapMonster mon1 = this->getMonsterAt(posx1 + dx, posy1 + dy);
-                change |= this->setMonsterAt(posx0 + dx, posy0 + dy, mon1.type, mon1.mox, mon1.moy);
-                change |= this->setMonsterAt(posx1 + dx, posy1 + dy, mon0.type, mon0.mox, mon0.moy);
+                change |= this->setMonsterAt(posx0 + dx, posy0 + dy, mon1);
+                change |= this->setMonsterAt(posx1 + dx, posy1 + dy, mon0);
             }
         }
     }
@@ -2685,7 +2693,7 @@ QString D1Dun::getMissileName(int misIndex) const
 {
     // check if it is a custom monster
     for (const CustomMissileStruct &customMissile : customMissileTypes) {
-        if (customMissile.type == monType) {
+        if (customMissile.type == misIndex) {
             return customMissile.name;
         }
     }
@@ -2751,7 +2759,7 @@ void D1Dun::loadObject(int objectIndex)
     this->objectCache.push_back(result);
 }
 
-void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
+void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
 {
     // check for existing entry
     unsigned i = 0;
@@ -2779,7 +2787,6 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QS
             return;
         }
     }
-    result.monDir = dir;
     if (!uniqueTrnFilePath.isEmpty()) {
         D1Trn *trn = new D1Trn();
         if (trn->load(uniqueTrnFilePath, result.monPal)) {
@@ -2820,23 +2827,23 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QS
     }
 }
 
-void D1Dun::loadMonster(const DunMonsterType &monType)
+void D1Dun::loadMonster(const MapMonster &mapMon)
 {
-    MonsterCacheEntry result = { monType, nullptr, 0, this->pal, nullptr, nullptr };
+    MonsterCacheEntry result = { mapMon.moType, nullptr, this->pal, nullptr, nullptr };
     // load a custom monster
     unsigned i = 0;
     for (; i < this->customMonsterTypes.size(); i++) {
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
-        if (customMonster.type == monType) {
+        if (customMonster.type == mapMon.moType) {
             QString cl2FilePath = customMonster.path;
-            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.animGroup, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
+            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
             break;
         }
     }
     if (i >= this->customMonsterTypes.size() && !this->assetPath.isEmpty()) {
         // load normal monster
-        unsigned monBaseType = monType.monIndex;
-        if (!monType.monUnique && monBaseType < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monBaseType] != 0) {
+        unsigned monBaseType = mapMon.moType.monIndex;
+        if (!mapMon.moType.monUnique && monBaseType < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monBaseType] != 0) {
             const MonsterData &md = monsterdata[MonstConvTbl[monBaseType]];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "N");
@@ -2846,11 +2853,11 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
                 baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
             }
             QString uniqueTrnFilePath;
-            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, 0, baseTrnFilePath, uniqueTrnFilePath, result);
+            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
         }
         // load unique monster
-        unsigned monUniqueType = monType.monIndex - 1;
-        if (monType.monUnique && monUniqueType < (unsigned)lengthof(uniqMonData) && uniqMonData[monUniqueType].mtype != MT_INVALID) {
+        unsigned monUniqueType = mapMon.moType.monIndex - 1;
+        if (mapMon.moType.monUnique && monUniqueType < (unsigned)lengthof(uniqMonData) && uniqMonData[monUniqueType].mtype != MT_INVALID) {
             const MonsterData &md = monsterdata[uniqMonData[monUniqueType].mtype];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "N");
@@ -2863,7 +2870,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             if (uniqMonData[monUniqueType].mTrnName != nullptr) {
                 uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monUniqueType].mTrnName + ".TRN";
             }
-            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, 0, baseTrnFilePath, uniqueTrnFilePath, result);
+            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
         }
     }
     this->monsterCache.push_back(result);
@@ -2894,37 +2901,63 @@ void D1Dun::loadItemGfx(const QString &filePath, int width, ItemCacheEntry &resu
     }
 }
 
-void D1Dun::loadMissileGfx(const QString &filePath, int width, MissileCacheEntry &result)
+void D1Dun::loadMissileGfx(const QString &filePath, int width, const QString &trnFilePath, MissileCacheEntry &result)
 {
     // check for existing entry
     unsigned i = 0;
     for (; i < this->missileDataCache.size(); i++) {
         auto &dataEntry = this->missileDataCache[i];
-        if (dataEntry.first->getFilePath() == filePath) {
-            result.misGfx = dataEntry.first;
-            dataEntry.second++;
+        if (dataEntry.midPath == filePath) {
+            dataEntry.numrefs++;
+            memcpy(&result.misGfx[0], &dataEntry.midGfx[0], sizeof(dataEntry.midGfx));
             break;
         }
     }
     if (i >= this->missileDataCache.size()) {
-        // create new entry
-        result.misGfx = new D1Gfx();
-        // result.misGfx->setPalette(this->pal);
         OpenAsParam params = OpenAsParam();
         params.celWidth = width;
-        D1Cl2::load(*result.misGfx, filePath, params);
-        if (result.misGfx->getFrameCount() != 0) {
-            this->missileDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.misGfx, 1));
+        MissileDataEntry mde;
+        mde.numrefs = 1;
+        mde.midPath = filePath;
+        memset(&mde.midGfx[0], 0, sizeof(mde.midGfx));
+        if (filePath.toLower().endsWith(".cl2")) {
+            // create new entry
+            D1Gfx *gfx = new D1Gfx();
+            // gfx->setPalette(this->pal);
+            D1Cl2::load(*gfx, filePath, params);
+            if (gfx->getFrameCount() != 0) {
+                mde.midGfx[0] = gfx;
+                mde.numgfxs = 1;
+            } else {
+                // TODO: suppress errors?
+                delete gfx;
+                return;
+            }
         } else {
-            // TODO: suppress errors? MemFree?
-            delete result.misGfx;
-            result.misGfx = nullptr;
-            return;
+            for (i = 0; i < lengthof(mde.midGfx); i++) {
+                // create new entry
+                D1Gfx *gfx = new D1Gfx();
+                // gfx->setPalette(this->pal);
+                QString fp = QString("%1%2.CL2").arg(filePath).arg(i + 1);
+                D1Cl2::load(*gfx, fp, params);
+                if (gfx->getFrameCount() != 0) {
+                    mde.midGfx[i] = gfx;
+                    mde.numgfxs++;
+                } else {
+                    // TODO: suppress errors?
+                    delete gfx;
+                    break;
+                }
+            }
+            if (i == 0)
+                return;
         }
+        memcpy(&result.misGfx[0], &mde.midGfx[0], sizeof(mde.midGfx));
+        this->missileDataCache.push_back(mde);
     }
-    if (!baseTrnFilePath.isEmpty()) {
+    if (!trnFilePath.isEmpty()) {
         D1Trn *trn = new D1Trn();
-        if (trn->load(baseTrnFilePath, result.misPal)) {
+        if (trn->load(trnFilePath, result.misPal)) {
             // set palette
             result.misPal = trn->getResultingPalette();
         } else {
@@ -2951,25 +2984,14 @@ void D1Dun::loadItem(int itemIndex)
 
 void D1Dun::loadMissile(int misIndex)
 {
-
-    for (const CustomMissileStruct &customMissile : this->customMissileTypes) {
-        if (customMissile.type == itemIndex) {
-            QString celFilePath = customMissile.path;
-            this->loadMissileGfx(celFilePath, customMissile.width, result);
-            break;
-        }
-    }
-    this->missileCache.push_back(result);
-
-
     MissileCacheEntry result = { misIndex, nullptr, 0, this->pal, nullptr };
     // load a custom monster
     unsigned i = 0;
     for (; i < this->customMissileTypes.size(); i++) {
         const CustomMonsterStruct &customMissile = this->customMissileTypes[i];
-        if (customMissile.type == monType) {
+        if (customMissile.type == misIndex) {
             QString cl2FilePath = customMissile.path;
-            this->loadMissileGfx(cl2FilePath, customMissile.width, customMissile.animGroup, customMissile.trnPath, result);
+            this->loadMissileGfx(cl2FilePath, customMissile.width, customMissile.trnPath, result);
             break;
         }
     }
@@ -2978,12 +3000,14 @@ void D1Dun::loadMissile(int misIndex)
         if ((unsigned)misIndex < (unsigned)lengthof(DunMissConvTbl)) {
             const MissileData &md = missiledata[misIndex];
             QString cl2FilePath = misfiledata[md.mFileNum].mfName;
-            cl2FilePath = this->assetPath + "/Missiles/" + cl2FilePath + ".CL2";
+            cl2FilePath = this->assetPath + "/Missiles/" + cl2FilePath;
+            if (misfiledata[md.mFileNum].mfAnimFAmt == 1)
+                cl2FilePath += ".CL2"
             QString trnFilePath;
             if (md.mfAnimTrans != nullptr) {
                 trnFilePath = this->assetPath + "/" + md.mfAnimTrans;
             }
-            this->loadMissileGfx(cl2FilePath, misfiledata[md.mFileNum].mfAnimWidth, 0, trnFilePath, result);
+            this->loadMissileGfx(cl2FilePath, misfiledata[md.mFileNum].mfAnimWidth, trnFilePath, result);
         }
     }
     this->missileCache.push_back(result);
@@ -3003,6 +3027,9 @@ void D1Dun::clearAssets()
     }
     this->monsterCache.clear();
     this->itemCache.clear();
+    for (auto &entry : this->missileCache) {
+        delete entry.misTrn;
+    }
     for (auto &dataEntry : this->objDataCache) {
         delete dataEntry.first;
     }
@@ -3016,8 +3043,8 @@ void D1Dun::clearAssets()
     }
     this->itemDataCache.clear();
     for (auto &dataEntry : this->missileDataCache) {
-        delete dataEntry.misTrn;
-        delete dataEntry.first;
+        for (int i = 0; i < lengthof(dataEntry.midGfx); i++)
+            delete dataEntry.midGfx[i];
     }
     this->missileDataCache.clear();
 }
@@ -3065,10 +3092,10 @@ std::pair<int, int> D1Dun::collectSpace() const
             quint8 solFlags = this->sla->getSubProperties(subtileRef - 1);
             if (solFlags & (1 << 0))
                 continue; // subtile is non-passable
-            if ((this->subtileProtections[posy][posx] & 1) == 0 && this->monsters[posy][posx].type.monIndex == 0) {
+            if ((this->subtileProtections[posy][posx] & 1) == 0 && (this->monsters[posy][posx].moType.monIndex == 0 && !this->monsters[posy][posx].moType.monUnique)) {
                 spaceMonster++;
             }
-            if ((this->subtileProtections[posy][posx] & 2) == 0 && this->monsters[posy][posx].type.monIndex == 0 && this->objects[posy][posx] == 0) {
+            if ((this->subtileProtections[posy][posx] & 2) == 0 && (this->monsters[posy][posx].moType.monIndex == 0 && !this->monsters[posy][posx].moType.monUnique) && this->objects[posy][posx].oType == 0) {
                 spaceObject++;
             }
         }
@@ -3100,19 +3127,18 @@ void D1Dun::collectMonsters(std::vector<std::pair<DunMonsterType, int>> &foundMo
 {
     for (const std::vector<MapMonster> &monstersRow : this->monsters) {
         for (const MapMonster &mon : monstersRow) {
-            const DunMonsterType &monType = mon.type;
-            int monsterIndex = monType.monIndex;
-            if (monsterIndex == 0) {
+            const DunMonsterType &monType = mon.moType;
+            if (monType.monIndex == 0 && !monType.monUnique)
                 continue;
-            }
+            bool added = false;
             for (std::pair<DunMonsterType, int> &monsterEntry : foundMonsters) {
                 if (monsterEntry.first == monType) {
                     monsterEntry.second++;
-                    monsterIndex = 0;
+                    added = true;
                     break;
                 }
             }
-            if (monsterIndex != 0) {
+            if (!added) {
                 foundMonsters.push_back(std::pair<DunMonsterType, int>(monType, 1));
             }
         }
@@ -3121,19 +3147,20 @@ void D1Dun::collectMonsters(std::vector<std::pair<DunMonsterType, int>> &foundMo
 
 void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects) const
 {
-    for (const std::vector<int> &objectsRow : this->objects) {
-        for (int objectIndex : objectsRow) {
-            if (objectIndex == 0) {
+    for (const std::vector<MapObject> &objectsRow : this->objects) {
+        for (const MapObject obj : objectsRow) {
+            if (obj.oType == 0) {
                 continue;
             }
+            bool added = false;
             for (std::pair<int, int> &objectEntry : foundObjects) {
-                if (objectEntry.first == objectIndex) {
+                if (objectEntry.first == obj.oType) {
                     objectEntry.second++;
-                    objectIndex = 0;
+                    added = true;
                 }
             }
-            if (objectIndex != 0) {
-                foundObjects.push_back(std::pair<int, int>(objectIndex, 1));
+            if (!added) {
+                foundObjects.push_back(std::pair<int, int>(obj.oType, 1));
             }
         }
     }
@@ -3202,7 +3229,7 @@ void D1Dun::checkProtections() const
         for (int x = 0; x < this->width; x++) {
             bool protection = (this->subtileProtections[y][x] & 1) != 0 && this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
             if (!protection) {
-                if (this->objects[y][x] != 0) {
+                if (this->objects[y][x].oType != 0) {
                     dProgressWarn() << tr("Subtile with an object is not protected at %1:%2.").arg(x).arg(y);
                     result = true;
                 }
@@ -3272,10 +3299,10 @@ void D1Dun::checkMonsters() const
     dProgress() << progress;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            const DunMonsterType &monType = this->monsters[y][x].type;
+            const DunMonsterType &monType = this->monsters[y][x].moType;
             if (monType.monIndex == 0) {
                 if (monType.monUnique) {
-                    dProgressWarn() << tr("An unique monster is indicated at %1:%2, but its index is not set.").arg(x).arg(y);
+                    dProgressWarn() << tr("An unique monster is indicated at %1:%2, but its index is zero which is not supported by the game (Diablo 1/DevilutionX).").arg(x).arg(y);
                     result = true;
                 }
                 continue;
@@ -3316,7 +3343,7 @@ void D1Dun::checkObjects() const
     dProgress() << progress;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            int objectIndex = this->objects[y][x];
+            int objectIndex = this->objects[y][x].oType;
             if (objectIndex == 0) {
                 continue;
             }
@@ -3329,7 +3356,7 @@ void D1Dun::checkObjects() const
                 dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(objectName).arg(x).arg(y);
                 result = true;
             }
-            if (this->monsters[y][x].type.monIndex != 0) {
+            if (this->monsters[y][x].moType.monIndex != 0 || this->monsters[y][x].moType.monUnique) {
                 dProgressErr() << tr("'%1' at %2:%3 is sharing a subtile with a monster.").arg(objectName).arg(x).arg(y);
                 result = true;
             }
@@ -3402,32 +3429,22 @@ bool D1Dun::removeMonsters()
     bool result = false;
     for (std::vector<MapMonster> &monstersRow : this->monsters) {
         for (MapMonster &mon : monstersRow) {
-            DunMonsterType &monType = mon.type;
-            if (monType.monIndex != 0 || monType.monUnique) {
-                monType.monIndex = 0;
-                monType.monUnique = false;
-                result = true;
-                this->modified = true;
-            }
-            mon.mox = 0;
-            mon.moy = 0;
+            result |= D1Dun::setMapMonster(mon, 0, false);
         }
     }
+    this->modified |= result;
     return result;
 }
 
 bool D1Dun::removeObjects()
 {
     bool result = false;
-    for (std::vector<int> &objectsRow : this->objects) {
-        for (int &objectIndex : objectsRow) {
-            if (objectIndex != 0) {
-                objectIndex = 0;
-                result = true;
-                this->modified = true;
-            }
+    for (std::vector<MapObject> &objectsRow : this->objects) {
+        for (MapObject &obj : objectsRow) {
+            result |= D1Dun::setMapObject(obj, 0);
         }
     }
+    this->modified |= result;
     return result;
 }
 
@@ -3526,17 +3543,14 @@ void D1Dun::loadMonsters(const D1Dun *srcDun)
     }
     for (int y = 0; y < std::min(this->height, srcDun->height); y++) {
         for (int x = 0; x < std::min(this->width, srcDun->width); x++) {
-            const DunMonsterType &newMonster = srcDun->monsters[y][x].type;
-            const DunMonsterType &currMonster = this->monsters[y][x].type;
-            if (newMonster.monIndex != 0 && currMonster != newMonster) {
-                if (currMonster.monIndex != 0) {
+            const DunMonsterType &newMonster = srcDun->monsters[y][x].moType;
+            const DunMonsterType currMonster = this->monsters[y][x].moType;
+            if ((newMonster.monIndex != 0 || newMonster.monUnique) && D1Dun::setMapMonster(this->monsters[y][x], newMonster.monIndex, newMonster.monUnique)) {
+                if (currMonster.monIndex != 0 || currMonster.monUnique) {
                     QString currMonsterName = this->getMonsterName(currMonster);
                     QString newMonsterName = this->getMonsterName(newMonster);
                     dProgressWarn() << tr("'%1'(%2) %3monster at %4:%5 was replaced by '%6'(%7)%8.").arg(currMonsterName).arg(currMonster.monIndex).arg(currMonster.monUnique ? "unique " : "").arg(x).arg(y).arg(newMonsterName).arg(newMonster.monIndex).arg(newMonster.monUnique ? " unique monster" : "");
                 }
-                this->monsters[y][x].type = newMonster;
-                this->monsters[y][x].mox = 0;
-                this->monsters[y][x].moy = 0;
                 this->modified = true;
             }
         }
@@ -3550,15 +3564,14 @@ void D1Dun::loadObjects(const D1Dun *srcDun)
     }
     for (int y = 0; y < std::min(this->height, srcDun->height); y++) {
         for (int x = 0; x < std::min(this->width, srcDun->width); x++) {
-            int newObjectIndex = srcDun->objects[y][x];
-            int currObjectIndex = this->objects[y][x];
-            if (newObjectIndex != 0 && currObjectIndex != newObjectIndex) {
+            int newObjectIndex = srcDun->objects[y][x].oType;
+            int currObjectIndex = this->objects[y][x].oType;
+            if (newObjectIndex != 0 && D1Dun::setMapObject(this->objects[y][x], newObjectIndex)) {
                 if (currObjectIndex != 0) {
                     QString currObjectName = this->getObjectName(currObjectIndex);
                     QString newObjectName = this->getObjectName(newObjectIndex);
                     dProgressWarn() << tr("'%1'(%2) object at %3:%4 was replaced by '%5'(%6).").arg(currObjectName).arg(currObjectIndex).arg(x).arg(y).arg(newObjectName).arg(newObjectIndex);
                 }
-                this->objects[y][x] = newObjectIndex;
                 this->modified = true;
             }
         }
@@ -3745,7 +3758,7 @@ bool D1Dun::maskTilesFrom(const D1Dun *srcDun)
 
 bool D1Dun::needsProtectionAt(int posx, int posy) const
 {
-    if (this->objects[posy][posx] == 0 && this->monsters[posy][posx].type.monIndex == 0) {
+    if (this->objects[posy][posx].oType == 0 && (this->monsters[posy][posx].moType.monIndex == 0 || this->monsters[posy][posx].moType.monUnique)) {
         return false;
     }
     int subtileRef = this->subtiles[posy][posx];
@@ -3856,8 +3869,9 @@ void D1Dun::insertTileRow(int posy)
         this->subtiles.insert(this->subtiles.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
         this->items.insert(this->items.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
         this->monsters.insert(this->monsters.begin() + TILE_HEIGHT * tilePosY, std::vector<MapMonster>(this->width));
-        this->objects.insert(this->objects.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->objects.insert(this->objects.begin() + TILE_HEIGHT * tilePosY, std::vector<MapObject>(this->width));
         this->rooms.insert(this->rooms.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->missiles.insert(this->missiles.begin() + TILE_HEIGHT * tilePosY, std::vector<MapMissile>(this->width));
     }
     // update subtiles to match the defaultTile - TODO: better solution?
     int prevDefaultTile = this->defaultTile;
@@ -3892,11 +3906,14 @@ void D1Dun::insertTileColumn(int posx)
         for (std::vector<MapMonster> &monsRow : this->monsters) {
             monsRow.insert(monsRow.begin() + TILE_WIDTH * tilePosX, MapMonster());
         }
-        for (std::vector<int> &objsRow : this->objects) {
+        for (std::vector<MapObject> &objsRow : this->objects) {
             objsRow.insert(objsRow.begin() + TILE_WIDTH * tilePosX, 0);
         }
         for (std::vector<int> &roomsRow : this->rooms) {
             roomsRow.insert(roomsRow.begin() + TILE_WIDTH * tilePosX, 0);
+        }
+        for (std::vector<MapMissile> &missilesRow : this->missiles) {
+            missilesRow.insert(missilesRow.begin() + TILE_WIDTH * tilePosX, 0);
         }
     }
     // update subtiles to match the defaultTile - TODO: better solution?
@@ -3922,6 +3939,7 @@ void D1Dun::removeTileRow(int posy)
         this->monsters.erase(this->monsters.begin() + TILE_WIDTH * tilePosY);
         this->objects.erase(this->objects.begin() + TILE_WIDTH * tilePosY);
         this->rooms.erase(this->rooms.begin() + TILE_WIDTH * tilePosY);
+        this->missiles.erase(this->missiles.begin() + TILE_WIDTH * tilePosY);
     }
 
     this->height -= TILE_HEIGHT;
@@ -3952,16 +3970,42 @@ void D1Dun::removeTileColumn(int posx)
         for (std::vector<MapMonster> &monsRow : this->monsters) {
             monsRow.erase(monsRow.begin() + TILE_WIDTH * tilePosX);
         }
-        for (std::vector<int> &objsRow : this->objects) {
+        for (std::vector<mapObject> &objsRow : this->objects) {
             objsRow.erase(objsRow.begin() + TILE_WIDTH * tilePosX);
         }
         for (std::vector<int> &roomsRow : this->rooms) {
             roomsRow.erase(roomsRow.begin() + TILE_WIDTH * tilePosX);
         }
+        for (std::vector<MapMissile> &missilesRow : this->missiles) {
+            missilesRow.erase(missilesRow.begin() + TILE_WIDTH * tilePosX);
+        }
     }
 
     this->width -= TILE_WIDTH;
     this->modified = true;
+}
+
+bool D1Dun::setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique)
+{
+    if (dstMon.monIndex == monsterIndex && dstMon.monUnique == isUnique) {
+        return false;
+    }
+    dstMon.moType = { monsterIndex, isUnique };
+    dstMon.moDir = DIR_S;
+    dstMon.frameNum = 0;
+    dstMon.mox = 0;
+    dstMon.moy = 0;
+    return true;
+}
+
+bool D1Dun::setMapObject(MapObject &dstObj, int objectIndex)
+{
+    if (dstObj.monIndex == monsterIndex) {
+        return false;
+    }
+    dstObj.oType = objectIndex;
+    dstObj.frameNum = 0;
+    return true;
 }
 
 bool D1Dun::changeTileAt(int tilePosX, int tilePosY, int tileRef)
@@ -3979,11 +4023,14 @@ bool D1Dun::changeTileAt(int tilePosX, int tilePosY, int tileRef)
 
 bool D1Dun::changeObjectAt(int posx, int posy, int objectIndex)
 {
-    int prevObject = this->objects[posy][posx];
+    MapObject &mapObj = this->objects[posy][posx];
+    int prevObject = mapObj.oType;
+    if (!D1Dun::setMapObject(mapObj, objectIndex)) {
+        return false;
+    }
     if (prevObject == objectIndex) {
         return false;
     }
-    this->objects[posy][posx] = objectIndex;
     if (objectIndex == 0) {
         dProgress() << tr("Removed Object '%1' from %2:%3.").arg(prevObject).arg(posx).arg(posy);
     } else if (prevObject == 0) {
@@ -3997,11 +4044,11 @@ bool D1Dun::changeObjectAt(int posx, int posy, int objectIndex)
 
 bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique)
 {
-    DunMonsterType prevMon = this->monsters[posy][posx].type;
-    if (prevMon.monIndex == monsterIndex && prevMon.monUnique == isUnique) {
+    MapMonster &mapMon = this->monsters[posy][posx];
+    DunMonsterType prevMon = mapMon.moType;
+    if (!D1Dun::setMapMonster(mapMon, monsterIndex, isUnique)) {
         return false;
     }
-    this->monsters[posy][posx].type = { monsterIndex, isUnique };
     if (monsterIndex == 0) {
         dProgress() << tr("Removed %1Monster '%2' from %3:%4.").arg(prevMon.monUnique ? "unique " : "").arg(prevMon.monIndex).arg(posx).arg(posy);
     } else if (prevMon.monIndex == 0) {
@@ -5673,14 +5720,9 @@ bool D1Dun::addResource(const AddResourceParam &params)
         openParams.celWidth = params.width;
         D1Cl2::load(*monGfx, cl2FilePath, openParams);
         bool result = monGfx->getFrameCount() != 0;
-        bool resGroup = monGfx->getGroupCount() > params.frameGroup;
         delete monGfx;
         if (!result) {
             dProgressFail() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
-            return false;
-        }
-        if (!resGroup) {
-            dProgressFail() << tr("Not enough frame groups in the CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
             return false;
         }
         // check if the TRNs can be loaded
@@ -5733,7 +5775,6 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customMonster.baseTrnPath = params.baseTrnPath;
                 customMonster.uniqueTrnPath = params.uniqueTrnPath;
                 customMonster.width = params.width;
-                customMonster.animGroup = params.frameGroup;
                 return true;
             }
         }
@@ -5745,7 +5786,6 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMonster.baseTrnPath = params.baseTrnPath;
         customMonster.uniqueTrnPath = params.uniqueTrnPath;
         customMonster.width = params.width;
-        customMonster.animGroup = params.frameGroup;
         this->customMonsterTypes.push_back(customMonster);
     } break;
     case DUN_ENTITY_TYPE::ITEM: {
@@ -5823,7 +5863,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 }
             }
         }*/
-        // check if the gfx can be loaded - TODO: merge with loadMonster?
+        // check if the gfx can be loaded - TODO: merge with loadMissile?
         D1Gfx *misGfx = new D1Gfx();
         // misGfx->setPalette(this->pal);
         QString cl2FilePath = params.path;
@@ -5831,14 +5871,9 @@ bool D1Dun::addResource(const AddResourceParam &params)
         openParams.celWidth = params.width;
         D1Cl2::load(*misGfx, cl2FilePath, openParams);
         bool result = misGfx->getFrameCount() != 0;
-        bool resGroup = misGfx->getGroupCount() > params.frameGroup;
         delete misGfx;
         if (!result) {
             dProgressFail() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
-            return false;
-        }
-        if (!resGroup) {
-            dProgressFail() << tr("Not enough frame groups in the CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
             return false;
         }
         // check if the TRNs can be loaded
@@ -5854,18 +5889,20 @@ bool D1Dun::addResource(const AddResourceParam &params)
         // remove cache entry
         for (unsigned i = 0; i < this->missileCache.size(); i++) {
             if (this->missileCache[i].misIndex == params.index) {
-                D1Gfx *gfx = this->missileCache[i].misGfx;
+                D1Gfx *gfx = this->missileCache[i].misGfx[0];
                 this->missileCache.erase(this->missileCache.begin() + i);
                 if (gfx == nullptr) {
                     break; // previous entry without gfx -> done
                 }
                 for (i = 0; i < this->missileDataCache.size(); i++) {
                     auto &dataEntry = this->missileDataCache[i];
-                    if (dataEntry.first == gfx) {
-                        dataEntry.second--;
-                        if (dataEntry.second == 0) {
+                    if (dataEntry.midGfx[0] == gfx) {
+                        dataEntry.numrefs--;
+                        if (dataEntry.numrefs == 0) {
+                            for (int g = 0; g < dataEnty.numgfxs; g++) {
+                                delete dataEntry.midGfx[g];
+                            }
                             this->missileDataCache.erase(this->missileDataCache.begin() + i);
-                            delete gfx;
                         }
                         break;
                     }
@@ -5881,7 +5918,6 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customMissile.path = params.path;
                 customMissile.trnPath = params.baseTrnPath;
                 customMissile.width = params.width;
-                customMissile.animGroup = params.frameGroup;
                 return true;
             }
         }
@@ -5892,7 +5928,6 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMissile.path = params.path;
         customMissile.trnPath = params.baseTrnPath;
         customMissile.width = params.width;
-        customMissile.animGroup = params.frameGroup;
         this->customMissileTypes.push_back(customMissile);
     } break;
     }
