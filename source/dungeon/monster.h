@@ -25,6 +25,7 @@ void GetLevelMTypes();
 void InitMonsters();
 void InitMonster(int mnum, int dir, int mtidx, int x, int y);
 void AddMonster(int mtidx, int x, int y);
+bool LineClear(int x1, int y1, int x2, int y2);
 int PreSpawnSkeleton();
 
 inline void SetMonsterLoc(MonsterStruct* mon, int x, int y)

@@ -796,8 +796,8 @@ bool D1Dun::save(const SaveAsParam &params)
                 if (this->rooms[y][x] != 0) {
                     dProgressWarn() << tr("Defined room at %1:%2 is not saved.").arg(x).arg(y);
                 }
-                if (this->missiles[y][x] != 0) {
-                    dProgressWarn() << tr("Defined room at %1:%2 is not saved.").arg(x).arg(y);
+                if (this->missiles[y][x].miType != 0) {
+                    dProgressWarn() << tr("Defined missile at %1:%2 is not saved.").arg(x).arg(y);
                 }
             }
         }
@@ -895,7 +895,7 @@ bool D1Dun::save(const SaveAsParam &params)
                 if (this->rooms[y][x] != 0) {
                     dProgressWarn() << tr("Defined room at %1:%2 is not saved.").arg(x).arg(y);
                 }
-                if (this->missiles[y][x] != 0) {
+                if (this->missiles[y][x].miType != 0) {
                     dProgressWarn() << tr("Defined missile at %1:%2 is not saved.").arg(x).arg(y);
                 }
             }
@@ -1237,7 +1237,7 @@ QImage D1Dun::getMissileImage(const MapMissile &mapMis)
         this->loadMissile(mapMis.miType);
         misEntry = &this->missileCache.back();
     }
-    if ((unsigned)mapMis.miDir < lengthof(misEntry->misGfx)) {
+    if ((unsigned)mapMis.miDir < (unsigned)lengthof(misEntry->misGfx)) {
         D1Gfx *gfx = misEntry->misGfx[mapMis.miDir];
         if (gfx != nullptr) {
             const int frameCount = gfx->getFrameCount();
@@ -1461,7 +1461,7 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
             if (!objectImage.isNull()) {
                 dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
-                QString text = this->getObjectName(objectIndex);
+                QString text = this->getObjectName(obj.oType);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + (middleText ? 1 : -1) * fm.height() / 2, text);
@@ -1507,7 +1507,7 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
         // draw the missile
         const MapMissile &mis = this->missiles[dunCursorY][dunCursorX];
         if (mis.miType != 0) {
-            QImage misImage = this->getMissileImage(mis, params.time);
+            QImage misImage = this->getMissileImage(mis);
             if (!misImage.isNull()) {
                 int xo = mis.mix;
                 int yo = mis.miy;
@@ -2038,7 +2038,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<MapObject> &objsRow : this->objects) {
         objsRow.resize(newWidth);
     }
-    for (std::vector<MapMissile> &roomsRow : this->rooms) {
+    for (std::vector<int> &roomsRow : this->rooms) {
         roomsRow.resize(newWidth);
     }
     for (std::vector<MapMissile> &missilesRow : this->missiles) {
@@ -2242,7 +2242,7 @@ MapMissile D1Dun::getMissileAt(int posx, int posy) const
 
 bool D1Dun::setMissileAt(int posx, int posy, const MapMissile &mis)
 {
-    if (this->missiles[posy][posx].miType == mis) {
+    if (this->missiles[posy][posx] == mis) {
         return false;
     }
     this->missiles[posy][posx] = mis;
@@ -2998,7 +2998,7 @@ void D1Dun::loadMissile(int misIndex)
     // load a custom monster
     unsigned i = 0;
     for (; i < this->customMissileTypes.size(); i++) {
-        const CustomMonsterStruct &customMissile = this->customMissileTypes[i];
+        const CustomMissileStruct &customMissile = this->customMissileTypes[i];
         if (customMissile.type == misIndex) {
             QString cl2FilePath = customMissile.path;
             this->loadMissileGfx(cl2FilePath, customMissile.width, customMissile.trnPath, result);
@@ -3007,17 +3007,18 @@ void D1Dun::loadMissile(int misIndex)
     }
     if (i >= this->customMissileTypes.size() && !this->assetPath.isEmpty()) {
         // load normal missile
-        if ((unsigned)misIndex < (unsigned)lengthof(DunMissConvTbl)) {
+        if ((unsigned)misIndex < (unsigned)lengthof(DunMissConvTbl) && DunMissConvTbl[misIndex].name != nullptr) {
             const MissileData &md = missiledata[misIndex];
-            QString cl2FilePath = misfiledata[md.mFileNum].mfName;
+            const MisFileData &mfd = misfiledata[md.mFileNum]'
+            QString cl2FilePath = mfd.mfName;
             cl2FilePath = this->assetPath + "/Missiles/" + cl2FilePath;
-            if (misfiledata[md.mFileNum].mfAnimFAmt == 1)
-                cl2FilePath += ".CL2"
+            if (mfd.mfAnimFAmt == 1)
+                cl2FilePath += ".CL2";
             QString trnFilePath;
-            if (md.mfAnimTrans != nullptr) {
-                trnFilePath = this->assetPath + "/" + md.mfAnimTrans;
+            if (mfd.mfAnimTrans != nullptr) {
+                trnFilePath = this->assetPath + "/" + mfd.mfAnimTrans;
             }
-            this->loadMissileGfx(cl2FilePath, misfiledata[md.mFileNum].mfAnimWidth, trnFilePath, result);
+            this->loadMissileGfx(cl2FilePath, mfd.mfAnimWidth, trnFilePath, result);
         }
     }
     this->missileCache.push_back(result);
@@ -3929,13 +3930,13 @@ void D1Dun::insertTileColumn(int posx)
             monsRow.insert(monsRow.begin() + TILE_WIDTH * tilePosX, MapMonster());
         }
         for (std::vector<MapObject> &objsRow : this->objects) {
-            objsRow.insert(objsRow.begin() + TILE_WIDTH * tilePosX, 0);
+            objsRow.insert(objsRow.begin() + TILE_WIDTH * tilePosX, MapObject());
         }
         for (std::vector<int> &roomsRow : this->rooms) {
             roomsRow.insert(roomsRow.begin() + TILE_WIDTH * tilePosX, 0);
         }
         for (std::vector<MapMissile> &missilesRow : this->missiles) {
-            missilesRow.insert(missilesRow.begin() + TILE_WIDTH * tilePosX, 0);
+            missilesRow.insert(missilesRow.begin() + TILE_WIDTH * tilePosX, MapMissile());
         }
     }
     // update subtiles to match the defaultTile - TODO: better solution?
@@ -3992,7 +3993,7 @@ void D1Dun::removeTileColumn(int posx)
         for (std::vector<MapMonster> &monsRow : this->monsters) {
             monsRow.erase(monsRow.begin() + TILE_WIDTH * tilePosX);
         }
-        for (std::vector<mapObject> &objsRow : this->objects) {
+        for (std::vector<MapObject> &objsRow : this->objects) {
             objsRow.erase(objsRow.begin() + TILE_WIDTH * tilePosX);
         }
         for (std::vector<int> &roomsRow : this->rooms) {
@@ -4009,7 +4010,7 @@ void D1Dun::removeTileColumn(int posx)
 
 bool D1Dun::setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique)
 {
-    if (dstMon.monIndex == monsterIndex && dstMon.monUnique == isUnique) {
+    if (dstMon.moType.monIndex == monsterIndex && dstMon.moType.monUnique == isUnique) {
         return false;
     }
     dstMon.moType = { monsterIndex, isUnique };
@@ -4022,7 +4023,7 @@ bool D1Dun::setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique)
 
 bool D1Dun::setMapObject(MapObject &dstObj, int objectIndex)
 {
-    if (dstObj.monIndex == monsterIndex) {
+    if (dstObj.oType == objectIndex) {
         return false;
     }
     dstObj.oType = objectIndex;
@@ -5934,7 +5935,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                     if (dataEntry.midGfx[0] == gfx) {
                         dataEntry.numrefs--;
                         if (dataEntry.numrefs == 0) {
-                            for (int g = 0; g < dataEnty.numgfxs; g++) {
+                            for (int g = 0; g < dataEntry.numgfxs; g++) {
                                 delete dataEntry.midGfx[g];
                             }
                             this->missileDataCache.erase(this->missileDataCache.begin() + i);

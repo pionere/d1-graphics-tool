@@ -409,13 +409,17 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
             break;
         case BEM_OBJECT:
             if (this->currentObjectIndex != 0) {
-                image = this->dun->getObjectImage(this->currentObjectIndex, 0);
+                MapObject obj = MapObject();
+                obj.oType = this->currentObjectIndex;
+                image = this->dun->getObjectImage(obj);
                 color = QColorConstants::Svg::magenta;
             }
             break;
         case BEM_MONSTER:
-            if (this->currentMonsterType.monIndex != 0) {
-                image = this->dun->getMonsterImage(this->currentMonsterType, 0);
+            if (this->currentMonsterType.monIndex != 0 || this->currentMonsterType.monUnique) {
+                MapMonster mon = MapMonster();
+                mon.moType = this->currentMonsterType;
+                image = this->dun->getMonsterImage(mon);
                 color = QColorConstants::Svg::magenta;
             }
             break;

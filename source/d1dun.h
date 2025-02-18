@@ -89,6 +89,9 @@ typedef struct MapMonster {
     int frameNum;
     int mox;
     int moy;
+   	bool operator==(const MapMonster & omon) const {
+        return moType == omon.moType && moDir == omon.moDir && frameNum == omon.frameNum && mox == omon.mox && moy == omon.moy;
+	};
 } MapMonster;
 
 typedef struct MapMissile {
@@ -184,7 +187,6 @@ public:
     bool showMonsters;
     bool showObjects;
     bool showMissiles;
-    unsigned time;
 };
 
 class D1Dun : public QObject {

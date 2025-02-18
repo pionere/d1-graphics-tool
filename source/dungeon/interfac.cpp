@@ -404,7 +404,7 @@ static void LoadDungeon(D1Dun *dun, bool first)
             // load entities
             // DunMonsterType monType = dun->getMonsterAt(baseX + x, baseY + y);
             // TODO: dMonster[DBORDERX + x][DBORDERX + y] = monType.monIndex;
-            dObject[DBORDERX + x][DBORDERX + y] = dun->getObjectAt(baseX + x, baseY + y);
+            dObject[DBORDERX + x][DBORDERX + y] = dun->getObjectAt(baseX + x, baseY + y).oType;
             dItem[DBORDERX + x][DBORDERX + y] = dun->getItemAt(baseX + x, baseY + y);
             // load subtile
             int subtile = dun->getSubtileAt(baseX + x, baseY + y);

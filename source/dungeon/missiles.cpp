@@ -8,6 +8,32 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#define TILE_WIDTH     (64 * ASSET_MPL)
+#define TILE_HEIGHT    (32 * ASSET_MPL)
+
+#define plr            players[pnum]
+#define plx(x)         players[x]
+
+int mypnum;
+PlayerStruct players[MAX_PLRS];
+
+bool PlrDecHp(int pnum, int hp, int dmgtype)
+{
+    return false;
+}
+
+void RemovePortalMissile(int pnum)
+{
+}
+
+void PlaySfxLoc(int nsfx, int x, int y)
+{
+}
+
+void PlaySfxLocN(int nsfx, int x, int y, int rndCnt)
+{
+}
+
 /*
  * Similar to walk offsetx/y with PLR/MON_WALK_SHIFT, missile velocity values
  * are shifted with MIS_*VELO_SHIFT to the higher range for better precision.
@@ -260,6 +286,7 @@ static bool PosOkMis2(int x, int y)
 
 static bool FindClosest(int sx, int sy, int& dx, int& dy)
 {
+#if 0
 	int j, i, mid, mnum, tx, ty;
 	const int8_t* cr;
 	MonsterStruct* mon;
@@ -290,11 +317,13 @@ static bool FindClosest(int sx, int sy, int& dx, int& dy)
 			}
 		}
 	}
+#endif
 	return false;
 }
 
 static bool FindClosestChain(int sx, int sy, int& dx, int& dy)
 {
+#if 0
 	int j, i, mid, mnum, tx, ty;
 	const int8_t* cr;
 	MonsterStruct* mon;
@@ -326,9 +355,10 @@ static bool FindClosestChain(int sx, int sy, int& dx, int& dy)
 			}
 		}
 	}
+#endif
 	return false;
 }
-
+#if 0
 static void DoTeleport(int pnum, int dx, int dy)
 {
 	int px, py;
@@ -350,7 +380,7 @@ static void DoTeleport(int pnum, int dx, int dy)
 		ViewY = py; // - ScrollInfo._sdy;
 	}
 }
-
+#endif
 /**
  * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
  *
@@ -1629,7 +1659,7 @@ static int PlaceRune(int mi, int sx, int sy, int dx, int dy, int mitype, int mir
 	mis->_miVar3 = 16;         // delay
 	if (mis->_miCaster & MST_PLAYER) {
 		mis->_miCaster |= MST_RUNE;
-		mis->_miSpllvl += plx(mis->_miSource)._pDexterity >> 3;
+//		mis->_miSpllvl += plx(mis->_miSource)._pDexterity >> 3;
 	}
 	mis->_miRange = 16 + 1584; // delay + ttl
 	static_assert(DBORDERX >= 9 && DBORDERY >= 9, "PlaceRune expects a large enough border.");
@@ -2063,6 +2093,7 @@ int AddAcidpud(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, 
 
 int AddTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	int i, j, tx, ty, dir;
 	const int8_t* cr;
 	// (micaster & MST_PLAYER);
@@ -2094,11 +2125,13 @@ int AddTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int micaster,
 			}
 		}
 	}
+#endif
 	return MIRES_FAIL_DELETE;
 }
 
 int AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	int nTries;
 	// ((micaster & MST_PLAYER) || micaster == MST_OBJECT);
 	// assert((unsigned)misource < MAX_PLRS);
@@ -2123,6 +2156,7 @@ int AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int micast
 	}
 
 	DoTeleport(misource, dx, dy);
+#endif
 	return MIRES_DELETE;
 }
 
@@ -2273,6 +2307,7 @@ int AddBleed(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 	MonsterStruct* mon;
 
 	mis = &missile[mi];
+#if 0
 	static_assert(MAX_PLRS <= MAX_MINIONS, "MIS_BLEED uses a single int to store player and monster targets.");
 	assert(!(monsterdata[MT_GOLEM].mFlags & MFLAG_CAN_BLEED));
 	if (spllvl >= MAX_MINIONS) {
@@ -2292,7 +2327,7 @@ int AddBleed(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 		mis->_miMinDam = plr._pMaxHP >> (2 + 4);
 		mis->_miMaxDam = plr._pMaxHP >> (1 + 4);
 	}
-
+#endif
 	mis->_miRange = misfiledata[MFILE_BLODBURS].mfAnimFrameLen[0] * misfiledata[MFILE_BLODBURS].mfAnimLen[0];
 	// mis->_miVar1 = 0;
 	return MIRES_DONE;
@@ -2415,8 +2450,8 @@ int AddPortal(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, i
 	mis->_miLid = AddLight(dx, dy, spllvl >= 0 ? 1 : 15);
 	if (spllvl >= 0) {
 		PlaySfxLoc(LS_SENTINEL, dx, dy);
-		if (misource == mypnum)
-			NetSendCmdLocBParam1(CMD_ACTIVATEPORTAL, dx, dy, currLvl._dLevelIdx);
+//		if (misource == mypnum)
+//			NetSendCmdLocBParam1(CMD_ACTIVATEPORTAL, dx, dy, currLvl._dLevelIdx);
 	} else {
 		// a recreated portal (by AddWarpMissile or InitVP*Trigger)
 		// make sure the portal is in its final form even on the first frame
@@ -2432,7 +2467,7 @@ int AddFlash(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 	int i, dam;
 
 	AddMissile(sx, sy, 0, 0, 0, MIS_FLASH2, micaster, misource, spllvl);
-
+#if 0
 	mis = &missile[mi];
 	if (micaster & MST_PLAYER) {
 		dam = plx(misource)._pMagic >> 1;
@@ -2449,6 +2484,7 @@ int AddFlash(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 		}
 		mis->_miMinDam = mis->_miMaxDam = dam;
 	}
+#endif
 	return MIRES_DONE;
 }
 
@@ -2668,6 +2704,7 @@ int AddCharge(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, i
  */
 int AddStone(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	MissileStruct* mis;
 	MonsterStruct* mon;
 	int i, j, tx, ty, mid, range;
@@ -2721,6 +2758,7 @@ int AddStone(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 			}
 		}
 	}
+#endif
 	return MIRES_FAIL_DELETE;
 }
 
@@ -3149,8 +3187,8 @@ int AddResurrect(int mi, int sx, int sy, int dx, int dy, int midir, int micaster
 	// (micaster & MST_PLAYER);
 	// ((unsigned)misource < MAX_PLRS);
 
-	if (spllvl == mypnum)
-		NetSendCmd(CMD_PLRRESURRECT);
+//	if (spllvl == mypnum)
+//		NetSendCmd(CMD_PLRRESURRECT);
 
 	mis = &missile[mi];
 	mis->_mix = dx;
@@ -3206,6 +3244,7 @@ int AddAttract(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, 
 
 int AddTelekinesis(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	int pnum = misource;
 	int target = spllvl & 0xFFFF;
 	int type = spllvl >> 16;
@@ -3249,6 +3288,7 @@ int AddTelekinesis(int mi, int sx, int sy, int dx, int dy, int midir, int micast
 		ASSUME_UNREACHABLE
 		break;
 	}
+#endif
 	return MIRES_DELETE;
 }
 
@@ -3293,6 +3333,7 @@ int AddApocaC2(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, 
 
 int AddManashield(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	// ((micaster & MST_PLAYER) || micaster == MST_NA);
 	// ((unsigned)misource < MAX_PLRS);
 
@@ -3302,11 +3343,13 @@ int AddManashield(int mi, int sx, int sy, int dx, int dy, int midir, int micaste
 		else
 			NetSendCmd(CMD_REMSHIELD);
 	}
+#endif
 	return MIRES_DELETE;
 }
 
 int AddInfra(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	int i, range;
 	// ((micaster & MST_PLAYER) || micaster == MST_NA);
 	// assert((unsigned)misource < MAX_PLRS);
@@ -3317,11 +3360,13 @@ int AddInfra(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 	// TODO: add support for spell duration modifier
 	//range += range * plx(misource)._pISplDur >> 7;
 	plx(misource)._pTimer[PLTR_INFRAVISION] = range;
+#endif
 	return MIRES_DELETE;
 }
 
 int AddRage(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	int pnum = misource;
 	// (micaster & MST_PLAYER);
 	// assert((unsigned)pnum < MAX_PLRS);
@@ -3331,6 +3376,7 @@ int AddRage(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int
 		PlaySfxLoc(sgSFXSets[SFXS_PLR_70][plr._pClass], plr._px, plr._py);
 		CalcPlrItemVals(pnum, false); // last parameter should not matter
 	}
+#endif
 	return MIRES_DELETE;
 }
 
