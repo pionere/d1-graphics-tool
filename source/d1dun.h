@@ -174,7 +174,7 @@ typedef struct MissileDataEntry {
     QString midPath;
     unsigned numgfxs;
     unsigned numrefs;
-} MissileCacheEntry;
+} MissileDataEntry;
 
 class DunDrawParam {
 public:
