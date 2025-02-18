@@ -662,7 +662,7 @@ static void ShiftMissilePos(int mi)
 		mis->_miyoff -= ((dy * 16) + (dx * 16)) * ASSET_MPL;
 	}
 }
-#endif
+
 unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned mindam, unsigned maxdam, bool penetrates)
 {
 	unsigned dam;
@@ -1315,7 +1315,7 @@ int CheckPlrCol(int pnum)
 		halfOver = !halfOver;
 	return halfOver ? -1 : pnum;
 }
-
+#endif
 /*
  * @param mi: index of the missile
  * @param mx: the x coordinate of the target
@@ -1329,7 +1329,7 @@ static int CheckMissileCol(int mi, int mx, int my, missile_collision_mode mode)
 	const MissileData* mds;
 	int oi, mnum, pnum;
 	int hit = 0;
-
+#if 0
 	oi = dObject[mx][my];
 	if (oi != 0) {
 		oi = oi >= 0 ? oi - 1 : -(oi + 1);
@@ -1368,6 +1368,7 @@ static int CheckMissileCol(int mi, int mx, int my, missile_collision_mode mode)
 		if (SFX_VALID(mds->miSFX))
 			PlaySfxLocN(mds->miSFX, mis->_mix, mis->_miy, mds->miSFXCnt);
 	}
+#endif
 	return hit;
 }
 
@@ -3628,6 +3629,7 @@ void MI_Poison(int mi)
 		mis->_mitxoff += mis->_mixvel;
 		mis->_mityoff += mis->_miyvel;
 		GetMissilePos(mi);
+#if 0
 		if ((mis->_mix != mis->_misx || mis->_miy != mis->_misy)
 		 && CheckMissileCol(mi, mis->_mix, mis->_miy, MICM_BLOCK_WALL) == 1) {
 			tnum = dMonster[mis->_mix][mis->_miy];
@@ -3687,6 +3689,7 @@ void MI_Poison(int mi)
 			// CheckMissileCol(mi, mis->_mix, mis->_miy, MICM_NONE);
 			PlrMissHit(pnum, mi);
 		}
+#endif
 	}
 
 	mis->_miRange--;
@@ -3824,6 +3827,7 @@ static bool CheckWallCol(int mi, missile_collision_mode mode)
 		tx = mx + XDirAdd[(wd + 7) & 7];
 		ty = my + YDirAdd[(wd + 7) & 7];
 		dFlags[tx][ty] |= BFLAG_HAZARD; // TODO: do not place hazard if the source is a monster
+#if 0
 		if (gdwGameLogicTurn & 1) {
 			int pnum = dPlayer[tx][ty];
 			if (pnum != 0) {
@@ -3846,6 +3850,7 @@ static bool CheckWallCol(int mi, missile_collision_mode mode)
 				}
 			}
 		}
+#endif
 	}
 	return false;
 }
@@ -4168,6 +4173,7 @@ void MI_Bleed(int mi)
 	MonsterStruct* mon;
 
 	mis = &missile[mi];
+#if 0
 	if (mis->_miVar1 == 0) {
 		tnum = mis->_miSpllvl;
 		static_assert(MAX_PLRS <= MAX_MINIONS, "MIS_BLEED uses a single int to store player and monster targets.");
@@ -4190,7 +4196,7 @@ void MI_Bleed(int mi)
 			}
 		}
 	}
-
+#endif
 	mis->_miRange--;
 	if (mis->_miRange >= 0) {
 		PutMissile(mi);
@@ -4654,6 +4660,7 @@ void MI_Shroud(int mi)
 
 void MI_Rhino(int mi)
 {
+#if 0
 	MissileStruct* mis;
 	int bx, by, mnum;
 
@@ -4703,10 +4710,12 @@ void MI_Rhino(int mi)
 	}
 	//ShiftMissilePos(mi);
 	PutMissile(mi);
+#endif
 }
 
 void MI_Charge(int mi)
 {
+#if 0
 	MissileStruct* mis;
 	int bx, by, pnum;
 
@@ -4753,6 +4762,7 @@ void MI_Charge(int mi)
 	}
 	//ShiftMissilePos(mi);
 	PutMissile(mi);
+#endif
 }
 
 /*void MI_Fireman(int mi)

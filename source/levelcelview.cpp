@@ -434,9 +434,9 @@ void LevelCelView::updateFields()
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
         MapMonster mon = this->dun->getMonsterAt(posx, posy);
-        this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.monIndex));
-        this->ui->dungeonMonsterCheckBox->setChecked(mon.type.monUnique);
-        this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.type));
+        this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.moType.monIndex));
+        this->ui->dungeonMonsterCheckBox->setChecked(mon.moType.monUnique);
+        this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.moType));
         {
             const int limit = this->min->getSubtileWidth() * MICRO_WIDTH;
             const QSignalBlocker blocker(this->ui->dungeonMonsterXOffSpinBox);
@@ -4645,7 +4645,7 @@ void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
 {
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.type.monIndex));
+    this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.moType.monIndex));
     this->ui->dungeonMonsterLineEdit->clearFocus();
 }
 
@@ -4727,17 +4727,6 @@ void LevelCelView::on_dungeonMonsterYOffSpinBox_valueChanged(int value)
     this->setCurrentMonster(mon);
 }
 
-void LevelCelView::on_dungeonMissileComboBox_activated(int index)
-{
-    if (index < 0) {
-        return;
-    }
-    int misIndex = this->ui->dungeonMissileComboBox->itemData(index).value<int>();
-    MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
-    mis.type = misIndex;
-    this->setCurrentMissile(mis);
-}
-
 void LevelCelView::setCurrentMissile(const MapMissile &mis)
 {
     bool change = this->dun->setMissileAt(this->currentDunPosX, this->currentDunPosY, mis);
@@ -4747,6 +4736,37 @@ void LevelCelView::setCurrentMissile(const MapMissile &mis)
     } else {
         this->updateFields();
     }
+}
+
+void LevelCelView::on_dungeonMissileLineEdit_returnPressed()
+{
+    int misIndex = this->ui->dungeonMissileLineEdit->text().toUShort();
+    // this->on_dungeonMissileLineEdit_escPressed();
+    this->ui->dungeonMissileLineEdit->clearFocus();
+
+    MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
+    mis.miType = misIndex;
+
+    this->setCurrentMissile(mis);
+}
+
+void LevelCelView::on_dungeonMissileLineEdit_escPressed()
+{
+    MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonMissileLineEdit->setText(QString::number(mis.miType));
+    this->ui->dungeonMissileLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonMissileComboBox_activated(int index)
+{
+    if (index < 0) {
+        return;
+    }
+    int misIndex = this->ui->dungeonMissileComboBox->itemData(index).value<int>();
+    MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
+    mis.miType = misIndex;
+    this->setCurrentMissile(mis);
 }
 
 void LevelCelView::on_dungeonMissileXOffSpinBox_valueChanged(int value)
@@ -4763,8 +4783,12 @@ void LevelCelView::on_dungeonMissileYOffSpinBox_valueChanged(int value)
     this->setCurrentMissile(mis);
 }
 
-void LevelCelView::on_dungeonMissileAddButton_clicked();
-
+void LevelCelView::on_dungeonMissileAddButton_clicked()
+{
+    int misIndex = this->ui->dungeonMissileLineEdit->text().toUShort();
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::MISSILE, misIndex, false, this->dun);
+    this->dungeonResourceDialog.show();
+}
 
 void LevelCelView::on_dungeonItemLineEdit_returnPressed()
 {

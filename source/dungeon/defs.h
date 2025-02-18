@@ -51,13 +51,18 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define DEAD_MULTI				0xFF
 #define MAXITEMS				127
 #define ITEM_NONE				0xFF
+#define ITEM_VALID(x) ((int8_t)x >= 0)
 #define MAXBELTITEMS			8
 //#define MAXLIGHTS				32
 #define MAXLIGHTS				0
+#define MAXMISSILES             125
+#define MIS_MULTI               0xFF
 #define MAXMONSTERS				200
 #define MON_NONE				0xFF
+#define MON_VALID(x) (x >= 0)
 #define MAXOBJECTS				127
 #define OBJ_NONE				0xFF
+#define OBJ_VALID(x) ((int8_t)x >= 0)
 #define MAXTHEMES				8
 #define MAXTILES				255
 #define MAXSUBTILES				1023

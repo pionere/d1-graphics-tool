@@ -302,6 +302,8 @@ private slots:
     void on_dungeonItemAddButton_clicked();
     void on_dungeonRoomLineEdit_returnPressed();
     void on_dungeonRoomLineEdit_escPressed();
+    void on_dungeonMissileLineEdit_returnPressed();
+    void on_dungeonMissileLineEdit_escPressed();
     void on_dungeonMissileComboBox_activated(int index);
     void on_dungeonMissileXOffSpinBox_valueChanged(int value);
     void on_dungeonMissileYOffSpinBox_valueChanged(int value);
