@@ -3404,6 +3404,15 @@ void LevelCelView::removeObjects()
     }
 }
 
+void LevelCelView::removeMissiles()
+{
+    bool change = this->dun->removeMissiles();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
 static bool dimensionMatch(const D1Dun *dun1, const D1Dun *dun2)
 {
     // if (dun1->getWidth() == dun2->getWidth() && dun1->getHeight() == dun2->getHeight()) {

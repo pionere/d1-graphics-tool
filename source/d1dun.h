@@ -201,10 +201,10 @@ public:
     void compareTo(const LoadFileContent *fileContent) const;
 
     QImage getImage(const DunDrawParam &params);
-    QImage getObjectImage(int objectIndex, unsigned time);
-    QImage getMonsterImage(DunMonsterType monType, unsigned time);
+    QImage getObjectImage(const MapObject &mapObj);
+    QImage getMonsterImage(const MapMonster &mapMon);
     QImage getItemImage(int itemIndex);
-    QImage getMissileImage(const MapMissile &mis, unsigned time);
+    QImage getMissileImage(const MapMissile &mapMis);
 
     void setPal(D1Pal *pal);
 
@@ -223,13 +223,13 @@ public:
     int getItemAt(int posx, int posy) const;
     bool setItemAt(int posx, int posy, int itemIndex);
     MapMonster getMonsterAt(int posx, int posy) const;
-    bool setMonsterAt(int posx, int posy, const MapMonster &mapMon);
-    int getObjectAt(int posx, int posy) const;
-    bool setObjectAt(int posx, int posy, const MapObject &srcObj);
+    bool setMonsterAt(int posx, int posy, const MapMonster &mon);
+    MapObject getObjectAt(int posx, int posy) const;
+    bool setObjectAt(int posx, int posy, const MapObject &obj);
     int getRoomAt(int posx, int posy) const;
     bool setRoomAt(int posx, int posy, int roomIndex);
     MapMissile getMissileAt(int posx, int posy) const;
-    bool setMissileAt(int posx, int posy, const MapMissile &mapMis);
+    bool setMissileAt(int posx, int posy, const MapMissile &mis);
     Qt::CheckState getTileProtectionAt(int posx, int posy) const;
     bool setTileProtectionAt(int posx, int posy, Qt::CheckState protection);
     bool getSubtileObjProtectionAt(int posx, int posy) const;
@@ -263,6 +263,7 @@ public:
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();
+    bool removeMissiles();
     void loadTiles(const D1Dun *srcDun);
     void loadProtections(const D1Dun *srcDun);
     void loadItems(const D1Dun *srcDun);
@@ -333,6 +334,7 @@ private:
     bool hasContentAt(int posx, int posy) const;
     static bool setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique);
     static bool setMapObject(MapObject &dstObj, int objectIndex);
+    static bool setMapMissile(MapMissile &dstMis, int misType);
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;

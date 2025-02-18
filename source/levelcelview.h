@@ -122,6 +122,7 @@ public:
     void removeItems();
     void removeMonsters();
     void removeObjects();
+    void removeMissiles();
     void loadTiles(const D1Dun *srcDun);
     void loadProtections(const D1Dun *srcDun);
     void loadItems(const D1Dun *srcDun);

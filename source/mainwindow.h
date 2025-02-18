@@ -261,6 +261,7 @@ private slots:
     void on_actionLoadMonsters_Dungeon_triggered();
     void on_actionRemoveObjects_Dungeon_triggered();
     void on_actionLoadObjects_Dungeon_triggered();
+    void on_actionRemoveMissiles_Dungeon_triggered();
     void on_actionGenerate_Dungeon_triggered();
     void on_actionDecorate_Dungeon_triggered();
     void on_actionSearch_Dungeon_triggered();

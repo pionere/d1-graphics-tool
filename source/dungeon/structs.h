@@ -4,13 +4,6 @@
  * Various global structures.
  */
 
-#define ALIGNMENT(x86, x64)
-#define ALIGNMENT32(num)
-#define ALIGNMENT64(num)
-#define ALIGN
-#define ALIGN32
-#define ALIGN64
-
 typedef uint8_t BYTE;
 typedef uint8_t BOOLEAN;
 typedef uint32_t BOOL;
@@ -226,7 +219,6 @@ typedef struct MissileData {
 	BYTE mlSFXCnt; // number of launch sound effects to choose from
 	BYTE miSFXCnt; // number of impact sound effects to choose from
 	BYTE mdPrSpeed; // speed of the projectile
-	ALIGNMENT32(2)
 } MissileData;
 
 
@@ -287,7 +279,6 @@ typedef struct MissileStruct {
 	int _miVar6;
 	int _miVar7; // distance travelled in case of ARROW missiles
 	int _miVar8; // last target in case of non-DOT missiles
-	ALIGNMENT(10, 24)
 } MissileStruct;
 
 //////////////////////////////////////////////////

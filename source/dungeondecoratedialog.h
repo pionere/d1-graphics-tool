@@ -20,6 +20,7 @@ public:
     bool resetObjects;
     bool resetItems;
     bool resetRooms;
+    bool resetMissiles;
     bool addShadows;
     bool addTiles;
     bool addMonsters;

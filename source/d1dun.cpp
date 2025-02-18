@@ -2195,12 +2195,12 @@ MapMonster D1Dun::getMonsterAt(int posx, int posy) const
     return this->monsters[posy][posx];
 }
 
-bool D1Dun::setMonsterAt(int posx, int posy, const MapMonster &srcMon)
+bool D1Dun::setMonsterAt(int posx, int posy, const MapMonster &mon)
 {
-    if (this->monsters[posy][posx] == srcMon) {
+    if (this->monsters[posy][posx] == mon) {
         return false;
     }
-    this->monsters[posy][posx] = srcMon;
+    this->monsters[posy][posx] = mon;
     this->modified = true;
     return true;
 }
@@ -2210,12 +2210,12 @@ MapObject D1Dun::getObjectAt(int posx, int posy) const
     return this->objects[posy][posx];
 }
 
-bool D1Dun::setObjectAt(int posx, int posy, const MapObject &srcObj)
+bool D1Dun::setObjectAt(int posx, int posy, const MapObject &obj)
 {
-    if (this->objects[posy][posx] == srcObj) {
+    if (this->objects[posy][posx] == obj) {
         return false;
     }
-    this->objects[posy][posx] = srcObj;
+    this->objects[posy][posx] = obj;
     this->modified = true;
     return true;
 }
@@ -3458,6 +3458,18 @@ bool D1Dun::removeObjects()
     return result;
 }
 
+bool D1Dun::removeMissiles()
+{
+    bool result = false;
+    for (std::vector<MapMissile> &missilesRow : this->missiles) {
+        for (MapMissile &mis : missilesRow) {
+            result |= D1Dun::setMapMissile(mis, 0);
+        }
+    }
+    this->modified |= result;
+    return result;
+}
+
 static QString protectionString(Qt::CheckState protectionState)
 {
     if (protectionState == Qt::Unchecked) {
@@ -4015,6 +4027,19 @@ bool D1Dun::setMapObject(MapObject &dstObj, int objectIndex)
     }
     dstObj.oType = objectIndex;
     dstObj.frameNum = 0;
+    return true;
+}
+
+bool D1Dun::setMapMissile(MapMissile &dstMis, int misType)
+{
+    if (dstMis.miType == misType) {
+        return false;
+    }
+    dstMis.miType = misType;
+    dstMis.miDir = DIR_S;
+    dstMis.frameNum = 0;
+    dstMis.mix = 0;
+    dstMis.miy = 0;
     return true;
 }
 

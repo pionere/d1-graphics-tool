@@ -109,6 +109,7 @@ void DungeonDecorateDialog::on_decorateButton_clicked()
     params.resetObjects = this->ui->resetObjectsCheckBox->isChecked();
     params.resetItems = this->ui->resetItemsCheckBox->isChecked();
     params.resetRooms = this->ui->resetRoomsCheckBox->isChecked();
+    params.resetMissiles = this->ui->resetMissilesCheckBox->isChecked();
     params.addTiles = this->ui->addTilesCheckBox->isChecked();
     params.addShadows = this->ui->addShadowsCheckBox->isChecked();
     params.addMonsters = this->ui->addMonstersCheckBox->isChecked();

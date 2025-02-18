@@ -16,8 +16,6 @@ DunPos::DunPos(int cx, int cy, int v)
     : cellX(cx)
     , cellY(cy)
     , value(v)
-    , metaValue0(0)
-    , metaValue1(0)
 {
 }
 
@@ -68,20 +66,20 @@ void EditDungeonCommand::undo()
             this->dun->setSubtileObjProtectionAt(dp.cellX, dp.cellY, (dp.value & 2) != 0);
             dp.value = currValue;
             break;
-        case BEM_OBJECT:
-            currValue = this->dun->getObjectAt(dp.cellX, dp.cellY);
-            this->dun->setObjectAt(dp.cellX, dp.cellY, dp.value);
+        case BEM_OBJECT: {
+            MapObject obj = this->dun->getObjectAt(dp.cellX, dp.cellY);
+            currValue = obj.oType;
+            obj.oType = dp.value;
+            this->dun->setObjectAt(dp.cellX, dp.cellY, obj);
             dp.value = currValue;
-            break;
+        } break;
         case BEM_MONSTER: {
             MapMonster mon = this->dun->getMonsterAt(dp.cellX, dp.cellY);
-            currValue = mon.type.monIndex | (mon.type.monUnique ? 1 << 31 : 0);
-            mon.type.monIndex = dp.value & INT32_MAX;
-            mon.type.monUnique = (dp.value & (1 << 31)) != 0;
-            this->dun->setMonsterAt(dp.cellX, dp.cellY, mon.type, dp.metaValue0, dp.metaValue1);
+            currValue = mon.moType.monIndex | (mon.moType.monUnique ? 1 << 31 : 0);
+            mon.moType.monIndex = dp.value & INT32_MAX;
+            mon.moType.monUnique = (dp.value & (1 << 31)) != 0;
+            this->dun->setMonsterAt(dp.cellX, dp.cellY, mon);
             dp.value = currValue;
-            dp.metaValue0 = mon.mox;
-            dp.metaValue1 = mon.moy;
         } break;
         }
     }
@@ -253,14 +251,14 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
         break;
     case BEM_OBJECT:
         value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
-        if (value == this->dun->getObjectAt(cell.x(), cell.y())) {
+        if (value == this->dun->getObjectAt(cell.x(), cell.y()).oType) {
             value = 0;
         }
         break;
     case BEM_MONSTER:
         value = this->currentMonsterType.monIndex; // this->ui->monsterLineEdit->text().toInt();
         value |= this->currentMonsterType.monUnique /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
-        if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y()).type) {
+        if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y()).moType) {
             value = 0;
         }
         break;

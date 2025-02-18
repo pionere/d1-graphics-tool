@@ -135,11 +135,11 @@ void DungeonSearchDialog::search(bool next)
                 found = this->dun->getRoomAt(posx, posy) == params.index;
                 break;
             case DUN_SEARCH_TYPE::Monster: {
-                DunMonsterType monType = this->dun->getMonsterAt(posx, posy).type;
+                DunMonsterType monType = this->dun->getMonsterAt(posx, posy).moType;
                 found = monType.monIndex == params.index && monType.monUnique == params.special;
             } break;
             case DUN_SEARCH_TYPE::Object:
-                found = this->dun->getObjectAt(posx, posy) == params.index;
+                found = this->dun->getObjectAt(posx, posy).oType == params.index;
                 break;
             case DUN_SEARCH_TYPE::Item:
                 found = this->dun->getItemAt(posx, posy) == params.index;
@@ -246,13 +246,15 @@ bool DungeonSearchDialog::replace(const QPoint &match, const DungeonSearchParam 
         result = dun->setRoomAt(match.x(), match.y(), replace);
         break;
     case DUN_SEARCH_TYPE::Monster: {
-        DunMonsterType monType = { replace, params.replaceSpec };
         MapMonster mon = dun->getMonsterAt(match.x(), match.y());
-        result = dun->setMonsterAt(match.x(), match.y(), monType, mon.mox, mon.moy);
+        mon.moType = { replace, params.replaceSpec };
+        result = dun->setMonsterAt(match.x(), match.y(), mon);
     } break;
-    case DUN_SEARCH_TYPE::Object:
-        result = dun->setObjectAt(match.x(), match.y(), replace);
-        break;
+    case DUN_SEARCH_TYPE::Object: {
+        MapObject obj = dun->getObjectAt(match.x(), match.y());
+        obj.oType = replace;
+        result = dun->setObjectAt(match.x(), match.y(), obj);
+    } break;
     case DUN_SEARCH_TYPE::Item:
         result = dun->setItemAt(match.x(), match.y(), replace);
         break;

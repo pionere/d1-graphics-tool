@@ -365,6 +365,16 @@
         </property>
        </widget>
       </item>
+      <item row="6" column="7">
+       <widget class="QCheckBox" name="resetMissilesCheckBox">
+        <property name="text">
+         <string>Missiles</string>
+        </property>
+        <property name="toolTip">
+         <string>Remove the current missiles</string>
+        </property>
+       </widget>
+      </item>
       <item row="7" column="0">
        <widget class="QLabel">
         <property name="text">

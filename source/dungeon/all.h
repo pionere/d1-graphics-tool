@@ -28,7 +28,7 @@
 #include "items.h"
 #include "lighting.h"
 #include "misdat.h"
-#include "missile.h"
+#include "missiles.h"
 #include "monstdat.h"
 #include "monster.h"
 #include "objdat.h"

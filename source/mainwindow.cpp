@@ -2792,6 +2792,16 @@ void MainWindow::on_actionLoadObjects_Dungeon_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionRemoveMissiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeMissiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionGenerate_Dungeon_triggered()
 {
     this->levelCelView->generateDungeon();
