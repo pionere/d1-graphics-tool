@@ -4013,6 +4013,7 @@ void MI_HorkSpawn(int mi)
 	}
 	// assert(abs(mis->_mix - mis->_misx) < 2 && abs(mis->_miy - mis->_misy) < 2);
 	mis->_miDelFlag = TRUE;
+#if 0
 	static_assert(DBORDERX >= 1 && DBORDERY >= 1, "MI_HorkSpawn expects a large enough border.");
 	static_assert(lengthof(CrawlNum) > 1, "MI_HorkSpawn uses CrawlTable/CrawlNum up to radius 1.");
 	for (i = 0; i <= 1; i++) {
@@ -4028,6 +4029,7 @@ void MI_HorkSpawn(int mi)
 			}
 		}
 	}
+#endif
 }
 
 void MI_Rune(int mi)
@@ -4166,6 +4168,7 @@ void MI_BloodBoilC(int mi)
 
 void MI_SwampC(int mi)
 {
+#if 0
 	MissileStruct *mis, *bmis;
 	int i, bmi, dx, dy, mx, my, mnum, pnum;
 	bool matches[16][16] = { false };
@@ -4214,7 +4217,7 @@ void MI_SwampC(int mi)
 			}
 		}
 	}
-
+#endif
 	MI_BloodBoilC(mi);
 }
 

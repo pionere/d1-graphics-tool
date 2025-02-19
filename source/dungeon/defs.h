@@ -12,12 +12,12 @@
 
 #define DEVILUTION_BEGIN_NAMESPACE
 #define DEVILUTION_END_NAMESPACE
+#define ALIGNMENT(x86, x64)
+#define ALIGNMENT32(num)
+#define ALIGNMENT64(num)
+#define ALIGN
 #define ALIGN32
 #define ALIGN64
-#define ALIGNMENT
-#define ALIGNMENT32
-#define ALIGNMENT64
-#define ALIGN
 
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
