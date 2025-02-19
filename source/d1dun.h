@@ -81,6 +81,9 @@ Q_DECLARE_METATYPE(DunMonsterType);
 typedef struct MapObject {
     int oType;
     int frameNum;
+    bool operator==(const MapObject & oobj) const {
+        return oType == oobj.oType && frameNum == oobj.frameNum;
+    };
 } MapObject;
 
 typedef struct MapMonster {
@@ -89,9 +92,9 @@ typedef struct MapMonster {
     int frameNum;
     int mox;
     int moy;
-   	bool operator==(const MapMonster & omon) const {
+    bool operator==(const MapMonster & omon) const {
         return moType == omon.moType && moDir == omon.moDir && frameNum == omon.frameNum && mox == omon.mox && moy == omon.moy;
-	};
+    };
 } MapMonster;
 
 typedef struct MapMissile {
@@ -100,6 +103,9 @@ typedef struct MapMissile {
     int frameNum;
     int mix;
     int miy;
+    bool operator==(const MapMissile & omis) const {
+        return miType == omis.miType && miDir == omis.miDir && frameNum == omis.frameNum && mix == omis.mix && miy == omis.miy;
+    };
 } MapMissile;
 
 typedef struct DunObjectStruct {
@@ -303,6 +309,8 @@ public:
     const std::vector<CustomItemStruct> &getCustomItemTypes() const;
     const std::vector<CustomMissileStruct> &getCustomMissileTypes() const;
     void clearAssets();
+
+    void game_logic();
 
 private:
     static void DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color);

@@ -2944,7 +2944,7 @@ void D1Dun::loadMissileGfx(const QString &filePath, int width, const QString &tr
                 return;
             }
         } else {
-            for (i = 0; i < lengthof(mde.midGfx); i++) {
+            for (i = 0; i < (unsigned)lengthof(mde.midGfx); i++) {
                 // create new entry
                 D1Gfx *gfx = new D1Gfx();
                 // gfx->setPalette(this->pal);
@@ -2994,7 +2994,7 @@ void D1Dun::loadItem(int itemIndex)
 
 void D1Dun::loadMissile(int misIndex)
 {
-    MissileCacheEntry result = { misIndex, nullptr, 0, this->pal, nullptr };
+    MissileCacheEntry result = { misIndex, { nullptr, nullptr, }, this->pal, nullptr };
     // load a custom monster
     unsigned i = 0;
     for (; i < this->customMissileTypes.size(); i++) {
@@ -3009,7 +3009,7 @@ void D1Dun::loadMissile(int misIndex)
         // load normal missile
         if ((unsigned)misIndex < (unsigned)lengthof(DunMissConvTbl) && DunMissConvTbl[misIndex].name != nullptr) {
             const MissileData &md = missiledata[misIndex];
-            const MisFileData &mfd = misfiledata[md.mFileNum]'
+            const MisFileData &mfd = misfiledata[md.mFileNum];
             QString cl2FilePath = mfd.mfName;
             cl2FilePath = this->assetPath + "/Missiles/" + cl2FilePath;
             if (mfd.mfAnimFAmt == 1)
@@ -5935,7 +5935,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                     if (dataEntry.midGfx[0] == gfx) {
                         dataEntry.numrefs--;
                         if (dataEntry.numrefs == 0) {
-                            for (int g = 0; g < dataEntry.numgfxs; g++) {
+                            for (unsigned g = 0; g < dataEntry.numgfxs; g++) {
                                 delete dataEntry.midGfx[g];
                             }
                             this->missileDataCache.erase(this->missileDataCache.begin() + i);
@@ -5989,4 +5989,9 @@ const std::vector<CustomItemStruct> &D1Dun::getCustomItemTypes() const
 const std::vector<CustomMissileStruct> &D1Dun::getCustomMissileTypes() const
 {
     return this->customMissileTypes;
+}
+
+void D1Dun::game_logic()
+{
+
 }

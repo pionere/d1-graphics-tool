@@ -92,6 +92,15 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define GOLD_MEDIUM_LIMIT		2500
 #define GOLD_MAX_LIMIT			5000
 
+#define PLR_NAME_LEN            16
+
+#define MAXPATHNODES            256
+
+#define MAX_PATH_LENGTH         23
+
+// 272 kilobytes .. (was 256 kb in vanilla which is not safe)
+#define FILEBUFF                (272 * 1024)
+
 // Diablo uses a 256 color palette
 // Entry 0-127 (0x00-0x7F) are level specific
 // Entry 128-255 (0x80-0xFF) are global

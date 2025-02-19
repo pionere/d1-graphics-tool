@@ -11,6 +11,10 @@ DEVILUTION_BEGIN_NAMESPACE
 #define TILE_WIDTH     (64 * ASSET_MPL)
 #define TILE_HEIGHT    (32 * ASSET_MPL)
 
+static_assert(NUM_SFXS <= INT_MAX, "SFX_VALID checks only the sign of the SFX_-value I.");
+static_assert(SFX_NONE < 0, "SFX_VALID checks only the sign of the SFX_-value II.");
+#define SFX_VALID(x) (x >= 0)
+
 #define plr            players[pnum]
 #define plx(x)         players[x]
 
@@ -20,6 +24,11 @@ PlayerStruct players[MAX_PLRS];
 bool PlrDecHp(int pnum, int hp, int dmgtype)
 {
     return false;
+}
+
+void PlrIncHp(int pnum, int hp)
+{
+
 }
 
 void RemovePortalMissile(int pnum)
@@ -2796,6 +2805,7 @@ int AddGuardian(int mi, int sx, int sy, int dx, int dy, int midir, int micaster,
 
 int AddGolem(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	MonsterStruct* mon;
 	int tx, ty, i, j;
 	const int8_t* cr;
@@ -2828,11 +2838,13 @@ int AddGolem(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 	CheckSplashColFull(mi);
 
 	MonKill(misource, misource);
+#endif
 	return MIRES_DELETE;
 }
 
 int AddHeal(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	int i, hp;
 	// (micaster & MST_PLAYER);
 	// assert((unsigned)misource < MAX_PLRS);
@@ -2859,11 +2871,13 @@ int AddHeal(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int
 		ASSUME_UNREACHABLE
 	}
 	PlrIncHp(misource, hp);
+#endif
 	return MIRES_DELETE;
 }
 
 int AddHealOther(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	int tnum, i, hp;
 	MonsterStruct* mon;
 	// (micaster & MST_PLAYER);
@@ -2913,6 +2927,7 @@ int AddHealOther(int mi, int sx, int sy, int dx, int dy, int midir, int micaster
 			}
 		}
 	}
+#endif
 	return MIRES_DELETE;
 }
 
@@ -3044,6 +3059,7 @@ int AddNovaC(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 
 int AddDisarm(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
+#if 0
 	int oi = spllvl;
 	int pnum = misource;
 	// (micaster & MST_PLAYER);
@@ -3054,6 +3070,7 @@ int AddDisarm(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, i
 	// assert(abs(dObject[dx][dy]) == oi + 1);
 	DisarmObject(pnum, oi);
 	OperateObject(pnum, oi, false);
+#endif
 	return MIRES_DELETE;
 }
 
@@ -4276,14 +4293,14 @@ void MI_Portal(int mi)
 			SetMissAnim(mi, 1);
 		}
 	}
-
+#if 0
 	if (mis->_miType == MIS_TOWN) {
 		if (myplr._px == mis->_mix && myplr._py == mis->_miy && /*!myplr._pLvlChanging &&*/ myplr._pmode == PM_STAND && !mis->_miVar3) {
 			mis->_miVar3 = TRUE;
 			NetSendCmdBParam1(CMD_USEPORTAL, mis->_miSource);
 		}
 	}
-
+#endif
 	PutMissile(mi);
 }
 

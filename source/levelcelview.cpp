@@ -3512,6 +3512,9 @@ void LevelCelView::displayFrame()
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     if (this->dunView) {
+        if (this->playTimer != 0) {
+            this->dun->game_logic();
+        }
         DunDrawParam params;
         params.tileState = this->ui->showTilesRadioButton->isChecked() ? Qt::Checked : (this->ui->showFloorRadioButton->isChecked() ? Qt::PartiallyChecked : Qt::Unchecked);
         params.overlayType = this->ui->dunOverlayComboBox->currentIndex();
@@ -3519,7 +3522,7 @@ void LevelCelView::displayFrame()
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();
         params.showMissiles = this->ui->showMissilesCheckBox->isChecked();
-        params.time = this->playCounter;
+        // params.time = this->playCounter;
         QImage dunFrame = this->dun->getImage(params);
 
         this->celScene.setSceneRect(0, 0,

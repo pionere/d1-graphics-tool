@@ -527,16 +527,47 @@ typedef struct MapMonData {
 #pragma pack(pop)
 typedef struct MonsterStruct {
 	int _mmode; // MON_MODE
+	unsigned _msquelch;
 	BYTE _mMTidx;
+	BYTE _mpathcount; // unused
+	BYTE _mAlign_1;   // unused
+	BYTE _mgoal;
+	int _mgoalvar1;
+	int _mgoalvar2;
+	int _mgoalvar3;
 	int _mx;           // Tile X-position where the monster should be drawn
 	int _my;           // Tile Y-position where the monster should be drawn
+	int _mfutx;        // Future tile X-position where the monster will be at the end of its action
+	int _mfuty;        // Future tile Y-position where the monster will be at the end of its action
+	int _moldx;        // Most recent tile X-position where the monster was at the start of its action
+	int _moldy;        // Most recent tile Y-position where the monster was at the start of its action
+	int _mxoff;        // Pixel X-offset from tile position where the monster should be drawn
+	int _myoff;        // Pixel Y-offset from tile position where the monster should be drawn
 	int _mdir;         // Direction faced by monster (direction enum)
+	int _menemy;       // The current target of the monster. An index in to either the plr or monster array depending on _mFlags (MFLAG_TARGETS_MONSTER)
+	BYTE _menemyx;     // Future (except for teleporting) tile X-coordinate of the enemy
+	BYTE _menemyy;     // Future (except for teleporting) tile Y-coordinate of the enemy
+	BYTE _mListener;   // the player to whom the monster is talking to (unused)
+	BOOLEAN _mDelFlag; // unused
+	BYTE* _mAnimData;
 	int _mAnimFrameLen; // Tick length of each frame in the current animation
 	int _mAnimCnt;   // Increases by one each game tick, counting how close we are to _mAnimFrameLen
 	int _mAnimLen;   // Number of frames in current animation
 	int _mAnimFrame; // Current frame of animation.
+	int _mVar1;
+	int _mVar2;
+	int _mVar3; // Used to store the original mode of a stoned monster. Not 'thread' safe -> do not use for anything else! 
+	int _mVar4;
+	int _mVar5;
+	int _mVar6;
+	int _mVar7;
+	int _mVar8;
 	int _mmaxhp;
+	int _mhitpoints;
+	int _mlastx; // the last known (future) tile X-coordinate of the enemy
+	int _mlasty; // the last known (future) tile Y-coordinate of the enemy
 	int32_t _mRndSeed;
+	int32_t _mAISeed;
 	BYTE _muniqtype;
 	BYTE _muniqtrans;
 	BYTE _mNameColor;  // color of the tooltip. white: normal, blue: pack; gold: unique. (text_color)
@@ -546,6 +577,7 @@ typedef struct MonsterStruct {
 	BYTE _mpacksize;   // the number of 'pack'-monsters close to their leader
 	BYTE _mvid;        // vision id of the monster (for minions only)
 	const char* _mName;
+	uint16_t _mFileNum; // _monster_gfx_id
 	BYTE _mLevel;
 	BYTE _mSelFlag;
 	MonsterAI _mAI;
@@ -561,6 +593,14 @@ typedef struct MonsterStruct {
 	int _mEvasion;       // evasion: used against magic-projectile
 	unsigned _mMagicRes; // resistances of the monster (_monster_resistance)
 	unsigned _mExp;
+	int _mAnimWidth;
+	int _mAnimXOffset;
+	BYTE _mAFNum;  // action frame number of the attack animation
+	BYTE _mAFNum2; // action frame number of the special animation
+	uint16_t _mAlign_0; // unused
+	int _mType; // _monster_id
+	MonAnimStruct* _mAnims;
+	ALIGNMENT(6, 2)
 } MonsterStruct;
 
 typedef struct UniqMonData {
