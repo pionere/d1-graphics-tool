@@ -3894,7 +3894,7 @@ bool D1Gfx::patchItemFlips(int gfxFileIndex, bool silent)
             dProgressErr() << tr("Framesize of the Item animation %d does not match. (%1:%2 expected %3:%4. Index %5.)").arg(gfxFileIndex).arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
             return false;
         }
-
+        bool change = false;
         // center frames
         // - shift crown, larmor, wshield (-12;0), ear (-16;0)
         if (gfxFileIndex == GFX_ITEM_CROWNF || gfxFileIndex == GFX_ITEM_FEAR || gfxFileIndex == GFX_ITEM_LARMOR || gfxFileIndex == GFX_ITEM_WSHIELD) {
