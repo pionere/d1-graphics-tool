@@ -3908,7 +3908,7 @@ bool D1Gfx::patchItemFlips(int gfxFileIndex, bool silent)
                 }
             }
             for (int y = 0; y < FRAME_HEIGHT; y++) {
-                for (int x = FRAME_WIDTH / 2; x < FRAME_WIDTH; x++) {
+                for (int x = 16; x < FRAME_WIDTH; x++) {
                     change |= frame->setPixel((x - (gfxFileIndex == GFX_ITEM_FEAR ? 16 : 12)), y, frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
@@ -3966,15 +3966,15 @@ bool D1Gfx::patchItemFlips(int gfxFileIndex, bool silent)
                 }
             }
         }
-        // - shift brain (+5;+16)
+        // - shift brain (+5;+11)
         if (gfxFileIndex == GFX_ITEM_FBRAIN) {
             // check if it is already done
             if (i == 0 && frame->getPixel(40, 85).isTransparent()) {
                 return result; // assume it is already done
             }
-            for (int y = FRAME_HEIGHT - 1 - 16; y >= 0; y--) {
+            for (int y = FRAME_HEIGHT - 1 - 11; y >= 0; y--) {
                 for (int x = FRAME_WIDTH - 1 - 5; x >= 0; x--) {
-                    change |= frame->setPixel((x + 5), (y + 16), frame->getPixel(x, y));
+                    change |= frame->setPixel((x + 5), (y + 11), frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
