@@ -100,6 +100,106 @@
          <string>Cursor icons (ObjCurs.CEL)</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Armor Item animation (Armor2.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Gold Item animation (GoldFlip.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Mace Item animation (Mace.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Staff Item animation (Staff.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ring Item animation (Ring.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Crown Item animation (CrownF.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Light Armor Item animation (LArmor.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Warrior Shield Item animation (WShield.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Scroll Item animation (Scroll.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ear Item animation (FEar.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Brain Item animation (FBrain.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Mushroom Item animation (FMush.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Innsign Item animation (Innsign.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bloodstone Item animation (Bldstn.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Anvil Item animation (Fanvil.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Lazarus's Staff Item animation (FLazStaf.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Teddy Item animation (teddys1.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Cow Hide Item animation (cows1.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Donkey Hide Item animation (donkys1.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Moose Hide Item animation (mooses1.CEL)</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
