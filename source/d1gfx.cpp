@@ -3882,6 +3882,377 @@ bool D1Gfx::patchSplIcons(bool silent)
     return true;
 }
 
+bool D1Gfx::patchItemFlips(int gfxFileIndex, bool silent)
+{
+    constexpr int FRAME_WIDTH = 96;
+    int FRAME_HEIGHT = (gfxFileIndex == GFX_ITEM_CROWNF || gfxFileIndex == GFX_ITEM_FEAR || gfxFileIndex == GFX_ITEM_LARMOR || gfxFileIndex == GFX_ITEM_WSHIELD) ? 128 : 160;
+
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << tr("Framesize of the Item animation %d does not match. (%1:%2 expected %3:%4. Index %5.)").arg(gfxFileIndex).arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false;
+        }
+
+        // center frames
+        // - shift crown, larmor, wshield (-12;0), ear (-16;0)
+        if (gfxFileIndex == GFX_ITEM_CROWNF || gfxFileIndex == GFX_ITEM_FEAR || gfxFileIndex == GFX_ITEM_LARMOR || gfxFileIndex == GFX_ITEM_WSHIELD) {
+            // check if it is already done
+            if (i == 0) {
+                for (int y = 0; y < FRAME_HEIGHT; y++) {
+                    for (int x = 0; x < FRAME_WIDTH / 2 - 1; x++) {
+                        if (frame->getPixel(x, y).isTransparent()) continue;
+                        return result; // assume it is already done
+                    }
+                }
+            }
+            for (int y = 0; y < FRAME_HEIGHT; y++) {
+                for (int x = FRAME_WIDTH / 2; x < FRAME_WIDTH; x++) {
+                    change |= frame->setPixel((x - (gfxFileIndex == GFX_ITEM_FEAR ? 16 : 12)), y, frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift mace (+2;-2)
+        if (gfxFileIndex == GFX_ITEM_MACE) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(41, 91).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = 16; y < FRAME_HEIGHT; y++) {
+                for (int x = FRAME_WIDTH - 20; x > 20; x--) {
+                    change |= frame->setPixel((x + 2), (y - 2), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift scroll (0;-2)
+        if (gfxFileIndex == GFX_ITEM_SCROLL) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(51, 94).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = 16; y < FRAME_HEIGHT; y++) {
+                for (int x = FRAME_WIDTH - 20; x > 20; x--) {
+                    change |= frame->setPixel((x + 0), (y - 2), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift ring (0;-3)
+        if (gfxFileIndex == GFX_ITEM_RING) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(45, 87).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = 16; y < FRAME_HEIGHT; y++) {
+                for (int x = FRAME_WIDTH - 20; x > 20; x--) {
+                    change |= frame->setPixel((x + 0), (y - 3), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift staff (-7;+5)
+        if (gfxFileIndex == GFX_ITEM_STAFF) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(53, 52).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 5; y >= 0; y--) {
+                for (int x = 16; x < FRAME_WIDTH; x++) {
+                    change |= frame->setPixel((x - 7), (y + 5), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift brain (+5;+16)
+        if (gfxFileIndex == GFX_ITEM_FBRAIN) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(40, 85).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 16; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 20; x > 20; x--) {
+                    change |= frame->setPixel((x + 5), (y + 16), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift mushroom (0;+6)
+        if (gfxFileIndex == GFX_ITEM_FMUSH) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(43, 83).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 6; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 20; x > 20; x--) {
+                    change |= frame->setPixel((x + 0), (y + 6), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift innsign (+14;+8)
+        if (gfxFileIndex == GFX_ITEM_INNSIGN) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(18, 96).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 8; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 1 - 14; x >= 0; x--) {
+                    change |= frame->setPixel((x + 14), (y + 8), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift bloodstone (0;+5)
+        if (gfxFileIndex == GFX_ITEM_BLDSTN) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(45, 75).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 5; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 20; x > 20; x--) {
+                    change |= frame->setPixel((x + 0), (y + 5), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift anvil (+3;+6)
+        if (gfxFileIndex == GFX_ITEM_FANVIL) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(22, 80).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 6; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 1 - 3; x >= 0; x--) {
+                    change |= frame->setPixel((x + 3), (y + 6), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift lazarus's staff (-3;+8)
+        if (gfxFileIndex == GFX_ITEM_FLAZSTAF) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(30, 58).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 8; y >= 0; y--) {
+                for (int x = 3; x < FRAME_WIDTH; x++) {
+                    change |= frame->setPixel((x - 3), (y + 8), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // fix the shadow of the staff
+            if (i == 6) {
+                change |= frame->setPixel(51, 127, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(63, 131, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(64, 131, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(35, 140, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(36, 140, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(39, 140, D1GfxPixel::colorPixel(0));
+            }
+            if (i == 7) {
+                for (int x = 27; x < 38; x++)
+                    change |= frame->setPixel(x, 140, D1GfxPixel::transparentPixel());
+                for (int x = 62; x < 66; x++)
+                    change |= frame->setPixel(x, 139, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(73, 140, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(74, 140, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(81, 139, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(48, 140, D1GfxPixel::colorPixel(0));
+                change |= frame->setPixel(49, 140, D1GfxPixel::colorPixel(0));
+            }
+        }
+        // - shift armor (0;-2)
+        if (gfxFileIndex == GFX_ITEM_ARMOR2) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(29, 111).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = 2; y < FRAME_HEIGHT; y++) {
+                for (int x = FRAME_WIDTH - 1; x >= 0; x--) {
+                    change |= frame->setPixel((x + 0), (y - 2), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // mask shadow
+            if (i == 14) {
+                change |= frame->setPixel(22, 147, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(23, 147, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(20, 148, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(21, 148, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(22, 148, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(23, 148, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(23, 149, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(24, 149, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(25, 149, D1GfxPixel::transparentPixel());
+            }
+        }
+        // - shift cowhide (+2;+4)
+        if (gfxFileIndex == GFX_ITEM_COWS1) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(30, 78).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 4; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 1 - 2; x >= 0; x--) {
+                    change |= frame->setPixel((x + 2), (y + 4), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift last frame of donkeyhide (+2;+4)
+        if (i == 14 && gfxFileIndex == GFX_ITEM_DONKYS1) {
+            // check if it is already done
+            if (frame->getPixel(40, 119).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 4; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 1 - 2; x >= 0; x--) {
+                    change |= frame->setPixel((x + 2), (y + 4), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift moosehide (0;+3)
+        if (gfxFileIndex == GFX_ITEM_MOOSES1) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(44, 83).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 3; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 1 - 0; x >= 0; x--) {
+                    change |= frame->setPixel((x + 0), (y + 3), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // - shift teddy (0;+6)
+        if (gfxFileIndex == GFX_ITEM_TEDDYS1) {
+            // check if it is already done
+            if (i == 0 && frame->getPixel(46, 100).isTransparent()) {
+                return result; // assume it is already done
+            }
+            for (int y = FRAME_HEIGHT - 1 - 6; y >= 0; y--) {
+                for (int x = FRAME_WIDTH - 1 - 0; x >= 0; x--) {
+                    change |= frame->setPixel((x + 0), (y + 6), frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // reduce gold stack
+        if (gfxFileIndex == GFX_ITEM_GOLDFLIP) {
+            // check if it is already done
+            if (i == 4 && frame->getPixel(22, 147).isTransparent()) {
+                return result; // assume it is already done
+            }
+            if (i == 4) {
+                for (int y = 0; y < FRAME_HEIGHT; y++) {
+                    for (int x = 0; x < FRAME_WIDTH; x++) {
+                        if (y >= 144 + x - 27)
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            if (i == 5) {
+                for (int y = 0; y < FRAME_HEIGHT; y++) {
+                    for (int x = 0; x < FRAME_WIDTH; x++) {
+                        if (x <= 23)
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            if (i == 6) {
+                for (int y = 0; y < FRAME_HEIGHT; y++) {
+                    for (int x = 0; x < FRAME_WIDTH; x++) {
+                        if (y >= 150 - x + 63 || y >= 146 + x - 24)
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            if (i == 7) {
+                for (int y = 0; y < FRAME_HEIGHT; y++) {
+                    for (int x = 0; x < FRAME_WIDTH; x++) {
+                        if (x <= 23 || y >= 152 - x + 63 || y >= 146 + x - 23 || (x <= 34 && y >= 150))
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            if (i == 8 || i == 9) {
+                for (int y = 0; y < FRAME_HEIGHT; y++) {
+                    for (int x = 0; x < FRAME_WIDTH; x++) {
+                        if (y >= 152 - x + 63 || y >= 146 + x - 23 || (x <= 34 && y >= 150) || (x <= 39 && y >= 152) || (x >= 57 && y >= 153) || (x <= 34 && y <= 136))
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            if (i == 9) {
+                change |= frame->setPixel(37, 149, D1GfxPixel::colorPixel(203)); // (was color204)
+                change |= frame->setPixel(38, 149, D1GfxPixel::colorPixel(198)); // (was color204)
+                change |= frame->setPixel(37, 150, D1GfxPixel::colorPixel(199)); // (was transparent)
+                change |= frame->setPixel(38, 150, D1GfxPixel::colorPixel(196)); // (was transparent)
+                change |= frame->setPixel(39, 150, D1GfxPixel::colorPixel(196)); // (was color204)
+                change |= frame->setPixel(40, 150, D1GfxPixel::colorPixel(197)); // (was color204)
+                change |= frame->setPixel(37, 151, D1GfxPixel::colorPixel(204)); // (was transparent)
+                change |= frame->setPixel(38, 151, D1GfxPixel::colorPixel(201)); // (was transparent)
+                change |= frame->setPixel(39, 151, D1GfxPixel::colorPixel(198)); // (was transparent)
+                change |= frame->setPixel(40, 151, D1GfxPixel::colorPixel(204)); // (was transparent)
+                change |= frame->setPixel(40, 153, D1GfxPixel::transparentPixel()); // (was color203)
+                change |= frame->setPixel(41, 153, D1GfxPixel::transparentPixel()); // (was color198)
+                change |= frame->setPixel(42, 153, D1GfxPixel::transparentPixel()); // (was color198)
+                change |= frame->setPixel(44, 153, D1GfxPixel::colorPixel(202)); // (was color198)
+                change |= frame->setPixel(40, 154, D1GfxPixel::transparentPixel()); // (was color197)
+                change |= frame->setPixel(41, 154, D1GfxPixel::transparentPixel()); // (was color196)
+                change |= frame->setPixel(42, 154, D1GfxPixel::transparentPixel()); // (was color196)
+                change |= frame->setPixel(43, 154, D1GfxPixel::transparentPixel()); // (was color196)
+                change |= frame->setPixel(44, 154, D1GfxPixel::transparentPixel()); // (was color202)
+                change |= frame->setPixel(40, 155, D1GfxPixel::transparentPixel()); // (was color199)
+                change |= frame->setPixel(41, 155, D1GfxPixel::transparentPixel()); // (was color196)
+                change |= frame->setPixel(42, 155, D1GfxPixel::transparentPixel()); // (was color196)
+                change |= frame->setPixel(43, 155, D1GfxPixel::transparentPixel()); // (was color197)
+                change |= frame->setPixel(44, 155, D1GfxPixel::transparentPixel()); // (was color204)
+                change |= frame->setPixel(40, 156, D1GfxPixel::transparentPixel()); // (was color204)
+                change |= frame->setPixel(41, 156, D1GfxPixel::transparentPixel()); // (was color201)
+                change |= frame->setPixel(42, 156, D1GfxPixel::transparentPixel()); // (was color198)
+                change |= frame->setPixel(43, 156, D1GfxPixel::transparentPixel()); // (was color204
+            }
+        }
+#if 0
+        // mask with the floor
+        for (int y = 0; y < FRAME_HEIGHT; y++) {
+            for (int x = 0; x < FRAME_WIDTH; x++) {
+                if (frame->getPixel(x, y).isTransparent()) continue;
+                //if (i != srcCelEntries - 1) {
+                    if (y < FRAME_HEIGHT + ((x - 47) / 2)
+                 // && y >= FRAME_HEIGHT - TILE_HEIGHT + ((x - 47) / 2)
+                 && y < FRAME_HEIGHT + ((48 - x) / 2))
+                 // && y >= FRAME_HEIGHT - TILE_HEIGHT + ((48 - x) / 2))
+                    continue;
+                /*} else {
+                if (y < FRAME_HEIGHT + ((x - 47) / 2)
+                 && y >= FRAME_HEIGHT - TILE_HEIGHT + ((x - 47) / 2)
+                 && y < FRAME_HEIGHT + ((48 - x) / 2)
+                 && y >= FRAME_HEIGHT - TILE_HEIGHT + ((48 - x) / 2))
+                     continue;
+                }*/
+                change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                LogErrorF("Patched %s %d. @ %d:%d", filesToPatch[gfxFileIndex], i, x, y);
+            }
+        }
+#endif
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        }
+    }
+
+    return result;
+}
+
 void D1Gfx::patch(int gfxFileIndex, bool silent)
 {
     bool change = false;
@@ -3925,6 +4296,29 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_CURS_ICONS: // patch ObjCurs.CEL
         change = this->patchCursorIcons(silent);
         break;
+    case GFX_ITEM_ARMOR2:   // patch Armor2.CEL
+    case GFX_ITEM_GOLDFLIP: // patch GoldFlip.CEL
+    case GFX_ITEM_MACE:     // patch Mace.CEL
+    case GFX_ITEM_STAFF:    // patch Staff.CEL
+    case GFX_ITEM_RING:     // patch Ring.CEL
+    case GFX_ITEM_CROWNF:   // patch CrownF.CEL
+    case GFX_ITEM_LARMOR:   // patch LArmor.CEL
+    case GFX_ITEM_WSHIELD:  // patch WShield.CEL
+    case GFX_ITEM_SCROLL:   // patch Scroll.CEL
+    case GFX_ITEM_FEAR:     // patch FEar.CEL
+    case GFX_ITEM_FBRAIN:   // patch FBrain.CEL
+    case GFX_ITEM_FMUSH:    // patch FMush.CEL
+    case GFX_ITEM_INNSIGN:  // patch Innsign.CEL
+    case GFX_ITEM_BLDSTN:   // patch Bldstn.CEL
+    case GFX_ITEM_FANVIL:   // patch Fanvil.CEL
+    case GFX_ITEM_FLAZSTAF: // patch FLazStaf.CEL
+    case GFX_ITEM_TEDDYS1:  // patch teddys1.CEL
+    case GFX_ITEM_COWS1:    // patch cows1.CEL
+    case GFX_ITEM_DONKYS1:  // patch donkys1.CEL
+    case GFX_ITEM_MOOSES1:  // patch mooses1.CEL
+        change = this->patchItemFlips(gfxFileIndex, silent);
+        break;
+
     }
     if (!change && !silent) {
         dProgress() << tr("No change was necessary.");
@@ -3965,6 +4359,66 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "objcurs") {
         fileIndex = GFX_CURS_ICONS;
+    }
+    if (baseName == "Armor2") {
+        fileIndex = GFX_ITEM_ARMOR2;
+    }
+    if (baseName == "GoldFlip") {
+        fileIndex = GFX_ITEM_GOLDFLIP;
+    }
+    if (baseName == "Mace") {
+        fileIndex = GFX_ITEM_MACE;
+    }
+    if (baseName == "Staff") {
+        fileIndex = GFX_ITEM_STAFF;
+    }
+    if (baseName == "Ring") {
+        fileIndex = GFX_ITEM_RING;
+    }
+    if (baseName == "CrownF") {
+        fileIndex = GFX_ITEM_CROWNF;
+    }
+    if (baseName == "LArmor") {
+        fileIndex = GFX_ITEM_LARMOR;
+    }
+    if (baseName == "WShield") {
+        fileIndex = GFX_ITEM_WSHIELD;
+    }
+    if (baseName == "Scroll") {
+        fileIndex = GFX_ITEM_SCROLL;
+    }
+    if (baseName == "FEar") {
+        fileIndex = GFX_ITEM_FEAR;
+    }
+    if (baseName == "FBrain") {
+        fileIndex = GFX_ITEM_FBRAIN;
+    }
+    if (baseName == "FMush") {
+        fileIndex = GFX_ITEM_FMUSH;
+    }
+    if (baseName == "Innsign") {
+        fileIndex = GFX_ITEM_INNSIGN;
+    }
+    if (baseName == "Bldstn") {
+        fileIndex = GFX_ITEM_BLDSTN;
+    }
+    if (baseName == "Fanvil") {
+        fileIndex = GFX_ITEM_FANVIL;
+    }
+    if (baseName == "FLazStaf") {
+        fileIndex = GFX_ITEM_FLAZSTAF;
+    }
+    if (baseName == "teddys1") {
+        fileIndex = GFX_ITEM_TEDDYS1;
+    }
+    if (baseName == "cows1") {
+        fileIndex = GFX_ITEM_COWS1;
+    }
+    if (baseName == "donkys1") {
+        fileIndex = GFX_ITEM_DONKYS1;
+    }
+    if (baseName == "mooses1") {
+        fileIndex = GFX_ITEM_MOOSES1;
     }
     // cl2 files
     if (baseName == "wmhas") {

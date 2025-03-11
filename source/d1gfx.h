@@ -126,6 +126,26 @@ typedef enum gfx_file_index {
     GFX_MON_GOATLD,  // graphics of the Satyr Lord dying (GoatLd.CL2)
     GFX_SPL_ICONS,   // spell icons (SpelIcon.CEL)
     GFX_CURS_ICONS,  // cursor icons (ObjCurs.CEL)
+    GFX_ITEM_ARMOR2,   // item drop animation (Armor2.CEL)
+    GFX_ITEM_GOLDFLIP, // item drop animation (GoldFlip.CEL)
+    GFX_ITEM_MACE,     // item drop animation (Mace.CEL)
+    GFX_ITEM_STAFF,    // item drop animation (Staff.CEL)
+    GFX_ITEM_RING,     // item drop animation (Ring.CEL)
+    GFX_ITEM_CROWNF,   // item drop animation (CrownF.CEL)
+    GFX_ITEM_LARMOR,   // item drop animation (LArmor.CEL)
+    GFX_ITEM_WSHIELD,  // item drop animation (WShield.CEL)
+    GFX_ITEM_SCROLL,   // item drop animation (Scroll.CEL)
+    GFX_ITEM_FEAR,     // item drop animation (FEar.CEL)
+    GFX_ITEM_FBRAIN,   // item drop animation (FBrain.CEL)
+    GFX_ITEM_FMUSH,    // item drop animation (FMush.CEL)
+    GFX_ITEM_INNSIGN,  // item drop animation (Innsign.CEL)
+    GFX_ITEM_BLDSTN,   // item drop animation (Bldstn.CEL)
+    GFX_ITEM_FANVIL,   // item drop animation (Fanvil.CEL)
+    GFX_ITEM_FLAZSTAF, // item drop animation (FLazStaf.CEL)
+    GFX_ITEM_TEDDYS1,  // item drop animation (teddys1.CEL)
+    GFX_ITEM_COWS1,    // item drop animation (cows1.CEL)
+    GFX_ITEM_DONKYS1,  // item drop animation (donkys1.CEL)
+    GFX_ITEM_MOOSES1,  // item drop animation (mooses1.CEL)
 } gfx_file_index;
 
 enum class D1CEL_TYPE {
@@ -221,6 +241,7 @@ private:
     bool patchGoatLDie(bool silent);
     bool patchSplIcons(bool silent);
     bool patchCursorIcons(bool silent);
+    bool patchItemFlips(int gfxFileIndex, bool silent);
 
 protected:
     D1CEL_TYPE type = D1CEL_TYPE::V1_REGULAR;
