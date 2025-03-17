@@ -8222,34 +8222,34 @@ void D1Tileset::patchTownSpec(bool silent)
         bool change = false;
         // shift the frame by (0; -HEIGHT) to add to a new subtile based on 10?
         if (i == 6 - 1) {
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH; x++) {
-                    change |= frame->setPixel(x, y - 2 * MICRO_HEIGHT, frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y - MICRO_HEIGHT, frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
         // shift the frame by (-HEIGHT/2, WIDTH/2) add frame 9 shifted by (-HEIGHT/2, -WIDTH/2) to add to 81
         if (i == 7 - 1) {
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH / 2; x++) {
-                    change |= frame->setPixel(x + FRAME_WIDTH / 2, y - 2 * MICRO_HEIGHT / 2, frame->getPixel(x, y));
+                    change |= frame->setPixel(x + FRAME_WIDTH / 2, y - MICRO_HEIGHT / 2, frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
             // add frame 9
             D1GfxFrame* frameSrc = this->cls->getFrame(9 - 1);
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = FRAME_WIDTH / 2; x < FRAME_WIDTH; x++) {
-                    change |= frame->setPixel(x - FRAME_WIDTH / 2, y - 2 * MICRO_HEIGHT / 2, frameSrc->getPixel(x, y));
+                    change |= frame->setPixel(x - FRAME_WIDTH / 2, y - MICRO_HEIGHT / 2, frameSrc->getPixel(x, y));
                 }
             }
         }
         // shift the frame by (0; -HEIGHT) + add trunc from 88r to add to 89
         if (i == 8 - 1) {
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH; x++) {
-                    change |= frame->setPixel(x, y - 2 * MICRO_HEIGHT, frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y - MICRO_HEIGHT, frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
@@ -8265,62 +8265,62 @@ void D1Tileset::patchTownSpec(bool silent)
                 for (int x = 16; x < 23; x++) {
                     D1GfxPixel pixel = frameSrc->getPixel(x, y);
                     if (!pixel.isTransparent())
-                        change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT / 2, pixel);
+                        change |= frame->setPixel(x, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT / 2, pixel);
                 }
             }
         }
         // add part of frame 12 shifted by (-HEIGHT/2, -WIDTH/2)
         if (i == 10 - 1) {
             D1GfxFrame* frameSrc = this->cls->getFrame(12 - 1);
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = FRAME_WIDTH / 2; x < FRAME_WIDTH; x++) {
-                    if ((y - 2 * MICRO_HEIGHT / 2) < 174) // y < 110 || x < 36)
+                    if ((y - MICRO_HEIGHT / 2) < 174) // y < 110 || x < 36)
                         continue;
                     D1GfxPixel pixel = frameSrc->getPixel(x, y);
                     quint8 color = pixel.getPaletteIndex();
                     if (!pixel.isTransparent() && (color == 0 || color == 110 || color == 117 || color == 119 || color == 121 || color == 122 || color == 124 || color == 126))
-                        change |= frame->setPixel(x - FRAME_WIDTH / 2, y - 2 * MICRO_HEIGHT / 2, pixel);
+                        change |= frame->setPixel(x - FRAME_WIDTH / 2, y - MICRO_HEIGHT / 2, pixel);
                 }
             }
         }
         // shift the frame by (0; -HEIGHT) to add to 102
         if (i == 11 - 1) {
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH; x++) {
-                    change |= frame->setPixel(x, y - 2 * MICRO_HEIGHT, frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y - MICRO_HEIGHT, frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
         // shift the frame by (0; -HEIGHT) and remove trunc to add to 107
         if (i == 12 - 1) {
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH; x++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
                     quint8 color = pixel.getPaletteIndex();
                     // if (color == TRANS_COLOR) continue;
-                    if ((y - 2 * MICRO_HEIGHT + MICRO_HEIGHT / 2) >= 174 //y >= 110 && x >= 36
+                    if ((y - MICRO_HEIGHT + MICRO_HEIGHT / 2) >= 174 //y >= 110 && x >= 36
                      && !pixel.isTransparent() && (color == 0 || color == 110 || color == 117 || color == 119 || color == 121 || color == 122 || color == 124 || color == 126))
                         pixel = D1GfxPixel::transparentPixel();
-                    change |= frame->setPixel(x, y - 2 * MICRO_HEIGHT, pixel);
+                    change |= frame->setPixel(x, y - MICRO_HEIGHT, pixel);
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
         // shift the frame by (WIDTH/2; -HEIGHT/2) to add to 97?
         if (i == 13 - 1) {
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH / 2; x++) {
-                    change |= frame->setPixel(x + TILE_WIDTH / 2, y - 2 * MICRO_HEIGHT / 2, frame->getPixel(x, y));
+                    change |= frame->setPixel(x + TILE_WIDTH / 2, y - MICRO_HEIGHT / 2, frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
         // shift the frame by (0; -HEIGHT) to add to a new subtile
         if (i == 14 - 1) {
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH; x++) {
-                    change |= frame->setPixel(x, y - 2 * MICRO_HEIGHT, frame->getPixel(x, y));
+                    change |= frame->setPixel(x, y - MICRO_HEIGHT, frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
@@ -8328,17 +8328,17 @@ void D1Tileset::patchTownSpec(bool silent)
         // add left side of frame 16 shifted by (-HEIGHT/2, WIDTH/2)
         if (i == 15 - 1) {
             D1GfxFrame* frameSrc = this->cls->getFrame(16 - 1);
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH / 2; x++) {
-                    change |= frame->setPixel(x + FRAME_WIDTH / 2, y - 2 * MICRO_HEIGHT / 2, frameSrc->getPixel(x, y));
+                    change |= frame->setPixel(x + FRAME_WIDTH / 2, y - MICRO_HEIGHT / 2, frameSrc->getPixel(x, y));
                 }
             }
         }
         // shift the frame by (-HEIGHT/2, -WIDTH/2) and add 138r to use in 138
         if (i == 16 - 1) {
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = FRAME_WIDTH / 2; x < FRAME_WIDTH; x++) {
-                    change |= frame->setPixel(x - FRAME_WIDTH / 2, y - 2 * MICRO_HEIGHT / 2, frame->getPixel(x, y));
+                    change |= frame->setPixel(x - FRAME_WIDTH / 2, y - MICRO_HEIGHT / 2, frame->getPixel(x, y));
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
@@ -8357,7 +8357,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT * (j + 0), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 0), pixel);
                     }
                 }
             }
@@ -8366,9 +8366,9 @@ void D1Tileset::patchTownSpec(bool silent)
         if (i == 17 - 1) {
             // add frame 18
             D1GfxFrame* frameSrc = this->cls->getFrame(18 - 1);
-            for (int y = 2 * MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
+            for (int y = MICRO_HEIGHT; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH / 2; x++) {
-                    change |= frame->setPixel(x + FRAME_WIDTH / 2, y - 2 * MICRO_HEIGHT / 2, frameSrc->getPixel(x, y));
+                    change |= frame->setPixel(x + FRAME_WIDTH / 2, y - MICRO_HEIGHT / 2, frameSrc->getPixel(x, y));
                 }
             }
         }
@@ -8387,7 +8387,7 @@ void D1Tileset::patchTownSpec(bool silent)
                     for (int x = 0; x < MICRO_WIDTH; x++) {
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
+                            change |= frame->setPixel(x, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
                     }
                 }
             }
@@ -8403,7 +8403,7 @@ void D1Tileset::patchTownSpec(bool silent)
                     for (int x = 0; x < MICRO_WIDTH; x++) {
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
                     }
                 }
             }
@@ -8424,7 +8424,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x, y + FRAME_HEIGHT + 2 * MICRO_HEIGHT - MICRO_HEIGHT / 2 - MICRO_HEIGHT * (j + 1), pixel);
+                            change |= frame->setPixel(x, y + FRAME_HEIGHT + MICRO_HEIGHT - MICRO_HEIGHT / 2 - MICRO_HEIGHT * (j + 1), pixel);
                     }
                 }
             }
@@ -8440,7 +8440,7 @@ void D1Tileset::patchTownSpec(bool silent)
                     for (int x = 0; x < MICRO_WIDTH; x++) {
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT + 2 * MICRO_HEIGHT - MICRO_HEIGHT / 2 - MICRO_HEIGHT * (j + 3), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT + MICRO_HEIGHT - MICRO_HEIGHT / 2 - MICRO_HEIGHT * (j + 3), pixel);
                     }
                 }
             }
@@ -8460,13 +8460,13 @@ void D1Tileset::patchTownSpec(bool silent)
                     for (int x = 0; x < MICRO_WIDTH; x++) {
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT * (j + 3), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 3), pixel);
                     }
                 }
             }
         }
 #endif
-        // create new frame from 274 shifted by (0; -2 * 2 * MICRO_HEIGHT) to add to a new subtile(777) based on 1
+        // create new frame from 274 shifted by (0; -2*HEIGHT) to add to a new subtile(777) based on 1
         if (i == 9 - 1) {
             for (int j = 0; j < 3; j++) {
                 const CelMicro &microSrc = micros[44 + j];
@@ -8484,7 +8484,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 3 * 2 * MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
+                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 3 * MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
                     }
                 }
             }
@@ -8500,12 +8500,12 @@ void D1Tileset::patchTownSpec(bool silent)
                     for (int x = 0; x < MICRO_WIDTH; x++) {
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 3 * 2 * MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 3 * MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
                     }
                 }
             }
         }
-        // create new frame from 416 shifted by (TILE_WIDTH / 2; -2 * MICRO_HEIGHT - 2 * MICRO_HEIGHT / 2) and 418 shifted by (0; -2 * MICRO_HEIGHT) to add to 398
+        // create new frame from 416 shifted by (WIDTH/2; -HEIGHT -mHEIGHT/2) and 418 shifted by (0; -HEIGHT) to add to 398
         if (i == 18 - 1) {
             for (int j = 0; j < 5; j++) {
                 const CelMicro &microSrc = micros[51 + j];
@@ -8525,7 +8525,7 @@ void D1Tileset::patchTownSpec(bool silent)
 #endif
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT / 2 - MICRO_HEIGHT * (j + 0), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT / 2 - MICRO_HEIGHT * (j + 0), pixel);
                     }
                 }
             }
@@ -8541,7 +8541,7 @@ void D1Tileset::patchTownSpec(bool silent)
                     for (int x = 0; x < MICRO_WIDTH; x++) {
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
+                            change |= frame->setPixel(x, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 1), pixel);
                     }
                 }
             }
@@ -8569,7 +8569,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
+                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
                     }
                 }
             }
@@ -8587,7 +8587,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 2), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 2), pixel);
                     }
                 }
             }
@@ -8614,7 +8614,7 @@ void D1Tileset::patchTownSpec(bool silent)
                         if (j >= 3 && (color == 62 || color == 52 || color == 59 || ((color == 113 || color == 118 || color == 121 || color == 122 || color == 126) && x <= 16)))
                             continue;
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
+                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
                     }
                 }
             }
@@ -8632,7 +8632,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
                     }
                 }
             }
@@ -8660,7 +8660,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * 2 * MICRO_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 0), pixel);
+                            change |= frame->setPixel(x, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 0), pixel);
                     }
                 }
             }
@@ -8682,7 +8682,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + (j < 3 ? -1 : 0)), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + (j < 3 ? -1 : 0)), pixel);
                     }
                 }
             }
@@ -8710,7 +8710,7 @@ void D1Tileset::patchTownSpec(bool silent)
                             continue;
                         D1GfxPixel pixel = frameSrc->getPixel(x, y);
                         if (!pixel.isTransparent())
-                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - 2 * MICRO_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
                     }
                 }
             }
