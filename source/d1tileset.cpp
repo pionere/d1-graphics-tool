@@ -4086,7 +4086,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         }
     }
 }
-
+#if 0
 typedef struct POS {
     BYTE x;
     BYTE y;
@@ -8079,8 +8079,7 @@ const POS trans22[] =
 { 39, 138 },
 };
 
-// void D1Tileset::patchTownSpec(bool silent)
-static void patchTownSpec(bool silent)
+void D1Tileset::patchTownSpec(bool silent)
 {
     constexpr int FRAME_WIDTH = 64;
     constexpr int FRAME_HEIGHT = 7 * 32;
@@ -8726,7 +8725,7 @@ static void patchTownSpec(bool silent)
         }
     }
 }
-
+#endif
 void D1Tileset::patchCathedralSpec(bool silent)
 {
     constexpr int FRAME_WIDTH = 64;
