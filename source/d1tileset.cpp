@@ -8079,7 +8079,8 @@ const POS trans22[] =
 { 39, 138 },
 };
 
-void D1Tileset::patchTownSpec(bool silent)
+// void D1Tileset::patchTownSpec(bool silent)
+static void patchTownSpec(bool silent)
 {
     constexpr int FRAME_WIDTH = 64;
     constexpr int FRAME_HEIGHT = 7 * 32;
@@ -25260,7 +25261,7 @@ void D1Tileset::patch(int dunType, bool silent)
             break; // -- assume it is already done
         }
         // patch pSpecialsCel - TownS.CEL must be done before Town.CEL
-        this->patchTownSpec(silent);
+        // this->patchTownSpec(silent);
         this->cleanupTown(deletedFrames, silent);
     } break;
     case DTYPE_CATHEDRAL:
