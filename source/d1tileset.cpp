@@ -8192,17 +8192,17 @@ void D1Tileset::patchTownSpec(bool silent)
     int srcCelEntries = this->cls->getFrameCount();
 
     if (srcCelEntries != 18)
-        return false; // assume it is already done
+        return; // assume it is already done
 
     // check and reset frames
     for (int i = 0; i < srcCelEntries; i++) {
         D1GfxFrame *frame = this->cls->getFrame(i);
-            
         if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
             dProgressErr() << QApplication::tr("Framesize of the Town's Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
             return;
         }
 
+        bool change = false;
         if (i == 3 - 1 || i == 4 - 1 || i == 5 - 1 || i == 9 - 1 || i == 18 - 1) {
             for (int y = 0; y < FRAME_HEIGHT; y++) {
                 for (int x = 0; x < FRAME_WIDTH; x++) {
@@ -8213,7 +8213,7 @@ void D1Tileset::patchTownSpec(bool silent)
     }
     // add empty frames
     for (int i = 0; i < 3; i++) {
-        this->cls->duplicateFrame(3 - 1);
+        this->cls->duplicateFrame(3 - 1, false);
     }
     // patch the frames
     for (int i = 0; i < srcCelEntries + 3; i++) {
@@ -8259,7 +8259,7 @@ void D1Tileset::patchTownSpec(bool silent)
             D1GfxFrame *frameSrc = mf.second;
             if (frameSrc == nullptr) {
                 dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                return result;
+                return;
             }
             for (int y = 0; y < MICRO_HEIGHT; y++) {
                 for (int x = 16; x < 23; x++) {
@@ -8349,7 +8349,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8380,7 +8380,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
 
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8397,7 +8397,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8416,7 +8416,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8434,7 +8434,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8454,7 +8454,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8474,7 +8474,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8494,7 +8494,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8513,7 +8513,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8535,7 +8535,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8557,7 +8557,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8579,7 +8579,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < 8; x++) {
@@ -8605,7 +8605,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8624,7 +8624,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8650,7 +8650,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 9; x < MICRO_WIDTH; x++) {
@@ -8670,7 +8670,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -8700,7 +8700,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
                     dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
-                    return result;
+                    return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     for (int x = 0; x < 8; x++) {
