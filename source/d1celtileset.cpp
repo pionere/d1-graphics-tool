@@ -195,7 +195,11 @@ bool D1CelTileset::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &
             *pBuf = (quint8)frame->getFrameType();
             pBuf++;
         }
+        quint8 *tBuf = pBuf;
         pBuf = D1CelTilesetFrame::writeFrameData(*frame, pBuf, gfx.patched);
+        if (ii == 0) {
+            dProgressErr() << QApplication::tr("Frame type of the first frame is %1 encoded length %2.").arg(frame->getFrameType()).arg(pBuf - tBuf);
+        }
     }
 
     *(quint32 *)&buf[(numFrames + 1) * sizeof(quint32)] = SwapLE32(pBuf - buf);
