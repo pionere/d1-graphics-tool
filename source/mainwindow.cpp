@@ -829,6 +829,7 @@ void MainWindow::importFile(const ImportParam &params)
             if (min->load(openParams.celFilePath, this->tileset, celFrameTypes, openParams)) {
                 delete this->tileset->min;
                 this->tileset->min = min;
+                this->levelCelView->setTileset(this->tileset);
                 this->updateWindow();
             } else {
                 delete min;
@@ -840,6 +841,7 @@ void MainWindow::importFile(const ImportParam &params)
             if (til->load(openParams.celFilePath, this->tileset->min)) {
                 delete this->tileset->til;
                 this->tileset->til = til;
+                this->levelCelView->setTileset(this->tileset);
                 this->updateWindow();
             } else {
                 delete til;
@@ -851,6 +853,7 @@ void MainWindow::importFile(const ImportParam &params)
             if (sla->load(openParams.celFilePath)) {
                 delete this->tileset->sla;
                 this->tileset->sla = sla;
+                this->levelCelView->setTileset(this->tileset);
                 this->updateWindow();
             } else {
                 delete sla;
@@ -862,6 +865,7 @@ void MainWindow::importFile(const ImportParam &params)
             if (tla->load(openParams.celFilePath, this->tileset->til->getTileCount(), openParams)) {
                 delete this->tileset->tla;
                 this->tileset->tla = tla;
+                this->levelCelView->setTileset(this->tileset);
                 this->updateWindow();
             } else {
                 delete tla;
@@ -874,6 +878,7 @@ void MainWindow::importFile(const ImportParam &params)
             if (D1Cel::load(*cls, openParams.celFilePath, openParams)) { // this->tileset->loadCls
                 delete this->tileset->cls;
                 this->tileset->cls = cls;
+                this->levelCelView->setTileset(this->tileset);
                 this->updateWindow();
             } else {
                 delete cls;
