@@ -874,7 +874,7 @@ void MainWindow::importFile(const ImportParam &params)
         } else if (fileType == IMPORT_FILE_TYPE::SCEL) {
             // Loading sCEL
             D1Gfx *cls = new D1Gfx();
-            gfx->setPalette(this->trnBase->getResultingPalette());
+            cls->setPalette(this->trnBase->getResultingPalette());
             if (D1Cel::load(*cls, openParams.celFilePath, openParams)) { // this->tileset->loadCls
                 delete this->tileset->cls;
                 this->tileset->cls = cls;
