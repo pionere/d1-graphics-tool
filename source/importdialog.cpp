@@ -185,10 +185,6 @@ void ImportDialog::on_importButton_clicked()
 {
     ImportParam params;
     params.filePath = this->ui->inputFileEdit->text();
-    if (params.filePath.isEmpty()) {
-        QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
-        return;
-    }
 
     if (this->ui->fileTypeCELRadioButton->isChecked()) {
         params.fileType = IMPORT_FILE_TYPE::CEL;
@@ -200,6 +196,11 @@ void ImportDialog::on_importButton_clicked()
         params.fileType = IMPORT_FILE_TYPE::FONT;
     } else {
         params.fileType = IMPORT_FILE_TYPE::AUTODETECT;
+    }
+
+    if (params.filePath.isEmpty() && params.fileType != IMPORT_FILE_TYPE::DUNGEON) {
+        QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
+        return;
     }
 
     params.fontSize = this->font_size;
