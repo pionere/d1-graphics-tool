@@ -864,7 +864,7 @@ void MainWindow::importFile(const ImportParam &params)
                 this->tileset->tla = tla;
                 this->updateWindow();
             } else {
-                delete min;
+                delete tla;
                 dProgressFail() << tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
             }
         } else if (fileType == IMPORT_FILE_TYPE::SCEL) {
@@ -884,7 +884,7 @@ void MainWindow::importFile(const ImportParam &params)
             QString minFilePath = this->tileset->min->getFilePath();
             D1Min min;
             std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-            if (min.load(minFilePath, this->tileset->til, celFrameTypes, openParams)) {
+            if (min.load(minFilePath, this->tileset, celFrameTypes, openParams)) {
                 D1Gfx* gfx = new D1Gfx();
                 gfx->setPalette(this->trnBase->getResultingPalette());
                 if (D1CelTileset::load(*gfx, celFrameTypes, openParams.celFilePath, openParams)) {
