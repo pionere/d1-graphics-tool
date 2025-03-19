@@ -58,6 +58,66 @@
          <number>0</number>
         </property>
         <item>
+         <widget class="QRadioButton" name="fileTypeMINRadioButton">
+          <property name="text">
+           <string>MIN</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">fileTypeButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="fileTypeTILRadioButton">
+          <property name="text">
+           <string>TIL</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">fileTypeButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="fileTypeSLARadioButton">
+          <property name="text">
+           <string>SLA</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">fileTypeButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="fileTypeTLARadioButton">
+          <property name="text">
+           <string>TLA</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">fileTypeButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="fileTypeDUNRadioButton">
+          <property name="text">
+           <string>DUN</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">fileTypeButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="fileTypeSCELRadioButton">
+          <property name="text">
+           <string>S-CEL</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">fileTypeButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
          <widget class="QRadioButton" name="fileTypeCELRadioButton">
           <property name="text">
            <string>CEL</string>
@@ -71,16 +131,6 @@
          <widget class="QRadioButton" name="fileTypeCL2RadioButton">
           <property name="text">
            <string>CL2</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">fileTypeButtonGroup</string>
-          </attribute>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="fileTypeDUNRadioButton">
-          <property name="text">
-           <string>DUN</string>
           </property>
           <attribute name="buttonGroup">
            <string notr="true">fileTypeButtonGroup</string>

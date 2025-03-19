@@ -30,7 +30,14 @@ void ImportDialog::initialize(bool dm, const PaletteWidget *palWidget)
     if (this->font_color < 0)
         this->font_color = 0;
 
+    this->ui->fileTypeMINRadioButton->setVisible(dm);
+    this->ui->fileTypeTILRadioButton->setVisible(dm);
+    this->ui->fileTypeSLARadioButton->setVisible(dm);
+    this->ui->fileTypeTLARadioButton->setVisible(dm);
     this->ui->fileTypeDUNRadioButton->setVisible(dm);
+    this->ui->fileTypeSCELRadioButton->setVisible(dm);
+    this->ui->fileTypeCL2RadioButton->setVisible(!dm);
+    this->ui->fileTypeFontRadioButton->setVisible(!dm);
     // if (!dm && this->ui->fileTypeDUNRadioButton->isChecked()) {
         this->ui->fileTypeAutoRadioButton->setChecked(true);
     // }
@@ -42,7 +49,7 @@ void ImportDialog::updateFields()
 {
     QString filePath = this->ui->inputFileEdit->text();
     bool hasInputFile = !filePath.isEmpty();
-    bool isFont = this->ui->fileTypeFontRadioButton->isChecked() || (this->ui->fileTypeAutoRadioButton->isChecked() && filePath.toLower().endsWith("tf")); // ttf or otf
+    bool isFont = this->ui->fileTypeFontRadioButton->isChecked() || (this->ui->fileTypeAutoRadioButton->isChecked() && filePath.toLower().endsWith("tf")); // .ttf or .otf
 
     this->ui->fontSettingsGroupBox->setEnabled(hasInputFile && isFont);
 
@@ -67,7 +74,7 @@ void ImportDialog::on_inputFileBrowseButton_clicked()
     QString filter;
     if (this->dunMode) {
         title = tr("Select Dungeon or Graphics");
-        filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN);;CEL Files (*.cel *.CEL)");
+        filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN);;CEL Files (*.cel *.CEL);;MIN Files (*.min *.MIN);;TIL Files (*.til *.TIL);;SLA Files (*.sla *.SLA);;TLA Files (*.tla *.TLA)");
     } else {
         title = tr("Select Graphics");
         filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;TTF/OTF Files (*.ttf *.TTF *.otf *.OTF)");
@@ -83,17 +90,42 @@ void ImportDialog::on_inputFileBrowseButton_clicked()
     this->updateFields();
 }
 
+void ImportDialog::on_fileTypeMINRadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void ImportDialog::on_fileTypeTILRadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void ImportDialog::on_fileTypeSLARadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void ImportDialog::on_fileTypeTLARadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void ImportDialog::on_fileTypeDUNRadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void ImportDialog::on_fileTypeSCELRadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
 void ImportDialog::on_fileTypeCELRadioButton_toggled(bool checked)
 {
     this->updateFields();
 }
 
 void ImportDialog::on_fileTypeCL2RadioButton_toggled(bool checked)
-{
-    this->updateFields();
-}
-
-void ImportDialog::on_fileTypeDUNRadioButton_toggled(bool checked)
 {
     this->updateFields();
 }
@@ -185,21 +217,32 @@ void ImportDialog::on_importButton_clicked()
 {
     ImportParam params;
     params.filePath = this->ui->inputFileEdit->text();
-    if (params.filePath.isEmpty()) {
-        QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
-        return;
-    }
 
-    if (this->ui->fileTypeCELRadioButton->isChecked()) {
+    if (this->ui->fileTypeMINRadioButton->isChecked()) {
+        params.fileType = IMPORT_FILE_TYPE::MIN;
+    } else if (this->ui->fileTypeTILRadioButton->isChecked()) {
+        params.fileType = IMPORT_FILE_TYPE::TIL;
+    } else if (this->ui->fileTypeSLARadioButton->isChecked()) {
+        params.fileType = IMPORT_FILE_TYPE::SLA;
+    } else if (this->ui->fileTypeTLARadioButton->isChecked()) {
+        params.fileType = IMPORT_FILE_TYPE::TLA;
+    } else if (this->ui->fileTypeDUNRadioButton->isChecked()) {
+        params.fileType = IMPORT_FILE_TYPE::DUNGEON;
+    } else if (this->ui->fileTypeSCELRadioButton->isChecked()) {
+        params.fileType = IMPORT_FILE_TYPE::SCEL;
+    } else if (this->ui->fileTypeCELRadioButton->isChecked()) {
         params.fileType = IMPORT_FILE_TYPE::CEL;
     } else if (this->ui->fileTypeCL2RadioButton->isChecked()) {
         params.fileType = IMPORT_FILE_TYPE::CL2;
-    } else if (this->ui->fileTypeDUNRadioButton->isChecked()) {
-        params.fileType = IMPORT_FILE_TYPE::DUNGEON;
     } else if (this->ui->fileTypeFontRadioButton->isChecked()) {
         params.fileType = IMPORT_FILE_TYPE::FONT;
     } else {
         params.fileType = IMPORT_FILE_TYPE::AUTODETECT;
+    }
+
+    if (params.filePath.isEmpty() && params.fileType != IMPORT_FILE_TYPE::DUNGEON) {
+        QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
+        return;
     }
 
     params.fontSize = this->font_size;

@@ -767,59 +767,148 @@ void MainWindow::importFile(const ImportParam &params)
     QString fileLower = gfxFilePath.toLower();
     IMPORT_FILE_TYPE fileType = params.fileType;
     if (fileType == IMPORT_FILE_TYPE::AUTODETECT) {
-        if (fileLower.endsWith("dun")) // .dun or .rdun
-            fileType = IMPORT_FILE_TYPE::DUNGEON;
-        else if (fileLower.endsWith(".cel"))
-            fileType = IMPORT_FILE_TYPE::CEL;
-        else if (fileLower.endsWith("tf"))
-            fileType = IMPORT_FILE_TYPE::FONT;
-        else
-            fileType = IMPORT_FILE_TYPE::CL2;
+        if (this->levelCelView != nullptr) {
+            if (fileLower.endsWith("s.cel"))
+                fileType = IMPORT_FILE_TYPE::SCEL;
+            else if (fileLower.endsWith(".cel"))
+                fileType = IMPORT_FILE_TYPE::CEL;
+            else if (fileLower.endsWith(".min"))
+                fileType = IMPORT_FILE_TYPE::MIN;
+            else if (fileLower.endsWith(".til"))
+                fileType = IMPORT_FILE_TYPE::TIL;
+            else if (fileLower.endsWith(".sla"))
+                fileType = IMPORT_FILE_TYPE::SLA;
+            else if (fileLower.endsWith(".tla"))
+                fileType = IMPORT_FILE_TYPE::TLA;
+            else // if (fileLower.endsWith("dun")) // .dun or .rdun
+                fileType = IMPORT_FILE_TYPE::DUNGEON;
+        } else {
+            if (fileLower.endsWith(".cl2"))
+                fileType = IMPORT_FILE_TYPE::CL2;
+            else if (fileLower.endsWith("tf"))    // .ttf or .otf
+                fileType = IMPORT_FILE_TYPE::FONT;
+            else
+                fileType = IMPORT_FILE_TYPE::CEL;
+        }
     }
-    if (fileType == IMPORT_FILE_TYPE::DUNGEON && this->levelCelView == nullptr)
-        fileType = IMPORT_FILE_TYPE::CL2;
 
     OpenAsParam openParams = OpenAsParam();
-    if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
+    //if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
         openParams.dunFilePath = gfxFilePath;
-    } else {
+    //} else {
         openParams.celFilePath = gfxFilePath;
-    }
+    //}
 
-    if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
-        D1Dun *dun = new D1Dun();
-        if (dun->load(openParams.dunFilePath, openParams)) {
-            dun->initialize(this->pal, this->tileset);
-            // TODO: this->dunChanged(dun)
-            delete this->dun;
-            this->dun = dun;
-            this->levelCelView->setDungeon(dun);
-            if (this->builderWidget == nullptr) {
-                // TODO: copy-paste from openFile()...
-                this->builderWidget = new BuilderWidget(this, this->undoStack, dun, this->levelCelView, this->tileset);
-                // Refresh builder widget when the resource-options are changed
-                QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
+    if (this->levelCelView != nullptr) {
+        if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
+            D1Dun *dun = new D1Dun();
+            if (dun->load(openParams.dunFilePath, openParams)) {
+                dun->initialize(this->pal, this->tileset);
+                // TODO: this->dunChanged(dun)
+                delete this->dun;
+                this->dun = dun;
+                this->levelCelView->setDungeon(dun);
+                if (this->builderWidget == nullptr) {
+                    // TODO: copy-paste from openFile()...
+                    this->builderWidget = new BuilderWidget(this, this->undoStack, dun, this->levelCelView, this->tileset);
+                    // Refresh builder widget when the resource-options are changed
+                    QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
+                } else {
+                    this->builderWidget->setDungeon(dun);
+                }
+                this->ui->menuDungeon->setEnabled(true);
+                this->updateWindow();
             } else {
-                this->builderWidget->setDungeon(dun);
+                delete dun;
+                dProgressFail() << tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
             }
-            this->ui->menuDungeon->setEnabled(true);
-            this->updateWindow();
-        } else {
-            delete dun;
-            dProgressFail() << tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
-        }
+        } else if (fileType == IMPORT_FILE_TYPE::MIN) {
+            // Loading MIN
+            std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
+            D1Min *min = new D1Min();
+            if (min->load(openParams.celFilePath, this->tileset, celFrameTypes, openParams)) {
+                delete this->tileset->min;
+                this->tileset->min = min;
+                this->updateWindow();
+            } else {
+                delete min;
+                dProgressFail() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
+            }
+        } else if (fileType == IMPORT_FILE_TYPE::TIL) {
+            // Loading TIL
+            D1Til *til = new D1Til();
+            if (til->load(openParams.celFilePath, this->tileset->min)) {
+                delete this->tileset->til;
+                this->tileset->til = til;
+                this->updateWindow();
+            } else {
+                delete til;
+                dProgressFail() << tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
+            }
+        } else if (fileType == IMPORT_FILE_TYPE::SLA) {
+            // Loading SLA
+            D1Sla *sla = new D1Sla();
+            if (sla->load(openParams.celFilePath)) {
+                delete this->tileset->sla;
+                this->tileset->sla = sla;
+                this->updateWindow();
+            } else {
+                delete sla;
+                dProgressFail() << tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
+            }
+        } else if (fileType == IMPORT_FILE_TYPE::TLA) {
+            // Loading TLA
+            D1Tla *tla = new D1Tla();
+            if (tla->load(openParams.celFilePath, this->tileset->til->getTileCount(), openParams)) {
+                delete this->tileset->tla;
+                this->tileset->tla = tla;
+                this->updateWindow();
+            } else {
+                delete min;
+                dProgressFail() << tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
+            }
+        } else if (fileType == IMPORT_FILE_TYPE::SCEL) {
+            // Loading sCEL
+            D1Gfx *cls = new D1Gfx();
+            gfx->setPalette(this->trnBase->getResultingPalette());
+            if (D1Cel::load(*cls, openParams.celFilePath, openParams)) { // this->tileset->loadCls
+                delete this->tileset->cls;
+                this->tileset->cls = cls;
+                this->updateWindow();
+            } else {
+                delete cls;
+                dProgressFail() << tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
+            }
+        } else if (fileType == IMPORT_FILE_TYPE::CEL) {
+            // Loading (MIN and) CEL
+            QString minFilePath = this->tileset->min->getFilePath();
+            D1Min min;
+            std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
+            if (min.load(minFilePath, this->tileset->til, celFrameTypes, openParams)) {
+                D1Gfx* gfx = new D1Gfx();
+                gfx->setPalette(this->trnBase->getResultingPalette());
+                if (D1CelTileset::load(*gfx, celFrameTypes, openParams.celFilePath, openParams)) {
+                    delete this->gfx;
+                    this->gfxChanged(gfx);
+                } else {
+                    delete gfx;
+                    dProgressFail() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
+                }
+            } else {
+                dProgressFail() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
+            }
     } else {
         D1Gfx *gfx = new D1Gfx();
         gfx->setPalette(this->trnBase->getResultingPalette());
 
-        if ((fileType == IMPORT_FILE_TYPE::CEL && D1Cel::load(*gfx, gfxFilePath, openParams))
-         || (fileType == IMPORT_FILE_TYPE::FONT && D1Font::load(*gfx, gfxFilePath, params))
-         || D1Cl2::load(*gfx, gfxFilePath, openParams)) {
+        if ((fileType == IMPORT_FILE_TYPE::CEL && D1Cel::load(*gfx, openParams.celFilePath, openParams))
+         || (fileType == IMPORT_FILE_TYPE::FONT && D1Font::load(*gfx, openParams.celFilePath, params))
+         || D1Cl2::load(*gfx, openParams.celFilePath, openParams)) {
             delete this->gfx;
             this->gfxChanged(gfx);
         } else {
             delete gfx;
-            dProgressFail() << tr("Failed loading GFX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+            dProgressFail() << tr("Failed loading GFX file: %1.").arg(QDir::toNativeSeparators(openParams.celFilePath));
         }
     }
 
