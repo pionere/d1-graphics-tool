@@ -25251,6 +25251,15 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
 
 void D1Tileset::patch(int dunType, bool silent)
 {
+    // ensure the special-cels are clipped
+    bool result = false;
+    for (int i = 0; i < this->cls->getFrameCount(); i++) {
+        result |= this->cls->getFrame(i)->setClipped(true);
+    }
+    if (result && !silent) {
+        this->cls->setModified();
+        dProgress() << QApplication::tr("Special-Frames are using clipped-encoding.");
+    }
     std::set<unsigned> deletedFrames;
     switch (dunType) {
     case DTYPE_TOWN: {
