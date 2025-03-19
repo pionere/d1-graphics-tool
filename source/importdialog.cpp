@@ -31,6 +31,8 @@ void ImportDialog::initialize(bool dm, const PaletteWidget *palWidget)
         this->font_color = 0;
 
     this->ui->fileTypeDUNRadioButton->setVisible(dm);
+    this->ui->fileTypeCL2RadioButton->setVisible(!dm);
+    this->ui->fileTypeFontRadioButton->setVisible(!dm);
     // if (!dm && this->ui->fileTypeDUNRadioButton->isChecked()) {
         this->ui->fileTypeAutoRadioButton->setChecked(true);
     // }
@@ -42,7 +44,7 @@ void ImportDialog::updateFields()
 {
     QString filePath = this->ui->inputFileEdit->text();
     bool hasInputFile = !filePath.isEmpty();
-    bool isFont = this->ui->fileTypeFontRadioButton->isChecked() || (this->ui->fileTypeAutoRadioButton->isChecked() && filePath.toLower().endsWith("tf")); // ttf or otf
+    bool isFont = this->ui->fileTypeFontRadioButton->isChecked() || (this->ui->fileTypeAutoRadioButton->isChecked() && filePath.toLower().endsWith("tf")); // .ttf or .otf
 
     this->ui->fontSettingsGroupBox->setEnabled(hasInputFile && isFont);
 
