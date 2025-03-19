@@ -88,6 +88,7 @@ public:
     std::vector<std::vector<D1GfxPixel>> &getPixels() const;
     bool setPixel(int x, int y, const D1GfxPixel pixel);
     bool isClipped() const;
+    bool setClipped(bool clipped);
     D1CEL_FRAME_TYPE getFrameType() const;
     void setFrameType(D1CEL_FRAME_TYPE type);
     bool addTo(const D1GfxFrame &frame);

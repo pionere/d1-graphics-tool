@@ -135,6 +135,14 @@ bool D1GfxFrame::isClipped() const
     return this->clipped;
 }
 
+bool D1GfxFrame::setClipped(bool clipped)
+{
+    if (this->clipped == clipped)
+        return false;
+    this->clipped = clipped;
+    return true;
+}
+
 D1CEL_FRAME_TYPE D1GfxFrame::getFrameType() const
 {
     return this->frameType;

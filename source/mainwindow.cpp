@@ -897,6 +897,7 @@ void MainWindow::importFile(const ImportParam &params)
             } else {
                 dProgressFail() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
             }
+        }
     } else {
         D1Gfx *gfx = new D1Gfx();
         gfx->setPalette(this->trnBase->getResultingPalette());
