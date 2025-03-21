@@ -2482,7 +2482,7 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             } else {
-                dProgressErr() << tr("Subtile %1 has an invalid trap-setting: %2.").arg(i + 1).arg(trapFlags);
+                dProgressErr() << tr("Subtile %1 has an invalid trap-setting [%2:%3].").arg(i + 1).arg((trapFlags & PST_LEFT) != 0).arg((trapFlags & PST_RIGHT) != 0);
                 result = true;
             }
         }
