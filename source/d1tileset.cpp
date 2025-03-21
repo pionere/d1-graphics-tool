@@ -3602,8 +3602,10 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         Blk2Mcr(974, 2);
         Blk2Mcr(1030, 2);
         ReplaceMcr(220, 0, 17, 0);
-        SetMcr(221, 2, 220, 1);
-        SetMcr(220, 1, 17, 1);
+        //SetMcr(221, 2, 220, 1);
+        SetMcr(221, 2, 223, 2);
+        //SetMcr(220, 1, 17, 1);
+        ReplaceMcr(220, 1, 17, 1);
         ReplaceMcr(218, 1, 25, 1);
         SetMcr(219, 3, 218, 0);
         SetMcr(218, 0, 25, 0);
