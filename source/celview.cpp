@@ -917,11 +917,11 @@ void CelView::drawGrid(QImage &celFrame)
         for (int x = 0; x < width; x++) {
             int y0 = height - microHeight + ( 0 + width / 2 + x / 2) % microHeight;
             if (y0 >= 0 && y0 < height)
-                celFrame.setPixel(x, y0, color);
+                celFrame.setPixelColor(x, y0, color);
 
             int y1 = height - microHeight + (microHeight - 1 + width / 2 - x / 2) % microHeight;
             if (y1 >= 0 && y1 < height)
-                celFrame.setPixel(x, y1, color);
+                celFrame.setPixelColor(x, y1, color);
         }
     }
 }
