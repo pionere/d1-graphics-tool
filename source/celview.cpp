@@ -271,6 +271,7 @@ CelView::CelView(QWidget *parent)
     this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
+    // this->on_assetMplEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
     layout->setAlignment(this->audioBtn, Qt::AlignLeft);
@@ -288,6 +289,7 @@ CelView::CelView(QWidget *parent)
     QObject::connect(this->ui->groupIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_groupIndexEdit_escPressed()));
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
+    QObject::connect(this->ui->assetMplEdit, SIGNAL(cancel_signal()), this, SLOT(on_assetMplEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -397,6 +399,9 @@ void CelView::updateFields()
     this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
     // update visiblity of the audio icon
     this->audioBtn->setVisible(this->gfx->getType() == D1CEL_TYPE::SMK && this->gfx->getFrameCount() != 0);
+
+    // update the asset multiplier field
+    this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
 
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
@@ -889,6 +894,26 @@ void CelView::upscale(const UpscaleParam &params)
     }
 }
 
+void CelView::drawGrid(QImage &celFrame)
+{
+    int width = celFrame.width();
+    int height = celFrame.height();
+    QColor color = this->pal->getUndefinedColor();
+
+    unsigned microHeight = MICRO_HEIGHT * this->assetMpl;
+    for (int i = (height + microHeight) / microHeight - 1; i >= 0; i--) {
+        for (int x = 0; x < width; x++) {
+            int y0 = height - microHeight * (i + 1) + ( 0 + (x - width / 2) / 2) % microHeight;
+            if (y0 >= 0 && y0 < height)
+                celFrame.setPixelColor(x, y0, color);
+
+            int y1 = height - microHeight * (i + 1) + (microHeight - 1 - (x - width / 2) / 2) % microHeight;
+            if (y1 >= 0 && y1 < height)
+                celFrame.setPixelColor(x, y1, color);
+        }
+    }
+}
+
 void CelView::displayFrame()
 {
     this->updateFields();
@@ -896,6 +921,11 @@ void CelView::displayFrame()
 
     // Getting the current frame to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
+
+    // add grid if requested
+    if (this->ui->showGridCheckBox->isChecked()) {
+        this->drawGrid(celFrame);
+    }
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -1184,6 +1214,30 @@ void CelView::on_nextGroupButton_clicked()
 void CelView::on_lastGroupButton_clicked()
 {
     this->setGroupIndex(this->gfx->getGroupCount() - 1);
+}
+
+void CelView::on_showGridCheckBox_clicked()
+{
+    this->displayFrame();
+}
+
+void CelView::on_assetMplEdit_returnPressed()
+{
+    unsigned ampl = this->ui->assetMplEdit->text().toUShort();
+    if (ampl == 0)
+        ampl = 1;
+    if (this->assetMpl != ampl) {
+        this->assetMpl = ampl;
+        this->displayFrame();
+    }
+
+    this->on_assetMplEdit_escPressed();
+}
+
+void CelView::on_assetMplEdit_escPressed()
+{
+    this->updateFields();
+    this->ui->assetMplEdit->clearFocus();
 }
 
 void CelView::on_zoomOutButton_clicked()
