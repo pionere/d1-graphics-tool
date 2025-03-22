@@ -161,20 +161,20 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="14" colspan="2">
+      <item row="0" column="14" colspan="4">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
-      <item row="0" column="16" colspan="2">
+      <!--item row="0" column="16" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
-      </item>
+      </item-->
       <item row="0" column="18" >
        <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
         <property name="topMargin">
@@ -311,14 +311,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="12" colspan="2">
+      <item row="1" column="12" colspan="6">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
-      <item row="1" column="14" colspan="2">
+      <!--item row="1" column="14" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -331,7 +331,7 @@
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
-      </item>
+      </item-->
       <item row="1" column="18">
        <layout class="QHBoxLayout" name="gridHorizontalLayout">
         <property name="topMargin">
@@ -340,6 +340,13 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="QCheckBox" name="showGridCheckBox">
           <property name="toolTip">
@@ -495,20 +502,20 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="12" colspan="2">
+      <item row="2" column="12" colspan="4">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
-      <item row="2" column="14" colspan="2">
+      <!--item row="2" column="14" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
-      </item>
+      </item-->
       <item row="2" column="16">
        <widget class="LineEditWidget" name="celFrameWidthEdit">
         <property name="charWidth">
