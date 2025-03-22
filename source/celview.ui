@@ -312,7 +312,7 @@
        </spacer>
       </item>
       <item row="1" column="18">
-       <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
+       <layout class="QHBoxLayout" name="gridHorizontalLayout">
         <property name="topMargin">
          <number>0</number>
         </property>

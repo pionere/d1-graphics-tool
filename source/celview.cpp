@@ -915,11 +915,11 @@ void CelView::drawGrid(QImage &celFrame)
     unsigned microHeight = MICRO_HEIGHT * this->assetMpl;
     for (int i = (height + microHeight) / microHeight - 1; i >= 0; i--) {
         for (int x = 0; x < width; x++) {
-            int y0 = height - microHeight * (i + 1) + ( 0 + width / 2 + x / 2) % microHeight;
+            int y0 = height - microHeight * (i + 1) + ( 0 + (x - width / 2) / 2) % microHeight;
             if (y0 >= 0 && y0 < height)
                 celFrame.setPixelColor(x, y0, color);
 
-            int y1 = height - microHeight * (i + 1) + (microHeight - 1 + width / 2 - x / 2) % microHeight;
+            int y1 = height - microHeight * (i + 1) + (microHeight - 1 - (x - width / 2) / 2) % microHeight;
             if (y1 >= 0 && y1 < height)
                 celFrame.setPixelColor(x, y1, color);
         }
@@ -1235,7 +1235,9 @@ void CelView::on_showGridCheckBox_clicked()
 
 void CelView::on_assetMplEdit_returnPressed()
 {
-    unsigned ampl = this->ui->groupIndexEdit->text().toUShort() + 1;
+    unsigned ampl = this->ui->assetMplEdit->text().toUShort();
+    if (ampl == 0)
+        ampl = 1;
     if (this->assetMpl != ampl) {
         this->assetMpl = ampl;
         this->displayFrame();
