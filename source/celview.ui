@@ -304,12 +304,32 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="12" colspan="7">
+      <item row="1" column="12" colspan="5">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
+      </item>
+      <item row="1" column="17">
+       <widget class="QCheckBox" name="showGridCheckBox">
+        <property name="toolTip">
+         <string>Show grid over the graphics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="18">
+       <widget class="LineEditWidget" name="assetMplEdit">
+        <property name="charWidth">
+         <number>2</number>
+        </property>
+        <property name="toolTip">
+         <string>Asset multiplier</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel">

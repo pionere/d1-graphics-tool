@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QImage>
 #include <QLabel>
 #include <QPoint>
 #include <QPointer>
@@ -116,6 +117,7 @@ public:
     static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 
 private:
+    void drawGrid(QImage &celFrame);
     void updateFields();
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
@@ -145,6 +147,10 @@ private slots:
     void on_nextGroupButton_clicked();
     void on_lastGroupButton_clicked();
 
+    void on_showGridCheckBox_clicked();
+    void on_assetMplEdit_returnPressed();
+    void on_assetMplEdit_escPressed();
+
     void on_zoomOutButton_clicked();
     void on_zoomInButton_clicked();
     void on_zoomEdit_returnPressed();
@@ -168,6 +174,7 @@ private:
     SmkAudioWidget *smkAudioWidget = nullptr;
     PushButtonWidget *audioBtn;
     bool audioMuted;
+    unsigned assetMpl = 1;
 
     D1Pal *pal;
     D1Gfx *gfx;
