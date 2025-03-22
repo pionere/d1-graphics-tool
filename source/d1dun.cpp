@@ -5998,7 +5998,7 @@ void D1Dun::game_logic()
         std::vector<MapMonster> &monstersRow = this->monsters[y];
         for (unsigned x = 0; x < monstersRow.size(); x++) {
             if (monstersRow[x].moType.monIndex != 0 || monstersRow[x].moType.monUnique) {
-                monstersRow[x].moType.frameNum++;
+                monstersRow[x].frameNum++;
             }
         }
     }

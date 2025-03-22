@@ -161,14 +161,21 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="14" colspan="4">
+      <item row="0" column="14" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
-      <item row="0" column="18">
+      <item row="0" column="16" colspan="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="18" >
        <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
         <property name="topMargin">
          <number>0</number>
@@ -304,7 +311,21 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="12" colspan="6">
+      <item row="1" column="12" colspan="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="14" colspan="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="16" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -474,7 +495,14 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="12" colspan="4">
+      <item row="2" column="12" colspan="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="14" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
