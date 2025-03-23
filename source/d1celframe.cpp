@@ -36,18 +36,18 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
             width = D1CelFrame::computeWidthFromHeader(rawData);
         }
     }
-    if (params.celWidth != 0)
+    if (params.celWidth != 0) {
         width = params.celWidth;
-
+    }
     // If width could not be calculated with frame header,
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
-    if (width == 0)
+    if (width == 0) {
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
-
+    }
     // check if a positive width was found
-    if (width == 0)
+    if (width == 0) {
         return rawData.size() == 0;
-
+    }
     // calculate the offset in case of a clipped frame
     int frameDataStartOffset = 0;
     if (frame.clipped) {
