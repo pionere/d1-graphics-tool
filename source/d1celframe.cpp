@@ -21,7 +21,7 @@ unsigned D1CelPixelGroup::getPixelCount() const
     return this->pixelCount;
 }
 
-bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
+int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
 {
     unsigned width = 0;
     // frame.clipped = false;
@@ -46,17 +46,17 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     }
     // check if a positive width was found
     if (width == 0) {
-        return rawData.size() == 0;
+        return rawData.size() == 0 ? 0 : -1;
     }
     // calculate the offset in case of a clipped frame
     int frameDataStartOffset = 0;
     if (frame.clipped) {
         if (rawData.size() != 0) {
             if (rawData.size() == 1)
-                return false;
+                return -2;
             frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
             if (frameDataStartOffset > rawData.size())
-                return false;
+                return -2;
         }
     }
     // READ {CEL FRAME DATA}
@@ -104,7 +104,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
             return D1CelFrame::load(frame, rawData, oParams);
         }
 
-        return false;
+        return -2;
     }
 
     for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
@@ -112,7 +112,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     }
     frame.width = width;
     frame.height = frame.pixels.size();
-    return true;
+    return 0;
 }
 
 unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
