@@ -28,6 +28,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Try to compute frame width from frame header
         width = D1CelFrame::computeWidthFromHeader(rawData);
+        dProgressWarn() << tr("Calculated width %1").arg(width);
         frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawData.constData()) == SUB_HEADER_SIZE);
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
@@ -41,8 +42,10 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 
     // If width could not be calculated with frame header,
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
-    if (width == 0)
+    if (width == 0) {
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
+        dProgressWarn() << tr("Re-Calculated width %1").arg(width);
+    }
 
     // check if a positive width was found
     if (width == 0)
@@ -95,7 +98,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     }
     frame.width = width;
     frame.height = frame.pixels.size();
-
+    dProgressWarn() << tr("Frame Result %1").arg(pixelLine.empty());
     return pixelLine.empty();
 }
 
