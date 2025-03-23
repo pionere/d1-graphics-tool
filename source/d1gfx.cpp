@@ -254,7 +254,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                     }
                     shortgap = drawlen <= 0x7F;
                 }
-                if (shortgap) ) {
+                if (shortgap) {
                     // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
                     for (int x = it->first; x < it->first + it->second; x++) {
                         result |= this->setPixel(x, y, D1GfxPixel::colorPixel(0));
