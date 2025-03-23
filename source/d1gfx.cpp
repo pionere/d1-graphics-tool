@@ -288,6 +288,36 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                     it++;
                 }
             }
+            for (auto it = gaps.begin(); it != gaps.end(); ) {
+                bool shortgap = it->second <= 8;
+                if (shortgap) {
+                    int drawlen = it->second;
+                    int units = 0;
+                    if (it != gaps.begin()) {
+                        auto pit = it - 1;
+                        int colorlen = it->first - (pit->first + pit->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
+                    }
+                    auto pit = it + 1;
+                    if (pit != gaps.end()) {
+                        int colorlen = pit->first - (it->first + it->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
+                    }
+                    int newunits = (drawlen - 1) / 0x7F + 1;
+                    shortgap = newunits < units; // drawlen <= 0x7F;
+                }
+                if (shortgap) {
+                    // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
+                    for (int x = it->first; x < it->first + it->second; x++) {
+                        result |= this->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                    it = gaps.erase(it);
+                } else {
+                    it++;
+                }
+            }
             for (auto it = gaps.begin(); it != gaps.end(); it++) {
                 // dProgress() << QApplication::tr("long gap %1 len %2").arg(it->first).arg(it->second);
                 for (int x = it->first; x < it->first + it->second; x++) {
