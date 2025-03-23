@@ -59,6 +59,15 @@ enum class D1CEL_FRAME_TYPE {
     Empty = -1,        // transparent frame (only for efficiency tests)
 };
 
+enum class D1CEL_TYPE {
+    V1_REGULAR,
+    V1_COMPILATION,
+    V1_LEVEL,
+    V2_MONO_GROUP,
+    V2_MULTIPLE_GROUPS,
+    SMK,
+};
+
 class D1GfxFrame : public QObject {
     Q_OBJECT
 
@@ -149,15 +158,6 @@ typedef enum gfx_file_index {
     GFX_ITEM_DONKYS1,  // item drop animation (donkys1.CEL)
     GFX_ITEM_MOOSES1,  // item drop animation (mooses1.CEL)
 } gfx_file_index;
-
-enum class D1CEL_TYPE {
-    V1_REGULAR,
-    V1_COMPILATION,
-    V1_LEVEL,
-    V2_MONO_GROUP,
-    V2_MULTIPLE_GROUPS,
-    SMK,
-};
 
 class D1Gfx : public QObject {
     Q_OBJECT

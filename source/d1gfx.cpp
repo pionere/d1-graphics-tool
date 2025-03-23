@@ -233,6 +233,9 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                     it++;
                 }
             }
+            for (auto it = gaps.begin(); it != gaps.end(); it++) {
+                result |= this->setPixel(it->first, y, D1GfxPixel::transparentPixel());
+            }
         }
     } break;
     case D1CEL_TYPE::V1_LEVEL:
