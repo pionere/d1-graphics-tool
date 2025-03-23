@@ -238,7 +238,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                     }
                     auto pit = it + 1;
                     if (pit != gaps.end()) {
-                        drawlen += pit->second;
+                        drawlen += pit->first - (it->first + it->second);
                     }
                     shortgap = drawlen <= 0x7F;
                 }
@@ -262,7 +262,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                     }
                     auto pit = it + 1;
                     if (pit != gaps.end()) {
-                        drawlen += pit->second;
+                        drawlen += pit->first - (it->first + it->second);
                     }
                     shortgap = drawlen <= 0x7F;
                 }
