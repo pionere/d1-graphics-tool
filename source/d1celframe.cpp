@@ -149,7 +149,8 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
                 j += readByte;
             }
         }
-
+        if (pixelCount % CEL_BLOCK_HEIGHT)
+            return false; // invalid block
         unsigned width = pixelCount / CEL_BLOCK_HEIGHT;
         // The calculated width has to be identical for each 32 pixel-line block
         if (celFrameWidth == 0) {
