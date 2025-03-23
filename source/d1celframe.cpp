@@ -30,10 +30,10 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
         width = D1CelFrame::computeWidthFromHeader(rawData);
         frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawData.constData()) == SUB_HEADER_SIZE);
     } else {
-        if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
+        frame.clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
+        if (frame.clipped) {
             // Try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
-            frame.clipped = true;
         }
     }
     if (params.celWidth != 0)
@@ -90,13 +90,22 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
             pixelLine.clear();
         }
     }
+    if (!pixelLine.empty()) {
+        if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
+            OpenAsParam oParams = params;
+            oParams.clipped = frame.clipped ? OPEN_CLIPPED_TYPE::FALSE : OPEN_CLIPPED_TYPE::TRUE;
+            return D1CelFrame::load(frame, rawData, oParams);
+        }
+
+        return false;
+    }
+
     for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
         frame.pixels.push_back(std::move(*it));
     }
     frame.width = width;
     frame.height = frame.pixels.size();
-
-    return pixelLine.empty();
+    return true;
 }
 
 unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
