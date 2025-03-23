@@ -215,7 +215,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
             int sx = 0;
             for (int x = 0; x < this->width; x++) {
                 D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
-                if (!d1pix.isTransparent() && d1pix.paletteIndex() != 0) {
+                if (!d1pix.isTransparent() && d1pix.getPaletteIndex() != 0) {
                     if (sx < x) {
                         gaps.push_back(QPair<int, int>(sx, x - sx));
                     }
@@ -761,7 +761,7 @@ void D1Gfx::optimize()
 {
     for (int i = 0; i < this->getFrameCount(); i++) {
         D1GfxFrame *frame = this->frames[i];
-        if (frame->optimize(this->type))
+        if (frame->optimize(this->type)) {
             this->setModified();
             dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
         }
