@@ -232,15 +232,21 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                 bool shortgap = it->second <= 2;
                 if (shortgap) {
                     int drawlen = it->second;
+                    int units = 0;
                     if (it != gaps.begin()) {
                         auto pit = it - 1;
-                        drawlen += it->first - (pit->first + pit->second);
+                        int colorlen = it->first - (pit->first + pit->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
                     }
                     auto pit = it + 1;
                     if (pit != gaps.end()) {
-                        drawlen += pit->first - (it->first + it->second);
+                        int colorlen = pit->first - (it->first + it->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
                     }
-                    shortgap = drawlen <= 0x7F;
+                    int newunits = (drawlen - 1) / 0x7F + 1;
+                    shortgap = newunits <= units; // drawlen <= 0x7F;
                 }
                 if (shortgap) {
                     // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
@@ -256,15 +262,21 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                 bool shortgap = it->second <= 4;
                 if (shortgap) {
                     int drawlen = it->second;
+                    int units = 0;
                     if (it != gaps.begin()) {
                         auto pit = it - 1;
-                        drawlen += it->first - (pit->first + pit->second);
+                        int colorlen = it->first - (pit->first + pit->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
                     }
                     auto pit = it + 1;
                     if (pit != gaps.end()) {
-                        drawlen += pit->first - (it->first + it->second);
+                        int colorlen = pit->first - (it->first + it->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
                     }
-                    shortgap = drawlen <= 0x7F;
+                    int newunits = (drawlen - 1) / 0x7F + 1;
+                    shortgap = newunits < units; // drawlen <= 0x7F;
                 }
                 if (shortgap) {
                     // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
