@@ -168,14 +168,7 @@
         </property>
        </spacer>
       </item>
-      <!--item row="0" column="16" colspan="2">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item-->
-      <item row="0" column="18" >
+      <item row="0" column="18">
        <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
         <property name="topMargin">
          <number>0</number>
@@ -318,20 +311,6 @@
         </property>
        </spacer>
       </item>
-      <!--item row="1" column="14" colspan="2">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="16" colspan="2">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item-->
       <item row="1" column="18">
        <layout class="QHBoxLayout" name="gridHorizontalLayout">
         <property name="topMargin">
@@ -509,13 +488,6 @@
         </property>
        </spacer>
       </item>
-      <!--item row="2" column="14" colspan="2">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item-->
       <item row="2" column="16">
        <widget class="LineEditWidget" name="celFrameWidthEdit">
         <property name="charWidth">

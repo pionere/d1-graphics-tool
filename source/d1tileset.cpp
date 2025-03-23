@@ -8085,14 +8085,14 @@ void D1Tileset::patchTownSpec(bool silent)
     constexpr int FRAME_HEIGHT = 7 * 32;
 
     const CelMicro micros[] = {
-/*  0 */{ 168  - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 111
-/*  1 */{ 168  - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 111
-/*  2 */{ 168  - 1, 4, D1CEL_FRAME_TYPE::Empty }, // 111
-/*  3 */{ 168  - 1, 6, D1CEL_FRAME_TYPE::Empty }, // 111
-/*  4 */{ 168  - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 111
-/*  5 */{ 168  - 1, 3, D1CEL_FRAME_TYPE::Empty }, // 111
-/*  6 */{ 168  - 1, 5, D1CEL_FRAME_TYPE::Empty }, // 111
-/*  7 */{ 168  - 1, 7, D1CEL_FRAME_TYPE::Empty }, // 111
+/*  0 */{ 1171  - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 745 -- catacombs
+/*  1 */{ 1171  - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 745
+/*  2 */{ 1171  - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 745
+/*  3 */{ 1171  - 1, 3, D1CEL_FRAME_TYPE::Empty }, // 745
+/*  4 */{ 1172  - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 746
+/*  5 */{ 1173  - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 747
+/*  6 */{ 1174  - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 748
+/*  7 */{ 1174  - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 748
 /*  8 */{ 169  - 1, 5, D1CEL_FRAME_TYPE::Empty }, // 112
 /*  9 */{ 169  - 1, 7, D1CEL_FRAME_TYPE::Empty }, // 112
 /* 10 */{ 170  - 1, 4, D1CEL_FRAME_TYPE::Empty }, // 113
@@ -8107,7 +8107,7 @@ void D1Tileset::patchTownSpec(bool silent)
 /* 19 */{ 181  - 1, 5, D1CEL_FRAME_TYPE::Empty }, // 120
 /* 20 */{ 182  - 1, 4, D1CEL_FRAME_TYPE::Empty }, // 121
 /* 21 */{ 182  - 1, 6, D1CEL_FRAME_TYPE::Empty }, // 121
-/* 22 */{ 359  - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 236
+/* 22 */{ 359  - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 236 -- trees
 /* 23 */{ 359  - 1, 3, D1CEL_FRAME_TYPE::Empty }, // 236
 /* 24 */{ 359  - 1, 5, D1CEL_FRAME_TYPE::Empty }, // 236
 /* 25 */{ 359  - 1, 7, D1CEL_FRAME_TYPE::Empty }, // 236
@@ -8194,6 +8194,8 @@ void D1Tileset::patchTownSpec(bool silent)
     if (srcCelEntries != 18)
         return; // assume it is already done
 
+    // calculate the number of frames in the result
+    int resCelEntries = 18 + 5;
     // check and reset frames
     for (int i = 0; i < srcCelEntries; i++) {
         D1GfxFrame *frame = this->cls->getFrame(i);
@@ -8212,11 +8214,11 @@ void D1Tileset::patchTownSpec(bool silent)
         }
     }
     // add empty frames
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < resCelEntries - srcCelEntries; i++) {
         this->cls->duplicateFrame(3 - 1, false);
     }
     // patch the frames
-    for (int i = 0; i < srcCelEntries + 3; i++) {
+    for (int i = 0; i < resCelEntries; i++) {
         D1GfxFrame *frame = this->cls->getFrame(i);
 
         bool change = false;
@@ -8717,6 +8719,173 @@ void D1Tileset::patchTownSpec(bool silent)
             // fix remaining artifacts
             for (int j = 0; j < lengthof(trans22); j++)
                 change |= frame->setPixel(trans22[j].x, trans22[j].y, D1GfxPixel::transparentPixel());
+        }
+        // catacombs
+        // create new frame from 745 747 to add to 747
+        if (i == 22 - 1) {
+            // 745
+            for (int j = 0; j < 2; j++) {
+                const CelMicro &microSrc = micros[0 + j];
+                std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+                D1GfxFrame *frameSrc = mf.second;
+                if (frameSrc == nullptr) {
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    return;
+                }
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        bool grate = false;
+                        // vertical grates
+                        if ((x >= 7 && x <= 9) || (x >= 15 && x <= 17) || (x >= 23 && x <= 25) || x >= 31) {
+                            // if (j == 0 || y > 2 + x / 2)
+                            if (j == 0 || (y > 6 + 2 * ((x - 7) / 4)))
+                                grate = true;
+                        }
+                        // horizontal grates
+                        if (j == 1 && x >= 2 && y >= 15 + x / 2 && y <= 17 + x / 2)
+                            grate = true;
+                        if (j == 0 && x >= 2) {
+                            if (y >= 4 + x / 2 && y <= 6 + x / 2)
+                                grate = true;
+                            if (y >= -17 + x / 2 && y <= -15 + x / 2)
+                                grate = true;
+                        }
+                        D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                        if (grate)
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT / 2 - MICRO_HEIGHT * (j + 0), pixel);
+                    }
+                }
+            }
+            // 747
+            for (int j = 0; j < 1; j++) {
+                const CelMicro &microSrc = micros[5 + j];
+                std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+                D1GfxFrame *frameSrc = mf.second;
+                if (frameSrc == nullptr) {
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    return;
+                }
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        bool grate = false;
+                        // vertical grates
+                        if ((x >= 7 && x <= 9) || (x >= 15 && x <= 17) || (x >= 23 && x <= 25) || x >= 31) {
+                            // if (y <= 6 + x / 2)
+                            if (y <= 9 + 2 * ((x - 7) / 4))
+                                grate = true;
+                        }
+                        D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                        if (grate && !pixel.isTransparent())
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
+                    }
+                }
+            }
+        }
+
+        // create new frame from 745 746 748 to add to 748
+        if (i == 23 - 1) {
+            // 745
+            for (int j = 0; j < 2; j++) {
+                const CelMicro &microSrc = micros[2 + j];
+                std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+                D1GfxFrame *frameSrc = mf.second;
+                if (frameSrc == nullptr) {
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    return;
+                }
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        bool grate = false;
+                        // vertical grates
+                        if ((x >= 0 && x <= 1) || (x >= 8 && x <= 10) || (x >= 16 && x <= 18)) {
+                            if (j == 0 || y > 18 + x / 2)
+                                grate = true;
+                        }
+                        // horizontal grates
+                        if (j == 0 && x <= 20) {
+                            if (y >= -1 + x / 2 && y <= 1 + x / 2)
+                                grate = true;
+                            if (y >= 20 + x / 2 && y <= 22 + x / 2)
+                                grate = true;
+                        }
+                        D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                        if (grate)
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT - MICRO_HEIGHT * (j + 0), pixel);
+                    }
+                }
+            }
+            // 746
+            for (int j = 0; j < 1; j++) {
+                const CelMicro &microSrc = micros[4 + j];
+                std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+                D1GfxFrame *frameSrc = mf.second;
+                if (frameSrc == nullptr) {
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    return;
+                }
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        bool grate = false;
+                        // vertical grates
+                        if ((x >= 0 && x <= 1) || (x >= 8 && x <= 10) || (x >= 16 && x <= 18)) {
+                            grate = true;
+                        }
+                        // horizontal grates
+                        if (j == 0 && y >= 4 + x / 2 && y <= 6 + x / 2)
+                            grate = true;
+                        D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                        quint8 color = pixel.getPaletteIndex();
+                        if (grate && !pixel.isTransparent() && color != 107)
+                            change |= frame->setPixel(x + MICRO_WIDTH, y + FRAME_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 1), pixel);
+                    }
+                }
+            }
+            // 748
+            for (int j = 0; j < 1; j++) {
+                const CelMicro &microSrc = micros[6 + j];
+                std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+                D1GfxFrame *frameSrc = mf.second;
+                if (frameSrc == nullptr) {
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    return;
+                }
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        bool grate = false;
+                        // vertical grates
+                        if (x >= 31 && y <= 5) {
+                            grate = true;
+                        }
+                        D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                        if (grate && !pixel.isTransparent())
+                            change |= frame->setPixel(x + 0, y + FRAME_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0), pixel);
+                    }
+                }
+            }
+            // 748
+            for (int j = 0; j < 1; j++) {
+                const CelMicro &microSrc = micros[7 + j];
+                std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+                D1GfxFrame *frameSrc = mf.second;
+                if (frameSrc == nullptr) {
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    return;
+                }
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        bool grate = false;
+                        // vertical grates
+                        //if ((x >= 0 && x <= 1) || (x >= 8 && x <= 10) || (x >= 16 && x <= 18)) {
+                        //    if (y <= 5 + x / 2) {
+                        if (((x >= 0 && x <= 1) && y <= 5) || ((x >= 8 && x <= 10) && y <= 9) || ((x >= 16 && x <= 18) && y <= 13)) {
+                                grate = true;
+                        }
+                        D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                        if (grate && !pixel.isTransparent())
+                            change |= frame->setPixel(x + MICRO_WIDTH, (y + FRAME_HEIGHT - MICRO_HEIGHT - (MICRO_HEIGHT / 2) * (j + 0)), pixel);
+                    }
+                }
+            }
         }
 
         if (change && !silent) {
