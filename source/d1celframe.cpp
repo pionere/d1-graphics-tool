@@ -28,7 +28,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Try to compute frame width from frame header
         width = D1CelFrame::computeWidthFromHeader(rawData);
-        dProgressWarn() << QApplication::tr("Calculated width %1").arg(width);
+        // dProgressWarn() << QApplication::tr("Calculated width %1").arg(width);
         frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawData.constData()) == SUB_HEADER_SIZE);
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
@@ -44,7 +44,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
     if (width == 0) {
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
-        dProgressWarn() << QApplication::tr("Re-Calculated width %1").arg(width);
+        // dProgressWarn() << QApplication::tr("Re-Calculated width %1").arg(width);
     }
 
     // check if a positive width was found
@@ -98,7 +98,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     }
     frame.width = width;
     frame.height = frame.pixels.size();
-    dProgressWarn() << QApplication::tr("Frame Result %1").arg(pixelLine.empty());
+    // dProgressWarn() << QApplication::tr("Frame Result %1").arg(pixelLine.empty());
     return pixelLine.empty();
 }
 
@@ -172,21 +172,34 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
 
 static bool isValidWidth(unsigned width, unsigned globalPixelCount, const std::vector<D1CelPixelGroup> &pixelGroups)
 {
-    dProgressWarn() << QApplication::tr("check width gpc %1 w %2 (%3)").arg(globalPixelCount).arg(width).arg((globalPixelCount % width) != 0);
     if ((globalPixelCount % width) != 0)
         return false;
 
     unsigned pixelCount = 0;
     for (unsigned i = 1; i < pixelGroups.size(); i++) {
-        unsigned currPixelCount = pixelGroups[i - 1].getPixelCount();
-        if (((pixelCount % width) + currPixelCount) > width) {
-            dProgressWarn() << QApplication::tr("group mismatch %1 cpc %2 lpc %3 w %4").arg(i).arg(currPixelCount).arg(pixelCount).arg(width);
-            return false; // group does not align with width
+        unsigned cpc = pixelGroups[i - 1].getPixelCount();
+        // gpc: [width]*lpc
+        unsigned lpc = pixelCount % width; // pixels in the last line
+        unsigned rpc = width - lpc; // possible remaining pixels in the last line
+        if (cpc > rpc) {
+            if (pixelGroups[i - 1].isTransparent()) {
+                // cpc: [0x80]*[width]*[0x80]*pc
+                if ((rpc % 0x80) != 0)
+                    return false; // group does not align with width
+            } else {
+                // cpc: [0x7F]*[width]*[0x7F]*pc
+                if ((rpc % 0x7F) != 0)
+                    return false; // group does not align with width
+            }
         }
-        pixelCount += currPixelCount;
+        /*if (((pixelCount % width) + (cpc % width)) > width) {
+            dProgressWarn() << QApplication::tr("group mismatch %1 cpc %2 lpc %3 w %4").arg(i).arg(cpc).arg(pixelCount).arg(width);
+            return false; // group does not align with width
+        }*/
+        pixelCount += cpc;
         if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
             if ((pixelCount % width) != 0) {
-                dProgressWarn() << QApplication::tr("line end mismatch %1 cpc %2 lpc %3 w %4").arg(i).arg(currPixelCount).arg(pixelCount).arg(width);
+                // dProgressWarn() << QApplication::tr("line end mismatch %1 cpc %2 lpc %3 w %4").arg(i).arg(cpc).arg(pixelCount).arg(width);
                 return false; // last line(?) does not fit to the width
             }
             pixelCount = 0;
@@ -241,7 +254,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     if (pixelCount != 0) {
         pixelGroups.push_back(D1CelPixelGroup(alpha, pixelCount));
     }
-    dProgressWarn() << QApplication::tr("pixel group size %1").arg(pixelGroups.size());
+    // dProgressWarn() << QApplication::tr("pixel group size %1").arg(pixelGroups.size());
     if (pixelGroups.size() <= 1) {
         if (pixelGroups.size() == 0)
             return 0; // empty frame
@@ -261,7 +274,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
         pixelCount += pixelGroups[i - 1].getPixelCount();
 
         if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
-            dProgressWarn() << QApplication::tr("break at %1 pc %2 w%3").arg(i).arg(pixelCount).arg(width);
+            // dProgressWarn() << QApplication::tr("break at %1 pc %2 w%3").arg(i).arg(pixelCount).arg(width);
             // If width == 0 then it's the first pixel-line wrap and width needs to be set
             // If pixelCount is less than width then the width has to be set to the new value
             if (width == 0 || pixelCount < width)
@@ -280,11 +293,11 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     globalPixelCount = 0;
     int n = 0;
     for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
-        dProgressWarn() << QApplication::tr("group %1 pc %2 t %3").arg(n++).arg(pixelGroup.getPixelCount()).arg(pixelGroup.isTransparent());
+        // dProgressWarn() << QApplication::tr("group %1 pc %2 t %3").arg(n++).arg(pixelGroup.getPixelCount()).arg(pixelGroup.isTransparent());
         pixelCount = pixelGroup.getPixelCount();
         globalPixelCount += pixelCount;
     }
-    dProgressWarn() << QApplication::tr("final gpc %1 w %2").arg(globalPixelCount).arg(width);
+    // dProgressWarn() << QApplication::tr("final gpc %1 w %2").arg(globalPixelCount).arg(width);
     if (width != 0 && isValidWidth(width, globalPixelCount, pixelGroups)) {
         return width; // width is consistent -> done
     }
