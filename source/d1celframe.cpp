@@ -21,20 +21,19 @@ unsigned D1CelPixelGroup::getPixelCount() const
     return this->pixelCount;
 }
 
-bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
+int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
 {
     unsigned width = 0;
     // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Try to compute frame width from frame header
         width = D1CelFrame::computeWidthFromHeader(rawData);
-        // dProgressWarn() << QApplication::tr("Calculated width %1").arg(width);
         frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawData.constData()) == SUB_HEADER_SIZE);
     } else {
-        if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
+        frame.clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
+        if (frame.clipped) {
             // Try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
-            frame.clipped = true;
         }
     }
     if (params.celWidth != 0)
@@ -44,17 +43,23 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
     if (width == 0) {
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
-        // dProgressWarn() << QApplication::tr("Re-Calculated width %1").arg(width);
     }
 
     // check if a positive width was found
     if (width == 0)
-        return rawData.size() == 0;
+        return rawData.size() == 0 ? 0 : -1;
 
     // READ {CEL FRAME DATA}
     int frameDataStartOffset = 0;
-    if (frame.clipped && rawData.size() >= SUB_HEADER_SIZE)
-        frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
+    if (frame.clipped) {
+        if (rawData.size() != 0) {
+            if (rawData.size() == 1)
+                return -2;
+            frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
+            if (frameDataStartOffset > rawData.size())
+                return -2;
+        }
+    }
 
     std::vector<std::vector<D1GfxPixel>> pixels;
     std::vector<D1GfxPixel> pixelLine;
@@ -93,13 +98,22 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
             pixelLine.clear();
         }
     }
+    if (!pixelLine.empty()) {
+        if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
+            OpenAsParam oParams = params;
+            oParams.clipped = frame.clipped ? OPEN_CLIPPED_TYPE::FALSE : OPEN_CLIPPED_TYPE::TRUE;
+            return D1CelFrame::load(frame, rawData, oParams);
+        }
+
+        return -2;
+    }
+
     for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
         frame.pixels.push_back(std::move(*it));
     }
     frame.width = width;
     frame.height = frame.pixels.size();
-    // dProgressWarn() << QApplication::tr("Frame Result %1").arg(pixelLine.empty());
-    return pixelLine.empty();
+    return 0;
 }
 
 unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
@@ -152,7 +166,8 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
                 j += readByte;
             }
         }
-
+        if (pixelCount % CEL_BLOCK_HEIGHT)
+            return false; // invalid block
         unsigned width = pixelCount / CEL_BLOCK_HEIGHT;
         // The calculated width has to be identical for each 32 pixel-line block
         if (celFrameWidth == 0) {
@@ -192,14 +207,9 @@ static bool isValidWidth(unsigned width, unsigned globalPixelCount, const std::v
                     return false; // group does not align with width
             }
         }
-        /*if (((pixelCount % width) + (cpc % width)) > width) {
-            dProgressWarn() << QApplication::tr("group mismatch %1 cpc %2 lpc %3 w %4").arg(i).arg(cpc).arg(pixelCount).arg(width);
-            return false; // group does not align with width
-        }*/
         pixelCount += cpc;
         if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
             if ((pixelCount % width) != 0) {
-                // dProgressWarn() << QApplication::tr("line end mismatch %1 cpc %2 lpc %3 w %4").arg(i).arg(cpc).arg(pixelCount).arg(width);
                 return false; // last line(?) does not fit to the width
             }
             pixelCount = 0;
@@ -254,7 +264,6 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     if (pixelCount != 0) {
         pixelGroups.push_back(D1CelPixelGroup(alpha, pixelCount));
     }
-    // dProgressWarn() << QApplication::tr("pixel group size %1").arg(pixelGroups.size());
     if (pixelGroups.size() <= 1) {
         if (pixelGroups.size() == 0)
             return 0; // empty frame
@@ -274,7 +283,6 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
         pixelCount += pixelGroups[i - 1].getPixelCount();
 
         if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
-            // dProgressWarn() << QApplication::tr("break at %1 pc %2 w%3").arg(i).arg(pixelCount).arg(width);
             // If width == 0 then it's the first pixel-line wrap and width needs to be set
             // If pixelCount is less than width then the width has to be set to the new value
             if (width == 0 || pixelCount < width)
@@ -293,11 +301,10 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     globalPixelCount = 0;
     int n = 0;
     for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
-        // dProgressWarn() << QApplication::tr("group %1 pc %2 t %3").arg(n++).arg(pixelGroup.getPixelCount()).arg(pixelGroup.isTransparent());
         pixelCount = pixelGroup.getPixelCount();
         globalPixelCount += pixelCount;
     }
-    // dProgressWarn() << QApplication::tr("final gpc %1 w %2").arg(globalPixelCount).arg(width);
+
     if (width != 0 && isValidWidth(width, globalPixelCount, pixelGroups)) {
         return width; // width is consistent -> done
     }

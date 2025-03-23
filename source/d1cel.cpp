@@ -170,10 +170,13 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         QByteArray celFrameRawData = device->read(offset.second - offset.first);
 
         D1GfxFrame *frame = new D1GfxFrame();
-        if (!D1CelFrame::load(*frame, celFrameRawData, params)) {
+        int res = D1CelFrame::load(*frame, celFrameRawData, params);
+        if (res != 0) {
             quint16 frameIndex = gfx.frames.size();
-            dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
-            // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
+            if (res == -1)
+                dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(frameIndex + 1);
+            else
+                dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
         }
 
