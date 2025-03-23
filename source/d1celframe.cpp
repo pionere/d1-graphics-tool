@@ -48,11 +48,18 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     if (width == 0)
         return rawData.size() == 0;
 
-    // READ {CEL FRAME DATA}
+    // calculate the offset in case of a clipped frame
     int frameDataStartOffset = 0;
-    if (frame.clipped && rawData.size() >= SUB_HEADER_SIZE)
-        frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
-
+    if (frame.clipped) {
+        if (rawData.size() != 0) {
+            if (rawData.size() == 1)
+                return false;
+            frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
+            if (frameDataStartOffset > rawData.size())
+                return false;
+        }
+    }
+    // READ {CEL FRAME DATA}
     std::vector<std::vector<D1GfxPixel>> pixels;
     std::vector<D1GfxPixel> pixelLine;
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
