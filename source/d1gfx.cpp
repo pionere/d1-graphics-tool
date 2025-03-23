@@ -217,16 +217,20 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                 D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
                 if (!d1pix.isTransparent() && d1pix.getPaletteIndex() != 0) {
                     if (sx < x) {
+                        dProgress() << QApplication::tr("gap %1 len %2").arg(sx, x - sx);
                         gaps.push_back(QPair<int, int>(sx, x - sx));
                     }
                     sx = x + 1;
                 }
             }
-            if (sx != this->width)
+            if (sx != this->width) {
+                dProgress() << QApplication::tr("gap %1 len %2").arg(sx, this->width - sx);
                 gaps.push_back(QPair<int, int>(sx, this->width - sx));
+            }
 
             for (auto it = gaps.begin(); it != gaps.end(); ) {
                 if (it->second <= 2) {
+                    dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first, it->second);
                     result |= this->setPixel(it->first, y, D1GfxPixel::colorPixel(0));
                     it = gaps.erase(it);
                 } else {
@@ -234,6 +238,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                 }
             }
             for (auto it = gaps.begin(); it != gaps.end(); it++) {
+                dProgress() << QApplication::tr("long gap %1 len %2").arg(it->first, it->second);
                 result |= this->setPixel(it->first, y, D1GfxPixel::transparentPixel());
             }
         }
