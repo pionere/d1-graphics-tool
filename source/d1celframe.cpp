@@ -98,7 +98,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     }
     frame.width = width;
     frame.height = frame.pixels.size();
-    dProgressWarn() << tr("Frame Result %1").arg(pixelLine.empty());
+    dProgressWarn() << QApplication::tr("Frame Result %1").arg(pixelLine.empty());
     return pixelLine.empty();
 }
 
@@ -172,7 +172,7 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
 
 static bool isValidWidth(unsigned width, unsigned globalPixelCount, const std::vector<D1CelPixelGroup> &pixelGroups)
 {
-    dProgressWarn() << QApplication::tr("check width gpc %1 w %2 (%3)").arg(i).arg(globalPixelCount).arg(width).arg((globalPixelCount % width) != 0);
+    dProgressWarn() << QApplication::tr("check width gpc %1 w %2 (%3)").arg(globalPixelCount).arg(width).arg((globalPixelCount % width) != 0);
     if ((globalPixelCount % width) != 0)
         return false;
 
@@ -278,11 +278,13 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     }
 
     globalPixelCount = 0;
+    int n = 0;
     for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
+        dProgressWarn() << QApplication::tr("group %1 pc %2 t %3").arg(n++).arg(pixelGroup.getPixelCount()).arg(pixelGroup.isTransparent());
         pixelCount = pixelGroup.getPixelCount();
         globalPixelCount += pixelCount;
     }
-    dProgressWarn() << QApplication::tr("final gpc %1 w %2").arg(i).arg(globalPixelCount).arg(width);
+    dProgressWarn() << QApplication::tr("final gpc %1 w %2").arg(globalPixelCount).arg(width);
     if (width != 0 && isValidWidth(width, globalPixelCount, pixelGroups)) {
         return width; // width is consistent -> done
     }
