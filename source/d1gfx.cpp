@@ -203,6 +203,47 @@ bool D1GfxFrame::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &repla
     return result;
 }
 
+bool D1GfxFrame::optimize(D1CEL_TYPE type)
+{
+    bool result = false;
+    switch (type) {
+    case D1CEL_TYPE::V1_REGULAR:
+    case D1CEL_TYPE::V1_COMPILATION:
+    {
+        for (int y = 0; y < this->height; y++) {
+            QList<QPair<int, int>> gaps;
+            int sx = 0;
+            for (int x = 0; x < this->width; x++) {
+                D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
+                if (!d1pix.isTransparent() && d1pix.paletteIndex() != 0) {
+                    if (sx < x) {
+                        gaps.push_back(QPair<int, int>(sx, x - sx));
+                    }
+                    sx = x + 1;
+                }
+            }
+            if (sx != this->width)
+                gaps.push_back(QPair<int, int>(sx, this->width - sx));
+
+            for (auto it = gaps.begin(); it != gaps.end(); ) {
+                if (it->second <= 2) {
+                    result |= this->setPixel(it->first, y, D1GfxPixel::colorPixel(0));
+                    it = gaps.erase(it);
+                } else {
+                    it++;
+                }
+            }
+        }
+    } break;
+    case D1CEL_TYPE::V1_LEVEL:
+    case D1CEL_TYPE::V2_MONO_GROUP:
+    case D1CEL_TYPE::V2_MULTIPLE_GROUPS:
+    case D1CEL_TYPE::SMK:
+        break;
+    }
+    return result;
+}
+
 QPointer<D1Pal>& D1GfxFrame::getFramePal()
 {
     return this->framePal;
@@ -709,6 +750,17 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
         D1GfxFrame *frame = this->getFrame(i);
         if (frame->replacePixels(replacements)) {
             this->setModified();
+        }
+    }
+}
+
+void D1Gfx::optimize()
+{
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->optimize(this->type))
+            this->setModified();
+            dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
         }
     }
 }

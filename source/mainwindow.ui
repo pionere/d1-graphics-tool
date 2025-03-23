@@ -421,6 +421,7 @@
     <addaction name="actionResize"/>
     <addaction name="actionUpscale"/>
     <addaction name="actionMerge"/>
+    <addaction name="actionOptimize"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -744,6 +745,14 @@
    </property>
    <property name="toolTip">
     <string>Add frames from an other graphics</string>
+   </property>
+  </action>
+  <action name="actionOptimize">
+   <property name="text">
+    <string>Optimize</string>
+   </property>
+   <property name="toolTip">
+    <string>Optimize graphics assuming a black background</string>
    </property>
   </action>
   <action name="actionTogglePalTrn">

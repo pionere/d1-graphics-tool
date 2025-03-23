@@ -36,20 +36,19 @@ int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
             width = D1CelFrame::computeWidthFromHeader(rawData);
         }
     }
-    if (params.celWidth != 0)
+    if (params.celWidth != 0) {
         width = params.celWidth;
-
+    }
     // If width could not be calculated with frame header,
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
     if (width == 0) {
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
     }
-
     // check if a positive width was found
-    if (width == 0)
+    if (width == 0) {
         return rawData.size() == 0 ? 0 : -1;
-
-    // READ {CEL FRAME DATA}
+    }
+    // calculate the offset in case of a clipped frame
     int frameDataStartOffset = 0;
     if (frame.clipped) {
         if (rawData.size() != 0) {
@@ -60,7 +59,7 @@ int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
                 return -2;
         }
     }
-
+    // READ {CEL FRAME DATA}
     std::vector<std::vector<D1GfxPixel>> pixels;
     std::vector<D1GfxPixel> pixelLine;
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
@@ -264,6 +263,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     if (pixelCount != 0) {
         pixelGroups.push_back(D1CelPixelGroup(alpha, pixelCount));
     }
+
     if (pixelGroups.size() <= 1) {
         if (pixelGroups.size() == 0)
             return 0; // empty frame
@@ -299,7 +299,6 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     }
 
     globalPixelCount = 0;
-    int n = 0;
     for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
         pixelCount = pixelGroup.getPixelCount();
         globalPixelCount += pixelCount;

@@ -216,6 +216,7 @@ private slots:
     void on_actionResize_triggered();
     void on_actionUpscale_triggered();
     void on_actionMerge_triggered();
+    void on_actionOptimize_triggered();
 
     void on_actionReportUse_Tileset_triggered();
     void on_actionReportActiveSubtiles_Tileset_triggered();

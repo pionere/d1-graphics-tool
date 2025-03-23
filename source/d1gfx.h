@@ -94,6 +94,7 @@ public:
     bool addTo(const D1GfxFrame &frame);
     void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
     bool replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements);
+    bool optimize(D1CEL_TYPE type);
 
     // functions for smk-frames
     QPointer<D1Pal>& getFramePal();
@@ -198,6 +199,7 @@ public:
     void mergeFrames(unsigned frameIndex0, unsigned frameIndex1);
     void addGfx(D1Gfx *gfx);
     void replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params, int verbose);
+    void optimize();
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);

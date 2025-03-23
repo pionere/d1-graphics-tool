@@ -142,8 +142,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
             // Going through all frames of the CEL
             for (unsigned int j = 1; j <= celFrameCount; j++) {
-                quint32 celFrameStartOffset = 0;
-                quint32 celFrameEndOffset = 0;
+                quint32 celFrameStartOffset;
+                quint32 celFrameEndOffset;
 
                 device->seek(celOffset + j * 4);
                 in >> celFrameStartOffset;
@@ -179,7 +179,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
         }
-
         gfx.frames.append(frame);
     }
 
