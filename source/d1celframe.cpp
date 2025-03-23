@@ -174,11 +174,22 @@ static bool isValidWidth(unsigned width, unsigned globalPixelCount, const std::v
 
     unsigned pixelCount = 0;
     for (unsigned i = 1; i < pixelGroups.size(); i++) {
-        unsigned currPixelCount = pixelGroups[i - 1].getPixelCount();
-        if (((pixelCount % width) + currPixelCount) > width) {
-            return false; // group does not align with width
+        unsigned cpc = pixelGroups[i - 1].getPixelCount();
+        // gpc: [width]*lpc
+        unsigned lpc = pixelCount % width; // pixels in the last line
+        unsigned rpc = width - lpc; // possible remaining pixels in the last line
+        if (cpc > rpc) {
+            if (pixelGroups[i - 1].isTransparent()) {
+                // cpc: [0x80]*[width]*[0x80]*pc
+                if ((rpc % 0x80) != 0)
+                    return false; // group does not align with width
+            } else {
+                // cpc: [0x7F]*[width]*[0x7F]*pc
+                if ((rpc % 0x7F) != 0)
+                    return false; // group does not align with width
+            }
         }
-        pixelCount += currPixelCount;
+        pixelCount += cpc;
         if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
             if ((pixelCount % width) != 0) {
                 return false; // last line(?) does not fit to the width
@@ -245,7 +256,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
         if ((globalPixelCount % width) == 0) {
             return width;
         }
-        return 0; // should not happen
+        return globalPixelCount; // single line
     }
 
     // Going through pixel groups to find pixel-lines wraps
