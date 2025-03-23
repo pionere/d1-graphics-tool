@@ -234,7 +234,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                     int drawlen = it->second;
                     if (it != gaps.begin()) {
                         auto pit = it - 1;
-                        drawlen += pit->second;
+                        drawlen += it->first - (pit->first + pit->second);
                     }
                     auto pit = it + 1;
                     if (pit != gaps.end()) {
@@ -258,7 +258,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
                     int drawlen = it->second;
                     if (it != gaps.begin()) {
                         auto pit = it - 1;
-                        drawlen += pit->second;
+                        drawlen += it->first - (pit->first + pit->second);
                     }
                     auto pit = it + 1;
                     if (pit != gaps.end()) {
