@@ -209,6 +209,7 @@ public:
     bool load(const QString &dunFilePath, const OpenAsParam &params);
     void initialize(D1Pal *pal, D1Tileset *tileset);
     bool save(const SaveAsParam &params);
+    void setTileset(D1Tileset *tileset);
 
     void compareTo(const LoadFileContent *fileContent) const;
 
