@@ -436,6 +436,7 @@ void LevelCelView::updateFields()
         MapMonster mon = this->dun->getMonsterAt(posx, posy);
         this->ui->dungeonMonsterLineEdit->setText(QString::number(mon.moType.monIndex));
         this->ui->dungeonMonsterCheckBox->setChecked(mon.moType.monUnique);
+        this->ui->dungeonMonsterDeadCheckBox->setChecked(mon.moType.monDeadFlag);
         this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, mon.moType));
         {
             const int limit = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -449,9 +450,26 @@ void LevelCelView::updateFields()
             this->ui->dungeonMonsterYOffSpinBox->setRange(-limit, limit);
             this->ui->dungeonMonsterYOffSpinBox->setValue(mon.moy);
         }
-        int objectIndex = this->dun->getObjectAt(posx, posy).oType;
-        this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
-        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
+        MapObject oo = this->dun->getObjectAt(posx, posy);
+        this->ui->dungeonObjectLineEdit->setText(QString::number(oo.oType));
+        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(oo.oType));
+        this->ui->dungeonObjectPreCheckBox->setChecked(oo.oPreFlag);
+        MapMissile mi = this->dun->getMissileAt(posx, posy);
+        this->ui->dungeonMissileLineEdit->setText(QString::number(mi.miType));
+        this->ui->dungeonMissileComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(mi.miType));
+        this->ui->dungeonMissilePreCheckBox->setChecked(mi.miPreFlag);
+        {
+            const int limit = this->min->getSubtileWidth() * MICRO_WIDTH;
+            const QSignalBlocker blocker(this->ui->dungeonMissileXOffSpinBox);
+            this->ui->dungeonMissileXOffSpinBox->setRange(-limit, limit);
+            this->ui->dungeonMissileXOffSpinBox->setValue(mi.mix);
+        }
+        {
+            const int limit = this->min->getSubtileWidth() * MICRO_HEIGHT / 2;
+            const QSignalBlocker blocker(this->ui->dungeonMissileYOffSpinBox);
+            this->ui->dungeonMissileYOffSpinBox->setRange(-limit, limit);
+            this->ui->dungeonMissileYOffSpinBox->setValue(mi.miy);
+        }
         this->ui->dungeonRoomLineEdit->setText(QString::number(this->dun->getRoomAt(posx, posy)));
         // update modal window
         if (this->dungeonSubtileWidget != nullptr) {
@@ -4620,6 +4638,21 @@ void LevelCelView::on_dungeonObjectComboBox_activated(int index)
     this->setObjectIndex(objectIndex);
 }
 
+void LevelCelView::on_dungeonObjectPreCheckBox_clicked()
+{
+    MapObject obj = this->dun->getObjectAt(this->currentDunPosX, this->currentDunPosY);
+    obj.oPreFlag = this->ui->dungeonObjectPreCheckBox->isChecked();
+
+    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, obj);
+
+    // update the view
+    if (change) {
+        this->displayFrame();
+    } else {
+        this->updateFields();
+    }
+}
+
 void LevelCelView::on_dungeonObjectAddButton_clicked()
 {
     int objectIndex = this->ui->dungeonObjectLineEdit->text().toUShort();
@@ -4627,19 +4660,21 @@ void LevelCelView::on_dungeonObjectAddButton_clicked()
     this->dungeonResourceDialog.show();
 }
 
-void LevelCelView::setMonsterType(int monsterIndex, bool monsterUnique)
+void LevelCelView::setMonsterType(int monsterIndex, bool monsterUnique, bool monsterDead)
 {
     MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
-    mon.moType = { monsterIndex, monsterUnique };
+    mon.moType = { monsterIndex, monsterUnique, monsterDead };
     this->setCurrentMonster(mon);
 }
 
 void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
 {
-    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
+    /*int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
     bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
+    bool monsterDead = this->ui->dungeonMonsterDeadCheckBox->isChecked();
 
-    this->setMonsterType(monsterIndex, monsterUnique);
+    this->setMonsterType(monsterIndex, monsterUnique, monsterDead);*/
+    this->on_dungeonMonsterCheckBox_clicked();
 
     this->on_dungeonMonsterLineEdit_escPressed();
 }
@@ -4656,7 +4691,9 @@ void LevelCelView::on_dungeonMonsterCheckBox_clicked()
 {
     int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
     bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
-    this->setMonsterType(monsterIndex, monsterUnique);
+    bool monsterDead = this->ui->dungeonMonsterDeadCheckBox->isChecked();
+
+    this->setMonsterType(monsterIndex, monsterUnique, monsterDead);
 }
 
 void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
@@ -4666,7 +4703,12 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
     }
     DunMonsterType monType = this->ui->dungeonMonsterComboBox->itemData(index).value<DunMonsterType>();
 
-    this->setMonsterType(monType.monIndex, monType.monUnique);
+    this->setMonsterType(monType.monIndex, monType.monUnique, monType.monDeadFlag);
+}
+
+void LevelCelView::on_dungeonMonsterDeadCheckBox_clicked()
+{
+    this->on_dungeonMonsterCheckBox_clicked();
 }
 
 void LevelCelView::on_dungeonMonsterAddButton_clicked()
@@ -4783,6 +4825,13 @@ void LevelCelView::on_dungeonMissileYOffSpinBox_valueChanged(int value)
 {
     MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
     mis.miy = getSpinValue(this->ui->dungeonMissileYOffSpinBox, value, mis.miy);
+    this->setCurrentMissile(mis);
+}
+
+void LevelCelView::on_dungeonMissilePreCheckBox_clicked()
+{
+    MapMissile mis = this->dun->getMissileAt(this->currentDunPosX, this->currentDunPosY);
+    mis.miPreFlag = this->ui->dungeonMissilePreCheckBox->isChecked();
     this->setCurrentMissile(mis);
 }
 

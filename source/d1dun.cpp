@@ -1453,10 +1453,44 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
             }
         }
     }
+    if (params.showMissiles) {
+        // draw the missile
+        const MapMissile &mis = this->missiles[dunCursorY][dunCursorX];
+        if (mis.miType != 0 && mis.miPreFlag) {
+            QImage misImage = this->getMissileImage(mis);
+            if (!misImage.isNull()) {
+                int xo = mis.mix;
+                int yo = mis.miy;
+                dungeon.drawImage(drawCursorX + ((int)backWidth - misImage.width()) / 2 + xo, drawCursorY - misImage.height() + yo, misImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+            } else {
+                QString text = this->getMissileName(mis.miType);
+                QFontMetrics fm(dungeon.font());
+                unsigned textWidth = fm.horizontalAdvance(text);
+                dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
+            }
+        }
+    }
+    if (params.showMonsters) {
+        // draw the monster
+        const MapMonster &mon = this->monsters[dunCursorY][dunCursorX];
+        if ((mon.moType.monIndex != 0 || mon.moType.monUnique) && mon.moType.monDeadFlag) {
+            QImage monImage = this->getMonsterImage(mon);
+            if (!monImage.isNull()) {
+                int xo = mon.mox;
+                int yo = mon.moy;
+                dungeon.drawImage(drawCursorX + ((int)backWidth - monImage.width()) / 2 + xo, drawCursorY - monImage.height() + yo, monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+            } else {
+                QString text = this->getMonsterName(mon.moType);
+                QFontMetrics fm(dungeon.font());
+                unsigned textWidth = fm.horizontalAdvance(text);
+                dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
+            }
+        }
+    }
     if (params.showObjects) {
         // draw the object
         const MapObject &obj = this->objects[dunCursorY][dunCursorX];
-        if (obj.oType != 0) {
+        if (obj.oType != 0 && obj.oPreFlag) {
             QImage objectImage = this->getObjectImage(obj);
             if (!objectImage.isNull()) {
                 dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
@@ -1486,10 +1520,12 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
             }
         }
     }
+    // params.showPlayers && pDeadFlag
+    // params.showPlayers && !pDeadFlag
     if (params.showMonsters) {
         // draw the monster
         const MapMonster &mon = this->monsters[dunCursorY][dunCursorX];
-        if (mon.moType.monIndex != 0 || mon.moType.monUnique) {
+        if ((mon.moType.monIndex != 0 || mon.moType.monUnique) && !mon.moType.monDeadFlag) {
             QImage monImage = this->getMonsterImage(mon);
             if (!monImage.isNull()) {
                 int xo = mon.mox;
@@ -1506,7 +1542,7 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
     if (params.showMissiles) {
         // draw the missile
         const MapMissile &mis = this->missiles[dunCursorY][dunCursorX];
-        if (mis.miType != 0) {
+        if (mis.miType != 0 && !mis.miPreFlag) {
             QImage misImage = this->getMissileImage(mis);
             if (!misImage.isNull()) {
                 int xo = mis.mix;
@@ -1517,6 +1553,22 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
+            }
+        }
+    }
+    if (params.showObjects) {
+        // draw the object
+        const MapObject &obj = this->objects[dunCursorY][dunCursorX];
+        if (obj.oType != 0 && !obj.oPreFlag) {
+            QImage objectImage = this->getObjectImage(obj);
+            if (!objectImage.isNull()) {
+                dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+            } else {
+                QString text = this->getObjectName(obj.oType);
+                QFontMetrics fm(dungeon.font());
+                unsigned textWidth = fm.horizontalAdvance(text);
+                dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + (middleText ? 1 : -1) * fm.height() / 2, text);
+                bottomText = middleText;
             }
         }
     }
@@ -3440,7 +3492,7 @@ bool D1Dun::removeMonsters()
     bool result = false;
     for (std::vector<MapMonster> &monstersRow : this->monsters) {
         for (MapMonster &mon : monstersRow) {
-            result |= D1Dun::setMapMonster(mon, 0, false);
+            result |= D1Dun::setMapMonster(mon, 0, false, false);
         }
     }
     this->modified |= result;
@@ -3568,7 +3620,7 @@ void D1Dun::loadMonsters(const D1Dun *srcDun)
         for (int x = 0; x < std::min(this->width, srcDun->width); x++) {
             const DunMonsterType &newMonster = srcDun->monsters[y][x].moType;
             const DunMonsterType currMonster = this->monsters[y][x].moType;
-            if ((newMonster.monIndex != 0 || newMonster.monUnique) && D1Dun::setMapMonster(this->monsters[y][x], newMonster.monIndex, newMonster.monUnique)) {
+            if ((newMonster.monIndex != 0 || newMonster.monUnique) && D1Dun::setMapMonster(this->monsters[y][x], newMonster.monIndex, newMonster.monUnique, newMonster.monDeadFlag)) {
                 if (currMonster.monIndex != 0 || currMonster.monUnique) {
                     QString currMonsterName = this->getMonsterName(currMonster);
                     QString newMonsterName = this->getMonsterName(newMonster);
@@ -4008,12 +4060,12 @@ void D1Dun::removeTileColumn(int posx)
     this->modified = true;
 }
 
-bool D1Dun::setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique)
+bool D1Dun::setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique, bool isDead)
 {
     if (dstMon.moType.monIndex == monsterIndex && dstMon.moType.monUnique == isUnique) {
         return false;
     }
-    dstMon.moType = { monsterIndex, isUnique };
+    dstMon.moType = { monsterIndex, isUnique, isDead };
     dstMon.moDir = DIR_S;
     dstMon.frameNum = 0;
     dstMon.mox = 0;
@@ -4028,6 +4080,7 @@ bool D1Dun::setMapObject(MapObject &dstObj, int objectIndex)
     }
     dstObj.oType = objectIndex;
     dstObj.frameNum = 0;
+    dstObj.oPreFlag = false;
     return true;
 }
 
@@ -4041,6 +4094,7 @@ bool D1Dun::setMapMissile(MapMissile &dstMis, int misType)
     dstMis.frameNum = 0;
     dstMis.mix = 0;
     dstMis.miy = 0;
+    dstMis.miPreFlag = false;
     return true;
 }
 
@@ -4078,11 +4132,11 @@ bool D1Dun::changeObjectAt(int posx, int posy, int objectIndex)
     return true;
 }
 
-bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique)
+bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique, bool isDead)
 {
     MapMonster &mapMon = this->monsters[posy][posx];
     DunMonsterType prevMon = mapMon.moType;
-    if (!D1Dun::setMapMonster(mapMon, monsterIndex, isUnique)) {
+    if (!D1Dun::setMapMonster(mapMon, monsterIndex, isUnique, isDead)) {
         return false;
     }
     if (monsterIndex == 0) {

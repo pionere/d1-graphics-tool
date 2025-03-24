@@ -187,7 +187,7 @@ private:
     void setTileIndex(int tileIndex);
     void swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1);
     void swapTiles(unsigned tileIndex0, unsigned tileIndex1);
-    void setMonsterType(int monsterIndex, bool monsterUnique);
+    void setMonsterType(int monsterIndex, bool monsterUnique, bool monsterDead);
     void setObjectIndex(int objectIndex);
     void setCurrentMonster(const MapMonster &mon);
     void setCurrentMissile(const MapMissile &mis);
@@ -288,6 +288,7 @@ private slots:
     void on_dungeonObjectLineEdit_returnPressed();
     void on_dungeonObjectLineEdit_escPressed();
     void on_dungeonObjectComboBox_activated(int index);
+    void on_dungeonObjectPreCheckBox_clicked();
     void on_dungeonObjectAddButton_clicked();
     void on_dungeonMonsterLineEdit_returnPressed();
     void on_dungeonMonsterLineEdit_escPressed();
@@ -295,6 +296,7 @@ private slots:
     void on_dungeonMonsterComboBox_activated(int index);
     void on_dungeonMonsterXOffSpinBox_valueChanged(int value);
     void on_dungeonMonsterYOffSpinBox_valueChanged(int value);
+    void on_dungeonMonsterDeadCheckBox_clicked();
     void on_dungeonMonsterAddButton_clicked();
     void on_dungeonItemLineEdit_returnPressed();
     void on_dungeonItemLineEdit_escPressed();
@@ -307,6 +309,7 @@ private slots:
     void on_dungeonMissileComboBox_activated(int index);
     void on_dungeonMissileXOffSpinBox_valueChanged(int value);
     void on_dungeonMissileYOffSpinBox_valueChanged(int value);
+    void on_dungeonMissilePreCheckBox_clicked();
     void on_dungeonMissileAddButton_clicked();
 
     void on_dunZoomOutButton_clicked();

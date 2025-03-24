@@ -68,12 +68,12 @@ typedef enum dun_overlay_type {
 typedef struct DunMonsterType {
     int monIndex;
     bool monUnique;
-
+    bool monDeadFlag;
     bool operator==(const DunMonsterType &rhs) const {
-        return monIndex == rhs.monIndex && monUnique == rhs.monUnique;
+        return monIndex == rhs.monIndex && monUnique == rhs.monUnique && monDeadFlag == rhs.monDeadFlag;
     }
     bool operator!=(const DunMonsterType &rhs) const {
-        return monIndex != rhs.monIndex || monUnique != rhs.monUnique;
+        return monIndex != rhs.monIndex || monUnique != rhs.monUnique || monDeadFlag != rhs.monDeadFlag;
     }
 } DunMonsterType;
 Q_DECLARE_METATYPE(DunMonsterType);
@@ -81,8 +81,9 @@ Q_DECLARE_METATYPE(DunMonsterType);
 typedef struct MapObject {
     int oType;
     int frameNum;
+    bool oPreFlag;
     bool operator==(const MapObject & oobj) const {
-        return oType == oobj.oType && frameNum == oobj.frameNum;
+        return oType == oobj.oType && frameNum == oobj.frameNum && oPreFlag == oobj.oPreFlag;
     };
 } MapObject;
 
@@ -103,8 +104,9 @@ typedef struct MapMissile {
     int frameNum;
     int mix;
     int miy;
+    bool miPreFlag;
     bool operator==(const MapMissile & omis) const {
-        return miType == omis.miType && miDir == omis.miDir && frameNum == omis.frameNum && mix == omis.mix && miy == omis.miy;
+        return miType == omis.miType && miDir == omis.miDir && frameNum == omis.frameNum && mix == omis.mix && miy == omis.miy && miPreFlag == omis.miPreFlag;
     };
 } MapMissile;
 
@@ -118,6 +120,7 @@ typedef struct CustomObjectStruct {
     QString path;
     QString name;
     int frameNum;
+    bool coPreFlag;
 } CustomObjectStruct;
 
 typedef struct DunMonsterStruct {
@@ -150,6 +153,7 @@ typedef struct CustomMissileStruct {
     QString path;
     QString trnPath;
     QString name;
+    bool cmiPreFlag;
 } CustomMissileStruct;
 
 typedef struct ObjectCacheEntry {
@@ -342,7 +346,7 @@ private:
     bool changeSubtileProtectionAt(int posx, int posy, int protection);
     bool needsProtectionAt(int posx, int posy) const;
     bool hasContentAt(int posx, int posy) const;
-    static bool setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique);
+    static bool setMapMonster(MapMonster &dstMon, int monsterIndex, bool isUnique, bool isDead);
     static bool setMapObject(MapObject &dstObj, int objectIndex);
     static bool setMapMissile(MapMissile &dstMis, int misType);
 

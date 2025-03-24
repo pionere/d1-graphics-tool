@@ -693,7 +693,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             }
             dun->setItemAt(x, y, item);
             int monIdx = dMonster[x][y];
-            MapMonster mon = { { 0, false }, 0, 0, 0, 0 };
+            MapMonster mon = { { 0, false, false }, 0, 0, 0, 0 };
             if (monIdx != 0) {
                 MonsterStruct *ms = &monsters[monIdx - 1];
                 mon.moType.monUnique = ms->_muniqtype != 0;
@@ -710,10 +710,11 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             }
             dun->setMonsterAt(x, y, mon);
             int objIdx = dObject[x][y];
-            MapObject obj = { 0, 0 };
+            MapObject obj = { 0, 0, false };
             if (objIdx > 0) {
                 GetObjectStr(objIdx - 1);
                 ObjectStruct *os = &objects[objIdx - 1];
+                obj.oPreFlag = os->_oPreFlag;
                 ObjStruct on;
                 on.otype = os->_otype;
                 on.animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : os->_oAnimFrame;
