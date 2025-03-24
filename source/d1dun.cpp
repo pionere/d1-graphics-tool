@@ -517,14 +517,20 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
     return true;
 }
 
-void D1Dun::initialize(D1Pal *p, D1Tileset *ts)
+void D1Dun::setTileset(D1Tileset *ts)
 {
-    this->pal = p;
     this->tileset = ts;
     this->cls = ts->cls;
     this->til = ts->til;
     this->min = ts->min;
     this->sla = ts->sla;
+}
+
+void D1Dun::initialize(D1Pal *p, D1Tileset *ts)
+{
+    this->pal = p;
+
+    setTileset(ts);
 
     if (this->type == D1DUN_TYPE::NORMAL) {
         // prepare subtiles
