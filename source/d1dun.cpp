@@ -4132,11 +4132,11 @@ bool D1Dun::changeObjectAt(int posx, int posy, int objectIndex)
     return true;
 }
 
-bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique, bool isDead)
+bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique)
 {
     MapMonster &mapMon = this->monsters[posy][posx];
     DunMonsterType prevMon = mapMon.moType;
-    if (!D1Dun::setMapMonster(mapMon, monsterIndex, isUnique, isDead)) {
+    if (!D1Dun::setMapMonster(mapMon, monsterIndex, isUnique, false)) {
         return false;
     }
     if (monsterIndex == 0) {
