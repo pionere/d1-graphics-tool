@@ -7,6 +7,7 @@
 #include <QTextStream>
 
 #include "config.h"
+#include "d1pcx.h"
 #include "progressdialog.h"
 
 PaletteColor::PaletteColor(const QColor &color, int index)
@@ -242,11 +243,10 @@ bool D1Pal::genColors(const QString &imagefilePath)
         if (palMod) {
             // update the palette
             this->updateColors(basePal);
-            emit this->palModified();
         }
         // update the view - done by the caller
         // this->displayFrame();
-        return;
+        return palMod;
     }
 
     QImage image = QImage(imagefilePath);
@@ -257,7 +257,7 @@ bool D1Pal::genColors(const QString &imagefilePath)
     }
     // find new color options
     int newColors = 0;
-    std::set<int> col32s;
+    QSet<int> col32s;
     for (int i = 0; i < D1PAL_COLORS; i++) {
         if (this->colors[i] == this->undefinedColor) {
             newColors++;
@@ -285,7 +285,7 @@ bool D1Pal::genColors(const QString &imagefilePath)
         int rangeLen;
         int marbles;
     } colorData;
-    std::vector<colorData> ranges;
+    QList<colorData> ranges;
     int lc = 0;
     for (auto it = col32s.begin(); it != cols32.end(); it++) {
         int cc = *it;
