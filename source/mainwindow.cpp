@@ -2992,6 +2992,26 @@ void MainWindow::on_actionSave_PAL_as_triggered()
     this->setPal(palFilePath); // path
 }
 
+void MainWindow::on_actionGen_PAL_triggered()
+{
+    QString filter = imageNameFilter();
+    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Image File"), filter.toLatin1().data());
+
+    if (imgFilePath.isEmpty()) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
+
+    if (this->pal->genColors(imgFilePath)) {
+        // updatePalette(this->pal);
+        this->updateWindow();
+    }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionClose_PAL_triggered()
 {
     QString filePath = this->pal->getFilePath();

@@ -228,6 +228,143 @@ void D1Pal::updateColors(const D1Pal &opal)
     }
 }
 
+bool D1Pal::genColors(const QString &imagefilePath)
+{
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false, palMod;
+        D1GfxFrame frame;
+        D1Pal basePal = D1Pal(this);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this, &palMod);
+        if (!success) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
+            return false;
+        }
+        if (palMod) {
+            // update the palette
+            this->updateColors(basePal);
+            emit this->palModified();
+        }
+        // update the view - done by the caller
+        // this->displayFrame();
+        return;
+    }
+
+    QImage image = QImage(imagefilePath);
+
+    if (image.isNull()) {
+        dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
+        return;
+    }
+    // find new color options
+    int newColors = 0;
+    std::set<int> col32s;
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        if (this->colors[i] == this->undefinedColor) {
+            newColors++;
+        } else if (this->colors[i].alpha() == 255) {
+            int cv = 0;
+            unsigned r = this->colors[i].red();
+            unsigned g = this->colors[i].green();
+            unsigned b = this->colors[i].blue();
+            for (int n = 0; n < 8; n++) {
+                cv |= ((r & 1) | ((g & 1) << 1) | ((b & 1) << 2)) << (n * 3);
+                r >>= 1;
+                g >>= 1;
+                b >>= 1;
+            }
+            col32s.insert(cv);
+        }
+    }
+
+    if (newColors == 0) {
+        return false; // no place for new colors -> done
+    }
+    // cover the color-space as much as possible
+    typedef struct colorData {
+        int colorCode;
+        int rangeLen;
+        int marbles;
+    } colorData;
+    std::vector<colorData> ranges;
+    int lc = 0;
+    for (auto it = col32s.begin(); it != cols32.end(); it++) {
+        int cc = *it;
+        if (lc != cc) {
+            colorData cd;
+            cd.colorCode = lc;
+            cd.rangeLen = cc - lc;
+            cd.marbles = 0;
+            ranges.push_back(cd);
+        }
+        lc = cc;
+    }
+    if (lc != 0xFFFFFF) {
+        colorData cd;
+        cd.colorCode = lc;
+        cd.rangeLen = 0xFFFFFF - lc;
+        cd.marbles = 0;
+        ranges.push_back(cd);
+    }
+    // select colors at the longest gaps
+    for (int i = 0; i < newColors; i++) {
+        std::sort(ranges.begin(),ranges.end(), [](colorData &a, colorData &b) {
+            int acw = (a.rangeLen) * (b.marbles + 1);
+            int bcw = (b.rangeLen) * (a.marbles + 1);
+            return acw > bcw || (acw == bcw && a.colorCode < b.colorCode);
+        });
+
+        ranges.front().marbles++;
+    }
+    // designate the colors
+    for (auto it = ranges.begin(); it != ranges.end(); ) {
+        int n = it->marbles;
+        if (n != 0) {
+            it->marbles = 0;
+            int cc = it->colorCode;
+            int rl = it->rangeLen;
+            for (int i = 0; i < n; i++) {
+                colorData cd;
+                cd.colorCode = cc + rl * i / (n + 1);
+                cd.rangeLen = it->rangeLen - (cd.colorCode - it->colorCode);
+                cd.marbles = 1;
+                it->rangeLen = cd.colorCode - it->colorCode;
+                it++;
+                it = ranges.insert(it, cd);
+            }
+        } else {
+            it++;
+        }
+    }
+    // use the colors of the image to optimize the new colors
+    /// tbc ...
+
+    // update the palette
+    for (auto it = ranges.begin(); it != ranges.end(); it++) {
+        if (it->marbles != 0) {
+            unsigned cv = it->colorCode;
+            unsigned r = 0;
+            unsigned g = 0;
+            unsigned b = 0;
+            for (int n = 0; n < 8; n++) {
+                r |= ((cv & 1) >> 0) << n;
+                g |= ((cv & 2) >> 1) << n;
+                b |= ((cv & 4) >> 2) << n;
+                cv >>= 3;
+            }
+            QColor color = QColor(r, g, b);
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                if (this->colors[i] == this->undefinedColor) {
+                    this->colors[i] = color;
+                }
+            }
+        }
+    }
+
+    // update the view - done by the caller
+    // this->displayFrame();
+    return true;
+}
+
 void D1Pal::cycleColors(D1PAL_CYCLE_TYPE type)
 {
     QColor celColor;

@@ -75,6 +75,7 @@ public:
 
     void getValidColors(std::vector<PaletteColor> &colors) const;
     void updateColors(const D1Pal &opal);
+    bool genColors(const QString &imagefilePath);
     void cycleColors(D1PAL_CYCLE_TYPE type);
     static int getCycleColors(D1PAL_CYCLE_TYPE type);
 
