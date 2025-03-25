@@ -234,7 +234,7 @@ bool D1Pal::genColors(const QString &imagefilePath)
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool clipped = false, palMod;
         D1GfxFrame frame;
-        D1Pal basePal = D1Pal(this);
+        D1Pal basePal = D1Pal(*this);
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this, &palMod);
         if (!success) {
             dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
@@ -253,7 +253,7 @@ bool D1Pal::genColors(const QString &imagefilePath)
 
     if (image.isNull()) {
         dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
-        return;
+        return false;
     }
     // find new color options
     int newColors = 0;
@@ -287,7 +287,7 @@ bool D1Pal::genColors(const QString &imagefilePath)
     } colorData;
     QList<colorData> ranges;
     int lc = 0;
-    for (auto it = col32s.begin(); it != cols32.end(); it++) {
+    for (auto it = col32s.begin(); it != col32s.end(); it++) {
         int cc = *it;
         if (lc != cc) {
             colorData cd;
