@@ -283,63 +283,138 @@ bool D1Pal::genColors(const QString &imagefilePath)
     typedef struct colorData {
         int colorCode;
         int rangeLen;
+        int closed;
         int marbles;
     } colorData;
     QList<colorData> ranges;
-    int lc = 0;
-    for (auto it = col32s.begin(); it != col32s.end(); it++) {
-        int cc = *it;
-        if (lc != cc) {
+    if (col32s.count() == 0) {
+        colorData cd;
+        cd.colorCode = 0;
+        cd.rangeLen = 0xFFFFFF;
+        cd.closed = 0;
+        cd.marbles = newColors;
+        ranges.push_back(cd);
+    } else {
+        if (*col32s.begin() != 0) {
             colorData cd;
-            cd.colorCode = lc;
-            cd.rangeLen = cc - lc;
+            cd.colorCode = 0;
+            cd.rangeLen = 0;
+            cd.closed = 1;
             cd.marbles = 0;
             ranges.push_back(cd);
         }
-        lc = cc;
-    }
-    if (lc != 0xFFFFFF) {
-        colorData cd;
-        cd.colorCode = lc;
-        cd.rangeLen = 0xFFFFFF - lc;
-        cd.marbles = 0;
-        ranges.push_back(cd);
-    }
-    // select colors at the longest gaps
-    for (int i = 0; i < newColors; i++) {
-        std::sort(ranges.begin(),ranges.end(), [](colorData &a, colorData &b) {
-            int acw = (a.rangeLen) * (b.marbles + 1);
-            int bcw = (b.rangeLen) * (a.marbles + 1);
-            return acw > bcw || (acw == bcw && a.colorCode < b.colorCode);
-        });
-
-        ranges.front().marbles++;
-    }
-    // designate the colors
-    for (auto it = ranges.begin(); it != ranges.end(); ) {
-        int n = it->marbles;
-        if (n != 0) {
-            it->marbles = 0;
-            int cc = it->colorCode;
-            int rl = it->rangeLen;
-            for (int i = 0; i < n; i++) {
-                colorData cd;
-                cd.colorCode = cc + rl * i / (n + 1);
-                cd.rangeLen = it->rangeLen - (cd.colorCode - it->colorCode);
-                cd.marbles = 1;
-                it->rangeLen = cd.colorCode - it->colorCode;
-                it++;
-                it = ranges.insert(it, cd);
+        for (auto it = col32s.begin(); it != col32s.end(); it++) {
+            int cc = *it;
+            colorData cd;
+            cd.colorCode = cc;
+            cd.rangeLen = 0;
+            cd.closed = 2;
+            cd.marbles = 0;
+            ranges.push_back(cd);
+        }
+        if (ranges.back().colorCode != 0xFFFFFF) {
+            ranges.back().closed = 1;
+        }
+        // initialize rangeLen
+        for (auto it = ranges.begin(); it != ranges.end(); it++) {
+            auto nit = it + 1;
+            if (nit != ranges.end()) {
+                it->rangeLen = nit->colorCode - it->colorCode;
+            } else {
+                it->rangeLen = 0xFFFFFF - it->colorCode;
             }
-        } else {
-            it++;
+        }
+        // select colors at the longest gaps
+        for (int i = 0; i < newColors; i++) {
+            std::sort(ranges.begin(), ranges.end(), [](colorData &a, colorData &b) {
+                int acw = a.rangeLen;
+                int bcw = b.rangeLen;
+                if (a.closed == 1 && a.marbles == 0)
+                    acw *= 2;
+                else
+                    bcw *= a.marbles + (a.closed == 1 ? 0 : 1);
+                if (b.closed == 1 && b.marbles == 0)
+                    bcw *= 2;
+                else
+                    acw *= b.marbles + (b.closed == 1 ? 0 : 1);
+                return acw > bcw || (acw == bcw && a.colorCode < b.colorCode);
+            });
+
+            ranges.front().marbles++;
         }
     }
+    
+    // designate the colors
+    QList<colorData> colors;
+    for (auto it = ranges.begin(); it != ranges.end(); it++) {
+        int cc = it->colorCode;
+        int n = it->marbles;
+        int rl = it->rangeLen;
+        if (it->closed == 0) {
+            // assert(n > 0);
+            n -= 2;
+            {
+                colorData cd;
+                cd.colorCode = 0;
+                cd.marbles = 1;
+                colors.push_back(cd);
+            }
+            if (n < 0) {
+                continue;
+            }
+            {
+                colorData cd;
+                cd.colorCode = 0xFFFFFF;
+                cd.marbles = 1;
+                colors.push_back(cd);
+            }
+        } else if (it->closed == 1) {
+            n--;            
+            if (cc == 0) {
+                if (n < 0) {
+                    continue;
+                }
+
+                colorData cd;
+                cd.colorCode = 0;
+                cd.marbles = 1;
+                colors.push_back(cd);
+            } else {
+                colorData cd;
+                cd.colorCode = cc;
+                cd.marbles = 0;
+                colors.push_back(cd);
+                if (n < 0) {
+                    continue;
+                }
+
+                colorData cd;
+                cd.colorCode = 0xFFFFFF;
+                cd.marbles = 1;
+                colors.push_back(cd);
+            }
+        } else {
+            {
+                colorData cd;
+                cd.colorCode = cc;
+                cd.marbles = 0;
+                colors.push_back(cd);
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            colorData cd;
+            cd.colorCode = cc + rl * (i + 1) / (n + 1);
+            cd.marbles = 1;
+            colors.push_back(cd);
+        }
+    }
+
     // use the colors of the image to optimize the new colors
     /// tbc ...
 
     // update the palette
-    for (auto it = ranges.begin(); it != ranges.end(); it++) {
+    for (auto it = colors.begin(); it != colors.end(); it++) {
         if (it->marbles != 0) {
             unsigned cv = it->colorCode;
             unsigned r = 0;
