@@ -388,10 +388,10 @@ bool D1Pal::genColors(const QString &imagefilePath)
                     continue;
                 }
 
-                colorData cd;
-                cd.colorCode = 0xFFFFFF;
-                cd.marbles = 1;
-                colors.push_back(cd);
+                colorData cde;
+                cde.colorCode = 0xFFFFFF;
+                cde.marbles = 1;
+                colors.push_back(cde);
             }
         } else {
             {
