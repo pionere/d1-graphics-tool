@@ -364,10 +364,13 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
 
     QGraphicsScene *scene = this->graphView->scene(); // this->levelCelView->getCelScene();
     QList<QGraphicsItem *> items = scene->items();
-    QGraphicsPixmapItem *overlay;
-
+    QGraphicsPixmapItem *overlay = this->currOverlay;
+    if (!items.contains(overlay)) {
+        this->currOverlay = nullptr;
+        overlay = nullptr;
+    }
     int overlayType = this->getOverlayType();
-    if (this->overlayType != overlayType || items.size() < 2 || forceRedraw) {
+    if (this->overlayType != overlayType || overlay == nullptr || forceRedraw) {
         this->overlayType = overlayType;
         QImage image;
         QColor color = QColorConstants::Svg::darkcyan;
@@ -420,14 +423,12 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
         }
 
         QPixmap pixmap = QPixmap::fromImage(image);
-        if (items.size() < 2) {
+        if (overlay == nullptr) {
             overlay = scene->addPixmap(pixmap);
+            this->currOverlay = overlay;
         } else {
-            overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
             overlay->setPixmap(pixmap);
         }
-    } else {
-        overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
     }
 
     QPoint op;
@@ -464,6 +465,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     op = QPoint(cX, cY);
 
     overlay->setPos(op);
+    scene->update();
 }
 
 void BuilderWidget::colorModified()
