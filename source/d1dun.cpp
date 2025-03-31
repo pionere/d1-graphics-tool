@@ -1331,7 +1331,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
                 if ((drawMask & DM_RFLOOR) && inRightTriangle) {
                     continue;
                 }
-                if ((drawMask & DM_RTRI) && !inLeftTriangle) {
+                if ((drawMask & DM_RTRI) && !inRightTriangle) {
                     continue;
                 }
             }
