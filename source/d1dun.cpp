@@ -1264,8 +1264,8 @@ typedef enum _draw_mask {
     DM_RTFLOOR = 1 << 2, // RightMask
     DM_LFLOOR  = 1 << 3, // LeftFoliageMask
     DM_RFLOOR  = 1 << 4, // RightFoliageMask
-    DM_LTRI    = 1 << 5, // LeftFoliageMask
-    DM_RTRI    = 1 << 6, // RightFoliageMask
+    DM_LTRI    = 1 << 5, // LeftTriangleMask
+    DM_RTRI    = 1 << 6, // RightTriangleMask
 } _draw_mask;
 
 static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subtileImage, int drawCursorX, int drawCursorY, unsigned backWidth, unsigned backHeight, unsigned drawMask)
