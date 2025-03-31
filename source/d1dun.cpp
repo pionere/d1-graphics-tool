@@ -1772,16 +1772,19 @@ void D1Dun::drawMeta(QPainter &dungeon, const QImage &backImage, int drawCursorX
 
 void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDrawParam &params, int layer)
 {
-    int maxDunSize = std::max(this->width, this->height);
-    int minDunSize = std::min(this->width, this->height);
-
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     unsigned cellWidth = subtileWidth;
     unsigned cellHeight = cellWidth / 2;
 
-    int drawCursorX = ((maxDunSize - 1) * cellWidth) / 2 - (this->width - this->height) * (cellWidth / 2);
+    int maxDunSize = this->width;
+    int minDunSize = this->height;
+    if (maxDunSize < minDunSize) {
+        std:swap(maxDunSize, minDunSize);
+    }
+    // int drawCursorX = ((maxDunSize - 1) * cellWidth) / 2 - (this->width - this->height) * (cellWidth / 2);
+    int drawCursorX = (maxDunSize - 1 - (this->width - this->height)) * cellWidth / 2;
     int drawCursorY = subtileHeight;
     int dunCursorX;
     int dunCursorY = 0;

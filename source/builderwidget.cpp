@@ -376,7 +376,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     QList<QGraphicsItem *> items = scene->items();
     QGraphicsPixmapItem *overlay = this->currOverlay;
     if (!items.contains(overlay)) {
-        this->currOverlay = nullptr;
+        this->currOverlay.clear();
         overlay = nullptr;
     }
     int overlayType = this->getOverlayType();
