@@ -1781,7 +1781,7 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
     int maxDunSize = this->width;
     int minDunSize = this->height;
     if (maxDunSize < minDunSize) {
-        std:swap(maxDunSize, minDunSize);
+        std::swap(maxDunSize, minDunSize);
     }
     // int drawCursorX = ((maxDunSize - 1) * cellWidth) / 2 - (this->width - this->height) * (cellWidth / 2);
     int drawCursorX = (maxDunSize - 1 - (this->width - this->height)) * cellWidth / 2;
