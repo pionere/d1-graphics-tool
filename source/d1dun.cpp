@@ -1106,7 +1106,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
     // assert(drawCursorY >= backHeight);
     QRgb *destBits;
     int line = drawCursorY;
-    line -= (drawMask & DMT_TWALL) ? (subtileImage.height() + CELL_BORDER) : (backHeight - CELL_BORDER);
+    line -= subtileImage.height() + CELL_BORDER;
     destBits = reinterpret_cast<QRgb *>(destImage->scanLine(line));
     destBits += drawCursorX + CELL_BORDER;
     if (drawMask & DM_WALL) {
