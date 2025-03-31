@@ -1187,6 +1187,7 @@ void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursor
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
             if (subtileRef >= 0 && subtileRef <= this->min->getSubtileCount()) {
+                if (params.tileState == Qt::Checked) {
                 quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
                 unsigned drawMask = 0;
                 if ((rp & (TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE)) != TMIF_LEFT_REDRAW) {
@@ -1198,6 +1199,7 @@ void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursor
                 if (drawMask != 0) {
                     QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
                     drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
+                }
                 }
             }
         }
