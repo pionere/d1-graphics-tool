@@ -481,7 +481,7 @@ static void copyComboBox(QComboBox *cmbDst, const QComboBox *cmbSrc)
     cmbDst->clear();
     for (int i = 0; i < cmbSrc->count(); i++) {
         QVariant data = cmbSrc->itemData(i);
-        if (data != QVariant::Invalid) {
+        if (data.isValid()) {
             cmbDst->addItem(cmbSrc->itemText(i), data);
         } else {
             cmbDst->insertSeparator(i);
