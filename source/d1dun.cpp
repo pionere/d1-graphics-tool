@@ -1327,7 +1327,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
                     continue;
                 }
             } else {
-                bool inRightTriangle = y >= (1 + x / 2) && y < (backHeight - x / 2); /* qAlpha(*backBits) != 0 */
+                bool inRightTriangle = y >= (1 + (x - backWidth / 2) / 2) && y < (backHeight - (x - backWidth / 2) / 2); /* qAlpha(*backBits) != 0 */
                 if ((drawMask & DM_RFLOOR) && inRightTriangle) {
                     continue;
                 }
