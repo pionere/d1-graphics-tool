@@ -1296,7 +1296,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
         // assert(subtileImage.height() == backHeight);
     }
     // draw the floor
-    if (drawMask & ~DM_WALL) { // (DM_LTFLOOR | DM_RTFLOOR | DM_LFLOOR | DM_RFLOOR | DM_LTRI | DM_RTRI)) == 0) {
+    if ((drawMask & ~DM_WALL) == 0) { // (DM_LTFLOOR | DM_RTFLOOR | DM_LFLOOR | DM_RFLOOR | DM_LTRI | DM_RTRI)) == 0) {
         return;
     }
 
@@ -1337,7 +1337,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
             }
             *destBits = *srcBits;
         }
-        if ((drawMask & (DM_RTFLOOR | DM_RFLOOR)) == 0) {
+        if ((drawMask & (DM_RTFLOOR | DM_RFLOOR | DM_RTRI)) == 0) {
             backBits += backWidth / 2;
             srcBits += backWidth / 2;
             destBits += backWidth / 2;
