@@ -1260,12 +1260,13 @@ QImage D1Dun::getMissileImage(const MapMissile &mapMis)
 
 typedef enum _draw_mask {
     DM_WALL    = 1 << 0, // WallMask
-    DM_LTFLOOR = 1 << 1, // LeftMask
-    DM_RTFLOOR = 1 << 2, // RightMask
-    DM_LFLOOR  = 1 << 3, // LeftFoliageMask
-    DM_RFLOOR  = 1 << 4, // RightFoliageMask
-    DM_LTRI    = 1 << 5, // LeftTriangleMask
-    DM_RTRI    = 1 << 6, // RightTriangleMask
+    DM_LFOL    = 1 << 1, // LeftFoliageMask
+    DM_LTRI    = 2 << 1, // LeftTriangleMask
+    DM_LMASK   = (DM_LTRI | DM_LFOL), // LeftMask
+
+    DM_RFOL    = 1 << 3, // RightFoliageMask
+    DM_RTRI    = 2 << 3, // RightTriangleMask
+    DM_RMASK   = (DM_RTRI | DM_RFOL), // RightMask
 } _draw_mask;
 
 static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subtileImage, int drawCursorX, int drawCursorY, unsigned backWidth, unsigned backHeight, unsigned drawMask)
@@ -1296,21 +1297,21 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
         // assert(subtileImage.height() == backHeight);
     }
     // draw the floor
-    if ((drawMask & ~DM_WALL) == 0) { // (DM_LTFLOOR | DM_RTFLOOR | DM_LFLOOR | DM_RFLOOR | DM_LTRI | DM_RTRI)) == 0) {
+    if ((drawMask & ~DM_WALL) == 0) {
         return;
     }
 
     const QRgb *backBits = reinterpret_cast<const QRgb *>(backImage.scanLine(0));
     for (unsigned y = 0; y < backHeight; y++) {
         unsigned x = 0;
-        if ((drawMask & (DM_LTFLOOR | DM_LFLOOR | DM_LTRI)) == 0) {
+        if ((drawMask & DM_LMASK) == 0) {
             x += backWidth / 2;
             backBits += backWidth / 2;
             srcBits += backWidth / 2;
             destBits += backWidth / 2;
         }
         unsigned limit = backWidth;
-        if ((drawMask & (DM_RTFLOOR | DM_RFLOOR | DM_RTRI)) == 0) {
+        if ((drawMask & DM_RMASK) == 0) {
             limit = backWidth / 2;
         }
         // assert(subtileImage.width() == backWidth);
@@ -1320,24 +1321,24 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
             }
             if (x < backWidth / 2) {
                 bool inLeftTriangle = y >= (backHeight / 2 - x / 2) && y <= (backHeight / 2 + x / 2); /* qAlpha(*backBits) != 0 */
-                if ((drawMask & DM_LFLOOR) && inLeftTriangle) {
+                if (!(drawMask & DM_LFOL) && !inLeftTriangle) {
                     continue;
                 }
-                if ((drawMask & DM_LTRI) && !inLeftTriangle) {
+                if (!(drawMask & DM_LTRI) && inLeftTriangle) {
                     continue;
                 }
             } else {
                 bool inRightTriangle = y >= (1 + (x - backWidth / 2) / 2) && y < (backHeight - (x - backWidth / 2) / 2); /* qAlpha(*backBits) != 0 */
-                if ((drawMask & DM_RFLOOR) && inRightTriangle) {
+                if (!(drawMask & DM_RFOL) && !inRightTriangle) {
                     continue;
                 }
-                if ((drawMask & DM_RTRI) && !inRightTriangle) {
+                if (!(drawMask & DM_RTRI) && inRightTriangle) {
                     continue;
                 }
             }
             *destBits = *srcBits;
         }
-        if ((drawMask & (DM_RTFLOOR | DM_RFLOOR | DM_RTRI)) == 0) {
+        if ((drawMask & DM_RMASK) == 0) {
             backBits += backWidth / 2;
             srcBits += backWidth / 2;
             destBits += backWidth / 2;
@@ -1365,10 +1366,10 @@ void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursor
                     quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
                     unsigned drawMask = 0;
                     if ((rp & (TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE)) != TMIF_LEFT_REDRAW) {
-                        drawMask |= DM_LTFLOOR;
+                        drawMask |= DM_LMASK;
                     }
                     if ((rp & (TMIF_RIGHT_REDRAW | TMIF_RIGHT_FOLIAGE)) != TMIF_RIGHT_REDRAW) {
-                        drawMask |= DM_RTFLOOR;
+                        drawMask |= DM_RMASK;
                     }
                     if (drawMask != 0) {
                         QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
@@ -1428,10 +1429,10 @@ void D1Dun::drawCell(QPainter &dungeon, const QImage &backImage, int drawCursorX
                     quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
                     unsigned drawMask = DM_WALL;
                     if (rp & TMIF_LEFT_REDRAW) {
-                        drawMask |= (rp & TMIF_LEFT_FOLIAGE) ? DM_LFLOOR : DM_LTFLOOR;
+                        drawMask |= (rp & TMIF_LEFT_FOLIAGE) ? DM_LFOL : DM_LMASK;
                     }
                     if (rp & TMIF_RIGHT_REDRAW) {
-                        drawMask |= (rp & TMIF_RIGHT_FOLIAGE) ? DM_RFLOOR : DM_RTFLOOR;
+                        drawMask |= (rp & TMIF_RIGHT_FOLIAGE) ? DM_RFOL : DM_RMASK;
                     }
                     drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
                 }
