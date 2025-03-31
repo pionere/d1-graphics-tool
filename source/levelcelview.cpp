@@ -3552,7 +3552,8 @@ void LevelCelView::displayFrame()
         QGraphicsPixmapItem *item;
         item = this->celScene.addPixmap(QPixmap::fromImage(dunFrame));
         item->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-        item->setAcceptHoverEvents(true);
+        // item->setAcceptHoverEvents(true);
+        this->ui->dungeonRoomLineEdit->setText(QString::number(this->celScene.items().count()));
         // scroll to the current position
         if (this->isScrolling) {
             this->isScrolling = false;
