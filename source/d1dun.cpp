@@ -1265,8 +1265,6 @@ typedef enum _draw_mask {
     DM_RTFLOOR = 1 << 2, // RightMask
     DM_LFLOOR  = 1 << 3, // LeftFoliageMask
     DM_RFLOOR  = 1 << 4, // RightFoliageMask
-    DM_LNONE   = 1 << 5, // LeftNoMask
-    DM_RNONE   = 1 << 6, // RightNoMask
 } _draw_mask;
 
 static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subtileImage, int drawCursorX, int drawCursorY, unsigned backWidth, unsigned backHeight, unsigned drawMask)
@@ -1282,28 +1280,18 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
     line -= subtileImage.height() + CELL_BORDER;
     destBits = reinterpret_cast<QRgb *>(destImage->scanLine(line));
     destBits += drawCursorX + CELL_BORDER;
-    if (drawMask & (DM_WALL | DM_LNONE | DM_RNONE)) {
-        // draw the floor or the non-floor bits of the cell
-        unsigned sw = backWidth - 2 * CELL_BORDER;
-        unsigned x0 = (drawMask & (DM_WALL | DM_LNONE)) ? 0 : sw / 2;
-        unsigned x1 = (drawMask & (DM_WALL | DM_RNONE)) ? sw : sw / 2;
-        unsigned y0 = 0;
-        unsigned y1 = subtileImage.height() - ((drawMask & DM_WALL) ? (backHeight - 2 * CELL_BORDER) : 0);
-        destBits += x0;
-        srcBits += x0;
-        for (unsigned y = y0; y < y1; y++) {
+    if (drawMask & DM_WALL) {
+        // draw the non-floor bits of the cell
+        for (unsigned y = 0; y < subtileImage.height() - (backHeight - 2 * CELL_BORDER); y++) {
             // assert(subtileImage.width() == backWidth - 2 * CELL_BORDER);
-            for (unsigned x = x0; x < x1; x++, srcBits++, destBits++) {
+            for (unsigned x = 0; x < backWidth - 2 * CELL_BORDER; x++, srcBits++, destBits++) {
                 if (qAlpha(*srcBits) == 0) {
                     continue;
                 }
                 *destBits = *srcBits;
             }
-            srcBits += sw - (x1 - x0);
-            destBits += destImage->width() - (x1 - x0);
+            destBits += destImage->width() - (backWidth - 2 * CELL_BORDER);
         }
-        destBits -= x0;
-        srcBits -= x0;
     } else {
         // assert(subtileImage.height() == backHeight - 2 * CELL_BORDER);
     }
@@ -1317,21 +1305,21 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
     for (unsigned y = CELL_BORDER; y < backHeight - CELL_BORDER; y++) {
         unsigned x = CELL_BORDER;
         if ((drawMask & (DM_LTFLOOR | DM_LFLOOR)) == 0) {
-            x += backWidth / 2;
-            backBits += backWidth / 2;
-            srcBits += backWidth / 2;
-            destBits += backWidth / 2;
+            x += (backWidth - 2 * CELL_BORDER) / 2;
+            backBits += (backWidth - 2 * CELL_BORDER) / 2;
+            srcBits += (backWidth - 2 * CELL_BORDER) / 2;
+            destBits += (backWidth - 2 * CELL_BORDER) / 2;
         }
         unsigned limit = backWidth - CELL_BORDER;
         if ((drawMask & (DM_RTFLOOR | DM_RFLOOR)) == 0) {
-            limit -= backWidth / 2;
+            limit -= (backWidth - 2 * CELL_BORDER) / 2;
         }
         // assert(subtileImage.width() == backWidth - 2 * CELL_BORDER);
         for (; x < limit; x++, backBits++, srcBits++, destBits++) {
             if (qAlpha(*srcBits) == 0) {
                 continue;
             }
-            if (x < CELL_BORDER + backWidth / 2) {
+            if (x < backWidth / 2) {
                 if ((drawMask & DM_LFLOOR) && qAlpha(*backBits) != 0) {
                     continue;
                 }
@@ -1343,12 +1331,12 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
             *destBits = *srcBits;
         }
         if ((drawMask & (DM_RTFLOOR | DM_RFLOOR)) == 0) {
-            backBits += backWidth / 2;
-            srcBits += backWidth / 2;
-            destBits += backWidth / 2;
+            backBits += (backWidth - 2 * CELL_BORDER) / 2;
+            srcBits += (backWidth - 2 * CELL_BORDER) / 2;
+            destBits += (backWidth - 2 * CELL_BORDER) / 2;
         }
         backBits += 2 * CELL_BORDER;
-        destBits += destImage->width() - backWidth;
+        destBits += destImage->width() - (backWidth - 2 * CELL_BORDER);
     }
 
 }
@@ -1364,17 +1352,19 @@ void D1Dun::drawBack(QPainter &dungeon, const QImage &backImage, int drawCursorX
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
             if (subtileRef >= 0 && subtileRef <= this->min->getSubtileCount()) {
+                if (params.tileState == Qt::Checked) {
                 quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
                 unsigned drawMask = 0;
                 if ((rp & (TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE)) != TMIF_LEFT_REDRAW) {
-                    drawMask |= DM_LNONE;
+                    drawMask |= DM_LTFLOOR;
                 }
                 if ((rp & (TMIF_RIGHT_REDRAW | TMIF_RIGHT_FOLIAGE)) != TMIF_RIGHT_REDRAW) {
-                    drawMask |= DM_RNONE;
+                    drawMask |= DM_RTFLOOR;
                 }
                 if (drawMask != 0) {
                     QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
                     drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
+                }
                 }
             }
         }
@@ -1434,7 +1424,7 @@ void D1Dun::drawImage(QPainter &dungeon, const QImage &backImage, int drawCursor
                             *destBits = *srcBits;
                         }
                         backBits += 2 * CELL_BORDER;
-                        destBits += destImage->width() - backWidth;
+                        destBits += destImage->width() - (backWidth - 2 * CELL_BORDER);
                     }
                 }
             } else {
