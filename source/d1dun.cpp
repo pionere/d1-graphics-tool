@@ -1338,7 +1338,6 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
         backBits += 2 * CELL_BORDER;
         destBits += destImage->width() - (backWidth - 2 * CELL_BORDER);
     }
-
 }
 
 void D1Dun::drawBack(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)

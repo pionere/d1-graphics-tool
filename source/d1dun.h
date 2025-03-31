@@ -326,7 +326,8 @@ private:
     static void DrawAutomapDoorDiamond(int dir, int sx, int sy);
     static void DrawMap(int drawCursorX, int drawCursorY, uint8_t automap_type);
     void drawBack(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
-    void drawImage(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
+    void drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
+    void drawCell(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void drawMeta(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void drawLayer(QPainter &dungeon, const QImage &backImage, const DunDrawParam &params, int layer);
     void initVectors(int width, int height);
