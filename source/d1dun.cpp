@@ -1195,6 +1195,29 @@ void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursor
                         QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
                         drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
                     }
+                } else {
+                    // mask the image with backImage
+                    QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
+                    QImage *destImage = (QImage *)dungeon.device();
+                    const QRgb *backBits = reinterpret_cast<const QRgb *>(backImage.bits());
+                    // assert(subtileImage.height() >= backHeight);
+                    QRgb *srcBits = reinterpret_cast<QRgb *>(subtileImage.scanLine(subtileImage.height() - backHeight));
+                    // assert(drawCursorY >= backHeight);
+                    QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(drawCursorY - backHeight));
+                    destBits += drawCursorX;
+                    // assert(subtileImage.width() == backWidth);
+                    for (unsigned y = 0; y < backHeight; y++) {
+                        for (unsigned x = 0; x < backWidth; x++, backBits++, srcBits++, destBits++) {
+                            if (qAlpha(*backBits) == 0) {
+                                continue;
+                            }
+                            if (qAlpha(*srcBits) == 0) {
+                                continue;
+                            }
+                            *destBits = *srcBits;
+                        }
+                        destBits += destImage->width() - backWidth;
+                    }
                 }
             }
         }
@@ -1226,30 +1249,6 @@ void D1Dun::drawCell(QPainter &dungeon, const QImage &backImage, int drawCursorX
                         drawMask |= (rp & TMIF_RIGHT_FOLIAGE) ? DM_RFLOOR : DM_RTFLOOR;
                     }
                     drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
-                    // dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
-                } else {
-                    // mask the image with backImage
-                    QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
-                    QImage *destImage = (QImage *)dungeon.device();
-                    const QRgb *backBits = reinterpret_cast<const QRgb *>(backImage.bits());
-                    // assert(subtileImage.height() >= backHeight);
-                    QRgb *srcBits = reinterpret_cast<QRgb *>(subtileImage.scanLine(subtileImage.height() - backHeight));
-                    // assert(drawCursorY >= backHeight);
-                    QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(drawCursorY - backHeight));
-                    destBits += drawCursorX;
-                    // assert(subtileImage.width() == backWidth);
-                    for (unsigned y = 0; y < backHeight; y++) {
-                        for (unsigned x = 0; x < backWidth; x++, backBits++, srcBits++, destBits++) {
-                            if (qAlpha(*backBits) == 0) {
-                                continue;
-                            }
-                            if (qAlpha(*srcBits) == 0) {
-                                continue;
-                            }
-                            *destBits = *srcBits;
-                        }
-                        destBits += destImage->width() - backWidth;
-                    }
                 }
             } else {
                 middleText = subtileRef != UNDEF_SUBTILE || tileRef == UNDEF_TILE;
