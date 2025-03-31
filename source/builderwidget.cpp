@@ -375,22 +375,9 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     QGraphicsScene *scene = this->graphView->scene(); // this->levelCelView->getCelScene();
     QList<QGraphicsItem *> items = scene->items();
     QGraphicsPixmapItem *overlay = this->currOverlay;
-    if (items.isEmpty()) {
-        QMessageBox::critical(nullptr, "Error", tr("no items before overlay"));
-        return;
-    }
     if (!items.contains(overlay)) {
-        if (items.count() != 1) {
-            QMessageBox::critical(nullptr, "Error", tr("too many items %1 without overlay").arg(items.count()));
-            return;
-        }
         this->currOverlay = nullptr;
         overlay = nullptr;
-    } else {
-        if (items.count() != 2) {
-            QMessageBox::critical(nullptr, "Error", tr("even more items %1 with overlay").arg(items.count()));
-            return;
-        }
     }
     int overlayType = this->getOverlayType();
     if (this->overlayType != overlayType || overlay == nullptr || forceRedraw) {
@@ -492,7 +479,8 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     op = QPoint(cX, cY);
 
     overlay->setPos(op);
-    scene->update();
+    overlay->prepareGeometryChange();
+    // scene->update();
 }
 
 void BuilderWidget::colorModified()
