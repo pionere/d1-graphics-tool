@@ -1398,7 +1398,7 @@ void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursor
                         }
                         destBits += destImage->width() - backWidth;
                     }*/
-                    drawMask = DM_LTRI | DM_RTRI;
+                    unsigned drawMask = DM_LTRI | DM_RTRI;
                     if (drawMask != 0) {
                         QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
                         drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
