@@ -1317,11 +1317,11 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
                 continue;
             }
             if (x < backWidth / 2) {
-                if ((drawMask & DM_LFLOOR) && qAlpha(*backBits) != 0) {
+                if ((drawMask & DM_LFLOOR) && (y < (backHeight / 2 - x / 2) || y > (backHeight / 2 + x / 2)) /* qAlpha(*backBits) != 0*/) {
                     continue;
                 }
             } else {
-                if ((drawMask & DM_RFLOOR) && qAlpha(*backBits) != 0) {
+                if ((drawMask & DM_RFLOOR) && (y < (1 + x / 2) || y >= (backHeight - x / 2)) /* && qAlpha(*backBits) != 0*/) {
                     continue;
                 }
             }
