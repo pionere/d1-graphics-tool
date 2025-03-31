@@ -479,7 +479,8 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     op = QPoint(cX, cY);
 
     overlay->setPos(op);
-    overlay->prepareGeometryChange();
+    overlay->update();
+    // overlay->prepareGeometryChange();
     // scene->update();
 }
 
