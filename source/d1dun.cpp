@@ -1001,7 +1001,7 @@ void D1Dun::DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(sy + y));
     destBits += sx;
     QRgb srcBit = color.rgba();
-    for (; y <= width / 4; y++) {
+    for ( ; y <= width / 4; y++) {
         len += 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
             // image.setPixelColor(sx + x, sy + y, color);
@@ -1009,7 +1009,7 @@ void D1Dun::DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
         }
         destBits += image.width();
     }
-    for (; y < width / 2; y++) {
+    for ( ; y < width / 2; y++) {
         len -= 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
             // image.setPixelColor(sx + x, sy + y, color);
@@ -1144,7 +1144,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
             limit -= backWidth / 2;
         }
         // assert(subtileImage.width() == backWidth - 2 * CELL_BORDER);
-        for (; x < limit; x++, backBits++, srcBits++, destBits++) {
+        for ( ; x < limit; x++, backBits++, srcBits++, destBits++) {
             if (qAlpha(*srcBits) == 0) {
                 continue;
             }
@@ -1167,7 +1167,6 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
         backBits += 2 * CELL_BORDER;
         destBits += destImage->width() - backWidth;
     }
-
 }
 
 void D1Dun::drawBack(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
@@ -1188,18 +1187,18 @@ void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursor
         if (subtileRef != 0) {
             if (subtileRef >= 0 && subtileRef <= this->min->getSubtileCount()) {
                 if (params.tileState == Qt::Checked) {
-                quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
-                unsigned drawMask = 0;
-                if ((rp & (TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE)) != TMIF_LEFT_REDRAW) {
-                    drawMask |= DM_LTFLOOR;
-                }
-                if ((rp & (TMIF_RIGHT_REDRAW | TMIF_RIGHT_FOLIAGE)) != TMIF_RIGHT_REDRAW) {
-                    drawMask |= DM_RTFLOOR;
-                }
-                if (drawMask != 0) {
-                    QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
-                    drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
-                }
+                    quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
+                    unsigned drawMask = 0;
+                    if ((rp & (TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE)) != TMIF_LEFT_REDRAW) {
+                        drawMask |= DM_LTFLOOR;
+                    }
+                    if ((rp & (TMIF_RIGHT_REDRAW | TMIF_RIGHT_FOLIAGE)) != TMIF_RIGHT_REDRAW) {
+                        drawMask |= DM_RTFLOOR;
+                    }
+                    if (drawMask != 0) {
+                        QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
+                        drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
+                    }
                 }
             }
         }
@@ -1691,7 +1690,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
         QRgb *destBits = reinterpret_cast<QRgb *>(backImage.scanLine(0 + CELL_BORDER + y));
         destBits += 0;
         QRgb srcBit = backColor.rgba();
-        for (; y <= cellHeight / 2; y++) {
+        for ( ; y <= cellHeight / 2; y++) {
             len += 2;
             for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {
                 // backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
@@ -1703,7 +1702,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
             }
             destBits += cellWidth + 2 * CELL_BORDER; // backImage.width();
         }
-        for (; y < cellHeight; y++) {
+        for ( ; y < cellHeight; y++) {
             len -= 2;
             for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {
                 // backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
@@ -2509,7 +2508,7 @@ void D1Dun::loadObject(int objectIndex)
 {
     ObjectCacheEntry result = { objectIndex, nullptr, 0 };
     unsigned i = 0;
-    for (; i < this->customObjectTypes.size(); i++) {
+    for ( ; i < this->customObjectTypes.size(); i++) {
         const CustomObjectStruct &customObject = this->customObjectTypes[i];
         if (customObject.type == objectIndex) {
             result.frameNum = customObject.frameNum;
@@ -2536,7 +2535,7 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QS
 {
     // check for existing entry
     unsigned i = 0;
-    for (; i < this->monDataCache.size(); i++) {
+    for ( ; i < this->monDataCache.size(); i++) {
         auto &dataEntry = this->monDataCache[i];
         if (dataEntry.first->getFilePath() == filePath) {
             result.monGfx = dataEntry.first;
@@ -2606,7 +2605,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
     MonsterCacheEntry result = { monType, nullptr, 0, this->pal, nullptr, nullptr };
     // load a custom monster
     unsigned i = 0;
-    for (; i < this->customMonsterTypes.size(); i++) {
+    for ( ; i < this->customMonsterTypes.size(); i++) {
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
         if (customMonster.type == monType) {
             QString cl2FilePath = customMonster.path;
