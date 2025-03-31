@@ -1099,7 +1099,7 @@ typedef enum _draw_mask {
     DM_RMASK   = (DM_RTRI | DM_RFOL), // RightMask
 } _draw_mask;
 
-static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subtileImage, int drawCursorX, int drawCursorY, unsigned backWidth, unsigned backHeight, unsigned drawMask)
+static void drawSubtile(QPainter &dungeon, QImage subtileImage, int drawCursorX, int drawCursorY, unsigned backWidth, unsigned backHeight, unsigned drawMask)
 {
     QImage *destImage = (QImage *)dungeon.device();
     // assert(subtileImage.height() >= backHeight);
@@ -1131,12 +1131,10 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
         return;
     }
 
-    const QRgb *backBits = reinterpret_cast<const QRgb *>(backImage.scanLine(0));
     for (unsigned y = 0; y < backHeight; y++) {
         unsigned x = 0;
         if ((drawMask & DM_LMASK) == 0) {
             x += backWidth / 2;
-            backBits += backWidth / 2;
             srcBits += backWidth / 2;
             destBits += backWidth / 2;
         }
@@ -1145,12 +1143,12 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
             limit -= backWidth / 2;
         }
         // assert(subtileImage.width() == backWidth);
-        for ( ; x < limit; x++, backBits++, srcBits++, destBits++) {
+        for ( ; x < limit; x++, srcBits++, destBits++) {
             if (qAlpha(*srcBits) == 0) {
                 continue;
             }
             if (x < backWidth / 2) {
-                bool inLeftTriangle = qAlpha(*backBits) != 0;
+                bool inLeftTriangle = y >= (backHeight / 2 - x / 2) && y <= (backHeight / 2 + x / 2);
                 if (!(drawMask & DM_LFOL) && !inLeftTriangle) {
                     continue;
                 }
@@ -1158,7 +1156,7 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
                     continue;
                 }
             } else {
-                bool inRightTriangle = qAlpha(*backBits) != 0;
+                bool inRightTriangle = y >= (1 + (x - backWidth / 2) / 2) && y < (backHeight - (x - backWidth / 2) / 2);
                 if (!(drawMask & DM_RFOL) && !inRightTriangle) {
                     continue;
                 }
@@ -1169,7 +1167,6 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
             *destBits = *srcBits;
         }
         if ((drawMask & DM_RMASK) == 0) {
-            backBits += backWidth / 2;
             srcBits += backWidth / 2;
             destBits += backWidth / 2;
         }
@@ -1204,14 +1201,14 @@ void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursor
                     }
                     if (drawMask != 0) {
                         QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
-                        drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
+                        drawSubtile(dungeon, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
                     }
                 } else {
                     drawMask = DM_LTRI | DM_RTRI;
                 }
                 if (drawMask != 0) {
                     QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
-                    drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
+                    drawSubtile(dungeon, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
                 }
             }
         }
@@ -1242,7 +1239,7 @@ void D1Dun::drawCell(QPainter &dungeon, const QImage &backImage, int drawCursorX
                     if (rp & TMIF_RIGHT_REDRAW) {
                         drawMask |= (rp & TMIF_RIGHT_FOLIAGE) ? DM_RFOL : DM_RMASK;
                     }
-                    drawSubtile(dungeon, backImage, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
+                    drawSubtile(dungeon, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
                 }
             } else {
                 middleText = subtileRef != UNDEF_SUBTILE || tileRef == UNDEF_TILE;
