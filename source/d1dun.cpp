@@ -1261,11 +1261,11 @@ QImage D1Dun::getMissileImage(const MapMissile &mapMis)
 
 typedef enum _draw_mask {
     DM_LWALL    = 1 << 0, // LeftWallMask
-    DM_RWALL    = 1 << 0, // RightWallMask
-    DM_LTFLOOR = 1 << 1, // LeftMask
-    DM_RTFLOOR = 1 << 2, // RightMask
-    DM_LFLOOR  = 1 << 3, // LeftFoliageMask
-    DM_RFLOOR  = 1 << 4, // RightFoliageMask
+    DM_RWALL    = 1 << 1, // RightWallMask
+    DM_LTFLOOR = 1 << 2, // LeftMask
+    DM_RTFLOOR = 1 << 3, // RightMask
+    DM_LFLOOR  = 1 << 4, // LeftFoliageMask
+    DM_RFLOOR  = 1 << 5, // RightFoliageMask
     DM_WALL    = (DM_LWALL | DM_RWALL), // WallMask
 } _draw_mask;
 
