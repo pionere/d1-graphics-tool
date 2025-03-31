@@ -136,6 +136,7 @@ private:
     QPoint lastHoverPos;
     int mode = BEM_TILE;  // builder_edit_mode
     int overlayType = -1; // builder_edit_mode
+    QPointer<QGraphicsPixmapItem> currOverlay;
 
     int currentTileIndex = 0;
     int currentSubtileIndex = 0;
