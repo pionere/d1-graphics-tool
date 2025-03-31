@@ -1260,11 +1260,13 @@ QImage D1Dun::getMissileImage(const MapMissile &mapMis)
 }
 
 typedef enum _draw_mask {
-    DM_WALL    = 1 << 0, // WallMask
+    DM_LWALL    = 1 << 0, // LeftWallMask
+    DM_RWALL    = 1 << 0, // RightWallMask
     DM_LTFLOOR = 1 << 1, // LeftMask
     DM_RTFLOOR = 1 << 2, // RightMask
     DM_LFLOOR  = 1 << 3, // LeftFoliageMask
     DM_RFLOOR  = 1 << 4, // RightFoliageMask
+    DM_WALL    = (DM_LWALL | DM_RWALL), // WallMask
 } _draw_mask;
 
 static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subtileImage, int drawCursorX, int drawCursorY, unsigned backWidth, unsigned backHeight, unsigned drawMask)
@@ -1281,14 +1283,20 @@ static void drawSubtile(QPainter &dungeon, const QImage &backImage, QImage subti
     destBits += drawCursorX + CELL_BORDER;
     if (drawMask & DM_WALL) {
         // draw the non-floor bits
+        unsigned sw = backWidth - 2 * CELL_BORDER;
+        unsigned x0 = (drawMask & DM_LWALL) ? 0 : sw / 2;
+        unsigned x1 = (drawMask & DM_RWALL) ? sw : sw / 2;
+        x0 += CELL_BORDER;
+        x1 += CELL_BORDER;
         for (unsigned y = 0; y < subtileImage.height() - (backHeight - 2 * CELL_BORDER); y++) {
             // assert(subtileImage.width() == backWidth - 2 * CELL_BORDER);
-            for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++, srcBits++, destBits++) {
+            for (unsigned x = x0; x < x1; x++, srcBits++, destBits++) {
                 if (qAlpha(*srcBits) == 0) {
                     continue;
                 }
                 *destBits = *srcBits;
             }
+            srcBits += sw - (x1 - x0);
             destBits += destImage->width() - backWidth;
         }
     } else {
@@ -1354,10 +1362,10 @@ void D1Dun::drawBack(QPainter &dungeon, const QImage &backImage, int drawCursorX
                 quint8 rp = this->sla->getRenderProperties(subtileRef - 1);
                 unsigned drawMask = 0;
                 if ((rp & (TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE)) != TMIF_LEFT_REDRAW) {
-                    drawMask |= DM_LTFLOOR;
+                    drawMask |= DM_LWALL;
                 }
                 if ((rp & (TMIF_RIGHT_REDRAW | TMIF_RIGHT_FOLIAGE)) != TMIF_RIGHT_REDRAW) {
-                    drawMask |= DM_RTFLOOR;
+                    drawMask |= DM_RWALL;
                 }
                 if (drawMask != 0) {
                     QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
