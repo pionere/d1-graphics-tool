@@ -1199,10 +1199,6 @@ void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursor
                     if ((rp & (TMIF_RIGHT_REDRAW | TMIF_RIGHT_FOLIAGE)) != TMIF_RIGHT_REDRAW) {
                         drawMask |= DM_RMASK;
                     }
-                    if (drawMask != 0) {
-                        QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
-                        drawSubtile(dungeon, subtileImage, drawCursorX, drawCursorY, backWidth, backHeight, drawMask);
-                    }
                 } else {
                     drawMask = DM_LTRI | DM_RTRI;
                 }
