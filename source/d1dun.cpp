@@ -1791,16 +1791,16 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
 
     if (layer == 0) {
         QColor backColor = QColor(Config::getGraphicsTransparentColor());
+        QRgb srcBit = backColor.rgba();
         unsigned sx = drawCursorX + cellWidth / 2;
         unsigned sy = drawCursorY - cellHeight + 1;
+        QImage *destImage = (QImage *)dunPainter.device();
+        unsigned imgWidth = destImage->width();
         if (params.tileState != Qt::Unchecked) {
             unsigned len = 4;
             unsigned drawlines = (this->width + this->height) * cellHeight / 2;
             unsigned wilines = this->width * cellHeight / 2;
             unsigned helines = this->height * cellHeight / 2;
-            QRgb srcBit = backColor.rgba();
-            QImage *destImage = (QImage *)dunPainter.device();
-            unsigned imgWidth = destImage->width();
             QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(0 + sy));
             destBits += sx - 2;
             for (unsigned n = 0; n < drawlines - 1; n++) {
@@ -1825,7 +1825,6 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
         } else {
             // QPen basePen = dunPainter.pen();
             // dunPainter.setPen(backColor);
-            QRgb srcBit = backColor.rgba();
             int drawlines = this->height + 1;
             int dx = this->width * cellWidth / 2;
             int dy = this->width * cellHeight / 2;
