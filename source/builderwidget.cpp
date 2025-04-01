@@ -358,17 +358,13 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     int cellHeight = subtileWidth / 2;
 
     QGraphicsScene *scene = this->graphView->scene(); // this->levelCelView->getCelScene();
+    QList<QGraphicsItem *> items = scene->items();
     QGraphicsPixmapItem *overlay = nullptr;
-    if (!forceRedraw) {
-        overlay = this->currOverlay;
-        QList<QGraphicsItem *> items = scene->items();
-        if (overlay != nullptr && !items.contains(overlay)) {
-            // QMessageBox::critical(nullptr, "Error", tr("BuilderWidget might reference an obsolete pointer!"));
-            overlay = nullptr;
-        }
+    if (items.count() == 2) {
+        overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
     }
     int overlayType = this->getOverlayType();
-    bool change = this->overlayType != overlayType || overlay == nullptr;
+    bool change = this->overlayType != overlayType || overlay == nullptr || forceRedraw;
     if (change) {
         this->overlayType = overlayType;
         QImage image;
@@ -426,7 +422,6 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
         QPixmap pixmap = QPixmap::fromImage(image);
         if (overlay == nullptr) {
             overlay = scene->addPixmap(pixmap);
-            this->currOverlay = overlay;
         } else {
             overlay->setPixmap(pixmap);
         }
