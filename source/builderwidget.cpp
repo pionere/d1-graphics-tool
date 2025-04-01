@@ -313,29 +313,32 @@ static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color
 {
     //unsigned len = 0;
     unsigned y = 1;
-    QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0 + y));
-    destBits += width / 2;
     QRgb srcBit = color.rgba();
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0 + y));
     // draw the upper right line
+    destBits += width / 2;
         for (unsigned x = 0; x < width / 4; x++) {
             destBits[0] = srcBit;
             destBits[1] = srcBit;
             destBits += width + 2;
         }
+    // draw the lower right line
         destBits -= 4;
-        for (unsigned x = 0; x < width / 4; x++) {
+        for (unsigned x = 0; x < width / 4 - 1; x++) {
             destBits[0] = srcBit;
             destBits[1] = srcBit;
             destBits += width - 2;
         }
+    // draw the lower left line
         destBits -= width;
         for (unsigned x = 0; x < width / 4; x++) {
             destBits[0] = srcBit;
             destBits[1] = srcBit;
             destBits -= width + 2;
         }
+    // draw the upper left line
         destBits += 4;
-        for (unsigned x = 0; x < width / 4; x++) {
+        for (unsigned x = 0; x < width / 4 - 1; x++) {
             destBits[0] = srcBit;
             destBits[1] = srcBit;
             destBits -= width - 2;
