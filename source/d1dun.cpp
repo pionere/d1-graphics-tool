@@ -1789,6 +1789,51 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
     int dunCursorX;
     int dunCursorY = 0;
 
+    if (layer == 0) {
+        QColor backColor = QColor(Config::getGraphicsTransparentColor());
+        unsigned sx = drawCursorX + cellWidth - 2;
+        unsigned sy = dunCursorY + 1;
+        if (params.tileState != Qt::Unchecked) {
+            QRgb srcBit = backColor.rgba();
+            QImage *destImage = (QImage *)dunPainter.device();
+            QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(0 + sy));
+            destBits += sx;
+            len = 4;
+            for (int n = 0; n < (this->width + this->height) * cellWidth / 2; n++) {
+                for (unsigned x = 0; x < len; x++) {
+                    destBits[x] = srcBit;
+                }
+                destBits += image.width();
+                if (n < this->height * cellWidth / 2) {
+                    len += 2;
+                    destBits -= 2;
+                } else if (n > this->height * cellWidth / 2) {
+                    len -= 2;
+                    destBits += 2;
+                }
+                if (n < this->width * cellWidth / 2) {
+                    len += 2;
+                } else if (n > this->width * cellWidth / 2) {
+                    len -= 2;
+                }
+            }
+        } else {
+            QPen basePen = dunPainter.pen();
+            dunPainter.setPen(backColor);
+            for (int n = 0; n < this->height + 1; n++) {
+                unsigned x = sx + 2 - n * cellWidth / 2;
+                unsigned y = sy + n * cellHeight / 2;
+                if (n != this->height)
+                    dunPainter.drawLine(x, y, x + this->width * cellWidth / 2, y + this->width * cellHeight / 2);
+                if (n != 0)
+                    dunPainter.drawLine(x + 1, y - 1, x + this->width * cellWidth / 2 + 1, y + this->width * cellHeight / 2 - 1);
+            }
+
+            dunPainter.setPen(basePen);
+        }
+        return;
+    }
+
     // draw top triangle
     for (int i = 0; i < minDunSize; i++) {
         dunCursorX = 0;
