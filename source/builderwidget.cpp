@@ -363,7 +363,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
         overlay = this->currOverlay;
         QList<QGraphicsItem *> items = scene->items();
         if (overlay != nullptr && !items.contains(overlay)) {
-            QMessageBox::critical(nullptr, "Error", tr("BuilderWidget might reference an obsolete pointer!"));
+            // QMessageBox::critical(nullptr, "Error", tr("BuilderWidget might reference an obsolete pointer!"));
             overlay = nullptr;
         }
     }

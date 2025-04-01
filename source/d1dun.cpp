@@ -1867,7 +1867,15 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
                     destBits += imgWidth + 2;
                 }
                 db += imgWidth * (cellHeight / 2) - cellWidth / 2;
-                destBits = db - imgWidth;
+                /*destBits = db - imgWidth;
+                for (unsigned n = 0; n < dx / 2; n++) {
+                    destBits[0] = srcBit;
+                    destBits[1] = srcBit;
+                    destBits += imgWidth + 2;
+                }*/
+            }
+            {
+                QRgb *destBits = db - imgWidth;
                 for (unsigned n = 0; n < dx / 2; n++) {
                     destBits[0] = srcBit;
                     destBits[1] = srcBit;
@@ -1919,7 +1927,15 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
                     destBits += imgWidth - 2;
                 }
                 db += imgWidth * (cellHeight / 2) + cellWidth / 2;
-                destBits = db - imgWidth;
+                /*destBits = db - imgWidth;
+                for (unsigned n = 0; n < dx / 2; n++) {
+                    destBits[0] = srcBit;
+                    destBits[1] = srcBit;
+                    destBits += imgWidth - 2;
+                }*/
+            }
+            {
+                QRgb *destBits = db - imgWidth;
                 for (unsigned n = 0; n < dx / 2; n++) {
                     destBits[0] = srcBit;
                     destBits[1] = srcBit;
