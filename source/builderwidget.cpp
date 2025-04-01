@@ -307,70 +307,40 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, int flags)
     return true;
 }
 
-#define CELL_BORDER 0
-
 static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color)
 {
-    //unsigned len = 0;
     unsigned y = 1;
     QRgb srcBit = color.rgba();
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0 + y));
     // draw the upper right line
     destBits += width / 2;
-        for (unsigned x = 0; x < width / 4; x++) {
-            destBits[0] = srcBit;
-            destBits[1] = srcBit;
-            destBits += width + 2;
-        }
-    // draw the lower right line
-        destBits -= 4;
-        for (unsigned x = 0; x < width / 4 - 1; x++) {
-            destBits[0] = srcBit;
-            destBits[1] = srcBit;
-            destBits += width - 2;
-        }
-    // draw the lower left line
-        destBits -= width;
-        for (unsigned x = 0; x < width / 4; x++) {
-            destBits[0] = srcBit;
-            destBits[1] = srcBit;
-            destBits -= width + 2;
-        }
-    // draw the upper left line
-        destBits += 4;
-        for (unsigned x = 0; x < width / 4 - 1; x++) {
-            destBits[0] = srcBit;
-            destBits[1] = srcBit;
-            destBits -= width - 2;
-        }
-    /*for ( ; y < width / 2; y++) {
-        len -= 2;
-        for (unsigned x = width / 2 - len - CELL_BORDER - 1; x <= width / 2 - len; x++) {
-            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, color);
-            destBits[x + CELL_BORDER] = srcBit;
-        }
-        for (unsigned x = width / 2 + len - 1; x <= width / 2 + len + CELL_BORDER; x++) {
-            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, color);
-            destBits[x + CELL_BORDER] = srcBit;
-        }
-        destBits += width + 2 * CELL_BORDER; // image.width();
-    }*/
-}
-
-/*static void maskImage(QImage &image)
-{
-    int y = 0;
-    int width = image.width();
-    QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0 + CELL_BORDER + y));
-    QRgb srcBit = QColor(Qt::transparent).rgba();
-    for (y = image.height() - 1; y >= 0; y--) {
-        for (int x = y & 1; x < width; x += 2) {
-            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, QColor(Qt::transparent));
-            destBits[x + CELL_BORDER] = srcBit;
-        }
-        destBits += width + 2 * CELL_BORDER; // image.width();
+    for (unsigned x = 0; x < width / 4; x++) {
+        destBits[0] = srcBit;
+        destBits[1] = srcBit;
+        destBits += width + 2;
     }
-}*/
+    // draw the lower right line
+    destBits -= 4;
+    for (unsigned x = 0; x < width / 4 - 1; x++) {
+        destBits[0] = srcBit;
+        destBits[1] = srcBit;
+        destBits += width - 2;
+    }
+    // draw the lower left line
+    destBits -= width;
+    for (unsigned x = 0; x < width / 4; x++) {
+        destBits[0] = srcBit;
+        destBits[1] = srcBit;
+        destBits -= width + 2;
+    }
+    // draw the upper left line
+    destBits += 4;
+    for (unsigned x = 0; x < width / 4 - 1; x++) {
+        destBits[0] = srcBit;
+        destBits[1] = srcBit;
+        destBits -= width - 2;
+    }
+}
 
 void BuilderWidget::dunHovered(const QPoint &cell)
 {
@@ -451,8 +421,6 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
             image = QImage(cellWidth * mpl, cellHeight * mpl, QImage::Format_ARGB32);
             image.fill(Qt::transparent);
             drawHollowDiamond(image, cellWidth * mpl, color);
-        } else {
-            ; // maskImage(image);
         }
 
         QPixmap pixmap = QPixmap::fromImage(image);

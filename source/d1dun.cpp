@@ -1804,7 +1804,6 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
             QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(0 + sy));
             destBits += sx - 2;
             for (unsigned n = 0; n < drawlines - 1; n++) {
-                // LogErrorF("line %d, len %d sx %d idim%d:%d dun%d:%d cell%d:%d", n, len, (size_t)destBits - (size_t)destImage->scanLine(n + sy), imgWidth, destImage->height(), this->width, this->height, cellWidth, cellHeight);
                 for (unsigned x = 0; x < len; x++) {
                     destBits[x] = srcBit;
                 }
@@ -1858,7 +1857,7 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
             unsigned drawlines = this->height;
             unsigned dx = this->width * cellWidth / 2;
             unsigned dy = this->width * cellHeight / 2;
-            QRgb *db = reinterpret_cast<QRgb *>(destImage->scanLine(y));
+            QRgb *db = reinterpret_cast<QRgb *>(destImage->scanLine(sy));
             db += sx;
             for (unsigned n = 0; n < drawlines; n++) {
                 QRgb *destBits = db;
