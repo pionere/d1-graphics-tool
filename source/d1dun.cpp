@@ -1344,9 +1344,102 @@ static void drawSubtile(QPainter &dungeon, QImage subtileImage, int drawCursorX,
     }
 }
 
-void D1Dun::drawBack(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
+void D1Dun::drawBack(QPainter &dungeon, int drawCursorX, int drawCursorY, unsigned cellWidth, unsigned cellHeight, const DunDrawParam &params)
 {
-    dungeon.drawImage(drawCursorX, drawCursorY - backImage.height(), backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+    // dungeon.drawImage(drawCursorX, drawCursorY - backImage.height(), backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+    QColor backColor = QColor(Config::getGraphicsTransparentColor());
+    QRgb srcBit = backColor.rgba();
+    unsigned sx = drawCursorX + cellWidth / 2;
+    unsigned sy = drawCursorY - cellHeight + 1;
+    QImage *destImage = (QImage *)dungeon.device();
+    unsigned imgWidth = destImage->width();
+    if (params.tileState != Qt::Unchecked) {
+        unsigned len = 4;
+        unsigned drawlines = (this->width + this->height) * cellHeight / 2;
+        unsigned wilines = this->width * cellHeight / 2;
+        unsigned helines = this->height * cellHeight / 2;
+        QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(0 + sy));
+        destBits += sx - 2;
+        for (unsigned n = 0; n < drawlines - 1; n++) {
+            for (unsigned x = 0; x < len; x++) {
+                destBits[x] = srcBit;
+            }
+            destBits += imgWidth;
+            if (n < helines - 1) {
+                len += 2;
+                destBits -= 2;
+            } else {
+                len -= 2;
+                destBits += 2;
+            }
+            if (n < wilines - 1) {
+                len += 2;
+            } else {
+                len -= 2;
+            }
+        }
+    } else {
+        {
+            unsigned drawlines = this->height;
+            unsigned dx = this->width * cellWidth / 2;
+            unsigned dy = this->width * cellHeight / 2;
+            QRgb *db = reinterpret_cast<QRgb *>(destImage->scanLine(sy));
+            db += sx;
+            for (unsigned n = 0; n < drawlines; n++) {
+                QRgb *destBits = db;
+                for (unsigned n = 0; n < dx / 2; n++) {
+                    destBits[0] = srcBit;
+                    destBits[1] = srcBit;
+                    destBits += imgWidth + 2;
+                }
+                db += imgWidth * (cellHeight / 2) - cellWidth / 2;
+                /*destBits = db - imgWidth;
+                for (unsigned n = 0; n < dx / 2; n++) {
+                    destBits[0] = srcBit;
+                    destBits[1] = srcBit;
+                    destBits += imgWidth + 2;
+                }*/
+            }
+            {
+                QRgb *destBits = db - imgWidth;
+                for (unsigned n = 0; n < dx / 2; n++) {
+                    destBits[0] = srcBit;
+                    destBits[1] = srcBit;
+                    destBits += imgWidth + 2;
+                }
+            }
+        }
+        {
+            unsigned drawlines = this->width;
+            unsigned dx = this->height * cellWidth / 2;
+            unsigned dy = this->height * cellHeight / 2;
+            QRgb *db = reinterpret_cast<QRgb *>(destImage->scanLine(sy));
+            db += sx - 2;
+            for (unsigned n = 0; n < drawlines; n++) {
+                QRgb *destBits = db;
+                for (unsigned n = 0; n < dx / 2; n++) {
+                    destBits[0] = srcBit;
+                    destBits[1] = srcBit;
+                    destBits += imgWidth - 2;
+                }
+                db += imgWidth * (cellHeight / 2) + cellWidth / 2;
+                /*destBits = db - imgWidth;
+                for (unsigned n = 0; n < dx / 2; n++) {
+                    destBits[0] = srcBit;
+                    destBits[1] = srcBit;
+                    destBits += imgWidth - 2;
+                }*/
+            }
+            {
+                QRgb *destBits = db - imgWidth;
+                for (unsigned n = 0; n < dx / 2; n++) {
+                    destBits[0] = srcBit;
+                    destBits[1] = srcBit;
+                    destBits += imgWidth - 2;
+                }
+            }
+        }
+    }
 }
 
 void D1Dun::drawFloor(QPainter &dungeon, const QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
@@ -1790,6 +1883,9 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
     int dunCursorY = 0;
 
     if (layer == 0) {
+        this->drawBack(dunPainter, drawCursorX, drawCursorY, cellWidth, cellHeight, params);
+        return;
+#if 0
         QColor backColor = QColor(Config::getGraphicsTransparentColor());
         QRgb srcBit = backColor.rgba();
         unsigned sx = drawCursorX + cellWidth / 2;
@@ -1947,6 +2043,7 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
             // dunPainter.setPen(basePen);
         }
         return;
+#endif
     }
 
     // draw top triangle
@@ -1954,9 +2051,7 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
         dunCursorX = 0;
         dunCursorY = i;
         while (dunCursorY >= 0) {
-            if (layer == 0) {
-                this->drawBack(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-            } else if (layer == 1) {
+            if (layer == 1) {
                 this->drawFloor(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
             } else if (layer == 2) {
                 this->drawCell(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
@@ -1981,9 +2076,7 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
             dunCursorX = i + 1;
             dunCursorY = this->height - 1;
             while (dunCursorY >= 0) {
-                if (layer == 0) {
-                    this->drawBack(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-                } else if (layer == 1) {
+                if (layer == 1) {
                     this->drawFloor(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
                 } else if (layer == 2) {
                     this->drawCell(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
@@ -2008,9 +2101,7 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
             dunCursorX = 0;
             dunCursorY = this->width + i;
             while (dunCursorX < this->width) {
-                if (layer == 0) {
-                    this->drawBack(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-                } else if (layer == 1) {
+                if (layer == 1) {
                     this->drawFloor(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
                 } else if (layer == 2) {
                     this->drawCell(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
@@ -2035,9 +2126,7 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
         dunCursorX = this->width - i;
         dunCursorY = this->height - 1;
         while (dunCursorX < this->width) {
-            if (layer == 0) {
-                this->drawBack(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-            } else if (layer == 1) {
+            if (layer == 1) {
                 this->drawFloor(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
             } else if (layer == 2) {
                 this->drawCell(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
