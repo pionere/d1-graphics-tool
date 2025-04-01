@@ -463,7 +463,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     if (change || overlay->pos() != op) {
         overlay->setPos(op);
         scene->update();
-    }    
+    }
 }
 
 void BuilderWidget::colorModified()
