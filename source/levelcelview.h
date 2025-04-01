@@ -204,6 +204,7 @@ private:
 
 signals:
     void frameRefreshed();
+    void dunSceneModified();
     void palModified();
     void dunResourcesModified();
 

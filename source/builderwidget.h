@@ -86,6 +86,7 @@ public slots:
     bool dunClicked(const QPoint &cell, int flags);
     void dunHovered(const QPoint &cell);
     void colorModified();
+    void dunSceneModified();
     void dunResourcesModified();
 
 private slots:

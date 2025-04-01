@@ -3558,7 +3558,7 @@ void LevelCelView::displayFrame()
             this->scrollToCurrent();
         }
         // Notify PalView that the frame changed (used to refresh palette widget)
-        emit frameRefreshed();
+        emit dunSceneModified();
         return;
     }
 

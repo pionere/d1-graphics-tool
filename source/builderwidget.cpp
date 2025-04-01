@@ -137,7 +137,7 @@ void BuilderWidget::setDungeon(D1Dun *d)
 {
     this->dun = d;
 
-    this->colorModified();
+    this->dunSceneModified();
 }
 
 void BuilderWidget::show()
@@ -149,7 +149,7 @@ void BuilderWidget::show()
     this->graphView->setCursor(Qt::BlankCursor);
     // update the view
     this->dunResourcesModified();
-    this->colorModified();
+    this->dunSceneModified();
 }
 
 void BuilderWidget::hide()
@@ -388,14 +388,17 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     int cellHeight = subtileWidth / 2;
 
     QGraphicsScene *scene = this->graphView->scene(); // this->levelCelView->getCelScene();
-    QList<QGraphicsItem *> items = scene->items();
-    QGraphicsPixmapItem *overlay = this->currOverlay;
-    if (!items.contains(overlay)) {
-        this->currOverlay = nullptr;
-        overlay = nullptr;
+    QGraphicsPixmapItem *overlay = nullptr;
+    if (!forceRedraw) {
+        overlay = this->currOverlay;
+        QList<QGraphicsItem *> items = scene->items();
+        if (!items.contains(overlay)) {
+            QMessageBox::critical(nullptr, "Error", tr("BuilderWidget might reference an obsolete pointer!"));
+            overlay = nullptr;
+        }
     }
     int overlayType = this->getOverlayType();
-    bool change = this->overlayType != overlayType || overlay == nullptr || forceRedraw;
+    bool change = this->overlayType != overlayType || overlay == nullptr;
     if (change) {
         this->overlayType = overlayType;
         QImage image;
@@ -501,6 +504,11 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
 }
 
 void BuilderWidget::colorModified()
+{
+    this->dunSceneModified();
+}
+
+void BuilderWidget::dunSceneModified()
 {
     if (this->isHidden())
         return;
