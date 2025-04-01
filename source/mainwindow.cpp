@@ -1573,8 +1573,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString firstPaletteFound;
     if (fileType == FILE_CONTENT::PCX) {
         firstPaletteFound = D1Pal::DEFAULT_PATH;
-    } else if (fileType == FILE_CONTENT::SMK && this->pals.size() > 1) {
-        firstPaletteFound = (this->pals.begin() + 1).key();
+    } else if (fileType == FILE_CONTENT::SMK && this->gfx->getFrameCount() > 0) {
+        D1GfxFrame *frame = this->gfx->getFrame(0);
+        QPointer<D1Pal>& pal = frame->getFramePal();
+        // assert(!pal.isNull());
+        firstPaletteFound = pal->getFilePath();
+        // assert(this->pals.contains(firstPaletteFound));
     }
     if (!baseDir.isEmpty()) {
         QDirIterator it(baseDir, QStringList("*.pal"), QDir::Files | QDir::Readable);
