@@ -1794,16 +1794,17 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
         unsigned sx = drawCursorX + cellWidth / 2;
         unsigned sy = drawCursorY - cellHeight + 1;
         if (params.tileState != Qt::Unchecked) {
-            QRgb srcBit = backColor.rgba();
-            QImage *destImage = (QImage *)dunPainter.device();
-            QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(0 + sy));
-            unsigned imgWidth = destImage->width();
-            destBits += sx - 2;
             unsigned len = 4;
-            unsigned drawlines = (this->width + this->height) * cellWidth / 2;
+            unsigned drawlines = (this->width + this->height) * cellHeight / 2;
             unsigned wilines = this->width * cellHeight / 2;
             unsigned helines = this->height * cellHeight / 2;
+            QRgb srcBit = backColor.rgba();
+            QImage *destImage = (QImage *)dunPainter.device();
+            unsigned imgWidth = destImage->width();
+            QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(0 + sy));
+            destBits += sx - 2;
             for (unsigned n = 0; n < drawlines; n++) {
+                LogErrorF("line %d, len %d sx %d idim%d:%d dun%d:%d cell%d:%d", n, len, (size_t)destBits - (size_t)destImage->scanLine(n + sy), imgWidth, destImage->height(), this->width, this->height, cellWidth, cellHeight);
                 for (unsigned x = 0; x < len; x++) {
                     destBits[x] = srcBit;
                 }
