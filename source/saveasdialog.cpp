@@ -85,7 +85,6 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
 
 void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
 {
-    QString filePath = this->gfx->getFilePath();
     const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : (this->isTableset ? tr("TBL Files (*.tbl *.TBL)") : (this->isGfxset ? tr("CL2 Files (*.cl2 *.CL2)") : (this->isCpp ? tr("CPP Files (*.cpp *.CPP *.c *.C)") : (this->isSmk ? tr("SMK Files (*.smk *.SMK)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)")))));
     const QString title = this->isTableset ? tr("Save Dist TBL as...") : (this->isCpp ? tr("Save Source as...") : tr("Save Graphics as..."));
 
