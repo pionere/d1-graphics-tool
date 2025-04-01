@@ -1803,41 +1803,57 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
             unsigned imgWidth = destImage->width();
             QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(0 + sy));
             destBits += sx - 2;
-            for (unsigned n = 0; n < drawlines; n++) {
-                LogErrorF("line %d, len %d sx %d idim%d:%d dun%d:%d cell%d:%d", n, len, (size_t)destBits - (size_t)destImage->scanLine(n + sy), imgWidth, destImage->height(), this->width, this->height, cellWidth, cellHeight);
+            for (unsigned n = 0; n < drawlines - 1; n++) {
+                // LogErrorF("line %d, len %d sx %d idim%d:%d dun%d:%d cell%d:%d", n, len, (size_t)destBits - (size_t)destImage->scanLine(n + sy), imgWidth, destImage->height(), this->width, this->height, cellWidth, cellHeight);
                 for (unsigned x = 0; x < len; x++) {
                     destBits[x] = srcBit;
                 }
                 destBits += imgWidth;
-                if (n < helines) {
+                if (n < helines - 1) {
                     len += 2;
                     destBits -= 2;
                 } else {
                     len -= 2;
                     destBits += 2;
                 }
-                if (n < wilines) {
+                if (n < wilines - 1) {
                     len += 2;
                 } else {
                     len -= 2;
                 }
             }
         } else {
-            QPen basePen = dunPainter.pen();
-            dunPainter.setPen(backColor);
+            // QPen basePen = dunPainter.pen();
+            // dunPainter.setPen(backColor);
+            QRgb srcBit = backColor.rgba();
             int drawlines = this->height + 1;
             int dx = this->width * cellWidth / 2;
             int dy = this->width * cellHeight / 2;
             for (int n = 0; n < drawlines; n++) {
                 unsigned x = sx - n * cellWidth / 2;
                 unsigned y = sy + n * cellHeight / 2;
-                if (n != drawlines - 1)
-                    dunPainter.drawLine(x, y, x + dx, y + dy);
-                if (n != 0)
-                    dunPainter.drawLine(x + 1, y - 1, x + dx + 1, y + dy - 1);
+                if (n != drawlines - 1) {
+                    QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(y));
+                    destBits += x;
+                    for (unsigned n = 0; n < dx / 2; n++) {
+                        destBits[0] = srcBit;
+                        destBits[1] = srcBit;
+                        destBits += imgWidth + 2;
+                    }
+                    // dunPainter.drawLine(x + 1, y, x + dx, y + dy);
+                }
+                if (n != 0) {
+                    QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(y - 1));
+                    destBits += x + 1;
+                    for (unsigned n = 0; n < dx / 2; n++) {
+                        destBits[0] = srcBit;
+                        destBits[1] = srcBit;
+                        destBits += imgWidth + 2;
+                    }
+                    // dunPainter.drawLine(x + 1, y - 1, x + dx + 1, y + dy - 1);
+                }
             }
-
-            dunPainter.setPen(basePen);
+            // dunPainter.setPen(basePen);
         }
         return;
     }
