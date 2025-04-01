@@ -1791,42 +1791,49 @@ void D1Dun::drawLayer(QPainter &dunPainter, const QImage &backImage, const DunDr
 
     if (layer == 0) {
         QColor backColor = QColor(Config::getGraphicsTransparentColor());
-        unsigned sx = drawCursorX + cellWidth - 2;
-        unsigned sy = dunCursorY + 1;
+        unsigned sx = drawCursorX + cellWidth / 2;
+        unsigned sy = drawCursorY - cellHeight + 1;
         if (params.tileState != Qt::Unchecked) {
             QRgb srcBit = backColor.rgba();
             QImage *destImage = (QImage *)dunPainter.device();
             QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(0 + sy));
-            destBits += sx;
-            len = 4;
-            for (int n = 0; n < (this->width + this->height) * cellWidth / 2; n++) {
+            unsigned imgWidth = destImage->width();
+            destBits += sx - 2;
+            unsigned len = 4;
+            unsigned drawlines = (this->width + this->height) * cellWidth / 2;
+            unsigned wilines = this->width * cellHeight / 2;
+            unsigned helines = this->height * cellHeight / 2;
+            for (unsigned n = 0; n < drawlines; n++) {
                 for (unsigned x = 0; x < len; x++) {
                     destBits[x] = srcBit;
                 }
-                destBits += image.width();
-                if (n < this->height * cellWidth / 2) {
+                destBits += imgWidth;
+                if (n < helines) {
                     len += 2;
                     destBits -= 2;
-                } else if (n > this->height * cellWidth / 2) {
+                } else {
                     len -= 2;
                     destBits += 2;
                 }
-                if (n < this->width * cellWidth / 2) {
+                if (n < wilines) {
                     len += 2;
-                } else if (n > this->width * cellWidth / 2) {
+                } else {
                     len -= 2;
                 }
             }
         } else {
             QPen basePen = dunPainter.pen();
             dunPainter.setPen(backColor);
-            for (int n = 0; n < this->height + 1; n++) {
-                unsigned x = sx + 2 - n * cellWidth / 2;
+            int drawlines = this->height + 1;
+            int dx = this->width * cellWidth / 2;
+            int dy = this->width * cellHeight / 2;
+            for (int n = 0; n < drawlines; n++) {
+                unsigned x = sx - n * cellWidth / 2;
                 unsigned y = sy + n * cellHeight / 2;
-                if (n != this->height)
-                    dunPainter.drawLine(x, y, x + this->width * cellWidth / 2, y + this->width * cellHeight / 2);
+                if (n != drawlines - 1)
+                    dunPainter.drawLine(x, y, x + dx, y + dy);
                 if (n != 0)
-                    dunPainter.drawLine(x + 1, y - 1, x + this->width * cellWidth / 2 + 1, y + this->width * cellHeight / 2 - 1);
+                    dunPainter.drawLine(x + 1, y - 1, x + dx + 1, y + dy - 1);
             }
 
             dunPainter.setPen(basePen);
