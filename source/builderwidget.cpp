@@ -137,7 +137,7 @@ void BuilderWidget::setDungeon(D1Dun *d)
 {
     this->dun = d;
 
-    this->dunSceneModified();
+    this->colorModified();
 }
 
 void BuilderWidget::show()
@@ -149,7 +149,7 @@ void BuilderWidget::show()
     this->graphView->setCursor(Qt::BlankCursor);
     // update the view
     this->dunResourcesModified();
-    this->dunSceneModified();
+    this->colorModified();
 }
 
 void BuilderWidget::hide()
@@ -467,11 +467,6 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
 }
 
 void BuilderWidget::colorModified()
-{
-    this->dunSceneModified();
-}
-
-void BuilderWidget::dunSceneModified()
 {
     if (this->isHidden())
         return;

@@ -813,8 +813,6 @@ void MainWindow::importFile(const ImportParam &params)
                     this->builderWidget = new BuilderWidget(this, this->undoStack, dun, this->levelCelView, this->tileset);
                     // Refresh builder widget when the resource-options are changed
                     QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
-                    // Refresh builder widget when the scene is recreated
-                    QObject::connect(this->levelCelView, &LevelCelView::dunSceneModified, this->builderWidget, &BuilderWidget::dunSceneModified);
                 } else {
                     this->builderWidget->setDungeon(dun);
                 }
@@ -1557,8 +1555,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->builderWidget = new BuilderWidget(this, this->undoStack, this->dun, this->levelCelView, this->tileset);
         // Refresh builder widget when the resource-options are changed
         QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
-        // Refresh builder widget when the scene is recreated
-        QObject::connect(this->levelCelView, &LevelCelView::dunSceneModified, this->builderWidget, &BuilderWidget::dunSceneModified);
     }
 
     if (fileType != FILE_CONTENT::CPP) {
