@@ -15,6 +15,8 @@
 #include "dungeon/defs.h"
 #include "dungeon/enums.h"
 
+struct CelMicro;
+
 class D1Tileset {
 public:
     D1Tileset(D1Gfx *gfx);
@@ -57,12 +59,12 @@ private:
 
     std::pair<unsigned, D1GfxFrame *> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
 
-    bool maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const struct CelMicro &micros);
-    bool copyUpperCathedralMicro(int src, int dst, int blockSize, const struct CelMicro &micros);
-    bool copyLowerCathedralMicro(int src, int dst, int blockSize, const struct CelMicro &micros);
-    bool copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const struct CelMicro &micros);
-    bool copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const struct CelMicro &micros);
-    bool shiftCathedralMicrosDown(int m0, int m1, int blockSize, const struct CelMicro &micros);
+    bool maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const CelMicro &micros);
+    bool copyUpperCathedralMicro(int src, int dst, int blockSize, const CelMicro &micros);
+    bool copyLowerCathedralMicro(int src, int dst, int blockSize, const CelMicro &micros);
+    bool copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro &micros);
+    bool copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro &micros);
+    bool shiftCathedralMicrosDown(int m0, int m1, int blockSize, const CelMicro &micros);
 
     void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
     bool patchTownCathedral(bool silent);

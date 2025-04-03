@@ -994,8 +994,8 @@ bool D1Tileset::maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize
     bool change = false;
     const CelMicro &micro = micros[idx];
     std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
-    D1GfxFrame *frameSrc = mf.second;
-    if (frameSrc == nullptr) {
+    D1GfxFrame *frame = mf.second;
+    if (frame == nullptr) {
         return false;
     }
 
@@ -1006,18 +1006,18 @@ bool D1Tileset::maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize
     }
     return change;
 }
-bool D1Tileset::change |= copyUpperCathedralMicro(int src, int dst, int blockSize, const CelMicro &micros)
+bool D1Tileset::copyUpperCathedralMicro(int src, int dst, int blockSize, const CelMicro &micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
-    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-    D1GfxFrame *frameSrc = mf.second;
+    std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+    D1GfxFrame *frameSrc = mfSrc.second;
     if (frameSrc == nullptr) {
         return false;
     }
     const CelMicro &microDst = micros[dst];
-    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-    D1GfxFrame *frameDst = mf.second;
+    std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+    D1GfxFrame *frameDst = mfDst.second;
     if (frameDst == nullptr) {
         return false;
     }
@@ -1037,14 +1037,14 @@ bool D1Tileset::copyLowerCathedralMicro(int src, int dst, int blockSize, const C
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
-    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-    D1GfxFrame *frameSrc = mf.second;
+    std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+    D1GfxFrame *frameSrc = mfSrc.second;
     if (frameSrc == nullptr) {
         return false;
     }
     const CelMicro &microDst = micros[dst];
-    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-    D1GfxFrame *frameDst = mf.second;
+    std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+    D1GfxFrame *frameDst = mfDst.second;
     if (frameDst == nullptr) {
         return false;
     }
@@ -1064,13 +1064,13 @@ bool D1Tileset::change |= copyLimitedUpperCathedralMicro(int src, int dst, int x
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
-    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-    D1GfxFrame *frameSrc = mf.second;
+    std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+    D1GfxFrame *frameSrc = mfSrc.second;
     if (frameSrc == nullptr) {
         return false;
     }
     const CelMicro &microDst = micros[dst];
-    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+    std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
     D1GfxFrame *frameDst = mf.second;
     if (frameDst == nullptr) {
         return false;
@@ -1091,13 +1091,13 @@ bool D1Tileset::change |= copyLimitedLowerCathedralMicro(int src, int dst, int x
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
-    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-    D1GfxFrame *frameSrc = mf.second;
+    std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+    D1GfxFrame *frameSrc = mfSrc.second;
     if (frameSrc == nullptr) {
         return false;
     }
     const CelMicro &microDst = micros[dst];
-    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+    std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
     D1GfxFrame *frameDst = mf.second;
     if (frameDst == nullptr) {
         return false;
@@ -1119,16 +1119,16 @@ bool D1Tileset::shiftCathedralMicrosDown(int m0, int m1, int blockSize, const Ce
     bool change = false;
     for (int i = m0; i < m1; i++) {
         const CelMicro &microSrc = micros[m0];
-        std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-        D1GfxFrame *frameSrc = mf.second;
+        std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+        D1GfxFrame *frameSrc = mfSrc.second;
         if (frameSrc == nullptr) {
             return false;
         }
         D1GfxFrame *frameDst = nullptr;
         if (i != m0) {
             const CelMicro &microDst = micros[m0 - 1];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-            frameDst = mf.second;
+            std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+            frameDst = mfDst.second;
             if (frameDst == nullptr) {
                 return false;
             }
