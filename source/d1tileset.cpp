@@ -989,7 +989,24 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     }
 }
 
-bool D1Tileset::change |= copyUpperCathedralMicro(int src, int dst, const CelMicro &micros)
+bool D1Tileset::maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const CelMicro &micros)
+{
+    bool change = false;
+    const CelMicro &micro = micros[idx];
+    std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+    D1GfxFrame *frameSrc = mf.second;
+    if (frameSrc == nullptr) {
+        return false;
+    }
+
+    for (int x = x0; x < x1; x++) {
+        for (int y = y0; y < y1; y++) {
+            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+        }
+    }
+    return change;
+}
+bool D1Tileset::change |= copyUpperCathedralMicro(int src, int dst, int blockSize, const CelMicro &micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1016,7 +1033,7 @@ bool D1Tileset::change |= copyUpperCathedralMicro(int src, int dst, const CelMic
     return change;
 }
 
-bool D1Tileset::copyLowerCathedralMicro(int src, int dst, const CelMicro &micros)
+bool D1Tileset::copyLowerCathedralMicro(int src, int dst, int blockSize, const CelMicro &micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1043,7 +1060,7 @@ bool D1Tileset::copyLowerCathedralMicro(int src, int dst, const CelMicro &micros
     return change;
 }
 
-bool D1Tileset::change |= copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, const CelMicro &micros)
+bool D1Tileset::change |= copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro &micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1070,7 +1087,7 @@ bool D1Tileset::change |= copyLimitedUpperCathedralMicro(int src, int dst, int x
     return change;
 }
 
-bool D1Tileset::change |= copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, const CelMicro &micros)
+bool D1Tileset::change |= copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro &micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1097,7 +1114,7 @@ bool D1Tileset::change |= copyLimitedLowerCathedralMicro(int src, int dst, int x
     return change;
 }
 
-bool D1Tileset::shiftCathedralMicrosDown(int m0, int m1, const CelMicro &micros)
+bool D1Tileset::shiftCathedralMicrosDown(int m0, int m1, int blockSize, const CelMicro &micros)
 {
     bool change = false;
     for (int i = m0; i < m1; i++) {
@@ -1412,401 +1429,408 @@ void D1Tileset::patchTownCathedral(bool silent)
         if (frame == nullptr) {
             return false;
         }
+    }
 
-        change = false;
-        // draw extra line to each frame
-        // 807[12]
-        for (int i = 0; i < 1; i++) {
-            for (int sx = 0; sx < MICRO_WIDTH; sx++) {
-                int y = MICRO_HEIGHT / 2 - sx / 2;
-                int x = sx;
-                change |= frame->setPixel(x, y, frame->getPixel(x, y + 6));
-            }
+    bool change = false;
+    // draw extra line to each frame
+    // 807[12]
+    {
+        const CelMicro &micro = micros[0];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        for (int sx = 0; sx < MICRO_WIDTH; sx++) {
+            int y = MICRO_HEIGHT / 2 - sx / 2;
+            int x = sx;
+            change |= frame->setPixel(x, y, frame->getPixel(x, y + 6));
         }
-        // 805[12]
-        for (int i = 1; i < 2; i++) {
-            for (int sx = 0; sx < MICRO_WIDTH - 4; sx++) {
-                int y = MICRO_HEIGHT / 2 - sx / 2;
-                int x = sx;
-                change |= frame->setPixel(x, y, frame->getPixel(x + 4, y + 4));
-            }
-            for (int sx = MICRO_WIDTH - 4; sx < MICRO_WIDTH; sx++) {
-                int y = MICRO_HEIGHT / 2 - sx / 2;
-                int x = sx;
-                change |= frame->setPixel(x, y, frame->getPixel(x, y + 2));
-            }
+    }
+    // 805[12]
+    {
+        const CelMicro &micro = micros[1];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        for (int sx = 0; sx < MICRO_WIDTH - 4; sx++) {
+            int y = MICRO_HEIGHT / 2 - sx / 2;
+            int x = sx;
+            change |= frame->setPixel(x, y, frame->getPixel(x + 4, y + 4));
         }
-        // 805[13]
-        for (int i = 2; i < 3; i++) {
-            for (int sx = 0; sx < 20; sx++) {
-                int y = 1 + sx / 2;
-                int x = sx;
-                change |= frame->setPixel(x, y, frame->getPixel(x, y + 1));
-            }
-            for (int sx = 20; sx < MICRO_WIDTH; sx++) {
-                int y = 1 + sx / 2;
-                int x = sx;
-                change |= frame->setPixel(x, y, frame->getPixel(x - 12, y - 6));
-            }
+        for (int sx = MICRO_WIDTH - 4; sx < MICRO_WIDTH; sx++) {
+            int y = MICRO_HEIGHT / 2 - sx / 2;
+            int x = sx;
+            change |= frame->setPixel(x, y, frame->getPixel(x, y + 2));
         }
-        // 806[13]
-        for (int i = 130; i < 131; i++) {
-            const CelMicro &microSrc = micros[i - 1];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            if (frameSrc == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                int y = 1 + x / 2;
-                change |= frame->setPixel(x, y, frameSrc->getPixel(x, y));
-            }
+    }
+    // 805[13]
+    {
+        const CelMicro &micro = micros[2];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        for (int sx = 0; sx < 20; sx++) {
+            int y = 1 + sx / 2;
+            int x = sx;
+            change |= frame->setPixel(x, y, frame->getPixel(x, y + 1));
         }
-        // copy lower half 811[0] to 727[9]
-        change |= copyLowerCathedralMicro(5, 4, micros);
-        // shift 811[2..] by half
-        change |= shiftCathedralMicrosDown(5, 9, micros);
-        // copy 728[9] to 716[13]
-        // copy 728[7] to 716[11]
-        for (int i = 11; i < 13; i++) {
-            const CelMicro &microDst = micros[i - 2];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-            D1GfxFrame *frameDst = mf.second;
-            if (frameDst == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    if (!pixel.isTransparent())
-                        change |= frameDst->setPixel(x, y, pixel);
-                }
-            }
+        for (int sx = 20; sx < MICRO_WIDTH; sx++) {
+            int y = 1 + sx / 2;
+            int x = sx;
+            change |= frame->setPixel(x, y, frame->getPixel(x - 12, y - 6));
         }
-        // copy lower half of 812[0] to 716[13]
-        change |= copyLowerCathedralMicro(14, 9, TRANS_COLOR, DRAW_HEIGHT);
-        // copy upper half of 812[0] to 811[1]
-        change |= copyUpperCathedralMicro(14, 13, micros);
+    }
+    // 806[13]
+    {
+        const CelMicro &micro = micros[130];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        const CelMicro &microSrc = micros[129];
+        std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+        D1GfxFrame *frameSrc = mf.second;
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            int y = 1 + x / 2;
+            change |= frame->setPixel(x, y, frameSrc->getPixel(x, y));
+        }
+    }
+    // copy lower half 811[0] to 727[9]
+    change |= copyLowerCathedralMicro(5, 4, blockSize, micros);
+    // shift 811[2..] by half
+    change |= shiftCathedralMicrosDown(5, 9, blockSize, micros);
+    // copy 728[9] to 716[13]
+    // copy 728[7] to 716[11]
+    for (int i = 11; i < 13; i++) {
+        const CelMicro &micro = micros[i];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
 
-        // copy lower half of 809[0] to 811[1]
-        change |= copyLowerCathedralMicro(15, 13, micros);
-        // shift 809[2..] by half
-        change |= shiftCathedralMicrosDown(15, 19, micros);
-        // copy lower half of 818[0] to 719[13]
-        change |= copyLowerCathedralMicro(20, 19, micros);
-        // copy upper half of 818[12] to 838[1]
-        change |= copyUpperCathedralMicro(26, 60, micros);
-        // shift 818[2..] by half
-        change |= shiftCathedralMicrosDown(20, 27, micros);
-        // copy lower half of 810[1] to 719[12]
-        change |= copyLowerCathedralMicro(28, 27, micros);
-        // shift 810[3..] by half
-        change |= shiftCathedralMicrosDown(28, 33, micros);
-        // copy lower half of 812[1] to 721[12]
-        change |= copyLowerCathedralMicro(35, 33, micros);
-        // copy upper half of 812[1] to 810[0]
-        change |= copyUpperCathedralMicro(35, 34, micros);
+        const CelMicro &microDst = micros[i - 2];
+        std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+        D1GfxFrame *frameDst = mf.second;
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (!pixel.isTransparent())
+                    change |= frameDst->setPixel(x, y, pixel);
+            }
+        }
+    }
+    // copy lower half of 812[0] to 716[13]
+    change |= copyLowerCathedralMicro(14, 9, blockSize, micros);
+    // copy upper half of 812[0] to 811[1]
+    change |= copyUpperCathedralMicro(14, 13, blockSize, micros);
 
-        // copy lower half of 809[1] to 810[0]
-        change |= copyLowerCathedralMicro(36, 34, micros);
-        // shift 809[3..] by half
-        change |= shiftCathedralMicrosDown(36, 40, micros);
-        // copy lower half of 818[1] to 819[0]
-        change |= copyLowerCathedralMicro(42, 40, micros);
-        // copy upper half of 818[1] to 816[0]
-        change |= copyUpperCathedralMicro(42, 41, micros);
-        // copy lower half of 817[0] to 819[1]
-        change |= copyLowerCathedralMicro(45, 43, micros);
-        // copy upper half of 817[0] to 816[1]
-        change |= copyUpperCathedralMicro(45, 44, micros);
-        // copy lower half of 837[1] to 816[12]
-        change |= copyLowerCathedralMicro(48, 46, micros);
-        // copy upper half of 837[5] to 846[0]
-        change |= copyUpperCathedralMicro(50, 47, micros);
-        // copy lower half of 845[1] to 846[0]
-        change |= copyLowerCathedralMicro(52, 47, micros);
-        // copy upper half of 845[1] to 843[0]
-        change |= copyUpperCathedralMicro(52, 51, micros);
-        // shift 837[3..] by half
-        change |= shiftCathedralMicrosDown(48, 51, micros);
-        // copy lower half of 841[0] to 816[13]
-        change |= copyLowerCathedralMicro(57, 53, micros);
-        // copy lower half of 844[0] to 846[1]
-        change |= copyLowerCathedralMicro(56, 54, micros);
-        // copy upper half of 844[0] to 843[1]
-        change |= copyUpperCathedralMicro(56, 55, micros);
-        // copy upper half of 841[4] to 846[1]
-        change |= copyUpperCathedralMicro(59, 54, micros);
-        // shift 841[2..] by half
-        change |= shiftCathedralMicrosDown(57, 60, micros);
-        // mask 836[1] and 838[1]
-        for (int i = 60; i < 62; i++) {
-            for (int x = 0; x < 10; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
+    // copy lower half of 809[0] to 811[1]
+    change |= copyLowerCathedralMicro(15, 13, blockSize, micros);
+    // shift 809[2..] by half
+    change |= shiftCathedralMicrosDown(15, 19, blockSize, micros);
+    // copy lower half of 818[0] to 719[13]
+    change |= copyLowerCathedralMicro(20, 19, blockSize, micros);
+    // copy upper half of 818[12] to 838[1]
+    change |= copyUpperCathedralMicro(26, 60, blockSize, micros);
+    // shift 818[2..] by half
+    change |= shiftCathedralMicrosDown(20, 27, blockSize, micros);
+    // copy lower half of 810[1] to 719[12]
+    change |= copyLowerCathedralMicro(28, 27, blockSize, micros);
+    // shift 810[3..] by half
+    change |= shiftCathedralMicrosDown(28, 33, blockSize, micros);
+    // copy lower half of 812[1] to 721[12]
+    change |= copyLowerCathedralMicro(35, 33, blockSize, micros);
+    // copy upper half of 812[1] to 810[0]
+    change |= copyUpperCathedralMicro(35, 34, blockSize, micros);
+
+    // copy lower half of 809[1] to 810[0]
+    change |= copyLowerCathedralMicro(36, 34, blockSize, micros);
+    // shift 809[3..] by half
+    change |= shiftCathedralMicrosDown(36, 40, blockSize, micros);
+    // copy lower half of 818[1] to 819[0]
+    change |= copyLowerCathedralMicro(42, 40, blockSize, micros);
+    // copy upper half of 818[1] to 816[0]
+    change |= copyUpperCathedralMicro(42, 41, blockSize, micros);
+    // copy lower half of 817[0] to 819[1]
+    change |= copyLowerCathedralMicro(45, 43, blockSize, micros);
+    // copy upper half of 817[0] to 816[1]
+    change |= copyUpperCathedralMicro(45, 44, blockSize, micros);
+    // copy lower half of 837[1] to 816[12]
+    change |= copyLowerCathedralMicro(48, 46, blockSize, micros);
+    // copy upper half of 837[5] to 846[0]
+    change |= copyUpperCathedralMicro(50, 47, blockSize, micros);
+    // copy lower half of 845[1] to 846[0]
+    change |= copyLowerCathedralMicro(52, 47, blockSize, micros);
+    // copy upper half of 845[1] to 843[0]
+    change |= copyUpperCathedralMicro(52, 51, blockSize, micros);
+    // shift 837[3..] by half
+    change |= shiftCathedralMicrosDown(48, 51, blockSize, micros);
+    // copy lower half of 841[0] to 816[13]
+    change |= copyLowerCathedralMicro(57, 53, blockSize, micros);
+    // copy lower half of 844[0] to 846[1]
+    change |= copyLowerCathedralMicro(56, 54, blockSize, micros);
+    // copy upper half of 844[0] to 843[1]
+    change |= copyUpperCathedralMicro(56, 55, blockSize, micros);
+    // copy upper half of 841[4] to 846[1]
+    change |= copyUpperCathedralMicro(59, 54, blockSize, micros);
+    // shift 841[2..] by half
+    change |= shiftCathedralMicrosDown(57, 60, blockSize, micros);
+    // mask 836[1] and 838[1]
+    change |= maskMicro(60, 0, 10, 0, MICRO_HEIGHT, blockSize, micros);
+    change |= maskMicro(61, 0, 10, 0, MICRO_HEIGHT, blockSize, micros);
+    // copy lower half of 837[0] to 838[1]
+    change |= copyLimitedLowerCathedralMicro(63, 60, 10, MICRO_WIDTH, blockSize, micros);
+    // copy upper half of 837[0] to 836[1]
+    change |= copyLimitedUpperCathedralMicro(63, 61, 10, MICRO_WIDTH, blockSize, micros);
+    // copy part of lower half of 845[0] to 836[5]
+    change |= copyLimitedLowerCathedralMicro(64, 62, 10, MICRO_WIDTH, blockSize, micros);
+    // mask 845[0]
+    change |= maskMicro(64, 0, 10, 0, MICRO_HEIGHT, blockSize, micros);
+    // mask 845[4]
+    change |= maskMicro(66, 0, 10, 0, MICRO_HEIGHT, blockSize, micros);
+    // shift 845[2..] by half
+    change |= shiftCathedralMicrosDown(64, 69, blockSize, micros);
+    // copy lower half of 844[1] to 839[4]
+    change |= copyLowerCathedralMicro(70, 69, blockSize, micros);
+    // shift 844[3..] by half
+    change |= shiftCathedralMicrosDown(70, 76, blockSize, micros);
+    // copy lower half of 817[1] to 805[12]
+    change |= copyLowerCathedralMicro(79, 1, blockSize, micros);
+    // copy lower half of 841[1] to 842[0]
+    change |= copyLowerCathedralMicro(78, 77, blockSize, micros);
+    // copy upper half of 841[1] to 839[0]
+    change |= copyUpperCathedralMicro(78, 76, blockSize, micros);
+    // copy upper half of 817[13] to 842[0]
+    change |= copyUpperCathedralMicro(85, 77, blockSize, micros);
+    // shift 817[3..] by half
+    change |= shiftCathedralMicrosDown(79, 86, blockSize, micros);
+    // copy lower half of 840[0] to 842[1]
+    change |= copyLowerCathedralMicro(88, 86, blockSize, micros);
+    // copy upper half of 840[0] to 839[1]
+    change |= copyUpperCathedralMicro(88, 87, blockSize, micros);
+    // copy lower half of 848[0] to 839[5]
+    change |= copyLowerCathedralMicro(90, 89, blockSize, micros);
+    // shift 848[2..] by half
+    change |= shiftCathedralMicrosDown(90, 96, blockSize, micros);
+    // mask 847[0] and 849[0]
+    change |= maskMicro(96, 30, MICRO_WIDTH, 0, MICRO_HEIGHT, blockSize, micros);
+    change |= maskMicro(97, 30, MICRO_WIDTH, 0, MICRO_HEIGHT, blockSize, micros);
+    // copy lower half of 848[1] to 849[0]
+    change |= copyLimitedLowerCathedralMicro(98, 96, 0, 30, blockSize, micros);
+    // copy upper half of 848[1] to 847[0]
+    change |= copyLimitedUpperCathedralMicro(98, 97, 0, 30, blockSize, micros);
+
+    // copy lower half of 840[0] to 559[12]
+    change |= copyLowerCathedralMicro(100, 99, blockSize, micros);
+    // copy upper half of 840[5] to 849[0]
+    change |= copyUpperCathedralMicro(102, 96, blockSize, micros);
+    // shift 840[3..] by half
+    change |= shiftCathedralMicrosDown(100, 103, blockSize, micros);
+    // copy upper half of 822[12] to 842[1]
+    change |= copyUpperCathedralMicro(109, 86, blockSize, micros);
+    // copy lower half of 822[0] to 805[13]
+    change |= copyLowerCathedralMicro(103, 2, blockSize, micros);
+    // shift 822[2..] by half
+    change |= shiftCathedralMicrosDown(103, 110, blockSize, micros);
+    // copy lower half of 821[0] to 823[1]
+    change |= copyLowerCathedralMicro(112, 110, blockSize, micros);
+    // copy upper half of 821[0] to 820[1]
+    change |= copyUpperCathedralMicro(112, 111, blockSize, micros);
+    // copy lower half of 826[0] to 820[1]
+    change |= copyLowerCathedralMicro(113, 111, blockSize, micros);
+    // shift 826[2..] by half
+    change |= shiftCathedralMicrosDown(113, 120, blockSize, micros);
+    // copy lower half of 822[1] to 823[0]
+    change |= copyLowerCathedralMicro(122, 120, blockSize, micros);
+    // copy upper half of 822[1] to 820[0]
+    change |= copyUpperCathedralMicro(122, 121, blockSize, micros);
+    // copy upper half of 806[13] to 823[0]
+    change |= copyUpperCathedralMicro(130, 120, blockSize, micros);
+    // copy lower half of 806[1] to 781[0]
+    change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
+    // shift 806[3..] by half
+    change |= shiftCathedralMicrosDown(124, 131, blockSize, micros);
+    // copy upper half of 787[12] to 823[1]
+    change |= copyUpperCathedralMicro(139, 110, blockSize, micros);
+    // copy lower half of 787[0] to 781[1]
+    change |= copyLowerCathedralMicro(133, 132, blockSize, micros);
+    // shift 787[2..] by half
+    change |= shiftCathedralMicrosDown(133, 140, blockSize, micros);
+    // copy lower half of 826[1] to 827[0]
+    change |= copyLowerCathedralMicro(142, 140, blockSize, micros);
+    // copy upper half of 826[1] to 824[0]
+    change |= copyUpperCathedralMicro(142, 141, blockSize, micros);
+    // copy lower half of 821[1] to 785[12]
+    change |= copyLowerCathedralMicro(144, 143, blockSize, micros);
+    // copy upper half of 821[1] to 827[0]
+    change |= copyUpperCathedralMicro(144, 140, blockSize, micros);
+    // copy lower half of 825[0] to 827[1]
+    change |= copyLowerCathedralMicro(147, 145, blockSize, micros);
+    // copy upper half of 825[0] to 824[1]
+    change |= copyUpperCathedralMicro(147, 146, blockSize, micros);
+    // copy upper half of 791[12] to 827[1]
+    change |= copyUpperCathedralMicro(155, 145, blockSize, micros);
+    // copy lower half of 791[0] to 785[1]
+    change |= copyLowerCathedralMicro(149, 148, blockSize, micros);
+    // copy lower half of 830[0] to 824[1]
+    change |= copyLowerCathedralMicro(156, 146, blockSize, micros);
+    // shift 791[2..] by half
+    change |= shiftCathedralMicrosDown(149, 156, blockSize, micros);
+    // shift 830[2..] by half
+    change |= shiftCathedralMicrosDown(156, 163, blockSize, micros);
+    // copy lower half of 825[1] to 789[12]
+    change |= copyLowerCathedralMicro(165, 163, blockSize, micros);
+    // copy upper half of 825[1] to 831[0]
+    change |= copyUpperCathedralMicro(165, 164, blockSize, micros);
+    // copy lower half of 830[1] to 831[0]
+    change |= copyLowerCathedralMicro(167, 164, blockSize, micros);
+    // copy upper half of 830[1] to 828[0]
+    change |= copyUpperCathedralMicro(167, 166, blockSize, micros);
+    // copy lower half of 829[0] to 831[1]
+    change |= copyLowerCathedralMicro(170, 168, blockSize, micros);
+    // copy upper half of 829[0] to 828[1]
+    change |= copyUpperCathedralMicro(170, 169, blockSize, micros);
+    // copy lower half of 834[0] to 828[1]
+    change |= copyLowerCathedralMicro(171, 169, blockSize, micros);
+    // shift 834[2..] by half
+    change |= shiftCathedralMicrosDown(171, 178, blockSize, micros);
+    // copy lower half of 834[1] to 835[0]
+    change |= copyLowerCathedralMicro(180, 178, blockSize, micros);
+    // copy upper half of 834[1] to 832[0]
+    change |= copyUpperCathedralMicro(180, 179, blockSize, micros);
+    // copy lower half of 829[1] to 793[12]
+    change |= copyLowerCathedralMicro(182, 181, blockSize, micros);
+    // copy upper half of 829[1] to 835[0]
+    change |= copyUpperCathedralMicro(182, 178, blockSize, micros);
+    // copy upper half of 795[12] to 831[1]
+    change |= copyUpperCathedralMicro(190, 168, blockSize, micros);
+    // copy lower half of 795[0] to 789[1]
+    change |= copyLowerCathedralMicro(184, 183, blockSize, micros);
+    // shift 795[2..] by half
+    change |= shiftCathedralMicrosDown(184, 191, blockSize, micros);
+    // copy lower half of 833[0] to 835[1]
+    change |= copyLowerCathedralMicro(193, 191, blockSize, micros);
+    // copy upper half of 833[0] to 832[1]
+    change |= copyUpperCathedralMicro(193, 192, blockSize, micros);
+    // copy lower half of 833[1] to 797[12]
+    change |= copyLowerCathedralMicro(195, 194, blockSize, micros);
+    // shift 833[3..] by half
+    change |= shiftCathedralMicrosDown(195, 200, blockSize, micros);
+    // copy upper half of 799[12] to 835[1]
+    change |= copyUpperCathedralMicro(207, 191, blockSize, micros);
+    // copy lower half of 799[0] to 793[1]
+    change |= copyLowerCathedralMicro(201, 200, blockSize, micros);
+    // shift 799[2..] by half
+    change |= shiftCathedralMicrosDown(201, 208, blockSize, micros);
+
+    // copy lower half of 806[0] to 808[1]
+    change |= copyLowerCathedralMicro(217, 215, blockSize, micros);
+    // copy upper half of 806[0] to 805[1]
+    change |= copyUpperCathedralMicro(217, 216, blockSize, micros);
+    // copy lower half of 807[1] to 808[0]
+    change |= copyLowerCathedralMicro(220, 218, blockSize, micros);
+    // copy upper half of 807[1] to 805[0]
+    change |= copyUpperCathedralMicro(220, 219, blockSize, micros);
+    // copy part of lower half of 803[0] to 797[1]
+    change |= copyLimitedLowerCathedralMicro(210, 208, 0, 17, blockSize, micros);
+    // copy part of upper half of 803[0] to 815[1]
+    change |= copyLimitedUpperCathedralMicro(210, 209, 0, 17, blockSize, micros);
+
+    // copy part of lower half of 814[0] to 815[1]
+    change |= copyLimitedLowerCathedralMicro(211, 209, 0, 16, blockSize, micros);
+    // copy part of upper half of 814[0] to 813[1]
+    change |= copyLimitedUpperCathedralMicro(211, 212, 0, 16, blockSize, micros);
+
+    // copy part of lower half of 813[1] to 814[0]
+    change |= copyLimitedLowerCathedralMicro(212, 211, 16, MICRO_WIDTH, blockSize, micros);
+    // copy part of upper half of 813[1] to 799[12]
+    for (int i = 212; i < 213; i++) {
+        const CelMicro &micro = micros[i];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+
+        const CelMicro &microDst = micros[i - 5];
+        std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+        D1GfxFrame *frameDst = mf.second;
+        if (frameDst == nullptr) {
+            return false;
+        }
+        for (int x = 16; x < MICRO_WIDTH; x++) {
+            for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                if (y <= 21 - x)
+                    continue;
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (!pixel.isTransparent()) {
+                    change |= frameDst->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
-        // copy lower half of 837[0] to 838[1]
-        change |= copyLimitedLowerCathedralMicro(63, 60, 10, MICRO_WIDTH, micros);
-        // copy upper half of 837[0] to 836[1]
-        change |= copyLimitedUpperCathedralMicro(63, 61, 10, MICRO_WIDTH, micros);
-        // copy part of lower half of 845[0] to 836[5]
-        change |= copyLimitedLowerCathedralMicro(64, 62, 10, MICRO_WIDTH, micros);
-        // mask 845[0]
-        for (int i = 64; i < 65; i++) {
-            for (int x = 0; x < 10; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
+    }
+    // copy part of lower half of 813[3] to 799[12]
+    // copy part of upper half of 813[3] to 795[12]
+    for (int i = 213; i < 214; i++) {
+        const CelMicro &micro = micros[i];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+
+        const CelMicro &microDst1 = micros[i - 6];
+        std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microDst1.subtileIndex, blockSize, microDst1.microIndex);
+        D1GfxFrame *frameDst1 = mf1.second;
+        if (frameDst1 == nullptr) {
+            return false;
+        }
+        const CelMicro &microDst2 = micros[i - 23];
+        std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microDst2.subtileIndex, blockSize, microDst2.microIndex);
+        D1GfxFrame *frameDst2 = mf2.second;
+        if (frameDst2 == nullptr) {
+            return false;
+        }
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                bool replace = false;
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                quint8 color = pixel.getPaletteIndex();
+                if (y <= 8 + x) {
+                    replace = y <= 3 + x || x > 20;
+                    if (y > 3 + x) {
+                        replace = !(color == 13 || color == 20 || color == 22 || color == 26 || color == 31 || color == 40 || color == 43 || color == 48 || color == 52 || color == 59 || color == 75 || color == 162);
+                    }
+                }
+                if (replace) {
+                    if (y >= MICRO_HEIGHT / 2)
+                        change |= frameDst1->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
+                    else
+                        change |= frameDst2->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
-        // mask 845[4]
-        for (int i = 66; i < 67; i++) {
-            for (int x = 0; x < 10; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
+    }
+
+    // copy lower half of 813[5] to 795[12]
+    change |= copyLowerCathedralMicro(214, 190, blockSize, micros);
+
+    // copy part of 815[1] to 791[12]
+    for (int i = 209; i < 210; i++) {
+        const CelMicro &micro = micros[i];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+
+        const CelMicro &microDst = micros[i - 54];
+        std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+        D1GfxFrame *frameDst = mf.second;
+        if (frameDst == nullptr) {
+            return false;
+        }
+        for (int x = 17; x < MICRO_WIDTH; x++) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (!pixel.isTransparent()) {
+                    change |= frameDst->setPixel(x, y, pixel);
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
-        // shift 845[2..] by half
-        change |= shiftCathedralMicrosDown(64, 69, micros);
-        // copy lower half of 844[1] to 839[4]
-        change |= copyLowerCathedralMicro(70, 69, micros);
-        // shift 844[3..] by half
-        change |= shiftCathedralMicrosDown(70, 76, micros);
-        // copy lower half of 817[1] to 805[12]
-        change |= copyLowerCathedralMicro(79, 1, micros);
-        // copy lower half of 841[1] to 842[0]
-        change |= copyLowerCathedralMicro(78, 77, micros);
-        // copy upper half of 841[1] to 839[0]
-        change |= copyUpperCathedralMicro(78, 76, micros);
-        // copy upper half of 817[13] to 842[0]
-        change |= copyUpperCathedralMicro(85, 77, micros);
-        // shift 817[3..] by half
-        change |= shiftCathedralMicrosDown(79, 86, micros);
-        // copy lower half of 840[0] to 842[1]
-        change |= copyLowerCathedralMicro(88, 86, micros);
-        // copy upper half of 840[0] to 839[1]
-        change |= copyUpperCathedralMicro(88, 87, micros);
-        // copy lower half of 848[0] to 839[5]
-        change |= copyLowerCathedralMicro(90, 89, micros);
-        // shift 848[2..] by half
-        change |= shiftCathedralMicrosDown(90, 96, micros);
-        // mask 847[0] and 849[0]
-        for (int i = 96; i < 98; i++) {
-            for (int x = 30; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        }
-        // copy lower half of 848[1] to 849[0]
-        change |= copyLimitedLowerCathedralMicro(98, 96, 0, 30, micros);
-        // copy upper half of 848[1] to 847[0]
-        change |= copyLimitedUpperCathedralMicro(98, 97, 0, 30, micros);
+    }
 
-        // copy lower half of 840[0] to 559[12]
-        change |= copyLowerCathedralMicro(100, 99, micros);
-        // copy upper half of 840[5] to 849[0]
-        change |= copyUpperCathedralMicro(102, 96, micros);
-        // shift 840[3..] by half
-        change |= shiftCathedralMicrosDown(100, 103, micros);
-        // copy upper half of 822[12] to 842[1]
-        change |= copyUpperCathedralMicro(109, 86, micros);
-        // copy lower half of 822[0] to 805[13]
-        change |= copyLowerCathedralMicro(103, 2, micros);
-        // shift 822[2..] by half
-        change |= shiftCathedralMicrosDown(103, 110, micros);
-        // copy lower half of 821[0] to 823[1]
-        change |= copyLowerCathedralMicro(112, 110, micros);
-        // copy upper half of 821[0] to 820[1]
-        change |= copyUpperCathedralMicro(112, 111, micros);
-        // copy lower half of 826[0] to 820[1]
-        change |= copyLowerCathedralMicro(113, 111, micros);
-        // shift 826[2..] by half
-        change |= shiftCathedralMicrosDown(113, 120, micros);
-        // copy lower half of 822[1] to 823[0]
-        change |= copyLowerCathedralMicro(122, 120, micros);
-        // copy upper half of 822[1] to 820[0]
-        change |= copyUpperCathedralMicro(122, 121, micros);
-        // copy upper half of 806[13] to 823[0]
-        change |= copyUpperCathedralMicro(130, 120, micros);
-        // copy lower half of 806[1] to 781[0]
-        change |= copyLowerCathedralMicro(124, 123, micros);
-        // shift 806[3..] by half
-        change |= shiftCathedralMicrosDown(124, 131, micros);
-        // copy upper half of 787[12] to 823[1]
-        change |= copyUpperCathedralMicro(139, 110, micros);
-        // copy lower half of 787[0] to 781[1]
-        change |= copyLowerCathedralMicro(133, 132, micros);
-        // shift 787[2..] by half
-        change |= shiftCathedralMicrosDown(133, 140, micros);
-        // copy lower half of 826[1] to 827[0]
-        change |= copyLowerCathedralMicro(142, 140, micros);
-        // copy upper half of 826[1] to 824[0]
-        change |= copyUpperCathedralMicro(142, 141, micros);
-        // copy lower half of 821[1] to 785[12]
-        change |= copyLowerCathedralMicro(144, 143, micros);
-        // copy upper half of 821[1] to 827[0]
-        change |= copyUpperCathedralMicro(144, 140, micros);
-        // copy lower half of 825[0] to 827[1]
-        change |= copyLowerCathedralMicro(147, 145, micros);
-        // copy upper half of 825[0] to 824[1]
-        change |= copyUpperCathedralMicro(147, 146, micros);
-        // copy upper half of 791[12] to 827[1]
-        change |= copyUpperCathedralMicro(155, 145, micros);
-        // copy lower half of 791[0] to 785[1]
-        change |= copyLowerCathedralMicro(149, 148, micros);
-        // copy lower half of 830[0] to 824[1]
-        change |= copyLowerCathedralMicro(156, 146, micros);
-        // shift 791[2..] by half
-        change |= shiftCathedralMicrosDown(149, 156, micros);
-        // shift 830[2..] by half
-        change |= shiftCathedralMicrosDown(156, 163, micros);
-        // copy lower half of 825[1] to 789[12]
-        change |= copyLowerCathedralMicro(165, 163, micros);
-        // copy upper half of 825[1] to 831[0]
-        change |= copyUpperCathedralMicro(165, 164, micros);
-        // copy lower half of 830[1] to 831[0]
-        change |= copyLowerCathedralMicro(167, 164, micros);
-        // copy upper half of 830[1] to 828[0]
-        change |= copyUpperCathedralMicro(167, 166, micros);
-        // copy lower half of 829[0] to 831[1]
-        change |= copyLowerCathedralMicro(170, 168, micros);
-        // copy upper half of 829[0] to 828[1]
-        change |= copyUpperCathedralMicro(170, 169, micros);
-        // copy lower half of 834[0] to 828[1]
-        change |= copyLowerCathedralMicro(171, 169, micros);
-        // shift 834[2..] by half
-        change |= shiftCathedralMicrosDown(171, 178, micros);
-        // copy lower half of 834[1] to 835[0]
-        change |= copyLowerCathedralMicro(180, 178, micros);
-        // copy upper half of 834[1] to 832[0]
-        change |= copyUpperCathedralMicro(180, 179, micros);
-        // copy lower half of 829[1] to 793[12]
-        change |= copyLowerCathedralMicro(182, 181, micros);
-        // copy upper half of 829[1] to 835[0]
-        change |= copyUpperCathedralMicro(182, 178, micros);
-        // copy upper half of 795[12] to 831[1]
-        change |= copyUpperCathedralMicro(190, 168, micros);
-        // copy lower half of 795[0] to 789[1]
-        change |= copyLowerCathedralMicro(184, 183, micros);
-        // shift 795[2..] by half
-        change |= shiftCathedralMicrosDown(184, 191, micros);
-        // copy lower half of 833[0] to 835[1]
-        change |= copyLowerCathedralMicro(193, 191, micros);
-        // copy upper half of 833[0] to 832[1]
-        change |= copyUpperCathedralMicro(193, 192, micros);
-        // copy lower half of 833[1] to 797[12]
-        change |= copyLowerCathedralMicro(195, 194, micros);
-        // shift 833[3..] by half
-        change |= shiftCathedralMicrosDown(195, 200, micros);
-        // copy upper half of 799[12] to 835[1]
-        change |= copyUpperCathedralMicro(207, 191, micros);
-        // copy lower half of 799[0] to 793[1]
-        change |= copyLowerCathedralMicro(201, 200, micros);
-        // shift 799[2..] by half
-        change |= shiftCathedralMicrosDown(201, 208, micros);
-
-        // copy lower half of 806[0] to 808[1]
-        change |= copyLowerCathedralMicro(217, 215, micros);
-        // copy upper half of 806[0] to 805[1]
-        change |= copyUpperCathedralMicro(217, 216, micros);
-        // copy lower half of 807[1] to 808[0]
-        change |= copyLowerCathedralMicro(220, 218, micros);
-        // copy upper half of 807[1] to 805[0]
-        change |= copyUpperCathedralMicro(220, 219, micros);
-        // copy part of lower half of 803[0] to 797[1]
-        change |= copyLimitedLowerCathedralMicro(210, 208, 0, 17, micros);
-        // copy part of upper half of 803[0] to 815[1]
-        change |= copyLimitedUpperCathedralMicro(210, 209, 0, 17, micros);
-
-        // copy part of lower half of 814[0] to 815[1]
-        change |= copyLimitedLowerCathedralMicro(211, 209, 0, 16, micros);
-        // copy part of upper half of 814[0] to 813[1]
-        change |= copyLimitedUpperCathedralMicro(211, 212, 0, 16, micros);
-
-        // copy part of lower half of 813[1] to 814[0]
-        change |= copyLimitedLowerCathedralMicro(212, 211, 16, MICRO_WIDTH, micros);
-        // copy part of upper half of 813[1] to 799[12]
-        for (int i = 212; i < 213; i++) {
-            const CelMicro &microDst = micros[i - 5];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-            D1GfxFrame *frameDst = mf.second;
-            if (frameDst == nullptr) {
-                return false;
-            }
-            for (int x = 16; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-                    if (y <= 21 - x)
-                        continue;
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    if (!pixel.isTransparent()) {
-                        change |= frameDst->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
-                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                    }
-                }
-            }
-        }
-        // copy part of lower half of 813[3] to 799[12]
-        // copy part of upper half of 813[3] to 795[12]
-        for (int i = 213; i < 214; i++) {
-            const CelMicro &microDst1 = micros[i - 6];
-            std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microDst1.subtileIndex, blockSize, microDst1.microIndex);
-            D1GfxFrame *frameDst1 = mf1.second;
-            if (frameDst1 == nullptr) {
-                return false;
-            }
-            const CelMicro &microDst2 = micros[i - 23];
-            std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microDst2.subtileIndex, blockSize, microDst2.microIndex);
-            D1GfxFrame *frameDst2 = mf2.second;
-            if (frameDst2 == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    bool replace = false;
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    quint8 color = pixel.getPaletteIndex();
-                    if (y <= 8 + x) {
-                        replace = y <= 3 + x || x > 20;
-                        if (y > 3 + x) {
-                            replace = !(color == 13 || color == 20 || color == 22 || color == 26 || color == 31 || color == 40 || color == 43 || color == 48 || color == 52 || color == 59 || color == 75 || color == 162);
-                        }
-                    }
-                    if (replace) {
-                        if (y >= MICRO_HEIGHT / 2)
-                            change |= frameDst1->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
-                        else
-                            change |= frameDst2->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
-                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                    }
-                }
-            }
-        }
-
-        // copy lower half of 813[5] to 795[12]
-        change |= copyLowerCathedralMicro(214, 190, micros);
-
-        // copy part of 815[1] to 791[12]
-        for (int i = 209; i < 210; i++) {
-            const CelMicro &microDst = micros[i - 54];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-            D1GfxFrame *frameDst = mf.second;
-            if (frameDst == nullptr) {
-                return false;
-            }
-            for (int x = 17; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    if (!pixel.isTransparent()) {
-                        change |= frameDst->setPixel(x, y, pixel);
-                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                    }
-                }
-            }
-        }
+    for (int i = 0; i < lengthof(micros); i++) {
+        const CelMicro &micro = micros[i];
+        if (micro.subtileIndex < 0)
+            continue;
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
@@ -1818,14 +1842,11 @@ void D1Tileset::patchTownCathedral(bool silent)
                 change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
             }
         }
-        if (change) {
-            this->gfx->setModified();
-            if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
-            }
-        }
     }
-    return true;
+    if (change) {
+        this->gfx->setModified();
+    }
+    return change;
 }
 
 // should run only once
