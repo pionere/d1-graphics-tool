@@ -989,7 +989,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     }
 }
 
-bool D1Tileset::maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const CelMicro &micros)
+bool D1Tileset::maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &micro = micros[idx];
@@ -1006,7 +1006,7 @@ bool D1Tileset::maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize
     }
     return change;
 }
-bool D1Tileset::copyUpperCathedralMicro(int src, int dst, int blockSize, const CelMicro &micros)
+bool D1Tileset::copyUpperCathedralMicro(int src, int dst, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1033,7 +1033,7 @@ bool D1Tileset::copyUpperCathedralMicro(int src, int dst, int blockSize, const C
     return change;
 }
 
-bool D1Tileset::copyLowerCathedralMicro(int src, int dst, int blockSize, const CelMicro &micros)
+bool D1Tileset::copyLowerCathedralMicro(int src, int dst, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1060,7 +1060,7 @@ bool D1Tileset::copyLowerCathedralMicro(int src, int dst, int blockSize, const C
     return change;
 }
 
-bool D1Tileset::copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro &micros)
+bool D1Tileset::copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1087,7 +1087,7 @@ bool D1Tileset::copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1,
     return change;
 }
 
-bool D1Tileset::change |= copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro &micros)
+bool D1Tileset::copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1114,7 +1114,7 @@ bool D1Tileset::change |= copyLimitedLowerCathedralMicro(int src, int dst, int x
     return change;
 }
 
-bool D1Tileset::shiftCathedralMicrosDown(int m0, int m1, int blockSize, const CelMicro &micros)
+bool D1Tileset::shiftCathedralMicrosDown(int m0, int m1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     for (int i = m0; i < m1; i++) {
@@ -1155,7 +1155,7 @@ bool D1Tileset::shiftCathedralMicrosDown(int m0, int m1, int blockSize, const Ce
     return change;
 }
 
-void D1Tileset::patchTownCathedral(bool silent)
+bool D1Tileset::patchTownCathedral(bool silent)
 {
     const CelMicro micros[] = {
 /*  0 */{ 807 - 1, 12, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -1411,6 +1411,7 @@ void D1Tileset::patchTownCathedral(bool silent)
 /*220 */{ 807 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 546
     };
 
+    constexpr unsigned blockSize = BLOCK_SIZE_TOWN;
     {
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(847 - 1, blockSize, 2);
         D1GfxFrame *frame = microFrame.second;
@@ -1419,7 +1420,6 @@ void D1Tileset::patchTownCathedral(bool silent)
         }
     }
 
-    constexpr unsigned blockSize = BLOCK_SIZE_TOWN;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
         if (micro.subtileIndex < 0)
