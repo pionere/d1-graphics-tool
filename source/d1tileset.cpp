@@ -832,7 +832,7 @@ static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int s
     }*/
 }
 
-typedef struct {
+typedef struct _CelMicro {
     int subtileIndex;
     unsigned microIndex;
     D1CEL_FRAME_TYPE res_encoding;
@@ -1060,7 +1060,7 @@ bool D1Tileset::copyLowerCathedralMicro(int src, int dst, int blockSize, const C
     return change;
 }
 
-bool D1Tileset::change |= copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro &micros)
+bool D1Tileset::copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro &micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
