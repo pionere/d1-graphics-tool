@@ -781,7 +781,7 @@ static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int s
     }
     unsigned srcFrameRef = srcFrameReferences[srcIndex];
     if (srcFrameRef == 0) {
-        dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(srcIndex + 1).arg(srcSubtileIndex + 1);
+        dProgressErr() << QApplication::tr("Frame %1(%2) of Subtile %3 is empty.").arg(srcIndex + 1).arg(srcMicroIndex).arg(srcSubtileIndex + 1);
         return;
     }
 
@@ -1639,7 +1639,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
     // copy upper half of 806[13] to 823[0]
     change |= copyUpperCathedralMicro(130, 120, blockSize, micros);
     // copy lower half of 806[1] to 781[0]
-    change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
+//    change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
     // shift 806[3..] by half
     change |= shiftCathedralMicrosDown(124, 131, blockSize, micros);
     // copy upper half of 787[12] to 823[1]
@@ -4556,7 +4556,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(809, 8, 809, 1); // 548[1]
         MoveMcr(809, 6, 810, 0); // 549[0] -> 548[7]
 
-        MoveMcr(781, 14, 806, 13); // 545 -> 528
+        // MoveMcr(781, 14, 806, 13); // 545 -> 528
         MoveMcr(781, 12, 806, 11);
         MoveMcr(781, 10, 806, 9);
         MoveMcr(781, 8, 806, 7);
