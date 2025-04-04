@@ -1639,7 +1639,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
     // copy upper half of 806[13] to 823[0]
     change |= copyUpperCathedralMicro(130, 120, blockSize, micros);
     // copy lower half of 806[1] to 781[0]
-    change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
+//    change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
     // shift 806[3..] by half
     change |= shiftCathedralMicrosDown(124, 131, blockSize, micros);
     // copy upper half of 787[12] to 823[1]
@@ -1736,12 +1736,12 @@ bool D1Tileset::patchTownCathedral(bool silent)
     // copy part of lower half of 813[1] to 814[0]
     change |= copyLimitedLowerCathedralMicro(212, 211, 16, MICRO_WIDTH, blockSize, micros);
     // copy part of upper half of 813[1] to 799[12]
-    for (int i = 212; i < 213; i++) {
-        const CelMicro &micro = micros[i];
+    {
+        const CelMicro &micro = micros[212];
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
 
-        const CelMicro &microDst = micros[i - 5];
+        const CelMicro &microDst = micros[207];
         std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
         D1GfxFrame *frameDst = mf.second;
         if (frameDst == nullptr) {
@@ -1761,18 +1761,18 @@ bool D1Tileset::patchTownCathedral(bool silent)
     }
     // copy part of lower half of 813[3] to 799[12]
     // copy part of upper half of 813[3] to 795[12]
-    for (int i = 213; i < 214; i++) {
-        const CelMicro &micro = micros[i];
+    {
+        const CelMicro &micro = micros[213];
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
 
-        const CelMicro &microDst1 = micros[i - 6];
+        const CelMicro &microDst1 = micros[207];
         std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microDst1.subtileIndex, blockSize, microDst1.microIndex);
         D1GfxFrame *frameDst1 = mf1.second;
         if (frameDst1 == nullptr) {
             return false;
         }
-        const CelMicro &microDst2 = micros[i - 23];
+        const CelMicro &microDst2 = micros[190];
         std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microDst2.subtileIndex, blockSize, microDst2.microIndex);
         D1GfxFrame *frameDst2 = mf2.second;
         if (frameDst2 == nullptr) {
@@ -1804,12 +1804,12 @@ bool D1Tileset::patchTownCathedral(bool silent)
     change |= copyLowerCathedralMicro(214, 190, blockSize, micros);
 
     // copy part of 815[1] to 791[12]
-    for (int i = 209; i < 210; i++) {
-        const CelMicro &micro = micros[i];
+    {
+        const CelMicro &micro = micros[209];
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
 
-        const CelMicro &microDst = micros[i - 54];
+        const CelMicro &microDst = micros[155];
         std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
         D1GfxFrame *frameDst = mf.second;
         if (frameDst == nullptr) {
