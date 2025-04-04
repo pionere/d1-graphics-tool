@@ -1071,7 +1071,7 @@ bool D1Tileset::copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1,
     }
     const CelMicro &microDst = micros[dst];
     std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-    D1GfxFrame *frameDst = mf.second;
+    D1GfxFrame *frameDst = mfDst.second;
     if (frameDst == nullptr) {
         return false;
     }
@@ -1098,7 +1098,7 @@ bool D1Tileset::copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1,
     }
     const CelMicro &microDst = micros[dst];
     std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-    D1GfxFrame *frameDst = mf.second;
+    D1GfxFrame *frameDst = mfDst.second;
     if (frameDst == nullptr) {
         return false;
     }
@@ -1831,6 +1831,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
         if (micro.subtileIndex < 0)
             continue;
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
