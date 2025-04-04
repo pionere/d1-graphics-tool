@@ -1639,7 +1639,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
     // copy upper half of 806[13] to 823[0]
     change |= copyUpperCathedralMicro(130, 120, blockSize, micros);
     // copy lower half of 806[1] to 781[0]
-//    change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
+    change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
     // shift 806[3..] by half
     change |= shiftCathedralMicrosDown(124, 131, blockSize, micros);
     // copy upper half of 787[12] to 823[1]
@@ -1836,12 +1836,12 @@ bool D1Tileset::patchTownCathedral(bool silent)
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
             frame->setFrameType(micro.res_encoding);
-            std::vector<FramePixel> pixels;
+            /*std::vector<FramePixel> pixels;
             D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
             for (const FramePixel &pix : pixels) {
                 D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
                 change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
-            }
+            }*/
         }
     }
     if (change) {
@@ -4457,7 +4457,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(808, 14, 805, 12);
         MoveMcr(808, 15, 805, 13);
 
-        MoveMcr(843, 14, 843, 10); // 582
+        // MoveMcr(843, 14, 843, 10); // 582
         MoveMcr(843, 12, 843, 8);
         MoveMcr(843, 10, 843, 6);
         MoveMcr(843, 8, 843, 4);
@@ -4502,7 +4502,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(847, 14, 847, 6); // 586[14]
         MoveMcr(847, 13, 847, 5); // 586[13]
         MoveMcr(847, 12, 847, 4); // 586[12]
-        MoveMcr(847, 11, 847, 3); // 586[11]
+        // MoveMcr(847, 11, 847, 3); // 586[11]
         MoveMcr(847, 10, 847, 2); // 586[10]
         HideMcr(847, 1); // 586[1]
         MoveMcr(847,  8, 847, 0); // 586[8]
@@ -4564,7 +4564,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(781, 4, 806, 3);
         MoveMcr(781, 2, 806, 1);
 
-        MoveMcr(781, 15, 787, 12); // 534 -> 528
+        // MoveMcr(781, 15, 787, 12); // 534 -> 528
         MoveMcr(781, 13, 787, 10);
         MoveMcr(781, 11, 787, 8);
         MoveMcr(781, 9, 787, 6);
