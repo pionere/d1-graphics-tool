@@ -4415,9 +4415,6 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         Blk2Mcr(510, 7);
         Blk2Mcr(510, 5);
 
-        // Blk2Mcr(728, 9);
-        Blk2Mcr(728, 7);
-
         Blk2Mcr(910, 9);
         Blk2Mcr(910, 7);
 
@@ -4589,6 +4586,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
 
         ReplaceMcr(728, 9, 716, 13); // 493[9]
         MoveMcr(728, 11, 811, 1); // 493[11]
+        Blk2Mcr(728, 7);
 
         MoveMcr(719, 15, 818, 0);
 
