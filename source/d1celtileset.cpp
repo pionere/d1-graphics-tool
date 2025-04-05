@@ -48,6 +48,20 @@ D1CEL_FRAME_TYPE guessFrameType(const QByteArray &rawFrameData)
     return D1CEL_FRAME_TYPE::TransparentSquare;
 }
 
+const char* frameTypeToStr(D1CEL_FRAME_TYPE frameType)
+{
+    const char* result = "N/A";
+    switch (frameType) {
+    case D1CEL_FRAME_TYPE::Square: result = "Square"; break;
+    case D1CEL_FRAME_TYPE::TransparentSquare: result = "Transparent square"; break;
+    case D1CEL_FRAME_TYPE::LeftTriangleSquare: result = "Left Triangle"; break;
+    case D1CEL_FRAME_TYPE::RightTriangle: result = "Right Triangle"; break;
+    case D1CEL_FRAME_TYPE::LeftTrapezoid: result = "Left Trapezoid"; break;
+    case D1CEL_FRAME_TYPE::RightTrapezoid: result = "Right Trapezoid"; break;
+    }
+    return result;
+}
+
 bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
@@ -140,7 +154,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         D1GfxFrame *frame = new D1GfxFrame();
         if (!D1CelTilesetFrame::load(*frame, frameType, celFrameRawData, &gfx.patched)) {
             quint16 frameIndex = gfx.frames.size();
-            dProgressErr() << QApplication::tr("Frame %1 is invalid (type %2 offset:%3-%4 (%5)).").arg(frameIndex + 1).arg(frameType).arg(offset.first).arg(offset.second).arg(offset.second - offset.first);
+            dProgressErr() << QApplication::tr("Frame %1 is invalid (type %2 offset:0x%3-0x%4 (%5)).").arg(frameIndex + 1).arg(frameTypeToStr(frameType)).arg(offset.first, 4, 16, '0').arg(offset.second, 4, 16, '0').arg(offset.second - offset.first);
             // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
         }
