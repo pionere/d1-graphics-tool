@@ -1640,7 +1640,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
     change |= copyUpperCathedralMicro(130, 120, blockSize, micros);
     // copy lower half of 806[1] to 781[0]
     change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
-#if 0
+#if 1
     // shift 806[3..] by half
     change |= shiftCathedralMicrosDown(124, 131, blockSize, micros);
     // copy upper half of 787[12] to 823[1]
@@ -1736,6 +1736,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
 
     // copy part of lower half of 813[1] to 814[0]
     change |= copyLimitedLowerCathedralMicro(212, 211, 16, MICRO_WIDTH, blockSize, micros);
+#else
     // copy part of upper half of 813[1] to 799[12]
     {
         const CelMicro &micro = micros[212];
@@ -1837,12 +1838,12 @@ bool D1Tileset::patchTownCathedral(bool silent)
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
             frame->setFrameType(micro.res_encoding);
-            /*std::vector<FramePixel> pixels;
+            std::vector<FramePixel> pixels;
             D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
             for (const FramePixel &pix : pixels) {
                 D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
                 change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
-            }*/
+            }
         }
     }
     if (change) {
