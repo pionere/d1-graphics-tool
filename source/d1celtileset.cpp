@@ -52,12 +52,13 @@ const char* frameTypeToStr(D1CEL_FRAME_TYPE frameType)
 {
     const char* result = "N/A";
     switch (frameType) {
-    case D1CEL_FRAME_TYPE::Square: result = "Square"; break;
+    case D1CEL_FRAME_TYPE::Square:            result = "Square";             break;
     case D1CEL_FRAME_TYPE::TransparentSquare: result = "Transparent square"; break;
-    case D1CEL_FRAME_TYPE::LeftTriangleSquare: result = "Left Triangle"; break;
-    case D1CEL_FRAME_TYPE::RightTriangle: result = "Right Triangle"; break;
-    case D1CEL_FRAME_TYPE::LeftTrapezoid: result = "Left Trapezoid"; break;
-    case D1CEL_FRAME_TYPE::RightTrapezoid: result = "Right Trapezoid"; break;
+    case D1CEL_FRAME_TYPE::LeftTriangle:      result = "Left Triangle";      break;
+    case D1CEL_FRAME_TYPE::RightTriangle:     result = "Right Triangle";     break;
+    case D1CEL_FRAME_TYPE::LeftTrapezoid:     result = "Left Trapezoid";     break;
+    case D1CEL_FRAME_TYPE::RightTrapezoid:    result = "Right Trapezoid";    break;
+    case D1CEL_FRAME_TYPE::Empty:             result = "Empty";              break;
     }
     return result;
 }
