@@ -4352,6 +4352,216 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(237, 1, 402, 1);
     // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
     this->patchTownPot(553, 554, silent);
+    // patch subtiles to reduce its memory footprint
+    if (this->patchTownFloor(silent)) {
+        // use the micros created by patchTownFloor
+        MoveMcr(732, 8, 731, 9);
+        Blk2Mcr(974, 2);
+        Blk2Mcr(1030, 2);
+        ReplaceMcr(220, 0, 17, 0);
+        SetMcr(221, 2, 223, 2);
+        ReplaceMcr(220, 1, 17, 1);
+        ReplaceMcr(218, 1, 25, 1);
+        SetMcr(219, 3, 218, 0);
+        SetMcr(218, 0, 25, 0);
+        ReplaceMcr(1166, 1, 281, 1);
+        SetMcr(1167, 3, 1166, 0);
+        SetMcr(1166, 0, 19, 0);
+        ReplaceMcr(962, 0, 14, 0);
+        SetMcr(963, 2, 962, 1);
+        SetMcr(962, 1, 14, 1);
+    }
+    // merge subtiles of the 'entrances'
+    if (this->patchTownDoor(silent) && this->patchTownLight(silent)) {
+        // use micros created by patchTownDoor and patchTownLight
+        Blk2Mcr(724, 0);
+        Blk2Mcr(724, 1);
+        Blk2Mcr(724, 3);
+        Blk2Mcr(723, 1);
+        Blk2Mcr(715, 11);
+        Blk2Mcr(715, 9);
+        Blk2Mcr(715, 3);
+
+        Blk2Mcr(428, 4);
+        Blk2Mcr(428, 2);
+        Blk2Mcr(428, 0);
+        Blk2Mcr(428, 1);
+        Blk2Mcr(426, 2);
+        Blk2Mcr(426, 0);
+        Blk2Mcr(429, 0);
+
+        Blk2Mcr(911, 9);
+        Blk2Mcr(911, 7);
+        Blk2Mcr(911, 5);
+        Blk2Mcr(919, 9);
+        Blk2Mcr(919, 5);
+
+        // Blk2Mcr(402, 0);
+        Blk2Mcr(954, 2);
+        Blk2Mcr(956, 2);
+        Blk2Mcr(918, 9);
+        Blk2Mcr(927, 0);
+        Blk2Mcr(918, 3);
+        Blk2Mcr(918, 2);
+        Blk2Mcr(918, 8);
+        Blk2Mcr(928, 4);
+        Blk2Mcr(237, 0);
+        Blk2Mcr(237, 1);
+
+        Blk2Mcr(551, 0);
+        Blk2Mcr(552, 1);
+        Blk2Mcr(519, 0);
+        Blk2Mcr(510, 7);
+        Blk2Mcr(510, 5);
+
+        // Blk2Mcr(728, 9);
+        Blk2Mcr(728, 7);
+
+        Blk2Mcr(910, 9);
+        Blk2Mcr(910, 7);
+
+        Blk2Mcr(537, 0);
+        Blk2Mcr(539, 0);
+        Blk2Mcr(478, 0);
+        Blk2Mcr(479, 1);
+
+        MoveMcr(927, 3, 919, 7);
+        MoveMcr(929, 2, 918, 4);
+        MoveMcr(929, 3, 918, 5);
+        MoveMcr(929, 4, 918, 6);
+        MoveMcr(929, 5, 918, 7);
+
+        MoveMcr(551, 5, 510, 9);
+        Blk2Mcr(522, 1);
+
+        MoveMcr(529, 6, 537, 2);
+        MoveMcr(529, 8, 537, 4);
+        MoveMcr(529, 10, 537, 6);
+        MoveMcr(529, 12, 537, 8);
+
+        MoveMcr(480, 2, 477, 0);
+        MoveMcr(480, 3, 477, 1);
+        MoveMcr(480, 4, 477, 2);
+        MoveMcr(480, 5, 477, 3);
+        MoveMcr(480, 6, 477, 4);
+        MoveMcr(480, 7, 477, 5);
+        MoveMcr(480, 8, 477, 6);
+        MoveMcr(480, 9, 477, 7);
+        MoveMcr(480, 10, 477, 8);
+
+        // patchTownLightCel
+        ReplaceMcr(509, 6, 524, 0);
+        ReplaceMcr(509, 7, 524, 1);
+        MoveMcr(509,  8, 521, 0);
+        MoveMcr(509,  9, 521, 1);
+        MoveMcr(509, 10, 521, 2);
+        MoveMcr(509, 11, 521, 3);
+        MoveMcr(509, 12, 521, 4);
+        MoveMcr(509, 13, 521, 5);
+        MoveMcr(509, 14, 521, 6);
+        MoveMcr(509, 15, 521, 7);
+        MoveMcr(552, 14, 521, 8);
+        MoveMcr(552, 15, 521, 9);
+        Blk2Mcr(522, 0);
+
+        MoveMcr(531, 6, 539, 2);
+        MoveMcr(531, 8, 539, 4);
+        MoveMcr(531, 10, 539, 6);
+        MoveMcr(531, 12, 539, 8);
+        MoveMcr(531, 14, 539, 10);
+
+        MoveMcr(551, 7, 522, 3);
+        MoveMcr(551, 9, 522, 5);
+        MoveMcr(551, 11, 522, 7);
+        MoveMcr(551, 13, 522, 9);
+        MoveMcr(551, 15, 522, 11);
+
+        Blk2Mcr(517, 0);
+        MoveMcr(519, 3, 551, 1);
+        Blk2Mcr(523, 1);
+
+        MoveMcr(513, 7, 523, 0);
+        MoveMcr(513, 9, 523, 2);
+        MoveMcr(513, 11, 523, 4);
+        MoveMcr(513, 13, 523, 6);
+        MoveMcr(513, 15, 523, 8);
+        Blk2Mcr(523, 10);
+
+        MoveMcr(386, 11, 432, 0);
+        MoveMcr(386, 13, 432, 2);
+        MoveMcr(386, 15, 432, 4);
+
+        MoveMcr(387, 11, 432, 1);
+        MoveMcr(387, 13, 430, 0);
+        MoveMcr(387, 15, 430, 2);
+        Blk2Mcr(433, 0);
+
+        MoveMcr(424, 10, 431, 0);
+        MoveMcr(424, 12, 430, 1);
+        MoveMcr(424, 14, 430, 3);
+        Blk2Mcr(433, 1);
+
+        MoveMcr(422, 10, 431, 1);
+        MoveMcr(422, 12, 431, 3);
+        MoveMcr(422, 14, 431, 5);
+
+        MoveMcr(422, 11, 436, 0);
+        MoveMcr(422, 13, 436, 2);
+        MoveMcr(422, 15, 436, 4);
+
+        MoveMcr(423, 11, 436, 1);
+        MoveMcr(423, 13, 434, 0);
+        MoveMcr(423, 15, 434, 2);
+        Blk2Mcr(437, 0);
+
+        MoveMcr(418, 13, 434, 1);
+        MoveMcr(418, 15, 434, 3);
+        Blk2Mcr(435, 0);
+        Blk2Mcr(437, 1);
+
+        MoveMcr(419, 15, 435, 3);
+        Blk2Mcr(435, 1);
+
+        MoveMcr(408, 14, 440, 2);
+        Blk2Mcr(440, 0);
+
+        MoveMcr(406, 12, 438, 0);
+        MoveMcr(406, 14, 438, 2);
+        Blk2Mcr(440, 1);
+        Blk2Mcr(441, 0);
+
+        MoveMcr(412, 10, 439, 0);
+        MoveMcr(412, 12, 438, 1);
+        MoveMcr(412, 14, 438, 3);
+        Blk2Mcr(441, 1);
+
+        MoveMcr(410, 10, 439, 1);
+        MoveMcr(410, 12, 439, 3);
+        MoveMcr(410, 14, 439, 5);
+        Blk2Mcr(439, 7);
+
+        // move micros for better light propagation
+        MoveMcr(433, 6, 430, 4);
+        MoveMcr(433, 7, 430, 5);
+        MoveMcr(428, 15, 435, 5);
+        MoveMcr(441, 6, 438, 4);
+        // MoveMcr(?, 14, 440, 4);
+        MoveMcr(923, 4, 920, 6);
+        MoveMcr(923, 6, 920, 8);
+    }
+    // patch subtiles to reduce minor protrusions
+    this->patchTownChop(silent);
+    // eliminate micros after patchTownChop
+    {
+        Blk2Mcr(362, 11);
+        Blk2Mcr(832, 12);
+        Blk2Mcr(926, 14);
+        Blk2Mcr(926, 15);
+        Blk2Mcr(946, 15);
+        Blk2Mcr(947, 15);
+        Blk2Mcr(950, 15);
+        Blk2Mcr(951, 15);
+    }
     // patch subtiles of the cathedral to fix graphical glitch
     if (this->patchTownCathedral(silent)) {
         Blk2Mcr(822, 1); // 561
@@ -4377,7 +4587,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(727, 13, 811, 2);
         MoveMcr(727, 15, 811, 4);
 
-        MoveMcr(728, 9, 716, 13); // 493[9]
+        ReplaceMcr(728, 9, 716, 13); // 493[9]
         MoveMcr(728, 11, 811, 1); // 493[11]
 
         MoveMcr(719, 15, 818, 0);
@@ -4675,216 +4885,6 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
 
         Blk2Mcr(803, 0); // 543
         Blk2Mcr(803, 1);
-    }
-    // patch subtiles to reduce its memory footprint
-    if (this->patchTownFloor(silent)) {
-        // use the micros created by patchTownFloor
-        MoveMcr(732, 8, 731, 9);
-        Blk2Mcr(974, 2);
-        Blk2Mcr(1030, 2);
-        ReplaceMcr(220, 0, 17, 0);
-        SetMcr(221, 2, 223, 2);
-        ReplaceMcr(220, 1, 17, 1);
-        ReplaceMcr(218, 1, 25, 1);
-        SetMcr(219, 3, 218, 0);
-        SetMcr(218, 0, 25, 0);
-        ReplaceMcr(1166, 1, 281, 1);
-        SetMcr(1167, 3, 1166, 0);
-        SetMcr(1166, 0, 19, 0);
-        ReplaceMcr(962, 0, 14, 0);
-        SetMcr(963, 2, 962, 1);
-        SetMcr(962, 1, 14, 1);
-    }
-    // merge subtiles of the 'entrances'
-    if (this->patchTownDoor(silent) && this->patchTownLight(silent)) {
-        // use micros created by patchTownDoor and patchTownLight
-        Blk2Mcr(724, 0);
-        Blk2Mcr(724, 1);
-        Blk2Mcr(724, 3);
-        Blk2Mcr(723, 1);
-        Blk2Mcr(715, 11);
-        Blk2Mcr(715, 9);
-        Blk2Mcr(715, 3);
-
-        Blk2Mcr(428, 4);
-        Blk2Mcr(428, 2);
-        Blk2Mcr(428, 0);
-        Blk2Mcr(428, 1);
-        Blk2Mcr(426, 2);
-        Blk2Mcr(426, 0);
-        Blk2Mcr(429, 0);
-
-        Blk2Mcr(911, 9);
-        Blk2Mcr(911, 7);
-        Blk2Mcr(911, 5);
-        Blk2Mcr(919, 9);
-        Blk2Mcr(919, 5);
-
-        // Blk2Mcr(402, 0);
-        Blk2Mcr(954, 2);
-        Blk2Mcr(956, 2);
-        Blk2Mcr(918, 9);
-        Blk2Mcr(927, 0);
-        Blk2Mcr(918, 3);
-        Blk2Mcr(918, 2);
-        Blk2Mcr(918, 8);
-        Blk2Mcr(928, 4);
-        Blk2Mcr(237, 0);
-        Blk2Mcr(237, 1);
-
-        Blk2Mcr(551, 0);
-        Blk2Mcr(552, 1);
-        Blk2Mcr(519, 0);
-        Blk2Mcr(510, 7);
-        Blk2Mcr(510, 5);
-
-        Blk2Mcr(728, 9);
-        Blk2Mcr(728, 7);
-
-        Blk2Mcr(910, 9);
-        Blk2Mcr(910, 7);
-
-        Blk2Mcr(537, 0);
-        Blk2Mcr(539, 0);
-        Blk2Mcr(478, 0);
-        Blk2Mcr(479, 1);
-
-        MoveMcr(927, 3, 919, 7);
-        MoveMcr(929, 2, 918, 4);
-        MoveMcr(929, 3, 918, 5);
-        MoveMcr(929, 4, 918, 6);
-        MoveMcr(929, 5, 918, 7);
-
-        MoveMcr(551, 5, 510, 9);
-        Blk2Mcr(522, 1);
-
-        MoveMcr(529, 6, 537, 2);
-        MoveMcr(529, 8, 537, 4);
-        MoveMcr(529, 10, 537, 6);
-        MoveMcr(529, 12, 537, 8);
-
-        MoveMcr(480, 2, 477, 0);
-        MoveMcr(480, 3, 477, 1);
-        MoveMcr(480, 4, 477, 2);
-        MoveMcr(480, 5, 477, 3);
-        MoveMcr(480, 6, 477, 4);
-        MoveMcr(480, 7, 477, 5);
-        MoveMcr(480, 8, 477, 6);
-        MoveMcr(480, 9, 477, 7);
-        MoveMcr(480, 10, 477, 8);
-
-        // patchTownLightCel
-        ReplaceMcr(509, 6, 524, 0);
-        ReplaceMcr(509, 7, 524, 1);
-        MoveMcr(509,  8, 521, 0);
-        MoveMcr(509,  9, 521, 1);
-        MoveMcr(509, 10, 521, 2);
-        MoveMcr(509, 11, 521, 3);
-        MoveMcr(509, 12, 521, 4);
-        MoveMcr(509, 13, 521, 5);
-        MoveMcr(509, 14, 521, 6);
-        MoveMcr(509, 15, 521, 7);
-        MoveMcr(552, 14, 521, 8);
-        MoveMcr(552, 15, 521, 9);
-        Blk2Mcr(522, 0);
-
-        MoveMcr(531, 6, 539, 2);
-        MoveMcr(531, 8, 539, 4);
-        MoveMcr(531, 10, 539, 6);
-        MoveMcr(531, 12, 539, 8);
-        MoveMcr(531, 14, 539, 10);
-
-        MoveMcr(551, 7, 522, 3);
-        MoveMcr(551, 9, 522, 5);
-        MoveMcr(551, 11, 522, 7);
-        MoveMcr(551, 13, 522, 9);
-        MoveMcr(551, 15, 522, 11);
-
-        Blk2Mcr(517, 0);
-        MoveMcr(519, 3, 551, 1);
-        Blk2Mcr(523, 1);
-
-        MoveMcr(513, 7, 523, 0);
-        MoveMcr(513, 9, 523, 2);
-        MoveMcr(513, 11, 523, 4);
-        MoveMcr(513, 13, 523, 6);
-        MoveMcr(513, 15, 523, 8);
-        Blk2Mcr(523, 10);
-
-        MoveMcr(386, 11, 432, 0);
-        MoveMcr(386, 13, 432, 2);
-        MoveMcr(386, 15, 432, 4);
-
-        MoveMcr(387, 11, 432, 1);
-        MoveMcr(387, 13, 430, 0);
-        MoveMcr(387, 15, 430, 2);
-        Blk2Mcr(433, 0);
-
-        MoveMcr(424, 10, 431, 0);
-        MoveMcr(424, 12, 430, 1);
-        MoveMcr(424, 14, 430, 3);
-        Blk2Mcr(433, 1);
-
-        MoveMcr(422, 10, 431, 1);
-        MoveMcr(422, 12, 431, 3);
-        MoveMcr(422, 14, 431, 5);
-
-        MoveMcr(422, 11, 436, 0);
-        MoveMcr(422, 13, 436, 2);
-        MoveMcr(422, 15, 436, 4);
-
-        MoveMcr(423, 11, 436, 1);
-        MoveMcr(423, 13, 434, 0);
-        MoveMcr(423, 15, 434, 2);
-        Blk2Mcr(437, 0);
-
-        MoveMcr(418, 13, 434, 1);
-        MoveMcr(418, 15, 434, 3);
-        Blk2Mcr(435, 0);
-        Blk2Mcr(437, 1);
-
-        MoveMcr(419, 15, 435, 3);
-        Blk2Mcr(435, 1);
-
-        MoveMcr(408, 14, 440, 2);
-        Blk2Mcr(440, 0);
-
-        MoveMcr(406, 12, 438, 0);
-        MoveMcr(406, 14, 438, 2);
-        Blk2Mcr(440, 1);
-        Blk2Mcr(441, 0);
-
-        MoveMcr(412, 10, 439, 0);
-        MoveMcr(412, 12, 438, 1);
-        MoveMcr(412, 14, 438, 3);
-        Blk2Mcr(441, 1);
-
-        MoveMcr(410, 10, 439, 1);
-        MoveMcr(410, 12, 439, 3);
-        MoveMcr(410, 14, 439, 5);
-        Blk2Mcr(439, 7);
-
-        // move micros for better light propagation
-        MoveMcr(433, 6, 430, 4);
-        MoveMcr(433, 7, 430, 5);
-        MoveMcr(428, 15, 435, 5);
-        MoveMcr(441, 6, 438, 4);
-        // MoveMcr(?, 14, 440, 4);
-        MoveMcr(923, 4, 920, 6);
-        MoveMcr(923, 6, 920, 8);
-    }
-    // patch subtiles to reduce minor protrusions
-    this->patchTownChop(silent);
-    // eliminate micros after patchTownChop
-    {
-        Blk2Mcr(362, 11);
-        Blk2Mcr(832, 12);
-        Blk2Mcr(926, 14);
-        Blk2Mcr(926, 15);
-        Blk2Mcr(946, 15);
-        Blk2Mcr(947, 15);
-        Blk2Mcr(950, 15);
-        Blk2Mcr(951, 15);
     }
     // prepare new subtiles for patchTownSpec
     {
