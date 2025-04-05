@@ -1640,9 +1640,10 @@ bool D1Tileset::patchTownCathedral(bool silent)
     change |= copyUpperCathedralMicro(130, 120, blockSize, micros);
     // copy lower half of 806[1] to 781[0]
     change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
-#if 1
+#if 0
     // shift 806[3..] by half
     change |= shiftCathedralMicrosDown(124, 131, blockSize, micros);
+#else
     // copy upper half of 787[12] to 823[1]
     change |= copyUpperCathedralMicro(139, 110, blockSize, micros);
     // copy lower half of 787[0] to 781[1]
@@ -1736,7 +1737,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
 
     // copy part of lower half of 813[1] to 814[0]
     change |= copyLimitedLowerCathedralMicro(212, 211, 16, MICRO_WIDTH, blockSize, micros);
-#else
+// #else
     // copy part of upper half of 813[1] to 799[12]
     {
         const CelMicro &micro = micros[212];
