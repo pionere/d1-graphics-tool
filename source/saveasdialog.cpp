@@ -107,6 +107,16 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
             this->ui->outputTilFileEdit->setText(saveFilePath + (upperCase ? ".TIL" : ".til"));
             this->ui->outputSlaFileEdit->setText(saveFilePath + (upperCase ? ".SLA" : ".sla"));
             this->ui->outputTlaFileEdit->setText(saveFilePath + (upperCase ? ".TLA" : ".tla"));
+
+            if (this->ui->outputDunFileEdit->isVisible()) {
+                QString dunFilePath = this->ui->outputDunFileEdit->text();
+
+                QFileInfo dfi(dunFilePath);
+                QFileInfo sfi(saveFilePath);
+
+                saveFilePath = sfi.absolutePath() + "/" + dfi.fileName();
+                this->ui->outputDunFileEdit->setText(QDir::toNativeSeparators(saveFilePath));
+            }
         }
     }
 }
