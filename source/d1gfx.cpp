@@ -506,23 +506,29 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
             int bestDiff = diff;
             int bestDist = 0;
             int bestOption = 0;
-            for (n = j + 1; n < myFrameCount; n++) {
+            for (int n = j + 1; n < myFrameCount; n++) {
                 D1GfxFrame *frameB_ = gfx->frames[n];
                 int diff = getFrameDiff(frameA, frameB_);
                 if (diff < bestDiff) {
                     bestDiff = diff;
                     bestOption = n;
                     bestDist = n - j;
+                    if (diff == 0)
+                        break;
                 }
             }
-            for (n = i + 1; n < frameCount; n++) {
-                D1GfxFrame *frameA_ = this->frames[n];
-                dist = n - i;
-                int diff = getFrameDiff(frameA_, frameB);
-                if (diff < bestDiff || (diff == bestDiff && (dist < bestDist))) {
-                    bestDiff = diff;
-                    bestOption = -n;
-                    bestDist = dist;
+            if (diff != 0) {
+                for (int n = i + 1; n < frameCount; n++) {
+                    D1GfxFrame *frameA_ = this->frames[n];
+                    dist = n - i;
+                    int diff = getFrameDiff(frameA_, frameB);
+                    if (diff < bestDiff || (diff == bestDiff && (dist < bestDist))) {
+                        bestDiff = diff;
+                        bestOption = -n;
+                        bestDist = dist;
+                        if (diff == 0)
+                            break;
+                    }
                 }
             }
 
