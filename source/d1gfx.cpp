@@ -508,25 +508,25 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
             int bestOption = 0;
             for (int n = j + 1; n < myFrameCount; n++) {
                 D1GfxFrame *frameB_ = gfx->frames[n];
-                int diff = getFrameDiff(frameA, frameB_);
+                diff = getFrameDiff(frameA, frameB_);
                 if (diff < bestDiff) {
                     bestDiff = diff;
                     bestOption = n;
                     bestDist = n - j;
-                    if (diff == 0)
+                    if (bestDiff == 0)
                         break;
                 }
             }
-            if (diff != 0) {
+            if (bestDiff != 0) {
                 for (int n = i + 1; n < frameCount; n++) {
                     D1GfxFrame *frameA_ = this->frames[n];
-                    dist = n - i;
-                    int diff = getFrameDiff(frameA_, frameB);
+                    int dist = n - i;
+                    diff = getFrameDiff(frameA_, frameB);
                     if (diff < bestDiff || (diff == bestDiff && (dist < bestDist))) {
                         bestDiff = diff;
                         bestOption = -n;
                         bestDist = dist;
-                        if (diff == 0)
+                        if (bestDiff == 0)
                             break;
                     }
                 }
@@ -554,7 +554,7 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
                 if (i == j)
                     msg = QApplication::tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1);
                 else
-                    msg = QApplication::tr("frame %1 (compared to %2) is %3x%4 pixel (was %5x%6)").arg(i + 1).arg(j + 1)
+                    msg = QApplication::tr("frame %1 (compared to %2) is %3x%4 pixel (was %5x%6)").arg(i + 1).arg(j + 1);
                 reportDiff(msg
                     .arg(frameA->getWidth()).arg(frameA->getHeight())
                     .arg(frameB->getWidth()).arg(frameB->getHeight()), header);
