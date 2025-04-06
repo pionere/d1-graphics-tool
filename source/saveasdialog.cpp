@@ -114,8 +114,8 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
                 QFileInfo dfi(dunFilePath);
                 QFileInfo sfi(saveFilePath);
 
-                saveFilePath = sfi.absolutePath() + "/" + dfi.fileName();
-                this->ui->outputDunFileEdit->setText(QDir::toNativeSeparators(saveFilePath));
+                dfi.setFile(sfi.absoluteDir(), dfi.fileName());
+                this->ui->outputDunFileEdit->setText(dfi.absoluteFilePath());
             }
         }
     }

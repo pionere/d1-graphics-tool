@@ -63,6 +63,21 @@ bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
     return lhs.transparent != rhs.transparent || lhs.paletteIndex != rhs.paletteIndex;
 }
 
+const char* D1GfxFrame::frameTypeToStr(D1CEL_FRAME_TYPE frameType)
+{
+    const char* result = "N/A";
+    switch (frameType) {
+    case D1CEL_FRAME_TYPE::Square:            result = "Square";             break;
+    case D1CEL_FRAME_TYPE::TransparentSquare: result = "Transparent square"; break;
+    case D1CEL_FRAME_TYPE::LeftTriangle:      result = "Left Triangle";      break;
+    case D1CEL_FRAME_TYPE::RightTriangle:     result = "Right Triangle";     break;
+    case D1CEL_FRAME_TYPE::LeftTrapezoid:     result = "Left Trapezoid";     break;
+    case D1CEL_FRAME_TYPE::RightTrapezoid:    result = "Right Trapezoid";    break;
+    case D1CEL_FRAME_TYPE::Empty:             result = "Empty";              break;
+    }
+    return result;
+}
+
 D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
 {
     this->width = o.width;
@@ -376,6 +391,7 @@ static void reportDiff(const QString text, QString &header)
     }
     dProgress() << text;
 }
+
 static QString CelTypeTxt(D1CEL_TYPE type)
 {
     QString result;
@@ -389,6 +405,55 @@ static QString CelTypeTxt(D1CEL_TYPE type)
     default: result = "???"; break;
     }
     return result;
+}
+
+static int getFrameDiff(const D1GfxFrame *frameA, const D1GfxFrame *frameB)
+{
+    int width = frameB->getWidth();
+    int myWidth = frameA->getWidth();
+    int height = frameB->getHeight();
+    int myHeight = frameA->getHeight();
+    int result = 0;
+    if (myWidth == width && myHeight == height) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                D1GfxPixel pixelA = frameA->getPixel(x, y);
+                D1GfxPixel pixelB = frameB->getPixel(x, y);
+                if (pixelA != pixelB) {
+                    result++;
+                }
+            }
+        }
+    } else {
+        result = INT_MAX;
+    }
+    return result;
+}
+
+static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxFrame *frameB, QString header)
+{
+    int width = frameA->getWidth();
+    int height = frameA->getHeight();
+    // assert(frameB->getWidth() == width && frameB->getHeight() == height);
+    bool firstInFrame = true;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            D1GfxPixel pixelA = frameA->getPixel(x, y);
+            D1GfxPixel pixelB = frameB->getPixel(x, y);
+            if (pixelA != pixelB) {
+                if (firstInFrame) {
+                    firstInFrame = false;
+                    if (i == j)
+                        reportDiff(QApplication::tr("Frame %1:").arg(i + 1), header);
+                    else
+                        reportDiff(QApplication::tr("Frame %1 (compared to %2):").arg(i + 1).arg(j + 1), header);
+                }
+                reportDiff(QApplication::tr("  pixel %1:%2 is %3 (was %4)").arg(x).arg(y)
+                    .arg(pixelA.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelA.getPaletteIndex()))
+                    .arg(pixelB.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelB.getPaletteIndex())), header);
+            }
+        }
+    }
 }
 
 void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
@@ -408,27 +473,16 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
     } else {
         reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(this->groupFrameIndices.size()).arg(gfx->groupFrameIndices.size()), header);
     }
-    if (gfx->getFrameCount() == this->getFrameCount()) {
-        for (int i = 0; i < this->getFrameCount(); i++) {
+    int frameCount = gfx->getFrameCount();
+    int myFrameCount = this->getFrameCount();
+    if (frameCount == myFrameCount) {
+        for (int i = 0; i < frameCount; i++) {
             D1GfxFrame *frameA = this->frames[i];
             D1GfxFrame *frameB = gfx->frames[i];
-            if (frameA->getWidth() == frameB->getWidth() && frameA->getHeight() == frameB->getHeight()) {
-                bool firstInFrame = true;
-                for (int y = 0; y < frameA->getHeight(); y++) {
-                    for (int x = 0; x < frameA->getWidth(); x++) {
-                        D1GfxPixel pixelA = frameA->getPixel(x, y);
-                        D1GfxPixel pixelB = frameB->getPixel(x, y);
-                        if (pixelA != pixelB) {
-                            if (firstInFrame) {
-                                firstInFrame = false;
-                                reportDiff(QApplication::tr("Frame %1:").arg(i + 1), header);
-                            }
-                            reportDiff(QApplication::tr("  pixel %1:%2 is %3 (was %4)").arg(x).arg(y)
-                                .arg(pixelA.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelA.getPaletteIndex()))
-                                .arg(pixelB.isTransparent() ? QApplication::tr("transparent") : QApplication::tr("color%1").arg(pixelB.getPaletteIndex())), header);
-                        }
-                    }
-                }
+            int diff = getFrameDiff(frameA, frameB);
+            if (diff == 0) continue;
+            if (diff != INT_MAX) {
+                reportFrameDiff(i, i, frameA, frameB, header);
             } else {
                 reportDiff(QApplication::tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1)
                     .arg(frameA->getWidth()).arg(frameA->getHeight())
@@ -436,7 +490,82 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
             }
         }
     } else {
-        reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(this->getFrameCount()).arg(gfx->getFrameCount()), header);
+        reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(myFrameCount).arg(frameCount), header);
+
+        int i, j;
+        for (i = 0, j = 0; i < myFrameCount && j < frameCount; ) {
+            D1GfxFrame *frameA = this->frames[i];
+            D1GfxFrame *frameB = gfx->frames[j];
+            int diff = getFrameDiff(frameA, frameB);
+            if (diff == 0) {
+                i++;
+                j++;
+                continue;
+            }
+
+            int bestDiff = diff;
+            int bestDist = 0;
+            int bestOption = 0;
+            for (n = j + 1; n < myFrameCount; n++) {
+                D1GfxFrame *frameB_ = gfx->frames[n];
+                int diff = getFrameDiff(frameA, frameB_);
+                if (diff < bestDiff) {
+                    bestDiff = diff;
+                    bestOption = n;
+                    bestDist = n - j;
+                }
+            }
+            for (n = i + 1; n < frameCount; n++) {
+                D1GfxFrame *frameA_ = this->frames[n];
+                dist = n - i;
+                int diff = getFrameDiff(frameA_, frameB);
+                if (diff < bestDiff || (diff == bestDiff && (dist < bestDist))) {
+                    bestDiff = diff;
+                    bestOption = -n;
+                    bestDist = dist;
+                }
+            }
+
+            if (bestDiff == 0) {
+                // matching frame found
+                // if (bestDist != 0) {
+                    if (bestOption >= 0) {
+                        // frame A matching later
+                        reportDiff(QApplication::tr("%1 frames deleted [%2..%3)").arg(bestDist).arg(j + 1).arg(bestOption + 1), header);
+                        j += bestDist;
+                    } else {
+                        // frame B matching later
+                        reportDiff(QApplication::tr("%1 frames added [%2..%3)").arg(bestDist).arg(i + 1).arg((-bestOption) + 1), header);
+                        i += bestDist;
+                    }
+                // }
+                i++;
+                j++;
+                continue;
+            }
+            if (bestDiff == INT_MAX) {
+                QString msg;
+                if (i == j)
+                    msg = QApplication::tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1);
+                else
+                    msg = QApplication::tr("frame %1 (compared to %2) is %3x%4 pixel (was %5x%6)").arg(i + 1).arg(j + 1)
+                reportDiff(msg
+                    .arg(frameA->getWidth()).arg(frameA->getHeight())
+                    .arg(frameB->getWidth()).arg(frameB->getHeight()), header);
+            } else {
+                reportFrameDiff(i, j, frameA, frameB, header);
+            }
+            i++;
+            j++;
+        }
+
+        if (i != myFrameCount) {
+            reportDiff(QApplication::tr("%1 frames added [%2..%3)").arg(myFrameCount - i).arg(i + 1).arg(myFrameCount), header);
+        }
+
+        if (j != frameCount) {
+            reportDiff(QApplication::tr("%1 frames deleted [%2..%3)").arg(frameCount - j).arg(j + 1).arg(frameCount), header);
+        }
     }
 }
 

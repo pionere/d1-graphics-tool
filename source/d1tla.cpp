@@ -9,6 +9,7 @@
 #include <QMessageBox>
 
 #include "progressdialog.h"
+#include "dungeon/all.h"
 
 bool D1Tla::load(const QString &filePath, int tileCount, const OpenAsParam &params)
 {
@@ -138,21 +139,21 @@ void D1Tla::compareTo(const D1Tla *tla) const
     unsigned tileCount = tla->properties.size();
     unsigned myTileCount = this->properties.size();
     if (myTileCount != tileCount) {
-        dProgress() << tr("The number of tiles are different (%1 vs. %2)").arg(myTileCount).arg(tileCount);
+        dProgress() << tr("The number of tiles is %1 (was %2)").arg(myTileCount).arg(tileCount);
         tileCount = std::min(myTileCount, tileCount);
     }
 
-    for (int i < 0; i < tileCount; i++) {
+    for (int i = 0; i < tileCount; i++) {
         quint8 properties = til->properties[i];
         quint8 myProperties = this->properties[i];
 
         if ((myProperties & (TIF_FLOOR_00 | TIF_FLOOR_01 | TIF_FLOOR_10 | TIF_FLOOR_11)) != (properties & (TIF_FLOOR_00 | TIF_FLOOR_01 | TIF_FLOOR_10 | TIF_FLOOR_11))) {
-            dProgress() << tr("The room propagation of tile %1 is different ([%2:%3:%4:%5] vs. [%6:%7:%8:%9])").arg(i + 1)
+            dProgress() << tr("The room propagation of tile %1 is [%2:%3:%4:%5] (was [%6:%7:%8:%9])").arg(i + 1)
                 .arg((myProperties & TIF_FLOOR_00) != 0).arg((myProperties & TIF_FLOOR_01) != 0).arg((myProperties & TIF_FLOOR_10) != 0).arg((myProperties & TIF_FLOOR_11) != 0)
                 .arg((properties & TIF_FLOOR_00) != 0).arg((properties & TIF_FLOOR_01) != 0).arg((properties & TIF_FLOOR_10) != 0).arg((properties & TIF_FLOOR_11) != 0);
         }
         if ((myProperties & (TIF_SHADOW_00 | TIF_SHADOW_01 | TIF_SHADOW_10 | TIF_SHADOW_11)) != (properties & (TIF_SHADOW_00 | TIF_SHADOW_01 | TIF_SHADOW_10 | TIF_SHADOW_11))) {
-            dProgress() << tr("The shadow flags of tile %1 are different ([%2:%3:%4:%5] vs. [%6:%7:%8:%9])").arg(i + 1)
+            dProgress() << tr("The shadow flags of tile %1 is [%2:%3:%4:%5] (was [%6:%7:%8:%9])").arg(i + 1)
                 .arg((myProperties & TIF_SHADOW_00) != 0).arg((myProperties & TIF_SHADOW_01) != 0).arg((myProperties & TIF_SHADOW_10) != 0).arg((myProperties & TIF_SHADOW_11) != 0)
                 .arg((properties & TIF_SHADOW_00) != 0).arg((properties & TIF_SHADOW_01) != 0).arg((properties & TIF_SHADOW_10) != 0).arg((properties & TIF_SHADOW_11) != 0);
 

@@ -2138,7 +2138,7 @@ void MainWindow::on_actionDiff_triggered()
     if (main) {
     if (this->gfxset != nullptr) {
         this->gfxset->compareTo(&fileContent);
-    } else if (this->dun != nullptr) {
+    } else if (this->dun != nullptr && fileContent.fileType == FILE_CONTENT::DUN) {
         this->dun->compareTo(&fileContent);
     //} else if (this->tableset != nullptr) {
     //    this->tableset->compareTo(&fileContent);

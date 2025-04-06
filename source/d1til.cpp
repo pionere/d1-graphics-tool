@@ -126,11 +126,11 @@ void D1Til::compareTo(const D1Til *til) const
     unsigned tileCount = til->subtileIndices.size();
     unsigned myTileCount = this->subtileIndices.size();
     if (myTileCount != tileCount) {
-        dProgress() << tr("The number of tiles are different (%1 vs. %2)").arg(myTileCount).arg(tileCount);
+        dProgress() << tr("The number of tiles is %1 (was %2)").arg(myTileCount).arg(tileCount);
         tileCount = std::min(myTileCount, tileCount);
     }
 
-    for (int i < 0; i < tileCount; i++) {
+    for (int i = 0; i < tileCount; i++) {
         const std::vector<int> &subtiles = til->subtileIndices[i];
         const std::vector<int> &mySubtiles = this->subtileIndices[i];
         // assert(subtiles.size() == TILE_SIZE);
@@ -143,7 +143,7 @@ void D1Til::compareTo(const D1Til *til) const
             int subtile = subtiles[x];
             int mySubtile = mySubtiles[x];
             if (mySubtile != subtile) {
-                dProgress() << tr("The subtile %1:%2 of tile %3 differs (%4 vs. %5)").arg(x % TILE_WIDTH).arg(x / TILE_HEIGHT).arg(i + 1).arg(mySubtile).arg(subtile);
+                dProgress() << tr("The subtile %1:%2 of tile %3 is %4 (was %5)").arg(x % TILE_WIDTH).arg(x / TILE_HEIGHT).arg(i + 1).arg(mySubtile).arg(subtile);
             }
         }
     }

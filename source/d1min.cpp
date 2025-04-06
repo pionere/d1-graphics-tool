@@ -229,40 +229,38 @@ void D1Min::clear()
 void D1Min::compareTo(const D1Min *min, const std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes) const
 {
     if (!min->tileset->gfx->isUpscaled()) {
-        int frameCount = celFrameTypes.size();
-        int myFrameCount = this->tileset->gfx->getFrameCount();
-        if (myFrameCount != frameCount) {
-            dProgress() << tr("The number of used subtiles are different (%1 vs. %2)").arg(myFrameCount).arg(frameCount);
-            frameCount = std::min(myFrameCount, frameCount);
-        }
-        for (int i = 0; i < frameCount; i++) {
-            if (celFrameTypes.count(i) == 0) {
+        for (int i = 0; i < this->tileset->gfx->getFrameCount(); i++) {
+            /*if (celFrameTypes.count(i) == 0) {
                 continue;
             }
-            D1CEL_FRAME_TYPE frameType = celFrameTypes[i];
+            D1CEL_FRAME_TYPE frameType = celFrameTypes[i];*/
+            auto it = celFrameTypes.find(i);
+            if (it == celFrameTypes.end())
+                continue;
+            D1CEL_FRAME_TYPE frameType = it->second;
             D1CEL_FRAME_TYPE myFrameType = this->tileset->gfx->getFrame(i)->getFrameType();
             if (myFrameType != frameType) {
-                dProgress() << tr("The type of subtile %1 differs (%1 vs. %2)").arg(i + 1).arg(myFrameType).arg(frameType);
+                dProgress() << tr("The type of subtile %1 is %1 (was %2)").arg(i + 1).arg(D1GfxFrame::frameTypeToStr(myFrameType)).arg(D1GfxFrame::frameTypeToStr(frameType));
             }
         }
     }
 
     int width = min->subtileWidth;
     if (this->subtileWidth != width) {
-        dProgress() << tr("The subtile-widths are different (%1 vs. %2)").arg(this->subtileWidth).arg(width);
+        dProgress() << tr("Subtile-width is %1 (was %2)").arg(this->subtileWidth).arg(width);
         return;
     }
     int height = min->subtileHeight;
     int myHeight = this->subtileHeight;
     if (myHeight != height) {
-        dProgress() << tr("The subtile-heights are different (%1 vs. %2)").arg(myHeight).arg(height);
+        dProgress() << tr("Subtile-height is %1 (was %2)").arg(myHeight).arg(height);
         height = std::min(myHeight, height);
     }
 
     unsigned frameCount = min->frameReferences.size();
     unsigned myFrameCount = this->frameReferences.size();
     if (myFrameCount != frameCount) {
-        dProgress() << tr("The number of subtiles are different (%1 vs. %2)").arg(myFrameCount).arg(frameCount);
+        dProgress() << tr("Number of subtiles is %1 (was %2)").arg(myFrameCount).arg(frameCount);
         frameCount = std::min(myFrameCount, frameCount);
     }
 
@@ -273,7 +271,7 @@ void D1Min::compareTo(const D1Min *min, const std::map<unsigned, D1CEL_FRAME_TYP
                 unsigned micro = min->frameReferences[i][index];
                 unsigned myMicro = this->frameReferences[i][index];
                 if (myMicro != micro) {
-                    dProgress() << tr("The micro %1:%2 of subtile %3 differs (%4 vs. %5)").arg(x).arg(y).arg(i + 1).arg(myMicro).arg(micro);
+                    dProgress() << tr("The micro %1:%2 of subtile %3 is %4 (was %5)").arg(x).arg(y).arg(i + 1).arg(myMicro).arg(micro);
                 }
             }
         }
