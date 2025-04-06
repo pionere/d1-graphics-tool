@@ -760,7 +760,7 @@ void MainWindow::on_actionImport_triggered()
 
 IMPORT_FILE_TYPE MainWindow::guessFileType(const QString& filePath, bool dunMode)
 {
-    QString fileLower = gfxFilePath.toLower();
+    QString fileLower = filePath.toLower();
     IMPORT_FILE_TYPE fileType;
     if (dunMode) {
         if (fileLower.endsWith("s.cel"))
@@ -2193,8 +2193,8 @@ void MainWindow::on_actionDiff_triggered()
         } break;
         case IMPORT_FILE_TYPE::TLA: {
             // Loading TLA
-            D1Tla *tla = new D1Tla();
-            if (tla->load(params.celFilePath, -1, params)) {
+            D1Tla tla = D1Tla();
+            if (tla.load(params.celFilePath, -1, params)) {
                 this->tileset->tla->compareTo(&tla);
             } else {
                 dProgressFail() << tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
