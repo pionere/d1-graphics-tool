@@ -150,6 +150,7 @@ public:
     static QString FileContentTypeTxt(FILE_CONTENT fileType);
 
 private:
+    static IMPORT_FILE_TYPE guessFileType(const QString& filePath, bool dunMode)
     static void loadFile(const OpenAsParam &params, MainWindow *instance, LoadFileContent *result);
     static void failWithError(MainWindow *instance, LoadFileContent *result, const QString &error);
 

@@ -803,7 +803,7 @@ void MainWindow::importFile(const ImportParam &params)
 
     IMPORT_FILE_TYPE fileType = params.fileType;
     if (fileType == IMPORT_FILE_TYPE::AUTODETECT) {
-        fileType = this->guessFileType(gfxFilePath, this->levelCelView != nullptr);
+        fileType = MainWindow::guessFileType(gfxFilePath, this->levelCelView != nullptr);
     }
 
     OpenAsParam openParams = OpenAsParam();
@@ -2086,7 +2086,7 @@ void MainWindow::on_actionDiff_triggered()
         return;
     }
 
-    IMPORT_FILE_TYPE fileType = this->guessFileType(filePath, this->tileset != nullptr);
+    IMPORT_FILE_TYPE fileType = MainWindow::guessFileType(filePath, this->tileset != nullptr);
 
     QString fileLower = filePath.toLower();
     bool main;
@@ -2177,7 +2177,7 @@ void MainWindow::on_actionDiff_triggered()
             D1Til til = D1Til();
             D1Min min = D1Min();
             if (til.load(params.celFilePath, &min)) {
-                this->tileset->til->compareTo(til);
+                this->tileset->til->compareTo(&til);
             } else {
                 dProgressFail() << tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
             }
@@ -2186,7 +2186,7 @@ void MainWindow::on_actionDiff_triggered()
             // Loading SLA
             D1Sla sla = D1Sla();
             if (sla.load(params.celFilePath)) {
-                this->tileset->sla->compareTo(sla);
+                this->tileset->sla->compareTo(&sla);
             } else {
                 dProgressFail() << tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
             }
@@ -2195,7 +2195,7 @@ void MainWindow::on_actionDiff_triggered()
             // Loading TLA
             D1Tla *tla = new D1Tla();
             if (tla->load(params.celFilePath, -1, params)) {
-                this->tileset->tla->compareTo(tla);
+                this->tileset->tla->compareTo(&tla);
             } else {
                 dProgressFail() << tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
             }
@@ -2206,7 +2206,7 @@ void MainWindow::on_actionDiff_triggered()
             cls.setPalette(this->trnBase->getResultingPalette());
             if (D1Cel::load(cls, params.celFilePath, params)) { // tileset.loadCls
                 QString header;
-                this->tileset->cls->compareTo(cls, header);
+                this->tileset->cls->compareTo(&cls, header);
             } else {
                 dProgressFail() << tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
             }
