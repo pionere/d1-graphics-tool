@@ -130,7 +130,7 @@ void D1Til::compareTo(const D1Til *til) const
         tileCount = std::min(myTileCount, tileCount);
     }
 
-    for (int i = 0; i < tileCount; i++) {
+    for (unsigned i = 0; i < tileCount; i++) {
         const std::vector<int> &subtiles = til->subtileIndices[i];
         const std::vector<int> &mySubtiles = this->subtileIndices[i];
         // assert(subtiles.size() == TILE_SIZE);
