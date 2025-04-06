@@ -21,6 +21,8 @@ public:
     bool save(const SaveAsParam &params);
     void clear();
 
+    void compareTo(const D1Til *til) const;
+
     QImage getTileImage(int tileIndex) const;
     QImage getFlatTileImage(int tileIndex) const;
     QImage getSpecTileImage(int tileIndex) const;

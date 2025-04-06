@@ -121,6 +121,34 @@ void D1Til::clear()
     this->modified = true;
 }
 
+void D1Til::compareTo(const D1Til *til) const
+{
+    unsigned tileCount = til->subtileIndices.size();
+    unsigned myTileCount = this->subtileIndices.size();
+    if (myTileCount != tileCount) {
+        dProgress() << tr("The number of tiles are different (%1 vs. %2)").arg(myTileCount).arg(tileCount);
+        tileCount = std::min(myTileCount, tileCount);
+    }
+
+    for (int i < 0; i < tileCount; i++) {
+        const std::vector<int> &subtiles = til->subtileIndices[i];
+        const std::vector<int> &mySubtiles = this->subtileIndices[i];
+        // assert(subtiles.size() == TILE_SIZE);
+        // assert(mySubtiles.size() == TILE_SIZE);
+        /*if (subtiles.size() != mySubtiles.size()) {
+            dProgress() << tr("The number of subtiles are different (%1 vs. %2)").arg(mySubtileCount).arg(subtileCount);
+            break;
+        }*/
+        for (unsigned x = 0; x < TILE_SIZE; x++) {
+            int subtile = subtiles[x];
+            int mySubtile = mySubtiles[x];
+            if (mySubtile != subtile) {
+                dProgress() << tr("The subtile %1:%2 of tile %3 differs (%4 vs. %5)").arg(x % TILE_WIDTH).arg(x / TILE_HEIGHT).arg(i + 1).arg(mySubtile).arg(subtile);
+            }
+        }
+    }
+}
+
 QImage D1Til::getTileImage(int tileIndex) const
 {
     if (tileIndex < 0 || (unsigned)tileIndex >= this->subtileIndices.size()) {

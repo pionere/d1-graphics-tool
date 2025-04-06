@@ -758,38 +758,52 @@ void MainWindow::on_actionImport_triggered()
     this->importDialog->show();
 }
 
+IMPORT_FILE_TYPE MainWindow::guessFileType(const QString& filePath, bool dunMode)
+{
+    QString fileLower = gfxFilePath.toLower();
+    IMPORT_FILE_TYPE fileType;
+    if (dunMode) {
+        if (fileLower.endsWith("s.cel"))
+            fileType = IMPORT_FILE_TYPE::SCEL;
+        else if (fileLower.endsWith(".cel"))
+            fileType = IMPORT_FILE_TYPE::CEL;
+        else if (fileLower.endsWith(".min"))
+            fileType = IMPORT_FILE_TYPE::MIN;
+        else if (fileLower.endsWith(".til"))
+            fileType = IMPORT_FILE_TYPE::TIL;
+        else if (fileLower.endsWith(".sla"))
+            fileType = IMPORT_FILE_TYPE::SLA;
+        else if (fileLower.endsWith(".tla"))
+            fileType = IMPORT_FILE_TYPE::TLA;
+        else // if (fileLower.endsWith("dun")) // .dun or .rdun
+            fileType = IMPORT_FILE_TYPE::DUNGEON;
+    } else {
+        if (fileLower.endsWith(".cl2"))
+            fileType = IMPORT_FILE_TYPE::CL2;
+        else if (fileLower.endsWith("tf"))    // .ttf or .otf
+            fileType = IMPORT_FILE_TYPE::FONT;
+        else if (fileLower.endsWith(".smk"))
+            fileType = IMPORT_FILE_TYPE::SMK;
+        else if (fileLower.endsWith(".pcx"))
+            fileType = IMPORT_FILE_TYPE::PCX;
+        else if (fileLower.endsWith(".tbl"))
+            fileType = IMPORT_FILE_TYPE::TBL;
+        else if (fileLower.endsWith(".cpp"))
+            fileType = IMPORT_FILE_TYPE::CPP;
+        else
+            fileType = IMPORT_FILE_TYPE::CEL;
+    }
+}
+
 void MainWindow::importFile(const ImportParam &params)
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Importing..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
 
     QString gfxFilePath = params.filePath;
 
-    QString fileLower = gfxFilePath.toLower();
     IMPORT_FILE_TYPE fileType = params.fileType;
     if (fileType == IMPORT_FILE_TYPE::AUTODETECT) {
-        if (this->levelCelView != nullptr) {
-            if (fileLower.endsWith("s.cel"))
-                fileType = IMPORT_FILE_TYPE::SCEL;
-            else if (fileLower.endsWith(".cel"))
-                fileType = IMPORT_FILE_TYPE::CEL;
-            else if (fileLower.endsWith(".min"))
-                fileType = IMPORT_FILE_TYPE::MIN;
-            else if (fileLower.endsWith(".til"))
-                fileType = IMPORT_FILE_TYPE::TIL;
-            else if (fileLower.endsWith(".sla"))
-                fileType = IMPORT_FILE_TYPE::SLA;
-            else if (fileLower.endsWith(".tla"))
-                fileType = IMPORT_FILE_TYPE::TLA;
-            else // if (fileLower.endsWith("dun")) // .dun or .rdun
-                fileType = IMPORT_FILE_TYPE::DUNGEON;
-        } else {
-            if (fileLower.endsWith(".cl2"))
-                fileType = IMPORT_FILE_TYPE::CL2;
-            else if (fileLower.endsWith("tf"))    // .ttf or .otf
-                fileType = IMPORT_FILE_TYPE::FONT;
-            else
-                fileType = IMPORT_FILE_TYPE::CEL;
-        }
+        fileType = this->guessFileType(gfxFilePath, this->levelCelView != nullptr);
     }
 
     OpenAsParam openParams = OpenAsParam();
@@ -1183,6 +1197,8 @@ static void findFirstFile(const QString &dir, const QString &filter, QString &fi
 
 void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadFileContent *result)
 {
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
+
     QString gfxFilePath = params.celFilePath;
 
     // Check file extension
@@ -1205,12 +1221,6 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
             fileType = FILE_CONTENT::UNKNOWN;
     }
     result->fileType = fileType;
-    if (fileType == FILE_CONTENT::UNKNOWN)
-        return;
-
-    if (instance != nullptr) {
-        instance->on_actionClose_triggered();
-    }
     // result->fileType = fileType;
     // result->pal = nullptr;
     // result->trnUnique = nullptr;
@@ -1221,8 +1231,14 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     result->dun = nullptr;
     result->tableset = nullptr;
     result->cpp = nullptr;
+    if (fileType == FILE_CONTENT::UNKNOWN) {
+        MainWindow::failWithError(nullptr, result, tr("Could not recognize file-type based on its extension."));
+        return;
+    }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
+    if (instance != nullptr) {
+        instance->on_actionClose_triggered();
+    }
 
     // Loading default.pal
     D1Pal *newPal = new D1Pal();
@@ -2035,12 +2051,15 @@ void MainWindow::on_actionDiff_triggered()
 {
     QString filter;
 
+    QString title = tr("Select Graphics");
     if (this->gfxset != nullptr) {
-        filter = "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)";
-    } else if (this->dun != nullptr) {
-        filter = "DUN Files (*.dun *.DUN *.rdun *.RDUN)";
+        filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
     } else if (this->tileset != nullptr) {
-        filter = "CEL Files (*.cel *.CEL)";
+        filter = tr("CEL Files (*.cel *.CEL);;MIN Files (*.min *.MIN);;TIL Files (*.til *.TIL);;SLA Files (*.sla *.SLA);;TLA Files (*.tla *.TLA)");
+        if (this->dun != nullptr) {
+            title = tr("Select Dungeon or Graphics");
+            filter.append(QString(";;") + tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
+        }
     // } else if (this->tableset != nullptr) {
     //    filter = "TBL Files (*.tbl *.TBL)";
     //} else if (this->cpp != nullptr) {
@@ -2049,37 +2068,74 @@ void MainWindow::on_actionDiff_triggered()
         QString filePath = this->gfx->getFilePath();
         QString fileLower = filePath.toLower();
         if (fileLower.endsWith(".cel")) {
-            filter = "CEL Files (*.cel *.CEL)";
+            filter = tr("CEL Files (*.cel *.CEL)");
         } else if (fileLower.endsWith(".cl2")) {
-            filter = "CL2 Files (*.cl2 *.CL2)";
+            filter = tr("CL2 Files (*.cl2 *.CL2)");
         } else if (fileLower.endsWith(".pcx")) {
-            filter = "PCX Files (*.pcx *.PCX)";
+            filter = tr("PCX Files (*.pcx *.PCX)");
         } else if (fileLower.endsWith(".smk")) {
-            filter = "SMK Files (*.smk *.SMK)";
+            filter = tr("SMK Files (*.smk *.SMK)");
         } else {
             QMessageBox::critical(this, tr("Error"), tr("Not supported."));
             return;
         }
     }
 
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), filter);
-    if (openFilePath.isEmpty()) {
+    QString filePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
+    if (filePath.isEmpty()) {
         return;
     }
 
-    OpenAsParam params = OpenAsParam();
-    if (openFilePath.toLower().endsWith("dun")) { // .dun or .rdun
-        params.dunFilePath = openFilePath;
-    } else {
-        params.celFilePath = openFilePath;
+    IMPORT_FILE_TYPE fileType = this->guessFileType(filePath, this->tileset != nullptr);
+
+    QString fileLower = filePath.toLower();
+    bool main;
+    switch (fileType) {
+    case IMPORT_FILE_TYPE::MIN:
+    case IMPORT_FILE_TYPE::TIL:
+    case IMPORT_FILE_TYPE::SLA:
+    case IMPORT_FILE_TYPE::TLA:
+    case IMPORT_FILE_TYPE::SCEL: main = false; break;
+    case IMPORT_FILE_TYPE::DUNGEON:
+    case IMPORT_FILE_TYPE::CEL:
+    case IMPORT_FILE_TYPE::CL2:
+    case IMPORT_FILE_TYPE::FONT:
+    case IMPORT_FILE_TYPE::SMK:
+    case IMPORT_FILE_TYPE::PCX:
+    case IMPORT_FILE_TYPE::TBL:
+    case IMPORT_FILE_TYPE::CPP:
+    default:                    main = true; break;
     }
+
     LoadFileContent fileContent;
-    MainWindow::loadFile(params, nullptr, &fileContent);
-    if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
-        return;
+    OpenAsParam params = OpenAsParam();
+    if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
+        params.dunFilePath = filePath;
+    } else {
+        params.celFilePath = filePath;
+    }
+    if (main) {
+        // first attempt with all-auto
+        MainWindow::loadFile(params, nullptr, &fileContent);
+        if (fileContent.fileType == FILE_CONTENT::UNKNOWN) {
+            // second attempt using the current content
+            if (this->tileset != nullptr) {
+                params.minWidth = this->tileset->min->getSubtileWidth();
+                params.minHeight = this->tileset->min->getSubtileHeight();
+            } else if (this->gfx != nullptr && this->gfx->getFrameCount() != 0) {
+                params.celWidth = this->gfx->getFrameWidth(0);
+            } else {
+                return;
+            }
+            MainWindow::loadFile(params, nullptr, &fileContent);
+            if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
+                return;
+        }
+    }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Comparing..."), 0, PAF_OPEN_DIALOG);
 
+    if (main) {
     if (this->gfxset != nullptr) {
         this->gfxset->compareTo(&fileContent);
     } else if (this->dun != nullptr) {
@@ -2104,7 +2160,59 @@ void MainWindow::on_actionDiff_triggered()
     }
 
     closeFileContent(&fileContent);
-
+    } else {
+        switch (fileType) {
+        case IMPORT_FILE_TYPE::MIN: {
+            // Loading MIN
+            D1Tileset tileset = D1Tileset(this->gfx);
+            std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
+            if (tileset.min->load(params.celFilePath, this->tileset, celFrameTypes, params)) {
+                this->tileset->min->compareTo(tileset.min, celFrameTypes);
+            } else {
+                dProgressFail() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
+            }
+        } break;
+        case IMPORT_FILE_TYPE::TIL: {
+            // Loading TIL
+            D1Til til = D1Til();
+            D1Min min = D1Min();
+            if (til.load(params.celFilePath, &min)) {
+                this->tileset->til->compareTo(til);
+            } else {
+                dProgressFail() << tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
+            }
+        } break;
+        case IMPORT_FILE_TYPE::SLA: {
+            // Loading SLA
+            D1Sla sla = D1Sla();
+            if (sla.load(params.celFilePath)) {
+                this->tileset->sla->compareTo(sla);
+            } else {
+                dProgressFail() << tr("Failed loading SLA file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
+            }
+        } break;
+        case IMPORT_FILE_TYPE::TLA: {
+            // Loading TLA
+            D1Tla *tla = new D1Tla();
+            if (tla->load(params.celFilePath, -1, params)) {
+                this->tileset->tla->compareTo(tla);
+            } else {
+                dProgressFail() << tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
+            }
+        } break;
+        case IMPORT_FILE_TYPE::SCEL: {
+            // Loading sCEL
+            D1Gfx cls = D1Gfx();
+            cls.setPalette(this->trnBase->getResultingPalette());
+            if (D1Cel::load(cls, params.celFilePath, params)) { // tileset.loadCls
+                QString header;
+                this->tileset->cls->compareTo(cls, header);
+            } else {
+                dProgressFail() << tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
+            }
+        } break;
+        }
+    }
     // Clear loading message from status bar
     ProgressDialog::done();
 }

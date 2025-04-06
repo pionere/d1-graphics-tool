@@ -16,6 +16,8 @@ public:
     bool save(const SaveAsParam &params);
     void clear();
 
+    void compareTo(const D1Tla *tla) const;
+
     QString getFilePath() const;
     bool isModified() const;
     quint8 getTileProperties(int tileIndex) const;

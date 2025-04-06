@@ -18,6 +18,8 @@ public:
     bool save(const SaveAsParam &params);
     void clear();
 
+    void compareTo(const D1Sla *sla) const;
+
     QString getFilePath() const;
     bool isModified() const;
     int getSubtileCount() const;

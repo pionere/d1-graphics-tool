@@ -180,6 +180,83 @@ void D1Sla::clear()
     this->modified = true;
 }
 
+static const char* mapTypeToStr(quint8 mapType)
+{
+    const char* result = "N/A";
+    switch (mapType) {
+    case 0: result = "None";      break;
+    case 1: result = "Extern";    break;
+    case 2: result = "Stairs";    break;
+    case 3: result = "West Door"; break;
+    case 4: result = "East Door"; break;
+    }
+    return result;
+}
+
+void D1Sla::compareTo(const D1Sla *sla) const
+{
+    unsigned subtileCount = sla->subProperties.size();
+    unsigned mySubtileCount = this->subProperties.size();
+    if (mySubtileCount != subtileCount) {
+        dProgress() << tr("The number of tiles are different (%1 vs. %2)").arg(myTileCount).arg(subtileCount);
+        subtileCount = std::min(mySubtileCount, subtileCount);
+    }
+
+    for (int i < 0; i < subtileCount; i++) {
+        quint8 subProps = sla->subProperties[i];
+        quint8 mySubProps = this->subProperties[i];
+        if (mySubProps != subProps) {
+            dProgress() << tr("The collision settings of tile %1 are different ([%2:%3:%4] vs. [%5:%6:%7])").arg(i + 1)
+                .arg((mySubProps & PSF_BLOCK_PATH) != 0).arg((mySubProps & PSF_BLOCK_LIGHT) != 0).arg((mySubProps & PSF_BLOCK_MISSILE) != 0)
+                .arg((subProps & PSF_BLOCK_PATH) != 0).arg((subProps & PSF_BLOCK_LIGHT) != 0).arg((subProps & PSF_BLOCK_MISSILE) != 0);
+        }
+
+        quint8 lr = sla->lightRadius[i];
+        quint8 mylr = this->lightRadius[i];
+        if (mylr != lr) {
+            dProgress() << tr("The light radius of tile %1 is different (%2 vs. %3)").arg(i + 1).arg(mylr).arg(lr);
+        }
+
+        int trapProps = sla->trapProperties[i];
+        int myTrapProps = this->trapProperties[i];
+        if (myTrapProps != trapProps) {
+            dProgress() << tr("The trap settings of tile %1 are different ('%2' vs. '%3')").arg(i + 1)
+                .arg(myTrapProps == PST_NONE ? tr("None") : (myTrapProps == PST_LEFT ? tr("Left") : (myTrapProps == PST_RIGHT ? tr("Right") : tr("N/A"))))
+                .arg(trapProps == PST_NONE ? tr("None") : (trapProps == PST_LEFT ? tr("Left") : (trapProps == PST_RIGHT ? tr("Right") : tr("N/A"))));
+        }
+        int spec = sla->specProperties[i];
+        int myspec = this->specProperties[i];
+        if (myspec != spec) {
+            dProgress() << tr("The special cell of tile %1 is different (%2 vs. %3)").arg(i + 1).arg(myspec).arg(spec);
+        }
+
+        quint8 renderProps = sla->renderProperties[i];
+        quint8 myRenderProps = this->renderProperties[i];
+        if (myRenderProps != renderProps) {
+            dProgress() << tr("The render settings of tile %1 are different ([%2 left %3:%4:%5 right %6:%7:%8] vs. [%9 left %10:%11:%12 right %13:%14:%15])").arg(i + 1)
+                .arg((myRenderProps & TMIF_WALL_TRANS) != 0).arg((myRenderProps & TMIF_LEFT_REDRAW) != 0).arg((myRenderProps & TMIF_LEFT_FOLIAGE) != 0).arg((myRenderProps & TMIF_LEFT_WALL_TRANS) != 0)
+                    .arg((myRenderProps & TMIF_RIGHT_REDRAW) != 0).arg((myRenderProps & TMIF_RIGHT_FOLIAGE) != 0).arg((myRenderProps & TMIF_RIGHT_WALL_TRANS) != 0)
+                .arg((renderProps & TMIF_WALL_TRANS) != 0).arg((renderProps & TMIF_LEFT_REDRAW) != 0).arg((renderProps & TMIF_LEFT_FOLIAGE) != 0).arg((renderProps & TMIF_LEFT_WALL_TRANS) != 0)
+                    .arg((renderProps & TMIF_RIGHT_REDRAW) != 0).arg((renderProps & TMIF_RIGHT_FOLIAGE) != 0).arg((renderProps & TMIF_RIGHT_WALL_TRANS) != 0);
+        }
+
+
+        quint8 mapType = sla->mapTypes[i];
+        quint8 myMapType = this->mapTypes[i];
+        if (myMapType != mapType) {
+            dProgress() << tr("The map type of tile %1 is different ('%2' vs. '%3')").arg(i + 1).arg(mapTypeToStr(myMapType)).arg(mapTypeToStr(mapType));
+        }
+
+        quint8 mapProps = sla->mapProperties[i];
+        quint8 myMapProps = this->mapProperties[i];
+        if (myMapProps != mapProps) {
+            dProgress() << tr("The map walls of tile %1 are different ([%2:%3:%4:%5] vs. [%6:%7:%8:%9])").arg(i + 1)
+                .arg((myMapProps & MAT_WALL_NW) != 0).arg((myMapProps & MAT_WALL_NE) != 0).arg((myMapProps & MAT_WALL_SW) != 0).arg((myMapProps & MAT_WALL_SE) != 0)
+                .arg((mapProps & MAT_WALL_NW) != 0).arg((mapProps & MAT_WALL_NE) != 0).arg((mapProps & MAT_WALL_SW) != 0).arg((mapProps & MAT_WALL_SE) != 0);
+        }
+    }
+}
+
 QString D1Sla::getFilePath() const
 {
     return this->slaFilePath;
