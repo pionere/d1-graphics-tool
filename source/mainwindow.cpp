@@ -793,6 +793,7 @@ IMPORT_FILE_TYPE MainWindow::guessFileType(const QString& filePath, bool dunMode
         else
             fileType = IMPORT_FILE_TYPE::CEL;
     }
+    return fileType;
 }
 
 void MainWindow::importFile(const ImportParam &params)

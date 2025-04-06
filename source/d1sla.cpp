@@ -202,7 +202,7 @@ void D1Sla::compareTo(const D1Sla *sla) const
         subtileCount = std::min(mySubtileCount, subtileCount);
     }
 
-    for (int i = 0; i < subtileCount; i++) {
+    for (unsigned i = 0; i < subtileCount; i++) {
         quint8 subProps = sla->subProperties[i];
         quint8 mySubProps = this->subProperties[i];
         if (mySubProps != subProps) {

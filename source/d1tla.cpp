@@ -143,7 +143,7 @@ void D1Tla::compareTo(const D1Tla *tla) const
         tileCount = std::min(myTileCount, tileCount);
     }
 
-    for (int i = 0; i < tileCount; i++) {
+    for (unsigned i = 0; i < tileCount; i++) {
         quint8 properties = tla->properties[i];
         quint8 myProperties = this->properties[i];
 
