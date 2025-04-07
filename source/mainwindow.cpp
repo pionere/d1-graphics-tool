@@ -1983,7 +1983,7 @@ void MainWindow::on_actionExport_triggered()
     this->exportDialog->show();
 }
 
-QString MainWindow::FileContentTypeTxt(FILE_CONTENT fileType)
+QString MainWindow::FileContentTypeToStr(FILE_CONTENT fileType)
 {
     QString result;
     switch (fileType) {
@@ -2064,10 +2064,10 @@ void MainWindow::on_actionDiff_triggered()
         case FILE_CONTENT::CEL:
         case FILE_CONTENT::CL2: this->gfx->compareTo(fileContent.gfx, header); break;
         case FILE_CONTENT::PCX: D1Pcx::compare(*this->gfx, this->pal, &fileContent); break;
-        case FILE_CONTENT::TBL: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::TBL)); break;
-        case FILE_CONTENT::CPP: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::CPP)); break;
+        case FILE_CONTENT::TBL: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::TBL)); break;
+        case FILE_CONTENT::CPP: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::CPP)); break;
         case FILE_CONTENT::SMK: D1Smk::compare(*this->gfx, this->pals, &fileContent); break;
-        case FILE_CONTENT::DUN: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeTxt(FILE_CONTENT::DUN)); break;
+        case FILE_CONTENT::DUN: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::DUN)); break;
         default: dProgressErr() << tr("Not supported."); break;
         }
     }

@@ -977,7 +977,7 @@ void D1Dun::compareTo(const LoadFileContent *fileContent) const
                     .arg(dunB->width).arg(dunB->height), header);
         }
     } else {
-        dProgressErr() << tr("Not a dungeon file (%1)").arg(MainWindow::FileContentTypeTxt(fileContent->fileType));
+        dProgressErr() << tr("Not a dungeon file (%1)").arg(MainWindow::FileContentTypeToStr(fileContent->fileType));
     }
 }
 
