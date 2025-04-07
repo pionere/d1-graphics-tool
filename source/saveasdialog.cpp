@@ -248,7 +248,7 @@ void SaveAsDialog::on_saveButton_clicked()
         msg = tr("File");
         errors++;
     }
-    if (params.isTileset) {
+    if (this->isTileset) {
         if (params.minFilePath.isEmpty()) {
             if (errors)
                 msg += ", ";
@@ -273,7 +273,7 @@ void SaveAsDialog::on_saveButton_clicked()
             errors++;
             msg += tr("Tla-file");
         }
-        if (params.isDun) {
+        if (this->isDun) {
             if (params.dunFilePath.isEmpty()) {
                 if (errors)
                     msg += ", ";

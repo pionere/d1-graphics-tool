@@ -315,7 +315,7 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
             dProgress() << "\n";
         }
     } else {
-        dProgressErr() << QApplication::tr("Not a graphics file (%1)").arg(MainWindow::FileContentTypeTxt(fileContent->fileType));
+        dProgressErr() << QApplication::tr("Not a graphics file (%1)").arg(MainWindow::FileContentTypeToStr(fileContent->fileType));
     }
 }
 
