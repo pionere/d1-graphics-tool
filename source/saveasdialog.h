@@ -78,6 +78,7 @@ private:
     Ui::SaveAsDialog *ui;
     D1Gfx *gfx = nullptr;
     bool isTileset;
+    bool isDun;
     bool isGfxset;
     bool isTableset;
     bool isCpp;

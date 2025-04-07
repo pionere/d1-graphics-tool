@@ -4584,8 +4584,9 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(727, 13, 811, 2);
         MoveMcr(727, 15, 811, 4);
 
-        ReplaceMcr(728, 9, 716, 13); // 493[9]
-        MoveMcr(728, 11, 811, 1); // 493[11]
+        Blk2Mcr(728, 9);
+		MoveMcr(728, 9, 716, 13); // 481[13] -> 493[9]
+		MoveMcr(728, 11, 811, 1); // 550[1] - >493[11]
         Blk2Mcr(728, 7);
 
         MoveMcr(719, 15, 818, 0);
@@ -4886,6 +4887,17 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     }
     // prepare new subtiles for patchTownSpec
     {
+		// catacombs
+		ReplaceMcr(1171, 0, 1175, 0); // 745 <- 749
+		ReplaceMcr(1171, 1, 1175, 1);
+		ReplaceMcr(1171, 2, 1175, 2);
+		ReplaceMcr(1171, 3, 1175, 3);
+		ReplaceMcr(1172, 0, 1176, 0); // 746 <- 750
+		ReplaceMcr(1173, 1, 1177, 1); // 747 <- 751
+		ReplaceMcr(1174, 0, 1178, 0); // 748 <- 752
+		ReplaceMcr(1174, 1, 1178, 1);
+
+        // trees
         Blk2Mcr(1216, 8);
         HideMcr(1216, 10);
         HideMcr(1216, 2);

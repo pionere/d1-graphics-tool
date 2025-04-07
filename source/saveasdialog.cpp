@@ -27,6 +27,7 @@ SaveAsDialog::~SaveAsDialog()
 void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1Dun *dun, D1Tableset *tableset, D1Cpp *cpp)
 {
     bool isTilesetGfx = tileset != nullptr;
+    bool isDun = dun != nullptr;
     bool isTableset = tableset != nullptr;
     bool isGfxset = gfxset != nullptr;
     bool isCpp = cpp != nullptr;
@@ -34,6 +35,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
 
     this->gfx = isGfxset ? gfxset->getGfx(0) : g;
     this->isTileset = isTilesetGfx;
+    this->isDun = isDun;
     this->isGfxset = isGfxset;
     this->isTableset = isTableset;
     this->isCpp = isCpp;
@@ -56,7 +58,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     this->ui->outputTlaFileEdit->setText(isTilesetGfx ? tileset->tla->getFilePath() : "");
     this->ui->tblFileEdit->setText(isTableset ? tableset->darkTbl->getFilePath() : "");
 
-    if (dun == nullptr) {
+    if (!isDun) {
         this->ui->outputDunFileLabel->setVisible(false);
         this->ui->outputDunFileEdit->setVisible(false);
         this->ui->outputDunFileEdit->setText("");
@@ -108,15 +110,17 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
             this->ui->outputSlaFileEdit->setText(saveFilePath + (upperCase ? ".SLA" : ".sla"));
             this->ui->outputTlaFileEdit->setText(saveFilePath + (upperCase ? ".TLA" : ".tla"));
 
-            if (this->ui->outputDunFileEdit->isVisible()) {
+            // if (this->isDun) {
                 QString dunFilePath = this->ui->outputDunFileEdit->text();
 
-                QFileInfo dfi(dunFilePath);
-                QFileInfo sfi(saveFilePath);
+                if (!dunFilePath.isEmpty()) {
+                    QFileInfo dfi(dunFilePath);
+                    QFileInfo sfi(saveFilePath);
 
-                dfi.setFile(sfi.absoluteDir(), dfi.fileName());
-                this->ui->outputDunFileEdit->setText(dfi.absoluteFilePath());
-            }
+                    dfi.setFile(sfi.absoluteDir(), dfi.fileName());
+                    this->ui->outputDunFileEdit->setText(dfi.absoluteFilePath());
+                }
+            // }
         }
     }
 }
@@ -237,6 +241,51 @@ void SaveAsDialog::on_saveButton_clicked()
     }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
     params.tblFilePath = this->ui->tblFileEdit->text();
+
+    int errors = 0;
+    QString msg;
+    if (this->celFilePath.isEmpty()) {
+        msg = tr("File");
+        errors++;
+    }
+    if (this->isTileset) {
+        if (this->minFilePath.isEmpty()) {
+            if (errors)
+                msg += ", ";
+            errors++;
+            msg += tr("Min-file");
+        }
+        if (this->tilFilePath.isEmpty()) {
+            if (errors)
+                msg += ", ";
+            errors++;
+            msg += tr("Til-file");
+        }
+        if (this->slaFilePath.isEmpty()) {
+            if (errors)
+                msg += ", ";
+            errors++;
+            msg += tr("Sla-file");
+        }
+        if (this->tlaFilePath.isEmpty()) {
+            if (errors)
+                msg += ", ";
+            errors++;
+            msg += tr("Tla-file");
+        }
+        if (this->isDun) {
+            if (this->dunFilePath.isEmpty()) {
+                if (errors)
+                    msg += ", ";
+                errors++;
+                msg += tr("Dun-file");
+            }
+        }
+    }
+    if (errors != 0) {
+        QMessageBox::critical(this,  tr("Error"), tr("%1 path is missing.", "", errors).arg(msg));
+        return;
+    }
 
     this->close();
 

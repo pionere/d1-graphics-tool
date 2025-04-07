@@ -237,22 +237,19 @@
       <item row="2" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Cls File:</string>
-        </property>
-        <property name="toolTip">
-         <string>Path of the special-CEL File</string>
+         <string>Min File:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="LineEditWidget" name="outputClsFileEdit">
+       <widget class="LineEditWidget" name="outputMinFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QPushButton" name="outputClsFileBrowseButton">
+       <widget class="QPushButton" name="outputMinFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -282,19 +279,19 @@
       <item row="4" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Min File:</string>
+         <string>Sla File:</string>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="LineEditWidget" name="outputMinFileEdit">
+       <widget class="LineEditWidget" name="outputSlaFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QPushButton" name="outputMinFileBrowseButton">
+       <widget class="QPushButton" name="outputSlaFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -303,19 +300,19 @@
       <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Sla File:</string>
+         <string>Tla File:</string>
         </property>
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="LineEditWidget" name="outputSlaFileEdit">
+       <widget class="LineEditWidget" name="outputTlaFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QPushButton" name="outputSlaFileBrowseButton">
+       <widget class="QPushButton" name="outputTlaFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -324,19 +321,22 @@
       <item row="6" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Tla File:</string>
+         <string>Cls File:</string>
+        </property>
+        <property name="toolTip">
+         <string>Path of the special-CEL File</string>
         </property>
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="LineEditWidget" name="outputTlaFileEdit">
+       <widget class="LineEditWidget" name="outputClsFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="6" column="2">
-       <widget class="QPushButton" name="outputTlaFileBrowseButton">
+       <widget class="QPushButton" name="outputClsFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>

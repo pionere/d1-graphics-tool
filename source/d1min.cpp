@@ -240,7 +240,7 @@ void D1Min::compareTo(const D1Min *min, const std::map<unsigned, D1CEL_FRAME_TYP
             D1CEL_FRAME_TYPE frameType = it->second;
             D1CEL_FRAME_TYPE myFrameType = this->tileset->gfx->getFrame(i)->getFrameType();
             if (myFrameType != frameType) {
-                dProgress() << tr("The type of subtile %1 is %2 (was %3)").arg(i + 1).arg(D1GfxFrame::frameTypeToStr(myFrameType)).arg(D1GfxFrame::frameTypeToStr(frameType));
+                dProgress() << tr("The type of frame %1 is %2 (was %3)").arg(i + 1).arg(D1GfxFrame::frameTypeToStr(myFrameType)).arg(D1GfxFrame::frameTypeToStr(frameType));
             }
         }
     }
@@ -271,7 +271,7 @@ void D1Min::compareTo(const D1Min *min, const std::map<unsigned, D1CEL_FRAME_TYP
                 unsigned micro = min->frameReferences[i][index];
                 unsigned myMicro = this->frameReferences[i][index];
                 if (myMicro != micro) {
-                    dProgress() << tr("The micro %1:%2 of subtile %3 is %4 (was %5)").arg(x).arg(y).arg(i + 1).arg(myMicro).arg(micro);
+                    dProgress() << tr("The micro :%1: of subtile %2 is %3 (was %4)").arg(x + y * width).arg(i + 1).arg(myMicro).arg(micro);
                 }
             }
         }
