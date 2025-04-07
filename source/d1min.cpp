@@ -234,13 +234,13 @@ void D1Min::compareTo(const D1Min *min, const std::map<unsigned, D1CEL_FRAME_TYP
                 continue;
             }
             D1CEL_FRAME_TYPE frameType = celFrameTypes[i];*/
-            auto it = celFrameTypes.find(i);
+            auto it = celFrameTypes.find(i + 1);
             if (it == celFrameTypes.end())
                 continue;
             D1CEL_FRAME_TYPE frameType = it->second;
             D1CEL_FRAME_TYPE myFrameType = this->tileset->gfx->getFrame(i)->getFrameType();
             if (myFrameType != frameType) {
-                dProgress() << tr("The type of subtile %1 is %1 (was %2)").arg(i + 1).arg(D1GfxFrame::frameTypeToStr(myFrameType)).arg(D1GfxFrame::frameTypeToStr(frameType));
+                dProgress() << tr("The type of subtile %1 is %2 (was %3)").arg(i + 1).arg(D1GfxFrame::frameTypeToStr(myFrameType)).arg(D1GfxFrame::frameTypeToStr(frameType));
             }
         }
     }
