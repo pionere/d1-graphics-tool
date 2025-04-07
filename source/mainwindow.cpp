@@ -1153,6 +1153,8 @@ static void findFirstFile(const QString &dir, const QString &filter, QString &fi
 
 void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadFileContent *result)
 {
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
+
     QString gfxFilePath = params.celFilePath;
 
     // Check file extension
@@ -1175,12 +1177,6 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
             fileType = FILE_CONTENT::UNKNOWN;
     }
     result->fileType = fileType;
-    if (fileType == FILE_CONTENT::UNKNOWN)
-        return;
-
-    if (instance != nullptr) {
-        instance->on_actionClose_triggered();
-    }
     // result->fileType = fileType;
     // result->pal = nullptr;
     // result->trnUnique = nullptr;
@@ -1191,8 +1187,14 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     result->dun = nullptr;
     result->tableset = nullptr;
     result->cpp = nullptr;
+    if (fileType == FILE_CONTENT::UNKNOWN) {
+        MainWindow::failWithError(nullptr, result, tr("Could not recognize file-type based on its extension."));
+        return;
+    }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
+    if (instance != nullptr) {
+        instance->on_actionClose_triggered();
+    }
 
     // Loading default.pal
     D1Pal *newPal = new D1Pal();
