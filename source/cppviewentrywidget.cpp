@@ -255,7 +255,7 @@ void CppViewEntryWidget::ShowHeaderContextMenu()
     menu->addAction(action);
 
     action = new QAction(tr("Insert"));
-    action->setToolTip(tr("Add new column before this one"));
+    action->setToolTip(tr("Add a new column before this one"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertColumn_triggered()));
     menu->addAction(action);
 
@@ -300,7 +300,7 @@ void CppViewEntryWidget::ShowRowContextMenu()
     menu->setToolTipsVisible(true);
     QString leader = ((QPushButton *)this->widget)->text();
     //if (!leader.isEmpty()) {
-        label = new QLabel(QString("<u>%1</u>").arg(leader), this);
+        label = new QLabel(QStringLiteral("<u>%1</u>").arg(leader), this);
         label->setAlignment(Qt::AlignCenter);
         action = new QWidgetAction(menu);
         ((QWidgetAction *)action)->setDefaultWidget(label);
@@ -313,7 +313,7 @@ void CppViewEntryWidget::ShowRowContextMenu()
     menu->addAction(action);
 
     action = new QAction(tr("Insert"));
-    action->setToolTip(tr("Add new row before this one"));
+    action->setToolTip(tr("Add a new row before this one"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionInsertRow_triggered()));
     menu->addAction(action);
 
@@ -332,13 +332,13 @@ void CppViewEntryWidget::ShowRowContextMenu()
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionHideRow_triggered()));
     menu->addAction(action);
 
-    action = new QAction(tr("^^ ^^"));
+    action = new QAction(QStringLiteral("^^ ^^"));
     action->setToolTip(tr("Move this row up"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionMoveUpRow_triggered()));
     action->setEnabled(this->rowNum > 1);
     menu->addAction(action);
 
-    action = new QAction(tr("vv vv"));
+    action = new QAction(QStringLiteral("vv vv"));
     action->setToolTip(tr("Move this row down"));
     QObject::connect(action, SIGNAL(triggered()), this, SLOT(on_actionMoveDownRow_triggered()));
     action->setEnabled(this->rowNum < this->table->getRowCount());

@@ -125,13 +125,13 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     QString seedTxt = this->ui->seedLineEdit->text();
     params.seed = seedTxt.toInt(&ok);
     if (!ok && !seedTxt.isEmpty()) {
-        QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
+        QMessageBox::critical(this, tr("Error"), tr("Failed to parse the seed to a 32-bit integer."));
         return;
     }
     seedTxt = this->ui->questSeedLineEdit->text();
     params.seedQuest = seedTxt.toInt(&ok);
     if (!ok && !seedTxt.isEmpty()) {
-        QMessageBox::critical(this, "Error", "Failed to parse the quest-seed to a 32-bit integer.");
+        QMessageBox::critical(this, tr("Error"), tr("Failed to parse the quest-seed to a 32-bit integer."));
         return;
     }
     params.entryMode = this->ui->entryComboBox->currentData().value<int>();

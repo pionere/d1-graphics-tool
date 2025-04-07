@@ -1068,12 +1068,12 @@ void CppView::ShowContextMenu(const QPoint &pos)
     menu->setToolTipsVisible(true);
 
     action = new QAction(tr("Add"));
-    action->setToolTip(tr("Add column to the end of the table"));
+    action->setToolTip(tr("Add a column to the end of the table"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionAddColumn_Table_triggered()));
     menu->addAction(action);
 
     action = new QAction(tr("Insert"));
-    action->setToolTip(tr("Add new column before the current one"));
+    action->setToolTip(tr("Add a new column before the current one"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionInsertColumn_Table_triggered()));
     menu->addAction(action);
 
@@ -1094,13 +1094,13 @@ void CppView::ShowContextMenu(const QPoint &pos)
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
 
-    action = new QAction("<<--");
+    action = new QAction(QStringLiteral("<<--"));
     action->setToolTip(tr("Move the current column to the left"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveLeftColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
 
-    action = new QAction("-->>");
+    action = new QAction(QStringLiteral("-->>"));
     action->setToolTip(tr("Move the current column to the right"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveRightColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
@@ -1132,12 +1132,12 @@ void CppView::ShowContextMenu(const QPoint &pos)
     menu->setToolTipsVisible(true);
 
     action = new QAction(tr("Add"));
-    action->setToolTip(tr("Add row to the end of the table"));
+    action->setToolTip(tr("Add a row to the end of the table"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionAddRow_Table_triggered()));
     menu->addAction(action);
 
     action = new QAction(tr("Insert"));
-    action->setToolTip(tr("Add new row before the current one"));
+    action->setToolTip(tr("Add a new row before the current one"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionInsertRow_Table_triggered()));
     menu->addAction(action);
 
@@ -1158,13 +1158,13 @@ void CppView::ShowContextMenu(const QPoint &pos)
     action->setEnabled(this->currentTable->getRowCount() != 0);
     menu->addAction(action);
 
-    action = new QAction("^^ ^^");
+    action = new QAction(QStringLiteral("^^ ^^"));
     action->setToolTip(tr("Move the current row up"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveUpRow_Table_triggered()));
     action->setEnabled(this->currentTable->getRowCount() != 0);
     menu->addAction(action);
 
-    action = new QAction("vv vv");
+    action = new QAction(QStringLiteral("vv vv"));
     action->setToolTip(tr("Move the current row down"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveDownRow_Table_triggered()));
     action->setEnabled(this->currentTable->getRowCount() != 0);

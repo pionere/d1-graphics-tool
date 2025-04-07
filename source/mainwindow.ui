@@ -1256,7 +1256,7 @@
     <string>Add</string>
    </property>
    <property name="toolTip">
-    <string>Add column to the end of the table</string>
+    <string>Add a column to the end of the table</string>
    </property>
   </action>
   <action name="actionInsertColumn_Table">
@@ -1264,7 +1264,7 @@
     <string>Insert</string>
    </property>
    <property name="toolTip">
-    <string>Add new column before the current one</string>
+    <string>Add a new column before the current one</string>
    </property>
   </action>
   <action name="actionDuplicateColumn_Table">
@@ -1336,7 +1336,7 @@
     <string>Add</string>
    </property>
    <property name="toolTip">
-    <string>Add row to the end of the table</string>
+    <string>Add a row to the end of the table</string>
    </property>
   </action>
   <action name="actionInsertRow_Table">
@@ -1344,7 +1344,7 @@
     <string>Insert</string>
    </property>
    <property name="toolTip">
-    <string>Add new row before the current one</string>
+    <string>Add a new row before the current one</string>
    </property>
   </action>
   <action name="actionDuplicateRow_Table">

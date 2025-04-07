@@ -2005,26 +2005,26 @@ void MainWindow::on_actionDiff_triggered()
     QString filter;
 
     if (this->gfxset != nullptr) {
-        filter = "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)";
+        filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
     } else if (this->dun != nullptr) {
-        filter = "DUN Files (*.dun *.DUN *.rdun *.RDUN)";
+        filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)");
     } else if (this->tileset != nullptr) {
-        filter = "CEL Files (*.cel *.CEL)";
+        filter = tr("CEL Files (*.cel *.CEL)");
     // } else if (this->tableset != nullptr) {
-    //    filter = "TBL Files (*.tbl *.TBL)";
+    //    filter = tr("TBL Files (*.tbl *.TBL)");
     //} else if (this->cpp != nullptr) {
-    //    filter = "CPP Files (*.cpp *.CPP *.c *.C)";
+    //    filter = tr("CPP Files (*.cpp *.CPP *.c *.C)");
     } else {
         QString filePath = this->gfx->getFilePath();
         QString fileLower = filePath.toLower();
         if (fileLower.endsWith(".cel")) {
-            filter = "CEL Files (*.cel *.CEL)";
+            filter = tr("CEL Files (*.cel *.CEL)");
         } else if (fileLower.endsWith(".cl2")) {
-            filter = "CL2 Files (*.cl2 *.CL2)";
+            filter = tr("CL2 Files (*.cl2 *.CL2)");
         } else if (fileLower.endsWith(".pcx")) {
-            filter = "PCX Files (*.pcx *.PCX)";
+            filter = tr("PCX Files (*.pcx *.PCX)");
         } else if (fileLower.endsWith(".smk")) {
-            filter = "SMK Files (*.smk *.SMK)";
+            filter = tr("SMK Files (*.smk *.SMK)");
         } else {
             QMessageBox::critical(this, tr("Error"), tr("Not supported."));
             return;

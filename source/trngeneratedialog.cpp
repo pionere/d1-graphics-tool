@@ -530,7 +530,7 @@ void TrnGenerateDialog::on_generateButton_clicked()
         params.pals.push_back(palWidget->getPalette());
     }
     if (params.pals.empty()) {
-        QMessageBox::critical(nullptr, "Error", tr("At least one reference palette is necessary."));
+        QMessageBox::critical(nullptr, tr("Error"), tr("At least one reference palette is necessary."));
         return;
     }
 
