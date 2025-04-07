@@ -1801,6 +1801,20 @@ uint8_t D1Dun::getNumLayers() const
     return this->numLayers;
 }
 
+bool D1Dun::hasContentAt(int x, int y) const
+{
+    bool hasContent = false;
+    hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
+    hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
+    hasContent |= this->items[y][x] != 0;
+    hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
+    hasContent |= this->subtileProtections[y][x] != 0;
+    hasContent |= this->monsters[y][x].type.monIndex != 0;
+    hasContent |= this->objects[y][x] != 0;
+    hasContent |= this->rooms[y][x] != 0;
+    return hasContent;
+}
+
 int D1Dun::getWidth() const
 {
     return this->width;
@@ -1825,14 +1839,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
         bool hasContent = false;
         for (int y = 0; y < height; y++) {
             for (int x = newWidth; x < prevWidth; x++) {
-                hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
-                hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
-                hasContent |= this->items[y][x] != 0;
-                hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
-                hasContent |= this->subtileProtections[y][x] != 0;
-                hasContent |= this->monsters[y][x].type.monIndex != 0;
-                hasContent |= this->objects[y][x] != 0;
-                hasContent |= this->rooms[y][x] != 0;
+                hasContent |= this->hasContentAt(x, y);
             }
         }
 
@@ -1904,14 +1911,7 @@ bool D1Dun::setHeight(int newHeight, bool force)
         bool hasContent = false;
         for (int y = newHeight; y < prevHeight; y++) {
             for (int x = 0; x < width; x++) {
-                hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
-                hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
-                hasContent |= this->items[y][x] != 0;
-                hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
-                hasContent |= this->subtileProtections[y][x] != 0;
-                hasContent |= this->monsters[y][x].type.monIndex != 0;
-                hasContent |= this->objects[y][x] != 0;
-                hasContent |= this->rooms[y][x] != 0;
+                hasContent |= this->hasContentAt(x, y);
             }
         }
 
