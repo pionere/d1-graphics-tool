@@ -312,22 +312,19 @@
       <item row="3" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Cls File:</string>
-        </property>
-        <property name="toolTip">
-         <string>Path of the special-CEL File</string>
+         <string>Min File:</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="LineEditWidget" name="clsFileEdit">
+       <widget class="LineEditWidget" name="minFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QPushButton" name="clsFileBrowseButton">
+       <widget class="QPushButton" name="minFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -357,19 +354,19 @@
       <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Min File:</string>
+         <string>Sla File:</string>
         </property>
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="LineEditWidget" name="minFileEdit">
+       <widget class="LineEditWidget" name="slaFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QPushButton" name="minFileBrowseButton">
+       <widget class="QPushButton" name="slaFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -378,19 +375,19 @@
       <item row="6" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Sla File:</string>
+         <string>Tla File:</string>
         </property>
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="LineEditWidget" name="slaFileEdit">
+       <widget class="LineEditWidget" name="tlaFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="6" column="2">
-       <widget class="QPushButton" name="slaFileBrowseButton">
+       <widget class="QPushButton" name="tlaFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -399,19 +396,22 @@
       <item row="7" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Tla File:</string>
+         <string>Cls File:</string>
+        </property>
+        <property name="toolTip">
+         <string>Path of the special-CEL File</string>
         </property>
        </widget>
       </item>
       <item row="7" column="1">
-       <widget class="LineEditWidget" name="tlaFileEdit">
+       <widget class="LineEditWidget" name="clsFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="7" column="2">
-       <widget class="QPushButton" name="tlaFileBrowseButton">
+       <widget class="QPushButton" name="clsFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>

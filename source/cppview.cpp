@@ -1094,13 +1094,13 @@ void CppView::ShowContextMenu(const QPoint &pos)
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
 
-    action = new QAction("<<--");
+    action = new QAction(QStringLiteral("<<--"));
     action->setToolTip(tr("Move the current column to the left"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveLeftColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
     menu->addAction(action);
 
-    action = new QAction("-->>");
+    action = new QAction(QStringLiteral("-->>"));
     action->setToolTip(tr("Move the current column to the right"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveRightColumn_Table_triggered()));
     action->setEnabled(this->currentTable->getColumnCount() != 0);
@@ -1158,13 +1158,13 @@ void CppView::ShowContextMenu(const QPoint &pos)
     action->setEnabled(this->currentTable->getRowCount() != 0);
     menu->addAction(action);
 
-    action = new QAction("^^ ^^");
+    action = new QAction(QStringLiteral("^^ ^^"));
     action->setToolTip(tr("Move the current row up"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveUpRow_Table_triggered()));
     action->setEnabled(this->currentTable->getRowCount() != 0);
     menu->addAction(action);
 
-    action = new QAction("vv vv");
+    action = new QAction(QStringLiteral("vv vv"));
     action->setToolTip(tr("Move the current row down"));
     QObject::connect(action, SIGNAL(triggered()), mw, SLOT(on_actionMoveDownRow_Table_triggered()));
     action->setEnabled(this->currentTable->getRowCount() != 0);
