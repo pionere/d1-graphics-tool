@@ -253,32 +253,32 @@ void SaveAsDialog::on_saveButton_clicked()
             if (errors)
                 msg += ", ";
             errors++;
-            msg += tr("Min-file");
+            msg += tr("Min File");
         }
         if (params.tilFilePath.isEmpty()) {
             if (errors)
                 msg += ", ";
             errors++;
-            msg += tr("Til-file");
+            msg += tr("Til File");
         }
         if (params.slaFilePath.isEmpty()) {
             if (errors)
                 msg += ", ";
             errors++;
-            msg += tr("Sla-file");
+            msg += tr("Sla File");
         }
         if (params.tlaFilePath.isEmpty()) {
             if (errors)
                 msg += ", ";
             errors++;
-            msg += tr("Tla-file");
+            msg += tr("Tla File");
         }
         if (this->isDun) {
             if (params.dunFilePath.isEmpty()) {
                 if (errors)
                     msg += ", ";
                 errors++;
-                msg += tr("Dun-file");
+                msg += tr("Dun File");
             }
         }
     }
