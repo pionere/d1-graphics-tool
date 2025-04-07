@@ -244,37 +244,37 @@ void SaveAsDialog::on_saveButton_clicked()
 
     int errors = 0;
     QString msg;
-    if (this->celFilePath.isEmpty()) {
+    if (params.celFilePath.isEmpty()) {
         msg = tr("File");
         errors++;
     }
-    if (this->isTileset) {
-        if (this->minFilePath.isEmpty()) {
+    if (params.isTileset) {
+        if (params.minFilePath.isEmpty()) {
             if (errors)
                 msg += ", ";
             errors++;
             msg += tr("Min-file");
         }
-        if (this->tilFilePath.isEmpty()) {
+        if (params.tilFilePath.isEmpty()) {
             if (errors)
                 msg += ", ";
             errors++;
             msg += tr("Til-file");
         }
-        if (this->slaFilePath.isEmpty()) {
+        if (params.slaFilePath.isEmpty()) {
             if (errors)
                 msg += ", ";
             errors++;
             msg += tr("Sla-file");
         }
-        if (this->tlaFilePath.isEmpty()) {
+        if (params.tlaFilePath.isEmpty()) {
             if (errors)
                 msg += ", ";
             errors++;
             msg += tr("Tla-file");
         }
-        if (this->isDun) {
-            if (this->dunFilePath.isEmpty()) {
+        if (params.isDun) {
+            if (params.dunFilePath.isEmpty()) {
                 if (errors)
                     msg += ", ";
                 errors++;
