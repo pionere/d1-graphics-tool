@@ -15,6 +15,8 @@
 #include "dungeon/defs.h"
 #include "dungeon/enums.h"
 
+struct _CelMicro;
+
 class D1Tileset {
 public:
     D1Tileset(D1Gfx *gfx);
@@ -57,8 +59,15 @@ private:
 
     std::pair<unsigned, D1GfxFrame *> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
 
+    bool maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const _CelMicro* micros);
+    bool copyUpperCathedralMicro(int src, int dst, int blockSize, const _CelMicro* micros);
+    bool copyLowerCathedralMicro(int src, int dst, int blockSize, const _CelMicro* micros);
+    bool copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
+    bool copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
+    bool shiftCathedralMicrosDown(int m0, int m1, int blockSize, const _CelMicro* micros);
+
     void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
-    void patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRightRef, int cathedralBottomLeftRef, bool silent);
+    bool patchTownCathedral(bool silent);
     bool patchTownFloor(bool silent);
     bool patchTownDoor(bool silent);
     bool patchTownLight(bool silent);
