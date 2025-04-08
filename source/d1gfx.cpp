@@ -319,8 +319,10 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
     if (gfx->type != this->type) {
         reportDiff(QApplication::tr("type is %1 (was %2)").arg(celTypeToStr(this->type)).arg(celTypeToStr(gfx->type)), header);
     }
-    if (gfx->groupFrameIndices.size() == this->groupFrameIndices.size()) {
-        for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
+    size_t groupCount = gfx->groupFrameIndices.size();
+    size_t myGroupCount = this->groupFrameIndices.size();
+    if (groupCount == myGroupCount) {
+        for (size_t i = 0; i < groupCount; i++) {
             if (this->groupFrameIndices[i].first != gfx->groupFrameIndices[i].first || 
                 this->groupFrameIndices[i].second != gfx->groupFrameIndices[i].second) {
                 reportDiff(QApplication::tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)
@@ -329,11 +331,11 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
             }
         }
     } else {
-        reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(this->groupFrameIndices.size()).arg(gfx->groupFrameIndices.size()), header);
+        reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(myGroupCount).arg(groupCount), header);
     }
     int frameCount = gfx->getFrameCount();
     int myFrameCount = this->getFrameCount();
-    if (frameCount != myFrameCount) {
+    if ((groupCount != 1 || groupCount != myGroupCount) && frameCount != myFrameCount) {
         reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(myFrameCount).arg(frameCount), header);
     }
     /*if (frameCount == myFrameCount) {
