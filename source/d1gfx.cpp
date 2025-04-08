@@ -392,17 +392,16 @@ static void reportDiff(const QString text, QString &header)
     dProgress() << text;
 }
 
-static QString CelTypeToStr(D1CEL_TYPE type)
+static QString celTypeToStr(D1CEL_TYPE type)
 {
-    QString result;
+    QString result = tr("Unknown");
     switch (type) {
     case D1CEL_TYPE::V1_REGULAR:         result = QApplication::tr("regular (v1)");     break;
     case D1CEL_TYPE::V1_COMPILATION:     result = QApplication::tr("compilation (v1)"); break;
     case D1CEL_TYPE::V1_LEVEL:           result = QApplication::tr("level (v1)");       break;
     case D1CEL_TYPE::V2_MONO_GROUP:      result = QApplication::tr("mono group (v2)");  break;
     case D1CEL_TYPE::V2_MULTIPLE_GROUPS: result = QApplication::tr("multi group (v2)"); break;
-    case D1CEL_TYPE::SMK:                result = "smk";                                break;
-    default: result = "???"; break;
+    case D1CEL_TYPE::SMK:                result = QApplication::tr("smacker file");     break;
     }
     return result;
 }
@@ -459,12 +458,12 @@ static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxF
 void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
 {
     if (gfx->type != this->type) {
-        reportDiff(QApplication::tr("type is %1 (was %2)").arg(CelTypeToStr(this->type)).arg(CelTypeToStr(gfx->type)), header);
+        reportDiff(QApplication::tr("type is %1 (was %2)").arg(celTypeToStr(this->type)).arg(celTypeToStr(gfx->type)), header);
     }
     size_t groupCount = gfx->groupFrameIndices.size();
     size_t myGroupCount = this->groupFrameIndices.size();
     if (groupCount == myGroupCount) {
-        for (unsigned i = 0; i < groupCount; i++) {
+        for (size_t i = 0; i < groupCount; i++) {
             if (this->groupFrameIndices[i].first != gfx->groupFrameIndices[i].first || 
                 this->groupFrameIndices[i].second != gfx->groupFrameIndices[i].second) {
                 reportDiff(QApplication::tr("group %1 is frames %2..%3 (was %4..%5)").arg(i + 1)
@@ -477,7 +476,7 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
     }
     int frameCount = gfx->getFrameCount();
     int myFrameCount = this->getFrameCount();
-    if (groupCount != myGroupCount && frameCount != myFrameCount) {
+    if ((groupCount != 1 || groupCount != myGroupCount) && frameCount != myFrameCount) {
         reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(myFrameCount).arg(frameCount), header);
     }
     /*if (frameCount == myFrameCount) {

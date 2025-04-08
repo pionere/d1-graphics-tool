@@ -4683,7 +4683,11 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
 
 void LevelCelView::on_dungeonMonsterDeadCheckBox_clicked()
 {
-    this->on_dungeonMonsterCheckBox_clicked();
+    bool monsterDead = this->ui->dungeonMonsterDeadCheckBox->isChecked();
+    MapMonster mon = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+
+    mon.moType.monDeadFlag = monsterDead;
+    this->setCurrentMonster(mon);
 }
 
 void LevelCelView::on_dungeonMonsterAddButton_clicked()
