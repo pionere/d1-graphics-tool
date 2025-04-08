@@ -3121,7 +3121,7 @@ bool D1Tileset::patchTownDoor(bool silent)
         }
         // copy 517[0] to 519[1]
         if (i == 88) {
-            change | = copyLowerCathedralMicro(87, 88, blockSize, micros);
+            change |= copyLowerCathedralMicro(87, 88, blockSize, micros);
             /*const CelMicro &microSrc = micros[87];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
