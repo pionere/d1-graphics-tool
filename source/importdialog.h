@@ -8,11 +8,16 @@ enum class IMPORT_FILE_TYPE {
     TIL,
     SLA,
     TLA,
-    DUNGEON,
     SCEL,
+    DUNGEON,
     CEL,
     CL2,
     FONT,
+    // unsupported types
+    SMK,
+    PCX,
+    TBL,
+    CPP,
 };
 
 typedef struct ImportParam {

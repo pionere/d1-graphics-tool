@@ -225,6 +225,54 @@ void D1Min::clear()
     this->modified = true;
 }
 
+void D1Min::compareTo(const D1Min *min, const std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes) const
+{
+    if (!min->tileset->gfx->isUpscaled()) {
+        for (int i = 0; i < this->tileset->gfx->getFrameCount(); i++) {
+            auto it = celFrameTypes.find(i + 1);
+            if (it == celFrameTypes.end())
+                continue;
+            D1CEL_FRAME_TYPE frameType = it->second;
+            D1CEL_FRAME_TYPE myFrameType = this->tileset->gfx->getFrame(i)->getFrameType();
+            if (myFrameType != frameType) {
+                dProgress() << tr("The type of frame %1 is %2 (was %3)").arg(i + 1).arg(D1GfxFrame::frameTypeToStr(myFrameType)).arg(D1GfxFrame::frameTypeToStr(frameType));
+            }
+        }
+    }
+
+    int width = min->subtileWidth;
+    if (this->subtileWidth != width) {
+        dProgress() << tr("Subtile-width is %1 (was %2)").arg(this->subtileWidth).arg(width);
+        return;
+    }
+    int height = min->subtileHeight;
+    int myHeight = this->subtileHeight;
+    if (myHeight != height) {
+        dProgress() << tr("Subtile-height is %1 (was %2)").arg(myHeight).arg(height);
+        height = std::min(myHeight, height);
+    }
+
+    unsigned frameCount = min->frameReferences.size();
+    unsigned myFrameCount = this->frameReferences.size();
+    if (myFrameCount != frameCount) {
+        dProgress() << tr("Number of subtiles is %1 (was %2)").arg(myFrameCount).arg(frameCount);
+        frameCount = std::min(myFrameCount, frameCount);
+    }
+
+    for (unsigned i = 0; i < frameCount; i++) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                unsigned index = y * width + x;
+                unsigned micro = min->frameReferences[i][index];
+                unsigned myMicro = this->frameReferences[i][index];
+                if (myMicro != micro) {
+                    dProgress() << tr("The micro :%1: of subtile %2 is %3 (was %4)").arg(x + y * width).arg(i + 1).arg(myMicro).arg(micro);
+                }
+            }
+        }
+    }
+}
+
 QImage D1Min::getSubtileImage(int subtileIndex) const
 {
     if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size()) {

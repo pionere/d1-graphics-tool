@@ -24,6 +24,8 @@ public:
     bool save(const SaveAsParam &params);
     void clear();
 
+    void compareTo(const D1Min *min, const std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes) const;
+
     QImage getSubtileImage(int subtileIndex) const;
     QImage getSpecSubtileImage(int subtileIndex) const;
     std::vector<std::vector<D1GfxPixel>> getSubtilePixelImage(int subtileIndex) const;
