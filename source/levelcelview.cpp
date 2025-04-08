@@ -2234,28 +2234,6 @@ void LevelCelView::activeTiles() const
     ProgressDialog::decBar();
 }
 
-static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
-{
-    switch (type) {
-    case D1CEL_FRAME_TYPE::Square:
-        return QApplication::tr("Square");
-    case D1CEL_FRAME_TYPE::TransparentSquare:
-        return QApplication::tr("Transparent square");
-    case D1CEL_FRAME_TYPE::LeftTriangle:
-        return QApplication::tr("Left Triangle");
-    case D1CEL_FRAME_TYPE::RightTriangle:
-        return QApplication::tr("Right Triangle");
-    case D1CEL_FRAME_TYPE::LeftTrapezoid:
-        return QApplication::tr("Left Trapezoid");
-    case D1CEL_FRAME_TYPE::RightTrapezoid:
-        return QApplication::tr("Right Trapezoid");
-    case D1CEL_FRAME_TYPE::Empty:
-        return QApplication::tr("Empty");
-    default:
-        return QApplication::tr("Unknown");
-    }
-}
-
 void LevelCelView::inefficientFrames() const
 {
     ProgressDialog::incBar(tr("Scanning frames..."), 1);
@@ -2271,7 +2249,7 @@ void LevelCelView::inefficientFrames() const
         D1CEL_FRAME_TYPE effType = D1CelTilesetFrame::altFrameType(frame, &diff);
         if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
             diff = limit - diff;
-            dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(getFrameTypeName(effType));
+            dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(D1GfxFrame::frameTypeToStr(effType));
             result = true;
         }
     }
@@ -2305,7 +2283,7 @@ void LevelCelView::resetFrameTypes()
         D1CelTilesetFrame::selectFrameType(frame);
         D1CEL_FRAME_TYPE newType = frame->getFrameType();
         if (prevType != newType) {
-            dProgress() << tr("Changed Frame %1 from '%2' to '%3'.").arg(i + 1).arg(getFrameTypeName(prevType)).arg(getFrameTypeName(newType));
+            dProgress() << tr("Changed Frame %1 from '%2' to '%3'.").arg(i + 1).arg(D1GfxFrame::frameTypeToStr(prevType)).arg(D1GfxFrame::frameTypeToStr(newType));
             result = true;
         }
     }

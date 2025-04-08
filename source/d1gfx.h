@@ -7,6 +7,7 @@
 #include <QList>
 #include <QPair>
 #include <QPointer>
+#include <QString>
 #include <QtEndian>
 
 #include "d1pal.h"
@@ -76,6 +77,8 @@ class D1GfxFrame : public QObject {
     friend class Upscaler;
 
 public:
+    static QString frameTypeToStr(D1CEL_FRAME_TYPE frameType);
+
     D1GfxFrame() = default;
     D1GfxFrame(const D1GfxFrame &o);
     ~D1GfxFrame();

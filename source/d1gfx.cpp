@@ -62,6 +62,21 @@ bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
     return lhs.transparent != rhs.transparent || lhs.paletteIndex != rhs.paletteIndex;
 }
 
+QString D1GfxFrame::frameTypeToStr(D1CEL_FRAME_TYPE frameType)
+{
+    QString result = tr("Unknown");
+    switch (frameType) {
+    case D1CEL_FRAME_TYPE::Square:            result = tr("Square");             break;
+    case D1CEL_FRAME_TYPE::TransparentSquare: result = tr("Transparent square"); break;
+    case D1CEL_FRAME_TYPE::LeftTriangle:      result = tr("Left Triangle");      break;
+    case D1CEL_FRAME_TYPE::RightTriangle:     result = tr("Right Triangle");     break;
+    case D1CEL_FRAME_TYPE::LeftTrapezoid:     result = tr("Left Trapezoid");     break;
+    case D1CEL_FRAME_TYPE::RightTrapezoid:    result = tr("Right Trapezoid");    break;
+    case D1CEL_FRAME_TYPE::Empty:             result = tr("Empty");              break;
+    }
+    return result;
+}
+
 D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
 {
     this->width = o.width;
