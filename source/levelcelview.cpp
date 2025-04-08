@@ -393,23 +393,26 @@ void LevelCelView::updateLabel()
 
 int LevelCelView::findMonType(const QComboBox *comboBox, const DunMonsterType &value)
 {
+    // check if there are custom entries
     int num = 0;
     for (int index = 0; index < comboBox->count(); index++) {
         QVariant entry = comboBox->itemData(index);
         if (!entry.isValid()) {
             num++;
+        }
+    }
+    num = num == 2 ? 1 : 0;
+    for (int index = 0; index < comboBox->count(); index++) {
+        QVariant entry = comboBox->itemData(index);
+        if (!entry.isValid()) {
+            num = 0;
             continue;
         }
         const DunMonsterType monType = entry.value<DunMonsterType>();
-        if (monType == value) {
-    if (num != 0) {
-        QMessageBox::critical(nullptr, "Err", QString::number(num));
-    }
+        // custom entries must match exactly, match standard entries ignoring the monDeadFlag
+        if (monType == value || (num == 0 && monType.monIndex == value.monIndex && monType.monUnique == value.monUnique)) {
             return index;
         }
-    }
-    if (num != 0) {
-        QMessageBox::critical(nullptr, "Err", QString::number(num));
     }
     return -1;
 }
