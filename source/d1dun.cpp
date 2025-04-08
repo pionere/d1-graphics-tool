@@ -1201,6 +1201,8 @@ QImage D1Dun::getMonsterImage(const MapMonster &mapMon)
         const std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(mapMon.moDir);
         // int frameIdx = frameIndices.first + (time % (frameIndices.second - frameIndices.first + 1));
         int frameIdx = frameIndices.first + ((unsigned)mapMon.frameNum % (unsigned)(frameIndices.second - frameIndices.first + 1));
+        if (mapMon.monDeadFlag)
+            frameIdx = frameIndices.second;
         monEntry->monGfx->setPalette(monEntry->monPal);
         return monEntry->monGfx->getFrameImage(frameIdx);
     } else {

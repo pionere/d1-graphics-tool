@@ -143,7 +143,7 @@ void D1Til::compareTo(const D1Til *til) const
             int subtile = subtiles[x];
             int mySubtile = mySubtiles[x];
             if (mySubtile != subtile) {
-                dProgress() << tr("The subtile %1:%2 of tile %3 is %4 (was %5)").arg(x % TILE_WIDTH).arg(x / TILE_HEIGHT).arg(i + 1).arg(mySubtile).arg(subtile);
+                dProgress() << tr("The subtile :%1: of tile %2 is %3 (was %4)").arg(x).arg(i + 1).arg(mySubtile + 1).arg(subtile + 1);
             }
         }
     }
