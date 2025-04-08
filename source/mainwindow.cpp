@@ -2006,12 +2006,15 @@ void MainWindow::on_actionDiff_triggered()
 {
     QString filter;
 
+    QString title = tr("Select Graphics");
     if (this->gfxset != nullptr) {
         filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
-    } else if (this->dun != nullptr) {
-        filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)");
     } else if (this->tileset != nullptr) {
         filter = tr("CEL Files (*.cel *.CEL)");
+        if (this->dun != nullptr) {
+            title = tr("Select Dungeon or Graphics");
+            filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)") + QString(";;") + filter;
+        }
     // } else if (this->tableset != nullptr) {
     //    filter = tr("TBL Files (*.tbl *.TBL)");
     //} else if (this->cpp != nullptr) {
@@ -2033,7 +2036,7 @@ void MainWindow::on_actionDiff_triggered()
         }
     }
 
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), filter);
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
     if (openFilePath.isEmpty()) {
         return;
     }
@@ -2053,7 +2056,7 @@ void MainWindow::on_actionDiff_triggered()
 
     if (this->gfxset != nullptr) {
         this->gfxset->compareTo(&fileContent);
-    } else if (this->dun != nullptr) {
+    } else if (this->dun != nullptr && fileContent.fileType == FILE_CONTENT::DUN) {
         this->dun->compareTo(&fileContent);
     //} else if (this->tableset != nullptr) {
     //    this->tableset->compareTo(&fileContent);
