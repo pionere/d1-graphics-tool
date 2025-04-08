@@ -44,7 +44,7 @@ void CppDataEditDialog::initialize(CPP_EDIT_MODE t, int index)
         for (int i = 0; i < table->getRowCount(); i++) {
             QString leader = table->getLeader(i);
             if (leader.isEmpty()) {
-                leader = tr("-- %1.row ").arg(i + 1);
+                leader = tr("-- %1.row --").arg(i + 1);
             }
             fromComboBox->addItem(leader);
             toComboBox->addItem(leader);
