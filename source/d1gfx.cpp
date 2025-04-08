@@ -394,7 +394,7 @@ static void reportDiff(const QString text, QString &header)
 
 static QString celTypeToStr(D1CEL_TYPE type)
 {
-    QString result = tr("Unknown");
+    QString result = QApplication::tr("Unknown");
     switch (type) {
     case D1CEL_TYPE::V1_REGULAR:         result = QApplication::tr("regular (v1)");     break;
     case D1CEL_TYPE::V1_COMPILATION:     result = QApplication::tr("compilation (v1)"); break;
