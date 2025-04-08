@@ -264,7 +264,7 @@ void LevelCelView::updateEntityOptions()
     comboBox = this->ui->dungeonMonsterComboBox;
     comboBox->hide();
     comboBox->clear();
-    DunMonsterType monType = { 0, false };
+    DunMonsterType monType = { 0, false, false };
     comboBox->addItem("", QVariant::fromValue(monType));
     //   - custom monsters
     const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
@@ -278,7 +278,7 @@ void LevelCelView::updateEntityOptions()
     for (int i = 0; i < lengthof(DunMonstConvTbl); i++) {
         const DunMonsterStruct &mon = DunMonstConvTbl[i];
         if (mon.name != nullptr) {
-            DunMonsterType monType = { i, false };
+            DunMonsterType monType = { i, false, false };
             // filter custom entries
             unsigned n = 0;
             for (; n < customMonsterTypes.size(); n++) {
@@ -296,7 +296,7 @@ void LevelCelView::updateEntityOptions()
     for (int i = 0;; i++) {
         const UniqMonData &mon = uniqMonData[i];
         if (mon.mtype != MT_INVALID) {
-            DunMonsterType monType = { i + 1, true };
+            DunMonsterType monType = { i + 1, true, false };
             // filter custom entries
             unsigned n = 0;
             for (; n < customMonsterTypes.size(); n++) {
@@ -393,11 +393,23 @@ void LevelCelView::updateLabel()
 
 int LevelCelView::findMonType(const QComboBox *comboBox, const DunMonsterType &value)
 {
+    int num = 0;
     for (int index = 0; index < comboBox->count(); index++) {
-        const DunMonsterType monType = comboBox->itemData(index).value<DunMonsterType>();
+        QVariant entry = comboBox->itemData(index);
+        if (!entry.isValid()) {
+            num++;
+            continue;
+        }
+        const DunMonsterType monType = entry.value<DunMonsterType>();
         if (monType == value) {
+    if (num != 0) {
+        QMessageBox::critical(nullptr, "Err", QString::number(num));
+    }
             return index;
         }
+    }
+    if (num != 0) {
+        QMessageBox::critical(nullptr, "Err", QString::number(num));
     }
     return -1;
 }

@@ -284,7 +284,7 @@ void ProgressDialog::done()
     theDialog->running = false;
 
     if (emptyResult && openDialog) {
-        QMessageBox::information(this, "", tr("Done"));
+        QMessageBox::information(theDialog, "", tr("Done"));
     }
 }
 
