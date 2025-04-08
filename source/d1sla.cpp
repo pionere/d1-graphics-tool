@@ -1,5 +1,6 @@
 #include "d1sla.h"
 
+#include <QApplication>
 #include <QBuffer>
 #include <QDataStream>
 #include <QDebug>
@@ -180,15 +181,15 @@ void D1Sla::clear()
     this->modified = true;
 }
 
-static const char* mapTypeToStr(quint8 mapType)
+static QString mapTypeToStr(quint8 mapType)
 {
-    const char* result = "N/A";
+    QString result = QApplication::tr("N/A");
     switch (mapType) {
-    case 0: result = "None";      break;
-    case 1: result = "Extern";    break;
-    case 2: result = "Stairs";    break;
-    case 3: result = "West Door"; break;
-    case 4: result = "East Door"; break;
+    case 0: result = QApplication::tr("None");      break;
+    case 1: result = QApplication::tr("Extern");    break;
+    case 2: result = QApplication::tr("Stairs");    break;
+    case 3: result = QApplication::tr("West Door"); break;
+    case 4: result = QApplication::tr("East Door"); break;
     }
     return result;
 }

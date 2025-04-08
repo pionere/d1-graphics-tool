@@ -2059,12 +2059,12 @@ void MainWindow::on_actionDiff_triggered()
         filter = tr("CEL Files (*.cel *.CEL);;MIN Files (*.min *.MIN);;TIL Files (*.til *.TIL);;SLA Files (*.sla *.SLA);;TLA Files (*.tla *.TLA)");
         if (this->dun != nullptr) {
             title = tr("Select Dungeon or Graphics");
-            filter.append(QString(";;") + tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
+            filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)") + QString(";;") + filter;
         }
     // } else if (this->tableset != nullptr) {
-    //    filter = "TBL Files (*.tbl *.TBL)";
+    //    filter = tr("TBL Files (*.tbl *.TBL)");
     //} else if (this->cpp != nullptr) {
-    //    filter = "CPP Files (*.cpp *.CPP *.c *.C)";
+    //    filter = tr("CPP Files (*.cpp *.CPP *.c *.C)");
     } else {
         QString filePath = this->gfx->getFilePath();
         QString fileLower = filePath.toLower();
@@ -2108,13 +2108,13 @@ void MainWindow::on_actionDiff_triggered()
     default:                    main = true; break;
     }
 
-    LoadFileContent fileContent;
     OpenAsParam params = OpenAsParam();
     if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
         params.dunFilePath = filePath;
     } else {
         params.celFilePath = filePath;
     }
+    LoadFileContent fileContent;
     if (main) {
         // first attempt with all-auto
         MainWindow::loadFile(params, nullptr, &fileContent);
