@@ -781,7 +781,7 @@ static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int s
     }
     unsigned srcFrameRef = srcFrameReferences[srcIndex];
     if (srcFrameRef == 0) {
-        dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(srcIndex + 1).arg(srcSubtileIndex + 1);
+        dProgressErr() << QApplication::tr("Frame %1(%2) of Subtile %3 is empty.").arg(srcIndex + 1).arg(srcMicroIndex).arg(srcSubtileIndex + 1);
         return;
     }
 

@@ -2994,7 +2994,7 @@ void D1Dun::checkMonsters() const
             const DunMonsterType &monType = this->monsters[y][x].type;
             if (monType.monIndex == 0) {
                 if (monType.monUnique) {
-                    dProgressWarn() << tr("An unique monster is indicated at %1:%2, but its index is not set.").arg(x).arg(y);
+                    dProgressWarn() << tr("An unique monster is indicated at %1:%2, but its index is zero which is not supported by the game (Diablo 1/DevilutionX).").arg(x).arg(y);
                     result = true;
                 }
                 continue;

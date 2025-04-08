@@ -139,7 +139,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         D1GfxFrame *frame = new D1GfxFrame();
         if (!D1CelTilesetFrame::load(*frame, frameType, celFrameRawData, params)) {
             quint16 frameIndex = gfx.frames.size();
-            dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
+            dProgressErr() << QApplication::tr("Frame %1 is invalid (type %2 offset:0x%3-0x%4 (%5)).").arg(frameIndex + 1).arg(D1GfxFrame::frameTypeToStr(frameType)).arg((int)offset.first, 4, 16, QChar('0')).arg((int)offset.second, 4, 16, QChar('0')).arg(offset.second - offset.first);
             // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
         }
