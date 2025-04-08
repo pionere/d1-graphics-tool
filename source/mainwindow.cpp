@@ -2048,9 +2048,24 @@ void MainWindow::on_actionDiff_triggered()
         params.celFilePath = openFilePath;
     }
     LoadFileContent fileContent;
-    MainWindow::loadFile(params, nullptr, &fileContent);
-    if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
-        return;
+    {
+        // first attempt with all-auto
+        MainWindow::loadFile(params, nullptr, &fileContent);
+        if (fileContent.fileType == FILE_CONTENT::UNKNOWN) {
+            // second attempt using the current content
+            if (this->tileset != nullptr) {
+                params.minWidth = this->tileset->min->getSubtileWidth();
+                params.minHeight = this->tileset->min->getSubtileHeight();
+            } else if (this->gfx != nullptr && this->gfx->getFrameCount() != 0) {
+                params.celWidth = this->gfx->getFrameWidth(0);
+            } else {
+                return;
+            }
+            MainWindow::loadFile(params, nullptr, &fileContent);
+            if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
+                return;
+        }
+    }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Comparing..."), 0, PAF_OPEN_DIALOG);
 
