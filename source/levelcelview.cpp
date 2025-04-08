@@ -4700,6 +4700,8 @@ void LevelCelView::on_dungeonMonsterAddButton_clicked()
 
 void LevelCelView::setCurrentMonster(const MapMonster &mon)
 {
+    QMessageBox::critical(nullptr, "Error", tr("setCurrentMonster idx%1 u%2 d%3 dir%4 pos%5:%6").arg(mon.moType.monIndex).arg(mon.moType.monUnique).arg(mon.moType.monDeadFlag)
+        .arg(mon.moDir).arg(mon.mox).arg(mon.moy));
     bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, mon);
     // update the view
     if (change) {
