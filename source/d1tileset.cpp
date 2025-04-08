@@ -1906,7 +1906,20 @@ bool D1Tileset::patchTownCathedral(bool silent)
     return change;
 }
 
-// should run only once
+/*
+289[1] -1/2 
+288[1] -1/2 + 291[1]
+288[0] + 291[0]
+290[0] -1/2 
+365, 354(in 339), 353, 316, 297, 295, 287, 284 == 285 obsolete
+286 ~> 293
+299 ~> 296
+296[1] -1/2 
+375 ~> 351
+374 ~> 349, 352
+317[1] +2
+*/
+
 bool D1Tileset::patchTownFloor(bool silent)
 {
     const CelMicro micros[] = {
@@ -2024,7 +2037,7 @@ bool D1Tileset::patchTownFloor(bool silent)
                     }
                 }*/
             }
-            shiftCathedralMicrosDown(6, 7, blockSize, micros);
+            change |= shiftCathedralMicrosDown(6, 7, blockSize, micros);
 
         }
         // mask and move down the image - 511, 513
@@ -2091,7 +2104,7 @@ bool D1Tileset::patchTownFloor(bool silent)
                 }*/
             }
             change |= copyLowerCathedralMicro(9, 10, blockSize, micros);
-            change |= hiftCathedralMicrosDown(9, 10, blockSize, micros);
+            change |= shiftCathedralMicrosDown(9, 10, blockSize, micros);
         }
         // mask the image 1171[1] (3302), 1172[0] (3303), 1175[1] (3311) and 1176[0] (3317)
         if (i >= 11 && i < 15) {
@@ -10357,7 +10370,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
         }
         // move pixels of 152[5] down to enable reuse as 153[6]
         if (i == 13) {
-            shiftCathedralMicrosDown(13, 14, blockSize, micros);
+            change |= shiftCathedralMicrosDown(13, 14, blockSize, micros);
             /*for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
