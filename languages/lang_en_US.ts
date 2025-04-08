@@ -118,12 +118,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/builderwidget.cpp" line="108"/>
+        <location filename="../source/builderwidget.cpp" line="106"/>
         <source>Move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/builderwidget.cpp" line="110"/>
+        <location filename="../source/builderwidget.cpp" line="108"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
@@ -136,13 +136,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1230"/>
+        <location filename="../source/celview.cpp" line="1318"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/celview.ui" line="101"/>
-        <location filename="../source/celview.cpp" line="1220"/>
+        <location filename="../source/celview.cpp" line="1306"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
@@ -222,151 +222,161 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="320"/>
+        <location filename="../source/celview.ui" line="332"/>
+        <source>Show grid over the graphics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/celview.ui" line="342"/>
+        <source>Asset multiplier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/celview.ui" line="357"/>
         <source>Frames:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="327"/>
+        <location filename="../source/celview.ui" line="364"/>
         <source>Handle frames in groups</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="347"/>
+        <location filename="../source/celview.ui" line="384"/>
         <source>First frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="363"/>
+        <location filename="../source/celview.ui" line="400"/>
         <source>Previous frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="376"/>
+        <location filename="../source/celview.ui" line="413"/>
         <source>Current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="405"/>
+        <location filename="../source/celview.ui" line="442"/>
         <source>Number of frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="424"/>
+        <location filename="../source/celview.ui" line="461"/>
         <source>Next frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="440"/>
+        <location filename="../source/celview.ui" line="477"/>
         <source>Last frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="460"/>
+        <location filename="../source/celview.ui" line="497"/>
         <source>Current frame width</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="489"/>
+        <location filename="../source/celview.ui" line="526"/>
         <source>Current frame height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="498"/>
-        <location filename="../source/celview.cpp" line="538"/>
-        <location filename="../source/celview.cpp" line="588"/>
+        <location filename="../source/celview.cpp" line="534"/>
+        <location filename="../source/celview.cpp" line="574"/>
+        <location filename="../source/celview.cpp" line="624"/>
         <source>Failed to load file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="512"/>
-        <location filename="../source/celview.cpp" line="558"/>
-        <location filename="../source/celview.cpp" line="605"/>
+        <location filename="../source/celview.cpp" line="548"/>
+        <location filename="../source/celview.cpp" line="594"/>
+        <location filename="../source/celview.cpp" line="641"/>
         <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="999"/>
+        <location filename="../source/celview.cpp" line="1059"/>
         <source>Create Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1000"/>
-        <source>Create new frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/celview.cpp" line="1005"/>
+        <location filename="../source/celview.cpp" line="1065"/>
         <source>Insert Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1006"/>
-        <source>Add new frames before the current one</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/celview.cpp" line="1011"/>
+        <location filename="../source/celview.cpp" line="1071"/>
         <source>Duplicate Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1012"/>
+        <location filename="../source/celview.cpp" line="1072"/>
         <source>Duplicate the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="993"/>
+        <location filename="../source/celview.cpp" line="1053"/>
         <source>Add Layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="267"/>
+        <location filename="../source/celview.cpp" line="279"/>
         <source>Show audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="765"/>
+        <location filename="../source/celview.cpp" line="801"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="765"/>
+        <location filename="../source/celview.cpp" line="801"/>
         <source>Pixels with non-background colors are going to be eliminated (At least Frame %1 is affected). Are you sure you want to proceed?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="771"/>
+        <location filename="../source/celview.cpp" line="807"/>
         <source>Resizing...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="994"/>
+        <location filename="../source/celview.cpp" line="1054"/>
         <source>Add the content of an image to the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1017"/>
+        <location filename="../source/celview.cpp" line="1060"/>
+        <source>Create a new frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1066"/>
+        <source>Add a new frame before the current one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1077"/>
         <source>Replace Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1018"/>
+        <location filename="../source/celview.cpp" line="1078"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1024"/>
+        <location filename="../source/celview.cpp" line="1084"/>
         <source>Del Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1025"/>
+        <location filename="../source/celview.cpp" line="1085"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="271"/>
+        <location filename="../source/celview.cpp" line="283"/>
         <source>Start drawing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -508,136 +518,160 @@
 <context>
     <name>CppView</name>
     <message>
-        <location filename="../source/cppview.cpp" line="991"/>
+        <location filename="../source/cppview.cpp" line="1067"/>
         <source>Columns</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="994"/>
-        <location filename="../source/cppview.cpp" line="1053"/>
+        <location filename="../source/cppview.cpp" line="1070"/>
+        <location filename="../source/cppview.cpp" line="1134"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="995"/>
-        <source>Add column to the end of the table</source>
+        <location filename="../source/cppview.cpp" line="1071"/>
+        <source>Add a column to the end of the table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="999"/>
-        <location filename="../source/cppview.cpp" line="1058"/>
+        <location filename="../source/cppview.cpp" line="1075"/>
+        <location filename="../source/cppview.cpp" line="1139"/>
         <source>Insert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1000"/>
-        <source>Add new column before the current one</source>
+        <location filename="../source/cppview.cpp" line="1076"/>
+        <source>Add a new column before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1004"/>
-        <location filename="../source/cppview.cpp" line="1063"/>
+        <location filename="../source/cppview.cpp" line="1085"/>
+        <location filename="../source/cppview.cpp" line="1149"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1005"/>
-        <location filename="../source/cppview.cpp" line="1031"/>
+        <location filename="../source/cppview.cpp" line="1112"/>
         <source>Delete columns</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1010"/>
-        <location filename="../source/cppview.cpp" line="1069"/>
+        <location filename="../source/cppview.cpp" line="1091"/>
+        <location filename="../source/cppview.cpp" line="1155"/>
         <source>Hide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1011"/>
-        <location filename="../source/cppview.cpp" line="1037"/>
+        <location filename="../source/cppview.cpp" line="1118"/>
         <source>Hide columns</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1017"/>
+        <location filename="../source/cppview.cpp" line="1098"/>
         <source>Move the current column to the left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1023"/>
+        <location filename="../source/cppview.cpp" line="1080"/>
+        <location filename="../source/cppview.cpp" line="1144"/>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/cppview.cpp" line="1081"/>
+        <source>Duplicate the current column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/cppview.cpp" line="1086"/>
+        <source>Delete the current column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/cppview.cpp" line="1092"/>
+        <source>Hide the current column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/cppview.cpp" line="1104"/>
         <source>Move the current column to the right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1030"/>
-        <location filename="../source/cppview.cpp" line="1089"/>
+        <location filename="../source/cppview.cpp" line="1111"/>
+        <location filename="../source/cppview.cpp" line="1175"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1036"/>
-        <location filename="../source/cppview.cpp" line="1095"/>
+        <location filename="../source/cppview.cpp" line="1117"/>
+        <location filename="../source/cppview.cpp" line="1181"/>
         <source>Hide...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1042"/>
-        <location filename="../source/cppview.cpp" line="1101"/>
+        <location filename="../source/cppview.cpp" line="1123"/>
+        <location filename="../source/cppview.cpp" line="1187"/>
         <source>Show...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1043"/>
+        <location filename="../source/cppview.cpp" line="1124"/>
         <source>Show columns</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1050"/>
+        <location filename="../source/cppview.cpp" line="1131"/>
         <source>Rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1054"/>
-        <source>Add row to the end of the table</source>
+        <location filename="../source/cppview.cpp" line="1135"/>
+        <source>Add a row to the end of the table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1059"/>
-        <source>Add new row before the current one</source>
+        <location filename="../source/cppview.cpp" line="1140"/>
+        <source>Add a new row before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1064"/>
+        <location filename="../source/cppview.cpp" line="1145"/>
+        <source>Duplicate the current row</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/cppview.cpp" line="1150"/>
         <source>Delete the current row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1070"/>
+        <location filename="../source/cppview.cpp" line="1156"/>
         <source>Hide the current row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1076"/>
+        <location filename="../source/cppview.cpp" line="1162"/>
         <source>Move the current row up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1082"/>
+        <location filename="../source/cppview.cpp" line="1168"/>
         <source>Move the current row down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1090"/>
+        <location filename="../source/cppview.cpp" line="1176"/>
         <source>Delete rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1096"/>
+        <location filename="../source/cppview.cpp" line="1182"/>
         <source>Hide rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppview.cpp" line="1102"/>
+        <location filename="../source/cppview.cpp" line="1188"/>
         <source>Show rows</source>
         <translation type="unfinished"></translation>
     </message>
@@ -677,7 +711,7 @@
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="254"/>
-        <location filename="../source/cppviewentrywidget.cpp" line="316"/>
+        <location filename="../source/cppviewentrywidget.cpp" line="321"/>
         <source>Change...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -698,84 +732,90 @@
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="264"/>
-        <location filename="../source/cppviewentrywidget.cpp" line="321"/>
+        <location filename="../source/cppviewentrywidget.cpp" line="326"/>
         <source>Insert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="265"/>
-        <source>Add new column before this one</source>
+        <source>Add a new column before this one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="269"/>
-        <location filename="../source/cppviewentrywidget.cpp" line="326"/>
-        <source>Delete</source>
+        <location filename="../source/cppviewentrywidget.cpp" line="331"/>
+        <source>Duplicate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="270"/>
-        <source>Delete this column</source>
+        <source>Duplicate this column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="274"/>
-        <location filename="../source/cppviewentrywidget.cpp" line="331"/>
-        <source>Hide</source>
+        <location filename="../source/cppviewentrywidget.cpp" line="336"/>
+        <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="275"/>
-        <source>Hide this column</source>
+        <source>Delete this column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/cppviewentrywidget.cpp" line="279"/>
+        <location filename="../source/cppviewentrywidget.cpp" line="341"/>
+        <source>Hide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="280"/>
+        <source>Hide this column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/cppviewentrywidget.cpp" line="285"/>
         <source>Move this column to the left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppviewentrywidget.cpp" line="286"/>
+        <location filename="../source/cppviewentrywidget.cpp" line="291"/>
         <source>Move this column to the right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppviewentrywidget.cpp" line="317"/>
+        <location filename="../source/cppviewentrywidget.cpp" line="322"/>
         <source>Change the leader text of this row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppviewentrywidget.cpp" line="322"/>
-        <source>Add new row before this one</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/cppviewentrywidget.cpp" line="327"/>
-        <source>Delete this row</source>
+        <source>Add a new row before this one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="332"/>
-        <source>Hide this row</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/cppviewentrywidget.cpp" line="336"/>
-        <source>^^ ^^</source>
+        <source>Duplicate this row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="337"/>
-        <source>Move this row up</source>
+        <source>Delete this row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="342"/>
-        <source>vv vv</source>
+        <source>Hide this row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/cppviewentrywidget.cpp" line="343"/>
+        <location filename="../source/cppviewentrywidget.cpp" line="347"/>
+        <source>Move this row up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/cppviewentrywidget.cpp" line="353"/>
         <source>Move this row down</source>
         <translation type="unfinished"></translation>
     </message>
@@ -783,22 +823,22 @@
 <context>
     <name>D1Cpp</name>
     <message>
-        <location filename="../source/d1cpp.cpp" line="1346"/>
+        <location filename="../source/d1cpp.cpp" line="1379"/>
         <source>Entries added to unbalanced table %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1cpp.cpp" line="1582"/>
+        <location filename="../source/d1cpp.cpp" line="1615"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1cpp.cpp" line="1582"/>
+        <location filename="../source/d1cpp.cpp" line="1615"/>
         <source>Are you sure you want to overwrite %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1cpp.cpp" line="1609"/>
+        <location filename="../source/d1cpp.cpp" line="1642"/>
         <source>Invalid header &apos;%1&apos; in table %2. (Followup headers are not empty)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -806,245 +846,268 @@
 <context>
     <name>D1Dun</name>
     <message>
-        <location filename="../source/d1dun.cpp" line="377"/>
+        <location filename="../source/d1dun.cpp" line="506"/>
         <source>Invalid DUN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="393"/>
+        <location filename="../source/d1dun.cpp" line="522"/>
         <source>Invalid DUN header.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="448"/>
+        <location filename="../source/d1dun.cpp" line="577"/>
         <source>Monsters are not defined in the DUN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="462"/>
+        <location filename="../source/d1dun.cpp" line="591"/>
         <source>Objects are not defined in the DUN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="480"/>
+        <location filename="../source/d1dun.cpp" line="609"/>
         <source>Unrecognizable data is ignored at the end of the DUN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="487"/>
+        <location filename="../source/d1dun.cpp" line="616"/>
         <source>Invalid RDUN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="769"/>
+        <location filename="../source/d1dun.cpp" line="806"/>
+        <location filename="../source/d1dun.cpp" line="905"/>
+        <source>Defined missile at %1:%2 is not saved.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="910"/>
         <source>Defined protection is not saved in this format (RDUN).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="772"/>
+        <location filename="../source/d1dun.cpp" line="913"/>
         <source>Defined monster is not saved in this format (RDUN).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="775"/>
+        <location filename="../source/d1dun.cpp" line="916"/>
         <source>Defined object is not saved in this format (RDUN).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2348"/>
-        <source>UniqMonster%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2721"/>
-        <source>Checking Tiles...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2726"/>
-        <source>Tile inconsistencies:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2736"/>
-        <source>Tile at %1:%2 is undefined.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2755"/>
-        <source>Subtile at %1:%2 is undefined.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2762"/>
-        <source>No inconsistency detected with the Tiles.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2771"/>
-        <source>Checking Protections...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2776"/>
-        <source>Protection inconsistencies:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2783"/>
-        <source>Subtile with an object is not protected at %1:%2.</source>
+        <location filename="../source/d1dun.cpp" line="1118"/>
+        <source>Not a dungeon file (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="2787"/>
+        <source>UniqMonster%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="2821"/>
+        <source>Missile%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3287"/>
+        <source>Checking Tiles...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3292"/>
+        <source>Tile inconsistencies:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3302"/>
+        <source>Tile at %1:%2 is undefined.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3321"/>
+        <source>Subtile at %1:%2 is undefined.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3328"/>
+        <source>No inconsistency detected with the Tiles.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3337"/>
+        <source>Checking Protections...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3342"/>
+        <source>Protection inconsistencies:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3349"/>
+        <source>Subtile with an object is not protected at %1:%2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3353"/>
         <source>Subtile with an item is not protected at %1:%2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2794"/>
+        <location filename="../source/d1dun.cpp" line="3360"/>
         <source>No inconsistency detected with the Protections.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2819"/>
-        <location filename="../source/d1dun.cpp" line="2863"/>
-        <location filename="../source/d1dun.cpp" line="2903"/>
+        <location filename="../source/d1dun.cpp" line="3385"/>
+        <location filename="../source/d1dun.cpp" line="3429"/>
+        <location filename="../source/d1dun.cpp" line="3469"/>
         <source>&apos;%1&apos; at %2:%3 is on an undefined subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2822"/>
-        <location filename="../source/d1dun.cpp" line="2866"/>
-        <location filename="../source/d1dun.cpp" line="2906"/>
+        <location filename="../source/d1dun.cpp" line="3388"/>
+        <location filename="../source/d1dun.cpp" line="3432"/>
+        <location filename="../source/d1dun.cpp" line="3472"/>
         <source>&apos;%1&apos; at %2:%3 is on an empty subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2827"/>
-        <location filename="../source/d1dun.cpp" line="2871"/>
+        <location filename="../source/d1dun.cpp" line="3393"/>
+        <location filename="../source/d1dun.cpp" line="3437"/>
         <source>&apos;%1&apos; at %2:%3 is on a subtile which is not accessible (solid or missile blocker).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2855"/>
-        <source>An unique monster is indicated at %1:%2, but its index is not set.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1dun.cpp" line="2910"/>
+        <location filename="../source/d1dun.cpp" line="3476"/>
         <source>&apos;%1&apos; at %2:%3 is sharing a subtile with a monster.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2914"/>
+        <location filename="../source/d1dun.cpp" line="3480"/>
         <source>&apos;%1&apos; at %2:%3 is sharing a subtile with an item.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3032"/>
+        <location filename="../source/d1dun.cpp" line="3593"/>
+        <location filename="../source/d1dun.cpp" line="3618"/>
+        <location filename="../source/d1dun.cpp" line="3648"/>
+        <location filename="../source/d1dun.cpp" line="3670"/>
+        <location filename="../source/d1dun.cpp" line="3691"/>
+        <location filename="../source/d1dun.cpp" line="3869"/>
+        <location filename="../source/d1dun.cpp" line="3938"/>
+        <source>Size of the dungeon does not match. (%1x%2 vs. %3x%4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3603"/>
         <source>Tile &apos;%1&apos; at %2:%3 was replaced by &apos;%4&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3052"/>
-        <location filename="../source/d1dun.cpp" line="3597"/>
+        <location filename="../source/d1dun.cpp" line="3626"/>
+        <location filename="../source/d1dun.cpp" line="4231"/>
         <source>&apos;%1&apos; at %2:%3 was replaced by &apos;%4&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3081"/>
+        <location filename="../source/d1dun.cpp" line="3658"/>
         <source>&apos;%1&apos;(%2) item at %3:%4 was replaced by &apos;%5&apos;(%6).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3100"/>
+        <location filename="../source/d1dun.cpp" line="3680"/>
         <source>&apos;%1&apos;(%2) %3monster at %4:%5 was replaced by &apos;%6&apos;(%7)%8.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3121"/>
+        <location filename="../source/d1dun.cpp" line="3701"/>
         <source>&apos;%1&apos;(%2) object at %3:%4 was replaced by &apos;%5&apos;(%6).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3334"/>
-        <location filename="../source/d1dun.cpp" line="3361"/>
+        <location filename="../source/d1dun.cpp" line="3916"/>
+        <location filename="../source/d1dun.cpp" line="3946"/>
         <source>Tile at %1:%2 is now &apos;%3&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3386"/>
+        <location filename="../source/d1dun.cpp" line="3971"/>
         <source>Subtile at %1:%2 is now protected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3544"/>
+        <location filename="../source/d1dun.cpp" line="4178"/>
         <source>Removed Object &apos;%1&apos; from %2:%3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3546"/>
+        <location filename="../source/d1dun.cpp" line="4180"/>
         <source>Added Object &apos;%1&apos; to %2:%3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3562"/>
+        <location filename="../source/d1dun.cpp" line="4196"/>
         <source>Removed %1Monster &apos;%2&apos; from %3:%4.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3564"/>
+        <location filename="../source/d1dun.cpp" line="4198"/>
         <source>Added %1Monster &apos;%2&apos; to %3:%4.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3566"/>
+        <location filename="../source/d1dun.cpp" line="4200"/>
         <source>Changed Monster at %1:%2 from &apos;%3&apos;%4 to &apos;%5&apos;%6.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3580"/>
+        <location filename="../source/d1dun.cpp" line="4214"/>
         <source>Removed Item &apos;%1&apos; from %2:%3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3582"/>
+        <location filename="../source/d1dun.cpp" line="4216"/>
         <source>Added Item &apos;%1&apos; to %2:%3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3584"/>
+        <location filename="../source/d1dun.cpp" line="4218"/>
         <source>Changed Item at %1:%2 from &apos;%3&apos; to &apos;%4&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3611"/>
+        <location filename="../source/d1dun.cpp" line="4245"/>
         <source>Added Monster Protection to %1:%2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3613"/>
+        <location filename="../source/d1dun.cpp" line="4247"/>
         <source>Removed Monster Protection from %1:%2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3618"/>
+        <location filename="../source/d1dun.cpp" line="4252"/>
         <source>Added Object Protection to %1:%2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3620"/>
+        <location filename="../source/d1dun.cpp" line="4254"/>
         <source>Removed Object Protection from %1:%2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="5168"/>
-        <location filename="../source/d1dun.cpp" line="5328"/>
+        <location filename="../source/d1dun.cpp" line="5802"/>
+        <location filename="../source/d1dun.cpp" line="5955"/>
         <source>Failed loading CEL file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="5235"/>
+        <location filename="../source/d1dun.cpp" line="5868"/>
+        <location filename="../source/d1dun.cpp" line="6019"/>
         <source>Failed loading CL2 file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1054,238 +1117,244 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="5248"/>
-        <location filename="../source/d1dun.cpp" line="5257"/>
+        <location filename="../source/d1dun.cpp" line="5877"/>
+        <location filename="../source/d1dun.cpp" line="5886"/>
+        <location filename="../source/d1dun.cpp" line="6028"/>
         <source>Failed loading TRN file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="615"/>
-        <location filename="../source/d1dun.cpp" line="1699"/>
-        <location filename="../source/d1dun.cpp" line="1778"/>
+        <location filename="../source/d1dun.cpp" line="750"/>
+        <location filename="../source/d1dun.cpp" line="2117"/>
+        <location filename="../source/d1dun.cpp" line="2192"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="434"/>
+        <location filename="../source/d1dun.cpp" line="563"/>
         <source>Protections are not defined in the DUN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="615"/>
+        <location filename="../source/d1dun.cpp" line="750"/>
         <source>Are you sure you want to overwrite %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="656"/>
+        <location filename="../source/d1dun.cpp" line="791"/>
         <source>Undefined tiles (one at %1:%2) can not be saved in this format (DUN).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="665"/>
-        <location filename="../source/d1dun.cpp" line="761"/>
+        <location filename="../source/d1dun.cpp" line="800"/>
+        <location filename="../source/d1dun.cpp" line="899"/>
         <source>Defined item at %1:%2 is not saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="668"/>
-        <location filename="../source/d1dun.cpp" line="764"/>
+        <location filename="../source/d1dun.cpp" line="803"/>
+        <location filename="../source/d1dun.cpp" line="902"/>
         <source>Defined room at %1:%2 is not saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="697"/>
+        <location filename="../source/d1dun.cpp" line="835"/>
         <source>Subtile value at %1:%2 inconsistent with tile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="709"/>
+        <location filename="../source/d1dun.cpp" line="847"/>
         <source>Defined protection is not saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="712"/>
+        <location filename="../source/d1dun.cpp" line="850"/>
         <source>Defined monster is not saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="715"/>
+        <location filename="../source/d1dun.cpp" line="853"/>
         <source>Defined object is not saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="727"/>
+        <location filename="../source/d1dun.cpp" line="865"/>
         <source>The DUN file has to have a layer for protections to be used in the game.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="740"/>
+        <location filename="../source/d1dun.cpp" line="878"/>
         <source>Undefined subtiles (one at %1:%2) can not be saved in this format (RDUN).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="747"/>
+        <location filename="../source/d1dun.cpp" line="885"/>
         <source>Only the subtiles are saved in this format (RDUN).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="754"/>
+        <location filename="../source/d1dun.cpp" line="892"/>
         <source>Defined tile at %1:%2 is not saved in this format (RDUN).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="783"/>
+        <location filename="../source/d1dun.cpp" line="924"/>
         <source>Failed to open file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="1146"/>
+        <location filename="../source/d1dun.cpp" line="1505"/>
         <source>Subtile%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="1171"/>
+        <location filename="../source/d1dun.cpp" line="1530"/>
         <source>Tile%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2365"/>
+        <location filename="../source/d1dun.cpp" line="2804"/>
         <source>Object%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2325"/>
+        <location filename="../source/d1dun.cpp" line="2764"/>
         <source>Item%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2348"/>
+        <location filename="../source/d1dun.cpp" line="2787"/>
         <source>Monster%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="1699"/>
-        <location filename="../source/d1dun.cpp" line="1778"/>
+        <location filename="../source/d1dun.cpp" line="2117"/>
+        <location filename="../source/d1dun.cpp" line="2192"/>
         <source>Some content are going to be eliminited. Are you sure you want to proceed?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="734"/>
+        <location filename="../source/d1dun.cpp" line="872"/>
         <source>Non-square dungeons (%1:%2) can not be saved in this format (RDUN).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2741"/>
+        <location filename="../source/d1dun.cpp" line="3307"/>
         <source>Tile-value at %1:%2 is not supported by the game (Diablo 1/DevilutionX).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2803"/>
+        <location filename="../source/d1dun.cpp" line="3369"/>
         <source>Checking Items...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2808"/>
+        <location filename="../source/d1dun.cpp" line="3374"/>
         <source>Item inconsistencies:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2834"/>
+        <location filename="../source/d1dun.cpp" line="3400"/>
         <source>No inconsistency detected with the Items.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2843"/>
+        <location filename="../source/d1dun.cpp" line="3409"/>
         <source>Checking Monsters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2848"/>
+        <location filename="../source/d1dun.cpp" line="3414"/>
         <source>Monster inconsistencies:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2878"/>
+        <location filename="../source/d1dun.cpp" line="3421"/>
+        <source>An unique monster is indicated at %1:%2, but its index is zero which is not supported by the game (Diablo 1/DevilutionX).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="3444"/>
         <source>No inconsistency detected with the Monsters.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2887"/>
+        <location filename="../source/d1dun.cpp" line="3453"/>
         <source>Checking Objects...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2892"/>
+        <location filename="../source/d1dun.cpp" line="3458"/>
         <source>Object inconsistencies:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2920"/>
+        <location filename="../source/d1dun.cpp" line="3486"/>
         <source>No inconsistency detected with the Objects.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3132"/>
-        <location filename="../source/d1dun.cpp" line="3287"/>
-        <location filename="../source/d1dun.cpp" line="3321"/>
-        <location filename="../source/d1dun.cpp" line="3353"/>
+        <location filename="../source/d1dun.cpp" line="3711"/>
+        <location filename="../source/d1dun.cpp" line="3866"/>
+        <location filename="../source/d1dun.cpp" line="3903"/>
+        <location filename="../source/d1dun.cpp" line="3935"/>
         <source>Checking tiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3167"/>
+        <location filename="../source/d1dun.cpp" line="3746"/>
         <source>Tile at %1:%2 is set to undefined, because no matching entry was found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3169"/>
+        <location filename="../source/d1dun.cpp" line="3748"/>
         <source>Tile%1 at %2:%3 was replaced with %4.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3190"/>
-        <location filename="../source/d1dun.cpp" line="3380"/>
+        <location filename="../source/d1dun.cpp" line="3769"/>
+        <location filename="../source/d1dun.cpp" line="3965"/>
         <source>Checking subtiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3223"/>
+        <location filename="../source/d1dun.cpp" line="3802"/>
         <source>Subtile at %1:%2 is set to undefined, because the corresponding tile is undefined.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3225"/>
+        <location filename="../source/d1dun.cpp" line="3804"/>
         <source>Subtile at %1:%2 is set to undefined, because there was no tile-info for the corresponding tile (%3).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3228"/>
+        <location filename="../source/d1dun.cpp" line="3807"/>
         <source>Subtile%1 at %2:%3 was replaced with %4.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3530"/>
+        <location filename="../source/d1dun.cpp" line="4161"/>
         <source>Changed Tile at %1:%2 from &apos;%3&apos; to &apos;%4&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3548"/>
+        <location filename="../source/d1dun.cpp" line="4182"/>
         <source>Changed Object at %1:%2 from &apos;%3&apos; to &apos;%4&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3660"/>
+        <location filename="../source/d1dun.cpp" line="4294"/>
         <source>Size of the dungeon does not match.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3177"/>
-        <location filename="../source/d1dun.cpp" line="3238"/>
-        <location filename="../source/d1dun.cpp" line="3298"/>
-        <location filename="../source/d1dun.cpp" line="3340"/>
-        <location filename="../source/d1dun.cpp" line="3367"/>
-        <location filename="../source/d1dun.cpp" line="3392"/>
-        <location filename="../source/d1dun.cpp" line="5133"/>
+        <location filename="../source/d1dun.cpp" line="3756"/>
+        <location filename="../source/d1dun.cpp" line="3817"/>
+        <location filename="../source/d1dun.cpp" line="3880"/>
+        <location filename="../source/d1dun.cpp" line="3922"/>
+        <location filename="../source/d1dun.cpp" line="3952"/>
+        <location filename="../source/d1dun.cpp" line="3977"/>
+        <location filename="../source/d1dun.cpp" line="5767"/>
         <source>No change was necessary.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1293,98 +1362,255 @@
 <context>
     <name>D1Gfx</name>
     <message>
-        <location filename="../source/d1gfx.cpp" line="731"/>
+        <location filename="../source/d1gfx.cpp" line="960"/>
+        <source>Replacing </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="962"/>
+        <source> color %1 with %2,</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../source/d1gfx.cpp" line="967"/>
+        <source> in frame(s) %3-%4</source>
+        <translation>
+            <numerusform> in frame %3</numerusform>
+            <numerusform> in frames %3-%4</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="972"/>
+        <source> of %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="972"/>
+        <source> in %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="1169"/>
         <source>Framesize of the Cathedal-Doors does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="857"/>
+        <location filename="../source/d1gfx.cpp" line="1295"/>
         <source>Framesize of the Catacombs-Doors does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="909"/>
+        <location filename="../source/d1gfx.cpp" line="1347"/>
         <source>Framesize of the Caves-Doors does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1204"/>
+        <location filename="../source/d1gfx.cpp" line="1642"/>
         <source>Framesize of the Magic Circle does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1390"/>
+        <location filename="../source/d1gfx.cpp" line="1828"/>
         <source>Framesize of the Candle does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1431"/>
+        <location filename="../source/d1gfx.cpp" line="1869"/>
         <source>Framesize of the west-facing shrine does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1481"/>
+        <location filename="../source/d1gfx.cpp" line="1919"/>
         <source>Framesize of the east-facing shrine does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1522"/>
+        <location filename="../source/d1gfx.cpp" line="1960"/>
         <source>Framesize of the Light stand in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1563"/>
+        <location filename="../source/d1gfx.cpp" line="2001"/>
         <source>Unrecognized file-path. Expected *WMH\WMHAS.CL2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1571"/>
-        <location filename="../source/d1gfx.cpp" line="1582"/>
+        <location filename="../source/d1gfx.cpp" line="2009"/>
+        <location filename="../source/d1gfx.cpp" line="2020"/>
+        <location filename="../source/d1gfx.cpp" line="2187"/>
         <source>Could not find %1 to be used as a template file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1591"/>
-        <location filename="../source/d1gfx.cpp" line="1598"/>
+        <location filename="../source/d1gfx.cpp" line="2029"/>
+        <location filename="../source/d1gfx.cpp" line="2036"/>
+        <location filename="../source/d1gfx.cpp" line="2195"/>
         <source>Failed loading CL2 file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1607"/>
+        <location filename="../source/d1gfx.cpp" line="2045"/>
+        <location filename="../source/d1gfx.cpp" line="2204"/>
+        <location filename="../source/d1gfx.cpp" line="3696"/>
         <source>Not enough frame groups in the graphics.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1611"/>
+        <location filename="../source/d1gfx.cpp" line="2049"/>
         <source>Not enough frames in the first frame group.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1615"/>
-        <location filename="../source/d1gfx.cpp" line="1623"/>
+        <location filename="../source/d1gfx.cpp" line="2053"/>
+        <location filename="../source/d1gfx.cpp" line="2061"/>
+        <location filename="../source/d1gfx.cpp" line="2216"/>
         <source>Not enough frame groups in &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1619"/>
+        <location filename="../source/d1gfx.cpp" line="2057"/>
         <source>Not enough frames in the first frame group of &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1631"/>
-        <location filename="../source/d1gfx.cpp" line="1637"/>
-        <location filename="../source/d1gfx.cpp" line="1716"/>
+        <location filename="../source/d1gfx.cpp" line="2067"/>
+        <location filename="../source/d1gfx.cpp" line="2075"/>
+        <location filename="../source/d1gfx.cpp" line="2154"/>
+        <location filename="../source/d1gfx.cpp" line="2237"/>
+        <location filename="../source/d1gfx.cpp" line="2242"/>
+        <location filename="../source/d1gfx.cpp" line="2368"/>
+        <location filename="../source/d1gfx.cpp" line="3726"/>
         <source>Frame size of &apos;%1&apos; does not fit (Expected %2x%3).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1748"/>
+        <location filename="../source/d1gfx.cpp" line="2179"/>
+        <source>Unrecognized file-path. Expected *Fallgw.CL2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="2208"/>
+        <location filename="../source/d1gfx.cpp" line="3712"/>
+        <source>Not enough frames in the frame group to East.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="2212"/>
+        <location filename="../source/d1gfx.cpp" line="3704"/>
+        <source>Not enough frames in the frame group to West.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="2220"/>
+        <source>Not enough frames in the frame group to East in &apos;%1&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3700"/>
+        <source>Not enough frames in the frame group to South-West.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3708"/>
+        <source>Not enough frames in the frame group to North-West.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3716"/>
+        <source>Not enough frames in the frame group to South-East.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3944"/>
+        <source>Invalid ObjCurs.CEL (Number of frames: %1. Expected at least 179.)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3959"/>
+        <source>Failed loading CEL file: %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3963"/>
+        <source>Invalid file: %1. (Number of frames: %2. Expected 61.)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3975"/>
+        <source>File not found (%1).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3980"/>
+        <source>Skipped CEL-merge for Hellfire (%1).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3980"/>
+        <source>ObjCurs2.CEL not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="3980"/>
+        <source>Frame-count is %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="4162"/>
         <source>Invalid SpelIcon.CEL (Number of frames: %1. Expected: 43 or 52.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1797"/>
+        <location filename="../source/d1gfx.cpp" line="4184"/>
+        <source>Framesize of the Item animation %d does not match. (%1:%2 expected %3:%4. Index %5.)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="4614"/>
         <source>No change was necessary.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>D1GfxFrame</name>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="68"/>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="70"/>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="71"/>
+        <source>Transparent square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="72"/>
+        <source>Left Triangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="73"/>
+        <source>Right Triangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="74"/>
+        <source>Left Trapezoid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="75"/>
+        <source>Right Trapezoid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="76"/>
+        <source>Empty</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1392,7 +1618,7 @@
     <name>D1Min</name>
     <message>
         <location filename="../source/d1min.cpp" line="72"/>
-        <source>Subtile width/height does not align with MIN file. (SubtileCount:%1, W/H:%2/%3, FileSize:%4)</source>
+        <source>Subtile width/height does not align with MIN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1402,8 +1628,8 @@
     </message>
     <message>
         <location filename="../source/d1min.cpp" line="136"/>
-        <location filename="../source/d1min.cpp" line="414"/>
         <location filename="../source/d1min.cpp" line="470"/>
+        <location filename="../source/d1min.cpp" line="527"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1434,9 +1660,47 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="414"/>
+        <location filename="../source/d1min.cpp" line="243"/>
+        <source>The type of frame %1 is %2 (was %3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1min.cpp" line="250"/>
+        <source>Subtile-width is %1 (was %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1min.cpp" line="256"/>
+        <source>Subtile-height is %1 (was %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1min.cpp" line="263"/>
+        <source>Number of subtiles is %1 (was %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1min.cpp" line="274"/>
+        <source>The micro :%1: of subtile %2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/d1min.cpp" line="470"/>
+        <location filename="../source/d1min.cpp" line="527"/>
         <source>Non-transparent frames are going to be eliminited. Are you sure you want to proceed?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>D1Pal</name>
+    <message>
+        <location filename="../source/d1pal.cpp" line="240"/>
+        <source>Failed to load file: %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1pal.cpp" line="255"/>
+        <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1460,6 +1724,70 @@
     <message>
         <location filename="../source/d1sla.cpp" line="116"/>
         <source>Failed to open file: %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="201"/>
+        <source>The number of tiles is %1 (was %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="209"/>
+        <source>The collision settings of tile %1 is [%2:%3:%4] (was [%5:%6:%7])</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="217"/>
+        <source>The light radius of tile %1 is %2 (was %3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="223"/>
+        <source>The trap settings of tile %1 is &apos;%2&apos; (was &apos;%3&apos;)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="224"/>
+        <location filename="../source/d1sla.cpp" line="225"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="224"/>
+        <location filename="../source/d1sla.cpp" line="225"/>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="224"/>
+        <location filename="../source/d1sla.cpp" line="225"/>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="224"/>
+        <location filename="../source/d1sla.cpp" line="225"/>
+        <source>N/A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="230"/>
+        <source>The special cell of tile %1 is %2 (was %3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="236"/>
+        <source>The render settings of tile %1 is [%2 left %3:%4:%5 right %6:%7:%8] (was [%9 left %10:%11:%12 right %13:%14:%15])</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="247"/>
+        <source>The map type of tile %1 is &apos;%2&apos; (was &apos;%3&apos;)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1sla.cpp" line="253"/>
+        <source>The map walls of tile %1 is [%2:%3:%4:%5] (was [%6:%7:%8:%9])</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1518,628 +1846,387 @@
         <source>The subtile indices can not be stored in this format (TIL). The limit is %1.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../source/d1til.cpp" line="129"/>
+        <source>The number of tiles is %1 (was %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1til.cpp" line="146"/>
+        <source>The subtile %1:%2 of tile %3 is %4 (was %5)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>D1Tla</name>
     <message>
-        <location filename="../source/d1tla.cpp" line="41"/>
+        <location filename="../source/d1tla.cpp" line="44"/>
         <source>The size of TLA file does not align with TIL file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tla.cpp" line="77"/>
+        <location filename="../source/d1tla.cpp" line="80"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tla.cpp" line="77"/>
+        <location filename="../source/d1tla.cpp" line="80"/>
         <source>Are you sure you want to overwrite %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tla.cpp" line="102"/>
+        <location filename="../source/d1tla.cpp" line="105"/>
         <source>Failed to open file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tla.cpp" line="116"/>
+        <location filename="../source/d1tla.cpp" line="119"/>
         <source>Failed to remove file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>DungeonDecorateDialog</name>
     <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="15"/>
-        <source>Level:</source>
+        <location filename="../source/d1tla.cpp" line="142"/>
+        <source>The number of tiles is %1 (was %2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="23"/>
-        <source>Cathedral 1</source>
+        <location filename="../source/d1tla.cpp" line="151"/>
+        <source>The room propagation of tile %1 is [%2:%3:%4:%5] (was [%6:%7:%8:%9])</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="28"/>
-        <source>Cathedral 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="33"/>
-        <source>Cathedral 3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="38"/>
-        <source>Cathedral 4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="43"/>
-        <source>Catacombs 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="48"/>
-        <source>Catacombs 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="53"/>
-        <source>Catacombs 3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="58"/>
-        <source>Catacombs 4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="63"/>
-        <source>Caves 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="68"/>
-        <source>Caves 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="73"/>
-        <source>Caves 3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="78"/>
-        <source>Caves 4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="83"/>
-        <source>Hell 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="88"/>
-        <source>Hell 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="93"/>
-        <source>Hell 3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="98"/>
-        <source>Hell 4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="103"/>
-        <source>Nest 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="108"/>
-        <source>Nest 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="113"/>
-        <source>Nest 3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="118"/>
-        <source>Nest 4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="123"/>
-        <source>Crypt 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="128"/>
-        <source>Crypt 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="133"/>
-        <source>Crypt 3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="138"/>
-        <source>Crypt 4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="143"/>
-        <source>Skeleton King</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="148"/>
-        <source>Chamber of Bone</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="153"/>
-        <source>Poisoned Water</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="158"/>
-        <source>Vile Betrayer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="166"/>
-        <source>Difficulty:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="174"/>
-        <source>Normal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="179"/>
-        <source>Nightmare</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="184"/>
-        <source>Hell</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="192"/>
-        <source>Players:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="202"/>
-        <source>Check if it is for a multiplayer game</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="215"/>
-        <source>Number of players in the game</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="222"/>
-        <source>Hellfire:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="232"/>
-        <source>Check if it is for a hellfire game</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="239"/>
-        <source>Seed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="257"/>
-        <source>Reset:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="264"/>
-        <location filename="../source/dungeondecoratedialog.ui" line="331"/>
-        <source>Monsters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="267"/>
-        <source>Remove monsters which are not protected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="274"/>
-        <location filename="../source/dungeondecoratedialog.ui" line="341"/>
-        <source>Objects</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="277"/>
-        <source>Remove objects which are not protected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="284"/>
-        <location filename="../source/dungeondecoratedialog.ui" line="351"/>
-        <source>Items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="287"/>
-        <source>Remove the current items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="294"/>
-        <location filename="../source/dungeondecoratedialog.ui" line="361"/>
-        <source>Rooms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="297"/>
-        <source>Remove the current rooms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="304"/>
-        <source>Add:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="311"/>
-        <source>Tiles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="314"/>
-        <source>Decorate the dungeon tiles which are not protected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="321"/>
-        <source>Shadows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="324"/>
-        <source>Generate dungeon tiles with shadows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="368"/>
-        <source>Extras:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="378"/>
-        <source>Number of extra rounds to generate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="385"/>
-        <source>Tileset:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="395"/>
-        <source>Check if the current tileset should be used</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="421"/>
-        <source>Decorate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.ui" line="428"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.cpp" line="18"/>
-        <source>Generate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeondecoratedialog.cpp" line="72"/>
-        <source>Processing...</source>
+        <location filename="../source/d1tla.cpp" line="156"/>
+        <source>The shadow flags of tile %1 is [%2:%3:%4:%5] (was [%6:%7:%8:%9])</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DungeonGenerateDialog</name>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="15"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="18"/>
         <source>Level:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="23"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="26"/>
         <source>Cathedral 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="28"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="31"/>
         <source>Cathedral 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="33"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="36"/>
         <source>Cathedral 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="38"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="41"/>
         <source>Cathedral 4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="43"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="46"/>
         <source>Catacombs 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="48"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="51"/>
         <source>Catacombs 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="53"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="56"/>
         <source>Catacombs 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="58"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="61"/>
         <source>Catacombs 4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="63"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="66"/>
         <source>Caves 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="68"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="71"/>
         <source>Caves 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="73"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="76"/>
         <source>Caves 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="78"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="81"/>
         <source>Caves 4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="83"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="86"/>
         <source>Hell 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="88"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="91"/>
         <source>Hell 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="93"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="96"/>
         <source>Hell 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="98"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="101"/>
         <source>Hell 4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="103"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="106"/>
         <source>Nest 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="108"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="111"/>
         <source>Nest 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="113"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="116"/>
         <source>Nest 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="118"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="121"/>
         <source>Nest 4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="123"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="126"/>
         <source>Crypt 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="128"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="131"/>
         <source>Crypt 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="133"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="136"/>
         <source>Crypt 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="138"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="141"/>
         <source>Crypt 4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="143"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="146"/>
         <source>Skeleton King</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="148"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="151"/>
         <source>Chamber of Bone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="153"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="156"/>
         <source>Poisoned Water</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="158"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="161"/>
         <source>Vile Betrayer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="166"/>
+        <source>Custom Level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="183"/>
+        <source>Any</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="188"/>
+        <source>Cathedral</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="193"/>
+        <source>Catacombs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="198"/>
+        <source>Caves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="208"/>
+        <source>Crypt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="213"/>
+        <source>Nest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="224"/>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="236"/>
         <source>Difficulty:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="174"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="244"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="179"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="249"/>
         <source>Nightmare</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="184"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="203"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="254"/>
         <source>Hell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="192"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="262"/>
         <source>Players:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="204"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="274"/>
         <source>A multiplayer game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="217"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="287"/>
         <source>Number of players in the game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="243"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="313"/>
         <source>A hellfire game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="233"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="303"/>
         <source>Hellfire:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="250"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="6"/>
+        <source>Generate Dungeon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeongeneratedialog.ui" line="320"/>
         <source>Seed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="268"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="338"/>
         <source>Quest:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="286"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="356"/>
         <source>Arrival:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="296"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="366"/>
         <source>Extras:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="308"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="378"/>
         <source>Number of extra maps to generate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="315"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="385"/>
         <source>Rand. Quests:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="325"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="395"/>
         <source>Randomize the quests on the extra maps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="334"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="404"/>
         <source>Tileset:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="344"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="414"/>
         <source>Use the current tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="351"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="421"/>
         <source>Patch:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="358"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="428"/>
         <source>Patch the DUN files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="384"/>
-        <location filename="../source/dungeongeneratedialog.cpp" line="23"/>
-        <location filename="../source/dungeongeneratedialog.cpp" line="26"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="454"/>
+        <location filename="../source/dungeongeneratedialog.cpp" line="24"/>
+        <location filename="../source/dungeongeneratedialog.cpp" line="27"/>
         <source>Generate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="391"/>
+        <location filename="../source/dungeongeneratedialog.ui" line="461"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.cpp" line="17"/>
+        <location filename="../source/dungeongeneratedialog.cpp" line="18"/>
         <source>Entrance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.cpp" line="18"/>
+        <location filename="../source/dungeongeneratedialog.cpp" line="19"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.cpp" line="19"/>
+        <location filename="../source/dungeongeneratedialog.cpp" line="20"/>
         <source>Town</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.cpp" line="20"/>
+        <location filename="../source/dungeongeneratedialog.cpp" line="21"/>
         <source>Return</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeongeneratedialog.cpp" line="85"/>
+        <location filename="../source/dungeongeneratedialog.cpp" line="177"/>
         <source>Processing...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2163,8 +2250,8 @@
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="57"/>
-        <location filename="../source/dungeonresourcedialog.ui" line="120"/>
-        <location filename="../source/dungeonresourcedialog.ui" line="159"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="106"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="145"/>
         <source>Browse</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2175,42 +2262,37 @@
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="78"/>
-        <source>Direction:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeonresourcedialog.ui" line="92"/>
         <source>Frame:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.ui" line="106"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="92"/>
         <source>Base TRN:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.ui" line="127"/>
-        <location filename="../source/dungeonresourcedialog.ui" line="166"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="113"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="152"/>
         <source>Clear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.ui" line="134"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="120"/>
         <source>Unique(TRN):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.ui" line="143"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="129"/>
         <source>Unique monster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.ui" line="185"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="171"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.ui" line="192"/>
+        <location filename="../source/dungeonresourcedialog.ui" line="178"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2230,43 +2312,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.cpp" line="81"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="48"/>
+        <source>Missile parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeonresourcedialog.cpp" line="83"/>
         <source>Select CL2 file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.cpp" line="81"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="83"/>
         <source>Select CEL file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.cpp" line="82"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="84"/>
         <source>CL2 Files (*.cl2 *.CL2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.cpp" line="82"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="84"/>
         <source>CEL Files (*.cel *.CEL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.cpp" line="92"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="94"/>
         <source>Select Base Translation File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.cpp" line="92"/>
-        <location filename="../source/dungeonresourcedialog.cpp" line="106"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="94"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="108"/>
         <source>TRN Files (*.trn *.TRN)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.cpp" line="106"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="108"/>
         <source>Select Unique Translation File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonresourcedialog.cpp" line="147"/>
+        <location filename="../source/dungeonresourcedialog.cpp" line="148"/>
         <source>Processing...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2578,7 +2665,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeonsubtilewidget.cpp" line="140"/>
+        <location filename="../source/dungeonsubtilewidget.cpp" line="152"/>
         <source>(Level %1)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2809,7 +2896,7 @@
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="484"/>
-        <location filename="../source/gfxsetview.cpp" line="211"/>
+        <location filename="../source/gfxsetview.cpp" line="212"/>
         <source>Light</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2825,7 +2912,7 @@
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="594"/>
-        <location filename="../source/gfxsetview.cpp" line="1322"/>
+        <location filename="../source/gfxsetview.cpp" line="1345"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2955,214 +3042,353 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="31"/>
+        <location filename="../source/gfxsetview.cpp" line="32"/>
         <source>Start drawing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="34"/>
+        <location filename="../source/gfxsetview.cpp" line="35"/>
         <source>Replace graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="193"/>
+        <location filename="../source/gfxsetview.cpp" line="194"/>
         <source>Warrior</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="196"/>
+        <location filename="../source/gfxsetview.cpp" line="197"/>
         <source>Rogue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="199"/>
+        <location filename="../source/gfxsetview.cpp" line="200"/>
         <source>Mage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="202"/>
+        <location filename="../source/gfxsetview.cpp" line="203"/>
         <source>Monk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="205"/>
-        <location filename="../source/gfxsetview.cpp" line="220"/>
-        <location filename="../source/gfxsetview.cpp" line="253"/>
+        <location filename="../source/gfxsetview.cpp" line="206"/>
+        <location filename="../source/gfxsetview.cpp" line="221"/>
+        <location filename="../source/gfxsetview.cpp" line="254"/>
         <source>N/A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="214"/>
+        <location filename="../source/gfxsetview.cpp" line="215"/>
         <source>Medium</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="217"/>
+        <location filename="../source/gfxsetview.cpp" line="218"/>
         <source>Heavy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="226"/>
+        <location filename="../source/gfxsetview.cpp" line="227"/>
         <source>Unarmed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="229"/>
+        <location filename="../source/gfxsetview.cpp" line="230"/>
         <source>Shield</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="232"/>
+        <location filename="../source/gfxsetview.cpp" line="233"/>
         <source>Sword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="235"/>
+        <location filename="../source/gfxsetview.cpp" line="236"/>
         <source>Sword+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="238"/>
+        <location filename="../source/gfxsetview.cpp" line="239"/>
         <source>Bow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="241"/>
+        <location filename="../source/gfxsetview.cpp" line="242"/>
         <source>Axe</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="244"/>
+        <location filename="../source/gfxsetview.cpp" line="245"/>
         <source>Blunt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="247"/>
+        <location filename="../source/gfxsetview.cpp" line="248"/>
         <source>Blunt+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="250"/>
+        <location filename="../source/gfxsetview.cpp" line="251"/>
         <source>Staff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="386"/>
-        <location filename="../source/gfxsetview.cpp" line="426"/>
-        <location filename="../source/gfxsetview.cpp" line="476"/>
+        <location filename="../source/gfxsetview.cpp" line="407"/>
+        <location filename="../source/gfxsetview.cpp" line="447"/>
+        <location filename="../source/gfxsetview.cpp" line="497"/>
         <source>Failed to load file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="400"/>
-        <location filename="../source/gfxsetview.cpp" line="446"/>
-        <location filename="../source/gfxsetview.cpp" line="493"/>
+        <location filename="../source/gfxsetview.cpp" line="421"/>
+        <location filename="../source/gfxsetview.cpp" line="467"/>
+        <location filename="../source/gfxsetview.cpp" line="514"/>
         <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="660"/>
+        <location filename="../source/gfxsetview.cpp" line="681"/>
         <source>Frame %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="662"/>
+        <location filename="../source/gfxsetview.cpp" line="683"/>
         <source> of %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="662"/>
+        <location filename="../source/gfxsetview.cpp" line="683"/>
         <source>Dir%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="664"/>
+        <location filename="../source/gfxsetview.cpp" line="685"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="664"/>
+        <location filename="../source/gfxsetview.cpp" line="685"/>
         <source>Pixels with non-background colors are going to be eliminated (At least %1 is affected). Are you sure you want to proceed?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="670"/>
+        <location filename="../source/gfxsetview.cpp" line="691"/>
         <source>Resizing...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="911"/>
+        <location filename="../source/gfxsetview.cpp" line="932"/>
         <source>Add Layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="912"/>
+        <location filename="../source/gfxsetview.cpp" line="933"/>
         <source>Add the content of an image to the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="917"/>
+        <location filename="../source/gfxsetview.cpp" line="938"/>
         <source>Insert Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="918"/>
+        <location filename="../source/gfxsetview.cpp" line="939"/>
         <source>Add new frames before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="923"/>
+        <location filename="../source/gfxsetview.cpp" line="944"/>
         <source>Duplicate Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="924"/>
+        <location filename="../source/gfxsetview.cpp" line="945"/>
         <source>Duplicate the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="929"/>
+        <location filename="../source/gfxsetview.cpp" line="950"/>
         <source>Append Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="930"/>
+        <location filename="../source/gfxsetview.cpp" line="951"/>
         <source>Append new frames at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="935"/>
+        <location filename="../source/gfxsetview.cpp" line="956"/>
         <source>Replace Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="936"/>
+        <location filename="../source/gfxsetview.cpp" line="957"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="942"/>
+        <location filename="../source/gfxsetview.cpp" line="963"/>
         <source>Del Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="943"/>
+        <location filename="../source/gfxsetview.cpp" line="964"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1123"/>
+        <location filename="../source/gfxsetview.cpp" line="1144"/>
         <source>Load Graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1123"/>
+        <location filename="../source/gfxsetview.cpp" line="1144"/>
         <source>CL2 Files (*.cl2 *.CL2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1332"/>
+        <location filename="../source/gfxsetview.cpp" line="1357"/>
         <source>Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ImportDialog</name>
+    <message>
+        <location filename="../source/importdialog.ui" line="6"/>
+        <location filename="../source/importdialog.ui" line="284"/>
+        <source>Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="18"/>
+        <source>File:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="32"/>
+        <source>Browse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="39"/>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="63"/>
+        <source>MIN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="73"/>
+        <source>TIL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="83"/>
+        <source>SLA</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="93"/>
+        <source>TLA</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="103"/>
+        <source>DUN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="113"/>
+        <source>S-CEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="123"/>
+        <source>CEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="133"/>
+        <source>CL2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="143"/>
+        <source>Font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="153"/>
+        <source>Auto detect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="175"/>
+        <source>Font Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="181"/>
+        <source>Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="205"/>
+        <source>Range:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="245"/>
+        <source>Hex format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="252"/>
+        <source>Color:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="262"/>
+        <source>Palette Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.ui" line="291"/>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.cpp" line="76"/>
+        <source>Select Dungeon or Graphics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.cpp" line="77"/>
+        <source>DUN Files (*.dun *.DUN *.rdun *.RDUN);;CEL Files (*.cel *.CEL);;MIN Files (*.min *.MIN);;TIL Files (*.til *.TIL);;SLA Files (*.sla *.SLA);;TLA Files (*.tla *.TLA)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.cpp" line="79"/>
+        <source>Select Graphics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.cpp" line="80"/>
+        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;TTF/OTF Files (*.ttf *.TTF *.otf *.OTF)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.cpp" line="244"/>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/importdialog.cpp" line="244"/>
+        <source>Input file is missing, please choose an input file.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3175,16 +3401,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3941"/>
-        <location filename="../source/levelcelview.cpp" line="3942"/>
+        <location filename="../source/levelcelview.cpp" line="4080"/>
+        <location filename="../source/levelcelview.cpp" line="4081"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="112"/>
         <location filename="../source/levelcelview.ui" line="778"/>
-        <location filename="../source/levelcelview.cpp" line="3925"/>
-        <location filename="../source/levelcelview.cpp" line="3926"/>
+        <location filename="../source/levelcelview.cpp" line="4064"/>
+        <location filename="../source/levelcelview.cpp" line="4065"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3353,6 +3579,31 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/levelcelview.ui" line="1469"/>
+        <source>Missile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="1479"/>
+        <source>Current missile at the selected position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="1517"/>
+        <source>X-Offset of the missile at the selected position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="1524"/>
+        <source>Y-Offset of the missile at the selected position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="1531"/>
+        <source>Current missile at the selected position is on the floor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/levelcelview.ui" line="851"/>
         <source>Dungeon:</source>
         <translation type="unfinished"></translation>
@@ -3430,332 +3681,347 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1020"/>
+        <location filename="../source/levelcelview.ui" line="1005"/>
+        <source>Draw missiles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="1027"/>
         <source>Move left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1049"/>
+        <location filename="../source/levelcelview.ui" line="1056"/>
         <source>Move right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1078"/>
+        <location filename="../source/levelcelview.ui" line="1085"/>
         <source>Clear tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1152"/>
+        <location filename="../source/levelcelview.ui" line="1159"/>
         <source>Width of the dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1178"/>
+        <location filename="../source/levelcelview.ui" line="1185"/>
         <source>Height of the dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1139"/>
+        <location filename="../source/levelcelview.ui" line="1146"/>
         <source>Move down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1033"/>
+        <location filename="../source/levelcelview.ui" line="1040"/>
         <source>Coordinate of the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1205"/>
+        <location filename="../source/levelcelview.ui" line="1212"/>
         <source>Current tile at the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1229"/>
+        <location filename="../source/levelcelview.ui" line="1236"/>
         <source>Subtile:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1239"/>
+        <location filename="../source/levelcelview.ui" line="1246"/>
         <source>Current subtile at the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1262"/>
+        <location filename="../source/levelcelview.ui" line="1269"/>
         <source>Room:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1272"/>
+        <location filename="../source/levelcelview.ui" line="1279"/>
         <source>Room-ID of the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1303"/>
+        <location filename="../source/levelcelview.ui" line="1310"/>
         <source>Object:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1340"/>
+        <location filename="../source/levelcelview.ui" line="1354"/>
         <source>Monster:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1360"/>
+        <location filename="../source/levelcelview.ui" line="1374"/>
         <source>Current monster at the selected position is unique</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1411"/>
+        <location filename="../source/levelcelview.ui" line="1432"/>
         <source>Item:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="319"/>
+        <location filename="../source/levelcelview.cpp" line="362"/>
         <source>Select asset folder of the entites</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1075"/>
-        <location filename="../source/levelcelview.ui" line="1291"/>
+        <location filename="../source/levelcelview.ui" line="1082"/>
+        <location filename="../source/levelcelview.ui" line="1298"/>
         <source>Clear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1087"/>
+        <location filename="../source/levelcelview.ui" line="1094"/>
         <source>Overlay:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1100"/>
+        <location filename="../source/levelcelview.ui" line="1107"/>
         <source>Map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1105"/>
+        <location filename="../source/levelcelview.ui" line="1112"/>
         <source>Rooms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1110"/>
+        <location filename="../source/levelcelview.ui" line="1117"/>
         <source>Tile protections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1115"/>
+        <location filename="../source/levelcelview.ui" line="1122"/>
         <source>Subtile protections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1120"/>
+        <location filename="../source/levelcelview.ui" line="1127"/>
         <source>Tile numbers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1125"/>
+        <location filename="../source/levelcelview.ui" line="1132"/>
         <source>Subtile numbers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1195"/>
+        <location filename="../source/levelcelview.ui" line="1202"/>
         <source>Tile:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1294"/>
+        <location filename="../source/levelcelview.ui" line="1301"/>
         <source>Clear asset folder of the entites</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1388"/>
+        <location filename="../source/levelcelview.ui" line="1337"/>
+        <source>Current object at the selected position is on the floor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="1402"/>
         <source>X-Offset of the monster at the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1395"/>
+        <location filename="../source/levelcelview.ui" line="1409"/>
         <source>Y-Offset of the monster at the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1421"/>
+        <location filename="../source/levelcelview.ui" line="1416"/>
+        <source>Current monster at the selected position is dead</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="1442"/>
         <source>Current item at the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1350"/>
+        <location filename="../source/levelcelview.ui" line="1364"/>
         <source>Current monster at the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1313"/>
+        <location filename="../source/levelcelview.ui" line="1320"/>
         <source>Current object at the selected position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="46"/>
+        <location filename="../source/levelcelview.cpp" line="47"/>
         <source>Tile properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="47"/>
+        <location filename="../source/levelcelview.cpp" line="48"/>
         <source>Subtile properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="48"/>
+        <location filename="../source/levelcelview.cpp" line="49"/>
         <source>Frame properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1753"/>
+        <location filename="../source/levelcelview.cpp" line="1887"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1583"/>
-        <location filename="../source/levelcelview.cpp" line="1606"/>
+        <location filename="../source/levelcelview.cpp" line="1717"/>
+        <location filename="../source/levelcelview.cpp" line="1740"/>
         <source>The image must be 32px * 32px to be used as a frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1635"/>
+        <location filename="../source/levelcelview.cpp" line="1769"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1635"/>
+        <location filename="../source/levelcelview.cpp" line="1769"/>
         <source>The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1695"/>
-        <location filename="../source/levelcelview.cpp" line="1719"/>
+        <location filename="../source/levelcelview.cpp" line="1829"/>
+        <location filename="../source/levelcelview.cpp" line="1853"/>
         <source>The image must be %1px * %2px to be used as a subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1753"/>
+        <location filename="../source/levelcelview.cpp" line="1887"/>
         <source>The subtile is used by tile %1 (and maybe others).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1794"/>
-        <location filename="../source/levelcelview.cpp" line="1819"/>
+        <location filename="../source/levelcelview.cpp" line="1928"/>
+        <location filename="../source/levelcelview.cpp" line="1953"/>
         <source>The image must be %1px * %2px to be used as a tile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2031"/>
+        <location filename="../source/levelcelview.cpp" line="2165"/>
         <source>The tileset is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2226"/>
+        <location filename="../source/levelcelview.cpp" line="2338"/>
         <source>No change was necessary.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2204"/>
+        <location filename="../source/levelcelview.cpp" line="2316"/>
         <source>The frames are optimal.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2798"/>
+        <location filename="../source/levelcelview.cpp" line="2927"/>
         <source>Every frame is used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2811"/>
+        <location filename="../source/levelcelview.cpp" line="2940"/>
         <source>Every subtile is used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2817"/>
+        <location filename="../source/levelcelview.cpp" line="2946"/>
         <source>Scanning tileset...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2836"/>
+        <location filename="../source/levelcelview.cpp" line="2965"/>
         <source>Every subtile and frame are used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="894"/>
-        <location filename="../source/levelcelview.cpp" line="1118"/>
-        <location filename="../source/levelcelview.cpp" line="1458"/>
-        <location filename="../source/levelcelview.cpp" line="1538"/>
-        <location filename="../source/levelcelview.cpp" line="1601"/>
-        <location filename="../source/levelcelview.cpp" line="1714"/>
-        <location filename="../source/levelcelview.cpp" line="1814"/>
+        <location filename="../source/levelcelview.cpp" line="1028"/>
+        <location filename="../source/levelcelview.cpp" line="1252"/>
+        <location filename="../source/levelcelview.cpp" line="1592"/>
+        <location filename="../source/levelcelview.cpp" line="1672"/>
+        <location filename="../source/levelcelview.cpp" line="1735"/>
+        <location filename="../source/levelcelview.cpp" line="1848"/>
+        <location filename="../source/levelcelview.cpp" line="1948"/>
         <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="51"/>
+        <location filename="../source/levelcelview.cpp" line="52"/>
         <source>Start drawing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="54"/>
+        <location filename="../source/levelcelview.cpp" line="55"/>
         <source>Switch to dungeon view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="60"/>
+        <location filename="../source/levelcelview.cpp" line="61"/>
         <source>Switch to tileset view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="66"/>
+        <location filename="../source/levelcelview.cpp" line="67"/>
         <source>Show Subtile Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="824"/>
-        <location filename="../source/levelcelview.cpp" line="849"/>
+        <location filename="../source/levelcelview.cpp" line="958"/>
+        <location filename="../source/levelcelview.cpp" line="983"/>
         <source>The image must contain 32px * 32px blocks to be used as a frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="882"/>
-        <location filename="../source/levelcelview.cpp" line="1106"/>
-        <location filename="../source/levelcelview.cpp" line="1446"/>
-        <location filename="../source/levelcelview.cpp" line="1517"/>
-        <location filename="../source/levelcelview.cpp" line="1578"/>
-        <location filename="../source/levelcelview.cpp" line="1691"/>
-        <location filename="../source/levelcelview.cpp" line="1790"/>
+        <location filename="../source/levelcelview.cpp" line="1016"/>
+        <location filename="../source/levelcelview.cpp" line="1240"/>
+        <location filename="../source/levelcelview.cpp" line="1580"/>
+        <location filename="../source/levelcelview.cpp" line="1651"/>
+        <location filename="../source/levelcelview.cpp" line="1712"/>
+        <location filename="../source/levelcelview.cpp" line="1825"/>
+        <location filename="../source/levelcelview.cpp" line="1924"/>
         <source>Failed to load file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1052"/>
-        <location filename="../source/levelcelview.cpp" line="1077"/>
+        <location filename="../source/levelcelview.cpp" line="1186"/>
+        <location filename="../source/levelcelview.cpp" line="1211"/>
         <source>The image must contain %1px * %2px blocks to be used as a subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1345"/>
-        <location filename="../source/levelcelview.cpp" line="1397"/>
+        <location filename="../source/levelcelview.cpp" line="1479"/>
+        <location filename="../source/levelcelview.cpp" line="1531"/>
         <source>The image must contain %1px * %2px blocks to be used as a tile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1912"/>
+        <location filename="../source/levelcelview.cpp" line="2046"/>
         <source>The image can not be used as a frame or as a subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1945"/>
-        <location filename="../source/levelcelview.cpp" line="3039"/>
+        <location filename="../source/levelcelview.cpp" line="2079"/>
+        <location filename="../source/levelcelview.cpp" line="3168"/>
         <source>Scanning...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1954"/>
+        <location filename="../source/levelcelview.cpp" line="2088"/>
         <source>Frame %1 is not used by any subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1961"/>
+        <location filename="../source/levelcelview.cpp" line="2095"/>
         <source>Frame %1 is used by subtile %2.</source>
         <translation>
             <numerusform>Frame %1 is used by subtile %2.</numerusform>
@@ -3763,12 +4029,12 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1976"/>
+        <location filename="../source/levelcelview.cpp" line="2110"/>
         <source>Subtile %1 is not used by any tile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1983"/>
+        <location filename="../source/levelcelview.cpp" line="2117"/>
         <source>Subtile %1 is used by tile %2.</source>
         <translation>
             <numerusform>Subtile %1 is used by tile %2.</numerusform>
@@ -3776,13 +4042,13 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2001"/>
+        <location filename="../source/levelcelview.cpp" line="2135"/>
         <source>No valid special frame use in the tileset.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2009"/>
-        <location filename="../source/levelcelview.cpp" line="2025"/>
+        <location filename="../source/levelcelview.cpp" line="2143"/>
+        <location filename="../source/levelcelview.cpp" line="2159"/>
         <source>Special-Frame %1 is used by subtile %2.</source>
         <translation>
             <numerusform>Special-Frame %1 is used by subtile %2.</numerusform>
@@ -3790,32 +4056,32 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2071"/>
+        <location filename="../source/levelcelview.cpp" line="2205"/>
         <source> The subtile is not lit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2073"/>
+        <location filename="../source/levelcelview.cpp" line="2207"/>
         <source> The subtile is lit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2088"/>
+        <location filename="../source/levelcelview.cpp" line="2222"/>
         <source>Lit subtiles:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2099"/>
+        <location filename="../source/levelcelview.cpp" line="2233"/>
         <source>Radius %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2107"/>
+        <location filename="../source/levelcelview.cpp" line="2241"/>
         <source>None of the subtiles are lit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2134"/>
+        <location filename="../source/levelcelview.cpp" line="2268"/>
         <source>Tile %1 has %n affected pixels.</source>
         <translation>
             <numerusform>Tile %1 has %n affected pixel.</numerusform>
@@ -3823,98 +4089,98 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2212"/>
+        <location filename="../source/levelcelview.cpp" line="2324"/>
         <source>Checking frames...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2221"/>
+        <location filename="../source/levelcelview.cpp" line="2333"/>
         <source>Changed Frame %1 from &apos;%2&apos; to &apos;%3&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2174"/>
+        <location filename="../source/levelcelview.cpp" line="2286"/>
         <source>Scanning frames...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="57"/>
+        <location filename="../source/levelcelview.cpp" line="58"/>
         <source>Start building</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="64"/>
+        <location filename="../source/levelcelview.cpp" line="65"/>
         <source>Center Dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="126"/>
+        <location filename="../source/levelcelview.cpp" line="127"/>
         <source>Add Custom Object</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="130"/>
+        <location filename="../source/levelcelview.cpp" line="131"/>
         <source>Add Custom Monster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="127"/>
+        <location filename="../source/levelcelview.cpp" line="128"/>
         <source>Add Custom Item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="209"/>
-        <location filename="../source/levelcelview.cpp" line="4343"/>
+        <location filename="../source/levelcelview.cpp" line="223"/>
+        <location filename="../source/levelcelview.cpp" line="4488"/>
         <source>Select tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="381"/>
+        <location filename="../source/levelcelview.cpp" line="424"/>
         <source>Tile might be replaced in the game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="381"/>
+        <location filename="../source/levelcelview.cpp" line="424"/>
         <source>Tile might be decorated in the game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="381"/>
+        <location filename="../source/levelcelview.cpp" line="424"/>
         <source>Tile is used as is in the game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="386"/>
+        <location filename="../source/levelcelview.cpp" line="429"/>
         <source>No monster might be placed by the game on this subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="386"/>
+        <location filename="../source/levelcelview.cpp" line="429"/>
         <source>Monster might be placed by the game on this subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="389"/>
+        <location filename="../source/levelcelview.cpp" line="432"/>
         <source>No object might be placed by the game on this subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="389"/>
+        <location filename="../source/levelcelview.cpp" line="432"/>
         <source>Object might be placed by the game on this subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2052"/>
+        <location filename="../source/levelcelview.cpp" line="2186"/>
         <source>Checking subtiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2062"/>
+        <location filename="../source/levelcelview.cpp" line="2196"/>
         <source>Active subtiles (using &apos;%1&apos; playback mode):</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2069"/>
+        <location filename="../source/levelcelview.cpp" line="2203"/>
         <source>Subtile %1 has %n affected pixels.</source>
         <translation>
             <numerusform>Subtile %1 has %n affected pixel.</numerusform>
@@ -3922,33 +4188,33 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2080"/>
+        <location filename="../source/levelcelview.cpp" line="2214"/>
         <source>None of the subtiles are active in &apos;%1&apos; playback mode.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2084"/>
-        <location filename="../source/levelcelview.cpp" line="2144"/>
+        <location filename="../source/levelcelview.cpp" line="2218"/>
+        <location filename="../source/levelcelview.cpp" line="2278"/>
         <source>Colors are not affected if the playback mode is &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2117"/>
+        <location filename="../source/levelcelview.cpp" line="2251"/>
         <source>Checking tiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2127"/>
+        <location filename="../source/levelcelview.cpp" line="2261"/>
         <source>Active tiles (using &apos;%1&apos; playback mode):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2140"/>
+        <location filename="../source/levelcelview.cpp" line="2274"/>
         <source>None of the tiles are active in &apos;%1&apos; playback mode.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2187"/>
+        <location filename="../source/levelcelview.cpp" line="2299"/>
         <source>Frame %1 could be &apos;%2&apos; by changing %n pixel(s).</source>
         <translation>
             <numerusform>Frame %1 could be &apos;%2&apos; by changing %n pixel.</numerusform>
@@ -3956,7 +4222,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2198"/>
+        <location filename="../source/levelcelview.cpp" line="2310"/>
         <source>The difference between Frame %1 and Frame %2 is only %n pixel(s).</source>
         <translation>
             <numerusform>The difference between Frame %1 and Frame %2 is only %n pixel.</numerusform>
@@ -3964,82 +4230,102 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2328"/>
+        <location filename="../source/levelcelview.cpp" line="2440"/>
         <source>Subtile %1 blocks the light, but still passable (not solid).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2332"/>
+        <location filename="../source/levelcelview.cpp" line="2444"/>
         <source>Subtile %1 blocks the light, but it does not block missiles.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2339"/>
+        <location filename="../source/levelcelview.cpp" line="2451"/>
         <source>Subtile %1 blocks missiles, but still passable (not solid).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2358"/>
+        <location filename="../source/levelcelview.cpp" line="2470"/>
         <source>Subtile %1 blocks the light or missiles, but it is completely transparent above the floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2441"/>
+        <location filename="../source/levelcelview.cpp" line="2510"/>
+        <source>Subtile %1 has an invalid trap-setting [%2:%3].</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2553"/>
         <source>Subtile %1 has wall transparency set, but it is completely transparent above the floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2449"/>
+        <location filename="../source/levelcelview.cpp" line="2561"/>
         <source>Subtile %1 has floor transparency on the left side, but no wall transparency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2457"/>
+        <location filename="../source/levelcelview.cpp" line="2569"/>
         <source>Subtile %1 has floor transparency on the right side, but no wall transparency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2493"/>
+        <location filename="../source/levelcelview.cpp" line="2605"/>
         <source>Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2498"/>
+        <location filename="../source/levelcelview.cpp" line="2610"/>
         <source>Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2529"/>
+        <location filename="../source/levelcelview.cpp" line="2641"/>
         <source>Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2555"/>
+        <location filename="../source/levelcelview.cpp" line="2667"/>
         <source>Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2735"/>
+        <location filename="../source/levelcelview.cpp" line="2703"/>
+        <source>Subtile %1 is plain light blocker, but it has no walls.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2709"/>
+        <source>Subtile %1 is marked extern, but it does not block light.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2720"/>
+        <source>Subtile %1 is for doors, but it does not block light.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2864"/>
         <source>Removing unused frames...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2748"/>
+        <location filename="../source/levelcelview.cpp" line="2877"/>
         <source>Removed frame %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2762"/>
+        <location filename="../source/levelcelview.cpp" line="2891"/>
         <source>Removing unused subtiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2780"/>
+        <location filename="../source/levelcelview.cpp" line="2909"/>
         <source>Removed subtile %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="3044"/>
+        <location filename="../source/levelcelview.cpp" line="3173"/>
         <source>There are %n subtiles in the dungeon for monsters.</source>
         <translation>
             <numerusform>There is %n subtile in the dungeon for monsters.</numerusform>
@@ -4047,7 +4333,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="3048"/>
+        <location filename="../source/levelcelview.cpp" line="3177"/>
         <source>There are %n subtiles in the dungeon for objects.</source>
         <translation>
             <numerusform>There is %n subtile in the dungeon for objects.</numerusform>
@@ -4055,19 +4341,19 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3052"/>
+        <location filename="../source/levelcelview.cpp" line="3181"/>
         <source>There is no available space in the dungeon to generate monsters or objects.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3062"/>
+        <location filename="../source/levelcelview.cpp" line="3191"/>
         <source>There are no items in the dungeon.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="3072"/>
-        <location filename="../source/levelcelview.cpp" line="3093"/>
-        <location filename="../source/levelcelview.cpp" line="3114"/>
+        <location filename="../source/levelcelview.cpp" line="3201"/>
+        <location filename="../source/levelcelview.cpp" line="3222"/>
+        <location filename="../source/levelcelview.cpp" line="3243"/>
         <source>There are %1 in the dungeon.</source>
         <translation>
             <numerusform>There is %1 in the dungeon.</numerusform>
@@ -4075,431 +4361,426 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3083"/>
+        <location filename="../source/levelcelview.cpp" line="3212"/>
         <source>There are no monsters in the dungeon.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3069"/>
-        <location filename="../source/levelcelview.cpp" line="3090"/>
-        <location filename="../source/levelcelview.cpp" line="3111"/>
+        <location filename="../source/levelcelview.cpp" line="3198"/>
+        <location filename="../source/levelcelview.cpp" line="3219"/>
+        <location filename="../source/levelcelview.cpp" line="3240"/>
         <source>%1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2386"/>
+        <location filename="../source/levelcelview.cpp" line="2498"/>
         <source>Subtile %1 is for traps, but the frames above the floor is not square on the left side.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2394"/>
+        <location filename="../source/levelcelview.cpp" line="2506"/>
         <source>Subtile %1 is for traps, but the frames above the floor is not square on the right side.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2398"/>
-        <source>Subtile %1 has an invalid trap-setting: %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2404"/>
+        <location filename="../source/levelcelview.cpp" line="2516"/>
         <source>Subtile %1 has a too high special cel-frame setting: %2. Limit it %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2407"/>
+        <location filename="../source/levelcelview.cpp" line="2519"/>
         <source>The special cel-frame (%1) referenced by Subtile %2 does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2504"/>
+        <location filename="../source/levelcelview.cpp" line="2616"/>
         <source>Subtile %1 has second pass set on the left side, but the floor-frame is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2507"/>
+        <location filename="../source/levelcelview.cpp" line="2619"/>
         <source>Subtile %1 has second pass set on the left side, but it is just a left triangle on the floor and the right side is not redrawn.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2513"/>
+        <location filename="../source/levelcelview.cpp" line="2625"/>
         <source>Subtile %1 has second pass set on the right side, but the floor-frame is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2516"/>
+        <location filename="../source/levelcelview.cpp" line="2628"/>
         <source>Subtile %1 has second pass set on the right side, but it is just a right triangle on the floor and the left side is not redrawn.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2650"/>
+        <location filename="../source/levelcelview.cpp" line="2779"/>
         <source>Checking TLA flags...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2656"/>
+        <location filename="../source/levelcelview.cpp" line="2785"/>
         <source>TLA inconsistencies:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2666"/>
-        <location filename="../source/levelcelview.cpp" line="2680"/>
-        <location filename="../source/levelcelview.cpp" line="2694"/>
-        <location filename="../source/levelcelview.cpp" line="2708"/>
+        <location filename="../source/levelcelview.cpp" line="2795"/>
+        <location filename="../source/levelcelview.cpp" line="2809"/>
+        <location filename="../source/levelcelview.cpp" line="2823"/>
+        <location filename="../source/levelcelview.cpp" line="2837"/>
         <source>Unreachable Subtile %1 in Tile %2 propagates the room-index.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2671"/>
-        <location filename="../source/levelcelview.cpp" line="2685"/>
-        <location filename="../source/levelcelview.cpp" line="2699"/>
-        <location filename="../source/levelcelview.cpp" line="2713"/>
+        <location filename="../source/levelcelview.cpp" line="2800"/>
+        <location filename="../source/levelcelview.cpp" line="2814"/>
+        <location filename="../source/levelcelview.cpp" line="2828"/>
+        <location filename="../source/levelcelview.cpp" line="2842"/>
         <source>Walkable Subtile %1 in Tile %2 does not propagate the room-index.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2720"/>
+        <location filename="../source/levelcelview.cpp" line="2849"/>
         <source>No inconsistency detected in the TLA flags.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3104"/>
+        <location filename="../source/levelcelview.cpp" line="3233"/>
         <source>There are no objects in the dungeon.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3129"/>
+        <location filename="../source/levelcelview.cpp" line="3258"/>
         <source>Subtiles in the dungeon:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3131"/>
+        <location filename="../source/levelcelview.cpp" line="3260"/>
         <source>   None.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3134"/>
+        <location filename="../source/levelcelview.cpp" line="3263"/>
         <source>    %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3516"/>
+        <location filename="../source/levelcelview.cpp" line="3655"/>
         <source>Insert Tile-Row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3517"/>
+        <location filename="../source/levelcelview.cpp" line="3656"/>
         <source>Add a tile-row before the one at the current position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3522"/>
+        <location filename="../source/levelcelview.cpp" line="3661"/>
         <source>Insert Tile-Column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3523"/>
+        <location filename="../source/levelcelview.cpp" line="3662"/>
         <source>Add a tile-column before the one at the current position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3528"/>
+        <location filename="../source/levelcelview.cpp" line="3667"/>
         <source>Delete Tile-Row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3529"/>
+        <location filename="../source/levelcelview.cpp" line="3668"/>
         <source>Delete the tile-row at the current position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3535"/>
+        <location filename="../source/levelcelview.cpp" line="3674"/>
         <source>Delete Tile-Column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3536"/>
+        <location filename="../source/levelcelview.cpp" line="3675"/>
         <source>Delete the tile-column at the current position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="4329"/>
-        <location filename="../source/levelcelview.cpp" line="4357"/>
+        <location filename="../source/levelcelview.cpp" line="3698"/>
+        <source>Create a new frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3704"/>
+        <source>Add a new frame before the current one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3735"/>
+        <source>Create a new subtile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3741"/>
+        <source>Add a new subtile before the current one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3772"/>
+        <source>Create a new tile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3779"/>
+        <source>Add a new tile before the current one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="4474"/>
+        <location filename="../source/levelcelview.cpp" line="4502"/>
         <source>Loading...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="4343"/>
+        <location filename="../source/levelcelview.cpp" line="4488"/>
         <source>CEL Files (*.cel *.CEL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="4371"/>
+        <location filename="../source/levelcelview.cpp" line="4516"/>
         <source>Select Assets Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2915"/>
+        <location filename="../source/levelcelview.cpp" line="3044"/>
         <source>Compressing tileset...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2310"/>
+        <location filename="../source/levelcelview.cpp" line="2422"/>
         <source>Checking Collision settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2317"/>
+        <location filename="../source/levelcelview.cpp" line="2429"/>
         <source>Inconsistencies in the Collision settings:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2365"/>
+        <location filename="../source/levelcelview.cpp" line="2477"/>
         <source>No inconsistency detected in the Collision settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2370"/>
+        <location filename="../source/levelcelview.cpp" line="2482"/>
         <source>Checking Special settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2375"/>
+        <location filename="../source/levelcelview.cpp" line="2487"/>
         <source>Inconsistencies in the Special settings:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2412"/>
+        <location filename="../source/levelcelview.cpp" line="2524"/>
         <source>No inconsistency detected in the Special settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2417"/>
+        <location filename="../source/levelcelview.cpp" line="2529"/>
         <source>Checking Render settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2422"/>
+        <location filename="../source/levelcelview.cpp" line="2534"/>
         <source>Inconsistencies in the Render settings:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2524"/>
+        <location filename="../source/levelcelview.cpp" line="2636"/>
         <source>Subtile %1 has foliage set on the left, but not second pass.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2537"/>
+        <location filename="../source/levelcelview.cpp" line="2649"/>
         <source>Subtile %1 has left floor transparency set, but the left side is completely transparent above the floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2542"/>
+        <location filename="../source/levelcelview.cpp" line="2654"/>
         <source>Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2550"/>
+        <location filename="../source/levelcelview.cpp" line="2662"/>
         <source>Subtile %1 has foliage set on the right, but not second pass.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2563"/>
+        <location filename="../source/levelcelview.cpp" line="2675"/>
         <source>Subtile %1 has right floor transparency set, but the right side is completely transparent above the floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2568"/>
+        <location filename="../source/levelcelview.cpp" line="2680"/>
         <source>Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2575"/>
+        <location filename="../source/levelcelview.cpp" line="2687"/>
         <source>No inconsistency detected in the Render settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2580"/>
+        <location filename="../source/levelcelview.cpp" line="2692"/>
         <source>Checking Map settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2585"/>
+        <location filename="../source/levelcelview.cpp" line="2697"/>
         <source>Inconsistencies in the Map settings:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2591"/>
+        <location filename="../source/levelcelview.cpp" line="2715"/>
         <source>Subtile %1 is for doors, but it has also walls.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2608"/>
+        <location filename="../source/levelcelview.cpp" line="2737"/>
         <source>Subtile %1 is for closed east-doors, but Subtile %2 is not for open east-doors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2611"/>
+        <location filename="../source/levelcelview.cpp" line="2740"/>
         <source>Subtile %1 is for closed west-doors, but Subtile %2 is not for open west-doors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2616"/>
+        <location filename="../source/levelcelview.cpp" line="2745"/>
         <source>Subtile %1 is for closed doors, but Subtile %2 is a path-blocker.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2623"/>
+        <location filename="../source/levelcelview.cpp" line="2752"/>
         <source>Subtile %1 is for open east-doors, but Subtile %2 is not for closed east-doors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2626"/>
+        <location filename="../source/levelcelview.cpp" line="2755"/>
         <source>Subtile %1 is for open west-doors, but Subtile %2 is not for closed west-doors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2631"/>
+        <location filename="../source/levelcelview.cpp" line="2760"/>
         <source>Subtile %1 is for open doors, but Subtile %2 is not a path-blocker.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2641"/>
+        <location filename="../source/levelcelview.cpp" line="2770"/>
         <source>No inconsistency detected in the Map settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3548"/>
+        <location filename="../source/levelcelview.cpp" line="3687"/>
         <source>Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3552"/>
+        <location filename="../source/levelcelview.cpp" line="3691"/>
         <source>Add Layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3553"/>
+        <location filename="../source/levelcelview.cpp" line="3692"/>
         <source>Add the content of an image to the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3559"/>
-        <source>Create new frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="3564"/>
-        <location filename="../source/levelcelview.cpp" line="3601"/>
-        <location filename="../source/levelcelview.cpp" line="3639"/>
+        <location filename="../source/levelcelview.cpp" line="3703"/>
+        <location filename="../source/levelcelview.cpp" line="3740"/>
+        <location filename="../source/levelcelview.cpp" line="3778"/>
         <source>Insert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3565"/>
-        <source>Add new frames before the current one</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="3570"/>
-        <location filename="../source/levelcelview.cpp" line="3607"/>
-        <location filename="../source/levelcelview.cpp" line="3645"/>
+        <location filename="../source/levelcelview.cpp" line="3709"/>
+        <location filename="../source/levelcelview.cpp" line="3746"/>
+        <location filename="../source/levelcelview.cpp" line="3784"/>
         <source>Duplicate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3571"/>
+        <location filename="../source/levelcelview.cpp" line="3710"/>
         <source>Duplicate the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3576"/>
-        <location filename="../source/levelcelview.cpp" line="3613"/>
-        <location filename="../source/levelcelview.cpp" line="3651"/>
+        <location filename="../source/levelcelview.cpp" line="3715"/>
+        <location filename="../source/levelcelview.cpp" line="3752"/>
+        <location filename="../source/levelcelview.cpp" line="3790"/>
         <source>Replace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3577"/>
+        <location filename="../source/levelcelview.cpp" line="3716"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3583"/>
-        <location filename="../source/levelcelview.cpp" line="3620"/>
-        <location filename="../source/levelcelview.cpp" line="3658"/>
+        <location filename="../source/levelcelview.cpp" line="3722"/>
+        <location filename="../source/levelcelview.cpp" line="3759"/>
+        <location filename="../source/levelcelview.cpp" line="3797"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3584"/>
+        <location filename="../source/levelcelview.cpp" line="3723"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3591"/>
+        <location filename="../source/levelcelview.cpp" line="3730"/>
         <source>Subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3596"/>
-        <source>Create new subtiles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="3633"/>
-        <source>Create new tiles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="3558"/>
-        <location filename="../source/levelcelview.cpp" line="3595"/>
-        <location filename="../source/levelcelview.cpp" line="3632"/>
+        <location filename="../source/levelcelview.cpp" line="3697"/>
+        <location filename="../source/levelcelview.cpp" line="3734"/>
+        <location filename="../source/levelcelview.cpp" line="3771"/>
         <source>Create</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3602"/>
-        <source>Add new subtiles before the current one</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="3608"/>
+        <location filename="../source/levelcelview.cpp" line="3747"/>
         <source>Duplicate the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3614"/>
+        <location filename="../source/levelcelview.cpp" line="3753"/>
         <source>Replace the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3621"/>
+        <location filename="../source/levelcelview.cpp" line="3760"/>
         <source>Delete the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3628"/>
+        <location filename="../source/levelcelview.cpp" line="3767"/>
         <source>Tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3640"/>
-        <source>Add new tiles before the current one</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="3646"/>
+        <location filename="../source/levelcelview.cpp" line="3785"/>
         <source>Duplicate the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3652"/>
+        <location filename="../source/levelcelview.cpp" line="3791"/>
         <source>Replace the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3659"/>
+        <location filename="../source/levelcelview.cpp" line="3798"/>
         <source>Delete the current tile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4810,1344 +5091,1443 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="83"/>
+        <location filename="../source/mainwindow.ui" line="84"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="97"/>
+        <location filename="../source/mainwindow.ui" line="98"/>
         <source>Report</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="109"/>
+        <location filename="../source/mainwindow.ui" line="110"/>
         <source>Check Flags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="120"/>
+        <location filename="../source/mainwindow.ui" line="121"/>
         <source>Cleanup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="131"/>
+        <location filename="../source/mainwindow.ui" line="132"/>
         <source>Compress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="142"/>
+        <location filename="../source/mainwindow.ui" line="143"/>
         <source>Sort</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="153"/>
-        <location filename="../source/mainwindow.ui" line="458"/>
-        <location filename="../source/mainwindow.ui" line="836"/>
-        <location filename="../source/mainwindow.ui" line="860"/>
-        <location filename="../source/mainwindow.ui" line="884"/>
-        <location filename="../source/mainwindow.ui" line="908"/>
+        <location filename="../source/mainwindow.ui" line="154"/>
+        <location filename="../source/mainwindow.ui" line="464"/>
+        <location filename="../source/mainwindow.ui" line="855"/>
+        <location filename="../source/mainwindow.ui" line="879"/>
+        <location filename="../source/mainwindow.ui" line="903"/>
+        <location filename="../source/mainwindow.ui" line="927"/>
         <source>Tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="171"/>
+        <location filename="../source/mainwindow.ui" line="172"/>
         <source>Protect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="182"/>
+        <location filename="../source/mainwindow.ui" line="183"/>
         <source>Check</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="196"/>
+        <location filename="../source/mainwindow.ui" line="197"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="209"/>
-        <location filename="../source/mainwindow.ui" line="505"/>
+        <location filename="../source/mainwindow.ui" line="210"/>
         <source>Load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="245"/>
-        <location filename="../source/mainwindow.cpp" line="1298"/>
+        <location filename="../source/mainwindow.ui" line="246"/>
+        <location filename="../source/mainwindow.cpp" line="1501"/>
         <source>Palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="272"/>
+        <location filename="../source/mainwindow.ui" line="274"/>
         <source>Unique Translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="286"/>
+        <location filename="../source/mainwindow.ui" line="288"/>
         <source>Translation Set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="297"/>
+        <location filename="../source/mainwindow.ui" line="299"/>
         <source>Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="312"/>
+        <location filename="../source/mainwindow.ui" line="315"/>
         <source>Columns</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="330"/>
+        <location filename="../source/mainwindow.ui" line="334"/>
         <source>Rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="348"/>
+        <location filename="../source/mainwindow.ui" line="353"/>
         <source>Data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="358"/>
+        <location filename="../source/mainwindow.ui" line="363"/>
         <source>Tasks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="406"/>
+        <location filename="../source/mainwindow.ui" line="411"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="438"/>
-        <location filename="../source/mainwindow.cpp" line="3115"/>
+        <location filename="../source/mainwindow.ui" line="444"/>
+        <location filename="../source/mainwindow.cpp" line="3627"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="443"/>
-        <location filename="../source/mainwindow.cpp" line="3120"/>
+        <location filename="../source/mainwindow.ui" line="449"/>
+        <location filename="../source/mainwindow.cpp" line="3632"/>
         <source>About Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="463"/>
+        <location filename="../source/mainwindow.ui" line="469"/>
         <source>Gfxset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="473"/>
+        <location filename="../source/mainwindow.ui" line="479"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="481"/>
-        <location filename="../source/mainwindow.ui" line="1147"/>
-        <location filename="../source/mainwindow.ui" line="1167"/>
-        <location filename="../source/mainwindow.ui" line="1195"/>
+        <location filename="../source/mainwindow.ui" line="487"/>
+        <location filename="../source/mainwindow.ui" line="1171"/>
+        <location filename="../source/mainwindow.ui" line="1191"/>
+        <location filename="../source/mainwindow.ui" line="1219"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="489"/>
+        <location filename="../source/mainwindow.ui" line="495"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="497"/>
+        <location filename="../source/mainwindow.ui" line="503"/>
         <source>Open As...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="521"/>
-        <location filename="../source/mainwindow.ui" line="1142"/>
-        <location filename="../source/mainwindow.ui" line="1162"/>
-        <location filename="../source/mainwindow.ui" line="1190"/>
+        <location filename="../source/mainwindow.ui" line="511"/>
+        <source>Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="527"/>
+        <location filename="../source/mainwindow.ui" line="1161"/>
+        <location filename="../source/mainwindow.ui" line="1186"/>
+        <location filename="../source/mainwindow.ui" line="1214"/>
         <source>Save As...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="529"/>
-        <location filename="../source/mainwindow.ui" line="537"/>
-        <location filename="../source/mainwindow.ui" line="545"/>
+        <location filename="../source/mainwindow.ui" line="535"/>
+        <location filename="../source/mainwindow.ui" line="543"/>
+        <location filename="../source/mainwindow.ui" line="551"/>
         <source>Open...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="812"/>
-        <source>Light Subtiles</source>
+        <location filename="../source/mainwindow.ui" line="567"/>
+        <source>Diff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="815"/>
-        <source>Adjust the light radius of the subtiles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="823"/>
-        <source>List inconsistent subtile settings</source>
+        <location filename="../source/mainwindow.ui" line="740"/>
+        <source>Upscale/Downscale the current graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="831"/>
+        <source>Light Subtiles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="834"/>
+        <source>Adjust the light radius of the subtiles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="842"/>
+        <source>List inconsistent subtile settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="850"/>
         <source>List inconsistent tile settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="839"/>
+        <location filename="../source/mainwindow.ui" line="858"/>
         <source>List inconsistent tile and subtile settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1216"/>
+        <location filename="../source/mainwindow.ui" line="1232"/>
         <source>Display Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1219"/>
+        <location filename="../source/mainwindow.ui" line="1235"/>
         <source>Show palette colors on a chart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1224"/>
-        <source>Generate Light Translations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1227"/>
-        <source>Generate light translations using the current palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1232"/>
-        <source>Load Translation Set</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1235"/>
-        <source>Load a translation set as unique translations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1240"/>
-        <source>Save Translation Set</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1243"/>
-        <source>Save the current unique translations as a translation set</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/mainwindow.ui" line="1248"/>
-        <location filename="../source/mainwindow.ui" line="1320"/>
-        <source>Add</source>
+        <source>Smack Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1251"/>
-        <source>Add column to the end of the table</source>
+        <source>Ensure the palette colors are SMK compliant</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1256"/>
+        <source>Generate Light Translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1259"/>
-        <source>Add new column before the current one</source>
+        <source>Generate light translations using the current palette</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1264"/>
+        <source>Load Translation Set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1267"/>
-        <source>Delete the current column</source>
+        <source>Load a translation set as unique translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1272"/>
-        <location filename="../source/mainwindow.ui" line="1344"/>
-        <source>Hide</source>
+        <source>Save Translation Set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1275"/>
-        <source>Hide the current column</source>
+        <source>Save the current unique translations as a translation set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1280"/>
+        <location filename="../source/mainwindow.ui" line="1360"/>
+        <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1283"/>
-        <source>Move the current column to the left</source>
+        <source>Add a column to the end of the table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1291"/>
-        <source>Move the current column to the right</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1296"/>
-        <location filename="../source/mainwindow.ui" line="1368"/>
-        <source>Delete...</source>
+        <source>Add a new column before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1299"/>
-        <source>Delete columns</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1304"/>
-        <location filename="../source/mainwindow.ui" line="1376"/>
-        <source>Hide...</source>
+        <source>Duplicate the current column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1307"/>
-        <source>Hide columns</source>
+        <source>Delete the current column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1312"/>
-        <location filename="../source/mainwindow.ui" line="1384"/>
-        <source>Show...</source>
+        <location filename="../source/mainwindow.ui" line="1392"/>
+        <source>Hide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1315"/>
-        <source>Show columns</source>
+        <source>Hide the current column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1323"/>
-        <source>Add row to the end of the table</source>
+        <source>Move the current column to the left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1331"/>
-        <source>Add new row before the current one</source>
+        <source>Move the current column to the right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1336"/>
+        <location filename="../source/mainwindow.ui" line="1416"/>
+        <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1339"/>
-        <source>Delete the current row</source>
+        <source>Delete columns</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1344"/>
+        <location filename="../source/mainwindow.ui" line="1424"/>
+        <source>Hide...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1347"/>
-        <source>Hide the current row</source>
+        <source>Hide columns</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1352"/>
+        <location filename="../source/mainwindow.ui" line="1432"/>
+        <source>Show...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1355"/>
-        <source>Move the current row up</source>
+        <source>Show columns</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1363"/>
-        <source>Move the current row down</source>
+        <source>Add a row to the end of the table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1371"/>
-        <source>Delete rows</source>
+        <source>Add a new row before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1379"/>
-        <source>Hide rows</source>
+        <source>Duplicate the current row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1387"/>
+        <source>Delete the current row</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1395"/>
+        <source>Hide the current row</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1403"/>
+        <source>Move the current row up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1411"/>
+        <source>Move the current row down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1419"/>
+        <source>Delete rows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1427"/>
+        <source>Hide rows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="1435"/>
         <source>Show rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="513"/>
-        <location filename="../source/mainwindow.ui" line="1137"/>
-        <location filename="../source/mainwindow.ui" line="1157"/>
-        <location filename="../source/mainwindow.ui" line="1185"/>
+        <location filename="../source/mainwindow.ui" line="519"/>
+        <location filename="../source/mainwindow.ui" line="1156"/>
+        <location filename="../source/mainwindow.ui" line="1181"/>
+        <location filename="../source/mainwindow.ui" line="1209"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="553"/>
+        <location filename="../source/mainwindow.ui" line="559"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="561"/>
+        <location filename="../source/mainwindow.ui" line="572"/>
         <source>Upscale Assets</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="564"/>
+        <location filename="../source/mainwindow.ui" line="575"/>
         <source>Upscale the assets of Diablo 1 / Hellfire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="569"/>
+        <location filename="../source/mainwindow.ui" line="580"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="710"/>
-        <location filename="../source/mainwindow.ui" line="1172"/>
-        <location filename="../source/mainwindow.ui" line="1200"/>
+        <location filename="../source/mainwindow.ui" line="721"/>
+        <location filename="../source/mainwindow.ui" line="1196"/>
+        <location filename="../source/mainwindow.ui" line="1224"/>
         <source>Patch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="713"/>
+        <location filename="../source/mainwindow.ui" line="724"/>
         <source>Patch the current graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="718"/>
+        <location filename="../source/mainwindow.ui" line="729"/>
         <source>Resize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="721"/>
+        <location filename="../source/mainwindow.ui" line="732"/>
         <source>Resize the current graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="764"/>
-        <location filename="../source/mainwindow.ui" line="916"/>
+        <location filename="../source/mainwindow.ui" line="783"/>
+        <location filename="../source/mainwindow.ui" line="935"/>
         <source>Usage Report</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="844"/>
-        <location filename="../source/mainwindow.ui" line="892"/>
+        <location filename="../source/mainwindow.ui" line="863"/>
+        <location filename="../source/mainwindow.ui" line="911"/>
         <source>Frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="852"/>
-        <location filename="../source/mainwindow.ui" line="868"/>
-        <location filename="../source/mainwindow.ui" line="900"/>
-        <location filename="../source/mainwindow.ui" line="972"/>
+        <location filename="../source/mainwindow.ui" line="871"/>
+        <location filename="../source/mainwindow.ui" line="887"/>
+        <location filename="../source/mainwindow.ui" line="919"/>
+        <location filename="../source/mainwindow.ui" line="991"/>
         <source>Subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="876"/>
-        <location filename="../source/mainwindow.ui" line="956"/>
-        <location filename="../source/mainwindow.ui" line="980"/>
-        <location filename="../source/mainwindow.ui" line="1028"/>
-        <location filename="../source/mainwindow.ui" line="1036"/>
+        <location filename="../source/mainwindow.ui" line="895"/>
+        <location filename="../source/mainwindow.ui" line="975"/>
+        <location filename="../source/mainwindow.ui" line="999"/>
+        <location filename="../source/mainwindow.ui" line="1047"/>
+        <location filename="../source/mainwindow.ui" line="1055"/>
         <source>Tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="948"/>
+        <location filename="../source/mainwindow.ui" line="967"/>
         <source>Mask Tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="951"/>
+        <location filename="../source/mainwindow.ui" line="970"/>
         <source>Mask tiles with the tiles of an another dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="959"/>
+        <location filename="../source/mainwindow.ui" line="978"/>
         <source>Mark tiles protected if the tile is set or there is an actor on the tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="964"/>
+        <location filename="../source/mainwindow.ui" line="983"/>
         <source>Tiles From</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="967"/>
+        <location filename="../source/mainwindow.ui" line="986"/>
         <source>Mark tiles protected if the tile is set in an another dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="975"/>
+        <location filename="../source/mainwindow.ui" line="994"/>
         <source>Mark subtiles protected if there is an actor on the tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="983"/>
+        <location filename="../source/mainwindow.ui" line="1002"/>
         <source>List inconsistent tiles/subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="988"/>
-        <location filename="../source/mainwindow.ui" line="1044"/>
-        <location filename="../source/mainwindow.ui" line="1052"/>
+        <location filename="../source/mainwindow.ui" line="1007"/>
+        <location filename="../source/mainwindow.ui" line="1063"/>
+        <location filename="../source/mainwindow.ui" line="1071"/>
         <source>Protections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="991"/>
+        <location filename="../source/mainwindow.ui" line="1010"/>
         <source>List inconsistent protections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="996"/>
-        <location filename="../source/mainwindow.ui" line="1060"/>
-        <location filename="../source/mainwindow.ui" line="1068"/>
+        <location filename="../source/mainwindow.ui" line="1015"/>
+        <location filename="../source/mainwindow.ui" line="1079"/>
+        <location filename="../source/mainwindow.ui" line="1087"/>
         <source>Items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1004"/>
-        <location filename="../source/mainwindow.ui" line="1076"/>
-        <location filename="../source/mainwindow.ui" line="1084"/>
+        <location filename="../source/mainwindow.ui" line="1023"/>
+        <location filename="../source/mainwindow.ui" line="1095"/>
+        <location filename="../source/mainwindow.ui" line="1103"/>
         <source>Monsters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1012"/>
-        <location filename="../source/mainwindow.ui" line="1092"/>
-        <location filename="../source/mainwindow.ui" line="1100"/>
+        <location filename="../source/mainwindow.ui" line="1031"/>
+        <location filename="../source/mainwindow.ui" line="1111"/>
+        <location filename="../source/mainwindow.ui" line="1119"/>
         <source>Objects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1020"/>
+        <location filename="../source/mainwindow.ui" line="1039"/>
         <source>Entities</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1031"/>
+        <location filename="../source/mainwindow.ui" line="1050"/>
         <source>Remove every tile from the dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1039"/>
+        <location filename="../source/mainwindow.ui" line="1058"/>
         <source>Load tiles from another dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1047"/>
+        <location filename="../source/mainwindow.ui" line="1066"/>
         <source>Remove every protection from the dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1055"/>
+        <location filename="../source/mainwindow.ui" line="1074"/>
         <source>Load protections from another dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1116"/>
-        <source>Decorate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1119"/>
-        <source>Generate contents to the dungeon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="1124"/>
+        <location filename="../source/mainwindow.ui" line="1143"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1127"/>
+        <location filename="../source/mainwindow.ui" line="1146"/>
         <source>Search for entities in the current dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1175"/>
-        <location filename="../source/mainwindow.ui" line="1203"/>
+        <location filename="../source/mainwindow.ui" line="1199"/>
+        <location filename="../source/mainwindow.ui" line="1227"/>
         <source>Replace translation values of 255 with 0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1208"/>
+        <location filename="../source/mainwindow.ui" line="1240"/>
         <source>Remap Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1211"/>
+        <location filename="../source/mainwindow.ui" line="1243"/>
         <source>Replace colors of the graphics with another colors from the palette or with transparent pixels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="796"/>
+        <location filename="../source/mainwindow.ui" line="815"/>
         <source>Reset Frame Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="799"/>
+        <location filename="../source/mainwindow.ui" line="818"/>
         <source>Reinitialize the frame types of every frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="788"/>
+        <location filename="../source/mainwindow.ui" line="807"/>
         <source>Inefficient Frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="90"/>
+        <location filename="../source/mainwindow.ui" line="91"/>
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="222"/>
-        <location filename="../source/mainwindow.ui" line="468"/>
+        <location filename="../source/mainwindow.ui" line="223"/>
+        <location filename="../source/mainwindow.ui" line="474"/>
         <source>Dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="574"/>
-        <location filename="../source/mainwindow.ui" line="734"/>
+        <location filename="../source/mainwindow.ui" line="585"/>
+        <location filename="../source/mainwindow.ui" line="745"/>
         <source>Merge</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="577"/>
+        <location filename="../source/mainwindow.ui" line="588"/>
         <source>Merge frames of the current graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="593"/>
+        <location filename="../source/mainwindow.ui" line="604"/>
         <source>Create a new (empty) frame (or multiple frames from images with SHIFT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="601"/>
+        <location filename="../source/mainwindow.ui" line="612"/>
         <source>Add a new frame before the current one (or multiple frames from images with SHIFT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="606"/>
-        <location filename="../source/mainwindow.ui" line="638"/>
-        <location filename="../source/mainwindow.ui" line="686"/>
+        <location filename="../source/mainwindow.ui" line="617"/>
+        <location filename="../source/mainwindow.ui" line="649"/>
+        <location filename="../source/mainwindow.ui" line="697"/>
+        <location filename="../source/mainwindow.ui" line="1296"/>
+        <location filename="../source/mainwindow.ui" line="1376"/>
         <source>Duplicate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="609"/>
+        <location filename="../source/mainwindow.ui" line="620"/>
         <source>Duplicate the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="641"/>
+        <location filename="../source/mainwindow.ui" line="652"/>
         <source>Duplicate the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="689"/>
+        <location filename="../source/mainwindow.ui" line="700"/>
         <source>Duplicate the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="737"/>
+        <location filename="../source/mainwindow.ui" line="748"/>
         <source>Add frames from an other graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="742"/>
+        <location filename="../source/mainwindow.ui" line="761"/>
         <source>Show PAL &amp;&amp; TRNs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="753"/>
+        <location filename="../source/mainwindow.ui" line="772"/>
         <source>Show Bottom Panel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="767"/>
+        <location filename="../source/mainwindow.ui" line="786"/>
         <source>List the uses of the current frame/subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="772"/>
+        <location filename="../source/mainwindow.ui" line="791"/>
         <source>Active Subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="775"/>
+        <location filename="../source/mainwindow.ui" line="794"/>
         <source>List subtiles which are affected by the current playback mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="780"/>
+        <location filename="../source/mainwindow.ui" line="799"/>
         <source>Active Tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="783"/>
+        <location filename="../source/mainwindow.ui" line="802"/>
         <source>List tiles which are affected by the current playback mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="791"/>
+        <location filename="../source/mainwindow.ui" line="810"/>
         <source>List frames which are almost standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="804"/>
+        <location filename="../source/mainwindow.ui" line="823"/>
         <source>Patch Tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="807"/>
+        <location filename="../source/mainwindow.ui" line="826"/>
         <source>Patch subtiles of the vanilla game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="847"/>
+        <location filename="../source/mainwindow.ui" line="866"/>
         <source>Eliminate unused frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="855"/>
+        <location filename="../source/mainwindow.ui" line="874"/>
         <source>Eliminate unused subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="863"/>
+        <location filename="../source/mainwindow.ui" line="882"/>
         <source>Eliminate unused subtiles and frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="871"/>
+        <location filename="../source/mainwindow.ui" line="890"/>
         <source>Reuse frames in subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="879"/>
+        <location filename="../source/mainwindow.ui" line="898"/>
         <source>Reuse subtiles in tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="887"/>
+        <location filename="../source/mainwindow.ui" line="906"/>
         <source>Reuse subtiles in tiles and frames in subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="895"/>
+        <location filename="../source/mainwindow.ui" line="914"/>
         <source>Sort the frames based on the subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="903"/>
+        <location filename="../source/mainwindow.ui" line="922"/>
         <source>Sort the subtiles based on the tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="911"/>
+        <location filename="../source/mainwindow.ui" line="930"/>
         <source>Sort the subtiles and frames based on the tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="919"/>
+        <location filename="../source/mainwindow.ui" line="938"/>
         <source>List the type of monsters/items/objects in the dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="924"/>
+        <location filename="../source/mainwindow.ui" line="943"/>
         <source>Patch Dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="927"/>
+        <location filename="../source/mainwindow.ui" line="946"/>
         <source>Patch subtiles in the dungeon of the vanilla game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="932"/>
+        <location filename="../source/mainwindow.ui" line="951"/>
         <source>Reset Tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="935"/>
+        <location filename="../source/mainwindow.ui" line="954"/>
         <source>Reinitialize the tiles based on the subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="940"/>
+        <location filename="../source/mainwindow.ui" line="959"/>
         <source>Reset Subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="943"/>
+        <location filename="../source/mainwindow.ui" line="962"/>
         <source>Reinitialize the subtiles based on the tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="999"/>
+        <location filename="../source/mainwindow.ui" line="1018"/>
         <source>List inconsistent items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1007"/>
+        <location filename="../source/mainwindow.ui" line="1026"/>
         <source>List inconsistent monsters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1015"/>
+        <location filename="../source/mainwindow.ui" line="1034"/>
         <source>List inconsistent objects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1023"/>
+        <location filename="../source/mainwindow.ui" line="1042"/>
         <source>List inconsistent items/monsters/objects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1063"/>
+        <location filename="../source/mainwindow.ui" line="1082"/>
         <source>Remove every item from the dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1071"/>
+        <location filename="../source/mainwindow.ui" line="1090"/>
         <source>Load items from another dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1079"/>
+        <location filename="../source/mainwindow.ui" line="1098"/>
         <source>Remove every monster from the dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1087"/>
+        <location filename="../source/mainwindow.ui" line="1106"/>
         <source>Load monsters from another dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1095"/>
+        <location filename="../source/mainwindow.ui" line="1114"/>
         <source>Remove every object from the dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1103"/>
+        <location filename="../source/mainwindow.ui" line="1122"/>
         <source>Load objects from another dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1108"/>
+        <location filename="../source/mainwindow.ui" line="1127"/>
+        <location filename="../source/mainwindow.ui" line="1166"/>
         <source>Generate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1111"/>
+        <location filename="../source/mainwindow.ui" line="1130"/>
         <source>Create a dungeon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1011"/>
+        <location filename="../source/mainwindow.cpp" line="1141"/>
         <source>Undo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1012"/>
+        <location filename="../source/mainwindow.cpp" line="1142"/>
         <source>Redo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="598"/>
-        <location filename="../source/mainwindow.ui" line="646"/>
-        <location filename="../source/mainwindow.ui" line="678"/>
-        <location filename="../source/mainwindow.ui" line="1256"/>
-        <location filename="../source/mainwindow.ui" line="1328"/>
+        <location filename="../source/mainwindow.ui" line="609"/>
+        <location filename="../source/mainwindow.ui" line="657"/>
+        <location filename="../source/mainwindow.ui" line="689"/>
+        <location filename="../source/mainwindow.ui" line="1288"/>
+        <location filename="../source/mainwindow.ui" line="1368"/>
         <source>Insert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="614"/>
-        <location filename="../source/mainwindow.ui" line="654"/>
-        <location filename="../source/mainwindow.ui" line="694"/>
+        <location filename="../source/mainwindow.ui" line="625"/>
+        <location filename="../source/mainwindow.ui" line="665"/>
+        <location filename="../source/mainwindow.ui" line="705"/>
         <source>Replace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="617"/>
+        <location filename="../source/mainwindow.ui" line="628"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="622"/>
-        <location filename="../source/mainwindow.ui" line="662"/>
-        <location filename="../source/mainwindow.ui" line="702"/>
-        <location filename="../source/mainwindow.ui" line="1264"/>
-        <location filename="../source/mainwindow.ui" line="1336"/>
+        <location filename="../source/mainwindow.ui" line="633"/>
+        <location filename="../source/mainwindow.ui" line="673"/>
+        <location filename="../source/mainwindow.ui" line="713"/>
+        <location filename="../source/mainwindow.ui" line="1304"/>
+        <location filename="../source/mainwindow.ui" line="1384"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="625"/>
+        <location filename="../source/mainwindow.ui" line="636"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="590"/>
-        <location filename="../source/mainwindow.ui" line="630"/>
-        <location filename="../source/mainwindow.ui" line="670"/>
+        <location filename="../source/mainwindow.ui" line="601"/>
+        <location filename="../source/mainwindow.ui" line="641"/>
+        <location filename="../source/mainwindow.ui" line="681"/>
         <source>Create</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="633"/>
+        <location filename="../source/mainwindow.ui" line="644"/>
         <source>Create a new subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="649"/>
+        <location filename="../source/mainwindow.ui" line="660"/>
         <source>Add new subtiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="657"/>
+        <location filename="../source/mainwindow.ui" line="668"/>
         <source>Replace the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="665"/>
+        <location filename="../source/mainwindow.ui" line="676"/>
         <source>Delete the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="673"/>
+        <location filename="../source/mainwindow.ui" line="684"/>
         <source>Create a new tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="681"/>
+        <location filename="../source/mainwindow.ui" line="692"/>
         <source>Add new tiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="697"/>
+        <location filename="../source/mainwindow.ui" line="708"/>
         <source>Replace the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="705"/>
+        <location filename="../source/mainwindow.ui" line="716"/>
         <source>Delete the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="726"/>
+        <location filename="../source/mainwindow.ui" line="737"/>
         <source>Upscale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="729"/>
-        <source>Upscale the current graphics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="316"/>
-        <location filename="../source/mainwindow.cpp" line="337"/>
-        <location filename="../source/mainwindow.cpp" line="358"/>
-        <location filename="../source/mainwindow.cpp" line="1555"/>
-        <location filename="../source/mainwindow.cpp" line="2470"/>
-        <location filename="../source/mainwindow.cpp" line="2634"/>
-        <location filename="../source/mainwindow.cpp" line="2715"/>
-        <location filename="../source/mainwindow.cpp" line="2801"/>
-        <location filename="../source/mainwindow.cpp" line="2979"/>
+        <location filename="../source/mainwindow.cpp" line="307"/>
+        <location filename="../source/mainwindow.cpp" line="328"/>
+        <location filename="../source/mainwindow.cpp" line="349"/>
+        <location filename="../source/mainwindow.cpp" line="1764"/>
+        <location filename="../source/mainwindow.cpp" line="2080"/>
+        <location filename="../source/mainwindow.cpp" line="2885"/>
+        <location filename="../source/mainwindow.cpp" line="3059"/>
+        <location filename="../source/mainwindow.cpp" line="3160"/>
+        <location filename="../source/mainwindow.cpp" line="3246"/>
+        <location filename="../source/mainwindow.cpp" line="3481"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="316"/>
-        <location filename="../source/mainwindow.cpp" line="2634"/>
+        <location filename="../source/mainwindow.cpp" line="307"/>
+        <location filename="../source/mainwindow.cpp" line="3059"/>
         <source>Failed loading PAL file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="337"/>
-        <location filename="../source/mainwindow.cpp" line="358"/>
-        <location filename="../source/mainwindow.cpp" line="2715"/>
-        <location filename="../source/mainwindow.cpp" line="2801"/>
+        <location filename="../source/mainwindow.cpp" line="328"/>
+        <location filename="../source/mainwindow.cpp" line="349"/>
+        <location filename="../source/mainwindow.cpp" line="3160"/>
+        <location filename="../source/mainwindow.cpp" line="3246"/>
         <source>Failed loading TRN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="726"/>
-        <location filename="../source/mainwindow.cpp" line="738"/>
-        <location filename="../source/mainwindow.cpp" line="2083"/>
+        <location filename="../source/mainwindow.cpp" line="731"/>
+        <location filename="../source/mainwindow.cpp" line="743"/>
+        <location filename="../source/mainwindow.cpp" line="2480"/>
         <source>Open Graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="448"/>
+        <location filename="../source/mainwindow.ui" line="454"/>
         <source>CEL graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="453"/>
+        <location filename="../source/mainwindow.ui" line="459"/>
         <source>CL2 graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="765"/>
-        <location filename="../source/mainwindow.cpp" line="959"/>
-        <location filename="../source/mainwindow.cpp" line="1074"/>
+        <location filename="../source/mainwindow.cpp" line="1089"/>
+        <location filename="../source/mainwindow.cpp" line="1201"/>
         <source>Loading...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="582"/>
+        <location filename="../source/mainwindow.ui" line="593"/>
         <source>Add Layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="585"/>
+        <location filename="../source/mainwindow.ui" line="596"/>
         <source>Add the content of an image to the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1220"/>
+        <location filename="../source/mainwindow.cpp" line="852"/>
+        <location filename="../source/mainwindow.cpp" line="923"/>
+        <location filename="../source/mainwindow.cpp" line="1397"/>
+        <location filename="../source/mainwindow.cpp" line="2173"/>
         <source>Failed loading MIN file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1226"/>
+        <location filename="../source/mainwindow.cpp" line="865"/>
+        <location filename="../source/mainwindow.cpp" line="1403"/>
+        <location filename="../source/mainwindow.cpp" line="2183"/>
         <source>Failed loading TIL file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1238"/>
+        <location filename="../source/mainwindow.cpp" line="920"/>
+        <location filename="../source/mainwindow.cpp" line="1415"/>
         <source>Failed loading Tileset-CEL file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="795"/>
-        <location filename="../source/mainwindow.cpp" line="1252"/>
+        <location filename="../source/mainwindow.cpp" line="838"/>
+        <location filename="../source/mainwindow.cpp" line="1429"/>
         <source>Failed loading DUN file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1259"/>
-        <location filename="../source/mainwindow.cpp" line="2095"/>
+        <location filename="../source/mainwindow.cpp" line="1436"/>
+        <location filename="../source/mainwindow.cpp" line="2498"/>
         <source>Failed loading CEL file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1264"/>
-        <location filename="../source/mainwindow.cpp" line="2100"/>
+        <location filename="../source/mainwindow.cpp" line="1441"/>
+        <location filename="../source/mainwindow.cpp" line="2503"/>
         <source>Failed loading CL2 file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1269"/>
+        <location filename="../source/mainwindow.cpp" line="1446"/>
         <source>Failed loading PCX file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1275"/>
+        <location filename="../source/mainwindow.cpp" line="1452"/>
         <source>Failed loading TBL file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1299"/>
+        <location filename="../source/mainwindow.cpp" line="1502"/>
         <source>Unique translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="258"/>
-        <location filename="../source/mainwindow.cpp" line="1300"/>
+        <location filename="../source/mainwindow.ui" line="260"/>
+        <location filename="../source/mainwindow.cpp" line="1503"/>
         <source>Base Translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1472"/>
-        <location filename="../source/mainwindow.cpp" line="1492"/>
-        <location filename="../source/mainwindow.cpp" line="1847"/>
-        <location filename="../source/mainwindow.cpp" line="1896"/>
-        <location filename="../source/mainwindow.cpp" line="1952"/>
-        <location filename="../source/mainwindow.cpp" line="1991"/>
+        <location filename="../source/mainwindow.cpp" line="1681"/>
+        <location filename="../source/mainwindow.cpp" line="1701"/>
+        <location filename="../source/mainwindow.cpp" line="2244"/>
+        <location filename="../source/mainwindow.cpp" line="2293"/>
+        <location filename="../source/mainwindow.cpp" line="2349"/>
+        <location filename="../source/mainwindow.cpp" line="2388"/>
+        <location filename="../source/mainwindow.cpp" line="3117"/>
         <source>Reading...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1529"/>
+        <location filename="../source/mainwindow.cpp" line="1738"/>
         <source>Saving...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1537"/>
+        <location filename="../source/mainwindow.cpp" line="1746"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1537"/>
+        <location filename="../source/mainwindow.cpp" line="1746"/>
         <source>Are you sure you want to save as %1? Data conversion is not supported.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1555"/>
+        <location filename="../source/mainwindow.cpp" line="1764"/>
+        <location filename="../source/mainwindow.cpp" line="2080"/>
+        <location filename="../source/mainwindow.cpp" line="2159"/>
         <source>Not supported.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1628"/>
+        <location filename="../source/mainwindow.cpp" line="1837"/>
         <source>Upscaling...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1685"/>
-        <location filename="../source/mainwindow.cpp" line="1706"/>
-        <location filename="../source/mainwindow.cpp" line="1719"/>
+        <location filename="../source/mainwindow.cpp" line="1894"/>
+        <location filename="../source/mainwindow.cpp" line="1915"/>
+        <location filename="../source/mainwindow.cpp" line="1928"/>
         <source>Select Image Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1841"/>
+        <location filename="../source/mainwindow.cpp" line="2055"/>
+        <source>Select Graphics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2059"/>
+        <source>CEL Files (*.cel *.CEL);;MIN Files (*.min *.MIN);;TIL Files (*.til *.TIL);;SLA Files (*.sla *.SLA);;TLA Files (*.tla *.TLA)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2061"/>
+        <source>Select Dungeon or Graphics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2072"/>
+        <source>CEL Files (*.cel *.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2076"/>
+        <source>PCX Files (*.pcx *.PCX)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2078"/>
+        <source>SMK Files (*.smk *.SMK)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2137"/>
+        <source>Comparing...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2151"/>
+        <source>File is empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2155"/>
+        <location filename="../source/mainwindow.cpp" line="2156"/>
+        <location filename="../source/mainwindow.cpp" line="2158"/>
+        <source>Not a graphics file (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="2238"/>
         <source>Composite Image File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1890"/>
-        <location filename="../source/mainwindow.cpp" line="1946"/>
-        <location filename="../source/mainwindow.cpp" line="1985"/>
+        <location filename="../source/mainwindow.cpp" line="2287"/>
+        <location filename="../source/mainwindow.cpp" line="2343"/>
+        <location filename="../source/mainwindow.cpp" line="2382"/>
         <source>Replacement Image File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2348"/>
+        <location filename="../source/mainwindow.cpp" line="2763"/>
         <source>Dungeon map file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2373"/>
+        <location filename="../source/mainwindow.cpp" line="2788"/>
         <source>Pre-Dungeon map file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2470"/>
+        <location filename="../source/mainwindow.cpp" line="2885"/>
         <source>Failed loading DUN file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2486"/>
+        <location filename="../source/mainwindow.cpp" line="2901"/>
         <source>Source of the tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2512"/>
+        <location filename="../source/mainwindow.cpp" line="2927"/>
         <source>Source of the flags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2538"/>
+        <location filename="../source/mainwindow.cpp" line="2953"/>
         <source>Source of the items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2564"/>
+        <location filename="../source/mainwindow.cpp" line="2979"/>
         <source>Source of the monsters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2590"/>
+        <location filename="../source/mainwindow.cpp" line="3005"/>
         <source>Source of the objects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2650"/>
+        <location filename="../source/mainwindow.cpp" line="3075"/>
         <source>Select Palette Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2731"/>
+        <location filename="../source/mainwindow.cpp" line="3111"/>
+        <source>Image File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="3176"/>
         <source>Select Unique Translation Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2817"/>
+        <location filename="../source/mainwindow.cpp" line="3262"/>
         <source>Select Base Translation Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2936"/>
+        <location filename="../source/mainwindow.cpp" line="3438"/>
         <source>Load Translation-Set File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2936"/>
-        <location filename="../source/mainwindow.cpp" line="2983"/>
+        <location filename="../source/mainwindow.cpp" line="3438"/>
+        <location filename="../source/mainwindow.cpp" line="3485"/>
         <source>TRS Files (*.trs *.TRS)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2979"/>
+        <location filename="../source/mainwindow.cpp" line="3481"/>
         <source>Built-in TRN files can not be saved to a translation set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2983"/>
+        <location filename="../source/mainwindow.cpp" line="3485"/>
         <source>Save Translation-Set File as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="145"/>
-        <location filename="../source/mainwindow.cpp" line="2113"/>
-        <location filename="../source/mainwindow.cpp" line="2123"/>
-        <location filename="../source/mainwindow.cpp" line="2133"/>
-        <location filename="../source/mainwindow.cpp" line="2143"/>
-        <location filename="../source/mainwindow.cpp" line="2153"/>
-        <location filename="../source/mainwindow.cpp" line="2177"/>
-        <location filename="../source/mainwindow.cpp" line="2187"/>
-        <location filename="../source/mainwindow.cpp" line="2197"/>
-        <location filename="../source/mainwindow.cpp" line="2207"/>
-        <location filename="../source/mainwindow.cpp" line="2217"/>
-        <location filename="../source/mainwindow.cpp" line="2227"/>
-        <location filename="../source/mainwindow.cpp" line="2246"/>
-        <location filename="../source/mainwindow.cpp" line="2260"/>
-        <location filename="../source/mainwindow.cpp" line="2274"/>
-        <location filename="../source/mainwindow.cpp" line="2279"/>
-        <location filename="../source/mainwindow.cpp" line="2289"/>
-        <location filename="../source/mainwindow.cpp" line="2299"/>
-        <location filename="../source/mainwindow.cpp" line="2309"/>
-        <location filename="../source/mainwindow.cpp" line="2328"/>
-        <location filename="../source/mainwindow.cpp" line="2338"/>
-        <location filename="../source/mainwindow.cpp" line="2353"/>
-        <location filename="../source/mainwindow.cpp" line="2363"/>
-        <location filename="../source/mainwindow.cpp" line="2378"/>
-        <location filename="../source/mainwindow.cpp" line="2388"/>
-        <location filename="../source/mainwindow.cpp" line="2398"/>
-        <location filename="../source/mainwindow.cpp" line="2408"/>
-        <location filename="../source/mainwindow.cpp" line="2418"/>
-        <location filename="../source/mainwindow.cpp" line="2428"/>
-        <location filename="../source/mainwindow.cpp" line="2438"/>
-        <location filename="../source/mainwindow.cpp" line="2448"/>
-        <location filename="../source/mainwindow.cpp" line="2476"/>
-        <location filename="../source/mainwindow.cpp" line="2491"/>
-        <location filename="../source/mainwindow.cpp" line="2502"/>
-        <location filename="../source/mainwindow.cpp" line="2517"/>
+        <location filename="../source/mainwindow.cpp" line="147"/>
+        <location filename="../source/mainwindow.cpp" line="2486"/>
+        <location filename="../source/mainwindow.cpp" line="2518"/>
         <location filename="../source/mainwindow.cpp" line="2528"/>
-        <location filename="../source/mainwindow.cpp" line="2543"/>
-        <location filename="../source/mainwindow.cpp" line="2554"/>
-        <location filename="../source/mainwindow.cpp" line="2569"/>
-        <location filename="../source/mainwindow.cpp" line="2580"/>
-        <location filename="../source/mainwindow.cpp" line="2595"/>
+        <location filename="../source/mainwindow.cpp" line="2538"/>
+        <location filename="../source/mainwindow.cpp" line="2548"/>
+        <location filename="../source/mainwindow.cpp" line="2558"/>
+        <location filename="../source/mainwindow.cpp" line="2568"/>
+        <location filename="../source/mainwindow.cpp" line="2592"/>
+        <location filename="../source/mainwindow.cpp" line="2602"/>
+        <location filename="../source/mainwindow.cpp" line="2612"/>
+        <location filename="../source/mainwindow.cpp" line="2622"/>
+        <location filename="../source/mainwindow.cpp" line="2632"/>
+        <location filename="../source/mainwindow.cpp" line="2642"/>
+        <location filename="../source/mainwindow.cpp" line="2661"/>
+        <location filename="../source/mainwindow.cpp" line="2675"/>
+        <location filename="../source/mainwindow.cpp" line="2689"/>
+        <location filename="../source/mainwindow.cpp" line="2694"/>
+        <location filename="../source/mainwindow.cpp" line="2704"/>
+        <location filename="../source/mainwindow.cpp" line="2714"/>
+        <location filename="../source/mainwindow.cpp" line="2724"/>
+        <location filename="../source/mainwindow.cpp" line="2743"/>
+        <location filename="../source/mainwindow.cpp" line="2753"/>
+        <location filename="../source/mainwindow.cpp" line="2768"/>
+        <location filename="../source/mainwindow.cpp" line="2778"/>
+        <location filename="../source/mainwindow.cpp" line="2793"/>
+        <location filename="../source/mainwindow.cpp" line="2803"/>
+        <location filename="../source/mainwindow.cpp" line="2813"/>
+        <location filename="../source/mainwindow.cpp" line="2823"/>
+        <location filename="../source/mainwindow.cpp" line="2833"/>
+        <location filename="../source/mainwindow.cpp" line="2843"/>
+        <location filename="../source/mainwindow.cpp" line="2853"/>
+        <location filename="../source/mainwindow.cpp" line="2863"/>
+        <location filename="../source/mainwindow.cpp" line="2891"/>
+        <location filename="../source/mainwindow.cpp" line="2906"/>
+        <location filename="../source/mainwindow.cpp" line="2917"/>
+        <location filename="../source/mainwindow.cpp" line="2932"/>
+        <location filename="../source/mainwindow.cpp" line="2943"/>
+        <location filename="../source/mainwindow.cpp" line="2958"/>
+        <location filename="../source/mainwindow.cpp" line="2969"/>
+        <location filename="../source/mainwindow.cpp" line="2984"/>
+        <location filename="../source/mainwindow.cpp" line="2995"/>
+        <location filename="../source/mainwindow.cpp" line="3010"/>
+        <location filename="../source/mainwindow.cpp" line="3021"/>
+        <location filename="../source/mainwindow.cpp" line="3337"/>
         <source>Processing...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="726"/>
+        <location filename="../source/mainwindow.cpp" line="731"/>
+        <location filename="../source/mainwindow.cpp" line="2074"/>
         <source>CL2 Files (*.cl2 *.CL2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="738"/>
+        <location filename="../source/mainwindow.cpp" line="743"/>
         <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="752"/>
-        <source>Load Dungeon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="753"/>
+        <location filename="../source/mainwindow.cpp" line="2062"/>
         <source>DUN Files (*.dun *.DUN *.rdun *.RDUN)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="756"/>
-        <source>Load Graphics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="757"/>
-        <location filename="../source/mainwindow.cpp" line="2083"/>
+        <location filename="../source/mainwindow.cpp" line="2057"/>
+        <location filename="../source/mainwindow.cpp" line="2480"/>
         <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="807"/>
-        <location filename="../source/mainwindow.cpp" line="1206"/>
+        <location filename="../source/mainwindow.cpp" line="937"/>
+        <location filename="../source/mainwindow.cpp" line="1383"/>
         <source>Failed loading GFX file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1153"/>
+        <location filename="../source/mainwindow.cpp" line="1319"/>
         <source>Could not find the other table file for TBL file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1213"/>
+        <location filename="../source/mainwindow.cpp" line="878"/>
+        <location filename="../source/mainwindow.cpp" line="1390"/>
+        <location filename="../source/mainwindow.cpp" line="2192"/>
         <source>Failed loading SLA file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1232"/>
+        <location filename="../source/mainwindow.cpp" line="801"/>
+        <source>Importing...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="891"/>
+        <location filename="../source/mainwindow.cpp" line="1409"/>
+        <location filename="../source/mainwindow.cpp" line="2201"/>
         <source>Failed loading TLA file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1244"/>
+        <location filename="../source/mainwindow.cpp" line="905"/>
+        <location filename="../source/mainwindow.cpp" line="1421"/>
+        <location filename="../source/mainwindow.cpp" line="2212"/>
         <source>Failed loading Special-CEL file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1281"/>
+        <location filename="../source/mainwindow.cpp" line="1236"/>
+        <source>Could not recognize file-type based on its extension.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="1368"/>
+        <source>Opening as standard CEL file because the SLA file (%1) is missing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="1458"/>
         <source>Failed loading CPP file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1286"/>
+        <location filename="../source/mainwindow.cpp" line="1463"/>
         <source>Failed loading SMK file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2621"/>
+        <location filename="../source/mainwindow.cpp" line="3046"/>
         <source>New Palette File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2621"/>
-        <location filename="../source/mainwindow.cpp" line="2650"/>
-        <location filename="../source/mainwindow.cpp" line="2667"/>
+        <location filename="../source/mainwindow.cpp" line="3046"/>
+        <location filename="../source/mainwindow.cpp" line="3075"/>
+        <location filename="../source/mainwindow.cpp" line="3092"/>
         <source>PAL Files (*.pal *.PAL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2667"/>
+        <location filename="../source/mainwindow.cpp" line="3092"/>
         <source>Save Palette File as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2702"/>
-        <location filename="../source/mainwindow.cpp" line="2788"/>
+        <location filename="../source/mainwindow.cpp" line="3147"/>
+        <location filename="../source/mainwindow.cpp" line="3233"/>
         <source>New Translation File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2702"/>
-        <location filename="../source/mainwindow.cpp" line="2731"/>
-        <location filename="../source/mainwindow.cpp" line="2748"/>
-        <location filename="../source/mainwindow.cpp" line="2788"/>
-        <location filename="../source/mainwindow.cpp" line="2817"/>
-        <location filename="../source/mainwindow.cpp" line="2834"/>
+        <location filename="../source/mainwindow.cpp" line="3147"/>
+        <location filename="../source/mainwindow.cpp" line="3176"/>
+        <location filename="../source/mainwindow.cpp" line="3193"/>
+        <location filename="../source/mainwindow.cpp" line="3233"/>
+        <location filename="../source/mainwindow.cpp" line="3262"/>
+        <location filename="../source/mainwindow.cpp" line="3279"/>
         <source>TRN Files (*.trn *.TRN)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2748"/>
-        <location filename="../source/mainwindow.cpp" line="2834"/>
+        <location filename="../source/mainwindow.cpp" line="3193"/>
+        <location filename="../source/mainwindow.cpp" line="3279"/>
         <source>Save Translation File as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="56"/>
-        <location filename="../source/mainwindow.ui" line="1132"/>
-        <location filename="../source/mainwindow.ui" line="1152"/>
-        <location filename="../source/mainwindow.ui" line="1180"/>
+        <location filename="../source/mainwindow.ui" line="1151"/>
+        <location filename="../source/mainwindow.ui" line="1176"/>
+        <location filename="../source/mainwindow.ui" line="1204"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="364"/>
+        <location filename="../source/mainwindow.ui" line="369"/>
         <source>Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="380"/>
-        <location filename="../source/mainwindow.ui" line="820"/>
+        <location filename="../source/mainwindow.ui" line="385"/>
+        <location filename="../source/mainwindow.ui" line="839"/>
         <source>Subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="393"/>
-        <location filename="../source/mainwindow.ui" line="828"/>
+        <location filename="../source/mainwindow.ui" line="398"/>
+        <location filename="../source/mainwindow.ui" line="847"/>
         <source>Tile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6365,12 +6745,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="156"/>
+        <location filename="../source/openasdialog.cpp" line="161"/>
         <source>TIL Files (*.til *.TIL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="166"/>
+        <location filename="../source/openasdialog.cpp" line="171"/>
         <source>MIN Files (*.min *.MIN)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6380,32 +6760,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="146"/>
+        <location filename="../source/openasdialog.cpp" line="151"/>
         <source>Select Special-CEL file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="146"/>
+        <location filename="../source/openasdialog.cpp" line="151"/>
         <source>CEL Files (*.cel *.CEL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="156"/>
+        <location filename="../source/openasdialog.cpp" line="161"/>
         <source>Select TIL file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="166"/>
+        <location filename="../source/openasdialog.cpp" line="171"/>
         <source>Select MIN file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="186"/>
+        <location filename="../source/openasdialog.cpp" line="191"/>
         <source>Select TLA file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="186"/>
+        <location filename="../source/openasdialog.cpp" line="191"/>
         <source>TLA Files (*.tla *.TLA)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6415,42 +6795,42 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="176"/>
+        <location filename="../source/openasdialog.cpp" line="181"/>
         <source>Select SLA file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="176"/>
+        <location filename="../source/openasdialog.cpp" line="181"/>
         <source>SLA Files (*.sla *.SLA)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="196"/>
+        <location filename="../source/openasdialog.cpp" line="201"/>
         <source>Select DUN file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="196"/>
+        <location filename="../source/openasdialog.cpp" line="201"/>
         <source>DUN Files (*.dun *.DUN *.rdun *.RDUN)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="206"/>
+        <location filename="../source/openasdialog.cpp" line="211"/>
         <source>Select TBL file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="206"/>
+        <location filename="../source/openasdialog.cpp" line="211"/>
         <source>TBL Files (*.tbl *.TBL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="219"/>
+        <location filename="../source/openasdialog.cpp" line="224"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.cpp" line="219"/>
+        <location filename="../source/openasdialog.cpp" line="224"/>
         <source>Input file is missing, please choose an input file.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7054,21 +7434,136 @@
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="85"/>
+        <source>Devil Kin Brute walking (Fallgw.CL2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="90"/>
+        <source>Satyr Lord dying (GoatLd.CL2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="95"/>
         <source>Spell icons (SpelIcon.CEL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/patchgfxdialog.ui" line="104"/>
+        <location filename="../source/patchgfxdialog.ui" line="100"/>
+        <source>Cursor icons (ObjCurs.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="105"/>
+        <source>Armor Item animation (Armor2.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="110"/>
+        <source>Gold Item animation (GoldFlip.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="115"/>
+        <source>Mace Item animation (Mace.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="120"/>
+        <source>Staff Item animation (Staff.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="125"/>
+        <source>Ring Item animation (Ring.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="130"/>
+        <source>Crown Item animation (CrownF.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="135"/>
+        <source>Light Armor Item animation (LArmor.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="140"/>
+        <source>Warrior Shield Item animation (WShield.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="145"/>
+        <source>Scroll Item animation (Scroll.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="150"/>
+        <source>Ear Item animation (FEar.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="155"/>
+        <source>Brain Item animation (FBrain.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="160"/>
+        <source>Mushroom Item animation (FMush.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="165"/>
+        <source>Innsign Item animation (Innsign.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="170"/>
+        <source>Bloodstone Item animation (Bldstn.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="175"/>
+        <source>Anvil Item animation (Fanvil.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="180"/>
+        <source>Lazarus&apos;s Staff Item animation (FLazStaf.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="185"/>
+        <source>Teddy Item animation (teddys1.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="190"/>
+        <source>Cow Hide Item animation (cows1.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="195"/>
+        <source>Donkey Hide Item animation (donkys1.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="200"/>
+        <source>Moose Hide Item animation (mooses1.CEL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="219"/>
         <source>Run</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/patchgfxdialog.ui" line="111"/>
+        <location filename="../source/patchgfxdialog.ui" line="226"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/patchgfxdialog.cpp" line="69"/>
+        <location filename="../source/patchgfxdialog.cpp" line="39"/>
         <source>Processing...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7149,14 +7644,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="220"/>
-        <location filename="../source/progressdialog.cpp" line="566"/>
+        <location filename="../source/progressdialog.cpp" line="225"/>
+        <location filename="../source/progressdialog.cpp" line="572"/>
         <source>Show details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="220"/>
-        <location filename="../source/progressdialog.cpp" line="566"/>
+        <location filename="../source/progressdialog.cpp" line="225"/>
+        <location filename="../source/progressdialog.cpp" line="572"/>
         <source>Hide details</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7164,282 +7659,287 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../source/d1cpp.cpp" line="1620"/>
-        <location filename="../source/d1pal.cpp" line="114"/>
+        <location filename="../source/d1cpp.cpp" line="1653"/>
+        <location filename="../source/d1pal.cpp" line="116"/>
         <location filename="../source/d1trn.cpp" line="35"/>
         <location filename="../source/d1trs.cpp" line="54"/>
-        <location filename="../source/levelcelview.cpp" line="3279"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="173"/>
-        <location filename="../source/d1celtileset.cpp" line="144"/>
-        <location filename="../source/d1cl2.cpp" line="140"/>
+        <location filename="../source/d1cel.cpp" line="177"/>
+        <source>Could not determine the width of Frame %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1cel.cpp" line="179"/>
+        <location filename="../source/d1cl2.cpp" line="142"/>
         <source>Frame %1 is invalid.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="314"/>
-        <location filename="../source/d1cl2.cpp" line="256"/>
+        <location filename="../source/d1cel.cpp" line="311"/>
+        <location filename="../source/d1cl2.cpp" line="258"/>
         <source>Frames can not be split to equal groups.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="394"/>
-        <location filename="../source/d1celtileset.cpp" line="211"/>
-        <location filename="../source/d1cl2.cpp" line="345"/>
+        <location filename="../source/d1cel.cpp" line="391"/>
+        <location filename="../source/d1celtileset.cpp" line="217"/>
+        <location filename="../source/d1cl2.cpp" line="347"/>
+        <location filename="../source/d1smk.cpp" line="1270"/>
         <location filename="../source/d1tileset.cpp" line="120"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="410"/>
-        <location filename="../source/d1celtileset.cpp" line="227"/>
-        <location filename="../source/d1cl2.cpp" line="361"/>
-        <location filename="../source/d1cpp.cpp" line="1620"/>
-        <location filename="../source/d1pal.cpp" line="114"/>
-        <location filename="../source/d1pcx.cpp" line="306"/>
-        <location filename="../source/d1smk.cpp" line="221"/>
+        <location filename="../source/d1cel.cpp" line="407"/>
+        <location filename="../source/d1celtileset.cpp" line="233"/>
+        <location filename="../source/d1cl2.cpp" line="363"/>
+        <location filename="../source/d1cpp.cpp" line="1653"/>
+        <location filename="../source/d1pal.cpp" line="116"/>
+        <location filename="../source/d1pcx.cpp" line="307"/>
+        <location filename="../source/d1smk.cpp" line="241"/>
+        <location filename="../source/d1smk.cpp" line="1286"/>
         <location filename="../source/d1trn.cpp" line="35"/>
         <location filename="../source/d1trs.cpp" line="54"/>
-        <location filename="../source/d1wav.cpp" line="284"/>
-        <location filename="../source/dungeon/engine.cpp" line="132"/>
-        <location filename="../source/dungeon/engine.cpp" line="167"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="440"/>
+        <location filename="../source/d1wav.cpp" line="289"/>
+        <location filename="../source/dungeon/engine.cpp" line="137"/>
+        <location filename="../source/dungeon/engine.cpp" line="172"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="408"/>
         <source>Failed to open file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtileset.cpp" line="137"/>
+        <location filename="../source/d1celtileset.cpp" line="136"/>
         <source>Unknown frame type for frame %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="394"/>
-        <location filename="../source/d1celtileset.cpp" line="211"/>
-        <location filename="../source/d1cl2.cpp" line="345"/>
+        <location filename="../source/d1celtileset.cpp" line="143"/>
+        <source>Frame %1 is invalid (type %2 offset:0x%3-0x%4 (%5)).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1cel.cpp" line="391"/>
+        <location filename="../source/d1celtileset.cpp" line="217"/>
+        <location filename="../source/d1cl2.cpp" line="347"/>
+        <location filename="../source/d1smk.cpp" line="1270"/>
         <location filename="../source/d1tileset.cpp" line="120"/>
         <source>Are you sure you want to overwrite %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="226"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="186"/>
+        <source>Unpatched left triangle in a patched tileset.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="203"/>
+        <source>Unpatched right triangle in a patched tileset.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="234"/>
+        <source>Unpatched left trapezoid in a patched tileset.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="251"/>
+        <source>Unpatched right trapezoid in a patched tileset.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="285"/>
         <source>Unknown frame type.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="242"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="301"/>
         <source>Invalid transparent pixel in a Square frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="308"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="367"/>
         <source>Invalid non-transparent pixel in the bottom part of the Left Triangle frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="317"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="378"/>
         <source>Invalid transparent pixel in the bottom part of the Left Triangle frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="330"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="391"/>
         <source>Invalid non-transparent pixel in the top part of the Left Triangle frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="339"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="402"/>
         <source>Invalid transparent pixel in the top part of the Left Triangle frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="361"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="424"/>
         <source>Invalid transparent pixel in the bottom part of the Right Triangle frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="372"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="437"/>
         <source>Invalid non-transparent pixel in the bottom part of the Right Triangle frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="383"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="448"/>
         <source>Invalid transparent pixel in the top part of the Right Triangle frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="394"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="461"/>
         <source>Invalid non-transparent pixel in the top part of the Right Triangle frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="414"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="481"/>
         <source>Invalid non-transparent pixel in the bottom part of the Left Trapezoid frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="423"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="492"/>
         <source>Invalid transparent pixel in the bottom part of the Left Trapezoid frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="435"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="504"/>
         <source>Invalid transparent pixel in the top part of the Left Trapezoid frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="457"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="526"/>
         <source>Invalid transparent pixel in the bottom part of the Right Trapezoid frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="468"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="539"/>
         <source>Invalid non-transparent pixel in the bottom part of the Right Trapezoid frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="478"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="549"/>
         <source>Invalid transparent pixel in the top part of the Right Trapezoid frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="545"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="616"/>
         <source>Frame width is not 32px.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="548"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="619"/>
         <source>Frame height is not 32px.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="557"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="628"/>
         <source>Suggested type: &apos;Square&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="562"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="633"/>
         <source>Suggested type: &apos;Left Triangle&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="567"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="638"/>
         <source>Suggested type: &apos;Right Triangle&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="572"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="643"/>
         <source>Suggested type: &apos;Left Trapezoid&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="577"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="648"/>
         <source>Suggested type: &apos;Right Trapezoid&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2154"/>
-        <source>Square</source>
+        <location filename="../source/mainwindow.cpp" line="2038"/>
+        <source>empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2156"/>
-        <source>Transparent square</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2158"/>
-        <source>Left Triangle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2160"/>
-        <source>Right Triangle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2162"/>
-        <source>Left Trapezoid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2164"/>
-        <source>Right Trapezoid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2166"/>
-        <source>Empty</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2168"/>
-        <location filename="../source/mainwindow.cpp" line="3110"/>
+        <location filename="../source/mainwindow.cpp" line="3622"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3279"/>
-        <source>Mismatching dungeons (Dimensions are %1:%2 vs %3:%4).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="599"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="670"/>
         <source>Invalid (transparent) pixel at (%1:%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="605"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="676"/>
         <source>Invalid (non-transparent) pixel at (%1:%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1677"/>
+        <location filename="../source/mainwindow.cpp" line="1886"/>
         <source>Image files (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="53"/>
+        <location filename="../source/d1pcx.cpp" line="54"/>
         <source>Width setting is ignored when a PCX file is loaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="84"/>
-        <location filename="../source/d1smk.cpp" line="229"/>
+        <location filename="../source/d1pcx.cpp" line="85"/>
+        <location filename="../source/d1smk.cpp" line="249"/>
         <location filename="../source/d1wav.cpp" line="36"/>
         <location filename="../source/main.cpp" line="19"/>
         <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="93"/>
+        <location filename="../source/d1pcx.cpp" line="94"/>
         <source>Invalid PCX file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="100"/>
+        <location filename="../source/d1pcx.cpp" line="101"/>
         <source>Invalid PCX header.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="104"/>
+        <location filename="../source/d1pcx.cpp" line="105"/>
         <source>Unsupported PCX format (number of bits per pixel).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="108"/>
+        <location filename="../source/d1pcx.cpp" line="109"/>
         <source>Unsupported PCX format (number of planes).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="267"/>
+        <location filename="../source/d1pcx.cpp" line="268"/>
         <source>PCX format can not store the image due to its dimensions: %1x%2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="298"/>
+        <location filename="../source/d1pcx.cpp" line="299"/>
         <source>Could not find a palette entry to use for the transparent colors.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1pcx.cpp" line="387"/>
+        <source>Graphics:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1pcx.cpp" line="389"/>
+        <source>Palette:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7470,45 +7970,68 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3097"/>
+        <location filename="../source/upscaler.cpp" line="3212"/>
         <source>Upscaling graphics...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3110"/>
+        <location filename="../source/upscaler.cpp" line="3212"/>
+        <source>Downscaling graphics...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/upscaler.cpp" line="3225"/>
         <source>Upscaling frame %1.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../source/upscaler.cpp" line="3225"/>
+        <source>Downscaling frame %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message numerus="yes">
-        <location filename="../source/upscaler.cpp" line="3136"/>
+        <location filename="../source/upscaler.cpp" line="3255"/>
         <source>Upscaled %n frame(s).</source>
         <translation>
             <numerusform>Upscaled %1 frame.</numerusform>
             <numerusform>Upscaled %1 frames.</numerusform>
         </translation>
     </message>
+    <message numerus="yes">
+        <location filename="../source/upscaler.cpp" line="3255"/>
+        <source>Downscaled %n frame(s).</source>
+        <translation>
+            <numerusform>Downscaled %n frame.</numerusform>
+            <numerusform>Downscaled %n frames.</numerusform>
+        </translation>
+    </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3230"/>
+        <location filename="../source/upscaler.cpp" line="3349"/>
+        <source>Downscaling of a tileset is not supported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/upscaler.cpp" line="3354"/>
         <source>Upscaling tileset...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3246"/>
+        <location filename="../source/upscaler.cpp" line="3370"/>
         <source>Upscaling subtile %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3282"/>
+        <location filename="../source/upscaler.cpp" line="3406"/>
         <source>Subtile height is not supported by the game (Diablo 1/DevilutionX).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3288"/>
+        <location filename="../source/upscaler.cpp" line="3412"/>
         <source>Empty frames were added to match the required height of the game (DevilutionX).</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/upscaler.cpp" line="3295"/>
+        <location filename="../source/upscaler.cpp" line="3419"/>
         <source>Upscaled %n subtile(s).</source>
         <translation>
             <numerusform>Upscaled %1 subtile.</numerusform>
@@ -7521,41 +8044,146 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celframe.cpp" line="75"/>
+        <location filename="../source/d1celframe.cpp" line="82"/>
         <source>Invalid CEL frame data (0x00 found)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="147"/>
+        <location filename="../source/d1gfx.cpp" line="174"/>
         <source>Mismatching frame-sizes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="831"/>
-        <location filename="../source/d1gfx.cpp" line="878"/>
-        <location filename="../source/d1gfx.cpp" line="1186"/>
-        <location filename="../source/d1gfx.cpp" line="1374"/>
-        <location filename="../source/d1gfx.cpp" line="1412"/>
-        <location filename="../source/d1gfx.cpp" line="1461"/>
-        <location filename="../source/d1gfx.cpp" line="1502"/>
-        <location filename="../source/d1gfx.cpp" line="1551"/>
+        <location filename="../source/d1gfx.cpp" line="399"/>
+        <source>regular (v1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="400"/>
+        <source>compilation (v1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="401"/>
+        <source>level (v1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="402"/>
+        <source>mono group (v2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="403"/>
+        <source>multi group (v2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="447"/>
+        <source>Frame %1:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="449"/>
+        <source>Frame %1 (compared to %2):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="451"/>
+        <source>  pixel %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="452"/>
+        <location filename="../source/d1gfx.cpp" line="453"/>
+        <source>transparent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="452"/>
+        <location filename="../source/d1gfx.cpp" line="453"/>
+        <source>color%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="462"/>
+        <source>type is %1 (was %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="468"/>
+        <source>group %1 is frames %2..%3 (was %4..%5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="474"/>
+        <source>group-count is %1 (was %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="479"/>
+        <source>frame-count is %1 (was %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../source/d1gfx.cpp" line="541"/>
+        <location filename="../source/d1gfx.cpp" line="575"/>
+        <source>%1 frame deleted [%2..%3)</source>
+        <translation>
+            <numerusform>%1 frame deleted (%2)</numerusform>
+            <numerusform>%1 frames deleted [%2..%3)</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../source/d1gfx.cpp" line="545"/>
+        <location filename="../source/d1gfx.cpp" line="571"/>
+        <source>%1 frame added [%2..%3)</source>
+        <translation>
+            <numerusform>%1 frame added (%2)</numerusform>
+            <numerusform>%1 frames added [%2..%3)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="556"/>
+        <source>frame %1 is %2x%3 pixel (was %4x%5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="558"/>
+        <source>frame %1 (compared to %2) is %3x%4 pixel (was %5x%6)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="993"/>
+        <location filename="../source/d1gfx.cpp" line="1269"/>
+        <location filename="../source/d1gfx.cpp" line="1316"/>
+        <location filename="../source/d1gfx.cpp" line="1624"/>
+        <location filename="../source/d1gfx.cpp" line="1812"/>
+        <location filename="../source/d1gfx.cpp" line="1850"/>
+        <location filename="../source/d1gfx.cpp" line="1899"/>
+        <location filename="../source/d1gfx.cpp" line="1940"/>
+        <location filename="../source/d1gfx.cpp" line="1989"/>
+        <location filename="../source/d1gfx.cpp" line="4142"/>
+        <location filename="../source/d1gfx.cpp" line="4538"/>
         <source>Frame %1 is modified.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1459"/>
-        <location filename="../source/d1gfx.cpp" line="1500"/>
-        <location filename="../source/d1gfx.cpp" line="1549"/>
+        <location filename="../source/d1gfx.cpp" line="1897"/>
+        <location filename="../source/d1gfx.cpp" line="1938"/>
+        <location filename="../source/d1gfx.cpp" line="1987"/>
         <source>Frame %1 is removed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1729"/>
-        <source>Frame %1 of group 2 is modified.</source>
+        <location filename="../source/d1gfx.cpp" line="2168"/>
+        <location filename="../source/d1gfx.cpp" line="3444"/>
+        <location filename="../source/d1gfx.cpp" line="3890"/>
+        <source>Frame %1 of group %2 is modified.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1756"/>
+        <location filename="../source/d1gfx.cpp" line="4170"/>
         <source>Removed the last 8 frames.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7643,7 +8271,7 @@
     <message numerus="yes">
         <location filename="../source/d1tileset.cpp" line="715"/>
         <source>Removed %n tile(s).</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>Removed %n tile.</numerusform>
             <numerusform>Removed %n tiles.</numerusform>
         </translation>
@@ -7653,11 +8281,6 @@
         <location filename="../source/d1tileset.cpp" line="779"/>
         <location filename="../source/d1tileset.cpp" line="793"/>
         <source>Not enough frames in Subtile %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1tileset.cpp" line="784"/>
-        <source>Frame %1 of Subtile %2 is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7692,103 +8315,84 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="1000"/>
-        <source>The cathedral subtiles (%1, %2, %3) are invalid (upscaled?).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1tileset.cpp" line="1014"/>
-        <source>Invalid (empty) cathedral subtiles (%1).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1tileset.cpp" line="1027"/>
-        <source>Invalid (non standard dimensions) cathedral subtiles (%1, %2, %3).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1tileset.cpp" line="1062"/>
-        <source>Frames %1, %2, %3 and %4 of subtiles %5, %6 and %7 are modified.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1tileset.cpp" line="1282"/>
-        <location filename="../source/d1tileset.cpp" line="2202"/>
-        <location filename="../source/d1tileset.cpp" line="3130"/>
-        <location filename="../source/d1tileset.cpp" line="3352"/>
-        <location filename="../source/d1tileset.cpp" line="4433"/>
-        <location filename="../source/d1tileset.cpp" line="4966"/>
-        <location filename="../source/d1tileset.cpp" line="6482"/>
-        <location filename="../source/d1tileset.cpp" line="7165"/>
-        <location filename="../source/d1tileset.cpp" line="10188"/>
-        <location filename="../source/d1tileset.cpp" line="10384"/>
-        <location filename="../source/d1tileset.cpp" line="11170"/>
-        <location filename="../source/d1tileset.cpp" line="11696"/>
-        <location filename="../source/d1tileset.cpp" line="12570"/>
-        <location filename="../source/d1tileset.cpp" line="12952"/>
-        <location filename="../source/d1tileset.cpp" line="13307"/>
-        <location filename="../source/d1tileset.cpp" line="14087"/>
-        <location filename="../source/d1tileset.cpp" line="14439"/>
-        <location filename="../source/d1tileset.cpp" line="16243"/>
-        <location filename="../source/d1tileset.cpp" line="16492"/>
-        <location filename="../source/d1tileset.cpp" line="16667"/>
-        <location filename="../source/d1tileset.cpp" line="17087"/>
-        <location filename="../source/d1tileset.cpp" line="18318"/>
-        <location filename="../source/d1tileset.cpp" line="18402"/>
-        <location filename="../source/d1tileset.cpp" line="18605"/>
+        <location filename="../source/d1tileset.cpp" line="2180"/>
+        <location filename="../source/d1tileset.cpp" line="3084"/>
+        <location filename="../source/d1tileset.cpp" line="4012"/>
+        <location filename="../source/d1tileset.cpp" line="4225"/>
+        <location filename="../source/d1tileset.cpp" line="10524"/>
+        <location filename="../source/d1tileset.cpp" line="11057"/>
+        <location filename="../source/d1tileset.cpp" line="12573"/>
+        <location filename="../source/d1tileset.cpp" line="13256"/>
+        <location filename="../source/d1tileset.cpp" line="16279"/>
+        <location filename="../source/d1tileset.cpp" line="16475"/>
+        <location filename="../source/d1tileset.cpp" line="17261"/>
+        <location filename="../source/d1tileset.cpp" line="17787"/>
+        <location filename="../source/d1tileset.cpp" line="18661"/>
+        <location filename="../source/d1tileset.cpp" line="19043"/>
+        <location filename="../source/d1tileset.cpp" line="19398"/>
+        <location filename="../source/d1tileset.cpp" line="20178"/>
+        <location filename="../source/d1tileset.cpp" line="20530"/>
+        <location filename="../source/d1tileset.cpp" line="22334"/>
+        <location filename="../source/d1tileset.cpp" line="22583"/>
+        <location filename="../source/d1tileset.cpp" line="22758"/>
+        <location filename="../source/d1tileset.cpp" line="23178"/>
+        <location filename="../source/d1tileset.cpp" line="24409"/>
+        <location filename="../source/d1tileset.cpp" line="24493"/>
+        <location filename="../source/d1tileset.cpp" line="24696"/>
         <source>Frame %1 of subtile %2 is modified.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="3880"/>
-        <location filename="../source/d1tileset.cpp" line="3902"/>
+        <location filename="../source/d1tileset.cpp" line="5163"/>
+        <location filename="../source/d1tileset.cpp" line="5185"/>
         <source>Removed Subtile %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="3915"/>
+        <location filename="../source/d1tileset.cpp" line="10006"/>
         <source>Framesize of the Cathedal&apos;s Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="3973"/>
-        <location filename="../source/d1tileset.cpp" line="6271"/>
-        <location filename="../source/d1tileset.cpp" line="17946"/>
+        <location filename="../source/d1tileset.cpp" line="9993"/>
+        <location filename="../source/d1tileset.cpp" line="10064"/>
+        <location filename="../source/d1tileset.cpp" line="12362"/>
+        <location filename="../source/d1tileset.cpp" line="24037"/>
         <source>Special-Frame %1 is modified.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="8238"/>
+        <location filename="../source/d1tileset.cpp" line="14329"/>
         <source>At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="8264"/>
+        <location filename="../source/d1tileset.cpp" line="14355"/>
         <source>The back-stairs tile (%1) has invalid (missing) frames.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="8271"/>
+        <location filename="../source/d1tileset.cpp" line="14362"/>
         <source>The stairs subtiles (%1) are already patched.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="8293"/>
+        <location filename="../source/d1tileset.cpp" line="14384"/>
         <source>The back-stairs tile (%1) has invalid (mismatching) frames.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="8300"/>
+        <location filename="../source/d1tileset.cpp" line="14391"/>
         <source>The stairs subtile (%1) has invalid (mismatching) frames I.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="8306"/>
+        <location filename="../source/d1tileset.cpp" line="14397"/>
         <source>The stairs subtile (%1) has invalid (mismatching) frames II.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="8455"/>
+        <location filename="../source/d1tileset.cpp" line="14546"/>
         <source>The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7829,34 +8433,77 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/d1tileset.cpp" line="784"/>
+        <source>Frame %1(%2) of Subtile %3 is empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/d1tileset.cpp" line="853"/>
         <source>Subtile (%1) has invalid (missing) frames.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="17598"/>
+        <location filename="../source/d1tileset.cpp" line="9303"/>
+        <source>Framesize of the Town&apos;s Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1tileset.cpp" line="9363"/>
+        <location filename="../source/d1tileset.cpp" line="9453"/>
+        <location filename="../source/d1tileset.cpp" line="9484"/>
+        <location filename="../source/d1tileset.cpp" line="9501"/>
+        <location filename="../source/d1tileset.cpp" line="9520"/>
+        <location filename="../source/d1tileset.cpp" line="9538"/>
+        <location filename="../source/d1tileset.cpp" line="9558"/>
+        <location filename="../source/d1tileset.cpp" line="9578"/>
+        <location filename="../source/d1tileset.cpp" line="9598"/>
+        <location filename="../source/d1tileset.cpp" line="9617"/>
+        <location filename="../source/d1tileset.cpp" line="9639"/>
+        <location filename="../source/d1tileset.cpp" line="9661"/>
+        <location filename="../source/d1tileset.cpp" line="9683"/>
+        <location filename="../source/d1tileset.cpp" line="9709"/>
+        <location filename="../source/d1tileset.cpp" line="9728"/>
+        <location filename="../source/d1tileset.cpp" line="9754"/>
+        <location filename="../source/d1tileset.cpp" line="9774"/>
+        <location filename="../source/d1tileset.cpp" line="9804"/>
+        <location filename="../source/d1tileset.cpp" line="9832"/>
+        <location filename="../source/d1tileset.cpp" line="9865"/>
+        <location filename="../source/d1tileset.cpp" line="9893"/>
+        <location filename="../source/d1tileset.cpp" line="9923"/>
+        <location filename="../source/d1tileset.cpp" line="9949"/>
+        <location filename="../source/d1tileset.cpp" line="9971"/>
+        <source>Missing micro to be used as a template to patch the town&apos;s Special-Cel %d.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1tileset.cpp" line="23689"/>
         <source>Framesize of the Crypt&apos;s Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="17622"/>
-        <location filename="../source/d1tileset.cpp" line="17778"/>
+        <location filename="../source/d1tileset.cpp" line="23713"/>
+        <location filename="../source/d1tileset.cpp" line="23869"/>
         <source>Missing &apos;template&apos; subtile-frame (%1:%2) to create Crypt&apos;s Special-Cels.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="17626"/>
-        <location filename="../source/d1tileset.cpp" line="17782"/>
+        <location filename="../source/d1tileset.cpp" line="23717"/>
+        <location filename="../source/d1tileset.cpp" line="23873"/>
         <source>Framesize of the &apos;template&apos; subtile-frame does not fit to create Crypt&apos;s Special-Cels. (%1:%2 expected %3:%4. Index %5:%6.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="20445"/>
-        <location filename="../source/d1tileset.cpp" line="20455"/>
-        <location filename="../source/d1tileset.cpp" line="20465"/>
-        <location filename="../source/d1tileset.cpp" line="20473"/>
-        <location filename="../source/d1tileset.cpp" line="20481"/>
-        <location filename="../source/d1tileset.cpp" line="20491"/>
+        <location filename="../source/d1tileset.cpp" line="26530"/>
+        <source>Special-Frames are using clipped-encoding.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1tileset.cpp" line="26547"/>
+        <location filename="../source/d1tileset.cpp" line="26557"/>
+        <location filename="../source/d1tileset.cpp" line="26567"/>
+        <location filename="../source/d1tileset.cpp" line="26575"/>
+        <location filename="../source/d1tileset.cpp" line="26583"/>
+        <location filename="../source/d1tileset.cpp" line="26593"/>
         <source>Invalid MIN file. Subtile-count is less than %1.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7876,68 +8523,118 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="265"/>
+        <location filename="../source/progressdialog.cpp" line="270"/>
         <source>Process cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="336"/>
+        <location filename="../source/progressdialog.cpp" line="342"/>
         <source>Too many progression bars.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="369"/>
+        <location filename="../source/progressdialog.cpp" line="375"/>
         <source>Mismatching progression bars.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/upscaletaskdialog.cpp" line="168"/>
         <location filename="../source/upscaletaskdialog.cpp" line="195"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="250"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="622"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="666"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="222"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="593"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="638"/>
         <source>Failed to load file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="523"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="558"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="612"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="655"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="698"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="733"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="772"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="809"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="492"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="528"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="583"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="627"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="671"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="707"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="747"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="785"/>
         <source>Upscaling asset %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="861"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="838"/>
         <source>Upscaling tileset %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2019"/>
+        <location filename="../source/d1dun.cpp" line="1023"/>
+        <source>Dungeon:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1031"/>
+        <source>tile %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1041"/>
+        <source>subtile %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1051"/>
+        <source>tile-protection %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1061"/>
+        <source>subtile-protection %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1071"/>
+        <source>item %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1081"/>
+        <source>object %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1095"/>
+        <source>monster %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1105"/>
+        <source>room %1:%2 is %3 (was %4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="1113"/>
+        <source>size is %1x%2 (was %3x%4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1dun.cpp" line="2448"/>
         <source>Subtile %1 was used at %2:%3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="2040"/>
+        <location filename="../source/d1dun.cpp" line="2469"/>
         <source>Tile %1 was used at %2:%3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3014"/>
+        <location filename="../source/d1dun.cpp" line="3582"/>
         <source>No Protection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3017"/>
+        <location filename="../source/d1dun.cpp" line="3585"/>
         <source>Partial Protection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1dun.cpp" line="3019"/>
+        <location filename="../source/d1dun.cpp" line="3587"/>
         <source>Complete Protection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7953,28 +8650,33 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/engine.cpp" line="161"/>
+        <location filename="../source/dungeon/engine.cpp" line="166"/>
         <source>Skipping file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/interfac.cpp" line="306"/>
+        <location filename="../source/dungeon/interfac.cpp" line="349"/>
         <source>Decoration is limited to %1x%2 dungeon.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/interfac.cpp" line="556"/>
-        <source>Generating dungeon %1 with seed: %2 / %3. Entry mode: %4</source>
+        <location filename="../source/dungeon/interfac.cpp" line="635"/>
+        <source>Generating dungeon %1: %2/%3 with seed: %4 / %5. Entry mode: %6</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/interfac.cpp" line="559"/>
-        <source>Done. The dungeon contains %1 monsters (%2 types), %3 objects and %4 items.</source>
+        <location filename="../source/dungeon/interfac.cpp" line="640"/>
+        <source>Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms. (%8:%9)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/interfac.cpp" line="571"/>
-        <source>Generated %1 dungeon. Elapsed time: %2ms.</source>
+        <location filename="../source/dungeon/interfac.cpp" line="667"/>
+        <source>Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: avg:%7 total:%8 min:%9 max:%10 Leveltype %11. times(dun%12, mon%13, obj%14, themes%15)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeon/interfac.cpp" line="668"/>
+        <source>minareas(%1, %2, %3) maxareas(%4, %5, %6) avgareas(%7, %8, %9) (%10, %11, %12) cnt%13:%14</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7983,8 +8685,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/objects.cpp" line="755"/>
+        <location filename="../source/dungeon/objects.cpp" line="747"/>
         <source>ObjIndex: Active object not found at (%1,%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeon/objects.cpp" line="706"/>
+        <source>Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %7:%8, pos %9:%10 .. %11:%12 tv %13</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7998,7 +8705,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/themes.cpp" line="343"/>
+        <location filename="../source/dungeon/themes.cpp" line="389"/>
         <source>Invalid theme room @%1:%2 .. %3:%4.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8029,38 +8736,218 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="236"/>
+        <location filename="../source/d1gfxset.cpp" line="289"/>
+        <location filename="../source/d1gfxset.cpp" line="297"/>
+        <location filename="../source/d1gfxset.cpp" line="304"/>
+        <source>Gfx %1 vs. %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="313"/>
+        <source>Gfx %1 vs. single gfx</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="318"/>
+        <source>Not a graphics file (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="256"/>
         <source>Invalid SMK file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="254"/>
+        <location filename="../source/d1smk.cpp" line="277"/>
         <source>Empty SMK file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="262"/>
+        <location filename="../source/d1smk.cpp" line="287"/>
         <source>Width setting is ignored when a SMK file is loaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="307"/>
+        <location filename="../source/d1smk.cpp" line="334"/>
         <source>SMK not fully loaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="327"/>
-        <source>Not supported.</source>
+        <location filename="../source/d1smk.cpp" line="479"/>
+        <source>ERROR: Missing entry for leaf %1 in the low paths.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="488"/>
+        <source>ERROR: Missing entry for leaf %1 in the high paths.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="500"/>
+        <source>writeTreeLeafs ERROR: depth %1 too much.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="633"/>
+        <source>Congratulation, you managed to break SMK.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="731"/>
+        <source>ERROR: writeTreeValue missing entry %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="836"/>
+        <source>Could not find matching color value for the %1 component of color %2 in the palette of frame %3. Using %4 instead of %5.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="991"/>
+        <source>ERROR: writeTreeValue missing entry %1 in byte paths.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1133"/>
+        <source>SMK requires width/height to be multiple of 4.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1137"/>
+        <source>Mismatching frame-size (%1).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1144"/>
+        <source>Transparent pixel in frame %1. at %2:%3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1196"/>
+        <source>Audio chunk of frame %1 (track %2) is too large (%3 Max. %4).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1205"/>
+        <source>Audio chunk of frame %1 (track %2) has mismatching compression setting (%3 vs %4).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1209"/>
+        <source>Audio chunk of frame %1 (track %2) has mismatching sample size (%3 vs %4).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1213"/>
+        <source>Audio chunk of frame %1 (track %2) has mismatching channel-count (%3 vs %4).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1217"/>
+        <source>Audio chunk of frame %1 (track %2) has mismatching bitrate (%3 vs %4).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1227"/>
+        <source>Compression mode of the audio chunk of frame %1 (track %2) is not supported (%3 Must be 0 or 1).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1231"/>
+        <source>Sample size of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 8 or 16).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1235"/>
+        <source>Channel-count of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 1 or 2).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1239"/>
+        <source>Bitrate of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 1-%4).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1255"/>
+        <source>Frame length is not set. Defaulting to 100000us.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1260"/>
+        <source>Frame length is rounded to %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1444"/>
+        <source>The palette is not set in the first frame. Defaulting to the current palette.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1567"/>
+        <source>Content:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1570"/>
+        <source>Palettes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1576"/>
+        <source>Palette &apos;%1&apos; is added.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1581"/>
+        <source>Palette &apos;%1&apos; is removed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/d1smk.cpp" line="511"/>
+        <location filename="../source/d1smk.cpp" line="1712"/>
+        <source> for frame(s) %1-%2</source>
+        <translation>
+            <numerusform> for frame %1</numerusform>
+            <numerusform> for frames %1-%2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1717"/>
+        <source> of %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1751"/>
+        <source>The %1 component of color %2 is adjusted in the palette</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1753"/>
+        <source> (Using %1 instead of %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1798"/>
+        <source>The palette</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1801"/>
+        <source> is SMK compliant</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1860"/>
+        <source>Palette of frame %1 is obsolete.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../source/d1smk.cpp" line="1793"/>
         <source>Ignored the %1 undefined color(s) in the palette</source>
         <translation>
             <numerusform>Ignored the undefined color %1 in the palette</numerusform>
             <numerusform>Ignored the %1 undefined colors in the palette</numerusform>
         </translation>
-    </message>    
+    </message>
     <message>
         <location filename="../source/d1trs.cpp" line="559"/>
         <source>Light%1.trn</source>
@@ -8128,23 +9015,28 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1wav.cpp" line="235"/>
+        <location filename="../source/d1wav.cpp" line="240"/>
         <source>Out of memory.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/gendung.cpp" line="121"/>
+        <location filename="../source/dungeon/gendung.cpp" line="135"/>
         <source>TIL file is too large. (%1 bytes. Limit %2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/gendung.cpp" line="144"/>
+        <location filename="../source/dungeon/gendung.cpp" line="158"/>
         <source>TLA file is too large. (%1 bytes. Limit %2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/dungeon/monster.cpp" line="555"/>
+        <location filename="../source/dungeon/monster.cpp" line="561"/>
         <source>Bad Na-Krul placement. Received-Id:%1 instead of %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/dungeon/monster.cpp" line="688"/>
+        <source>Failed proper unique placement (Id %d. Type %2. Pos %3:%4).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8163,7 +9055,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/smkaudiowidget.cpp" line="251"/>
+        <location filename="../source/smkaudiowidget.cpp" line="280"/>
         <source>Not enough frames for the audio files. The last %n audio file(s) are ignored.</source>
         <translation>
             <numerusform>Not enough frames for the audio files. The last audio file is ignored.</numerusform>
@@ -8171,12 +9063,27 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/smkaudiowidget.cpp" line="283"/>
+        <location filename="../source/smkaudiowidget.cpp" line="313"/>
         <source>Not enough tracks for the audio files. The last %n audio file(s) are ignored.</source>
         <translation>
             <numerusform>Not enough tracks for the audio files. The last audio file is ignored.</numerusform>
             <numerusform>Not enough tracks for the audio files. The last %n audio files are ignored.</numerusform>
         </translation>
+    </message>
+    <message>
+        <location filename="../source/d1font.cpp" line="21"/>
+        <source>Font could not be loaded.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1font.cpp" line="27"/>
+        <source>No font families loaded.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/d1pal.cpp" line="151"/>
+        <source>color %1 is %2 (was %3)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8198,16 +9105,12 @@
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="48"/>
-        <location filename="../source/remapdialog.ui" line="126"/>
-        <location filename="../source/remapdialog.ui" line="204"/>
-        <source>From</source>
+        <source>(Palette-)Index of the first color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="77"/>
-        <location filename="../source/remapdialog.ui" line="155"/>
-        <location filename="../source/remapdialog.ui" line="236"/>
-        <source>To</source>
+        <source>(Palette-)Index of the last color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8221,6 +9124,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/remapdialog.ui" line="126"/>
+        <source>(Palette-)Index of the first replacement color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/remapdialog.ui" line="155"/>
+        <source>(Palette-)Index of the last replacement color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/remapdialog.ui" line="174"/>
         <source>Range:</source>
         <translation type="unfinished"></translation>
@@ -8231,6 +9144,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/remapdialog.ui" line="204"/>
+        <source>The first frame to be changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/remapdialog.ui" line="236"/>
+        <source>The last frame to be changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/remapdialog.ui" line="277"/>
         <source>Start</source>
         <translation type="unfinished"></translation>
@@ -8238,16 +9161,6 @@
     <message>
         <location filename="../source/remapdialog.ui" line="284"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/remapdialog.cpp" line="82"/>
-        <source>Warning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/remapdialog.cpp" line="82"/>
-        <source>Source and target selection length do not match.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -8379,13 +9292,13 @@
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="40"/>
-        <location filename="../source/saveasdialog.ui" line="209"/>
-        <location filename="../source/saveasdialog.ui" line="230"/>
-        <location filename="../source/saveasdialog.ui" line="251"/>
-        <location filename="../source/saveasdialog.ui" line="272"/>
-        <location filename="../source/saveasdialog.ui" line="293"/>
-        <location filename="../source/saveasdialog.ui" line="314"/>
-        <location filename="../source/saveasdialog.ui" line="405"/>
+        <location filename="../source/saveasdialog.ui" line="254"/>
+        <location filename="../source/saveasdialog.ui" line="275"/>
+        <location filename="../source/saveasdialog.ui" line="296"/>
+        <location filename="../source/saveasdialog.ui" line="317"/>
+        <location filename="../source/saveasdialog.ui" line="341"/>
+        <location filename="../source/saveasdialog.ui" line="362"/>
+        <location filename="../source/saveasdialog.ui" line="453"/>
         <source>Browse</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8412,18 +9325,21 @@
     <message>
         <location filename="../source/saveasdialog.ui" line="79"/>
         <location filename="../source/saveasdialog.ui" line="153"/>
+        <location filename="../source/saveasdialog.ui" line="201"/>
         <source>YES</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="89"/>
         <location filename="../source/saveasdialog.ui" line="163"/>
+        <location filename="../source/saveasdialog.ui" line="211"/>
         <source>NO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="99"/>
         <location filename="../source/saveasdialog.ui" line="173"/>
+        <location filename="../source/saveasdialog.ui" line="221"/>
         <source>Preserve</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8439,36 +9355,41 @@
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="144"/>
-        <source>Upscaled:</source>
+        <source>Patched:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="192"/>
+        <source>Upscaled:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/saveasdialog.ui" line="324"/>
         <source>Cls File:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="195"/>
+        <location filename="../source/saveasdialog.ui" line="327"/>
         <source>Path of the special-CEL File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="237"/>
+        <location filename="../source/saveasdialog.ui" line="240"/>
         <source>Min File:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="258"/>
+        <location filename="../source/saveasdialog.ui" line="282"/>
         <source>Sla File:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="279"/>
+        <location filename="../source/saveasdialog.ui" line="303"/>
         <source>Tla File:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="216"/>
+        <location filename="../source/saveasdialog.ui" line="261"/>
         <source>Til File:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8478,166 +9399,209 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="300"/>
+        <location filename="../source/saveasdialog.ui" line="348"/>
         <source>Dun File:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="321"/>
+        <location filename="../source/saveasdialog.ui" line="369"/>
         <source>Last Layer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="324"/>
+        <location filename="../source/saveasdialog.ui" line="372"/>
         <source>The last layer stored in the dun file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="333"/>
+        <location filename="../source/saveasdialog.ui" line="381"/>
         <source>Tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="343"/>
+        <location filename="../source/saveasdialog.ui" line="391"/>
         <source>Protections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="353"/>
+        <location filename="../source/saveasdialog.ui" line="401"/>
         <source>Monsters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="363"/>
+        <location filename="../source/saveasdialog.ui" line="411"/>
         <source>Objects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="385"/>
+        <location filename="../source/saveasdialog.ui" line="433"/>
         <source>TBL File Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="391"/>
+        <location filename="../source/saveasdialog.ui" line="439"/>
         <source>Dark TBL File:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="424"/>
+        <location filename="../source/saveasdialog.ui" line="472"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="431"/>
+        <location filename="../source/saveasdialog.ui" line="479"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="89"/>
-        <location filename="../source/saveasdialog.cpp" line="116"/>
+        <location filename="../source/saveasdialog.cpp" line="91"/>
+        <location filename="../source/saveasdialog.cpp" line="130"/>
         <source>CEL Files (*.cel *.CEL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="89"/>
+        <location filename="../source/saveasdialog.cpp" line="91"/>
         <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="89"/>
-        <location filename="../source/saveasdialog.cpp" line="176"/>
+        <location filename="../source/saveasdialog.cpp" line="91"/>
+        <location filename="../source/saveasdialog.cpp" line="190"/>
         <source>TBL Files (*.tbl *.TBL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="89"/>
+        <location filename="../source/saveasdialog.cpp" line="91"/>
         <source>CL2 Files (*.cl2 *.CL2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="89"/>
+        <location filename="../source/saveasdialog.cpp" line="91"/>
         <source>CPP Files (*.cpp *.CPP *.c *.C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="89"/>
+        <location filename="../source/saveasdialog.cpp" line="91"/>
         <source>SMK Files (*.smk *.SMK)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="90"/>
+        <location filename="../source/saveasdialog.cpp" line="92"/>
         <source>Save Graphics as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="90"/>
+        <location filename="../source/saveasdialog.cpp" line="92"/>
         <source>Save Dist TBL as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="90"/>
+        <location filename="../source/saveasdialog.cpp" line="92"/>
         <source>Save Source as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="116"/>
+        <location filename="../source/saveasdialog.cpp" line="130"/>
         <source>Save Special-CEL as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="126"/>
+        <location filename="../source/saveasdialog.cpp" line="140"/>
         <source>Save MIN as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="126"/>
+        <location filename="../source/saveasdialog.cpp" line="140"/>
         <source>MIN Files (*.min *.MIN)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="136"/>
+        <location filename="../source/saveasdialog.cpp" line="150"/>
         <source>Save TIL as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="136"/>
+        <location filename="../source/saveasdialog.cpp" line="150"/>
         <source>TIL Files (*.til *.TIL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="146"/>
+        <location filename="../source/saveasdialog.cpp" line="160"/>
         <source>Save SLA as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="146"/>
+        <location filename="../source/saveasdialog.cpp" line="160"/>
         <source>SLA Files (*.sla *.SLA)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="156"/>
+        <location filename="../source/saveasdialog.cpp" line="170"/>
         <source>Save TLA as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="156"/>
+        <location filename="../source/saveasdialog.cpp" line="170"/>
         <source>TLA Files (*.tla *.TLA)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="166"/>
+        <location filename="../source/saveasdialog.cpp" line="180"/>
         <source>Save DUN as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="166"/>
+        <location filename="../source/saveasdialog.cpp" line="180"/>
         <source>DUN Files (*.dun *.DUN *.rdun *.RDUN)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.cpp" line="176"/>
+        <location filename="../source/saveasdialog.cpp" line="190"/>
         <source>Save Dark TBL as...</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/saveasdialog.cpp" line="248"/>
+        <source>File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/saveasdialog.cpp" line="256"/>
+        <source>Min file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/saveasdialog.cpp" line="262"/>
+        <source>Til file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/saveasdialog.cpp" line="268"/>
+        <source>Sla file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/saveasdialog.cpp" line="274"/>
+        <source>Tla file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/saveasdialog.cpp" line="281"/>
+        <source>Dun file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/saveasdialog.cpp" line="286"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../source/saveasdialog.cpp" line="286"/>
+        <source>%1 path is missing.</source>
+        <translation>
+            <numerusform>%1 path is missing.</numerusform>
+            <numerusform>%1 paths are missing.</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -8764,6 +9728,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/smkaudiowidget.ui" line="155"/>
+        <source>Compressed audio data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/smkaudiowidget.cpp" line="37"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
@@ -8785,54 +9754,70 @@
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="43"/>
-        <source>Mute</source>
+        <source>Remove chunk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="44"/>
+        <source>Remove track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/smkaudiowidget.cpp" line="45"/>
+        <source>Mute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/smkaudiowidget.cpp" line="46"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/smkaudiowidget.cpp" line="151"/>
+        <location filename="../source/smkaudiowidget.cpp" line="158"/>
         <source>Track %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/smkaudiowidget.cpp" line="151"/>
+        <location filename="../source/smkaudiowidget.cpp" line="158"/>
         <source>- Track %1 -</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/smkaudiowidget.cpp" line="160"/>
+        <location filename="../source/smkaudiowidget.cpp" line="167"/>
         <source>%1bit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/smkaudiowidget.cpp" line="164"/>
+        <location filename="../source/smkaudiowidget.cpp" line="171"/>
         <source>%1Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/smkaudiowidget.cpp" line="168"/>
+        <location filename="../source/smkaudiowidget.cpp" line="175"/>
         <source>N/A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/smkaudiowidget.cpp" line="168"/>
+        <location filename="../source/smkaudiowidget.cpp" line="175"/>
         <source>%1us</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/smkaudiowidget.cpp" line="245"/>
-        <location filename="../source/smkaudiowidget.cpp" line="277"/>
+        <location filename="../source/smkaudiowidget.cpp" line="274"/>
+        <location filename="../source/smkaudiowidget.cpp" line="307"/>
         <source>Select Audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/smkaudiowidget.cpp" line="245"/>
-        <location filename="../source/smkaudiowidget.cpp" line="277"/>
+        <location filename="../source/smkaudiowidget.cpp" line="274"/>
+        <location filename="../source/smkaudiowidget.cpp" line="307"/>
         <source>WAV Files (*.wav *.WAV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/smkaudiowidget.cpp" line="275"/>
+        <location filename="../source/smkaudiowidget.cpp" line="308"/>
+        <source>Loading...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9312,8 +10297,7 @@
     <name>UpscaleDialog</name>
     <message>
         <location filename="../source/upscaledialog.ui" line="6"/>
-        <location filename="../source/upscaledialog.ui" line="186"/>
-        <source>Upscale</source>
+        <source>Upscale/Downscale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -9322,68 +10306,78 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="35"/>
+        <location filename="../source/upscaledialog.ui" line="31"/>
+        <source>&apos;2&apos;, &apos;3&apos; ... to upscale, &apos;1/2&apos;, &apos;1/3&apos; ... to downscale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/upscaledialog.ui" line="38"/>
         <source>Fix colors:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="79"/>
+        <location filename="../source/upscaledialog.ui" line="82"/>
         <source>Town</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="84"/>
+        <location filename="../source/upscaledialog.ui" line="87"/>
         <source>(L1) Cathedral</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="89"/>
+        <location filename="../source/upscaledialog.ui" line="92"/>
         <source>(L2) Catacombs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="94"/>
+        <location filename="../source/upscaledialog.ui" line="97"/>
         <source>(L3) Caves</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="99"/>
+        <location filename="../source/upscaledialog.ui" line="102"/>
         <source>(L4) Hell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="104"/>
+        <location filename="../source/upscaledialog.ui" line="107"/>
         <source>(L5) Crypt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="109"/>
+        <location filename="../source/upscaledialog.ui" line="112"/>
         <source>(L6) Nest</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="114"/>
-        <location filename="../source/upscaledialog.ui" line="157"/>
+        <location filename="../source/upscaledialog.ui" line="117"/>
+        <location filename="../source/upscaledialog.ui" line="160"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="122"/>
+        <location filename="../source/upscaledialog.ui" line="125"/>
         <source>Anti aliasing:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="147"/>
+        <location filename="../source/upscaledialog.ui" line="150"/>
         <source>Basic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="152"/>
+        <location filename="../source/upscaledialog.ui" line="155"/>
         <source>Tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="193"/>
+        <location filename="../source/upscaledialog.ui" line="189"/>
+        <source>Resample</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/upscaledialog.ui" line="196"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
