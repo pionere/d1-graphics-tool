@@ -2963,7 +2963,7 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
         if (!mapMon.moType.monUnique && monBaseType < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monBaseType] != 0) {
             const MonsterData &md = monsterdata[MonstConvTbl[monBaseType]];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
-            cl2FilePath.replace("%c", "N");
+            cl2FilePath.replace("%c", mapMon.moType.monDeadFlag ? "d" : "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
             QString baseTrnFilePath;
             if (md.mTransFile != nullptr) {
@@ -2977,7 +2977,7 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
         if (mapMon.moType.monUnique && monUniqueType < (unsigned)lengthof(uniqMonData) && uniqMonData[monUniqueType].mtype != MT_INVALID) {
             const MonsterData &md = monsterdata[uniqMonData[monUniqueType].mtype];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
-            cl2FilePath.replace("%c", "N");
+            cl2FilePath.replace("%c", mapMon.moType.monDeadFlag ? "d" : "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
             QString baseTrnFilePath;
             if (md.mTransFile != nullptr) {
@@ -5834,6 +5834,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customObject.path = params.path;
                 customObject.frameNum = params.frame;
                 customObject.width = params.width;
+                customObject.coPreFlag = params.preFlag;
                 return true;
             }
         }
@@ -5844,6 +5845,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customObject.path = params.path;
         customObject.frameNum = params.frame;
         customObject.width = params.width;
+        customObject.coPreFlag = params.preFlag;
         this->customObjectTypes.push_back(customObject);
     } break;
     case DUN_ENTITY_TYPE::MONSTER: {
@@ -5891,7 +5893,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         }
         // remove cache entry
         for (unsigned i = 0; i < this->monsterCache.size(); i++) {
-            if (this->monsterCache[i].monType.monIndex == params.index && this->monsterCache[i].monType.monUnique == params.uniqueMon) {
+            if (this->monsterCache[i].monType.monIndex == params.index && this->monsterCache[i].monType.monUnique == params.uniqueMon && this->monsterCache[i].monType.monDeadFlag == params.preFlag) {
                 D1Gfx *gfx = this->monsterCache[i].monGfx;
                 this->monsterCache.erase(this->monsterCache.begin() + i);
                 if (gfx == nullptr) {
@@ -5912,9 +5914,10 @@ bool D1Dun::addResource(const AddResourceParam &params)
             }
         }
         // replace previous entry
+        DunMonsterType monType = { params.index, params.uniqueMon, params.preFlag };
         for (unsigned i = 0; i < this->customMonsterTypes.size(); i++) {
             CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
-            if (customMonster.type.monIndex == params.index && customMonster.type.monUnique == params.uniqueMon) {
+            if (customMonster.type == monType) {
                 customMonster.name = params.name;
                 customMonster.path = params.path;
                 customMonster.baseTrnPath = params.baseTrnPath;
@@ -5925,7 +5928,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         }
         // add new entry
         CustomMonsterStruct customMonster;
-        customMonster.type = { params.index, params.uniqueMon };
+        customMonster.type = monType;
         customMonster.name = params.name;
         customMonster.path = params.path;
         customMonster.baseTrnPath = params.baseTrnPath;
@@ -6073,6 +6076,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMissile.path = params.path;
         customMissile.trnPath = params.baseTrnPath;
         customMissile.width = params.width;
+        customMissile.cmiPreFlag = params.preFlag;
         this->customMissileTypes.push_back(customMissile);
     } break;
     }

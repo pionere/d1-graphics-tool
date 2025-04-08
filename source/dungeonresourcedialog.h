@@ -23,6 +23,7 @@ public:
     QString baseTrnPath;
     QString uniqueTrnPath;
     bool uniqueMon;
+    bool preFlag;
 };
 
 namespace Ui {

@@ -32,6 +32,7 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, bool unique
         this->ui->baseTrnFileLineEdit->setText("");
         this->ui->uniqueTrnFileLineEdit->setText("");
         this->ui->uniqueMonCheckBox->setChecked(false);
+        this->ui->preFlagCheckBox->setChecked(false);
         // select window title
         QString title;
         switch (t) {
@@ -64,6 +65,9 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, int index, bool unique
 
         this->ui->frameLabel->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
         this->ui->frameLineEdit->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
+
+        this->ui->preFlagCheckBox->setVisible(t != DUN_ENTITY_TYPE::ITEM);
+        this->ui->preFlagCheckBox->setToolTip(t == DUN_ENTITY_TYPE::MONSTER ? tr("Dead monster") : tr("On the floor"));
 
         this->adjustSize();
     }
@@ -139,6 +143,7 @@ void DungeonResourceDialog::on_addButton_clicked()
     params.baseTrnPath = this->ui->baseTrnFileLineEdit->text();
     params.uniqueTrnPath = this->ui->uniqueTrnFileLineEdit->text();
     params.uniqueMon = this->ui->uniqueMonCheckBox->isChecked();
+    params.preFlag = this->ui->preFlagCheckBox->isChecked();
     if (params.frame < 0 && params.type == DUN_ENTITY_TYPE::OBJECT) {
         return;
     }
