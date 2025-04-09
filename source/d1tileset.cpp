@@ -1006,7 +1006,8 @@ bool D1Tileset::maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize
     }
     return change;
 }
-bool D1Tileset::copyUpperCathedralMicro(int src, int dst, int blockSize, const CelMicro* micros)
+
+bool D1Tileset::moveUpperMicroPixels(int src, int dst, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1033,7 +1034,7 @@ bool D1Tileset::copyUpperCathedralMicro(int src, int dst, int blockSize, const C
     return change;
 }
 
-bool D1Tileset::copyLowerCathedralMicro(int src, int dst, int blockSize, const CelMicro* micros)
+bool D1Tileset::moveLowerMicroPixels(int src, int dst, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1060,7 +1061,7 @@ bool D1Tileset::copyLowerCathedralMicro(int src, int dst, int blockSize, const C
     return change;
 }
 
-bool D1Tileset::copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro* micros)
+bool D1Tileset::moveLimitedUpperMicroPixels(int src, int dst, int x0, int x1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1087,7 +1088,7 @@ bool D1Tileset::copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1,
     return change;
 }
 
-bool D1Tileset::copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const CelMicro* micros)
+bool D1Tileset::moveLimitedLowerMicroPixels(int src, int dst, int x0, int x1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     const CelMicro &microSrc = micros[src];
@@ -1114,7 +1115,7 @@ bool D1Tileset::copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1,
     return change;
 }
 
-bool D1Tileset::shiftCathedralMicrosDown(int m0, int m1, int blockSize, const CelMicro* micros)
+bool D1Tileset::shiftMicrosDown(int m0, int m1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
     for (int i = m0; i < m1; i++) {
@@ -1513,9 +1514,9 @@ bool D1Tileset::patchTownCathedral(bool silent)
         change |= frame->setPixel(24, 19, frame->getPixel(30, 18));
     }
     // copy lower half 811[0] to 727[9]
-    change |= copyLowerCathedralMicro(5, 4, blockSize, micros);
+    change |= moveLowerMicroPixels(5, 4, blockSize, micros);
     // shift 811[2..] by half
-    change |= shiftCathedralMicrosDown(5, 9, blockSize, micros);
+    change |= shiftMicrosDown(5, 9, blockSize, micros);
     // copy 728[9] to 716[13]
     // copy 728[7] to 716[11]
     for (int i = 11; i < 13; i++) {
@@ -1535,231 +1536,231 @@ bool D1Tileset::patchTownCathedral(bool silent)
         }
     }
     // copy lower half of 812[0] to 716[13]
-    change |= copyLowerCathedralMicro(14, 9, blockSize, micros);
+    change |= moveLowerMicroPixels(14, 9, blockSize, micros);
     // copy upper half of 812[0] to 811[1]
-    change |= copyUpperCathedralMicro(14, 13, blockSize, micros);
+    change |= moveUpperMicroPixels(14, 13, blockSize, micros);
 
     // copy lower half of 809[0] to 811[1]
-    change |= copyLowerCathedralMicro(15, 13, blockSize, micros);
+    change |= moveLowerMicroPixels(15, 13, blockSize, micros);
     // shift 809[2..] by half
-    change |= shiftCathedralMicrosDown(15, 19, blockSize, micros);
+    change |= shiftMicrosDown(15, 19, blockSize, micros);
     // copy lower half of 818[0] to 719[13]
-    change |= copyLowerCathedralMicro(20, 19, blockSize, micros);
+    change |= moveLowerMicroPixels(20, 19, blockSize, micros);
     // copy upper half of 818[12] to 838[1]
-    change |= copyUpperCathedralMicro(26, 60, blockSize, micros);
+    change |= moveUpperMicroPixels(26, 60, blockSize, micros);
     // shift 818[2..] by half
-    change |= shiftCathedralMicrosDown(20, 27, blockSize, micros);
+    change |= shiftMicrosDown(20, 27, blockSize, micros);
     // copy lower half of 810[1] to 719[12]
-    change |= copyLowerCathedralMicro(28, 27, blockSize, micros);
+    change |= moveLowerMicroPixels(28, 27, blockSize, micros);
     // shift 810[3..] by half
-    change |= shiftCathedralMicrosDown(28, 33, blockSize, micros);
+    change |= shiftMicrosDown(28, 33, blockSize, micros);
     // copy lower half of 812[1] to 721[12]
-    change |= copyLowerCathedralMicro(35, 33, blockSize, micros);
+    change |= moveLowerMicroPixels(35, 33, blockSize, micros);
     // copy upper half of 812[1] to 810[0]
-    change |= copyUpperCathedralMicro(35, 34, blockSize, micros);
+    change |= moveUpperMicroPixels(35, 34, blockSize, micros);
 
     // copy lower half of 809[1] to 810[0]
-    change |= copyLowerCathedralMicro(36, 34, blockSize, micros);
+    change |= moveLowerMicroPixels(36, 34, blockSize, micros);
     // shift 809[3..] by half
-    change |= shiftCathedralMicrosDown(36, 40, blockSize, micros);
+    change |= shiftMicrosDown(36, 40, blockSize, micros);
     // copy lower half of 818[1] to 819[0]
-    change |= copyLowerCathedralMicro(42, 40, blockSize, micros);
+    change |= moveLowerMicroPixels(42, 40, blockSize, micros);
     // copy upper half of 818[1] to 816[0]
-    change |= copyUpperCathedralMicro(42, 41, blockSize, micros);
+    change |= moveUpperMicroPixels(42, 41, blockSize, micros);
     // copy lower half of 817[0] to 819[1]
-    change |= copyLowerCathedralMicro(45, 43, blockSize, micros);
+    change |= moveLowerMicroPixels(45, 43, blockSize, micros);
     // copy upper half of 817[0] to 816[1]
-    change |= copyUpperCathedralMicro(45, 44, blockSize, micros);
+    change |= moveUpperMicroPixels(45, 44, blockSize, micros);
     // copy lower half of 837[1] to 816[12]
-    change |= copyLowerCathedralMicro(48, 46, blockSize, micros);
+    change |= moveLowerMicroPixels(48, 46, blockSize, micros);
     // copy upper half of 837[5] to 846[0]
-    change |= copyUpperCathedralMicro(50, 47, blockSize, micros);
+    change |= moveUpperMicroPixels(50, 47, blockSize, micros);
     // copy lower half of 845[1] to 846[0]
-    change |= copyLowerCathedralMicro(52, 47, blockSize, micros);
+    change |= moveLowerMicroPixels(52, 47, blockSize, micros);
     // copy upper half of 845[1] to 843[0]
-    change |= copyUpperCathedralMicro(52, 51, blockSize, micros);
+    change |= moveUpperMicroPixels(52, 51, blockSize, micros);
     // shift 837[3..] by half
-    change |= shiftCathedralMicrosDown(48, 51, blockSize, micros);
+    change |= shiftMicrosDown(48, 51, blockSize, micros);
     // copy lower half of 841[0] to 816[13]
-    change |= copyLowerCathedralMicro(57, 53, blockSize, micros);
+    change |= moveLowerMicroPixels(57, 53, blockSize, micros);
     // copy lower half of 844[0] to 846[1]
-    change |= copyLowerCathedralMicro(56, 54, blockSize, micros);
+    change |= moveLowerMicroPixels(56, 54, blockSize, micros);
     // copy upper half of 844[0] to 843[1]
-    change |= copyUpperCathedralMicro(56, 55, blockSize, micros);
+    change |= moveUpperMicroPixels(56, 55, blockSize, micros);
     // copy upper half of 841[4] to 846[1]
-    change |= copyUpperCathedralMicro(59, 54, blockSize, micros);
+    change |= moveUpperMicroPixels(59, 54, blockSize, micros);
     // shift 841[2..] by half
-    change |= shiftCathedralMicrosDown(57, 60, blockSize, micros);
+    change |= shiftMicrosDown(57, 60, blockSize, micros);
     // mask 836[1] and 838[1]
     change |= maskMicro(60, 0, 10, 0, MICRO_HEIGHT, blockSize, micros);
     change |= maskMicro(61, 0, 10, 0, MICRO_HEIGHT, blockSize, micros);
     // copy lower half of 837[0] to 838[1]
-    change |= copyLimitedLowerCathedralMicro(63, 60, 10, MICRO_WIDTH, blockSize, micros);
+    change |= moveLimitedLowerMicroPixels(63, 60, 10, MICRO_WIDTH, blockSize, micros);
     // copy upper half of 837[0] to 836[1]
-    change |= copyLimitedUpperCathedralMicro(63, 61, 10, MICRO_WIDTH, blockSize, micros);
+    change |= moveLimitedUpperMicroPixels(63, 61, 10, MICRO_WIDTH, blockSize, micros);
     // copy part of lower half of 845[0] to 836[5]
-    change |= copyLimitedLowerCathedralMicro(64, 62, 10, MICRO_WIDTH, blockSize, micros);
+    change |= moveLimitedLowerMicroPixels(64, 62, 10, MICRO_WIDTH, blockSize, micros);
     // mask 845[0]
     change |= maskMicro(64, 0, 10, 0, MICRO_HEIGHT, blockSize, micros);
     // mask 845[4]
     change |= maskMicro(66, 0, 10, 0, MICRO_HEIGHT, blockSize, micros);
     // shift 845[2..] by half
-    change |= shiftCathedralMicrosDown(64, 69, blockSize, micros);
+    change |= shiftMicrosDown(64, 69, blockSize, micros);
     // copy lower half of 844[1] to 839[4]
-    change |= copyLowerCathedralMicro(70, 69, blockSize, micros);
+    change |= moveLowerMicroPixels(70, 69, blockSize, micros);
     // shift 844[3..] by half
-    change |= shiftCathedralMicrosDown(70, 76, blockSize, micros);
+    change |= shiftMicrosDown(70, 76, blockSize, micros);
     // copy lower half of 817[1] to 805[12]
-    change |= copyLowerCathedralMicro(79, 1, blockSize, micros);
+    change |= moveLowerMicroPixels(79, 1, blockSize, micros);
     // copy lower half of 841[1] to 842[0]
-    change |= copyLowerCathedralMicro(78, 77, blockSize, micros);
+    change |= moveLowerMicroPixels(78, 77, blockSize, micros);
     // copy upper half of 841[1] to 839[0]
-    change |= copyUpperCathedralMicro(78, 76, blockSize, micros);
+    change |= moveUpperMicroPixels(78, 76, blockSize, micros);
     // copy upper half of 817[13] to 842[0]
-    change |= copyUpperCathedralMicro(85, 77, blockSize, micros);
+    change |= moveUpperMicroPixels(85, 77, blockSize, micros);
     // shift 817[3..] by half
-    change |= shiftCathedralMicrosDown(79, 86, blockSize, micros);
+    change |= shiftMicrosDown(79, 86, blockSize, micros);
     // copy lower half of 840[0] to 842[1]
-    change |= copyLowerCathedralMicro(88, 86, blockSize, micros);
+    change |= moveLowerMicroPixels(88, 86, blockSize, micros);
     // copy upper half of 840[0] to 839[1]
-    change |= copyUpperCathedralMicro(88, 87, blockSize, micros);
+    change |= moveUpperMicroPixels(88, 87, blockSize, micros);
     // copy lower half of 848[0] to 839[5]
-    change |= copyLowerCathedralMicro(90, 89, blockSize, micros);
+    change |= moveLowerMicroPixels(90, 89, blockSize, micros);
     // shift 848[2..] by half
-    change |= shiftCathedralMicrosDown(90, 96, blockSize, micros);
+    change |= shiftMicrosDown(90, 96, blockSize, micros);
     // mask 847[0] and 849[0]
     change |= maskMicro(96, 30, MICRO_WIDTH, 0, MICRO_HEIGHT, blockSize, micros);
     change |= maskMicro(97, 30, MICRO_WIDTH, 0, MICRO_HEIGHT, blockSize, micros);
     // copy lower half of 848[1] to 849[0]
-    change |= copyLimitedLowerCathedralMicro(98, 96, 0, 30, blockSize, micros);
+    change |= moveLimitedLowerMicroPixels(98, 96, 0, 30, blockSize, micros);
     // copy upper half of 848[1] to 847[0]
-    change |= copyLimitedUpperCathedralMicro(98, 97, 0, 30, blockSize, micros);
+    change |= moveLimitedUpperMicroPixels(98, 97, 0, 30, blockSize, micros);
 
     // copy lower half of 840[0] to 559[12]
-    change |= copyLowerCathedralMicro(100, 99, blockSize, micros);
+    change |= moveLowerMicroPixels(100, 99, blockSize, micros);
     // copy upper half of 840[5] to 849[0]
-    change |= copyUpperCathedralMicro(102, 96, blockSize, micros);
+    change |= moveUpperMicroPixels(102, 96, blockSize, micros);
     // shift 840[3..] by half
-    change |= shiftCathedralMicrosDown(100, 103, blockSize, micros);
+    change |= shiftMicrosDown(100, 103, blockSize, micros);
     // copy upper half of 822[12] to 842[1]
-    change |= copyUpperCathedralMicro(109, 86, blockSize, micros);
+    change |= moveUpperMicroPixels(109, 86, blockSize, micros);
     // copy lower half of 822[0] to 805[13]
-    change |= copyLowerCathedralMicro(103, 2, blockSize, micros);
+    change |= moveLowerMicroPixels(103, 2, blockSize, micros);
     // shift 822[2..] by half
-    change |= shiftCathedralMicrosDown(103, 110, blockSize, micros);
+    change |= shiftMicrosDown(103, 110, blockSize, micros);
     // copy lower half of 821[0] to 823[1]
-    change |= copyLowerCathedralMicro(112, 110, blockSize, micros);
+    change |= moveLowerMicroPixels(112, 110, blockSize, micros);
     // copy upper half of 821[0] to 820[1]
-    change |= copyUpperCathedralMicro(112, 111, blockSize, micros);
+    change |= moveUpperMicroPixels(112, 111, blockSize, micros);
     // copy lower half of 826[0] to 820[1]
-    change |= copyLowerCathedralMicro(113, 111, blockSize, micros);
+    change |= moveLowerMicroPixels(113, 111, blockSize, micros);
     // shift 826[2..] by half
-    change |= shiftCathedralMicrosDown(113, 120, blockSize, micros);
+    change |= shiftMicrosDown(113, 120, blockSize, micros);
     // copy lower half of 822[1] to 823[0]
-    change |= copyLowerCathedralMicro(122, 120, blockSize, micros);
+    change |= moveLowerMicroPixels(122, 120, blockSize, micros);
     // copy upper half of 822[1] to 820[0]
-    change |= copyUpperCathedralMicro(122, 121, blockSize, micros);
+    change |= moveUpperMicroPixels(122, 121, blockSize, micros);
     // copy upper half of 806[13] to 823[0]
-    change |= copyUpperCathedralMicro(130, 120, blockSize, micros);
+    change |= moveUpperMicroPixels(130, 120, blockSize, micros);
     // copy lower half of 806[1] to 781[0]
-    change |= copyLowerCathedralMicro(124, 123, blockSize, micros);
+    change |= moveLowerMicroPixels(124, 123, blockSize, micros);
 
     // shift 806[3..] by half
-    change |= shiftCathedralMicrosDown(124, 131, blockSize, micros);
+    change |= shiftMicrosDown(124, 131, blockSize, micros);
 
     // copy upper half of 787[12] to 823[1]
-    change |= copyUpperCathedralMicro(139, 110, blockSize, micros);
+    change |= moveUpperMicroPixels(139, 110, blockSize, micros);
     // copy lower half of 787[0] to 781[1]
-    change |= copyLowerCathedralMicro(133, 132, blockSize, micros);
+    change |= moveLowerMicroPixels(133, 132, blockSize, micros);
     // shift 787[2..] by half
-    change |= shiftCathedralMicrosDown(133, 140, blockSize, micros);
+    change |= shiftMicrosDown(133, 140, blockSize, micros);
     // copy lower half of 826[1] to 827[0]
-    change |= copyLowerCathedralMicro(142, 140, blockSize, micros);
+    change |= moveLowerMicroPixels(142, 140, blockSize, micros);
     // copy upper half of 826[1] to 824[0]
-    change |= copyUpperCathedralMicro(142, 141, blockSize, micros);
+    change |= moveUpperMicroPixels(142, 141, blockSize, micros);
     // copy lower half of 821[1] to 785[12]
-    change |= copyLowerCathedralMicro(144, 143, blockSize, micros);
+    change |= moveLowerMicroPixels(144, 143, blockSize, micros);
     // copy upper half of 821[1] to 827[0]
-    change |= copyUpperCathedralMicro(144, 140, blockSize, micros);
+    change |= moveUpperMicroPixels(144, 140, blockSize, micros);
     // copy lower half of 825[0] to 827[1]
-    change |= copyLowerCathedralMicro(147, 145, blockSize, micros);
+    change |= moveLowerMicroPixels(147, 145, blockSize, micros);
     // copy upper half of 825[0] to 824[1]
-    change |= copyUpperCathedralMicro(147, 146, blockSize, micros);
+    change |= moveUpperMicroPixels(147, 146, blockSize, micros);
     // copy upper half of 791[12] to 827[1]
-    change |= copyUpperCathedralMicro(155, 145, blockSize, micros);
+    change |= moveUpperMicroPixels(155, 145, blockSize, micros);
     // copy lower half of 791[0] to 785[1]
-    change |= copyLowerCathedralMicro(149, 148, blockSize, micros);
+    change |= moveLowerMicroPixels(149, 148, blockSize, micros);
     // copy lower half of 830[0] to 824[1]
-    change |= copyLowerCathedralMicro(156, 146, blockSize, micros);
+    change |= moveLowerMicroPixels(156, 146, blockSize, micros);
     // shift 791[2..] by half
-    change |= shiftCathedralMicrosDown(149, 156, blockSize, micros);
+    change |= shiftMicrosDown(149, 156, blockSize, micros);
     // shift 830[2..] by half
-    change |= shiftCathedralMicrosDown(156, 163, blockSize, micros);
+    change |= shiftMicrosDown(156, 163, blockSize, micros);
     // copy lower half of 825[1] to 789[12]
-    change |= copyLowerCathedralMicro(165, 163, blockSize, micros);
+    change |= moveLowerMicroPixels(165, 163, blockSize, micros);
     // copy upper half of 825[1] to 831[0]
-    change |= copyUpperCathedralMicro(165, 164, blockSize, micros);
+    change |= moveUpperMicroPixels(165, 164, blockSize, micros);
     // copy lower half of 830[1] to 831[0]
-    change |= copyLowerCathedralMicro(167, 164, blockSize, micros);
+    change |= moveLowerMicroPixels(167, 164, blockSize, micros);
     // copy upper half of 830[1] to 828[0]
-    change |= copyUpperCathedralMicro(167, 166, blockSize, micros);
+    change |= moveUpperMicroPixels(167, 166, blockSize, micros);
     // copy lower half of 829[0] to 831[1]
-    change |= copyLowerCathedralMicro(170, 168, blockSize, micros);
+    change |= moveLowerMicroPixels(170, 168, blockSize, micros);
     // copy upper half of 829[0] to 828[1]
-    change |= copyUpperCathedralMicro(170, 169, blockSize, micros);
+    change |= moveUpperMicroPixels(170, 169, blockSize, micros);
     // copy lower half of 834[0] to 828[1]
-    change |= copyLowerCathedralMicro(171, 169, blockSize, micros);
+    change |= moveLowerMicroPixels(171, 169, blockSize, micros);
     // shift 834[2..] by half
-    change |= shiftCathedralMicrosDown(171, 178, blockSize, micros);
+    change |= shiftMicrosDown(171, 178, blockSize, micros);
     // copy lower half of 834[1] to 835[0]
-    change |= copyLowerCathedralMicro(180, 178, blockSize, micros);
+    change |= moveLowerMicroPixels(180, 178, blockSize, micros);
     // copy upper half of 834[1] to 832[0]
-    change |= copyUpperCathedralMicro(180, 179, blockSize, micros);
+    change |= moveUpperMicroPixels(180, 179, blockSize, micros);
     // copy lower half of 829[1] to 793[12]
-    change |= copyLowerCathedralMicro(182, 181, blockSize, micros);
+    change |= moveLowerMicroPixels(182, 181, blockSize, micros);
     // copy upper half of 829[1] to 835[0]
-    change |= copyUpperCathedralMicro(182, 178, blockSize, micros);
+    change |= moveUpperMicroPixels(182, 178, blockSize, micros);
     // copy upper half of 795[12] to 831[1]
-    change |= copyUpperCathedralMicro(190, 168, blockSize, micros);
+    change |= moveUpperMicroPixels(190, 168, blockSize, micros);
     // copy lower half of 795[0] to 789[1]
-    change |= copyLowerCathedralMicro(184, 183, blockSize, micros);
+    change |= moveLowerMicroPixels(184, 183, blockSize, micros);
     // shift 795[2..] by half
-    change |= shiftCathedralMicrosDown(184, 191, blockSize, micros);
+    change |= shiftMicrosDown(184, 191, blockSize, micros);
     // copy lower half of 833[0] to 835[1]
-    change |= copyLowerCathedralMicro(193, 191, blockSize, micros);
+    change |= moveLowerMicroPixels(193, 191, blockSize, micros);
     // copy upper half of 833[0] to 832[1]
-    change |= copyUpperCathedralMicro(193, 192, blockSize, micros);
+    change |= moveUpperMicroPixels(193, 192, blockSize, micros);
     // copy lower half of 833[1] to 797[12]
-    change |= copyLowerCathedralMicro(195, 194, blockSize, micros);
+    change |= moveLowerMicroPixels(195, 194, blockSize, micros);
     // shift 833[3..] by half
-    change |= shiftCathedralMicrosDown(195, 200, blockSize, micros);
+    change |= shiftMicrosDown(195, 200, blockSize, micros);
     // copy upper half of 799[12] to 835[1]
-    change |= copyUpperCathedralMicro(207, 191, blockSize, micros);
+    change |= moveUpperMicroPixels(207, 191, blockSize, micros);
     // copy lower half of 799[0] to 793[1]
-    change |= copyLowerCathedralMicro(201, 200, blockSize, micros);
+    change |= moveLowerMicroPixels(201, 200, blockSize, micros);
     // shift 799[2..] by half
-    change |= shiftCathedralMicrosDown(201, 208, blockSize, micros);
+    change |= shiftMicrosDown(201, 208, blockSize, micros);
 
     // copy lower half of 806[0] to 808[1]
-    change |= copyLowerCathedralMicro(217, 215, blockSize, micros);
+    change |= moveLowerMicroPixels(217, 215, blockSize, micros);
     // copy upper half of 806[0] to 805[1]
-    change |= copyUpperCathedralMicro(217, 216, blockSize, micros);
+    change |= moveUpperMicroPixels(217, 216, blockSize, micros);
     // copy lower half of 807[1] to 808[0]
-    change |= copyLowerCathedralMicro(220, 218, blockSize, micros);
+    change |= moveLowerMicroPixels(220, 218, blockSize, micros);
     // copy upper half of 807[1] to 805[0]
-    change |= copyUpperCathedralMicro(220, 219, blockSize, micros);
+    change |= moveUpperMicroPixels(220, 219, blockSize, micros);
     // copy part of lower half of 803[0] to 797[1]
-    change |= copyLimitedLowerCathedralMicro(210, 208, 0, 17, blockSize, micros);
+    change |= moveLimitedLowerMicroPixels(210, 208, 0, 17, blockSize, micros);
     // copy part of upper half of 803[0] to 815[1]
-    change |= copyLimitedUpperCathedralMicro(210, 209, 0, 17, blockSize, micros);
+    change |= moveLimitedUpperMicroPixels(210, 209, 0, 17, blockSize, micros);
 
     // copy part of lower half of 814[0] to 815[1]
-    change |= copyLimitedLowerCathedralMicro(211, 209, 0, 16, blockSize, micros);
+    change |= moveLimitedLowerMicroPixels(211, 209, 0, 16, blockSize, micros);
     // copy part of upper half of 814[0] to 813[1]
-    change |= copyLimitedUpperCathedralMicro(211, 212, 0, 16, blockSize, micros);
+    change |= moveLimitedUpperMicroPixels(211, 212, 0, 16, blockSize, micros);
 
     // copy part of lower half of 813[1] to 814[0]
-    change |= copyLimitedLowerCathedralMicro(212, 211, 16, MICRO_WIDTH, blockSize, micros);
+    change |= moveLimitedLowerMicroPixels(212, 211, 16, MICRO_WIDTH, blockSize, micros);
 
     // copy part of upper half of 813[1] to 799[12]
     {
@@ -1827,7 +1828,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
     }
 
     // copy lower half of 813[5] to 795[12]
-    change |= copyLowerCathedralMicro(214, 190, blockSize, micros);
+    change |= moveLowerMicroPixels(214, 190, blockSize, micros);
 
     // copy part of 815[1] to 791[12]
     {
