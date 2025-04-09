@@ -2352,12 +2352,12 @@ bool D1Tileset::patchTownDoor(bool silent)
 /* 79 */{ 529 - 1, 4, D1CEL_FRAME_TYPE::Square },
 /* 80 */{ 531 - 1, 4, D1CEL_FRAME_TYPE::Square },
 
-/* 81 */{ 478 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 82 */{ 477 - 1, 1, D1CEL_FRAME_TYPE::Square }, // 317
-/* 83 */{ 480 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
-/* 84 */{ 479 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 85 */{ 477 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 317
-/* 86 */{ 480 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },
+/* 81 */{ 478 - 1, 0, D1CEL_FRAME_TYPE::Empty },  // 317
+/* 82 */{ 477 - 1, 1, D1CEL_FRAME_TYPE::Square }, // 316
+/* 83 */{ 480 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid }, // 319
+/* 84 */{ 479 - 1, 1, D1CEL_FRAME_TYPE::Empty },  // 318
+/* 85 */{ 477 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 316
+/* 86 */{ 480 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },  // 319
 
 /* 87 */{ 517 - 1, 0, D1CEL_FRAME_TYPE::Empty },          // move micros for better light propagation
 /* 88 */{ 519 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
@@ -2636,14 +2636,14 @@ bool D1Tileset::patchTownDoor(bool silent)
 
 
 /*
-(431 - 289)[1] -1/2 
-(430 - 288)[1] -1/2 + (430[5] - 291)[1]
-(430 - 288)[0] + (430[4] - 291)[0]
-(432 - 290)[0] -1/2 
+(431 - 289)[+9, +11] -1/2 
+(430 - 288)[+7, +9] -1/2 + (433[5] - 291)[1]
+(430 - 288)[0] + (433[4] - 291)[0]
+(432 - 290)[6, +8] -1/2 
 (539 - 366), (537 - 365), (524 - 354)(in 339), (523 - 353), (477 - 316), (439 - 297), (437 - 295), (429 - 287), (426 - 284) == 285 obsolete
 +(428 - 286) ~> (435 - 293)
 +(441 - 299) ~> (438 - 296)
-(438 - 296)[1] -1/2 
+(438 - 296)[5, +7, +9] -1/2 
 +(521[8,9] - 375) ~> (521 - 351)
 +(522[3..11] - 374) ~> (519 - 349), (522 - 352)
 (478 - 317)[1] +2
@@ -2681,68 +2681,73 @@ bool D1Tileset::patchTownLight(bool silent)
 /* 20 */{ 432 - 1, 2, D1CEL_FRAME_TYPE::Square },
 /* 21 */{ 432 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 22 */{ 432 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 23 */{ 432 - 1, 8, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 23 */{ 433 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 24 */{ 387 - 1, 9, D1CEL_FRAME_TYPE::Square },
-/* 25 */{ 432 - 1, 1, D1CEL_FRAME_TYPE::Square },
-/* 26 */{ 430 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 288
-/* 27 */{ 430 - 1, 2, D1CEL_FRAME_TYPE::Square },
-/* 28 */{ 430 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 24 */{ 433 - 1, 0, D1CEL_FRAME_TYPE::Empty },  // 299
+/* 25 */{ 387 - 1, 9, D1CEL_FRAME_TYPE::Square },
+/* 26 */{ 432 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 27 */{ 430 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 288
+/* 28 */{ 430 - 1, 2, D1CEL_FRAME_TYPE::Square },
+/* 29 */{ 430 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 29 */{ 433 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 30 */{ 424 - 1, 8, D1CEL_FRAME_TYPE::Square },
-/* 31 */{ 431 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 289
-/* 32 */{ 430 - 1, 1, D1CEL_FRAME_TYPE::Square },
-/* 33 */{ 430 - 1, 3, D1CEL_FRAME_TYPE::Square },
-/* 34 */{ 430 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 30 */{ 433 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 31 */{ 424 - 1, 8, D1CEL_FRAME_TYPE::Square },
+/* 32 */{ 431 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 289
+/* 33 */{ 430 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 34 */{ 430 - 1, 3, D1CEL_FRAME_TYPE::Square },
+/* 35 */{ 430 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 36 */{ 430 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 37 */{ 430 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 35 */{ 422 - 1, 8, D1CEL_FRAME_TYPE::Square },
-/* 36 */{ 431 - 1, 1, D1CEL_FRAME_TYPE::Square },
-/* 37 */{ 431 - 1, 3, D1CEL_FRAME_TYPE::Square },
-/* 38 */{ 431 - 1, 5, D1CEL_FRAME_TYPE::Square },
-/* 39 */{ 431 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 38 */{ 422 - 1, 8, D1CEL_FRAME_TYPE::Square },
+/* 39 */{ 431 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 40 */{ 431 - 1, 3, D1CEL_FRAME_TYPE::Square },
+/* 41 */{ 431 - 1, 5, D1CEL_FRAME_TYPE::Square },
+/* 42 */{ 431 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 43 */{ 431 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 44 */{ 431 - 1, 11, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 40 */{ 422 - 1, 9, D1CEL_FRAME_TYPE::Square },
-/* 41 */{ 436 - 1, 0, D1CEL_FRAME_TYPE::Square },
-/* 42 */{ 436 - 1, 2, D1CEL_FRAME_TYPE::Square },
-/* 43 */{ 436 - 1, 4, D1CEL_FRAME_TYPE::Square },
-/* 44 */{ 436 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 45 */{ 422 - 1, 9, D1CEL_FRAME_TYPE::Square },
+/* 46 */{ 436 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/* 47 */{ 436 - 1, 2, D1CEL_FRAME_TYPE::Square },
+/* 48 */{ 436 - 1, 4, D1CEL_FRAME_TYPE::Square },
+/* 49 */{ 436 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 45 */{ 437 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 46 */{ 423 - 1, 9, D1CEL_FRAME_TYPE::Square },
-/* 47 */{ 436 - 1, 1, D1CEL_FRAME_TYPE::Square },
-/* 48 */{ 434 - 1, 0, D1CEL_FRAME_TYPE::Square },
-/* 49 */{ 434 - 1, 2, D1CEL_FRAME_TYPE::Square },
-/* 50 */{ 434 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 50 */{ 437 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 51 */{ 423 - 1, 9, D1CEL_FRAME_TYPE::Square },
+/* 52 */{ 436 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 53 */{ 434 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/* 54 */{ 434 - 1, 2, D1CEL_FRAME_TYPE::Square },
+/* 55 */{ 434 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 51 */{ 437 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 52 */{ 435 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 53 */{ 418 - 1, 11, D1CEL_FRAME_TYPE::Square },
-/* 54 */{ 434 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 56 */{ 437 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 57 */{ 435 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 58 */{ 418 - 1, 11, D1CEL_FRAME_TYPE::Square },
+/* 59 */{ 434 - 1, 1, D1CEL_FRAME_TYPE::Square },
 
-/* 55 */{ 435 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 56 */{ 419 - 1, 13, D1CEL_FRAME_TYPE::Square }, // 277
+/* 60 */{ 435 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 61 */{ 419 - 1, 13, D1CEL_FRAME_TYPE::Square }, // 277
 
-/* 57 */{ 440 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 58 */{ 408 - 1, 12, D1CEL_FRAME_TYPE::Square },
+/* 62 */{ 440 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 63 */{ 408 - 1, 12, D1CEL_FRAME_TYPE::Square },
 
-/* 59 */{ 440 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 60 */{ 441 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 299
-/* 61 */{ 406 - 1, 10, D1CEL_FRAME_TYPE::Square }, // 268
-/* 62 */{ 438 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 296
+/* 64 */{ 440 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 65 */{ 441 - 1, 0, D1CEL_FRAME_TYPE::Empty },   // 299
+/* 66 */{ 406 - 1, 10, D1CEL_FRAME_TYPE::Square }, // 268
+/* 67 */{ 438 - 1, 0, D1CEL_FRAME_TYPE::Square },  // 296
 
-/* 63 */{ 441 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 64 */{ 412 - 1, 8, D1CEL_FRAME_TYPE::Square },
-/* 65 */{ 439 - 1, 0, D1CEL_FRAME_TYPE::Square },
-/* 66 */{ 438 - 1, 1, D1CEL_FRAME_TYPE::Square },
-/* 67 */{ 438 - 1, 3, D1CEL_FRAME_TYPE::Square },
-/* 68 */{ 438 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 68 */{ 441 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 69 */{ 412 - 1, 8, D1CEL_FRAME_TYPE::Square },
+/* 70 */{ 439 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/* 71 */{ 438 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 72 */{ 438 - 1, 3, D1CEL_FRAME_TYPE::Square },
+/* 73 */{ 438 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 69 */{ 410 - 1, 8, D1CEL_FRAME_TYPE::Square },
-/* 70 */{ 439 - 1, 1, D1CEL_FRAME_TYPE::Square },
-/* 71 */{ 439 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 72 */{ 439 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 73 */{ 439 - 1, 7, D1CEL_FRAME_TYPE::Empty },
+/* 74 */{ 410 - 1, 8, D1CEL_FRAME_TYPE::Square },
+/* 75 */{ 439 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 76 */{ 439 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 77 */{ 439 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 78 */{ 439 - 1, 7, D1CEL_FRAME_TYPE::Empty },
     };
 
     constexpr unsigned blockSize = BLOCK_SIZE_TOWN;
@@ -2853,19 +2858,19 @@ bool D1Tileset::patchTownLight(bool silent)
         }
 
         // copy 433[0] to 387[9]
-        if (i == 24) {
-            change |= moveLowerMicroPixels(23, 24, blockSize, micros);
+        if (i == 25) {
+            change |= moveLowerMicroPixels(24, 25, blockSize, micros);
         }
         // copy 433[0] to 432[1]
-        if (i == 25) {
-            change |= moveUpperMicroPixels(23, 25, blockSize, micros);
+        if (i == 26) {
+            change |= moveUpperMicroPixels(24, 26, blockSize, micros);
         }
         // copy 430[0] to 432[1]
-        if (i == 25) {
-            change |= moveLowerMicroPixels(26, 25, blockSize, micros);
+        if (i == 27) {
+            change |= moveLowerMicroPixels(27, 26, blockSize, micros);
         }
         // move 430[0 2] down MICRO_HEIGHT / 2
-        if (i >= 26 && i < 28) {
+        if (i >= 27 && i < 29) {
             const CelMicro &microSrc = micros[i + 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -2885,24 +2890,24 @@ bool D1Tileset::patchTownLight(bool silent)
             }
         }
         // mask 430[4]
-        if (i == 28) {
-            change |= maskMicro(28, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
+        if (i == 29) {
+            change |= maskMicro(29, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
         }
 
         // copy 433[1] to 424[8]
-        if (i == 30) {
-            change |= moveLowerMicroPixels(29, 30, blockSize, micros);
+        if (i == 31) {
+            change |= moveLowerMicroPixels(30, 31, blockSize, micros);
         }
         // copy 433[1] to 431[0]
-        if (i == 31) {
-            change |= moveUpperMicroPixels(29, 31, blockSize, micros);
+        if (i == 32) {
+            change |= moveUpperMicroPixels(30, 32, blockSize, micros);
         }
         // copy 430[1] to 431[0]
-        if (i == 31) {
-            change |= moveLowerMicroPixels(32, 31, blockSize, micros);
+        if (i == 32) {
+            change |= moveLowerMicroPixels(33, 32, blockSize, micros);
         }
         // move 430[1 3] down MICRO_HEIGHT / 2
-        if (i >= 32 && i < 34) {
+        if (i >= 33 && i < 35) {
             const CelMicro &microSrc = micros[i + 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -2922,8 +2927,8 @@ bool D1Tileset::patchTownLight(bool silent)
             }
         }
         // mask 430[5]
-        if (i == 34) {
-            change |= maskMicro(34, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
+        if (i == 35) {
+            change |= maskMicro(35, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
         }
 
         // copy 431[1] to 422[8]
@@ -2931,7 +2936,7 @@ bool D1Tileset::patchTownLight(bool silent)
             change |= moveLowerMicroPixels(36, 35, blockSize, micros);
         }
         // move 431[1 3 5] down MICRO_HEIGHT / 2
-        if (i >= 36 && i < 39) {
+        if (i >= 39 && i < 42) {
             const CelMicro &microSrc = micros[i + 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -2951,16 +2956,16 @@ bool D1Tileset::patchTownLight(bool silent)
             }
         }
         // mask 431[7]
-        if (i == 39) {
-            change |= maskMicro(39, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
+        if (i == 42) {
+            change |= maskMicro(42, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
         }
 
         // copy 436[0] to 422[9]
-        if (i == 40) {
-            change |= moveLowerMicroPixels(41, 40, blockSize, micros);
+        if (i == 45) {
+            change |= moveLowerMicroPixels(46, 45, blockSize, micros);
         }
         // move 436[0 2 4] down MICRO_HEIGHT / 2
-        if (i >= 41 && i < 44) {
+        if (i >= 46 && i < 49) {
             const CelMicro &microSrc = micros[i + 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -2980,24 +2985,24 @@ bool D1Tileset::patchTownLight(bool silent)
             }
         }
         // mask 436[6]
-        if (i == 44) {
-            change |= maskMicro(44, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
+        if (i == 49) {
+            change |= maskMicro(49, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
         }
 
         // copy 437[0] to 423[9]
-        if (i == 46) {
-            change |= moveLowerMicroPixels(45, 46, blockSize, micros);
+        if (i == 51) {
+            change |= moveLowerMicroPixels(50, 51, blockSize, micros);
         }
         // copy 437[0] to 436[1]
-        if (i == 47) {
-            change |= moveUpperMicroPixels(45, 47, blockSize, micros);
+        if (i == 52) {
+            change |= moveUpperMicroPixels(50, 52, blockSize, micros);
         }
         // copy 434[0] to 436[1]
-        if (i == 47) {
-            change |= moveLowerMicroPixels(48, 47, blockSize, micros);
+        if (i == 52) {
+            change |= moveLowerMicroPixels(53, 52, blockSize, micros);
         }
         // move 434[0 2] down MICRO_HEIGHT / 2
-        if (i >= 48 && i < 50) {
+        if (i >= 53 && i < 55) {
             const CelMicro &microSrc = micros[i + 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -3017,60 +3022,60 @@ bool D1Tileset::patchTownLight(bool silent)
             }
         }
         // mask 434[4]
-        if (i == 50) {
-            change |= maskMicro(50, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
+        if (i == 55) {
+            change |= maskMicro(55, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
         }
 
         // copy 435[0] to 418[11]
-        if (i == 53) {
-            change |= moveLowerMicroPixels(52, 53, blockSize, micros);
+        if (i == 58) {
+            change |= moveLowerMicroPixels(57, 58, blockSize, micros);
         }
         // copy 435[0] to 434[1]
-        if (i == 54) {
-            change |= moveUpperMicroPixels(52, 54, blockSize, micros);
+        if (i == 59) {
+            change |= moveUpperMicroPixels(57, 59, blockSize, micros);
         }
         // copy 437[1] to 418[11]
-        if (i == 53) {
-            change |= moveMicroPixels(51, 53, blockSize, micros);
+        if (i == 58) {
+            change |= moveMicroPixels(56, 58, blockSize, micros);
         }
 
         // copy 435[1] to 419[13]
-        if (i == 56) {
-            change |= moveMicroPixels(55, 56, blockSize, micros);
-        }
-
-        // copy 440[0] to 408[12]
-        if (i == 58) {
-            change |= moveMicroPixels(57, 58, blockSize, micros);
-        }
-
-        // copy 440[1] to 406[10]
-        if (i == 61) {
-            change |= moveLowerMicroPixels(59, 61, blockSize, micros);
-        }
-        // copy 440[1] to 438[0]
-        if (i == 62) {
-            change |= moveUpperMicroPixels(59, 62, blockSize, micros);
-        }
-        // copy 441[0] to 406[10]
         if (i == 61) {
             change |= moveMicroPixels(60, 61, blockSize, micros);
         }
 
+        // copy 440[0] to 408[12]
+        if (i == 63) {
+            change |= moveMicroPixels(62, 63, blockSize, micros);
+        }
+
+        // copy 440[1] to 406[10]
+        if (i == 66) {
+            change |= moveLowerMicroPixels(64, 66, blockSize, micros);
+        }
+        // copy 440[1] to 438[0]
+        if (i == 67) {
+            change |= moveUpperMicroPixels(64, 67, blockSize, micros);
+        }
+        // copy 441[0] to 406[10]
+        if (i == 66) {
+            change |= moveMicroPixels(65, 66, blockSize, micros);
+        }
+
         // copy 441[1] to 412[8]
-        if (i == 64) {
-            change |= moveLowerMicroPixels(63, 64, blockSize, micros);
+        if (i == 69) {
+            change |= moveLowerMicroPixels(68, 69, blockSize, micros);
         }
         // copy 441[1] to 439[0]
-        if (i == 65) {
-            change |= moveUpperMicroPixels(63, 65, blockSize, micros);
+        if (i == 70) {
+            change |= moveUpperMicroPixels(68, 70, blockSize, micros);
         }
         // copy 438[1] to 439[0]
-        if (i == 65) {
-            change |= moveLowerMicroPixels(66, 65, blockSize, micros);
+        if (i == 70) {
+            change |= moveLowerMicroPixels(71, 70, blockSize, micros);
         }
         // move 438[1 3] down MICRO_HEIGHT / 2
-        if (i >= 66 && i < 68) {
+        if (i >= 71 && i < 73) {
             const CelMicro &microSrc = micros[i + 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -3090,17 +3095,17 @@ bool D1Tileset::patchTownLight(bool silent)
             }
         }
         // mask 438[5]
-        if (i == 68) {
-            change |= maskMicro(68, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
+        if (i == 73) {
+            change |= maskMicro(73, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
         }
 
         // copy 439[1] to 410[8]
-        if (i == 69) {
-            change |= moveLowerMicroPixels(70, 69, blockSize, micros);
+        if (i == 74) {
+            change |= moveLowerMicroPixels(75, 74, blockSize, micros);
         }
         // shift 439[3..] by half
-        if (i == 70) {
-            change |= shiftMicrosDown(70, 74, blockSize, micros);
+        if (i == 75) {
+            change |= shiftMicrosDown(75, 79, blockSize, micros);
         }
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
@@ -3546,7 +3551,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(529, 10, 537, 6);
         MoveMcr(529, 12, 537, 8);
 
-        MoveMcr(480, 2, 477, 0); // 317 -> 319
+        MoveMcr(480, 2, 477, 0); // 316 -> 319
         MoveMcr(480, 3, 477, 1);
         MoveMcr(480, 4, 477, 2);
         MoveMcr(480, 5, 477, 3);
@@ -3646,9 +3651,10 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(410, 14, 439, 5);
         Blk2Mcr(439, 7);
 
-        // move micros for better light propagation
-        MoveMcr(433, 6, 430, 4);
-        MoveMcr(433, 7, 430, 5);
+        MoveMcr(433, 7, 430, 5); // 288 -> 291
+        MoveMcr(433, 9, 430, 7);
+        MoveMcr(433, 11, 430, 9);
+
         // MoveMcr(?, 14, 440, 4);
         MoveMcr(923, 4, 920, 6);
         MoveMcr(923, 6, 920, 8);
