@@ -2683,7 +2683,7 @@ bool D1Tileset::patchTownLight(bool silent)
 /* 22 */{ 432 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 23 */{ 432 - 1, 8, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 24 */{ 433 - 1, 0, D1CEL_FRAME_TYPE::Empty },  // 299
+/* 24 */{ 433 - 1, 0, D1CEL_FRAME_TYPE::Empty },  // 291
 /* 25 */{ 387 - 1, 9, D1CEL_FRAME_TYPE::Square },
 /* 26 */{ 432 - 1, 1, D1CEL_FRAME_TYPE::Square },
 /* 27 */{ 430 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 288
@@ -2932,8 +2932,8 @@ bool D1Tileset::patchTownLight(bool silent)
         }
 
         // copy 431[1] to 422[8]
-        if (i == 35) {
-            change |= moveLowerMicroPixels(36, 35, blockSize, micros);
+        if (i == 39) {
+            change |= moveLowerMicroPixels(39, 38, blockSize, micros);
         }
         // move 431[1 3 5] down MICRO_HEIGHT / 2
         if (i >= 39 && i < 42) {
