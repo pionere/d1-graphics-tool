@@ -1239,7 +1239,7 @@ bool D1Tileset::shiftMicrosDown(int m0, int m1, int blockSize, const CelMicro* m
 bool D1Tileset::shiftMicrosUp(int m0, int m1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
-    for (int i = m1 - 1; i >= m0; i++) {
+    for (int i = m1 - 1; i >= m0; i--) {
         const CelMicro &microSrc = micros[i];
         std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
         D1GfxFrame *frameSrc = mfSrc.second;
@@ -3454,7 +3454,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(237, 1, 402, 1);
     // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
     if (this->patchTownPot(silent)) {
-        MoveMcr(554, 2, 553, 3);
+        MoveMcr(554, 2, 553, 3); // 376[3] -> 377[2]
         MoveMcr(554, 4, 553, 5);
     }
     // patch subtiles to reduce its memory footprint
