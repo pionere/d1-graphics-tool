@@ -60,14 +60,15 @@ private:
     std::pair<unsigned, D1GfxFrame *> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
 
     bool maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const _CelMicro* micros);
-    bool copyMicro(int src, int dst, int blockSize, const _CelMicro* micros);
-    bool copyUpperCathedralMicro(int src, int dst, int blockSize, const _CelMicro* micros);
-    bool copyLowerCathedralMicro(int src, int dst, int blockSize, const _CelMicro* micros);
-    bool copyLimitedUpperCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
-    bool copyLimitedLowerCathedralMicro(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
-    bool shiftCathedralMicrosDown(int m0, int m1, int blockSize, const _CelMicro* micros);
+    bool moveMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
+    bool moveUpperMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
+    bool moveLowerMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
+    bool moveLimitedUpperMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
+    bool moveLimitedLowerMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
+    bool shiftMicrosDown(int m0, int m1, int blockSize, const _CelMicro* micros);
+    bool shiftMicrosUp(int m0, int m1, int blockSize, const _CelMicro* micros);    
 
-    void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
+    bool patchTownPot(bool silent);
     bool patchTownCathedral(bool silent);
     bool patchTownFloor(bool silent);
     bool patchTownDoor(bool silent);
