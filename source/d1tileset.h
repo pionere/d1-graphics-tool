@@ -63,6 +63,7 @@ private:
     bool moveMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
     bool moveUpperMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
     bool moveLowerMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
+    bool moveLimitedMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
     bool moveLimitedUpperMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
     bool moveLimitedLowerMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
     bool shiftMicrosDown(int m0, int m1, int blockSize, const _CelMicro* micros);
