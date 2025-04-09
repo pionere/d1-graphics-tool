@@ -1288,10 +1288,10 @@ bool D1Tileset::shiftMicrosUp(int m0, int m1, int blockSize, const CelMicro* mic
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (frameDst != nullptr) { // i != m0) {
                 for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-                    D1GfxPixel pixel = frameDst->getPixel(x, y);
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
                     // if (!pixel.isTransparent()) {
-                        change |= frameSrc->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
-                        change |= frameDst->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        change |= frameDst->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
+                        change |= frameSrc->setPixel(x, y, D1GfxPixel::transparentPixel());
                     // }
                 }
             }
@@ -2641,11 +2641,11 @@ bool D1Tileset::patchTownDoor(bool silent)
 (430 - 288)[0] + (430[4] - 291)[0]
 (432 - 290)[0] -1/2 
 (539 - 366), (537 - 365), (524 - 354)(in 339), (523 - 353), (477 - 316), (439 - 297), (437 - 295), (429 - 287), (426 - 284) == 285 obsolete
-(428 - 286) ~> (435 - 293)
-(441 - 299) ~> (438 - 296)
++(428 - 286) ~> (435 - 293)
++(441 - 299) ~> (438 - 296)
 (438 - 296)[1] -1/2 
-(521[8,9] - 375) ~> (521 - 351)
-(522[3..11] - 374) ~> (519 - 349), (522 - 352)
++(521[8,9] - 375) ~> (521 - 351)
++(522[3..11] - 374) ~> (519 - 349), (522 - 352)
 (478 - 317)[1] +2
 (479 - 318)[0] +2
 (480 - 319) +2
@@ -3568,8 +3568,6 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(509, 13, 521, 5);
         MoveMcr(509, 14, 521, 6);
         MoveMcr(509, 15, 521, 7);
-        MoveMcr(552, 14, 521, 8);
-        MoveMcr(552, 15, 521, 9);
         Blk2Mcr(522, 0);
 
         MoveMcr(531, 6, 539, 2);
@@ -3578,14 +3576,15 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(531, 12, 539, 8);
         MoveMcr(531, 14, 539, 10);
 
-        MoveMcr(551, 7, 522, 3);
-        MoveMcr(551, 9, 522, 5);
-        MoveMcr(551, 11, 522, 7);
-        MoveMcr(551, 13, 522, 9);
-        MoveMcr(551, 15, 522, 11);
+        MoveMcr(519, 5, 551, 3); // 374[3] -> 349[5]
+        MoveMcr(519, 7, 522, 3); // 352 -> 349
+        MoveMcr(519, 9, 522, 5);
+        MoveMcr(519, 11, 522, 7);
+        MoveMcr(519, 13, 522, 9);
+        MoveMcr(519, 15, 522, 11);
 
         Blk2Mcr(517, 0);
-        MoveMcr(519, 3, 551, 1);
+        MoveMcr(519, 3, 551, 1); // 374[1] -> 349[3]
         Blk2Mcr(523, 1);
 
         MoveMcr(513, 7, 523, 0);
@@ -3651,8 +3650,6 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         // move micros for better light propagation
         MoveMcr(433, 6, 430, 4);
         MoveMcr(433, 7, 430, 5);
-        MoveMcr(428, 15, 435, 5);
-        MoveMcr(441, 6, 438, 4);
         // MoveMcr(?, 14, 440, 4);
         MoveMcr(923, 4, 920, 6);
         MoveMcr(923, 6, 920, 8);
