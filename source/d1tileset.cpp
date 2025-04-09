@@ -1905,7 +1905,6 @@ bool D1Tileset::patchTownFloor(bool silent)
 /* 21 */{  783 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
 /* 22 */{  138 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // merge 94 and 86
-/* 23 */{  128 - 1, 0, D1CEL_FRAME_TYPE::Empty },
 
         //{ 493 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // TODO: fix light?
         //{ 290 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // TODO: fix grass?
@@ -2068,7 +2067,7 @@ bool D1Tileset::patchTownFloor(bool silent)
         }
         // merge 94 and 86
         if (i == 22) {
-            const CelMicro &microSrc = micros[i + 1];
+            const CelMicro &microSrc = micros[i - 6];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             if (frameSrc == nullptr) {
