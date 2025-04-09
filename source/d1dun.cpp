@@ -2647,7 +2647,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
         if (!monType.monUnique && monBaseType < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monBaseType] != 0) {
             const MonsterData &md = monsterdata[MonstConvTbl[monBaseType]];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
-            cl2FilePath.replace("%c", "N");
+            cl2FilePath.replace("%c", "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
             QString baseTrnFilePath;
             if (md.mTransFile != nullptr) {
@@ -2661,7 +2661,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
         if (monType.monUnique && monUniqueType < (unsigned)lengthof(uniqMonData) && uniqMonData[monUniqueType].mtype != MT_INVALID) {
             const MonsterData &md = monsterdata[uniqMonData[monUniqueType].mtype];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
-            cl2FilePath.replace("%c", "N");
+            cl2FilePath.replace("%c", "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
             QString baseTrnFilePath;
             if (md.mTransFile != nullptr) {
