@@ -1146,29 +1146,29 @@ bool D1Tileset::moveLowerMicroPixels(int src, int dst, int blockSize, const CelM
 
 bool D1Tileset::moveLimitedMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros)
 {
+    bool change = false;
     const CelMicro &microSrc = micros[src];
     std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
     D1GfxFrame *frameSrc = mfSrc.second;
     if (frameSrc == nullptr) {
         return false;
     }
-
     const CelMicro &microDst = micros[dst];
     std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
     D1GfxFrame *frameDst = mfDst.second;
     if (frameDst == nullptr) {
         return false;
     }
-
     for (int x = x0; x < x1; x++) {
         for (int y = 0; y < MICRO_HEIGHT; y++) {
-            D1GfxPixel pixel = frame->getPixel(x, y);
+            D1GfxPixel pixel = frameSrc->getPixel(x, y);
             if (!pixel.isTransparent()) {
                 change |= frameDst->setPixel(x, y, pixel);
-                change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                change |= frameSrc->setPixel(x, y, D1GfxPixel::transparentPixel());
             }
         }
     }
+    return change;
 }
 
 bool D1Tileset::moveLimitedUpperMicroPixels(int src, int dst, int x0, int x1, int blockSize, const CelMicro* micros)
@@ -1988,20 +1988,6 @@ bool D1Tileset::patchTownCathedral(bool silent)
     return change;
 }
 
-/*
-289[1] -1/2 
-288[1] -1/2 + 291[1]
-288[0] + 291[0]
-290[0] -1/2 
-365, 354(in 339), 353, 316, 297, 295, 287, 284 == 285 obsolete
-286 ~> 293
-299 ~> 296
-296[1] -1/2 
-375 ~> 351
-374 ~> 349, 352
-317[1] +2
-*/
-
 bool D1Tileset::patchTownFloor(bool silent)
 {
     const CelMicro micros[] = {
@@ -2297,7 +2283,7 @@ bool D1Tileset::patchTownDoor(bool silent)
 /* 17 */{ 725 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 18 */{ 725 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 19 */{ 428 - 1, 4, D1CEL_FRAME_TYPE::Empty },
+/* 19 */{ 428 - 1, 4, D1CEL_FRAME_TYPE::Empty }, // 286
 /* 20 */{ 428 - 1, 2, D1CEL_FRAME_TYPE::Empty },
 /* 21 */{ 428 - 1, 0, D1CEL_FRAME_TYPE::Empty },
 /* 22 */{ 418 - 1, 5, D1CEL_FRAME_TYPE::Square },
@@ -2648,6 +2634,23 @@ bool D1Tileset::patchTownDoor(bool silent)
     return true;
 }
 
+
+/*
+(431 - 289)[1] -1/2 
+(430 - 288)[1] -1/2 + (430[5] - 291)[1]
+(430 - 288)[0] + (430[4] - 291)[0]
+(432 - 290)[0] -1/2 
+(539 - 366), (537 - 365), (524 - 354)(in 339), (523 - 353), (477 - 316), (439 - 297), (437 - 295), (429 - 287), (426 - 284) == 285 obsolete
+(428 - 286) ~> (435 - 293)
+(441 - 299) ~> (438 - 296)
+(438 - 296)[1] -1/2 
+(521[8,9] - 375) ~> (521 - 351)
+(522[3..11] - 374) ~> (519 - 349), (522 - 352)
+(478 - 317)[1] +2
+(479 - 318)[0] +2
+(480 - 319) +2
+*/
+
 bool D1Tileset::patchTownLight(bool silent)
 {
     const CelMicro micros[] = {
@@ -2674,7 +2677,7 @@ bool D1Tileset::patchTownLight(bool silent)
 /* 17 */{ 523 - 1, 10, D1CEL_FRAME_TYPE::Empty },
 
 /* 18 */{ 386 - 1, 9, D1CEL_FRAME_TYPE::Square },
-/* 19 */{ 432 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/* 19 */{ 432 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 290
 /* 20 */{ 432 - 1, 2, D1CEL_FRAME_TYPE::Square },
 /* 21 */{ 432 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 22 */{ 432 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -2682,13 +2685,13 @@ bool D1Tileset::patchTownLight(bool silent)
 /* 23 */{ 433 - 1, 0, D1CEL_FRAME_TYPE::Empty },
 /* 24 */{ 387 - 1, 9, D1CEL_FRAME_TYPE::Square },
 /* 25 */{ 432 - 1, 1, D1CEL_FRAME_TYPE::Square },
-/* 26 */{ 430 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/* 26 */{ 430 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 288
 /* 27 */{ 430 - 1, 2, D1CEL_FRAME_TYPE::Square },
 /* 28 */{ 430 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 
 /* 29 */{ 433 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /* 30 */{ 424 - 1, 8, D1CEL_FRAME_TYPE::Square },
-/* 31 */{ 431 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/* 31 */{ 431 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 289
 /* 32 */{ 430 - 1, 1, D1CEL_FRAME_TYPE::Square },
 /* 33 */{ 430 - 1, 3, D1CEL_FRAME_TYPE::Square },
 /* 34 */{ 430 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -2724,9 +2727,9 @@ bool D1Tileset::patchTownLight(bool silent)
 /* 58 */{ 408 - 1, 12, D1CEL_FRAME_TYPE::Square },
 
 /* 59 */{ 440 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 60 */{ 441 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 60 */{ 441 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 299
 /* 61 */{ 406 - 1, 10, D1CEL_FRAME_TYPE::Square }, // 268
-/* 62 */{ 438 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/* 62 */{ 438 - 1, 0, D1CEL_FRAME_TYPE::Square }, // 296
 
 /* 63 */{ 441 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /* 64 */{ 412 - 1, 8, D1CEL_FRAME_TYPE::Square },
