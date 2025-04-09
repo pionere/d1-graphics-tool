@@ -60,6 +60,7 @@ private:
     std::pair<unsigned, D1GfxFrame *> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
 
     bool maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const _CelMicro* micros);
+    bool moveMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
     bool moveUpperMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
     bool moveLowerMicroPixels(int src, int dst, int blockSize, const _CelMicro* micros);
     bool moveLimitedUpperMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
