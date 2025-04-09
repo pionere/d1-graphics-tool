@@ -3576,12 +3576,11 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(531, 12, 539, 8);
         MoveMcr(531, 14, 539, 10);
 
-        MoveMcr(519, 5, 551, 3); // 374[3] -> 349[5]
-        MoveMcr(519, 7, 522, 3); // 352 -> 349
-        MoveMcr(519, 9, 522, 5);
-        MoveMcr(519, 11, 522, 7);
-        MoveMcr(519, 13, 522, 9);
-        MoveMcr(519, 15, 522, 11);
+        MoveMcr(519, 7, 551, 3); // 374[3] -> 349[5]
+        MoveMcr(519, 9, 522, 3); // 352 -> 349
+        MoveMcr(519, 11, 522, 5);
+        MoveMcr(519, 13, 522, 7);
+        MoveMcr(519, 15, 522, 9);
 
         Blk2Mcr(517, 0);
         MoveMcr(519, 3, 551, 1); // 374[1] -> 349[3]
