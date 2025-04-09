@@ -298,7 +298,7 @@
     <message>
         <location filename="../source/celview.cpp" line="1059"/>
         <source>Create Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Képkocka hozzáadása</translation>
     </message>
     <message>
         <location filename="../source/celview.cpp" line="1065"/>
@@ -348,7 +348,7 @@
     <message>
         <location filename="../source/celview.cpp" line="1060"/>
         <source>Create a new frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Képkocka hozzáadása</translation>
     </message>
     <message>
         <location filename="../source/celview.cpp" line="1066"/>
@@ -391,7 +391,7 @@
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="18"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Név:</translation>
     </message>
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="32"/>
@@ -411,17 +411,17 @@
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="50"/>
         <source>Integer</source>
-        <translation type="unfinished"></translation>
+        <translation>Egész szám</translation>
     </message>
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="55"/>
         <source>Real</source>
-        <translation type="unfinished"></translation>
+        <translation>Valós szám</translation>
     </message>
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="75"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>Kész</translation>
     </message>
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="82"/>
@@ -454,42 +454,42 @@
     <message>
         <location filename="../source/cppdataeditdialog.cpp" line="35"/>
         <source>-- %1.column --</source>
-        <translation type="unfinished"></translation>
+        <translation>-- %1.oszlop --</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.cpp" line="47"/>
-        <source>-- %1.row </source>
-        <translation type="unfinished"></translation>
+        <source>-- %1.row --</source>
+        <translation>-- %1.sor --</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.cpp" line="69"/>
         <source>Hide Columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok elrejtése</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.cpp" line="72"/>
         <source>Show Columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok megjelentítése</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.cpp" line="75"/>
         <source>Delete Columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok törlése</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.cpp" line="78"/>
         <source>Hide Rows</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorok elrejtése</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.cpp" line="81"/>
         <source>Show Rows</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorok megjelentítése</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.cpp" line="84"/>
         <source>Delete Rows</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorok törlése</translation>
     </message>
 </context>
 <context>
@@ -507,7 +507,7 @@
     <message>
         <location filename="../source/cpprowchangedialog.ui" line="44"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>Kész</translation>
     </message>
     <message>
         <location filename="../source/cpprowchangedialog.ui" line="51"/>
@@ -520,13 +520,13 @@
     <message>
         <location filename="../source/cppview.cpp" line="1067"/>
         <source>Columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok</translation>
     </message>
     <message>
         <location filename="../source/cppview.cpp" line="1070"/>
         <location filename="../source/cppview.cpp" line="1134"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Hozzáadás</translation>
     </message>
     <message>
         <location filename="../source/cppview.cpp" line="1071"/>
@@ -537,12 +537,12 @@
         <location filename="../source/cppview.cpp" line="1075"/>
         <location filename="../source/cppview.cpp" line="1139"/>
         <source>Insert</source>
-        <translation>Beillesztése</translation>
+        <translation>Beillesztés</translation>
     </message>
     <message>
         <location filename="../source/cppview.cpp" line="1076"/>
         <source>Add a new column before the current one</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlop hozzáadása az aktuális oszlop elé</translation>
     </message>
     <message>
         <location filename="../source/cppview.cpp" line="1085"/>
@@ -618,7 +618,7 @@
     <message>
         <location filename="../source/cppview.cpp" line="1124"/>
         <source>Show columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok megjelenítése</translation>
     </message>
     <message>
         <location filename="../source/cppview.cpp" line="1131"/>
@@ -702,12 +702,12 @@
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="245"/>
         <source>integer</source>
-        <translation type="unfinished"></translation>
+        <translation>egész</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="246"/>
         <source>real</source>
-        <translation type="unfinished"></translation>
+        <translation>valós</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="254"/>
@@ -734,7 +734,7 @@
         <location filename="../source/cppviewentrywidget.cpp" line="264"/>
         <location filename="../source/cppviewentrywidget.cpp" line="326"/>
         <source>Insert</source>
-        <translation>Beillesztése</translation>
+        <translation>Beillesztés</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="265"/>
@@ -1101,6 +1101,11 @@
         <translation>A(z) %1 CL2 fájl betöltése sikertelen.</translation>
     </message>
     <message>
+        <location filename="../source/d1dun.cpp" line="5239"/>
+        <source>Not enough frame groups in the CL2 file: %1.</source>
+        <translation>Nincs elég képkocka-csoport a(z) %1 CL2 fájlban.</translation>
+    </message>
+    <message>
         <location filename="../source/d1dun.cpp" line="5877"/>
         <location filename="../source/d1dun.cpp" line="5886"/>
         <location filename="../source/d1dun.cpp" line="6028"/>
@@ -1184,7 +1189,7 @@
     <message>
         <location filename="../source/d1dun.cpp" line="924"/>
         <source>Failed to open file: %1.</source>
-        <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
+        <translation>Nem sikerült megnyitni a(z) %1 fájlt.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="1505"/>
@@ -1635,7 +1640,7 @@
     <message>
         <location filename="../source/d1min.cpp" line="152"/>
         <source>Failed to open file: %1.</source>
-        <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
+        <translation>Nem sikerült megnyitni a(z) %1 fájlt.</translation>
     </message>
     <message>
         <location filename="../source/d1min.cpp" line="167"/>
@@ -1690,12 +1695,12 @@
     <message>
         <location filename="../source/d1pal.cpp" line="240"/>
         <source>Failed to load file: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 fájl betöltése sikertelen.</translation>
     </message>
     <message>
         <location filename="../source/d1pal.cpp" line="255"/>
         <source>Failed to read file: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 fájl olvasása sikertelen.</translation>
     </message>
 </context>
 <context>
@@ -1718,7 +1723,7 @@
     <message>
         <location filename="../source/d1sla.cpp" line="116"/>
         <source>Failed to open file: %1.</source>
-        <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
+        <translation>Nem sikerült megnyitni a(z) %1 fájlt.</translation>
     </message>
     <message>
         <location filename="../source/d1sla.cpp" line="201"/>
@@ -1805,7 +1810,7 @@
     <message>
         <location filename="../source/d1tbl.cpp" line="93"/>
         <source>Failed to open file: %1.</source>
-        <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
+        <translation>Nem sikerült megnyitni a(z) %1 fájlt.</translation>
     </message>
     <message>
         <location filename="../source/d1tbl.cpp" line="155"/>
@@ -1833,7 +1838,7 @@
     <message>
         <location filename="../source/d1til.cpp" line="86"/>
         <source>Failed to open file: %1.</source>
-        <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
+        <translation>Nem sikerült megnyitni a(z) %1 fájlt.</translation>
     </message>
     <message>
         <location filename="../source/d1til.cpp" line="95"/>
@@ -1871,7 +1876,7 @@
     <message>
         <location filename="../source/d1tla.cpp" line="105"/>
         <source>Failed to open file: %1.</source>
-        <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
+        <translation>Nem sikerült megnyitni a(z) %1 fájlt.</translation>
     </message>
     <message>
         <location filename="../source/d1tla.cpp" line="119"/>
@@ -2049,42 +2054,37 @@
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="183"/>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>Bármely</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="188"/>
         <source>Cathedral</source>
-        <translation type="unfinished"></translation>
+        <translation>Katedrális</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="193"/>
         <source>Catacombs</source>
-        <translation type="unfinished"></translation>
+        <translation>Katakombák</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="198"/>
         <source>Caves</source>
-        <translation type="unfinished"></translation>
+        <translation>Barlangok</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="208"/>
         <source>Crypt</source>
-        <translation type="unfinished"></translation>
+        <translation>Kripta</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="213"/>
         <source>Nest</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeongeneratedialog.ui" line="224"/>
-        <source>1</source>
-        <translation type="unfinished"></translation>
+        <translation>Fészek</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="236"/>
         <source>Difficulty:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nehézség:</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="244"/>
@@ -2235,7 +2235,7 @@
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="29"/>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Név:</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="43"/>
@@ -2257,7 +2257,7 @@
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="78"/>
         <source>Frame:</source>
-        <translation type="unfinished"></translation>
+        <translation>Képkocka:</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="92"/>
@@ -2273,7 +2273,7 @@
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="120"/>
         <source>Unique(TRN):</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi átrendelő:</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="129"/>
@@ -2333,7 +2333,7 @@
     <message>
         <location filename="../source/dungeonresourcedialog.cpp" line="94"/>
         <source>Select Base Translation File</source>
-        <translation type="unfinished"></translation>
+        <translation>Alap átrendelő választása</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.cpp" line="94"/>
@@ -2344,7 +2344,7 @@
     <message>
         <location filename="../source/dungeonresourcedialog.cpp" line="108"/>
         <source>Select Unique Translation File</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi átrendelő választása</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.cpp" line="148"/>
@@ -5001,7 +5001,7 @@
     <message>
         <location filename="../source/leveltabsubtilewidget.cpp" line="147"/>
         <source>Any</source>
-        <translation type="unfinished"></translation>
+        <translation>Bármely</translation>
     </message>
 </context>
 <context>
@@ -5082,7 +5082,7 @@
     <message>
         <location filename="../source/mainwindow.ui" line="98"/>
         <source>Report</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelentés</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="110"/>
@@ -5117,12 +5117,12 @@
     <message>
         <location filename="../source/mainwindow.ui" line="172"/>
         <source>Protect</source>
-        <translation type="unfinished"></translation>
+        <translation>Védelem</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="183"/>
         <source>Check</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellenőrzés</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="197"/>
@@ -5132,7 +5132,7 @@
     <message>
         <location filename="../source/mainwindow.ui" line="210"/>
         <source>Load</source>
-        <translation type="unfinished"></translation>
+        <translation>Betöltés</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="246"/>
@@ -5143,7 +5143,7 @@
     <message>
         <location filename="../source/mainwindow.ui" line="274"/>
         <source>Unique Translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi átrendelő</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="288"/>
@@ -5158,17 +5158,17 @@
     <message>
         <location filename="../source/mainwindow.ui" line="315"/>
         <source>Columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="334"/>
         <source>Rows</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorok</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="353"/>
         <source>Data</source>
-        <translation type="unfinished"></translation>
+        <translation>Adat</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="363"/>
@@ -5231,14 +5231,14 @@
         <location filename="../source/mainwindow.ui" line="1186"/>
         <location filename="../source/mainwindow.ui" line="1214"/>
         <source>Save As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Mentés mint...</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="535"/>
         <location filename="../source/mainwindow.ui" line="543"/>
         <location filename="../source/mainwindow.ui" line="551"/>
         <source>Open...</source>
-        <translation>Megnyitás</translation>
+        <translation>Megnyitás mint...</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="567"/>
@@ -5248,16 +5248,6 @@
     <message>
         <location filename="../source/mainwindow.ui" line="740"/>
         <source>Upscale/Downscale the current graphics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="753"/>
-        <source>Optimize</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.ui" line="756"/>
-        <source>Optimize graphics assuming a black background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5339,7 +5329,7 @@
         <location filename="../source/mainwindow.ui" line="1280"/>
         <location filename="../source/mainwindow.ui" line="1360"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Hozzáadás</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1283"/>
@@ -5365,7 +5355,7 @@
         <location filename="../source/mainwindow.ui" line="1312"/>
         <location filename="../source/mainwindow.ui" line="1392"/>
         <source>Hide</source>
-        <translation>Elrejt</translation>
+        <translation>Elrejtés</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1315"/>
@@ -5386,34 +5376,34 @@
         <location filename="../source/mainwindow.ui" line="1336"/>
         <location filename="../source/mainwindow.ui" line="1416"/>
         <source>Delete...</source>
-        <translation type="unfinished"></translation>
+        <translation>Töröl...</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1339"/>
         <source>Delete columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok törlése</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1344"/>
         <location filename="../source/mainwindow.ui" line="1424"/>
         <source>Hide...</source>
-        <translation type="unfinished"></translation>
+        <translation>Elrejt...</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1347"/>
         <source>Hide columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok elrejtése</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1352"/>
         <location filename="../source/mainwindow.ui" line="1432"/>
         <source>Show...</source>
-        <translation type="unfinished"></translation>
+        <translation>Mutat...</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1355"/>
         <source>Show columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok megjelenítése</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1363"/>
@@ -5638,14 +5628,9 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1138"/>
-        <source>Generate contents to the dungeon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/mainwindow.ui" line="1143"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Keresés</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="1146"/>
@@ -5686,7 +5671,7 @@
     <message>
         <location filename="../source/mainwindow.ui" line="91"/>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>Nézet</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="223"/>
@@ -5762,22 +5747,22 @@
     <message>
         <location filename="../source/mainwindow.ui" line="791"/>
         <source>Active Subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktív mezők</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="794"/>
         <source>List subtiles which are affected by the current playback mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Mezők összegyûjtése melyekre az aktuális lejátszási mód hatással van</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="799"/>
         <source>Active Tiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktív lapok</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="802"/>
         <source>List tiles which are affected by the current playback mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapok összegyûjtése melyekre az aktuális lejátszási mód hatással van</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="810"/>
@@ -6277,7 +6262,7 @@
     <message>
         <location filename="../source/mainwindow.cpp" line="2151"/>
         <source>File is empty.</source>
-        <translation type="unfinished"></translation>
+        <translation>A fájl üres.</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="2155"/>
@@ -6988,7 +6973,7 @@
     <message>
         <location filename="../source/paletteshowdialog.ui" line="6"/>
         <source>Palette Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Paletta színek</translation>
     </message>
     <message>
         <location filename="../source/paletteshowdialog.ui" line="32"/>
@@ -7728,29 +7713,9 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="186"/>
-        <source>Unpatched left triangle in a patched tileset.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="203"/>
-        <source>Unpatched right triangle in a patched tileset.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="234"/>
-        <source>Unpatched left trapezoid in a patched tileset.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="251"/>
-        <source>Unpatched right trapezoid in a patched tileset.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/d1celtilesetframe.cpp" line="285"/>
         <source>Unknown frame type.</source>
-        <translation>Ismeretlent képkocka típus.</translation>
+        <translation>Ismeretlen képkocka típus.</translation>
     </message>
     <message>
         <location filename="../source/d1celtilesetframe.cpp" line="301"/>
@@ -7928,12 +7893,12 @@
     <message>
         <location filename="../source/d1pcx.cpp" line="387"/>
         <source>Graphics:</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafika:</translation>
     </message>
     <message>
         <location filename="../source/d1pcx.cpp" line="389"/>
         <source>Palette:</source>
-        <translation type="unfinished"></translation>
+        <translation>Paletta:</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="1886"/>
@@ -7975,17 +7940,17 @@
     <message>
         <location filename="../source/upscaler.cpp" line="3212"/>
         <source>Downscaling graphics...</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafika kicsinyítése...</translation>
     </message>
     <message>
         <location filename="../source/upscaler.cpp" line="3225"/>
         <source>Upscaling frame %1.</source>
-        <translation>Képkocka %1 felméretezése</translation>
+        <translation>%1. képkocka felméretezése</translation>
     </message>
     <message>
         <location filename="../source/upscaler.cpp" line="3225"/>
         <source>Downscaling frame %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1. képkocka kicsinyítése</translation>
     </message>
     <message numerus="yes">
         <location filename="../source/upscaler.cpp" line="3255"/>
@@ -8103,7 +8068,7 @@
     <message>
         <location filename="../source/d1gfx.cpp" line="462"/>
         <source>type is %1 (was %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>típusa %1 (ezelőtt %2)</translation>
     </message>
     <message>
         <location filename="../source/d1gfx.cpp" line="468"/>
@@ -8139,7 +8104,7 @@
     <message>
         <location filename="../source/d1gfx.cpp" line="556"/>
         <source>frame %1 is %2x%3 pixel (was %4x%5)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 képkocka %2x%3 pixel (ezelőtt %4x%5)</translation>
     </message>
     <message>
         <location filename="../source/d1gfx.cpp" line="558"/>
@@ -9363,11 +9328,6 @@
         <location filename="../source/saveasdialog.ui" line="261"/>
         <source>Til File:</source>
         <translation>Til Fájl:</translation>
-    </message>
-    <message>
-        <location filename="../source/saveasdialog.ui" line="144"/>
-        <source>Patched:</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="240"/>
