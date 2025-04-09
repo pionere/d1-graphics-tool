@@ -5444,9 +5444,10 @@ bool D1Dun::addResource(const AddResourceParam &params)
             }
         }
         // replace previous entry
+        DunMonsterType monType = { params.index, params.uniqueMon };
         for (unsigned i = 0; i < this->customMonsterTypes.size(); i++) {
             CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
-            if (customMonster.type.monIndex == params.index && customMonster.type.monUnique == params.uniqueMon) {
+            if (customMonster.type == monType) {
                 customMonster.name = params.name;
                 customMonster.path = params.path;
                 customMonster.baseTrnPath = params.baseTrnPath;
@@ -5458,7 +5459,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         }
         // add new entry
         CustomMonsterStruct customMonster;
-        customMonster.type = { params.index, params.uniqueMon };
+        customMonster.type = monType;
         customMonster.name = params.name;
         customMonster.path = params.path;
         customMonster.baseTrnPath = params.baseTrnPath;
