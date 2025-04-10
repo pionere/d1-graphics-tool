@@ -861,132 +861,62 @@ std::pair<unsigned, D1GfxFrame *> D1Tileset::getFrame(int subtileIndex, int bloc
     return std::pair<unsigned, D1GfxFrame *>(frameRef, frame);
 }
 
-void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent)
+bool D1Tileset::patchTownPot(bool silent)
 {
-    std::vector<unsigned> &leftFrameReferences = this->min->getFrameReferences(potLeftSubtileRef - 1);
-    std::vector<unsigned> &rightFrameReferences = this->min->getFrameReferences(potRightSubtileRef - 1);
+    const CelMicro micros[] = {
+/*  0 */{ 553 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare }, // 376
+/*  1 */{ 553 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  2 */{ 553 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  3 */{ 554 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 377
+    };
 
     constexpr unsigned blockSize = BLOCK_SIZE_TOWN;
-    if (leftFrameReferences.size() != blockSize || rightFrameReferences.size() != blockSize) {
-        dProgressErr() << QApplication::tr("The pot subtiles (%1, %2) are invalid (upscaled?).").arg(potLeftSubtileRef).arg(potRightSubtileRef);
-        return;
-    }
-
-    unsigned leftIndex0 = MICRO_IDX(blockSize, 1);
-    unsigned leftFrameRef0 = leftFrameReferences[leftIndex0];
-    unsigned leftIndex1 = MICRO_IDX(blockSize, 3);
-    unsigned leftFrameRef1 = leftFrameReferences[leftIndex1];
-    unsigned leftIndex2 = MICRO_IDX(blockSize, 5);
-    unsigned leftFrameRef2 = leftFrameReferences[leftIndex2];
-
-    if (leftFrameRef1 == 0 || leftFrameRef2 == 0) {
-        // TODO: report error if not empty both? + additional checks
-        return; // left frames are empty -> assume it is already done
-    }
-    if (leftFrameRef0 == 0) {
-        dProgressErr() << QApplication::tr("Invalid (empty) pot floor subtile (%1).").arg(potLeftSubtileRef);
-        return;
-    }
-
-    D1GfxFrame *frameLeft0 = this->gfx->getFrame(leftFrameRef0 - 1);
-    D1GfxFrame *frameLeft1 = this->gfx->getFrame(leftFrameRef1 - 1);
-    D1GfxFrame *frameLeft2 = this->gfx->getFrame(leftFrameRef2 - 1);
-
-    if (frameLeft0->getWidth() != MICRO_WIDTH || frameLeft0->getHeight() != MICRO_HEIGHT) {
-        return; // upscaled(?) frames -> assume it is already done
-    }
-    if ((frameLeft1->getWidth() != MICRO_WIDTH || frameLeft1->getHeight() != MICRO_HEIGHT)
-        || (frameLeft2->getWidth() != MICRO_WIDTH || frameLeft2->getHeight() != MICRO_HEIGHT)) {
-        dProgressErr() << QApplication::tr("Invalid (mismatching frames) pot floor subtile (%1).").arg(potLeftSubtileRef);
-        return;
-    }
-
-    unsigned rightIndex0 = MICRO_IDX(blockSize, 0);
-    unsigned rightFrameRef0 = rightFrameReferences[rightIndex0];
-    unsigned rightIndex1 = MICRO_IDX(blockSize, 2);
-    unsigned rightFrameRef1 = rightFrameReferences[rightIndex1];
-    unsigned rightIndex2 = MICRO_IDX(blockSize, 4);
-    unsigned rightFrameRef2 = rightFrameReferences[rightIndex2];
-
-    if (rightFrameRef1 != 0 || rightFrameRef2 != 0) {
-        // TODO: report error if not empty both? + additional checks
-        return; // right frames are not empty -> assume it is already done
-    }
-    if (rightFrameRef0 == 0) {
-        dProgressErr() << QApplication::tr("Invalid (empty) pot floor subtile (%1).").arg(potRightSubtileRef);
-        return;
-    }
-
-    // move the frames to the right side
-    rightFrameReferences[rightIndex1] = leftFrameRef1;
-    rightFrameReferences[rightIndex2] = leftFrameRef2;
-    leftFrameReferences[leftIndex1] = 0;
-    leftFrameReferences[leftIndex2] = 0;
-
-    this->min->setModified();
-
-    D1GfxFrame *frameRight0 = this->gfx->getFrame(rightFrameRef0 - 1);
-
-    // move the image up 553[5] (1470) and 553[3] (1471)
-    for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
-        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
-            D1GfxPixel pixel = frameLeft2->getPixel(x, y);
-            frameLeft2->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
-            frameLeft2->setPixel(x, y, D1GfxPixel::transparentPixel());
+    for (int i = 0; i < lengthof(micros); i++) {
+        const CelMicro &micro = micros[i];
+        // if (micro.subtileIndex < 0)
+        //    continue;
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
+            return false; // frame is empty -> assume it is already done
         }
     }
-    for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
-        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-            D1GfxPixel pixel = frameLeft1->getPixel(x, y);
-            frameLeft2->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
-            frameLeft1->setPixel(x, y, D1GfxPixel::transparentPixel());
-        }
-    }
-    for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
-        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
-            D1GfxPixel pixel = frameLeft1->getPixel(x, y);
-            frameLeft1->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
-            frameLeft1->setPixel(x, y, D1GfxPixel::transparentPixel());
-        }
-    }
-    // copy image to the other micros 553[1] (1473) -> 553[3] 1471, 554[0] 1475
-    for (int x = MICRO_WIDTH / 2 + 2; x < MICRO_WIDTH - 4; x++) {
-        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-            D1GfxPixel pixel = frameLeft0->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            frameLeft1->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
-            frameLeft0->setPixel(x, y, D1GfxPixel::transparentPixel());
-        }
-    }
-    for (int x = MICRO_WIDTH / 2 + 2; x < MICRO_WIDTH - 4; x++) {
-        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT / 2 + 8; y++) {
-            D1GfxPixel pixel = frameLeft0->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            frameRight0->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
-            frameLeft0->setPixel(x, y, D1GfxPixel::transparentPixel());
-        }
-    }
-    // convert the left floor to triangle
-    std::vector<FramePixel> pixels;
-    D1CelTilesetFrame::collectPixels(frameLeft0, D1CEL_FRAME_TYPE::RightTriangle, pixels);
-    for (const FramePixel framePixel : pixels) {
-        if (framePixel.pixel.isTransparent()) {
-            frameLeft0->setPixel(framePixel.pos.x(), framePixel.pos.y(), D1GfxPixel::colorPixel(0));
-        } else {
-            frameLeft0->setPixel(framePixel.pos.x(), framePixel.pos.y(), D1GfxPixel::transparentPixel());
-        }
-    }
-    this->gfx->setModified();
 
-    D1CelTilesetFrame::selectFrameType(frameLeft0);
-    D1CelTilesetFrame::selectFrameType(frameRight0);
-    if (frameLeft0->getFrameType() != D1CEL_FRAME_TYPE::RightTriangle) {
-        dProgressErr() << QApplication::tr("Pot floor subtile (%1) is not triangle after patch.").arg(potLeftSubtileRef);
-    } else if (!silent) {
-        dProgress() << QApplication::tr("Frame %1 and %2 are modified and moved from subtile %3 to subtile %4.").arg(leftFrameRef1).arg(leftFrameRef2).arg(potLeftSubtileRef).arg(potRightSubtileRef);
+    bool result = false;
+    // copy part of 553[1] to 554[0]
+    result |= moveLimitedLowerMicroPixels(2, 3, 18, 28, blockSize, micros);
+    // shift 553[3..] up by half
+    result |= shiftMicrosUp(0, 2, blockSize, micros);
+    // copy part of 553[1] to 553[3]
+    result |= moveLimitedUpperMicroPixels(2, 1, 18, 28, blockSize, micros);
+
+    for (int i = 0; i < lengthof(micros); i++) {
+        const CelMicro &micro = micros[i];
+        // if (micro.subtileIndex < 0)
+        //    continue;
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        bool change = false;
+        if (/*micro.res_encoding != D1CEL_FRAME_TYPE::Empty &&*/ frame->getFrameType() != micro.res_encoding) {
+            change = true;
+            frame->setFrameType(micro.res_encoding);
+            std::vector<FramePixel> pixels;
+            D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
+            for (const FramePixel &pix : pixels) {
+                D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+                change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+            }
+        }
+        if (change) {
+            result = true;
+            this->gfx->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
+            }
+        }
     }
+
+    return result;
 }
 
 bool D1Tileset::maskMicro(int idx, int x0, int x1, int y0, int y1, int blockSize, const CelMicro* micros)
@@ -1203,6 +1133,47 @@ bool D1Tileset::shiftMicrosDown(int m0, int m1, int blockSize, const CelMicro* m
                 D1GfxPixel pixel = frameSrc->getPixel(x, y);
                 // if (!pixel.isTransparent()) {
                     change |= frameSrc->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
+                    change |= frameSrc->setPixel(x, y, D1GfxPixel::transparentPixel());
+                // }
+            }
+        }
+    }
+    return change;
+}
+
+bool D1Tileset::shiftMicrosUp(int m0, int m1, int blockSize, const CelMicro* micros)
+{
+    bool change = false;
+    for (int i = m0; i < m1; i++) {
+        const CelMicro &microSrc = micros[i];
+        std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+        D1GfxFrame *frameSrc = mfSrc.second;
+        if (frameSrc == nullptr) {
+            return false;
+        }
+        D1GfxFrame *frameDst = nullptr;
+        if (i != m0) {
+            const CelMicro &microDst = micros[i - 1];
+            std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+            frameDst = mfDst.second;
+            if (frameDst == nullptr) {
+                return false;
+            }
+        }
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (frameDst != nullptr) { // i != m0) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                    // if (!pixel.isTransparent()) {
+                        change |= frameDst->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
+                        change |= frameSrc->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    // }
+                }
+            }
+            for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                // if (!pixel.isTransparent()) {
+                    change |= frameSrc->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
                     change |= frameSrc->setPixel(x, y, D1GfxPixel::transparentPixel());
                 // }
             }
@@ -3338,7 +3309,10 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(237, 0, 402, 0);
     // ReplaceMcr(237, 1, 402, 1);
     // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
-    this->patchTownPot(553, 554, silent);
+    if (this->patchTownPot(silent)) {
+        MoveMcr(554, 2, 553, 3); // 376[3] -> 377[2]
+        MoveMcr(554, 4, 553, 5);
+    }
     // patch subtiles to reduce its memory footprint
     if (this->patchTownFloor(silent)) {
         // use the micros created by patchTownFloor

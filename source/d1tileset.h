@@ -67,8 +67,9 @@ private:
     bool moveLimitedUpperMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
     bool moveLimitedLowerMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros);
     bool shiftMicrosDown(int m0, int m1, int blockSize, const _CelMicro* micros);
+    bool shiftMicrosUp(int m0, int m1, int blockSize, const _CelMicro* micros);    
 
-    void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
+    bool patchTownPot(bool silent);
     bool patchTownCathedral(bool silent);
     bool patchTownFloor(bool silent);
     bool patchTownDoor(bool silent);
