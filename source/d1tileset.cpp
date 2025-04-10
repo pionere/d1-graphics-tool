@@ -3574,8 +3574,10 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(480, 14, 477, 8);
 
         // patchTownLightCel
-        ReplaceMcr(509, 6, 524, 0);
-        ReplaceMcr(509, 7, 524, 1);
+        Blk2Mcr(509, 6);
+        Blk2Mcr(509, 7);
+        MoveMcr(509, 6, 524, 0);
+        MoveMcr(509, 7, 524, 1);
         MoveMcr(509,  8, 521, 0);
         MoveMcr(509,  9, 521, 1);
         MoveMcr(509, 10, 521, 2);
@@ -3679,7 +3681,6 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(410, 14, 439, 5);
         Blk2Mcr(439, 7);
 
-
         // MoveMcr(?, 14, 440, 4);
         MoveMcr(923, 4, 920, 6);
         MoveMcr(923, 6, 920, 8);
@@ -3695,6 +3696,8 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(479, 8, 479, 4);
         MoveMcr(479, 6, 479, 2);
         MoveMcr(479, 4, 479, 0);
+
+        // TODO: eliminate unused subtiles 551 (374), 539 (366), 537 (365), 524 (354), 523 (353), 477 (316), 441 (299), 437 (295), 429 (287), 426 (284)
     }
     // patch subtiles to reduce minor protrusions
     this->patchTownChop(silent);
