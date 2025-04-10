@@ -1991,7 +1991,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
 bool D1Tileset::patchTownFloor(bool silent)
 {
     const CelMicro micros[] = {
-/*  0 */{  731 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare }, // move micro
+/*  0 */{  731 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare }, // move micro 495
 /*  1 */{  755 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // change type
 /*  2 */{  974 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // change type
 /*  3 */{ 1030 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // change type
@@ -2038,17 +2038,6 @@ bool D1Tileset::patchTownFloor(bool silent)
         // move the image up - 731[9]
         if (i == 0) {
             shiftMicrosUp(0, 1, blockSize, micros);
-            /*for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y + MICRO_HEIGHT / 2);
-                    if (!pixel.isTransparent()) {
-                        change |= frame->setPixel(x, y, pixel);
-                    }
-                }
-                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }*/
         }
 
         // mask and move down the image - 220[1], 221[0]
@@ -3390,7 +3379,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     // patch subtiles to reduce its memory footprint
     if (this->patchTownFloor(silent)) {
         // use the micros created by patchTownFloor
-        MoveMcr(732, 8, 731, 9);
+        MoveMcr(732, 8, 731, 9); // 495 -> 496
         Blk2Mcr(974, 2);
         Blk2Mcr(1030, 2);
         ReplaceMcr(220, 0, 17, 0);
@@ -3485,8 +3474,8 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         // patchTownLightCel
         Blk2Mcr(509, 6);
         Blk2Mcr(509, 7);
-        MoveMcr(509, 6, 524, 0);
-        MoveMcr(509, 7, 524, 1);
+        MoveMcr(509,  6, 524, 0);
+        MoveMcr(509,  7, 524, 1);
         MoveMcr(509,  8, 521, 0);
         MoveMcr(509,  9, 521, 1);
         MoveMcr(509, 10, 521, 2);
