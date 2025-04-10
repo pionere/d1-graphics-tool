@@ -1190,7 +1190,7 @@ bool D1Tileset::shiftMicrosDown(int m0, int m1, int blockSize, const CelMicro* m
             }
         }
         for (int x = 0; x < MICRO_WIDTH; x++) {
-            if (i != m0) {
+            if (frameDst != nullptr) { // i != m0) {
                 for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frameSrc->getPixel(x, y);
                     // if (!pixel.isTransparent()) {
@@ -1813,9 +1813,6 @@ bool D1Tileset::patchTownCathedral(bool silent)
         const CelMicro &microDst = micros[207];
         std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
         D1GfxFrame *frameDst = mf.second;
-        if (frameDst == nullptr) {
-            return false;
-        }
         for (int x = 16; x < MICRO_WIDTH; x++) {
             for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
                 if (y <= 21 - x)
@@ -1838,15 +1835,11 @@ bool D1Tileset::patchTownCathedral(bool silent)
         const CelMicro &microDst1 = micros[207];
         std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microDst1.subtileIndex, blockSize, microDst1.microIndex);
         D1GfxFrame *frameDst1 = mf1.second;
-        if (frameDst1 == nullptr) {
-            return false;
-        }
+
         const CelMicro &microDst2 = micros[190];
         std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microDst2.subtileIndex, blockSize, microDst2.microIndex);
         D1GfxFrame *frameDst2 = mf2.second;
-        if (frameDst2 == nullptr) {
-            return false;
-        }
+
         for (int x = 0; x < MICRO_WIDTH; x++) {
             for (int y = 0; y < MICRO_HEIGHT; y++) {
                 bool replace = false;
@@ -3194,12 +3187,6 @@ void D1Tileset::patchTownChop(bool silent)
             change |= frame->setPixel(0, 26, pixel);
         }
         if (i == 32) { // 414[6] - mask special cel
-            const CelMicro &microSrc = micros[0];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            /*if (frameSrc == nullptr) {
-                return;
-            }*/
             for (int y = 0; y < MICRO_HEIGHT; y++) {
                 for (int x = 0; x < MICRO_WIDTH; x++) {
                     if (x > 2 && y >= 28 - x) {
