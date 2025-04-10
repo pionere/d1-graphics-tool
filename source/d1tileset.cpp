@@ -2938,7 +2938,7 @@ bool D1Tileset::patchTownLight(bool silent)
             change |= maskMicro(35, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
         }*/
         if (i == 33) {
-            change |= shiftMicrosDown(33, 37, blockSize, micros);
+            change |= shiftMicrosDown(33, 38, blockSize, micros);
         }
 
         // copy 431[1] to 422[8]
@@ -3626,19 +3626,19 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(424, 14, 430, 3);
         Blk2Mcr(433, 1);
 
-        MoveMcr(433, 7, 430, 5); // 288 -> 291
-        MoveMcr(433, 9, 430, 7);
-        MoveMcr(433, 11, 430, 9);
+        MoveMcr(433, 12, 430, 5); // 288 -> 291
+        MoveMcr(433, 14, 430, 7);
+        Blk2Mcr(430, 9);
 
-        MoveMcr(430, 15, 430, 6); // 288
-        MoveMcr(430, 13, 430, 4);
+        MoveMcr(430, 14, 430, 6); // 288
+        MoveMcr(430, 12, 430, 4);
 
         MoveMcr(422, 10, 431, 1); // 289 ->
         MoveMcr(422, 12, 431, 3);
         MoveMcr(422, 14, 431, 5);
 
-        MoveMcr(431, 14, 431, 7); // 289
-        MoveMcr(431, 12, 431, 9);
+        MoveMcr(431, 12, 431, 7); // 289
+        MoveMcr(431, 14, 431, 9);
 
         MoveMcr(422, 11, 436, 0);
         MoveMcr(422, 13, 436, 2);
