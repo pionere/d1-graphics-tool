@@ -2037,8 +2037,8 @@ bool D1Tileset::patchTownFloor(bool silent)
         bool change = false;
         // move the image up - 731[9]
         if (i == 0) {
-            // shiftMicrosUp(0, 1, blockSize, micros);
-            for (int x = 0; x < MICRO_WIDTH; x++) {
+            shiftMicrosUp(0, 1, blockSize, micros);
+            /*for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y + MICRO_HEIGHT / 2);
                     if (!pixel.isTransparent()) {
@@ -2048,7 +2048,7 @@ bool D1Tileset::patchTownFloor(bool silent)
                 for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
-            }
+            }*/
         }
 
         // mask and move down the image - 220[1], 221[0]
@@ -2085,7 +2085,6 @@ bool D1Tileset::patchTownFloor(bool silent)
             }
             // 962[1]
             change |= shiftMicrosDown(6, 7, blockSize, micros);
-
         }
         // mask and move down the image - 218[0], 219[1]
         if (i == 7) {
@@ -2456,9 +2455,10 @@ bool D1Tileset::patchTownDoor(bool silent)
         if (i == 25) {
             change |= moveLowerMicroPixels(25, 29, blockSize, micros);
         }
-        // copy part of 426[0] to 419[5] and 419[3]
         if (i == 26) {
+            // copy part of 426[0] to 419[5]
             change |= moveLimitedUpperMicroPixels(26, 29, 0, 9, blockSize, micros);
+            // copy part of 426[0] to 419[3]
             change |= moveLimitedLowerMicroPixels(26, 30, 0, 9, blockSize, micros);
         }
         if (i == 27) {
@@ -2467,9 +2467,10 @@ bool D1Tileset::patchTownDoor(bool silent)
             // copy 428[1] to 419[3]
             change |= moveMicroPixels(27, 30, blockSize, micros);
         }
-        // copy part of 429[0] to 419[3] and 419[1]
         if (i == 28) {
+            // copy part of 429[0] to 419[3]
             change |= moveLimitedUpperMicroPixels(28, 30, 0, 9, blockSize, micros);
+            // copy part of 429[0] to 419[1]
             change |= moveLimitedLowerMicroPixels(28, 31, 0, 9, blockSize, micros);
         }
         // copy 911[9] to 931[5]
@@ -2836,30 +2837,7 @@ bool D1Tileset::patchTownLight(bool silent)
             change |= moveLowerMicroPixels(19, 18, blockSize, micros);
         }
 
-        // move 432[0 2 4] down MICRO_HEIGHT / 2
-        /*if (i >= 19 && i < 22) {
-            const CelMicro &microSrc = micros[i + 1];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            if (frameSrc == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = MICRO_HEIGHT - 1; y >= 0; y--) {
-                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
-                    if (y < MICRO_HEIGHT / 2) {
-                        pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2);
-                    } else {
-                        pixel = frame->getPixel(x, y - MICRO_HEIGHT / 2);
-                    }
-                    change |= frame->setPixel(x, y, pixel);
-                }
-            }
-        }
-        // mask 432[6]
-        if (i == 22) {
-            change |= maskMicro(22, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
-        }*/
+        // shift 432[2..] by half
         if (i == 19) {
             change |= shiftMicrosDown(19, 24, blockSize, micros);
         }
@@ -2913,30 +2891,7 @@ bool D1Tileset::patchTownLight(bool silent)
         if (i == 32) {
             change |= moveLowerMicroPixels(33, 32, blockSize, micros);
         }
-        // move 430[1 3] down MICRO_HEIGHT / 2
-        /*if (i >= 33 && i < 35) {
-            const CelMicro &microSrc = micros[i + 1];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            if (frameSrc == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = MICRO_HEIGHT - 1; y >= 0; y--) {
-                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
-                    if (y < MICRO_HEIGHT / 2) {
-                        pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2);
-                    } else {
-                        pixel = frame->getPixel(x, y - MICRO_HEIGHT / 2);
-                    }
-                    change |= frame->setPixel(x, y, pixel);
-                }
-            }
-        }
-        // mask 430[5]
-        if (i == 35) {
-            change |= maskMicro(35, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
-        }*/
+        // shift 430[3..] by half
         if (i == 33) {
             change |= shiftMicrosDown(33, 38, blockSize, micros);
         }
@@ -2945,30 +2900,7 @@ bool D1Tileset::patchTownLight(bool silent)
         if (i == 39) {
             change |= moveLowerMicroPixels(39, 38, blockSize, micros);
         }
-        // move 431[1 3 5] down MICRO_HEIGHT / 2
-        /*if (i >= 39 && i < 42) {
-            const CelMicro &microSrc = micros[i + 1];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            if (frameSrc == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = MICRO_HEIGHT - 1; y >= 0; y--) {
-                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
-                    if (y < MICRO_HEIGHT / 2) {
-                        pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2);
-                    } else {
-                        pixel = frame->getPixel(x, y - MICRO_HEIGHT / 2);
-                    }
-                    change |= frame->setPixel(x, y, pixel);
-                }
-            }
-        }
-        // mask 431[7]
-        if (i == 42) {
-            change |= maskMicro(42, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
-        }*/
+        // shift 431[3..] by half
         if (i == 39) {
             change |= shiftMicrosDown(39, 45, blockSize, micros);
         }
@@ -3087,30 +3019,7 @@ bool D1Tileset::patchTownLight(bool silent)
         if (i == 70) {
             change |= moveLowerMicroPixels(71, 70, blockSize, micros);
         }
-        // move 438[1 3] down MICRO_HEIGHT / 2
-        /*if (i >= 71 && i < 73) {
-            const CelMicro &microSrc = micros[i + 1];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            if (frameSrc == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = MICRO_HEIGHT - 1; y >= 0; y--) {
-                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
-                    if (y < MICRO_HEIGHT / 2) {
-                        pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2);
-                    } else {
-                        pixel = frame->getPixel(x, y - MICRO_HEIGHT / 2);
-                    }
-                    change |= frame->setPixel(x, y, pixel);
-                }
-            }
-        }
-        // mask 438[5]
-        if (i == 73) {
-            change |= maskMicro(73, 0, MICRO_WIDTH, MICRO_HEIGHT / 2, MICRO_HEIGHT, blockSize, micros);
-        }*/
+        // shift 438[3..] by half
         if (i == 71) {
             change |= shiftMicrosDown(71, 76, blockSize, micros);
         }
