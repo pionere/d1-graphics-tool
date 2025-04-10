@@ -1912,17 +1912,7 @@ bool D1Tileset::patchTownFloor(bool silent)
         bool change = false;
         // move the image up - 731[9]
         if (i == 0) {
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y + MICRO_HEIGHT / 2);
-                    if (!pixel.isTransparent()) {
-                        change |= frame->setPixel(x, y, pixel);
-                    }
-                }
-                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
+            shiftMicrosUp(0, 1, blockSize, micros);
         }
 
         // mask and move down the image - 220[1], 221[0]
