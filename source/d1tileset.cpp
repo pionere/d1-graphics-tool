@@ -1089,6 +1089,33 @@ bool D1Tileset::moveLowerMicroPixels(int src, int dst, int blockSize, const CelM
     return change;
 }
 
+bool D1Tileset::moveLimitedMicroPixels(int src, int dst, int x0, int x1, int blockSize, const _CelMicro* micros)
+{
+    bool change = false;
+    const CelMicro &microSrc = micros[src];
+    std::pair<unsigned, D1GfxFrame *> mfSrc = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+    D1GfxFrame *frameSrc = mfSrc.second;
+    if (frameSrc == nullptr) {
+        return false;
+    }
+    const CelMicro &microDst = micros[dst];
+    std::pair<unsigned, D1GfxFrame *> mfDst = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+    D1GfxFrame *frameDst = mfDst.second;
+    if (frameDst == nullptr) {
+        return false;
+    }
+    for (int x = x0; x < x1; x++) {
+        for (int y = 0; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel = frameSrc->getPixel(x, y);
+            if (!pixel.isTransparent()) {
+                change |= frameDst->setPixel(x, y, pixel);
+                change |= frameSrc->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+    }
+    return change;
+}
+
 bool D1Tileset::moveLimitedUpperMicroPixels(int src, int dst, int x0, int x1, int blockSize, const CelMicro* micros)
 {
     bool change = false;
@@ -1846,27 +1873,7 @@ bool D1Tileset::patchTownCathedral(bool silent)
     change |= moveLowerMicroPixels(214, 190, blockSize, micros);
 
     // copy part of 815[1] to 791[12]
-    {
-        const CelMicro &micro = micros[209];
-        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
-        D1GfxFrame *frame = microFrame.second;
-
-        const CelMicro &microDst = micros[155];
-        std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-        D1GfxFrame *frameDst = mf.second;
-        if (frameDst == nullptr) {
-            return false;
-        }
-        for (int x = 17; x < MICRO_WIDTH; x++) {
-            for (int y = 0; y < MICRO_HEIGHT; y++) {
-                D1GfxPixel pixel = frame->getPixel(x, y);
-                if (!pixel.isTransparent()) {
-                    change |= frameDst->setPixel(x, y, pixel);
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        }
-    }
+    change |= moveLimitedMicroPixels(209, 155, 17, MICRO_WIDTH, blockSize, micros);
 
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
