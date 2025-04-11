@@ -334,9 +334,9 @@ static const std::pair<QString, QString> menuarts[] = {
     { "ui_art\\credits.CEL",  "ui_art\\credits.PAL" },
     // { "ui_art\\black.CEL",    "" },
     { "ui_art\\heros.CEL",    "" },
-    { "ui_art\\selconn.CEL",  "" },
-    { "ui_art\\selgame.CEL",  "" },
-    { "ui_art\\selhero.CEL",  "" },
+    // { "ui_art\\selconn.CEL",  "" },
+    // { "ui_art\\selgame.CEL",  "" },
+    // { "ui_art\\selhero.CEL",  "" },
     // "ui_art\\focus.CEL", "ui_art\\focus16.CEL", "ui_art\\focus42.CEL",
     // "ui_art\\lrpopup.CEL", "ui_art\\spopup.CEL", "ui_art\\srpopup.CEL", "ui_art\\smbutton.CEL"
     // "ui_art\\prog_bg.CEL", "ui_art\\prog_fil.CEL",
