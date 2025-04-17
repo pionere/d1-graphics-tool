@@ -333,7 +333,7 @@ static const std::pair<QString, QString> menuarts[] = {
     // { "ui_art\\smlogo.CEL",   "ui_art\\menu.PAL" },
     { "ui_art\\credits.CEL",  "ui_art\\credits.PAL" },
     // { "ui_art\\black.CEL",    "" },
-    { "ui_art\\heros.CEL",    "" },
+    // { "ui_art\\heros.CEL",    "" },
     // { "ui_art\\selconn.CEL",  "" },
     // { "ui_art\\selgame.CEL",  "" },
     // { "ui_art\\selhero.CEL",  "" },
@@ -444,7 +444,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         120, // Regular CL2 Files - PlrGfx
         1, // Fixed CL2 Files
         16, // Tilesets
-        // 2, // Fixed Tilesets
+        2, // Fixed Tilesets
         // clang-format on
     };
     {
@@ -831,9 +831,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, opParams.celFilePath)) {
                 continue;
             }
-            /*if (params.steps[FIXED_TILESET] && isListedAsset(botchedMINs, lengthof(botchedMINs), opParams.celFilePath)) {
+            if (params.steps[FIXED_TILESET] && isListedAsset(botchedMINs, lengthof(botchedMINs), opParams.celFilePath)) {
                 continue;
-            }*/
+            }
 
             dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(opParams.celFilePath);
             if (ProgressDialog::wasCanceled()) {
@@ -854,9 +854,15 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::addValue(stepWeights[TILESET]);
     }
     // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
-    /*if (params.steps[FIXED_TILESET]) {
-        // special cases to upscale cl2 files (must be done manually)
+    if (params.steps[FIXED_TILESET]) {
+        // special cases to upscale tileset files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
+        const MinAssetConfig botchedMINs[] = {
+            // clang-format off
+            // celname,                      palette                   numcolors, numfixcolors, dunType
+            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+            // clang-format on
+        };
         ProgressDialog::incBar("Fixed Tilesets", lengthof(botchedMINs));
 
         SaveAsParam saParams = SaveAsParam();
@@ -874,7 +880,6 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         for (int i = 0; i < lengthof(botchedMINs); i++) {
             opParams.celFilePath = botchedMINs[i].path;
-            opParams.solFilePath = botchedMINs[i].solPath;
             if (!isListedAsset(assets, opParams.celFilePath)) {
                 continue;
             }
@@ -885,7 +890,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
             D1Pal pal;
             if (UpscaleTaskDialog::loadCustomPal(botchedMINs[i].palette, botchedMINs[i].numcolors, botchedMINs[i].fixcolors, params, pal, upParams)) {
-                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams);
+                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams, botchedMINs[i].dunType);
             }
             if (!ProgressDialog::incValue()) {
                 return;

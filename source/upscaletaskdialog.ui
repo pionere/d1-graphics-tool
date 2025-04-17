@@ -121,11 +121,11 @@
           <string>Tilesets</string>
          </property>
         </item>
-        <!--item>
+        <item>
          <property name="text">
           <string>Fixed Tilesets</string>
          </property>
-        </item-->
+        </item>
        </widget>
       </item>
       <item row="3" column="0">
