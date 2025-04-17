@@ -344,6 +344,11 @@ static const std::pair<QString, QString> menuarts[] = {
     // clang-format on
 };
 
+static const MinAssetConfig botchedMINs[] = {
+    // celname,                      palette                   numcolors, numfixcolors, dunType
+    { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+};
+
 static const QString botchedCL2s[] = {
     "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
 };
@@ -381,6 +386,17 @@ static bool isListedAsset(const std::pair<QString, QString> *assets, int numAsse
 }
 
 static bool isListedAsset(const AssetConfig *assets, int numAssets, const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    for (int i = 0; i < numAssets; i++) {
+        const QString &name = assets[i].path;
+        if (name.toLower() == assetLower)
+            return true;
+    }
+    return false;
+}
+
+static bool isListedAsset(const MinAssetConfig *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
     for (int i = 0; i < numAssets; i++) {
@@ -760,8 +776,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[FIXED_CL2]) {
-        // special cases to upscale cl2 files (must be done manually)
-        // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
+        // special cases to upscale cl2 files (must be done manually, because width detection fails)
         ProgressDialog::incBar("Fixed CL2 Files", lengthof(botchedCL2s));
 
         SaveAsParam saParams = SaveAsParam();
@@ -855,14 +870,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[FIXED_TILESET]) {
-        // special cases to upscale tileset files (must be done manually)
-        // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
-        const MinAssetConfig botchedMINs[] = {
-            // clang-format off
-            // celname,                      palette                   numcolors, numfixcolors, dunType
-            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
-            // clang-format on
-        };
+        // special cases to upscale tilesets (must be done manually, because height detection fails)
         ProgressDialog::incBar("Fixed Tilesets", lengthof(botchedMINs));
 
         SaveAsParam saParams = SaveAsParam();
