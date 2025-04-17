@@ -761,11 +761,8 @@ void CelView::resize(const ResizeParam &params)
                 } else {
                     idx = currWidth - 1 - n;
                 }
-                int y = 0;
                 for (const std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                    y++;
                     if (pixelLine[idx] != backPixel) {
-                        QMessageBox::critical(nullptr, tr("Error"), tr("pixel at %1:%2 n:%3 cw%4 w%5").arg(idx).arg(y).arg(n).arg(currWidth).arg(width));
                         frameWithPixelLost = i;
                         goto done;
                     }
@@ -789,11 +786,8 @@ void CelView::resize(const ResizeParam &params)
                     idx = currHeight - 1 - n;
                 }
                 const std::vector<D1GfxPixel> &pixelLine = pixelLines[idx];
-                int x = 0;
                 for (const D1GfxPixel &pixel : pixelLine) {
-                    x++;
                     if (pixel != backPixel) {
-                        QMessageBox::critical(nullptr, tr("Error"), tr("pixel at %1:%2 n:%3 cw%4 w%5").arg(x).arg(idx).arg(n).arg(currHeight).arg(height));
                         frameWithPixelLost = i;
                         goto done;
                     }

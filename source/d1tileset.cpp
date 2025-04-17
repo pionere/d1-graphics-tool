@@ -4236,7 +4236,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
         }
     }
 }
-#if 0
+#if 1
 typedef struct POS {
     BYTE x;
     BYTE y;
@@ -25614,7 +25614,7 @@ void D1Tileset::patch(int dunType, bool silent)
             break; // -- assume it is already done
         }
         // patch pSpecialsCel - TownS.CEL must be done before Town.CEL
-        // this->patchTownSpec(silent);
+        this->patchTownSpec(silent);
         this->cleanupTown(deletedFrames, silent);
     } break;
     case DTYPE_CATHEDRAL:
