@@ -4182,7 +4182,7 @@ bool D1Gfx::patchItemFlips(int gfxFileIndex, bool silent)
     for (int i = 0; i < this->getFrameCount(); i++) {
         D1GfxFrame *frame = this->frames[i];
         if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
-            dProgressErr() << tr("Framesize of the Item animation %d does not match. (%1:%2 expected %3:%4. Index %5.)").arg(gfxFileIndex).arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            dProgressErr() << tr("Framesize of the Item animation (%1) does not match. (%2:%3 expected %4:%5. Index %6.)").arg(gfxFileIndex).arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
             return false;
         }
         bool change = false;

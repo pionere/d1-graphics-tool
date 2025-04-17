@@ -685,7 +685,7 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 					continue;
 				}
                 if (count == 0) {
-                    dProgressErr() << QApplication::tr("Failed proper unique placement (Id %d. Type %2. Pos %3:%4).").arg(uniqindex).arg(mtidx).arg(xp).arg(yp);
+                    dProgressErr() << QApplication::tr("Failed proper unique placement (Id %1. Type %2. Pos %3:%4).").arg(uniqindex).arg(mtidx).arg(xp).arg(yp);
                 }
 			}
 			break;

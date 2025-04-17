@@ -1557,7 +1557,7 @@
     </message>
     <message>
         <location filename="../source/d1gfx.cpp" line="4184"/>
-        <source>Framesize of the Item animation %d does not match. (%1:%2 expected %3:%4. Index %5.)</source>
+        <source>Framesize of the Item animation (%1) does not match. (%2:%3 expected %4:%5. Index %6.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8003,8 +8003,8 @@
         <location filename="../source/upscaler.cpp" line="3255"/>
         <source>Upscaled %n frame(s).</source>
         <translation>
-            <numerusform>Upscaled %1 frame.</numerusform>
-            <numerusform>Upscaled %1 frames.</numerusform>
+            <numerusform>Upscaled %n frame.</numerusform>
+            <numerusform>Upscaled %n frames.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -8044,8 +8044,8 @@
         <location filename="../source/upscaler.cpp" line="3419"/>
         <source>Upscaled %n subtile(s).</source>
         <translation>
-            <numerusform>Upscaled %1 subtile.</numerusform>
-            <numerusform>Upscaled %1 subtiles.</numerusform>
+            <numerusform>Upscaled %n subtile.</numerusform>
+            <numerusform>Upscaled %n subtiles.</numerusform>
         </translation>
     </message>
     <message>
@@ -8482,7 +8482,7 @@
         <location filename="../source/d1tileset.cpp" line="9923"/>
         <location filename="../source/d1tileset.cpp" line="9949"/>
         <location filename="../source/d1tileset.cpp" line="9971"/>
-        <source>Missing micro to be used as a template to patch the town&apos;s Special-Cel %d.</source>
+        <source>Missing micro to be used as a template to patch the town&apos;s Special-Cel %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8706,7 +8706,7 @@
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="475"/>
-        <source>Non-blocking door pn:%d type:%d tile:%d</source>
+        <source>Non-blocking door pn:%1 type:%2 tile:%3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -9046,7 +9046,7 @@
     </message>
     <message>
         <location filename="../source/dungeon/monster.cpp" line="688"/>
-        <source>Failed proper unique placement (Id %d. Type %2. Pos %3:%4).</source>
+        <source>Failed proper unique placement (Id %1. Type %2. Pos %3:%4).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -128,6 +128,24 @@
         </item>
        </widget>
       </item>
+      <item row="2" column="2">
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QPushButton" name="selectAllButton">
+          <property name="text">
+           <string>Select All</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="deselectAllButton">
+          <property name="text">
+           <string>Deselect All</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
       <item row="3" column="0">
        <widget class="QLabel">
         <property name="text">

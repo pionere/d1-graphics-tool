@@ -55,6 +55,8 @@ private:
 
 private slots:
     void on_listfilesFileBrowseButton_clicked();
+    void on_selectAllButton_clicked();
+    void on_deselectAllButton_clicked();
     void on_assetsFolderBrowseButton_clicked();
     void on_outputFolderBrowseButton_clicked();
     void on_upscaleButton_clicked();

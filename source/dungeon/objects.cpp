@@ -472,7 +472,7 @@ static void AddDunObjs(int x1, int y1, int x2, int y2)
 			pn = dPiece[i][j];
 			type = automaptype[pn] & MAT_TYPE;
 			if ((type == MAT_DOOR_WEST || type == MAT_DOOR_EAST) && !nSolidTable[pn]) {
-				dProgressErr() << QApplication::tr("Non-blocking door pn:%d type:%d tile:%d").arg(pn).arg(type).arg(dungeon[(i - DBORDERX) >> 1][(j - DBORDERY) >> 1]);
+				dProgressErr() << QApplication::tr("Non-blocking door pn:%1 type:%2 tile:%3").arg(pn).arg(type).arg(dungeon[(i - DBORDERX) >> 1][(j - DBORDERY) >> 1]);
 			}
 			if (type == MAT_DOOR_WEST) {
 				AddObject(wdoor, i, j);
