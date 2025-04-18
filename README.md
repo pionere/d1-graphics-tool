@@ -18,11 +18,14 @@ Go to the [releases page](https://github.com/pionere/d1-graphics-tool/releases) 
 ## Features
 - Regular, level and compiled CEL support with animation.
 - Mono and multi-group CL2 support with animation.
-- DUN support with option to generate in-game dungeons.
+- (R)DUN support with option to generate in-game dungeons.
 - SMK support with animation and sound.
-- PAL/TRN support.
-- Palette hits and color translation hits display.
+- PAL/TRN/TRS support.
+- Support to upscale assets (graphics/tilesets).
+- Editing tables of c/cpp files.
+- Adding graphics from image files (PNG, BMP, JPG, WEBP, etc...) or PCX.
 - Exporting to (multiple) image files (PNG, BMP, JPG, WEBP, etc...).
+- Importing font files (ttf or otf).
 
 For a full list of features and changes see our [changelog](CHANGELOG.md).
 
