@@ -186,7 +186,7 @@
      <item>
       <widget class="QPushButton" name="upscaleButton">
        <property name="text">
-        <string>Resample</string>
+        <string>Upscale</string>
        </property>
       </widget>
      </item>

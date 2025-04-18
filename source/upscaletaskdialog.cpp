@@ -357,7 +357,7 @@ static const std::pair<QString, QString> menuarts[] = {
 static const MinAssetConfig botchedMINs[] = {
     // celname,                      palette                   numcolors, numfixcolors, dunType
     { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
-    { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+    { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   256,  0, DTYPE_TOWN      },
 };
 
 static const QString botchedCL2s[] = {
@@ -829,11 +829,11 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // clang-format off
             // celname,                      palette                   numcolors, numfixcolors, dunType
             { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
-            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL },
+            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     256,  0, DTYPE_CATHEDRAL },
             { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS },
             { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES     },
             { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL      },
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   256,  0, DTYPE_TOWN      },
             { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT     },
             { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32, DTYPE_NEST      },
             // clang-format on
