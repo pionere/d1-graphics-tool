@@ -902,6 +902,7 @@ void CelView::drawGrid(QImage &celFrame)
     int width = celFrame.width();
     int height = celFrame.height();
     QColor color = this->pal->getUndefinedColor();
+
     unsigned microHeight = MICRO_HEIGHT * this->assetMpl;
     for (int i = (height + microHeight) / microHeight - 1; i >= 0; i--) {
         for (int x = 0; x < width; x++) {
