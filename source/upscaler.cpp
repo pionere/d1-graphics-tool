@@ -3190,9 +3190,9 @@ void Upscaler::downscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
         }
     } break;
     case ANTI_ALIASING_MODE::NONE: {  // resample
-        for (size_t y = 0; y < newHeight; y++) {
+        for (int y = 0; y < newHeight; y++) {
             std::vector<D1GfxPixel> pixelLine;
-            for (size_t x = 0; x < newWidth; x++) {
+            for (int x = 0; x < newWidth; x++) {
                 pixelLine.push_back(frame->pixels[y * multiplier][x * multiplier]);
             }
             newPixels.push_back(pixelLine);
