@@ -68,6 +68,16 @@ void UpscaleTaskDialog::on_listfilesFileBrowseButton_clicked()
     this->ui->listfilesFileLineEdit->setText(filePath);
 }
 
+void UpscaleTaskDialog::on_selectAllButton_clicked()
+{
+    this->ui->skipStepListWidget->selectAll();
+}
+
+void UpscaleTaskDialog::on_deselectAllButton_clicked()
+{
+    this->ui->skipStepListWidget->clearSelection();
+}
+
 void UpscaleTaskDialog::on_assetsFolderBrowseButton_clicked()
 {
     QString dirPath = dMainWindow().folderDialog(tr("Select Assets Folder"));
