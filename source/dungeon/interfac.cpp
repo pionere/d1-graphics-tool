@@ -563,11 +563,11 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
 }
 static unsigned totalMonsters;
 static unsigned themeMonsters;
-static unsigned maxMonsters;
-static unsigned minMonsters;
+static int maxMonsters;
+static int minMonsters;
 static unsigned totalThemes;
-static unsigned maxThemes;
-static unsigned minThemes;
+static int maxThemes;
+static int minThemes;
 static unsigned rounds;
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
@@ -619,9 +619,9 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     totalThemes = 0;
     totalMonsters = 0;
     themeMonsters = 0;
-    minMonsters = UINT_MAX;
+    minMonsters = INT_MAX;
     maxMonsters = 0;
-    minThemes = UINT_MAX;
+    minThemes = INT_MAX;
     maxThemes = 0;
     int32_t questSeed = params.seedQuest;
     int extraRounds = params.extraRounds;

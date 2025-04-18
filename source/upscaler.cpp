@@ -3213,7 +3213,7 @@ static void updateDynColors(UpscalingParam &upParams)
 
     upParams.dynColors.clear();
     for (const PaletteColor color : dynColors) {
-        if (color.index < params.firstfixcolor || color.index > params.lastfixcolor)
+        if (color.index < upParams.firstfixcolor || color.index > upParams.lastfixcolor)
             upParams.dynColors.push_back(color);
     }
 }
