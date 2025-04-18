@@ -357,6 +357,7 @@ static const std::pair<QString, QString> menuarts[] = {
 static const MinAssetConfig botchedMINs[] = {
     // celname,                      palette                   numcolors, numfixcolors, dunType
     { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+    { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   256,  0, DTYPE_TOWN      },
 };
 
 static const QString botchedCL2s[] = {
