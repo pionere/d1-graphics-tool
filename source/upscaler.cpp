@@ -3206,6 +3206,18 @@ void Upscaler::downscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
     frame->height = newHeight;
 }
 
+static void updateDynColors(UpscalingParam &upParams)
+{
+    std::vector<PaletteColor> dynColors;
+    upParams.pal->getValidColors(dynColors);
+
+    upParams.dynColors.clear();
+    for (const PaletteColor color : dynColors) {
+        if (color.index() < upParams.firstfixcolor || color.index() > upParams.lastfixcolor)
+            upParams.dynColors.push_back(color);
+    }
+}
+
 bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
 {
     int amount = gfx->getFrameCount();
@@ -3233,7 +3245,7 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
         D1Pal *pal = gfx->palette;
         if (pal != upParams.pal) {
             upParams.pal = pal;
-            pal->getValidColors(upParams.dynColors);
+            updateDynColors(upParams);
         }
         if (params.downscale) {
             downscaleFrame(newFrame, upParams);
@@ -3378,7 +3390,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         D1Pal *pal = gfx->palette;
         if (pal != upParams.pal) {
             upParams.pal = pal;
-            pal->getValidColors(upParams.dynColors);
+            updateDynColors(upParams);
         }
         Upscaler::upscaleFrame(subtileFrame, upParams);
         padding = Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
