@@ -2698,7 +2698,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
                 if (p0->isTransparent())
                     continue; // skip transparent pixels
                 // skip 'protected' colors
-                if (p0->getPaletteIndex() >= upParams.firstfixcolor && p0->getPaletteIndex() <= upParams.lastfixcolor)
+                if (isPixelFixed(p0, upParams))
                     continue;
 
                 D1GfxPixel *pR = &newPixels[y][x + multiplier];
@@ -2716,7 +2716,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
                 D1GfxPixel *p0 = &newPixels[y][x];
                 if (p0->isTransparent())
                     continue; // skip transparent pixels
-                if (p0->getPaletteIndex() >= upParams.firstfixcolor && p0->getPaletteIndex() <= upParams.lastfixcolor)
+                if (isPixelFixed(p0, upParams))
                     continue; // skip 'protected' colors
                 D1GfxPixel pDR = D1GfxPixel::transparentPixel();
                 D1GfxPixel *pD = &newPixels[y + multiplier][x];
@@ -2733,7 +2733,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
             D1GfxPixel *p0 = &newPixels[y][x];
             if (p0->isTransparent())
                 continue; // skip transparent pixels
-            if (p0->getPaletteIndex() >= upParams.firstfixcolor && p0->getPaletteIndex() <= upParams.lastfixcolor)
+            if (isPixelFixed(p0, upParams))
                 continue; // skip 'protected' colors
             D1GfxPixel *pR = &newPixels[y][x + multiplier];
             D1GfxPixel pDR = D1GfxPixel::transparentPixel();
@@ -3213,7 +3213,7 @@ static void updateDynColors(UpscalingParam &upParams)
 
     upParams.dynColors.clear();
     for (const PaletteColor color : dynColors) {
-        if (color.index < upParams.firstfixcolor || color.index > upParams.lastfixcolor)
+        if (color.index() < upParams.firstfixcolor || color.index() > upParams.lastfixcolor)
             upParams.dynColors.push_back(color);
     }
 }
