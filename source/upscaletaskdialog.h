@@ -20,7 +20,7 @@ typedef enum task_step {
     REGULAR_CL2_PLRGFX,
     FIXED_CL2,
     TILESET,
-    // FIXED_TILESET,
+    FIXED_TILESET,
     NUM_STEPS,
 } task_step;
 

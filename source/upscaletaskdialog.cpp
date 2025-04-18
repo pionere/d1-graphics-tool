@@ -354,6 +354,11 @@ static const std::pair<QString, QString> menuarts[] = {
     // clang-format on
 };
 
+static const MinAssetConfig botchedMINs[] = {
+    // celname,                      palette                   numcolors, numfixcolors, dunType
+    { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+};
+
 static const QString botchedCL2s[] = {
     "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
 };
@@ -391,6 +396,17 @@ static bool isListedAsset(const std::pair<QString, QString> *assets, int numAsse
 }
 
 static bool isListedAsset(const AssetConfig *assets, int numAssets, const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    for (int i = 0; i < numAssets; i++) {
+        const QString &name = assets[i].path;
+        if (name.toLower() == assetLower)
+            return true;
+    }
+    return false;
+}
+
+static bool isListedAsset(const MinAssetConfig *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
     for (int i = 0; i < numAssets; i++) {
@@ -454,7 +470,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         120, // Regular CL2 Files - PlrGfx
         1, // Fixed CL2 Files
         16, // Tilesets
-        // 2, // Fixed Tilesets
+        2, // Fixed Tilesets
         // clang-format on
     };
     {
@@ -770,8 +786,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[FIXED_CL2]) {
-        // special cases to upscale cl2 files (must be done manually)
-        // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
+        // special cases to upscale cl2 files (must be done manually, because width detection fails)
         ProgressDialog::incBar("Fixed CL2 Files", lengthof(botchedCL2s));
 
         SaveAsParam saParams = SaveAsParam();
@@ -841,9 +856,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, opParams.celFilePath)) {
                 continue;
             }
-            /*if (params.steps[FIXED_TILESET] && isListedAsset(botchedMINs, lengthof(botchedMINs), opParams.celFilePath)) {
+            if (params.steps[FIXED_TILESET] && isListedAsset(botchedMINs, lengthof(botchedMINs), opParams.celFilePath)) {
                 continue;
-            }*/
+            }
 
             dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(opParams.celFilePath);
             if (ProgressDialog::wasCanceled()) {
@@ -864,9 +879,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::addValue(stepWeights[TILESET]);
     }
     // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
-    /*if (params.steps[FIXED_TILESET]) {
-        // special cases to upscale cl2 files (must be done manually)
-        // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
+    if (params.steps[FIXED_TILESET]) {
+        // special cases to upscale tilesets (must be done manually, because height detection fails)
         ProgressDialog::incBar("Fixed Tilesets", lengthof(botchedMINs));
 
         SaveAsParam saParams = SaveAsParam();
@@ -884,7 +898,6 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         for (int i = 0; i < lengthof(botchedMINs); i++) {
             opParams.celFilePath = botchedMINs[i].path;
-            opParams.solFilePath = botchedMINs[i].solPath;
             if (!isListedAsset(assets, opParams.celFilePath)) {
                 continue;
             }
@@ -895,7 +908,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
             D1Pal pal;
             if (UpscaleTaskDialog::loadCustomPal(botchedMINs[i].palette, botchedMINs[i].numcolors, botchedMINs[i].fixcolors, params, pal, upParams)) {
-                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams);
+                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams, botchedMINs[i].dunType);
             }
             if (!ProgressDialog::incValue()) {
                 return;
