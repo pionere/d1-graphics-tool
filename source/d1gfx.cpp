@@ -398,11 +398,11 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
                 // if (bestDist != 0) {
                     if (bestOption >= 0) {
                         // frame A matching later
-                        reportDiff(QApplication::tr("%1 frame deleted [%2..%3)", "", bestDist).arg(bestDist).arg(j + 1).arg(bestOption + 1), header);
+                        reportDiff(QApplication::tr("%n frame deleted [%1..%2)", "", bestDist).arg(j + 1).arg(bestOption + 1), header);
                         j += bestDist;
                     } else {
                         // frame B matching later
-                        reportDiff(QApplication::tr("%1 frame added [%2..%3)", "", bestDist).arg(bestDist).arg(i + 1).arg((-bestOption) + 1), header);
+                        reportDiff(QApplication::tr("%n frame added [%1..%2)", "", bestDist).arg(i + 1).arg((-bestOption) + 1), header);
                         i += bestDist;
                     }
                 // }
@@ -428,11 +428,11 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
 
         int remFrames = myFrameCount - i;
         if (remFrames) {
-            reportDiff(QApplication::tr("%1 frame added [%2..%3)", "", remFrames).arg(remFrames).arg(i + 1).arg(myFrameCount), header);
+            reportDiff(QApplication::tr("%n frame added [%1..%2)", "", remFrames).arg(i + 1).arg(myFrameCount), header);
         }
         remFrames = frameCount - j;
         if (remFrames) {
-            reportDiff(QApplication::tr("%1 frame deleted [%2..%3)", "", remFrames).arg(remFrames).arg(j + 1).arg(frameCount), header);
+            reportDiff(QApplication::tr("%n frame deleted [%1..%2)", "", remFrames).arg(j + 1).arg(frameCount), header);
         }
     }
 }
@@ -818,7 +818,7 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
         msg.chop(1);
         bool ofTxt = false;
         if (rangeFrom != 0 || rangeTo != this->getFrameCount()) {
-            msg.append(tr(" in frame(s) %3-%4", "", rangeTo - rangeFrom + 1).arg(rangeFrom + 1).arg(rangeTo + 1));
+            msg.append(tr(" in frame(s) %1-%2", "", rangeTo - rangeFrom + 1).arg(rangeFrom + 1).arg(rangeTo + 1));
             ofTxt = true;
         }
         if (verbose != 1) {
@@ -3999,7 +3999,7 @@ bool D1Gfx::patchItemFlips(int gfxFileIndex, bool silent)
     for (int i = 0; i < this->getFrameCount(); i++) {
         D1GfxFrame *frame = this->frames[i];
         if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
-            dProgressErr() << tr("Framesize of the Item animation %d does not match. (%1:%2 expected %3:%4. Index %5.)").arg(gfxFileIndex).arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            dProgressErr() << tr("Framesize of the Item animation (%1) does not match. (%2:%3 expected %4:%5. Index %6.)").arg(gfxFileIndex).arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
             return false;
         }
         bool change = false;

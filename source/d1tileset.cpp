@@ -8264,7 +8264,7 @@ void D1Tileset::patchTownSpec(bool silent)
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             if (frameSrc == nullptr) {
-                dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                 return;
             }
             for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8354,7 +8354,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8385,7 +8385,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
 
@@ -8402,7 +8402,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8421,7 +8421,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8439,7 +8439,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8459,7 +8459,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8479,7 +8479,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8499,7 +8499,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8518,7 +8518,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8540,7 +8540,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8562,7 +8562,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8584,7 +8584,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8610,7 +8610,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8629,7 +8629,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8655,7 +8655,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8675,7 +8675,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8705,7 +8705,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8733,7 +8733,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8766,7 +8766,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8794,7 +8794,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8824,7 +8824,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8850,7 +8850,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -8872,7 +8872,7 @@ void D1Tileset::patchTownSpec(bool silent)
                 std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
                 D1GfxFrame *frameSrc = mf.second;
                 if (frameSrc == nullptr) {
-                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %d.").arg(i + 1);
+                    dProgressErr() << QApplication::tr("Missing micro to be used as a template to patch the town's Special-Cel %1.").arg(i + 1);
                     return;
                 }
                 for (int y = 0; y < MICRO_HEIGHT; y++) {

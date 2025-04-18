@@ -1373,7 +1373,7 @@
     </message>
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="967"/>
-        <source> in frame(s) %3-%4</source>
+        <source> in frame(s) %1-%2</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
@@ -1561,7 +1561,7 @@
     </message>
     <message>
         <location filename="../source/d1gfx.cpp" line="4184"/>
-        <source>Framesize of the Item animation %d does not match. (%1:%2 expected %3:%4. Index %5.)</source>
+        <source>Framesize of the Item animation (%1) does not match. (%2:%3 expected %4:%5. Index %6.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4019,19 +4019,19 @@
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="2203"/>
         <source>Subtile %1 has %n affected pixels.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Mező %1-ben %n pixel érintett.</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="2205"/>
         <source> The subtile is not lit.</source>
-        <translation type="unfinished"></translation>
+        <translation> A mező nem rendelkezik saját fénnyel.</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="2207"/>
         <source> The subtile is lit.</source>
-        <translation type="unfinished"></translation>
+        <translation> A mező saját fénnyel rendelkezik.</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="2222"/>
@@ -8088,17 +8088,17 @@
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="541"/>
         <location filename="../source/d1gfx.cpp" line="575"/>
-        <source>%1 frame deleted [%2..%3)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <source>%n frame deleted [%2..%3)</source>
+        <translation>
+            <numerusform>%1 képkocka [%1..%2) törölve</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="545"/>
         <location filename="../source/d1gfx.cpp" line="571"/>
-        <source>%1 frame added [%2..%3)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <source>%n frame added [%1..%2)</source>
+        <translation>
+            <numerusform>%1 képkocka [%1..%2) hozzáadva</numerusform>
         </translation>
     </message>
     <message>
@@ -8189,7 +8189,7 @@
         <location filename="../source/d1tileset.cpp" line="570"/>
         <source>Reused %n frame(s).</source>
         <translation>
-            <numerusform>% képkocka került újrafelhasználásra.</numerusform>
+            <numerusform>%n képkocka került újrafelhasználásra.</numerusform>
         </translation>
     </message>
     <message>
@@ -8206,7 +8206,7 @@
         <location filename="../source/d1tileset.cpp" line="649"/>
         <source>Reused %n subtile(s).</source>
         <translation>
-            <numerusform>% mező került újrafelhasználásra.</numerusform>
+            <numerusform>%n mező került újrafelhasználásra.</numerusform>
         </translation>
     </message>
     <message>
@@ -8222,7 +8222,7 @@
     <message>
         <location filename="../source/d1tileset.cpp" line="705"/>
         <source>Removed Tile %1 because it was the same as Tile %2.</source>
-        <translation>A(z) %-es lap törlésre került mivel egyezett a %-es lappal.</translation>
+        <translation>A(z) %1-es lap törlésre került mivel egyezett a %2-es lappal.</translation>
     </message>
     <message numerus="yes">
         <location filename="../source/d1tileset.cpp" line="715"/>
@@ -8427,7 +8427,7 @@
         <location filename="../source/d1tileset.cpp" line="9923"/>
         <location filename="../source/d1tileset.cpp" line="9949"/>
         <location filename="../source/d1tileset.cpp" line="9971"/>
-        <source>Missing micro to be used as a template to patch the town&apos;s Special-Cel %d.</source>
+        <source>Missing micro to be used as a template to patch the town&apos;s Special-Cel %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8646,12 +8646,12 @@
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="706"/>
-        <source>Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %7:%8, pos %9:%10 .. %11:%12 tv %13</source>
+        <source>Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="475"/>
-        <source>Non-blocking door pn:%d type:%d tile:%d</source>
+        <source>Non-blocking door pn:%1 type:%2 tile:%3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8985,11 +8985,6 @@
     <message>
         <location filename="../source/dungeon/monster.cpp" line="561"/>
         <source>Bad Na-Krul placement. Received-Id:%1 instead of %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeon/monster.cpp" line="688"/>
-        <source>Failed proper unique placement (Id %d. Type %2. Pos %3:%4).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

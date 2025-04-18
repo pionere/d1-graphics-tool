@@ -1373,10 +1373,10 @@
     </message>
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="967"/>
-        <source> in frame(s) %3-%4</source>
+        <source> in frame(s) %1-%2</source>
         <translation>
-            <numerusform> in frame %3</numerusform>
-            <numerusform> in frames %3-%4</numerusform>
+            <numerusform> in frame %1</numerusform>
+            <numerusform> in frames %1-%2</numerusform>
         </translation>
     </message>
     <message>
@@ -1562,7 +1562,7 @@
     </message>
     <message>
         <location filename="../source/d1gfx.cpp" line="4184"/>
-        <source>Framesize of the Item animation %d does not match. (%1:%2 expected %3:%4. Index %5.)</source>
+        <source>Framesize of the Item animation (%1) does not match. (%2:%3 expected %4:%5. Index %6.)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7993,8 +7993,8 @@
         <location filename="../source/upscaler.cpp" line="3255"/>
         <source>Upscaled %n frame(s).</source>
         <translation>
-            <numerusform>Upscaled %1 frame.</numerusform>
-            <numerusform>Upscaled %1 frames.</numerusform>
+            <numerusform>Upscaled %n frame.</numerusform>
+            <numerusform>Upscaled %n frames.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -8034,8 +8034,8 @@
         <location filename="../source/upscaler.cpp" line="3419"/>
         <source>Upscaled %n subtile(s).</source>
         <translation>
-            <numerusform>Upscaled %1 subtile.</numerusform>
-            <numerusform>Upscaled %1 subtiles.</numerusform>
+            <numerusform>Upscaled %n subtile.</numerusform>
+            <numerusform>Upscaled %n subtiles.</numerusform>
         </translation>
     </message>
     <message>
@@ -8128,19 +8128,19 @@
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="541"/>
         <location filename="../source/d1gfx.cpp" line="575"/>
-        <source>%1 frame deleted [%2..%3)</source>
+        <source>%n frame deleted [%1..%2)</source>
         <translation>
-            <numerusform>%1 frame deleted (%2)</numerusform>
-            <numerusform>%1 frames deleted [%2..%3)</numerusform>
+            <numerusform>%n frame deleted (%1)</numerusform>
+            <numerusform>%n frames deleted [%1..%2)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="545"/>
         <location filename="../source/d1gfx.cpp" line="571"/>
-        <source>%1 frame added [%2..%3)</source>
+        <source>%n frame added [%1..%2)</source>
         <translation>
-            <numerusform>%1 frame added (%2)</numerusform>
-            <numerusform>%1 frames added [%2..%3)</numerusform>
+            <numerusform>%n frame added (%1)</numerusform>
+            <numerusform>%n frames added [%1..%2)</numerusform>
         </translation>
     </message>
     <message>
@@ -8472,7 +8472,7 @@
         <location filename="../source/d1tileset.cpp" line="9923"/>
         <location filename="../source/d1tileset.cpp" line="9949"/>
         <location filename="../source/d1tileset.cpp" line="9971"/>
-        <source>Missing micro to be used as a template to patch the town&apos;s Special-Cel %d.</source>
+        <source>Missing micro to be used as a template to patch the town&apos;s Special-Cel %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8691,12 +8691,12 @@
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="706"/>
-        <source>Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %7:%8, pos %9:%10 .. %11:%12 tv %13</source>
+        <source>Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="475"/>
-        <source>Non-blocking door pn:%d type:%d tile:%d</source>
+        <source>Non-blocking door pn:%1 type:%2 tile:%3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -9032,11 +9032,6 @@
     <message>
         <location filename="../source/dungeon/monster.cpp" line="561"/>
         <source>Bad Na-Krul placement. Received-Id:%1 instead of %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/dungeon/monster.cpp" line="688"/>
-        <source>Failed proper unique placement (Id %d. Type %2. Pos %3:%4).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
