@@ -75,7 +75,7 @@ void UpscaleTaskDialog::on_selectAllButton_clicked()
 
 void UpscaleTaskDialog::on_deselectAllButton_clicked()
 {
-    this->ui->->clearSelection();
+    this->ui->skipStepListWidget->clearSelection();
 }
 
 void UpscaleTaskDialog::on_assetsFolderBrowseButton_clicked()

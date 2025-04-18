@@ -1373,7 +1373,7 @@
     </message>
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="967"/>
-        <source> in frame(s) %3-%4</source>
+        <source> in frame(s) %1-%2</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
@@ -8088,17 +8088,17 @@
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="541"/>
         <location filename="../source/d1gfx.cpp" line="575"/>
-        <source>%1 frame deleted [%2..%3)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <source>%n frame deleted [%2..%3)</source>
+        <translation>
+            <numerusform>%1 képkocka [%1..%2) törölve</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../source/d1gfx.cpp" line="545"/>
         <location filename="../source/d1gfx.cpp" line="571"/>
-        <source>%1 frame added [%2..%3)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <source>%n frame added [%1..%2)</source>
+        <translation>
+            <numerusform>%1 képkocka [%1..%2) hozzáadva</numerusform>
         </translation>
     </message>
     <message>
