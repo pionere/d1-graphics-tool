@@ -152,7 +152,7 @@ void MainWindow::remapColors(const RemapParam &params)
             gfx->replacePixels(replacements, params, 0);
         }
     } else {
-        this->gfx->replacePixels(replacements, params, 1);
+        this->gfx->replacePixels(replacements, params, 0);
     }
 
     // Clear loading message from status bar
