@@ -7,6 +7,7 @@
 #include <QList>
 #include <QPair>
 #include <QPointer>
+#include <QRect>
 #include <QString>
 #include <QtEndian>
 
@@ -182,6 +183,7 @@ public:
     ~D1Gfx();
 
     void compareTo(const D1Gfx *gfx, QString header) const;
+    QRect getBoundary() const;
 
     void clear();
 

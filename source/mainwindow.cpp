@@ -2023,6 +2023,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuEdit->setEnabled(false);
     this->ui->menuView->setEnabled(false);
     this->ui->menuTileset->setEnabled(false);
+    this->ui->menuReports->setEnabled(false);
     this->ui->menuDungeon->setEnabled(false);
     this->ui->menuColors->setEnabled(false);
     this->ui->menuData->setEnabled(false);
@@ -2544,6 +2545,23 @@ void MainWindow::on_actionOptimize_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionReportBoundary_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    if (this->levelCelView != nullptr)
+        this->levelCelView->reportBoundary();
+
+    if (this->celView != nullptr)
+        this->celView->reportBoundary();
+
+    if (this->gfxsetView != nullptr)
+        this->gfxsetView->reportBoundary();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionReportColoredFrames_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
@@ -2557,7 +2575,7 @@ void MainWindow::on_actionReportColoredFrames_triggered()
         this->celView->coloredFrames(colors);
 
     if (this->gfxsetView != nullptr)
-        this->celView->coloredFrames(colors);
+        this->gfxsetView->coloredFrames(colors);
 
     // Clear loading message from status bar
     ProgressDialog::done();

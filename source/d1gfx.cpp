@@ -597,6 +597,27 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
     }
 }
 
+QRect D1Gfx::getBoundary() const
+{
+    int minx = INT_MAX, maxx = INT_MIN, miny = INT_MAX, maxy = INT_MIN;
+    for (const D1GfxFrame *frame : this->frames) {
+        for (int y = 0; y < frame->getHeight(); y++) {
+            for (int x = 0; x < frame->getWidth(); x++) {
+                if (frame->getPixel().isTransparent()) continue;
+                if (x < minx)
+                    minx = x;
+                if (x > maxx)
+                    maxx = x;
+                if (y < miny)
+                    miny = y;
+                if (y > maxy)
+                    maxy = y;
+            }
+        }
+    }
+    return QRect(minx, miny, maxx - minx + 1, maxy - miny + 1);
+}
+
 bool D1Gfx::isFrameSizeConstant() const
 {
     if (this->frames.isEmpty()) {

@@ -219,6 +219,7 @@ private slots:
     void on_actionMerge_triggered();
     void on_actionOptimize_triggered();
 
+    void on_actionReportBoundary_triggered();
     void on_actionReportColoredFrames_triggered();
     void on_actionReportColoredSubtiles_triggered();
     void on_actionReportColoredTiles_triggered();

@@ -590,6 +590,35 @@ void GfxsetView::pasteCurrentImage(const QImage &image)
     // this->displayFrame();
 }
 
+void GfxsetView::reportBoundary() const
+{
+    ProgressDialog::incBar(tr("Checking frames..."), 1);
+
+    QRect rect = QRect();
+    for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
+        D1Gfx *gfx = this->gfxset->getGfx(gn);
+        rect |= gfx->getBoundary();
+        /*QRect gRect = gfx->getBoundary();
+        if (rect.isNull()) {
+            rect = gRect;
+        } else {
+            rect |= gRect;
+        }*/
+
+    }
+
+    QString msg;
+    if (rect.isNull() != 0) {
+        msg = tr("The upper left of the bounding rectangle is %1:%2, the lower right corner is %3:%4. (width %5, height %6)")
+            .arg(rect.x()).arg(rect.y()).arg(rect.x() + rect.w() - 1).arg(rect.y() + rect.h() - 1).arg(rect.w()).arg(rect.h());
+    } else {
+        msg = tr("The graphics-set is completely transparent.");
+    }
+    dProgress() << msg;
+
+    ProgressDialog::decBar();
+}
+
 void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
 {
     ProgressDialog::incBar(tr("Checking frames..."), 1);
