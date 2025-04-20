@@ -247,6 +247,7 @@ void MainWindow::updateWindow()
     //     this->palWidget->refresh();
     // }
     // update menu options
+    // - Edit
     bool hasFrame = this->gfx != nullptr && this->gfx->getFrameCount() != 0;
     this->ui->actionDuplicate_Frame->setEnabled(hasFrame);
     this->ui->actionReplace_Frame->setEnabled(hasFrame);
@@ -261,6 +262,16 @@ void MainWindow::updateWindow()
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
+    // - Reports
+    this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
+    this->ui->actionReportColoredSubtiles->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportColoredTiles->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportActiveFrames->setEnabled(this->gfx != nullptr);
+    this->ui->actionReportActiveSubtiles->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportActiveTiles->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportTilesetUse->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportTilesetInefficientFrames->setEnabled(this->levelCelView != nullptr);
+    // - Data
     bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
     this->ui->actionDelColumn_Table->setEnabled(hasColumn);
     this->ui->actionHideColumn_Table->setEnabled(hasColumn);
@@ -2533,17 +2544,67 @@ void MainWindow::on_actionOptimize_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionReportUse_Tileset_triggered()
+void MainWindow::on_actionReportColoredFrames_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    this->levelCelView->reportUsage();
+    std::pair<int, int> colors = this->palWidget->getCurrentSelection();
+
+    if (this->levelCelView != nullptr)
+        this->levelCelView->coloredFrames(colors);
+
+    if (this->celView != nullptr)
+        this->celView->coloredFrames(colors);
+
+    if (this->gfxsetView != nullptr)
+        this->celView->coloredFrames(colors);
 
     // Clear loading message from status bar
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionReportActiveSubtiles_Tileset_triggered()
+void MainWindow::on_actionReportColoredSubtiles_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    std::pair<int, int> colors = this->palWidget->getCurrentSelection();
+
+    this->levelCelView->coloredSubtiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportColoredTiles_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    std::pair<int, int> colors = this->palWidget->getCurrentSelection();
+
+    this->levelCelView->coloredTiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportActiveFrames_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    if (this->levelCelView != nullptr)
+        this->levelCelView->activeFrames();
+
+    if (this->celView != nullptr)
+        this->celView->activeFrames();
+
+    if (this->gfxsetView != nullptr)
+        this->gfxsetView->activeFrames();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportActiveSubtiles_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
@@ -2553,7 +2614,7 @@ void MainWindow::on_actionReportActiveSubtiles_Tileset_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionReportActiveTiles_Tileset_triggered()
+void MainWindow::on_actionReportActiveTiles_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
@@ -2563,11 +2624,21 @@ void MainWindow::on_actionReportActiveTiles_Tileset_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionReportInefficientFrames_Tileset_triggered()
+void MainWindow::on_actionReportTilesetInefficientFrames_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     this->levelCelView->inefficientFrames();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportTilesetUse_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->reportUsage();
 
     // Clear loading message from status bar
     ProgressDialog::done();

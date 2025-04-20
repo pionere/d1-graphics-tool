@@ -29,6 +29,25 @@ D1GfxPixel D1GfxPixel::colorPixel(quint8 color)
     return pixel;
 }
 
+int D1GfxPixel::countAffectedPixels(const std::vector<std::vector<D1GfxPixel>> &pixelImage, const std::pair<int, int>& colors)
+{
+    int result = 0;
+    for (auto &pixelLine : pixelImage) {
+        for (auto &pixel : pixelLine) {
+            if ((unsigned)colors.first >= D1PAL_COLORS) {
+                if (pixel.isTransparent()) {
+                    result++;
+                }
+            } else {
+                if (!pixel.isTransparent() && pixel.getPaletteIndex() >= colors.first && pixel.getPaletteIndex() <= colors.second) {
+                    result++;
+                }
+            }
+        }
+    }
+    return result;
+}
+
 bool D1GfxPixel::isTransparent() const
 {
     return this->transparent;

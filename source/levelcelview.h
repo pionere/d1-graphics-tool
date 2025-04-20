@@ -85,9 +85,13 @@ public:
     QImage copyCurrentImage() const;
     void pasteCurrentImage(const QImage &image);
 
-    void reportUsage() const;
+    void coloredFrames(const std::pair<int, int>& colors) const;
+    void coloredSubtiles(const std::pair<int, int>& colors) const;
+    void coloredTiles(const std::pair<int, int>& colors) const;
+    void activeFrames() const;
     void activeSubtiles() const;
     void activeTiles() const;
+    void reportUsage() const;
     void inefficientFrames() const;
     void resetFrameTypes();
     void lightSubtiles();

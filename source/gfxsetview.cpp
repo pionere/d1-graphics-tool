@@ -590,6 +590,91 @@ void GfxsetView::pasteCurrentImage(const QImage &image)
     // this->displayFrame();
 }
 
+void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
+{
+    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    if ((unsigned)colors.first >= D1PAL_COLORS) {
+        progress.second = tr("Frames with transparent pixels:");
+    } else {
+        progress.second = tr("Frames with pixels in the [%1..%2] color range:").arg(colors.first).arg(colors.second);
+    }
+
+    dProgress() << progress;
+    for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
+        D1Gfx *gfx = this->gfxset->getGfx(gn);
+        for (int i = 0; i < gfx->getFrameCount(); i++) {
+            const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
+            int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
+            if (numPixels != 0) {
+                QString frameId = tr("Frame %1").arg(i + 1);
+                if (this->gfx != gfx) {
+                    frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
+                }
+                dProgress() << tr("%1 has %n affected pixels.", "", numPixels).arg(frameId);
+                result = true;
+            }
+        }
+    }
+
+    if (!result) {
+        if ((unsigned)colors.first >= D1PAL_COLORS) {
+            progress.second = tr("None of the frames have transparent pixel.");
+        } else {
+            progress.second = tr("None of the frames are using the colors [%1..%2].").arg(colors.first).arg(colors.second);
+        }
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
+}
+
+void GfxsetView::activeFrames() const
+{
+    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    QString cycleTypeTxt = cycleBox->currentText();
+    int cycleType = cycleBox->currentIndex();
+    if (cycleType != 0) {
+        int cycleColors = D1Pal::getCycleColors((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        const std::pair<int, int> colors = { 1, cycleColors - 1 };
+        bool result = false;
+
+        QPair<int, QString> progress;
+        progress.first = -1;
+        progress.second = tr("Active frames (using '%1' playback mode):").arg(cycleTypeTxt);
+
+        dProgress() << progress;
+        for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
+            D1Gfx *gfx = this->gfxset->getGfx(gn);
+            for (int i = 0; i < gfx->getFrameCount(); i++) {
+                const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
+                int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
+                if (numPixels != 0) {
+                    QString frameId = tr("Frame %1").arg(i + 1);
+                    if (this->gfx != gfx) {
+                        frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
+                    }
+                    dProgress() << tr("%1 has %n affected pixels.", "", numPixels).arg(frameId);
+                    result = true;
+                }
+            }
+        }
+
+        if (!result) {
+            progress.second = tr("None of the frames are active in '%1' playback mode.").arg(cycleTypeTxt);
+            dProgress() << progress;
+        }
+    } else {
+        dProgress() << tr("Colors are not affected if the playback mode is '%1'.").arg(cycleTypeTxt);
+    }
+
+    ProgressDialog::decBar();
+}
+
 void GfxsetView::resize(const ResizeParam &params)
 {
     D1GfxPixel backPixel = (unsigned)params.backcolor < D1PAL_COLORS ? D1GfxPixel::colorPixel(params.backcolor) : D1GfxPixel::transparentPixel();

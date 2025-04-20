@@ -27,6 +27,8 @@ public:
     static D1GfxPixel transparentPixel();
     static D1GfxPixel colorPixel(quint8 color);
 
+    static int countAffectedPixels(const std::vector<std::vector<D1GfxPixel>> &pixelImage, const std::pair<int, int>& colors);
+
     ~D1GfxPixel() = default;
 
     bool isTransparent() const;
