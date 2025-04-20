@@ -2569,7 +2569,7 @@ void MainWindow::on_actionReportColoredSubtiles_triggered()
 
     std::pair<int, int> colors = this->palWidget->getCurrentSelection();
 
-    this->levelCelView->coloredSubtiles();
+    this->levelCelView->coloredSubtiles(colors);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -2581,7 +2581,7 @@ void MainWindow::on_actionReportColoredTiles_triggered()
 
     std::pair<int, int> colors = this->palWidget->getCurrentSelection();
 
-    this->levelCelView->coloredTiles();
+    this->levelCelView->coloredTiles(colors);
 
     // Clear loading message from status bar
     ProgressDialog::done();
