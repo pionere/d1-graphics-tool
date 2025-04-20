@@ -635,7 +635,7 @@ void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
 void GfxsetView::activeFrames() const
 {
     ProgressDialog::incBar(tr("Checking frames..."), 1);
-    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    QComboBox *cycleBox = this->ui->playComboBox;
     QString cycleTypeTxt = cycleBox->currentText();
     int cycleType = cycleBox->currentIndex();
     if (cycleType != 0) {
