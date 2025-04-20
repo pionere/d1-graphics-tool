@@ -603,7 +603,7 @@ QRect D1Gfx::getBoundary() const
     for (const D1GfxFrame *frame : this->frames) {
         for (int y = 0; y < frame->getHeight(); y++) {
             for (int x = 0; x < frame->getWidth(); x++) {
-                if (frame->getPixel().isTransparent()) continue;
+                if (frame->getPixel(x, y).isTransparent()) continue;
                 if (x < minx)
                     minx = x;
                 if (x > maxx)
