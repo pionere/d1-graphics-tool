@@ -2121,17 +2121,145 @@ void LevelCelView::reportUsage() const
     ProgressDialog::decBar();
 }
 
-static int countCycledPixels(const std::vector<std::vector<D1GfxPixel>> &pixelImage, int cycleColors)
+void LevelCelView::coloredFrames(const std::pair<int, int>& colors) const
 {
-    int result = 0;
-    for (auto &pixelLine : pixelImage) {
-        for (auto &pixel : pixelLine) {
-            if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < cycleColors) {
-                result++;
-            }
+    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    if ((unsigned)colors.first >= D1PAL_COLORS) {
+        progress.second = tr("Frames with transparent pixels:");
+    } else {
+        progress.second = tr("Frames with pixels in the [%1..%2] color range:").arg(colors.first).arg(colors.second);
+    }
+
+    dProgress() << progress;
+    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        const std::vector<std::vector<D1GfxPixel>> pixelImage = this->gfx->getFramePixelImage(i);
+        int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
+        if (numPixels != 0) {
+            dProgress() << tr("Frame %1 has %n affected pixels.", "", numPixels).arg(i + 1);
+            result = true;
         }
     }
-    return result;
+
+    if (!result) {
+        if ((unsigned)colors.first >= D1PAL_COLORS) {
+            progress.second = tr("None of the frames have transparent pixel.");
+        } else {
+            progress.second = tr("None of the frames are using the colors [%1..%2].").arg(colors.first).arg(colors.second);
+        }
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
+}
+
+void LevelCelView::coloredSubtiles(const std::pair<int, int>& colors) const
+{
+    ProgressDialog::incBar(tr("Checking subtiles..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    if ((unsigned)colors.first >= D1PAL_COLORS) {
+        progress.second = tr("Subtiles with transparent pixels:");
+    } else {
+        progress.second = tr("Subtiles with pixels in the [%1..%2] color range:").arg(colors.first).arg(colors.second);
+    }
+
+    dProgress() << progress;
+    for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        const std::vector<std::vector<D1GfxPixel>> pixelImage = this->min->getSubtilePixelImage(i);
+        int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
+        if (numPixels != 0) {
+            dProgress() << tr("Subtile %1 has %n affected pixels.", "", numPixels).arg(i + 1);
+            result = true;
+        }
+    }
+
+    if (!result) {
+        if ((unsigned)colors.first >= D1PAL_COLORS) {
+            progress.second = tr("None of the subtiles have transparent pixel.");
+        } else {
+            progress.second = tr("None of the subtiles are using the colors [%1..%2].").arg(colors.first).arg(colors.second);
+        }
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
+}
+
+void LevelCelView::coloredTiles(const std::pair<int, int>& colors) const
+{
+    ProgressDialog::incBar(tr("Checking tiles..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    if ((unsigned)colors.first >= D1PAL_COLORS) {
+        progress.second = tr("Tiles with transparent pixels:");
+    } else {
+        progress.second = tr("Tiles with pixels in the [%1..%2] color range:").arg(colors.first).arg(colors.second);
+    }
+
+    dProgress() << progress;
+    for (int i = 0; i < this->til->getTileCount(); i++) {
+        const std::vector<std::vector<D1GfxPixel>> pixelImage = this->til->getTilePixelImage(i);
+        int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
+        if (numPixels != 0) {
+            dProgress() << tr("Tile %1 has %n affected pixels.", "", numPixels).arg(i + 1);
+            result = true;
+        }
+    }
+
+    if (!result) {
+        if ((unsigned)colors.first >= D1PAL_COLORS) {
+            progress.second = tr("None of the tiles have transparent pixel.");
+        } else {
+            progress.second = tr("None of the tiles are using the colors [%1..%2].").arg(colors.first).arg(colors.second);
+        }
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
+}
+
+void LevelCelView::activeFrames() const
+{
+    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    QString cycleTypeTxt = cycleBox->currentText();
+    int cycleType = cycleBox->currentIndex();
+    if (cycleType != 0) {
+        int cycleColors = D1Pal::getCycleColors((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        const std::pair<int, int> colors = { 1, cycleColors - 1 };
+        bool result = false;
+
+        QPair<int, QString> progress;
+        progress.first = -1;
+        progress.second = tr("Active frames (using '%1' playback mode):").arg(cycleTypeTxt);
+
+        dProgress() << progress;
+        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+            const std::vector<std::vector<D1GfxPixel>> pixelImage = this->gfx->getFramePixelImage(i);
+            int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
+            if (numPixels != 0) {
+                dProgress() << tr("Frame %1 has %n affected pixels.", "", numPixels).arg(i + 1);
+                result = true;
+            }
+        }
+
+        if (!result) {
+            progress.second = tr("None of the frames are active in '%1' playback mode.").arg(cycleTypeTxt);
+            dProgress() << progress;
+        }
+    } else {
+        dProgress() << tr("Colors are not affected if the playback mode is '%1'.").arg(cycleTypeTxt);
+    }
+
+    ProgressDialog::decBar();
 }
 
 void LevelCelView::activeSubtiles() const
@@ -2142,6 +2270,7 @@ void LevelCelView::activeSubtiles() const
     int cycleType = cycleBox->currentIndex();
     if (cycleType != 0) {
         int cycleColors = D1Pal::getCycleColors((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        const std::pair<int, int> colors = { 1, cycleColors - 1 };
         bool result = false;
 
         QPair<int, QString> progress;
@@ -2151,7 +2280,7 @@ void LevelCelView::activeSubtiles() const
         dProgress() << progress;
         for (int i = 0; i < this->min->getSubtileCount(); i++) {
             const std::vector<std::vector<D1GfxPixel>> pixelImage = this->min->getSubtilePixelImage(i);
-            int numPixels = countCycledPixels(pixelImage, cycleColors);
+            int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
             if (numPixels != 0) {
                 QString msg = tr("Subtile %1 has %n affected pixels.", "", numPixels).arg(i + 1);
                 if (this->sla->getLightRadius(i) == 0) {
@@ -2207,6 +2336,7 @@ void LevelCelView::activeTiles() const
     int cycleType = cycleBox->currentIndex();
     if (cycleType != 0) {
         int cycleColors = D1Pal::getCycleColors((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        const std::pair<int, int> colors = { 1, cycleColors - 1 };
         bool result = false;
 
         QPair<int, QString> progress;
@@ -2216,7 +2346,7 @@ void LevelCelView::activeTiles() const
         dProgress() << progress;
         for (int i = 0; i < this->til->getTileCount(); i++) {
             const std::vector<std::vector<D1GfxPixel>> pixelImage = this->til->getTilePixelImage(i);
-            int numPixels = countCycledPixels(pixelImage, cycleColors);
+            int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
             if (numPixels != 0) {
                 dProgress() << tr("Tile %1 has %n affected pixels.", "", numPixels).arg(i + 1);
                 result = true;

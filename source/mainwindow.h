@@ -218,10 +218,15 @@ private slots:
     void on_actionUpscale_triggered();
     void on_actionMerge_triggered();
 
-    void on_actionReportUse_Tileset_triggered();
-    void on_actionReportActiveSubtiles_Tileset_triggered();
-    void on_actionReportActiveTiles_Tileset_triggered();
-    void on_actionReportInefficientFrames_Tileset_triggered();
+    void on_actionReportColoredFrames_triggered();
+    void on_actionReportColoredSubtiles_triggered();
+    void on_actionReportColoredTiles_triggered();
+    void on_actionReportActiveFrames_triggered();
+    void on_actionReportActiveSubtiles_triggered();
+    void on_actionReportActiveTiles_triggered();
+    void on_actionReportTilesetUse_triggered();
+    void on_actionReportTilesetInefficientFrames_triggered();
+
     void on_actionResetFrameTypes_Tileset_triggered();
     void on_actionPatchTileset_Tileset_triggered();
     void on_actionLightSubtiles_Tileset_triggered();

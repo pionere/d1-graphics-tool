@@ -93,17 +93,21 @@
     <addaction name="actionTogglePalTrn"/>
     <addaction name="actionToggleBottomPanel"/>
    </widget>
-   <widget class="QMenu" name="menuTilesetReports">
+   <widget class="QMenu" name="menuReports">
     <property name="title">
-     <string>Report</string>
+     <string>Reports</string>
     </property>
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
-    <addaction name="actionReportUse_Tileset"/>
-    <addaction name="actionReportActiveSubtiles_Tileset"/>
-    <addaction name="actionReportActiveTiles_Tileset"/>
-    <addaction name="actionReportInefficientFrames_Tileset"/>
+    <addaction name="actionReportColoredFrames"/>
+    <addaction name="actionReportColoredSubtiles"/>
+    <addaction name="actionReportColoredTiles"/>
+    <addaction name="actionReportActiveFrames"/>
+    <addaction name="actionReportActiveSubtiles"/>
+    <addaction name="actionReportActiveTiles"/>
+    <addaction name="actionReportTilesetUse"/>
+    <addaction name="actionReportTilesetInefficientFrames"/>
    </widget>
    <widget class="QMenu" name="menuTilesetCheckFlags">
     <property name="title">
@@ -156,8 +160,6 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
-    <addaction name="menuTilesetReports"/>
-    <addaction name="separator"/>
     <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="actionPatchTileset_Tileset"/>
     <addaction name="actionLightSubtiles_Tileset"/>
@@ -767,15 +769,39 @@
     <bool>true</bool>
    </property>
   </action>
-  <action name="actionReportUse_Tileset">
+  <action name="actionReportColoredFrames">
    <property name="text">
-    <string>Usage Report</string>
+    <string>Colored Frames</string>
    </property>
    <property name="toolTip">
-    <string>List the uses of the current frame/subtile</string>
+    <string>List frames which are affected by the currently selected colors</string>
    </property>
   </action>
-  <action name="actionReportActiveSubtiles_Tileset">
+  <action name="actionReportColoredSubtiles">
+   <property name="text">
+    <string>Colored Subtiles</string>
+   </property>
+   <property name="toolTip">
+    <string>List subtiles which are affected by the currently selected colors</string>
+   </property>
+  </action>
+  <action name="actionReportColoredTiles">
+   <property name="text">
+    <string>Colored Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>List tiles which are affected by the currently selected colors</string>
+   </property>
+  </action>
+  <action name="actionReportActiveFrames">
+   <property name="text">
+    <string>Active Frames</string>
+   </property>
+   <property name="toolTip">
+    <string>List frames which are affected by the current playback mode</string>
+   </property>
+  </action>
+  <action name="actionReportActiveSubtiles">
    <property name="text">
     <string>Active Subtiles</string>
    </property>
@@ -783,7 +809,7 @@
     <string>List subtiles which are affected by the current playback mode</string>
    </property>
   </action>
-  <action name="actionReportActiveTiles_Tileset">
+  <action name="actionReportActiveTiles">
    <property name="text">
     <string>Active Tiles</string>
    </property>
@@ -791,7 +817,15 @@
     <string>List tiles which are affected by the current playback mode</string>
    </property>
   </action>
-  <action name="actionReportInefficientFrames_Tileset">
+  <action name="actionReportTilesetUse">
+   <property name="text">
+    <string>Usage Report</string>
+   </property>
+   <property name="toolTip">
+    <string>List the uses of the current frame/subtile</string>
+   </property>
+  </action>
+  <action name="actionReportTilesetInefficientFrames">
    <property name="text">
     <string>Inefficient Frames</string>
    </property>
