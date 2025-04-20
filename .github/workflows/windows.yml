@@ -46,7 +46,7 @@ jobs:
 
     - name: Upload-translations
       #if: ${{ !env.ACT }}
-      #if: false
+      if: false
       uses: actions/upload-artifact@v4
       with:
         name: D1GraphicsTool-Translations

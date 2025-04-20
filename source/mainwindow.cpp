@@ -1686,6 +1686,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionOptimize->setEnabled(this->celView != nullptr);
 
+    this->ui->menuReports->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
 
