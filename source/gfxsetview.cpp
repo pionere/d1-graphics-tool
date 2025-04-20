@@ -608,9 +608,9 @@ void GfxsetView::reportBoundary() const
     }
 
     QString msg;
-    if (rect.isNull() != 0) {
+    if (!rect.isNull()) {
         msg = tr("The upper left of the bounding rectangle is %1:%2, the lower right corner is %3:%4. (width %5, height %6)")
-            .arg(rect.x()).arg(rect.y()).arg(rect.x() + rect.w() - 1).arg(rect.y() + rect.h() - 1).arg(rect.w()).arg(rect.h());
+            .arg(rect.x()).arg(rect.y()).arg(rect.x() + rect.width() - 1).arg(rect.y() + rect.height() - 1).arg(rect.width()).arg(rect.height());
     } else {
         msg = tr("The graphics-set is completely transparent.");
     }
