@@ -237,6 +237,23 @@ bool D1GfxFrame::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &repla
     return result;
 }
 
+bool D1GfxFrame::mask(const D1GfxFrame *frame)
+{
+    bool result = false;
+    for (int y = 0; y < this->height(); y++) {
+        for (int x = 0; x < this->width; x++) {
+            D1GfxPixel pixelA = this->pixels[y][x]; // this->getPixel(x, y);
+            if (pixelA.isTransparent()) continue;
+            D1GfxPixel pixelB = frame->pixels[y][x]; // frame->getPixel(x, y);
+            if (pixelB.isTransparent() || pixelA.getPaletteIndex() != pixelB.getPaletteIndex()) {
+                this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
 bool D1GfxFrame::optimize(D1CEL_TYPE type)
 {
     bool result = false;
@@ -1020,6 +1037,22 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
     for (int i = rangeFrom; i <= rangeTo; i++) {
         D1GfxFrame *frame = this->getFrame(i);
         if (frame->replacePixels(replacements)) {
+            this->setModified();
+        }
+    }
+}
+
+void D1Gfx::mask()
+{
+    if (this->getFrameCount() <= 1)
+        return;
+    if (!isFrameSizeConstant()) {
+        dProgressErr() << tr("Frame-size is not constant");
+        return;
+    }
+    D1GfxFrame *frameA = this->frames[0];
+    for (const D1GfxFrame *frameB : this->frames) {
+        if (frameA->mask(frameB)) {
             this->setModified();
         }
     }

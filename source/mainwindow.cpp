@@ -1684,6 +1684,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionMask->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionOptimize->setEnabled(this->celView != nullptr);
 
     this->ui->menuReports->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
@@ -2531,6 +2532,19 @@ void MainWindow::on_actionMerge_triggered()
         this->gfx->addGfx(gfx);
     }
     delete gfx;
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionMask_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+
+    if (this->gfxset != nullptr)
+        this->gfxset->mask();
+    else
+        this->gfx->mask();
 
     // Clear loading message from status bar
     ProgressDialog::done();

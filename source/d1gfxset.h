@@ -57,6 +57,7 @@ public:
     void save(const SaveAsParam &params);
 
     void compareTo(const LoadFileContent *fileContent) const;
+    void mask();
 
     D1GFX_SET_TYPE getType() const;
     D1GFX_SET_CLASS_TYPE getClassType() const;

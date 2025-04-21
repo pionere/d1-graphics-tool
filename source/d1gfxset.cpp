@@ -319,6 +319,48 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
     }
 }
 
+void D1Gfxset::mask()
+{
+    int width, height, w, h;
+    bool first = true;
+    for (D1Gfx *gfx : this->gfxList) {
+        if (gfx->getFrameCount() == 0) continue;
+        if (!gfx->isFrameSizeConstant()) {
+            dProgressErr() << tr("Frame-size is not constant");
+            return;
+        }
+        w = gfx->getFrameWidth();
+        h = gfx->getFrameHeight();
+        if (!first) {
+            if (w != width || h != height) {
+                dProgressErr() << tr("Frame-size is not constant");
+                return;
+            }
+        } else {
+            width = w;
+            height = h;
+            first = false;
+        }
+    }
+    for (D1Gfx *gfx : this->gfxList) {
+        gfx->mask();
+    }
+    if (this->gfxList.count() <= 1)
+        return;
+    D1Gfx *gfxA = NULL;
+    for (D1Gfx *gfxB : this->gfxList) {
+        if (gfxB->getFrameCount() == 0) continue;
+        if (gfxA != NULL) {
+            D1GfxFrame *frameA = gfxA->getFrame(0);
+            if (frameA->mask(gfxB->getFrame(0))) {
+                gfxA->setModified();
+            }
+        } else {
+            gfxA = gfxB;
+        }
+    }
+}
+
 D1GFX_SET_TYPE D1Gfxset::getType() const
 {
     return this->type;
