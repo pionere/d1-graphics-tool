@@ -1650,6 +1650,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionUpscale->setEnabled(this->gfx != nullptr);
     this->ui->actionMerge->setEnabled(this->gfx != nullptr);
     this->ui->actionMask->setEnabled(this->gfx != nullptr);
+    this->ui->actionOptimize->setEnabled(this->celView != nullptr);
     // - Reports
     this->ui->actionReportBoundary->setEnabled(this->gfx != nullptr);
     this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
@@ -2516,6 +2517,16 @@ void MainWindow::on_actionMask_triggered()
         this->gfxset->mask();
     else
         this->gfx->mask();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionOptimize_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+
+    this->gfx->optimize();
 
     // Clear loading message from status bar
     ProgressDialog::done();

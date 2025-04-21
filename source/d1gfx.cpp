@@ -247,6 +247,140 @@ bool D1GfxFrame::mask(const D1GfxFrame *frame)
     return result;
 }
 
+bool D1GfxFrame::optimize(D1CEL_TYPE type)
+{
+    bool result = false;
+    switch (type) {
+    case D1CEL_TYPE::V1_REGULAR:
+    case D1CEL_TYPE::V1_COMPILATION:
+    {
+        for (int y = 0; y < this->height; y++) {
+            QList<QPair<int, int>> gaps;
+            int sx = 0;
+            for (int x = 0; x < this->width; x++) {
+                D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
+                if (!d1pix.isTransparent() && d1pix.getPaletteIndex() != 0) {
+                    if (sx < x) {
+                        // dProgress() << QApplication::tr("gap %1 len %2").arg(sx).arg(x - sx);
+                        gaps.push_back(QPair<int, int>(sx, x - sx));
+                    }
+                    sx = x + 1;
+                }
+            }
+            if (sx != this->width) {
+                // dProgress() << QApplication::tr("gap %1 len %2").arg(sx).arg(this->width - sx);
+                gaps.push_back(QPair<int, int>(sx, this->width - sx));
+            }
+
+            for (auto it = gaps.begin(); it != gaps.end(); ) {
+                bool shortgap = it->second <= 2;
+                if (shortgap) {
+                    int drawlen = it->second;
+                    int units = 0;
+                    if (it != gaps.begin()) {
+                        auto pit = it - 1;
+                        int colorlen = it->first - (pit->first + pit->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
+                    }
+                    auto pit = it + 1;
+                    if (pit != gaps.end()) {
+                        int colorlen = pit->first - (it->first + it->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
+                    }
+                    int newunits = (drawlen - 1) / 0x7F + 1;
+                    shortgap = newunits <= units; // drawlen <= 0x7F;
+                }
+                if (shortgap) {
+                    // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
+                    for (int x = it->first; x < it->first + it->second; x++) {
+                        result |= this->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                    it = gaps.erase(it);
+                } else {
+                    it++;
+                }
+            }
+            for (auto it = gaps.begin(); it != gaps.end(); ) {
+                int gaplen = it->second;
+                bool shortgap = gaplen <= 4;
+                if (shortgap) {
+                    int drawlen = gaplen;
+                    int units = 0;
+                    if (it != gaps.begin()) {
+                        auto pit = it - 1;
+                        int colorlen = it->first - (pit->first + pit->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
+                    }
+                    auto pit = it + 1;
+                    if (pit != gaps.end()) {
+                        int colorlen = pit->first - (it->first + gaplen);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
+                    }
+                    int newunits = (drawlen - 1) / 0x7F + 1;
+                    shortgap = drawlen >= gaplen * 4 && newunits < units; // drawlen <= 0x7F;
+                }
+                if (shortgap) {
+                    // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
+                    for (int x = it->first; x < it->first + it->second; x++) {
+                        result |= this->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                    it = gaps.erase(it);
+                } else {
+                    it++;
+                }
+            }
+            for (auto it = gaps.begin(); it != gaps.end(); ) {
+                int gaplen = it->second;
+                bool shortgap = gaplen <= 8;
+                if (shortgap) {
+                    int drawlen = gaplen;
+                    int units = 0;
+                    if (it != gaps.begin()) {
+                        auto pit = it - 1;
+                        int colorlen = it->first - (pit->first + pit->second);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
+                    }
+                    auto pit = it + 1;
+                    if (pit != gaps.end()) {
+                        int colorlen = pit->first - (it->first + gaplen);
+                        drawlen += colorlen;
+                        units += (colorlen - 1) / 0x7F + 1;
+                    }
+                    int newunits = (drawlen - 1) / 0x7F + 1;
+                    shortgap = drawlen >= gaplen * 4 && newunits < units; // drawlen <= 0x7F;
+                }
+                if (shortgap) {
+                    // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
+                    for (int x = it->first; x < it->first + it->second; x++) {
+                        result |= this->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                    it = gaps.erase(it);
+                } else {
+                    it++;
+                }
+            }
+            for (auto it = gaps.begin(); it != gaps.end(); it++) {
+                // dProgress() << QApplication::tr("long gap %1 len %2").arg(it->first).arg(it->second);
+                for (int x = it->first; x < it->first + it->second; x++) {
+                    result |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    } break;
+    case D1CEL_TYPE::V1_LEVEL:
+    case D1CEL_TYPE::V2_MONO_GROUP:
+    case D1CEL_TYPE::V2_MULTIPLE_GROUPS:
+    case D1CEL_TYPE::SMK:
+        break;
+    }
+    return result;
+}
+
 QPointer<D1Pal>& D1GfxFrame::getFramePal()
 {
     return this->framePal;
@@ -955,6 +1089,16 @@ void D1Gfx::mask()
     }
 }
 
+void D1Gfx::optimize()
+{
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->optimize(this->type)) {
+            this->setModified();
+            dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+        }
+    }
+}
 
 D1CEL_TYPE D1Gfx::getType() const
 {
