@@ -232,15 +232,6 @@ void MainWindow::updateWindow()
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
-    // - Reports
-    this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
-    this->ui->actionReportColoredSubtiles->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportColoredTiles->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportActiveFrames->setEnabled(this->gfx != nullptr);
-    this->ui->actionReportActiveSubtiles->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportActiveTiles->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportTilesetUse->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportTilesetInefficientFrames->setEnabled(this->levelCelView != nullptr);
     // - Data
     bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
     this->ui->actionDelColumn_Table->setEnabled(hasColumn);
@@ -1638,6 +1629,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != FILE_CONTENT::TBL);
     this->ui->menuView->setEnabled(fileType != FILE_CONTENT::CPP);
+    this->ui->menuReports->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->menuColors->setEnabled(fileType != FILE_CONTENT::CPP);
     this->ui->menuData->setEnabled(fileType == FILE_CONTENT::CPP);
     this->ui->actionExport->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
@@ -1654,6 +1646,15 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    // - Reports
+    this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
+    this->ui->actionReportColoredSubtiles->setEnabled(isTileset);
+    this->ui->actionReportColoredTiles->setEnabled(isTileset);
+    this->ui->actionReportActiveFrames->setEnabled(this->gfx != nullptr);
+    this->ui->actionReportActiveSubtiles->setEnabled(isTileset);
+    this->ui->actionReportActiveTiles->setEnabled(isTileset);
+    this->ui->actionReportTilesetUse->setEnabled(isTileset);
+    this->ui->actionReportTilesetInefficientFrames->setEnabled(isTileset);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
@@ -2517,7 +2518,7 @@ void MainWindow::on_actionReportColoredFrames_triggered()
         this->celView->coloredFrames(colors);
 
     if (this->gfxsetView != nullptr)
-        this->celView->coloredFrames(colors);
+        this->gfxsetView->coloredFrames(colors);
 
     // Clear loading message from status bar
     ProgressDialog::done();
