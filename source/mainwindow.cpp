@@ -1630,22 +1630,25 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuEdit->setEnabled(fileType != FILE_CONTENT::TBL);
     this->ui->menuView->setEnabled(fileType != FILE_CONTENT::CPP);
     this->ui->menuReports->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->menuTileset->setEnabled(isTileset);
+    this->ui->menuDungeon->setEnabled(this->dun != nullptr);
     this->ui->menuColors->setEnabled(fileType != FILE_CONTENT::CPP);
     this->ui->menuData->setEnabled(fileType == FILE_CONTENT::CPP);
+    // - File
     this->ui->actionExport->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionDiff->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionImport->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
-
+    // - Edit
     this->ui->menuFrame->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->menuSubtile->setEnabled(isTileset);
     this->ui->menuTile->setEnabled(isTileset);
     this->ui->actionPatch->setEnabled(this->celView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
-    this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
-    this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionUpscale->setEnabled(this->gfx != nullptr);
+    this->ui->actionMerge->setEnabled(this->gfx != nullptr);
     // - Reports
     this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
     this->ui->actionReportColoredSubtiles->setEnabled(isTileset);
@@ -1656,8 +1659,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionReportTilesetUse->setEnabled(isTileset);
     this->ui->actionReportTilesetInefficientFrames->setEnabled(isTileset);
 
-    this->ui->menuTileset->setEnabled(isTileset);
-    this->ui->menuDungeon->setEnabled(this->dun != nullptr);
 
     // Clear loading message from status bar
     ProgressDialog::done();
