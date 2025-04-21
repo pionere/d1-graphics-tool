@@ -100,6 +100,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionReportBoundary"/>
     <addaction name="actionReportColoredFrames"/>
     <addaction name="actionReportColoredSubtiles"/>
     <addaction name="actionReportColoredTiles"/>
@@ -768,6 +769,14 @@
    </property>
    <property name="checked">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionReportBoundary">
+   <property name="text">
+    <string>Graphics Boundary</string>
+   </property>
+   <property name="toolTip">
+    <string>Report the rectangle in which the graphics have non-transparent pixels</string>
    </property>
   </action>
   <action name="actionReportColoredFrames">

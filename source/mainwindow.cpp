@@ -1650,6 +1650,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionUpscale->setEnabled(this->gfx != nullptr);
     this->ui->actionMerge->setEnabled(this->gfx != nullptr);
     // - Reports
+    this->ui->actionReportBoundary->setEnabled(this->gfx != nullptr);
     this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
     this->ui->actionReportColoredSubtiles->setEnabled(isTileset);
     this->ui->actionReportColoredTiles->setEnabled(isTileset);
@@ -2501,6 +2502,31 @@ void MainWindow::on_actionMerge_triggered()
         this->gfx->addGfx(gfx);
     }
     delete gfx;
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportBoundary_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    QRect rect = QRect();
+    if (this->gfxset != nullptr)
+        rect = this->gfxset->getBoundary();
+    else
+        rect = this->gfx->getBoundary();
+
+    QString msg;
+    if (!rect.isNull()) {
+        msg = tr("The upper left of the bounding rectangle is %1:%2, the lower right corner is %3:%4. (width %5, height %6)")
+            .arg(rect.x()).arg(rect.y()).arg(rect.x() + rect.width() - 1).arg(rect.y() + rect.height() - 1).arg(rect.width()).arg(rect.height());
+    } else if (this->gfxset != nullptr) {
+        msg = tr("The graphics is completely transparent.");
+    } else {
+        msg = tr("The graphics-set is completely transparent.");
+    }
+    dProgress() << msg;
 
     // Clear loading message from status bar
     ProgressDialog::done();

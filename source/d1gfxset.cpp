@@ -319,6 +319,22 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
     }
 }
 
+QRect D1Gfxset::getBoundary() const
+{
+    QRect rect = QRect();
+    for (const D1Gfx *gfx : this->gfxList) {
+        rect |= gfx->getBoundary();
+        /*QRect gRect = gfx->getBoundary();
+        if (rect.isNull()) {
+            rect = gRect;
+        } else {
+            rect |= gRect;
+        }*/
+
+    }
+    return rect;
+}
+
 D1GFX_SET_TYPE D1Gfxset::getType() const
 {
     return this->type;
