@@ -326,14 +326,14 @@ void D1Gfxset::mask()
     for (D1Gfx *gfx : this->gfxList) {
         if (gfx->getFrameCount() == 0) continue;
         if (!gfx->isFrameSizeConstant()) {
-            dProgressErr() << tr("Frame-size is not constant");
+            dProgressErr() << QApplication::tr("Frame-size is not constant");
             return;
         }
-        w = gfx->getFrameWidth();
-        h = gfx->getFrameHeight();
+        w = gfx->getFrameWidth(0);
+        h = gfx->getFrameHeight(0);
         if (!first) {
             if (w != width || h != height) {
-                dProgressErr() << tr("Frame-size is not constant");
+                dProgressErr() << QApplication::tr("Frame-size is not constant");
                 return;
             }
         } else {

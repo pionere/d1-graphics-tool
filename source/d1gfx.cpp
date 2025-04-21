@@ -240,7 +240,7 @@ bool D1GfxFrame::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &repla
 bool D1GfxFrame::mask(const D1GfxFrame *frame)
 {
     bool result = false;
-    for (int y = 0; y < this->height(); y++) {
+    for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             D1GfxPixel pixelA = this->pixels[y][x]; // this->getPixel(x, y);
             if (pixelA.isTransparent()) continue;
