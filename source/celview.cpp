@@ -717,24 +717,6 @@ void CelView::pasteCurrentImage(const QImage &image)
     // this->displayFrame();
 }
 
-void CelView::reportBoundary() const
-{
-    ProgressDialog::incBar(tr("Checking frames..."), 1);
-
-    QRect rect = this->gfx->getBoundary();
-
-    QString msg;
-    if (!rect.isNull()) {
-        msg = tr("The upper left of the bounding rectangle is %1:%2, the lower right corner is %3:%4. (width %5, height %6)")
-            .arg(rect.x()).arg(rect.y()).arg(rect.x() + rect.width() - 1).arg(rect.y() + rect.height() - 1).arg(rect.width()).arg(rect.height());
-    } else {
-        msg = tr("The graphics is completely transparent.");
-    }
-    dProgress() << msg;
-
-    ProgressDialog::decBar();
-}
-
 void CelView::coloredFrames(const std::pair<int, int>& colors) const
 {
     ProgressDialog::incBar(tr("Checking frames..."), 1);

@@ -189,6 +189,7 @@ public:
     void clear();
 
     bool isFrameSizeConstant() const;
+    bool isGroupSizeConstant() const;
     QString getFramePixels(int frameIndex, bool values) const;
     QImage getFrameImage(int frameIndex) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;

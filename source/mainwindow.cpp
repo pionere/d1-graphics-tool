@@ -262,15 +262,6 @@ void MainWindow::updateWindow()
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
-    // - Reports
-    this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
-    this->ui->actionReportColoredSubtiles->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportColoredTiles->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportActiveFrames->setEnabled(this->gfx != nullptr);
-    this->ui->actionReportActiveSubtiles->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportActiveTiles->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportTilesetUse->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportTilesetInefficientFrames->setEnabled(this->levelCelView != nullptr);
     // - Data
     bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
     this->ui->actionDelColumn_Table->setEnabled(hasColumn);
@@ -1668,28 +1659,39 @@ void MainWindow::openFile(const OpenAsParam &params)
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != FILE_CONTENT::TBL);
     this->ui->menuView->setEnabled(fileType != FILE_CONTENT::CPP);
+    this->ui->menuReports->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->menuTileset->setEnabled(isTileset);
+    this->ui->menuDungeon->setEnabled(this->dun != nullptr);
     this->ui->menuColors->setEnabled(fileType != FILE_CONTENT::CPP);
     this->ui->menuData->setEnabled(fileType == FILE_CONTENT::CPP);
+    // - File
     this->ui->actionExport->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionDiff->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionImport->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
-
+    // - Edit
     this->ui->menuFrame->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->menuSubtile->setEnabled(isTileset);
     this->ui->menuTile->setEnabled(isTileset);
     this->ui->actionPatch->setEnabled(this->celView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
-    this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
-    this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
-    this->ui->actionMask->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionUpscale->setEnabled(this->gfx != nullptr);
+    this->ui->actionMerge->setEnabled(this->gfx != nullptr);
+    this->ui->actionMask->setEnabled(this->gfx != nullptr);
     this->ui->actionOptimize->setEnabled(this->celView != nullptr);
+    // - Reports
+    this->ui->actionReportBoundary->setEnabled(this->gfx != nullptr);
+    this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
+    this->ui->actionReportColoredSubtiles->setEnabled(isTileset);
+    this->ui->actionReportColoredTiles->setEnabled(isTileset);
+    this->ui->actionReportActiveFrames->setEnabled(this->gfx != nullptr);
+    this->ui->actionReportActiveSubtiles->setEnabled(isTileset);
+    this->ui->actionReportActiveTiles->setEnabled(isTileset);
+    this->ui->actionReportTilesetUse->setEnabled(isTileset);
+    this->ui->actionReportTilesetInefficientFrames->setEnabled(isTileset);
 
-    this->ui->menuReports->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
-    this->ui->menuTileset->setEnabled(isTileset);
-    this->ui->menuDungeon->setEnabled(this->dun != nullptr);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -2564,14 +2566,22 @@ void MainWindow::on_actionReportBoundary_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    if (this->levelCelView != nullptr)
-        this->levelCelView->reportBoundary();
+    QRect rect = QRect();
+    if (this->gfxset != nullptr)
+        rect = this->gfxset->getBoundary();
+    else
+        rect = this->gfx->getBoundary();
 
-    if (this->celView != nullptr)
-        this->celView->reportBoundary();
-
-    if (this->gfxsetView != nullptr)
-        this->gfxsetView->reportBoundary();
+    QString msg;
+    if (!rect.isNull()) {
+        msg = tr("The upper left of the bounding rectangle is %1:%2, the lower right corner is %3:%4. (width %5, height %6)")
+            .arg(rect.x()).arg(rect.y()).arg(rect.x() + rect.width() - 1).arg(rect.y() + rect.height() - 1).arg(rect.width()).arg(rect.height());
+    } else if (this->gfxset != nullptr) {
+        msg = tr("The graphics is completely transparent.");
+    } else {
+        msg = tr("The graphics-set is completely transparent.");
+    }
+    dProgress() << msg;
 
     // Clear loading message from status bar
     ProgressDialog::done();

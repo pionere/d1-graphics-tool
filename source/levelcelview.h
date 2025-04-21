@@ -85,7 +85,6 @@ public:
     QImage copyCurrentImage() const;
     void pasteCurrentImage(const QImage &image);
 
-    void reportBoundary() const;
     void coloredFrames(const std::pair<int, int>& colors) const;
     void coloredSubtiles(const std::pair<int, int>& colors) const;
     void coloredTiles(const std::pair<int, int>& colors) const;

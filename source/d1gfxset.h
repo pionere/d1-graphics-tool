@@ -2,6 +2,7 @@
 
 #include <QList>
 #include <QPair>
+#include <QRect>
 
 #include "d1gfx.h"
 #include "openasdialog.h"
@@ -57,6 +58,7 @@ public:
     void save(const SaveAsParam &params);
 
     void compareTo(const LoadFileContent *fileContent) const;
+    QRect getBoundary() const;
     void mask();
 
     D1GFX_SET_TYPE getType() const;
