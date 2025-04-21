@@ -343,7 +343,7 @@ static const std::pair<QString, QString> menuarts[] = {
     // { "ui_art\\smlogo.CEL",   "ui_art\\menu.PAL" },
     { "ui_art\\credits.CEL",  "ui_art\\credits.PAL" },
     // { "ui_art\\black.CEL",    "" },
-    { "ui_art\\heros.CEL",    "" },
+    // { "ui_art\\heros.CEL",    "" },
     // { "ui_art\\selconn.CEL",  "" },
     // { "ui_art\\selgame.CEL",  "" },
     // { "ui_art\\selhero.CEL",  "" },
