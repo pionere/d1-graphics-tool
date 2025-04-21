@@ -43,3 +43,11 @@ jobs:
       with:
         name: D1GraphicsTool-Windows-x64
         path: dist
+
+    - name: Upload-translations
+      #if: ${{ !env.ACT }}
+      if: false
+      uses: actions/upload-artifact@v4
+      with:
+        name: D1GraphicsTool-Translations
+        path: languages

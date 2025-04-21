@@ -1056,7 +1056,7 @@ void D1Gfx::mask()
     if (this->getFrameCount() <= 1)
         return;
     if (!this->isFrameSizeConstant()) {
-        dProgressErr() << tr("Frame-size is not constant");
+        dProgressErr() << tr("Framesize is not constant");
         return;
     }
 
@@ -1069,7 +1069,7 @@ void D1Gfx::mask()
         }
     } else {
         if (!this->isGroupSizeConstant()) {
-            dProgressErr() << tr("group-size is not constant");
+            dProgressErr() << tr("Groupsize is not constant");
             return;
         }
         for (int n = this->groupFrameIndices[0].first; n <= this->groupFrameIndices[0].second; n++) {
