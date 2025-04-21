@@ -335,6 +335,70 @@ QRect D1Gfxset::getBoundary() const
     return rect;
 }
 
+void D1Gfxset::mask()
+{
+    int width, height, w, h;
+    int groupSize, gs;
+    bool first = true;
+    for (D1Gfx *gfx : this->gfxList) {
+        if (gfx->getFrameCount() == 0) continue;
+        if (!gfx->isFrameSizeConstant()) {
+            dProgressErr() << QApplication::tr("Frame-size is not constant");
+            return;
+        }
+        if (!gfx->isGroupSizeConstant()) {
+            dProgressErr() << QApplication::tr("Group-size is not constant");
+            return;
+        }
+        w = gfx->getFrameWidth(0);
+        h = gfx->getFrameHeight(0);
+        gs = gfx->getGroupFrameIndices(0).second - gfx->getGroupFrameIndices(0).first + 1;
+        if (!first) {
+            if (w != width || h != height) {
+                dProgressErr() << QApplication::tr("Frame-size is not constant");
+                return;
+            }
+            if (gs != groupSize) {
+                dProgressErr() << QApplication::tr("Group-size is not constant");
+                return;
+            }
+        } else {
+            width = w;
+            height = h;
+            groupSize = gs;
+            first = false;
+        }
+    }
+    for (D1Gfx *gfx : this->gfxList) {
+        gfx->mask();
+    }
+    if (this->gfxList.count() <= 1)
+        return;
+    D1Gfx *gfxA = NULL;
+    for (D1Gfx *gfxB : this->gfxList) {
+        if (gfxB->getFrameCount() == 0) continue;
+        if (gfxA != NULL) {
+            if (gs == 1) {
+                D1GfxFrame *frameA = gfxA->getFrame(0);
+                D1GfxFrame *frameB = gfxB->getFrame(0);
+                if (frameA->mask(frameB)) {
+                    gfxA->setModified();
+                }
+            } else {
+                for (int n = 0; n < gs; n++) {
+                    D1GfxFrame *frameA = gfxA->getFrame(gfxA->getGroupFrameIndices(n).first);
+                    D1GfxFrame *frameB = gfxB->getFrame(gfxB->getGroupFrameIndices(n).first);
+                    if (frameA->mask(frameB)) {
+                        gfxA->setModified();
+                    }
+                }
+            }
+        } else {
+            gfxA = gfxB;
+        }
+    }
+}
+
 D1GFX_SET_TYPE D1Gfxset::getType() const
 {
     return this->type;

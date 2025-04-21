@@ -423,6 +423,7 @@
     <addaction name="actionResize"/>
     <addaction name="actionUpscale"/>
     <addaction name="actionMerge"/>
+    <addaction name="actionMask"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -747,6 +748,14 @@
    </property>
    <property name="toolTip">
     <string>Add frames from an other graphics</string>
+   </property>
+  </action>
+  <action name="actionMask">
+   <property name="text">
+    <string>Mask</string>
+   </property>
+   <property name="toolTip">
+    <string>Select the common pixels of the current graphics</string>
    </property>
   </action>
   <action name="actionTogglePalTrn">

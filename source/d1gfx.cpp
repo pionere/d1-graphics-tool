@@ -230,6 +230,23 @@ bool D1GfxFrame::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &repla
     return result;
 }
 
+bool D1GfxFrame::mask(const D1GfxFrame *frame)
+{
+    bool result = false;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            D1GfxPixel pixelA = this->pixels[y][x]; // this->getPixel(x, y);
+            if (pixelA.isTransparent()) continue;
+            D1GfxPixel pixelB = frame->pixels[y][x]; // frame->getPixel(x, y);
+            if (pixelB.isTransparent() || pixelA.getPaletteIndex() != pixelB.getPaletteIndex()) {
+                this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
 QPointer<D1Pal>& D1GfxFrame::getFramePal()
 {
     return this->framePal;
@@ -495,6 +512,25 @@ bool D1Gfx::isFrameSizeConstant() const
             return false;
     }
 
+    return true;
+}
+
+bool D1Gfx::isGroupSizeConstant() const
+{
+    if (this->frames.isEmpty()) {
+        return false;
+    }
+
+    int groupSize = -1;
+    for (auto git = this->groupFrameIndices.begin(); git != this->groupFrameIndices.end(); git++) {
+        int gs = git->second - git->first + 1;
+        if (groupSize != gs) {
+            if (groupSize >= 0) {
+                return false;
+            }
+            groupSize = gs;
+        }
+    }
     return true;
 }
 
@@ -880,6 +916,45 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
         }
     }
 }
+
+void D1Gfx::mask()
+{
+    if (this->getFrameCount() <= 1)
+        return;
+    if (!this->isFrameSizeConstant()) {
+        dProgressErr() << tr("Frame-size is not constant");
+        return;
+    }
+
+    if (this->groupFrameIndices.size() <= 1) {
+        D1GfxFrame *frameA = this->frames[0];
+        for (const D1GfxFrame *frameB : this->frames) {
+            if (frameA->mask(frameB)) {
+                this->setModified();
+            }
+        }
+    } else {
+        if (!this->isGroupSizeConstant()) {
+            dProgressErr() << tr("group-size is not constant");
+            return;
+        }
+        for (int n = this->groupFrameIndices[0].first; n <= this->groupFrameIndices[0].second; n++) {
+            D1GfxFrame *frameA = this->frames[n];
+            auto git = this->groupFrameIndices.begin();
+            while (true) {
+                git++;
+                if (git == this->groupFrameIndices.end()) {
+                    break;
+                }
+                const D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[0].first];
+                if (frameA->mask(frameB)) {
+                    this->setModified();
+                }
+            }
+        }
+    }
+}
+
 
 D1CEL_TYPE D1Gfx::getType() const
 {
