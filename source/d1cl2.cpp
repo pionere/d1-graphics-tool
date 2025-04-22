@@ -246,8 +246,6 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
 
 bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 {
-    const int numFrames = gfx.frames.count();
-
     // calculate header size
     bool groupped = false;
     int numGroups = params.groupNum;
@@ -261,12 +259,13 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
             headerSize += 4 + 4 * (ni + 1);
         }
     } else {
+        // update group indices
+        const int numFrames = gfx.frames.count();
         if (numFrames == 0 || (numFrames % numGroups) != 0) {
             dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
             return false;
         }
         groupped = true;
-        // update group indices
         gfx.groupFrameIndices.clear();
         for (int i = 0; i < numGroups; i++) {
             int ni = numFrames / numGroups;
@@ -280,15 +279,12 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // update type
     gfx.type = groupped ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
     // update clipped info
-    bool clippedForced = params.clipped != SAVE_CLIPPED_TYPE::AUTODETECT;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
-        frame->clipped = (clippedForced && params.clipped == SAVE_CLIPPED_TYPE::TRUE) || (!clippedForced && frame->isClipped());
+    for (D1GfxFrame *frame : gfx.frames) {
+        frame->clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && frame->clipped);
     }
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
+    for (D1GfxFrame *frame : gfx.frames) {
         if (frame->clipped) {
             int hs = (frame->getHeight() - 1) / CEL_BLOCK_HEIGHT;
             hs = (hs + 1) * sizeof(quint16);
@@ -297,8 +293,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     }
     // estimate data size
     int maxSize = headerSize;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
+    for (D1GfxFrame *frame : gfx.frames) {
         if (frame->clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
         }
