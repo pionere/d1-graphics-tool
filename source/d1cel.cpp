@@ -11,32 +11,6 @@
 #include "d1celframe.h"
 #include "progressdialog.h"
 
-static void LogErrorFFF(const char* msg, ...)
-{
-	char tmp[256];
-	char tmsg[256];
-	va_list va;
-
-	va_start(va, msg);
-
-	vsnprintf(tmsg, sizeof(tmsg), msg, va);
-
-	va_end(va);
-
-	// dProgressErr() << QString(tmsg);
-	
-	snprintf(tmp, sizeof(tmp), "c:\\logdebug%d.txt", 0);
-	FILE* f0 = fopen(tmp, "a+");
-	if (f0 == NULL)
-		return;
-
-	fputs(tmsg, f0);
-
-	fputc('\n', f0);
-
-	fclose(f0);
-}
-
 bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
@@ -244,17 +218,14 @@ bool D1Cel::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // update type
     gfx.type = D1CEL_TYPE::V1_REGULAR;
     // update clipped info
-    bool clippedForced = params.clipped != SAVE_CLIPPED_TYPE::AUTODETECT;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
-        frame->clipped = (clippedForced && params.clipped == SAVE_CLIPPED_TYPE::TRUE) || (!clippedForced && frame->isClipped());
+    for (D1GfxFrame *frame : gfx.frames) {
+        frame->clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && frame->clipped);
     }
     // calculate header size
     int HEADER_SIZE = 4 + 4 + numFrames * 4;
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
+    for (D1GfxFrame *frame : gfx.frames) {
         if (frame->clipped) {
             int hs = (frame->getHeight() - 1) / CEL_BLOCK_HEIGHT;
             hs = (hs + 1) * sizeof(quint16);
@@ -263,8 +234,7 @@ bool D1Cel::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     }
     // estimate data size
     int maxSize = HEADER_SIZE;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
+    for (D1GfxFrame *frame : gfx.frames) {
         if (frame->clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
         }
@@ -293,8 +263,6 @@ bool D1Cel::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 
 bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 {
-    const int numFrames = gfx.frames.count();
-
     // calculate header size
     int numGroups = params.groupNum;
     int headerSize = 0;
@@ -307,11 +275,11 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
         }
     } else {
         // update group indices
+        const int numFrames = gfx.frames.count();
         if (numFrames == 0 || (numFrames % numGroups) != 0) {
             dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
             return false;
         }
-        // update group indices
         gfx.groupFrameIndices.clear();
         for (int i = 0; i < numGroups; i++) {
             int ni = numFrames / numGroups;
@@ -327,15 +295,12 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     // update type
     gfx.type = D1CEL_TYPE::V1_COMPILATION;
     // update clipped info
-    bool clippedForced = params.clipped != SAVE_CLIPPED_TYPE::AUTODETECT;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
-        frame->clipped = (clippedForced && params.clipped == SAVE_CLIPPED_TYPE::TRUE) || (!clippedForced && frame->isClipped());
+    for (D1GfxFrame *frame : gfx.frames) {
+        frame->clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && frame->clipped);
     }
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
+    for (D1GfxFrame *frame : gfx.frames) {
         if (frame->clipped) {
             int hs = (frame->getHeight() - 1) / CEL_BLOCK_HEIGHT;
             hs = (hs + 1) * sizeof(quint16);
@@ -344,8 +309,7 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     }
     // estimate data size
     int maxSize = headerSize;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
+    for (D1GfxFrame *frame : gfx.frames) {
         if (frame->clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
         }

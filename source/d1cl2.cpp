@@ -105,6 +105,9 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             quint32 cl2GroupOffset;
             in >> cl2GroupOffset;
 
+            if (fileSize < (cl2GroupOffset + 4))
+                return false;
+
             device->seek(cl2GroupOffset);
             quint32 cl2GroupFrameCount;
             in >> cl2GroupFrameCount;
@@ -112,14 +115,18 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (cl2GroupFrameCount == 0) {
                 continue;
             }
+            if (fileSize < (cl2GroupOffset + cl2GroupFrameCount * 4 + 4 + 4))
+                return false;
+
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + cl2GroupFrameCount - 1));
 
             // Going through all frames of the group
             for (unsigned j = 1; j <= cl2GroupFrameCount; j++) {
-                device->seek(cl2GroupOffset + j * 4);
                 quint32 cl2FrameStartOffset;
-                in >> cl2FrameStartOffset;
                 quint32 cl2FrameEndOffset;
+
+                device->seek(cl2GroupOffset + j * 4);
+                in >> cl2FrameStartOffset;
                 in >> cl2FrameEndOffset;
 
                 frameOffsets.push_back(
@@ -239,8 +246,6 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
 
 bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 {
-    const int numFrames = gfx.frames.count();
-
     // calculate header size
     bool groupped = false;
     int numGroups = params.groupNum;
@@ -254,12 +259,13 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
             headerSize += 4 + 4 * (ni + 1);
         }
     } else {
+        // update group indices
+        const int numFrames = gfx.frames.count();
         if (numFrames == 0 || (numFrames % numGroups) != 0) {
             dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
             return false;
         }
         groupped = true;
-        // update group indices
         gfx.groupFrameIndices.clear();
         for (int i = 0; i < numGroups; i++) {
             int ni = numFrames / numGroups;
@@ -273,15 +279,12 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // update type
     gfx.type = groupped ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
     // update clipped info
-    bool clippedForced = params.clipped != SAVE_CLIPPED_TYPE::AUTODETECT;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
-        frame->clipped = (clippedForced && params.clipped == SAVE_CLIPPED_TYPE::TRUE) || (!clippedForced && frame->isClipped());
+    for (D1GfxFrame *frame : gfx.frames) {
+        frame->clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && frame->clipped);
     }
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
+    for (D1GfxFrame *frame : gfx.frames) {
         if (frame->clipped) {
             int hs = (frame->getHeight() - 1) / CEL_BLOCK_HEIGHT;
             hs = (hs + 1) * sizeof(quint16);
@@ -290,8 +293,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     }
     // estimate data size
     int maxSize = headerSize;
-    for (int n = 0; n < numFrames; n++) {
-        D1GfxFrame *frame = gfx.getFrame(n);
+    for (D1GfxFrame *frame : gfx.frames) {
         if (frame->clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
         }
