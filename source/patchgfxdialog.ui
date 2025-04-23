@@ -92,6 +92,16 @@
        </item>
        <item>
         <property name="text">
+         <string>Skeleton Bow dying (SklBwd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Skeleton Sword dying (SklSrd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Spell icons (SpelIcon.CEL)</string>
         </property>
        </item>

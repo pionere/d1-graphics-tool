@@ -3804,6 +3804,22 @@ bool D1Gfx::patchFallGWalk(bool silent)
     return result;
 }*/
 
+static QString dirToStr(int dir)
+{
+    QString result = QApplication::tr("N/A");
+    switch (dir) {
+	case DIR_S:  result = QApplication::tr("South");      break;
+	case DIR_SW: result = QApplication::tr("South-West"); break;
+	case DIR_W:  result = QApplication::tr("West");       break;
+	case DIR_NW: result = QApplication::tr("North-West"); break;
+	case DIR_N:  result = QApplication::tr("North");      break;
+	case DIR_NE: result = QApplication::tr("North-East"); break;
+	case DIR_E:  result = QApplication::tr("East");       break;
+	case DIR_SE: result = QApplication::tr("South-East"); break;
+    }
+    return result;
+}
+
 bool D1Gfx::patchGoatLDie(bool silent)
 {
     constexpr int frameCount = 16;
@@ -3815,23 +3831,23 @@ bool D1Gfx::patchGoatLDie(bool silent)
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_SW).second - this->getGroupFrameIndices(DIR_SW).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to South-West.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_SW + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_W).second - this->getGroupFrameIndices(DIR_W).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to West.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_W + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_NW).second - this->getGroupFrameIndices(DIR_NW).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to North-West.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_NW + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to East.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_E + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_SE).second - this->getGroupFrameIndices(DIR_SE).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to South-East.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_SE + 1);
         return false;
     }
 
@@ -3999,6 +4015,93 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+bool D1Gfx::patchSklBwDie(bool silent)
+{
+    constexpr int frameCount = 16;
+    constexpr int obsoleteFrameCount = 3;
+    constexpr int height = 128;
+    constexpr int width = 96;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount - obsoleteFrameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        while (true) {
+            int n = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1;
+            if (n == frameCount - obsoleteFrameCount)
+                break;
+            this->removeFrame(this->getGroupFrameIndices(ii).first + n - 1, false);
+            dProgress() << tr("Removed frame %1 of group %2.")arg(n).arg(ii + 1).
+            result = true;
+        }
+    }
+
+    return result;
+}
+
+bool D1Gfx::patchSklSrDie(bool silent)
+{
+    constexpr int frameCount = 15;
+    constexpr int height = 128;
+    constexpr int width = 96;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                break;
+            }
+            bool change = false;
+            if (i == 0) {
+                if (currFrame->getPixel(31, 14).isTransparent()) {
+                    return false; // assume it is already done
+                }
+                // shift the frame down by 16
+                for (int y = height - 16 - 1; y >= 0; y--) {
+                    for (int x = 0; x < width; x++) {
+                        D1GfxPixel pixel = currFrame->getPixel(x, y);
+                        change |= currFrame->setPixel(x, y + 16, pixel);
+                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
             }
 
             if (change) {
@@ -4698,6 +4801,12 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_GOATLD: // patch GoatLd.CL2
         change = this->patchGoatLDie(silent);
         break;
+    case GFX_MON_SKLBWD:
+        change = this->patchSklBwDie(silent);
+        break;
+    case GFX_MON_SKLSRD:
+        change = this->patchSklSrDie(silent);
+        break;
     case GFX_SPL_ICONS: // patch SpelIcon.CEL
         change = this->patchSplIcons(silent);
         break;
@@ -4837,6 +4946,12 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "goatld") {
         fileIndex = GFX_MON_GOATLD;
+    }
+    if (baseName == "sklbwd") {
+        fileIndex = GFX_MON_SKLBWD;
+    }
+    if (baseName == "sklsrd") {
+        fileIndex = GFX_MON_SKLBWD;
     }
     return fileIndex;
 }
