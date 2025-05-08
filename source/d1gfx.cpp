@@ -4252,6 +4252,7 @@ bool D1Gfx::patchSklSrDie(bool silent)
         }
         for (int i = 0; i < frameCount; i++) {
             int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
             if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
                 dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
                 return false;
@@ -4303,7 +4304,7 @@ bool D1Gfx::patchSklSrDie(bool silent)
 
             if (dx == 0 && dy == 0)
                 continue;
-            if (dx <= 0 && y >= 0) {
+            if (dx <= 0 && dy >= 0) {
                 for (int y = height - dy - 1; y >= 0; y--) {
                     for (int x = dx; x < width; x++) {
                         D1GfxPixel pixel = currFrame->getPixel(x, y);
