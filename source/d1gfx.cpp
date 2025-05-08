@@ -3845,8 +3845,8 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 break;
             }
             bool change = false;
-            switch (ii) {
-            case DIR_SW: {
+            switch (ii + 1) {
+            case 2: {
                 switch (i + 1) {
                 case 9:
                     if (currFrame->getPixel(71, 127).isTransparent()) {
@@ -3892,7 +3892,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
-            case DIR_W: {
+            case 3: {
                 switch (i + 1) {
                 case 9:
                 case 10:
@@ -3944,7 +3944,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
-            case DIR_NW: {
+            case 4: {
                 switch (i + 1) {
                 case 12:
                 case 13:
@@ -3964,7 +3964,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
-            case DIR_E: {
+            case 7: {
                 switch (i + 1) {
                 case 9:
                 case 10:
@@ -3979,7 +3979,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
-            case DIR_SE: {
+            case 8: {
                 switch (i + 1) {
                 case 12:
                 case 13:
@@ -4005,7 +4005,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 result = true;
                 this->setModified();
                 if (!silent) {
-                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(ii + 1);
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
                 }
             }
         }
@@ -4030,6 +4030,22 @@ bool D1Gfx::patchSklBwDie(bool silent)
             dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
             return false;
         }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 2 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(76, 92).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
     }
 
     bool result = false;
@@ -4042,6 +4058,178 @@ bool D1Gfx::patchSklBwDie(bool silent)
             dProgress() << tr("Removed frame %1 of group %2.").arg(n).arg(ii + 1);
             result = true;
         }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 0, dy = 0;
+            switch (ii + 1) {
+            case 1:
+                if (i + 1 == 2) {
+                    dx = -3;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = -3;
+                    dy = -7;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = -3;
+                    dy = -5;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = -2;
+                    dy = -6;
+                }
+                break;
+            case 2:
+                if (i + 1 == 2) {
+                    dx = -3;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = -3;
+                    dy = -7;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = -3;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = -3;
+                    dy = -7;
+                }
+                break;
+            case 3:
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = -5;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = 0;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = 0;
+                    dy = -7;
+                }
+                break;
+            case 4:
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = -5;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = 0;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = 0;
+                    dy = -7;
+                }
+                break;
+            case 5:
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = -5;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = 0;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = 0;
+                    dy = -7;
+                }
+                break;
+            case 6:
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = -5;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = 0;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = 0;
+                    dy = -7;
+                }
+                break;
+            case 7:
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = -5;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = 0;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = 0;
+                    dy = -7;
+                }
+                break;
+            case 8:
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = -5;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = 0;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = 0;
+                    dy = -7;
+                }
+                break;
+            }
+
+            if (dx == 0 && dy == 0)
+                continue;
+            if (dx <= 0 && dy <= 0) {
+                for (int y = dy; y < height; y++) {
+                    for (int x = dx; x < width; x++) {
+                        D1GfxPixel pixel = currFrame->getPixel(x, y);
+                        change |= currFrame->setPixel(x + dx, y + dy, pixel);
+                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(ii + 1);
+                }
+            }
+        }
     }
 
     return result;
@@ -4050,8 +4238,8 @@ bool D1Gfx::patchSklBwDie(bool silent)
 bool D1Gfx::patchSklSrDie(bool silent)
 {
     constexpr int frameCount = 15;
-    constexpr int height = 128;
-    constexpr int width = 96;
+    constexpr int height = 96;
+    constexpr int width = 128;
 
     if (this->getGroupCount() != NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -4062,6 +4250,21 @@ bool D1Gfx::patchSklSrDie(bool silent)
             dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
             return false;
         }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(31, 14).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
     }
 
     bool result = false;
@@ -4069,20 +4272,42 @@ bool D1Gfx::patchSklSrDie(bool silent)
         for (int i = 0; i < frameCount; i++) {
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* currFrame = this->getFrame(n);
-            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
-                break;
-            }
             bool change = false;
-            if (i == 0) {
-                if (currFrame->getPixel(31, 14).isTransparent()) {
-                    return false; // assume it is already done
+            int dx = 0, dy = 0;
+            if (i + 1 == 1) {
+                dx = 0;
+                dy = 15;
+            }
+            // if (ii + 1 == 1) {
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = 12;
                 }
-                // shift the frame down by 16
-                for (int y = height - 16 - 1; y >= 0; y--) {
-                    for (int x = 0; x < width; x++) {
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = 10;
+                }
+                if (i + 1 == 4) {
+                    dx = 0;
+                    dy = 6;
+                }
+                if (i + 1 == 5 || i + 1 == 6 || i + 1 == 7) {
+                    dx = 0;
+                    dy = 5;
+                }
+                if (i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11) {
+                    dx = 0;
+                    dy = 3;
+                }
+            // }
+
+            if (dx == 0 && dy == 0)
+                continue;
+            if (dx <= 0 && y >= 0) {
+                for (int y = height - dy - 1; y >= 0; y--) {
+                    for (int x = dx; x < width; x++) {
                         D1GfxPixel pixel = currFrame->getPixel(x, y);
-                        change |= currFrame->setPixel(x, y + 16, pixel);
+                        change |= currFrame->setPixel(x + dx, y + dy, pixel);
                         change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
@@ -4935,7 +5160,7 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
         fileIndex = GFX_MON_SKLBWD;
     }
     if (baseName == "sklsrd") {
-        fileIndex = GFX_MON_SKLBWD;
+        fileIndex = GFX_MON_SKLSRD;
     }
     return fileIndex;
 }
