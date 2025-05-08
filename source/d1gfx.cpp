@@ -4039,7 +4039,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
             if (n == frameCount - obsoleteFrameCount)
                 break;
             this->removeFrame(this->getGroupFrameIndices(ii).first + n - 1, false);
-            dProgress() << tr("Removed frame %1 of group %2.").arg(n).arg(ii + 1).
+            dProgress() << tr("Removed frame %1 of group %2.").arg(n).arg(ii + 1);
             result = true;
         }
     }
