@@ -3804,22 +3804,6 @@ bool D1Gfx::patchFallGWalk(bool silent)
     return result;
 }*/
 
-static QString dirToStr(int dir)
-{
-    QString result = QApplication::tr("N/A");
-    switch (dir) {
-	case DIR_S:  result = QApplication::tr("South");      break;
-	case DIR_SW: result = QApplication::tr("South-West"); break;
-	case DIR_W:  result = QApplication::tr("West");       break;
-	case DIR_NW: result = QApplication::tr("North-West"); break;
-	case DIR_N:  result = QApplication::tr("North");      break;
-	case DIR_NE: result = QApplication::tr("North-East"); break;
-	case DIR_E:  result = QApplication::tr("East");       break;
-	case DIR_SE: result = QApplication::tr("South-East"); break;
-    }
-    return result;
-}
-
 bool D1Gfx::patchGoatLDie(bool silent)
 {
     constexpr int frameCount = 16;
@@ -4055,7 +4039,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
             if (n == frameCount - obsoleteFrameCount)
                 break;
             this->removeFrame(this->getGroupFrameIndices(ii).first + n - 1, false);
-            dProgress() << tr("Removed frame %1 of group %2.")arg(n).arg(ii + 1).
+            dProgress() << tr("Removed frame %1 of group %2.").arg(n).arg(ii + 1).
             result = true;
         }
     }
