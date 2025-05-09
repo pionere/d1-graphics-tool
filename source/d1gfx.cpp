@@ -3804,6 +3804,81 @@ bool D1Gfx::patchFallGWalk(bool silent)
     return result;
 }*/
 
+static bool ShiftFrame(D1GfxFrame *frame, int dx, int dy, int sx, int sy, int ex, int ey)
+{
+    if (dx == 0 && dy == 0)
+        return false;
+    int width = frame->getHeight();
+    int height = frame->getHeight();
+    bool change = false;
+    if (dx <= 0) {
+        if (dy <= 0) {
+            // for (int y = std::max(sy, -dy); y < ey; y++) {
+            for (int y = sy; y < ey; y++) {
+                // for (int x = std::max(sx, -dx); x < ex; x++) {
+                for (int x = sx; x < ex; x++) {
+                    if (x + dx >= 0 /*&& x + dx < width*/ && y + dy >= 0 /*&& y + dy < height*/)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } else {
+            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
+            for (int y = ey - 1; y >= sy; y--) {
+                // for (int x = std::max(sx, -dx); x < ex; x++) {
+                for (int x = sx; x < ex; x++) {
+                    if (x + dx >= 0 /*&& x + dx < width && y + dy >= 0 */&& y + dy < height)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    } else {
+        if (dy <= 0) {
+            // for (int y = std::max(sy, -dy); y < ey; y++) {
+            for (int y = sy; y < ey; y++) {
+                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
+                for (int x = ex - 1; x >= sx; x--) {
+                    if (/*x + dx >= 0 && */x + dx < width && y + dy >= 0 /*&& y + dy < height*/)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } else {
+            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
+            for (int y = ey - 1; y >= sy; y--) {
+                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
+                for (int x = ex - 1; x >= sx; x--) {
+                    if (/*x + dx >= 0 && */x + dx < width /*&& y + dy >= 0 */&& y + dy < height)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    }
+    return change;
+}
+
 bool D1Gfx::patchGoatLDie(bool silent)
 {
     constexpr int frameCount = 16;
@@ -4210,17 +4285,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
                 break;
             }
 
-            if (dx == 0 && dy == 0)
-                continue;
-            if (dx <= 0 && dy <= 0) {
-                for (int y = dy; y < height; y++) {
-                    for (int x = dx; x < width; x++) {
-                        D1GfxPixel pixel = currFrame->getPixel(x, y);
-                        change |= currFrame->setPixel(x + dx, y + dy, pixel);
-                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                    }
-                }
-            }
+            change | = ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
             if (change) {
                 result = true;
@@ -4300,17 +4365,79 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     dx = 0;
                     dy = 3;
                 }
+                if (ii + 1 != 7 && ii + 1 != 8) {
+                if (i + 1 == 12) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 5 && ii + 1 != 7 && ii + 1 != 8) {
+                if (i + 1 == 13) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 7 && ii + 1 != 8) {
+                if (i + 1 == 14) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 1 && ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 7 && ii + 1 != 8) {
+                if (i + 1 == 15) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
             // }
 
-            if (dx == 0 && dy == 0)
-                continue;
-            if (dx <= 0 && dy >= 0) {
-                for (int y = height - dy - 1; y >= 0; y--) {
-                    for (int x = dx; x < width; x++) {
-                        D1GfxPixel pixel = currFrame->getPixel(x, y);
-                        change |= currFrame->setPixel(x + dx, y + dy, pixel);
-                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                    }
+            change | = ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            if (ii + 1 == 1) {
+                // shift the sword
+                if (i + 1 == 9) {
+                    change | = ShiftFrame(currFrame, -1, 3, 47, 50, 61, 60);
+                }
+                if (i + 1 == 10) {
+                    change | = ShiftFrame(currFrame, -2, 9, 47, 41, 64, 58);
+                }
+                if (i + 1 == 11) {
+                    change | = ShiftFrame(currFrame, 1, 14, 42, 37, 60, 53);
+                }
+                if (i + 1 == 12) {
+                    change | = ShiftFrame(currFrame, 5, 15, 37, 36, 55, 51);
+                }
+                if (i + 1 == 13) {
+                    change | = ShiftFrame(currFrame, 7, 15, 34, 34, 51, 49);
+                }
+                if (i + 1 == 14) {
+                    change | = ShiftFrame(currFrame, 9, 14, 34, 39, 50, 54);
+                }
+                // shift the shadow of the sword
+                if (i + 1 == 13) {
+                    change | = ShiftFrame(currFrame, 3, 1, 25, 63, 43, 70);
+                }
+                if (i + 1 == 14) {
+                    change | = ShiftFrame(currFrame, 3, 0, 26, 65, 43, 70);
+                }
+
+                if (i + 1 == 15) {
+                    // shift the main body
+                    change | = ShiftFrame(currFrame, 0, 3, 28, 66, 31, 68);
+                    change | = ShiftFrame(currFrame, 0, 3, 30, 56, 76, 87);
+                    change | = ShiftFrame(currFrame, 0, 3, 73, 37, 95, 56);
+                    change | = ShiftFrame(currFrame, 0, 3, 76, 56, 109, 80);
+                    // shift the sword
+                    change | = ShiftFrame(currFrame, 9, 13, 34, 41, 50, 56);
+                    // shift the shadow of the sword
+                    change | = ShiftFrame(currFrame, 2, 0, 28, 66, 38, 71);
+                }
+
+                // shift the left-leg
+                if (i + 1 == 14 || i + 1 == 15) {
+                    change | = ShiftFrame(currFrame, -1, 0, 69, 78, 75, 90);
+                    change | = ShiftFrame(currFrame, -1, -4, 75, 78, 82, 96);
+                    change | = ShiftFrame(currFrame, -1, -4, 74, 92, 75, 96);
                 }
             }
 
