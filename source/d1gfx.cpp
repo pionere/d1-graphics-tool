@@ -3808,7 +3808,7 @@ static bool ShiftFrame(D1GfxFrame *frame, int dx, int dy, int sx, int sy, int ex
 {
     if (dx == 0 && dy == 0)
         return false;
-    int width = frame->getHeight();
+    int width = frame->getWidth();
     int height = frame->getHeight();
     bool change = false;
     if (dx <= 0) {
@@ -4285,7 +4285,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
                 break;
             }
 
-            change | = ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
             if (change) {
                 result = true;
@@ -4391,53 +4391,53 @@ bool D1Gfx::patchSklSrDie(bool silent)
                 }
             // }
 
-            change | = ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
             if (ii + 1 == 1) {
                 // shift the sword
                 if (i + 1 == 9) {
-                    change | = ShiftFrame(currFrame, -1, 3, 47, 50, 61, 60);
+                    change |= ShiftFrame(currFrame, -1, 3, 47, 50, 61, 60);
                 }
                 if (i + 1 == 10) {
-                    change | = ShiftFrame(currFrame, -2, 9, 47, 41, 64, 58);
+                    change |= ShiftFrame(currFrame, -2, 9, 47, 41, 64, 58);
                 }
                 if (i + 1 == 11) {
-                    change | = ShiftFrame(currFrame, 1, 14, 42, 37, 60, 53);
+                    change |= ShiftFrame(currFrame, 1, 14, 42, 37, 60, 53);
                 }
                 if (i + 1 == 12) {
-                    change | = ShiftFrame(currFrame, 5, 15, 37, 36, 55, 51);
+                    change |= ShiftFrame(currFrame, 5, 15, 37, 36, 55, 51);
                 }
                 if (i + 1 == 13) {
-                    change | = ShiftFrame(currFrame, 7, 15, 34, 34, 51, 49);
+                    change |= ShiftFrame(currFrame, 7, 15, 34, 34, 51, 49);
                 }
                 if (i + 1 == 14) {
-                    change | = ShiftFrame(currFrame, 9, 14, 34, 39, 50, 54);
+                    change |= ShiftFrame(currFrame, 9, 14, 34, 39, 50, 54);
                 }
                 // shift the shadow of the sword
                 if (i + 1 == 13) {
-                    change | = ShiftFrame(currFrame, 3, 1, 25, 63, 43, 70);
+                    change |= ShiftFrame(currFrame, 3, 1, 25, 63, 43, 70);
                 }
                 if (i + 1 == 14) {
-                    change | = ShiftFrame(currFrame, 3, 0, 26, 65, 43, 70);
+                    change |= ShiftFrame(currFrame, 3, 0, 26, 65, 43, 70);
                 }
 
                 if (i + 1 == 15) {
                     // shift the main body
-                    change | = ShiftFrame(currFrame, 0, 3, 28, 66, 31, 68);
-                    change | = ShiftFrame(currFrame, 0, 3, 30, 56, 76, 87);
-                    change | = ShiftFrame(currFrame, 0, 3, 73, 37, 95, 56);
-                    change | = ShiftFrame(currFrame, 0, 3, 76, 56, 109, 80);
+                    change |= ShiftFrame(currFrame, 0, 3, 28, 66, 31, 68);
+                    change |= ShiftFrame(currFrame, 0, 3, 30, 56, 76, 87);
+                    change |= ShiftFrame(currFrame, 0, 3, 73, 37, 95, 56);
+                    change |= ShiftFrame(currFrame, 0, 3, 76, 56, 109, 80);
                     // shift the sword
-                    change | = ShiftFrame(currFrame, 9, 13, 34, 41, 50, 56);
+                    change |= ShiftFrame(currFrame, 9, 13, 34, 41, 50, 56);
                     // shift the shadow of the sword
-                    change | = ShiftFrame(currFrame, 2, 0, 28, 66, 38, 71);
+                    change |= ShiftFrame(currFrame, 2, 0, 28, 66, 38, 71);
                 }
 
                 // shift the left-leg
                 if (i + 1 == 14 || i + 1 == 15) {
-                    change | = ShiftFrame(currFrame, -1, 0, 69, 78, 75, 90);
-                    change | = ShiftFrame(currFrame, -1, -4, 75, 78, 82, 96);
-                    change | = ShiftFrame(currFrame, -1, -4, 74, 92, 75, 96);
+                    change |= ShiftFrame(currFrame, -1, 0, 69, 78, 75, 90);
+                    change |= ShiftFrame(currFrame, -1, -4, 75, 78, 82, 96);
+                    change |= ShiftFrame(currFrame, -1, -4, 74, 92, 75, 96);
                 }
             }
 
