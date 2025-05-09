@@ -4093,8 +4093,8 @@ bool D1Gfx::patchSklBwDie(bool silent)
 {
     constexpr int frameCount = 16;
     constexpr int obsoleteFrameCount = 3;
-    constexpr int height = 128;
-    constexpr int width = 96;
+    constexpr int height = 96;
+    constexpr int width = 128;
 
     if (this->getGroupCount() != NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -4405,10 +4405,10 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, 1, 14, 42, 37, 60, 53);
                 }
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, 5, 15, 37, 36, 55, 51);
+                    change |= ShiftFrame(currFrame, 5, 15, 37, 36, 55, 52);
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 7, 15, 34, 34, 51, 49);
+                    change |= ShiftFrame(currFrame, 7, 15, 34, 34, 51, 52);
                 }
                 if (i + 1 == 14) {
                     change |= ShiftFrame(currFrame, 9, 14, 34, 39, 50, 54);
@@ -4423,10 +4423,10 @@ bool D1Gfx::patchSklSrDie(bool silent)
 
                 if (i + 1 == 15) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 28, 66, 31, 68);
+                    change |= ShiftFrame(currFrame, 0, 3, 28, 66, 30, 68);
                     change |= ShiftFrame(currFrame, 0, 3, 30, 56, 76, 87);
-                    change |= ShiftFrame(currFrame, 0, 3, 73, 37, 95, 56);
                     change |= ShiftFrame(currFrame, 0, 3, 76, 56, 109, 80);
+                    change |= ShiftFrame(currFrame, 0, 3, 73, 37, 95, 56);
                     // shift the sword
                     change |= ShiftFrame(currFrame, 9, 13, 34, 41, 50, 56);
                     // shift the shadow of the sword
@@ -4435,9 +4435,134 @@ bool D1Gfx::patchSklSrDie(bool silent)
 
                 // shift the left-leg
                 if (i + 1 == 14 || i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, -1, 0, 69, 78, 75, 90);
+                    change |= ShiftFrame(currFrame, -1, -1, 69, 78, 75, 90);
                     change |= ShiftFrame(currFrame, -1, -4, 75, 78, 82, 96);
                     change |= ShiftFrame(currFrame, -1, -4, 74, 92, 75, 96);
+                }
+            }
+
+            if (ii + 1 == 2) {
+                // shift the right-leg
+                if (i + 1 == 9) {
+                    change |= ShiftFrame(currFrame, 0, 3, 24, 57, 43, 67);
+                }
+                if (i + 1 == 10) {
+                    change |= ShiftFrame(currFrame, 0, 6, 23, 53, 41, 65);
+                }
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 1, 6, 19, 54, 38, 64);
+                }
+                if (i + 1 == 12) {
+                    // shadow
+                    change |= ShiftFrame(currFrame, 5, 0, 9, 71, 30, 73);
+                    // leg
+                    change |= ShiftFrame(currFrame, 5, 6, 14, 57, 33, 66);
+                }
+                if (i + 1 == 13) {
+                    // shadow
+                    change |= ShiftFrame(currFrame, 9, 0, 5, 71, 26, 73);
+                    // leg
+                    change |= ShiftFrame(currFrame, 8, 7, 10, 57, 29, 65);
+                }
+                if (i + 1 == 14) {
+                    // shadow
+                    change |= ShiftFrame(currFrame, 10, 0, 3, 71, 24, 73);
+                    // leg
+                    change |= ShiftFrame(currFrame, 9, 7, 8, 58, 27, 66);
+                }
+                if (i + 1 == 15) {
+                    // shadow
+                    change |= ShiftFrame(currFrame, 12, 0, 1, 71, 23, 73);
+                    // leg
+                    change |= ShiftFrame(currFrame, 10, 7, 6, 59, 26, 66);
+                }
+
+                // shift the left-leg
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 2, -2, 35, 76, 58, 93);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 2, -2, 36, 76, 58, 96);
+
+                    change |= ShiftFrame(currFrame, 2, -2, 38, 82, 49, 94);
+                }
+            }
+
+            if (ii + 1 == 4) {
+                // shift the main body
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+
+                // shift the shield
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, -2, 30, 72, 46, 85);
+                    change |= ShiftFrame(currFrame, 0, -2, 46, 76, 47, 77);
+                    change |= ShiftFrame(currFrame, 0, -2, 46, 77, 48, 85);
+                    change |= ShiftFrame(currFrame, 0, -2, 48, 78, 50, 81);
+                }
+            }
+
+            if (ii + 1 == 5) {
+                // shift the main body
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 77);
+                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 68);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 79);
+                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 69);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 80);
+                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 69);
+                }
+            }
+            if (ii + 1 == 6) {
+                // shift the main body
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 80);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                }
+            }
+            if (ii + 1 == 7) {
+                // shift the main body
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 73, 79, 76, 81);
+                    change |= ShiftFrame(currFrame, 0, 3, 29, 74, 76, 79);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 74);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 29, 79, 76, 84);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                }
+            }
+            if (ii + 1 == 8) {
+                // shift the main body
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 0, 3, 61, 82, width, height);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 0, 3, 61, 83, width, height);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 86);
                 }
             }
 
