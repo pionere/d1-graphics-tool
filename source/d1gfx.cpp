@@ -2422,6 +2422,43 @@ bool D1Gfx::patchFallGDie(bool silent)
 
             change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
+            // add missing pixels
+            if (ii + 1 == 5) {
+                if (i + 1 >= 13) {
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(190));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(8, 109, D1GfxPixel::colorPixel(253));
+                    change |= currFrame->setPixel(8, 110, D1GfxPixel::colorPixel(254));
+                    change |= currFrame->setPixel(8, 111, D1GfxPixel::colorPixel(223));
+                    change |= currFrame->setPixel(7, 108, D1GfxPixel::colorPixel(223));
+                    change |= currFrame->setPixel(7, 109, D1GfxPixel::colorPixel(190));
+                }
+            }
+            if (ii + 1 == 4) {
+                if (i + 1 >= 13) {
+                    change |= currFrame->setPixel(24, 126, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(25, 126, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(26, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(27, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(28, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(29, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(30, 126, D1GfxPixel::colorPixel(202));
+                    change |= currFrame->setPixel(31, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(32, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(33, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(24, 127, D1GfxPixel::colorPixel(254));
+                    change |= currFrame->setPixel(25, 127, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(26, 127, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(27, 127, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(28, 127, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(29, 127, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(30, 127, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(31, 127, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(32, 127, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(33, 127, D1GfxPixel::colorPixel(204));
+                }
+            }
+
             if (change) {
                 result = true;
                 this->setModified();
