@@ -92,6 +92,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Skeleton Axe dying (SklAxd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Skeleton Bow dying (SklBwd.CL2)</string>
         </property>
        </item>

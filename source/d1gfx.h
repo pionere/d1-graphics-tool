@@ -142,6 +142,7 @@ typedef enum gfx_file_index {
     GFX_PLR_WMHAS,   // graphics of the warrior with shield and mace standing in the dungeon (WMHAS.CL2)
     GFX_MON_FALLGW,  // graphics of the Devil Kin Brute walking (Fallgw.CL2)
     GFX_MON_GOATLD,  // graphics of the Satyr Lord dying (GoatLd.CL2)
+    GFX_MON_SKLAXD,  // graphics of the Skeleton Axe dying (SklAxd.CL2)
     GFX_MON_SKLBWD,  // graphics of the Skeleton Bow dying (SklBwd.CL2)
     GFX_MON_SKLSRD,  // graphics of the Skeleton Sword dying (SklSrd.CL2)
     GFX_SPL_ICONS,   // spell icons (SpelIcon.CEL)
@@ -254,6 +255,7 @@ private:
     bool patchWarriorStand(bool silent);
     bool patchFallGWalk(bool silent);
     bool patchGoatLDie(bool silent);
+    bool patchSklAxDie(bool silent);
     bool patchSklBwDie(bool silent);
     bool patchSklSrDie(bool silent);
     bool patchSplIcons(bool silent);

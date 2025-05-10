@@ -2156,8 +2156,8 @@ bool D1Gfx::patchWarriorStand(bool silent)
     }
 
     constexpr int frameCount = 10;
-    constexpr int height = 96;
     constexpr int width = 96;
+    constexpr int height = 96;
 
     if (this->getGroupCount() <= DIR_SW) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -2315,8 +2315,8 @@ bool D1Gfx::patchFallGWalk(bool silent)
     }
 
     constexpr int frameCount = 8;
-    constexpr int height = 128;
     constexpr int width = 128;
+    constexpr int height = 128;
 
     if (this->getGroupCount() <= DIR_E || this->getGroupCount() <= DIR_W) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -3570,8 +3570,8 @@ bool D1Gfx::patchFallGWalk(bool silent)
 /*bool D1Gfx::patchGoatLDieDio(bool silent)
 {
     constexpr int frameCount = 16;
-    constexpr int height = 160;
     constexpr int width = 160;
+    constexpr int height = 160;
 
     if (this->getGroupCount() <= DIR_NW || this->getGroupCount() <= DIR_NE) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -3896,8 +3896,8 @@ static bool CopyFrame(D1GfxFrame* dstFrame, int dx, int dy, const D1GfxFrame* sr
 bool D1Gfx::patchGoatLDie(bool silent)
 {
     constexpr int frameCount = 16;
-    constexpr int height = 128;
     constexpr int width = 160;
+    constexpr int height = 128;
 
     if (this->getGroupCount() <= DIR_SW || this->getGroupCount() <= DIR_W || this->getGroupCount() <= DIR_NW || this->getGroupCount() <= DIR_E || this->getGroupCount() <= DIR_SE) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -4103,12 +4103,234 @@ bool D1Gfx::patchGoatLDie(bool silent)
     return result;
 }
 
+
+bool D1Gfx::patchSklAxDie(bool silent)
+{
+    constexpr int frameCount = 17;
+    constexpr int width = 128;
+    constexpr int height = 96;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(49, 12).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 0, dy = 0;
+            if (i + 1 == 1) {
+                dx = 0;
+                dy = 15;
+            }
+            // if (ii + 1 == 1) {
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = 12;
+                }
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = 10;
+                }
+                if (i + 1 == 4) {
+                    dx = 0;
+                    dy = 6;
+                }
+                if (i + 1 == 5 || i + 1 == 6 || i + 1 == 7) {
+                    dx = 0;
+                    dy = 5;
+                }
+                if (i + 1 == 8 || i + 1 == 9 || i + 1 == 10) {
+                    dx = 0;
+                    dy = 3;
+                }
+                if (ii + 1 != 4) {
+                if (i + 1 == 11) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 4) {
+                if (i + 1 == 12) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 4 && ii + 1 != 5) {
+                if (i + 1 == 13) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 4 && ii + 1 != 5) {
+                if (i + 1 == 14) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 4 && ii + 1 != 5) {
+                if (i + 1 == 15) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 4 && ii + 1 != 5) {
+                if (i + 1 == 16) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+                if (ii + 1 != 1 && ii + 1 != 2 && ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 8) {
+                if (i + 1 == 17) {
+                    dx = 0;
+                    dy = 3;
+                }
+                }
+            // }
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            switch (ii + 1) {
+            case 1:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                break;
+            case 2:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                break;
+            case 4:
+                if (i + 1 == 11) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                if (i + 1 == 12) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                if (i + 1 == 13) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 89);
+                }
+                if (i + 1 == 14) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 87, 70, 88);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 87);
+                }
+                if (i + 1 == 15) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 85, 70, 87);
+                    change |= ShiftFrame(currFrame, 0, 3, 91, 85, 93, 86);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                if (i + 1 == 16) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 87, 70, 89);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 87);
+                }
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 67, 87);
+                    change |= ShiftFrame(currFrame, 0, 3, 88, 83, 97, 85);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                break;
+            case 5:
+                if (i + 1 == 13) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 85, 75, 89);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                if (i + 1 == 14) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 83, 75, 88);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                if (i + 1 == 15) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 56, 81, 76, 90);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 81);
+                }
+                if (i + 1 == 16) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 57, 85, 67, 90); // axe
+                    change |= ShiftFrame(currFrame, 0, 3, 70, 83, width, height); // right arm
+                    change |= ShiftFrame(currFrame, 0, 3, 40, 77, width, 83); // body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 77); // body
+
+                    change |= ShiftFrame(currFrame, 0, -3, 48, 87, 54, 92); // left arm
+                }
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 57, 85, 67, 91); // axe
+                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 74, 85); // axe
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);  // body
+                }
+                break;
+            case 6:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 72, 83, 74, 85);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                break;
+            case 8:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 67, 85);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                break;
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 bool D1Gfx::patchSklBwDie(bool silent)
 {
     constexpr int frameCount = 16;
     constexpr int obsoleteFrameCount = 3;
-    constexpr int height = 96;
     constexpr int width = 128;
+    constexpr int height = 96;
 
     if (this->getGroupCount() != NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -4190,95 +4412,10 @@ bool D1Gfx::patchSklBwDie(bool silent)
                 }
                 break;
             case 3:
-                if (i + 1 == 2) {
-                    dx = 0;
-                    dy = -3;
-                }
-                if (i + 1 == 3) {
-                    dx = 0;
-                    dy = -5;
-                }
-                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
-                    dx = 0;
-                    dy = -6;
-                }
-                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
-                    dx = 0;
-                    dy = -7;
-                }
-                break;
             case 4:
-                if (i + 1 == 2) {
-                    dx = 0;
-                    dy = -3;
-                }
-                if (i + 1 == 3) {
-                    dx = 0;
-                    dy = -5;
-                }
-                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
-                    dx = 0;
-                    dy = -6;
-                }
-                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
-                    dx = 0;
-                    dy = -7;
-                }
-                break;
             case 5:
-                if (i + 1 == 2) {
-                    dx = 0;
-                    dy = -3;
-                }
-                if (i + 1 == 3) {
-                    dx = 0;
-                    dy = -5;
-                }
-                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
-                    dx = 0;
-                    dy = -6;
-                }
-                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
-                    dx = 0;
-                    dy = -7;
-                }
-                break;
             case 6:
-                if (i + 1 == 2) {
-                    dx = 0;
-                    dy = -3;
-                }
-                if (i + 1 == 3) {
-                    dx = 0;
-                    dy = -5;
-                }
-                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
-                    dx = 0;
-                    dy = -6;
-                }
-                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
-                    dx = 0;
-                    dy = -7;
-                }
-                break;
             case 7:
-                if (i + 1 == 2) {
-                    dx = 0;
-                    dy = -3;
-                }
-                if (i + 1 == 3) {
-                    dx = 0;
-                    dy = -5;
-                }
-                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
-                    dx = 0;
-                    dy = -6;
-                }
-                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
-                    dx = 0;
-                    dy = -7;
-                }
-                break;
             case 8:
                 if (i + 1 == 2) {
                     dx = 0;
@@ -4317,8 +4454,8 @@ bool D1Gfx::patchSklBwDie(bool silent)
 bool D1Gfx::patchSklSrDie(bool silent)
 {
     constexpr int frameCount = 15;
-    constexpr int height = 96;
     constexpr int width = 128;
+    constexpr int height = 96;
 
     if (this->getGroupCount() != NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -4460,10 +4597,19 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, 6, -6, 13, 78, 16, 79);
                     change |= ShiftFrame(currFrame, 6, -6, 32, 77, 36, 79);
                     change |= ShiftFrame(currFrame, 6, -6, 14, 79, 36, 85);
+                    // eliminate shadow(?)
+                    change |= currFrame->setPixel(16, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(17, 78, D1GfxPixel::transparentPixel());
                 }
                 if (i + 1 == 13) {
                     change |= ShiftFrame(currFrame, 10, -6, 30, 77, 33, 79);
                     change |= ShiftFrame(currFrame, 10, -6, 9, 79, 33, 85);
+                    // eliminate shadow(?)
+                    change |= currFrame->setPixel(9, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(10, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(11, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(12, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(13, 78, D1GfxPixel::transparentPixel());
                 }
                 if (i + 1 == 14) {
                     change |= ShiftFrame(currFrame, 11, -6, 8, 79, 32, 87);
@@ -4660,7 +4806,8 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, -9, -8, 90, 84, 99, 85);
                     change |= ShiftFrame(currFrame, -10, -8, 90, 85, 99, 88);
                     change |= ShiftFrame(currFrame, -11, -8, 90, 88, 99, 90);
-                    change |= ShiftFrame(currFrame, -12, -8, 90, 90, 99, 96);
+                    change |= ShiftFrame(currFrame, -12, -8, 90, 90, 99, 91);
+                    change |= ShiftFrame(currFrame, -13, -8, 90, 91, 99, 96);
                 }
                 break;
             case 8:
@@ -4698,12 +4845,13 @@ bool D1Gfx::patchSklSrDie(bool silent)
                 // complete the left-leg
                 if (i + 1 == 14) {
                     D1GfxFrame* prevFrame = this->getFrame(n - 1);
-                    change |= CopyFrame(currFrame, 0, -1, prevFrame, 44, 86, 48, 87);
+                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 44, 86, 48, 87);
                     change |= CopyFrame(currFrame, 0, 1, prevFrame, 45, 87, 49, 88);
+                    change |= currFrame->setPixel(45, 87, D1GfxPixel::colorPixel(165));
                 }
                 if (i + 1 == 15) {
                     D1GfxFrame* prevFrame = this->getFrame(n - 1);
-                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 43, 86, 51, 88);
+                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 43, 86, 51, 89);
                 }
                 break;
             }
@@ -5405,6 +5553,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_GOATLD: // patch GoatLd.CL2
         change = this->patchGoatLDie(silent);
         break;
+    case GFX_MON_SKLAXD:
+        change = this->patchSklAxDie(silent);
+        break;
     case GFX_MON_SKLBWD:
         change = this->patchSklBwDie(silent);
         break;
@@ -5550,6 +5701,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "goatld") {
         fileIndex = GFX_MON_GOATLD;
+    }
+    if (baseName == "sklaxd") {
+        fileIndex = GFX_MON_SKLAXD;
     }
     if (baseName == "sklbwd") {
         fileIndex = GFX_MON_SKLBWD;
