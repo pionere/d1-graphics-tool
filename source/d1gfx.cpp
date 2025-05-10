@@ -3879,6 +3879,20 @@ static bool ShiftFrame(D1GfxFrame *frame, int dx, int dy, int sx, int sy, int ex
     return change;
 }
 
+static bool CopyFrame(D1GfxFrame* dstFrame, int dx, int dy, const D1GfxFrame* srcFrame, int sx, int sy, int ex, int ey)
+{
+    bool change = false;
+    for (int y = sy; y < ey; y++) {
+        for (int x = sx; x < ex; x++) {
+            D1GfxPixel pixel = srcFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            change |= dstFrame->setPixel(x + dx, y + dy, pixel);
+        }
+    }
+    return change;
+}
+
 bool D1Gfx::patchGoatLDie(bool silent)
 {
     constexpr int frameCount = 16;
@@ -4291,7 +4305,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
                 result = true;
                 this->setModified();
                 if (!silent) {
-                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(ii + 1);
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
                 }
             }
         }
@@ -4393,7 +4407,8 @@ bool D1Gfx::patchSklSrDie(bool silent)
 
             change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
-            if (ii + 1 == 1) {
+            switch (ii + 1) {
+            case 1:
                 // shift the sword
                 if (i + 1 == 9) {
                     change |= ShiftFrame(currFrame, -1, 3, 47, 50, 61, 60);
@@ -4420,7 +4435,6 @@ bool D1Gfx::patchSklSrDie(bool silent)
                 if (i + 1 == 14) {
                     change |= ShiftFrame(currFrame, 3, 0, 26, 65, 43, 70);
                 }
-
                 if (i + 1 == 15) {
                     // shift the main body
                     change |= ShiftFrame(currFrame, 0, 3, 28, 66, 30, 68);
@@ -4432,16 +4446,33 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     // shift the shadow of the sword
                     change |= ShiftFrame(currFrame, 2, 0, 28, 66, 38, 71);
                 }
-
                 // shift the left-leg
                 if (i + 1 == 14 || i + 1 == 15) {
                     change |= ShiftFrame(currFrame, -1, -1, 69, 78, 75, 90);
                     change |= ShiftFrame(currFrame, -1, -4, 75, 78, 82, 96);
                     change |= ShiftFrame(currFrame, -1, -4, 74, 92, 75, 96);
                 }
-            }
-
-            if (ii + 1 == 2) {
+                // shift the right-leg
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 3, -3, 17, 72, 40, 80);
+                }
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 6, -6, 13, 78, 16, 79);
+                    change |= ShiftFrame(currFrame, 6, -6, 32, 77, 36, 79);
+                    change |= ShiftFrame(currFrame, 6, -6, 14, 79, 36, 85);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 10, -6, 30, 77, 33, 79);
+                    change |= ShiftFrame(currFrame, 10, -6, 9, 79, 33, 85);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 11, -6, 8, 79, 32, 87);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 13, -3, 6, 76, 30, 85);
+                }
+                break;
+            case 2:
                 // shift the right-leg
                 if (i + 1 == 9) {
                     change |= ShiftFrame(currFrame, 0, 3, 24, 57, 43, 67);
@@ -4485,7 +4516,6 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, 2, -2, 36, 76, 58, 96);
                     change |= ShiftFrame(currFrame, 2, -2, 38, 82, 49, 94);
                 }
-
                 // shift the shield
                 if (i + 1 == 14) {
                     change |= ShiftFrame(currFrame, 0, -2, 93, 76, 97, 78);
@@ -4497,11 +4527,10 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, 0, -4, 83, 79, 85, 80);
                     change |= ShiftFrame(currFrame, 0, -4, 79, 80, 95, 81);
                     change |= ShiftFrame(currFrame, 0, -4, 70, 81, 97, 87);
-                    change |= ShiftFrame(currFrame, 0, -4, 75, 82, 88, 83);
+                    change |= ShiftFrame(currFrame, 0, -4, 75, 87, 88, 88);
                 }
-            }
-
-            if (ii + 1 == 4) {
+                break;
+            case 4:
                 // shift the main body
                 if (i + 1 == 14) {
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
@@ -4509,7 +4538,6 @@ bool D1Gfx::patchSklSrDie(bool silent)
                 if (i + 1 == 15) {
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
                 }
-
                 // shift the shield
                 if (i + 1 == 15) {
                     change |= ShiftFrame(currFrame, 0, -2, 30, 72, 46, 85);
@@ -4517,9 +4545,8 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, 0, -2, 46, 77, 48, 85);
                     change |= ShiftFrame(currFrame, 0, -2, 48, 78, 50, 81);
                 }
-            }
-
-            if (ii + 1 == 5) {
+                break;
+            case 5:
                 // shift the main body
                 if (i + 1 == 13) {
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 77);
@@ -4533,7 +4560,6 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 80);
                     change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 69);
                 }
-
                 // shift the sword
                 if (i + 1 == 12) {
                     change |= ShiftFrame(currFrame, -2, -1, 62, 73, width, height);
@@ -4551,8 +4577,18 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, -2, -5, 64, 81, width, height);
                     change |= ShiftFrame(currFrame, -4, 0, 84, 76, width, height);
                 }
-            }
-            if (ii + 1 == 6) {
+                // complete the sword
+                if (i + 1 == 14) {
+                    change |= currFrame->setPixel(87, 94, D1GfxPixel::colorPixel(248));
+                    change |= currFrame->setPixel(88, 94, D1GfxPixel::colorPixel(164));
+                }
+                if (i + 1 == 15) {
+                    change |= CopyFrame(currFrame, -2, 3, currFrame, 88, 88, 92, 91);
+                    change |= currFrame->setPixel(86, 94, D1GfxPixel::colorPixel(248));
+                    change |= currFrame->setPixel(87, 94, D1GfxPixel::colorPixel(247));
+                }
+                break;
+            case 6:
                 // shift the main body
                 if (i + 1 == 14) {
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 80);
@@ -4560,8 +4596,27 @@ bool D1Gfx::patchSklSrDie(bool silent)
                 if (i + 1 == 15) {
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
                 }
-            }
-            if (ii + 1 == 7) {
+                // shift the sword
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 3, -4, 66, 81, 68, 93);
+                    change |= ShiftFrame(currFrame, 3, -4, 40, 82, 68, 93);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 4, -7, 39, 86, 68, 96);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 6, -7, 38, 87, 68, 96);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 9, -12, 54, 92, 67, 96);
+                }
+                // complete the sword
+                if (i + 1 == 15) {
+                    D1GfxFrame* prevFrame = this->getFrame(n - 1);
+                    change |= CopyFrame(currFrame, 2, 0, prevFrame, 44, 84, 71, 89);
+                }
+                break;
+            case 7:
                 // shift the main body
                 if (i + 1 == 12) {
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
@@ -4578,8 +4633,37 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= ShiftFrame(currFrame, 0, 3, 29, 79, 76, 84);
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
                 }
-            }
-            if (ii + 1 == 8) {
+                // shift the sword
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, -1, -5, 4, 78, 38, 87);
+                }
+                // shift the right-leg
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, -1, -3, 81, 78, 91, 92);
+                }
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, -5, -6, 85, 79, 94, 94);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, -8, -7, 88, 80, 97, 88);
+                    change |= ShiftFrame(currFrame, -9, -7, 88, 88, 97, 95);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, -8, -8, 90, 81, 99, 83);
+                    change |= ShiftFrame(currFrame, -9, -8, 90, 83, 99, 84);
+                    change |= ShiftFrame(currFrame, -10, -8, 90, 84, 99, 87);
+                    change |= ShiftFrame(currFrame, -11, -8, 90, 87, 99, 89);
+                    change |= ShiftFrame(currFrame, -12, -8, 90, 89, 99, 96);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, -8, -8, 90, 82, 99, 84);
+                    change |= ShiftFrame(currFrame, -9, -8, 90, 84, 99, 85);
+                    change |= ShiftFrame(currFrame, -10, -8, 90, 85, 99, 88);
+                    change |= ShiftFrame(currFrame, -11, -8, 90, 88, 99, 90);
+                    change |= ShiftFrame(currFrame, -12, -8, 90, 90, 99, 96);
+                }
+                break;
+            case 8:
                 // shift the main body
                 if (i + 1 == 12) {
                     change |= ShiftFrame(currFrame, 0, 3, 61, 82, width, height);
@@ -4595,13 +4679,40 @@ bool D1Gfx::patchSklSrDie(bool silent)
                 if (i + 1 == 15) {
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 86);
                 }
+                // shift the left-leg
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 2, -3, 45, 81, 61, 93);
+                }
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 1, -6, 44, 82, 60, 96);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 0, -7, 43, 83, 61, 96);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, -2, -8, 45, 85, 61, 96);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, -1, -9, 49, 86, 60, 96);
+                }
+                // complete the left-leg
+                if (i + 1 == 14) {
+                    D1GfxFrame* prevFrame = this->getFrame(n - 1);
+                    change |= CopyFrame(currFrame, 0, -1, prevFrame, 44, 86, 48, 87);
+                    change |= CopyFrame(currFrame, 0, 1, prevFrame, 45, 87, 49, 88);
+                }
+                if (i + 1 == 15) {
+                    D1GfxFrame* prevFrame = this->getFrame(n - 1);
+                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 43, 86, 51, 88);
+                }
+                break;
             }
 
             if (change) {
                 result = true;
                 this->setModified();
                 if (!silent) {
-                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(ii + 1);
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
                 }
             }
         }
