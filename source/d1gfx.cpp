@@ -2290,6 +2290,151 @@ bool D1Gfx::patchWarriorStand(bool silent)
     return result;
 }
 
+static bool ShiftFrame(D1GfxFrame *frame, int dx, int dy, int sx, int sy, int ex, int ey)
+{
+    if (dx == 0 && dy == 0)
+        return false;
+    int width = frame->getWidth();
+    int height = frame->getHeight();
+    bool change = false;
+    if (dx <= 0) {
+        if (dy <= 0) {
+            // for (int y = std::max(sy, -dy); y < ey; y++) {
+            for (int y = sy; y < ey; y++) {
+                // for (int x = std::max(sx, -dx); x < ex; x++) {
+                for (int x = sx; x < ex; x++) {
+                    if (x + dx >= 0 /*&& x + dx < width*/ && y + dy >= 0 /*&& y + dy < height*/)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } else {
+            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
+            for (int y = ey - 1; y >= sy; y--) {
+                // for (int x = std::max(sx, -dx); x < ex; x++) {
+                for (int x = sx; x < ex; x++) {
+                    if (x + dx >= 0 /*&& x + dx < width && y + dy >= 0 */&& y + dy < height)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    } else {
+        if (dy <= 0) {
+            // for (int y = std::max(sy, -dy); y < ey; y++) {
+            for (int y = sy; y < ey; y++) {
+                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
+                for (int x = ex - 1; x >= sx; x--) {
+                    if (/*x + dx >= 0 && */x + dx < width && y + dy >= 0 /*&& y + dy < height*/)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } else {
+            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
+            for (int y = ey - 1; y >= sy; y--) {
+                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
+                for (int x = ex - 1; x >= sx; x--) {
+                    if (/*x + dx >= 0 && */x + dx < width /*&& y + dy >= 0 */&& y + dy < height)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    }
+    return change;
+}
+
+static bool CopyFrame(D1GfxFrame* dstFrame, int dx, int dy, const D1GfxFrame* srcFrame, int sx, int sy, int ex, int ey)
+{
+    bool change = false;
+    for (int y = sy; y < ey; y++) {
+        for (int x = sx; x < ex; x++) {
+            D1GfxPixel pixel = srcFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            change |= dstFrame->setPixel(x + dx, y + dy, pixel);
+        }
+    }
+    return change;
+}
+
+bool D1Gfx::patchFallGDie(bool silent)
+{
+    constexpr int frameCount = 17;
+    constexpr int width = 128;
+    constexpr int height = 128;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(28, 108).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 9, dy = -2;
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 bool D1Gfx::patchFallGWalk(bool silent)
 {
     QString baseFilePath = this->getFilePath();
@@ -3804,95 +3949,6 @@ bool D1Gfx::patchFallGWalk(bool silent)
     return result;
 }*/
 
-static bool ShiftFrame(D1GfxFrame *frame, int dx, int dy, int sx, int sy, int ex, int ey)
-{
-    if (dx == 0 && dy == 0)
-        return false;
-    int width = frame->getWidth();
-    int height = frame->getHeight();
-    bool change = false;
-    if (dx <= 0) {
-        if (dy <= 0) {
-            // for (int y = std::max(sy, -dy); y < ey; y++) {
-            for (int y = sy; y < ey; y++) {
-                // for (int x = std::max(sx, -dx); x < ex; x++) {
-                for (int x = sx; x < ex; x++) {
-                    if (x + dx >= 0 /*&& x + dx < width*/ && y + dy >= 0 /*&& y + dy < height*/)
-                    {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        change |= frame->setPixel(x + dx, y + dy, pixel);
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        } else {
-            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
-            for (int y = ey - 1; y >= sy; y--) {
-                // for (int x = std::max(sx, -dx); x < ex; x++) {
-                for (int x = sx; x < ex; x++) {
-                    if (x + dx >= 0 /*&& x + dx < width && y + dy >= 0 */&& y + dy < height)
-                    {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        change |= frame->setPixel(x + dx, y + dy, pixel);
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        }
-    } else {
-        if (dy <= 0) {
-            // for (int y = std::max(sy, -dy); y < ey; y++) {
-            for (int y = sy; y < ey; y++) {
-                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
-                for (int x = ex - 1; x >= sx; x--) {
-                    if (/*x + dx >= 0 && */x + dx < width && y + dy >= 0 /*&& y + dy < height*/)
-                    {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        change |= frame->setPixel(x + dx, y + dy, pixel);
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        } else {
-            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
-            for (int y = ey - 1; y >= sy; y--) {
-                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
-                for (int x = ex - 1; x >= sx; x--) {
-                    if (/*x + dx >= 0 && */x + dx < width /*&& y + dy >= 0 */&& y + dy < height)
-                    {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        change |= frame->setPixel(x + dx, y + dy, pixel);
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        }
-    }
-    return change;
-}
-
-static bool CopyFrame(D1GfxFrame* dstFrame, int dx, int dy, const D1GfxFrame* srcFrame, int sx, int sy, int ex, int ey)
-{
-    bool change = false;
-    for (int y = sy; y < ey; y++) {
-        for (int x = sx; x < ex; x++) {
-            D1GfxPixel pixel = srcFrame->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            change |= dstFrame->setPixel(x + dx, y + dy, pixel);
-        }
-    }
-    return change;
-}
-
 bool D1Gfx::patchGoatLDie(bool silent)
 {
     constexpr int frameCount = 16;
@@ -4310,6 +4366,67 @@ bool D1Gfx::patchSklAxDie(bool silent)
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
                 }
                 break;
+            }
+
+            // shift bone
+            if (ii + 1 == 6) {
+                if (i + 1 == 9) {
+                    change |= ShiftFrame(currFrame, 0, -10, 52, 78, 54, 80);
+                    change |= ShiftFrame(currFrame, 0, -10, 49, 79, 52, 81);
+                }
+                if (i + 1 == 10) {
+                    change |= ShiftFrame(currFrame, 0, -10, 50, 83, 53, 85);
+                    change |= ShiftFrame(currFrame, 0, -10, 48, 85, 52, 89);
+                }
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 4, -6, 48, 87, 53, 93);
+                    change |= ShiftFrame(currFrame, 4, -6, 47, 91, 48, 92);
+                }
+            } else {
+                if (i + 1 == 9) {
+                    if (ii + 1 == 1 || ii + 1 == 2) {
+                        change |= ShiftFrame(currFrame, 0, -10, 51, 77, 54, 79);
+                        change |= ShiftFrame(currFrame, 0, -10, 48, 79, 53, 82);
+                    } else if (ii + 1 == 4) {
+                        change |= ShiftFrame(currFrame, 0, -10, 49, 78, 54, 82);
+                    } else {
+                        change |= ShiftFrame(currFrame, 0, -10, 48, 77, 54, 82);
+                    }
+                }
+                if (i + 1 == 10) {
+                    if (ii + 1 == 3) {
+                        // TODO:....
+                    } else {
+                        change |= ShiftFrame(currFrame, 0, -10, 47, 83, 53, 89);
+                    }
+                }
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 4, -6, 47, 87, 53, 93);
+                }
+            }
+
+            if (i + 1 == 12) {
+                change |= ShiftFrame(currFrame, 7, -2, 49, 89, 53, 94);
+            }
+            if (i + 1 == 13) {
+                change |= ShiftFrame(currFrame, 7, -2, 50, 92, 53, 95);
+            }
+            if (i + 1 == 14) {
+                change |= ShiftFrame(currFrame, 7, -2, 50, 91, 53, 93);
+            }
+            if (i + 1 == 15) {
+                change |= ShiftFrame(currFrame, 7, -2, 49, 88, 54, 92);
+            }
+            if (i + 1 == 16) {
+                change |= ShiftFrame(currFrame, 7, -2, 48, 90, 54, 95);
+            }
+            if (i + 1 == 17) {
+                if (ii + 1 == 3) {
+                    D1GfxFrame* prevFrame = this->getFrame(n - 1);
+                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 56, 90, 61, 93);
+                } else {
+                    change |= ShiftFrame(currFrame, 7, -2, 49, 92, 54, 95);
+                }
             }
 
             if (change) {
@@ -5547,6 +5664,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
+    case GFX_MON_FALLGD: // patch Fallgd.CL2
+        change = this->patchFallGDie(silent);
+        break;
     case GFX_MON_FALLGW: // patch Fallgw.CL2
         change = this->patchFallGWalk(silent);
         break;
@@ -5695,6 +5815,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     // cl2 files
     if (baseName == "wmhas") {
         fileIndex = GFX_PLR_WMHAS;
+    }
+    if (baseName == "fallgd") {
+        fileIndex = GFX_MON_FALLGD;
     }
     if (baseName == "fallgw") {
         fileIndex = GFX_MON_FALLGW;

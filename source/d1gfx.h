@@ -140,6 +140,7 @@ typedef enum gfx_file_index {
     GFX_OBJ_RSHR,    // graphics of the east-facing shrine (RShrineG.CEL)
     GFX_OBJ_L5LIGHT, // graphics of the light stand in Crypt (L5Light.CEL)
     GFX_PLR_WMHAS,   // graphics of the warrior with shield and mace standing in the dungeon (WMHAS.CL2)
+    GFX_MON_FALLGD,  // graphics of the Devil Kin Brute dying (Fallgd.CL2)
     GFX_MON_FALLGW,  // graphics of the Devil Kin Brute walking (Fallgw.CL2)
     GFX_MON_GOATLD,  // graphics of the Satyr Lord dying (GoatLd.CL2)
     GFX_MON_SKLAXD,  // graphics of the Skeleton Axe dying (SklAxd.CL2)
@@ -253,6 +254,7 @@ private:
     bool patchRightShrine(bool silent);
     bool patchCryptLight(bool silent);
     bool patchWarriorStand(bool silent);
+    bool patchFallGDie(bool silent);
     bool patchFallGWalk(bool silent);
     bool patchGoatLDie(bool silent);
     bool patchSklAxDie(bool silent);

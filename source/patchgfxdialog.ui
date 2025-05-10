@@ -82,6 +82,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Devil Kin Brute dying (Fallgd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Devil Kin Brute walking (Fallgw.CL2)</string>
         </property>
        </item>
