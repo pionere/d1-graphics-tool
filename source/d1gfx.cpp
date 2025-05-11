@@ -2699,7 +2699,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
                 for (int x = 0; x < width; x++) {
                     // preserve pixels
                     if (i + 1 == 3) {
-                        if (y < 51 || (x > 65 && y < 55) || (x >= 57 && x < 60 && y < 54 + 57 - x) || (x == 56 && y == 52)) {
+                        if (y < 51 || (x > 65 && y < 55) || (x >= 57 && x < 60 && y < 54 + 57 - x) || (x == 56 && y == 52))
                             continue;
                     }
                     if (i + 1 == 2) {
