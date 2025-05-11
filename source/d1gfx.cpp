@@ -2671,7 +2671,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
         int n;
         D1GfxFrame* frame;
 
-        int n = this->getGroupFrameIndices(ii).first + i;
+        n = this->getGroupFrameIndices(ii).first + i;
         frame = this->getFrame(n);
         if (frame->getWidth() != width || frame->getHeight() != height) {
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
