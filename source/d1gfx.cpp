@@ -2479,6 +2479,11 @@ bool D1Gfx::patchFallGDie(bool silent)
             if (ii + 1 == 3) {
                 if (i + 1 >= 13) {
                     // draw club based on frame 1 of group 8
+                    for (int y = 123; y < 126; y++) {
+                        for (int x = 40; x < 46; x++) {
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
                     int bn = this->getGroupFrameIndices(8 - 1).first + 1 - 1;
                     D1GfxFrame* baseFrame = this->getFrame(bn);
                     for (int y = 97 + 2; y < 110 + 2 - 2; y++) {
@@ -2486,7 +2491,7 @@ bool D1Gfx::patchFallGDie(bool silent)
                             D1GfxPixel pixel = baseFrame->getPixel(x, y);
                             if (pixel.isTransparent())
                                 continue;
-                            change |= currFrame->setPixel(37 + x - (83 - 9), y + 17, pixel);
+                            change |= currFrame->setPixel(37 + x - (83 - 9), y + 18, pixel);
                         }
                     }
                 }
@@ -2656,7 +2661,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
         dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
-    if ((stdGfx.getGroupFrameIndices(ii).second - stdGfx.getGroupFrameIndices(ii).first + 1) < framesToPatch) {
+    if ((stdGfx.getGroupFrameIndices(ii).second - stdGfx.getGroupFrameIndices(ii).first + 1) < 7) {
         dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg(ii + 1).arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
@@ -2693,7 +2698,14 @@ bool D1Gfx::patchMagmaDie(bool silent)
         D1GfxFrame* currFrame = this->getFrame(n);
         bool change = false;
         if (i + 1 <= framesToPatch) {
-            D1GfxFrame* frameSrcStd = stdGfx.getFrame(stdGfx.getGroupFrameIndices(ii).first + i);
+            int si;
+            switch (i + 1) {
+            case 1: si = 1 - 1; break;
+            case 2: si = 6 - 1; break;
+            case 3: si = 7 - 1; break;
+            }
+            int sn = stdGfx.getGroupFrameIndices(ii).first + si;
+            D1GfxFrame* frameSrcStd = stdGfx.getFrame(sn);
 
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
