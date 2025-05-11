@@ -2477,6 +2477,27 @@ bool D1Gfx::patchFallGDie(bool silent)
                 }
             }
             if (ii + 1 == 3) {
+                // add shadow
+                if (i + 1 == 6) {
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 7) {
+                    change |= currFrame->setPixel(7, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 106, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 8) {
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 109, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 9) {
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 110, D1GfxPixel::colorPixel(0));
+                }
                 if (i + 1 >= 13) {
                     // draw club based on frame 1 of group 8
                     for (int y = 123; y < 126; y++) {
@@ -2760,7 +2781,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
                                 D1GfxPixel pixel = baseFrame->getPixel(x, y);
                                 if (pixel.isTransparent())
                                     continue;
-                                int dx = 59 - 93, dy = 93 - 62;
+                                int dx = 59 - 93, dy = 88 - 62;
                                 D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
                                 if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
                                     change |= currFrame->setPixel(x + dx, y + dy, pixel);
