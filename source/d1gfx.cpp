@@ -2423,7 +2423,7 @@ bool D1Gfx::patchFallGDie(bool silent)
             change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
             // add missing pixels
-            if (ii + 1 == 2) {
+            if (ii + 1 == 1) {
                 if (i + 1 >= 13) {
                     // draw leg
                     change |= currFrame->setPixel(50, 126, D1GfxPixel::colorPixel(174));
@@ -2478,21 +2478,15 @@ bool D1Gfx::patchFallGDie(bool silent)
             }
             if (ii + 1 == 3) {
                 if (i + 1 >= 13) {
-                    // draw club based on frame 4
-                    D1GfxFrame* baseFrame = this->getFrame(n - (9 + i + 1 - 13));
-                    for (int y = 92; y < 104; y++) {
-                        for (int x = 15; x < 43; x++) {
-                            if (y < 102 && y < 92 - 10 + (x + 1) / 2) {
-                                continue;
-                            }
+                    // draw club based on frame 1 of group 8
+                    int bn = this->getGroupFrameIndices(8 - 1).first + 1 - 1;
+                    D1GfxFrame* baseFrame = this->getFrame(bn);
+                    for (int y = 97 + 2; y < 110 + 2 - 2; y++) {
+                        for (int x = 83 - 9; x < 103 - 9; x++) {
                             D1GfxPixel pixel = baseFrame->getPixel(x, y);
                             if (pixel.isTransparent())
                                 continue;
-                            quint8 color = pixel.getPaletteIndex();
-                            if (x >= 27 && color == 0)
-                                continue;
-
-                            change |= currFrame->setPixel(37 + 42 - x, 118 + 102 - y, pixel);
+                            change |= currFrame->setPixel(37 + x - (83 - 9), y + 17, pixel);
                         }
                     }
                 }
@@ -2701,36 +2695,20 @@ bool D1Gfx::patchMagmaDie(bool silent)
         if (i + 1 <= framesToPatch) {
             D1GfxFrame* frameSrcStd = stdGfx.getFrame(stdGfx.getGroupFrameIndices(ii).first + i);
 
-            // prepare a 'work'-frame
-            D1GfxFrame* frame = new D1GfxFrame();
-            for (int y = 0; y < height; y++) {
-                std::vector<D1GfxPixel> pixelLine;
-                for (int x = 0; x < width; x++) {
-                    pixelLine.push_back(D1GfxPixel::transparentPixel());
-                }
-                frame->addPixelLine(std::move(pixelLine));
-            }
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     // preserve pixels
                     if (i + 1 == 3) {
-                        D1GfxPixel pixel = currFrame->getPixel(x, y);
                         if (y < 51 || (x > 65 && y < 55) || (x >= 57 && x < 60 && y < 54 + 57 - x) || (x == 56 && y == 52)) {
-                            frame->setPixel(x, y, pixel);
-                        } else if (x >= 37 && x < 53 && y >= 81 && y < 105 && y > 80 + x - 47) {
-                            if (!pixel.isTransparent()) {
-                                quint8 color = pixel.getPaletteIndex();
-                                if (color != 0) {
-                                    frame->setPixel(x + 22, y + 9, pixel);
-                                }
-                            }
-                        }
+                            continue;
                     }
                     if (i + 1 == 2) {
                         if (x >= 72 && y < 72 && y < 64 + x - 72) {
                             D1GfxPixel pixel = currFrame->getPixel(x, y);
                             if (!pixel.isTransparent()) {
-                                frame->setPixel(x - 16, y, pixel);
+                                change |= currFrame->setPixel(x - 16, y, pixel);
+                                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                                continue;
                             }
                         }
                     }
@@ -2738,22 +2716,40 @@ bool D1Gfx::patchMagmaDie(bool silent)
                     D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
                     if (!pixel.isTransparent()) {
                         quint8 color = pixel.getPaletteIndex();
-                        if (color != 0) {
+                        if (color != 0 && color < 240) {
                             pixel = D1GfxPixel::colorPixel(color - 1);
                         }
                     }
                     change |= currFrame->setPixel(x, y, pixel);
                 }
             }
-            // draw preserved pixels
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    if (!pixel.isTransparent())
-                        change |= currFrame->setPixel(x, y, pixel);
+
+            if (i + 1 == 3) {
+                // add bits from frame 4
+                D1GfxFrame* baseFrame = this->getFrame(n + 1);
+                for (int y = 62; y < 73; y++) {
+                    for (int x = 93; x < 106; x++) {
+                        D1GfxPixel pixel = baseFrame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        int dx = 59 - 93, dy = 93 - 62;
+                        D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
+                        if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
+                            change |= currFrame->setPixel(x + dx, y + dy, pixel);
+                    }
+                }
+                for (int y = 79; y < 88; y++) {
+                    for (int x = 88; x < 98; x++) {
+                        D1GfxPixel pixel = baseFrame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        int dx = 56 - 88, dy = 95 - 79; 
+                        D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
+                        if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
+                            change |= currFrame->setPixel(x + dx, y + dy, pixel);
+                    }
                 }
             }
-            delete frame;
         }
 
         if (change) {
