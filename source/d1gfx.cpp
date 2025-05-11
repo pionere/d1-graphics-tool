@@ -2633,8 +2633,12 @@ bool D1Gfx::patchMagmaDie(bool silent)
     constexpr int frameCount = 18;
     constexpr int width = 128;
     constexpr int height = 128;
-    int ii = DIR_S;
     int framesToPatch = 3;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
 
     QString baseFilePath = this->getFilePath();
     if (baseFilePath.length() < 10) {
@@ -2657,118 +2661,153 @@ bool D1Gfx::patchMagmaDie(bool silent)
         dProgressErr() << (tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(stdPath)));
         return false;
     }
-    if (stdGfx.getGroupCount() <= ii) {
+    if (stdGfx.getGroupCount() <= DIR_S) {
         dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
-    if ((stdGfx.getGroupFrameIndices(ii).second - stdGfx.getGroupFrameIndices(ii).first + 1) < 7) {
-        dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg(ii + 1).arg(QDir::toNativeSeparators(stdPath));
+    if ((stdGfx.getGroupFrameIndices(DIR_S).second - stdGfx.getGroupFrameIndices(DIR_S).first + 1) < 7) {
+        dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg((int)DIR_S + 1).arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
 
-    for (int i = 0; i < frameCount; i++) {
-        int n;
-        D1GfxFrame* frame;
-
-        n = this->getGroupFrameIndices(ii).first + i;
-        frame = this->getFrame(n);
-        if (frame->getWidth() != width || frame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
-            return false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* frame = this->getFrame(n);
+            if (frame->getWidth() != width || frame->getHeight() != height) {
+                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
         }
-        n = stdGfx.getGroupFrameIndices(ii).first + i;
-        frame = stdGfx.getFrame(n);
-        if (frame->getWidth() != width || frame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
-            return false;
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(51, 51).isTransparent()) {
+                return false; // assume it is already done
+            }
         }
     }
-    // if (ii + 1 == 1) {
-        int i = 1 - 1;
-        int n = this->getGroupFrameIndices(ii).first + i;
-        D1GfxFrame* currFrame = this->getFrame(n);
-        if (currFrame->getPixel(51, 51).isTransparent()) {
-            return false; // assume it is already done
-        }
-    // }
 
     bool result = false;
-    for (int i = 0; i < frameCount; i++) {
-        int n = this->getGroupFrameIndices(ii).first + i;
-        D1GfxFrame* currFrame = this->getFrame(n);
-        bool change = false;
-        if (i + 1 <= framesToPatch) {
-            int si;
-            switch (i + 1) {
-            case 1: si = 1 - 1; break;
-            case 2: si = 6 - 1; break;
-            case 3: si = 7 - 1; break;
-            }
-            int sn = stdGfx.getGroupFrameIndices(ii).first + si;
-            D1GfxFrame* frameSrcStd = stdGfx.getFrame(sn);
-
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    // preserve pixels
-                    if (i + 1 == 3) {
-                        if (y < 51 || (x > 65 && y < 55) || (x >= 57 && x < 60 && y < 54 + 57 - x) || (x == 56 && y == 52))
-                            continue;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            if (ii + 1 == 1) {
+                if (i + 1 <= framesToPatch) {
+                    int si;
+                    switch (i + 1) {
+                    case 1: si = 1 - 1; break;
+                    case 2: si = 6 - 1; break;
+                    case 3: si = 7 - 1; break;
                     }
-                    if (i + 1 == 2) {
-                        if (x >= 72 && y < 72 && y < 64 + x - 72) {
-                            D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    int sn = stdGfx.getGroupFrameIndices(ii).first + si;
+                    D1GfxFrame* frameSrcStd = stdGfx.getFrame(sn);
+                    if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
+                        dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+                        return result;
+                    }
+
+                    for (int y = 0; y < height; y++) {
+                        for (int x = 0; x < width; x++) {
+                            // preserve pixels
+                            if (i + 1 == 3) {
+                                if (y < 51 || (x > 65 && y < 55) || (x >= 57 && x < 60 && y < 54 + 57 - x) || (x == 56 && y == 52))
+                                    continue;
+                            }
+                            if (i + 1 == 2) {
+                                if (x >= 72 && y < 72 && y < 64 + x - 72) {
+                                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                                    if (!pixel.isTransparent()) {
+                                        change |= currFrame->setPixel(x - 16, y, pixel);
+                                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                                        continue;
+                                    }
+                                }
+                            }
+                            // copy pixels with 'trn'
+                            D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
                             if (!pixel.isTransparent()) {
-                                change |= currFrame->setPixel(x - 16, y, pixel);
-                                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                                continue;
+                                quint8 color = pixel.getPaletteIndex();
+                                if (color != 0) {
+                                    if (color < 188)
+                                        pixel = D1GfxPixel::colorPixel(color - 1);
+                                    if (color >= 214 && color <= 217)
+                                        pixel = D1GfxPixel::colorPixel(155);
+                                    if (color >= 218 && color <= 220)
+                                        pixel = D1GfxPixel::colorPixel(140 + color - 218);
+                                    if (color >= 221 && color <= 222)
+                                        pixel = D1GfxPixel::colorPixel(142);
+                                    if (color >= 232 && color <= 233)
+                                        pixel = D1GfxPixel::colorPixel(154);
+                                    if (color >= 234 && color <= 235)
+                                        pixel = D1GfxPixel::colorPixel(156);
+                                    if (color >= 236 && color <= 239)
+                                        pixel = D1GfxPixel::colorPixel(color - 4);
+                                }
+                            }
+                            change |= currFrame->setPixel(x, y, pixel);
+                        }
+                    }
+
+                    if (i + 1 == 3) {
+                        // add bits from frame 4
+                        D1GfxFrame* baseFrame = this->getFrame(n + 1);
+                        for (int y = 62; y < 73; y++) {
+                            for (int x = 93; x < 106; x++) {
+                                D1GfxPixel pixel = baseFrame->getPixel(x, y);
+                                if (pixel.isTransparent())
+                                    continue;
+                                int dx = 59 - 93, dy = 93 - 62;
+                                D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
+                                if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
+                                    change |= currFrame->setPixel(x + dx, y + dy, pixel);
+                            }
+                        }
+                        for (int y = 79; y < 88; y++) {
+                            for (int x = 88; x < 98; x++) {
+                                D1GfxPixel pixel = baseFrame->getPixel(x, y);
+                                if (pixel.isTransparent())
+                                    continue;
+                                int dx = 56 - 88, dy = 95 - 79;
+                                D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
+                                if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
+                                    change |= currFrame->setPixel(x + dx, y + dy, pixel);
                             }
                         }
                     }
-                    // copy pixels with 'trn'
-                    D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
-                    if (!pixel.isTransparent()) {
-                        quint8 color = pixel.getPaletteIndex();
-                        if (color != 0 && color < 240) {
-                            pixel = D1GfxPixel::colorPixel(color - 1);
+                }
+            } else if (i + 1 == 1) {
+                // draw leg
+                int si = 1 - 1;
+                int sn = stdGfx.getGroupFrameIndices(ii).first + si;
+                D1GfxFrame* frameSrcStd = stdGfx.getFrame(sn);
+                if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
+                    dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+                    return result;
+                }
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        int dx = 0, dy = 0;
+                        D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
+                        if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0) {
+                            change |= currFrame->setPixel(x + dx, y + dy, pixel);
                         }
                     }
-                    change |= currFrame->setPixel(x, y, pixel);
                 }
             }
 
-            if (i + 1 == 3) {
-                // add bits from frame 4
-                D1GfxFrame* baseFrame = this->getFrame(n + 1);
-                for (int y = 62; y < 73; y++) {
-                    for (int x = 93; x < 106; x++) {
-                        D1GfxPixel pixel = baseFrame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        int dx = 59 - 93, dy = 93 - 62;
-                        D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
-                        if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
-                            change |= currFrame->setPixel(x + dx, y + dy, pixel);
-                    }
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
                 }
-                for (int y = 79; y < 88; y++) {
-                    for (int x = 88; x < 98; x++) {
-                        D1GfxPixel pixel = baseFrame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        int dx = 56 - 88, dy = 95 - 79; 
-                        D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
-                        if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
-                            change |= currFrame->setPixel(x + dx, y + dy, pixel);
-                    }
-                }
-            }
-        }
-
-        if (change) {
-            result = true;
-            this->setModified();
-            if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
             }
         }
     }
@@ -2808,11 +2847,11 @@ bool D1Gfx::patchFallGWalk(bool silent)
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to East.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_E + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_W).second - this->getGroupFrameIndices(DIR_W).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to West.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_W + 1);
         return false;
     }
     if (stdGfx.getGroupCount() <= DIR_E) {
