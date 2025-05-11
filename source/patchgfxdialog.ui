@@ -92,6 +92,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Magma Demon dying (Magmad.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Satyr Lord dying (GoatLd.CL2)</string>
         </property>
        </item>

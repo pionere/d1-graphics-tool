@@ -2164,7 +2164,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         return false;
     }
     if (this->getGroupFrameIndices(DIR_SW).first != frameCount && this->getGroupFrameIndices(DIR_SW).second != 2 * frameCount - 1) {
-        dProgressErr() << tr("Not enough frames in the first frame group.");
+        dProgressErr() << tr("Not enough frames in the frame %1 group.").arg((int)DIR_SW + 1 - 1);
         return false;
     }
     if (stdGfx.getGroupCount() <= DIR_SW) {
@@ -2172,7 +2172,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         return false;
     }
     if (stdGfx.getGroupFrameIndices(DIR_SW).first != frameCount && stdGfx.getGroupFrameIndices(DIR_SW).second != 2 * frameCount - 1) {
-        dProgressErr() << tr("Not enough frames in the first frame group of '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg((int)DIR_SW + 1 - 1).arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
     if (atkGfx.getGroupCount() <= DIR_SW) {
@@ -2423,18 +2423,163 @@ bool D1Gfx::patchFallGDie(bool silent)
             change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
             // add missing pixels
-            if (ii + 1 == 5) {
+            if (ii + 1 == 2) {
                 if (i + 1 >= 13) {
-                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(190));
-                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(173));
-                    change |= currFrame->setPixel(8, 109, D1GfxPixel::colorPixel(253));
-                    change |= currFrame->setPixel(8, 110, D1GfxPixel::colorPixel(254));
-                    change |= currFrame->setPixel(8, 111, D1GfxPixel::colorPixel(223));
-                    change |= currFrame->setPixel(7, 108, D1GfxPixel::colorPixel(223));
-                    change |= currFrame->setPixel(7, 109, D1GfxPixel::colorPixel(190));
+                    // draw leg
+                    change |= currFrame->setPixel(50, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(51, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(52, 126, D1GfxPixel::colorPixel(238));
+                    change |= currFrame->setPixel(53, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(54, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(55, 126, D1GfxPixel::colorPixel(235));
+                    change |= currFrame->setPixel(56, 126, D1GfxPixel::colorPixel(234));
+                    change |= currFrame->setPixel(57, 126, D1GfxPixel::colorPixel(172));
+                    change |= currFrame->setPixel(58, 126, D1GfxPixel::colorPixel(238));
+                    change |= currFrame->setPixel(51, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(52, 127, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(53, 127, D1GfxPixel::colorPixel(235));
+                    change |= currFrame->setPixel(54, 127, D1GfxPixel::colorPixel(238));
+                    change |= currFrame->setPixel(55, 127, D1GfxPixel::colorPixel(238));
+                }
+            }
+            if (ii + 1 == 2) {
+                if (i + 1 >= 13) {
+                    // draw club
+                    change |= currFrame->setPixel(71, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(72, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(73, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(74, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(75, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(76, 126, D1GfxPixel::colorPixel(188));
+                    change |= currFrame->setPixel(77, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(78, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(79, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(80, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(81, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(82, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(83, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(84, 126, D1GfxPixel::colorPixel(175));
+                    change |= currFrame->setPixel(85, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(86, 126, D1GfxPixel::colorPixel(175));
+                    change |= currFrame->setPixel(95, 126, D1GfxPixel::colorPixel(175));
+                    change |= currFrame->setPixel(96, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(97, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(98, 126, D1GfxPixel::colorPixel(252));
+                    change |= currFrame->setPixel(99, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(100, 126, D1GfxPixel::colorPixel(188));
+                    change |= currFrame->setPixel(101, 126, D1GfxPixel::colorPixel(188));
+                    change |= currFrame->setPixel(73, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(74, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(75, 127, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(76, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(77, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(78, 127, D1GfxPixel::colorPixel(188));
+                }
+            }
+            if (ii + 1 == 3) {
+                if (i + 1 >= 13) {
+                    // draw club based on frame 4
+                    D1GfxFrame* baseFrame = this->getFrame(n - (9 + i + 1 - 13));
+                    for (int y = 92; y < 104; y++) {
+                        for (int x = 15; x < 43; x++) {
+                            if (y < 102 && y < 92 - 10 + (x + 1) / 2) {
+                                continue;
+                            }
+                            D1GfxPixel pixel = baseFrame->getPixel(x, y);
+                            if (pixel.isTransparent())
+                                continue;
+                            quint8 color = pixel.getPaletteIndex();
+                            if (x >= 27 && color == 0)
+                                continue;
+
+                            change |= currFrame->setPixel(37 + 42 - x, 118 + 102 - y, pixel);
+                        }
+                    }
                 }
             }
             if (ii + 1 == 4) {
+                // add shadow
+                if (i + 1 == 3) {
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 4) {
+                    change |= currFrame->setPixel(5, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(5, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 5) {
+                    change |= currFrame->setPixel(6, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 6) {
+                    change |= currFrame->setPixel(5, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(5, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 97, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 97, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 7) {
+                    change |= currFrame->setPixel(6, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 97, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 97, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 8) {
+                    change |= currFrame->setPixel(8, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 10) {
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 11) {
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 102, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 103, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 102, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 103, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 102, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 103, D1GfxPixel::colorPixel(0));
+                }
+                // draw club
                 if (i + 1 >= 13) {
                     change |= currFrame->setPixel(24, 126, D1GfxPixel::colorPixel(173));
                     change |= currFrame->setPixel(25, 126, D1GfxPixel::colorPixel(173));
@@ -2458,6 +2603,18 @@ bool D1Gfx::patchFallGDie(bool silent)
                     change |= currFrame->setPixel(33, 127, D1GfxPixel::colorPixel(204));
                 }
             }
+            if (ii + 1 == 5) {
+                // draw club
+                if (i + 1 >= 13) {
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(190));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(8, 109, D1GfxPixel::colorPixel(253));
+                    change |= currFrame->setPixel(8, 110, D1GfxPixel::colorPixel(254));
+                    change |= currFrame->setPixel(8, 111, D1GfxPixel::colorPixel(223));
+                    change |= currFrame->setPixel(7, 108, D1GfxPixel::colorPixel(223));
+                    change |= currFrame->setPixel(7, 109, D1GfxPixel::colorPixel(190));
+                }
+            }
 
             if (change) {
                 result = true;
@@ -2472,6 +2629,144 @@ bool D1Gfx::patchFallGDie(bool silent)
     return result;
 }
 
+bool D1Gfx::patchMagmaDie(bool silent)
+{
+    constexpr int frameCount = 18;
+    constexpr int width = 128;
+    constexpr int height = 128;
+    int ii = DIR_S;
+    int framesToPatch = 3;
+
+    QString baseFilePath = this->getFilePath();
+    if (baseFilePath.length() < 10) {
+        dProgressErr() << tr("Unrecognized file-path. Expected *Magmad.CL2");
+        return false;
+    }
+    // read Fallgn.CL2 from the same folder
+    QString stdPath = baseFilePath;
+    stdPath[stdPath.length() - 5] = QChar('h');
+
+    if (!QFileInfo::exists(stdPath)) {
+        dProgressErr() << tr("Could not find %1 to be used as a template file").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+
+    OpenAsParam opParams = OpenAsParam();
+    D1Gfx stdGfx;
+    stdGfx.setPalette(this->palette);
+    if (!D1Cl2::load(stdGfx, stdPath, opParams)) {
+        dProgressErr() << (tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(stdPath)));
+        return false;
+    }
+    if (stdGfx.getGroupCount() <= ii) {
+        dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+    if ((stdGfx.getGroupFrameIndices(ii).second - stdGfx.getGroupFrameIndices(ii).first + 1) < framesToPatch) {
+        dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg(ii + 1).arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+
+    for (int i = 0; i < frameCount; i++) {
+        int n;
+        D1GfxFrame* frame;
+
+        int n = this->getGroupFrameIndices(ii).first + i;
+        frame = this->getFrame(n);
+        if (frame->getWidth() != width || frame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            return false;
+        }
+        n = stdGfx.getGroupFrameIndices(ii).first + i;
+        frame = stdGfx.getFrame(n);
+        if (frame->getWidth() != width || frame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            return false;
+        }
+    }
+    // if (ii + 1 == 1) {
+        int i = 1 - 1;
+        int n = this->getGroupFrameIndices(ii).first + i;
+        D1GfxFrame* currFrame = this->getFrame(n);
+        if (currFrame->getPixel(51, 51).isTransparent()) {
+            return false; // assume it is already done
+        }
+    // }
+
+    bool result = false;
+    for (int i = 0; i < frameCount; i++) {
+        int n = this->getGroupFrameIndices(ii).first + i;
+        D1GfxFrame* currFrame = this->getFrame(n);
+        bool change = false;
+        if (i + 1 <= framesToPatch) {
+            D1GfxFrame* frameSrcStd = stdGfx.getFrame(stdGfx.getGroupFrameIndices(ii).first + i);
+
+            // prepare a 'work'-frame
+            D1GfxFrame* frame = new D1GfxFrame();
+            for (int y = 0; y < height; y++) {
+                std::vector<D1GfxPixel> pixelLine;
+                for (int x = 0; x < width; x++) {
+                    pixelLine.push_back(D1GfxPixel::transparentPixel());
+                }
+                frame->addPixelLine(std::move(pixelLine));
+            }
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    // preserve pixels
+                    if (i + 1 == 3) {
+                        D1GfxPixel pixel = currFrame->getPixel(x, y);
+                        if (y < 51 || (x > 65 && y < 55) || (x >= 57 && x < 60 && y < 54 + 57 - x) || (x == 56 && y == 52)) {
+                            frame->setPixel(x, y, pixel);
+                        } else if (x >= 37 && x < 53 && y >= 81 && y < 105 && y > 80 + x - 47) {
+                            if (!pixel.isTransparent()) {
+                                quint8 color = pixel.getPaletteIndex();
+                                if (color != 0) {
+                                    frame->setPixel(x + 22, y + 9, pixel);
+                                }
+                            }
+                        }
+                    }
+                    if (i + 1 == 2) {
+                        if (x >= 72 && y < 72 && y < 64 + x - 72) {
+                            D1GfxPixel pixel = currFrame->getPixel(x, y);
+                            if (!pixel.isTransparent()) {
+                                frame->setPixel(x - 16, y, pixel);
+                            }
+                        }
+                    }
+                    // copy pixels with 'trn'
+                    D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
+                    if (!pixel.isTransparent()) {
+                        quint8 color = pixel.getPaletteIndex();
+                        if (color != 0) {
+                            pixel = D1GfxPixel::colorPixel(color - 1);
+                        }
+                    }
+                    change |= currFrame->setPixel(x, y, pixel);
+                }
+            }
+            // draw preserved pixels
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent())
+                        change |= currFrame->setPixel(x, y, pixel);
+                }
+            }
+            delete frame;
+        }
+
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchFallGWalk(bool silent)
 {
     QString baseFilePath = this->getFilePath();
@@ -2481,7 +2776,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
     }
     // read Fallgn.CL2 from the same folder
     QString stdPath = baseFilePath;
-    stdPath[stdPath.length() - 5] = QChar('N');
+    stdPath[stdPath.length() - 5] = QChar('n');
 
     if (!QFileInfo::exists(stdPath)) {
         dProgressErr() << tr("Could not find %1 to be used as a template file").arg(QDir::toNativeSeparators(stdPath));
@@ -2517,7 +2812,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         return false;
     }
     if ((stdGfx.getGroupFrameIndices(DIR_E).second - stdGfx.getGroupFrameIndices(DIR_E).first + 1) < 10) {
-        dProgressErr() << tr("Not enough frames in the frame group to East in '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg((int)DIR_E + 1).arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
     // prepare a 'work'-frame
@@ -5707,6 +6002,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_FALLGW: // patch Fallgw.CL2
         change = this->patchFallGWalk(silent);
         break;
+    case GFX_MON_MAGMAD: // patch Magmad.CL2
+        change = this->patchMagmaDie(silent);
+        break;
     case GFX_MON_GOATLD: // patch GoatLd.CL2
         change = this->patchGoatLDie(silent);
         break;
@@ -5858,6 +6156,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "fallgw") {
         fileIndex = GFX_MON_FALLGW;
+    }
+    if (baseName == "magmad") {
+        fileIndex = GFX_MON_MAGMAD;
     }
     if (baseName == "goatld") {
         fileIndex = GFX_MON_GOATLD;
