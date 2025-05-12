@@ -1071,7 +1071,7 @@ void PaletteWidget::on_colorLineEdit_escPressed()
 void PaletteWidget::on_colorPickPushButton_clicked()
 {
     if (this->isTrn) {
-        this->ui->colorPickPushButton->clearFocus();
+        // this->ui->colorPickPushButton->clearFocus();
         emit this->colorPicking_started(this->selectedFirstColorIndex == this->selectedLastColorIndex);
     } else {
         this->initStopColorPicking();
