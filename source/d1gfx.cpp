@@ -2809,8 +2809,18 @@ bool D1Gfx::patchMagmaDie(bool silent)
                     dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
                     return result;
                 }
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++) {
+                int sx = 0, sy = 0, ex = 0, ey = 0;
+                switch (ii + 1) {
+                case 2: sx = 53; sy = 87; ex = 62, ey =  97; break;
+                case 3: sx = 69; sy = 94; ex = 72, ey = 101; break;
+                case 4: sx = 66; sy = 80; ex = 79, ey =  92; break;
+                case 5: sx = 56; sy = 83; ex = 78, ey = 115; break;
+                case 6: sx = 56; sy = 89; ex = 76, ey = 113; break;
+                case 7: sx = 66; sy = 94; ex = 69, ey = 101; break;
+                case 8: sx = 39; sy = 80; ex = 62, ey = 114; break;
+                }
+                for (int y = sy; y < ey; y++) {
+                    for (int x = sx; x < ex; x++) {
                         D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
                         if (pixel.isTransparent())
                             continue;
