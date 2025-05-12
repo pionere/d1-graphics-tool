@@ -209,7 +209,7 @@ void PaletteScene::keyPressEvent(QKeyEvent *event)
         QGraphicsScene::keyPressEvent(event);
         return;
     }
-    QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("scene key event"));
+    // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("scene key event"));
     bool extend = (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0;
     this->view->changeColorSelection(dir, extend);
 }
@@ -745,7 +745,8 @@ void PaletteWidget::startTrnColorPicking(bool single)
     this->displayColors();
     // QMessageBox::critical(this, tr("Error"), tr("focus"));
     // this->setFocus();
-    this->scene.setFocus();
+    // this->scene.setFocus();
+    this->ui->graphicsView->setFocus();
 }
 
 void PaletteWidget::stopTrnColorPicking()
