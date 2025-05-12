@@ -209,7 +209,7 @@ void PaletteScene::keyPressEvent(QKeyEvent *event)
         QGraphicsScene::keyPressEvent(event);
         return;
     }
-    QMessageBox::critical(this, "Error", "scene key event");
+    QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("scene key event"));
     bool extend = (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0;
     this->view->changeColorSelection(dir, extend);
 }
