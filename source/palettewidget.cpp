@@ -741,6 +741,8 @@ void PaletteWidget::startTrnColorPicking(bool single)
     this->ui->informationLabel->setText(tr("<- Select color(s)", "", single ? 1 : 2));
     this->pickingTranslationColor = true;
     this->displayColors();
+
+    this->scene.setFocus();
 }
 
 void PaletteWidget::stopTrnColorPicking()
@@ -1184,7 +1186,6 @@ void PaletteWidget::patchTrn()
 
 void PaletteWidget::keyPressEvent(QKeyEvent *event)
 {
-    QMessageBox::critical(this, tr("Error"), tr("palette cancel %1 %2").arg(this->pickingTranslationColor).arg(event->matches(QKeySequence::Cancel)));
     if (this->pickingTranslationColor && event->matches(QKeySequence::Cancel)) {
         this->initStopColorPicking();
         return;
