@@ -209,6 +209,7 @@ void PaletteScene::keyPressEvent(QKeyEvent *event)
         QGraphicsScene::keyPressEvent(event);
         return;
     }
+    QMessageBox::critical(this, "Error", "scene key event");
     bool extend = (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0;
     this->view->changeColorSelection(dir, extend);
 }
@@ -735,7 +736,8 @@ void PaletteWidget::displaySelection()
 void PaletteWidget::startTrnColorPicking(bool single)
 {
     // stop previous picking
-    this->initStopColorPicking();
+    // this->initStopColorPicking();
+    // this->stopTrnColorPicking();
 
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
     this->ui->informationLabel->setText(tr("<- Select color(s)", "", single ? 1 : 2));
