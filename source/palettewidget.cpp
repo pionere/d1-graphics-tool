@@ -741,7 +741,8 @@ void PaletteWidget::startTrnColorPicking(bool single)
     this->ui->informationLabel->setText(tr("<- Select color(s)", "", single ? 1 : 2));
     this->pickingTranslationColor = true;
     this->displayColors();
-
+    QMessageBox::critical(this, tr("Error"), tr("focus"));
+    this->setFocus();
     this->scene.setFocus();
 }
 
@@ -1067,6 +1068,7 @@ void PaletteWidget::on_colorLineEdit_escPressed()
 void PaletteWidget::on_colorPickPushButton_clicked()
 {
     if (this->isTrn) {
+        this->ui->colorPickPushButton->clearFocus();
         emit this->colorPicking_started(this->selectedFirstColorIndex == this->selectedLastColorIndex);
     } else {
         this->initStopColorPicking();
