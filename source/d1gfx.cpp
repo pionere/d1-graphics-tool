@@ -3728,6 +3728,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
                     change |= currFrame->setPixel(80, 117, D1GfxPixel::transparentPixel());
                     break;
                 }
+            }
 
             if (change) {
                 result = true;
