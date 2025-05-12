@@ -1028,6 +1028,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     const int kc = event->key() | event->modifiers();
     if (keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
+        QMessageBox::critical(this, tr("Error"), tr("main cancel"));
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->hide();
         }

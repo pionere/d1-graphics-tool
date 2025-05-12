@@ -1184,6 +1184,7 @@ void PaletteWidget::patchTrn()
 
 void PaletteWidget::keyPressEvent(QKeyEvent *event)
 {
+    QMessageBox::critical(this, tr("Error"), tr("palette cancel"));
     if (this->pickingTranslationColor && event->matches(QKeySequence::Cancel)) {
         this->initStopColorPicking();
         return;
