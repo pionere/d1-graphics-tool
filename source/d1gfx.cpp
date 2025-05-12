@@ -5507,74 +5507,60 @@ bool D1Gfx::patchSklAxDie(bool silent)
             D1GfxFrame* currFrame = this->getFrame(n);
             bool change = false;
             int dx = 0, dy = 0;
-            if (i + 1 == 1) {
-                dx = 0;
-                dy = 15;
-            }
-            // if (ii + 1 == 1) {
-                if (i + 1 == 2) {
-                    dx = 0;
-                    dy = 12;
-                }
-                if (i + 1 == 3) {
-                    dx = 0;
-                    dy = 10;
-                }
-                if (i + 1 == 4) {
-                    dx = 0;
-                    dy = 6;
-                }
-                if (i + 1 == 5 || i + 1 == 6 || i + 1 == 7) {
-                    dx = 0;
-                    dy = 5;
-                }
-                if (i + 1 == 8 || i + 1 == 9 || i + 1 == 10) {
-                    dx = 0;
-                    dy = 3;
-                }
+            switch (i + 1) {
+            case 1: dx = 0; dy = 15; break;
+            case 2: dx = 0; dy = 12; break;
+            case 3: dx = 0; dy = 10; break;
+            case 4: dx = 0; dy = 6; break;
+            case 5:
+            case 6:
+            case 7: dx = 0; dy = 5; break;
+            case 8:
+            case 9:
+            case 10: dx = 0; dy = 3; break;
+            case 11:
                 if (ii + 1 != 4) {
-                if (i + 1 == 11) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 12:
                 if (ii + 1 != 4) {
-                if (i + 1 == 12) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 13:
                 if (ii + 1 != 4 && ii + 1 != 5) {
-                if (i + 1 == 13) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 14:
                 if (ii + 1 != 4 && ii + 1 != 5) {
-                if (i + 1 == 14) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 15:
                 if (ii + 1 != 4 && ii + 1 != 5) {
-                if (i + 1 == 15) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 16:
                 if (ii + 1 != 4 && ii + 1 != 5) {
-                if (i + 1 == 16) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 17:
                 if (ii + 1 != 1 && ii + 1 != 2 && ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 8) {
-                if (i + 1 == 17) {
                     dx = 0;
                     dy = 3;
                 }
-                }
-            // }
+                break;
+            }
 
             change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
@@ -5915,56 +5901,43 @@ bool D1Gfx::patchSklSrDie(bool silent)
             D1GfxFrame* currFrame = this->getFrame(n);
             bool change = false;
             int dx = 0, dy = 0;
-            if (i + 1 == 1) {
-                dx = 0;
-                dy = 15;
-            }
-            // if (ii + 1 == 1) {
-                if (i + 1 == 2) {
-                    dx = 0;
-                    dy = 12;
-                }
-                if (i + 1 == 3) {
-                    dx = 0;
-                    dy = 10;
-                }
-                if (i + 1 == 4) {
-                    dx = 0;
-                    dy = 6;
-                }
-                if (i + 1 == 5 || i + 1 == 6 || i + 1 == 7) {
-                    dx = 0;
-                    dy = 5;
-                }
-                if (i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11) {
-                    dx = 0;
-                    dy = 3;
-                }
+            switch (i + 1) {
+            case 1: dx = 0; dy = 15; break;
+            case 2: dx = 0; dy = 12; break;
+            case 3: dx = 0; dy = 10; break;
+            case 4: dx = 0; dy = 6;  break;
+            case 5:
+            case 6:
+            case 7: dx = 0; dy = 5; break;
+            case 8:
+            case 9:
+            case 10:
+            case 11: dx = 0; dy = 3; break;
+            case 12: 
                 if (ii + 1 != 7 && ii + 1 != 8) {
-                if (i + 1 == 12) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 13:
                 if (ii + 1 != 5 && ii + 1 != 7 && ii + 1 != 8) {
-                if (i + 1 == 13) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 14:
                 if (ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 7 && ii + 1 != 8) {
-                if (i + 1 == 14) {
                     dx = 0;
                     dy = 3;
                 }
-                }
+                break;
+            case 15:
                 if (ii + 1 != 1 && ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 7 && ii + 1 != 8) {
-                if (i + 1 == 15) {
                     dx = 0;
                     dy = 3;
                 }
-                }
-            // }
+                break;
+            }
 
             change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
