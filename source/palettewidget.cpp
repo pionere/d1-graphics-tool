@@ -744,7 +744,7 @@ void PaletteWidget::startTrnColorPicking(bool single)
     this->pickingTranslationColor = true;
     this->displayColors();
     // QMessageBox::critical(this, tr("Error"), tr("focus"));
-    this->setFocus();
+    // this->setFocus();
     this->scene.setFocus();
 }
 
