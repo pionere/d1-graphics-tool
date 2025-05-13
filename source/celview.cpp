@@ -424,6 +424,9 @@ void CelView::updateFields()
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
+
+    // update clipped checkbox
+    this->ui->celFramesClippedCheckBox->setChecked(this->gfx->isClipped());
 }
 
 CelScene *CelView::getCelScene() const
@@ -1312,6 +1315,12 @@ void CelView::on_assetMplEdit_escPressed()
 {
     this->updateFields();
     this->ui->assetMplEdit->clearFocus();
+}
+
+void CelView::on_celFramesClippedCheckBox_clicked()
+{
+    this->gfx->setClipped(this->ui->celFramesClippedCheckBox->isChecked());
+    // this->updateFields();
 }
 
 void CelView::on_zoomOutButton_clicked()

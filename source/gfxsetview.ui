@@ -797,12 +797,49 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="12" colspan="7">
+      <item row="1" column="12" colspan="6">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
+      </item>
+      <item row="1" column="18">
+       <layout class="QHBoxLayout">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showGridCheckBox">
+          <property name="toolTip">
+           <string>Show grid over the graphics</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="assetMplEdit">
+          <property name="charWidth">
+           <number>2</number>
+          </property>
+          <property name="toolTip">
+           <string>Asset multiplier</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
@@ -944,50 +981,70 @@
         </property>
        </spacer>
       </item>
-      <item row="2" column="16">
-       <widget class="LineEditWidget" name="celFrameWidthEdit">
-        <property name="charWidth">
-         <number>7</number>
-        </property>
-        <property name="toolTip">
-         <string>Current frame width</string>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="17">
-       <widget class="QLabel">
-        <property name="minimumWidth">
-         <number>8</number>
-        </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property>
-        <property name="text">
-         <string notr="true">*</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="18">
-       <widget class="LineEditWidget" name="celFrameHeightEdit">
-        <property name="charWidth">
-         <number>7</number>
-        </property>
-        <property name="toolTip">
-         <string>Current frame height</string>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="LineEditWidget" name="celFrameWidthEdit">
+          <property name="charWidth">
+           <number>7</number>
+          </property>
+          <property name="toolTip">
+           <string>Current frame width</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="minimumWidth">
+           <number>8</number>
+          </property>
+          <property name="maximumWidth">
+           <number>8</number>
+          </property>
+          <property name="text">
+           <string notr="true">*</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="celFrameHeightEdit">
+          <property name="charWidth">
+           <number>7</number>
+          </property>
+          <property name="toolTip">
+           <string>Current frame height</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="celFramesClippedCheckBox">
+          <property name="toolTip">
+           <string>Frames are stored with clipping information</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
       </item>
      </layout>
      </item>

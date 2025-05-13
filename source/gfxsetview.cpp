@@ -27,7 +27,8 @@ GfxsetView::GfxsetView(QWidget *parent)
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
-    this->on_playDelayEdit_escPressed();
+    // this->on_playDelayEdit_escPressed();
+    // this->on_assetMplEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
@@ -43,6 +44,7 @@ GfxsetView::GfxsetView(QWidget *parent)
     QObject::connect(this->ui->groupIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_groupIndexEdit_escPressed()));
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
+    QObject::connect(this->ui->assetMplEdit, SIGNAL(cancel_signal()), this, SLOT(on_assetMplEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -279,6 +281,12 @@ void GfxsetView::updateFields()
         this->buttons[i]->update();
     }
 
+    // set play-delay text
+    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+
+    // update the asset multiplier field
+    this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
+
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
     this->ui->groupIndexEdit->setText(
@@ -297,6 +305,9 @@ void GfxsetView::updateFields()
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
+
+    // update clipped checkbox
+    this->ui->celFramesClippedCheckBox->setChecked(this->gfx->isClipped());
 }
 
 CelScene *GfxsetView::getCelScene() const
@@ -886,6 +897,26 @@ void GfxsetView::upscale(const UpscaleParam &params)
     }
 }
 
+void GfxsetView::drawGrid(QImage &celFrame)
+{
+    int width = celFrame.width();
+    int height = celFrame.height();
+    QColor color = this->pal->getUndefinedColor();
+
+    unsigned microHeight = MICRO_HEIGHT * this->assetMpl;
+    for (int i = (height + microHeight) / microHeight - 1; i >= 0; i--) {
+        for (int x = 0; x < width; x++) {
+            int y0 = height - microHeight * (i + 1) + ( 0 + (x - width / 2) / 2) % microHeight;
+            if (y0 >= 0 && y0 < height)
+                celFrame.setPixelColor(x, y0, color);
+
+            int y1 = height - microHeight * (i + 1) + (microHeight - 1 - (x - width / 2) / 2) % microHeight;
+            if (y1 >= 0 && y1 < height)
+                celFrame.setPixelColor(x, y1, color);
+        }
+    }
+}
+
 void GfxsetView::displayFrame()
 {
     this->updateFields();
@@ -894,6 +925,11 @@ void GfxsetView::displayFrame()
 
     // Getting the current frame to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
+
+    // add grid if requested
+    if (this->ui->showGridCheckBox->isChecked()) {
+        this->drawGrid(celFrame);
+    }
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -1372,6 +1408,36 @@ void GfxsetView::on_lastGroupButton_clicked()
     this->setGroupIndex(this->gfx->getGroupCount() - 1);
 }
 
+void GfxsetView::on_showGridCheckBox_clicked()
+{
+    this->displayFrame();
+}
+
+void GfxsetView::on_assetMplEdit_returnPressed()
+{
+    unsigned ampl = this->ui->assetMplEdit->text().toUShort();
+    if (ampl == 0)
+        ampl = 1;
+    if (this->assetMpl != ampl) {
+        this->assetMpl = ampl;
+        this->displayFrame();
+    }
+
+    this->on_assetMplEdit_escPressed();
+}
+
+void GfxsetView::on_assetMplEdit_escPressed()
+{
+    this->updateFields();
+    this->ui->assetMplEdit->clearFocus();
+}
+
+void GfxsetView::on_celFramesClippedCheckBox_clicked()
+{
+    this->gfx->setClipped(this->ui->celFramesClippedCheckBox->isChecked());
+    // this->updateFields();
+}
+
 void GfxsetView::on_zoomOutButton_clicked()
 {
     this->celScene.zoomOut();
@@ -1411,7 +1477,8 @@ void GfxsetView::on_playDelayEdit_returnPressed()
 
 void GfxsetView::on_playDelayEdit_escPressed()
 {
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    // update playDelayEdit
+    this->updateFields();
     this->ui->playDelayEdit->clearFocus();
 }
 
