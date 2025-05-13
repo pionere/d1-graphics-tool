@@ -1449,6 +1449,7 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
         // result->palWidget->updatePathComboBoxOptions(result->pals.keys(), result->pal->getFilePath()); -- should be called later
     } else {
         // gfxFilePath.isEmpty()
+        result->gfx->setClipped(params.clipped == OPEN_CLIPPED_TYPE::TRUE);
         result->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
     }
 }

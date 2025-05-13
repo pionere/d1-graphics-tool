@@ -278,7 +278,7 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     if (params.celWidth != 0) {
         dProgressWarn() << QApplication::tr("Width setting is ignored when a SMK file is loaded.");
     }
-    const bool clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
+    gfx.clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
     unsigned frameNum = 0;
     unsigned prevPalFrame = 0;
     const unsigned char *smkFrame = smk_get_video(SVidSMK);
@@ -292,7 +292,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
         }
         // create a new frame
         D1GfxFrame *frame = new D1GfxFrame();
-        frame->clipped = clipped;
         frame->framePal = palUpdate ? pal : nullptr;
         const unsigned char *smkFrameCursor = smkFrame;
         for (unsigned y = 0; y < SVidHeight; y++) {

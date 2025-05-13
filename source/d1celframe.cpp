@@ -24,14 +24,14 @@ unsigned D1CelPixelGroup::getPixelCount() const
 int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
 {
     unsigned width = 0;
-    // frame.clipped = false;
+    bool clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Try to compute frame width from frame header
         width = D1CelFrame::computeWidthFromHeader(rawData);
-        frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawData.constData()) == SUB_HEADER_SIZE);
+        clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawData.constData()) == SUB_HEADER_SIZE);
     } else {
-        frame.clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
-        if (frame.clipped) {
+        clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
+        if (clipped) {
             // Try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
         }
@@ -42,15 +42,15 @@ int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     // If width could not be calculated with frame header,
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
     if (width == 0) {
-        width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
+        width = D1CelFrame::computeWidthFromData(rawData, clipped);
     }
     // check if a positive width was found
     if (width == 0) {
-        return rawData.size() == 0 ? 0 : -1;
+        return rawData.size() == 0 ? (clipped ? 1 : 0) : -1;
     }
     // calculate the offset in case of a clipped frame
     int frameDataStartOffset = 0;
-    if (frame.clipped) {
+    if (clipped) {
         if (rawData.size() != 0) {
             if (rawData.size() == 1)
                 return -2;
@@ -100,7 +100,7 @@ int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     if (!pixelLine.empty()) {
         if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
             OpenAsParam oParams = params;
-            oParams.clipped = frame.clipped ? OPEN_CLIPPED_TYPE::FALSE : OPEN_CLIPPED_TYPE::TRUE;
+            oParams.clipped = clipped ? OPEN_CLIPPED_TYPE::FALSE : OPEN_CLIPPED_TYPE::TRUE;
             return D1CelFrame::load(frame, rawData, oParams);
         }
 
@@ -112,7 +112,7 @@ int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     }
     frame.width = width;
     frame.height = frame.pixels.size();
-    return 0;
+    return clipped ? 1 : 0;
 }
 
 unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)

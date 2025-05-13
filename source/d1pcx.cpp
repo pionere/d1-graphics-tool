@@ -64,6 +64,7 @@ bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
     gfx.groupFrameIndices.push_back(std::pair<int, int>(0, 0));
 
     gfx.type = D1CEL_TYPE::V1_REGULAR;
+    gfx.clipped = clipped;
 
     // gfx.frames.clear();
     D1GfxFrame *frame = new D1GfxFrame();
@@ -73,10 +74,10 @@ bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
     gfx.modified = true;
 
     bool dummy;
-    return D1Pcx::load(*frame, filePath, clipped, pal, nullptr, &dummy);
+    return D1Pcx::load(*frame, filePath, pal, nullptr, &dummy);
 }
 
-bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
+bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, D1Pal *basePal, D1Pal *resPal, bool *palMod)
 {
     // Opening PCX file
     QFile file = QFile(filePath);
@@ -155,7 +156,6 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
     // prepare D1GfxFrame
     frame.width = SwapLE16(pcxhdr.Xmax) - SwapLE16(pcxhdr.Xmin) + 1;
     frame.height = SwapLE16(pcxhdr.Ymax) - SwapLE16(pcxhdr.Ymin) + 1;
-    frame.clipped = clipped;
     frame.pixels.clear();
 
     // read data
@@ -251,7 +251,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
             dataPtr += srcSkip;
         }
 
-        D1ImageFrame::load(frame, image, frame.clipped, resPal);
+        D1ImageFrame::load(frame, image, resPal);
     }
 
     if (pcxPal != resPal && pcxPal != basePal) {

@@ -79,27 +79,27 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
 int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsParam &params)
 {
     unsigned width = 0;
-    // frame.clipped = false;
+    bool clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Try to compute frame width from frame header
         width = D1Cl2Frame::computeWidthFromHeader(rawData);
-        frame.clipped = true; // Assume the presence of the {CEL FRAME HEADER}
+        clipped = true; // Assume the presence of the {CEL FRAME HEADER}
     } else {
-        if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
+        clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
+        if (clipped) {
             // Try to compute frame width from frame header
             width = D1Cl2Frame::computeWidthFromHeader(rawData);
-            frame.clipped = true;
         }
     }
     frame.width = params.celWidth == 0 ? width : params.celWidth;
 
     // check if a positive width was found
     if (frame.width == 0)
-        return rawData.size() == 0 ? 0 : -1;
+        return rawData.size() == 0 ? (clipped ? 1 : 0) : -1;
 
     // READ {CL2 FRAME DATA}
     int frameDataStartOffset = 0;
-    if (frame.clipped) {
+    if (clipped) {
         if (rawData.size() != 0) {
             if (rawData.size() == 1)
                 return -2;
@@ -160,7 +160,7 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
     if (!pixelLine.empty()) {
         if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
             OpenAsParam oParams = params;
-            oParams.clipped = frame.clipped ? OPEN_CLIPPED_TYPE::FALSE : OPEN_CLIPPED_TYPE::TRUE;
+            oParams.clipped = clipped ? OPEN_CLIPPED_TYPE::FALSE : OPEN_CLIPPED_TYPE::TRUE;
             return D1Cl2Frame::load(frame, rawData, oParams);
         }
 
@@ -172,5 +172,5 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
     }
     frame.height = frame.pixels.size();
 
-    return true;
+    return clipped ? 1 : 0;
 }

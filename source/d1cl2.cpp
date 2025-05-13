@@ -139,22 +139,29 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
     // BUILDING {CL2 FRAMES}
     // std::stack<quint16> invalidFrames;
+    int clipped = -1;
     for (const auto &offset : frameOffsets) {
         device->seek(offset.first);
         QByteArray cl2FrameRawData = device->read(offset.second - offset.first);
 
         D1GfxFrame *frame = new D1GfxFrame();
         int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params);
-        if (res != 0) {
-            quint16 frameIndex = gfx.frames.size();
+        quint16 frameIndex = gfx.frames.size();
+        if (res < 0) {
             if (res == -1)
                 dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(frameIndex + 1);
             else
                 dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
+        } else if (clipped != res) {
+            if (clipped == -1)
+                clipped = res;
+            else
+                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
         }
         gfx.frames.append(frame);
     }
+    gfx.clipped = clipped != 0;
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
@@ -166,11 +173,10 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     return true;
 }
 
-static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize)
+static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, bool clipped)
 {
     const int RLE_LEN = 4; // number of matching colors to switch from bmp encoding to RLE
 
-    bool clipped = frame->isClipped();
     // convert one image to cl2-data
     quint8 *pHeader = pBuf;
     if (clipped) {
@@ -282,13 +288,13 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // update type
     gfx.type = groupped ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
     // update clipped info
-    for (D1GfxFrame *frame : gfx.frames) {
-        frame->clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && frame->clipped);
-    }
+    bool clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && gfx.clipped);
+    gfx.clipped = clipped;
+
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
     for (D1GfxFrame *frame : gfx.frames) {
-        if (frame->clipped) {
+        if (clipped) {
             int hs = (frame->getHeight() - 1) / CEL_BLOCK_HEIGHT;
             hs = (hs + 1) * sizeof(quint16);
             subHeaderSize = std::max(subHeaderSize, hs);
@@ -297,7 +303,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // estimate data size
     int maxSize = headerSize;
     for (D1GfxFrame *frame : gfx.frames) {
-        if (frame->clipped) {
+        if (clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
         }
         maxSize += frame->getHeight() * (2 * frame->getWidth());
@@ -329,7 +335,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 
         for (int n = 0; n < ni; n++, idx++) {
             D1GfxFrame *frame = gfx.getFrame(idx); // TODO: what if the groups are not continuous?
-            pBuf = writeFrameData(frame, pBuf, subHeaderSize);
+            pBuf = writeFrameData(frame, pBuf, subHeaderSize, clipped);
             *(quint32 *)&hdr[4 + 4 * (n + 1)] = SwapLE32(pBuf - hdr);
         }
         hdr += 4 + 4 * (ni + 1);
