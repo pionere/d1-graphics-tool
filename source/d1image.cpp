@@ -26,9 +26,8 @@ static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
     return res;
 }
 
-bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, const D1Pal *pal)
+bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
 {
-    frame.clipped = clipped;
     frame.width = image.width();
     frame.height = image.height();
 
@@ -56,10 +55,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, co
     return true;
 }
 
-bool D1ImageFrame::load(D1GfxFrame &frame, const QString &pixels, bool clipped, const D1Pal *pal)
+bool D1ImageFrame::load(D1GfxFrame &frame, const QString &pixels, const D1Pal *pal)
 {
-    frame.clipped = clipped;
-
     QStringList rows = pixels.split('\n');
     int width = 0, height = 0;
     QList<QStringList> pixValues;

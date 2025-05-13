@@ -126,14 +126,12 @@ void D1Tileset::saveCls(const SaveAsParam &params)
         return;
     }
 
-    // validate the frames
-    for (int i = 0; i < this->cls->getFrameCount(); i++) {
-        if (!this->cls->getFrame(i)->isClipped()) {
-            dProgressWarn() << QApplication::tr("Non-clipped Special-CEL %1 file is not supported by the game (Diablo 1/DevilutionX).").arg(QDir::toNativeSeparators(filePath));
-            break;
-        }
+    // validate the graphics
+    if (!this->cls->isClipped()) {
+        dProgressWarn() << QApplication::tr("Non-clipped Special-CEL %1 file is not supported by the game (Diablo 1/DevilutionX).").arg(QDir::toNativeSeparators(filePath));
     }
 
+    // validate the frames
     if (this->cls->getFrameCount() != 0) {
         // S.CEL with content -> create or change
         SaveAsParam clsParams;
@@ -25473,11 +25471,9 @@ void D1Tileset::patch(int dunType, bool silent)
 {
     // ensure the special-cels are clipped
     bool result = false;
-    for (int i = 0; i < this->cls->getFrameCount(); i++) {
-        result |= this->cls->getFrame(i)->setClipped(true);
-    }
+    result |= this->cls->setClipped(true);
+
     if (result && !silent) {
-        this->cls->setModified();
         dProgress() << QApplication::tr("Special-Frames are using clipped-encoding.");
     }
     std::set<unsigned> deletedFrames;

@@ -1021,10 +1021,10 @@ bool LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFram
 void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertFrames(mode, index, frame);
         } else if (mode != IMAGE_FILE_MODE::AUTO) {
@@ -1245,10 +1245,10 @@ bool LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFr
 void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertSubtiles(mode, index, frame);
         } else if (mode != IMAGE_FILE_MODE::AUTO) {
@@ -1585,10 +1585,10 @@ bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertTiles(mode, index, frame);
         } else if (mode != IMAGE_FILE_MODE::AUTO) {
@@ -1658,10 +1658,10 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
 void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
             dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
@@ -1718,10 +1718,10 @@ void LevelCelView::duplicateCurrentFrame(bool wholeGroup)
 void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame *frame = new D1GfxFrame();
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(*frame, imagefilePath, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
             delete frame;
             dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
@@ -1832,10 +1832,10 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
             dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
@@ -1931,10 +1931,10 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
             dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;

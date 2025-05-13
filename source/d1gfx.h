@@ -121,8 +121,6 @@ protected:
     int width = 0;
     int height = 0;
     std::vector<std::vector<D1GfxPixel>> pixels;
-    // fields of cel/cl2-frames
-    bool clipped = false;
     // fields of tileset-frames
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
     // fields of smk-frames
@@ -273,6 +271,8 @@ protected:
     D1Pal *palette = nullptr;
     std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
+    // fields of cel/cl2-frames
+    bool clipped = false;
     // fields of tilesets
     bool patched = false;
     bool upscaled = false;

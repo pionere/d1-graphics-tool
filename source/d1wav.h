@@ -21,7 +21,6 @@ public:
     static bool load(D1GfxFrame &gfxFrame, int track, const QString &wavFilePath);
     static bool save(const D1SmkAudioData *audioData, int track, const QString &wavFilePath);
 
-    // static bool load(D1GfxFrame &frame, const QString &pcxFilePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod);
 private:
     static bool checkAudio(const D1SmkAudioData *audio, const WAVAudioData &wavAudioData, int track);
     static bool load(WAVAudioData &audioData, const QString &wavFilePath);

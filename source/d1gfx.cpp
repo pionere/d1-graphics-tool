@@ -102,7 +102,6 @@ D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
     this->width = o.width;
     this->height = o.height;
     this->pixels = o.pixels;
-    this->clipped = o.clipped;
     this->frameType = o.frameType;
 }
 
@@ -161,19 +160,6 @@ bool D1GfxFrame::setPixel(int x, int y, const D1GfxPixel pixel)
     }
 
     this->pixels[y][x] = pixel;
-    return true;
-}
-
-bool D1GfxFrame::isClipped() const
-{
-    return this->clipped;
-}
-
-bool D1GfxFrame::setClipped(bool clipped)
-{
-    if (this->clipped == clipped)
-        return false;
-    this->clipped = clipped;
     return true;
 }
 
@@ -508,12 +494,12 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
             }
         }
     } else {
-        reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(myGroupCount).arg(groupCount), header);
+        reportDiff(QApplication::tr("groupcount is %1 (was %2)").arg(myGroupCount).arg(groupCount), header);
     }
     int frameCount = gfx->getFrameCount();
     int myFrameCount = this->getFrameCount();
     if ((groupCount != 1 || groupCount != myGroupCount) && frameCount != myFrameCount) {
-        reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(myFrameCount).arg(frameCount), header);
+        reportDiff(QApplication::tr("framecount is %1 (was %2)").arg(myFrameCount).arg(frameCount), header);
     }
     /*if (frameCount == myFrameCount) {
         for (int i = 0; i < frameCount; i++) {
@@ -739,17 +725,6 @@ std::vector<std::vector<D1GfxPixel>> D1Gfx::getFramePixelImage(int frameIndex) c
     return frame->getPixels();
 }
 
-bool D1Gfx::isClipped(int frameIndex) const
-{
-    bool clipped;
-    if (this->frames.count() > frameIndex) {
-        clipped = this->frames[frameIndex]->isClipped();
-    } else {
-        clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
-    }
-    return clipped;
-}
-
 void D1Gfx::insertFrame(int idx, int width, int height)
 {
     D1GfxFrame *frame = this->insertFrame(idx);
@@ -765,10 +740,7 @@ void D1Gfx::insertFrame(int idx, int width, int height)
 
 D1GfxFrame *D1Gfx::insertFrame(int idx)
 {
-    bool clipped = this->isClipped(0);
-
     D1GfxFrame* newFrame = new D1GfxFrame();
-    newFrame->clipped = clipped;
     this->frames.insert(idx, newFrame);
 
     if (this->groupFrameIndices.empty()) {
@@ -796,7 +768,7 @@ D1GfxFrame *D1Gfx::insertFrame(int idx)
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QString &pixels)
 {
     D1GfxFrame *frame = this->insertFrame(idx);
-    D1ImageFrame::load(*frame, pixels, frame->isClipped(), this->palette);
+    D1ImageFrame::load(*frame, pixels, this->palette);
     // this->modified = true;
 
     return this->frames[idx];
@@ -805,7 +777,7 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QString &pixels)
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 {
     D1GfxFrame *frame = this->insertFrame(idx);
-    D1ImageFrame::load(*frame, image, frame->isClipped(), this->palette);
+    D1ImageFrame::load(*frame, image, this->palette);
     // this->modified = true;
 
     return this->frames[idx];
@@ -828,19 +800,16 @@ D1GfxFrame *D1Gfx::addToFrame(int idx, const D1GfxFrame &frame)
 
 D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
 {
-    bool clipped = false;
     D1GfxFrame frame;
-    D1ImageFrame::load(frame, image, clipped, this->palette);
+    D1ImageFrame::load(frame, image, this->palette);
 
     return this->addToFrame(idx, frame);
 }
 
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QString &pixels)
 {
-    bool clipped = this->isClipped(idx);
-
     D1GfxFrame *frame = new D1GfxFrame();
-    D1ImageFrame::load(*frame, pixels, clipped, this->palette);
+    D1ImageFrame::load(*frame, pixels, this->palette);
     this->setFrame(idx, frame);
 
     return this->frames[idx];
@@ -848,10 +817,8 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QString &pixels)
 
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
 {
-    bool clipped = this->isClipped(idx);
-
     D1GfxFrame *frame = new D1GfxFrame();
-    D1ImageFrame::load(*frame, image, clipped, this->palette);
+    D1ImageFrame::load(*frame, image, this->palette);
     this->setFrame(idx, frame);
 
     return this->frames[idx];
@@ -995,11 +962,9 @@ void D1Gfx::addGfx(D1Gfx *gfx)
     if (numNewFrames == 0) {
         return;
     }
-    bool clipped = this->isClipped(0);
     for (int i = 0; i < numNewFrames; i++) {
         const D1GfxFrame* frame = gfx->getFrame(i);
         D1GfxFrame* newFrame = new D1GfxFrame(*frame);
-        newFrame->clipped = clipped;
         // if (this->type != D1CEL_TYPE::V1_LEVEL) {
         //    newFrame->frameType = D1CEL_FRAME_TYPE::TransparentSquare;
         // }
@@ -1147,6 +1112,20 @@ void D1Gfx::setPatched(bool patched)
         return;
     this->patched = patched;
     this->modified = true;
+}
+
+bool D1Gfx::isClipped() const
+{
+    return this->clipped;
+}
+
+bool D1Gfx::setClipped(bool clipped)
+{
+    if (this->clipped == clipped)
+        return false;
+    this->clipped = clipped;
+    this->modified = true;
+    return true;
 }
 
 bool D1Gfx::isUpscaled() const
@@ -5464,7 +5443,6 @@ bool D1Gfx::patchGoatLDie(bool silent)
 
     return result;
 }
-
 
 bool D1Gfx::patchSklAxDie(bool silent)
 {
