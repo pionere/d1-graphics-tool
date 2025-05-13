@@ -3967,7 +3967,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 result = true;
                 this->setModified();
                 if (!silent) {
-                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(ii + 1);
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
                 }
             }
         }
