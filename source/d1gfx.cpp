@@ -2252,6 +2252,1457 @@ bool D1Gfx::patchWarriorStand(bool silent)
     return result;
 }
 
+static bool ShiftFrame(D1GfxFrame *frame, int dx, int dy, int sx, int sy, int ex, int ey)
+{
+    if (dx == 0 && dy == 0)
+        return false;
+    int width = frame->getWidth();
+    int height = frame->getHeight();
+    bool change = false;
+    if (dx <= 0) {
+        if (dy <= 0) {
+            // for (int y = std::max(sy, -dy); y < ey; y++) {
+            for (int y = sy; y < ey; y++) {
+                // for (int x = std::max(sx, -dx); x < ex; x++) {
+                for (int x = sx; x < ex; x++) {
+                    if (x + dx >= 0 /*&& x + dx < width*/ && y + dy >= 0 /*&& y + dy < height*/)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } else {
+            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
+            for (int y = ey - 1; y >= sy; y--) {
+                // for (int x = std::max(sx, -dx); x < ex; x++) {
+                for (int x = sx; x < ex; x++) {
+                    if (x + dx >= 0 /*&& x + dx < width && y + dy >= 0 */&& y + dy < height)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    } else {
+        if (dy <= 0) {
+            // for (int y = std::max(sy, -dy); y < ey; y++) {
+            for (int y = sy; y < ey; y++) {
+                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
+                for (int x = ex - 1; x >= sx; x--) {
+                    if (/*x + dx >= 0 && */x + dx < width && y + dy >= 0 /*&& y + dy < height*/)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } else {
+            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
+            for (int y = ey - 1; y >= sy; y--) {
+                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
+                for (int x = ex - 1; x >= sx; x--) {
+                    if (/*x + dx >= 0 && */x + dx < width /*&& y + dy >= 0 */&& y + dy < height)
+                    {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= frame->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    }
+    return change;
+}
+
+static bool CopyFrame(D1GfxFrame* dstFrame, int dx, int dy, const D1GfxFrame* srcFrame, int sx, int sy, int ex, int ey)
+{
+    bool change = false;
+    for (int y = sy; y < ey; y++) {
+        for (int x = sx; x < ex; x++) {
+            D1GfxPixel pixel = srcFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            change |= dstFrame->setPixel(x + dx, y + dy, pixel);
+        }
+    }
+    return change;
+}
+
+bool D1Gfx::patchFallGDie(bool silent)
+{
+    constexpr int frameCount = 17;
+    constexpr int width = 128;
+    constexpr int height = 128;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(28, 108).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 9, dy = -2;
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            // add missing pixels
+            if (ii + 1 == 1) {
+                if (i + 1 >= 13) {
+                    // draw leg
+                    change |= currFrame->setPixel(50, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(51, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(52, 126, D1GfxPixel::colorPixel(238));
+                    change |= currFrame->setPixel(53, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(54, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(55, 126, D1GfxPixel::colorPixel(235));
+                    change |= currFrame->setPixel(56, 126, D1GfxPixel::colorPixel(234));
+                    change |= currFrame->setPixel(57, 126, D1GfxPixel::colorPixel(172));
+                    change |= currFrame->setPixel(58, 126, D1GfxPixel::colorPixel(238));
+                    change |= currFrame->setPixel(51, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(52, 127, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(53, 127, D1GfxPixel::colorPixel(235));
+                    change |= currFrame->setPixel(54, 127, D1GfxPixel::colorPixel(238));
+                    change |= currFrame->setPixel(55, 127, D1GfxPixel::colorPixel(238));
+                }
+            }
+            if (ii + 1 == 2) {
+                if (i + 1 >= 13) {
+                    // draw club
+                    change |= currFrame->setPixel(71, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(72, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(73, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(74, 126, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(75, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(76, 126, D1GfxPixel::colorPixel(188));
+                    change |= currFrame->setPixel(77, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(78, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(79, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(80, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(81, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(82, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(83, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(84, 126, D1GfxPixel::colorPixel(175));
+                    change |= currFrame->setPixel(85, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(86, 126, D1GfxPixel::colorPixel(175));
+                    change |= currFrame->setPixel(95, 126, D1GfxPixel::colorPixel(175));
+                    change |= currFrame->setPixel(96, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(97, 126, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(98, 126, D1GfxPixel::colorPixel(252));
+                    change |= currFrame->setPixel(99, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(100, 126, D1GfxPixel::colorPixel(188));
+                    change |= currFrame->setPixel(101, 126, D1GfxPixel::colorPixel(188));
+                    change |= currFrame->setPixel(73, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(74, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(75, 127, D1GfxPixel::colorPixel(237));
+                    change |= currFrame->setPixel(76, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(77, 127, D1GfxPixel::colorPixel(174));
+                    change |= currFrame->setPixel(78, 127, D1GfxPixel::colorPixel(188));
+                }
+            }
+            if (ii + 1 == 3) {
+                // add shadow
+                if (i + 1 == 6) {
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 7) {
+                    change |= currFrame->setPixel(7, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 106, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 8) {
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 109, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 9) {
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 110, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 >= 13) {
+                    // draw club based on frame 1 of group 8
+                    for (int y = 123; y < 126; y++) {
+                        for (int x = 40; x < 46; x++) {
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                    int bn = this->getGroupFrameIndices(8 - 1).first + 1 - 1;
+                    D1GfxFrame* baseFrame = this->getFrame(bn);
+                    for (int y = 97 + 2; y < 110 + 2 - 2; y++) {
+                        for (int x = 83 - 9; x < 103 - 9; x++) {
+                            D1GfxPixel pixel = baseFrame->getPixel(x, y);
+                            if (pixel.isTransparent())
+                                continue;
+                            change |= currFrame->setPixel(37 + x - (83 - 9), y + 18, pixel);
+                        }
+                    }
+                }
+            }
+            if (ii + 1 == 4) {
+                // add shadow
+                if (i + 1 == 3) {
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 4) {
+                    change |= currFrame->setPixel(5, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(5, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 5) {
+                    change |= currFrame->setPixel(6, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 6) {
+                    change |= currFrame->setPixel(5, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(5, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 97, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 97, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 7) {
+                    change |= currFrame->setPixel(6, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 97, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 99, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 97, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 8) {
+                    change |= currFrame->setPixel(8, 98, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 99, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 10) {
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                }
+                if (i + 1 == 11) {
+                    change |= currFrame->setPixel(8, 100, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 102, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(6, 103, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 102, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(7, 103, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 101, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 102, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(8, 103, D1GfxPixel::colorPixel(0));
+                }
+                // draw club
+                if (i + 1 >= 13) {
+                    change |= currFrame->setPixel(24, 126, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(25, 126, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(26, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(27, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(28, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(29, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(30, 126, D1GfxPixel::colorPixel(202));
+                    change |= currFrame->setPixel(31, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(32, 126, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(33, 126, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(24, 127, D1GfxPixel::colorPixel(254));
+                    change |= currFrame->setPixel(25, 127, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(26, 127, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(27, 127, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(28, 127, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(29, 127, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(30, 127, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(31, 127, D1GfxPixel::colorPixel(203));
+                    change |= currFrame->setPixel(32, 127, D1GfxPixel::colorPixel(204));
+                    change |= currFrame->setPixel(33, 127, D1GfxPixel::colorPixel(204));
+                }
+            }
+            if (ii + 1 == 5) {
+                // draw club
+                if (i + 1 >= 13) {
+                    change |= currFrame->setPixel(8, 107, D1GfxPixel::colorPixel(190));
+                    change |= currFrame->setPixel(8, 108, D1GfxPixel::colorPixel(173));
+                    change |= currFrame->setPixel(8, 109, D1GfxPixel::colorPixel(253));
+                    change |= currFrame->setPixel(8, 110, D1GfxPixel::colorPixel(254));
+                    change |= currFrame->setPixel(8, 111, D1GfxPixel::colorPixel(223));
+                    change |= currFrame->setPixel(7, 108, D1GfxPixel::colorPixel(223));
+                    change |= currFrame->setPixel(7, 109, D1GfxPixel::colorPixel(190));
+                }
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+bool D1Gfx::patchMagmaDie(bool silent)
+{
+    constexpr int frameCount = 18;
+    constexpr int width = 128;
+    constexpr int height = 128;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+
+    QString baseFilePath = this->getFilePath();
+    if (baseFilePath.length() < 10) {
+        dProgressErr() << tr("Unrecognized file-path. Expected *Magmad.CL2");
+        return false;
+    }
+    // read Fallgn.CL2 from the same folder
+    QString stdPath = baseFilePath;
+    stdPath[stdPath.length() - 5] = QChar('h');
+
+    if (!QFileInfo::exists(stdPath)) {
+        dProgressErr() << tr("Could not find %1 to be used as a template file").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+
+    OpenAsParam opParams = OpenAsParam();
+    D1Gfx stdGfx;
+    stdGfx.setPalette(this->palette);
+    if (!D1Cl2::load(stdGfx, stdPath, opParams)) {
+        dProgressErr() << (tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(stdPath)));
+        return false;
+    }
+    if (stdGfx.getGroupCount() <= DIR_S) {
+        dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+    if ((stdGfx.getGroupFrameIndices(DIR_S).second - stdGfx.getGroupFrameIndices(DIR_S).first + 1) < 7) {
+        dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg((int)DIR_S + 1).arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* frame = this->getFrame(n);
+            if (frame->getWidth() != width || frame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(51, 51).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            if (ii + 1 == 1) {
+                if (i + 1 <= 3) {
+                    int si;
+                    switch (i + 1) {
+                    case 1: si = 1 - 1; break;
+                    case 2: si = 6 - 1; break;
+                    case 3: si = 7 - 1; break;
+                    }
+                    int sn = stdGfx.getGroupFrameIndices(ii).first + si;
+                    D1GfxFrame* frameSrcStd = stdGfx.getFrame(sn);
+                    if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
+                        dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+                        return result;
+                    }
+
+                    for (int y = 0; y < height; y++) {
+                        for (int x = 0; x < width; x++) {
+                            // preserve pixels
+                            if (i + 1 == 3) {
+                                if (y < 51 || (x > 65 && y < 55) || (x >= 57 && x < 60 && y < 54 + 57 - x) || (x == 56 && y == 52))
+                                    continue;
+                            }
+                            if (i + 1 == 2) {
+                                if (x >= 72 && y < 72 && y < 64 + x - 72) {
+                                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                                    if (!pixel.isTransparent()) {
+                                        change |= currFrame->setPixel(x - 16, y, pixel);
+                                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                                        continue;
+                                    }
+                                }
+                            }
+                            // copy pixels with 'trn'
+                            D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
+                            if (!pixel.isTransparent()) {
+                                quint8 color = pixel.getPaletteIndex();
+                                if (color != 0) {
+                                    if (color < 188)
+                                        pixel = D1GfxPixel::colorPixel(color - 1);
+                                    else if (color >= 214 && color <= 217)
+                                        pixel = D1GfxPixel::colorPixel(155);
+                                    else if (color >= 218 && color <= 220)
+                                        pixel = D1GfxPixel::colorPixel(140 + color - 218);
+                                    else if (color >= 221 && color <= 222)
+                                        pixel = D1GfxPixel::colorPixel(142);
+                                    else if (color >= 232 && color <= 233)
+                                        pixel = D1GfxPixel::colorPixel(154);
+                                    else if (color >= 234 && color <= 235)
+                                        pixel = D1GfxPixel::colorPixel(156);
+                                    else if (color >= 236 && color <= 239)
+                                        pixel = D1GfxPixel::colorPixel(color - 4);
+                                }
+                            }
+                            change |= currFrame->setPixel(x, y, pixel);
+                        }
+                    }
+
+                    if (i + 1 == 3) {
+                        // add bits from frame 4
+                        D1GfxFrame* baseFrame = this->getFrame(n + 1);
+                        for (int y = 62; y < 73; y++) {
+                            for (int x = 93; x < 106; x++) {
+                                D1GfxPixel pixel = baseFrame->getPixel(x, y);
+                                if (pixel.isTransparent())
+                                    continue;
+                                int dx = 59 - 93, dy = 88 - 62;
+                                D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
+                                if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
+                                    change |= currFrame->setPixel(x + dx, y + dy, pixel);
+                            }
+                        }
+                        for (int y = 79; y < 88; y++) {
+                            for (int x = 88; x < 98; x++) {
+                                D1GfxPixel pixel = baseFrame->getPixel(x, y);
+                                if (pixel.isTransparent())
+                                    continue;
+                                int dx = 56 - 88, dy = 95 - 79;
+                                D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
+                                if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0)
+                                    change |= currFrame->setPixel(x + dx, y + dy, pixel);
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (i + 1 == 1) {
+                    // draw leg
+                    int si = 1 - 1;
+                    int sn = stdGfx.getGroupFrameIndices(ii).first + si;
+                    D1GfxFrame* frameSrcStd = stdGfx.getFrame(sn);
+                    if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
+                        dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+                        return result;
+                    }
+                    int sx = 0, sy = 0, ex = 0, ey = 0;
+                    switch (ii + 1) {
+                    case 2: sx = 53; sy = 87; ex = 62, ey = 97; break;
+                    case 3: sx = 69; sy = 94; ex = 72, ey = 101; break;
+                    case 4: sx = 66; sy = 80; ex = 79, ey = 92; break;
+                    case 5: sx = 56; sy = 83; ex = 78, ey = 115; break;
+                    case 6: sx = 56; sy = 89; ex = 76, ey = 113; break;
+                    case 7: sx = 66; sy = 94; ex = 69, ey = 101; break;
+                    case 8: sx = 39; sy = 80; ex = 62, ey = 114; break;
+                    }
+                    for (int y = sy; y < ey; y++) {
+                        for (int x = sx; x < ex; x++) {
+                            D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
+                            if (pixel.isTransparent())
+                                continue;
+                            int dx = 0, dy = 0;
+                            D1GfxPixel currPixel = currFrame->getPixel(x + dx, y + dy);
+                            if (currPixel.isTransparent() || currPixel.getPaletteIndex() == 0) {
+                                change |= currFrame->setPixel(x + dx, y + dy, pixel);
+                            }
+                        }
+                    }
+                }
+
+                switch (n + 1) {
+                case 19:
+                    change |= currFrame->setPixel(54, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(41, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(42, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(43, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(43, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 117, D1GfxPixel::transparentPixel());
+                    break;
+                case 20:
+                    change |= currFrame->setPixel(40, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(41, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(41, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(42, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(42, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(43, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(43, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(41, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(42, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(43, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(43, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 117, D1GfxPixel::transparentPixel());
+                    break;
+                case 21:
+                    change |= currFrame->setPixel(53, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(41, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(42, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(43, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(43, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 117, D1GfxPixel::transparentPixel());
+                    break;
+                case 37:
+                    change |= currFrame->setPixel(49, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 115, D1GfxPixel::transparentPixel());
+                    break;
+                case 38:
+                    change |= currFrame->setPixel(53, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 115, D1GfxPixel::transparentPixel());
+                    break;
+                case 39:
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 115, D1GfxPixel::transparentPixel());
+                    break;
+                case 55:
+                    change |= currFrame->setPixel(68, 102, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(70, 103, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(71, 103, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(61, 108, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 108, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 108, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 108, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(61, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(60, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 114, D1GfxPixel::transparentPixel());
+                    break;
+                case 56:
+                    change |= currFrame->setPixel(65, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(64, 108, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(68, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(69, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(71, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 114, D1GfxPixel::transparentPixel());
+                    break;
+                case 57:
+                    change |= currFrame->setPixel(69, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(60, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 114, D1GfxPixel::transparentPixel());
+                    break;
+                case 58:
+                    change |= currFrame->setPixel(71, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 114, D1GfxPixel::transparentPixel());
+                    break;
+                case 91:
+                    change |= currFrame->setPixel(45, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(44, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(45, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(58, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(59, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(60, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(58, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(59, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    break;
+                case 92:
+                    change |= currFrame->setPixel(59, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(60, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(61, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(59, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(60, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(61, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(64, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(46, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(60, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(61, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(64, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(65, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(47, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(59, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(60, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(61, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(47, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(58, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(47, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(58, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(59, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 115, D1GfxPixel::transparentPixel());
+                    break;
+                case 93:
+                    change |= currFrame->setPixel(45, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(64, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(65, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(66, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(67, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(44, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(56, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(57, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(58, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(59, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(60, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(61, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(64, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(65, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(66, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(67, 110, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(45, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(46, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(58, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(59, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(60, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(61, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(64, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(47, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(47, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(58, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(59, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(60, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 113, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(47, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(54, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(55, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(58, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(59, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(48, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(49, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(50, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(51, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(52, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(53, 115, D1GfxPixel::transparentPixel());
+                    break;
+                case 127:
+                    change |= currFrame->setPixel(67, 105, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(67, 106, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(67, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(67, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(68, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(69, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(66, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 109, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 110, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(56, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(57, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(58, 111, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(60, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(57, 112, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(60, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(79, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(80, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(79, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(80, 117, D1GfxPixel::transparentPixel());
+                    break;
+                case 128:
+                    change |= currFrame->setPixel(67, 107, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(67, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(68, 108, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(69, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(70, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(71, 109, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(62, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 111, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(60, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 112, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(59, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(60, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(61, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(62, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(63, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 113, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(58, 114, D1GfxPixel::colorPixel(0));
+                    change |= currFrame->setPixel(63, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 114, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(64, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(65, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(66, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(67, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(68, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(69, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(70, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(71, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(79, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(80, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(79, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(80, 117, D1GfxPixel::transparentPixel());
+                    break;
+                case 129:
+                    change |= currFrame->setPixel(73, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(79, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(80, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(79, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(80, 117, D1GfxPixel::transparentPixel());
+                    break;
+                case 130:
+                    change |= currFrame->setPixel(73, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 115, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(79, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(80, 116, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(72, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(73, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(74, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(75, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(76, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(77, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(78, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(79, 117, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(80, 117, D1GfxPixel::transparentPixel());
+                    break;
+                }
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchFallGWalk(bool silent)
 {
     QString baseFilePath = this->getFilePath();
@@ -3976,6 +5427,817 @@ bool D1Gfx::patchGoatLDie(bool silent)
     return result;
 }
 
+bool D1Gfx::patchSklAxDie(bool silent)
+{
+    constexpr int frameCount = 17;
+    constexpr int width = 128;
+    constexpr int height = 96;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(49, 12).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 0, dy = 0;
+            switch (i + 1) {
+            case 1: dx = 0; dy = 15; break;
+            case 2: dx = 0; dy = 12; break;
+            case 3: dx = 0; dy = 10; break;
+            case 4: dx = 0; dy = 6; break;
+            case 5:
+            case 6:
+            case 7: dx = 0; dy = 5; break;
+            case 8:
+            case 9:
+            case 10: dx = 0; dy = 3; break;
+            case 11:
+                if (ii + 1 != 4) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 12:
+                if (ii + 1 != 4) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 13:
+                if (ii + 1 != 4 && ii + 1 != 5) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 14:
+                if (ii + 1 != 4 && ii + 1 != 5) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 15:
+                if (ii + 1 != 4 && ii + 1 != 5) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 16:
+                if (ii + 1 != 4 && ii + 1 != 5) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 17:
+                if (ii + 1 != 1 && ii + 1 != 2 && ii + 1 != 3 && ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 8) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            }
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            switch (ii + 1) {
+            case 1:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                break;
+            case 2:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                break;
+            case 3:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 88);
+                }
+                break;
+            case 4:
+                if (i + 1 == 11) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                if (i + 1 == 12) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                if (i + 1 == 13) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 89);
+                }
+                if (i + 1 == 14) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 87, 70, 88);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 87);
+                }
+                if (i + 1 == 15) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 85, 70, 87);
+                    change |= ShiftFrame(currFrame, 0, 3, 91, 85, 93, 86);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                if (i + 1 == 16) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 87, 70, 89);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 87);
+                }
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 67, 87);
+                    change |= ShiftFrame(currFrame, 0, 3, 88, 83, 97, 85);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                break;
+            case 5:
+                if (i + 1 == 13) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 85, 75, 89);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                if (i + 1 == 14) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 67, 83, 75, 88);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                if (i + 1 == 15) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 56, 81, 76, 90);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 81);
+                }
+                if (i + 1 == 16) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 57, 85, 67, 90); // axe
+                    change |= ShiftFrame(currFrame, 0, 3, 70, 83, width, height); // right arm
+                    change |= ShiftFrame(currFrame, 0, 3, 40, 77, width, 83); // body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 77); // body
+
+                    change |= ShiftFrame(currFrame, 0, -3, 48, 87, 54, 92); // left arm
+                }
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 57, 85, 67, 91); // axe
+                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 74, 85); // axe
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);  // body
+                }
+                break;
+            case 6:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 72, 83, 74, 85);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                break;
+            case 8:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 67, 85);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                break;
+            }
+
+            // shift bone
+            if (ii + 1 == 6) {
+                if (i + 1 == 9) {
+                    change |= ShiftFrame(currFrame, 0, -10, 52, 78, 54, 80);
+                    change |= ShiftFrame(currFrame, 0, -10, 49, 79, 52, 81);
+                }
+                if (i + 1 == 10) {
+                    change |= ShiftFrame(currFrame, 0, -10, 50, 83, 53, 85);
+                    change |= ShiftFrame(currFrame, 0, -10, 48, 85, 52, 89);
+                }
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 4, -6, 48, 87, 53, 93);
+                    change |= ShiftFrame(currFrame, 4, -6, 47, 91, 48, 92);
+                }
+            } else {
+                if (i + 1 == 9) {
+                    if (ii + 1 == 1 || ii + 1 == 2) {
+                        change |= ShiftFrame(currFrame, 0, -10, 51, 77, 54, 79);
+                        change |= ShiftFrame(currFrame, 0, -10, 48, 79, 53, 82);
+                    } else if (ii + 1 == 4) {
+                        change |= ShiftFrame(currFrame, 0, -10, 49, 78, 54, 82);
+                    } else {
+                        change |= ShiftFrame(currFrame, 0, -10, 48, 77, 54, 82);
+                    }
+                }
+                if (i + 1 == 10) {
+                    if (ii + 1 == 3) {
+                        // TODO:....
+                    } else {
+                        change |= ShiftFrame(currFrame, 0, -10, 47, 83, 53, 89);
+                    }
+                }
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 4, -6, 47, 87, 53, 93);
+                }
+            }
+
+            if (i + 1 == 12) {
+                change |= ShiftFrame(currFrame, 7, -2, 49, 89, 53, 94);
+            }
+            if (i + 1 == 13) {
+                change |= ShiftFrame(currFrame, 7, -2, 50, 92, 53, 95);
+            }
+            if (i + 1 == 14) {
+                change |= ShiftFrame(currFrame, 7, -2, 50, 91, 53, 93);
+            }
+            if (i + 1 == 15) {
+                change |= ShiftFrame(currFrame, 7, -2, 49, 88, 54, 92);
+            }
+            if (i + 1 == 16) {
+                change |= ShiftFrame(currFrame, 7, -2, 48, 90, 54, 95);
+            }
+            if (i + 1 == 17) {
+                if (ii + 1 == 3) {
+                    for (int y = 92; y < 96; y++) {
+                        for (int x = 49; x < 65; x++) {
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+
+                    D1GfxFrame* prevFrame = this->getFrame(n - 1);
+                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 56, 90, 61, 93);
+                } else {
+                    change |= ShiftFrame(currFrame, 7, -2, 49, 92, 54, 95);
+                }
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+bool D1Gfx::patchSklBwDie(bool silent)
+{
+    constexpr int frameCount = 16;
+    constexpr int obsoleteFrameCount = 3;
+    constexpr int width = 128;
+    constexpr int height = 96;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount - obsoleteFrameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 2 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(76, 92).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        while (true) {
+            int n = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1;
+            if (n <= frameCount - obsoleteFrameCount)
+                break;
+            this->removeFrame(this->getGroupFrameIndices(ii).first + n - 1, false);
+            dProgress() << tr("Removed frame %1 of group %2.").arg(n).arg(ii + 1);
+            result = true;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 0, dy = 0;
+            switch (ii + 1) {
+            case 1:
+                if (i + 1 == 2) {
+                    dx = -3;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = -3;
+                    dy = -7;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = -3;
+                    dy = -5;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = -2;
+                    dy = -6;
+                }
+                break;
+            case 2:
+                if (i + 1 == 2) {
+                    dx = -3;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = -3;
+                    dy = -7;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = -3;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = -3;
+                    dy = -7;
+                }
+                break;
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                if (i + 1 == 2) {
+                    dx = 0;
+                    dy = -3;
+                }
+                if (i + 1 == 3) {
+                    dx = 0;
+                    dy = -5;
+                }
+                if (i + 1 == 4 || i + 1 == 5 || i + 1 == 6) {
+                    dx = 0;
+                    dy = -6;
+                }
+                if (i + 1 == 7 || i + 1 == 8 || i + 1 == 9 || i + 1 == 10 || i + 1 == 11 || i + 1 == 12 || i + 1 == 13) {
+                    dx = 0;
+                    dy = -7;
+                }
+                break;
+            }
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+bool D1Gfx::patchSklSrDie(bool silent)
+{
+    constexpr int frameCount = 15;
+    constexpr int width = 128;
+    constexpr int height = 96;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(31, 14).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 0, dy = 0;
+            switch (i + 1) {
+            case 1: dx = 0; dy = 15; break;
+            case 2: dx = 0; dy = 12; break;
+            case 3: dx = 0; dy = 10; break;
+            case 4: dx = 0; dy = 6;  break;
+            case 5:
+            case 6:
+            case 7: dx = 0; dy = 5; break;
+            case 8:
+            case 9:
+            case 10:
+            case 11: dx = 0; dy = 3; break;
+            case 12: 
+                if (ii + 1 != 7 && ii + 1 != 8) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 13:
+                if (ii + 1 != 5 && ii + 1 != 7 && ii + 1 != 8) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 14:
+                if (ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 7 && ii + 1 != 8) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            case 15:
+                if (ii + 1 != 1 && ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 7 && ii + 1 != 8) {
+                    dx = 0;
+                    dy = 3;
+                }
+                break;
+            }
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            switch (ii + 1) {
+            case 1:
+                // shift the sword
+                if (i + 1 == 9) {
+                    change |= ShiftFrame(currFrame, -1, 3, 47, 50, 61, 60);
+                }
+                if (i + 1 == 10) {
+                    change |= ShiftFrame(currFrame, -2, 9, 47, 41, 64, 58);
+                }
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 1, 14, 42, 37, 60, 53);
+                }
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 5, 15, 37, 36, 55, 52);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 7, 15, 34, 34, 51, 52);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 9, 14, 34, 39, 50, 54);
+                }
+                // shift the shadow of the sword
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 3, 1, 25, 63, 43, 70);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 3, 0, 26, 65, 43, 70);
+                }
+                if (i + 1 == 15) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 28, 66, 30, 68);
+                    change |= ShiftFrame(currFrame, 0, 3, 30, 56, 76, 87);
+                    change |= ShiftFrame(currFrame, 0, 3, 76, 56, 109, 80);
+                    change |= ShiftFrame(currFrame, 0, 3, 73, 37, 95, 56);
+                    // shift the sword
+                    change |= ShiftFrame(currFrame, 9, 13, 34, 41, 50, 56);
+                    // shift the shadow of the sword
+                    change |= ShiftFrame(currFrame, 2, 0, 28, 66, 38, 71);
+                }
+                // shift the left-leg
+                if (i + 1 == 14 || i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, -1, -1, 69, 78, 75, 90);
+                    change |= ShiftFrame(currFrame, -1, -4, 75, 78, 82, 96);
+                    change |= ShiftFrame(currFrame, -1, -4, 74, 92, 75, 96);
+                }
+                // shift the right-leg
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 3, -3, 17, 72, 40, 80);
+                }
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 6, -6, 13, 78, 16, 79);
+                    change |= ShiftFrame(currFrame, 6, -6, 32, 77, 36, 79);
+                    change |= ShiftFrame(currFrame, 6, -6, 14, 79, 36, 85);
+                    // eliminate shadow(?)
+                    change |= currFrame->setPixel(16, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(17, 78, D1GfxPixel::transparentPixel());
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 10, -6, 30, 77, 33, 79);
+                    change |= ShiftFrame(currFrame, 10, -6, 9, 79, 33, 85);
+                    // eliminate shadow(?)
+                    change |= currFrame->setPixel(9, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(10, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(11, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(12, 78, D1GfxPixel::transparentPixel());
+                    change |= currFrame->setPixel(13, 78, D1GfxPixel::transparentPixel());
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 11, -6, 8, 79, 32, 87);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 13, -3, 6, 76, 30, 85);
+                }
+                break;
+            case 2:
+                // shift the right-leg
+                if (i + 1 == 9) {
+                    change |= ShiftFrame(currFrame, 0, 3, 24, 57, 43, 67);
+                }
+                if (i + 1 == 10) {
+                    change |= ShiftFrame(currFrame, 0, 6, 23, 53, 41, 65);
+                }
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 1, 6, 19, 54, 38, 64);
+                }
+                if (i + 1 == 12) {
+                    // shadow
+                    change |= ShiftFrame(currFrame, 5, 0, 9, 71, 30, 74);
+                    // leg
+                    change |= ShiftFrame(currFrame, 5, 6, 14, 57, 33, 66);
+                }
+                if (i + 1 == 13) {
+                    // shadow
+                    change |= ShiftFrame(currFrame, 9, 0, 5, 71, 26, 74);
+                    // leg
+                    change |= ShiftFrame(currFrame, 8, 7, 10, 57, 29, 65);
+                }
+                if (i + 1 == 14) {
+                    // shadow
+                    change |= ShiftFrame(currFrame, 10, 0, 3, 71, 24, 74);
+                    // leg
+                    change |= ShiftFrame(currFrame, 9, 7, 8, 58, 27, 66);
+                }
+                if (i + 1 == 15) {
+                    // shadow
+                    change |= ShiftFrame(currFrame, 12, 0, 1, 71, 23, 74);
+                    // leg
+                    change |= ShiftFrame(currFrame, 10, 7, 6, 59, 26, 66);
+                }
+
+                // shift the left-leg
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 2, -2, 35, 76, 58, 93);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 2, -2, 36, 76, 58, 96);
+                    change |= ShiftFrame(currFrame, 2, -2, 38, 82, 49, 94);
+                }
+                // shift the shield
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, -2, 93, 76, 97, 78);
+                    change |= ShiftFrame(currFrame, 0, -2, 82, 78, 97, 79);
+                    change |= ShiftFrame(currFrame, 0, -2, 79, 79, 97, 81);
+                    change |= ShiftFrame(currFrame, 0, -2, 70, 81, 97, 85);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, -4, 83, 79, 85, 80);
+                    change |= ShiftFrame(currFrame, 0, -4, 79, 80, 95, 81);
+                    change |= ShiftFrame(currFrame, 0, -4, 70, 81, 97, 87);
+                    change |= ShiftFrame(currFrame, 0, -4, 75, 87, 88, 88);
+                }
+                break;
+            case 4:
+                // shift the main body
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                // shift the shield
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, -2, 30, 72, 46, 85);
+                    change |= ShiftFrame(currFrame, 0, -2, 46, 76, 47, 77);
+                    change |= ShiftFrame(currFrame, 0, -2, 46, 77, 48, 85);
+                    change |= ShiftFrame(currFrame, 0, -2, 48, 78, 50, 81);
+                }
+                break;
+            case 5:
+                // shift the main body
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 77);
+                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 68);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 79);
+                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 69);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 80);
+                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 69);
+                }
+                // shift the sword
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, -2, -1, 62, 73, width, height);
+                    change |= ShiftFrame(currFrame, -2, 0, 79, 72, width, height);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, -3, 0, 64, 75, width, height);
+                    change |= ShiftFrame(currFrame, -4, 0, 83, 75, width, height);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, -2, -2, 64, 77, width, height);
+                    change |= ShiftFrame(currFrame, -4, 0, 84, 75, width, height);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, -2, -5, 64, 81, width, height);
+                    change |= ShiftFrame(currFrame, -4, 0, 84, 76, width, height);
+                }
+                // complete the sword
+                if (i + 1 == 14) {
+                    change |= currFrame->setPixel(87, 94, D1GfxPixel::colorPixel(248));
+                    change |= currFrame->setPixel(88, 94, D1GfxPixel::colorPixel(164));
+                }
+                if (i + 1 == 15) {
+                    change |= CopyFrame(currFrame, -2, 3, currFrame, 88, 88, 92, 91);
+                    change |= currFrame->setPixel(86, 94, D1GfxPixel::colorPixel(248));
+                    change |= currFrame->setPixel(87, 94, D1GfxPixel::colorPixel(247));
+                }
+                break;
+            case 6:
+                // shift the main body
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 80);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                }
+                // shift the sword
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 3, -4, 66, 81, 68, 93);
+                    change |= ShiftFrame(currFrame, 3, -4, 40, 82, 68, 93);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 4, -7, 39, 86, 68, 96);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 6, -7, 38, 87, 68, 96);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 9, -12, 54, 92, 67, 96);
+                }
+                // complete the sword
+                if (i + 1 == 15) {
+                    D1GfxFrame* prevFrame = this->getFrame(n - 1);
+                    change |= CopyFrame(currFrame, 2, 0, prevFrame, 44, 84, 71, 89);
+                }
+                break;
+            case 7:
+                // shift the main body
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 73, 79, 76, 81);
+                    change |= ShiftFrame(currFrame, 0, 3, 29, 74, 76, 79);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 74);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 29, 79, 76, 84);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                }
+                // shift the sword
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, -1, -5, 4, 78, 38, 87);
+                }
+                // shift the right-leg
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, -1, -3, 81, 78, 91, 92);
+                }
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, -5, -6, 85, 79, 94, 94);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, -8, -7, 88, 80, 97, 88);
+                    change |= ShiftFrame(currFrame, -9, -7, 88, 88, 97, 95);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, -8, -8, 90, 81, 99, 83);
+                    change |= ShiftFrame(currFrame, -9, -8, 90, 83, 99, 84);
+                    change |= ShiftFrame(currFrame, -10, -8, 90, 84, 99, 87);
+                    change |= ShiftFrame(currFrame, -11, -8, 90, 87, 99, 89);
+                    change |= ShiftFrame(currFrame, -12, -8, 90, 89, 99, 96);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, -8, -8, 90, 82, 99, 84);
+                    change |= ShiftFrame(currFrame, -9, -8, 90, 84, 99, 85);
+                    change |= ShiftFrame(currFrame, -10, -8, 90, 85, 99, 88);
+                    change |= ShiftFrame(currFrame, -11, -8, 90, 88, 99, 90);
+                    change |= ShiftFrame(currFrame, -12, -8, 90, 90, 99, 91);
+                    change |= ShiftFrame(currFrame, -13, -8, 90, 91, 99, 96);
+                }
+                break;
+            case 8:
+                // shift the main body
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 0, 3, 61, 82, width, height);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 0, 3, 61, 83, width, height);
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 86);
+                }
+                // shift the left-leg
+                if (i + 1 == 11) {
+                    change |= ShiftFrame(currFrame, 2, -3, 45, 81, 61, 93);
+                }
+                if (i + 1 == 12) {
+                    change |= ShiftFrame(currFrame, 1, -6, 44, 82, 60, 96);
+                }
+                if (i + 1 == 13) {
+                    change |= ShiftFrame(currFrame, 0, -7, 43, 83, 61, 96);
+                }
+                if (i + 1 == 14) {
+                    change |= ShiftFrame(currFrame, -2, -8, 45, 85, 61, 96);
+                }
+                if (i + 1 == 15) {
+                    change |= ShiftFrame(currFrame, -1, -9, 49, 86, 60, 96);
+                }
+                // complete the left-leg
+                if (i + 1 == 14) {
+                    D1GfxFrame* prevFrame = this->getFrame(n - 1);
+                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 44, 86, 48, 87);
+                    change |= CopyFrame(currFrame, 0, 1, prevFrame, 45, 87, 49, 88);
+                    change |= currFrame->setPixel(45, 87, D1GfxPixel::colorPixel(165));
+                }
+                if (i + 1 == 15) {
+                    D1GfxFrame* prevFrame = this->getFrame(n - 1);
+                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 43, 86, 51, 89);
+                }
+                break;
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 bool D1Gfx::moveImage(D1GfxFrame* currFrame, int dx, int dy)
 {
     int width = currFrame->getWidth();
@@ -4632,11 +6894,26 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
+    case GFX_MON_FALLGD: // patch Fallgd.CL2
+        change = this->patchFallGDie(silent);
+        break;
     case GFX_MON_FALLGW: // patch Fallgw.CL2
         change = this->patchFallGWalk(silent);
         break;
+    case GFX_MON_MAGMAD: // patch Magmad.CL2
+        change = this->patchMagmaDie(silent);
+        break;
     case GFX_MON_GOATLD: // patch GoatLd.CL2
         change = this->patchGoatLDie(silent);
+        break;
+    case GFX_MON_SKLAXD:
+        change = this->patchSklAxDie(silent);
+        break;
+    case GFX_MON_SKLBWD:
+        change = this->patchSklBwDie(silent);
+        break;
+    case GFX_MON_SKLSRD:
+        change = this->patchSklSrDie(silent);
         break;
     case GFX_SPL_ICONS: // patch SpelIcon.CEL
         change = this->patchSplIcons(silent);
@@ -4772,11 +7049,26 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "wmhas") {
         fileIndex = GFX_PLR_WMHAS;
     }
+    if (baseName == "fallgd") {
+        fileIndex = GFX_MON_FALLGD;
+    }
     if (baseName == "fallgw") {
         fileIndex = GFX_MON_FALLGW;
     }
+    if (baseName == "magmad") {
+        fileIndex = GFX_MON_MAGMAD;
+    }
     if (baseName == "goatld") {
         fileIndex = GFX_MON_GOATLD;
+    }
+    if (baseName == "sklaxd") {
+        fileIndex = GFX_MON_SKLAXD;
+    }
+    if (baseName == "sklbwd") {
+        fileIndex = GFX_MON_SKLBWD;
+    }
+    if (baseName == "sklsrd") {
+        fileIndex = GFX_MON_SKLSRD;
     }
     return fileIndex;
 }

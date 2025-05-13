@@ -82,12 +82,37 @@
        </item>
        <item>
         <property name="text">
+         <string>Devil Kin Brute dying (Fallgd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Devil Kin Brute walking (Fallgw.CL2)</string>
         </property>
        </item>
        <item>
         <property name="text">
+         <string>Magma Demon dying (Magmad.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Satyr Lord dying (GoatLd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Skeleton Axe dying (SklAxd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Skeleton Bow dying (SklBwd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Skeleton Sword dying (SklSrd.CL2)</string>
         </property>
        </item>
        <item>
