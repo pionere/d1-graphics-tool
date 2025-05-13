@@ -740,7 +740,9 @@ void PaletteWidget::startTrnColorPicking(bool single)
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
     this->ui->informationLabel->setText(tr("<- Select color(s)", "", single ? 1 : 2));
     this->pickingTranslationColor = true;
-    // this->displayColors();
+    this->displayColors();
+
+    this->ui->graphicsView->setFocus();
 }
 
 void PaletteWidget::stopTrnColorPicking()
@@ -748,7 +750,7 @@ void PaletteWidget::stopTrnColorPicking()
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 255, 255);");
     this->ui->informationLabel->clear();
     this->pickingTranslationColor = false;
-    // this->displayColors();
+    this->displayColors();
 }
 
 void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, const QString &selectedOption)
@@ -1184,6 +1186,10 @@ void PaletteWidget::patchTrn()
 
 void PaletteWidget::keyPressEvent(QKeyEvent *event)
 {
+    if (this->pickingTranslationColor && event->matches(QKeySequence::Cancel)) {
+        this->initStopColorPicking();
+        return;
+    }
     if (event->matches(QKeySequence::Copy)) {
         if (this->selectedFirstColorIndex != COLORIDX_TRANSPARENT) {
             this->on_actionCopy_triggered();
