@@ -209,7 +209,6 @@ void PaletteScene::keyPressEvent(QKeyEvent *event)
         QGraphicsScene::keyPressEvent(event);
         return;
     }
-    // QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("scene key event"));
     bool extend = (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) != 0;
     this->view->changeColorSelection(dir, extend);
 }
@@ -618,7 +617,7 @@ void PaletteWidget::finishColorSelection()
 
 void PaletteWidget::initStopColorPicking()
 {
-    // this->stopTrnColorPicking();
+    this->stopTrnColorPicking();
 
     emit this->colorPicking_stopped(); // cancel color picking
 }
@@ -736,16 +735,13 @@ void PaletteWidget::displaySelection()
 void PaletteWidget::startTrnColorPicking(bool single)
 {
     // stop previous picking
-    // this->initStopColorPicking();
-    // this->stopTrnColorPicking();
+    this->initStopColorPicking();
 
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
     this->ui->informationLabel->setText(tr("<- Select color(s)", "", single ? 1 : 2));
     this->pickingTranslationColor = true;
     this->displayColors();
-    // QMessageBox::critical(this, tr("Error"), tr("focus"));
-    // this->setFocus();
-    // this->scene.setFocus();
+
     this->ui->graphicsView->setFocus();
 }
 
@@ -1071,7 +1067,6 @@ void PaletteWidget::on_colorLineEdit_escPressed()
 void PaletteWidget::on_colorPickPushButton_clicked()
 {
     if (this->isTrn) {
-        // this->ui->colorPickPushButton->clearFocus();
         emit this->colorPicking_started(this->selectedFirstColorIndex == this->selectedLastColorIndex);
     } else {
         this->initStopColorPicking();

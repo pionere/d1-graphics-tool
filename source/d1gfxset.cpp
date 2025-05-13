@@ -343,11 +343,11 @@ void D1Gfxset::mask()
     for (D1Gfx *gfx : this->gfxList) {
         if (gfx->getFrameCount() == 0) continue;
         if (!gfx->isFrameSizeConstant()) {
-            dProgressErr() << QApplication::tr("Frame-size is not constant");
+            dProgressErr() << QApplication::tr("Framesize is not constant");
             return;
         }
         if (!gfx->isGroupSizeConstant()) {
-            dProgressErr() << QApplication::tr("Group-size is not constant");
+            dProgressErr() << QApplication::tr("Groupsize is not constant");
             return;
         }
         w = gfx->getFrameWidth(0);
@@ -355,11 +355,11 @@ void D1Gfxset::mask()
         gs = gfx->getGroupFrameIndices(0).second - gfx->getGroupFrameIndices(0).first + 1;
         if (!first) {
             if (w != width || h != height) {
-                dProgressErr() << QApplication::tr("Frame-size is not constant");
+                dProgressErr() << QApplication::tr("Framesize is not constant");
                 return;
             }
             if (gs != groupSize) {
-                dProgressErr() << QApplication::tr("Group-size is not constant");
+                dProgressErr() << QApplication::tr("Groupsize is not constant");
                 return;
             }
         } else {

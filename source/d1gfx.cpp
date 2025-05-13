@@ -190,7 +190,7 @@ void D1GfxFrame::setFrameType(D1CEL_FRAME_TYPE type)
 bool D1GfxFrame::addTo(const D1GfxFrame &frame)
 {
     if (this->width != frame.width || this->height != frame.height) {
-        dProgressFail() << QApplication::tr("Mismatching frame-sizes.");
+        dProgressFail() << QApplication::tr("Mismatching framesizes.");
         return false;
     }
 
@@ -1069,7 +1069,7 @@ void D1Gfx::mask()
     if (this->getFrameCount() <= 1)
         return;
     if (!this->isFrameSizeConstant()) {
-        dProgressErr() << tr("Frame-size is not constant");
+        dProgressErr() << tr("Framesize is not constant");
         return;
     }
 
@@ -1082,7 +1082,7 @@ void D1Gfx::mask()
         }
     } else {
         if (!this->isGroupSizeConstant()) {
-            dProgressErr() << tr("group-size is not constant");
+            dProgressErr() << tr("Groupsize is not constant");
             return;
         }
         for (int n = this->groupFrameIndices[0].first; n <= this->groupFrameIndices[0].second; n++) {
@@ -2164,7 +2164,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         return false;
     }
     if (this->getGroupFrameIndices(DIR_SW).first != frameCount && this->getGroupFrameIndices(DIR_SW).second != 2 * frameCount - 1) {
-        dProgressErr() << tr("Not enough frames in the frame %1 group.").arg((int)DIR_SW + 1 - 1);
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_SW + 1 - 1);
         return false;
     }
     if (stdGfx.getGroupCount() <= DIR_SW) {
@@ -2654,7 +2654,6 @@ bool D1Gfx::patchMagmaDie(bool silent)
     constexpr int frameCount = 18;
     constexpr int width = 128;
     constexpr int height = 128;
-    int framesToPatch = 3;
 
     if (this->getGroupCount() != NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -2717,7 +2716,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
             D1GfxFrame* currFrame = this->getFrame(n);
             bool change = false;
             if (ii + 1 == 1) {
-                if (i + 1 <= framesToPatch) {
+                if (i + 1 <= 3) {
                     int si;
                     switch (i + 1) {
                     case 1: si = 1 - 1; break;
@@ -2755,17 +2754,17 @@ bool D1Gfx::patchMagmaDie(bool silent)
                                 if (color != 0) {
                                     if (color < 188)
                                         pixel = D1GfxPixel::colorPixel(color - 1);
-                                    if (color >= 214 && color <= 217)
+                                    else if (color >= 214 && color <= 217)
                                         pixel = D1GfxPixel::colorPixel(155);
-                                    if (color >= 218 && color <= 220)
+                                    else if (color >= 218 && color <= 220)
                                         pixel = D1GfxPixel::colorPixel(140 + color - 218);
-                                    if (color >= 221 && color <= 222)
+                                    else if (color >= 221 && color <= 222)
                                         pixel = D1GfxPixel::colorPixel(142);
-                                    if (color >= 232 && color <= 233)
+                                    else if (color >= 232 && color <= 233)
                                         pixel = D1GfxPixel::colorPixel(154);
-                                    if (color >= 234 && color <= 235)
+                                    else if (color >= 234 && color <= 235)
                                         pixel = D1GfxPixel::colorPixel(156);
-                                    if (color >= 236 && color <= 239)
+                                    else if (color >= 236 && color <= 239)
                                         pixel = D1GfxPixel::colorPixel(color - 4);
                                 }
                             }
@@ -5773,7 +5772,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
     for (int ii = 0; ii < NUM_DIRS; ii++) {
         while (true) {
             int n = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1;
-            if (n == frameCount - obsoleteFrameCount)
+            if (n <= frameCount - obsoleteFrameCount)
                 break;
             this->removeFrame(this->getGroupFrameIndices(ii).first + n - 1, false);
             dProgress() << tr("Removed frame %1 of group %2.").arg(n).arg(ii + 1);
