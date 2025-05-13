@@ -1119,7 +1119,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
                 return false;
             }
         } else if (width != frame->getWidth() || height != frame->getHeight()) {
-            dProgressErr() << QApplication::tr("Mismatching frame-size (%1).").arg(i + 1);
+            dProgressErr() << QApplication::tr("Mismatching framesize (%1).").arg(i + 1);
             return false;
         }
         for (int y = 0; y < height; y++) {
@@ -1404,7 +1404,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
         header.AudioMaxChunkLength[i] = SwapLE32(maxChunkLength);
         header.AudioType[i] = SwapLE32(audioFlags);
     }
-    // add space for the frame-sizes
+    // add space for the framesizes
     outFile.write((const char*)&header, sizeof(header));
     for (int i = 0; i < frameCount; i++) {
         outFile.write((const char*)&header.Dummy, 4);

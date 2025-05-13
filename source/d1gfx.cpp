@@ -183,7 +183,7 @@ void D1GfxFrame::setFrameType(D1CEL_FRAME_TYPE type)
 bool D1GfxFrame::addTo(const D1GfxFrame &frame)
 {
     if (this->width != frame.width || this->height != frame.height) {
-        dProgressFail() << QApplication::tr("Mismatching frame-sizes.");
+        dProgressFail() << QApplication::tr("Mismatching framesizes.");
         return false;
     }
 
@@ -2126,7 +2126,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         return false;
     }
     if (this->getGroupFrameIndices(DIR_SW).first != frameCount && this->getGroupFrameIndices(DIR_SW).second != 2 * frameCount - 1) {
-        dProgressErr() << tr("Not enough frames in the first frame group.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_SW + 1 - 1);
         return false;
     }
     if (stdGfx.getGroupCount() <= DIR_SW) {
@@ -2134,7 +2134,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         return false;
     }
     if (stdGfx.getGroupFrameIndices(DIR_SW).first != frameCount && stdGfx.getGroupFrameIndices(DIR_SW).second != 2 * frameCount - 1) {
-        dProgressErr() << tr("Not enough frames in the first frame group of '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg((int)DIR_SW + 1 - 1).arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
     if (atkGfx.getGroupCount() <= DIR_SW) {
@@ -2144,7 +2144,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
     constexpr int atkWidth = 128;
     const D1GfxFrame* frameSrcAtk = atkGfx.getFrame(atkGfx.getGroupFrameIndices(DIR_SW).first);
     if (frameSrcAtk->getWidth() != atkWidth || frameSrcAtk->getHeight() != height) {
-        dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(atkPath)).arg(atkWidth).arg(height);
+        dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(atkPath)).arg(atkWidth).arg(height);
         return false;
     }
 
@@ -2152,7 +2152,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
     for (int n = 0; n < frameCount; n++) {
         D1GfxFrame* frameSrcStd = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_SW).first + n);
         if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
             return false;
         }
         // copy the shield to the stand frame
@@ -2231,7 +2231,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         // copy the result to the active graphics
         D1GfxFrame* frame = this->getFrame(this->getGroupFrameIndices(DIR_SW).first + n);
         if (frame->getWidth() != width || frame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             return result;
         }
 
@@ -2285,11 +2285,11 @@ bool D1Gfx::patchFallGWalk(bool silent)
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to East.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_E + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_W).second - this->getGroupFrameIndices(DIR_W).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to West.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_W + 1);
         return false;
     }
     if (stdGfx.getGroupCount() <= DIR_E) {
@@ -2297,7 +2297,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         return false;
     }
     if ((stdGfx.getGroupFrameIndices(DIR_E).second - stdGfx.getGroupFrameIndices(DIR_E).first + 1) < 10) {
-        dProgressErr() << tr("Not enough frames in the frame group to East in '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        dProgressErr() << tr("Not enough frames in the frame group %1 in '%2'.").arg((int)DIR_E + 1).arg(QDir::toNativeSeparators(stdPath));
         return false;
     }
     // prepare a 'work'-frame
@@ -2314,12 +2314,12 @@ bool D1Gfx::patchFallGWalk(bool silent)
         int n = this->getGroupFrameIndices(DIR_E).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
         if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
         D1GfxFrame* walkWestFrame = this->getFrame(this->getGroupFrameIndices(DIR_W).first + i);
         if (walkWestFrame->getWidth() != width || walkWestFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
         bool change = false;
@@ -2445,7 +2445,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         }
         D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
         if (stdEastFrame->getWidth() != width || stdEastFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
             break;
         }
 
@@ -3553,7 +3553,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         int n = this->getGroupFrameIndices(DIR_NE).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
         if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
         bool change = false;
@@ -3651,7 +3651,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         int n = this->getGroupFrameIndices(DIR_NW).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
         if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
         bool change = false;
@@ -3777,23 +3777,23 @@ bool D1Gfx::patchGoatLDie(bool silent)
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_SW).second - this->getGroupFrameIndices(DIR_SW).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to South-West.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_SW + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_W).second - this->getGroupFrameIndices(DIR_W).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to West.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_W + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_NW).second - this->getGroupFrameIndices(DIR_NW).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to North-West.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_NW + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_E).second - this->getGroupFrameIndices(DIR_E).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to East.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_E + 1);
         return false;
     }
     if ((this->getGroupFrameIndices(DIR_SE).second - this->getGroupFrameIndices(DIR_SE).first + 1) != frameCount) {
-        dProgressErr() << tr("Not enough frames in the frame group to South-East.");
+        dProgressErr() << tr("Not enough frames in the frame group %1.").arg((int)DIR_SE + 1);
         return false;
     }
 
@@ -3803,7 +3803,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* currFrame = this->getFrame(n);
             if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
                 break;
             }
             bool change = false;

@@ -48,7 +48,7 @@ void MergeFramesDialog::on_submitButton_clicked()
         D1GfxFrame* baseFrame = this->gfx->getFrame(firstFrameIdx);
         D1GfxFrame* currFrame = this->gfx->getFrame(frameIdx);
         if (baseFrame->getWidth() != currFrame->getWidth() || baseFrame->getHeight() != currFrame->getHeight()) {
-            QMessageBox::critical(nullptr, tr("Error"), tr("Mismatching frame-size (%1).").arg(frameIdx + 1));
+            QMessageBox::critical(nullptr, tr("Error"), tr("Mismatching framesize (%1).").arg(frameIdx + 1));
             return;
         }
     }
