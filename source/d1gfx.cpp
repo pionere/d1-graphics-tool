@@ -2261,7 +2261,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
     }
     // read Fallgn.CL2 from the same folder
     QString stdPath = baseFilePath;
-    stdPath[stdPath.length() - 5] = QChar('N');
+    stdPath[stdPath.length() - 5] = QChar('n');
 
     if (!QFileInfo::exists(stdPath)) {
         dProgressErr() << tr("Could not find %1 to be used as a template file").arg(QDir::toNativeSeparators(stdPath));
