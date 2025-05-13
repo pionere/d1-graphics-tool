@@ -1320,7 +1320,7 @@ void CelView::on_assetMplEdit_escPressed()
 void CelView::on_celFramesClippedCheckBox_clicked()
 {
     this->gfx->setClipped(this->ui->celFramesClippedCheckBox->isChecked());
-    // this->updateFields();
+    this->updateFields();
 }
 
 void CelView::on_zoomOutButton_clicked()

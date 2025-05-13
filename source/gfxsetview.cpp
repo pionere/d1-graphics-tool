@@ -1435,7 +1435,7 @@ void GfxsetView::on_assetMplEdit_escPressed()
 void GfxsetView::on_celFramesClippedCheckBox_clicked()
 {
     this->gfx->setClipped(this->ui->celFramesClippedCheckBox->isChecked());
-    // this->updateFields();
+    this->updateFields();
 }
 
 void GfxsetView::on_zoomOutButton_clicked()
