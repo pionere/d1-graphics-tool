@@ -501,12 +501,12 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
             }
         }
     } else {
-        reportDiff(QApplication::tr("group-count is %1 (was %2)").arg(myGroupCount).arg(groupCount), header);
+        reportDiff(QApplication::tr("groupcount is %1 (was %2)").arg(myGroupCount).arg(groupCount), header);
     }
     int frameCount = gfx->getFrameCount();
     int myFrameCount = this->getFrameCount();
     if ((groupCount != 1 || groupCount != myGroupCount) && frameCount != myFrameCount) {
-        reportDiff(QApplication::tr("frame-count is %1 (was %2)").arg(myFrameCount).arg(frameCount), header);
+        reportDiff(QApplication::tr("framecount is %1 (was %2)").arg(myFrameCount).arg(frameCount), header);
     }
     /*if (frameCount == myFrameCount) {
         for (int i = 0; i < frameCount; i++) {
@@ -2118,8 +2118,8 @@ bool D1Gfx::patchWarriorStand(bool silent)
     }
 
     constexpr int frameCount = 10;
-    constexpr int height = 96;
     constexpr int width = 96;
+    constexpr int height = 96;
 
     if (this->getGroupCount() <= DIR_SW) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -2277,8 +2277,8 @@ bool D1Gfx::patchFallGWalk(bool silent)
     }
 
     constexpr int frameCount = 8;
-    constexpr int height = 128;
     constexpr int width = 128;
+    constexpr int height = 128;
 
     if (this->getGroupCount() <= DIR_E || this->getGroupCount() <= DIR_W) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -3532,8 +3532,8 @@ bool D1Gfx::patchFallGWalk(bool silent)
 /*bool D1Gfx::patchGoatLDieDio(bool silent)
 {
     constexpr int frameCount = 16;
-    constexpr int height = 160;
     constexpr int width = 160;
+    constexpr int height = 160;
 
     if (this->getGroupCount() <= DIR_NW || this->getGroupCount() <= DIR_NE) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -3769,8 +3769,8 @@ bool D1Gfx::patchFallGWalk(bool silent)
 bool D1Gfx::patchGoatLDie(bool silent)
 {
     constexpr int frameCount = 16;
-    constexpr int height = 128;
     constexpr int width = 160;
+    constexpr int height = 128;
 
     if (this->getGroupCount() <= DIR_SW || this->getGroupCount() <= DIR_W || this->getGroupCount() <= DIR_NW || this->getGroupCount() <= DIR_E || this->getGroupCount() <= DIR_SE) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
@@ -3807,8 +3807,8 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 break;
             }
             bool change = false;
-            switch (ii) {
-            case DIR_SW: {
+            switch (ii + 1) {
+            case 2: {
                 switch (i + 1) {
                 case 9:
                     if (currFrame->getPixel(71, 127).isTransparent()) {
@@ -3854,7 +3854,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
-            case DIR_W: {
+            case 3: {
                 switch (i + 1) {
                 case 9:
                 case 10:
@@ -3906,7 +3906,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
-            case DIR_NW: {
+            case 4: {
                 switch (i + 1) {
                 case 12:
                 case 13:
@@ -3926,7 +3926,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
-            case DIR_E: {
+            case 7: {
                 switch (i + 1) {
                 case 9:
                 case 10:
@@ -3941,7 +3941,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
                 } break;
                 }
             } break;
-            case DIR_SE: {
+            case 8: {
                 switch (i + 1) {
                 case 12:
                 case 13:
