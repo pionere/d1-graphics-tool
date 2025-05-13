@@ -5720,6 +5720,12 @@ bool D1Gfx::patchSklAxDie(bool silent)
             }
             if (i + 1 == 17) {
                 if (ii + 1 == 3) {
+                    for (int y = 92; y < 96; y++) {
+                        for (int x = 49; x < 65; x++) {
+                            change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+
                     D1GfxFrame* prevFrame = this->getFrame(n - 1);
                     change |= CopyFrame(currFrame, 0, 0, prevFrame, 56, 90, 61, 93);
                 } else {
