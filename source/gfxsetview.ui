@@ -983,6 +983,12 @@
       </item>
       <item row="2" column="18">
        <layout class="QHBoxLayout">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="LineEditWidget" name="celFrameWidthEdit">
           <property name="charWidth">
@@ -1043,8 +1049,6 @@
          </widget>
         </item>
        </layout>
-      </item>
-     </layout>
       </item>
      </layout>
      </item>
