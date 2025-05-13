@@ -102,8 +102,6 @@ public:
     D1GfxPixel getPixel(int x, int y) const;
     std::vector<std::vector<D1GfxPixel>> &getPixels() const;
     bool setPixel(int x, int y, const D1GfxPixel pixel);
-    bool isClipped() const;
-    bool setClipped(bool clipped);
     D1CEL_FRAME_TYPE getFrameType() const;
     void setFrameType(D1CEL_FRAME_TYPE type);
     bool addTo(const D1GfxFrame &frame);
@@ -219,7 +217,7 @@ public:
     bool isPatched() const;
     void setPatched(bool patched);
     bool isClipped() const;
-    void setClipped(bool clipped);
+    bool setClipped(bool clipped);
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
     unsigned getFrameLen() const;
