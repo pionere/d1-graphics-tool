@@ -275,7 +275,7 @@ void PaintWidget::pasteCurrentPixels(const QString &pixels)
 {
     // load the image
     D1GfxFrame srcFrame;
-    D1ImageFrame::load(srcFrame, pixels, false, this->pal);
+    D1ImageFrame::load(srcFrame, pixels, this->pal);
 
     this->pasteCurrentFrame(srcFrame);
 }
@@ -309,7 +309,7 @@ void PaintWidget::pasteCurrentImage(const QImage &image)
 {
     // load the image
     D1GfxFrame srcFrame;
-    D1ImageFrame::load(srcFrame, image, false, this->pal);
+    D1ImageFrame::load(srcFrame, image, this->pal);
 
     this->pasteCurrentFrame(srcFrame);
 }

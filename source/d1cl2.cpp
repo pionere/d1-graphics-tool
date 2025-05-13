@@ -146,8 +146,8 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
         D1GfxFrame *frame = new D1GfxFrame();
         int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params);
+        quint16 frameIndex = gfx.frames.size();
         if (res < 0) {
-            quint16 frameIndex = gfx.frames.size();
             if (res == -1)
                 dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(frameIndex + 1);
             else
@@ -157,7 +157,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (clipped == -1)
                 clipped = res;
             else
-                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(res == 0 ? tr("not clipped") : tr("clipped"));
+                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
         }
         gfx.frames.append(frame);
     }

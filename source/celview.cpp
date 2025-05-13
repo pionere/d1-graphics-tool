@@ -528,7 +528,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         bool wasModified = this->gfx->isModified();
         bool palMod;
         D1GfxFrame *frame = this->gfx->insertFrame(index);
-        if (!D1Pcx::load(*frame, imagefilePath, frame->isClipped(), this->pal, this->gfx->getPalette(), &palMod)) {
+        if (!D1Pcx::load(*frame, imagefilePath, this->pal, this->gfx->getPalette(), &palMod)) {
             this->gfx->removeFrame(index, false);
             this->gfx->setModified(wasModified);
             QString msg = tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
@@ -566,10 +566,10 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
 void CelView::addToCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
             dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
@@ -616,9 +616,9 @@ void CelView::duplicateCurrentFrame(bool wholeGroup)
 void CelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = this->gfx->getFrame(this->currentFrameIndex)->isClipped(), palMod;
+        bool palMod;
         D1GfxFrame *frame = new D1GfxFrame();
-        bool success = D1Pcx::load(*frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(*frame, imagefilePath, this->pal, this->gfx->getPalette(), &palMod);
         if (!success) {
             delete frame;
             dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));

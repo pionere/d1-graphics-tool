@@ -11,7 +11,6 @@ bool D1CelTilesetFrame::load(D1GfxFrame &frame, D1CEL_FRAME_TYPE type, QByteArra
     frame.width = MICRO_WIDTH;
     frame.height = MICRO_HEIGHT;
     frame.frameType = type;
-    frame.clipped = false;
     for (int i = 0; i < MICRO_HEIGHT /* frame.height */; i++) {
         frame.pixels.push_back(std::vector<D1GfxPixel>());
     }

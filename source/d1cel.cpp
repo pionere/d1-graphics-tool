@@ -146,8 +146,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
         D1GfxFrame *frame = new D1GfxFrame();
         int res = D1CelFrame::load(*frame, celFrameRawData, params);
+        quint16 frameIndex = gfx.frames.size();
         if (res < 0) {
-            quint16 frameIndex = gfx.frames.size();
             if (res == -1)
                 dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(frameIndex + 1);
             else
@@ -174,7 +174,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 }
 
 // assumes a zero filled pBuf-buffer
-static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, clipped)
+static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, bool clipped)
 {
     // add optional {CEL FRAME HEADER}
     quint8 *pHeader = pBuf;

@@ -232,10 +232,10 @@ void D1Pal::updateColors(const D1Pal &opal)
 bool D1Pal::genColors(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false, palMod;
+        bool palMod;
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this, &palMod);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this, &palMod);
         if (!success) {
             dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return false;

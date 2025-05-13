@@ -218,6 +218,8 @@ public:
     void setType(D1CEL_TYPE type);
     bool isPatched() const;
     void setPatched(bool patched);
+    bool isClipped() const;
+    void setClipped(bool clipped);
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
     unsigned getFrameLen() const;
@@ -241,7 +243,6 @@ public:
     static int getPatchFileIndex(QString &filePath);
 
 private:
-    bool isClipped(int frameIndex) const;
     bool moveImage(D1GfxFrame* currFrame, int dx, int dy);
 
     bool patchCathedralDoors(bool silent);
