@@ -2182,7 +2182,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
     constexpr int atkWidth = 128;
     const D1GfxFrame* frameSrcAtk = atkGfx.getFrame(atkGfx.getGroupFrameIndices(DIR_SW).first);
     if (frameSrcAtk->getWidth() != atkWidth || frameSrcAtk->getHeight() != height) {
-        dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(atkPath)).arg(atkWidth).arg(height);
+        dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(atkPath)).arg(atkWidth).arg(height);
         return false;
     }
 
@@ -2190,7 +2190,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
     for (int n = 0; n < frameCount; n++) {
         D1GfxFrame* frameSrcStd = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_SW).first + n);
         if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
             return false;
         }
         // copy the shield to the stand frame
@@ -2269,7 +2269,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
         // copy the result to the active graphics
         D1GfxFrame* frame = this->getFrame(this->getGroupFrameIndices(DIR_SW).first + n);
         if (frame->getWidth() != width || frame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             return result;
         }
 
@@ -2398,7 +2398,7 @@ bool D1Gfx::patchFallGDie(bool silent)
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* currFrame = this->getFrame(n);
             if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
                 return false;
             }
         }
@@ -2695,7 +2695,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* frame = this->getFrame(n);
             if (frame->getWidth() != width || frame->getHeight() != height) {
-                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
                 return false;
             }
         }
@@ -2726,7 +2726,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
                     int sn = stdGfx.getGroupFrameIndices(ii).first + si;
                     D1GfxFrame* frameSrcStd = stdGfx.getFrame(sn);
                     if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
-                        dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+                        dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
                         return result;
                     }
 
@@ -2806,7 +2806,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
                     int sn = stdGfx.getGroupFrameIndices(ii).first + si;
                     D1GfxFrame* frameSrcStd = stdGfx.getFrame(sn);
                     if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
-                        dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+                        dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
                         return result;
                     }
                     int sx = 0, sy = 0, ex = 0, ey = 0;
@@ -3803,12 +3803,12 @@ bool D1Gfx::patchFallGWalk(bool silent)
         int n = this->getGroupFrameIndices(DIR_E).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
         if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
         D1GfxFrame* walkWestFrame = this->getFrame(this->getGroupFrameIndices(DIR_W).first + i);
         if (walkWestFrame->getWidth() != width || walkWestFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
         bool change = false;
@@ -3934,7 +3934,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         }
         D1GfxFrame* stdEastFrame = stdGfx.getFrame(stdGfx.getGroupFrameIndices(DIR_E).first + fn);
         if (stdEastFrame->getWidth() != width || stdEastFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
             break;
         }
 
@@ -5042,7 +5042,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         int n = this->getGroupFrameIndices(DIR_NE).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
         if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
         bool change = false;
@@ -5140,7 +5140,7 @@ bool D1Gfx::patchFallGWalk(bool silent)
         int n = this->getGroupFrameIndices(DIR_NW).first + i;
         D1GfxFrame* currFrame = this->getFrame(n);
         if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
             break;
         }
         bool change = false;
@@ -5292,7 +5292,7 @@ bool D1Gfx::patchGoatLDie(bool silent)
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* currFrame = this->getFrame(n);
             if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
                 break;
             }
             bool change = false;
@@ -5485,7 +5485,7 @@ bool D1Gfx::patchSklAxDie(bool silent)
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* currFrame = this->getFrame(n);
             if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
                 return false;
             }
         }
@@ -5554,7 +5554,7 @@ bool D1Gfx::patchSklAxDie(bool silent)
                 }
                 break;
             case 17:
-                if (ii + 1 != 1 && ii + 1 != 2 && ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 8) {
+                if (ii + 1 != 1 && ii + 1 != 2 && ii + 1 != 3 && ii + 1 != 4 && ii + 1 != 5 && ii + 1 != 6 && ii + 1 != 8) {
                     dx = 0;
                     dy = 3;
                 }
@@ -5574,6 +5574,12 @@ bool D1Gfx::patchSklAxDie(bool silent)
                 if (i + 1 == 17) {
                     // shift the main body
                     change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                }
+                break;
+            case 3:
+                if (i + 1 == 17) {
+                    // shift the main body
+                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 88);
                 }
                 break;
             case 4:
@@ -5754,7 +5760,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* currFrame = this->getFrame(n);
             if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
                 return false;
             }
         }
@@ -5879,7 +5885,7 @@ bool D1Gfx::patchSklSrDie(bool silent)
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* currFrame = this->getFrame(n);
             if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
-                dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
                 return false;
             }
         }
