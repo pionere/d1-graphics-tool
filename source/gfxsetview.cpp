@@ -305,6 +305,9 @@ void GfxsetView::updateFields()
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
+
+    // update clipped checkbox
+    this->ui->celFramesClippedCheckBox->setChecked(this->gfx->isClipped());
 }
 
 CelScene *GfxsetView::getCelScene() const
@@ -1425,6 +1428,12 @@ void GfxsetView::on_assetMplEdit_escPressed()
 {
     this->updateFields();
     this->ui->assetMplEdit->clearFocus();
+}
+
+void GfxsetView::on_celFramesClippedCheckBox_clicked()
+{
+    this->gfx->setClipped(this->ui->celFramesClippedCheckBox->isChecked());
+    this->updateFields();
 }
 
 void GfxsetView::on_zoomOutButton_clicked()
