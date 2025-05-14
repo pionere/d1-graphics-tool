@@ -27,7 +27,7 @@ GfxsetView::GfxsetView(QWidget *parent)
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
     this->on_zoomEdit_escPressed();
-    this->on_playDelayEdit_escPressed();
+    // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
@@ -280,6 +280,9 @@ void GfxsetView::updateFields()
         this->buttons[i]->setChecked(gfx == baseGfx);
         this->buttons[i]->update();
     }
+
+    // set play-delay text
+    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
@@ -1453,7 +1456,7 @@ void GfxsetView::on_zoomEdit_escPressed()
 
 void GfxsetView::on_playDelayEdit_returnPressed()
 {
-    quint16 playDelay = this->ui->playDelayEdit->text().toUInt();
+    unsigned playDelay = this->ui->playDelayEdit->text().toUInt();
 
     if (playDelay != 0)
         this->currentPlayDelay = playDelay;
@@ -1463,7 +1466,8 @@ void GfxsetView::on_playDelayEdit_returnPressed()
 
 void GfxsetView::on_playDelayEdit_escPressed()
 {
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    // update playDelayEdit
+    this->updateFields();
     this->ui->playDelayEdit->clearFocus();
 }
 
