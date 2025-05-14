@@ -139,10 +139,12 @@ typedef enum gfx_file_index {
     GFX_MON_FALLGD,  // graphics of the Devil Kin Brute dying (Fallgd.CL2)
     GFX_MON_FALLGW,  // graphics of the Devil Kin Brute walking (Fallgw.CL2)
     GFX_MON_MAGMAD,  // graphics of the Magma Demon dying (Magmad.CL2)
+    GFX_MON_GOATBD,  // graphics of the Flesh Clan (Bow) dying (GoatBd.CL2)
     GFX_MON_GOATLD,  // graphics of the Satyr Lord dying (GoatLd.CL2)
     GFX_MON_SKLAXD,  // graphics of the Skeleton Axe dying (SklAxd.CL2)
     GFX_MON_SKLBWD,  // graphics of the Skeleton Bow dying (SklBwd.CL2)
     GFX_MON_SKLSRD,  // graphics of the Skeleton Sword dying (SklSrd.CL2)
+    GFX_MON_ZOMBIED, // graphics of the Zombie dying (Zombied.CL2)
     GFX_SPL_ICONS,   // spell icons (SpelIcon.CEL)
     GFX_CURS_ICONS,  // cursor icons (ObjCurs.CEL)
     GFX_ITEM_ARMOR2,   // item drop animation (Armor2.CEL)
@@ -253,10 +255,12 @@ private:
     bool patchFallGDie(bool silent);
     bool patchFallGWalk(bool silent);
     bool patchMagmaDie(bool silent);
+    bool patchGoatBDie(bool silent);
     bool patchGoatLDie(bool silent);
     bool patchSklAxDie(bool silent);
     bool patchSklBwDie(bool silent);
     bool patchSklSrDie(bool silent);
+    bool patchZombieDie(bool silent);
     bool patchSplIcons(bool silent);
     bool patchCursorIcons(bool silent);
     bool patchItemFlips(int gfxFileIndex, bool silent);

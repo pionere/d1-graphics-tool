@@ -4959,6 +4959,64 @@ bool D1Gfx::patchFallGWalk(bool silent)
     return result;
 }
 
+bool D1Gfx::patchGoatBDie(bool silent)
+{
+    constexpr int frameCount = 20;
+    constexpr int width = 128;
+    constexpr int height = 128;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 4 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(50, 126).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+
+            // fix bouncying bow
+            if (i + 1 == 4) {
+                change |= ShiftFrame(currFrame, -1, -3, 0, 106, width, height);
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 /*bool D1Gfx::patchGoatLDieDio(bool silent)
 {
     constexpr int frameCount = 16;
@@ -6257,6 +6315,108 @@ bool D1Gfx::moveImage(D1GfxFrame* currFrame, int dx, int dy)
     return change;
 }
 
+bool D1Gfx::patchZombieDie(bool silent)
+{
+    constexpr int frameCount = 16;
+    constexpr int width = 128;
+    constexpr int height = 96;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 2) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(40, 74).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 0, dy = 0;
+            switch (ii + 1) {
+            case 2:
+                if (i + 1 == 1) {
+                    dx = 8;
+                    dy = -3;
+                } else if (i + 1 == 2) {
+                    dx = 4;
+                    dy = 0;
+                } else {
+                    dx = 2;
+                    dy = 0;
+                }
+                break;
+            case 3:
+                if (i + 1 == 1) {
+                    dx = 10;
+                    dy = -3;
+                } else if (i + 1 == 2) {
+                    dx = 5;
+                    dy = 0;
+                } else {
+                    dx = 4;
+                    dy = 0;
+                }
+                break;
+            case 4:
+                switch (i + 1) {
+                case 1: dx = 6; dy = 13; break;
+                case 2: dx = 6; dy = 10; break;
+                case 3: dx = 6; dy = 7; break;
+                case 4: dx = 5; dy = 4; break;
+                case 5: dx = 5; dy = 3; break;
+                default:dx = 4; dy = 2; break; // 6.. 16
+                }
+                break;
+            case 5:
+                switch (i + 1) {
+                case 1: dx = -1; dy = 13; break;
+                case 2: dx = -1; dy = 10; break;
+                case 3: dx = -1; dy = 7; break;
+                case 4: dx = -1; dy = 4; break;
+                case 5: dx = -1; dy = 2; break;
+                default: dx = -1; dy = 0; break; // 6.. 16
+                }
+                break;
+            }
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 bool D1Gfx::patchCursorIcons(bool silent)
 {
     int frameCount = this->getFrameCount();
@@ -6882,17 +7042,23 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_MAGMAD: // patch Magmad.CL2
         change = this->patchMagmaDie(silent);
         break;
+    case GFX_MON_GOATBD: // patch GoatBd.CL2
+        change = this->patchGoatBDie(silent);
+        break;
     case GFX_MON_GOATLD: // patch GoatLd.CL2
         change = this->patchGoatLDie(silent);
         break;
-    case GFX_MON_SKLAXD:
+    case GFX_MON_SKLAXD: // patch SklAxd.CL2
         change = this->patchSklAxDie(silent);
         break;
-    case GFX_MON_SKLBWD:
+    case GFX_MON_SKLBWD: // patch SklBwd.CL2
         change = this->patchSklBwDie(silent);
         break;
-    case GFX_MON_SKLSRD:
+    case GFX_MON_SKLSRD: // patch SklSrd.CL2
         change = this->patchSklSrDie(silent);
+        break;
+    case GFX_MON_ZOMBIED: // patch Zombied.CL2
+        change = this->patchZombieDie(silent);
         break;
     case GFX_SPL_ICONS: // patch SpelIcon.CEL
         change = this->patchSplIcons(silent);
@@ -7037,6 +7203,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "magmad") {
         fileIndex = GFX_MON_MAGMAD;
     }
+    if (baseName == "goatbd") {
+        fileIndex = GFX_MON_GOATBD;
+    }
     if (baseName == "goatld") {
         fileIndex = GFX_MON_GOATLD;
     }
@@ -7048,6 +7217,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "sklsrd") {
         fileIndex = GFX_MON_SKLSRD;
+    }
+    if (baseName == "zombied") {
+        fileIndex = GFX_MON_ZOMBIED;
     }
     return fileIndex;
 }

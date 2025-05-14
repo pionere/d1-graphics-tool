@@ -97,6 +97,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Flesh Clan (Bow) dying (GoatBd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Satyr Lord dying (GoatLd.CL2)</string>
         </property>
        </item>
@@ -113,6 +118,11 @@
        <item>
         <property name="text">
          <string>Skeleton Sword dying (SklSrd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Zombie dying (Zombied.CL2)</string>
         </property>
        </item>
        <item>
