@@ -4997,6 +4997,64 @@ bool D1Gfx::patchFallGWalk(bool silent)
     return result;
 }
 
+bool D1Gfx::patchGoatBDie(bool silent)
+{
+    constexpr int frameCount = 20;
+    constexpr int width = 128;
+    constexpr int height = 128;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 4 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(50, 126).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+
+            // fix bouncying bow
+            if (i + 1 == 4) {
+                change |= ShiftFrame(currFrame, -1, -5, 0, 106, width, height);
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 /*bool D1Gfx::patchGoatLDieDio(bool silent)
 {
     constexpr int frameCount = 16;
@@ -6255,44 +6313,120 @@ bool D1Gfx::patchSklSrDie(bool silent)
     return result;
 }
 
-bool D1Gfx::moveImage(D1GfxFrame* currFrame, int dx, int dy)
+bool D1Gfx::patchZombieDie(bool silent)
 {
-    int width = currFrame->getWidth();
-    int height = currFrame->getHeight();
-    bool change = false;
-    if (dx > 0) {
-        for (int y = 0; y < height; y++) {
-            for (int x = width - dx - 1; x >= 0; x--) {
-                change |= currFrame->setPixel(x + dx, y, currFrame->getPixel(x, y));
-                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+    constexpr int frameCount = 16;
+    constexpr int width = 128;
+    constexpr int height = 96;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+        if (ii + 1 == 1) {
+            int i = 1 - 1;
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getPixel(40, 74).isTransparent()) {
+                return false; // assume it is already done
             }
         }
     }
-    if (dx < 0) {
-        for (int y = 0; y < height; y++) {
-            for (int x = -dx; x < width; x++) {
-                change |= currFrame->setPixel(x + dx, y, currFrame->getPixel(x, y));
-                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 0, dy = 0;
+            switch (ii + 1) {
+            case 2:
+                if (i + 1 == 1) {
+                    dx = 8;
+                    dy = -3;
+                } else if (i + 1 == 2) {
+                    dx = 4;
+                    dy = 0;
+                } else {
+                    dx = 2;
+                    dy = 0;
+                }
+                break;
+            case 3:
+                if (i + 1 == 1) {
+                    dx = 10;
+                    dy = -3;
+                } else if (i + 1 == 2) {
+                    dx = 5;
+                    dy = 0;
+                } else {
+                    dx = 4;
+                    dy = 0;
+                }
+                break;
+            case 4:
+                switch (i + 1) {
+                case 1: dx = 6; dy = 16; break;
+                case 2: dx = 6; dy = 13; break;
+                case 3: dx = 6; dy = 10; break;
+                case 4: dx = 6; dy = 7; break;
+                case 5: dx = 6; dy = 4; break;
+                case 6:
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16: dx = 6; dy = 2; break;
+                }
+                break;
+            case 5:
+                switch (i + 1) {
+                case 1: dx = -1; dy = 17; break;
+                case 2: dx = -1; dy = 13; break;
+                case 3: dx = -1; dy = 10; break;
+                case 4: dx = -1; dy = 7; break;
+                case 5: dx = -1; dy = 4; break;
+                case 6:
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16: dx = -1; dy = 0; break;
+                }
+                break;
+            }
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
             }
         }
     }
-    if (dy > 0) {
-        for (int y = height - dy - 1; y >= 0; y--) {
-            for (int x = 0; x < width; x++) {
-                change |= currFrame->setPixel(x, (y + dy), currFrame->getPixel(x, y));
-                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-            }
-        }
-    }
-    if (dy < 0) {
-        for (int y = -dy; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                change |= currFrame->setPixel(x, (y + dy), currFrame->getPixel(x, y));
-                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-            }
-        }
-    }
-    return change;
+
+    return result;
 }
 
 bool D1Gfx::patchCursorIcons(bool silent)
@@ -6342,6 +6476,8 @@ bool D1Gfx::patchCursorIcons(bool silent)
     bool result = false;
     for (int i = 0; i < frameCount; i++) {
         D1GfxFrame* currFrame = this->getFrame(i);
+        int width = currFrame->getWidth();
+        int height = currFrame->getHeight();
         bool change = false;
         int dx = 0, dy = 0;
         switch (i + 1) {
@@ -6374,8 +6510,8 @@ bool D1Gfx::patchCursorIcons(bool silent)
         case 171: dx = 0; dy = -3; break; // a
         case 167: dx = -1; dy = 0; break;
         case 165: dx = 2; dy = -3; // a
-            for (int y = 0; y < currFrame->getHeight(); y++) {
-                for (int x = 0; x < currFrame->getWidth(); x++) {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     if (pixel.isTransparent())
                         continue;
@@ -6493,7 +6629,7 @@ bool D1Gfx::patchCursorIcons(bool silent)
             break;
         }
 
-        change = moveImage(currFrame, dx, dy);
+        change = ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
         if (change) {
             result = true;
             this->setModified();
@@ -6942,17 +7078,23 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_MAGMAD: // patch Magmad.CL2
         change = this->patchMagmaDie(silent);
         break;
+    case GFX_MON_GOATBD: // patch GoatBd.CL2
+        change = this->patchGoatBDie(silent);
+        break;
     case GFX_MON_GOATLD: // patch GoatLd.CL2
         change = this->patchGoatLDie(silent);
         break;
-    case GFX_MON_SKLAXD:
+    case GFX_MON_SKLAXD: // patch SklAxd.CL2
         change = this->patchSklAxDie(silent);
         break;
-    case GFX_MON_SKLBWD:
+    case GFX_MON_SKLBWD: // patch SklBwd.CL2
         change = this->patchSklBwDie(silent);
         break;
-    case GFX_MON_SKLSRD:
+    case GFX_MON_SKLSRD: // patch SklSrd.CL2
         change = this->patchSklSrDie(silent);
+        break;
+    case GFX_MON_ZOMBIED: // patch Zombied.CL2
+        change = this->patchZombieDie(silent);
         break;
     case GFX_SPL_ICONS: // patch SpelIcon.CEL
         change = this->patchSplIcons(silent);
@@ -7097,6 +7239,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "magmad") {
         fileIndex = GFX_MON_MAGMAD;
     }
+    if (baseName == "goatbd") {
+        fileIndex = GFX_MON_GOATBD;
+    }
     if (baseName == "goatld") {
         fileIndex = GFX_MON_GOATLD;
     }
@@ -7108,6 +7253,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "sklsrd") {
         fileIndex = GFX_MON_SKLSRD;
+    }
+    if (baseName == "zombied") {
+        fileIndex = GFX_MON_ZOMBIED;
     }
     return fileIndex;
 }
