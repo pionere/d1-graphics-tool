@@ -5039,7 +5039,7 @@ bool D1Gfx::patchGoatBDie(bool silent)
 
             // fix bouncying bow
             if (i + 1 == 4) {
-                change |= ShiftFrame(currFrame, -1, -5, 0, 106, width, height);
+                change |= ShiftFrame(currFrame, -1, -3, 0, 106, width, height);
             }
 
             if (change) {
@@ -6336,7 +6336,7 @@ bool D1Gfx::patchZombieDie(bool silent)
                 return false;
             }
         }
-        if (ii + 1 == 1) {
+        if (ii + 1 == 2) {
             int i = 1 - 1;
             int n = this->getGroupFrameIndices(ii).first + i;
             D1GfxFrame* currFrame = this->getFrame(n);
@@ -6380,36 +6380,23 @@ bool D1Gfx::patchZombieDie(bool silent)
                 break;
             case 4:
                 switch (i + 1) {
-                case 1: dx = 6; dy = 16; break;
-                case 2: dx = 6; dy = 13; break;
-                case 3: dx = 6; dy = 10; break;
-                case 4: dx = 6; dy = 7; break;
-                case 5: dx = 6; dy = 4; break;
-                case 6:
-                case 10:
-                case 11:
-                case 12:
-                case 13:
-                case 14:
-                case 15:
-                case 16: dx = 6; dy = 2; break;
+                case 1: dx = 6; dy = 13; break;
+                case 2: dx = 6; dy = 10; break;
+                case 3: dx = 6; dy = 7; break;
+                case 4: dx = 5; dy = 4; break;
+                case 5: dx = 5; dy = 3; break;
+                default:dx = 4; dy = 2; break; // 6.. 16
+                
                 }
                 break;
             case 5:
                 switch (i + 1) {
-                case 1: dx = -1; dy = 17; break;
-                case 2: dx = -1; dy = 13; break;
-                case 3: dx = -1; dy = 10; break;
-                case 4: dx = -1; dy = 7; break;
-                case 5: dx = -1; dy = 4; break;
-                case 6:
-                case 10:
-                case 11:
-                case 12:
-                case 13:
-                case 14:
-                case 15:
-                case 16: dx = -1; dy = 0; break;
+                case 1: dx = -1; dy = 13; break;
+                case 2: dx = -1; dy = 10; break;
+                case 3: dx = -1; dy = 7; break;
+                case 4: dx = -1; dy = 4; break;
+                case 5: dx = -1; dy = 2; break;
+                case 16: dx = -1; dy = 0; break; // 6.. 16
                 }
                 break;
             }

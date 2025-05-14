@@ -1475,7 +1475,7 @@ void GfxsetView::on_zoomEdit_escPressed()
 
 void GfxsetView::on_playDelayEdit_returnPressed()
 {
-    quint16 playDelay = this->ui->playDelayEdit->text().toUInt();
+    unsigned playDelay = this->ui->playDelayEdit->text().toUInt();
 
     if (playDelay != 0)
         this->currentPlayDelay = playDelay;
