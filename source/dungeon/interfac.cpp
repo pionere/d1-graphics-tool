@@ -741,8 +741,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         AddResourceParam itemRes = AddResourceParam();
         itemRes.type = DUN_ENTITY_TYPE::ITEM;
         itemRes.index = 1 + itype;
-        itemRes.name = AllItemsList[itype].iName; // TODO: more specific names?
-        itemRes.path = assetPath + "/Items/" + itemfiledata[ItemCAnimTbl[AllItemsList[itype].iCurs]].ifName + ".CEL";
+        itemRes.name = AllItemList[itype].iName; // TODO: more specific names?
+        itemRes.path = assetPath + "/Items/" + itemfiledata[ItemCAnimTbl[AllItemList[itype].iCurs]].ifName + ".CEL";
         // itemRes.width = ITEM_ANIM_WIDTH;
         dun->addResource(itemRes);
     }
