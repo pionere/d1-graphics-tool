@@ -6386,7 +6386,6 @@ bool D1Gfx::patchZombieDie(bool silent)
                 case 4: dx = 5; dy = 4; break;
                 case 5: dx = 5; dy = 3; break;
                 default:dx = 4; dy = 2; break; // 6.. 16
-                
                 }
                 break;
             case 5:
@@ -6396,7 +6395,7 @@ bool D1Gfx::patchZombieDie(bool silent)
                 case 3: dx = -1; dy = 7; break;
                 case 4: dx = -1; dy = 4; break;
                 case 5: dx = -1; dy = 2; break;
-                case 16: dx = -1; dy = 0; break; // 6.. 16
+                default: dx = -1; dy = 0; break; // 6.. 16
                 }
                 break;
             }
