@@ -66,6 +66,7 @@ public:
     void changeColor(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
 
 private:
+    void drawGrid(QImage &celFrame);
     void updateFields();
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
@@ -131,6 +132,10 @@ private slots:
     void on_nextGroupButton_clicked();
     void on_lastGroupButton_clicked();
 
+    void on_showGridCheckBox_clicked();
+    void on_assetMplEdit_returnPressed();
+    void on_assetMplEdit_escPressed();
+
     void on_zoomOutButton_clicked();
     void on_zoomInButton_clicked();
     void on_zoomEdit_returnPressed();
@@ -152,6 +157,7 @@ private:
     Ui::GfxsetView *ui;
     PushButtonWidget *loadGfxBtn;
     CelScene celScene = CelScene(this);
+    unsigned assetMpl = 1;
 
     D1Pal *pal;
     D1Gfx *gfx;
