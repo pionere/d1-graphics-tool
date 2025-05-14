@@ -1095,10 +1095,10 @@ void GfxsetView::selectGfx(int gfxIndex)
 {
     D1Gfx* currGfx = this->gfx;
     D1Gfx* nextGfx = this->gfxset->getGfx(gfxIndex);
-    // try to preserve frameIndex of the group
+    // preserve group-index (and relative frame-index of the group if possible)
     if (this->currentGroupIndex < currGfx->getGroupCount() && currGfx->getGroupCount() == nextGfx->getGroupCount()) {
-        int frameIndex = this->currFrameIndex - currGfx->getGroupFrameIndices(this->currentGroupIndex).first;
-        this->currFrameIndex = nextGfx->getGroupFrameIndices(this->currentGroupIndex).first + frameIndex;
+        int frameIndex = this->currentFrameIndex - currGfx->getGroupFrameIndices(this->currentGroupIndex).first;
+        this->currentFrameIndex = nextGfx->getGroupFrameIndices(this->currentGroupIndex).first + frameIndex;
     }
 
     dMainWindow().gfxChanged(nextGfx);
