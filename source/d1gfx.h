@@ -212,7 +212,7 @@ public:
     D1Gfx() = default;
     ~D1Gfx();
 
-    void compareTo(const D1Gfx *gfx, QString header) const;
+    void compareTo(const D1Gfx *gfx, QString &header) const;
     QRect getBoundary() const;
 
     void clear();

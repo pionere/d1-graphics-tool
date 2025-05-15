@@ -477,7 +477,7 @@ static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxF
     }
 }
 
-void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
+void D1Gfx::compareTo(const D1Gfx *gfx, QString &header) const
 {
     if (gfx->type != this->type) {
         reportDiff(QApplication::tr("type is %1 (was %2)").arg(celTypeToStr(this->type)).arg(celTypeToStr(gfx->type)), header);
@@ -6449,6 +6449,11 @@ bool D1Gfx::patchFireba(int gfxFileIndex, bool silent)
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
+    if (this->getFrameCount() != frameCount) {
+        dProgressErr() << tr("Not enough frames in the graphics.");
+        return false;
+    }
+
     for (int i = 0; i < frameCount; i++) {
         int n = i;
         D1GfxFrame* currFrame = this->getFrame(n);
@@ -6457,24 +6462,23 @@ bool D1Gfx::patchFireba(int gfxFileIndex, bool silent)
             return false;
         }
 
-        int x, y;
+        int nn = 0, x, y;
         switch (gfxFileIndex) {
-        case GFX_MIS_FIREBA2:  n = 1; x = 41; y = 66; break;
-        case GFX_MIS_FIREBA3:  n = 2; x = 37; y = 65; break;
-        case GFX_MIS_FIREBA11: n = 4; x = 49; y = 54; break;
-        case GFX_MIS_FIREBA15: n = 2; x = 55; y = 63; break;
-        case GFX_MIS_FIREBA16: n = 1; x = 54; y = 66; break;
+        case GFX_MIS_FIREBA2:  nn = 1; x = 41; y = 66; break;
+        case GFX_MIS_FIREBA3:  nn = 2; x = 37; y = 65; break;
+        case GFX_MIS_FIREBA11: nn = 4; x = 49; y = 54; break;
+        case GFX_MIS_FIREBA15: nn = 2; x = 55; y = 63; break;
+        case GFX_MIS_FIREBA16: nn = 1; x = 54; y = 66; break;
 
-        case GFX_MIS_HOLY2:  n = 1; x = 41; y = 66; break;
-        case GFX_MIS_HOLY3:  n = 2; x = 37; y = 65; break;
-        case GFX_MIS_HOLY11: n = 4; x = 49; y = 54; break;
-        case GFX_MIS_HOLY15: n = 2; x = 55; y = 63; break;
-        case GFX_MIS_HOLY16: n = 1; x = 54; y = 66; break;
-        default:
-            continue;
+        case GFX_MIS_HOLY2:  nn = 1; x = 41; y = 66; break;
+        case GFX_MIS_HOLY3:  nn = 2; x = 37; y = 65; break;
+        case GFX_MIS_HOLY11: nn = 4; x = 49; y = 54; break;
+        case GFX_MIS_HOLY15: nn = 2; x = 55; y = 63; break;
+        case GFX_MIS_HOLY16: nn = 1; x = 54; y = 66; break;
+        default: continue;
         }
 
-        if (i + 1 == n && currFrame->getPixel(x, y).isTransparent()) {
+        if (nn != 0 && i + 1 == nn && currFrame->getPixel(x, y).isTransparent()) {
             return false; // assume it is already done
         }
     }
@@ -6517,7 +6521,7 @@ bool D1Gfx::patchFireba(int gfxFileIndex, bool silent)
         case GFX_MIS_HOLY6:
             if (i + 1 == 10 || i + 1 == 11) {
                 for (int y = 63; y < 68; y++) {
-                    for (int x = 81; x < 84; y++) {
+                    for (int x = 81; x < 84; x++) {
                         change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
@@ -6559,7 +6563,7 @@ bool D1Gfx::patchFireba(int gfxFileIndex, bool silent)
         case GFX_MIS_HOLY12:
             if (i + 1 == 5) {
                 for (int y = 66; y < 72; y++) {
-                    for (int x = 91; x < width; y++) {
+                    for (int x = 91; x < width; x++) {
                         change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }

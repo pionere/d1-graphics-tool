@@ -2515,7 +2515,11 @@ void MainWindow::on_actionPatch_triggered()
                 QString filePath = currGfx->getFilePath();
                 int fileIndex = D1Gfx::getPatchFileIndex(filePath);
                 if (fileIndex != -1) {
+                    QFileInfo fileInfo(filePath);
+                    QString labelText = fileInfo.fileName();
+                    dProgress() << tr("%1:").arg(labelText);
                     currGfx->patch(fileIndex, false);
+                    dProgress() << "\n";
                 }
             }
 
