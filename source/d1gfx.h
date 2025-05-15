@@ -287,9 +287,9 @@ private:
     bool patchSklBwDie(bool silent);
     bool patchSklSrDie(bool silent);
     bool patchZombieDie(bool silent);
-    bool patchAcidbf(bool gfxFileIndex, bool silent);
-    bool patchFireba(bool gfxFileIndex, bool silent);
-    bool patchHoly(bool gfxFileIndex, bool silent);
+    bool patchAcidbf(int gfxFileIndex, bool silent);
+    bool patchFireba(int gfxFileIndex, bool silent);
+    bool patchHoly(int gfxFileIndex, bool silent);
     bool patchMagball(bool silent);
     bool patchSplIcons(bool silent);
     bool patchCursorIcons(bool silent);

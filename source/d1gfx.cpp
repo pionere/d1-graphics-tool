@@ -6439,7 +6439,7 @@ bool D1Gfx::patchAcidbf(bool gfxFileIndex, bool silent)
     return result;
 }
 
-bool D1Gfx::patchFireba(bool gfxFileIndex, bool silent)
+bool D1Gfx::patchFireba(int gfxFileIndex, bool silent)
 {
     constexpr int frameCount = 14;
     constexpr int width = 96;
@@ -6480,6 +6480,7 @@ bool D1Gfx::patchFireba(bool gfxFileIndex, bool silent)
     }
 
     bool result = false;
+    int ii = 0;
     for (int i = 0; i < frameCount; i++) {
         int n = i;
         D1GfxFrame* currFrame = this->getFrame(n);
@@ -6598,7 +6599,7 @@ bool D1Gfx::patchFireba(bool gfxFileIndex, bool silent)
     return result;
 }
 
-bool D1Gfx::patchHoly(bool gfxFileIndex, bool silent)
+bool D1Gfx::patchHoly(int gfxFileIndex, bool silent)
 {
     return this->patchFireba(gfxFileIndex, silent);
 }
@@ -6619,6 +6620,7 @@ bool D1Gfx::patchMagball(bool silent)
     }
 
     bool result = false;
+    int ii = 0;
     for (int i = 0; i < frameCount; i++) {
         int n = i;
         D1GfxFrame* currFrame = this->getFrame(n);
