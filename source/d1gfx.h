@@ -145,6 +145,32 @@ typedef enum gfx_file_index {
     GFX_MON_SKLBWD,  // graphics of the Skeleton Bow dying (SklBwd.CL2)
     GFX_MON_SKLSRD,  // graphics of the Skeleton Sword dying (SklSrd.CL2)
     GFX_MON_ZOMBIED, // graphics of the Zombie dying (Zombied.CL2)
+    GFX_MIS_ACIDBF1,  // missile animation (Acidbf1.CL2)
+    GFX_MIS_ACIDBF10, // missile animation (Acidbf10.CL2)
+    GFX_MIS_ACIDBF11, // missile animation (Acidbf11.CL2)
+    GFX_MIS_FIREBA2,  // missile animation (Fireba2.CL2)
+    GFX_MIS_FIREBA3,  // missile animation (Fireba3.CL2)
+    GFX_MIS_FIREBA5,  // missile animation (Fireba5.CL2)
+    GFX_MIS_FIREBA6,  // missile animation (Fireba6.CL2)
+    GFX_MIS_FIREBA8,  // missile animation (Fireba8.CL2)
+    GFX_MIS_FIREBA9,  // missile animation (Fireba9.CL2)
+    GFX_MIS_FIREBA10, // missile animation (Fireba10.CL2)
+    GFX_MIS_FIREBA11, // missile animation (Fireba11.CL2)
+    GFX_MIS_FIREBA12, // missile animation (Fireba12.CL2)
+    GFX_MIS_FIREBA15, // missile animation (Fireba15.CL2)
+    GFX_MIS_FIREBA16, // missile animation (Fireba16.CL2)
+    GFX_MIS_HOLY2,    // missile animation (Holy2.CL2)
+    GFX_MIS_HOLY3,    // missile animation (Holy3.CL2)
+    GFX_MIS_HOLY5,    // missile animation (Holy5.CL2)
+    GFX_MIS_HOLY6,    // missile animation (Holy6.CL2)
+    GFX_MIS_HOLY8,    // missile animation (Holy8.CL2)
+    GFX_MIS_HOLY9,    // missile animation (Holy9.CL2)
+    GFX_MIS_HOLY10,   // missile animation (Holy10.CL2)
+    GFX_MIS_HOLY11,   // missile animation (Holy11.CL2)
+    GFX_MIS_HOLY12,   // missile animation (Holy12.CL2)
+    GFX_MIS_HOLY15,   // missile animation (Holy15.CL2)
+    GFX_MIS_HOLY16,   // missile animation (Holy16.CL2)
+    GFX_MIS_MAGBALL2, // missile animation (Magball2.CL2)
     GFX_SPL_ICONS,   // spell icons (SpelIcon.CEL)
     GFX_CURS_ICONS,  // cursor icons (ObjCurs.CEL)
     GFX_ITEM_ARMOR2,   // item drop animation (Armor2.CEL)
@@ -261,6 +287,10 @@ private:
     bool patchSklBwDie(bool silent);
     bool patchSklSrDie(bool silent);
     bool patchZombieDie(bool silent);
+    bool patchAcidbf(bool gfxFileIndex, bool silent);
+    bool patchFireba(bool gfxFileIndex, bool silent);
+    bool patchHoly(bool gfxFileIndex, bool silent);
+    bool patchMagball(bool silent);
     bool patchSplIcons(bool silent);
     bool patchCursorIcons(bool silent);
     bool patchItemFlips(int gfxFileIndex, bool silent);

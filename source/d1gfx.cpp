@@ -5819,11 +5819,11 @@ bool D1Gfx::patchSklBwDie(bool silent)
     bool result = false;
     for (int ii = 0; ii < NUM_DIRS; ii++) {
         while (true) {
-            int n = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1;
-            if (n <= frameCount - obsoleteFrameCount)
+            int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
+            if (i < frameCount - obsoleteFrameCount)
                 break;
-            this->removeFrame(this->getGroupFrameIndices(ii).first + n - 1, false);
-            dProgress() << tr("Removed frame %1 of group %2.").arg(n).arg(ii + 1);
+            this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+            dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
             result = true;
         }
         for (int i = 0; i < frameCount; i++) {
@@ -6408,6 +6408,233 @@ bool D1Gfx::patchZombieDie(bool silent)
                 if (!silent) {
                     dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
                 }
+            }
+        }
+    }
+
+    return result;
+}
+
+bool D1Gfx::patchAcidbf(bool gfxFileIndex, bool silent)
+{
+    constexpr int frameCount = 9;
+    constexpr int obsoleteFrameCount = 1;
+
+    if (this->getGroupCount() == 0) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+
+    bool result = false;
+    int ii = 0;
+    while (true) {
+        int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
+        if (i < frameCount - obsoleteFrameCount)
+            break;
+        this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+        dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
+        result = true;
+    }
+
+    return result;
+}
+
+bool D1Gfx::patchFireba(bool gfxFileIndex, bool silent)
+{
+    constexpr int frameCount = 14;
+    constexpr int width = 96;
+    constexpr int height = 96;
+
+    if (this->getGroupCount() == 0) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    for (int i = 0; i < frameCount; i++) {
+        int n = i;
+        D1GfxFrame* currFrame = this->getFrame(n);
+        if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            return false;
+        }
+
+        int x, y;
+        switch (gfxFileIndex) {
+        case GFX_MIS_FIREBA2:  n = 1; x = 41; y = 66; break;
+        case GFX_MIS_FIREBA3:  n = 2; x = 37; y = 65; break;
+        case GFX_MIS_FIREBA11: n = 4; x = 49; y = 54; break;
+        case GFX_MIS_FIREBA15: n = 2; x = 55; y = 63; break;
+        case GFX_MIS_FIREBA16: n = 1; x = 54; y = 66; break;
+
+        case GFX_MIS_HOLY2:  n = 1; x = 41; y = 66; break;
+        case GFX_MIS_HOLY3:  n = 2; x = 37; y = 65; break;
+        case GFX_MIS_HOLY11: n = 4; x = 49; y = 54; break;
+        case GFX_MIS_HOLY15: n = 2; x = 55; y = 63; break;
+        case GFX_MIS_HOLY16: n = 1; x = 54; y = 66; break;
+        default:
+            continue;
+        }
+
+        if (i + 1 == n && currFrame->getPixel(x, y).isTransparent()) {
+            return false; // assume it is already done
+        }
+    }
+
+    bool result = false;
+    for (int i = 0; i < frameCount; i++) {
+        int n = i;
+        D1GfxFrame* currFrame = this->getFrame(n);
+        bool change = false;
+        int dx = 0, dy = 0;
+
+        switch (gfxFileIndex) {
+        case GFX_MIS_FIREBA2:
+        case GFX_MIS_HOLY2:
+            switch (i + 1) {
+            case 1:
+            case 2:
+            case 7:
+            case 8:
+            case 13:
+            case 14: dx = 1; dy = 0; break;
+            }
+            break;
+        case GFX_MIS_FIREBA3:
+        case GFX_MIS_HOLY3:
+            if (i + 1 == 2) {
+                dx = 3;
+                dy = 0;
+            }
+            break;
+        case GFX_MIS_FIREBA5:
+        case GFX_MIS_HOLY5:
+            if (i + 1 == 6) {
+                change |= currFrame->setPixel(0, 57, D1GfxPixel::transparentPixel());
+                change |= currFrame->setPixel(0, 58, D1GfxPixel::transparentPixel());
+            }
+            break;
+        case GFX_MIS_FIREBA6:
+        case GFX_MIS_HOLY6:
+            if (i + 1 == 10 || i + 1 == 11) {
+                for (int y = 63; y < 68; y++) {
+                    for (int x = 81; x < 84; y++) {
+                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            break;
+        case GFX_MIS_FIREBA8:
+        case GFX_MIS_HOLY8:
+            if (i + 1 == 2) {
+                change |= currFrame->setPixel(37, 59, D1GfxPixel::transparentPixel());
+                change |= currFrame->setPixel(37, 60, D1GfxPixel::transparentPixel());
+            }
+            break;
+        case GFX_MIS_FIREBA9:
+        case GFX_MIS_HOLY9:
+            if (i + 1 == 5) {
+                change |= currFrame->setPixel(49, 42, D1GfxPixel::transparentPixel());
+            }
+            break;
+        case GFX_MIS_FIREBA10:
+        case GFX_MIS_HOLY10:
+            if (i + 1 == 2) {
+                change |= currFrame->setPixel(58, 59, D1GfxPixel::transparentPixel());
+                change |= currFrame->setPixel(58, 60, D1GfxPixel::transparentPixel());
+            }
+            break;
+        case GFX_MIS_FIREBA11:
+        case GFX_MIS_HOLY11:
+            switch (i + 1) {
+            case 4: dx = 0; dy = 1; break;
+            case 5:
+            case 6: dx = 0; dy = 2; break;
+            case 7:
+            case 8:
+            case 9:
+            case 10: dx = 0; dy = -1; break;
+            }
+            break;
+        case GFX_MIS_FIREBA12:
+        case GFX_MIS_HOLY12:
+            if (i + 1 == 5) {
+                for (int y = 66; y < 72; y++) {
+                    for (int x = 91; x < width; y++) {
+                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            break;
+        case GFX_MIS_FIREBA15:
+        case GFX_MIS_HOLY15:
+            if (i + 1 == 2) {
+                dx = -3;
+                dy = 0;
+            }
+            break;
+        case GFX_MIS_FIREBA16:
+        case GFX_MIS_HOLY16:
+            switch (i + 1) {
+            case 1:
+            case 2:
+            case 7:
+            case 8:
+            case 13:
+            case 14: dx = -1; dy = 0; break;
+            }
+            break;
+        }
+
+        change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+            }
+        }
+    }
+
+    return result;
+}
+
+bool D1Gfx::patchHoly(bool gfxFileIndex, bool silent)
+{
+    return this->patchFireba(gfxFileIndex, silent);
+}
+
+bool D1Gfx::patchMagball(bool silent)
+{
+    constexpr int frameCount = 16;
+    constexpr int width = 128;
+    constexpr int height = 128;
+
+    for (int i = 0; i < frameCount; i++) {
+        int n = i;
+        D1GfxFrame* currFrame = this->getFrame(n);
+        if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            return false;
+        }
+    }
+
+    bool result = false;
+    for (int i = 0; i < frameCount; i++) {
+        int n = i;
+        D1GfxFrame* currFrame = this->getFrame(n);
+        bool change = false;
+
+        if (i + 1 == 6) {
+            change |= currFrame->setPixel(52, 99, D1GfxPixel::transparentPixel());
+            change |= currFrame->setPixel(52, 100, D1GfxPixel::transparentPixel());
+            change |= currFrame->setPixel(52, 101, D1GfxPixel::transparentPixel());
+        }
+
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
             }
         }
     }
@@ -7082,6 +7309,40 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_ZOMBIED: // patch Zombied.CL2
         change = this->patchZombieDie(silent);
         break;
+    case GFX_MIS_ACIDBF1:
+    case GFX_MIS_ACIDBF10:
+    case GFX_MIS_ACIDBF11: // patch Acidbf*.CL2
+        change = this->patchAcidbf(gfxFileIndex, silent);
+        break;
+    case GFX_MIS_FIREBA2:
+    case GFX_MIS_FIREBA3:
+    case GFX_MIS_FIREBA5:
+    case GFX_MIS_FIREBA6:
+    case GFX_MIS_FIREBA8:
+    case GFX_MIS_FIREBA9:
+    case GFX_MIS_FIREBA10:
+    case GFX_MIS_FIREBA11:
+    case GFX_MIS_FIREBA12:
+    case GFX_MIS_FIREBA15:
+    case GFX_MIS_FIREBA16: // patch Fireba*.CL2
+        change = this->patchFireba(gfxFileIndex, silent);
+        break;
+    case GFX_MIS_HOLY2:
+    case GFX_MIS_HOLY3:
+    case GFX_MIS_HOLY5:
+    case GFX_MIS_HOLY6:
+    case GFX_MIS_HOLY8:
+    case GFX_MIS_HOLY9:
+    case GFX_MIS_HOLY10:
+    case GFX_MIS_HOLY11:
+    case GFX_MIS_HOLY12:
+    case GFX_MIS_HOLY15:
+    case GFX_MIS_HOLY16: // patch Holy*.CL2
+        change = this->patchHoly(gfxFileIndex, silent);
+        break;
+    case GFX_MIS_MAGBALL2: // patch Magball2.CL2
+        change = this->patchMagball(silent);
+        break;
     case GFX_SPL_ICONS: // patch SpelIcon.CEL
         change = this->patchSplIcons(silent);
         break;
@@ -7213,6 +7474,7 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
         fileIndex = GFX_ITEM_MOOSES1;
     }
     // cl2 files
+    // - monsters
     if (baseName == "wmhas") {
         fileIndex = GFX_PLR_WMHAS;
     }
@@ -7242,6 +7504,85 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "zombied") {
         fileIndex = GFX_MON_ZOMBIED;
+    }
+    // - missiles
+    if (baseName == "Acidbf1") {
+        fileIndex = GFX_MIS_ACIDBF1;
+    }
+    if (baseName == "Acidbf10") {
+        fileIndex = GFX_MIS_ACIDBF10;
+    }
+    if (baseName == "Acidbf11") {
+        fileIndex = GFX_MIS_ACIDBF11;
+    }
+    if (baseName == "Fireba2") {
+        fileIndex = GFX_MIS_FIREBA2;
+    }
+    if (baseName == "Fireba3") {
+        fileIndex = GFX_MIS_FIREBA3;
+    }
+    if (baseName == "Fireba5") {
+        fileIndex = GFX_MIS_FIREBA5;
+    }
+    if (baseName == "Fireba6") {
+        fileIndex = GFX_MIS_FIREBA6;
+    }
+    if (baseName == "Fireba8") {
+        fileIndex = GFX_MIS_FIREBA8;
+    }
+    if (baseName == "Fireba9") {
+        fileIndex = GFX_MIS_FIREBA9;
+    }
+    if (baseName == "Fireba10") {
+        fileIndex = GFX_MIS_FIREBA10;
+    }
+    if (baseName == "Fireba11") {
+        fileIndex = GFX_MIS_FIREBA11;
+    }
+    if (baseName == "Fireba12") {
+        fileIndex = GFX_MIS_FIREBA12;
+    }
+    if (baseName == "Fireba15") {
+        fileIndex = GFX_MIS_FIREBA15;
+    }
+    if (baseName == "Fireba16") {
+        fileIndex = GFX_MIS_FIREBA16;
+    }
+    if (baseName == "Holy2") {
+        fileIndex = GFX_MIS_HOLY2;
+    }
+    if (baseName == "Holy3") {
+        fileIndex = GFX_MIS_HOLY3;
+    }
+    if (baseName == "Holy5") {
+        fileIndex = GFX_MIS_HOLY5;
+    }
+    if (baseName == "Holy6") {
+        fileIndex = GFX_MIS_HOLY6;
+    }
+    if (baseName == "Holy8") {
+        fileIndex = GFX_MIS_HOLY8;
+    }
+    if (baseName == "Holy9") {
+        fileIndex = GFX_MIS_HOLY9;
+    }
+    if (baseName == "Holy10") {
+        fileIndex = GFX_MIS_HOLY10;
+    }
+    if (baseName == "Holy11") {
+        fileIndex = GFX_MIS_HOLY11;
+    }
+    if (baseName == "Holy12") {
+        fileIndex = GFX_MIS_HOLY12;
+    }
+    if (baseName == "Holy15") {
+        fileIndex = GFX_MIS_HOLY15;
+    }
+    if (baseName == "Holy16") {
+        fileIndex = GFX_MIS_HOLY16;
+    }
+    if (baseName == "Magball2") {
+        fileIndex = GFX_MIS_MAGBALL2;
     }
     return fileIndex;
 }
