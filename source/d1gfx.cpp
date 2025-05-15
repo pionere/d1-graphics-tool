@@ -7508,82 +7508,82 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
         fileIndex = GFX_MON_ZOMBIED;
     }
     // - missiles
-    if (baseName == "Acidbf1") {
+    if (baseName == "acidbf1") {
         fileIndex = GFX_MIS_ACIDBF1;
     }
-    if (baseName == "Acidbf10") {
+    if (baseName == "acidbf10") {
         fileIndex = GFX_MIS_ACIDBF10;
     }
-    if (baseName == "Acidbf11") {
+    if (baseName == "acidbf11") {
         fileIndex = GFX_MIS_ACIDBF11;
     }
-    if (baseName == "Fireba2") {
+    if (baseName == "fireba2") {
         fileIndex = GFX_MIS_FIREBA2;
     }
-    if (baseName == "Fireba3") {
+    if (baseName == "fireba3") {
         fileIndex = GFX_MIS_FIREBA3;
     }
-    if (baseName == "Fireba5") {
+    if (baseName == "fireba5") {
         fileIndex = GFX_MIS_FIREBA5;
     }
-    if (baseName == "Fireba6") {
+    if (baseName == "fireba6") {
         fileIndex = GFX_MIS_FIREBA6;
     }
-    if (baseName == "Fireba8") {
+    if (baseName == "fireba8") {
         fileIndex = GFX_MIS_FIREBA8;
     }
-    if (baseName == "Fireba9") {
+    if (baseName == "fireba9") {
         fileIndex = GFX_MIS_FIREBA9;
     }
-    if (baseName == "Fireba10") {
+    if (baseName == "fireba10") {
         fileIndex = GFX_MIS_FIREBA10;
     }
-    if (baseName == "Fireba11") {
+    if (baseName == "fireba11") {
         fileIndex = GFX_MIS_FIREBA11;
     }
-    if (baseName == "Fireba12") {
+    if (baseName == "fireba12") {
         fileIndex = GFX_MIS_FIREBA12;
     }
-    if (baseName == "Fireba15") {
+    if (baseName == "fireba15") {
         fileIndex = GFX_MIS_FIREBA15;
     }
-    if (baseName == "Fireba16") {
+    if (baseName == "fireba16") {
         fileIndex = GFX_MIS_FIREBA16;
     }
-    if (baseName == "Holy2") {
+    if (baseName == "holy2") {
         fileIndex = GFX_MIS_HOLY2;
     }
-    if (baseName == "Holy3") {
+    if (baseName == "holy3") {
         fileIndex = GFX_MIS_HOLY3;
     }
-    if (baseName == "Holy5") {
+    if (baseName == "holy5") {
         fileIndex = GFX_MIS_HOLY5;
     }
-    if (baseName == "Holy6") {
+    if (baseName == "holy6") {
         fileIndex = GFX_MIS_HOLY6;
     }
-    if (baseName == "Holy8") {
+    if (baseName == "holy8") {
         fileIndex = GFX_MIS_HOLY8;
     }
-    if (baseName == "Holy9") {
+    if (baseName == "holy9") {
         fileIndex = GFX_MIS_HOLY9;
     }
-    if (baseName == "Holy10") {
+    if (baseName == "holy10") {
         fileIndex = GFX_MIS_HOLY10;
     }
-    if (baseName == "Holy11") {
+    if (baseName == "holy11") {
         fileIndex = GFX_MIS_HOLY11;
     }
-    if (baseName == "Holy12") {
+    if (baseName == "holy12") {
         fileIndex = GFX_MIS_HOLY12;
     }
-    if (baseName == "Holy15") {
+    if (baseName == "holy15") {
         fileIndex = GFX_MIS_HOLY15;
     }
-    if (baseName == "Holy16") {
+    if (baseName == "holy16") {
         fileIndex = GFX_MIS_HOLY16;
     }
-    if (baseName == "Magball2") {
+    if (baseName == "magball2") {
         fileIndex = GFX_MIS_MAGBALL2;
     }
     return fileIndex;
