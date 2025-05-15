@@ -2143,7 +2143,6 @@ void MainWindow::on_actionDiff_triggered()
     }
     LoadFileContent fileContent;
     if (main) {
-        fileContent = FILE_CONTENT::UNKNOWN;
         if (this->gfxset != nullptr) {
             // pre-attempt
             params.gfxType = OPEN_GFX_TYPE::GFXSET;
