@@ -2075,7 +2075,7 @@ QString MainWindow::FileContentTypeToStr(FILE_CONTENT fileType)
     return result;
 }
 
-static bool loadFileContent(D1Gfx *gfx, D1Gfxset* gfxset, D1Tileset * tileset, OpenAsParam& params)
+static bool loadFileContent(D1Gfx *gfx, D1Gfxset* gfxset, D1Tileset * tileset, OpenAsParam& params, LoadFileContent &fileContent)
 {
     if (gfxset != nullptr) {
         // pre-attempt
@@ -2177,7 +2177,7 @@ void MainWindow::on_actionDiff_triggered()
     }
     LoadFileContent fileContent;
     if (main) {
-        if (!loadFileContent(this->gfx, this->gfxset, this->tileset, params))
+        if (!loadFileContent(this->gfx, this->gfxset, this->tileset, params, fileContent))
             return;
     }
 
@@ -2501,7 +2501,8 @@ void MainWindow::on_actionPatch_triggered()
         int fileIndex = -1;
         for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
             D1Gfx* currGfx = this->gfxset->getGfx(i);
-            fileIndex = D1Gfx::getPatchFileIndex(currGfx->getFilePath());
+            QString filePath = currGfx->getFilePath();
+            fileIndex = D1Gfx::getPatchFileIndex(filePath);
             if (fileIndex != -1) {
                 break;
             }
@@ -2511,7 +2512,8 @@ void MainWindow::on_actionPatch_triggered()
 
             for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
                 D1Gfx* currGfx = this->gfxset->getGfx(i);
-                int fileIndex = D1Gfx::getPatchFileIndex(currGfx->getFilePath());
+                QString filePath = currGfx->getFilePath();
+                int fileIndex = D1Gfx::getPatchFileIndex(filePath);
                 if (fileIndex != -1) {
                     currGfx->patch(fileIndex, false);
                 }
@@ -2525,7 +2527,8 @@ void MainWindow::on_actionPatch_triggered()
             return;
         }
     } else {
-        int fileIndex = D1Gfx::getPatchFileIndex(this->gfx->getFilePath());
+        QString filePath = this->gfx->getFilePath();
+        int fileIndex = D1Gfx::getPatchFileIndex(filePath);
         if (fileIndex != -1) {
             ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
