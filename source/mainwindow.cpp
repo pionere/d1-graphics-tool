@@ -2177,7 +2177,7 @@ void MainWindow::on_actionDiff_triggered()
     }
     LoadFileContent fileContent;
     if (main) {
-        if (!loadFileContent(this->gfx, this->gfxset, this->tileset, params, fileContent))
+        if (!loadFileContent(params, fileContent))
             return;
     }
 
