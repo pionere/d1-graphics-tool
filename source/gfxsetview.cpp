@@ -1096,7 +1096,7 @@ void GfxsetView::selectGfx(int gfxIndex)
 
 void GfxsetView::on_misNWButton_clicked()
 {
-    this->selectGfx(6);
+    this->selectGfx(this->gfxset->getGfxCount() == 16 ? 6 : DIR_NW);
 }
 
 void GfxsetView::on_misNNWButton_clicked()
@@ -1106,7 +1106,7 @@ void GfxsetView::on_misNNWButton_clicked()
 
 void GfxsetView::on_misNButton_clicked()
 {
-    this->selectGfx(8);
+    this->selectGfx(this->gfxset->getGfxCount() == 16 ? 8 : DIR_N);
 }
 
 void GfxsetView::on_misNNEButton_clicked()
@@ -1116,7 +1116,7 @@ void GfxsetView::on_misNNEButton_clicked()
 
 void GfxsetView::on_misNEButton_clicked()
 {
-    this->selectGfx(10);
+    this->selectGfx(this->gfxset->getGfxCount() == 16 ? 10 : DIR_NE);
 }
 
 void GfxsetView::on_misWNWButton_clicked()
@@ -1131,12 +1131,12 @@ void GfxsetView::on_misENEButton_clicked()
 
 void GfxsetView::on_misWButton_clicked()
 {
-    this->selectGfx(4);
+    this->selectGfx(this->gfxset->getGfxCount() == 16 ? 4 : DIR_W);
 }
 
 void GfxsetView::on_misEButton_clicked()
 {
-    this->selectGfx(12);
+    this->selectGfx(this->gfxset->getGfxCount() == 16 ? 12 : DIR_E);
 }
 
 void GfxsetView::on_misWSWButton_clicked()
@@ -1151,7 +1151,7 @@ void GfxsetView::on_misESEButton_clicked()
 
 void GfxsetView::on_misSWButton_clicked()
 {
-    this->selectGfx(2);
+    this->selectGfx(this->gfxset->getGfxCount() == 16 ? 2 : DIR_SW);
 }
 
 void GfxsetView::on_misSSWButton_clicked()
@@ -1161,7 +1161,7 @@ void GfxsetView::on_misSSWButton_clicked()
 
 void GfxsetView::on_misSButton_clicked()
 {
-    this->selectGfx(0);
+    this->selectGfx(this->gfxset->getGfxCount() == 16 ? 0 : DIR_S);
 }
 
 void GfxsetView::on_misSSEButton_clicked()
@@ -1171,7 +1171,7 @@ void GfxsetView::on_misSSEButton_clicked()
 
 void GfxsetView::on_misSEButton_clicked()
 {
-    this->selectGfx(14);
+    this->selectGfx(this->gfxset->getGfxCount() == 16 ? 14 : DIR_SE);
 }
 
 void GfxsetView::on_monStandButton_clicked()
