@@ -84,15 +84,21 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             while (!baseName.isEmpty() && baseName[baseName.length() - 1].isDigit()) {
                 baseName.chop(1);
             }
-            int n = 0;
             basePath += baseName;
-            while (true) {
-                n++;
-                QString filePath = basePath + QString::number(n) + extension;
-                if (!QFileInfo::exists(filePath))
-                    break;
+            int n = 0, cn = 0, mn = 0;
+            for (int i = 0; i < 16; i++) {
+                QString filePath = basePath + QString::number(i + 1) + extension;
+                if (gfxFilePath == filePath) {
+                    cn = i;
+                }
+                if (QFileInfo::exists(filePath)) {
+                    // n++;
+                    if (i > mn) {
+                        mn = i;
+                    }
+                }
             }
-            n = n > 9 ? 16 : 8;
+            n = (/*n > 8 ||*/ cn >= 8 || mn >= 8) ? 16 : 8;
             for (int i = 1; i <= n; i++) {
                 QString filePath = basePath + QString::number(i) + extension;
                 filePaths.push_back(filePath);
@@ -308,6 +314,9 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
                     if (header.isEmpty())
                         dProgress() << "\n";
                 }
+            } else {
+                // compare N1 to N2
+                dProgress() << QApplication::tr("number of graphics is %1 (was %2)").arg(this->gfxList.count()).arg(fileContent->gfxset->gfxList.count());
             }
         }
     } else if (fileContent->gfx != nullptr) {
