@@ -2075,16 +2075,16 @@ QString MainWindow::FileContentTypeToStr(FILE_CONTENT fileType)
     return result;
 }
 
-static bool loadFileContent(D1Gfx *gfx, D1Gfxset* gfxset, D1Tileset * tileset, OpenAsParam& params, LoadFileContent &fileContent)
+bool MainWindow::loadFileContent(OpenAsParam& params, LoadFileContent &fileContent)
 {
-    if (gfxset != nullptr) {
+    if (this->gfxset != nullptr) {
         // pre-attempt
         params.gfxType = OPEN_GFX_TYPE::GFXSET;
         MainWindow::loadFile(params, nullptr, &fileContent);
         if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
             return true;
         // second pre-attempt using the current content
-        params.celWidth = gfx->getFrameWidth(0);
+        params.celWidth = this->gfx->getFrameWidth(0);
         MainWindow::loadFile(params, nullptr, &fileContent);
         if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
             return true;
@@ -2095,11 +2095,11 @@ static bool loadFileContent(D1Gfx *gfx, D1Gfxset* gfxset, D1Tileset * tileset, O
     if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
         return true;
     // second attempt using the current content
-    if (tileset != nullptr) {
-        params.minWidth = tileset->min->getSubtileWidth();
-        params.minHeight = tileset->min->getSubtileHeight();
-    } else if (gfx != nullptr && gfx->getFrameCount() != 0) {
-        params.celWidth = gfx->getFrameWidth(0);
+    if (this->tileset != nullptr) {
+        params.minWidth = this->tileset->min->getSubtileWidth();
+        params.minHeight = this->tileset->min->getSubtileHeight();
+    } else if (this->gfx != nullptr && this->gfx->getFrameCount() != 0) {
+        params.celWidth = this->gfx->getFrameWidth(0);
     } else {
         return false;
     }
