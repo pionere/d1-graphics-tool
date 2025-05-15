@@ -1091,7 +1091,15 @@ void GfxsetView::ShowContextMenu(const QPoint &pos)
 
 void GfxsetView::selectGfx(int gfxIndex)
 {
-    dMainWindow().gfxChanged(this->gfxset->getGfx(gfxIndex));
+    D1Gfx* nextGfx = this->gfxset->getGfx(gfxIndex);
+    // preserve group-index (and relative frame-index of the group if possible)
+    D1Gfx* currGfx = this->gfx;
+    if (this->ui->framesGroupCheckBox->isChecked() && this->currentGroupIndex < currGfx->getGroupCount() && currGfx->getGroupCount() == nextGfx->getGroupCount()) {
+        int frameIndex = this->currentFrameIndex - currGfx->getGroupFrameIndices(this->currentGroupIndex).first;
+        this->currentFrameIndex = nextGfx->getGroupFrameIndices(this->currentGroupIndex).first + frameIndex;
+    }
+
+    dMainWindow().gfxChanged(nextGfx);
 }
 
 void GfxsetView::on_misNWButton_clicked()
