@@ -6275,46 +6275,6 @@ bool D1Gfx::patchSklSrDie(bool silent)
     return result;
 }
 
-bool D1Gfx::moveImage(D1GfxFrame* currFrame, int dx, int dy)
-{
-    int width = currFrame->getWidth();
-    int height = currFrame->getHeight();
-    bool change = false;
-    if (dx > 0) {
-        for (int y = 0; y < height; y++) {
-            for (int x = width - dx - 1; x >= 0; x--) {
-                change |= currFrame->setPixel(x + dx, y, currFrame->getPixel(x, y));
-                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-            }
-        }
-    }
-    if (dx < 0) {
-        for (int y = 0; y < height; y++) {
-            for (int x = -dx; x < width; x++) {
-                change |= currFrame->setPixel(x + dx, y, currFrame->getPixel(x, y));
-                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-            }
-        }
-    }
-    if (dy > 0) {
-        for (int y = height - dy - 1; y >= 0; y--) {
-            for (int x = 0; x < width; x++) {
-                change |= currFrame->setPixel(x, (y + dy), currFrame->getPixel(x, y));
-                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-            }
-        }
-    }
-    if (dy < 0) {
-        for (int y = -dy; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                change |= currFrame->setPixel(x, (y + dy), currFrame->getPixel(x, y));
-                change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-            }
-        }
-    }
-    return change;
-}
-
 bool D1Gfx::patchZombieDie(bool silent)
 {
     constexpr int frameCount = 16;
@@ -6464,6 +6424,8 @@ bool D1Gfx::patchCursorIcons(bool silent)
     bool result = false;
     for (int i = 0; i < frameCount; i++) {
         D1GfxFrame* currFrame = this->getFrame(i);
+        int width = currFrame->getWidth();
+        int height = currFrame->getHeight();
         bool change = false;
         int dx = 0, dy = 0;
         switch (i + 1) {
@@ -6496,8 +6458,8 @@ bool D1Gfx::patchCursorIcons(bool silent)
         case 171: dx = 0; dy = -3; break; // a
         case 167: dx = -1; dy = 0; break;
         case 165: dx = 2; dy = -3; // a
-            for (int y = 0; y < currFrame->getHeight(); y++) {
-                for (int x = 0; x < currFrame->getWidth(); x++) {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     if (pixel.isTransparent())
                         continue;
@@ -6615,7 +6577,7 @@ bool D1Gfx::patchCursorIcons(bool silent)
             break;
         }
 
-        change = moveImage(currFrame, dx, dy);
+        change = ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
         if (change) {
             result = true;
             this->setModified();

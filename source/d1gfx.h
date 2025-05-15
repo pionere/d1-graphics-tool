@@ -241,8 +241,6 @@ public:
     static int getPatchFileIndex(QString &filePath);
 
 private:
-    bool moveImage(D1GfxFrame* currFrame, int dx, int dy);
-
     bool patchCathedralDoors(bool silent);
     bool patchCatacombsDoors(bool silent);
     bool patchCavesDoors(bool silent);
