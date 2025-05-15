@@ -1676,7 +1676,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuFrame->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->menuSubtile->setEnabled(isTileset);
     this->ui->menuTile->setEnabled(isTileset);
-    this->ui->actionPatch->setEnabled(this->celView != nullptr);
+    this->ui->actionPatch->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(this->gfx != nullptr);
     this->ui->actionMerge->setEnabled(this->gfx != nullptr);
@@ -2075,6 +2075,40 @@ QString MainWindow::FileContentTypeToStr(FILE_CONTENT fileType)
     return result;
 }
 
+static bool loadFileContent(D1Gfx *gfx, D1Gfxset* gfxset, D1Tileset * tileset, OpenAsParam& params)
+{
+    if (gfxset != nullptr) {
+        // pre-attempt
+        params.gfxType = OPEN_GFX_TYPE::GFXSET;
+        MainWindow::loadFile(params, nullptr, &fileContent);
+        if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
+            return true;
+        // second pre-attempt using the current content
+        params.celWidth = gfx->getFrameWidth(0);
+        MainWindow::loadFile(params, nullptr, &fileContent);
+        if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
+            return true;
+        params.gfxType = OPEN_GFX_TYPE::AUTODETECT;
+    }
+    // first attempt with all-auto
+    MainWindow::loadFile(params, nullptr, &fileContent);
+    if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
+        return true;
+    // second attempt using the current content
+    if (tileset != nullptr) {
+        params.minWidth = tileset->min->getSubtileWidth();
+        params.minHeight = tileset->min->getSubtileHeight();
+    } else if (gfx != nullptr && gfx->getFrameCount() != 0) {
+        params.celWidth = gfx->getFrameWidth(0);
+    } else {
+        return false;
+    }
+    MainWindow::loadFile(params, nullptr, &fileContent);
+    if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
+        return true;
+    return false;
+}
+
 void MainWindow::on_actionDiff_triggered()
 {
     QString filter;
@@ -2143,35 +2177,8 @@ void MainWindow::on_actionDiff_triggered()
     }
     LoadFileContent fileContent;
     if (main) {
-        if (this->gfxset != nullptr) {
-            // pre-attempt
-            params.gfxType = OPEN_GFX_TYPE::GFXSET;
-            MainWindow::loadFile(params, nullptr, &fileContent);
-            if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
-                goto contentLoaded;
-            // second pre-attempt using the current content
-            params.celWidth = this->gfx->getFrameWidth(0);
-            MainWindow::loadFile(params, nullptr, &fileContent);
-            if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
-                goto contentLoaded;
-        }
-        // first attempt with all-auto
-        MainWindow::loadFile(params, nullptr, &fileContent);
-        if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
-            goto contentLoaded;
-            // second attempt using the current content
-            if (this->tileset != nullptr) {
-                params.minWidth = this->tileset->min->getSubtileWidth();
-                params.minHeight = this->tileset->min->getSubtileHeight();
-            } else if (this->gfx != nullptr && this->gfx->getFrameCount() != 0) {
-                params.celWidth = this->gfx->getFrameWidth(0);
-            } else {
-                return;
-            }
-            MainWindow::loadFile(params, nullptr, &fileContent);
-            if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
-                return;
-contentLoaded:
+        if (!loadFileContent(this->gfx, this->gfxset, this->tileset, params))
+            return;
     }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Comparing..."), 0, PAF_OPEN_DIALOG);
@@ -2490,10 +2497,53 @@ void MainWindow::on_actionToggleBottomPanel_triggered()
 
 void MainWindow::on_actionPatch_triggered()
 {
+    if (this->gfxset != nullptr) {
+        int fileIndex = -1;
+        for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
+            D1Gfx* currGfx = this->gfxset->getGfx(i);
+            fileIndex = D1Gfx::getPatchFileIndex(currGfx->getFilePath());
+            if (fileIndex != -1) {
+                break;
+            }
+        }
+        if (fileIndex != -1) {
+            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+
+            for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
+                D1Gfx* currGfx = this->gfxset->getGfx(i);
+                int fileIndex = D1Gfx::getPatchFileIndex(currGfx->getFilePath());
+                if (fileIndex != -1) {
+                    currGfx->patch(fileIndex, false);
+                }
+            }
+
+            // trigger the update of the selected indices
+            this->gfxsetView->setGfx(this->gfx);
+
+            // Clear loading message from status bar
+            ProgressDialog::done();
+            return;
+        }
+    } else {
+        int fileIndex = D1Gfx::getPatchFileIndex(this->gfx->getFilePath());
+        if (fileIndex != -1) {
+            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+
+            this->gfx->patch(fileIndex, false);
+
+            // trigger the update of the selected indices
+            this->celView->setGfx(this->gfx);
+
+            // Clear loading message from status bar
+            ProgressDialog::done();
+            return;
+        }
+    }
+
     if (this->patchGfxDialog == nullptr) {
         this->patchGfxDialog = new PatchGfxDialog(this);
     }
-    this->patchGfxDialog->initialize(this->gfx, this->celView);
+    this->patchGfxDialog->initialize(this->gfx, this->celView, this->gfxsetView);
     this->patchGfxDialog->show();
 }
 
