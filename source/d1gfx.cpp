@@ -6415,7 +6415,7 @@ bool D1Gfx::patchZombieDie(bool silent)
     return result;
 }
 
-bool D1Gfx::patchAcidbf(bool gfxFileIndex, bool silent)
+bool D1Gfx::patchAcidbf(int gfxFileIndex, bool silent)
 {
     constexpr int frameCount = 9;
     constexpr int obsoleteFrameCount = 1;

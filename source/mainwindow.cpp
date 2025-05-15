@@ -2143,9 +2143,23 @@ void MainWindow::on_actionDiff_triggered()
     }
     LoadFileContent fileContent;
     if (main) {
+        fileContent = FILE_CONTENT::UNKNOWN;
+        if (this->gfxset != nullptr) {
+            // pre-attempt
+            params.gfxType = OPEN_GFX_TYPE::GFXSET;
+            MainWindow::loadFile(params, nullptr, &fileContent);
+            if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
+                goto contentLoaded;
+            // second pre-attempt using the current content
+            params.celWidth = this->gfx->getFrameWidth(0);
+            MainWindow::loadFile(params, nullptr, &fileContent);
+            if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
+                goto contentLoaded;
+        }
         // first attempt with all-auto
         MainWindow::loadFile(params, nullptr, &fileContent);
-        if (fileContent.fileType == FILE_CONTENT::UNKNOWN) {
+        if (fileContent.fileType != FILE_CONTENT::UNKNOWN)
+            goto contentLoaded;
             // second attempt using the current content
             if (this->tileset != nullptr) {
                 params.minWidth = this->tileset->min->getSubtileWidth();
@@ -2158,7 +2172,7 @@ void MainWindow::on_actionDiff_triggered()
             MainWindow::loadFile(params, nullptr, &fileContent);
             if (fileContent.fileType == FILE_CONTENT::UNKNOWN)
                 return;
-        }
+contentLoaded:
     }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Comparing..."), 0, PAF_OPEN_DIALOG);
