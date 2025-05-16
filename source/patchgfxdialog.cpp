@@ -1,5 +1,7 @@
 #include "patchgfxdialog.h"
 
+#include "celview.h"
+#include "gfxsetview.h"
 #include "progressdialog.h"
 #include "ui_patchgfxdialog.h"
 
@@ -15,10 +17,11 @@ PatchGfxDialog::~PatchGfxDialog()
     delete ui;
 }
 
-void PatchGfxDialog::initialize(D1Gfx *g, CelView *cv)
+void PatchGfxDialog::initialize(D1Gfx *g, CelView *cv, GfxsetView *gv)
 {
     this->gfx = g;
     this->celView = cv;
+    this->gfxsetView = gv;
 
     // initialize the dropdown based on the filename
     QString filePath = g->getFilePath();
@@ -41,7 +44,12 @@ void PatchGfxDialog::on_runButton_clicked()
     this->gfx->patch(fileIndex, false);
 
     // trigger the update of the selected indices
-    this->celView->setGfx(this->gfx);
+    if (this->celView != nullptr) {
+        this->celView->setGfx(this->gfx);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->setGfx(this->gfx);
+    }
 
     // Clear loading message from status bar
     ProgressDialog::done();

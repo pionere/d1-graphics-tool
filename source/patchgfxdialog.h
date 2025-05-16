@@ -3,7 +3,9 @@
 #include <QDialog>
 
 #include "d1gfx.h"
-#include "celview.h"
+
+class CelView;
+class GfxsetView;
 
 namespace Ui {
 class PatchGfxDialog;
@@ -16,7 +18,7 @@ public:
     explicit PatchGfxDialog(QWidget *parent);
     ~PatchGfxDialog();
 
-    void initialize(D1Gfx *gfx, CelView *celView);
+    void initialize(D1Gfx *gfx, CelView *celView, GfxsetView *gfxsetView);
 
 private slots:
     void on_runButton_clicked();
@@ -30,4 +32,5 @@ private:
 
     D1Gfx *gfx;
     CelView *celView;
+    GfxsetView *gfxsetView;
 };

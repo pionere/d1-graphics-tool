@@ -162,6 +162,7 @@ private:
     bool loadUniqueTrn(const QString &trnfilePath);
     bool loadBaseTrn(const QString &trnfilePath);
     D1Dun *loadDun(const QString &title);
+    bool loadFileContent(OpenAsParam& params, LoadFileContent &fileContent);
 
     void addFrames(bool append);
     void addSubtiles(bool append);
