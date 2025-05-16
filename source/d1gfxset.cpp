@@ -82,7 +82,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             // ends with a number -> missile animation
             QChar lastDigit = baseName[baseName.length() - 1];
             baseName.chop(1);
-            if (lastDigit <= 6 && !baseName.isEmpty() && baseName.endsWith('1')) {
+            if (lastDigit.digitValue() <= 6 && !baseName.isEmpty() && baseName.endsWith('1')) {
                 baseName.chop(1);
             }
             basePath += baseName;
@@ -263,7 +263,7 @@ void D1Gfxset::save(const SaveAsParam &params)
                 anim = animletter[i];
             } else {
                 // assert(this->type == D1GFX_SET_TYPE::Player);
-                anim = anim + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1]);
+                anim = anim + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1];
             }
             anim += extension;
             saveParams.celFilePath = filePath + anim;

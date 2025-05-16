@@ -6345,6 +6345,7 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
             }
         }
     }
+    bool result = false;
     for (int ii = 0; ii < NUM_DIRS; ii++) {
         int frameCount = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1;
         for (int i = 0; i < frameCount; i++) {
@@ -6363,8 +6364,8 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
 
             change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
 
-            for (int y = 0; y < height, y++) {
-                for (int x = 0; x < width, x++) {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() == 0) {
                         change |= currFrame->setPixel(x, y, D1GfxPixel::colorPixel(0));
@@ -6381,6 +6382,7 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
             }
         }
     }
+    return result;
 }
 
 bool D1Gfx::patchZombieDie(bool silent)
