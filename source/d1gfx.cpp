@@ -6368,7 +6368,7 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
                 for (int x = 0; x < width; x++) {
                     D1GfxPixel pixel = currFrame->getPixel(x, y);
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() == 0) {
-                        change |= currFrame->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                        change |= currFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
             }
