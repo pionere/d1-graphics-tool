@@ -5781,11 +5781,11 @@ bool D1Gfx::patchSklBwDie(bool silent)
     bool result = false;
     for (int ii = 0; ii < NUM_DIRS; ii++) {
         while (true) {
-            int n = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1;
-            if (n <= frameCount - obsoleteFrameCount)
+            int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
+            if (i < frameCount - obsoleteFrameCount)
                 break;
-            this->removeFrame(this->getGroupFrameIndices(ii).first + n - 1, false);
-            dProgress() << tr("Removed frame %1 of group %2.").arg(n).arg(ii + 1);
+            this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+            dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
             result = true;
         }
         for (int i = 0; i < frameCount; i++) {
