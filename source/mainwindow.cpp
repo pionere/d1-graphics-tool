@@ -2447,6 +2447,23 @@ void MainWindow::on_actionToggleBottomPanel_triggered()
 
 void MainWindow::on_actionPatch_triggered()
 {
+    {
+        QString filePath = this->gfx->getFilePath();
+        int fileIndex = D1Gfx::getPatchFileIndex(filePath);
+        if (fileIndex != -1) {
+            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+
+            this->gfx->patch(fileIndex, false);
+
+            // trigger the update of the selected indices
+            this->celView->setGfx(this->gfx);
+
+            // Clear loading message from status bar
+            ProgressDialog::done();
+            return;
+        }
+    }
+
     if (this->patchGfxDialog == nullptr) {
         this->patchGfxDialog = new PatchGfxDialog(this);
     }
