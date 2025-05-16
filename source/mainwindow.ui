@@ -109,6 +109,7 @@
     <addaction name="actionReportActiveTiles"/>
     <addaction name="actionReportTilesetUse"/>
     <addaction name="actionReportTilesetInefficientFrames"/>
+    <addaction name="actionReportCheckGraphics"/>
    </widget>
    <widget class="QMenu" name="menuTilesetCheckFlags">
     <property name="title">
@@ -861,6 +862,14 @@
    </property>
    <property name="toolTip">
     <string>List frames which are almost standard</string>
+   </property>
+  </action>
+  <action name="actionReportCheckGraphics">
+   <property name="text">
+    <string>Check Graphics</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistencies of the graphics</string>
    </property>
   </action>
   <action name="actionResetFrameTypes_Tileset">

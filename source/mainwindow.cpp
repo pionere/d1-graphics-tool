@@ -1692,7 +1692,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionReportActiveTiles->setEnabled(isTileset);
     this->ui->actionReportTilesetUse->setEnabled(isTileset);
     this->ui->actionReportTilesetInefficientFrames->setEnabled(isTileset);
-
+    this->ui->actionReportCheckGraphics->setEnabled(this->gfxsetView != nullptr);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -2743,6 +2743,16 @@ void MainWindow::on_actionReportTilesetInefficientFrames_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     this->levelCelView->inefficientFrames();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_on_actionReportCheckGraphics_triggered_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->gfxsetView->checkGraphics();
 
     // Clear loading message from status bar
     ProgressDialog::done();

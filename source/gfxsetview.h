@@ -57,6 +57,7 @@ public:
 
     void coloredFrames(const std::pair<int, int>& colors) const;
     void activeFrames() const;
+    void checkGraphics() const;
 
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);

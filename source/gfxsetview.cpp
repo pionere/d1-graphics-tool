@@ -621,11 +621,7 @@ void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
             const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
             int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
             if (numPixels != 0) {
-                QString frameId = tr("Frame %1").arg(i + 1);
-                if (this->gfx != gfx) {
-                    frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
-                }
-                dProgress() << tr("%1 has %n affected pixels.", "", numPixels).arg(frameId);
+                dProgress() << tr("Frame %1 of %2 has %n affected pixels.", "", numPixels).arg(i + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text());
                 result = true;
             }
         }
@@ -665,11 +661,7 @@ void GfxsetView::activeFrames() const
                 const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
                 int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
                 if (numPixels != 0) {
-                    QString frameId = tr("Frame %1").arg(i + 1);
-                    if (this->gfx != gfx) {
-                        frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
-                    }
-                    dProgress() << tr("%1 has %n affected pixels.", "", numPixels).arg(frameId);
+                    dProgress() << tr("Frame %1 of %2 has %n affected pixels.", "", numPixels).arg(i + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text());
                     result = true;
                 }
             }
@@ -681,6 +673,87 @@ void GfxsetView::activeFrames() const
         }
     } else {
         dProgress() << tr("Colors are not affected if the playback mode is '%1'.").arg(cycleTypeTxt);
+    }
+
+    ProgressDialog::decBar();
+}
+
+void GfxsetView::checkGraphics() const
+{
+    ProgressDialog::incBar(tr("Checking frames..."), 1);
+
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Inconsistencies in the graphics of the gfx-set:").arg(cycleTypeTxt);
+
+    dProgress() << progress;
+    int frameCount = -1;
+    for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
+        D1Gfx *gfx = this->gfxset->getGfx(gn);
+        // test whether the graphics use colors from the level-dependent range 
+        const std::pair<int, int> colors = { 1, 128 - 1 };
+        for (int i = 0; i < gfx->getFrameCount(); i++) {
+            const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
+            int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
+            if (numPixels != 0) {
+                dProgress() << tr("Frame %1 of %2 has pixels in a range which is level-dependent in the game.").arg(i + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text());
+                result = true;
+            }
+        }
+        // test whether the graphics have the right number of groups
+        int numGroups = this->currType == D1GFX_SET_TYPE::Missile ? 1 : NUM_DIRS;
+        if (this->currType == D1GFX_SET_TYPE::Player) {
+            if (gn == PGT_BLOCK) {
+                if (gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::BluntShield && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::SwordShield
+                 && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::ShieldOnly && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unknown)
+                    numGroups = 0;
+            }
+            if (gn == PGT_DEATH) {
+                if (gfx->getArmorType() != D1GFX_SET_ARMOR_TYPE::Light && gfx->getArmorType() != D1GFX_SET_ARMOR_TYPE::Unknown
+                 && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unarmed && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unknown)
+                    numGroups = 0;
+            }
+        }
+        int gc = gfx->getGroupCount();
+        if (gc != numGroups) {
+            dProgress() << tr("%1 has %2 instead of %n groups.", "", numGroups).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(gc);
+            result = true;
+        }
+        // test whether a graphic have the same frame-count in each group
+        if (this->currType != D1GFX_SET_TYPE::Missile)
+            frameCount = -1;
+        for (int n = 0; n < gfx->getGroupCount(); n++) {
+            std::pair<int, int> gfi = gfx->getGroupFrameIndices(n);
+            int fc = gfi.second - gfi.first + 1;
+            if (fc != frameCount) {
+                if (frameCount < 0) {
+                    frameCount = fc;
+                } else {
+                    dProgress() << tr("%1 in group %2 has inconsistent framecount (%3 vs %4).").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(n + 1).arg(fc).arg(frameCount);
+                    result = true;
+                }
+            }
+        }
+    }
+#if 0
+    // test whether the graphics is 'complete'
+    switch (this->currType) {
+    case D1GFX_SET_TYPE::Missile: {
+        // - test against game code if possible
+    } break;
+    case D1GFX_SET_TYPE::Monster: {
+        // - test against game code if possible
+    } break;
+    case D1GFX_SET_TYPE::Player: {
+        // - test against game code if possible
+    } break;
+    }
+#endif
+    if (!result) {
+        progress.second = tr("No inconsistency detected in the gfx-set.");
+        dProgress() << progress;
     }
 
     ProgressDialog::decBar();

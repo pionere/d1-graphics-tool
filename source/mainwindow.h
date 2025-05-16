@@ -230,6 +230,7 @@ private slots:
     void on_actionReportActiveTiles_triggered();
     void on_actionReportTilesetUse_triggered();
     void on_actionReportTilesetInefficientFrames_triggered();
+    void on_actionReportCheckGraphics_triggered();
 
     void on_actionResetFrameTypes_Tileset_triggered();
     void on_actionPatchTileset_Tileset_triggered();
