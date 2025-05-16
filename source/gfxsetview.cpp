@@ -753,7 +753,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             int w = frame->getWidth();
             int h = frame->getHeight();
             if (w != width || h != height) {
-                if (w < 0) {
+                if (width < 0) {
                     width = w;
                     height = h;
                 } else {
