@@ -738,7 +738,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                 if (frameCount < 0) {
                     frameCount = fc;
                 } else {
-                    dProgress() << tr("%1 in group %2 has inconsistent framecount (%3 vs %4).").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(n + 1).arg(fc).arg(frameCount);
+                    dProgress() << tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(fc).arg(frameCount);
                     result = true;
                 }
             }
@@ -749,7 +749,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             height = -1;
         }
         for (int i = 0; i < gfx->getFrameCount(); i++) {
-            D1GfxFrame* frame = gfx->getFrame(n);
+            D1GfxFrame* frame = gfx->getFrame(i);
             int w = frame->getWidth();
             int h = frame->getHeight();
             if (w != width || h != height) {
@@ -757,7 +757,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                     width = w;
                     height = h;
                 } else {
-                    dProgress() << tr("%1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(n + 1).arg(fc).arg(w).arg(h).arg(width).arg(height);
+                    dProgress() << tr("Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(i + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(w).arg(h).arg(width).arg(height);
                     result = true;
                 }
             }
