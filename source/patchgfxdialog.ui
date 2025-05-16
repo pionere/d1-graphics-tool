@@ -127,6 +127,136 @@
        </item>
        <item>
         <property name="text">
+         <string>Acid missile South (Acidbf1.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Acid missile North/North-East (Acidbf10.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Acid missile North-East (Acidbf11.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile South/South-West (Fireba2.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile South-West (Fireba3.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile West (Fireba5.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile West/North-West (Fireba6.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile North/North-West (Fireba8.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile North (Fireba9.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile North/North-East (Fireba10.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile North-East (Fireba11.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile East/North-East (Fireba12.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile South-East (Fireba15.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Firaball missile South/South-East (Fireba16.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile South/South-West (Holy2.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile South-West (Holy3.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile West (Holy5.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile West/North-West (Holy6.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile North/North-West (Holy8.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile North (Holy9.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile North/North-East (Holy10.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile North-East (Holy11.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile East/North-East (Holy12.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile South-East (Holy15.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Holybolt missile South/South-East (Holy16.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Magmaball missile South/South-West (Magball2.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Spell icons (SpelIcon.CEL)</string>
         </property>
        </item>
