@@ -6333,7 +6333,7 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
         if (n == 0) {
             int x, y;
             switch (gfxFileIndex) {
-            case GFX_MON_UNRAVA: x = 80; y = 76; break;
+            case GFX_MON_UNRAVA: x = 79; y = 76; break;
             case GFX_MON_UNRAVD: x = 80; y = 74; break;
             case GFX_MON_UNRAVH: x = 78; y = 66; break;
             case GFX_MON_UNRAVN: x = 80; y = 76; break;
@@ -6354,12 +6354,12 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
             bool change = false;
             int dx = 0, dy = 0;
             switch (gfxFileIndex) {
-            case GFX_MON_UNRAVA: dx = -31; dy = 0; break;
-            case GFX_MON_UNRAVD: dx = -32; dy = 0; break;
-            case GFX_MON_UNRAVH: dx = -32; dy = 0; break;
-            case GFX_MON_UNRAVN: dx = -32; dy = 0; break;
-            case GFX_MON_UNRAVS: dx = -32; dy = 0; break;
-            case GFX_MON_UNRAVW: dx = -31; dy = 0; break;
+            case GFX_MON_UNRAVA: dx = -15; dy = 0; break;
+            case GFX_MON_UNRAVD: dx = -16; dy = 0; break;
+            case GFX_MON_UNRAVH: dx = -16; dy = 0; break;
+            case GFX_MON_UNRAVN: dx = -16; dy = 0; break;
+            case GFX_MON_UNRAVS: dx = -16; dy = 0; break;
+            case GFX_MON_UNRAVW: dx = -15; dy = 0; break;
             }
 
             change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
