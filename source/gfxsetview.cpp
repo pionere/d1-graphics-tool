@@ -693,7 +693,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
     progress.second = tr("Inconsistencies in the graphics of the gfx-set:");
 
     dProgress() << progress;
-    int frameCount = -1;
+    int frameCount = -1, width = -1, height = -1;
     for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
         D1Gfx *gfx = this->gfxset->getGfx(gn);
         if (gfxOnly && gfx != this->gfx)
@@ -728,8 +728,9 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             result = true;
         }
         // test whether a graphic have the same frame-count in each group
-        if (this->currType != D1GFX_SET_TYPE::Missile)
+        if (this->currType != D1GFX_SET_TYPE::Missile) {
             frameCount = -1;
+        }
         for (int n = 0; n < gfx->getGroupCount(); n++) {
             std::pair<int, int> gfi = gfx->getGroupFrameIndices(n);
             int fc = gfi.second - gfi.first + 1;
@@ -738,6 +739,25 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                     frameCount = fc;
                 } else {
                     dProgress() << tr("%1 in group %2 has inconsistent framecount (%3 vs %4).").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(n + 1).arg(fc).arg(frameCount);
+                    result = true;
+                }
+            }
+        }
+        // test whether a graphic have the same frame-size in each group
+        if (this->currType != D1GFX_SET_TYPE::Missile) {
+            width = -1;
+            height = -1;
+        }
+        for (int i = 0; i < gfx->getFrameCount(); i++) {
+            D1GfxFrame* frame = gfx->getFrame(n);
+            int w = frame->getWidth();
+            int h = frame->getHeight();
+            if (w != width || h != height) {
+                if (w < 0) {
+                    width = w;
+                    height = h;
+                } else {
+                    dProgress() << tr("%1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(n + 1).arg(fc).arg(w).arg(h).arg(width).arg(height);
                     result = true;
                 }
             }

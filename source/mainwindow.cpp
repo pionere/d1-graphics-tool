@@ -2754,7 +2754,7 @@ void MainWindow::on_actionReportTilesetInefficientFrames_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_on_actionReportCheckGraphics_triggered()
+void MainWindow::on_actionReportCheckGraphics_triggered()
 {
     const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
 
