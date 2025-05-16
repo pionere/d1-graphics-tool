@@ -122,6 +122,36 @@
        </item>
        <item>
         <property name="text">
+         <string>The Shredded attacking (Unrava.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>The Shredded dying (Unravd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>The Shredded getting hit (Unravh.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>The Shredded standing (Unravn.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>The Shredded special movement (Unravs.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>The Shredded walking (Unravw.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Zombie dying (Zombied.CL2)</string>
         </property>
        </item>
