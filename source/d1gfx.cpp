@@ -6313,6 +6313,76 @@ bool D1Gfx::patchSklSrDie(bool silent)
     return result;
 }
 
+bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
+{
+    constexpr int width = 96;
+    constexpr int height = 128;
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    int frameCount = this->getFrameCount();
+    for (int n = 0; n < frameCount; n++) {
+        D1GfxFrame* currFrame = this->getFrame(n);
+        if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+            dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            return false;
+        }
+
+        if (n == 0) {
+            int x, y;
+            switch (gfxFileIndex) {
+            case GFX_MON_UNRAVA: x = 80; y = 76; break;
+            case GFX_MON_UNRAVD: x = 80; y = 74; break;
+            case GFX_MON_UNRAVH: x = 78; y = 66; break;
+            case GFX_MON_UNRAVN: x = 80; y = 76; break;
+            case GFX_MON_UNRAVS: x = 80; y = 77; break;
+            case GFX_MON_UNRAVW: x = 79; y = 76; break;
+            }
+            if (currFrame->getPixel(x, y).isTransparent()) {
+                return false; // assume it is already done
+            }
+        }
+    }
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        int frameCount = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1;
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int dx = 0, dy = 0;
+            switch (gfxFileIndex) {
+            case GFX_MON_UNRAVA: dx = -31; dy = 0; break;
+            case GFX_MON_UNRAVD: dx = -32; dy = 0; break;
+            case GFX_MON_UNRAVH: dx = -32; dy = 0; break;
+            case GFX_MON_UNRAVN: dx = -32; dy = 0; break;
+            case GFX_MON_UNRAVS: dx = -32; dy = 0; break;
+            case GFX_MON_UNRAVW: dx = -31; dy = 0; break;
+            }
+
+            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+
+            for (int y = 0; y < height, y++) {
+                for (int x = 0; x < width, x++) {
+                    D1GfxPixel pixel = currFrame->getPixel(x, y);
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() == 0) {
+                        change |= currFrame->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                    }
+                }
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(i + 1).arg(ii + 1);
+                }
+            }
+        }
+    }
+}
+
 bool D1Gfx::patchZombieDie(bool silent)
 {
     constexpr int frameCount = 16;
@@ -7312,6 +7382,14 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_SKLSRD: // patch SklSrd.CL2
         change = this->patchSklSrDie(silent);
         break;
+    case GFX_MON_UNRAVA: // patch Unrava.CL2
+    case GFX_MON_UNRAVD: // patch Unravd.CL2
+    case GFX_MON_UNRAVH: // patch Unravh.CL2
+    case GFX_MON_UNRAVN: // patch Unravn.CL2
+    case GFX_MON_UNRAVS: // patch Unravs.CL2
+    case GFX_MON_UNRAVW: // patch Unravw.CL2
+        change = this->patchUnrav(gfxFileIndex, silent);
+        break;
     case GFX_MON_ZOMBIED: // patch Zombied.CL2
         change = this->patchZombieDie(silent);
         break;
@@ -7507,6 +7585,24 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "sklsrd") {
         fileIndex = GFX_MON_SKLSRD;
+    }
+    if (baseName == "unrava") {
+        fileIndex = GFX_MON_UNRAVA;
+    }
+    if (baseName == "unravd") {
+        fileIndex = GFX_MON_UNRAVD;
+    }
+    if (baseName == "unravh") {
+        fileIndex = GFX_MON_UNRAVH;
+    }
+    if (baseName == "unravn") {
+        fileIndex = GFX_MON_UNRAVN;
+    }
+    if (baseName == "unravs") {
+        fileIndex = GFX_MON_UNRAVS;
+    }
+    if (baseName == "unravw") {
+        fileIndex = GFX_MON_UNRAVW;
     }
     if (baseName == "zombied") {
         fileIndex = GFX_MON_ZOMBIED;
