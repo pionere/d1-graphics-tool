@@ -206,14 +206,6 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 baseMatch = true;
             }
             this->gfxList.push_back(gfx);
-            // validate the gfx
-            if (gfx->getGroupCount() == 0) {
-                dProgressWarn() << QApplication::tr("%1 is empty.").arg(gfx->getFilePath());
-            } else if (type != D1GFX_SET_TYPE::Missile && gfx->getGroupCount() != NUM_DIRS) {
-                dProgressWarn() << QApplication::tr("%1 has invalid group-count.").arg(gfx->getFilePath());
-            } else if (type == D1GFX_SET_TYPE::Missile && gfx->getGroupCount() != 1) {
-                dProgressWarn() << QApplication::tr("%1 has more than one group.").arg(gfx->getFilePath());
-            }
         }
         if (!baseMatch) {
             QString firstFilePath = this->gfxList[0]->getFilePath();

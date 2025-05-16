@@ -601,9 +601,9 @@ void GfxsetView::pasteCurrentImage(const QImage &image)
     // this->displayFrame();
 }
 
-void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
+void GfxsetView::coloredFrames(bool gfxOnly, const std::pair<int, int>& colors) const
 {
-    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    ProgressDialog::incBar(gfxOnly ? tr("Checking frames...") : tr("Checking graphics..."), 1);
     bool result = false;
 
     QPair<int, QString> progress;
@@ -617,6 +617,8 @@ void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
     dProgress() << progress;
     for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
         D1Gfx *gfx = this->gfxset->getGfx(gn);
+        if (gfxOnly && gfx != this->gfx)
+            continue;
         for (int i = 0; i < gfx->getFrameCount(); i++) {
             const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
             int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
@@ -639,9 +641,9 @@ void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
     ProgressDialog::decBar();
 }
 
-void GfxsetView::activeFrames() const
+void GfxsetView::activeFrames(bool gfxOnly) const
 {
-    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    ProgressDialog::incBar(gfxOnly ? tr("Checking frames...") : tr("Checking graphics..."), 1);
     QComboBox *cycleBox = this->ui->playComboBox;
     QString cycleTypeTxt = cycleBox->currentText();
     int cycleType = cycleBox->currentIndex();
@@ -657,6 +659,8 @@ void GfxsetView::activeFrames() const
         dProgress() << progress;
         for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
             D1Gfx *gfx = this->gfxset->getGfx(gn);
+            if (gfxOnly && gfx != this->gfx)
+                continue;
             for (int i = 0; i < gfx->getFrameCount(); i++) {
                 const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
                 int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
@@ -678,20 +682,22 @@ void GfxsetView::activeFrames() const
     ProgressDialog::decBar();
 }
 
-void GfxsetView::checkGraphics() const
+void GfxsetView::checkGraphics(bool gfxOnly) const
 {
-    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    ProgressDialog::incBar(tr("Checking graphics..."), 1);
 
     bool result = false;
 
     QPair<int, QString> progress;
     progress.first = -1;
-    progress.second = tr("Inconsistencies in the graphics of the gfx-set:").arg(cycleTypeTxt);
+    progress.second = tr("Inconsistencies in the graphics of the gfx-set:");
 
     dProgress() << progress;
     int frameCount = -1;
     for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
         D1Gfx *gfx = this->gfxset->getGfx(gn);
+        if (gfxOnly && gfx != this->gfx)
+            continue;
         // test whether the graphics use colors from the level-dependent range 
         const std::pair<int, int> colors = { 1, 128 - 1 };
         for (int i = 0; i < gfx->getFrameCount(); i++) {
@@ -706,13 +712,13 @@ void GfxsetView::checkGraphics() const
         int numGroups = this->currType == D1GFX_SET_TYPE::Missile ? 1 : NUM_DIRS;
         if (this->currType == D1GFX_SET_TYPE::Player) {
             if (gn == PGT_BLOCK) {
-                if (gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::BluntShield && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::SwordShield
-                 && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::ShieldOnly && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unknown)
+                if (this->gfxset->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unknown && this->gfxset->getWeaponType() != D1GFX_SET_WEAPON_TYPE::ShieldOnly
+                 && this->gfxset->getWeaponType() != D1GFX_SET_WEAPON_TYPE::SwordShield && this->gfxset->getWeaponType() != D1GFX_SET_WEAPON_TYPE::BluntShield)
                     numGroups = 0;
             }
             if (gn == PGT_DEATH) {
-                if (gfx->getArmorType() != D1GFX_SET_ARMOR_TYPE::Light && gfx->getArmorType() != D1GFX_SET_ARMOR_TYPE::Unknown
-                 && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unarmed && gfx->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unknown)
+                if (this->gfxset->getArmorType() != D1GFX_SET_ARMOR_TYPE::Unknown && this->gfxset->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unknown
+                 && (this->gfxset->getArmorType() != D1GFX_SET_ARMOR_TYPE::Light || this->gfxset->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unarmed))
                     numGroups = 0;
             }
         }

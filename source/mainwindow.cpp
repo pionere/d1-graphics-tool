@@ -2635,10 +2635,12 @@ void MainWindow::on_actionOptimize_triggered()
 
 void MainWindow::on_actionReportBoundary_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     QRect rect = QRect();
-    if (this->gfxset != nullptr)
+    if (this->gfxset != nullptr && !gfxOnly)
         rect = this->gfxset->getBoundary();
     else
         rect = this->gfx->getBoundary();
@@ -2660,6 +2662,8 @@ void MainWindow::on_actionReportBoundary_triggered()
 
 void MainWindow::on_actionReportColoredFrames_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     std::pair<int, int> colors = this->palWidget->getCurrentSelection();
@@ -2671,7 +2675,7 @@ void MainWindow::on_actionReportColoredFrames_triggered()
         this->celView->coloredFrames(colors);
 
     if (this->gfxsetView != nullptr)
-        this->gfxsetView->coloredFrames(colors);
+        this->gfxsetView->coloredFrames(gfxOnly, colors);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -2703,6 +2707,8 @@ void MainWindow::on_actionReportColoredTiles_triggered()
 
 void MainWindow::on_actionReportActiveFrames_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     if (this->levelCelView != nullptr)
@@ -2712,7 +2718,7 @@ void MainWindow::on_actionReportActiveFrames_triggered()
         this->celView->activeFrames();
 
     if (this->gfxsetView != nullptr)
-        this->gfxsetView->activeFrames();
+        this->gfxsetView->activeFrames(gfxOnly);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -2748,11 +2754,13 @@ void MainWindow::on_actionReportTilesetInefficientFrames_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_on_actionReportCheckGraphics_triggered_triggered()
+void MainWindow::on_on_actionReportCheckGraphics_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    this->gfxsetView->checkGraphics();
+    this->gfxsetView->checkGraphics(gfxOnly);
 
     // Clear loading message from status bar
     ProgressDialog::done();
