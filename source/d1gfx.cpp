@@ -470,7 +470,7 @@ static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxF
     }
 }
 
-void D1Gfx::compareTo(const D1Gfx *gfx, QString header) const
+void D1Gfx::compareTo(const D1Gfx *gfx, QString &header) const
 {
     if (gfx->type != this->type) {
         reportDiff(QApplication::tr("type is %1 (was %2)").arg(celTypeToStr(this->type)).arg(celTypeToStr(gfx->type)), header);
