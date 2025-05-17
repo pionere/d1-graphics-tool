@@ -443,7 +443,6 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
         if (this->getGfxCount() >= 1) {
             QString filePath = this->getGfx(0)->getFilePath();
             QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
-            LogErrorF("Missile: %s", filePathLower.toLatin1().data());
             for (const MisFileData &mfdata : misfiledata) {
                 char pszName[DATA_ARCHIVE_MAX_PATH];
                 int n = mfdata.mfAnimFAmt;
@@ -456,7 +455,6 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 }
                 // QString misGfxName = QString(pszName).replace(QChar('\\'), QDir::separator()).toLower();
                 QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
-                LogErrorF("gfx: %s", misGfxName.toLatin1().data());
                 if (filePathLower.endsWith(misGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
                         D1Gfx *currGfx = this->getGfx(gn);
@@ -465,7 +463,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         int frameCount = gn < lengthof(mfdata.mfAnimLen) ? mfdata.mfAnimLen[gn] : 0;
                         int animWidth = mfdata.mfAnimWidth * assetMpl;
                         for (int i = 0; i < currGfx->getGroupCount(); i++) {
-                            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
+                            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
                             int fc = gfi.second - gfi.first + 1;
                             if (fc != frameCount) {
                                 dProgress() << QApplication::tr("framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
