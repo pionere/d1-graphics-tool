@@ -24,6 +24,8 @@
 
 #define ASSET_MPL                1
 
+#define DATA_ARCHIVE_MAX_PATH    128
+
 // MAXDUN = DSIZE + 2 * DBORDER
 // DSIZE = 2 * DMAX
 #define DMAXX					40

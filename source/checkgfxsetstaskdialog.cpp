@@ -88,16 +88,19 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
                 CheckGfxsetsTaskDialog::runTask(pm);
             }
         } else {
+            QString gfxsetName = gfx->getFilePath();
+            QFileInfo xfi(gfxsetName);
+            QString extension = xfi.suffix();
+
+            if (extension.toLower() != "cl2")
+                continue;
+            gfxsetName.chop(extension.length() + 1 + (gfxset->getType() == D1GFX_SET_TYPE::Player ? 1 : 0));
+            gfxsetName[gfxsetName.length() - 1] = 'x';
+
             D1Gfx* gfx = new D1Gfx();
             D1Gfxset* gfxset = new D1Gfxset(gfx);
             OpenAsParam pm;
             if (gfxset->load(sPath, pm)) {
-                QString gfxsetName = gfx->getFilePath();
-                QFileInfo xfi(gfxsetName);
-                QString extension = xfi.suffix();
-                gfxsetName.chop(extension.length() + 1 + (gfxset->getType() == D1GFX_SET_TYPE::Player ? 1 : 0));
-                gfxsetName[gfxsetName.length() - 1] = 'x';
-
                 QPair<int, QString> progress;
                 progress.first = -1;
                 progress.second = tr("Inconsistencies in the graphics of the '%1' gfx-set:").arg(gfxsetName);

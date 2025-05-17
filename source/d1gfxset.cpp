@@ -440,9 +440,85 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
     switch (this->type) {
     case D1GFX_SET_TYPE::Missile: {
         // - test against game code if possible
+        if (this->getGfxCount() >= 1) {
+            QString gfxsetName = this->getGfx(0)->getFilePath();
+            QFileInfo xfi(gfxsetName);
+            QString baseNameLower = xfi.completeBaseName().toLower();
+            for (const MisFileData &mfdata : misfiledata) {
+                char pszName[DATA_ARCHIVE_MAX_PATH];
+                int n = mfdata.mfAnimFAmt;
+                const char* name = mfdata.mfName;
+                if (n == 1) {
+                    snprintf(pszName, sizeof(pszName), "Missiles\\%s.CL2", name);
+                } else {
+                    snprintf(pszName, sizeof(pszName), "Missiles\\%s%d.CL2", name, 1);
+                }
+                QString misGfxName = QString(pszName).toLower();
+                if (baseNameLower.endsWidth(misGfxName)) {
+                    for (int i = 0; i < this->getGfxCount(); i++) {
+                        D1Gfx *currGfx = this->getGfx(0);
+                        if (gfx != nullptr && gfx != currGfx)
+                            continue;
+                        int frameCount = mfdata.mfAnimLen[i];
+                        int animWidth = mfdata.mfAnimWidth * assetMpl;
+                        for (int n = 0; n < currGfx->getGroupCount(); n++) {
+                            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
+                            int fc = gfi.second - gfi.first + 1;
+                            if (fc != frameCount) {
+                                dProgress() << QApplication::tr("framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+                                result = true;
+                            }
+                            for (int ii = 0; ii < fc; ii++) {
+                                int w = currGfx->getFrame(gfi.first + ii)->getWidth();
+                                if (w != animWidth) {
+                                    dProgress() << QApplication::tr("framewidth of frame %1 of group %2 in %3 does not match with the game (%4 vs %5).").arg(ii + 1).arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(animWidth);
+                                    result = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
     } break;
     case D1GFX_SET_TYPE::Monster: {
         // - test against game code if possible
+        if (this->getGfxCount() >= (int)MA_STAND + 1) {
+            QString gfxsetName = this->getGfx(MA_STAND)->getFilePath();
+            QFileInfo xfi(gfxsetName);
+            QString baseNameLower = xfi.completeBaseName().toLower();
+            for (const MonFileData &mfdata : monfiledata) {
+                char strBuff[DATA_ARCHIVE_MAX_PATH];
+                snprintf(strBuff, sizeof(strBuff), mfdata.moGfxFile, animletter[MA_STAND]);
+                QString monGfxName = QString(strBuff).toLower();
+                if (baseNameLower.endsWidth(monGfxName)) {
+                    for (int i = 0; i < this->getGfxCount(); i++) {
+                        D1Gfx *currGfx = this->getGfx(0);
+                        if (gfx != nullptr && gfx != currGfx)
+                            continue;
+                        int frameCount = mfdata.moAnimFrames[i];
+                        int animWidth = mfdata.moWidth * assetMpl;
+                        for (int n = 0; n < currGfx->getGroupCount(); n++) {
+                            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
+                            int fc = gfi.second - gfi.first + 1;
+                            if (fc != frameCount) {
+                                dProgress() << QApplication::tr("framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+                                result = true;
+                            }
+                            for (int ii = 0; ii < fc; ii++) {
+                                int w = currGfx->getFrame(gfi.first + ii)->getWidth();
+                                if (w != animWidth) {
+                                    dProgress() << QApplication::tr("framewidth of frame %1 of group %2 in %3 does not match with the game (%4 vs %5).").arg(ii + 1).arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(animWidth);
+                                    result = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
     } break;
     case D1GFX_SET_TYPE::Player: {
         // - test against game code if possible
