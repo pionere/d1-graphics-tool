@@ -444,6 +444,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             QString gfxsetName = this->getGfx(0)->getFilePath();
             QFileInfo xfi(gfxsetName);
             QString baseNameLower = xfi.completeBaseName().toLower();
+            LogErrorF("Missile: %s", baseNameLower.toLatin1().data());
             for (const MisFileData &mfdata : misfiledata) {
                 char pszName[DATA_ARCHIVE_MAX_PATH];
                 int n = mfdata.mfAnimFAmt;
@@ -453,7 +454,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 } else {
                     snprintf(pszName, sizeof(pszName), "Missiles\\%s%d.CL2", name, 1);
                 }
-                QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
+                QString misGfxName = QString(pszName).replace(QChar('\\'), QDir::separator()).toLower();
+                LogErrorF("gfx: %s", misGfxName.toLatin1().data());
                 if (baseNameLower.endsWith(misGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
                         D1Gfx *currGfx = this->getGfx(gn);
@@ -491,7 +493,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             for (const MonFileData &mfdata : monfiledata) {
                 char strBuff[DATA_ARCHIVE_MAX_PATH];
                 snprintf(strBuff, sizeof(strBuff), mfdata.moGfxFile, animletter[MA_STAND]);
-                QString monGfxName = QDir::toNativeSeparators(QString(strBuff)).toLower();
+                QString monGfxName = QString(strBuff).replace(QChar('\\'), QDir::separator()).toLower();
                 if (baseNameLower.endsWith(monGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
                         D1Gfx *currGfx = this->getGfx(gn);
