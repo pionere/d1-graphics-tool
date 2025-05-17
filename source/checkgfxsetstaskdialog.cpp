@@ -95,7 +95,7 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
                 QString gfxsetName = gfx->getFilePath();
                 QFileInfo xfi(gfxsetName);
                 QString extension = xfi.suffix();
-                gfxsetName[gfxsetName.length() - extension.length() - 1] = 'X'; break;
+                gfxsetName[gfxsetName.length() - extension.length() - 1] = 'X';
 #if 0
                 QPair<int, QString> progress;
                 progress.first = -1;
