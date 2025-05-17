@@ -447,6 +447,43 @@ QList<D1Gfx *> &D1Gfxset::getGfxList() const
     return const_cast<QList<D1Gfx *> &>(this->gfxList);
 }
 
+QString D1Gfxset::getGfxLabel(int index) const
+{
+    switch (this->ctype){
+    case D1GFX_SET_TYPE::Unknown:
+        return tr("Unknown%1").arg(index + 1);
+    case D1GFX_SET_TYPE::Missile:
+        return tr("Dir%1").arg(index + 1);
+    case D1GFX_SET_TYPE::Monster:
+        switch (index) {
+        case MA_STAND:   return tr("Stand");
+        case MA_ATTACK:  return tr("Attack");
+        case MA_WALK:    return tr("Walk");
+        case MA_SPECIAL: return tr("Spec");
+        case MA_GOTHIT:  return tr("Hit");
+        case MA_DEATH:   return tr("Death");
+        }
+        break;
+    case D1GFX_SET_TYPE::Player:
+        switch (index) {
+        case PGT_STAND_TOWN:    return tr("Stand (town)");
+        case PGT_STAND_DUNGEON: return tr("Stand (dungeon)");
+        case PGT_WALK_TOWN:     return tr("Walk (town)");
+        case PGT_WALK_DUNGEON:  return tr("Walk (dungeon)");
+        case PGT_ATTACK:        return tr("Attack");
+        case PGT_FIRE:          return tr("Fire");
+        case PGT_LIGHTNING:     return tr("Light");
+        case PGT_MAGIC:         return tr("Magic");
+        case PGT_BLOCK:         return tr("Block");
+        case PGT_GOTHIT:        return tr("Hit");
+        case PGT_DEATH:         return tr("Death");
+        }
+        break;
+    }
+
+    return tr("N/A");
+}
+
 void D1Gfxset::frameModified(D1GfxFrame *frame)
 {
     for (D1Gfx *gfx : this->gfxList) {

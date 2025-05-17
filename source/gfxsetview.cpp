@@ -18,6 +18,7 @@
 #include "progressdialog.h"
 #include "ui_gfxsetview.h"
 #include "upscaler.h"
+#include "dungeon/all.h"
 
 GfxsetView::GfxsetView(QWidget *parent)
     : QWidget(parent)
@@ -162,7 +163,7 @@ void GfxsetView::updateFields()
             this->buttons[15] = this->ui->misSSEButton;
         } else {
             // assert(gs->getGfxCount() == 8);
-            numButtons = 8;
+            numButtons = NUM_DIRS;
             this->buttons[DIR_S] = this->ui->misSButton;
             this->buttons[DIR_SW] = this->ui->misSWButton;
             this->buttons[DIR_W] = this->ui->misWButton;
@@ -181,7 +182,7 @@ void GfxsetView::updateFields()
             this->ui->misSSEButton->setVisible(false);
         }
     } else if (this->currType == D1GFX_SET_TYPE::Monster) {
-        numButtons = 6;
+        numButtons = NUM_MON_ANIM;
         this->buttons[MA_STAND] = this->ui->monStandButton;
         this->buttons[MA_ATTACK] = this->ui->monAttackButton;
         this->buttons[MA_WALK] = this->ui->monWalkButton;
@@ -257,7 +258,7 @@ void GfxsetView::updateFields()
         };
         this->ui->plrWeaponLabel->setText(weaponLabel);
 
-        numButtons = 11;
+        numButtons = NUM_PGTS;
         this->buttons[PGT_STAND_TOWN] = this->ui->plrStandTownButton;
         this->buttons[PGT_STAND_DUNGEON] = this->ui->plrStandDunButton;
         this->buttons[PGT_WALK_TOWN] = this->ui->plrWalkTownButton;
@@ -623,7 +624,7 @@ void GfxsetView::coloredFrames(bool gfxOnly, const std::pair<int, int>& colors) 
             const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
             int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
             if (numPixels != 0) {
-                dProgress() << tr("Frame %1 of %2 has %n affected pixels.", "", numPixels).arg(i + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text());
+                dProgress() << tr("Frame %1 of %2 has %n affected pixels.", "", numPixels).arg(i + 1).arg(this->gfxset->getGfxLabel(gn));
                 result = true;
             }
         }
@@ -665,7 +666,7 @@ void GfxsetView::activeFrames(bool gfxOnly) const
                 const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
                 int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
                 if (numPixels != 0) {
-                    dProgress() << tr("Frame %1 of %2 has %n affected pixels.", "", numPixels).arg(i + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text());
+                    dProgress() << tr("Frame %1 of %2 has %n affected pixels.", "", numPixels).arg(i + 1).arg(this->gfxset->getGfxLabel(gn));
                     result = true;
                 }
             }
@@ -680,6 +681,28 @@ void GfxsetView::activeFrames(bool gfxOnly) const
     }
 
     ProgressDialog::decBar();
+}
+
+static bool checkPlrGraphics(D1Gfxset* gfxset, int gn, int assetMpl)
+{
+    bool result = false;
+    D1Gfx* gfx = gfxset->getGfx(gn);
+    for (int i = 0; i < gfx->getGroupCount(); i++) {
+        std::pair<int, int> gfi = gfx->getGroupFrameIndices(i);
+        int fc = gfi.second - gfi.first + 1;
+        if (fc != plr._pAnims[n].paFrames) {
+            dProgress() << QApplication::tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(i + 1).arg(gfxset->getGfxLabel(gn)).arg(fc).arg(plr._pAnims[n].paFrames);
+            result = true;
+        }
+        for (int ii = 0; ii < fc; ii++) {
+            int w = gfx->getFrame(gfi.first + ii)->getWidth();
+            if (w != plr._pAnims[n].paAnimWidth * this->assetMpl) {
+                dProgress() << QApplication::tr("frame %1 of group %2 in %3 has inconsistent framewidth (%4 vs %5).").arg(ii + 1).arg(i + 1).arg(gfxset->getGfxLabel(gn)).arg(w).arg(plr._pAnims[n].paAnimWidth * assetMpl);
+                result = true;
+            }
+        }
+    }
+    return result;
 }
 
 void GfxsetView::checkGraphics(bool gfxOnly) const
@@ -704,7 +727,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
             int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
             if (numPixels != 0) {
-                dProgress() << tr("Frame %1 of %2 has pixels in a range which is level-dependent in the game.").arg(i + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text());
+                dProgress() << tr("Frame %1 of %2 has pixels in a range which is level-dependent in the game.").arg(i + 1).arg(this->gfxset->getGfxLabel(gn));
                 result = true;
             }
         }
@@ -724,7 +747,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
         }
         int gc = gfx->getGroupCount();
         if (gc != numGroups) {
-            dProgress() << tr("%1 has %2 instead of %n groups.", "", numGroups).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(gc);
+            dProgress() << tr("%1 has %2 instead of %n groups.", "", numGroups).arg(this->gfxset->getGfxLabel(gn)).arg(gc);
             result = true;
         }
         // test whether a graphic have the same frame-count in each group
@@ -738,7 +761,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                 if (frameCount < 0) {
                     frameCount = fc;
                 } else {
-                    dProgress() << tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(fc).arg(frameCount);
+                    dProgress() << tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->gfxset->getGfxLabel(gn)).arg(fc).arg(frameCount);
                     result = true;
                 }
             }
@@ -757,14 +780,13 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                     width = w;
                     height = h;
                 } else {
-                    dProgress() << tr("Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(i + 1).arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn + 1) : this->buttons[gn]->text()).arg(w).arg(h).arg(width).arg(height);
+                    dProgress() << tr("Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(i + 1).arg(this->gfxset->getGfxLabel(gn)).arg(w).arg(h).arg(width).arg(height);
                     result = true;
                 }
             }
         }
     }
-#if 0
-    // test whether the graphics is 'complete'
+
     switch (this->currType) {
     case D1GFX_SET_TYPE::Missile: {
         // - test against game code if possible
@@ -774,9 +796,81 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
     } break;
     case D1GFX_SET_TYPE::Player: {
         // - test against game code if possible
+        D1GFX_SET_CLASS_TYPE classType = gfxset->getClassType();
+        D1GFX_SET_ARMOR_TYPE armorType = gfxset->getArmorType();
+        D1GFX_SET_WEAPON_TYPE weaponType = gfxset->getWeaponType();
+        if (classType != D1GFX_SET_CLASS_TYPE::Unknown && armorType != D1GFX_SET_ARMOR_TYPE::Unknown && weaponType != D1GFX_SET_WEAPON_TYPE::Unknown) {
+            int pnum = 0;
+            int pc = PC_WARRIOR;
+            switch (classType) {
+            case D1GFX_SET_CLASS_TYPE::Warrior: pc = PC_WARRIOR; break;
+            case D1GFX_SET_CLASS_TYPE::Rogue:   pc = PC_ROGUE;   break;
+            case D1GFX_SET_CLASS_TYPE::Mage:    pc = PC_MAGE;    break;
+            case D1GFX_SET_CLASS_TYPE::Monk:    pc = PC_MONK;    break;
+            }
+            int gfx = 0;
+            switch (weaponType) {
+            case D1GFX_SET_WEAPON_TYPE::Unarmed:     gfx = ANIM_ID_UNARMED;     break;
+            case D1GFX_SET_WEAPON_TYPE::ShieldOnly:  gfx = ANIM_ID_UNARMED + 1; break;
+            case D1GFX_SET_WEAPON_TYPE::Sword:       gfx = ANIM_ID_SWORD;       break;
+            case D1GFX_SET_WEAPON_TYPE::SwordShield: gfx = ANIM_ID_SWORD + 1;   break;
+            case D1GFX_SET_WEAPON_TYPE::Bow:         gfx = ANIM_ID_BOW;         break;
+            case D1GFX_SET_WEAPON_TYPE::Axe:         gfx = ANIM_ID_AXE;         break;
+            case D1GFX_SET_WEAPON_TYPE::Blunt:       gfx = ANIM_ID_MACE;        break;
+            case D1GFX_SET_WEAPON_TYPE::BluntShield: gfx = ANIM_ID_MACE + 1;    break;
+            case D1GFX_SET_WEAPON_TYPE::Staff:       gfx = ANIM_ID_STAFF;       break;
+            }
+            switch (armorType) {
+            case D1GFX_SET_ARMOR_TYPE::Light:  gfx |= 0;                    break;
+            case D1GFX_SET_ARMOR_TYPE::Medium: gfx |= ANIM_ID_MEDIUM_ARMOR; break;
+            case D1GFX_SET_ARMOR_TYPE::Heavy:  gfx |= ANIM_ID_HEAVY_ARMOR;  break;
+            }
+            plr._pClass = pc;
+            plr._pgfxnum = gfx;
+
+            currLvl._dType = DTYPE_TOWN;
+            SetPlrAnims(0);
+            // assert(gfxset->getGfxCount() == NUM_PGTS);
+            for (int n = 0; n < NUM_PGXS; n++) {
+                int gn = 0;
+                switch (n) {
+                case PGX_STAND:     gn = PGT_STAND_TOWN; break;
+                case PGX_WALK:      gn = PGT_WALK_TOWN;  break;
+                case PGX_ATTACK:    gn = PGT_ATTACK;     break;
+                case PGX_FIRE:      gn = PGT_FIRE;       break;
+                case PGX_LIGHTNING: gn = PGT_LIGHTNING;  break;
+                case PGX_MAGIC:     gn = PGT_MAGIC;      break;
+                case PGX_BLOCK:     gn = PGT_BLOCK;      break;
+                case PGX_GOTHIT:    gn = PGT_GOTHIT;     break;
+                case PGX_DEATH:     gn = PGT_DEATH;      break;
+                }
+
+                result |= checkPlrGraphics(this->gfxset, gn, this->assetMpl);
+            }
+
+            currLvl._dType = DTYPE_CATHEDRAL;
+            SetPlrAnims(0);
+
+            for (int n = 0; n < NUM_PGXS; n++) {
+                int gn = 0;
+                switch (n) {
+                case PGX_STAND: gn = PGT_STAND_DUNGEON; break;
+                case PGX_WALK:  gn = PGT_WALK_DUNGEON;  break;
+                case PGX_ATTACK:
+                case PGX_FIRE:
+                case PGX_LIGHTNING:
+                case PGX_MAGIC:
+                case PGX_BLOCK:
+                case PGX_GOTHIT:
+                case PGX_DEATH: continue;
+                }
+
+                result |= checkPlrGraphics(this->gfxset, gn, this->assetMpl);
+            }
+        }
     } break;
     }
-#endif
+
     if (!result) {
         progress.second = tr("No inconsistency detected in the gfx-set.");
         dProgress() << progress;
@@ -874,10 +968,7 @@ void GfxsetView::resize(const ResizeParam &params)
 done:
     if (frameWithPixelLost != -1) {
         QMessageBox::StandardButton reply;
-        QString frameId = tr("Frame %1").arg(frameWithPixelLost + 1);
-        if (this->gfx != this->gfxset->getGfx(gn)) {
-            frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
-        }
+        QString frameId = tr("Frame %1 of %2").arg(frameWithPixelLost + 1).arg(this->gfxset->getGfxLabel(gn));
         reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with non-background colors are going to be eliminated (At least %1 is affected). Are you sure you want to proceed?").arg(frameId), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
             return;

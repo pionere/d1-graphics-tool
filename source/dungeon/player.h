@@ -8,6 +8,11 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#define plr            players[pnum]
+
+extern PlayerStruct players[MAX_PLRS];
+
+void SetPlrAnims(int pnum);
 bool PosOkActor(int x, int y);
 
 DEVILUTION_END_NAMESPACE
