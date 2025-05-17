@@ -719,12 +719,14 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
     progress.second = tr("Inconsistencies in the graphics of the gfx-set:");
 
     dProgress() << progress;
+    LogErrorF("checkGraphics 0");
     int frameCount = -1, width = -1, height = -1;
     for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
         D1Gfx *gfx = this->gfxset->getGfx(gn);
         if (gfxOnly && gfx != this->gfx)
             continue;
         // test whether the graphics use colors from the level-dependent range 
+        LogErrorF("checkGraphics 1 %d", gn);
         const std::pair<int, int> colors = { 1, 128 - 1 };
         for (int i = 0; i < gfx->getFrameCount(); i++) {
             const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
@@ -735,6 +737,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             }
         }
         // test whether the graphics have the right number of groups
+        LogErrorF("checkGraphics 2 %d", gn);
         int numGroups = this->currType == D1GFX_SET_TYPE::Missile ? 1 : NUM_DIRS;
         if (this->currType == D1GFX_SET_TYPE::Player) {
             if (gn == PGT_BLOCK) {
@@ -754,6 +757,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             result = true;
         }
         // test whether a graphic have the same frame-count in each group
+        LogErrorF("checkGraphics 3 %d", gn);
         if (this->currType != D1GFX_SET_TYPE::Missile) {
             frameCount = -1;
         }
@@ -770,6 +774,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             }
         }
         // test whether a graphic have the same frame-size in each group
+        LogErrorF("checkGraphics 4 %d", gn);
         if (this->currType != D1GFX_SET_TYPE::Missile) {
             width = -1;
             height = -1;
@@ -799,6 +804,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
     } break;
     case D1GFX_SET_TYPE::Player: {
         // - test against game code if possible
+        LogErrorF("checkGraphics 5");
         D1GFX_SET_CLASS_TYPE classType = gfxset->getClassType();
         D1GFX_SET_ARMOR_TYPE armorType = gfxset->getArmorType();
         D1GFX_SET_WEAPON_TYPE weaponType = gfxset->getWeaponType();
@@ -831,6 +837,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             plr._pClass = pc;
             plr._pgfxnum = gfx;
 
+            LogErrorF("checkGraphics 6 %d, %d", pc, gfx);
             currLvl._dType = DTYPE_TOWN;
             SetPlrAnims(0);
             // assert(gfxset->getGfxCount() == NUM_PGTS);
@@ -847,6 +854,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                 case PGX_GOTHIT:    gn = PGT_GOTHIT;     break;
                 case PGX_DEATH:     gn = PGT_DEATH;      break;
                 }
+            LogErrorF("checkGraphics 7 %d, %d", n, gn);
 
                 result |= checkPlrGraphics(this->gfxset, n, gn, gfxOnly ? this->gfx : nullptr, this->assetMpl);
             }
@@ -867,6 +875,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                 case PGX_GOTHIT:
                 case PGX_DEATH: continue;
                 }
+            LogErrorF("checkGraphics 8 %d, %d", n, gn);
 
                 result |= checkPlrGraphics(this->gfxset, n, gn, gfxOnly ? this->gfx : nullptr, this->assetMpl);
             }
@@ -874,8 +883,9 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
     } break;
     }
 
+    LogErrorF("checkGraphics done");
     if (!result) {
-        progress.second = tr("No inconsistency detected in the gfx-set.");
+        progress.second = gfxOnly ? tr("No inconsistency detected in the current gfx.") : tr("No inconsistency detected in the gfx-set.");
         dProgress() << progress;
     }
 
