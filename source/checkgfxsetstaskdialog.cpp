@@ -83,7 +83,7 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
             if (params.recursive) {
                 CheckGfxsetsTaskParam pm = params;
                 pm.folder = sPath;
-                this->runTask(pm);
+                CheckGfxsetsTaskDialog::runTask(pm);
             }
         } else {
             D1Gfx* gfx = new D1Gfx();
