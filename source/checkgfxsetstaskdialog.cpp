@@ -1,4 +1,4 @@
-#include "checkgfxsetstasksialog.h"
+#include "checkgfxsetstaskdialog.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -9,7 +9,7 @@
 #include "d1gfx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
-#include "ui_checkgfxsetstasksialog.h"
+#include "ui_checkgfxsetstaskdialog.h"
 
 CheckGfxsetsTaskDialog::CheckGfxsetsTaskDialog(QWidget *parent)
     : QDialog(parent)
