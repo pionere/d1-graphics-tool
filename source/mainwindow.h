@@ -11,6 +11,7 @@
 
 #include "builderwidget.h"
 #include "celview.h"
+#include "checkgfxsetstaskdialog.h"
 #include "cppview.h"
 #include "d1cpp.h"
 #include "d1dun.h"
@@ -327,6 +328,7 @@ private slots:
     void on_actionShowRows_Table_triggered();
 
     void on_actionUpscaleTask_triggered();
+    void on_actionCheckGfxsetsTask_triggered();
 
     void on_actionAbout_triggered();
     void on_actionAbout_Qt_triggered();
@@ -380,6 +382,7 @@ private:
     RemapDialog *remapDialog = nullptr;
     PaletteShowDialog *paletteShowDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
+    CheckGfxsetsTaskDialog *checkGfxsetsTaskDialog = nullptr;
 
     D1Pal *pal = nullptr;
     D1Trn *trnUnique = nullptr;

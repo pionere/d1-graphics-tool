@@ -3811,6 +3811,14 @@ void MainWindow::on_actionUpscaleTask_triggered()
     this->upscaleTaskDialog->show();
 }
 
+void MainWindow::on_actionCheckGfxsetsTask_triggered()
+{
+    if (this->checkGfxsetsTaskDialog == nullptr) {
+        this->checkGfxsetsTaskDialog = new CheckGfxsetsTaskDialog(this);
+    }
+    this->checkGfxsetsTaskDialog->show();
+}
+
 #if defined(Q_OS_WIN)
 #define OS_TYPE "Windows"
 #elif defined(Q_OS_QNX)

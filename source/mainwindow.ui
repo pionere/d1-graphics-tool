@@ -367,6 +367,7 @@
      <string>Tasks</string>
     </property>
     <addaction name="actionUpscaleTask"/>
+    <addaction name="actionCheckGfxsetsTask"/>
    </widget>
    <widget class="QMenu" name="menuFrame">
     <property name="title">
@@ -579,6 +580,14 @@
    </property>
    <property name="toolTip">
     <string>Upscale the assets of Diablo 1 / Hellfire</string>
+   </property>
+  </action>
+  <action name="actionCheckGfxsetsTask">
+   <property name="text">
+    <string>Check Gfxsets</string>
+   </property>
+   <property name="toolTip">
+    <string>Check gfxsets of Diablo 1 / Hellfire</string>
    </property>
   </action>
   <action name="actionSettings">

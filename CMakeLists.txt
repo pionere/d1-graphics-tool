@@ -52,6 +52,9 @@ set(PROJECT_SOURCES
         source/celview.cpp
         source/celview.h
         source/celview.ui
+        source/checkgfxsetstasksialog.cpp
+        source/checkgfxsetstasksialog.h
+        source/checkgfxsetstasksialog.ui
         source/cppdataeditdialog.cpp
         source/cppdataeditdialog.h
         source/cppdataeditdialog.ui
