@@ -441,20 +441,21 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
     case D1GFX_SET_TYPE::Missile: {
         // - test against game code if possible
         if (this->getGfxCount() >= 1) {
-            QString gfxsetName = this->getGfx(0)->getFilePath();
-            QFileInfo xfi(gfxsetName);
-            QString baseNameLower = xfi.completeBaseName().toLower();
-            LogErrorF("Missile: %s", baseNameLower.toLatin1().data());
+            QString filePath = this->getGfx(0)->getFilePath();
+            QString filePathLower = filePath.toLower();
+            LogErrorF("Missile: %s", filePathLower.toLatin1().data());
             for (const MisFileData &mfdata : misfiledata) {
                 char pszName[DATA_ARCHIVE_MAX_PATH];
                 int n = mfdata.mfAnimFAmt;
                 const char* name = mfdata.mfName;
                 if (n == 1) {
-                    snprintf(pszName, sizeof(pszName), "Missiles\\%s.CL2", name);
+                    // snprintf(pszName, sizeof(pszName), "Missiles\\%s.CL2", name);
+                    snprintf(pszName, sizeof(pszName), "Missiles/%s.CL2", name);
                 } else {
                     snprintf(pszName, sizeof(pszName), "Missiles\\%s%d.CL2", name, 1);
                 }
-                QString misGfxName = QString(pszName).replace(QChar('\\'), QDir::separator()).toLower();
+                // QString misGfxName = QString(pszName).replace(QChar('\\'), QDir::separator()).toLower();
+                QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
                 LogErrorF("gfx: %s", misGfxName.toLatin1().data());
                 if (baseNameLower.endsWith(misGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
