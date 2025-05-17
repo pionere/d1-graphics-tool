@@ -76,7 +76,7 @@ public:
     void setPalette(D1Pal *pal);
 
 private:
-    bool D1Gfxset::checkPlrGraphics(int n, int gn, const D1Gfx* gfx, int assetMpl) const;
+    bool checkPlrGraphics(int n, int gn, const D1Gfx* gfx, int assetMpl) const;
 
     D1GFX_SET_TYPE type = D1GFX_SET_TYPE::Unknown;
     D1GFX_SET_CLASS_TYPE ctype = D1GFX_SET_CLASS_TYPE::Unknown;

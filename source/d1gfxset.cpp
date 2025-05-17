@@ -377,7 +377,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             const std::vector<std::vector<D1GfxPixel>> pixelImage = currGfx->getFramePixelImage(i);
             int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
             if (numPixels != 0) {
-                dProgress() << tr("Frame %1 of %2 has pixels in a range which is level-dependent in the game.").arg(i + 1).arg(this->getGfxLabel(gn));
+                dProgress() << QApplication::tr("Frame %1 of %2 has pixels in a range which is level-dependent in the game.").arg(i + 1).arg(this->getGfxLabel(gn));
                 result = true;
             }
         }
@@ -397,7 +397,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
         }
         int gc = currGfx->getGroupCount();
         if (gc != numGroups) {
-            dProgress() << tr("%1 has %2 instead of %n groups.", "", numGroups).arg(this->getGfxLabel(gn)).arg(gc);
+            dProgress() << QApplication::tr("%1 has %2 instead of %n groups.", "", numGroups).arg(this->getGfxLabel(gn)).arg(gc);
             result = true;
         }
         // test whether a graphic have the same frame-count in each group
@@ -411,7 +411,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 if (frameCount < 0) {
                     frameCount = fc;
                 } else {
-                    dProgress() << tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+                    dProgress() << QApplication::tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
                     result = true;
                 }
             }
@@ -430,7 +430,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                     width = w;
                     height = h;
                 } else {
-                    dProgress() << tr("Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(h).arg(width).arg(height);
+                    dProgress() << QApplication::tr("Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(h).arg(width).arg(height);
                     result = true;
                 }
             }
@@ -495,7 +495,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 case PGX_DEATH:     gn = PGT_DEATH;      break;
                 }
 
-                result |= checkPlrGraphics(this n, gn, gfx, assetMpl);
+                result |= this->checkPlrGraphics(n, gn, gfx, assetMpl);
             }
 
             currLvl._dType = DTYPE_CATHEDRAL;
@@ -515,7 +515,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 case PGX_DEATH: continue;
                 }
 
-                result |= checkPlrGraphics(this, n, gn, gfx, assetMpl);
+                result |= this->checkPlrGraphics(n, gn, gfx, assetMpl);
             }
         }
     } break;
