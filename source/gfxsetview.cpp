@@ -683,13 +683,15 @@ void GfxsetView::activeFrames(bool gfxOnly) const
     ProgressDialog::decBar();
 }
 
-static bool checkPlrGraphics(D1Gfxset* gfxset, int n, int gn, int assetMpl)
+static bool checkPlrGraphics(D1Gfxset* gfxset, int n, int gn, D1Gfx* gfx, int assetMpl)
 {
     bool result = false;
     int pnum = 0;
-    D1Gfx* gfx = gfxset->getGfx(gn);
-    for (int i = 0; i < gfx->getGroupCount(); i++) {
-        std::pair<int, int> gfi = gfx->getGroupFrameIndices(i);
+    D1Gfx* currGfx = gfxset->getGfx(gn);
+    if (gfx != nullptr && gfx != currGfx)
+        return false;
+    for (int i = 0; i < currGfx->getGroupCount(); i++) {
+        std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
         int fc = gfi.second - gfi.first + 1;
         if (fc != plr._pAnims[n].paFrames) {
             dProgress() << QApplication::tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(i + 1).arg(gfxset->getGfxLabel(gn)).arg(fc).arg(plr._pAnims[n].paFrames);
@@ -846,7 +848,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                 case PGX_DEATH:     gn = PGT_DEATH;      break;
                 }
 
-                result |= checkPlrGraphics(this->gfxset, n, gn, this->assetMpl);
+                result |= checkPlrGraphics(this->gfxset, n, gn, gfxOnly ? this->gfx : nullptr, this->assetMpl);
             }
 
             currLvl._dType = DTYPE_CATHEDRAL;
@@ -866,7 +868,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                 case PGX_DEATH: continue;
                 }
 
-                result |= checkPlrGraphics(this->gfxset, n, gn, this->assetMpl);
+                result |= checkPlrGraphics(this->gfxset, n, gn, gfxOnly ? this->gfx : nullptr, this->assetMpl);
             }
         }
     } break;
