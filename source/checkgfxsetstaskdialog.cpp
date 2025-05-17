@@ -102,7 +102,7 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
                 progress.second = tr("Inconsistencies in the graphics of the '%1' gfx-set:").arg(gfxsetName);
 
                 dProgress() << progress;
-                result = this->gfxset->check(nullptr, params.multiplier);
+                bool result = gfxset->check(nullptr, params.multiplier);
 
                 if (!result) {
                     progress.second = tr("No inconsistency detected in the '%1' gfx-set.").arg(gfxsetName);
