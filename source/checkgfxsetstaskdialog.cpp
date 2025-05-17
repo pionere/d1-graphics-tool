@@ -52,7 +52,7 @@ void CheckGfxsetsTaskDialog::on_checkRunButton_clicked()
     std::function<void()> func = [params]() {
         CheckGfxsetsTaskDialog::runTask(params);
     };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Checking assets..."), 3, PAF_NONE, std::move(func));
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Checking assets..."), 3, PAF_OPEN_DIALOG, std::move(func));
 }
 
 void CheckGfxsetsTaskDialog::on_checkCancelButton_clicked()
@@ -96,19 +96,22 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
                 QFileInfo xfi(gfxsetName);
                 QString extension = xfi.suffix();
                 gfxsetName[gfxsetName.length() - extension.length() - 1] = 'X'; break;
-
+#if 0
                 QPair<int, QString> progress;
                 progress.first = -1;
                 progress.second = tr("Inconsistencies in the graphics of the '%1' gfx-set:").arg(gfxsetName);
 
+#else
+                QString progress = tr("Inconsistencies in the graphics of the '%1' gfx-set:").arg(gfxsetName);
+#endif
                 dProgress() << progress;
                 bool result = gfxset->check(nullptr, params.multiplier);
-
+#if 0
                 if (!result) {
                     progress.second = tr("No inconsistency detected in the '%1' gfx-set.").arg(gfxsetName);
                     dProgress() << progress;
                 }
-
+#endif
                 for (int i = 0; i < gfxset->getGfxCount(); i++) {
                     checked.insert(gfxset->getGfx(i)->getFilePath());
                 }
