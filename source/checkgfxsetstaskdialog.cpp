@@ -75,7 +75,7 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
         return;
     }
     QSet<QString> checked;
-    QDirIterator it(params.folder, QDir::AllDirs | QDir::Files | QDir::Readable);
+    QDirIterator it(params.folder, QDir::NoDotAndDotDot | QDir::NoSymLinks | QDir::AllDirs |  QDir::Files | QDir::Readable);
     while (it.hasNext()) {
         QString sPath = it.next();
         if (checked.contains(sPath))
