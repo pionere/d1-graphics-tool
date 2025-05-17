@@ -80,7 +80,6 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
         QString sPath = it.next();
         if (checked.contains(sPath))
             continue;
-        LogErrorF("CheckGfxsetsTaskDialog %s", sPath.toLatin1().data());
         QFileInfo sfi(sPath);
         if (sfi.isDir()) {
             if (params.recursive) {
@@ -92,16 +91,28 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
             D1Gfx* gfx = new D1Gfx();
             D1Gfxset* gfxset = new D1Gfxset(gfx);
             OpenAsParam pm;
-            LogErrorF("CheckGfxsetsTaskDialog 1");
             if (gfxset->load(sPath, pm)) {
-                LogErrorF("CheckGfxsetsTaskDialog 2");
-                gfxset->check(nullptr, params.multiplier);
-                LogErrorF("CheckGfxsetsTaskDialog 3");
+                QString gfxsetName = gfx->getFilePath();
+                QFileInfo xfi(gfxsetName);
+                QString extension = xfi.suffix();
+                gfxsetName[gfxsetName.length() - extension.length() - 1] = 'X'; break;
+
+                QPair<int, QString> progress;
+                progress.first = -1;
+                progress.second = tr("Inconsistencies in the graphics of the '%1' gfx-set:").arg(gfxsetName);
+
+                dProgress() << progress;
+                result = this->gfxset->check(nullptr, params.multiplier);
+
+                if (!result) {
+                    progress.second = tr("No inconsistency detected in the '%1' gfx-set.").arg(gfxsetName);
+                    dProgress() << progress;
+                }
+
                 for (int i = 0; i < gfxset->getGfxCount(); i++) {
                     checked.insert(gfxset->getGfx(i)->getFilePath());
                 }
             }
-            LogErrorF("CheckGfxsetsTaskDialog 4");
             delete gfxset;
             delete gfx;
         }
