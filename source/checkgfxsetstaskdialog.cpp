@@ -11,6 +11,8 @@
 #include "progressdialog.h"
 #include "ui_checkgfxsetstaskdialog.h"
 
+#include "dungeon/all.h"
+
 CheckGfxsetsTaskDialog::CheckGfxsetsTaskDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::CheckGfxsetsTaskDialog())
@@ -78,6 +80,7 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
         QString sPath = it.next();
         if (checked.contains(sPath))
             continue;
+        LogErrorF("CheckGfxsetsTaskDialog %s", sPath.toLatin1().data());
         QFileInfo sfi(sPath);
         if (sfi.isDir()) {
             if (params.recursive) {
@@ -89,13 +92,16 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
             D1Gfx* gfx = new D1Gfx();
             D1Gfxset* gfxset = new D1Gfxset(gfx);
             OpenAsParam pm;
+            LogErrorF("CheckGfxsetsTaskDialog 1");
             if (gfxset->load(sPath, pm)) {
+                LogErrorF("CheckGfxsetsTaskDialog 2");
                 gfxset->check(nullptr, params.multiplier);
-
+                LogErrorF("CheckGfxsetsTaskDialog 3");
                 for (int i = 0; i < gfxset->getGfxCount(); i++) {
                     checked.insert(gfxset->getGfx(i)->getFilePath());
                 }
             }
+            LogErrorF("CheckGfxsetsTaskDialog 4");
             delete gfxset;
             delete gfx;
         }
