@@ -7,6 +7,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+int mypnum;
 PlayerStruct players[MAX_PLRS];
 
 /**
@@ -203,6 +204,16 @@ bool PosOkActor(int x, int y)
 	}
 
 	return true;
+}
+
+bool PlrDecHp(int pnum, int hp, int dmgtype)
+{
+    return false;
+}
+
+void PlrIncHp(int pnum, int hp)
+{
+
 }
 
 DEVILUTION_END_NAMESPACE

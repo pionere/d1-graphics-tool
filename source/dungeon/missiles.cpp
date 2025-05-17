@@ -15,22 +15,6 @@ static_assert(NUM_SFXS <= INT_MAX, "SFX_VALID checks only the sign of the SFX_-v
 static_assert(SFX_NONE < 0, "SFX_VALID checks only the sign of the SFX_-value II.");
 #define SFX_VALID(x) (x >= 0)
 
-#define plr            players[pnum]
-#define plx(x)         players[x]
-
-int mypnum;
-PlayerStruct players[MAX_PLRS];
-
-bool PlrDecHp(int pnum, int hp, int dmgtype)
-{
-    return false;
-}
-
-void PlrIncHp(int pnum, int hp)
-{
-
-}
-
 void RemovePortalMissile(int pnum)
 {
 }
