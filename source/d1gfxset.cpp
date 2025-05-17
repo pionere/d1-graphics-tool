@@ -442,7 +442,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
         // - test against game code if possible
         if (this->getGfxCount() >= 1) {
             QString filePath = this->getGfx(0)->getFilePath();
-            QString filePathLower = filePath.toLower();
+            QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
             LogErrorF("Missile: %s", filePathLower.toLatin1().data());
             for (const MisFileData &mfdata : misfiledata) {
                 char pszName[DATA_ARCHIVE_MAX_PATH];
@@ -488,14 +488,14 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
     case D1GFX_SET_TYPE::Monster: {
         // - test against game code if possible
         if (this->getGfxCount() >= (int)MA_STAND + 1) {
-            QString gfxsetName = this->getGfx(MA_STAND)->getFilePath();
-            QFileInfo xfi(gfxsetName);
-            QString baseNameLower = xfi.completeBaseName().toLower();
+            QString filePath = this->getGfx(0)->getFilePath();
+            QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
             for (const MonFileData &mfdata : monfiledata) {
                 char strBuff[DATA_ARCHIVE_MAX_PATH];
                 snprintf(strBuff, sizeof(strBuff), mfdata.moGfxFile, animletter[MA_STAND]);
-                QString monGfxName = QString(strBuff).replace(QChar('\\'), QDir::separator()).toLower();
-                if (baseNameLower.endsWith(monGfxName)) {
+                // QString monGfxName = QString(strBuff).replace(QChar('\\'), QDir::separator()).toLower();
+                QString monGfxName = QDir::toNativeSeparators(QString(strBuff)).toLower();
+                if (filePathLower.endsWith(monGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
                         D1Gfx *currGfx = this->getGfx(gn);
                         if (gfx != nullptr && gfx != currGfx)
