@@ -459,7 +459,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         D1Gfx *currGfx = this->getGfx(gn);
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
-                        int frameCount = mfdata.mfAnimLen[i];
+                        int frameCount = gn < lengthof(mfdata.mfAnimLen) ? mfdata.mfAnimLen[gn] : 0;
                         int animWidth = mfdata.mfAnimWidth * assetMpl;
                         for (int i = 0; i < currGfx->getGroupCount(); i++) {
                             std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
@@ -497,7 +497,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         D1Gfx *currGfx = this->getGfx(gn);
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
-                        int frameCount = mfdata.moAnimFrames[i];
+                        int frameCount = gn < lengthof(mfdata.moAnimFrames) ? mfdata.moAnimFrames[gn] : 0;
                         int animWidth = mfdata.moWidth * assetMpl;
                         for (int i = 0; i < currGfx->getGroupCount(); i++) {
                             std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
