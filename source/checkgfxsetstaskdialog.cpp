@@ -95,8 +95,11 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
                 QString gfxsetName = gfx->getFilePath();
                 QFileInfo xfi(gfxsetName);
                 QString extension = xfi.suffix();
-                gfxsetName[gfxsetName.length() - extension.length() - 1] = 'X';
-#if 0
+                int lastIdx = gfxsetName.length() - extension.length() - 1 - 1;
+                gfxsetName[lastIdx] = 'X';
+                if (gfxset->getType() == D1GFX_SET_TYPE::Player)
+                    gfxsetName.remove(lastIdx - 1, 1);
+#if 1
                 QPair<int, QString> progress;
                 progress.first = -1;
                 progress.second = tr("Inconsistencies in the graphics of the '%1' gfx-set:").arg(gfxsetName);
@@ -106,7 +109,7 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
 #endif
                 dProgress() << progress;
                 bool result = gfxset->check(nullptr, params.multiplier);
-#if 0
+#if 1
                 if (!result) {
                     progress.second = tr("No inconsistency detected in the '%1' gfx-set.").arg(gfxsetName);
                     dProgress() << progress;
