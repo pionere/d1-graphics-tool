@@ -204,7 +204,7 @@ typedef struct PlrAnimType {
 } PlrAnimType;
 
 typedef struct PlrAnimStruct {
-	BYTE* paAnimData[NUM_DIRS];
+	// BYTE* paAnimData[NUM_DIRS];
 	unsigned paFrames;
 	int paAnimWidth;
 } PlrAnimStruct;
@@ -298,7 +298,7 @@ typedef struct PlayerStruct {
 	int _pVar8;
 	int _pGFXLoad; // flags of the loaded gfx('s)  (player_graphic_flag)
 	// int _pIAlign_64;
-//	PlrAnimStruct _pAnims[NUM_PGXS];
+	PlrAnimStruct _pAnims[NUM_PGXS];
 	unsigned _pAFNum; // action frame number of the attack animation
 	unsigned _pSFNum; // action frame number of the spell animation
 	ItemStruct _pHoldItem;

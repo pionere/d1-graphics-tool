@@ -8,6 +8,8 @@
 
 #include <QString>
 
+#define dev_fatal(msg, ...) ((void)0)
+
 class D1Dun;
 class D1Tileset;
 class DecorateDunParam;

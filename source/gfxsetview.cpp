@@ -683,9 +683,10 @@ void GfxsetView::activeFrames(bool gfxOnly) const
     ProgressDialog::decBar();
 }
 
-static bool checkPlrGraphics(D1Gfxset* gfxset, int gn, int assetMpl)
+static bool checkPlrGraphics(D1Gfxset* gfxset, int n, int gn, int assetMpl)
 {
     bool result = false;
+    int pnum = 0;
     D1Gfx* gfx = gfxset->getGfx(gn);
     for (int i = 0; i < gfx->getGroupCount(); i++) {
         std::pair<int, int> gfi = gfx->getGroupFrameIndices(i);
@@ -696,7 +697,7 @@ static bool checkPlrGraphics(D1Gfxset* gfxset, int gn, int assetMpl)
         }
         for (int ii = 0; ii < fc; ii++) {
             int w = gfx->getFrame(gfi.first + ii)->getWidth();
-            if (w != plr._pAnims[n].paAnimWidth * this->assetMpl) {
+            if (w != plr._pAnims[n].paAnimWidth * assetMpl) {
                 dProgress() << QApplication::tr("frame %1 of group %2 in %3 has inconsistent framewidth (%4 vs %5).").arg(ii + 1).arg(i + 1).arg(gfxset->getGfxLabel(gn)).arg(w).arg(plr._pAnims[n].paAnimWidth * assetMpl);
                 result = true;
             }
@@ -803,10 +804,10 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
             int pnum = 0;
             int pc = PC_WARRIOR;
             switch (classType) {
-            case D1GFX_SET_CLASS_TYPE::Warrior: pc = PC_WARRIOR; break;
-            case D1GFX_SET_CLASS_TYPE::Rogue:   pc = PC_ROGUE;   break;
-            case D1GFX_SET_CLASS_TYPE::Mage:    pc = PC_MAGE;    break;
-            case D1GFX_SET_CLASS_TYPE::Monk:    pc = PC_MONK;    break;
+            case D1GFX_SET_CLASS_TYPE::Warrior: pc = PC_WARRIOR;  break;
+            case D1GFX_SET_CLASS_TYPE::Rogue:   pc = PC_ROGUE;    break;
+            case D1GFX_SET_CLASS_TYPE::Mage:    pc = PC_SORCERER; break;
+            case D1GFX_SET_CLASS_TYPE::Monk:    pc = PC_MONK;     break;
             }
             int gfx = 0;
             switch (weaponType) {
@@ -845,7 +846,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                 case PGX_DEATH:     gn = PGT_DEATH;      break;
                 }
 
-                result |= checkPlrGraphics(this->gfxset, gn, this->assetMpl);
+                result |= checkPlrGraphics(this->gfxset, n, gn, this->assetMpl);
             }
 
             currLvl._dType = DTYPE_CATHEDRAL;
@@ -865,7 +866,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
                 case PGX_DEATH: continue;
                 }
 
-                result |= checkPlrGraphics(this->gfxset, gn, this->assetMpl);
+                result |= checkPlrGraphics(this->gfxset, n, gn, this->assetMpl);
             }
         }
     } break;
