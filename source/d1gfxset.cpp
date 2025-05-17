@@ -454,14 +454,14 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                     snprintf(pszName, sizeof(pszName), "Missiles\\%s%d.CL2", name, 1);
                 }
                 QString misGfxName = QString(pszName).toLower();
-                if (baseNameLower.endsWidth(misGfxName)) {
-                    for (int i = 0; i < this->getGfxCount(); i++) {
-                        D1Gfx *currGfx = this->getGfx(0);
+                if (baseNameLower.endsWith(misGfxName)) {
+                    for (int gn = 0; gn < this->getGfxCount(); gn++) {
+                        D1Gfx *currGfx = this->getGfx(gn);
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
                         int frameCount = mfdata.mfAnimLen[i];
                         int animWidth = mfdata.mfAnimWidth * assetMpl;
-                        for (int n = 0; n < currGfx->getGroupCount(); n++) {
+                        for (int i = 0; i < currGfx->getGroupCount(); i++) {
                             std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
                             int fc = gfi.second - gfi.first + 1;
                             if (fc != frameCount) {
@@ -492,15 +492,15 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 char strBuff[DATA_ARCHIVE_MAX_PATH];
                 snprintf(strBuff, sizeof(strBuff), mfdata.moGfxFile, animletter[MA_STAND]);
                 QString monGfxName = QString(strBuff).toLower();
-                if (baseNameLower.endsWidth(monGfxName)) {
-                    for (int i = 0; i < this->getGfxCount(); i++) {
-                        D1Gfx *currGfx = this->getGfx(0);
+                if (baseNameLower.endsWith(monGfxName)) {
+                    for (int gn = 0; gn < this->getGfxCount(); gn++) {
+                        D1Gfx *currGfx = this->getGfx(gn);
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
                         int frameCount = mfdata.moAnimFrames[i];
                         int animWidth = mfdata.moWidth * assetMpl;
-                        for (int n = 0; n < currGfx->getGroupCount(); n++) {
-                            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
+                        for (int i = 0; i < currGfx->getGroupCount(); i++) {
+                            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
                             int fc = gfi.second - gfi.first + 1;
                             if (fc != frameCount) {
                                 dProgress() << QApplication::tr("framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
