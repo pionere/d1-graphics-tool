@@ -70,6 +70,7 @@ public:
     D1Gfx *getGfx(int i) const;
     D1Gfx *getBaseGfx() const;
     QList<D1Gfx *> &getGfxList() const;
+    QString getGfxLabel(int) const;
     void frameModified(D1GfxFrame *frame);
     void setPalette(D1Pal *pal);
 

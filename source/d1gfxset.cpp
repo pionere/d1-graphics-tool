@@ -451,6 +451,43 @@ QList<D1Gfx *> &D1Gfxset::getGfxList() const
     return const_cast<QList<D1Gfx *> &>(this->gfxList);
 }
 
+QString D1Gfxset::getGfxLabel(int index) const
+{
+    switch (this->type) {
+    case D1GFX_SET_TYPE::Unknown:
+        return QApplication::tr("Unknown%1").arg(index + 1);
+    case D1GFX_SET_TYPE::Missile:
+        return QApplication::tr("Dir%1").arg(index + 1);
+    case D1GFX_SET_TYPE::Monster:
+        switch (index) {
+        case MA_STAND:   return QApplication::tr("Stand");
+        case MA_ATTACK:  return QApplication::tr("Attack");
+        case MA_WALK:    return QApplication::tr("Walk");
+        case MA_SPECIAL: return QApplication::tr("Spec");
+        case MA_GOTHIT:  return QApplication::tr("Hit");
+        case MA_DEATH:   return QApplication::tr("Death");
+        }
+        break;
+    case D1GFX_SET_TYPE::Player:
+        switch (index) {
+        case PGT_STAND_TOWN:    return QApplication::tr("Stand (town)");
+        case PGT_STAND_DUNGEON: return QApplication::tr("Stand (dungeon)");
+        case PGT_WALK_TOWN:     return QApplication::tr("Walk (town)");
+        case PGT_WALK_DUNGEON:  return QApplication::tr("Walk (dungeon)");
+        case PGT_ATTACK:        return QApplication::tr("Attack");
+        case PGT_FIRE:          return QApplication::tr("Fire");
+        case PGT_LIGHTNING:     return QApplication::tr("Light");
+        case PGT_MAGIC:         return QApplication::tr("Magic");
+        case PGT_BLOCK:         return QApplication::tr("Block");
+        case PGT_GOTHIT:        return QApplication::tr("Hit");
+        case PGT_DEATH:         return QApplication::tr("Death");
+        }
+        break;
+    }
+
+    return QApplication::tr("N/A");
+}
+
 void D1Gfxset::frameModified(D1GfxFrame *frame)
 {
     for (D1Gfx *gfx : this->gfxList) {

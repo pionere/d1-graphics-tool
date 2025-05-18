@@ -623,11 +623,7 @@ void GfxsetView::coloredFrames(bool gfxOnly, const std::pair<int, int>& colors) 
             const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
             int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
             if (numPixels != 0) {
-                QString frameId = tr("Frame %1").arg(i + 1);
-                if (this->gfx != gfx) {
-                    frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
-                }
-                dProgress() << tr("%1 has %n affected pixels.", "", numPixels).arg(frameId);
+                dProgress() << tr("Frame %1 of %2 has %n affected pixels.", "", numPixels).arg(i + 1).arg(this->gfxset->getGfxLabel(gn));
                 result = true;
             }
         }
@@ -669,11 +665,7 @@ void GfxsetView::activeFrames(bool gfxOnly) const
                 const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
                 int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
                 if (numPixels != 0) {
-                    QString frameId = tr("Frame %1").arg(i + 1);
-                    if (this->gfx != gfx) {
-                        frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
-                    }
-                    dProgress() << tr("%1 has %n affected pixels.", "", numPixels).arg(frameId);
+                    dProgress() << tr("Frame %1 of %2 has %n affected pixels.", "", numPixels).arg(i + 1).arg(this->gfxset->getGfxLabel(gn));
                     result = true;
                 }
             }
@@ -778,10 +770,7 @@ void GfxsetView::resize(const ResizeParam &params)
 done:
     if (frameWithPixelLost != -1) {
         QMessageBox::StandardButton reply;
-        QString frameId = tr("Frame %1").arg(frameWithPixelLost + 1);
-        if (this->gfx != this->gfxset->getGfx(gn)) {
-            frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
-        }
+        QString frameId = tr("Frame %1 of %2").arg(frameWithPixelLost + 1).arg(this->gfxset->getGfxLabel(gn));
         reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with non-background colors are going to be eliminated (At least %1 is affected). Are you sure you want to proceed?").arg(frameId), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
             return;
