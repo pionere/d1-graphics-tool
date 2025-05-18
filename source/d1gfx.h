@@ -135,6 +135,13 @@ typedef enum gfx_file_index {
     GFX_OBJ_LSHR,    // graphics of the west-facing shrine (LShrineG.CEL)
     GFX_OBJ_RSHR,    // graphics of the east-facing shrine (RShrineG.CEL)
     GFX_OBJ_L5LIGHT, // graphics of the light stand in Crypt (L5Light.CEL)
+    GFX_PLR_RHTAT,   // graphics of rogue in heavy armor with staff attacking (RHTAT.CL2)
+    GFX_PLR_RHUHT,   // graphics of rogue in heavy armor with shield getting hit (RHUHT.CL2)
+    GFX_PLR_RHUQM,   // graphics of rogue in heavy armor with shield casting magic (RHUQM.CL2)
+    GFX_PLR_RMTAT,   // graphics of rogue in medium armor with staff attacking (RMTAT.CL2)
+    GFX_PLR_WHMAT,   // graphics of warrior in heavy armor with mace attacking (WHMAT.CL2)
+    GFX_PLR_WLNLM,   // graphics of warrior in light armor unarmed casting lightning (WLNLM.CL2)
+    GFX_PLR_WMDLM,   // graphics of warrior in medium armor with sword and shield casting lightning (WMDLM.CL2)
     GFX_PLR_WMHAS,   // graphics of warrior in medium armor with mace and shield standing in dungeon (WMHAS.CL2)
     GFX_MON_FALLGD,  // graphics of the Devil Kin Brute dying (Fallgd.CL2)
     GFX_MON_FALLGW,  // graphics of the Devil Kin Brute walking (Fallgw.CL2)
@@ -281,6 +288,7 @@ private:
     bool patchLeftShrine(bool silent);
     bool patchRightShrine(bool silent);
     bool patchCryptLight(bool silent);
+    bool patchPlrFrames(int gfxFileIndex, bool silent);
     bool patchWarriorStand(bool silent);
     bool patchFallGDie(bool silent);
     bool patchFallGWalk(bool silent);

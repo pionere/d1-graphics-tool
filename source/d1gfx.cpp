@@ -2053,6 +2053,66 @@ bool D1Gfx::patchCryptLight(bool silent)
     return result;
 }
 
+bool D1Gfx::patchPlrFrames(int gfxFileIndex, bool silent)
+{
+    int frameCount = 0, width = 0, height = 0;
+    switch (gfxFileIndex) {
+    case GFX_PLR_RHTAT: frameCount = 18 - 2; width = 128; height = 128; break;
+    case GFX_PLR_RHUHT: frameCount =  8 - 1; width =  96; height =  96; break;
+    case GFX_PLR_RHUQM: frameCount = 17 - 1; width =  96; height =  96; break;
+    case GFX_PLR_RMTAT: frameCount = 17 - 1; width = 128; height = 128; break;
+    case GFX_PLR_WHMAT: frameCount = 17 - 1; width = 128; height =  96; break;
+    case GFX_PLR_WLNLM: frameCount = 21 - 1; width =  96; height =  96; break;
+    case GFX_PLR_WMDLM: frameCount = 21 - 1; width =  96; height =  96; break;
+    }
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+#if 0
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+#endif
+    }
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if (gfxFileIndex == GFX_PLR_RHTAT || gfxFileIndex == GFX_PLR_RMTAT) {
+            int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
+            if (i + 1 == 18) {
+                i = 13;
+                this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+                dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
+                i = 11;
+                this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+                dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
+                result = true;
+            }
+        }
+        while (true) {
+            int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
+            if (i < frameCount)
+                break;
+            this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+            dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
+            result = true;
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchWarriorStand(bool silent)
 {
     QString baseFilePath = this->getFilePath();
@@ -7297,6 +7357,15 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_L5LIGHT: // patch L5Light.CEL
         change = this->patchCryptLight(silent);
         break;
+    case GFX_PLR_RHTAT: // patch RHTAT.CL2
+    case GFX_PLR_RHUHT: // patch RHUHT.CL2
+    case GFX_PLR_RHUQM: // patch RHUQM.CL2
+    case GFX_PLR_RMTAT: // patch RMTAT.CL2
+    case GFX_PLR_WHMAT: // patch WHMAT.CL2
+    case GFX_PLR_WLNLM: // patch WLNLM.CL2
+    case GFX_PLR_WMDLM: // patch WMDLM.CL2
+        change = this->patchPlrFrames(gfxFileIndex, silent);
+        break;
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
@@ -7501,6 +7570,27 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     // cl2 files
     // - players
+    if (baseName == "rhtat") {
+        fileIndex = GFX_PLR_RHTAT;
+    }
+    if (baseName == "rhuht") {
+        fileIndex = GFX_PLR_RHUHT;
+    }
+    if (baseName == "rhuqm") {
+        fileIndex = GFX_PLR_RHUQM;
+    }
+    if (baseName == "rmtat") {
+        fileIndex = GFX_PLR_RMTAT;
+    }
+    if (baseName == "whmat") {
+        fileIndex = GFX_PLR_WHMAT;
+    }
+    if (baseName == "wlnlm") {
+        fileIndex = GFX_PLR_WLNLM;
+    }
+    if (baseName == "wmdlm") {
+        fileIndex = GFX_PLR_WMDLM;
+    }
     if (baseName == "wmhas") {
         fileIndex = GFX_PLR_WMHAS;
     }

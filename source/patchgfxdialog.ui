@@ -77,6 +77,41 @@
        </item>
        <item>
         <property name="text">
+         <string>Rogue in heavy armor with staff attacking (RHTAT.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in heavy armor with shield getting hit (RHUHT.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in heavy armor with shield casting magic (RHUQM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in medium armor with staff attacking (RMTAT.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Warrior in heavy armor with mace attacking (WHMAT.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Warrior in light armor unarmed casting lightning (WLNLM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Warrior in medium armor with sword and shield casting lightning (WMDLM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Warrior in medium armor standing with mace and shield in dungeon (WMHAS.CL2)</string>
         </property>
        </item>
