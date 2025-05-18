@@ -29,6 +29,14 @@ void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius);
 void MakeLightTable();
 unsigned AddLight(int x, int y, int r);
+void AddUnLight(unsigned lnum);
+void ChangeLightRadius(unsigned lnum, int r);
+void ChangeLightXY(unsigned lnum, int x, int y);
+void ChangeLightScreenOff(unsigned lnum, int xsoff, int ysoff);
+void CondChangeLightXY(unsigned lnum, int x, int y);
+void ChangeLight(unsigned lnum, int x, int y, int r);
+
+void ChangeVisionXY(unsigned vnum, int x, int y);
 
 /* rdata */
 

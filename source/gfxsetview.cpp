@@ -683,6 +683,23 @@ void GfxsetView::activeFrames(bool gfxOnly) const
     ProgressDialog::decBar();
 }
 
+void GfxsetView::checkGraphics(bool gfxOnly) const
+{
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Inconsistencies in the graphics of the gfx-set:");
+
+    dProgress() << progress;
+    result = this->gfxset->check(gfxOnly ? this->gfx : nullptr, this->assetMpl);
+
+    if (!result) {
+        progress.second = gfxOnly ? tr("No inconsistency detected in the current gfx.") : tr("No inconsistency detected in the gfx-set.");
+        dProgress() << progress;
+    }
+}
+
 void GfxsetView::resize(const ResizeParam &params)
 {
     D1GfxPixel backPixel = (unsigned)params.backcolor < D1PAL_COLORS ? D1GfxPixel::colorPixel(params.backcolor) : D1GfxPixel::transparentPixel();

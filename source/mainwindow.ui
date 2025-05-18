@@ -109,6 +109,7 @@
     <addaction name="actionReportActiveTiles"/>
     <addaction name="actionReportTilesetUse"/>
     <addaction name="actionReportTilesetInefficientFrames"/>
+    <addaction name="actionReportCheckGraphics"/>
    </widget>
    <widget class="QMenu" name="menuTilesetCheckFlags">
     <property name="title">
@@ -364,6 +365,7 @@
      <string>Tasks</string>
     </property>
     <addaction name="actionUpscaleTask"/>
+    <addaction name="actionCheckGfxsetsTask"/>
    </widget>
    <widget class="QMenu" name="menuFrame">
     <property name="title">
@@ -576,6 +578,14 @@
    </property>
    <property name="toolTip">
     <string>Upscale the assets of Diablo 1 / Hellfire</string>
+   </property>
+  </action>
+  <action name="actionCheckGfxsetsTask">
+   <property name="text">
+    <string>Check Gfxsets</string>
+   </property>
+   <property name="toolTip">
+    <string>Check gfxsets of Diablo 1 / Hellfire</string>
    </property>
   </action>
   <action name="actionSettings">
@@ -859,6 +869,14 @@
    </property>
    <property name="toolTip">
     <string>List frames which are almost standard</string>
+   </property>
+  </action>
+  <action name="actionReportCheckGraphics">
+   <property name="text">
+    <string>Check Graphics</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistencies of the graphics</string>
    </property>
   </action>
   <action name="actionResetFrameTypes_Tileset">

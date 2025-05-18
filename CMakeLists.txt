@@ -52,6 +52,9 @@ set(PROJECT_SOURCES
         source/celview.cpp
         source/celview.h
         source/celview.ui
+        source/checkgfxsetstaskdialog.cpp
+        source/checkgfxsetstaskdialog.h
+        source/checkgfxsetstaskdialog.ui
         source/cppdataeditdialog.cpp
         source/cppdataeditdialog.h
         source/cppdataeditdialog.ui
@@ -132,6 +135,8 @@ set(PROJECT_SOURCES
         source/dungeon/itemdat.cpp
         source/dungeon/items.cpp
         source/dungeon/lighting.cpp
+        source/dungeon/misdat.cpp
+        source/dungeon/missiles.cpp
         source/dungeon/monstdat.cpp
         source/dungeon/monster.cpp
         source/dungeon/objdat.cpp

@@ -8,7 +8,16 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#define plr            players[pnum]
+#define plx(x)         players[x]
+
+extern int mypnum;
+extern PlayerStruct players[MAX_PLRS];
+
+void SetPlrAnims(int pnum);
 bool PosOkActor(int x, int y);
+void PlrIncHp(int pnum, int hp);
+bool PlrDecHp(int pnum, int hp, int dmgtype);
 
 DEVILUTION_END_NAMESPACE
 

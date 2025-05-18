@@ -206,14 +206,6 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 baseMatch = true;
             }
             this->gfxList.push_back(gfx);
-            // validate the gfx
-            if (gfx->getGroupCount() == 0) {
-                dProgressWarn() << QApplication::tr("%1 is empty.").arg(gfx->getFilePath());
-            } else if (type != D1GFX_SET_TYPE::Missile && gfx->getGroupCount() != NUM_DIRS) {
-                dProgressWarn() << QApplication::tr("%1 has invalid group-count.").arg(gfx->getFilePath());
-            } else if (type == D1GFX_SET_TYPE::Missile && gfx->getGroupCount() != 1) {
-                dProgressWarn() << QApplication::tr("%1 has more than one group.").arg(gfx->getFilePath());
-            }
         }
         if (!baseMatch) {
             QString firstFilePath = this->gfxList[0]->getFilePath();
@@ -344,6 +336,232 @@ QRect D1Gfxset::getBoundary() const
 
     }
     return rect;
+}
+
+bool D1Gfxset::checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx* gfx) const
+{
+    bool result = false;
+    D1Gfx* currGfx = this->getGfx(gn);
+    if (gfx != nullptr && gfx != currGfx)
+        return false;
+    for (int i = 0; i < currGfx->getGroupCount(); i++) {
+        std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
+        int fc = gfi.second - gfi.first + 1;
+        if (fc != frameCount) {
+            dProgress() << QApplication::tr("framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+            result = true;
+        }
+        for (int ii = 0; ii < fc; ii++) {
+            int w = currGfx->getFrame(gfi.first + ii)->getWidth();
+            if (w != animWidth) {
+                dProgress() << QApplication::tr("framewidth of frame %1 of group %2 in %3 does not match with the game (%4 vs %5).").arg(ii + 1).arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(animWidth);
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
+bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
+{
+    bool result = false;
+    int frameCount = -1, width = -1, height = -1;
+    for (int gn = 0; gn < this->getGfxCount(); gn++) {
+        D1Gfx *currGfx = this->getGfx(gn);
+        if (gfx != nullptr && gfx != currGfx)
+            continue;
+        // test whether the graphics use colors from the level-dependent range 
+        const std::pair<int, int> colors = { 1, 128 - 1 };
+        for (int i = 0; i < currGfx->getFrameCount(); i++) {
+            const std::vector<std::vector<D1GfxPixel>> pixelImage = currGfx->getFramePixelImage(i);
+            int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
+            if (numPixels != 0) {
+                dProgress() << QApplication::tr("Frame %1 of %2 has pixels in a range which is level-dependent in the game.").arg(i + 1).arg(this->getGfxLabel(gn));
+                result = true;
+            }
+        }
+        // test whether the graphics have the right number of groups
+        int numGroups = this->type == D1GFX_SET_TYPE::Missile ? 1 : NUM_DIRS;
+        if (this->type == D1GFX_SET_TYPE::Player) {
+            if (gn == PGT_BLOCK) {
+                if (this->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unknown && this->getWeaponType() != D1GFX_SET_WEAPON_TYPE::ShieldOnly
+                 && this->getWeaponType() != D1GFX_SET_WEAPON_TYPE::SwordShield && this->getWeaponType() != D1GFX_SET_WEAPON_TYPE::BluntShield)
+                    numGroups = 0;
+            }
+            if (gn == PGT_DEATH) {
+                if (this->getArmorType() != D1GFX_SET_ARMOR_TYPE::Unknown && this->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unknown
+                 && (this->getArmorType() != D1GFX_SET_ARMOR_TYPE::Light || this->getWeaponType() != D1GFX_SET_WEAPON_TYPE::Unarmed))
+                    numGroups = 0;
+            }
+        }
+        int gc = currGfx->getGroupCount();
+        if (gc != numGroups) {
+            dProgress() << QApplication::tr("%1 has %2 instead of %n groups.", "", numGroups).arg(this->getGfxLabel(gn)).arg(gc);
+            result = true;
+        }
+        // test whether a graphic have the same frame-count in each group
+        if (this->type != D1GFX_SET_TYPE::Missile) {
+            frameCount = -1;
+        }
+        for (int n = 0; n < currGfx->getGroupCount(); n++) {
+            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
+            int fc = gfi.second - gfi.first + 1;
+            if (fc != frameCount) {
+                if (frameCount < 0) {
+                    frameCount = fc;
+                } else {
+                    dProgress() << QApplication::tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+                    result = true;
+                }
+            }
+        }
+        // test whether a graphic have the same frame-size in each group
+        if (this->type != D1GFX_SET_TYPE::Missile) {
+            width = -1;
+            height = -1;
+        }
+        for (int i = 0; i < currGfx->getFrameCount(); i++) {
+            D1GfxFrame* frame = currGfx->getFrame(i);
+            int w = frame->getWidth();
+            int h = frame->getHeight();
+            if (w != width || h != height) {
+                if (width < 0) {
+                    width = w;
+                    height = h;
+                } else {
+                    dProgress() << QApplication::tr("Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(h).arg(width).arg(height);
+                    result = true;
+                }
+            }
+        }
+    }
+
+    switch (this->type) {
+    case D1GFX_SET_TYPE::Missile: {
+        // - test against game code if possible
+        if (this->getGfxCount() >= 1) {
+            QString filePath = this->getGfx(0)->getFilePath();
+            QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
+            for (const MisFileData &mfdata : misfiledata) {
+                char pszName[DATA_ARCHIVE_MAX_PATH];
+                int n = mfdata.mfAnimFAmt;
+                const char* name = mfdata.mfName;
+                if (name == NULL)
+                    continue;
+                if (n == 1) {
+                    snprintf(pszName, sizeof(pszName), "Missiles\%s.CL2", name);
+                } else {
+                    snprintf(pszName, sizeof(pszName), "Missiles\\%s%d.CL2", name, 1);
+                }
+                QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
+                if (filePathLower.endsWith(misGfxName)) {
+                    for (int gn = 0; gn < this->getGfxCount(); gn++) {
+                        int frameCount = gn < lengthof(mfdata.mfAnimLen) ? mfdata.mfAnimLen[gn] : 0;
+                        int animWidth = mfdata.mfAnimWidth * assetMpl;
+                        result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
+                    }
+                    break;
+                }
+            }
+        }
+    } break;
+    case D1GFX_SET_TYPE::Monster: {
+        // - test against game code if possible
+        if (this->getGfxCount() >= (int)MA_STAND + 1) {
+            QString filePath = this->getGfx(MA_STAND)->getFilePath();
+            QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
+            for (const MonFileData &mfdata : monfiledata) {
+                char strBuff[DATA_ARCHIVE_MAX_PATH];
+                snprintf(strBuff, sizeof(strBuff), mfdata.moGfxFile, animletter[MA_STAND]);
+                QString monGfxName = QDir::toNativeSeparators(QString(strBuff)).toLower();
+                if (filePathLower.endsWith(monGfxName)) {
+                    for (int gn = 0; gn < this->getGfxCount(); gn++) {
+                        int frameCount = gn < lengthof(mfdata.moAnimFrames) ? mfdata.moAnimFrames[gn] : 0;
+                        int animWidth = mfdata.moWidth * assetMpl;
+                        result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
+                    }
+                    break;
+                }
+            }
+        }
+    } break;
+    case D1GFX_SET_TYPE::Player: {
+        // - test against game code if possible
+        D1GFX_SET_CLASS_TYPE classType = this->getClassType();
+        D1GFX_SET_ARMOR_TYPE armorType = this->getArmorType();
+        D1GFX_SET_WEAPON_TYPE weaponType = this->getWeaponType();
+        if (classType != D1GFX_SET_CLASS_TYPE::Unknown && armorType != D1GFX_SET_ARMOR_TYPE::Unknown && weaponType != D1GFX_SET_WEAPON_TYPE::Unknown) {
+            int pnum = 0;
+            int pc = PC_WARRIOR;
+            switch (classType) {
+            case D1GFX_SET_CLASS_TYPE::Warrior: pc = PC_WARRIOR;  break;
+            case D1GFX_SET_CLASS_TYPE::Rogue:   pc = PC_ROGUE;    break;
+            case D1GFX_SET_CLASS_TYPE::Mage:    pc = PC_SORCERER; break;
+            case D1GFX_SET_CLASS_TYPE::Monk:    pc = PC_MONK;     break;
+            }
+            int plrgfx = 0;
+            switch (weaponType) {
+            case D1GFX_SET_WEAPON_TYPE::Unarmed:     plrgfx = ANIM_ID_UNARMED;     break;
+            case D1GFX_SET_WEAPON_TYPE::ShieldOnly:  plrgfx = ANIM_ID_UNARMED + 1; break;
+            case D1GFX_SET_WEAPON_TYPE::Sword:       plrgfx = ANIM_ID_SWORD;       break;
+            case D1GFX_SET_WEAPON_TYPE::SwordShield: plrgfx = ANIM_ID_SWORD + 1;   break;
+            case D1GFX_SET_WEAPON_TYPE::Bow:         plrgfx = ANIM_ID_BOW;         break;
+            case D1GFX_SET_WEAPON_TYPE::Axe:         plrgfx = ANIM_ID_AXE;         break;
+            case D1GFX_SET_WEAPON_TYPE::Blunt:       plrgfx = ANIM_ID_MACE;        break;
+            case D1GFX_SET_WEAPON_TYPE::BluntShield: plrgfx = ANIM_ID_MACE + 1;    break;
+            case D1GFX_SET_WEAPON_TYPE::Staff:       plrgfx = ANIM_ID_STAFF;       break;
+            }
+            switch (armorType) {
+            case D1GFX_SET_ARMOR_TYPE::Light:  plrgfx |= 0;                    break;
+            case D1GFX_SET_ARMOR_TYPE::Medium: plrgfx |= ANIM_ID_MEDIUM_ARMOR; break;
+            case D1GFX_SET_ARMOR_TYPE::Heavy:  plrgfx |= ANIM_ID_HEAVY_ARMOR;  break;
+            }
+            plr._pClass = pc;
+            plr._pgfxnum = plrgfx;
+
+            currLvl._dType = DTYPE_TOWN;
+            SetPlrAnims(0);
+            // assert(this->getGfxCount() == NUM_PGTS);
+            for (int n = 0; n < NUM_PGXS; n++) {
+                int gn = 0;
+                switch (n) {
+                case PGX_STAND:     gn = PGT_STAND_TOWN; break;
+                case PGX_WALK:      gn = PGT_WALK_TOWN;  break;
+                case PGX_ATTACK:    gn = PGT_ATTACK;     break;
+                case PGX_FIRE:      gn = PGT_FIRE;       break;
+                case PGX_LIGHTNING: gn = PGT_LIGHTNING;  break;
+                case PGX_MAGIC:     gn = PGT_MAGIC;      break;
+                case PGX_BLOCK:     gn = PGT_BLOCK;      break;
+                case PGX_GOTHIT:    gn = PGT_GOTHIT;     break;
+                case PGX_DEATH:     gn = PGT_DEATH;      break;
+                }
+
+                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
+            }
+
+            currLvl._dType = DTYPE_CATHEDRAL;
+            SetPlrAnims(0);
+
+            for (int n = 0; n < NUM_PGXS; n++) {
+                int gn = 0;
+                switch (n) {
+                case PGX_STAND: gn = PGT_STAND_DUNGEON; break;
+                case PGX_WALK:  gn = PGT_WALK_DUNGEON;  break;
+                case PGX_ATTACK:
+                case PGX_FIRE:
+                case PGX_LIGHTNING:
+                case PGX_MAGIC:
+                case PGX_BLOCK:
+                case PGX_GOTHIT:
+                case PGX_DEATH: continue;
+                }
+
+                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
+            }
+        }
+    } break;
+    }
+    return result;
 }
 
 void D1Gfxset::mask()

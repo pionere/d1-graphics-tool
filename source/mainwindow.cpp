@@ -1662,7 +1662,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionReportActiveTiles->setEnabled(isTileset);
     this->ui->actionReportTilesetUse->setEnabled(isTileset);
     this->ui->actionReportTilesetInefficientFrames->setEnabled(isTileset);
-
+    this->ui->actionReportCheckGraphics->setEnabled(this->gfxsetView != nullptr);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -2724,6 +2724,18 @@ void MainWindow::on_actionReportTilesetInefficientFrames_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionReportCheckGraphics_triggered()
+{
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_OPEN_DIALOG);
+
+    this->gfxsetView->checkGraphics(gfxOnly);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionReportTilesetUse_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
@@ -3732,6 +3744,14 @@ void MainWindow::on_actionUpscaleTask_triggered()
         this->upscaleTaskDialog = new UpscaleTaskDialog(this);
     }
     this->upscaleTaskDialog->show();
+}
+
+void MainWindow::on_actionCheckGfxsetsTask_triggered()
+{
+    if (this->checkGfxsetsTaskDialog == nullptr) {
+        this->checkGfxsetsTaskDialog = new CheckGfxsetsTaskDialog(this);
+    }
+    this->checkGfxsetsTaskDialog->show();
 }
 
 #if defined(Q_OS_WIN)

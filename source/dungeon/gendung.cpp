@@ -76,6 +76,12 @@ BYTE dTransVal[MAXDUNX][MAXDUNY];
 /** Specifies the (runtime) flags of each square on the map (dflag) */
 BYTE dFlags[MAXDUNX][MAXDUNY];
 /**
+ * Contains the player numbers (players array indices) of the map.
+ *   pnum + 1 : the player is on the given location.
+ * -(pnum + 1): reserved for a moving player
+ */
+int8_t dPlayer[MAXDUNX][MAXDUNY];
+/**
  * Contains the NPC numbers of the map. The NPC number represents a
  * towner number (towners array index) in Tristram and a monster number
  * (monsters array index) in the dungeon.
@@ -96,6 +102,14 @@ static_assert(MAXOBJECTS <= CHAR_MAX, "Index of an object might not fit to dObje
  */
 BYTE dItem[MAXDUNX][MAXDUNY];
 static_assert(MAXITEMS <= UCHAR_MAX, "Index of an item might not fit to dItem.");
+/**
+ * Contains the missile numbers (missiles array indices) of the map.
+ *   mi + 1 : the missile is on the given location.
+ * MIS_MULTI: more than one missile on the given location.
+ */
+BYTE dMissile[MAXDUNX][MAXDUNY];
+static_assert(MAXMISSILES <= UCHAR_MAX, "Index of a missile might not fit to dMissile.");
+static_assert((BYTE)(MAXMISSILES + 1) < (BYTE)MIS_MULTI, "Multi-missile in dMissile reserves one entry.");
 
 void InitLvlDungeon()
 {
