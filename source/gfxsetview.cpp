@@ -18,6 +18,7 @@
 #include "progressdialog.h"
 #include "ui_gfxsetview.h"
 #include "upscaler.h"
+#include "dungeon/all.h"
 
 GfxsetView::GfxsetView(QWidget *parent)
     : QWidget(parent)
@@ -162,7 +163,7 @@ void GfxsetView::updateFields()
             this->buttons[15] = this->ui->misSSEButton;
         } else {
             // assert(gs->getGfxCount() == 8);
-            numButtons = 8;
+            numButtons = NUM_DIRS;
             this->buttons[DIR_S] = this->ui->misSButton;
             this->buttons[DIR_SW] = this->ui->misSWButton;
             this->buttons[DIR_W] = this->ui->misWButton;
@@ -181,7 +182,7 @@ void GfxsetView::updateFields()
             this->ui->misSSEButton->setVisible(false);
         }
     } else if (this->currType == D1GFX_SET_TYPE::Monster) {
-        numButtons = 6;
+        numButtons = NUM_MON_ANIM;
         this->buttons[MA_STAND] = this->ui->monStandButton;
         this->buttons[MA_ATTACK] = this->ui->monAttackButton;
         this->buttons[MA_WALK] = this->ui->monWalkButton;
@@ -257,7 +258,7 @@ void GfxsetView::updateFields()
         };
         this->ui->plrWeaponLabel->setText(weaponLabel);
 
-        numButtons = 11;
+        numButtons = NUM_PGTS;
         this->buttons[PGT_STAND_TOWN] = this->ui->plrStandTownButton;
         this->buttons[PGT_STAND_DUNGEON] = this->ui->plrStandDunButton;
         this->buttons[PGT_WALK_TOWN] = this->ui->plrWalkTownButton;
