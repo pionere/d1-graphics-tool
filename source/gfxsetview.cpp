@@ -685,8 +685,6 @@ void GfxsetView::activeFrames(bool gfxOnly) const
 
 void GfxsetView::checkGraphics(bool gfxOnly) const
 {
-    ProgressDialog::incBar(tr("Checking graphics..."), 1);
-
     bool result = false;
 
     QPair<int, QString> progress;
@@ -700,8 +698,6 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
         progress.second = gfxOnly ? tr("No inconsistency detected in the current gfx.") : tr("No inconsistency detected in the gfx-set.");
         dProgress() << progress;
     }
-
-    ProgressDialog::decBar();
 }
 
 void GfxsetView::resize(const ResizeParam &params)

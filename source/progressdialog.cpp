@@ -269,10 +269,7 @@ void ProgressDialog::done()
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
         ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE::NORMAL, QApplication::tr("Process cancelled."), false);
     }
-    bool emptyResult = theDialog->ui->outputTextEdit->document()->isEmpty();
-    bool openDialog = (theDialog->afterFlags & PAF_OPEN_DIALOG) != 0;
-    if (emptyResult
-     || (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !openDialog)) {
+    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !(theDialog->afterFlags & PAF_OPEN_DIALOG)) {
         theDialog->hide();
     } else {
         theDialog->showNormal();
@@ -280,12 +277,8 @@ void ProgressDialog::done()
         theDialog->ui->closePushButton->setFocus();
     }
 
-    theWidget->updateWidget(theDialog->status, !emptyResult, "");
+    theWidget->updateWidget(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
     theDialog->running = false;
-
-    if (emptyResult && openDialog) {
-        QMessageBox::information(theDialog, "", tr("Done"));
-    }
 }
 
 void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags, std::function<void()> &&callFunc)

@@ -2758,7 +2758,7 @@ void MainWindow::on_actionReportCheckGraphics_triggered()
 {
     const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_OPEN_DIALOG);
 
     this->gfxsetView->checkGraphics(gfxOnly);
 

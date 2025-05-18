@@ -44,7 +44,7 @@ void CheckGfxsetsTaskDialog::on_checkRunButton_clicked()
 
     this->close();
 
-    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Checking assets..."), 3, PAF_NONE);
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Checking assets..."), 0, PAF_NONE);
 
     CheckGfxsetsTaskDialog::runTask(params);
 
@@ -52,7 +52,7 @@ void CheckGfxsetsTaskDialog::on_checkRunButton_clicked()
     std::function<void()> func = [params]() {
         CheckGfxsetsTaskDialog::runTask(params);
     };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Checking assets..."), 3, PAF_OPEN_DIALOG, std::move(func));
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Checking assets..."), 0, PAF_OPEN_DIALOG, std::move(func));
 }
 
 void CheckGfxsetsTaskDialog::on_checkCancelButton_clicked()
