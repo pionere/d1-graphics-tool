@@ -601,9 +601,9 @@ void GfxsetView::pasteCurrentImage(const QImage &image)
     // this->displayFrame();
 }
 
-void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
+void GfxsetView::coloredFrames(bool gfxOnly, const std::pair<int, int>& colors) const
 {
-    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    ProgressDialog::incBar(gfxOnly ? tr("Checking frames...") : tr("Checking graphics..."), 1);
     bool result = false;
 
     QPair<int, QString> progress;
@@ -617,6 +617,8 @@ void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
     dProgress() << progress;
     for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
         D1Gfx *gfx = this->gfxset->getGfx(gn);
+        if (gfxOnly && gfx != this->gfx)
+            continue;
         for (int i = 0; i < gfx->getFrameCount(); i++) {
             const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
             int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
@@ -643,9 +645,9 @@ void GfxsetView::coloredFrames(const std::pair<int, int>& colors) const
     ProgressDialog::decBar();
 }
 
-void GfxsetView::activeFrames() const
+void GfxsetView::activeFrames(bool gfxOnly) const
 {
-    ProgressDialog::incBar(tr("Checking frames..."), 1);
+    ProgressDialog::incBar(gfxOnly ? tr("Checking frames...") : tr("Checking graphics..."), 1);
     QComboBox *cycleBox = this->ui->playComboBox;
     QString cycleTypeTxt = cycleBox->currentText();
     int cycleType = cycleBox->currentIndex();
@@ -661,6 +663,8 @@ void GfxsetView::activeFrames() const
         dProgress() << progress;
         for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
             D1Gfx *gfx = this->gfxset->getGfx(gn);
+            if (gfxOnly && gfx != this->gfx)
+                continue;
             for (int i = 0; i < gfx->getFrameCount(); i++) {
                 const std::vector<std::vector<D1GfxPixel>> pixelImage = gfx->getFramePixelImage(i);
                 int numPixels = D1GfxPixel::countAffectedPixels(pixelImage, colors);
