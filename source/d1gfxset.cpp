@@ -45,7 +45,7 @@ const char WepChar[] = {
 /** Maps from player class to letter used in graphic files. */
 const char CharChar[NUM_CLASSES] = { 'W', 'R', 'S', 'M' };
 
-static const char animletter[NUM_MON_ANIM] = { 'N', 'W', 'A', 'H', 'D', 'S' };
+static const char animletter[NUM_MON_ANIM] = { 'n', 'w', 'a', 'h', 'd', 's' };
 // clang-format on
 
 D1Gfxset::D1Gfxset(D1Gfx *g)
@@ -143,8 +143,6 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 for (int i = 0; i < lengthof(animletter); i++) {
                     QString anim;
                     anim = anim + animletter[i] + extension;
-                    if (!uppercase)
-                        anim = anim.toLower();
                     QString filePath = baseMonPath + anim;
                     filePaths.push_back(filePath);
                 }
@@ -154,8 +152,6 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
                     QString anim;
                     anim = anim + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
-                    if (!uppercase)
-                        anim = anim.toLower();
                     QString filePath = basePlrPath + anim;
                     filePaths.push_back(filePath);
                 }
@@ -229,25 +225,26 @@ void D1Gfxset::save(const SaveAsParam &params)
 {
     SaveAsParam saveParams = params;
     QString filePath = saveParams.celFilePath;
-    bool uppercase = false;
+    QString extension = QString(".CL2");
     if (!filePath.isEmpty()) {
-        if (filePath.toLower().endsWith(".cl2")) {
-            uppercase = filePath[filePath.length() - 2] == 'L';
-            filePath.chop(4);
-        }
+        QFileInfo celFileInfo = QFileInfo(filePath);
+
+        extension = QString(".") + celFileInfo.suffix();
+        filePath.chop(extension.length());
+
         if (this->type == D1GFX_SET_TYPE::Missile) {
-            if (filePath[filePath.length() - 1] == '1') {
+            if (filePath.endsWith('1')) {
                 filePath.chop(1);
             }
         } else if (this->type == D1GFX_SET_TYPE::Monster) {
-            if (filePath[filePath.length() - 1].toUpper() == animletter[0]) {
+            if (filePath.endsWith(animletter[0])) {
                 filePath.chop(1);
             }
         } else {
             // assert(this->type == D1GFX_SET_TYPE::Player);
-            if ((filePath[filePath.length() - 2].toUpper() == PlrAnimTypes[0].patTxt[0])
-                && (filePath[filePath.length() - 1].toUpper() == PlrAnimTypes[0].patTxt[1]))
+            if (filePath.endsWith(QString() + PlrAnimTypes[0].patTxt[0] + PlrAnimTypes[0].patTxt[1])) {
                 filePath.chop(2);
+            }
         }
     }
     for (int i = 0; i < this->gfxList.count(); i++) {
@@ -259,10 +256,10 @@ void D1Gfxset::save(const SaveAsParam &params)
                 anim = animletter[i];
             } else {
                 // assert(this->type == D1GFX_SET_TYPE::Player);
-                anim = anim + QChar(PlrAnimTypes[i].patTxt[0]) + QChar(PlrAnimTypes[i].patTxt[1]);
+                anim = anim + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1];
             }
-            anim += ".cl2";
-            saveParams.celFilePath = filePath + (uppercase ? anim : anim.toLower());
+            anim += extension;
+            saveParams.celFilePath = filePath + anim;
         }
         D1Gfx *gfx = this->gfxList[i];
         if (gfx->getFrameCount() != 0) {
