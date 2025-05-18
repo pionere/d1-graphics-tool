@@ -135,7 +135,7 @@ typedef enum gfx_file_index {
     GFX_OBJ_LSHR,    // graphics of the west-facing shrine (LShrineG.CEL)
     GFX_OBJ_RSHR,    // graphics of the east-facing shrine (RShrineG.CEL)
     GFX_OBJ_L5LIGHT, // graphics of the light stand in Crypt (L5Light.CEL)
-    GFX_PLR_WMHAS,   // graphics of the warrior with shield and mace standing in the dungeon (WMHAS.CL2)
+    GFX_PLR_WMHAS,   // graphics of warrior in medium armor with mace and shield standing in dungeon (WMHAS.CL2)
     GFX_MON_FALLGD,  // graphics of the Devil Kin Brute dying (Fallgd.CL2)
     GFX_MON_FALLGW,  // graphics of the Devil Kin Brute walking (Fallgw.CL2)
     GFX_MON_MAGMAD,  // graphics of the Magma Demon dying (Magmad.CL2)

@@ -7500,10 +7500,11 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
         fileIndex = GFX_ITEM_MOOSES1;
     }
     // cl2 files
-    // - monsters
+    // - players
     if (baseName == "wmhas") {
         fileIndex = GFX_PLR_WMHAS;
     }
+    // - monsters
     if (baseName == "fallgd") {
         fileIndex = GFX_MON_FALLGD;
     }
