@@ -149,12 +149,12 @@ typedef struct ItemStruct {
 	unsigned _iAnimFrame;    // Current frame of animation.
 	//int _iAnimWidth;
 	//int _iAnimXOffset;
-	BOOL _iPostDraw; // should be drawn during the post-phase (magic rock on the stand) -- unused
+	BOOL _iPostDraw; // should be drawn during the post-phase (magic rock on the stand)
 	char _iName[32];
 	int _ivalue;
 	int _iIvalue;
 	int _iAC;
-	int _iFlags;	// item_special_effect
+	int _iPLFlags; // item_special_effect
 	int _iCharges;
 	int _iMaxCharges;
 	int _iDurability;
@@ -202,6 +202,245 @@ typedef struct PlrAnimType {
 	char patTxt[4]; // suffix to select the player animation CL2
 	int patGfxIdx;  // player_graphic_idx
 } PlrAnimType;
+
+typedef struct PlrAnimStruct {
+	// BYTE* paAnimData[NUM_DIRS];
+	unsigned paFrames;
+	int paAnimWidth;
+} PlrAnimStruct;
+
+typedef struct PlayerStruct {
+	int _pmode; // PLR_MODE
+	int _pDestAction;
+	int _pDestParam1;
+	int _pDestParam2;
+	int _pDestParam3; // the skill to be used in case of skill based actions
+	int _pDestParam4; // the level of the skill to be used in case of skill based actions
+	BOOLEAN _pActive;
+	BYTE _pInvincible;
+	BOOLEAN _pLvlChanging; // True when the player is transitioning between levels
+	BYTE _pDunLevel; // dungeon_level
+	BYTE _pClass; // plr_class
+	BYTE _pLevel;
+	BYTE _pRank;
+	BYTE _pTeam;
+	uint16_t _pStatPts;
+	BYTE _pLightRad;
+	BYTE _pManaShield;
+	int16_t _pTimer[NUM_PLRTIMERS];
+	unsigned _pExperience;
+	unsigned _pNextExper;
+	int _px;      // Tile X-position where the player should be drawn
+	int _py;      // Tile Y-position where the player should be drawn
+	int _pfutx;   // Future tile X-position where the player will be at the end of its action
+	int _pfuty;   // Future tile Y-position where the player will be at the end of its action
+	int _poldx;   // Most recent tile X-position where the player was at the start of its action
+	int _poldy;   // Most recent tile Y-position where the player was at the start of its action
+	int _pxoff;   // Pixel X-offset from tile position where the player should be drawn
+	int _pyoff;   // Pixel Y-offset from tile position where the player should be drawn
+	int _pdir;    // Direction faced by player (direction enum)
+	// int _pIAlign_64;
+	BYTE* _pAnimData;
+	int _pAnimFrameLen; // Tick length of each frame in the current animation
+	int _pAnimCnt;        // Increases by one each game tick, counting how close we are to _pAnimFrameLen
+	unsigned _pAnimLen;   // Number of frames in current animation
+	unsigned _pAnimFrame; // Current frame of animation.
+	int _pAnimWidth;
+	int _pAnimXOffset;
+	unsigned _plid; // light id of the player
+	unsigned _pvid; // vision id of the player
+	BYTE _pAtkSkill;         // the selected attack skill for the primary action
+	BYTE _pAtkSkillType;     // the (RSPLTYPE_)type of the attack skill for the primary action
+	BYTE _pMoveSkill;        // the selected movement skill for the primary action
+	BYTE _pMoveSkillType;    // the (RSPLTYPE_)type of the movement skill for the primary action
+	BYTE _pAltAtkSkill;      // the selected attack skill for the secondary action
+	BYTE _pAltAtkSkillType;  // the (RSPLTYPE_)type of the attack skill for the secondary action
+	BYTE _pAltMoveSkill;     // the selected movement skill for the secondary action
+	BYTE _pAltMoveSkillType; // the (RSPLTYPE_)type of the movement skill for the secondary action
+	BYTE _pAtkSkillHotKey[4];         // the attack skill selected by the hotkey
+	BYTE _pAtkSkillTypeHotKey[4];     // the (RSPLTYPE_)type of the attack skill selected by the hotkey
+	BYTE _pMoveSkillHotKey[4];        // the movement skill selected by the hotkey
+	BYTE _pMoveSkillTypeHotKey[4];    // the (RSPLTYPE_)type of the movement skill selected by the hotkey
+	BYTE _pAltAtkSkillHotKey[4];      // the attack skill selected by the alt-hotkey
+	BYTE _pAltAtkSkillTypeHotKey[4];  // the (RSPLTYPE_)type of the attack skill selected by the alt-hotkey
+	BYTE _pAltMoveSkillHotKey[4];     // the movement skill selected by the alt-hotkey
+	BYTE _pAltMoveSkillTypeHotKey[4]; // the (RSPLTYPE_)type of the movement skill selected by the alt-hotkey
+	BYTE _pAtkSkillSwapKey[4];         // the attack skill selected by the hotkey after skill-set swap
+	BYTE _pAtkSkillTypeSwapKey[4];     // the (RSPLTYPE_)type of the attack skill selected by the hotkey after skill-set swap
+	BYTE _pMoveSkillSwapKey[4];        // the movement skill selected by the hotkey after skill-set swap
+	BYTE _pMoveSkillTypeSwapKey[4];    // the (RSPLTYPE_)type of the movement skill selected by the hotkey after skill-set swap
+	BYTE _pAltAtkSkillSwapKey[4];      // the attack skill selected by the alt-hotkey after skill-set swap
+	BYTE _pAltAtkSkillTypeSwapKey[4];  // the (RSPLTYPE_)type of the attack skill selected by the alt-hotkey after skill-set swap
+	BYTE _pAltMoveSkillSwapKey[4];     // the movement skill selected by the alt-hotkey after skill-set swap
+	BYTE _pAltMoveSkillTypeSwapKey[4]; // the (RSPLTYPE_)type of the movement skill selected by the alt-hotkey after skill-set swap
+	BYTE _pSkillLvlBase[64]; // the skill levels of the player if they would not wear an item
+	BYTE _pSkillActivity[64];
+	unsigned _pSkillExp[64];
+	uint64_t _pMemSkills;  // Bitmask of learned skills
+	uint64_t _pAblSkills;  // Bitmask of abilities
+	uint64_t _pInvSkills;  // Bitmask of skills available via items in inventory (scrolls or runes)
+	char _pName[PLR_NAME_LEN];
+	uint16_t _pBaseStr;
+	uint16_t _pBaseMag;
+	uint16_t _pBaseDex;
+	uint16_t _pBaseVit;
+	int _pHPBase;    // the hp of the player if they would not wear an item
+	int _pMaxHPBase; // the maximum hp of the player without items
+	int _pManaBase;    // the mana of the player if they would not wear an item
+	int _pMaxManaBase; // the maximum mana of the player without items
+	int _pVar1;
+	int _pVar2;
+	int _pVar3;
+	int _pVar4;
+	int _pVar5;
+	int _pVar6;
+	int _pVar7;
+	int _pVar8;
+	int _pGFXLoad; // flags of the loaded gfx('s)  (player_graphic_flag)
+	// int _pIAlign_64;
+	PlrAnimStruct _pAnims[NUM_PGXS];
+	unsigned _pAFNum; // action frame number of the attack animation
+	unsigned _pSFNum; // action frame number of the spell animation
+	ItemStruct _pHoldItem;
+	ItemStruct _pInvBody[NUM_INVLOC];
+	ItemStruct _pSpdList[MAXBELTITEMS];
+	ItemStruct _pInvList[NUM_INV_GRID_ELEM];
+	int _pGold;
+	int _pStrength;
+	int _pMagic;
+	int _pDexterity;
+	int _pVitality;
+	int _pHitPoints; // the current hp of the player
+	int _pMaxHP;     // the maximum hp of the player
+	int _pMana;      // the current mana of the player
+	int _pMaxMana;   // the maximum mana of the player
+	BYTE _pSkillLvl[64]; // the skill levels of the player
+	uint64_t _pISpells;  // Bitmask of skills available via equipped items (staff)
+	BYTE _pSkillFlags;   // Bitmask of allowed skill-types (SFLAG_*)
+	BOOLEAN _pInfraFlag; // unused
+	BYTE _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
+	BOOLEAN _pHasUnidItem; // whether the player has an unidentified (magic) item equipped
+	int _pISlMinDam; // min slash-damage (swords, axes)
+	int _pISlMaxDam; // max slash-damage (swords, axes)
+	int _pIBlMinDam; // min blunt-damage (maces, axes)
+	int _pIBlMaxDam; // max blunt-damage (maces, axes)
+	int _pIPcMinDam; // min puncture-damage (bows, daggers)
+	int _pIPcMaxDam; // max puncture-damage (bows, daggers)
+	int _pIChMinDam; // min charge-damage (shield charge)
+	int _pIChMaxDam; // max charge-damage (shield charge)
+	int _pIEvasion;
+	int _pIAC;
+	int8_t _pMagResist;
+	int8_t _pFireResist;
+	int8_t _pLghtResist;
+	int8_t _pAcidResist;
+	int _pIHitChance;
+	BYTE _pIBaseHitBonus; // indicator whether the base BonusToHit of the items is positive/negative/neutral
+	BYTE _pICritChance; // 200 == 100%
+	uint16_t _pIBlockChance;
+	unsigned _pIFlags; // item_special_effect
+	BYTE _pIWalkSpeed;
+	BYTE _pIRecoverySpeed;
+	BYTE _pIBaseCastSpeed;
+	BYTE _pAlign_B1;
+	int _pIAbsAnyHit; // absorbed hit damage
+	int _pIAbsPhyHit; // absorbed physical hit damage
+	// int _pIAlign_64;
+	int8_t _pIBaseAttackSpeed;
+	BYTE _pAlign_B2; // _pISplCost in vanilla code
+	BYTE _pILifeSteal;
+	BYTE _pIManaSteal;
+	int _pIFMinDam; // min fire damage (item's added fire damage)
+	int _pIFMaxDam; // max fire damage (item's added fire damage)
+	int _pILMinDam; // min lightning damage (item's added lightning damage)
+	int _pILMaxDam; // max lightning damage (item's added lightning damage)
+	int _pIMMinDam; // min magic damage (item's added magic damage)
+	int _pIMMaxDam; // max magic damage (item's added magic damage)
+	int _pIAMinDam; // min acid damage (item's added acid damage)
+	int _pIAMaxDam; // max acid damage (item's added acid damage)
+	BYTE* _pAnimFileData[NUM_PGXS]; // file-pointers of the animations
+} PlayerStruct;
+
+//////////////////////////////////////////////////
+// missiles
+//////////////////////////////////////////////////
+
+typedef struct MissileData {
+	int (*mAddProc)(int, int, int, int, int, int, int, int, int);
+	void (*mProc)(int);
+	BYTE mdFlags; // missile_flags
+	BYTE mResist; // missile_resistance
+	BYTE mFileNum; // missile_gfx_id
+	int mlSFX; // sound effect when a missile is launched (_sfx_id)
+	int miSFX; // sound effect on impact (_sfx_id)
+	BYTE mlSFXCnt; // number of launch sound effects to choose from
+	BYTE miSFXCnt; // number of impact sound effects to choose from
+	BYTE mdPrSpeed; // speed of the projectile
+	BYTE mdRange; // default range of the missile
+} MissileData;
+
+
+typedef struct MisFileData {
+	const char* mfName;
+	const char* mfAnimTrans;
+	int mfAnimFAmt;
+	BOOLEAN mfDrawFlag;
+	BOOLEAN mfAnimFlag;
+	BOOLEAN mfLightFlag;
+	BOOLEAN mfPreFlag;
+	BYTE mfAnimFrameLen[16];
+	BYTE mfAnimLen[16];
+	int mfAnimWidth;
+	int mfAnimXOffset; // could be calculated
+} MisFileData;
+
+typedef struct MissileStruct {
+	int _miType;   // missile_id
+	BYTE _miFlags; // missile_flags
+	BYTE _miResist; // missile_resistance
+	BYTE _miFileNum; // missile_gfx_id
+	BOOLEAN _miDelFlag; // should be deleted
+	int _miUniqTrans; // use unique color-transformation when drawing
+	BOOLEAN _miDrawFlag; // should be drawn
+	BOOLEAN _miAnimFlag;
+	BOOLEAN _miLightFlag; // use light-transformation when drawing
+	BOOLEAN _miPreFlag; // should be drawn in the pre-phase
+	BYTE* _miAnimData;
+	int _miAnimFrameLen; // Tick length of each frame in the current animation
+	int _miAnimLen;   // Number of frames in current animation
+	int _miAnimWidth;
+	int _miAnimXOffset;
+	int _miAnimCnt; // Increases by one each game tick, counting how close we are to _miAnimFrameLen
+	int _miAnimAdd;
+	int _miAnimFrame; // Current frame of animation.
+	int _misx;    // Initial tile X-position
+	int _misy;    // Initial tile Y-position
+	int _mix;     // Tile X-position where the missile should be drawn
+	int _miy;     // Tile Y-position where the missile should be drawn
+	int _mixoff;  // Pixel X-offset from tile position where the missile should be drawn
+	int _miyoff;  // Pixel Y-offset from tile position where the missile should be drawn
+	int _mixvel;  // Missile tile (X - Y)-velocity while moving. This gets added onto _mitxoff each game tick
+	int _miyvel;  // Missile tile (X + Y)-velocity while moving. This gets added onto _mityoff each game tick
+	int _mitxoff; // How far the missile has travelled in its lifespan along the (X - Y)-axis. mix/miy/mxoff/myoff get updated every game tick based on this
+	int _mityoff; // How far the missile has travelled in its lifespan along the (X + Y)-axis. mix/miy/mxoff/myoff get updated every game tick based on this
+	int _miDir;   // The direction of the missile
+	int _miSpllvl;
+	int _miSource; // missile_source_type
+	int _miCaster;
+	int _miMinDam;
+	int _miMaxDam;
+	// int _miRndSeed;
+	int _miRange;
+	unsigned _miLid; // light id of the missile
+	int _miVar1;
+	int _miVar2;
+	int _miVar3;
+	int _miVar4;
+	int _miVar5;
+	int _miVar6;
+	int _miVar7; // distance travelled in case of ARROW missiles
+	int _miVar8; // last target in case of non-DOT missiles
+} MissileStruct;
 
 //////////////////////////////////////////////////
 // monster
@@ -290,16 +529,47 @@ typedef struct MapMonData {
 #pragma pack(pop)
 typedef struct MonsterStruct {
 	int _mmode; // MON_MODE
+	unsigned _msquelch;
 	BYTE _mMTidx;
+	BYTE _mpathcount; // unused
+	BYTE _mAlign_1;   // unused
+	BYTE _mgoal;
+	int _mgoalvar1;
+	int _mgoalvar2;
+	int _mgoalvar3;
 	int _mx;           // Tile X-position where the monster should be drawn
 	int _my;           // Tile Y-position where the monster should be drawn
+	int _mfutx;        // Future tile X-position where the monster will be at the end of its action
+	int _mfuty;        // Future tile Y-position where the monster will be at the end of its action
+	int _moldx;        // Most recent tile X-position where the monster was at the start of its action
+	int _moldy;        // Most recent tile Y-position where the monster was at the start of its action
+	int _mxoff;        // Pixel X-offset from tile position where the monster should be drawn
+	int _myoff;        // Pixel Y-offset from tile position where the monster should be drawn
 	int _mdir;         // Direction faced by monster (direction enum)
+	int _menemy;       // The current target of the monster. An index in to either the plr or monster array depending on _mFlags (MFLAG_TARGETS_MONSTER)
+	BYTE _menemyx;     // Future (except for teleporting) tile X-coordinate of the enemy
+	BYTE _menemyy;     // Future (except for teleporting) tile Y-coordinate of the enemy
+	BYTE _mListener;   // the player to whom the monster is talking to (unused)
+	BOOLEAN _mDelFlag; // unused
+	BYTE* _mAnimData;
 	int _mAnimFrameLen; // Tick length of each frame in the current animation
 	int _mAnimCnt;   // Increases by one each game tick, counting how close we are to _mAnimFrameLen
 	int _mAnimLen;   // Number of frames in current animation
 	int _mAnimFrame; // Current frame of animation.
+	int _mVar1;
+	int _mVar2;
+	int _mVar3; // Used to store the original mode of a stoned monster. Not 'thread' safe -> do not use for anything else! 
+	int _mVar4;
+	int _mVar5;
+	int _mVar6;
+	int _mVar7;
+	int _mVar8;
 	int _mmaxhp;
+	int _mhitpoints;
+	int _mlastx; // the last known (future) tile X-coordinate of the enemy
+	int _mlasty; // the last known (future) tile Y-coordinate of the enemy
 	int32_t _mRndSeed;
+	int32_t _mAISeed;
 	BYTE _muniqtype;
 	BYTE _muniqtrans;
 	BYTE _mNameColor;  // color of the tooltip. white: normal, blue: pack; gold: unique. (text_color)
@@ -309,6 +579,7 @@ typedef struct MonsterStruct {
 	BYTE _mpacksize;   // the number of 'pack'-monsters close to their leader
 	BYTE _mvid;        // vision id of the monster (for minions only)
 	const char* _mName;
+	uint16_t _mFileNum; // _monster_gfx_id
 	BYTE _mLevel;
 	BYTE _mSelFlag;
 	MonsterAI _mAI;
@@ -324,6 +595,14 @@ typedef struct MonsterStruct {
 	int _mEvasion;       // evasion: used against magic-projectile
 	unsigned _mMagicRes; // resistances of the monster (_monster_resistance)
 	unsigned _mExp;
+	int _mAnimWidth;
+	int _mAnimXOffset;
+	BYTE _mAFNum;  // action frame number of the attack animation
+	BYTE _mAFNum2; // action frame number of the special animation
+	uint16_t _mAlign_0; // unused
+	int _mType; // _monster_id
+	MonAnimStruct* _mAnims;
+	ALIGNMENT(6, 2)
 } MonsterStruct;
 
 typedef struct UniqMonData {
@@ -597,6 +876,7 @@ typedef struct ThemePosDir {
 #define L1_MAXROOMS ((DSIZEX * DSIZEY) / sizeof(L1ROOM))
 /** The number of generated rooms in catacombs. */
 #define L2_MAXROOMS 32
+static_assert(L2_MAXROOMS * sizeof(ROOMHALLNODE) <= (DSIZEX * DSIZEY), "RoomList is too large for DrlgMem.");
 /** Possible matching locations in a theme room. */
 #define THEME_LOCS ((DSIZEX * DSIZEY) / sizeof(ThemePosDir))
 

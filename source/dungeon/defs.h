@@ -12,13 +12,19 @@
 
 #define DEVILUTION_BEGIN_NAMESPACE
 #define DEVILUTION_END_NAMESPACE
+#define ALIGNMENT(x86, x64)
+#define ALIGNMENT32(num)
+#define ALIGNMENT64(num)
+#define ALIGN
 #define ALIGN32
 #define ALIGN64
-#define ALIGNMENT
-#define ALIGN
 
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
+
+#define ASSET_MPL                1
+
+#define DATA_ARCHIVE_MAX_PATH    128
 
 // MAXDUN = DSIZE + 2 * DBORDER
 // DSIZE = 2 * DMAX
@@ -52,13 +58,18 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define DEAD_MULTI              0xFF
 #define MAXITEMS                127
 #define ITEM_NONE               0xFF
+#define ITEM_VALID(x) ((int8_t)x >= 0)
 #define MAXBELTITEMS            8
 //#define MAXLIGHTS               32
 #define MAXLIGHTS               0
+#define MAXMISSILES             125
+#define MIS_MULTI               0xFF
 #define MAXMONSTERS             200
 #define MON_NONE                0xFF
+#define MON_VALID(x) (x >= 0)
 #define MAXOBJECTS              127
 #define OBJ_NONE                0xFF
+#define OBJ_VALID(x) ((int8_t)x >= 0)
 #define MAXTHEMES               8
 #define MAXTILES                255
 #define MAXSUBTILES             1023
@@ -84,6 +95,15 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define GOLD_MEDIUM_LIMIT       2500
 #define GOLD_MAX_LIMIT          5000
 
+#define PLR_NAME_LEN            16
+
+#define MAXPATHNODES            256
+
+#define MAX_PATH_LENGTH         23
+
+// 272 kilobytes .. (was 256 kb in vanilla which is not safe)
+#define FILEBUFF                (272 * 1024)
+
 // Diablo uses a 256 color palette
 // Entry 0-127 (0x00-0x7F) are level specific
 // Entry 128-255 (0x80-0xFF) are global
@@ -107,6 +127,18 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 
 #define NIGHTMARE_LEVEL_BONUS   16
 #define HELL_LEVEL_BONUS        32
+
+/*#define NIGHTMARE_TO_HIT_BONUS  85
+#define HELL_TO_HIT_BONUS      120
+
+#define NIGHTMARE_AC_BONUS 50
+#define HELL_AC_BONUS      80
+
+#define NIGHTMARE_EVASION_BONUS 35
+#define HELL_EVASION_BONUS      50
+
+#define NIGHTMARE_MAGIC_BONUS 35
+#define HELL_MAGIC_BONUS      50*/
 
 #define POS_IN_RECT(x, y, rx, ry, rw, rh) \
     ((x) >= (rx)                          \
