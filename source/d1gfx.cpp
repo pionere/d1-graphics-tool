@@ -5806,8 +5806,7 @@ bool D1Gfx::patchSklAxDie(bool silent)
 
 bool D1Gfx::patchSklBwDie(bool silent)
 {
-    constexpr int frameCount = 16;
-    constexpr int obsoleteFrameCount = 3;
+    constexpr int frameCount = 16 - 3;
     constexpr int width = 128;
     constexpr int height = 96;
 
@@ -5816,7 +5815,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
         return false;
     }
     for (int ii = 0; ii < NUM_DIRS; ii++) {
-        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount - obsoleteFrameCount) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
             dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
             return false;
         }
@@ -5842,7 +5841,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
     for (int ii = 0; ii < NUM_DIRS; ii++) {
         while (true) {
             int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
-            if (i < frameCount - obsoleteFrameCount)
+            if (i < frameCount)
                 break;
             this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
             dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
