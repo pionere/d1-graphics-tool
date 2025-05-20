@@ -203,7 +203,7 @@ void SaveAsDialog::on_saveButton_clicked()
     params.celFilePath = this->ui->outputCelFileEdit->text();
     // celSettingsGroupBox: groupNum, rle_len, clipped
     params.groupNum = this->ui->celGroupEdit->nonNegInt();
-    params.rle_len = this->ui->rleLenEdit->nonNegInt();
+    params.rle_len = this->ui->celRleLenEdit->nonNegInt();
     if (this->ui->celClippedYesRadioButton->isChecked()) {
         params.clipped = SAVE_CLIPPED_TYPE::TRUE;
     } else if (this->ui->celClippedNoRadioButton->isChecked()) {
