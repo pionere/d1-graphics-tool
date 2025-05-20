@@ -131,8 +131,8 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
         } else if (/*readByte >= 0x80 &&*/ readByte < 0xBF) {
             // RLE encoded palette index
             unsigned len = 0xBF - readByte;
-            if (len < rle_len)
-                rle_len = len;
+            if (len < *rle_len)
+                *rle_len = len;
             // Go to the palette index offset
             o++;
 

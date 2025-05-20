@@ -1133,7 +1133,7 @@ unsigned D1Gfx::getRleLen() const
     return this->rle_len;
 }
 
-bool setRleLen(unsigned rleLen)
+bool D1Gfx::setRleLen(unsigned rleLen)
 {
     if (this->rle_len == rleLen)
         return false;

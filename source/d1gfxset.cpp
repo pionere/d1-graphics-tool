@@ -449,7 +449,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 if (name == NULL)
                     continue;
                 if (n == 1) {
-                    snprintf(pszName, sizeof(pszName), "Missiles\%s.CL2", name);
+                    snprintf(pszName, sizeof(pszName), "Missiles\\%s.CL2", name);
                 } else {
                     snprintf(pszName, sizeof(pszName), "Missiles\\%s%d.CL2", name, 1);
                 }
