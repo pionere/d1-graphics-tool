@@ -557,6 +557,19 @@
         </item>
        </layout>
        </item>
+      <item>
+       <widget class="LineEditWidget" name="cl2RleEdit">
+        <property name="charWidth">
+         <number>2</number>
+        </property>
+        <property name="toolTip">
+         <string>RLE length when encoding a CL2 file</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

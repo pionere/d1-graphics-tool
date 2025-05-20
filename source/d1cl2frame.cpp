@@ -76,7 +76,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
     return celFrameWidth;
 }
 
-int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsParam &params)
+int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsParam &params, unsigned *rle_len)
 {
     unsigned width = 0;
     bool clipped = false;
@@ -130,10 +130,13 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
             }
         } else if (/*readByte >= 0x80 &&*/ readByte < 0xBF) {
             // RLE encoded palette index
+            unsigned len = 0xBF - readByte;
+            if (len < rle_len)
+                rle_len = len;
             // Go to the palette index offset
             o++;
 
-            for (int i = 0; i < (0xBF - readByte); i++) {
+            for (unsigned i = 0; i < len; i++) {
                 // Add opaque pixel
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
 

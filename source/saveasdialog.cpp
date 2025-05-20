@@ -47,6 +47,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     // reset fields
     this->ui->celClippedAutoRadioButton->setChecked(true);
     this->ui->celGroupEdit->setText("0");
+    this->ui->celRleLenEdit->setText("0");
 
     this->ui->celPatchedAutoRadioButton->setChecked(true);
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
@@ -200,8 +201,9 @@ void SaveAsDialog::on_saveButton_clicked()
     SaveAsParam params;
     // main cel file
     params.celFilePath = this->ui->outputCelFileEdit->text();
-    // celSettingsGroupBox: groupNum, clipped
+    // celSettingsGroupBox: groupNum, rle_len, clipped
     params.groupNum = this->ui->celGroupEdit->nonNegInt();
+    params.rle_len = this->ui->rleLenEdit->nonNegInt();
     if (this->ui->celClippedYesRadioButton->isChecked()) {
         params.clipped = SAVE_CLIPPED_TYPE::TRUE;
     } else if (this->ui->celClippedNoRadioButton->isChecked()) {

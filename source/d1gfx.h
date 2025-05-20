@@ -138,6 +138,7 @@ typedef enum gfx_file_index {
     GFX_PLR_RHTAT,   // graphics of rogue in heavy armor with staff attacking (RHTAT.CL2)
     GFX_PLR_RHUHT,   // graphics of rogue in heavy armor with shield getting hit (RHUHT.CL2)
     GFX_PLR_RHUQM,   // graphics of rogue in heavy armor with shield casting magic (RHUQM.CL2)
+    GFX_PLR_RLMAT,   // graphics of rogue in light armor with mace attacking (RLMAT.CL2)
     GFX_PLR_RMBFM,   // graphics of rogue in medium armor with bow casting fire (RMBFM.CL2)
     GFX_PLR_RMBLM,   // graphics of rogue in medium armor with bow casting lightning (RMBLM.CL2)
     GFX_PLR_RMBQM,   // graphics of rogue in medium armor with bow casting magic (RMBQM.CL2)
@@ -262,6 +263,8 @@ public:
     void setPatched(bool patched);
     bool isClipped() const;
     bool setClipped(bool clipped);
+    unsigned getRleLen() const;
+    bool setRleLen(unsigned rleLen);
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
     unsigned getFrameLen() const;
@@ -322,6 +325,7 @@ protected:
     std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
     // fields of cel/cl2-frames
+    unsigned rle_len = 0;
     bool clipped = false;
     // fields of tilesets
     bool patched = false;

@@ -275,6 +275,7 @@ CelView::CelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();
+    // this->on_cl2RleEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
     layout->setAlignment(this->audioBtn, Qt::AlignLeft);
@@ -293,6 +294,7 @@ CelView::CelView(QWidget *parent)
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
     QObject::connect(this->ui->assetMplEdit, SIGNAL(cancel_signal()), this, SLOT(on_assetMplEdit_escPressed()));
+    QObject::connect(this->ui->cl2RleEdit, SIGNAL(cancel_signal()), this, SLOT(on_cl2RleEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -427,6 +429,8 @@ void CelView::updateFields()
 
     // update clipped checkbox
     this->ui->celFramesClippedCheckBox->setChecked(this->gfx->isClipped());
+    // update the cl2 rle length field
+    this->ui->cl2RleEdit->setText(QString::number(this->gfx->getRleLen()));
 }
 
 CelScene *CelView::getCelScene() const
@@ -1321,6 +1325,22 @@ void CelView::on_celFramesClippedCheckBox_clicked()
 {
     this->gfx->setClipped(this->ui->celFramesClippedCheckBox->isChecked());
     this->updateFields();
+}
+
+void CelView::on_cl2RleEdit_returnPressed()
+{
+    unsigned rle = this->ui->cl2RleEdit->text().toUShort();
+    if (rle <= 2)
+        rle = 0;
+    this->setRleLen(rle);
+
+    this->on_cl2RleEdit_escPressed();
+}
+
+void CelView::on_cl2RleEdit_escPressed()
+{
+    this->updateFields();
+    this->ui->cl2RleEdit->clearFocus();
 }
 
 void CelView::on_zoomOutButton_clicked()
