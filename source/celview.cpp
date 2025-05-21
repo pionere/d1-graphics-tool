@@ -1330,8 +1330,6 @@ void CelView::on_celFramesClippedCheckBox_clicked()
 void CelView::on_cl2RleEdit_returnPressed()
 {
     unsigned rle = this->ui->cl2RleEdit->text().toUShort();
-    if (rle <= 2)
-        rle = 0;
     this->gfx->setRleLen(rle);
 
     this->on_cl2RleEdit_escPressed();

@@ -30,6 +30,7 @@ GfxsetView::GfxsetView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();
+    // this->on_cl2RleEdit_escPressed();
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
@@ -46,6 +47,7 @@ GfxsetView::GfxsetView(QWidget *parent)
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
     QObject::connect(this->ui->assetMplEdit, SIGNAL(cancel_signal()), this, SLOT(on_assetMplEdit_escPressed()));
+    QObject::connect(this->ui->cl2RleEdit, SIGNAL(cancel_signal()), this, SLOT(on_cl2RleEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -309,6 +311,8 @@ void GfxsetView::updateFields()
 
     // update clipped checkbox
     this->ui->celFramesClippedCheckBox->setChecked(this->gfx->isClipped());
+    // update the cl2 rle length field
+    this->ui->cl2RleEdit->setText(QString::number(this->gfx->getRleLen()));
 }
 
 CelScene *GfxsetView::getCelScene() const
@@ -1455,6 +1459,20 @@ void GfxsetView::on_celFramesClippedCheckBox_clicked()
 {
     this->gfx->setClipped(this->ui->celFramesClippedCheckBox->isChecked());
     this->updateFields();
+}
+
+void GfxsetView::on_cl2RleEdit_returnPressed()
+{
+    unsigned rle = this->ui->cl2RleEdit->text().toUShort();
+    this->gfx->setRleLen(rle);
+
+    this->on_cl2RleEdit_escPressed();
+}
+
+void GfxsetView::on_cl2RleEdit_escPressed()
+{
+    this->updateFields();
+    this->ui->cl2RleEdit->clearFocus();
 }
 
 void GfxsetView::on_zoomOutButton_clicked()
