@@ -112,7 +112,8 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 QString basePlrPath = basePath + baseName.mid(0, 3);
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
                     QString filePath = basePlrPath + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
-                    if (!QFileInfo::exists(filePath))
+                     QFileInfo qfi = QFileInfo(filePath);
+                    if (!qfi.exists())
                         continue;
                     QDir parent_dir = qfi.dir();
                     if (parent_dir.entryList().contains(filePath, Qt::CaseSensitive))
