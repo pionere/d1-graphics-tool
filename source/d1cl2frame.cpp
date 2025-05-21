@@ -141,8 +141,11 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
                 if (len < 3) {
                     dProgressErr() << QApplication::tr("short rle %1").arg(len);
                 } else {
-                    dProgress() << QApplication::tr("rle3: before %1 after %2").arg((pixelLine.empty() || pixelLine.back().isTransparent()) ? "t" : "c/r")
-                        .arg(o == rawData.size() ? "s" : (rawData[o] < 0x80 ? "t" : (rawData[o] < 0xBF ? "r" : "c")));
+                    QString before = (pixelLine.empty() || pixelLine.back().isTransparent()) ? "t" : "c/r";
+                    QString after = (o + 1) == rawData.size() ? "s" : (rawData[o + 1] < 0x80 ? "t" : (rawData[o + 1] < 0xBF ? "r" : "c"));
+                    if (before != "t" || (after != "s" && after != "t")) {
+                        dProgress() << QApplication::tr("rle3: before %1 after %2").arg(before).arg(after);
+                    }
                 }
             }
 
@@ -169,7 +172,7 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
                             dProgressErr() << QApplication::tr("long rle %1").arg(crle + 2);
                         } else {
                             dProgress() << QApplication::tr("non-rle3: before %1 after %2").arg(i == 0 ? ((pixelLine.empty() || pixelLine.back().isTransparent()) ? "t" : "c/r") : "c")
-                                .arg((i != (256 - readByte) - 1) ? (o == rawData.size() ? "s" : (rawData[o] < 0x80 ? "t" : (rawData[o] < 0xBF ? "r" : "c"))) : "c");
+                                .arg((i == (256 - readByte) - 1) ? ((o + 1) == rawData.size() ? "s" : (rawData[o + 1] < 0x80 ? "t" : (rawData[o + 1] < 0xBF ? "r" : "c"))) : "c");
                         }
                     }
                 } else {
