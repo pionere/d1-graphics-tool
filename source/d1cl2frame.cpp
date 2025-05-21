@@ -168,7 +168,7 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
                         if (i != (256 - readByte) - 1 && rawData[o + 1] == lastColor) {
                             dProgressErr() << QApplication::tr("long rle %1").arg(crle + 2);
                         } else {
-                            dProgress() << QApplication::tr("non-rle3: before %1 after %2").arg(i == 0 ? ((pixelLine.empty() || pixelLine.back().isTransparent()) ? : "t" : "c/r") : "c")
+                            dProgress() << QApplication::tr("non-rle3: before %1 after %2").arg(i == 0 ? ((pixelLine.empty() || pixelLine.back().isTransparent()) ? "t" : "c/r") : "c")
                                 .arg((i != (256 - readByte) - 1) ? (o == rawData.size() ? "s" : (rawData[o] < 0x80 ? "t" : (rawData[o] < 0xBF ? "r" : "c"))) : "c");
                         }
                     }
