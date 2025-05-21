@@ -137,6 +137,15 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
             // Go to the palette index offset
             o++;
 
+            if (len <= 3) {
+                if (len < 3) {
+                    dProgressErr() << QApplication::tr("short rle %1").arg(len);
+                } else {
+                    dProgress() << QApplication::tr("rle3: before %1 after %2").arg((pixelLine.empty() || pixelLine.back().isTransparent()) ? "t" : "c/r")
+                        .arg(o == rawData.size() ? "s" : (rawData[o] < 0x80 ? "t" : (rawData[o] < 0xBF ? "r" : "c")));
+                }
+            }
+
             for (unsigned i = 0; i < len; i++) {
                 // Add opaque pixel
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
@@ -148,9 +157,25 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
             }
         } else /*if (readByte >= 0xBF && readByte <= 0xFF)*/ {
             // Palette indices
+            unsigned crle = 0;
+            unsigned lastColor = 256;
             for (int i = 0; i < (256 - readByte); i++) {
                 // Go to the next palette index offset
                 o++;
+                if (lastColor == rawData[o]) {
+                    crle++;
+                    if (crle >= 2) {
+                        if (i != (256 - readByte) - 1 && rawData[o + 1] == lastColor) {
+                            dProgressErr() << QApplication::tr("long rle %1").arg(crle + 2);
+                        } else {
+                            dProgress() << QApplication::tr("non-rle3: before %1 after %2").arg(i == 0 ? ((pixelLine.empty() || pixelLine.back().isTransparent()) ? : "t" : "c/r") : "c")
+                                .arg((i != (256 - readByte) - 1) ? (o == rawData.size() ? "s" : (rawData[o] < 0x80 ? "t" : (rawData[o] < 0xBF ? "r" : "c"))) : "c");
+                        }
+                    }
+                } else {
+                    lastColor = rawData[o];
+                    crle = 0;
+                }
                 // Add opaque pixel
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
 
