@@ -477,9 +477,9 @@ static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxF
     }
 }
 
-static QString clippedtoStr(bool clipped)
+QString D1Gfx::clippedtoStr(bool clipped)
 {
-    return clipped ? QApplication::tr("clipped") : QApplication::tr("non-clipped");
+    return clipped ? QApplication::tr("clipped") : QApplication::tr("not clipped");
 }
 
 void D1Gfx::compareTo(const D1Gfx *gfx, QString &header) const
@@ -488,7 +488,7 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString &header) const
         reportDiff(QApplication::tr("type is %1 (was %2)").arg(celTypeToStr(this->type)).arg(celTypeToStr(gfx->type)), header);
     }
     if (gfx->clipped != this->clipped) {
-        reportDiff(QApplication::tr("%1 (was %2)").arg(clippedtoStr(this->clipped)).arg(clippedtoStr(gfx->clipped)), header);
+        reportDiff(QApplication::tr("%1 (was %2)").arg(D1Gfx::clippedtoStr(this->clipped)).arg(D1Gfx::clippedtoStr(gfx->clipped)), header);
     }
     size_t groupCount = gfx->groupFrameIndices.size();
     size_t myGroupCount = this->groupFrameIndices.size();

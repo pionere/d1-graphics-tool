@@ -140,14 +140,16 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // BUILDING {CL2 FRAMES}
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
-    unsigned rle_len = UINT_MAX;
+    unsigned rle_len_min = 0;
+    unsigned rle_len_max = UINT_MAX;
     for (const auto &offset : frameOffsets) {
         device->seek(offset.first);
         QByteArray cl2FrameRawData = device->read(offset.second - offset.first);
 
         D1GfxFrame *frame = new D1GfxFrame();
-        unsigned rle = UINT_MAX;
-        int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params, &rle);
+        unsigned rle_min = 0;
+        unsigned rle_max = UINT_MAX;
+        int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params, &rle_min, &rle_max);
         quint16 frameIndex = gfx.frames.size();
         if (res < 0) {
             if (res == -1)
@@ -160,16 +162,34 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 if (clipped == -1)
                     clipped = res;
                 else
-                    dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
+                    dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(D1Gfx::clippedtoStr(res != 0));
             }
-            if (rle < rle_len)
-                rle_len = rle;
+            if (rle_min > rle_len_min) {
+                if (rle_min <= rle_len_max) {
+                    rle_len_min = rle_min;
+                } else {
+                    dProgressErr() << QApplication::tr("Inconsistent rle-encoding (Frame %1 is %2..%3 while the preceeding frames are %4..%5).").arg(frameIndex + 1)
+                        .arg(rle_min).arg(rle_max).arg(rle_len_min).arg(rle_len_max);
+                }
+            }
+            if (rle_max < rle_len_max) {
+                if (rle_max >= rle_len_min) {
+                    rle_len_max = rle_max;
+                } else {
+                    dProgressErr() << QApplication::tr("Inconsistent rle-encoding (Frame %1 is %2..%3 while the preceeding frames are %4..%5).").arg(frameIndex + 1)
+                        .arg(rle_min).arg(rle_max).arg(rle_len_min).arg(rle_len_max);
+                }
+            }
         }
         gfx.frames.append(frame);
     }
     gfx.clipped = clipped != 0;
-    if (rle_len == UINT_MAX)
-        rle_len = 0;
+    unsigned rle_len = rle_len_min;
+    if (rle_len == 0) {
+        rle_len = rle_len_max;
+        if (rle_len == UINT_MAX)
+            rle_len = 0;
+    }
     gfx.rle_len = rle_len;
 
     gfx.gfxFilePath = filePath;
@@ -182,45 +202,56 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     return true;
 }
 
-static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, unsigned rle_len, bool clipped)
+static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, unsigned rle_len, bool clipped)
 {
     // convert one image to cl2-data
     quint8 *pHeader = pBuf;
     if (clipped) {
         // add CL2 FRAME HEADER
         *(quint16 *)&pBuf[0] = SwapLE16(subHeaderSize); // SUB_HEADER_SIZE
-        *(quint32 *)&pBuf[2] = 0;
-        *(quint32 *)&pBuf[6] = 0;
+        //*(quint32 *)&pBuf[2] = 0;
+        //*(quint32 *)&pBuf[6] = 0;
         pBuf += subHeaderSize;
     }
 
     quint8 *pHead = pBuf;
     quint8 col, lastCol;
     quint8 colMatches = 0;
-    bool alpha = false;
-    bool first = true;
+    int mode = 0; // -1;
+    // bool alpha = false;
+    // bool first = true;
     for (int i = 1; i <= frame->getHeight(); i++) {
         if (clipped && (i % CEL_BLOCK_HEIGHT) == 1 /*&& (i / CEL_BLOCK_HEIGHT) * 2 < SUB_HEADER_SIZE*/) {
             pHead = pBuf;
             *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
 
-            colMatches = 0;
-            alpha = false;
+            //colMatches = 0;
+            // alpha = false;
             // first = true;
+            // if (mode == 2)
+            mode = 0; // -1;
         }
-        first = true;
+        // first = true;
+        if (mode != 2) {
+            mode = 0; // -1;
+        }
+        colMatches = 0;
         for (int j = 0; j < frame->getWidth(); j++) {
             D1GfxPixel pixel = frame->getPixel(j, frame->getHeight() - i);
             if (!pixel.isTransparent()) {
                 // add opaque pixel
                 col = pixel.getPaletteIndex();
-                if (alpha || first || col != lastCol)
+                // if (alpha || first || col != lastCol)
+                if ((mode != 0 && mode != 1) || col != lastCol)
                     colMatches = 1;
                 else
                     colMatches++;
-                if (colMatches < rle_len || (char)*pHead <= -127) {
+                // if (colMatches < rle_len || (char)*pHead <= -127) {
+                if (colMatches < rle_len || (/*mode == 1 && */*pHead == 0x80u)) {
                     // bmp encoding
-                    if (alpha || (char)*pHead <= -65 || first) {
+                    // if (alpha || (char)*pHead <= -65 || first) {
+                    if (mode != 0 || *pHead == 0xBF) {
+                        mode = 0;
                         pHead = pBuf;
                         pBuf++;
                         colMatches = 1;
@@ -229,7 +260,9 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
                     pBuf++;
                 } else {
                     // RLE encoding
-                    if (colMatches == rle_len) {
+                    // if (colMatches == rle_len) {
+                    if (mode != 1) {
+                        mode = 1;
                         memset(pBuf - (rle_len - 1), 0, rle_len - 1);
                         *pHead += rle_len - 1;
                         if (*pHead != 0) {
@@ -244,17 +277,20 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
                 --*pHead;
 
                 lastCol = col;
-                alpha = false;
+                // alpha = false;
             } else {
                 // add transparent pixel
-                if (!alpha || (char)*pHead >= 127) {
+                // if (!alpha || (char)*pHead >= 127) {
+                // if (!alpha || *pHead >= 0x7Fu) {
+                if (mode != 2 || *pHead == 0x7Fu) {
+                    mode = 2;
                     pHead = pBuf;
                     pBuf++;
                 }
                 ++*pHead;
-                alpha = true;
+                // alpha = true;
             }
-            first = false;
+            // first = false;
         }
     }
     return pBuf;
@@ -299,6 +335,11 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     gfx.clipped = clipped;
     // update rle length
     unsigned rle_len = params.rle_len == 0 ? gfx.rle_len : params.rle_len;
+    if (rle_len == 0) {
+        rle_len = 3; // use 'default' rle
+    } else if (rle_len == 1) {
+        rle_len = UINT_MAX; // turn off rle
+    }
     gfx.rle_len = rle_len;
 
     // calculate sub header size

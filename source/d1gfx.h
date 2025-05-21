@@ -287,6 +287,7 @@ public:
 
     void patch(int gfxFileIndex, bool silent); // gfx_file_index
     static int getPatchFileIndex(QString &filePath);
+    static QString clippedtoStr(bool clipped);
 
 private:
     bool patchCathedralDoors(bool silent);

@@ -76,7 +76,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
     return celFrameWidth;
 }
 
-int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsParam &params, unsigned *rle_len)
+int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsParam &params, unsigned *rle_len_min, unsigned *rle_len_max)
 {
     unsigned width = 0;
     bool clipped = false;
@@ -111,15 +111,16 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
 
     std::vector<std::vector<D1GfxPixel>> pixels;
     std::vector<D1GfxPixel> pixelLine;
-    unsigned rle = UINT_MAX;
+    unsigned rle_min = 0;
+    unsigned rle_max = UINT_MAX;
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
         quint8 readByte = rawData[o];
 
         if (/*readByte >= 0x00 &&*/ readByte < 0x80) {
             // Transparent pixels
-            if (readByte == 0x00) {
+            /*if (readByte == 0x00) {
                 dProgressWarn() << QApplication::tr("Invalid CL2 frame data (0x00 found)");
-            }
+            }*/
             for (int i = 0; i < readByte; i++) {
                 // Add transparent pixel
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
@@ -132,22 +133,14 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
         } else if (/*readByte >= 0x80 &&*/ readByte < 0xBF) {
             // RLE encoded palette index
             unsigned len = 0xBF - readByte;
-            if (len < rle)
-                rle = len;
-            // Go to the palette index offset
-            o++;
-
-            if (len <= 3) {
+            if (len < rle_max) {
+                rle_max = len;
                 if (len < 3) {
-                    dProgressErr() << QApplication::tr("short rle %1").arg(len);
-                } else {
-                    QString before = (pixelLine.empty() || pixelLine.back().isTransparent()) ? "t" : "c/r";
-                    QString after = (o + 1) == rawData.size() ? "s" : (rawData[o + 1] < 0x80 ? "t" : (rawData[o + 1] < 0xBF ? "r" : "c"));
-                    if (before != "t" || (after != "s" && after != "t")) {
-                        dProgress() << QApplication::tr("rle3: before %1 after %2").arg(before).arg(after);
-                    }
+                    dProgressWarn() << QApplication::tr("FIXME Short rle-encoding (%1).").arg(len);
                 }
             }
+            // Go to the palette index offset
+            o++;
 
             for (unsigned i = 0; i < len; i++) {
                 // Add opaque pixel
@@ -160,24 +153,19 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
             }
         } else /*if (readByte >= 0xBF && readByte <= 0xFF)*/ {
             // Palette indices
-            unsigned crle = 0;
+            unsigned nrle = 0;
             unsigned lastColor = 256;
             for (int i = 0; i < (256 - readByte); i++) {
                 // Go to the next palette index offset
                 o++;
                 if (lastColor == rawData[o]) {
-                    crle++;
-                    if (crle >= 2) {
-                        if (i != (256 - readByte) - 1 && rawData[o + 1] == lastColor) {
-                            dProgressErr() << QApplication::tr("long rle %1").arg(crle + 2);
-                        } else {
-                            dProgress() << QApplication::tr("non-rle3: before %1 after %2").arg(i == 0 ? ((pixelLine.empty() || pixelLine.back().isTransparent()) ? "t" : "c/r") : "c")
-                                .arg((i == (256 - readByte) - 1) ? ((o + 1) == rawData.size() ? "s" : (rawData[o + 1] < 0x80 ? "t" : (rawData[o + 1] < 0xBF ? "r" : "c"))) : "c");
-                        }
+                    nrle++;
+                    if (nrle > rle_min) {
+                        rle_min = nrle;
                     }
                 } else {
                     lastColor = rawData[o];
-                    crle = 0;
+                    nrle = 2;
                 }
                 // Add opaque pixel
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
@@ -193,7 +181,7 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
         if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
             OpenAsParam oParams = params;
             oParams.clipped = clipped ? OPEN_CLIPPED_TYPE::FALSE : OPEN_CLIPPED_TYPE::TRUE;
-            return D1Cl2Frame::load(frame, rawData, oParams, rle_len);
+            return D1Cl2Frame::load(frame, rawData, oParams, rle_len_min, rle_len_max);
         }
 
         return -2;
@@ -204,6 +192,11 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
     }
     frame.height = frame.pixels.size();
 
-    *rle_len = rle;
+    if (rle_min <= rle_max) {
+        *rle_len_min = rle_min;
+        *rle_len_max = rle_max;
+    } else {
+        dProgressWarn() << QApplication::tr("Inconsistent rle-encoding (%1..%2).").arg(rle_min).arg(rle_max);
+    }
     return clipped ? 1 : 0;
 }
