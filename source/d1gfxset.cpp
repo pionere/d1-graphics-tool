@@ -335,7 +335,7 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent, bool patchData) con
                 }
             } else {*/
                 // compare N1 to N2
-                QSet<D1Gfx *> checked;
+                QSet<const D1Gfx *> checked;
                 for (int i = 0; i < this->gfxList.count(); i++) {
                     const D1Gfx *gfxA = this->gfxList[i];
                     QString nameA = getGfxName(gfxA);

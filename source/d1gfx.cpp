@@ -463,7 +463,7 @@ static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxF
             D1GfxPixel pixelB = frameB->getPixel(x, y);
             if (pixelA == pixelB) continue;
             if (patchData) {
-                reportDiff(QString(" { %1, %2, %3, %4 }, ").arg(i + 1).arg(x).arg(y).arg(x).arg(pixelA.isTransparent() ? 256 : pixelA.getPaletteIndex()));
+                reportDiff(QString(" { %1, %2, %3, %4 }, ").arg(i + 1).arg(x).arg(y).arg(x).arg(pixelA.isTransparent() ? 256 : pixelA.getPaletteIndex()), header);
             } else {
                 if (firstInFrame) {
                     firstInFrame = false;
