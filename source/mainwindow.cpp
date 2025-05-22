@@ -2201,10 +2201,10 @@ void MainWindow::on_actionDiff_triggered()
         case FILE_CONTENT::EMPTY: dProgressErr() << tr("File is empty."); break;
         case FILE_CONTENT::CEL:
         case FILE_CONTENT::CL2: this->gfx->compareTo(fileContent.gfx, header, patchData); break;
-        case FILE_CONTENT::PCX: D1Pcx::compare(*this->gfx, this->pal, &fileContent); break;
+        case FILE_CONTENT::PCX: D1Pcx::compare(*this->gfx, this->pal, &fileContent, patchData); break;
         case FILE_CONTENT::TBL: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::TBL)); break;
         case FILE_CONTENT::CPP: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::CPP)); break;
-        case FILE_CONTENT::SMK: D1Smk::compare(*this->gfx, this->pals, &fileContent); break;
+        case FILE_CONTENT::SMK: D1Smk::compare(*this->gfx, this->pals, &fileContent, patchData); break;
         case FILE_CONTENT::DUN: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::DUN)); break;
         default: dProgressErr() << tr("Not supported."); break;
         }
@@ -2257,7 +2257,7 @@ void MainWindow::on_actionDiff_triggered()
             cls.setPalette(this->trnBase->getResultingPalette());
             if (D1Cel::load(cls, params.celFilePath, params)) { // tileset.loadCls
                 QString header;
-                this->tileset->cls->compareTo(&cls, header);
+                this->tileset->cls->compareTo(&cls, header, patchData);
             } else {
                 dProgressFail() << tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(params.celFilePath));
             }

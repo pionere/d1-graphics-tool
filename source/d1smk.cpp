@@ -1561,10 +1561,10 @@ static void reportDiff(const QString text, QString &header)
     }
     dProgress() << text;
 }
-void D1Smk::compare(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent)
+void D1Smk::compare(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const LoadFileContent *fileContent, bool patchData)
 {
     QString header = QApplication::tr("Content:");
-    gfx.compareTo(fileContent->gfx, header);
+    gfx.compareTo(fileContent->gfx, header, patchData);
     {
         header = QApplication::tr("Palettes:");
         const QMap<QString, D1Pal *> *palsB = &fileContent->pals;
