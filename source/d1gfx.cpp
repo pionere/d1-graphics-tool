@@ -2218,6 +2218,15 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
             int nn = n;
             switch (gfxFileIndex) {
             case GFX_PLR_RLMAT:
+                for (int i = 0; i < lengthof(deltaRLMAT); i++) {
+                    if (deltaRLMAT[i].dfFrameNum == nn + 1) {
+                        if (deltaRLMAT[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRLMAT[i].dfx, deltaRLMAT[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRLMAT[i].dfx, deltaRLMAT[i].dfy, D1GfxPixel::colorPixel(deltaRLMAT[i].color));
+                    }
+                }
+                break;
                 switch (nn + 1) {
                 case 1:
                     change |= currFrame->setPixel(73, 81, D1GfxPixel::transparentPixel());
@@ -14102,6 +14111,15 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
                 }
                 break;
             case GFX_PLR_RMBFM:
+                for (int i = 0; i < lengthof(deltaRMBFM); i++) {
+                    if (deltaRMBFM[i].dfFrameNum == nn + 1) {
+                        if (deltaRMBFM[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMBFM[i].dfx, deltaRMBFM[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMBFM[i].dfx, deltaRMBFM[i].dfy, D1GfxPixel::colorPixel(deltaRMBFM[i].color));
+                    }
+                }
+                break;
                 switch (nn + 1) {
                 case 2:
                     change |= currFrame->setPixel(36, 52, D1GfxPixel::transparentPixel());
@@ -15443,6 +15461,15 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
                 }
                 break;
             case GFX_PLR_RMBLM:
+                for (int i = 0; i < lengthof(deltaRMBLM); i++) {
+                    if (deltaRMBLM[i].dfFrameNum == nn + 1) {
+                        if (deltaRMBLM[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMBLM[i].dfx, deltaRMBLM[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMBLM[i].dfx, deltaRMBLM[i].dfy, D1GfxPixel::colorPixel(deltaRMBLM[i].color));
+                    }
+                }
+                break;
                 switch (nn + 1) {
                 case 2:
                     change |= currFrame->setPixel(36, 52, D1GfxPixel::transparentPixel());
@@ -18139,6 +18166,15 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
                 }
                 break;
             case GFX_PLR_RMBQM:
+                for (int i = 0; i < lengthof(deltaRMBQM); i++) {
+                    if (deltaRMBQM[i].dfFrameNum == nn + 1) {
+                        if (deltaRMBQM[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMBQM[i].dfx, deltaRMBQM[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMBQM[i].dfx, deltaRMBQM[i].dfy, D1GfxPixel::colorPixel(deltaRMBQM[i].color));
+                    }
+                }
+                break;
                 switch (nn + 1) {
                 case 2:
                     change |= currFrame->setPixel(38, 51, D1GfxPixel::transparentPixel());
