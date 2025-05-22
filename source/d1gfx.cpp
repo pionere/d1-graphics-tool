@@ -451,7 +451,7 @@ static int getFrameDiff(const D1GfxFrame *frameA, const D1GfxFrame *frameB)
     return result;
 }
 
-static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxFrame *frameB, QString header)
+static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxFrame *frameB, QString &header, bool patchData)
 {
     int width = frameA->getWidth();
     int height = frameA->getHeight();
@@ -461,7 +461,10 @@ static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxF
         for (int x = 0; x < width; x++) {
             D1GfxPixel pixelA = frameA->getPixel(x, y);
             D1GfxPixel pixelB = frameB->getPixel(x, y);
-            if (pixelA != pixelB) {
+            if (pixelA == pixelB) continue;
+            if (patchData) {
+                reportDiff(QString(" { %1, %2, %3, %4 }, ").arg(i + 1).arg(x).arg(y).arg(x).arg(pixelA.isTransparent() ? 256 : pixelA.getPaletteIndex()));
+            } else {
                 if (firstInFrame) {
                     firstInFrame = false;
                     if (i == j)
@@ -482,7 +485,7 @@ QString D1Gfx::clippedtoStr(bool clipped)
     return clipped ? QApplication::tr("clipped") : QApplication::tr("not clipped");
 }
 
-void D1Gfx::compareTo(const D1Gfx *gfx, QString &header) const
+void D1Gfx::compareTo(const D1Gfx *gfx, QString &header, bool patchData) const
 {
     if (gfx->type != this->type) {
         reportDiff(QApplication::tr("type is %1 (was %2)").arg(celTypeToStr(this->type)).arg(celTypeToStr(gfx->type)), header);
@@ -516,7 +519,7 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString &header) const
             int diff = getFrameDiff(frameA, frameB);
             if (diff == 0) continue;
             if (diff != INT_MAX) {
-                reportFrameDiff(i, i, frameA, frameB, header);
+                reportFrameDiff(i, i, frameA, frameB, header, patchData);
             } else {
                 reportDiff(QApplication::tr("frame %1 is %2x%3 pixel (was %4x%5)").arg(i + 1)
                     .arg(frameA->getWidth()).arg(frameA->getHeight())
@@ -591,7 +594,7 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString &header) const
                     .arg(frameA->getWidth()).arg(frameA->getHeight())
                     .arg(frameB->getWidth()).arg(frameB->getHeight()), header);
             } else {
-                reportFrameDiff(i, j, frameA, frameB, header);
+                reportFrameDiff(i, j, frameA, frameB, header, patchData);
             }
             i++;
             j++;

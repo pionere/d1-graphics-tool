@@ -2111,6 +2111,9 @@ bool MainWindow::loadFileContent(OpenAsParam& params, LoadFileContent &fileConte
 
 void MainWindow::on_actionDiff_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool patchData = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+
     QString filter;
 
     QString title = tr("Select Graphics");
@@ -2184,8 +2187,8 @@ void MainWindow::on_actionDiff_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Comparing..."), 0, PAF_OPEN_DIALOG);
 
     if (main) {
-    if (this->gfxset != nullptr) {
-        this->gfxset->compareTo(&fileContent);
+    if (this->gfxset != nullptr && !gfxOnly) {
+        this->gfxset->compareTo(&fileContent, patchData);
     } else if (this->dun != nullptr && fileContent.fileType == FILE_CONTENT::DUN) {
         this->dun->compareTo(&fileContent);
     //} else if (this->tableset != nullptr) {
@@ -2197,7 +2200,7 @@ void MainWindow::on_actionDiff_triggered()
         switch (fileContent.fileType) {
         case FILE_CONTENT::EMPTY: dProgressErr() << tr("File is empty."); break;
         case FILE_CONTENT::CEL:
-        case FILE_CONTENT::CL2: this->gfx->compareTo(fileContent.gfx, header); break;
+        case FILE_CONTENT::CL2: this->gfx->compareTo(fileContent.gfx, header, patchData); break;
         case FILE_CONTENT::PCX: D1Pcx::compare(*this->gfx, this->pal, &fileContent); break;
         case FILE_CONTENT::TBL: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::TBL)); break;
         case FILE_CONTENT::CPP: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::CPP)); break;

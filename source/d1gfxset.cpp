@@ -115,8 +115,8 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                      QFileInfo qfi = QFileInfo(filePath);
                     if (!qfi.exists())
                         continue;
-                    QDir parent_dir = qfi.dir();
-                    if (parent_dir.entryList().contains(filePath, Qt::CaseSensitive))
+                    QDir folder = qfi.dir();
+                    if (folder.entryList().contains(filePath, Qt::CaseSensitive))
                         fileMatchesPlr++;
                     fileInMatchesPlr++;
                 }
@@ -131,8 +131,8 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     QFileInfo qfi = QFileInfo(filePath);
                     if (!qfi.exists())
                         continue;
-                    QDir parent_dir = qfi.dir();
-                    if (parent_dir.entryList().contains(filePath, Qt::CaseSensitive))
+                    QDir folder = qfi.dir();
+                    if (folder.entryList().contains(filePath, Qt::CaseSensitive))
                         fileMatchesMon++;
                     fileInMatchesMon++;
                 }
@@ -194,10 +194,6 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 if (!D1Cl2::load(*gfx, filePath, params) || this->baseGfx->getType() != gfx->getType()) {
                     gfx->setType(this->baseGfx->getType());
                     gfx->setFilePath(filePath);
-                    // treat empty files as non-modified
-                    if (gfx->getFrameCount() == 0) {
-                        gfx->setModified(false);
-                    }
                 }
             } else {
                 gfx = this->baseGfx;
@@ -281,21 +277,35 @@ static QString getGfxName(const D1Gfx* gfx)
     return qfi.completeBaseName();
 }
 
-void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
+void D1Gfxset::compareTo(const LoadFileContent *fileContent, bool patchData) const
 {
     if (fileContent->gfxset != nullptr) {
         if (this->gfxList.count() == fileContent->gfxset->gfxList.count()) {
             // compare N to N
             for (int i = 0; i < this->gfxList.count(); i++) {
-                QString name0 = getGfxName(this->gfxList[i]);
-                QString name1 = getGfxName(fileContent->gfxset->gfxList[i]);
+                const D1Gfx *gfxA = this->gfxList[i];
+                const D1Gfx *gfxB = fileContent->gfxset->gfxList[i];
+                QString nameA = getGfxName(gfxA);
+                QString nameB = getGfxName(gfxB);
                 QString header;
-                if (name0 == name1) {
-                    header = QApplication::tr("Gfx %1 (%2):").arg(name0).arg(i + 1);
-                } else {
-                    header = QApplication::tr("Gfx %1 vs. %2 (%3):").arg(name0).arg(name1).arg(i + 1);
+                // treat empty/modified graphics as missing/deleted
+                if (gfxB->getFrameCount() == 0 && gfxB->isModified()) {
+                    if (gfxA->getFrameCount() == 0 && gfxA->isModified()) {
+                        continue;
+                    }
+                    dProgress() << QApplication::tr("Added gfx %1.").arg(nameA);
+                    continue;
+                } else if (gfxA->getFrameCount() == 0 && gfxA->isModified()) {
+                    dProgress() << QApplication::tr("Deleted gfx %1.").arg(nameB);
+                    continue;
                 }
-                this->gfxList[i]->compareTo(fileContent->gfxset->gfxList[i], header);
+                // compare non-empty graphics
+                if (nameA == nameB) {
+                    header = QApplication::tr("Gfx %1 (%2):").arg(nameA).arg(i + 1);
+                } else {
+                    header = QApplication::tr("Gfx %1 vs. %2 (%3):").arg(nameA).arg(nameB).arg(i + 1);
+                }
+                this->gfxList[i]->compareTo(fileContent->gfxset->gfxList[i], header, patchData);
                 if (header.isEmpty())
                     dProgress() << "\n";
             }
@@ -303,13 +313,13 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
             /*if (this->gfxList.count() == 1) {
                 // compare 1 to N
                 for (int i = 0; i < fileContent->gfxset->gfxList.count(); i++) {
-                    QString name0 = getGfxName(this->gfxList[0]);
-                    QString name1 = getGfxName(fileContent->gfxset->gfxList[i]);
+                    QString nameA = getGfxName(this->gfxList[0]);
+                    QString nameB = getGfxName(fileContent->gfxset->gfxList[i]);
                     QString header;
-                    if (name0 == name1) {
-                        header = QApplication::tr("Gfx %1 (%2):").arg(name0).arg(i + 1);
+                    if (nameA == nameB) {
+                        header = QApplication::tr("Gfx %1 (%2):").arg(nameA).arg(i + 1);
                     } else {
-                        header = QApplication::tr("Gfx %1 vs. %2 (%3):").arg(name0).arg(name1).arg(i + 1);
+                        header = QApplication::tr("Gfx %1 vs. %2 (%3):").arg(nameA).arg(nameB).arg(i + 1);
                     }
                     this->gfxList[0]->compareTo(fileContent->gfxset->gfxList[i], header);
                     if (header.isEmpty())
@@ -327,56 +337,71 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
                 // compare N1 to N2
                 QSet<D1Gfx *> checked;
                 for (int i = 0; i < this->gfxList.count(); i++) {
-                    QString name0 = getGfxName(this->gfxList[i]);
+                    const D1Gfx *gfxA = this->gfxList[i];
+                    QString nameA = getGfxName(gfxA);
                     int n = 0;
                     for ( ; n < fileContent->gfxset->gfxList.count(); n++) {
-                        D1Gfx *gfx = fileContent->gfxset->gfxList[n];
-                        if (checked.contains(gfx))
+                        const D1Gfx *gfxB = fileContent->gfxset->gfxList[n];
+                        if (checked.contains(gfxB))
                             continue;
-                        QString name1 = getGfxName(gfx);
-                        if (name1.toLower() == name0.toLower()) {
+                        QString nameB = getGfxName(gfxB);
+                        if (nameB.toLower() == nameA.toLower()) {
                             QString header;
-                            if (name0 == name1) {
+                            checked.insert(gfxB);
+                            // treat empty/modified graphics as missing/deleted
+                            if (gfxB->getFrameCount() == 0 && gfxB->isModified()) {
+                                if (gfxA->getFrameCount() == 0 && gfxA->isModified()) {
+                                    break;
+                                }
+                                dProgress() << QApplication::tr("Added gfx %1.").arg(nameA);
+                                break;
+                            } else if (gfxA->getFrameCount() == 0 && gfxA->isModified()) {
+                                dProgress() << QApplication::tr("Deleted gfx %1.").arg(nameB);
+                                break;
+                            }
+                            // compare non-empty graphics
+                            if (nameA == nameB) {
                                 if (i == n) {
-                                    header = QApplication::tr("Gfx %1 (%2 vs %3):").arg(name0).arg(i + 1).arg(n + 1);
+                                    header = QApplication::tr("Gfx %1 (%2 vs %3):").arg(nameA).arg(i + 1).arg(n + 1);
                                 } else {
-                                    header = QApplication::tr("Gfx %1 (%2):").arg(name0).arg(i + 1);
+                                    header = QApplication::tr("Gfx %1 (%2):").arg(nameA).arg(i + 1);
                                 }
                             } else {
                                 if (i == n) {
-                                    header = QApplication::tr("Gfx %1 vs %2 (%3):").arg(name0).arg(name1).arg(i + 1);
+                                    header = QApplication::tr("Gfx %1 vs %2 (%3):").arg(nameA).arg(nameB).arg(i + 1);
                                 } else {
-                                    header = QApplication::tr("Gfx %1 (%2) vs %3 (%4):").arg(name0).arg(i + 1).arg(name1).arg(n + 1);
+                                    header = QApplication::tr("Gfx %1 (%2) vs %3 (%4):").arg(nameA).arg(i + 1).arg(nameB).arg(n + 1);
                                 }
                             }
-                            this->gfxList[i]->compareTo(gfx, header);
+                            gfxA->compareTo(gfxB, header, patchData);
                             if (header.isEmpty())
                                 dProgress() << "\n";
-                            checked.insert(gfx);
                             break;
                         }
                     }
                     if (n >= fileContent->gfxset->gfxList.count()) {
-                        dProgress() << QApplication::tr("Added gfx %1.").arg(name0);
+                        dProgress() << QApplication::tr("Added gfx %1.").arg(nameA);
                     }
                 }
 
                 for (int n = 0; n < fileContent->gfxset->gfxList.count(); n++) {
-                    D1Gfx *gfx = fileContent->gfxset->gfxList[n];
-                    if (checked.contains(gfx))
+                    D1Gfx *gfxB = fileContent->gfxset->gfxList[n];
+                    if (checked.contains(gfxB))
                         continue;
 
-                    QString name1 = getGfxName(fileContent->gfxset->gfxList[n]);
-                    dProgress() << QApplication::tr("Deleted gfx %1.").arg(name1);
+                    QString nameB = getGfxName(gfxB);
+                    dProgress() << QApplication::tr("Deleted gfx %1.").arg(nameB);
                 }
             // }
         }
     } else if (fileContent->gfx != nullptr) {
         // compare N to 1
+        const D1Gfx *gfxB = fileContent->gfx;
         for (int i = 0; i < this->gfxList.count(); i++) {
-            QString name0 = getGfxName(this->gfxList[i]);
-            QString header = QApplication::tr("Gfx %1 (%2):").arg(name0).arg(i + 1);
-            this->gfxList[i]->compareTo(fileContent->gfx, header);
+            const D1Gfx *gfxA = this->gfxList[i];
+            QString nameA = getGfxName(gfxA);
+            QString header = QApplication::tr("Gfx %1 (%2):").arg(nameA).arg(i + 1);
+            gfxA->compareTo(gfxB, header, patchData);
             if (header.isEmpty())
                 dProgress() << "\n";
         }
