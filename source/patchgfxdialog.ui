@@ -97,6 +97,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Rogue in medium armor with mace and shield attacking (RMHAT.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Rogue in medium armor with mace attacking (RMMAT.CL2)</string>
         </property>
        </item>

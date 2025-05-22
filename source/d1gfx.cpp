@@ -12,6 +12,7 @@
 #include "remapdialog.h"
 
 #include "dungeon/enums.h"
+#include "dungeon/patchdat.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
 {
@@ -463,7 +464,7 @@ static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxF
             D1GfxPixel pixelB = frameB->getPixel(x, y);
             if (pixelA == pixelB) continue;
             if (patchData) {
-                reportDiff(QString(" { %1, %2, %3, %4 }, ").arg(i + 1).arg(x).arg(y).arg(pixelA.isTransparent() ? 256 : pixelA.getPaletteIndex()), header);
+                reportDiff(QString("{ %1, %2, %3, %4 },").arg(i + 1, 3).arg(x, 3).arg(y, 3).arg(pixelA.isTransparent() ? 256 : pixelA.getPaletteIndex(), 3), header);
             } else {
                 if (firstInFrame) {
                     firstInFrame = false;
@@ -2178,9 +2179,11 @@ bool D1Gfx::patchPlrFrames(int gfxFileIndex, bool silent)
 
 bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
 {
+    constexpr BYTE TRANS_COLOR = 1;
     int frameCount = 0, width = 0, height = 0;
     switch (gfxFileIndex) {
     case GFX_PLR_RLMAT: frameCount = 18; width = 128; height = 128; break;
+    case GFX_PLR_RMHAT: frameCount = 18; width = 128; height = 128; break;
     case GFX_PLR_RMMAT: frameCount = 18; width = 128; height = 128; break;
     case GFX_PLR_RMBFM: frameCount = 16; width = 96; height = 96; break;
     case GFX_PLR_RMBLM: frameCount = 16; width = 96; height = 96; break;
@@ -8532,7 +8535,26 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
                     break;
                 }
                 break;
+            case GFX_PLR_RMHAT:
+                for (int i = 0; i < lengthof(deltaRMHAT); i++) {
+                    if (deltaRMHAT[i].dfFrameNum == nn + 1) {
+                        if (deltaRMHAT[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMHAT[i].dfx, deltaRMHAT[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMHAT[i].dfx, deltaRMHAT[i].dfy, D1GfxPixel::colorPixel(deltaRMHAT[i].color));
+                    }
+                }
+                break;
             case GFX_PLR_RMMAT:
+                for (int i = 0; i < lengthof(deltaRMMAT); i++) {
+                    if (deltaRMMAT[i].dfFrameNum == nn + 1) {
+                        if (deltaRMMAT[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMMAT[i].dfx, deltaRMMAT[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMMAT[i].dfx, deltaRMMAT[i].dfy, D1GfxPixel::colorPixel(deltaRMMAT[i].color));
+                    }
+                }
+                break;
                 switch (nn + 1) {
                 case 1:
                     change |= currFrame->setPixel(74, 81, D1GfxPixel::transparentPixel());
@@ -25748,6 +25770,7 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
         change = this->patchPlrFrames(gfxFileIndex, silent);
         break;
     case GFX_PLR_RLMAT:
+    case GFX_PLR_RMHAT:
     case GFX_PLR_RMMAT:
     case GFX_PLR_RMBFM:
     case GFX_PLR_RMBLM:
@@ -25969,6 +25992,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "rlmat") {
         fileIndex = GFX_PLR_RLMAT;
+    }
+    if (baseName == "rmhat") {
+        fileIndex = GFX_PLR_RMHAT;
     }
     if (baseName == "rmmat") {
         fileIndex = GFX_PLR_RMMAT;
