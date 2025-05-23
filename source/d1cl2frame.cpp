@@ -134,9 +134,6 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
             unsigned len = 0xBF - readByte;
             if (len < rle_max) {
                 rle_max = len;
-                if (len < 3) {
-                    dProgressWarn() << QApplication::tr("FIXME Short rle-encoding (%1).").arg(len);
-                }
             }
             // Go to the palette index offset
             o++;
@@ -146,6 +143,9 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
+                    if (i != len - 1) {
+                        dProgressWarn() << QApplication::tr("Frame encoding is not supported by the game (line-break in the middle of RLE-encoded pixels).");
+                    }
                     pixels.push_back(std::move(pixelLine));
                     pixelLine.clear();
                 }
@@ -154,7 +154,8 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
             // Palette indices
             unsigned nrle = 0;
             unsigned lastColor = 256;
-            for (int i = 0; i < (256 - readByte); i++) {
+            unsigned len = (256 - readByte);
+            for (int i = 0; i < len; i++) {
                 // Go to the next palette index offset
                 o++;
                 if (lastColor == rawData[o]) {
@@ -170,6 +171,9 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
+                    if (i != len - 1) {
+                        dProgressWarn() << QApplication::tr("Frame encoding is not supported by the game (line-break in the middle of BMP-encoded pixels).");
+                    }
                     pixels.push_back(std::move(pixelLine));
                     pixelLine.clear();
                 }

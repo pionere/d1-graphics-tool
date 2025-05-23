@@ -245,7 +245,11 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
     quint8 *pLastHead = nullptr;
     for (int i = 1; i <= frame->getHeight(); i++) {
         if (clipped && (i % CEL_BLOCK_HEIGHT) == 1 /*&& (i / CEL_BLOCK_HEIGHT) * 2 < SUB_HEADER_SIZE*/) {
-            pushHead(&pPrevHead, &pLastHead, /*first ? nullptr :*/ pHead);
+            pushHead(&pPrevHead, &pLastHead, pHead);
+            //if (first) {
+                pLastHead = nullptr;
+            //}
+
             pHead = pBuf;
             *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
 
@@ -254,7 +258,6 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
             // first = true;
             // if (mode == 2)
             //mode = -1;
-            pLastHead = nullptr;
         }
         first = true;
         //if (mode != 2) {
@@ -277,7 +280,10 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
                     if (/*alpha ||*/ *pHead <= 0xBFu || first) {
                     //if (mode != 0 || *pHead == 0xBF) {
                     //    mode = 0;
-                        pushHead(&pPrevHead, &pLastHead, /*first ? nullptr :*/ pHead);
+                        pushHead(&pPrevHead, &pLastHead, pHead);
+                        if (first) {
+                            pLastHead = nullptr;
+                        }
                         pHead = pBuf;
                         pBuf++;
                         colMatches = 1;
@@ -292,7 +298,10 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
                         memset(pBuf - (RLE_LEN - 1), 0, RLE_LEN - 1);
                         *pHead += RLE_LEN - 1;
                         if (*pHead != 0) {
-                            pushHead(&pPrevHead, &pLastHead, /*first ? nullptr : */pHead);
+                            pushHead(&pPrevHead, &pLastHead, pHead);
+                            //if (first) {
+                            //    pLastHead = nullptr;
+                            //}
                             pHead = pBuf - (RLE_LEN - 1);
                         }
                         *pHead = 0xBFu - (RLE_LEN - 1);
@@ -310,7 +319,10 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
                 if (!alpha || *pHead == 0x7Fu) {
                 // if (mode != 2 || *pHead == 0x7Fu) {
                 //    mode = 2;
-                    pushHead(&pPrevHead, &pLastHead, /*first ? nullptr :*/ pHead);
+                    pushHead(&pPrevHead, &pLastHead, pHead);
+                    //if (first) {
+                    //    pLastHead = nullptr;
+                    //}
                     pHead = pBuf;
                     pBuf++;
                 }
