@@ -205,7 +205,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 static void pushHead(quint8 **prevHead, quint8 **lastHead, quint8 *head)
 {
     if (*lastHead != nullptr && *prevHead != nullptr && head != nullptr) {
-        if (**prevHead == 0xBF - 3 && *head >= 0xBF && **prevHead >= 0xBF) {
+        if (**lastHead == 0xBF - 3 && *head >= 0xBF && **prevHead >= 0xBF) {
             unsigned len = 3 + (256 - *head) + (256 - **prevHead);
             if (len <= (256 - 0xBF)) {
                 **prevHead = 256 - len;
