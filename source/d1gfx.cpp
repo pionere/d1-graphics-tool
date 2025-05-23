@@ -1140,20 +1140,6 @@ bool D1Gfx::setClipped(bool clipped)
     return true;
 }
 
-unsigned D1Gfx::getRleLen() const
-{
-    return this->rle_len;
-}
-
-bool D1Gfx::setRleLen(unsigned rleLen)
-{
-    if (this->rle_len == rleLen)
-        return false;
-    this->rle_len = rleLen;
-    this->modified = true;
-    return true;
-}
-
 bool D1Gfx::isUpscaled() const
 {
     return this->upscaled;

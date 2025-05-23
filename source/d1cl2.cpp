@@ -140,16 +140,12 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // BUILDING {CL2 FRAMES}
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
-    unsigned rle_len_min = 0;
-    unsigned rle_len_max = UINT_MAX;
     for (const auto &offset : frameOffsets) {
         device->seek(offset.first);
         QByteArray cl2FrameRawData = device->read(offset.second - offset.first);
 
         D1GfxFrame *frame = new D1GfxFrame();
-        unsigned rle_min = 0;
-        unsigned rle_max = UINT_MAX;
-        int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params, &rle_min, &rle_max);
+        int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params);
         quint16 frameIndex = gfx.frames.size();
         if (res < 0) {
             if (res == -1)
@@ -157,40 +153,15 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             else
                 dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
             // invalidFrames.push(frameIndex);
-        } else {
-            if (clipped != res) {
-                if (clipped == -1)
-                    clipped = res;
-                else
-                    dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(D1Gfx::clippedtoStr(res != 0));
-            }
-            if (rle_min > rle_len_min) {
-                if (rle_min <= rle_len_max) {
-                    rle_len_min = rle_min;
-                } else {
-                    dProgressErr() << QApplication::tr("Inconsistent rle-encoding (Frame %1 is %2..%3 while the preceeding frames are %4..%5).").arg(frameIndex + 1)
-                        .arg(rle_min).arg(rle_max).arg(rle_len_min).arg(rle_len_max);
-                }
-            }
-            if (rle_max < rle_len_max) {
-                if (rle_max >= rle_len_min) {
-                    rle_len_max = rle_max;
-                } else {
-                    dProgressErr() << QApplication::tr("Inconsistent rle-encoding (Frame %1 is %2..%3 while the preceeding frames are %4..%5).").arg(frameIndex + 1)
-                        .arg(rle_min).arg(rle_max).arg(rle_len_min).arg(rle_len_max);
-                }
-            }
+        } else if (clipped != res) {
+            if (clipped == -1)
+                clipped = res;
+            else
+                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(D1Gfx::clippedtoStr(res != 0));
         }
         gfx.frames.append(frame);
     }
     gfx.clipped = clipped != 0;
-    unsigned rle_len = rle_len_min;
-    if (rle_len == 0) {
-        rle_len = rle_len_max;
-        if (rle_len == UINT_MAX)
-            rle_len = 0;
-    }
-    gfx.rle_len = rle_len;
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
@@ -223,8 +194,10 @@ static void pushHead(quint8 **prevHead, quint8 **lastHead, quint8 *head)
     *lastHead = head;
 }
 
-static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, unsigned RLE_LEN, bool clipped)
+static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, bool clipped)
 {
+    const int RLE_LEN = 3; // number of matching colors to switch from bmp encoding to RLE
+
     // convert one image to cl2-data
     quint8 *pHeader = pBuf;
     if (clipped) {
@@ -373,14 +346,6 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // update clipped info
     bool clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && gfx.clipped);
     gfx.clipped = clipped;
-    // update rle length
-    unsigned rle_len = params.rle_len == 0 ? gfx.rle_len : params.rle_len;
-    if (rle_len == 0) {
-        rle_len = 3; // use 'default' rle
-    } else if (rle_len == 1) {
-        rle_len = UINT_MAX; // turn off rle
-    }
-    gfx.rle_len = rle_len;
 
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
@@ -426,7 +391,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 
         for (int n = 0; n < ni; n++, idx++) {
             D1GfxFrame *frame = gfx.getFrame(idx); // TODO: what if the groups are not continuous?
-            pBuf = writeFrameData(frame, pBuf, subHeaderSize, rle_len, clipped);
+            pBuf = writeFrameData(frame, pBuf, subHeaderSize, clipped);
             *(quint32 *)&hdr[4 + 4 * (n + 1)] = SwapLE32(pBuf - hdr);
         }
         hdr += 4 + 4 * (ni + 1);

@@ -39,7 +39,6 @@ public:
     QString dunFilePath;
     uint8_t dunLayerNum = UINT8_MAX;
     int groupNum = 0;
-    unsigned rle_len = 0;
     SAVE_CLIPPED_TYPE clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     SAVE_UPSCALED_TYPE upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
     SAVE_PATCHED_TYPE patched = SAVE_PATCHED_TYPE::AUTODETECT;

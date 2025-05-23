@@ -265,8 +265,6 @@ public:
     void setPatched(bool patched);
     bool isClipped() const;
     bool setClipped(bool clipped);
-    unsigned getRleLen() const;
-    bool setRleLen(unsigned rleLen);
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
     unsigned getFrameLen() const;
@@ -328,7 +326,6 @@ protected:
     std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
     // fields of cel/cl2-frames
-    unsigned rle_len = 0;
     bool clipped = false;
     // fields of tilesets
     bool patched = false;

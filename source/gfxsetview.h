@@ -138,8 +138,6 @@ private slots:
     void on_assetMplEdit_escPressed();
 
     void on_celFramesClippedCheckBox_clicked();
-    void on_cl2RleEdit_returnPressed();
-    void on_cl2RleEdit_escPressed();
 
     void on_zoomOutButton_clicked();
     void on_zoomInButton_clicked();
