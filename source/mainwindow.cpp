@@ -2081,6 +2081,8 @@ bool MainWindow::loadFileContent(OpenAsParam& params, LoadFileContent &fileConte
 
 void MainWindow::on_actionDiff_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
     QString filter;
 
     QString title = tr("Select Graphics");
@@ -2154,7 +2156,7 @@ void MainWindow::on_actionDiff_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Comparing..."), 0, PAF_OPEN_DIALOG);
 
     if (main) {
-    if (this->gfxset != nullptr) {
+    if (this->gfxset != nullptr && !gfxOnly) {
         this->gfxset->compareTo(&fileContent);
     } else if (this->dun != nullptr && fileContent.fileType == FILE_CONTENT::DUN) {
         this->dun->compareTo(&fileContent);
