@@ -1,7 +1,7 @@
 /**
  * @file patchdat.cpp
  *
- * Implementation of data related to missiles.
+ * Implementation of data related to patches.
  */
 #include "patchdat.h"
 

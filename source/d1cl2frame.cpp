@@ -101,11 +101,15 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
     int frameDataStartOffset = 0;
     if (clipped) {
         if (rawData.size() != 0) {
-            if (rawData.size() == 1)
+            if (rawData.size() == 1) {
+dProgressWarn() << QApplication::tr("short data %1.").arg(rawData.size());
                 return -2;
+            }
             frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
-            if (frameDataStartOffset > rawData.size())
+            if (frameDataStartOffset > rawData.size()) {
+dProgressWarn() << QApplication::tr("Bad offset %1 vs %2.").arg(frameDataStartOffset).arg(rawData.size());
                 return -2;
+            }
         }
     }
 
@@ -115,7 +119,7 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
     unsigned rle_max = UINT_MAX;
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
         quint8 readByte = rawData[o];
-
+dProgress() << QApplication::tr("ReadByte %1 len %2").arg(readByte).arg((256 - readByte));
         if (/*readByte >= 0x00 &&*/ readByte < 0x80) {
             // Transparent pixels
             /*if (readByte == 0x00) {
@@ -178,6 +182,8 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
         }
     }
     if (!pixelLine.empty()) {
+dProgressWarn() << QApplication::tr("Remaining pixels %1 (w%2 h%3).").arg(pixelLine.size()).arg(width).arg(pixels.size());
+
         if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
             OpenAsParam oParams = params;
             oParams.clipped = clipped ? OPEN_CLIPPED_TYPE::FALSE : OPEN_CLIPPED_TYPE::TRUE;
