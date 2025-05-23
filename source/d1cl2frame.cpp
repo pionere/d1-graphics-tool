@@ -116,9 +116,6 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
 
         if (/*readByte >= 0x00 &&*/ readByte < 0x80) {
             // Transparent pixels
-            if (readByte == 0x00) {
-                dProgressWarn() << QApplication::tr("Invalid CL2 frame data (0x00 found)");
-            }
             for (int i = 0; i < readByte; i++) {
                 // Add transparent pixel
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
