@@ -11,6 +11,7 @@
 #include "remapdialog.h"
 
 #include "dungeon/enums.h"
+#include "dungeon/patchdat.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
 {
@@ -2108,6 +2109,120 @@ bool D1Gfx::patchPlrFrames(int gfxFileIndex, bool silent)
             this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
             dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
             result = true;
+        }
+    }
+    return result;
+}
+
+bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
+{
+    constexpr BYTE TRANS_COLOR = 1;
+    int frameCount = 0, width = 0, height = 0;
+    switch (gfxFileIndex) {
+    case GFX_PLR_RLMAT: frameCount = 18; width = 128; height = 128; break;
+    case GFX_PLR_RMHAT: frameCount = 18; width = 128; height = 128; break;
+    case GFX_PLR_RMMAT: frameCount = 18; width = 128; height = 128; break;
+    case GFX_PLR_RMBFM: frameCount = 16; width = 96; height = 96; break;
+    case GFX_PLR_RMBLM: frameCount = 16; width = 96; height = 96; break;
+    case GFX_PLR_RMBQM: frameCount = 16; width = 96; height = 96; break;
+    }
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+    }
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            bool change = false;
+            int nn = n;
+            switch (gfxFileIndex) {
+            case GFX_PLR_RLMAT:
+                for (int i = 0; i < lengthof(deltaRLMAT); i++) {
+                    if (deltaRLMAT[i].dfFrameNum == nn + 1) {
+                        if (deltaRLMAT[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRLMAT[i].dfx, deltaRLMAT[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRLMAT[i].dfx, deltaRLMAT[i].dfy, D1GfxPixel::colorPixel(deltaRLMAT[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RMHAT:
+                for (int i = 0; i < lengthof(deltaRMHAT); i++) {
+                    if (deltaRMHAT[i].dfFrameNum == nn + 1) {
+                        if (deltaRMHAT[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMHAT[i].dfx, deltaRMHAT[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMHAT[i].dfx, deltaRMHAT[i].dfy, D1GfxPixel::colorPixel(deltaRMHAT[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RMMAT:
+                for (int i = 0; i < lengthof(deltaRMMAT); i++) {
+                    if (deltaRMMAT[i].dfFrameNum == nn + 1) {
+                        if (deltaRMMAT[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMMAT[i].dfx, deltaRMMAT[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMMAT[i].dfx, deltaRMMAT[i].dfy, D1GfxPixel::colorPixel(deltaRMMAT[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RMBFM:
+                for (int i = 0; i < lengthof(deltaRMBFM); i++) {
+                    if (deltaRMBFM[i].dfFrameNum == nn + 1) {
+                        if (deltaRMBFM[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMBFM[i].dfx, deltaRMBFM[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMBFM[i].dfx, deltaRMBFM[i].dfy, D1GfxPixel::colorPixel(deltaRMBFM[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RMBLM:
+                for (int i = 0; i < lengthof(deltaRMBLM); i++) {
+                    if (deltaRMBLM[i].dfFrameNum == nn + 1) {
+                        if (deltaRMBLM[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMBLM[i].dfx, deltaRMBLM[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMBLM[i].dfx, deltaRMBLM[i].dfy, D1GfxPixel::colorPixel(deltaRMBLM[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RMBQM:
+                for (int i = 0; i < lengthof(deltaRMBQM); i++) {
+                    if (deltaRMBQM[i].dfFrameNum == nn + 1) {
+                        if (deltaRMBQM[i].color == TRANS_COLOR)
+                            change |= currFrame->setPixel(deltaRMBQM[i].dfx, deltaRMBQM[i].dfy, D1GfxPixel::transparentPixel());
+                        else
+                            change |= currFrame->setPixel(deltaRMBQM[i].dfx, deltaRMBQM[i].dfy, D1GfxPixel::colorPixel(deltaRMBQM[i].color));
+                    }
+                }
+                break;
+            }
+
+            if (change) {
+                result = true;
+                this->setModified();
+                if (!silent) {
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_SW + 1);
+                }
+            }
         }
     }
     return result;
@@ -7365,6 +7480,14 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMDLM: // patch WMDLM.CL2
         change = this->patchPlrFrames(gfxFileIndex, silent);
         break;
+    case GFX_PLR_RLMAT:
+    case GFX_PLR_RMHAT:
+    case GFX_PLR_RMMAT:
+    case GFX_PLR_RMBFM:
+    case GFX_PLR_RMBLM:
+    case GFX_PLR_RMBQM:
+        change = this->patchRogueExtraPixels(gfxFileIndex, silent);
+        break;
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
@@ -7577,6 +7700,24 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "rhuqm") {
         fileIndex = GFX_PLR_RHUQM;
+    }
+    if (baseName == "rlmat") {
+        fileIndex = GFX_PLR_RLMAT;
+    }
+    if (baseName == "rmhat") {
+        fileIndex = GFX_PLR_RMHAT;
+    }
+    if (baseName == "rmmat") {
+        fileIndex = GFX_PLR_RMMAT;
+    }
+    if (baseName == "rmbfm") {
+        fileIndex = GFX_PLR_RMBFM;
+    }
+    if (baseName == "rmblm") {
+        fileIndex = GFX_PLR_RMBLM;
+    }
+    if (baseName == "rmbqm") {
+        fileIndex = GFX_PLR_RMBQM;
     }
     if (baseName == "rmtat") {
         fileIndex = GFX_PLR_RMTAT;

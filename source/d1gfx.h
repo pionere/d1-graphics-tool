@@ -138,6 +138,12 @@ typedef enum gfx_file_index {
     GFX_PLR_RHTAT,   // graphics of rogue in heavy armor with staff attacking (RHTAT.CL2)
     GFX_PLR_RHUHT,   // graphics of rogue in heavy armor with shield getting hit (RHUHT.CL2)
     GFX_PLR_RHUQM,   // graphics of rogue in heavy armor with shield casting magic (RHUQM.CL2)
+    GFX_PLR_RLMAT,   // graphics of rogue in light armor with mace attacking (RLMAT.CL2)
+    GFX_PLR_RMHAT,   // graphics of rogue in medium armor with mace and shield attacking (RMHAT.CL2)
+    GFX_PLR_RMMAT,   // graphics of rogue in medium armor with mace attacking (RMMAT.CL2)
+    GFX_PLR_RMBFM,   // graphics of rogue in medium armor with bow casting fire (RMBFM.CL2)
+    GFX_PLR_RMBLM,   // graphics of rogue in medium armor with bow casting lightning (RMBLM.CL2)
+    GFX_PLR_RMBQM,   // graphics of rogue in medium armor with bow casting magic (RMBQM.CL2)
     GFX_PLR_RMTAT,   // graphics of rogue in medium armor with staff attacking (RMTAT.CL2)
     GFX_PLR_WHMAT,   // graphics of warrior in heavy armor with mace attacking (WHMAT.CL2)
     GFX_PLR_WLNLM,   // graphics of warrior in light armor unarmed casting lightning (WLNLM.CL2)
@@ -289,6 +295,7 @@ private:
     bool patchRightShrine(bool silent);
     bool patchCryptLight(bool silent);
     bool patchPlrFrames(int gfxFileIndex, bool silent);
+    bool patchRogueExtraPixels(int gfxFileIndex, bool silent);
     bool patchWarriorStand(bool silent);
     bool patchFallGDie(bool silent);
     bool patchFallGWalk(bool silent);
