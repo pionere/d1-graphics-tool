@@ -445,7 +445,7 @@ static int getFrameDiff(const D1GfxFrame *frameA, const D1GfxFrame *frameB)
     return result;
 }
 
-static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxFrame *frameB, QString header)
+static void reportFrameDiff(int i, int j, const D1GfxFrame *frameA, const D1GfxFrame *frameB, QString &header)
 {
     int width = frameA->getWidth();
     int height = frameA->getHeight();
