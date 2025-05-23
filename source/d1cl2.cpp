@@ -233,7 +233,7 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
         }
         // first = true;
         if (mode != 2) {
-            mode = 0; // -1;
+            mode = -1;
         }
         colMatches = 0;
         for (int j = 0; j < frame->getWidth(); j++) {
