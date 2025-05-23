@@ -57,7 +57,7 @@ public:
     bool load(const QString &gfxFilePath, const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
-    void compareTo(const LoadFileContent *fileContent) const;
+    void compareTo(const LoadFileContent *fileContent, bool patchData) const;
     QRect getBoundary() const;
     bool check(const D1Gfx *gfx, int assetMpl) const;
     void mask();

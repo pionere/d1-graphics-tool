@@ -277,7 +277,7 @@ static QString getGfxName(const D1Gfx* gfx)
     return qfi.completeBaseName();
 }
 
-void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
+void D1Gfxset::compareTo(const LoadFileContent *fileContent, bool patchData) const
 {
     if (fileContent->gfxset != nullptr) {
         if (this->gfxList.count() == fileContent->gfxset->gfxList.count()) {
@@ -305,7 +305,7 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
                 } else {
                     header = QApplication::tr("Gfx %1 vs. %2 (%3):").arg(nameA).arg(nameB).arg(i + 1);
                 }
-                this->gfxList[i]->compareTo(fileContent->gfxset->gfxList[i], header);
+                this->gfxList[i]->compareTo(fileContent->gfxset->gfxList[i], header, patchData);
                 if (header.isEmpty())
                     dProgress() << "\n";
             }
@@ -349,7 +349,7 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
                                 header = QApplication::tr("Gfx %1 (%2) vs %3 (%4):").arg(nameA).arg(i + 1).arg(nameB).arg(n + 1);
                             }
                         }
-                        gfxA->compareTo(gfxB, header);
+                        gfxA->compareTo(gfxB, header, patchData);
                         if (header.isEmpty())
                             dProgress() << "\n";
                         break;
@@ -376,7 +376,7 @@ void D1Gfxset::compareTo(const LoadFileContent *fileContent) const
             const D1Gfx *gfxA = this->gfxList[i];
             QString nameA = getGfxName(gfxA);
             QString header = QApplication::tr("Gfx %1 (%2):").arg(nameA).arg(i + 1);
-            gfxA->compareTo(gfxB, header);
+            gfxA->compareTo(gfxB, header, patchData);
             if (header.isEmpty())
                 dProgress() << "\n";
         }

@@ -382,10 +382,10 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
     return true;
 }
 
-void D1Pcx::compare(D1Gfx &gfx, D1Pal *pal, const LoadFileContent *fileContent)
+void D1Pcx::compare(D1Gfx &gfx, D1Pal *pal, const LoadFileContent *fileContent, bool patchData)
 {
     QString header = QApplication::tr("Graphics:");
-    gfx.compareTo(fileContent->gfx, header);
+    gfx.compareTo(fileContent->gfx, header, patchData);
     header = QApplication::tr("Palette:");
     pal->compareTo(fileContent->gfx->getPalette(), header);
 }

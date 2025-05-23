@@ -18,5 +18,5 @@ public:
 
     static bool load(D1GfxFrame &frame, const QString &pcxFilePath, D1Pal *basePal, D1Pal *resPal, bool *palMod);
 
-    static void compare(D1Gfx &gfx, D1Pal *pal, const LoadFileContent *fileContent);
+    static void compare(D1Gfx &gfx, D1Pal *pal, const LoadFileContent *fileContent, bool patchData);
 };
