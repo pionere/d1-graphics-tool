@@ -216,10 +216,10 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
 
     quint8 *pHead = pBuf;
     quint8 col, lastCol;
-    quint8 colMatches = 0;
+    quint8 colMatches = 0; // does not matter
     //int mode = 0; // -1;
     bool alpha = false;
-    bool first = false; // true;
+    bool first = false; // true; - does not matter
     for (int i = 1; i <= frame->getHeight(); i++) {
         if (clipped && (i % CEL_BLOCK_HEIGHT) == 1 /*&& (i / CEL_BLOCK_HEIGHT) * 2 < SUB_HEADER_SIZE*/) {
             pHead = pBuf;
@@ -249,7 +249,7 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
                 if (colMatches < RLE_LEN || *pHead == 0x80u) {
                 // if (colMatches < RLE_LEN || (/*mode == 1 && */*pHead == 0x80u)) {
                     // bmp encoding
-                    if (alpha || *pHead == 0xBFu || first) {
+                    if (/*alpha ||*/ *pHead <= 0xBFu || first) {
                     //if (mode != 0 || *pHead == 0xBF) {
                     //    mode = 0;
                         pHead = pBuf;
