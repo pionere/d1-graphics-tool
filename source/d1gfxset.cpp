@@ -112,13 +112,13 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 QString basePlrPath = basePath + baseName.mid(0, 3);
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
                     QString filePath = basePlrPath + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
-                     QFileInfo qfi = QFileInfo(filePath);
-                    if (!qfi.exists())
-                        continue;
-                    QDir folder = qfi.dir();
-                    if (folder.entryList().contains(filePath, Qt::CaseSensitive))
-                        fileMatchesPlr++;
-                    fileInMatchesPlr++;
+                    QFileInfo qfi = QFileInfo(filePath);
+                    QStringList files = qfi.dir().entryList();
+                    if (files.contains(filePath, Qt::CaseInsensitive)) {
+                        fileInMatchesPlr++;
+                        if (files.contains(filePath, Qt::CaseSensitive))
+                            fileMatchesPlr++;
+                    }
                 }
             }
             int fileMatchesMon = 0, fileInMatchesMon = 0;
@@ -129,12 +129,12 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 for (int i = 0; i < lengthof(animletter); i++) {
                     QString filePath = baseMonPath + animletter[i] + extension;
                     QFileInfo qfi = QFileInfo(filePath);
-                    if (!qfi.exists())
-                        continue;
-                    QDir folder = qfi.dir();
-                    if (folder.entryList().contains(filePath, Qt::CaseSensitive))
-                        fileMatchesMon++;
-                    fileInMatchesMon++;
+                    QStringList files = qfi.dir().entryList();
+                    if (files.contains(filePath, Qt::CaseInsensitive)) {
+                        fileInMatchesMon++;
+                        if (files.contains(filePath, Qt::CaseSensitive))
+                            fileMatchesMon++;
+                    }
                 }
             }
             if (fileInMatchesMon == fileInMatchesPlr) {

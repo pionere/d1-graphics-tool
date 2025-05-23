@@ -50,9 +50,9 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define MAX_LVLMIMAGE            4000
 
 #ifdef HELLFIRE
-#define MAXTRIGGERS             7
+#define MAXTRIGGERS              7
 #else
-#define MAXTRIGGERS             5
+#define MAXTRIGGERS              5
 #endif
 
 #define DEAD_MULTI              0xFF
@@ -60,7 +60,7 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define ITEM_NONE               0xFF
 #define ITEM_VALID(x) ((int8_t)x >= 0)
 #define MAXBELTITEMS            8
-//#define MAXLIGHTS             32
+//#define MAXLIGHTS               32
 #define MAXLIGHTS               0
 #define MAXMISSILES             125
 #define MIS_MULTI               0xFF

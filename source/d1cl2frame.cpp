@@ -127,35 +127,27 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
             }
         } else if (/*readByte >= 0x80 &&*/ readByte < 0xBF) {
             // RLE encoded palette index
-            unsigned len = 0xBF - readByte;
             // Go to the palette index offset
             o++;
 
-            for (unsigned i = 0; i < len; i++) {
+            for (int i = 0; i < (0xBF - readByte); i++) {
                 // Add opaque pixel
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
-                    if (i != len - 1) {
-                        dProgressWarn() << QApplication::tr("Frame encoding is not supported by the game (line-break in the middle of RLE-encoded pixels).");
-                    }
                     pixels.push_back(std::move(pixelLine));
                     pixelLine.clear();
                 }
             }
         } else /*if (readByte >= 0xBF && readByte <= 0xFF)*/ {
             // Palette indices
-            unsigned len = (256 - readByte);
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < (256 - readByte); i++) {
                 // Go to the next palette index offset
                 o++;
                 // Add opaque pixel
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
-                    if (i != len - 1) {
-                        dProgressWarn() << QApplication::tr("Frame encoding is not supported by the game (line-break in the middle of BMP-encoded pixels).");
-                    }
                     pixels.push_back(std::move(pixelLine));
                     pixelLine.clear();
                 }
