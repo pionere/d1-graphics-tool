@@ -202,7 +202,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     return true;
 }
 
-static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, unsigned rle_len, bool clipped)
+static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, unsigned RLE_LEN, bool clipped)
 {
     // convert one image to cl2-data
     quint8 *pHeader = pBuf;
@@ -217,41 +217,41 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
     quint8 *pHead = pBuf;
     quint8 col, lastCol;
     quint8 colMatches = 0;
-    int mode = 0; // -1;
-    // bool alpha = false;
-    // bool first = true;
+    //int mode = 0; // -1;
+    bool alpha = false;
+    bool first = false; // true;
     for (int i = 1; i <= frame->getHeight(); i++) {
         if (clipped && (i % CEL_BLOCK_HEIGHT) == 1 /*&& (i / CEL_BLOCK_HEIGHT) * 2 < SUB_HEADER_SIZE*/) {
             pHead = pBuf;
             *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
 
             //colMatches = 0;
-            // alpha = false;
+            alpha = false;
             // first = true;
             // if (mode == 2)
-            mode = 0; // -1;
+            //mode = -1;
         }
-        // first = true;
-        if (mode != 2) {
-            mode = -1;
-        }
-        colMatches = 0;
+        first = true;
+        //if (mode != 2) {
+        //    mode = -1;
+        //}
+        //colMatches = 0;
         for (int j = 0; j < frame->getWidth(); j++) {
             D1GfxPixel pixel = frame->getPixel(j, frame->getHeight() - i);
             if (!pixel.isTransparent()) {
                 // add opaque pixel
                 col = pixel.getPaletteIndex();
-                // if (alpha || first || col != lastCol)
-                if ((mode != 0 && mode != 1) || col != lastCol)
+                if (alpha || first || col != lastCol)
+                //if ((mode != 0 && mode != 1) || col != lastCol)
                     colMatches = 1;
                 else
                     colMatches++;
-                // if (colMatches < rle_len || (char)*pHead <= -127) {
-                if (colMatches < rle_len || (/*mode == 1 && */*pHead == 0x80u)) {
+                if (colMatches < RLE_LEN || *pHead == 0x80u) {
+                // if (colMatches < RLE_LEN || (/*mode == 1 && */*pHead == 0x80u)) {
                     // bmp encoding
-                    // if (alpha || (char)*pHead <= -65 || first) {
-                    if (mode != 0 || *pHead == 0xBF) {
-                        mode = 0;
+                    if (alpha || *pHead == 0xBF || first) {
+                    //if (mode != 0 || *pHead == 0xBF) {
+                    //    mode = 0;
                         pHead = pBuf;
                         pBuf++;
                         colMatches = 1;
@@ -260,15 +260,15 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
                     pBuf++;
                 } else {
                     // RLE encoding
-                    // if (colMatches == rle_len) {
-                    if (mode != 1) {
-                        mode = 1;
-                        memset(pBuf - (rle_len - 1), 0, rle_len - 1);
-                        *pHead += rle_len - 1;
+                    if (colMatches == RLE_LEN) {
+                    //if (mode != 1) {
+                    //    mode = 1;
+                        memset(pBuf - (RLE_LEN - 1), 0, RLE_LEN - 1);
+                        *pHead += RLE_LEN - 1;
                         if (*pHead != 0) {
-                            pHead = pBuf - (rle_len - 1);
+                            pHead = pBuf - (RLE_LEN - 1);
                         }
-                        *pHead = -65 - (rle_len - 1);
+                        *pHead = -65 - (RLE_LEN - 1);
                         pBuf = pHead + 1;
                         *pBuf = col;
                         pBuf++;
@@ -277,20 +277,19 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
                 --*pHead;
 
                 lastCol = col;
-                // alpha = false;
+                alpha = false;
             } else {
                 // add transparent pixel
-                // if (!alpha || (char)*pHead >= 127) {
-                // if (!alpha || *pHead >= 0x7Fu) {
-                if (mode != 2 || *pHead == 0x7Fu) {
-                    mode = 2;
+                if (!alpha || *pHead == 0x7Fu) {
+                // if (mode != 2 || *pHead == 0x7Fu) {
+                //    mode = 2;
                     pHead = pBuf;
                     pBuf++;
                 }
                 ++*pHead;
-                // alpha = true;
+                alpha = true;
             }
-            // first = false;
+            first = false;
         }
     }
     return pBuf;
