@@ -173,31 +173,31 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     return true;
 }
 
-static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, bool clipped)
+static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize, bool clipped)
 {
-    const int RLE_LEN = 4; // number of matching colors to switch from bmp encoding to RLE
+    const int RLE_LEN = 3; // number of matching colors to switch from bmp encoding to RLE
 
     // convert one image to cl2-data
     quint8 *pHeader = pBuf;
     if (clipped) {
         // add CL2 FRAME HEADER
         *(quint16 *)&pBuf[0] = SwapLE16(subHeaderSize); // SUB_HEADER_SIZE
-        *(quint32 *)&pBuf[2] = 0;
-        *(quint32 *)&pBuf[6] = 0;
+        //*(quint32 *)&pBuf[2] = 0;
+        //*(quint32 *)&pBuf[6] = 0;
         pBuf += subHeaderSize;
     }
 
     quint8 *pHead = pBuf;
     quint8 col, lastCol;
-    quint8 colMatches = 0;
+    quint8 colMatches = 0; // does not matter
     bool alpha = false;
-    bool first = true;
+    bool first = false; // true; - does not matter
     for (int i = 1; i <= frame->getHeight(); i++) {
         if (clipped && (i % CEL_BLOCK_HEIGHT) == 1 /*&& (i / CEL_BLOCK_HEIGHT) * 2 < SUB_HEADER_SIZE*/) {
             pHead = pBuf;
             *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
 
-            colMatches = 0;
+            //colMatches = 0;
             alpha = false;
             // first = true;
         }
@@ -211,9 +211,9 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
                     colMatches = 1;
                 else
                     colMatches++;
-                if (colMatches < RLE_LEN || (char)*pHead <= -127) {
+                if (colMatches < RLE_LEN || *pHead == 0x80u) {
                     // bmp encoding
-                    if (alpha || (char)*pHead <= -65 || first) {
+                    if (/*alpha ||*/ *pHead <= 0xBFu || first) {
                         pHead = pBuf;
                         pBuf++;
                         colMatches = 1;
@@ -228,7 +228,7 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
                         if (*pHead != 0) {
                             pHead = pBuf - (RLE_LEN - 1);
                         }
-                        *pHead = -65 - (RLE_LEN - 1);
+                        *pHead = 0xBFu - (RLE_LEN - 1);
                         pBuf = pHead + 1;
                         *pBuf = col;
                         pBuf++;
@@ -240,7 +240,7 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
                 alpha = false;
             } else {
                 // add transparent pixel
-                if (!alpha || (char)*pHead >= 127) {
+                if (!alpha || *pHead == 0x7Fu) {
                     pHead = pBuf;
                     pBuf++;
                 }
