@@ -912,6 +912,26 @@ void MainWindow::importFile(const ImportParam &params)
         if ((fileType == IMPORT_FILE_TYPE::CEL && D1Cel::load(*gfx, openParams.celFilePath, openParams))
          || (fileType == IMPORT_FILE_TYPE::FONT && D1Font::load(*gfx, openParams.celFilePath, params))
          || D1Cl2::load(*gfx, openParams.celFilePath, openParams)) {
+            if (this->gfxsetView != nullptr) {
+                // select the corresponding gfx if possible
+                QFileInfo qfi = QFileInfo(openParams.celFilePath);
+                QString fileName = qfi.fileName();
+                for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
+                    QFileInfo cqfi = QFileInfo(this->gfxset->getGfx(i)->getFilePath());
+                    QString cFileName = cqfi.fileName();
+                    if (fileName == cFileName) {
+                        this->gfxsetView->selectGfx(i);
+                        break;
+                    }
+                }
+                // replace gfx in the list
+                QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
+                for (int i = 0; i < gfxs.count(); i++) {
+                    if (gfxs[i] == this->gfx) {
+                        gfxs[i] = gfx;
+                    }
+                }
+            }
             delete this->gfx;
             this->gfxChanged(gfx);
         } else {
@@ -1638,7 +1658,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     // - File
     this->ui->actionExport->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionDiff->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
-    this->ui->actionImport->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
+    this->ui->actionImport->setEnabled(this->celView != nullptr || this->levelCelView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
