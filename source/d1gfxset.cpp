@@ -85,14 +85,13 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             if (lastDigit.digitValue() <= 6 && !baseName.isEmpty() && baseName.endsWith('1')) {
                 baseName.chop(1);
             }
-            basePath += baseName;
             int n = 0, cn = 0, mn = 0;
             for (int i = 0; i < 16; i++) {
-                QString filePath = basePath + QString::number(i + 1) + extension;
-                if (gfxFilePath == filePath) {
+                QFileInfo qfi = QFileInfo(celFileInfo.dir(), baseName + QString::number(i + 1) + extension);
+                if (qfi == celFileInfo) {
                     cn = i;
                 }
-                if (QFileInfo::exists(filePath)) {
+                if (qfi.exists()) {
                     // n++;
                     if (i > mn) {
                         mn = i;
@@ -108,33 +107,29 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
         } else {
             int fileMatchesPlr = 0, fileInMatchesPlr = 0;
             if (baseName.length() == 5) {
-                bool plrMatch = false;
-                QString basePlrPath = basePath + baseName.mid(0, 3);
+                QString basePlrName = baseName.mid(0, 3);
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
-                    QString filePath = basePlrPath + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
-                    QFileInfo qfi = QFileInfo(filePath);
-                    QStringList files = qfi.dir().entryList();
-                    dProgress() << tr("plrfile: %1 files: %2").arg(filePath).arg(files.size());
-                    if (files.contains(filePath, Qt::CaseInsensitive)) {
+                    QString fileName = basePlrName + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
+                    QStringList files = celFileInfo.dir().entryList();
+                    dProgress() << tr("plrfile: %1 files: %2").arg(filePath).arg(files.size()).arg(files.size() == 0 ? QString("-") : files[0]);
+                    if (files.contains(fileName, Qt::CaseInsensitive)) {
                         fileInMatchesPlr++;
-                        if (files.contains(filePath, Qt::CaseSensitive))
+                        if (files.contains(fileName, Qt::CaseSensitive))
                             fileMatchesPlr++;
                     }
                 }
             }
             int fileMatchesMon = 0, fileInMatchesMon = 0;
             if (baseName.length() > 1) {
-                bool monMatch = false;
-                QString baseMonPath = basePath + baseName;
-                baseMonPath.chop(1);
+                QString baseMonName = baseName;
+                baseMonName.chop(1);
                 for (int i = 0; i < lengthof(animletter); i++) {
-                    QString filePath = baseMonPath + animletter[i] + extension;
-                    QFileInfo qfi = QFileInfo(filePath);
-                    QStringList files = qfi.dir().entryList();
-                    dProgress() << tr("monfile: %1 files: %2").arg(filePath).arg(files.size());
-                    if (files.contains(filePath, Qt::CaseInsensitive)) {
+                    QString fileName = baseMonName + animletter[i] + extension;
+                    QStringList files = celFileInfo.dir().entryList();
+                    dProgress() << tr("monfile: %1 files: %2").arg(filePath).arg(files.size()).arg(files.size() == 0 ? QString("-") : files[0]);
+                    if (files.contains(fileName, Qt::CaseInsensitive)) {
                         fileInMatchesMon++;
-                        if (files.contains(filePath, Qt::CaseSensitive))
+                        if (files.contains(fileName, Qt::CaseSensitive))
                             fileMatchesMon++;
                     }
                 }
