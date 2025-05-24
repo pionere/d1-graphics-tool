@@ -114,6 +114,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     QString filePath = basePlrPath + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
                     QFileInfo qfi = QFileInfo(filePath);
                     QStringList files = qfi.dir().entryList();
+                    dProgress() << tr("plrfile: %1 files: %2").arg(filePath).arg(files.size());
                     if (files.contains(filePath, Qt::CaseInsensitive)) {
                         fileInMatchesPlr++;
                         if (files.contains(filePath, Qt::CaseSensitive))
@@ -130,6 +131,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     QString filePath = baseMonPath + animletter[i] + extension;
                     QFileInfo qfi = QFileInfo(filePath);
                     QStringList files = qfi.dir().entryList();
+                    dProgress() << tr("monfile: %1 files: %2").arg(filePath).arg(files.size());
                     if (files.contains(filePath, Qt::CaseInsensitive)) {
                         fileInMatchesMon++;
                         if (files.contains(filePath, Qt::CaseSensitive))
@@ -137,6 +139,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     }
                 }
             }
+            dProgress() << tr("plr: %1, %2 mon: %3, %4").arg(fileInMatchesPlr).arg(fileMatchesPlr).arg(fileInMatchesMon).arg(fileMatchesMon);
             if (fileInMatchesMon == fileInMatchesPlr) {
                 fileInMatchesPlr = fileMatchesPlr;
                 fileInMatchesMon = fileMatchesMon;
