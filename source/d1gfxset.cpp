@@ -102,7 +102,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             n = (/*n > 8 ||*/ cn >= 8 || mn >= 8) ? 16 : 8;
             for (int i = 0; i < n; i++) {
                 QString fileName = baseName + QString::number(i + 1) + extension;
-                QFileInfo qfi = QFileInfo(folder(), fileName);
+                QFileInfo qfi = QFileInfo(folder, fileName);
                 filePaths.push_back(qfi.filePath());
             }
             type = D1GFX_SET_TYPE::Missile;
@@ -112,7 +112,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 QString basePlrName = baseName.mid(0, 3);
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
                     QString fileName = basePlrName + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
-                    QStringList files = folder().entryList();
+                    QStringList files = folder.entryList();
                     if (files.contains(fileName, Qt::CaseInsensitive)) {
                         fileInMatchesPlr++;
                         if (files.contains(fileName, Qt::CaseSensitive))
@@ -126,7 +126,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 baseMonName.chop(1);
                 for (int i = 0; i < lengthof(animletter); i++) {
                     QString fileName = baseMonName + animletter[i] + extension;
-                    QStringList files = folder().entryList();
+                    QStringList files = folder.entryList();
                     if (files.contains(fileName, Qt::CaseInsensitive)) {
                         fileInMatchesMon++;
                         if (files.contains(fileName, Qt::CaseSensitive))
@@ -144,7 +144,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 baseMonName.chop(1);
                 for (int i = 0; i < lengthof(animletter); i++) {
                     QString fileName = baseMonName + animletter[i] + extension;
-                    QFileInfo qfi = QFileInfo(folder(), fileName);
+                    QFileInfo qfi = QFileInfo(folder, fileName);
                     filePaths.push_back(qfi.filePath());
                 }
             } else {
@@ -152,7 +152,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 QString basePlrName = baseName.mid(0, 3);
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
                     QString fileName = basePlrName + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
-                    QFileInfo qfi = QFileInfo(folder(), fileName);
+                    QFileInfo qfi = QFileInfo(folder, fileName);
                     filePaths.push_back(qfi.filePath());
                 }
                 for (int i = 0; i < lengthof(CharChar); i++) {
