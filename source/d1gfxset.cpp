@@ -71,8 +71,8 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
         QFileInfo celFileInfo = QFileInfo(gfxFilePath);
 
         const QString extension = QString(".") + celFileInfo.suffix();
+        QDir folder = celFileInfo.dir();
         QString baseName = celFileInfo.completeBaseName();
-        QString basePath = celFileInfo.absolutePath() + "/";
         std::vector<QString> filePaths;
         D1GFX_SET_TYPE type = D1GFX_SET_TYPE::Unknown;
         D1GFX_SET_CLASS_TYPE ctype = D1GFX_SET_CLASS_TYPE::Unknown;
@@ -85,14 +85,14 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             if (lastDigit.digitValue() <= 6 && !baseName.isEmpty() && baseName.endsWith('1')) {
                 baseName.chop(1);
             }
-            basePath += baseName;
             int n = 0, cn = 0, mn = 0;
             for (int i = 0; i < 16; i++) {
-                QString filePath = basePath + QString::number(i + 1) + extension;
-                if (gfxFilePath == filePath) {
+                QString fileName = baseName + QString::number(i + 1) + extension;
+                QFileInfo qfi = QFileInfo(folder, fileName);
+                if (qfi == celFileInfo) {
                     cn = i;
                 }
-                if (QFileInfo::exists(filePath)) {
+                if (qfi.exists()) {
                     // n++;
                     if (i > mn) {
                         mn = i;
@@ -100,39 +100,36 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 }
             }
             n = (/*n > 8 ||*/ cn >= 8 || mn >= 8) ? 16 : 8;
-            for (int i = 1; i <= n; i++) {
-                QString filePath = basePath + QString::number(i) + extension;
-                filePaths.push_back(filePath);
+            for (int i = 0; i < n; i++) {
+                QString fileName = baseName + QString::number(i + 1) + extension;
+                QFileInfo qfi = QFileInfo(folder, fileName);
+                filePaths.push_back(qfi.filePath());
             }
             type = D1GFX_SET_TYPE::Missile;
         } else {
             int fileMatchesPlr = 0, fileInMatchesPlr = 0;
             if (baseName.length() == 5) {
-                bool plrMatch = false;
-                QString basePlrPath = basePath + baseName.mid(0, 3);
+                QString basePlrName = baseName.mid(0, 3);
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
-                    QString filePath = basePlrPath + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
-                    QFileInfo qfi = QFileInfo(filePath);
-                    QStringList files = qfi.dir().entryList();
-                    if (files.contains(filePath, Qt::CaseInsensitive)) {
+                    QString fileName = basePlrName + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
+                    QStringList files = folder.entryList();
+                    if (files.contains(fileName, Qt::CaseInsensitive)) {
                         fileInMatchesPlr++;
-                        if (files.contains(filePath, Qt::CaseSensitive))
+                        if (files.contains(fileName, Qt::CaseSensitive))
                             fileMatchesPlr++;
                     }
                 }
             }
             int fileMatchesMon = 0, fileInMatchesMon = 0;
             if (baseName.length() > 1) {
-                bool monMatch = false;
-                QString baseMonPath = basePath + baseName;
-                baseMonPath.chop(1);
+                QString baseMonName = baseName;
+                baseMonName.chop(1);
                 for (int i = 0; i < lengthof(animletter); i++) {
-                    QString filePath = baseMonPath + animletter[i] + extension;
-                    QFileInfo qfi = QFileInfo(filePath);
-                    QStringList files = qfi.dir().entryList();
-                    if (files.contains(filePath, Qt::CaseInsensitive)) {
+                    QString fileName = baseMonName + animletter[i] + extension;
+                    QStringList files = folder.entryList();
+                    if (files.contains(fileName, Qt::CaseInsensitive)) {
                         fileInMatchesMon++;
-                        if (files.contains(filePath, Qt::CaseSensitive))
+                        if (files.contains(fileName, Qt::CaseSensitive))
                             fileMatchesMon++;
                     }
                 }
@@ -143,35 +140,33 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             }
             if (fileInMatchesMon >= fileInMatchesPlr) {
                 type = D1GFX_SET_TYPE::Monster;
-                QString baseMonPath = basePath + baseName;
-                baseMonPath.chop(1);
+                QString baseMonName = baseName;
+                baseMonName.chop(1);
                 for (int i = 0; i < lengthof(animletter); i++) {
-                    QString anim;
-                    anim = anim + animletter[i] + extension;
-                    QString filePath = baseMonPath + anim;
-                    filePaths.push_back(filePath);
+                    QString fileName = baseMonName + animletter[i] + extension;
+                    QFileInfo qfi = QFileInfo(folder, fileName);
+                    filePaths.push_back(qfi.filePath());
                 }
             } else {
                 type = D1GFX_SET_TYPE::Player;
-                QString basePlrPath = basePath + baseName.mid(0, 3);
+                QString basePlrName = baseName.mid(0, 3);
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
-                    QString anim;
-                    anim = anim + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
-                    QString filePath = basePlrPath + anim;
-                    filePaths.push_back(filePath);
+                    QString fileName = basePlrName + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
+                    QFileInfo qfi = QFileInfo(folder, fileName);
+                    filePaths.push_back(qfi.filePath());
                 }
                 for (int i = 0; i < lengthof(CharChar); i++) {
-                    if (baseName[0].toUpper() == CharChar[i]) {
+                    if (basePlrName[0].toUpper() == CharChar[i]) {
                         ctype = (D1GFX_SET_CLASS_TYPE)i;
                     }
                 }
                 for (int i = 0; i < lengthof(ArmorChar); i++) {
-                    if (baseName[1].toUpper() == ArmorChar[i]) {
+                    if (basePlrName[1].toUpper() == ArmorChar[i]) {
                         atype = (D1GFX_SET_ARMOR_TYPE)i;
                     }
                 }
                 for (int i = 0; i < lengthof(WepChar); i++) {
-                    if (baseName[2].toUpper() == WepChar[i]) {
+                    if (basePlrName[2].toUpper() == WepChar[i]) {
                         wtype = (D1GFX_SET_WEAPON_TYPE)i;
                     }
                 }
