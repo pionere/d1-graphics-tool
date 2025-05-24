@@ -111,7 +111,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
                     QString fileName = basePlrName + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
                     QStringList files = celFileInfo.dir().entryList();
-                    dProgress() << tr("plrfile: %1 files: %2").arg(filePath).arg(files.size()).arg(files.size() == 0 ? QString("-") : files[0]);
+                    dProgress() << QString("plrfile: %1 files: %2").arg(filePath).arg(files.size()).arg(files.size() == 0 ? QString("-") : files[0]);
                     if (files.contains(fileName, Qt::CaseInsensitive)) {
                         fileInMatchesPlr++;
                         if (files.contains(fileName, Qt::CaseSensitive))
@@ -126,7 +126,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 for (int i = 0; i < lengthof(animletter); i++) {
                     QString fileName = baseMonName + animletter[i] + extension;
                     QStringList files = celFileInfo.dir().entryList();
-                    dProgress() << tr("monfile: %1 files: %2").arg(filePath).arg(files.size()).arg(files.size() == 0 ? QString("-") : files[0]);
+                    dProgress() << QString("monfile: %1 files: %2").arg(filePath).arg(files.size()).arg(files.size() == 0 ? QString("-") : files[0]);
                     if (files.contains(fileName, Qt::CaseInsensitive)) {
                         fileInMatchesMon++;
                         if (files.contains(fileName, Qt::CaseSensitive))
@@ -134,7 +134,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     }
                 }
             }
-            dProgress() << tr("plr: %1, %2 mon: %3, %4").arg(fileInMatchesPlr).arg(fileMatchesPlr).arg(fileInMatchesMon).arg(fileMatchesMon);
+            dProgress() << QString("plr: %1, %2 mon: %3, %4").arg(fileInMatchesPlr).arg(fileMatchesPlr).arg(fileInMatchesMon).arg(fileMatchesMon);
             if (fileInMatchesMon == fileInMatchesPlr) {
                 fileInMatchesPlr = fileMatchesPlr;
                 fileInMatchesMon = fileMatchesMon;
