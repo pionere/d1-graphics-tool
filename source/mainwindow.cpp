@@ -944,6 +944,7 @@ void MainWindow::importFile(const ImportParam &params)
          || D1Cl2::load(*gfx, openParams.celFilePath, openParams)) {
 
             if (this->gfxsetView != nullptr) {
+                // select the corresponding gfx if possible
                 QFileInfo qfi = QFileInfo(openParams.celFilePath);
                 QString fileName = qfi.fileName();
                 for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
@@ -952,6 +953,13 @@ void MainWindow::importFile(const ImportParam &params)
                     if (fileName == cFileName) {
                         this->gfxsetView->selectGfx(i);
                         break;
+                    }
+                }
+                // replace gfx in the list
+                QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
+                for (int i = 0; i < gfxs.count(); i++) {
+                    if (gfxs[i] == this->gfx) {
+                        gfxs[i] = gfx;
                     }
                 }
             }

@@ -713,11 +713,6 @@ int D1Gfxset::getGfxCount() const
 
 void D1Gfxset::setGfx(D1Gfx *gfx)
 {
-    for (int i = 0; i < this->gfxList.count(); i++) {
-        if (this->gfxList[i] == this->baseGfx) {
-            this->gfxList[i] = gfx;
-        }
-    }
     this->baseGfx = gfx;
 }
 
