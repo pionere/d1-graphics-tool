@@ -92,6 +92,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Rogue in light armor with mace and shield blocking (RLHBL.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Rogue in light armor with mace attacking (RLMAT.CL2)</string>
         </property>
        </item>

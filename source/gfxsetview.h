@@ -36,6 +36,7 @@ public:
     void initialize(D1Pal *pal, D1Gfxset *gfxset, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
     void setGfx(D1Gfx *gfx);
+    void selectGfx(int gfxIndex);
 
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
@@ -74,7 +75,6 @@ private:
     void setFrameIndex(int frameIndex);
     void updateGroupIndex();
     void setGroupIndex(int groupIndex);
-    void selectGfx(int gfxIndex);
     bool framePos(QPoint &pos) const;
 
 signals:
