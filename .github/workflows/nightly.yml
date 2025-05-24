@@ -181,12 +181,12 @@ jobs:
         echo ''                             >> RELEASE_NOTE.md
         echo 'For the list of changes see [changelog](CHANGELOG.md).' >> RELEASE_NOTE.md
         echo ''                             >> RELEASE_NOTE.md
-        echo '### **D1GraphicsTool**'       >> RELEASE_NOTE.md
-        echo '_Filename_ | _Description_'   >> RELEASE_NOTE.md
+        echo '### **Downloads**'       >> RELEASE_NOTE.md
+        echo '_Environment_ | _Package_'   >> RELEASE_NOTE.md
         echo '------------ | -------------' >> RELEASE_NOTE.md
-        echo '[D1GraphicsTool-Windows-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x64.zip)   | D1GraphicsTool for `Windows x64`' >> RELEASE_NOTE.md
-        echo '[D1GraphicsTool-Windows-x86.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x86.zip)   | D1GraphicsTool for `Windows x86`' >> RELEASE_NOTE.md
-        echo '[D1GraphicsTool-Linux-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Linux-x64.zip)   | D1GraphicsTool for `Linux x64`' >> RELEASE_NOTE.md
+        echo '`Windows x64` | [Windows-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x64.zip)' >> RELEASE_NOTE.md
+        echo '`Windows x86` | [Windows-x86.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x86.zip)' >> RELEASE_NOTE.md
+        echo '`Linux x64 | [Linux-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Linux-x64.zip)`' >> RELEASE_NOTE.md
 
     #- name: Show content of workspace
     #  run: find $RUNNER_WORKSPACE
