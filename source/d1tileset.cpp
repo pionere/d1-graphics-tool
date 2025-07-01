@@ -11489,17 +11489,17 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
 /*  3 */{ 482 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },  // change type
 
 /*  4 */{ 17 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // mask door
-/*  5 */{ 17 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
-/*  6 */{ 17 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
-/*  7 */{ 17 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
+/*  5 */{ 17 - 1, 0, D1CEL_FRAME_TYPE::Empty /* D1CEL_FRAME_TYPE::TransparentSquare */ }, // unused
+/*  6 */{ 17 - 1, 2, D1CEL_FRAME_TYPE::Empty /* D1CEL_FRAME_TYPE::TransparentSquare */ }, // unused
+/*  7 */{ 17 - 1, 4, D1CEL_FRAME_TYPE::Empty /* D1CEL_FRAME_TYPE::TransparentSquare */ }, // unused
 /*  8 */{ 551 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  9 */{ 551 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 10 */{ 551 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 11 */{ 551 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 12 */{ 13 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 13 */{ 13 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
-/* 14 */{ 13 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
-/* 15 */{ 13 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
+/* 13 */{ 13 - 1, 1, D1CEL_FRAME_TYPE::Empty /* D1CEL_FRAME_TYPE::TransparentSquare */ }, // unused
+/* 14 */{ 13 - 1, 3, D1CEL_FRAME_TYPE::Empty /* D1CEL_FRAME_TYPE::TransparentSquare */ }, // unused
+/* 15 */{ 13 - 1, 5, D1CEL_FRAME_TYPE::Empty /* D1CEL_FRAME_TYPE::TransparentSquare */ }, // unused
 /* 16 */{ 553 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 17 */{ 553 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 18 */{ 553 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -11519,8 +11519,8 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
 
 /* 31 */{ 323 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // redraw floor
 /* 22 */{ 323 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 33 */{ 324 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // unused
-/* 34 */{ 324 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // unused
+/* 33 */{ 324 - 1, 0, D1CEL_FRAME_TYPE::Empty /* D1CEL_FRAME_TYPE::LeftTriangle */ }, // unused
+/* 34 */{ 324 - 1, 1, D1CEL_FRAME_TYPE::Empty /* D1CEL_FRAME_TYPE::RightTriangle */ }, // unused
 /* 35 */{ 332 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
 /* 36 */{ 332 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 /* 37 */{ 331 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
