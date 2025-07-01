@@ -240,7 +240,7 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
                     colMatches = 1;
                 else
                     colMatches++;
-                if (colMatches < RLE_LEN || *pHead == 0x80u) {
+                if (colMatches < RLE_LEN || *pHead == 0x81u) {
                     // bmp encoding
                     if (/*alpha ||*/ *pHead <= 0xBFu || first) {
                         pushHead(&pPrevHead, &pLastHead, pHead);
