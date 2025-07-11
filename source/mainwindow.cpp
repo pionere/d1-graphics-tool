@@ -942,7 +942,6 @@ void MainWindow::importFile(const ImportParam &params)
         if ((fileType == IMPORT_FILE_TYPE::CEL && D1Cel::load(*gfx, openParams.celFilePath, openParams))
          || (fileType == IMPORT_FILE_TYPE::FONT && D1Font::load(*gfx, openParams.celFilePath, params))
          || D1Cl2::load(*gfx, openParams.celFilePath, openParams)) {
-
             if (this->gfxsetView != nullptr) {
                 // select the corresponding gfx if possible
                 QFileInfo qfi = QFileInfo(openParams.celFilePath);

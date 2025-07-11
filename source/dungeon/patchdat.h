@@ -22,6 +22,7 @@ extern "C" {
 #endif
 
 extern const DeltaFrameData deltaRLHBL[2243];
+extern const DeltaFrameData deltaRLHWL[3834];
 extern const DeltaFrameData deltaRLMAT[6037];
 extern const DeltaFrameData deltaRMHAT[5043];
 extern const DeltaFrameData deltaRMMAT[5280];

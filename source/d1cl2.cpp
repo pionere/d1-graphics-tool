@@ -247,7 +247,7 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
                     colMatches = 1;
                 else
                     colMatches++;
-                if (colMatches < RLE_LEN || *pHead == 0x80u) {
+                if (colMatches < RLE_LEN || *pHead == 0x81u) {
                 // if (colMatches < RLE_LEN || (/*mode == 1 && */*pHead == 0x80u)) {
                     // bmp encoding
                     if (/*alpha ||*/ *pHead <= 0xBFu || first) {
