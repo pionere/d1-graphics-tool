@@ -21,6 +21,8 @@ typedef struct DeltaFrameData {
 extern "C" {
 #endif
 
+extern const DeltaFrameData deltaRLHAS[3242];
+extern const DeltaFrameData deltaRLHAW[2968];
 extern const DeltaFrameData deltaRLHBL[2243];
 extern const DeltaFrameData deltaRLHWL[3834];
 extern const DeltaFrameData deltaRLMAT[6037];

@@ -2168,6 +2168,8 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
     constexpr BYTE TRANS_COLOR = 1;
     int frameCount = 0, width = 0, height = 0;
     switch (gfxFileIndex) {
+    case GFX_PLR_RLHAS: frameCount =  8; width = 96; height = 96; break;
+    case GFX_PLR_RLHAW: frameCount =  8; width = 96; height = 96; break;
     case GFX_PLR_RLHBL: frameCount =  4; width = 96; height = 96; break;
     case GFX_PLR_RLHWL: frameCount =  8; width = 96; height = 96; break;
     case GFX_PLR_RLMAT: frameCount = 18; width = 128; height = 128; break;
@@ -2205,6 +2207,20 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
             bool change = false;
             int nn = n;
             switch (gfxFileIndex) {
+            case GFX_PLR_RLHAS:
+                for (int i = 0; i < lengthof(deltaRLHAS); i++) {
+                    if (deltaRLHAS[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHAS[i].dfx, deltaRLHAS[i].dfy, deltaRLHAS[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHAS[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHAW:
+                for (int i = 0; i < lengthof(deltaRLHAW); i++) {
+                    if (deltaRLHAW[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHAW[i].dfx, deltaRLHAW[i].dfy, deltaRLHAW[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHAW[i].color));
+                    }
+                }
+                break;
             case GFX_PLR_RLHBL:
                 for (int i = 0; i < lengthof(deltaRLHBL); i++) {
                     if (deltaRLHBL[i].dfFrameNum == nn + 1) {
@@ -7570,6 +7586,8 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMDLM: // patch WMDLM.CL2
         change = this->patchPlrFrames(gfxFileIndex, silent);
         break;
+    case GFX_PLR_RLHAS:
+    case GFX_PLR_RLHAW:
     case GFX_PLR_RLHBL:
     case GFX_PLR_RLHWL:
     case GFX_PLR_RLMAT:
@@ -7792,6 +7810,12 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "rhuqm") {
         fileIndex = GFX_PLR_RHUQM;
+    }
+    if (baseName == "rlhas") {
+        fileIndex = GFX_PLR_RLHAS;
+    }
+    if (baseName == "rlhaw") {
+        fileIndex = GFX_PLR_RLHAW;
     }
     if (baseName == "rlhbl") {
         fileIndex = GFX_PLR_RLHBL;
