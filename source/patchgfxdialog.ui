@@ -107,6 +107,16 @@
        </item>
        <item>
         <property name="text">
+         <string>Rogue in light armor with mace and shield casting magic (RLHQM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield standing in town (RLHST.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Rogue in light armor with mace and shield walking (RLHWL.CL2)</string>
         </property>
        </item>
