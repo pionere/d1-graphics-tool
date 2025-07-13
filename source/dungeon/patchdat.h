@@ -6,7 +6,7 @@
 #ifndef __PATCHDAT_H__
 #define __PATCHDAT_H__
 
-#include "../all.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
