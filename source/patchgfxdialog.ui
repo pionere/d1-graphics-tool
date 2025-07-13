@@ -107,6 +107,21 @@
        </item>
        <item>
         <property name="text">
+         <string>Rogue in light armor with mace and shield casting fire (RLHFM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield casting lightning (RLHLM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield getting hit (RLHHT.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Rogue in light armor with mace and shield casting magic (RLHQM.CL2)</string>
         </property>
        </item>

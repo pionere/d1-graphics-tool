@@ -6,7 +6,7 @@
 #ifndef __PATCHDAT_H__
 #define __PATCHDAT_H__
 
-#include "all.h"
+#include "../all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -25,6 +25,9 @@ extern const DeltaFrameData deltaRLHAS[3242];
 extern const DeltaFrameData deltaRLHAW[2968];
 extern const DeltaFrameData deltaRLHST[11936];
 extern const DeltaFrameData deltaRLHBL[2243];
+extern const DeltaFrameData deltaRLFLM[1968];
+extern const DeltaFrameData deltaRLHLM[3342];
+extern const DeltaFrameData deltaRLHHT[1635];
 extern const DeltaFrameData deltaRLHQM[2968];
 extern const DeltaFrameData deltaRLHWL[3834];
 extern const DeltaFrameData deltaRLMAT[6037];
