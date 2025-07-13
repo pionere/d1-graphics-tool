@@ -2520,7 +2520,9 @@ void MainWindow::on_actionToggleBottomPanel_triggered()
 
 void MainWindow::on_actionPatch_triggered()
 {
-    if (this->gfxset != nullptr) {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    if (this->gfxset != nullptr && !gfxOnly) {
         int fileIndex = -1;
         for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
             D1Gfx* currGfx = this->gfxset->getGfx(i);
