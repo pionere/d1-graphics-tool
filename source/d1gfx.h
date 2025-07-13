@@ -139,6 +139,7 @@ typedef enum gfx_file_index {
     GFX_PLR_RHUHT,   // graphics of rogue in heavy armor with shield getting hit (RHUHT.CL2)
     GFX_PLR_RHUQM,   // graphics of rogue in heavy armor with shield casting magic (RHUQM.CL2)
     GFX_PLR_RLHAS,   // graphics of rogue in light armor with mace and shield standing in dungeon (RLHAS.CL2)
+    GFX_PLR_RLHAT,   // graphics of rogue in light armor with mace and shield attacking (RLHAT.CL2)
     GFX_PLR_RLHAW,   // graphics of rogue in light armor with mace and shield walking in dungeon (RLHAW.CL2)
     GFX_PLR_RLHBL,   // graphics of rogue in light armor with mace and shield blocking (RLHBL.CL2)
     GFX_PLR_RLHFM,   // graphics of rogue in light armor with mace and shield casting fire (RLHFM.CL2)

@@ -21,15 +21,16 @@ typedef struct DeltaFrameData {
 extern "C" {
 #endif
 
-extern const DeltaFrameData deltaRLHAS[3242];
-extern const DeltaFrameData deltaRLHAW[2968];
-extern const DeltaFrameData deltaRLHST[11936];
+extern const DeltaFrameData deltaRLHAS[3449];
+extern const DeltaFrameData deltaRLHAT[913];
+extern const DeltaFrameData deltaRLHAW[3011];
+extern const DeltaFrameData deltaRLHST[12079];
 extern const DeltaFrameData deltaRLHBL[2243];
-extern const DeltaFrameData deltaRLHFM[1968];
-extern const DeltaFrameData deltaRLHLM[3342];
-extern const DeltaFrameData deltaRLHHT[1635];
-extern const DeltaFrameData deltaRLHQM[2968];
-extern const DeltaFrameData deltaRLHWL[3834];
+extern const DeltaFrameData deltaRLHFM[1977];
+extern const DeltaFrameData deltaRLHLM[3400];
+extern const DeltaFrameData deltaRLHHT[1687];
+extern const DeltaFrameData deltaRLHQM[2987];
+extern const DeltaFrameData deltaRLHWL[3876];
 extern const DeltaFrameData deltaRLMAT[6037];
 extern const DeltaFrameData deltaRMHAT[5043];
 extern const DeltaFrameData deltaRMMAT[5280];
