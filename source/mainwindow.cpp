@@ -2490,7 +2490,9 @@ void MainWindow::on_actionToggleBottomPanel_triggered()
 
 void MainWindow::on_actionPatch_triggered()
 {
-    if (this->gfxset != nullptr) {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    if (this->gfxset != nullptr && !gfxOnly) {
         int fileIndex = -1;
         for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
             D1Gfx* currGfx = this->gfxset->getGfx(i);
@@ -2532,7 +2534,11 @@ void MainWindow::on_actionPatch_triggered()
             this->gfx->patch(fileIndex, false);
 
             // trigger the update of the selected indices
-            this->celView->setGfx(this->gfx);
+            if (this->gfxsetView != nullptr) {
+                this->gfxsetView->setGfx(this->gfx);
+            } else {
+                this->celView->setGfx(this->gfx);
+            }
 
             // Clear loading message from status bar
             ProgressDialog::done();
