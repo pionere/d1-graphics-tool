@@ -2168,22 +2168,22 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
     constexpr BYTE TRANS_COLOR = 1;
     int frameCount = 0, width = 0, height = 0;
     switch (gfxFileIndex) {
-    case GFX_PLR_RLHAS: frameCount =  8; width = 96; height = 96; break;
+    case GFX_PLR_RLHAS: frameCount =  8; width =  96; height =  96; break;
     case GFX_PLR_RLHAT: frameCount = 18; width = 128; height = 128; break;
-    case GFX_PLR_RLHAW: frameCount =  8; width = 96; height = 96; break;
-    case GFX_PLR_RLHBL: frameCount =  4; width = 96; height = 96; break;
-    case GFX_PLR_RLHFM: frameCount = 16; width = 96; height = 96; break;
-    case GFX_PLR_RLHLM: frameCount = 16; width = 96; height = 96; break;
-    case GFX_PLR_RLHHT: frameCount =  7; width = 96; height = 96; break;
-    case GFX_PLR_RLHQM: frameCount = 16; width = 96; height = 96; break;
-    case GFX_PLR_RLHST: frameCount = 20; width = 96; height = 96; break;
-    case GFX_PLR_RLHWL: frameCount =  8; width = 96; height = 96; break;
+    case GFX_PLR_RLHAW: frameCount =  8; width =  96; height =  96; break;
+    case GFX_PLR_RLHBL: frameCount =  4; width =  96; height =  96; break;
+    case GFX_PLR_RLHFM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RLHLM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RLHHT: frameCount =  7; width =  96; height =  96; break;
+    case GFX_PLR_RLHQM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RLHST: frameCount = 20; width =  96; height =  96; break;
+    case GFX_PLR_RLHWL: frameCount =  8; width =  96; height =  96; break;
     case GFX_PLR_RLMAT: frameCount = 18; width = 128; height = 128; break;
     case GFX_PLR_RMHAT: frameCount = 18; width = 128; height = 128; break;
     case GFX_PLR_RMMAT: frameCount = 18; width = 128; height = 128; break;
-    case GFX_PLR_RMBFM: frameCount = 16; width = 96; height = 96; break;
-    case GFX_PLR_RMBLM: frameCount = 16; width = 96; height = 96; break;
-    case GFX_PLR_RMBQM: frameCount = 16; width = 96; height = 96; break;
+    case GFX_PLR_RMBFM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RMBLM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RMBQM: frameCount = 16; width =  96; height =  96; break;
     }
 
     if (this->getGroupCount() != NUM_DIRS) {
