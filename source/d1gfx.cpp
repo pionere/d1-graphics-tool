@@ -2130,12 +2130,22 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
     constexpr BYTE TRANS_COLOR = 1;
     int frameCount = 0, width = 0, height = 0;
     switch (gfxFileIndex) {
+    case GFX_PLR_RLHAS: frameCount =  8; width =  96; height =  96; break;
+    case GFX_PLR_RLHAT: frameCount = 18; width = 128; height = 128; break;
+    case GFX_PLR_RLHAW: frameCount =  8; width =  96; height =  96; break;
+    case GFX_PLR_RLHBL: frameCount =  4; width =  96; height =  96; break;
+    case GFX_PLR_RLHFM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RLHLM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RLHHT: frameCount =  7; width =  96; height =  96; break;
+    case GFX_PLR_RLHQM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RLHST: frameCount = 20; width =  96; height =  96; break;
+    case GFX_PLR_RLHWL: frameCount =  8; width =  96; height =  96; break;
     case GFX_PLR_RLMAT: frameCount = 18; width = 128; height = 128; break;
     case GFX_PLR_RMHAT: frameCount = 18; width = 128; height = 128; break;
     case GFX_PLR_RMMAT: frameCount = 18; width = 128; height = 128; break;
-    case GFX_PLR_RMBFM: frameCount = 16; width = 96; height = 96; break;
-    case GFX_PLR_RMBLM: frameCount = 16; width = 96; height = 96; break;
-    case GFX_PLR_RMBQM: frameCount = 16; width = 96; height = 96; break;
+    case GFX_PLR_RMBFM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RMBLM: frameCount = 16; width =  96; height =  96; break;
+    case GFX_PLR_RMBQM: frameCount = 16; width =  96; height =  96; break;
     }
 
     if (this->getGroupCount() != NUM_DIRS) {
@@ -2165,6 +2175,76 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
             bool change = false;
             int nn = n;
             switch (gfxFileIndex) {
+            case GFX_PLR_RLHAS:
+                for (int i = 0; i < lengthof(deltaRLHAS); i++) {
+                    if (deltaRLHAS[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHAS[i].dfx, deltaRLHAS[i].dfy, deltaRLHAS[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHAS[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHAT:
+                for (int i = 0; i < lengthof(deltaRLHAT); i++) {
+                    if (deltaRLHAT[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHAT[i].dfx, deltaRLHAT[i].dfy, deltaRLHAT[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHAT[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHAW:
+                for (int i = 0; i < lengthof(deltaRLHAW); i++) {
+                    if (deltaRLHAW[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHAW[i].dfx, deltaRLHAW[i].dfy, deltaRLHAW[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHAW[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHBL:
+                for (int i = 0; i < lengthof(deltaRLHBL); i++) {
+                    if (deltaRLHBL[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHBL[i].dfx, deltaRLHBL[i].dfy, deltaRLHBL[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHBL[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHFM:
+                for (int i = 0; i < lengthof(deltaRLHFM); i++) {
+                    if (deltaRLHFM[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHFM[i].dfx, deltaRLHFM[i].dfy, deltaRLHFM[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHFM[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHLM:
+                for (int i = 0; i < lengthof(deltaRLHLM); i++) {
+                    if (deltaRLHLM[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHLM[i].dfx, deltaRLHLM[i].dfy, deltaRLHLM[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHLM[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHHT:
+                for (int i = 0; i < lengthof(deltaRLHHT); i++) {
+                    if (deltaRLHHT[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHHT[i].dfx, deltaRLHHT[i].dfy, deltaRLHHT[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHHT[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHQM:
+                for (int i = 0; i < lengthof(deltaRLHQM); i++) {
+                    if (deltaRLHQM[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHQM[i].dfx, deltaRLHQM[i].dfy, deltaRLHQM[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHQM[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHST:
+                for (int i = 0; i < lengthof(deltaRLHST); i++) {
+                    if (deltaRLHST[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHST[i].dfx, deltaRLHST[i].dfy, deltaRLHST[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHST[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RLHWL:
+                for (int i = 0; i < lengthof(deltaRLHWL); i++) {
+                    if (deltaRLHWL[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRLHWL[i].dfx, deltaRLHWL[i].dfy, deltaRLHWL[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRLHWL[i].color));
+                    }
+                }
+                break;
             case GFX_PLR_RLMAT:
                 for (int i = 0; i < lengthof(deltaRLMAT); i++) {
                     if (deltaRLMAT[i].dfFrameNum == nn + 1) {
@@ -7491,6 +7571,16 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMDLM: // patch WMDLM.CL2
         change = this->patchPlrFrames(gfxFileIndex, silent);
         break;
+    case GFX_PLR_RLHAS:
+    case GFX_PLR_RLHAT:
+    case GFX_PLR_RLHAW:
+    case GFX_PLR_RLHBL:
+    case GFX_PLR_RLHFM:
+    case GFX_PLR_RLHLM:
+    case GFX_PLR_RLHHT:
+    case GFX_PLR_RLHQM:
+    case GFX_PLR_RLHST:
+    case GFX_PLR_RLHWL:
     case GFX_PLR_RLMAT:
     case GFX_PLR_RMHAT:
     case GFX_PLR_RMMAT:
@@ -7711,6 +7801,36 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "rhuqm") {
         fileIndex = GFX_PLR_RHUQM;
+    }
+    if (baseName == "rlhas") {
+        fileIndex = GFX_PLR_RLHAS;
+    }
+    if (baseName == "rlhat") {
+        fileIndex = GFX_PLR_RLHAT;
+    }
+    if (baseName == "rlhaw") {
+        fileIndex = GFX_PLR_RLHAW;
+    }
+    if (baseName == "rlhbl") {
+        fileIndex = GFX_PLR_RLHBL;
+    }
+    if (baseName == "rlhfm") {
+        fileIndex = GFX_PLR_RLHFM;
+    }
+    if (baseName == "rlhlm") {
+        fileIndex = GFX_PLR_RLHLM;
+    }
+    if (baseName == "rlhht") {
+        fileIndex = GFX_PLR_RLHHT;
+    }
+    if (baseName == "rlhqm") {
+        fileIndex = GFX_PLR_RLHQM;
+    }
+    if (baseName == "rlhst") {
+        fileIndex = GFX_PLR_RLHST;
+    }
+    if (baseName == "rlhwl") {
+        fileIndex = GFX_PLR_RLHWL;
     }
     if (baseName == "rlmat") {
         fileIndex = GFX_PLR_RLMAT;

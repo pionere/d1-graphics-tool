@@ -92,6 +92,56 @@
        </item>
        <item>
         <property name="text">
+         <string>Rogue in light armor with mace and shield standing in dungeon (RLHAS.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield attacking (RLHAT.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield walking in dungeon (RLHAW.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield blocking (RLHBL.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield casting fire (RLHFM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield casting lightning (RLHLM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield getting hit (RLHHT.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield casting magic (RLHQM.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield standing in town (RLHST.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rogue in light armor with mace and shield walking (RLHWL.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Rogue in light armor with mace attacking (RLMAT.CL2)</string>
         </property>
        </item>
