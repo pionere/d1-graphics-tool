@@ -2141,6 +2141,7 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
     case GFX_PLR_RLHST: frameCount = 20; width =  96; height =  96; break;
     case GFX_PLR_RLHWL: frameCount =  8; width =  96; height =  96; break;
     case GFX_PLR_RLMAT: frameCount = 18; width = 128; height = 128; break;
+    case GFX_PLR_RMDAW: frameCount =  8; width =  96; height =  96; break;
     case GFX_PLR_RMHAT: frameCount = 18; width = 128; height = 128; break;
     case GFX_PLR_RMMAT: frameCount = 18; width = 128; height = 128; break;
     case GFX_PLR_RMBFM: frameCount = 16; width =  96; height =  96; break;
@@ -2252,6 +2253,13 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
                             change |= currFrame->setPixel(deltaRLMAT[i].dfx, deltaRLMAT[i].dfy, D1GfxPixel::transparentPixel());
                         else
                             change |= currFrame->setPixel(deltaRLMAT[i].dfx, deltaRLMAT[i].dfy, D1GfxPixel::colorPixel(deltaRLMAT[i].color));
+                    }
+                }
+                break;
+            case GFX_PLR_RMDAW:
+                for (int i = 0; i < lengthof(deltaRMDAW); i++) {
+                    if (deltaRMDAW[i].dfFrameNum == nn + 1) {
+                        change |= currFrame->setPixel(deltaRMDAW[i].dfx, deltaRMDAW[i].dfy, deltaRMDAW[i].color == TRANS_COLOR ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(deltaRMDAW[i].color));
                     }
                 }
                 break;
@@ -7582,6 +7590,7 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_RLHST:
     case GFX_PLR_RLHWL:
     case GFX_PLR_RLMAT:
+    case GFX_PLR_RMDAW:
     case GFX_PLR_RMHAT:
     case GFX_PLR_RMMAT:
     case GFX_PLR_RMBFM:
@@ -7834,6 +7843,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "rlmat") {
         fileIndex = GFX_PLR_RLMAT;
+    }
+    if (baseName == "rmdaw") {
+        fileIndex = GFX_PLR_RMDAW;
     }
     if (baseName == "rmhat") {
         fileIndex = GFX_PLR_RMHAT;
