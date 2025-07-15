@@ -384,6 +384,7 @@
     <addaction name="actionDuplicate_Frame"/>
     <addaction name="actionReplace_Frame"/>
     <addaction name="actionDel_Frame"/>
+    <addaction name="separator"/>
     <addaction name="actionFlipHorizontal_Frame"/>
     <addaction name="actionFlipVertical_Frame"/>
    </widget>

@@ -1085,35 +1085,53 @@ void GfxsetView::ShowContextMenu(const QPoint &pos)
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddTo_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
+    contextMenu.addSeparator();
+
     cursor++;
-    actions[cursor].setText(tr("Insert Frame"));
+    actions[cursor].setText(tr("Insert"));
     actions[cursor].setToolTip(tr("Add new frames before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Duplicate Frame"));
+    actions[cursor].setText(tr("Duplicate"));
     actions[cursor].setToolTip(tr("Duplicate the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Append Frame"));
+    actions[cursor].setText(tr("Append"));
     actions[cursor].setToolTip(tr("Append new frames at the end"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Replace Frame"));
+    actions[cursor].setText(tr("Replace"));
     actions[cursor].setToolTip(tr("Replace the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Del Frame"));
+    actions[cursor].setText(tr("Del"));
     actions[cursor].setToolTip(tr("Delete the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
+    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    contextMenu.addAction(&actions[cursor]);
+
+    contextMenu.addSeparator();
+
+    cursor++;
+    actions[cursor].setText(tr("Horizontal Flip"));
+    actions[cursor].setToolTip(tr("Flip the current frame horizontally"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionFlipHorizontal_Frame_triggered()));
+    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    contextMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Vertical Flip"));
+    actions[cursor].setToolTip(tr("Flip the current frame vertically"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionFlipVertical_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
     contextMenu.addAction(&actions[cursor]);
 

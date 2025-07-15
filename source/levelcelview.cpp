@@ -3844,7 +3844,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
         return;
     }
     MainWindow *mw = &dMainWindow();
-    QAction actions[16];
+    QAction actions[18];
     QMenu contextMenu(this);
 
     QMenu frameMenu(tr("Frame"), this);
@@ -3855,6 +3855,8 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setToolTip(tr("Add the content of an image to the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddTo_Frame_triggered()));
     frameMenu.addAction(&actions[cursor]);
+
+    frameMenu.addSeparator();
 
     cursor++;
     actions[cursor].setText(tr("Create"));
@@ -3885,6 +3887,22 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setText(tr("Delete"));
     actions[cursor].setToolTip(tr("Delete the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
+    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    frameMenu.addAction(&actions[cursor]);
+
+    frameMenu.addSeparator();
+
+    cursor++;
+    actions[cursor].setText(tr("Horizontal Flip"));
+    actions[cursor].setToolTip(tr("Flip the current frame horizontally"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionFlipHorizontal_Frame_triggered()));
+    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    frameMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Vertical Flip"));
+    actions[cursor].setToolTip(tr("Flip the current frame vertically"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionFlipVertical_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
     frameMenu.addAction(&actions[cursor]);
 
