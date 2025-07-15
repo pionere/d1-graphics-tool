@@ -740,10 +740,10 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
 
         if (frameRef > 0) {
             this->currentFrameIndex = frameRef - 1;
-            if (dMainWindow().isPainting() && (!frameChanged || this->ui->drawToSpecCheckBox->isChecked())) {
+            if ((dMainWindow().isPainting() && !(QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier)) && (!frameChanged || this->ui->drawToSpecCheckBox->isChecked())) {
                 if (!this->ui->drawToSpecCheckBox->isChecked()) {
                     // draw to the micro
-                    if (frameRef <= this->gfx->getFrameCount()) {
+                    if (frameRef <= (unsigned)this->gfx->getFrameCount()) {
                         D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
                         dMainWindow().frameClicked(frame, rpos, flags);
                     }
@@ -752,8 +752,8 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
                     int specFrame = this->sla->getSpecProperty(this->currentSubtileIndex);
                     if (specFrame > 0 && specFrame <= this->cls->getFrameCount()) {
                         D1GfxFrame *frame = this->cls->getFrame(specFrame - 1);
-                        rpos.x() += stx * MICRO_WIDTH;
-                        rpos.y() += sty * MICRO_HEIGHT;
+                        rpos.rx() += stx * MICRO_WIDTH;
+                        rpos.ry() += sty * MICRO_HEIGHT;
                         dMainWindow().frameClicked(frame, rpos, flags);
                     }
                 }
@@ -791,7 +791,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
         if (tilSubtiles.size() > tSubtile) {
             this->currentSubtileIndex = tilSubtiles.at(tSubtile);
             bool tileChanged = this->tabTileWidget.selectSubtile(tSubtile);
-            if (dMainWindow().isPainting() && (!tileChanged || this->ui->drawToSpecCheckBox->isChecked())) {
+            if ((dMainWindow().isPainting() && !(QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier)) && (!tileChanged || this->ui->drawToSpecCheckBox->isChecked())) {
                 if (!this->ui->drawToSpecCheckBox->isChecked()) {
                     // draw to the micro
                     unsigned stx = rpos.x();
@@ -808,7 +808,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
                     unsigned frameRef = 0;
                     if (minFrames.size() > stFrame) {
                         frameRef = minFrames.at(stFrame);
-                        if (frameRef > 0 && frameRef <= this->gfx->getFrameCount()) {
+                        if (frameRef > 0 && frameRef <= (unsigned)this->gfx->getFrameCount()) {
                             D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
                             dMainWindow().frameClicked(frame, rpos, flags);
                         }
@@ -844,7 +844,8 @@ void LevelCelView::framePixelHovered(const QPoint &pos) const
         return;
     }
     QPoint tpos = pos;
-    if (this->subtilePos(tpos)) {
+    QPoint rpos;
+    if (this->subtilePos(tpos, rpos)) {
         unsigned stx = tpos.x();
         unsigned sty = tpos.y();
         unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -856,7 +857,7 @@ void LevelCelView::framePixelHovered(const QPoint &pos) const
         dMainWindow().pointHovered(tpos);
         return;
     }
-    if (this->tilePos(tpos)) {
+    if (this->tilePos(tpos, rpos)) {
         dMainWindow().pointHovered(tpos);
         return;
     }
