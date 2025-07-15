@@ -171,10 +171,14 @@ void LevelTabTileWidget::updateFields()
     this->onUpdate = false;
 }
 
-void LevelTabTileWidget::selectSubtile(int index)
+bool LevelTabTileWidget::selectSubtile(int index)
 {
+    if (this->lastSubtileEntryIndex == index) {
+        return false;
+    }
     this->ui->subtilesComboBox->setCurrentIndex(index);
     this->updateSubtilesSelection(index);
+    return true;
 }
 
 void LevelTabTileWidget::updateSubtilesSelection(int index)

@@ -203,8 +203,8 @@ private:
     void setPosition(int posx, int posy);
     void shiftPosition(int dx, int dy);
     QPoint getCellPos(const QPoint &pos) const;
-    bool subtilePos(QPoint &pos) const;
-    bool tilePos(QPoint &pos) const;
+    bool subtilePos(QPoint &pos, QPoint &rpos) const;
+    bool tilePos(QPoint &pos, QPoint &rpos) const;
     bool framePos(QPoint &pos) const;
     void showSubtileInfo();
 

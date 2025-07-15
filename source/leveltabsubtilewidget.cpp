@@ -261,10 +261,14 @@ void LevelTabSubtileWidget::updateFields()
     this->onUpdate = false;
 }
 
-void LevelTabSubtileWidget::selectFrame(int index)
+bool LevelTabSubtileWidget::selectFrame(int index)
 {
+    if (this->lastFrameEntryIndex == index) {
+        return false;
+    }
     this->ui->framesComboBox->setCurrentIndex(index);
     this->updateFramesSelection(index);
+    return true;
 }
 
 void LevelTabSubtileWidget::updateFramesSelection(int index)
