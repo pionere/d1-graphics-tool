@@ -1128,32 +1128,32 @@ void CelView::ShowContextMenu(const QPoint &pos)
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Create Frame"));
+    actions[cursor].setText(tr("Create"));
     actions[cursor].setToolTip(tr("Create a new frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionCreate_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Insert Frame"));
+    actions[cursor].setText(tr("Insert"));
     actions[cursor].setToolTip(tr("Add a new frame before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Duplicate Frame"));
+    actions[cursor].setText(tr("Duplicate"));
     actions[cursor].setToolTip(tr("Duplicate the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Replace Frame"));
+    actions[cursor].setText(tr("Replace"));
     actions[cursor].setToolTip(tr("Replace the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText(tr("Del Frame"));
+    actions[cursor].setText(tr("Del"));
     actions[cursor].setToolTip(tr("Delete the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
