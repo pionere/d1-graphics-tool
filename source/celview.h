@@ -100,6 +100,8 @@ public:
     void duplicateCurrentFrame(bool wholeGroup);
     void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame(bool wholeGroup);
+    void flipHorizontalCurrentFrame(bool wholeGroup);
+    void flipVerticalCurrentFrame(bool wholeGroup);
     void mergeFrames(const MergeFramesParam &params);
 
     QString copyCurrentPixels(bool values) const;

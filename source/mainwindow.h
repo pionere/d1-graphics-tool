@@ -177,6 +177,8 @@ public slots:
     void on_actionDuplicate_Frame_triggered();
     void on_actionReplace_Frame_triggered();
     void on_actionDel_Frame_triggered();
+    void on_actionFlipHorizontal_Frame_triggered();
+    void on_actionFlipVertical_Frame_triggered();
 
     void on_actionCreate_Subtile_triggered();
     void on_actionInsert_Subtile_triggered();

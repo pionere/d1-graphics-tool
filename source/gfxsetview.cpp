@@ -546,6 +546,24 @@ void GfxsetView::removeCurrentFrame(bool wholeGroup)
     // this->displayFrame();
 }
 
+void GfxsetView::flipHorizontalCurrentFrame(bool wholeGroup)
+{
+    // flip the frame
+    this->gfx->flipHorizontalFrame(this->currentFrameIndex, wholeGroup);
+
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+void GfxsetView::flipVerticalCurrentFrame(bool wholeGroup)
+{
+    // flip the frame
+    this->gfx->flipVerticalFrame(this->currentFrameIndex, wholeGroup);
+
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
 void GfxsetView::mergeFrames(const MergeFramesParam &params)
 {
     int firstFrameIdx = params.rangeFrom;

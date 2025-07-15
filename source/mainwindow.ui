@@ -384,6 +384,8 @@
     <addaction name="actionDuplicate_Frame"/>
     <addaction name="actionReplace_Frame"/>
     <addaction name="actionDel_Frame"/>
+    <addaction name="actionFlipHorizontal_Frame"/>
+    <addaction name="actionFlipVertical_Frame"/>
    </widget>
    <widget class="QMenu" name="menuSubtile">
     <property name="title">
@@ -649,6 +651,22 @@
    </property>
    <property name="toolTip">
     <string>Delete the current frame</string>
+   </property>
+  </action>
+  <action name="actionFlipHorizontal_Frame">
+   <property name="text">
+    <string>Horizontal Flip</string>
+   </property>
+   <property name="toolTip">
+    <string>Flip the current frame horizontally</string>
+   </property>
+  </action>
+  <action name="actionFlipVertical_Frame">
+   <property name="text">
+    <string>Vertical Flip</string>
+   </property>
+   <property name="toolTip">
+    <string>Flip the current frame vertically</string>
    </property>
   </action>
   <action name="actionCreate_Subtile">

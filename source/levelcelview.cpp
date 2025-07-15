@@ -1792,6 +1792,24 @@ void LevelCelView::removeCurrentFrame(bool wholeGroup)
     // this->displayFrame();
 }
 
+void LevelCelView::flipHorizontalCurrentFrame(bool wholeGroup)
+{
+    // flip the frame
+    this->gfx->flipHorizontalFrame(this->currentFrameIndex, wholeGroup);
+
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+void LevelCelView::flipVerticalCurrentFrame(bool wholeGroup)
+{
+    // flip the frame
+    this->gfx->flipVerticalFrame(this->currentFrameIndex, wholeGroup);
+
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
 void LevelCelView::mergeFrames(const MergeFramesParam &params)
 {
     int firstFrameIdx = params.rangeFrom;

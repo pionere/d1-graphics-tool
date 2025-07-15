@@ -224,6 +224,42 @@ bool D1GfxFrame::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &repla
     return result;
 }
 
+bool D1GfxFrame::flipHorizontal()
+{
+    bool result = false;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width / 2; x++) {
+            D1GfxPixel d1pix0 = this->pixels[y][x]; // this->getPixel(x, y);
+            D1GfxPixel d1pix1 = this->pixels[y][this->width - 1 - x]; // this->getPixel(width - 1 - x, y);
+
+            if (d1pix0 != d1pix1) {
+                this->pixels[y][x] = d1pix1;
+                this->pixels[y][this->width - 1 - x] = d1pix0;
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
+bool D1GfxFrame::flipVertical()
+{
+    bool result = false;
+    for (int x = 0; x < this->width; x++) {
+        for (int y = 0; y < this->height / 2; y++) {
+            D1GfxPixel d1pix0 = this->pixels[y][x]; // this->getPixel(x, y);
+            D1GfxPixel d1pix1 = this->pixels[this->height - 1 - y][x]; // this->getPixel(x, height - 1 - y);
+
+            if (d1pix0 != d1pix1) {
+                this->pixels[y][x] = d1pix1;
+                this->pixels[this->height - 1 - y][x] = d1pix0;
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
 bool D1GfxFrame::mask(const D1GfxFrame *frame)
 {
     bool result = false;
@@ -916,6 +952,48 @@ void D1Gfx::removeFrame(int idx, bool wholeGroup)
         }
     }
     this->modified = true;
+}
+
+void D1Gfx::flipHorizontalFrame(int idx, bool wholeGroup)
+{
+    //const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    bool modified = this->modified;
+    if (wholeGroup /*&& multiGroup*/) {
+        for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
+            if (this->groupFrameIndices[i].second < idx)
+                continue;
+            if (this->groupFrameIndices[i].first <= idx) {
+                idx = this->groupFrameIndices[i].first; 
+                for (int n = idx; n <= this->groupFrameIndices[i].second; n++) {
+                    modified |= this->frames[n]->flipHorizontal();
+                }
+            }
+        }
+    } else {
+        modified |= this->frames[idx]->flipHorizontal();
+    }
+    this->modified = modified;
+}
+
+void D1Gfx::flipVerticalFrame(int idx, bool wholeGroup)
+{
+    //const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    bool modified = this->modified;
+    if (wholeGroup /*&& multiGroup*/) {
+        for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
+            if (this->groupFrameIndices[i].second < idx)
+                continue;
+            if (this->groupFrameIndices[i].first <= idx) {
+                idx = this->groupFrameIndices[i].first; 
+                for (int n = idx; n <= this->groupFrameIndices[i].second; n++) {
+                    modified |= this->frames[n]->flipVertical();
+                }
+            }
+        }
+    } else {
+        modified |= this->frames[idx]->flipVertical();
+    }
+    this->modified = modified;
 }
 
 void D1Gfx::remapFrames(const std::map<unsigned, unsigned> &remap)

@@ -2391,6 +2391,36 @@ void MainWindow::on_actionDel_Frame_triggered()
     this->updateWindow();
 }
 
+void MainWindow::on_actionFlipHorizontal_Frame_triggered()
+{
+    const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    if (this->celView != nullptr) {
+        this->celView->flipHorizontalCurrentFrame(wholeGroup);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->flipHorizontalCurrentFrame(wholeGroup);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->flipHorizontalCurrentFrame(wholeGroup);
+    }
+    this->updateWindow();
+}
+
+void MainWindow::on_actionFlipVertical_Frame_triggered()
+{
+    const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    if (this->celView != nullptr) {
+        this->celView->flipVerticalCurrentFrame(wholeGroup);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->flipVerticalCurrentFrame(wholeGroup);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->flipVerticalCurrentFrame(wholeGroup);
+    }
+    this->updateWindow();
+}
+
 void MainWindow::on_actionCreate_Subtile_triggered()
 {
     this->addSubtiles(true);
