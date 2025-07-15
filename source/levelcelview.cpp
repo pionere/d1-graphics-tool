@@ -732,56 +732,61 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
         unsigned stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
         std::vector<unsigned> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
         unsigned frameRef = 0;
-        bool frameChanged = false;
+        bool frameChanged = false, drawn = false;
         if (minFrames.size() > stFrame) {
             frameRef = minFrames.at(stFrame);
             frameChanged = this->tabSubtileWidget.selectFrame(stFrame);
         }
-
         if (frameRef > 0) {
             this->currentFrameIndex = frameRef - 1;
-            if ((dMainWindow().isPainting() && !(QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier)) && (!frameChanged || this->ui->drawToSpecCheckBox->isChecked())) {
-                if (!this->ui->drawToSpecCheckBox->isChecked()) {
-                    // draw to the micro
-                    if (frameRef <= (unsigned)this->gfx->getFrameCount()) {
-                        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
-                        dMainWindow().frameClicked(frame, rpos, flags);
-                    }
-                } else {
-                    // draw to the special frame of the subtile
-                    int specFrame = this->sla->getSpecProperty(this->currentSubtileIndex);
-                    if (specFrame > 0 && specFrame <= this->cls->getFrameCount()) {
-                        D1GfxFrame *frame = this->cls->getFrame(specFrame - 1);
-                        rpos.rx() += stx * MICRO_WIDTH;
-                        rpos.ry() += sty * MICRO_HEIGHT;
-                        dMainWindow().frameClicked(frame, rpos, flags);
-                    }
+        }
+        if ((dMainWindow().isPainting() && !(QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier)) && (!frameChanged || this->ui->drawToSpecCheckBox->isChecked())) {
+            if (!this->ui->drawToSpecCheckBox->isChecked()) {
+                // draw to the micro
+                if (frameRef > 0 && frameRef <= (unsigned)this->gfx->getFrameCount()) {
+                    D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
+                    dMainWindow().frameClicked(frame, rpos, flags);
+                    drawn = true;
+                }
+            } else {
+                // draw to the special frame of the subtile
+                int specFrame = this->sla->getSpecProperty(this->currentSubtileIndex);
+                if (specFrame > 0 && specFrame <= this->cls->getFrameCount()) {
+                    D1GfxFrame *frame = this->cls->getFrame(specFrame - 1);
+                    rpos.rx() += stx * MICRO_WIDTH;
+                    rpos.ry() += sty * MICRO_HEIGHT;
+                    dMainWindow().frameClicked(frame, rpos, flags);
+                    drawn = true;
                 }
             }
-            this->displayFrame();
         }
-        // highlight selection
-        QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
-        QPen pen(borderColor);
-        pen.setWidth(PALETTE_SELECTION_WIDTH);
-        QRectF coordinates = QRectF(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_MARGIN + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
-        int a = PALETTE_SELECTION_WIDTH / 2;
-        coordinates.adjust(-a, -a, 0, 0);
-        // - top line
-        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
-        // - bottom line
-        this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
-        // - left side
-        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left(), coordinates.bottom(), pen);
-        // - right side
-        this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
-        // clear after some time
-        QTimer *timer = new QTimer();
-        QObject::connect(timer, &QTimer::timeout, [this, timer]() {
+        // if (frameChanged || drawn) {
             this->displayFrame();
-            timer->deleteLater();
-        });
-        timer->start(500);
+        // }
+        // highlight selection
+        if (!drawn) {
+            QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+            QPen pen(borderColor);
+            pen.setWidth(PALETTE_SELECTION_WIDTH);
+            QRectF coordinates = QRectF(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_MARGIN + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
+            int a = PALETTE_SELECTION_WIDTH / 2;
+            coordinates.adjust(-a, -a, 0, 0);
+            // - top line
+            this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
+            // - bottom line
+            this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
+            // - left side
+            this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left(), coordinates.bottom(), pen);
+            // - right side
+            this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
+            // clear after some time
+            QTimer *timer = new QTimer();
+            QObject::connect(timer, &QTimer::timeout, [this, timer]() {
+                this->displayFrame();
+                timer->deleteLater();
+            });
+            timer->start(500);
+        }
         return;
     }
     if (this->tilePos(tpos, rpos)) {
@@ -822,7 +827,9 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
                     }
                 }
             }
-            this->displayFrame();
+            // if (tileChanged || drawn) {
+                this->displayFrame();
+            }
         }
         return;
     }
