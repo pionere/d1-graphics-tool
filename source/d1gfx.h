@@ -107,6 +107,8 @@ public:
     bool addTo(const D1GfxFrame &frame);
     void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
     bool replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements);
+    bool flipHorizontal();
+    bool flipVertical();
     bool mask(const D1GfxFrame *frame);
     bool optimize(D1CEL_TYPE type);
 
@@ -262,6 +264,8 @@ public:
     D1GfxFrame *replaceFrame(int frameIndex, const QImage &image);
     int duplicateFrame(int frameIndex, bool wholeGroup);
     void removeFrame(int frameIndex, bool wholeGroup);
+    void flipHorizontalFrame(int frameIndex, bool wholeGroup);
+    void flipVerticalFrame(int frameIndex, bool wholeGroup);
     void remapFrames(const std::map<unsigned, unsigned> &remap);
     void swapFrames(unsigned frameIndex0, unsigned frameIndex1);
     void mergeFrames(unsigned frameIndex0, unsigned frameIndex1);

@@ -661,6 +661,24 @@ void CelView::removeCurrentFrame(bool wholeGroup)
     // this->displayFrame();
 }
 
+void CelView::flipHorizontalCurrentFrame(bool wholeGroup)
+{
+    // flip the frame
+    this->gfx->flipHorizontalFrame(this->currentFrameIndex, wholeGroup);
+
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+void CelView::flipVerticalCurrentFrame(bool wholeGroup)
+{
+    // flip the frame
+    this->gfx->flipVerticalFrame(this->currentFrameIndex, wholeGroup);
+
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
 void CelView::mergeFrames(const MergeFramesParam &params)
 {
     int firstFrameIdx = params.rangeFrom;
@@ -1127,6 +1145,8 @@ void CelView::ShowContextMenu(const QPoint &pos)
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddTo_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
+    contextMenu.addSeparator();
+
     cursor++;
     actions[cursor].setText(tr("Create"));
     actions[cursor].setToolTip(tr("Create a new frame"));
@@ -1156,6 +1176,22 @@ void CelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setText(tr("Del"));
     actions[cursor].setToolTip(tr("Delete the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
+    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    contextMenu.addAction(&actions[cursor]);
+
+    contextMenu.addSeparator();
+
+    cursor++;
+    actions[cursor].setText(tr("Horizontal Flip"));
+    actions[cursor].setToolTip(tr("Flip the current frame horizontally"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionFlipHorizontal_Frame_triggered()));
+    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    contextMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Vertical Flip"));
+    actions[cursor].setToolTip(tr("Flip the current frame vertically"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionFlipVertical_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
     contextMenu.addAction(&actions[cursor]);
 

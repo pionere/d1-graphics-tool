@@ -222,6 +222,8 @@ void MainWindow::updateWindow()
     this->ui->actionDuplicate_Frame->setEnabled(hasFrame);
     this->ui->actionReplace_Frame->setEnabled(hasFrame);
     this->ui->actionDel_Frame->setEnabled(hasFrame);
+    this->ui->actionFlipHorizontal_Frame->setEnabled(hasFrame);
+    this->ui->actionFlipVertical_Frame->setEnabled(hasFrame);
     bool hasSubtile = this->tileset != nullptr && this->tileset->min->getSubtileCount() != 0;
     this->ui->actionDuplicate_Subtile->setEnabled(hasSubtile);
     this->ui->actionReplace_Subtile->setEnabled(hasSubtile);
@@ -2357,6 +2359,36 @@ void MainWindow::on_actionDel_Frame_triggered()
     }
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->removeCurrentFrame(wholeGroup);
+    }
+    this->updateWindow();
+}
+
+void MainWindow::on_actionFlipHorizontal_Frame_triggered()
+{
+    const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    if (this->celView != nullptr) {
+        this->celView->flipHorizontalCurrentFrame(wholeGroup);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->flipHorizontalCurrentFrame(wholeGroup);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->flipHorizontalCurrentFrame(wholeGroup);
+    }
+    this->updateWindow();
+}
+
+void MainWindow::on_actionFlipVertical_Frame_triggered()
+{
+    const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    if (this->celView != nullptr) {
+        this->celView->flipVerticalCurrentFrame(wholeGroup);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->flipVerticalCurrentFrame(wholeGroup);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->flipVerticalCurrentFrame(wholeGroup);
     }
     this->updateWindow();
 }
