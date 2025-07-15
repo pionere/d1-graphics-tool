@@ -2357,7 +2357,7 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
                 result = true;
                 this->setModified();
                 if (!silent) {
-                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_SW + 1);
+                    dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(ii + 1);
                 }
             }
         }
