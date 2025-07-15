@@ -829,7 +829,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
             }
             // if (tileChanged || drawn) {
                 this->displayFrame();
-            }
+            // }
         }
         return;
     }
