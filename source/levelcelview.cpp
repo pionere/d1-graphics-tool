@@ -702,28 +702,28 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
             this->displayFrame();
         // }
         if (!drawn) {
-        // highlight selection
-        QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
-        QPen pen(borderColor);
-        pen.setWidth(PALETTE_SELECTION_WIDTH);
-        QRectF coordinates = QRectF(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_MARGIN + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
-        int a = PALETTE_SELECTION_WIDTH / 2;
-        coordinates.adjust(-a, -a, 0, 0);
-        // - top line
-        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
-        // - bottom line
-        this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
-        // - left side
-        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left(), coordinates.bottom(), pen);
-        // - right side
-        this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
-        // clear after some time
-        QTimer *timer = new QTimer();
-        QObject::connect(timer, &QTimer::timeout, [this, timer]() {
-            this->displayFrame();
-            timer->deleteLater();
-        });
-        timer->start(500);
+            // highlight selection
+            QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+            QPen pen(borderColor);
+            pen.setWidth(PALETTE_SELECTION_WIDTH);
+            QRectF coordinates = QRectF(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_MARGIN + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
+            int a = PALETTE_SELECTION_WIDTH / 2;
+            coordinates.adjust(-a, -a, 0, 0);
+            // - top line
+            this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
+            // - bottom line
+            this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
+            // - left side
+            this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left(), coordinates.bottom(), pen);
+            // - right side
+            this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
+            // clear after some time
+            QTimer *timer = new QTimer();
+            QObject::connect(timer, &QTimer::timeout, [this, timer]() {
+                this->displayFrame();
+                timer->deleteLater();
+            });
+            timer->start(500);
         }
         return;
     }
