@@ -76,7 +76,7 @@ public:
     void setGfx(D1Gfx *g);
     void updateFields();
 
-    void selectFrame(int index);
+    bool selectFrame(int index);
 
 private slots:
     void on_clearPushButtonClicked();

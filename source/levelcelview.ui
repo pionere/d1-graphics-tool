@@ -163,11 +163,22 @@
        </widget>
       </item>
       <item row="0" column="13" colspan="4">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
+       <layout class="QHBoxLayout">
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="drawToSpecCheckBox">
+          <property name="toolTip">
+           <string>Draw to the special cels</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="0" column="17">
        <layout class="QHBoxLayout" name="tilesetButtonsHorizontalLayout">

@@ -534,7 +534,7 @@ QPoint LevelCelView::getCellPos(const QPoint &pos) const
     return QPoint(cellX, cellY);
 }
 
-bool LevelCelView::subtilePos(QPoint &pos) const
+bool LevelCelView::subtilePos(QPoint &pos, QPoint &rpos) const
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -552,6 +552,9 @@ bool LevelCelView::subtilePos(QPoint &pos) const
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
+        rpos.setX(stx % MICRO_WIDTH);
+        rpos.setY(sty % MICRO_HEIGHT);
+
         stx /= MICRO_WIDTH;
         sty /= MICRO_HEIGHT;
 
@@ -563,7 +566,7 @@ bool LevelCelView::subtilePos(QPoint &pos) const
     return false;
 }
 
-bool LevelCelView::tilePos(QPoint &pos) const
+bool LevelCelView::tilePos(QPoint &pos, QPoint &rpos) const
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -616,6 +619,15 @@ bool LevelCelView::tilePos(QPoint &pos) const
             else
                 tSubtile = 3;
         }
+        switch (tSubtile) {
+        case 0: tx -= subtileWidth / 2; ty -= 0; break;
+        case 1: tx -= subtileWidth; ty -= subtileShiftY; break;
+        case 2: tx -= 0; ty -= subtileShiftY; break;
+        case 3: tx -= subtileWidth / 2; ty -= 2 * subtileShiftY; break;
+        }
+        rpos.setX(tx);
+        rpos.setY(ty);
+
         pos.setX(tSubtile);
         pos.setY(UINT_MAX);
         return true;
@@ -650,22 +662,46 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
         return;
     }
     QPoint tpos = pos;
-    if (this->subtilePos(tpos)) {
+    QPoint rpos;
+    if (this->subtilePos(tpos, rpos)) {
         unsigned stx = tpos.x();
         unsigned sty = tpos.y();
 
         unsigned stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
         std::vector<unsigned> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
         unsigned frameRef = 0;
+        bool frameChanged = false, drawn = false;
         if (minFrames.size() > stFrame) {
             frameRef = minFrames.at(stFrame);
-            this->tabSubtileWidget.selectFrame(stFrame);
+            frameChanged = this->tabSubtileWidget.selectFrame(stFrame);
         }
-
         if (frameRef > 0) {
             this->currentFrameIndex = frameRef - 1;
-            this->displayFrame();
         }
+        if ((dMainWindow().isPainting() && !(QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier)) && (!frameChanged || this->ui->drawToSpecCheckBox->isChecked())) {
+            if (!this->ui->drawToSpecCheckBox->isChecked()) {
+                // draw to the micro
+                if (frameRef > 0 && frameRef <= (unsigned)this->gfx->getFrameCount()) {
+                    D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
+                    dMainWindow().frameClicked(frame, rpos, flags);
+                    drawn = true;
+                }
+            } else {
+                // draw to the special frame of the subtile
+                int specFrame = this->sla->getSpecProperty(this->currentSubtileIndex);
+                if (specFrame > 0 && specFrame <= this->cls->getFrameCount()) {
+                    D1GfxFrame *frame = this->cls->getFrame(specFrame - 1);
+                    rpos.rx() += stx * MICRO_WIDTH;
+                    rpos.ry() += sty * MICRO_HEIGHT;
+                    dMainWindow().frameClicked(frame, rpos, flags);
+                    drawn = true;
+                }
+            }
+        }
+        // if (frameChanged || drawn) {
+            this->displayFrame();
+        // }
+        if (!drawn) {
         // highlight selection
         QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
         QPen pen(borderColor);
@@ -688,16 +724,50 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
             timer->deleteLater();
         });
         timer->start(500);
+        }
         return;
     }
-    if (this->tilePos(tpos)) {
+    if (this->tilePos(tpos, rpos)) {
         unsigned tSubtile = tpos.x();
 
         std::vector<int> &tilSubtiles = this->til->getSubtileIndices(this->currentTileIndex);
         if (tilSubtiles.size() > tSubtile) {
             this->currentSubtileIndex = tilSubtiles.at(tSubtile);
-            this->tabTileWidget.selectSubtile(tSubtile);
-            this->displayFrame();
+            bool tileChanged = this->tabTileWidget.selectSubtile(tSubtile);
+            if ((dMainWindow().isPainting() && !(QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier)) && (!tileChanged || this->ui->drawToSpecCheckBox->isChecked())) {
+                if (!this->ui->drawToSpecCheckBox->isChecked()) {
+                    // draw to the micro
+                    unsigned stx = rpos.x();
+                    unsigned sty = rpos.y();
+
+                    rpos.setX(stx % MICRO_WIDTH);
+                    rpos.setY(sty % MICRO_HEIGHT);
+
+                    stx /= MICRO_WIDTH;
+                    sty /= MICRO_HEIGHT;
+
+                    unsigned stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
+                    std::vector<unsigned> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
+                    unsigned frameRef = 0;
+                    if (minFrames.size() > stFrame) {
+                        frameRef = minFrames.at(stFrame);
+                        if (frameRef > 0 && frameRef <= (unsigned)this->gfx->getFrameCount()) {
+                            D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
+                            dMainWindow().frameClicked(frame, rpos, flags);
+                        }
+                    }
+                } else {
+                    // draw to the special frame of the subtile
+                    int specFrame = this->sla->getSpecProperty(this->currentSubtileIndex);
+                    if (specFrame > 0 && specFrame <= this->cls->getFrameCount()) {
+                        D1GfxFrame *frame = this->cls->getFrame(specFrame - 1);
+                        dMainWindow().frameClicked(frame, rpos, flags);
+                    }
+                }
+            }
+            // if (tileChanged || drawn) {
+                this->displayFrame();
+            // }
         }
         return;
     }
@@ -719,7 +789,8 @@ void LevelCelView::framePixelHovered(const QPoint &pos) const
         return;
     }
     QPoint tpos = pos;
-    if (this->subtilePos(tpos)) {
+    QPoint rpos;
+    if (this->subtilePos(tpos, rpos)) {
         unsigned stx = tpos.x();
         unsigned sty = tpos.y();
         unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -731,7 +802,7 @@ void LevelCelView::framePixelHovered(const QPoint &pos) const
         dMainWindow().pointHovered(tpos);
         return;
     }
-    if (this->tilePos(tpos)) {
+    if (this->tilePos(tpos, rpos)) {
         dMainWindow().pointHovered(tpos);
         return;
     }

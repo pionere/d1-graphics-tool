@@ -67,7 +67,7 @@ public:
     void setGfx(D1Gfx *g);
     void updateFields();
 
-    void selectSubtile(int index);
+    bool selectSubtile(int index);
 
 private slots:
     void on_clearPushButtonClicked();
