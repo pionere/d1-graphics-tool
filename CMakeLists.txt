@@ -166,6 +166,9 @@ set(PROJECT_SOURCES
         source/exportdialog.cpp
         source/exportdialog.h
         source/exportdialog.ui
+        source/gfxcomponentdialog.cpp
+        source/gfxcomponentdialog.h
+        source/gfxcomponentdialog.ui
         source/gfxsetview.cpp
         source/gfxsetview.h
         source/gfxsetview.ui

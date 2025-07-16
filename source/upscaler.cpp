@@ -3260,6 +3260,7 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
         }
     }
     gfx->frames.swap(newFrames);
+    // TODO: gfx->components ?
     gfx->upscaled = !params.downscale;
     gfx->modified = true;
 

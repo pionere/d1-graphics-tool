@@ -275,6 +275,11 @@ CelView::CelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();
+    QLayout *compLayout = this->ui->componentsHorizontalLayout;
+    PushButtonWidget::addButton(this, compLayout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &CelView::on_newComponentPushButtonClicked);
+    PushButtonWidget::addButton(this, compLayout, QStyle::SP_FileDialogOpenFolder, tr("Edit"), this, &CelView::on_editComponentPushButtonClicked);
+    PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogCloseButton, tr("Close"), this, &CelView::on_closeComponentPushButtonClicked);
+    compLayout
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
     layout->setAlignment(this->audioBtn, Qt::AlignLeft);
@@ -303,6 +308,7 @@ CelView::CelView(QWidget *parent)
 
 CelView::~CelView()
 {
+    delete gfxComponentDialog;
     delete smkAudioWidget;
     delete ui;
 }
@@ -402,6 +408,21 @@ void CelView::updateFields()
     this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
     // update visiblity of the audio icon
     this->audioBtn->setVisible(this->gfx->getType() == D1CEL_TYPE::SMK && this->gfx->getFrameCount() != 0);
+
+    // update the components
+    QComboBox *comboBox = this->ui->componentsComboBox;
+    comboBox->hide();
+    comboBox->clear();
+    comboBox->addItem("", 0);
+    for (int i = 0; i < this->gfx->getComponentCount(); i++) {
+        D1GfxComp *comp = this->gfx->getComponent(i);
+        QString labelText = comp->getLabel();
+        if (comp->getGFX()->isModified()) {
+            labelText += "*";
+        }
+        comboBox->addItem(labelText, i + 1);
+    }
+    comboBox->show();
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
@@ -1015,7 +1036,9 @@ void CelView::displayFrame()
     this->celScene.clear();
 
     // Getting the current frame to display
-    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
+    Qt::CheckState compType = this->ui->showComponentsCheckBox->checkState();
+    int component = compType == Qt::Unchecked ? 0 : (compType == Qt::PartiallyChecked ? this->ui->componentsComboBox.currentIndex() : -1);
+    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex, component) : QImage();
 
     // add grid if requested
     if (this->ui->showGridCheckBox->isChecked()) {
@@ -1199,6 +1222,59 @@ void CelView::ShowContextMenu(const QPoint &pos)
     contextMenu.addAction(&actions[cursor]);
 
     contextMenu.exec(mapToGlobal(pos));
+}
+
+void CelView::on_newComponentPushButtonClicked()
+{
+    QString gfxFilePath = dMainWindow()->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
+    if (gfxFilePath.isEmpty()) {
+        return;
+    }
+
+    // TODO: merge with on_actionMerge_triggered ?
+    OpenAsParam params = OpenAsParam();
+    QString fileLower = gfxFilePath.toLower();
+    D1Gfx* gfx = new D1Gfx();
+    gfx->setPalette(this->gfx->getPalette());
+    if (fileLower.endsWith(".cel")) {
+        if (!D1Cel::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else { // if (fileLower.endsWith(".cl2")) {
+        if (!D1Cl2::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    }
+
+    int compIdx = this->ui->componentsComboBox->currentIndex();
+
+    this->gfx->insertComponent(compIdx, gfx);
+    this->displayFrame();
+}
+
+void CelView::on_editComponentPushButtonClicked()
+{
+    int compIdx = this->ui->componentsComboBox->currentIndex();
+    if (compIdx != 0) {
+        if (this->gfxComponentDialog == nullptr) {
+            this->gfxComponentDialog = new GfxComponentDialog(this);
+        }
+        this->gfxComponentDialog->initialize(this->gfx, this->gfx->getComponent(compIdx - 1));
+        this->gfxComponentDialog->show();
+    }
+}
+
+void CelView::on_closeComponentPushButtonClicked()
+{
+    int compIdx = this->ui->componentsComboBox->currentIndex();
+    if (compIdx != 0) {
+        this->gfx->removeComponent(compIdx - 1);
+        this->displayFrame();
+    }
 }
 
 void CelView::on_framesGroupCheckBox_clicked()

@@ -136,8 +136,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // CEL FRAMES OFFSETS CALCULATION
 
     // BUILDING {CEL FRAMES}
-
-    // gfx.frames.clear();
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
     for (const auto &offset : frameOffsets) {

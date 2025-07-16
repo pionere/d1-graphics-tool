@@ -164,12 +164,6 @@
       </item>
       <item row="0" column="13" colspan="4">
        <layout class="QHBoxLayout">
-        <!--property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property-->
         <item>
          <spacer>
           <property name="orientation">

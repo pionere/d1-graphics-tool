@@ -227,6 +227,33 @@ typedef enum gfx_file_index {
     GFX_ITEM_MOOSES1,  // item drop animation (mooses1.CEL)
 } gfx_file_index;
 
+class D1Gfx;
+typedef struct D1GfxCompFrame {
+    unsigned cfFrameRef;
+    int cfZOrder;
+    int cfOffsetX;
+    int cfOffsetY;
+} D1GfxCompFrame;
+class D1GfxComp : public QObject {
+    Q_OBJECT
+
+    friend class D1Gfx;
+public:
+    D1GfxComp(D1Gfx *gfx);
+    ~D1GfxComp() = default;
+
+    D1Gfx *getGFX() { return this->gfx; };
+    QString getLabel() { return this->label; };
+    void setLabel(QString lbl) { this->label = lbl; };
+    int getCompFrameCount() const { return this->compFrames.count(); };
+    D1GfxCompFrame *getCompFrame(int frameIdx) { return &this->compFrames[frameIdx]; };
+
+private:
+    D1Gfx *gfx;
+    QString label;
+    QList<D1GfxCompFrame> compFrames;
+};
+
 class D1Gfx : public QObject {
     Q_OBJECT
 
@@ -252,7 +279,7 @@ public:
     bool isFrameSizeConstant() const;
     bool isGroupSizeConstant() const;
     QString getFramePixels(int frameIndex, bool values) const;
-    QImage getFrameImage(int frameIndex) const;
+    QImage getFrameImage(int frameIndex, int component = 0) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
     void insertFrame(int frameIndex, int width, int height);
     D1GfxFrame *insertFrame(int frameIndex);
@@ -300,11 +327,18 @@ public:
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
+    int getComponentCount() const;
+    D1GfxComp *getComponent(int compIndex);
+    void removeComponent(int compIndex);
+    void insertComponent(int compIndex, D1Gfx *gfx);
+
     void patch(int gfxFileIndex, bool silent); // gfx_file_index
     static int getPatchFileIndex(QString &filePath);
     static QString clippedtoStr(bool clipped);
 
 private:
+    QRect getFrameRect(int frameIndex, bool full) const;
+
     bool patchCathedralDoors(bool silent);
     bool patchCatacombsDoors(bool silent);
     bool patchCavesDoors(bool silent);
@@ -342,6 +376,7 @@ protected:
     std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
     // fields of cel/cl2-frames
+    QList<D1GfxComp> components;
     bool clipped = false;
     // fields of tilesets
     bool patched = false;

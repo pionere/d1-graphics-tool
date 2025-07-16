@@ -44,6 +44,8 @@ typedef struct _PcxPalette {
 
 bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsParam &params)
 {
+    gfx.clear();
+
     QString celPath = filePath;
 
     // assert(filePath.toLower().endsWith(".pcx"));
@@ -60,18 +62,16 @@ bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
         pal->setColor(i, undefColor);
     }
 
-    gfx.groupFrameIndices.clear();
     gfx.groupFrameIndices.push_back(std::pair<int, int>(0, 0));
 
     gfx.type = D1CEL_TYPE::V1_REGULAR;
     gfx.clipped = clipped;
 
-    // gfx.frames.clear();
     D1GfxFrame *frame = new D1GfxFrame();
     gfx.frames.append(frame);
 
     gfx.gfxFilePath = celPath;
-    gfx.modified = true;
+    // gfx.modified = true;
 
     bool dummy;
     return D1Pcx::load(*frame, filePath, pal, nullptr, &dummy);
