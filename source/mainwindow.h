@@ -136,6 +136,7 @@ public:
     int getDunBuilderMode() const;
     void frameModified(D1GfxFrame *frame);
     void colorModified();
+    bool isPainting() const;
 
     void initPaletteCycle();
     void nextPaletteCycle(D1PAL_CYCLE_TYPE type);

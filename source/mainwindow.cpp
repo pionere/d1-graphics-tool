@@ -426,6 +426,11 @@ void MainWindow::colorModified()
     }
 }
 
+bool MainWindow::isPainting() const
+{
+    return this->paintWidget != nullptr && !this->paintWidget->isHidden();
+}
+
 void MainWindow::reloadConfig()
 {
     // update locale
@@ -1020,7 +1025,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     const int kc = event->key() | event->modifiers();
     if (keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
-        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+        if (this->isPainting()) {
             this->paintWidget->hide();
         }
         if (this->builderWidget != nullptr && !this->builderWidget->isHidden()) {
@@ -1036,7 +1041,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
     if (keyCombinationMatchesSequence(kc, QKeySequence::Copy)) { // event->matches(QKeySequence::Copy)) {
         QImage image;
-        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+        if (this->isPainting()) {
             image = this->paintWidget->copyCurrentImage();
         } else if (this->celView != nullptr) {
             image = this->celView->copyCurrentImage();
@@ -1054,7 +1059,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if (kc == (Qt::CTRL | Qt::Key_E) || kc == (Qt::CTRL | Qt::Key_E | Qt::ShiftModifier)) {
         bool shift = (kc & Qt::ShiftModifier) != 0;
         QString pixels;
-        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+        if (this->isPainting()) {
             pixels = this->paintWidget->copyCurrentPixels(shift);
         } else if (this->celView != nullptr) {
             pixels = this->celView->copyCurrentPixels(shift);
@@ -1070,7 +1075,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (keyCombinationMatchesSequence(kc, QKeySequence::Cut)) { // event->matches(QKeySequence::Cut)) {
-        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+        if (this->isPainting()) {
             QImage image = this->paintWidget->copyCurrentImage();
             if (!image.isNull()) {
                 this->paintWidget->deleteCurrent();
@@ -1081,7 +1086,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (keyCombinationMatchesSequence(kc, QKeySequence::Delete)) { // event->matches(QKeySequence::Delete)) {
-        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+        if (this->isPainting()) {
             this->paintWidget->deleteCurrent();
         }
         return;
@@ -1092,7 +1097,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         if (!image.isNull()) {
             ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
 
-            if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            if (this->isPainting()) {
                 this->paintWidget->pasteCurrentImage(image);
             } else if (this->celView != nullptr) {
                 this->celView->pasteCurrentImage(image);
@@ -1105,7 +1110,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             // Clear loading message from status bar
             ProgressDialog::done();
             /*std::function<void()> func = [this, image]() {
-                if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+                if (this->isPainting()) {
                     this->paintWidget->pasteCurrent(image);
                 } else if (this->celView != nullptr) {
                     this->celView->pasteCurrent(image);
@@ -1121,7 +1126,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         QString pixels = clipboard->text();
         if (!pixels.isEmpty()) {
-            if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            if (this->isPainting()) {
                 this->paintWidget->pasteCurrentPixels(pixels);
             } else if (this->celView != nullptr) {
                 this->celView->pasteCurrentPixels(pixels);
