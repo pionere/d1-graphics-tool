@@ -1501,12 +1501,12 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     return true;
 }
 
-int getComponentCount() const
+int D1Gfx::getComponentCount() const
 {
     return this->components.count();
 }
 
-D1GfxComp *getComponent(int compIndex)
+D1GfxComp *D1Gfx::getComponent(int compIndex)
 {
     return &this->components[compIndex];
 }

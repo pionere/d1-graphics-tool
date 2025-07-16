@@ -1039,7 +1039,7 @@ void CelView::displayFrame()
 
     // Getting the current frame to display
     Qt::CheckState compType = this->ui->showComponentsCheckBox->checkState();
-    int component = compType == Qt::Unchecked ? 0 : (compType == Qt::PartiallyChecked ? this->ui->componentsComboBox.currentIndex() : -1);
+    int component = compType == Qt::Unchecked ? 0 : (compType == Qt::PartiallyChecked ? this->ui->componentsComboBox->currentIndex() : -1);
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex, component) : QImage();
 
     // add grid if requested
