@@ -12,6 +12,8 @@
 #include <QMimeData>
 
 #include "config.h"
+#include "d1cel.h"
+#include "d1cl2.h"
 #include "d1pcx.h"
 #include "d1smk.h"
 #include "mainwindow.h"
@@ -277,7 +279,7 @@ CelView::CelView(QWidget *parent)
     // this->on_assetMplEdit_escPressed();
     QLayout *compLayout = this->ui->componentsHorizontalLayout;
     PushButtonWidget::addButton(this, compLayout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &CelView::on_newComponentPushButtonClicked);
-    PushButtonWidget::addButton(this, compLayout, QStyle::SP_FileDialogOpenFolder, tr("Edit"), this, &CelView::on_editComponentPushButtonClicked);
+    PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogOpenButton, tr("Edit"), this, &CelView::on_editComponentPushButtonClicked);
     PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogCloseButton, tr("Close"), this, &CelView::on_closeComponentPushButtonClicked);
     compLayout
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
@@ -1226,7 +1228,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
 
 void CelView::on_newComponentPushButtonClicked()
 {
-    QString gfxFilePath = dMainWindow()->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
+    QString gfxFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
     if (gfxFilePath.isEmpty()) {
         return;
     }

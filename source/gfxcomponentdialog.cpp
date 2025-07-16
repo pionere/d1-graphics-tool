@@ -40,7 +40,7 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     this->ui->frameNumberEdit->setText(QString::number(gc->getCompFrameCount()));
     for (int i = 0; i < gc->getCompFrameCount(); i++) {
         D1GfxCompFrame *frame = gc->getCompFrame(i);
-        this->compFrames.push_back(*gc);
+        this->compFrames.push_back(*frame);
     }
 
     this->updateFields();
@@ -48,13 +48,13 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
 
 void GfxComponentDialog::updateFields()
 {
-    this->ui->labelLineEdit->setText(this->compLabel);
+    this->ui->labelEdit->setText(this->compLabel);
     this->ui->frameIndexEdit->setText(QString::number(this->currentFrameIndex + 1));
     D1GfxCompFrame *frame = this->gfxComp->getCompFrame(this->currentFrameIndex);
-    this->ui->zorderLineEdit->setText(QString::number(this->frame->cfZOrder));
-    this->ui->xOffsetLineEdit->setText(QString::number(this->frame->cfOffsetX));
-    this->ui->yOffsetLineEdit->setText(QString::number(this->frame->cfOffsetY));
-    this->ui->frameRefLineEdit->setText(QString::number(this->frame->cfFrameRef));
+    this->ui->zorderEdit->setText(QString::number(frame->cfZOrder));
+    this->ui->xOffsetEdit->setText(QString::number(frame->cfOffsetX));
+    this->ui->yOffsetEdit->setText(QString::number(frame->cfOffsetY));
+    this->ui->frameRefEdit->setText(QString::number(frame->cfFrameRef));
 }
 
 void GfxComponentDialog::displayFrame()

@@ -769,7 +769,7 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
     return rect;
 }
 
-static void drawFrame(const D1GfxFrame *frame, QImage image, int ox, int oy)
+static void drawFrame(const D1GfxFrame *frame, const D1Pal *pal, QImage image, int ox, int oy)
 {
     QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
     destBits += oy * image.width() + ox;
@@ -781,7 +781,7 @@ static void drawFrame(const D1GfxFrame *frame, QImage image, int ox, int oy)
             if (d1pix.isTransparent())
                 continue;
             else
-                color = this->palette->getColor(d1pix.getPaletteIndex());
+                color = pal->getColor(d1pix.getPaletteIndex());
 
             // image.setPixelColor(x, y, color);
             *destBits = color.rgba();
@@ -802,7 +802,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
     QRect rect = this->getFrameRect(frameIndex, true);
     D1GfxFrame *frame = this->frames[frameIndex];
 
-    QImage image = QImage(rect->width(), rect->height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
+    QImage image = QImage(rect.width(), rect.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
     image.fill(Qt::transparent);
 
     QSet<D1GfxComp *> drawn;
@@ -833,11 +833,11 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
             const D1GfxFrame *compFrame = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
             int ox = nextCompFrame->cfOffsetX + rect.x();
             int oy = nextCompFrame->cfOffsetY + rect.y();
-            drawFrame(compFrame, image, ox, oy);
+            drawFrame(compFrame, this->palette, image, ox, oy);
         }
     }
 
-    drawFrame(this->frames[frameIndex], image, rect->x(), rect->y());
+    drawFrame(this->frames[frameIndex], this->palette, image, rect.x(), rect.y());
 
     if (component != 0) {
         while (true) {
@@ -866,7 +866,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
             D1GfxFrame *compFrameGfx = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
             int ox = nextCompFrame->cfOffsetX + rect.x();
             int oy = nextCompFrame->cfOffsetY + rect.y();
-            drawFrame(compFrameGfx, image, ox, oy);
+            drawFrame(compFrameGfx, this->palette, image, ox, oy);
         }
     }
 
