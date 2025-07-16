@@ -1178,6 +1178,15 @@ void D1Gfx::setModified(bool modified)
     this->modified = modified;
 }
 
+void D1Gfx::frameModified(const D1GfxFrame *frame)
+{
+    for (D1GfxFrame *iframe : frames) {
+        if (iframe == frame) {
+            this->modified = true;
+        }
+    }
+}
+
 bool D1Gfx::isClipped() const
 {
     return this->clipped;

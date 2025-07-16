@@ -768,14 +768,10 @@ QString D1Gfxset::getGfxLabel(int index) const
     return QApplication::tr("N/A");
 }
 
-void D1Gfxset::frameModified(D1GfxFrame *frame)
+void D1Gfxset::frameModified(const D1GfxFrame *frame)
 {
     for (D1Gfx *gfx : this->gfxList) {
-        for (int i = 0; i < gfx->getFrameCount(); i++) {
-            if (gfx->getFrame(i) == frame) {
-                gfx->setModified();
-            }
-        }
+        gfx->frameModified(frame);
     }
 }
 

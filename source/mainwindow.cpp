@@ -392,12 +392,17 @@ int MainWindow::getDunBuilderMode() const
     return this->builderWidget == nullptr ? -1 : this->builderWidget->getOverlayType();
 }
 
-void MainWindow::frameModified(D1GfxFrame *frame)
+void MainWindow::frameModified(const D1GfxFrame *frame)
 {
+    // if (this->gfx != nullptr) {
+        this->gfx->frameModified(frame);
+    // }
     if (this->gfxset != nullptr) {
         this->gfxset->frameModified(frame);
-    } else {
-        this->gfx->setModified();
+    }
+    if (this->tileset != nullptr) {
+        // this->tileset->gfx->frameModified(frame);
+        this->tileset->cls->frameModified(frame);
     }
 
     this->updateWindow();
