@@ -281,7 +281,7 @@ CelView::CelView(QWidget *parent)
     PushButtonWidget::addButton(this, compLayout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &CelView::on_newComponentPushButtonClicked);
     PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogOpenButton, tr("Edit"), this, &CelView::on_editComponentPushButtonClicked);
     PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogCloseButton, tr("Close"), this, &CelView::on_closeComponentPushButtonClicked);
-    compLayout
+
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
     layout->setAlignment(this->audioBtn, Qt::AlignLeft);
