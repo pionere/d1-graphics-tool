@@ -993,6 +993,13 @@ D1GfxComp::D1GfxComp(D1Gfx *g)
     }
 }
 
+D1GfxComp(const D1GfxComp &o)
+{
+    this->gfx = o.gfx;
+    this->label = o.label;
+    this->compFrames = o.compFrames;
+}
+
 int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
 {
     const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;

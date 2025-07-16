@@ -240,6 +240,7 @@ class D1GfxComp : public QObject {
     friend class D1Gfx;
 public:
     D1GfxComp(D1Gfx *gfx);
+    D1GfxComp(const D1GfxComp &o);
     ~D1GfxComp() = default;
 
     D1Gfx *getGFX() { return this->gfx; };
