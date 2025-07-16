@@ -288,6 +288,7 @@ public:
     void setFilePath(const QString &filePath);
     bool isModified() const;
     void setModified(bool modified = true);
+    void frameModified(const D1GfxFrame *frame);
     D1Pal *getPalette() const;
     void setPalette(D1Pal *pal);
     int getGroupCount() const;

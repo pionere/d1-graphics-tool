@@ -134,7 +134,7 @@ public:
     void dunClicked(const QPoint &cell, int flags);
     void dunHovered(const QPoint &cell);
     int getDunBuilderMode() const;
-    void frameModified(D1GfxFrame *frame);
+    void frameModified(const D1GfxFrame *frame);
     void colorModified();
     bool isPainting() const;
 

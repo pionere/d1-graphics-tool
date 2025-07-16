@@ -162,19 +162,29 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="13" colspan="3">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="0" column="13" colspan="4">
+       <layout class="QHBoxLayout">
+        <!--property name="topMargin">
+         <number>0</number>
         </property>
-       </spacer>
-      </item>
-      <item row="0" column="16">
-       <widget class="QCheckBox" name="drawToSpecCheckBox">
-        <property name="toolTip">
-         <string>Draw to the special cels</string>
-        </property>
-       </widget>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property-->
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="drawToSpecCheckBox">
+          <property name="toolTip">
+           <string>Draw to the special cels</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="0" column="17">
        <layout class="QHBoxLayout" name="tilesetButtonsHorizontalLayout">
