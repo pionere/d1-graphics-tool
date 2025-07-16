@@ -16,6 +16,7 @@
 #include <QWidget>
 
 #include "d1gfx.h"
+#include "gfxcomponentdialog.h"
 #include "mergeframesdialog.h"
 #include "pushbuttonwidget.h"
 #include "resizedialog.h"

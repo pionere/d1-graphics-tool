@@ -57,6 +57,31 @@ void GfxComponentDialog::updateFields()
     this->ui->frameRefLineEdit->setText(QString::number(this->frame->cfFrameRef));
 }
 
+void GfxComponentDialog::displayFrame()
+{
+    this->updateFields();
+}
+
+void GfxComponentDialog::setFrameIndex(int frameIndex)
+{
+    const int frameCount = this->gfx->getFrameCount();
+    if (frameCount == 0) {
+        // this->currentFrameIndex = 0;
+        // this->currentGroupIndex = 0;
+        // this->displayFrame();
+        return;
+    }
+    if (frameIndex >= frameCount) {
+        frameIndex = frameCount - 1;
+    } else if (frameIndex < 0) {
+        frameIndex = 0;
+    }
+    this->currentFrameIndex = frameIndex;
+    this->updateGroupIndex();
+
+    this->displayFrame();
+}
+
 void GfxComponentDialog::updateGroupIndex()
 {
     int i = 0;
@@ -70,11 +95,6 @@ void GfxComponentDialog::updateGroupIndex()
         }
     }
     this->currentGroupIndex = i;
-}
-
-void GfxComponentDialog::displayFrame()
-{
-    this->updateFields();
 }
 
 void GfxComponentDialog::setGroupIndex(int groupIndex)

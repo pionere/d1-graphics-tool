@@ -19,8 +19,11 @@ public:
 
 private:
     void updateFields();
-    void updateGroupIndex();
     void displayFrame();
+
+    void setFrameIndex(int frameIndex);
+    void updateGroupIndex();
+    void setGroupIndex(int groupIndex);
 
 private slots:
     void on_labelEdit_returnPressed();
