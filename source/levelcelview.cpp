@@ -598,7 +598,7 @@ bool LevelCelView::tilePos(QPoint &pos) const
         unsigned gtx = tileHeight - tx / 2;
         // qDebug() << "fx=" << ftx << ", gx=" << gtx;
         unsigned tSubtile = 0;
-        if (ty < ftx) {
+        if (ty <= ftx) {
             if (ty < gtx) {
                 // limit the area of 0 horizontally
                 if (tx < subtileWidth / 2)
