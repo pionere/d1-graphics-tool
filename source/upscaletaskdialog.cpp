@@ -319,27 +319,27 @@ static int isRegularCl2(const QString &asset)
 static const AssetConfig objects[] = {
     // clang-format off
     // celname,                palette,                 numcolors, firstfixcolor, lastfixcolor (protected colors)
-    { "Objects\\L1Doors.CEL",  "Levels\\L1Data\\L1_1.PAL",    128,  -1, -1 },
-    { "Objects\\L2Doors.CEL",  "Levels\\L2Data\\L2_1.PAL",    128,  -1, -1 },
-    { "Objects\\L3Doors.CEL",  "Levels\\L3Data\\L3_1.PAL",    128,   1, 31 },
-    { "Objects\\L5Door.CEL",   "NLevels\\L5Data\\L5base.PAL", 128,   1, 31 },
-    { "Objects\\L5Books.CEL",  "NLevels\\L5Data\\L5base.PAL", 256,   1, 31 },
-    { "Objects\\L5Lever.CEL",  "NLevels\\L5Data\\L5base.PAL", 128,   1, 31 },
-    { "Objects\\L5Light.CEL",  "NLevels\\L5Data\\L5base.PAL", 128,   1, 31 },
-    { "Objects\\L5Sarco.CEL",  "NLevels\\L5Data\\L5base.PAL", 256,   1, 31 },
-    { "Objects\\Urnexpld.CEL", "NLevels\\L5Data\\L5base.PAL", 256,   1, 31 },
-    { "Objects\\Urn.CEL",      "NLevels\\L5Data\\L5base.PAL", 256,   1, 31 },
+    { "Objects\\L1Doors.CEL",  "Levels\\L1Data\\L1_1.pal",    128,  -1, -1 },
+    { "Objects\\L2Doors.CEL",  "Levels\\L2Data\\L2_1.pal",    128,  -1, -1 },
+    { "Objects\\L3Doors.CEL",  "Levels\\L3Data\\L3_1.pal",    128,   1, 31 },
+    { "Objects\\L5Door.CEL",   "NLevels\\L5Data\\L5base.pal", 128,   1, 31 },
+    { "Objects\\L5Books.CEL",  "NLevels\\L5Data\\L5base.pal", 256,   1, 31 },
+    { "Objects\\L5Lever.CEL",  "NLevels\\L5Data\\L5base.pal", 128,   1, 31 },
+    { "Objects\\L5Light.CEL",  "NLevels\\L5Data\\L5base.pal", 128,   1, 31 },
+    { "Objects\\L5Sarco.CEL",  "NLevels\\L5Data\\L5base.pal", 256,   1, 31 },
+    { "Objects\\Urnexpld.CEL", "NLevels\\L5Data\\L5base.pal", 256,   1, 31 },
+    { "Objects\\Urn.CEL",      "NLevels\\L5Data\\L5base.pal", 256,   1, 31 },
     // clang-format on
 };
 
 static const std::pair<QString, QString> menuarts[] = {
     // clang-format off
     // celname,               palette
-    { "ui_art\\mainmenu.CEL", "ui_art\\menu.PAL" },
-    { "ui_art\\title.CEL",    "ui_art\\menu.PAL" },
-    // { "ui_art\\logo.CEL",     "ui_art\\menu.PAL" },
-    // { "ui_art\\smlogo.CEL",   "ui_art\\menu.PAL" },
-    { "ui_art\\credits.CEL",  "ui_art\\credits.PAL" },
+    { "ui_art\\mainmenu.CEL", "ui_art\\menu.pal" },
+    { "ui_art\\title.CEL",    "ui_art\\menu.pal" },
+    // { "ui_art\\logo.CEL",     "ui_art\\menu.pal" },
+    // { "ui_art\\smlogo.CEL",   "ui_art\\menu.pal" },
+    { "ui_art\\credits.CEL",  "ui_art\\credits.pal" },
     // { "ui_art\\black.CEL",    "" },
     // { "ui_art\\heros.CEL",    "" },
     // { "ui_art\\selconn.CEL",  "" },
@@ -354,8 +354,8 @@ static const std::pair<QString, QString> menuarts[] = {
 
 static const MinAssetConfig botchedMINs[] = {
     // celname,                      palette                   numcolors, firstfixcolor, lastfixcolor, dunType
-    { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  -1, -1, DTYPE_TOWN      },
-    { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   256,  -1, -1, DTYPE_TOWN      },
+    { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.pal",   128,  -1, -1, DTYPE_TOWN      },
+    { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.pal",   256,  -1, -1, DTYPE_TOWN      },
 };
 
 static const QString botchedCL2s[] = {
@@ -573,15 +573,15 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         const QString celPalPairs[][2] = {
             // clang-format off
             // celname,                palette
-            { "Gendata\\Cut2.CEL",     "Gendata\\Cut2.pal" },
-            { "Gendata\\Cut3.CEL",     "Gendata\\Cut3.pal" },
-            { "Gendata\\Cut4.CEL",     "Gendata\\Cut4.pal" },
-            { "Gendata\\Cutgate.CEL",  "Gendata\\Cutgate.pal" },
-            { "Gendata\\Cutl1d.CEL",   "Gendata\\Cutl1d.pal" },
-            { "Gendata\\Cutportl.CEL", "Gendata\\Cutportl.pal" },
-            { "Gendata\\Cutportr.CEL", "Gendata\\Cutportr.pal" },
-            { "Gendata\\Cutstart.CEL", "Gendata\\Cutstart.pal" },
-            { "Gendata\\Cuttt.CEL",    "Gendata\\Cuttt.pal" },
+            { "gendata\\Cut2.CEL",     "gendata\\Cut2.pal" },
+            { "gendata\\Cut3.CEL",     "gendata\\Cut3.pal" },
+            { "gendata\\Cut4.CEL",     "gendata\\Cut4.pal" },
+            { "gendata\\Cutgate.CEL",  "gendata\\Cutgate.pal" },
+            { "gendata\\Cutl1d.CEL",   "gendata\\Cutl1d.pal" },
+            { "gendata\\Cutportl.CEL", "gendata\\Cutportl.pal" },
+            { "gendata\\Cutportr.CEL", "gendata\\Cutportr.pal" },
+            { "gendata\\Cutstart.CEL", "gendata\\Cutstart.pal" },
+            { "gendata\\Cuttt.CEL",    "gendata\\Cuttt.pal" },
             { "NLevels\\CutL5.CEL",    "NLevels\\CutL5.pal" },
             { "NLevels\\CutL6.CEL",    "NLevels\\CutL6.pal" },
             // clang-format on
@@ -826,14 +826,14 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         const MinAssetConfig celPalPairs[] = {
             // clang-format off
             // celname,                      palette                   numcolors, firstfixcolor, lastfixcolor, dunType
-            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  -1,  -1, DTYPE_TOWN      },
-            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     256, 128, 239, DTYPE_CATHEDRAL },
-            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  -1,  -1, DTYPE_CATACOMBS },
-            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128,   1,  31, DTYPE_CAVES     },
-            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128,   1,  31, DTYPE_HELL      },
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   256,  -1,  -1, DTYPE_TOWN      },
-            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128,   1,  31, DTYPE_CRYPT     },
-            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128,   1,  31, DTYPE_NEST      },
+            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.pal",   128,  -1,  -1, DTYPE_TOWN      },
+            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.pal",     256, 128, 239, DTYPE_CATHEDRAL },
+            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.pal",     128,  -1,  -1, DTYPE_CATACOMBS },
+            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.pal",     128,   1,  31, DTYPE_CAVES     },
+            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.pal",     128,   1,  31, DTYPE_HELL      },
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.pal",   256,  -1,  -1, DTYPE_TOWN      },
+            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.pal",  128,   1,  31, DTYPE_CRYPT     },
+            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.pal", 128,   1,  31, DTYPE_NEST      },
             // clang-format on
         };
         ProgressDialog::incBar("Tilesets", lengthof(celPalPairs));
