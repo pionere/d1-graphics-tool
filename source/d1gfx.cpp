@@ -993,7 +993,7 @@ D1GfxComp::D1GfxComp(D1Gfx *g)
     }
 }
 
-D1GfxComp(const D1GfxComp &o)
+D1GfxComp::D1GfxComp(const D1GfxComp &o)
 {
     this->gfx = o.gfx;
     this->label = o.label;
