@@ -1376,8 +1376,8 @@
              </widget>
             </item>
             <!--item>
-           <widget class="QCheckBox" name="dungeonMonsterAddButton"/>
-          </item-->
+              <widget class="QCheckBox" name="dungeonMonsterAddButton"/>
+            </item-->
            </layout>
           </item>
           <item row="1" column="9">
