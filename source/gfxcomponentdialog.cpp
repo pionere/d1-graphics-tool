@@ -2,6 +2,7 @@
 
 #include <QMessageBox>
 
+#include "config.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_gfxcomponentdialog.h"
@@ -38,16 +39,16 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     }
     this->updateGroupIndex();
     this->ui->frameNumberEdit->setText(QString::number(gc->getCompFrameCount()));
-    this->compIdx = 0;
+    int compIdx = 0;
     for (int i = 0; i < g->getComponentCount(); i++) {
         if (g->getComponent(i) == gc) {
-            this->compIdx = i;
+            compIdx = i;
         }
     }
     // TODO: use D1Gfx copy-constructor?
     this->newGfx = new D1Gfx();
     this->newGfx->addGfx(g);
-    this->newComp = this->newGfx->getComponent(this->compIdx);
+    this->newComp = this->newGfx->getComponent(compIdx);
     this->updateFields();
 }
 

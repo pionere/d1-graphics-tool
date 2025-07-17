@@ -16,6 +16,7 @@
 #include "d1cl2.h"
 #include "d1pcx.h"
 #include "d1smk.h"
+#include "gfxcomponentdialog.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_celview.h"

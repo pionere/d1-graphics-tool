@@ -16,7 +16,6 @@
 #include <QWidget>
 
 #include "d1gfx.h"
-#include "gfxcomponentdialog.h"
 #include "mergeframesdialog.h"
 #include "pushbuttonwidget.h"
 #include "resizedialog.h"
@@ -38,6 +37,8 @@ typedef enum _mouse_click_flags {
     DOUBLE_CLICK = 1 << 1,
     SHIFT_CLICK  = 1 << 2,
 } _mouse_click_flags;
+
+class GfxComponentDialog;
 
 class CelScene : public QGraphicsScene {
     Q_OBJECT
