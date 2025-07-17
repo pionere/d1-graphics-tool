@@ -47,6 +47,8 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     }
     // TODO: use D1Gfx copy-constructor?
     this->newGfx = new D1Gfx();
+    this->newGfx->setPalette(g->getPalette();
+    // this->newGfx->setFilePath(g->getFilePath());
     this->newGfx->addGfx(g);
     this->newComp = this->newGfx->getComponent(compIdx);
     this->updateFields();
