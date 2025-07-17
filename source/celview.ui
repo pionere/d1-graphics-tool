@@ -162,13 +162,11 @@
        </widget>
       </item>
       <item row="0" column="14" colspan="4">
-       <item>
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </spacer>
-       </item>
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
       </item>
       <item row="0" column="18">
        <layout class="QHBoxLayout">
