@@ -181,7 +181,11 @@
          <layout class="QHBoxLayout" name="componentsHorizontalLayout"/>
         </item>
         <item>
-         <widget class="QComboBox" name="componentsComboBox"/>
+         <widget class="QComboBox" name="componentsComboBox">
+          <property name="sizeAdjustPolicy">
+           <enum>QComboBox::AdjustToContents</enum>
+          </property>
+         </widget>
         </item>
         <item>
          <spacer>

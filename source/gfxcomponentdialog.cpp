@@ -41,8 +41,6 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     this->updateGroupIndex();
     // Set the maximum group text
     this->ui->groupNumberEdit->setText(QString::number(g->getGroupCount()));
-    // Set the maximum frame text
-    this->ui->frameNumberEdit->setText(QString::number(gc->getCompFrameCount()));
     int compIdx = 0;
     for (int i = 0; i < g->getComponentCount(); i++) {
         if (g->getComponent(i) == gc) {
@@ -69,7 +67,7 @@ void GfxComponentDialog::updateFields()
     this->ui->groupIndexEdit->setText(
         QString::number(count != 0 ? this->currentGroupIndex + 1 : 0));
 
-    // Set the current frame text
+    // Set current and maximum frame text
     int frameIndex = this->currentFrameIndex;
     if (this->ui->framesGroupCheckBox->isChecked() && count != 0) {
         std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
@@ -80,6 +78,7 @@ void GfxComponentDialog::updateFields()
     }
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
+    this->ui->frameNumberEdit->setText(QString::number(count));
 
     // set the details
     if (count != 0) {
@@ -182,7 +181,7 @@ void GfxComponentDialog::setGroupIndex(int groupIndex)
 
 void GfxComponentDialog::on_labelEdit_returnPressed()
 {
-    this->compLabel = this->ui->frameIndexEdit->text();
+    this->compLabel = this->ui->labelEdit->text();
 
     this->on_labelEdit_escPressed();
 }
@@ -190,6 +189,7 @@ void GfxComponentDialog::on_labelEdit_returnPressed()
 void GfxComponentDialog::on_labelEdit_escPressed()
 {
     this->updateFields();
+    this->ui->labelEdit->clearFocus();
 }
 
 void GfxComponentDialog::on_framesGroupCheckBox_clicked()
@@ -327,12 +327,15 @@ void GfxComponentDialog::on_zorderEdit_returnPressed()
     D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfZOrder = zorder;
 
+    this->displayFrame();
+
     this->on_zorderEdit_escPressed();
 }
 
 void GfxComponentDialog::on_zorderEdit_escPressed()
 {
     this->updateFields();
+    this->ui->zorderEdit->clearFocus();
 }
 
 void GfxComponentDialog::on_xOffsetEdit_returnPressed()
@@ -342,13 +345,17 @@ void GfxComponentDialog::on_xOffsetEdit_returnPressed()
     D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfOffsetX = offset;
 
+    this->displayFrame();
+
     this->on_xOffsetEdit_escPressed();
 }
 
 void GfxComponentDialog::on_xOffsetEdit_escPressed()
 {
     this->updateFields();
+    this->ui->xOffsetEdit->clearFocus();
 }
+
 void GfxComponentDialog::on_yOffsetEdit_returnPressed()
 {
     int offset = this->ui->yOffsetEdit->text().toInt();
@@ -356,12 +363,17 @@ void GfxComponentDialog::on_yOffsetEdit_returnPressed()
     D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfOffsetY = offset;
 
+    this->displayFrame();
+
     this->on_yOffsetEdit_escPressed();
 }
+
 void GfxComponentDialog::on_yOffsetEdit_escPressed()
 {
     this->updateFields();
+    this->ui->yOffsetEdit->clearFocus();
 }
+
 void GfxComponentDialog::on_frameRefEdit_returnPressed()
 {
     int frameRef = this->ui->frameRefEdit->text().toInt();
@@ -369,11 +381,15 @@ void GfxComponentDialog::on_frameRefEdit_returnPressed()
     D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfFrameRef = frameRef;
 
+    this->displayFrame();
+
     this->on_frameRefEdit_escPressed();
 }
+
 void GfxComponentDialog::on_frameRefEdit_escPressed()
 {
     this->updateFields();
+    this->ui->frameRefEdit->clearFocus();
 }
 
 void GfxComponentDialog::on_submitButton_clicked()
@@ -402,7 +418,7 @@ void GfxComponentDialog::on_submitButton_clicked()
             change = true;
         }
     }
-    QMessageBox::critical(this, "Error", tr("GfxComponentDialog done %1").arg(change));
+
     // TODO: report change?
 
     this->on_cancelButton_clicked();

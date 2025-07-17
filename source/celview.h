@@ -143,6 +143,7 @@ private slots:
     void on_editComponentPushButtonClicked();
     void on_closeComponentPushButtonClicked();
 
+    void on_showComponentsCheckBox_clicked();
     void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();

@@ -414,10 +414,15 @@ void CelView::updateFields()
 
     // update the components
     QComboBox *comboBox = this->ui->componentsComboBox;
+    int prevIndex = comboBox.currentIndex();
     comboBox->hide();
     comboBox->clear();
     comboBox->addItem("", 0);
-    for (int i = 0; i < this->gfx->getComponentCount(); i++) {
+    count = this->gfx->getComponentCount();
+    if (count <= prevIndex) {
+        prevIndex = count - 1;
+    }
+    for (int i = 0; i < count; i++) {
         D1GfxComp *comp = this->gfx->getComponent(i);
         QString labelText = comp->getLabel();
         if (comp->getGFX()->isModified()) {
@@ -425,6 +430,7 @@ void CelView::updateFields()
         }
         comboBox->addItem(labelText, i + 1);
     }
+    comboBox->setCurrentIndex(prevIndex);
     comboBox->show();
 
     // update the asset multiplier field
@@ -1278,6 +1284,12 @@ void CelView::on_closeComponentPushButtonClicked()
         this->gfx->removeComponent(compIdx - 1);
         this->displayFrame();
     }
+}
+
+void CelView::on_showComponentsCheckBox_clicked()
+{
+    // redraw the frame
+    this->displayFrame();
 }
 
 void CelView::on_framesGroupCheckBox_clicked()
