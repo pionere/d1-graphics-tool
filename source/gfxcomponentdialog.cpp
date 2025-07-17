@@ -32,6 +32,7 @@ GfxComponentDialog::~GfxComponentDialog()
 void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
 {
     this->gfx = g;
+    this->gfxComp = gc;
     this->compLabel = gc->getLabel();
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
@@ -336,7 +337,7 @@ void GfxComponentDialog::on_zorderEdit_escPressed()
 
 void GfxComponentDialog::on_xOffsetEdit_returnPressed()
 {
-    int offset = this->ui->zorderEdit->text().toInt();
+    int offset = this->ui->xOffsetEdit->text().toInt();
 
     D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfOffsetX = offset;
@@ -350,7 +351,7 @@ void GfxComponentDialog::on_xOffsetEdit_escPressed()
 }
 void GfxComponentDialog::on_yOffsetEdit_returnPressed()
 {
-    int offset = this->ui->zorderEdit->text().toInt();
+    int offset = this->ui->yOffsetEdit->text().toInt();
 
     D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfOffsetY = offset;
@@ -363,7 +364,7 @@ void GfxComponentDialog::on_yOffsetEdit_escPressed()
 }
 void GfxComponentDialog::on_frameRefEdit_returnPressed()
 {
-    int frameRef = this->ui->zorderEdit->text().toInt();
+    int frameRef = this->ui->frameRefEdit->text().toInt();
 
     D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfFrameRef = frameRef;

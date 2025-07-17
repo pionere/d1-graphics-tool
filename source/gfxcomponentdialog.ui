@@ -195,7 +195,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="2" column="2">
       <widget class="QPushButton" name="firstFrameButton">
        <property name="minimumWidth">
         <number>40</number>

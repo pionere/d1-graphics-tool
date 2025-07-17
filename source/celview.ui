@@ -170,13 +170,13 @@
       </item>
       <item row="0" column="18">
        <layout class="QHBoxLayout">
-        <!--item>
+        <item>
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </spacer>
-        </item-->
+        </item>
         <item>
          <layout class="QHBoxLayout" name="componentsHorizontalLayout"/>
         </item>
