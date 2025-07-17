@@ -414,7 +414,7 @@ void CelView::updateFields()
 
     // update the components
     QComboBox *comboBox = this->ui->componentsComboBox;
-    int prevIndex = comboBox.currentIndex();
+    int prevIndex = comboBox->currentIndex();
     comboBox->hide();
     comboBox->clear();
     comboBox->addItem("", 0);
