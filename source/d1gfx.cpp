@@ -994,6 +994,18 @@ D1GfxComp::D1GfxComp(D1Gfx *g)
     }
 }
 
+D1GfxComp::D1GfxComp(const D1GfxComp &o)
+{
+    // TODO: use D1Gfx copy-constructor?
+    D1Gfx* g = new D1Gfx();
+    g->setPalette(o.gfx->getPalette());
+    // g->setFilePath(o.gfx->getFilePath());
+    g->addGfx(o.gfx);
+    this->gfx = g;
+    this->label = o.label;
+    this->compFrames = o.compFrames;
+}
+
 D1GfxComp::~D1GfxComp()
 {
     delete this->gfx;
@@ -1156,7 +1168,7 @@ void D1Gfx::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
         D1GfxFrame *tmp = this->frames.takeAt(frameIndex1);
         this->frames.push_front(tmp);
         for (D1GfxComp *comp : this->components) {
-            D1GfxCompFrame tmpComp = comp.compFrames.takeAt(frameIndex1);
+            D1GfxCompFrame tmpComp = comp->compFrames.takeAt(frameIndex1);
             comp->compFrames.push_front(tmpComp);
         }
     } else if (frameIndex1 >= numFrames) {
@@ -1213,6 +1225,13 @@ void D1Gfx::addGfx(D1Gfx *gfx)
         for (D1GfxComp *comp : this->components) {
             comp->compFrames.append(D1GfxCompFrame());
         }
+    }
+    for (int i = 0; i < gfx->getComponentCount(); i++) {
+        D1GfxComp *newComp = new D1GfxComp(*gfx->getComponent(i));
+        for (int n = 0; n < this->getFrameCount() - numNewFrames; n++) {
+            newComp->compFrames.push_front(D1GfxCompFrame());
+        }
+        this->components.push_back(newComp);
     }
     const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     if (multiGroup) {

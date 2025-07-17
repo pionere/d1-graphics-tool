@@ -11,6 +11,7 @@ GfxComponentDialog::GfxComponentDialog(QWidget *parent)
     , ui(new Ui::GfxComponentDialog())
 {
     ui->setupUi(this);
+    this->ui->celGraphicsView->setScene(&this->celScene);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->labelEdit, SIGNAL(cancel_signal()), this, SLOT(on_labelEdit_escPressed()));    
@@ -30,7 +31,6 @@ GfxComponentDialog::~GfxComponentDialog()
 void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
 {
     this->gfx = g;
-    this->gfxComp = gc;
     this->compLabel = gc->getLabel();
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
@@ -38,11 +38,16 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     }
     this->updateGroupIndex();
     this->ui->frameNumberEdit->setText(QString::number(gc->getCompFrameCount()));
-    for (int i = 0; i < gc->getCompFrameCount(); i++) {
-        D1GfxCompFrame *frame = gc->getCompFrame(i);
-        this->compFrames.push_back(*frame);
+    this->compIdx = 0;
+    for (int i = 0; i < g->getComponentCount(); i++) {
+        if (g->getComponent(i) == gc) {
+            this->compIdx = i;
+        }
     }
-
+    // TODO: use D1Gfx copy-constructor?
+    this->newGfx = new D1Gfx();
+    this->newGfx->addGfx(g);
+    this->newComp = this->newGfx->getComponent(this->compIdx);
     this->updateFields();
 }
 
@@ -50,7 +55,8 @@ void GfxComponentDialog::updateFields()
 {
     this->ui->labelEdit->setText(this->compLabel);
     this->ui->frameIndexEdit->setText(QString::number(this->currentFrameIndex + 1));
-    D1GfxCompFrame *frame = this->gfxComp->getCompFrame(this->currentFrameIndex);
+
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     this->ui->zorderEdit->setText(QString::number(frame->cfZOrder));
     this->ui->xOffsetEdit->setText(QString::number(frame->cfOffsetX));
     this->ui->yOffsetEdit->setText(QString::number(frame->cfOffsetY));
@@ -60,6 +66,27 @@ void GfxComponentDialog::updateFields()
 void GfxComponentDialog::displayFrame()
 {
     this->updateFields();
+    this->celScene.clear();
+
+    QImage celFrame = this->newGfx->getFrameCount() != 0 ? this->newGfx->getFrameImage(this->currentFrameIndex, -1) : QImage();
+
+    this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
+
+    // Building background of the width/height of the CEL frame
+    QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
+    celFrameBackground.fill(QColor(Config::getGraphicsTransparentColor()));
+
+    // Resize the scene rectangle to include some padding around the CEL frame
+    this->celScene.setSceneRect(0, 0,
+        CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_MARGIN,
+        CEL_SCENE_MARGIN + celFrame.height() + CEL_SCENE_MARGIN);
+    // ui->celGraphicsView->adjustSize();
+
+    // Add the backgrond and CEL frame while aligning it in the center
+    this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
+        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    this->celScene.addPixmap(QPixmap::fromImage(celFrame))
+        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
 }
 
 void GfxComponentDialog::setFrameIndex(int frameIndex)
@@ -217,6 +244,13 @@ void GfxComponentDialog::on_frameIndexEdit_returnPressed()
     this->on_frameIndexEdit_escPressed();
 }
 
+void GfxComponentDialog::on_frameIndexEdit_escPressed()
+{
+    // update frameIndexEdit
+    this->updateFields();
+    this->ui->frameIndexEdit->clearFocus();
+}
+
 void GfxComponentDialog::on_firstGroupButton_clicked()
 {
     this->setGroupIndex(0);
@@ -257,7 +291,7 @@ void GfxComponentDialog::on_zorderEdit_returnPressed()
 {
     int zorder = this->ui->zorderEdit->text().toInt();
 
-    D1GfxCompFrame *frame = this->gfxComp->getCompFrame(this->currentFrameIndex);
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfZOrder = zorder;
 
     this->on_zorderEdit_escPressed();
@@ -272,7 +306,7 @@ void GfxComponentDialog::on_xOffsetEdit_returnPressed()
 {
     int offset = this->ui->zorderEdit->text().toInt();
 
-    D1GfxCompFrame *frame = this->gfxComp->getCompFrame(this->currentFrameIndex);
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfOffsetX = offset;
 
     this->on_xOffsetEdit_escPressed();
@@ -286,7 +320,7 @@ void GfxComponentDialog::on_yOffsetEdit_returnPressed()
 {
     int offset = this->ui->zorderEdit->text().toInt();
 
-    D1GfxCompFrame *frame = this->gfxComp->getCompFrame(this->currentFrameIndex);
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfOffsetY = offset;
 
     this->on_yOffsetEdit_escPressed();
@@ -299,7 +333,7 @@ void GfxComponentDialog::on_frameRefEdit_returnPressed()
 {
     int frameRef = this->ui->zorderEdit->text().toInt();
 
-    D1GfxCompFrame *frame = this->gfxComp->getCompFrame(this->currentFrameIndex);
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
     frame->cfFrameRef = frameRef;
 
     this->on_frameRefEdit_escPressed();
@@ -311,13 +345,13 @@ void GfxComponentDialog::on_frameRefEdit_escPressed()
 
 void GfxComponentDialog::on_submitButton_clicked()
 {
-    D1GfxComp * g = this->gfxComp;
-    g->setLabel(this->compLabel);
+    D1GfxComp *gc = this->gfxComp;
+    gc->setLabel(this->compLabel);
 
     bool change = false;
-    for (int i = 0; i < g->getCompFrameCount(); i++) {
-        D1GfxCompFrame *frame = g->getCompFrame(i);
-        D1GfxCompFrame *newFrame = &this->compFrames[i];
+    for (int i = 0; i < gc->getCompFrameCount(); i++) {
+        D1GfxCompFrame *frame = gc->getCompFrame(i);
+        D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
         if (frame->cfZOrder != newFrame->cfZOrder) {
             frame->cfZOrder = newFrame->cfZOrder;
             change = true;
@@ -338,7 +372,7 @@ void GfxComponentDialog::on_submitButton_clicked()
 
     // TODO: report change?
 
-    this->close();
+    this->on_cancelButton_clicked();
 
     dMainWindow().updateWindow();
 }
@@ -346,6 +380,9 @@ void GfxComponentDialog::on_submitButton_clicked()
 void GfxComponentDialog::on_cancelButton_clicked()
 {
     this->close();
+
+    delete this->newGfx;
+    this->newGfx = nullptr;
 }
 
 void GfxComponentDialog::changeEvent(QEvent *event)

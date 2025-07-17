@@ -2,6 +2,7 @@
 
 #include <QDialog>
 
+#include "celview.h"
 #include "d1gfx.h"
 
 namespace Ui {
@@ -61,11 +62,13 @@ private slots:
 
 private:
     Ui::GfxComponentDialog *ui;
+    CelScene celScene = CelScene(this);
 
     D1Gfx *gfx;
     D1GfxComp *gfxComp;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     QString compLabel;
-    QList<D1GfxCompFrame> compFrames;
+    D1Gfx *newGfx = nullptr;
+    D1GfxComp *newComp;
 };
