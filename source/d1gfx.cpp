@@ -836,7 +836,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
             int ox = nextCompFrame->cfOffsetX + rect.x();
             int oy = nextCompFrame->cfOffsetY + rect.y();
             drawFrame(compFrame, this->palette, image, ox, oy);
-            QMessageBox::critical(nullptr, "Error", tr("getFrameImage sub frame added");
+            QMessageBox::critical(nullptr, "Error", tr("getFrameImage sub frame added"));
         }
     }
 
@@ -871,7 +871,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
             int ox = nextCompFrame->cfOffsetX + rect.x();
             int oy = nextCompFrame->cfOffsetY + rect.y();
             drawFrame(compFrameGfx, this->palette, image, ox, oy);
-            QMessageBox::critical(nullptr, "Error", tr("getFrameImage frame added");
+            QMessageBox::critical(nullptr, "Error", tr("getFrameImage frame added"));
         }
     }
 
