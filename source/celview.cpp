@@ -279,9 +279,9 @@ CelView::CelView(QWidget *parent)
     // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();
     QLayout *compLayout = this->ui->componentsHorizontalLayout;
-    PushButtonWidget::addButton(this, compLayout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &CelView::on_newComponentPushButtonClicked);
-    PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogOpenButton, tr("Edit"), this, &CelView::on_editComponentPushButtonClicked);
-    PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogCloseButton, tr("Close"), this, &CelView::on_closeComponentPushButtonClicked);
+    PushButtonWidget::addButton(this, compLayout, QStyle::SP_FileDialogNewFolder, tr("New Component"), this, &CelView::on_newComponentPushButtonClicked);
+    PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogOpenButton, tr("Edit Component"), this, &CelView::on_editComponentPushButtonClicked);
+    PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogCloseButton, tr("Remove Component"), this, &CelView::on_closeComponentPushButtonClicked);
 
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     this->audioBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_MediaVolume, tr("Show audio"), this, &CelView::showAudioInfo);
@@ -1262,7 +1262,7 @@ void CelView::on_newComponentPushButtonClicked()
 void CelView::on_editComponentPushButtonClicked()
 {
     int compIdx = this->ui->componentsComboBox->currentIndex();
-    if (compIdx != 0) {
+    if (compIdx != 0 && this->gfx->getFrameCount() != 0) {
         if (this->gfxComponentDialog == nullptr) {
             this->gfxComponentDialog = new GfxComponentDialog(this);
         }

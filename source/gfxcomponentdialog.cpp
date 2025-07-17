@@ -38,6 +38,9 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
         this->currentFrameIndex = 0;
     }
     this->updateGroupIndex();
+    // Set the maximum group text
+    this->ui->groupNumberEdit->setText(QString::number(g->getGroupCount()));
+    // Set the maximum frame text
     this->ui->frameNumberEdit->setText(QString::number(gc->getCompFrameCount()));
     int compIdx = 0;
     for (int i = 0; i < g->getComponentCount(); i++) {
@@ -51,19 +54,45 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     // this->newGfx->setFilePath(g->getFilePath());
     this->newGfx->addGfx(g);
     this->newComp = this->newGfx->getComponent(compIdx);
-    this->updateFields();
+
+    this->displayFrame();
 }
 
 void GfxComponentDialog::updateFields()
 {
-    this->ui->labelEdit->setText(this->compLabel);
-    this->ui->frameIndexEdit->setText(QString::number(this->currentFrameIndex + 1));
+    int count;
 
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    this->ui->zorderEdit->setText(QString::number(frame->cfZOrder));
-    this->ui->xOffsetEdit->setText(QString::number(frame->cfOffsetX));
-    this->ui->yOffsetEdit->setText(QString::number(frame->cfOffsetY));
-    this->ui->frameRefEdit->setText(QString::number(frame->cfFrameRef));
+    this->ui->labelEdit->setText(this->compLabel);
+    // Set the current group text
+    count = this->gfx->getGroupCount();
+    this->ui->groupIndexEdit->setText(
+        QString::number(count != 0 ? this->currentGroupIndex + 1 : 0));
+
+    // Set the current frame text
+    int frameIndex = this->currentFrameIndex;
+    if (this->ui->framesGroupCheckBox->isChecked() && count != 0) {
+        std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
+        frameIndex -= groupFrameIndices.first;
+        count = groupFrameIndices.second - groupFrameIndices.first + 1;
+    } else {
+        count = this->gfx->getFrameCount();
+    }
+    this->ui->frameIndexEdit->setText(
+        QString::number(count != 0 ? frameIndex + 1 : 0));
+
+    // set the details
+    if (count != 0) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
+        this->ui->zorderEdit->setText(QString::number(frame->cfZOrder));
+        this->ui->xOffsetEdit->setText(QString::number(frame->cfOffsetX));
+        this->ui->yOffsetEdit->setText(QString::number(frame->cfOffsetY));
+        this->ui->frameRefEdit->setText(QString::number(frame->cfFrameRef));
+    } else {
+        this->ui->zorderEdit->setText("");
+        this->ui->xOffsetEdit->setText("");
+        this->ui->yOffsetEdit->setText("");
+        this->ui->frameRefEdit->setText("");
+    }
 }
 
 void GfxComponentDialog::displayFrame()
@@ -372,7 +401,7 @@ void GfxComponentDialog::on_submitButton_clicked()
             change = true;
         }
     }
-
+    QMessageBox::critical(this, "Error", tr("GfxComponentDialog done %1").arg(change));
     // TODO: report change?
 
     this->on_cancelButton_clicked();

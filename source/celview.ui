@@ -162,7 +162,29 @@
        </widget>
       </item>
       <item row="0" column="14" colspan="4">
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
+      </item>
+      <item row="0" column="18">
        <layout class="QHBoxLayout">
+        <!--item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item-->
+        <item>
+         <layout class="QHBoxLayout" name="componentsHorizontalLayout"/>
+        </item>
+        <item>
+         <widget class="QComboBox" name="componentsComboBox"/>
+        </item>
         <item>
          <spacer>
           <property name="orientation">
@@ -171,22 +193,17 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="componentsHorizontalLayout"/>
-        </item>
-        <item>
-         <widget class="QComboBox" name="componentsComboBox"/>
+         <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout"/>
         </item>
        </layout>
-      </item>
-      <item row="0" column="18">
-       <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
+       <!--layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
         <property name="topMargin">
          <number>0</number>
         </property>
         <property name="bottomMargin">
          <number>0</number>
         </property>
-       </layout>
+       </layout-->
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
