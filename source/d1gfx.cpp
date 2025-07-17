@@ -770,7 +770,7 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
     return rect;
 }
 
-static void drawFrame(const D1GfxFrame *frame, const D1Pal *pal, QImage image, int ox, int oy)
+static void drawFrame(const D1GfxFrame *frame, const D1Pal *pal, QImage &image, int ox, int oy)
 {
     QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
     destBits += oy * image.width() + ox;
