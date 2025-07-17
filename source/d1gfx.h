@@ -240,8 +240,7 @@ class D1GfxComp : public QObject {
     friend class D1Gfx;
 public:
     D1GfxComp(D1Gfx *gfx);
-    D1GfxComp(const D1GfxComp &o);
-    ~D1GfxComp() = default;
+    ~D1GfxComp();
 
     D1Gfx *getGFX() { return this->gfx; };
     QString getLabel() { return this->label; };
@@ -377,7 +376,7 @@ protected:
     std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
     // fields of cel/cl2-frames
-    QList<D1GfxComp> components;
+    QList<D1GfxComp *> components;
     bool clipped = false;
     // fields of tilesets
     bool patched = false;
