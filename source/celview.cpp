@@ -420,7 +420,7 @@ void CelView::updateFields()
     comboBox->addItem("", 0);
     count = this->gfx->getComponentCount();
     if (count != 0) {
-        QMessageBox::critical(nullptr, "Error", tr("updateFields %1").arg(count));
+        QMessageBox::critical(nullptr, "Error", tr("updateFields %1 prev%2").arg(count).arg(prevIndex));
     }
     if (count < prevIndex) {
         prevIndex = count;
@@ -434,7 +434,7 @@ void CelView::updateFields()
         comboBox->addItem(labelText, i + 1);
     }
     comboBox->show();
-    //comboBox->setCurrentIndex(prevIndex);
+    comboBox->setCurrentIndex(prevIndex);
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
