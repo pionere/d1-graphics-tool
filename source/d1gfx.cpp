@@ -820,9 +820,10 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
         return QImage();
     }
     QRect rect = this->getFrameRect(frameIndex, true);
+    QMessageBox::critical(nullptr, "Error", tr("getFrameImage - %1:%2 w%3:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
     rect.setX(-rect.x());
     rect.setY(-rect.y());
-    QMessageBox::critical(nullptr, "Error", tr("getFrameImage %1:%2 w%3:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
+    QMessageBox::critical(nullptr, "Error", tr("getFrameImage + %1:%2 w%3:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
     QImage image = QImage(rect.width(), rect.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
     image.fill(Qt::transparent);
 

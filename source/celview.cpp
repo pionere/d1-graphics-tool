@@ -419,9 +419,9 @@ void CelView::updateFields()
     comboBox->clear();
     comboBox->addItem("", 0);
     count = this->gfx->getComponentCount();
-    if (count != 0) {
+    /*if (count != 0) {
         QMessageBox::critical(nullptr, "Error", tr("updateFields %1 prev%2").arg(count).arg(prevIndex));
-    }
+    }*/
     if (count < prevIndex) {
         prevIndex = count;
     }
