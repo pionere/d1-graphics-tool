@@ -766,24 +766,7 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
             fRect.setX(fRect.x() + compFrame->cfOffsetX);
             fRect.setY(fRect.y() + compFrame->cfOffsetY);
 
-            QRect pRect = rect;
             rect = rect.united(fRect);
-
-            QMessageBox::critical(nullptr, "Error", tr("uniting %1:%2 w%3:%4 + %5:%6 w%7:%8 -> %9:%10 w%11:%12").arg(pRect.x()).arg(pRect.y()).arg(pRect.width()).arg(pRect.height())
-            .arg(fRect.x()).arg(fRect.y()).arg(fRect.width()).arg(fRect.height())
-            .arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
-            /*if (-compFrame->cfOffsetX > rect.x()) {
-                rect.setX(-compFrame->cfOffsetX);
-            }
-            if (-compFrame->cfOffsetY > rect.y()) {
-                rect.setY(-compFrame->cfOffsetY);
-            }
-            if (compFrame->cfOffsetX + compFrameGfx->getWidth() > rect.width()) {
-                rect.setWidth(compFrame->cfOffsetX + compFrameGfx->getWidth());
-            }
-            if (compFrame->cfOffsetY + compFrameGfx->getHeight() > rect.height()) {
-                rect.setHeight(compFrame->cfOffsetY + compFrameGfx->getHeight());
-            }*/
         }
     }
     return rect;
@@ -820,9 +803,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
         return QImage();
     }
     QRect rect = this->getFrameRect(frameIndex, true);
-    QMessageBox::critical(nullptr, "Error", tr("getFrameImage - %1:%2 w%3:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
     rect.moveTo(-rect.x(), -rect.y());
-    QMessageBox::critical(nullptr, "Error", tr("getFrameImage + %1:%2 w%3:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
     QImage image = QImage(rect.width(), rect.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
     image.fill(Qt::transparent);
 
@@ -857,7 +838,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
             drawFrame(compFrame, this->palette, image, ox, oy);
         }
     }
-    QMessageBox::critical(nullptr, "Error", tr("drawFrame main"));
+
     drawFrame(this->frames[frameIndex], this->palette, image, rect.x(), rect.y());
 
     if (component != 0) {
@@ -887,9 +868,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
             const D1GfxFrame *compFrameGfx = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
             int ox = nextCompFrame->cfOffsetX + rect.x();
             int oy = nextCompFrame->cfOffsetY + rect.y();
-            QMessageBox::critical(nullptr, "Error", tr("drawsub %1:%2 w%3:%4").arg(ox).arg(oy).arg(nextCompFrame->cfOffsetX).arg(nextCompFrame->cfOffsetY));
             drawFrame(compFrameGfx, this->palette, image, ox, oy);
-            QMessageBox::critical(nullptr, "Error", tr("drawnsub"));
         }
     }
 

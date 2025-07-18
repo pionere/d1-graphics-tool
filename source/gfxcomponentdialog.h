@@ -45,12 +45,16 @@ private slots:
     void on_nextGroupButton_clicked();
     void on_lastGroupButton_clicked();
 
+    void on_zorderDecButton_clicked();
+    void on_zorderIncButton_clicked();
     void on_zorderEdit_returnPressed();
     void on_zorderEdit_escPressed();
     void on_xOffsetEdit_returnPressed();
     void on_xOffsetEdit_escPressed();
     void on_yOffsetEdit_returnPressed();
     void on_yOffsetEdit_escPressed();
+    void on_prevRefButton_clicked();
+    void on_nextRefButton_clicked();
     void on_frameRefEdit_returnPressed();
     void on_frameRefEdit_escPressed();
 

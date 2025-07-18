@@ -32,23 +32,123 @@
         <number>48</number>
        </property>
        <property name="text">
-        <string>Name:</string>
+        <string>Groups:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1" colspan="7">
-      <widget class="LineEditWidget" name="labelEdit">
+     <item row="0" column="1" colspan="1">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="firstGroupButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>First group of the graphics</string>
+       </property>
+       <property name="text">
+        <string notr="true">|&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="previousGroupButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Previous group of the graphics</string>
+       </property>
+       <property name="text">
+        <string notr="true">&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="LineEditWidget" name="groupIndexEdit">
        <property name="charWidth">
         <number>5</number>
        </property>
        <property name="toolTip">
-        <string>Label of the graphics component</string>
-       </property>
-       <property name="text">
-        <string notr="true">0</string>
+        <string>Current group of the graphics</string>
        </property>
        <property name="alignment">
         <enum>Qt::AlignCenter</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>8</number>
+       </property>
+       <property name="maximumWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string notr="true">/</string>
+       </property>
+       <property name="alignment">
+        <enum>Qt::AlignCenter</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="6">
+      <widget class="LineEditWidget" name="groupNumberEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Number of groups in the graphics</string>
+       </property>
+       <property name="alignment">
+        <enum>Qt::AlignCenter</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="7">
+      <widget class="QPushButton" name="nextGroupButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Next group of the graphics</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="8">
+      <widget class="QPushButton" name="lastGroupButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Last group of the graphics</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;|</string>
        </property>
       </widget>
      </item>
@@ -58,19 +158,19 @@
         <number>48</number>
        </property>
        <property name="text">
-        <string>Groups:</string>
+        <string>Frame:</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1" colspan="1">
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="1" column="1">
+      <widget class="QCheckBox" name="framesGroupCheckBox">
+       <property name="toolTip">
+        <string>Handle frames in groups</string>
        </property>
-      </spacer>
+      </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QPushButton" name="firstGroupButton">
+      <widget class="QPushButton" name="firstFrameButton">
        <property name="minimumWidth">
         <number>40</number>
        </property>
@@ -78,7 +178,7 @@
         <number>40</number>
        </property>
        <property name="toolTip">
-        <string>First group</string>
+        <string>First frame of the graphics</string>
        </property>
        <property name="text">
         <string notr="true">|&lt;</string>
@@ -86,7 +186,7 @@
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QPushButton" name="previousGroupButton">
+      <widget class="QPushButton" name="previousFrameButton">
        <property name="minimumWidth">
         <number>40</number>
        </property>
@@ -94,7 +194,7 @@
         <number>40</number>
        </property>
        <property name="toolTip">
-        <string>Previous group</string>
+        <string>Previous frame of the graphics</string>
        </property>
        <property name="text">
         <string notr="true">&lt;</string>
@@ -102,12 +202,12 @@
       </widget>
      </item>
      <item row="1" column="4">
-      <widget class="LineEditWidget" name="groupIndexEdit">
+      <widget class="LineEditWidget" name="frameIndexEdit">
        <property name="charWidth">
         <number>5</number>
        </property>
        <property name="toolTip">
-        <string>Current group</string>
+        <string>Current frame of the graphics</string>
        </property>
        <property name="alignment">
         <enum>Qt::AlignCenter</enum>
@@ -131,12 +231,12 @@
       </widget>
      </item>
      <item row="1" column="6">
-      <widget class="LineEditWidget" name="groupNumberEdit">
+      <widget class="LineEditWidget" name="frameNumberEdit">
        <property name="charWidth">
         <number>5</number>
        </property>
        <property name="toolTip">
-        <string>Number of groups</string>
+        <string>Number of frames in the graphics</string>
        </property>
        <property name="alignment">
         <enum>Qt::AlignCenter</enum>
@@ -147,7 +247,7 @@
       </widget>
      </item>
      <item row="1" column="7">
-      <widget class="QPushButton" name="nextGroupButton">
+      <widget class="QPushButton" name="nextFrameButton">
        <property name="minimumWidth">
         <number>40</number>
        </property>
@@ -155,7 +255,7 @@
         <number>40</number>
        </property>
        <property name="toolTip">
-        <string>Next group</string>
+        <string>Next frame of the graphics</string>
        </property>
        <property name="text">
         <string notr="true">&gt;</string>
@@ -163,7 +263,7 @@
       </widget>
      </item>
      <item row="1" column="8">
-      <widget class="QPushButton" name="lastGroupButton">
+      <widget class="QPushButton" name="lastFrameButton">
        <property name="minimumWidth">
         <number>40</number>
        </property>
@@ -171,7 +271,7 @@
         <number>40</number>
        </property>
        <property name="toolTip">
-        <string>Last group</string>
+        <string>Last frame of the graphics</string>
        </property>
        <property name="text">
         <string notr="true">&gt;|</string>
@@ -184,123 +284,23 @@
         <number>48</number>
        </property>
        <property name="text">
-        <string>Frame:</string>
+        <string>Name:</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QCheckBox" name="framesGroupCheckBox">
-       <property name="toolTip">
-        <string>Handle frames in groups</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QPushButton" name="firstFrameButton">
-       <property name="minimumWidth">
-        <number>40</number>
-       </property>
-       <property name="maximumWidth">
-        <number>40</number>
-       </property>
-       <property name="toolTip">
-        <string>First frame</string>
-       </property>
-       <property name="text">
-        <string notr="true">|&lt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QPushButton" name="previousFrameButton">
-       <property name="minimumWidth">
-        <number>40</number>
-       </property>
-       <property name="maximumWidth">
-        <number>40</number>
-       </property>
-       <property name="toolTip">
-        <string>Previous frame</string>
-       </property>
-       <property name="text">
-        <string notr="true">&lt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="LineEditWidget" name="frameIndexEdit">
+     <item row="2" column="1" colspan="7">
+      <widget class="LineEditWidget" name="labelEdit">
        <property name="charWidth">
         <number>5</number>
        </property>
        <property name="toolTip">
-        <string>Current frame</string>
+        <string>Label of the graphics component</string>
+       </property>
+       <property name="text">
+        <string notr="true">0</string>
        </property>
        <property name="alignment">
         <enum>Qt::AlignCenter</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="5">
-      <widget class="QLabel">
-       <property name="minimumWidth">
-        <number>8</number>
-       </property>
-       <property name="maximumWidth">
-        <number>8</number>
-       </property>
-       <property name="text">
-        <string notr="true">/</string>
-       </property>
-       <property name="alignment">
-        <enum>Qt::AlignCenter</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="6">
-      <widget class="LineEditWidget" name="frameNumberEdit">
-       <property name="charWidth">
-        <number>5</number>
-       </property>
-       <property name="toolTip">
-        <string>Number of frames</string>
-       </property>
-       <property name="alignment">
-        <enum>Qt::AlignCenter</enum>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="7">
-      <widget class="QPushButton" name="nextFrameButton">
-       <property name="minimumWidth">
-        <number>40</number>
-       </property>
-       <property name="maximumWidth">
-        <number>40</number>
-       </property>
-       <property name="toolTip">
-        <string>Next frame</string>
-       </property>
-       <property name="text">
-        <string notr="true">&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="8">
-      <widget class="QPushButton" name="lastFrameButton">
-       <property name="minimumWidth">
-        <number>40</number>
-       </property>
-       <property name="maximumWidth">
-        <number>40</number>
-       </property>
-       <property name="toolTip">
-        <string>Last frame</string>
-       </property>
-       <property name="text">
-        <string notr="true">&gt;|</string>
        </property>
       </widget>
      </item>
@@ -315,20 +315,50 @@
       </widget>
      </item>
      <item row="3" column="1" colspan="7">
-      <widget class="LineEditWidget" name="zorderEdit">
-       <property name="charWidth">
-        <number>5</number>
-       </property>
-       <property name="toolTip">
-        <string>Z-Order of the graphics component</string>
-       </property>
-       <property name="text">
-        <string notr="true">0</string>
-       </property>
-       <property name="alignment">
-        <enum>Qt::AlignCenter</enum>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout">
+       <item>
+        <widget class="QPushButton" name="zorderDecButton">
+         <property name="minimumWidth">
+          <number>24</number>
+         </property>
+         <property name="maximumWidth">
+          <number>24</number>
+         </property>
+         <property name="text">
+          <string notr="true">-</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="LineEditWidget" name="zorderEdit">
+         <property name="charWidth">
+          <number>5</number>
+         </property>
+         <property name="toolTip">
+          <string>Z-Order of the graphics component</string>
+         </property>
+         <property name="text">
+          <string notr="true">0</string>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="zorderIncButton">
+         <property name="minimumWidth">
+          <number>24</number>
+         </property>
+         <property name="maximumWidth">
+          <number>24</number>
+         </property>
+         <property name="text">
+          <string notr="true">-</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item row="4" column="0">
       <widget class="QLabel">
@@ -404,20 +434,88 @@
       </widget>
      </item>
      <item row="5" column="1" colspan="7">
-      <widget class="LineEditWidget" name="frameRefEdit">
-       <property name="charWidth">
-        <number>5</number>
-       </property>
-       <property name="toolTip">
-        <string>Frame of the graphics component</string>
-       </property>
-       <property name="text">
-        <string notr="true">0</string>
-       </property>
-       <property name="alignment">
-        <enum>Qt::AlignCenter</enum>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout">
+       <item>
+        <widget class="QPushButton" name="prevRefButton">
+         <property name="minimumWidth">
+          <number>40</number>
+         </property>
+         <property name="maximumWidth">
+          <number>40</number>
+         </property>
+         <property name="toolTip">
+          <string>Previous frame of the graphics component</string>
+         </property>
+         <property name="text">
+          <string notr="true">&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="LineEditWidget" name="frameRefEdit">
+         <property name="charWidth">
+          <number>5</number>
+         </property>
+         <property name="toolTip">
+          <string>Frame of the graphics component</string>
+         </property>
+         <property name="text">
+          <string notr="true">0</string>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel">
+         <property name="minimumWidth">
+          <number>8</number>
+         </property>
+         <property name="maximumWidth">
+          <number>8</number>
+         </property>
+         <property name="text">
+          <string notr="true">/</string>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="LineEditWidget" name="frameRefNumberEdit">
+         <property name="charWidth">
+          <number>5</number>
+         </property>
+         <property name="toolTip">
+          <string>Number of frames in the graphics component</string>
+         </property>
+         <property name="alignment">
+          <enum>Qt::AlignCenter</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="nextRefButton">
+         <property name="minimumWidth">
+          <number>40</number>
+         </property>
+         <property name="maximumWidth">
+          <number>40</number>
+         </property>
+         <property name="toolTip">
+          <string>Next frame of the graphics component</string>
+         </property>
+         <property name="text">
+          <string notr="true">&gt;</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item row="6" column="0" colspan="8">
       <widget class="QGraphicsView" name="celGraphicsView">

@@ -41,6 +41,8 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     this->updateGroupIndex();
     // Set the maximum group text
     this->ui->groupNumberEdit->setText(QString::number(g->getGroupCount()));
+    // Set the maximum frame-reference
+    this->ui->frameRefNumberEdit->setText(QString::number(gc->getGfx()->getFrameCount()));
     int compIdx = 0;
     for (int i = 0; i < g->getComponentCount(); i++) {
         if (g->getComponent(i) == gc) {
@@ -320,6 +322,22 @@ void GfxComponentDialog::on_lastGroupButton_clicked()
     this->setGroupIndex(this->gfx->getGroupCount() - 1);
 }
 
+void GfxComponentDialog::on_zorderDecButton_clicked()
+{
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
+    frame->cfZOrder--;
+
+    this->displayFrame();
+}
+
+void GfxComponentDialog::on_zorderIncButton_clicked()
+{
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
+    frame->cfZOrder++;
+
+    this->displayFrame();
+}
+
 void GfxComponentDialog::on_zorderEdit_returnPressed()
 {
     int zorder = this->ui->zorderEdit->text().toInt();
@@ -372,6 +390,26 @@ void GfxComponentDialog::on_yOffsetEdit_escPressed()
 {
     this->updateFields();
     this->ui->yOffsetEdit->clearFocus();
+}
+
+void GfxComponentDialog::on_prevRefButton_clicked()
+{
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
+    if (frame->cfFrameRef > 0) {
+        frame->cfFrameRef--;
+    }
+
+    this->displayFrame();
+}
+
+void GfxComponentDialog::on_nextRefButton_clicked()
+{
+    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
+    if (frame->cfFrameRef < this->newComp->getGFX()->getFrameCount()) {
+        frame->cfFrameRef++;
+    }
+
+    this->displayFrame();
 }
 
 void GfxComponentDialog::on_frameRefEdit_returnPressed()
