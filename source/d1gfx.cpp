@@ -677,7 +677,7 @@ QRect D1Gfx::getBoundary() const
     }*/
     QRect result = QRect();
     for (const D1GfxFrame *frame : this->frames) {
-        result += frame->getBoundary();
+        result = result.united(frame->getBoundary());
     }
     // TODO: components ...
 
@@ -766,7 +766,7 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
             fRect.rx() += compFrame->cfOffsetX();
             fRect.ry() += compFrame->cfOffsetY();
 
-            rect += fRect;
+            rect = rect.united(fRect);
 
             /*if (-compFrame->cfOffsetX > rect.x()) {
                 rect.setX(-compFrame->cfOffsetX);
