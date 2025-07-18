@@ -419,8 +419,8 @@ void CelView::updateFields()
     comboBox->clear();
     comboBox->addItem("", 0);
     count = this->gfx->getComponentCount();
-    if (count <= prevIndex) {
-        prevIndex = count - 1;
+    if (count < prevIndex) {
+        prevIndex = count;
     }
     for (int i = 0; i < count; i++) {
         D1GfxComp *comp = this->gfx->getComponent(i);
@@ -430,8 +430,8 @@ void CelView::updateFields()
         }
         comboBox->addItem(labelText, i + 1);
     }
-    comboBox->setCurrentIndex(prevIndex);
     comboBox->show();
+    comboBox->setCurrentIndex(prevIndex);
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));

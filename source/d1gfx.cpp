@@ -111,6 +111,25 @@ D1GfxFrame::~D1GfxFrame()
     delete this->frameAudio;
 }
 
+QRect D1GfxFrame::getBoundary() const
+{
+    int minx = INT_MAX, maxx = INT_MIN, miny = INT_MAX, maxy = INT_MIN;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            if (this->pixels[y][x].isTransparent()) continue;
+            if (x < minx)
+                minx = x;
+            if (x > maxx)
+                maxx = x;
+            if (y < miny)
+                miny = y;
+            if (y > maxy)
+                maxy = y;
+        }
+    }
+    return QRect(minx, miny, maxx - minx + 1, maxy - miny + 1);
+}
+
 int D1GfxFrame::getWidth() const
 {
     return this->width;
@@ -653,27 +672,16 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString &header, bool patchData) const
 
 QRect D1Gfx::getBoundary() const
 {
-    int minx = INT_MAX, maxx = INT_MIN, miny = INT_MAX, maxy = INT_MIN;
     /*if (this->frames.isEmpty()) {
         return QRect();
     }*/
+    QRect result = QRect();
     for (const D1GfxFrame *frame : this->frames) {
-        for (int y = 0; y < frame->getHeight(); y++) {
-            for (int x = 0; x < frame->getWidth(); x++) {
-                if (frame->getPixel(x, y).isTransparent()) continue;
-                if (x < minx)
-                    minx = x;
-                if (x > maxx)
-                    maxx = x;
-                if (y < miny)
-                    miny = y;
-                if (y > maxy)
-                    maxy = y;
-            }
-        }
-        // ...
+        result += frame->getBoundary();
     }
-    return QRect(minx, miny, maxx - minx + 1, maxy - miny + 1);
+    // TODO: components ...
+
+    return result;
 }
 
 bool D1Gfx::isFrameSizeConstant() const
@@ -753,7 +761,14 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
                 continue;
             }
             const D1GfxFrame *compFrameGfx = comp->gfx->frames[compFrame->cfFrameRef - 1];
-            if (-compFrame->cfOffsetX > rect.x()) {
+
+            QRect fRect = compFrameGfx->getBoundary();
+            fRect.rx() += compFrame->cfOffsetX();
+            fRect.ry() += compFrame->cfOffsetY();
+
+            rect += fRect;
+
+            /*if (-compFrame->cfOffsetX > rect.x()) {
                 rect.setX(-compFrame->cfOffsetX);
             }
             if (-compFrame->cfOffsetY > rect.y()) {
@@ -764,7 +779,7 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
             }
             if (compFrame->cfOffsetY + compFrameGfx->getHeight() > rect.height()) {
                 rect.setHeight(compFrame->cfOffsetY + compFrameGfx->getHeight());
-            }
+            }*/
         }
     }
     return rect;
@@ -801,7 +816,8 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
         return QImage();
     }
     QRect rect = this->getFrameRect(frameIndex, true);
-    D1GfxFrame *frame = this->frames[frameIndex];
+    rect.setX(-rect.x());
+    rect.setY(-rect.y());
 
     QImage image = QImage(rect.width(), rect.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
     image.fill(Qt::transparent);
