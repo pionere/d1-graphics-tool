@@ -763,8 +763,8 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
             const D1GfxFrame *compFrameGfx = comp->gfx->frames[compFrame->cfFrameRef - 1];
 
             QRect fRect = compFrameGfx->getBoundary();
-            fRect.rx() += compFrame->cfOffsetX();
-            fRect.ry() += compFrame->cfOffsetY();
+            fRect.setX(fRect.x() + compFrame->cfOffsetX);
+            fRect.setY(fRect.y() + compFrame->cfOffsetY);
 
             rect = rect.united(fRect);
 
