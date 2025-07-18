@@ -42,7 +42,7 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     // Set the maximum group text
     this->ui->groupNumberEdit->setText(QString::number(g->getGroupCount()));
     // Set the maximum frame-reference
-    this->ui->frameRefNumberEdit->setText(QString::number(gc->getGfx()->getFrameCount()));
+    this->ui->frameRefNumberEdit->setText(QString::number(gc->getGFX()->getFrameCount()));
     int compIdx = 0;
     for (int i = 0; i < g->getComponentCount(); i++) {
         if (g->getComponent(i) == gc) {
@@ -405,7 +405,7 @@ void GfxComponentDialog::on_prevRefButton_clicked()
 void GfxComponentDialog::on_nextRefButton_clicked()
 {
     D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    if (frame->cfFrameRef < this->newComp->getGFX()->getFrameCount()) {
+    if (frame->cfFrameRef < (unsigned)this->newComp->getGFX()->getFrameCount()) {
         frame->cfFrameRef++;
     }
 
