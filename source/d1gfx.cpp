@@ -766,8 +766,12 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
             fRect.setX(fRect.x() + compFrame->cfOffsetX);
             fRect.setY(fRect.y() + compFrame->cfOffsetY);
 
+            QRect pRect = rect;
             rect = rect.united(fRect);
 
+            QMessageBox::critical(nullptr, "Error", tr("uniting %1:%2 w%3:%4 + %5:%6 w%7:%8 -> %9:%10 w%11:%12").arg(pRect.x()).arg(pRect.y()).arg(pRect.width()).arg(pRect.height())
+            .arg(fRect.x()).arg(fRect.y()).arg(fRect.width()).arg(fRect.height())
+            .arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
             /*if (-compFrame->cfOffsetX > rect.x()) {
                 rect.setX(-compFrame->cfOffsetX);
             }

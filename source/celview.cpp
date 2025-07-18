@@ -415,7 +415,7 @@ void CelView::updateFields()
     // update the components
     QComboBox *comboBox = this->ui->componentsComboBox;
     int prevIndex = comboBox->currentIndex();
-    comboBox->hide();
+    // comboBox->hide();
     comboBox->clear();
     comboBox->addItem("", 0);
     count = this->gfx->getComponentCount();
@@ -433,7 +433,7 @@ void CelView::updateFields()
         }
         comboBox->addItem(labelText, i + 1);
     }
-    comboBox->show();
+    // comboBox->show();
     comboBox->setCurrentIndex(prevIndex);
 
     // update the asset multiplier field
