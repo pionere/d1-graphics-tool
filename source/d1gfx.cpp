@@ -9,6 +9,7 @@
 #include "openasdialog.h"
 #include "progressdialog.h"
 #include "remapdialog.h"
+#include "resizedialog.h"
 
 #include "dungeon/enums.h"
 #include "dungeon/patchdat.h"
@@ -215,6 +216,142 @@ bool D1GfxFrame::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &repla
         }
     }
     return result;
+}
+
+bool D1GfxFrame::testResize(int width, int height, RESIZE_PLACEMENT placement, const D1GfxPixel &backPixel) const
+{
+    int currWidth = this->width;
+    if (width == 0) {
+        width = currWidth;
+    }
+    int currHeight = this->height;
+    if (height == 0) {
+        height = currHeight;
+    }
+
+    const std::vector<std::vector<D1GfxPixel>> &pixelLines = this->pixels;
+    if (width < currWidth) {
+        int counter = 0;
+        for (int n = 0; n < currWidth - width; n++, counter++) {
+            int idx;
+            if (placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::BOTTOM) {
+                if (counter & 1) {
+                    idx = n / 2;
+                } else {
+                    idx = currWidth - 1 - n / 2;
+                }
+            } else if (placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
+                idx = n;
+            } else {
+                idx = currWidth - 1 - n;
+            }
+            for (const std::vector<D1GfxPixel> &pixelLine : pixelLines) {
+                if (pixelLine[idx] != backPixel) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    if (height < currHeight) {
+        int counter = 0;
+        for (int n = 0; n < currHeight - height; n++, counter++) {
+            int idx;
+            if (placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) {
+                if (counter & 1) {
+                    idx = n / 2;
+                } else {
+                    idx = currHeight - 1 - n / 2;
+                }
+            } else if (placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
+                idx = n;
+            } else {
+                idx = currHeight - 1 - n;
+            }
+            const std::vector<D1GfxPixel> &pixelLine = pixelLines[idx];
+            for (const D1GfxPixel &pixel : pixelLine) {
+                if (pixel != backPixel) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool D1GfxFrame::resize(int width, int height, RESIZE_PLACEMENT placement, const D1GfxPixel &backPixel)
+{
+    int currWidth = this->width;
+    if (width == 0)
+        width = currWidth;
+    int currHeight = this->height;
+    if (height == 0)
+        height = currHeight;
+
+    std::vector<std::vector<D1GfxPixel>> &pixelLines = this->pixels;
+    bool change = false;
+    int counter = 0;
+    while (width > currWidth) {
+        for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
+            if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
+                pixelLine.insert(pixelLine.begin(), backPixel);
+            } else {
+                pixelLine.push_back(backPixel);
+            }
+        }
+        counter++;
+        currWidth++;
+        change = true;
+    }
+
+    while (width < currWidth) {
+        for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
+            if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
+                pixelLine.erase(pixelLine.begin());
+            } else {
+                pixelLine.pop_back();
+            }
+        }
+        counter++;
+        currWidth--;
+        change = true;
+    }
+    this->width = width;
+
+    counter = 0;
+    std::vector<D1GfxPixel> pixelLine;
+    for (int x = 0; x < width; x++) {
+        pixelLine.push_back(backPixel);
+    }
+    while (height > currHeight) {
+        if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+            || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
+            pixelLines.insert(pixelLines.begin(), pixelLine);
+        }
+        else {
+            pixelLines.push_back(pixelLine);
+        }
+        counter++;
+        currHeight++;
+        change = true;
+    }
+
+    while (height < currHeight) {
+        if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+            || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
+            pixelLines.erase(pixelLines.begin());
+        }
+        else {
+            pixelLines.pop_back();
+        }
+        counter++;
+        currHeight--;
+        change = true;
+    }
+    this->height = height;
+    return change;
 }
 
 bool D1GfxFrame::flipHorizontal()
@@ -1104,6 +1241,52 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
             this->setModified();
         }
     }
+}
+
+int D1Gfx::testResize(const ResizeParam &params)
+{
+    const D1GfxPixel backPixel = (unsigned)params.backcolor < D1PAL_COLORS ? D1GfxPixel::colorPixel(params.backcolor) : D1GfxPixel::transparentPixel();
+    int rangeFrom = params.rangeFrom;
+    if (rangeFrom != 0) {
+        rangeFrom--;
+    }
+    int rangeTo = params.rangeTo;
+    if (rangeTo == 0 || rangeTo >= this->getFrameCount()) {
+        rangeTo = this->getFrameCount();
+    }
+    rangeTo--;
+
+    int frameWithPixelLost = -1;
+    for (int i = rangeFrom; i <= rangeTo; i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (!frame->testResize(params.width, params.height, params.placement, backPixel)) {
+            frameWithPixelLost = i;
+            break;
+        }
+    }
+    return frameWithPixelLost;
+}
+
+bool D1Gfx::resize(const ResizeParam &params)
+{
+    const D1GfxPixel backPixel = (unsigned)params.backcolor < D1PAL_COLORS ? D1GfxPixel::colorPixel(params.backcolor) : D1GfxPixel::transparentPixel();
+    int rangeFrom = params.rangeFrom;
+    if (rangeFrom != 0) {
+        rangeFrom--;
+    }
+    int rangeTo = params.rangeTo;
+    if (rangeTo == 0 || rangeTo >= this->getFrameCount()) {
+        rangeTo = this->getFrameCount();
+    }
+    rangeTo--;
+
+    bool change = false;
+    for (int i = rangeFrom; i <= rangeTo; i++) {
+        D1GfxFrame *frame = this->frames[i];
+        change |= frame->resize(params.width, params.height, params.placement, backPixel);
+    }
+
+    return change;
 }
 
 void D1Gfx::mask()

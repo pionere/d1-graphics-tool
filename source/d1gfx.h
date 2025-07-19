@@ -22,6 +22,8 @@
 
 class D1SmkAudioData;
 class RemapParam;
+enum class RESIZE_PLACEMENT;
+class ResizeParam;
 
 class D1GfxPixel {
 public:
@@ -107,6 +109,8 @@ public:
     bool addTo(const D1GfxFrame &frame);
     void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
     bool replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements);
+    bool testResize(int width, int height, RESIZE_PLACEMENT placement, const D1GfxPixel &backPixel) const;
+    bool resize(int width, int height, RESIZE_PLACEMENT placement, const D1GfxPixel &backPixel);
     bool flipHorizontal();
     bool flipVertical();
     bool mask(const D1GfxFrame *frame);
@@ -271,6 +275,8 @@ public:
     void mergeFrames(unsigned frameIndex0, unsigned frameIndex1);
     void addGfx(D1Gfx *gfx);
     void replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params, int verbose);
+    int testResize(const ResizeParam &params);
+    bool resize(const ResizeParam &params);
     void mask();
     void optimize();
 
