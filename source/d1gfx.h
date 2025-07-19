@@ -113,6 +113,8 @@ public:
     bool replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements);
     bool testResize(int width, int height, RESIZE_PLACEMENT placement, const D1GfxPixel &backPixel) const;
     bool resize(int width, int height, RESIZE_PLACEMENT placement, const D1GfxPixel &backPixel);
+    bool shift(int dx, int dy, int sx, int sy, int ex, int ey);
+    bool copy(int dx, int dy, const D1GfxFrame* srcFrame, int sx, int sy, int ex, int ey);
     bool flipHorizontal();
     bool flipVertical();
     bool mask(const D1GfxFrame *frame);

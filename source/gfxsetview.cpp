@@ -720,91 +720,18 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
 
 void GfxsetView::resize(const ResizeParam &params)
 {
-    D1GfxPixel backPixel = (unsigned)params.backcolor < D1PAL_COLORS ? D1GfxPixel::colorPixel(params.backcolor) : D1GfxPixel::transparentPixel();
-
-    const RESIZE_PLACEMENT placement = params.placement;
     int frameWithPixelLost = -1;
     int gn = 0;
-    for (; gn < this->gfxset->getGfxCount(); gn++) {
+    for ( ; gn < this->gfxset->getGfxCount(); gn++) {
         D1Gfx *gfx = this->gfxset->getGfx(gn);
         if (!params.resizeAll && gfx != this->gfx) {
             continue;
         }
-        int rangeFrom = params.rangeFrom;
-        if (rangeFrom != 0) {
-            rangeFrom--;
-        }
-        int rangeTo = params.rangeTo;
-        if (rangeTo == 0 || rangeTo >= gfx->getFrameCount()) {
-            rangeTo = gfx->getFrameCount();
-        }
-        rangeTo--;
-		// same as in celview.cpp?
-        for (int i = rangeFrom; i <= rangeTo; i++) {
-            D1GfxFrame *frame = gfx->getFrame(i);
-            int width = params.width;
-            int currWidth = frame->getWidth();
-            if (width == 0) {
-                width = currWidth;
-            }
-            int height = params.height;
-            int currHeight = frame->getHeight();
-            if (height == 0) {
-                height = currHeight;
-            }
-
-            const std::vector<std::vector<D1GfxPixel>> &pixelLines = frame->getPixels();
-            if (width < currWidth) {
-                int counter = 0;
-                for (int n = 0; n < currWidth - width; n++, counter++) {
-                    int idx;
-                    if (placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::BOTTOM) {
-                        if (counter & 1) {
-                            idx = n / 2;
-                        } else {
-                            idx = currWidth - 1 - n / 2;
-                        }
-                    } else if (placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
-                        idx = n;
-                    } else {
-                        idx = currWidth - 1 - n;
-                    }
-                    for (const std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                        if (pixelLine[idx] != backPixel) {
-                            frameWithPixelLost = i;
-                            goto done;
-                        }
-                    }
-                }
-            }
-
-            if (height < currHeight) {
-                int counter = 0;
-                for (int n = 0; n < currHeight - height; n++, counter++) {
-                    int idx;
-                    if (placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) {
-                        if (counter & 1) {
-                            idx = n / 2;
-                        } else {
-                            idx = currHeight - 1 - n / 2;
-                        }
-                    } else if (placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
-                        idx = n;
-                    } else {
-                        idx = currHeight - 1 - n;
-                    }
-                    const std::vector<D1GfxPixel> &pixelLine = pixelLines[idx];
-                    for (const D1GfxPixel &pixel : pixelLine) {
-                        if (pixel != backPixel) {
-                            frameWithPixelLost = i;
-                            goto done;
-                        }
-                    }
-                }
-            }
+        frameWithPixelLost = gfx->testResize(params);
+        if (frameWithPixelLost != -1) {
+            break;
         }
     }
-done:
     if (frameWithPixelLost != -1) {
         QMessageBox::StandardButton reply;
         QString frameId = tr("Frame %1 of %2").arg(frameWithPixelLost + 1).arg(this->gfxset->getGfxLabel(gn));
@@ -822,89 +749,7 @@ done:
         if (!params.resizeAll && gfx != this->gfx) {
             continue;
         }
-        bool change = false;
-        int rangeFrom = params.rangeFrom;
-        if (rangeFrom != 0) {
-            rangeFrom--;
-        }
-        int rangeTo = params.rangeTo;
-        if (rangeTo == 0 || rangeTo >= gfx->getFrameCount()) {
-            rangeTo = gfx->getFrameCount();
-        }
-        rangeTo--;
-		// same as in celview.cpp?
-        for (int i = rangeFrom; i <= rangeTo; i++) {
-            D1GfxFrame *frame = gfx->getFrame(i);
-            int width = params.width;
-            int currWidth = frame->getWidth();
-            if (width == 0)
-                width = currWidth;
-            int height = params.height;
-            int currHeight = frame->getHeight();
-            if (height == 0)
-                height = currHeight;
-
-            std::vector<std::vector<D1GfxPixel>> &pixelLines = frame->getPixels();
-            int counter = 0;
-            while (width > currWidth) {
-                for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                    if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                        || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
-                        pixelLine.insert(pixelLine.begin(), backPixel);
-                    } else {
-                        pixelLine.push_back(backPixel);
-                    }
-                }
-                counter++;
-                currWidth++;
-                change = true;
-            }
-
-            while (width < currWidth) {
-                for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                    if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                        || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
-                        pixelLine.erase(pixelLine.begin());
-                    } else {
-                        pixelLine.pop_back();
-                    }
-                }
-                counter++;
-                currWidth--;
-                change = true;
-            }
-            frame->setWidth(width);
-
-            counter = 0;
-            std::vector<D1GfxPixel> pixelLine;
-            for (int x = 0; x < width; x++) {
-                pixelLine.push_back(backPixel);
-            }
-            while (height > currHeight) {
-                if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                    || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
-                    pixelLines.insert(pixelLines.begin(), pixelLine);
-                } else {
-                    pixelLines.push_back(pixelLine);
-                }
-                counter++;
-                currHeight++;
-                change = true;
-            }
-
-            while (height < currHeight) {
-                if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                    || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
-                    pixelLines.erase(pixelLines.begin());
-                } else {
-                    pixelLines.pop_back();
-                }
-                counter++;
-                currHeight--;
-                change = true;
-            }
-            frame->setHeight(height);
-        }
+        bool change = gfx->resize(params);
         if (change) {
             gfx->setModified();
             ch = true;

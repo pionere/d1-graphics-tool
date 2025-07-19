@@ -291,7 +291,7 @@
      <item row="2" column="1" colspan="7">
       <widget class="LineEditWidget" name="labelEdit">
        <property name="charWidth">
-        <number>5</number>
+        <number>8</number>
        </property>
        <property name="toolTip">
         <string>Label of the graphics component</string>
