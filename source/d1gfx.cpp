@@ -315,6 +315,7 @@ bool D1GfxFrame::resize(int width, int height, RESIZE_PLACEMENT placement, const
         height = currHeight;
 
     std::vector<std::vector<D1GfxPixel>> &pixelLines = this->pixels;
+    bool change = false;
     int counter = 0;
     while (width > currWidth) {
         for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
@@ -1437,14 +1438,14 @@ int D1Gfx::testResize(const ResizeParam &params)
         rangeFrom--;
     }
     int rangeTo = params.rangeTo;
-    if (rangeTo == 0 || rangeTo >= this->gfx->getFrameCount()) {
-        rangeTo = this->gfx->getFrameCount();
+    if (rangeTo == 0 || rangeTo >= this->getFrameCount()) {
+        rangeTo = this->getFrameCount();
     }
     rangeTo--;
 
     int frameWithPixelLost = -1;
     for (int i = rangeFrom; i <= rangeTo; i++) {
-        D1GfxFrame *frame = this->gfx->getFrame(i);
+        D1GfxFrame *frame = this->frames[i];
         if (!frame->testResize(params.width, params.height, params.placement, backPixel)) {
             frameWithPixelLost = i;
             break;
@@ -1515,6 +1516,7 @@ void D1Gfx::mask()
 
 bool D1Gfx::squash()
 {
+    const D1GfxPixel backPixel = D1GfxPixel::transparentPixel();
     bool change = false;
     for (int i = 0; i < this->getFrameCount(); i++) {
         QRect rect = this->getFrameRect(i, true);
@@ -1523,7 +1525,7 @@ bool D1Gfx::squash()
         D1GfxFrame* frame = this->frames[i];
 
         if (rect.width() != frame->getWidth() || rect.height() != frame->getHeight()) {
-            change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT);
+            change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT, backPixel);
         }
 
         if (rect.x() != 0 || rect.y() != 0) {
