@@ -535,6 +535,42 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
+      <widget class="QPushButton" name="zoomOutButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="text">
+        <string notr="true">-</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="LineEditWidget" name="zoomEdit">
+       <property name="charWidth">
+        <number>4</number>
+       </property>
+       <property name="alignment">
+        <enum>Qt::AlignCenter</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="zoomInButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="text">
+        <string notr="true">+</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

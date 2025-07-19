@@ -329,6 +329,7 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     }
 
     this->updateFields();
+    this->updateComponentsList();
 }
 
 void CelView::setPal(D1Pal *p)
@@ -402,6 +403,31 @@ void CelView::updateLabel()
     CelView::setLabelContent(this->ui->celLabel, this->gfx->getFilePath(), this->gfx->isModified());
 }
 
+void CelView::updateComponentsList()
+{
+    int count;
+
+    QComboBox *comboBox = this->ui->componentsComboBox;
+    int prevIndex = comboBox->currentIndex();
+    // comboBox->hide();
+    comboBox->clear();
+    comboBox->addItem("", 0);
+    count = this->gfx->getComponentCount();
+    if (count < prevIndex) {
+        prevIndex = count;
+    }
+    for (int i = 0; i < count; i++) {
+        D1GfxComp *comp = this->gfx->getComponent(i);
+        QString labelText = comp->getLabel();
+        /*if (comp->getGFX()->isModified()) {
+            labelText += "*";
+        }*/
+        comboBox->addItem(labelText, i + 1);
+    }
+    // comboBox->show();
+    comboBox->setCurrentIndex(prevIndex);
+}
+
 void CelView::updateFields()
 {
     int count;
@@ -413,15 +439,12 @@ void CelView::updateFields()
     this->audioBtn->setVisible(this->gfx->getType() == D1CEL_TYPE::SMK && this->gfx->getFrameCount() != 0);
 
     // update the components
-    QComboBox *comboBox = this->ui->componentsComboBox;
+    /*QComboBox *comboBox = this->ui->componentsComboBox;
     int prevIndex = comboBox->currentIndex();
     // comboBox->hide();
     comboBox->clear();
     comboBox->addItem("", 0);
     count = this->gfx->getComponentCount();
-    /*if (count != 0) {
-        QMessageBox::critical(nullptr, "Error", tr("updateFields %1 prev%2").arg(count).arg(prevIndex));
-    }*/
     if (count < prevIndex) {
         prevIndex = count;
     }
@@ -434,7 +457,7 @@ void CelView::updateFields()
         comboBox->addItem(labelText, i + 1);
     }
     // comboBox->show();
-    // comboBox->setCurrentIndex(prevIndex);
+    // comboBox->setCurrentIndex(prevIndex);*/
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
@@ -1263,8 +1286,11 @@ void CelView::on_newComponentPushButtonClicked()
     }
 
     int compIdx = this->ui->componentsComboBox->currentIndex();
-
+    
     this->gfx->insertComponent(compIdx, gfx);
+
+    this->updateComponentsList();
+
     this->displayFrame();
 }
 
@@ -1285,6 +1311,9 @@ void CelView::on_closeComponentPushButtonClicked()
     int compIdx = this->ui->componentsComboBox->currentIndex();
     if (compIdx != 0) {
         this->gfx->removeComponent(compIdx - 1);
+
+        this->updateComponentsList();
+
         this->displayFrame();
     }
 }

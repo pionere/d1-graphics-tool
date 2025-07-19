@@ -430,6 +430,33 @@ void GfxComponentDialog::on_frameRefEdit_escPressed()
     this->ui->frameRefEdit->clearFocus();
 }
 
+void GfxComponentDialog::on_zoomOutButton_clicked()
+{
+    this->celScene.zoomOut();
+    this->on_zoomEdit_escPressed();
+}
+
+void GfxComponentDialog::on_zoomInButton_clicked()
+{
+    this->celScene.zoomIn();
+    this->on_zoomEdit_escPressed();
+}
+
+void GfxComponentDialog::on_zoomEdit_returnPressed()
+{
+    QString zoom = this->ui->zoomEdit->text();
+
+    this->celScene.setZoom(zoom);
+
+    this->on_zoomEdit_escPressed();
+}
+
+void GfxComponentDialog::on_zoomEdit_escPressed()
+{
+    this->ui->zoomEdit->setText(this->celScene.zoomText());
+    this->ui->zoomEdit->clearFocus();
+}
+
 void GfxComponentDialog::on_submitButton_clicked()
 {
     D1GfxComp *gc = this->gfxComp;

@@ -58,6 +58,11 @@ private slots:
     void on_frameRefEdit_returnPressed();
     void on_frameRefEdit_escPressed();
 
+    void on_zoomOutButton_clicked();
+    void on_zoomInButton_clicked();
+    void on_zoomEdit_returnPressed();
+    void on_zoomEdit_escPressed();
+
     void on_submitButton_clicked();
     void on_cancelButton_clicked();
 

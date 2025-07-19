@@ -127,6 +127,7 @@ private:
     void drawGrid(QImage &celFrame);
     void updateFields();
     void updateLabel();
+    void updateComponentsList();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void setFrameIndex(int frameIndex);
     void updateGroupIndex();
