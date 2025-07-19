@@ -222,6 +222,7 @@ private slots:
     void on_actionResize_triggered();
     void on_actionUpscale_triggered();
     void on_actionMerge_triggered();
+    void on_actionSquash_triggered();
     void on_actionMask_triggered();
     void on_actionOptimize_triggered();
 

@@ -430,6 +430,7 @@
     <addaction name="actionResize"/>
     <addaction name="actionUpscale"/>
     <addaction name="actionMerge"/>
+    <addaction name="actionSquash"/>
     <addaction name="actionMask"/>
     <addaction name="actionOptimize"/>
    </widget>
@@ -780,6 +781,14 @@
    </property>
    <property name="toolTip">
     <string>Add frames from an other graphics</string>
+   </property>
+  </action>
+  <action name="actionSquash">
+   <property name="text">
+    <string>Squash</string>
+   </property>
+   <property name="toolTip">
+    <string>Add components to the main graphics</string>
    </property>
   </action>
   <action name="actionMask">

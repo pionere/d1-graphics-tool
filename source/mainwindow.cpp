@@ -1712,6 +1712,13 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(this->gfx != nullptr);
     this->ui->actionMerge->setEnabled(this->gfx != nullptr);
+    bool hasComponent = this->gfx != nullptr && this->gfx->getComponentCount() != 0;
+    if (this->gfxset != nullptr) {
+        for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
+            hasComponent |= this->gfxset->getGfx(i)->getComponentCount() != 0;
+        }
+    }
+    this->ui->actionSquash->setEnabled(hasComponent);
     this->ui->actionMask->setEnabled(this->gfx != nullptr);
     this->ui->actionOptimize->setEnabled(this->celView != nullptr);
     // - Reports
@@ -2676,6 +2683,22 @@ void MainWindow::on_actionMerge_triggered()
         this->gfx->addGfx(gfx);
     }
     delete gfx;
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionSquash_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+
+    if (this->gfxset != nullptr) {
+        for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
+            this->gfxset->getGfx(i)->squash();
+        }
+    } else {
+        this->gfx->squash();
+    }
 
     // Clear loading message from status bar
     ProgressDialog::done();
