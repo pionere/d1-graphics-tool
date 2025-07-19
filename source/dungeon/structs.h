@@ -149,7 +149,8 @@ typedef struct ItemStruct {
 	unsigned _iAnimFrame;    // Current frame of animation.
 	//int _iAnimWidth;
 	//int _iAnimXOffset;
-	BOOL _iPostDraw; // should be drawn during the post-phase (magic rock on the stand)
+	BOOL _iPostDraw; // should be drawn during the post-phase (magic rock on the stand) -- unused
+	BOOL _iIdentified;
 	char _iName[32];
 	int _ivalue;
 	int _iIvalue;
@@ -173,7 +174,10 @@ typedef struct ItemStruct {
 	int _iPLMana;
 	int _iPLHP;
 	int _iPLDamMod;
-	int _iPLGetHit;
+	BYTE _iPLToBlk;
+	int8_t _iPLAtkSpdMod;
+	int8_t _iPLAbsAnyHit;
+	int8_t _iPLAbsPhyHit;
 	int8_t _iPLLight;
 	int8_t _iPLSkillLevels;
 	BYTE _iPLSkill;
@@ -181,6 +185,7 @@ typedef struct ItemStruct {
 	BYTE _iPLManaSteal;
 	BYTE _iPLLifeSteal;
 	BYTE _iPLCrit;
+	BOOLEAN _iStatFlag;
 	int _iUid; // unique_item_indexes
 	BYTE _iPLFMinDam;
 	BYTE _iPLFMaxDam;
@@ -190,8 +195,6 @@ typedef struct ItemStruct {
 	BYTE _iPLMMaxDam;
 	BYTE _iPLAMinDam;
 	BYTE _iPLAMaxDam;
-	int _iVAdd;
-	int _iVMult;
 } ItemStruct;
 
 //////////////////////////////////////////////////
@@ -239,7 +242,6 @@ typedef struct PlayerStruct {
 	int _pxoff;   // Pixel X-offset from tile position where the player should be drawn
 	int _pyoff;   // Pixel Y-offset from tile position where the player should be drawn
 	int _pdir;    // Direction faced by player (direction enum)
-	// int _pIAlign_64;
 	BYTE* _pAnimData;
 	int _pAnimFrameLen; // Tick length of each frame in the current animation
 	int _pAnimCnt;        // Increases by one each game tick, counting how close we are to _pAnimFrameLen
@@ -297,7 +299,6 @@ typedef struct PlayerStruct {
 	int _pVar7;
 	int _pVar8;
 	int _pGFXLoad; // flags of the loaded gfx('s)  (player_graphic_flag)
-	// int _pIAlign_64;
 	PlrAnimStruct _pAnims[NUM_PGXS];
 	unsigned _pAFNum; // action frame number of the attack animation
 	unsigned _pSFNum; // action frame number of the spell animation
@@ -345,9 +346,8 @@ typedef struct PlayerStruct {
 	BYTE _pAlign_B1;
 	int _pIAbsAnyHit; // absorbed hit damage
 	int _pIAbsPhyHit; // absorbed physical hit damage
-	// int _pIAlign_64;
 	int8_t _pIBaseAttackSpeed;
-	BYTE _pAlign_B2; // _pISplCost in vanilla code
+	BYTE _pAlign_B2;
 	BYTE _pILifeSteal;
 	BYTE _pIManaSteal;
 	int _pIFMinDam; // min fire damage (item's added fire damage)
@@ -430,7 +430,7 @@ typedef struct MissileStruct {
 	int _miMinDam;
 	int _miMaxDam;
 	// int _miRndSeed;
-	int _miRange;
+	int _miRange;    // Time to live for the missile in game ticks, when negative the missile will be deleted
 	unsigned _miLid; // light id of the missile
 	int _miVar1;
 	int _miVar2;
@@ -447,6 +447,7 @@ typedef struct MissileStruct {
 //////////////////////////////////////////////////
 
 typedef struct MonAnimStruct {
+	// BYTE* maAnimData[NUM_DIRS];
 	int maFrames;
 	int maFrameLen;
 } MonAnimStruct;
@@ -546,7 +547,7 @@ typedef struct MonsterStruct {
 	int _mxoff;        // Pixel X-offset from tile position where the monster should be drawn
 	int _myoff;        // Pixel Y-offset from tile position where the monster should be drawn
 	int _mdir;         // Direction faced by monster (direction enum)
-	int _menemy;       // The current target of the monster. An index in to either the plr or monster array depending on _mFlags (MFLAG_TARGETS_MONSTER)
+	int _menemy;       // The current target of the monster. An index in to either a player(zero or positive) or a monster (negative)
 	BYTE _menemyx;     // Future (except for teleporting) tile X-coordinate of the enemy
 	BYTE _menemyy;     // Future (except for teleporting) tile Y-coordinate of the enemy
 	BYTE _mListener;   // the player to whom the monster is talking to (unused)
