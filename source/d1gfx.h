@@ -111,7 +111,8 @@ public:
     bool addTo(const D1GfxFrame &frame);
     void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
     bool replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements);
-    bool resize(int width, int height, RESIZE_PLACEMENT placement);
+    bool testResize(int width, int height, RESIZE_PLACEMENT placement, const D1GfxPixel &backPixel) const;
+    bool resize(int width, int height, RESIZE_PLACEMENT placement, const D1GfxPixel &backPixel);
     bool flipHorizontal();
     bool flipVertical();
     bool mask(const D1GfxFrame *frame);
