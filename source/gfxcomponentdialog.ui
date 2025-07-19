@@ -354,9 +354,16 @@
           <number>24</number>
          </property>
          <property name="text">
-          <string notr="true">-</string>
+          <string notr="true">+</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
@@ -447,7 +454,7 @@
           <string>Previous frame of the graphics component</string>
          </property>
          <property name="text">
-          <string notr="true">&gt;</string>
+          <string notr="true">&lt;</string>
          </property>
         </widget>
        </item>
@@ -514,6 +521,13 @@
           <string notr="true">&gt;</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>

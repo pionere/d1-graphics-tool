@@ -236,16 +236,8 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBaseWidget->setTrn(this->trnBase);
 }
 
-void MainWindow::updateWindow()
+void MainWindow::updateDynamicMenus()
 {
-    // rebuild palette hits
-    if (this->palHits != nullptr) {
-        this->palHits->update();
-    }
-    // refresh the palette-colors - triggered by displayFrame
-    // if (this->palWidget != nullptr) {
-    //     this->palWidget->refresh();
-    // }
     // update menu options
     // - Edit
     bool hasFrame = this->gfx != nullptr && this->gfx->getFrameCount() != 0;
@@ -264,6 +256,13 @@ void MainWindow::updateWindow()
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
+    bool hasComponent = this->gfx != nullptr && this->gfx->getComponentCount() != 0;
+    if (this->gfxset != nullptr) {
+        for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
+            hasComponent |= this->gfxset->getGfx(i)->getComponentCount() != 0;
+        }
+    }
+    this->ui->actionSquash->setEnabled(hasComponent);
     // - Data
     bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
     this->ui->actionDelColumn_Table->setEnabled(hasColumn);
@@ -279,7 +278,20 @@ void MainWindow::updateWindow()
     this->ui->actionMoveDownRow_Table->setEnabled(hasRow);
     this->ui->actionDelRows_Table->setEnabled(hasRow);
     this->ui->actionHideRows_Table->setEnabled(hasRow);
+}
 
+void MainWindow::updateWindow()
+{
+    // rebuild palette hits
+    if (this->palHits != nullptr) {
+        this->palHits->update();
+    }
+    // refresh the palette-colors - triggered by displayFrame
+    // if (this->palWidget != nullptr) {
+    //     this->palWidget->refresh();
+    // }
+    // update menu options
+    this->updateDynamicMenus();
     // update the view
     if (this->celView != nullptr) {
         // this->celView->updateFields();
@@ -1712,13 +1724,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(this->gfx != nullptr);
     this->ui->actionMerge->setEnabled(this->gfx != nullptr);
-    bool hasComponent = this->gfx != nullptr && this->gfx->getComponentCount() != 0;
-    if (this->gfxset != nullptr) {
-        for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
-            hasComponent |= this->gfxset->getGfx(i)->getComponentCount() != 0;
-        }
-    }
-    this->ui->actionSquash->setEnabled(hasComponent);
     this->ui->actionMask->setEnabled(this->gfx != nullptr);
     this->ui->actionOptimize->setEnabled(this->celView != nullptr);
     // - Reports
@@ -1732,6 +1737,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionReportTilesetUse->setEnabled(isTileset);
     this->ui->actionReportTilesetInefficientFrames->setEnabled(isTileset);
     this->ui->actionReportCheckGraphics->setEnabled(this->gfxsetView != nullptr);
+    this->updateDynamicMenus();
 
     // Clear loading message from status bar
     ProgressDialog::done();

@@ -156,6 +156,8 @@ private:
     static void loadFile(const OpenAsParam &params, MainWindow *instance, LoadFileContent *result);
     static void failWithError(MainWindow *instance, LoadFileContent *result, const QString &error);
 
+    void updateDynamicMenus();
+
     void setPal(const QString &palFilePath);
     void setUniqueTrn(const QString &trnfilePath);
     void setBaseTrn(const QString &trnfilePath);

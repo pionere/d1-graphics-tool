@@ -654,6 +654,9 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 	case IPL_ACP:
 		is->_iPLAC = r;
 		break;
+	case IPL_TOBLOCK:
+		is->_iPLToBlk = r;
+		break;
 	case IPL_FIRERES:
 		is->_iPLFR = r;
 		break;
@@ -685,6 +688,7 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		break;
 	case IPL_SKILLLVL:
 		is->_iPLSkillLvl = r;
+		static_assert(NUM_SPELLS < UINT8_MAX, "Skill-index can not be stored in a BYTE field.");
 		is->_iPLSkill = GetItemSpell();
 		break;
 	case IPL_SKILLLEVELS:
@@ -728,8 +732,11 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		is->_iPLDex = r;
 		is->_iPLVit = r;
 		break;
-	case IPL_GETHIT:
-		is->_iPLGetHit = -r;
+	case IPL_ABS_ANYHIT:
+		is->_iPLAbsAnyHit = r;
+		break;
+	case IPL_ABS_PHYHIT:
+		is->_iPLAbsPhyHit = r;
 		break;
 	case IPL_LIFE:
 		is->_iPLHP = r << 6;
@@ -740,10 +747,6 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 	case IPL_DUR:
 		r2 = r * is->_iMaxDur / 100;
 		is->_iDurability = is->_iMaxDur = is->_iMaxDur + r2;
-		break;
-	case IPL_CRYSTALLINE:
-		is->_iPLDam = r * 2;
-		is->_iDurability = is->_iMaxDur = r < 100 ? (is->_iMaxDur - r * is->_iMaxDur / 100) : 1;
 		break;
 	case IPL_INDESTRUCTIBLE:
 		is->_iDurability = is->_iMaxDur = DUR_INDESTRUCTIBLE;
@@ -785,12 +788,7 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		is->_iPLFlags |= ISPL_PENETRATE_PHYS;
 		break;
 	case IPL_FASTATTACK:
-		static_assert((ISPL_QUICKATTACK & (ISPL_QUICKATTACK - 1)) == 0, "Optimized SaveItemPower depends simple flag-like attack-speed modifiers.");
-		static_assert(ISPL_QUICKATTACK == ISPL_FASTATTACK / 2, "SaveItemPower depends on ordered attack-speed modifiers I.");
-		static_assert(ISPL_FASTATTACK == ISPL_FASTERATTACK / 2, "SaveItemPower depends on ordered attack-speed modifiers II.");
-		static_assert(ISPL_FASTERATTACK == ISPL_FASTESTATTACK / 2, "SaveItemPower depends on ordered attack-speed modifiers III.");
-		// assert((unsigned)(r - 1) < 4);
-			is->_iPLFlags |= ISPL_QUICKATTACK << (r - 1);
+		is->_iPLAtkSpdMod = r;
 		break;
 	case IPL_FASTRECOVER:
 		static_assert((ISPL_FASTRECOVER & (ISPL_FASTRECOVER - 1)) == 0, "Optimized SaveItemPower depends simple flag-like hit-recovery modifiers.");
@@ -838,6 +836,10 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		break;
 	case IPL_ACMOD:
 		is->_iAC += r;
+		break;
+	case IPL_CRYSTALLINE:
+		is->_iPLDam = r * 2;
+		is->_iDurability = is->_iMaxDur = r < 100 ? (is->_iMaxDur - r * is->_iMaxDur / 100) : 1;
 		break;
 	case IPL_MANATOLIFE:
 		is->_iPLFlags |= ISPL_MANATOLIFE;
@@ -1211,7 +1213,7 @@ static void ItemRndDur(int ii)
 	}
 }
 
-static void SetupAllItems(int ii, int idx, int32_t iseed, unsigned lvl, unsigned quality)
+static void SetupAllItems(int ii, int idx, int iseed, unsigned lvl, unsigned quality)
 {
 	int uid;
 
@@ -1268,7 +1270,7 @@ void CreateRndItem(int x, int y, unsigned quality)
 	RespawnItem(ii);
 }
 
-static void SetupAllUseful(int ii, int32_t iseed, unsigned lvl)
+static void SetupAllUseful(int ii, int iseed, unsigned lvl)
 {
 	int idx;
 

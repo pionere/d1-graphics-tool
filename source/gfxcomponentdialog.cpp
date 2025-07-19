@@ -13,6 +13,7 @@ GfxComponentDialog::GfxComponentDialog(QWidget *parent)
 {
     ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
+    this->on_zoomEdit_escPressed();
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->labelEdit, SIGNAL(cancel_signal()), this, SLOT(on_labelEdit_escPressed()));    
@@ -22,6 +23,7 @@ GfxComponentDialog::GfxComponentDialog(QWidget *parent)
     QObject::connect(this->ui->xOffsetEdit, SIGNAL(cancel_signal()), this, SLOT(on_xOffsetEdit_escPressed()));
     QObject::connect(this->ui->yOffsetEdit, SIGNAL(cancel_signal()), this, SLOT(on_yOffsetEdit_escPressed()));
     QObject::connect(this->ui->frameRefEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameRefEdit_escPressed()));
+    QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
 }
 
 GfxComponentDialog::~GfxComponentDialog()
