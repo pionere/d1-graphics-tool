@@ -461,9 +461,11 @@ void CelView::updateFields()
         comboBox->addItem(labelText, i + 1);
     }
     comboBox->show();
-    comboBox->blockSignals(true);
-    comboBox->setCurrentIndex(prevIndex);
-    comboBox->blockSignals(false);
+    if (prevIndex >= 0 && prevIndex < comboBox->count()) {
+        comboBox->blockSignals(true);
+        comboBox->setCurrentIndex(prevIndex);
+        comboBox->blockSignals(false);
+    }
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
