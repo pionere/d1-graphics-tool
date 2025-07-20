@@ -405,7 +405,7 @@ void CelView::updateLabel()
 
 void CelView::updateComponentsList()
 {
-    int count;
+    /*int count;
 
     QComboBox *comboBox = this->ui->componentsComboBox;
     int prevIndex = comboBox->currentIndex();
@@ -421,7 +421,7 @@ void CelView::updateComponentsList()
         QString labelText = comp->getLabel();
         /*if (comp->getGFX()->isModified()) {
             labelText += "*";
-        }*/
+        }* /
         comboBox->addItem(labelText, i + 1);
     }
     // comboBox->show();
@@ -429,7 +429,7 @@ void CelView::updateComponentsList()
         comboBox->blockSignals(true);
         comboBox->setCurrentIndex(prevIndex);
         comboBox->blockSignals(false);
-    }
+    }*/
 }
 
 void CelView::updateFields()
@@ -443,9 +443,9 @@ void CelView::updateFields()
     this->audioBtn->setVisible(this->gfx->getType() == D1CEL_TYPE::SMK && this->gfx->getFrameCount() != 0);
 
     // update the components
-    /*QComboBox *comboBox = this->ui->componentsComboBox;
+    QComboBox *comboBox = this->ui->componentsComboBox;
     int prevIndex = comboBox->currentIndex();
-    // comboBox->hide();
+    comboBox->hide();
     comboBox->clear();
     comboBox->addItem("", 0);
     count = this->gfx->getComponentCount();
@@ -460,8 +460,10 @@ void CelView::updateFields()
         }
         comboBox->addItem(labelText, i + 1);
     }
-    // comboBox->show();
-    // comboBox->setCurrentIndex(prevIndex);*/
+    comboBox->show();
+    comboBox->blockSignals(true);
+    comboBox->setCurrentIndex(prevIndex);
+    comboBox->blockSignals(false);
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
