@@ -1639,10 +1639,9 @@ bool D1Gfx::squash()
         while (true) {
             const D1GfxComp *nextComp = NULL;
             const D1GfxCompFrame *nextCompFrame;
-            for (int i = 0; i < this->components.count(); i++) {
-                const D1GfxComp *comp = this->components[i];
-                if (component > 0 && component - 1 != i) continue;
-                const D1GfxCompFrame *compFrame = &comp->compFrames[frameIndex];
+            for (int n = 0; n < this->components.count(); n++) {
+                const D1GfxComp *comp = this->components[n];
+                const D1GfxCompFrame *compFrame = &comp->compFrames[i];
 
                 if (compFrame->cfFrameRef == 0) continue;
                 if (compFrame->cfFrameRef > comp->gfx->frames.count()) {
