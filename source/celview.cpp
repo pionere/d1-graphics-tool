@@ -329,7 +329,6 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     }
 
     this->updateFields();
-    this->updateComponentsList();
 }
 
 void CelView::setPal(D1Pal *p)
@@ -403,35 +402,6 @@ void CelView::updateLabel()
     CelView::setLabelContent(this->ui->celLabel, this->gfx->getFilePath(), this->gfx->isModified());
 }
 
-void CelView::updateComponentsList()
-{
-    /*int count;
-
-    QComboBox *comboBox = this->ui->componentsComboBox;
-    int prevIndex = comboBox->currentIndex();
-    // comboBox->hide();
-    comboBox->clear();
-    comboBox->addItem("", 0);
-    count = this->gfx->getComponentCount();
-    if (count < prevIndex) {
-        prevIndex = count;
-    }
-    for (int i = 0; i < count; i++) {
-        D1GfxComp *comp = this->gfx->getComponent(i);
-        QString labelText = comp->getLabel();
-        /*if (comp->getGFX()->isModified()) {
-            labelText += "*";
-        }* /
-        comboBox->addItem(labelText, i + 1);
-    }
-    // comboBox->show();
-    if (prevIndex >= 0 && prevIndex < comboBox->count()) {
-        comboBox->blockSignals(true);
-        comboBox->setCurrentIndex(prevIndex);
-        comboBox->blockSignals(false);
-    }*/
-}
-
 void CelView::updateFields()
 {
     int count;
@@ -449,7 +419,7 @@ void CelView::updateFields()
     comboBox->clear();
     comboBox->addItem("", 0);
     count = this->gfx->getComponentCount();
-    if (count < prevIndex) {
+    if (prevIndex < 0 || count < prevIndex) {
         prevIndex = count;
     }
     for (int i = 0; i < count; i++) {
@@ -461,13 +431,11 @@ void CelView::updateFields()
         comboBox->addItem(labelText, i + 1);
     }
     comboBox->show();
-    if (prevIndex >= 0 && prevIndex < comboBox->count()) {
-        comboBox->blockSignals(true);
+    // if (prevIndex >= 0 && prevIndex < comboBox->count()) {
+    //    comboBox->blockSignals(true);
         comboBox->setCurrentIndex(prevIndex);
-        comboBox->blockSignals(false);
-    } else if (prevIndex >= 0) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed %1 vs %2").arg(prevIndex).arg(comboBox->count()));
-    }
+    //    comboBox->blockSignals(false);
+    // }
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
@@ -1151,8 +1119,6 @@ void CelView::on_newComponentPushButtonClicked()
     
     this->gfx->insertComponent(compIdx, gfx);
 
-    this->updateComponentsList();
-
     dMainWindow().updateWindow();
 }
 
@@ -1173,8 +1139,6 @@ void CelView::on_closeComponentPushButtonClicked()
     int compIdx = this->ui->componentsComboBox->currentIndex();
     if (compIdx != 0) {
         this->gfx->removeComponent(compIdx - 1);
-
-        this->updateComponentsList();
 
         dMainWindow().updateWindow();
     }
