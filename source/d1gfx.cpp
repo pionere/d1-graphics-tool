@@ -1628,15 +1628,61 @@ bool D1Gfx::squash()
         rect.moveTo(-rect.x(), -rect.y());
 
         D1GfxFrame* frame = this->frames[i];
+        // resize the image if necessary
+        change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT, backPixel);
 
-        if (rect.width() != frame->getWidth() || rect.height() != frame->getHeight()) {
-            change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT, backPixel);
-        }
-
-        // move the image ...
+        // move the image if necessary
         change |= frame->shift(rect.x(), rect.y(), 0, 0, rect.width(), rect.height());
 
-        // add the components FIXME
+        // add the components
+        QSet<const D1GfxComp *> added;
+        while (true) {
+            const D1GfxComp *nextComp = NULL;
+            const D1GfxCompFrame *nextCompFrame;
+            for (int i = 0; i < this->components.count(); i++) {
+                const D1GfxComp *comp = this->components[i];
+                if (component > 0 && component - 1 != i) continue;
+                const D1GfxCompFrame *compFrame = &comp->compFrames[frameIndex];
+
+                if (compFrame->cfFrameRef == 0) continue;
+                if (compFrame->cfFrameRef > comp->gfx->frames.count()) {
+                    // TODO: add warning?
+                    continue;
+                }
+                if (added.contains(comp)) continue;
+                if (nextComp == NULL || compFrame->cfZOrder < nextCompFrame->cfZOrder) {
+                    nextComp = comp;
+                    nextCompFrame = compFrame;
+                }
+            }
+            if (nextComp == NULL) {
+                break;
+            }
+            added.insert(nextComp);
+            const D1GfxFrame *compFrame = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
+            int ox = nextCompFrame->cfOffsetX + rect.x();
+            int oy = nextCompFrame->cfOffsetY + rect.y();
+            if (nextCompFrame->cfZOrder >= 0) {
+                // draw the component over the current frame
+                change |= frame->copy(ox, oy, compFrame, 0, 0, compFrame->getWidth(), compFrame->getHeight());
+            } else {
+                // prepare a 'work'-frame
+                D1GfxFrame* newFrame = new D1GfxFrame();
+                for (int y = 0; y < frame->getHeight(); y++) {
+                    std::vector<D1GfxPixel> pixelLine;
+                    for (int x = 0; x < frame->getWidth(); x++) {
+                        pixelLine.push_back(D1GfxPixel::transparentPixel());
+                    }
+                    newFrame->addPixelLine(std::move(pixelLine));
+                }
+                // draw the component under the current frame
+                change |= newFrame->copy(ox, oy, compFrame, 0, 0, compFrame->getWidth(), compFrame->getHeight());
+                newFrame->copy(0, 0, frame, 0, 0, frame->getWidth(), frame->getHeight());
+                delete frame;
+                frame = newFrame;
+                this->frames[i] = newFrame;
+            }
+        }
     }
 
     // eliminate the obsolete components

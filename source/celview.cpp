@@ -425,7 +425,11 @@ void CelView::updateComponentsList()
         comboBox->addItem(labelText, i + 1);
     }
     // comboBox->show();
-    //comboBox->setCurrentIndex(prevIndex);
+    if (prevIndex >= 0 && prevIndex < comboBox->count()) {
+        comboBox->blockSignals(true);
+        comboBox->setCurrentIndex(prevIndex);
+        comboBox->blockSignals(false);
+    }
 }
 
 void CelView::updateFields()
