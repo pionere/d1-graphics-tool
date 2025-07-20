@@ -465,6 +465,8 @@ void CelView::updateFields()
         comboBox->blockSignals(true);
         comboBox->setCurrentIndex(prevIndex);
         comboBox->blockSignals(false);
+    } else if (prevIndex >= 0) {
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed %1 vs %2").arg(prevIndex).arg(comboBox->count()));
     }
 
     // update the asset multiplier field
