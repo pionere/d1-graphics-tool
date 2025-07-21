@@ -15,6 +15,9 @@ GfxComponentDialog::GfxComponentDialog(QWidget *parent)
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->on_zoomEdit_escPressed();
 
+    QLayout *layout = this->ui->reloadHBoxLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Reload Component Graphics"), this, &GfxComponentDialog::on_reloadComponentPushButtonClicked);
+
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->labelEdit, SIGNAL(cancel_signal()), this, SLOT(on_labelEdit_escPressed()));    
     QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
@@ -322,6 +325,14 @@ void GfxComponentDialog::on_nextGroupButton_clicked()
 void GfxComponentDialog::on_lastGroupButton_clicked()
 {
     this->setGroupIndex(this->gfx->getGroupCount() - 1);
+}
+
+void GfxComponentDialog::on_reloadComponentPushButtonClicked()
+{
+    D1Gfx* cGfx = this->gfx->loadComponentGFX(this->gfxComp->getGFX()->getFilePath());
+    if (cGfx != nullptr) {
+        this->gfxComp->setGFX(cGfx);
+    }
 }
 
 void GfxComponentDialog::on_zorderDecButton_clicked()

@@ -251,11 +251,12 @@ public:
     D1GfxComp(const D1GfxComp &o);
     ~D1GfxComp();
 
-    D1Gfx *getGFX() { return this->gfx; };
-    QString getLabel() { return this->label; };
-    void setLabel(QString lbl) { this->label = lbl; };
-    int getCompFrameCount() const { return this->compFrames.count(); };
-    D1GfxCompFrame *getCompFrame(int frameIdx) { return &this->compFrames[frameIdx]; };
+    D1Gfx *getGFX();
+    void setGFX(D1Gfx *g);
+    QString getLabel();
+    void setLabel(QString lbl);
+    int getCompFrameCount() const;
+    D1GfxCompFrame *getCompFrame(int frameIdx);
 
 private:
     D1Gfx *gfx;
@@ -339,6 +340,7 @@ public:
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
+    D1Gfx *loadComponentGFX(QString gfxFilePath);
     void saveComponents();
     int getComponentCount() const;
     D1GfxComp *getComponent(int compIndex);

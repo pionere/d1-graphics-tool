@@ -474,11 +474,12 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
     if (this->gfx->getFrameCount() == 0) {
         return;
     }
+    QRect rect = this->gfx->getFrameRect(this->currentFrameIndex, true);
+
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     p += QPoint(rect.x(), rect.y());
 
-    QRect rect = this->gfx->getFrameRect(this->currentFrameIndex, true);
     int compIdx = this->ui->componentsComboBox->currentIndex();
     if (compIdx > 0) {
         D1GfxComp *comp = this->gfx->getComponent(compIdx - 1);
@@ -1110,23 +1111,9 @@ void CelView::on_newComponentPushButtonClicked()
         return;
     }
 
-    // TODO: merge with on_actionMerge_triggered ?
-    OpenAsParam params = OpenAsParam();
-    QString fileLower = gfxFilePath.toLower();
-    D1Gfx* gfx = new D1Gfx();
-    gfx->setPalette(this->gfx->getPalette());
-    if (fileLower.endsWith(".cel")) {
-        if (!D1Cel::load(*gfx, gfxFilePath, params)) {
-            delete gfx;
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
-            return;
-        }
-    } else { // if (fileLower.endsWith(".cl2")) {
-        if (!D1Cl2::load(*gfx, gfxFilePath, params)) {
-            delete gfx;
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
-            return;
-        }
+    D1Gfx* gfx = this->gfx->loadComponentGFX(gfxFilePath);
+    if (gfx == nullptr) {
+        return;
     }
 
     int compIdx = this->ui->componentsComboBox->currentIndex();

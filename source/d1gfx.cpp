@@ -1254,6 +1254,60 @@ D1GfxComp::~D1GfxComp()
     delete this->gfx;
 }
 
+D1Gfx *D1GfxComp::getGFX()
+{
+    return this->gfx;
+}
+
+void D1GfxComp::setGFX(D1Gfx *g)
+{
+    delete this->gfx;
+    this->gfx = g;
+}
+
+QString D1GfxComp::getLabel()
+{
+    return this->label;
+}
+
+void D1GfxComp::setLabel(QString lbl)
+{
+    this->label = lbl;
+}
+
+int D1GfxComp::getCompFrameCount() const
+{
+    return this->compFrames.count();
+}
+
+D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx)
+{
+    return &this->compFrames[frameIdx];
+}
+
+D1Gfx *D1Gfx::loadComponentGFX(QString gfxFilePath)
+{
+    // TODO: merge with on_actionMerge_triggered ?
+    OpenAsParam params = OpenAsParam();
+    QString fileLower = gfxFilePath.toLower();
+    D1Gfx* gfx = new D1Gfx();
+    gfx->setPalette(this->palette);
+    if (fileLower.endsWith(".cel")) {
+        if (!D1Cel::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return nullptr;
+        }
+    } else { // if (fileLower.endsWith(".cl2")) {
+        if (!D1Cl2::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return nullptr;
+        }
+    }
+    return gfx;
+}
+
 int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
 {
     const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;

@@ -288,7 +288,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1" colspan="7">
+     <item row="2" column="1" colspan="6">
       <widget class="LineEditWidget" name="labelEdit">
        <property name="charWidth">
         <number>8</number>
@@ -303,6 +303,17 @@
         <enum>Qt::AlignCenter</enum>
        </property>
       </widget>
+     </item>
+     <item row="2" column="8">
+      <layout class="QHBoxLayout" name="reloadHBoxLayout">
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </item>
      <item row="3" column="0">
       <widget class="QLabel">
