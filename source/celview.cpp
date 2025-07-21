@@ -1144,7 +1144,7 @@ void CelView::on_reloadComponentPushButtonClicked()
         D1GfxComp *gfxComp = this->gfx->getComponent(compIdx - 1);
         D1Gfx* cGfx = this->gfx->loadComponentGFX(gfxComp->getGFX()->getFilePath());
         if (cGfx != nullptr) {
-            this->gfxComp->setGFX(cGfx);
+            gfxComp->setGFX(cGfx);
 
             this->displayFrame();
         }
