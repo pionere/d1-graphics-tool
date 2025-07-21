@@ -141,6 +141,7 @@ signals:
 private slots:
     void on_newComponentPushButtonClicked();
     void on_editComponentPushButtonClicked();
+    void on_reloadComponentPushButtonClicked();
     void on_closeComponentPushButtonClicked();
 
     void on_showComponentsCheckBox_clicked();

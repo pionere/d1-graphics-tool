@@ -281,6 +281,7 @@ CelView::CelView(QWidget *parent)
     QLayout *compLayout = this->ui->componentsHorizontalLayout;
     PushButtonWidget::addButton(this, compLayout, QStyle::SP_FileDialogNewFolder, tr("New Component"), this, &CelView::on_newComponentPushButtonClicked);
     PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogOpenButton, tr("Edit Component"), this, &CelView::on_editComponentPushButtonClicked);
+    PushButtonWidget::addButton(this, compLayout, QStyle::SP_BrowserReload, tr("Reload Component Graphics"), this, &CelView::on_reloadComponentPushButtonClicked);
     PushButtonWidget::addButton(this, compLayout, QStyle::SP_DialogCloseButton, tr("Remove Component"), this, &CelView::on_closeComponentPushButtonClicked);
 
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
@@ -426,7 +427,6 @@ void CelView::updateFields()
         D1GfxComp *comp = this->gfx->getComponent(i);
         QString labelText = comp->getLabel();
         if (comp->getGFX()->isModified()) {
-            // QMessageBox::critical(nullptr, tr("Error"), tr("Comp '%1' is modified.").arg(labelText));
             labelText += "*";
         }
         comboBox->addItem(labelText, i + 1);
@@ -1133,6 +1133,21 @@ void CelView::on_editComponentPushButtonClicked()
         }
         this->gfxComponentDialog->initialize(this->gfx, this->gfx->getComponent(compIdx - 1));
         this->gfxComponentDialog->show();
+    }
+}
+
+
+void CelView::on_reloadComponentPushButtonClicked()
+{
+    int compIdx = this->ui->componentsComboBox->currentIndex();
+    if (compIdx != 0) {
+        D1GfxComp *gfxComp = this->gfx->getComponent(compIdx - 1);
+        D1Gfx* cGfx = this->gfx->loadComponentGFX(gfxComp->getGFX()->getFilePath());
+        if (cGfx != nullptr) {
+            this->gfxComp->setGFX(cGfx);
+
+            this->displayFrame();
+        }
     }
 }
 

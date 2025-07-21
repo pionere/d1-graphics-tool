@@ -45,8 +45,6 @@ private slots:
     void on_nextGroupButton_clicked();
     void on_lastGroupButton_clicked();
 
-    void on_reloadComponentPushButtonClicked();
-
     void on_zorderDecButton_clicked();
     void on_zorderIncButton_clicked();
     void on_zorderEdit_returnPressed();
