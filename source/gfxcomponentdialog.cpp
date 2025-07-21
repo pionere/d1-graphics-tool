@@ -338,6 +338,8 @@ void GfxComponentDialog::on_reloadComponentPushButtonClicked()
         // newGfx->setFilePath(cGfx->getFilePath());
         newGfx->addGfx(cGfx);
         this->newComp->setGFX(newGfx);
+
+        this->displayFrame();
     }
 }
 

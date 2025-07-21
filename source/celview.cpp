@@ -426,7 +426,7 @@ void CelView::updateFields()
         D1GfxComp *comp = this->gfx->getComponent(i);
         QString labelText = comp->getLabel();
         if (comp->getGFX()->isModified()) {
-            QMessageBox::critical(nullptr, tr("Error"), tr("Comp '%1' is modified.").arg(labelText));
+            // QMessageBox::critical(nullptr, tr("Error"), tr("Comp '%1' is modified.").arg(labelText));
             labelText += "*";
         }
         comboBox->addItem(labelText, i + 1);

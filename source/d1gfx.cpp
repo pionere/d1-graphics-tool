@@ -1005,8 +1005,9 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
             const D1GfxFrame *compFrameGfx = comp->gfx->frames[compFrame->cfFrameRef - 1];
 
             QRect fRect = compFrameGfx->getBoundary();
-            fRect.setX(fRect.x() + compFrame->cfOffsetX);
-            fRect.setY(fRect.y() + compFrame->cfOffsetY);
+            // fRect.setX(fRect.x() + compFrame->cfOffsetX);
+            // fRect.setY(fRect.y() + compFrame->cfOffsetY);
+            fRect.moveTo(fRect.x() + compFrame->cfOffsetX, fRect.y() + compFrame->cfOffsetY);
 
             rect = rect.united(fRect);
         }
@@ -1784,6 +1785,9 @@ void D1Gfx::frameModified(const D1GfxFrame *frame)
         if (iframe == frame) {
             this->modified = true;
         }
+    }
+    for (D1GfxComp *comp : components) {
+        comp->gfx->frameModified(frame);
     }
 }
 
