@@ -406,6 +406,8 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 
 bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
 {
+    gfx.saveComponents();
+
     QString filePath = gfx.gfxFilePath;
     if (!params.celFilePath.isEmpty()) {
         filePath = params.celFilePath;

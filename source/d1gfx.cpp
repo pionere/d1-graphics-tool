@@ -1886,6 +1886,19 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     return true;
 }
 
+void D1Gfx::saveComponents()
+{
+    for (int i = 0; i < this->getComponentCount(); i++) {
+        SaveAsParam compParams = SaveAsParam();
+        D1Gfx* gfx = this->components[i]->getGFX();
+        if (gfx->type == D1CEL_TYPE::V2_MONO_GROUP || gfx->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS) {
+            D1Cl2::save(*gfx, compParams);
+        } else {
+            D1Cel::save(*gfx, compParams);
+        }
+    }
+}
+
 int D1Gfx::getComponentCount() const
 {
     return this->components.count();

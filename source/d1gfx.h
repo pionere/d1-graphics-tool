@@ -339,18 +339,18 @@ public:
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
+    void saveComponents();
     int getComponentCount() const;
     D1GfxComp *getComponent(int compIndex);
     void removeComponent(int compIndex);
     void insertComponent(int compIndex, D1Gfx *gfx);
+    QRect getFrameRect(int frameIndex, bool full) const;
 
     void patch(int gfxFileIndex, bool silent); // gfx_file_index
     static int getPatchFileIndex(QString &filePath);
     static QString clippedtoStr(bool clipped);
 
 private:
-    QRect getFrameRect(int frameIndex, bool full) const;
-
     bool patchCathedralDoors(bool silent);
     bool patchCatacombsDoors(bool silent);
     bool patchCavesDoors(bool silent);

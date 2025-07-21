@@ -431,11 +431,7 @@ void CelView::updateFields()
         comboBox->addItem(labelText, i + 1);
     }
     comboBox->show();
-    // if (prevIndex >= 0 && prevIndex < comboBox->count()) {
-    //    comboBox->blockSignals(true);
-        comboBox->setCurrentIndex(prevIndex);
-    //    comboBox->blockSignals(false);
-    // }
+    comboBox->setCurrentIndex(prevIndex);
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
@@ -478,9 +474,27 @@ void CelView::framePixelClicked(const QPoint &pos, int flags)
     if (this->gfx->getFrameCount() == 0) {
         return;
     }
-    D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    p += QPoint(rect.x(), rect.y());
+
+    QRect rect = this->gfx->getFrameRect(this->currentFrameIndex, true);
+    int compIdx = this->ui->componentsComboBox->currentIndex();
+    if (compIdx > 0) {
+        D1GfxComp *comp = this->gfx->getComponent(compIdx - 1);
+        D1GfxCompFrame *cFrame = comp->getCompFrame(this->currentFrameIndex);
+        unsigned frameRef = cFrame->cfFrameRef;
+        D1Gfx* cGfx = comp->getGFX();
+        if (frameRef != 0 && frameRef <= (unsigned)cGfx->getFrameCount()) {
+            p -= QPoint(cFrame->cfOffsetX, cFrame->cfOffsetY);
+
+            D1GfxFrame *frame = cGfx->getFrame(frameRef - 1);
+            dMainWindow().frameClicked(frame, p, flags);
+        }
+        return;
+    }
+
+    D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     dMainWindow().frameClicked(frame, p, flags);
 }
 
