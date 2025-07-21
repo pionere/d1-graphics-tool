@@ -332,6 +332,12 @@ void GfxComponentDialog::on_reloadComponentPushButtonClicked()
     D1Gfx* cGfx = this->gfx->loadComponentGFX(this->gfxComp->getGFX()->getFilePath());
     if (cGfx != nullptr) {
         this->gfxComp->setGFX(cGfx);
+        // TODO: use D1Gfx copy-constructor?
+        D1Gfx *newGfx = new D1Gfx();
+        newGfx->setPalette(cGfx->getPalette());
+        // newGfx->setFilePath(cGfx->getFilePath());
+        newGfx->addGfx(cGfx);
+        this->newComp->setGFX(newGfx);
     }
 }
 
