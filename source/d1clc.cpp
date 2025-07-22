@@ -25,6 +25,7 @@ bool D1Clc::load(D1Gfx &gfx, const QString &jsonFilePath, const OpenAsParam &par
 
     if (!jsonObj.contains(D1Clc::CLC_MAIN_GFX)) {
         // path to the main gfx is missing
+        dProgressErr() << QApplication::tr("path to the main gfx is missing.");
         return false;
     }
 
@@ -38,11 +39,13 @@ bool D1Clc::load(D1Gfx &gfx, const QString &jsonFilePath, const OpenAsParam &par
     if (lowerFilePath.endsWith("cel")) {
         if (!D1Cel::load(gfx, gfxFilePath, params)) {
             // main gfx file can not be loaded
+            dProgressErr() << QApplication::tr("main gfx cel file can not be loaded %1.").arg(gfxFilePath);
             return false;
         }
     } else {
         if (!D1Cl2::load(gfx, gfxFilePath, params)) {
             // main gfx file can not be loaded
+            dProgressErr() << QApplication::tr("main gfx cl2 file can not be loaded %1.").arg(gfxFilePath);
             return false;
         }
     }
@@ -55,12 +58,14 @@ bool D1Clc::load(D1Gfx &gfx, const QString &jsonFilePath, const OpenAsParam &par
                if (!D1Clc::loadComponent(gfx, val, workDir)) {
                    // invalid format
                    // gfx.clear();
+                   dProgressErr() << QApplication::tr("invalid component in array");
                    return false;
                }
            }
        } else {
            if (!D1Clc::loadComponent(gfx, jsonVal, workDir)) {
                // invalid format
+               dProgressErr() << QApplication::tr("invalid flat component");
                // gfx.clear();
                return false;
            }
@@ -70,37 +75,59 @@ bool D1Clc::load(D1Gfx &gfx, const QString &jsonFilePath, const OpenAsParam &par
     return true;
 }
 
+static void invalidJsonValue(const QJsonValue &jsonVal, QString field)
+{
+    if (!jsonVal.isUndefined()) {
+        dProgressErr() << QApplication::tr("%1 is invalid (%2).").arg(jsonVal.isString() ? jsonVal.toString() : QString("*type*: %1").arg(jsonVal.type()));
+    }
+}
+
 bool D1Clc::loadCompFrame(D1GfxComp &comp, const QJsonValue &jsonVal)
 {
     if (!jsonVal.isObject()) {
+        invalidJsonValue(jsonVal, "Frame-object");
         return false;
     }
 
     QJsonObject jsonObj = jsonVal.toObject();
     QJsonValue idxVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_IDX);
-    if (!idxVal.isString()) {
+    if (!idxVal.isDouble() || (int)idxVal.toDouble() != idxVal.toInt()) {
+        if (idxVal.isUndefined()) {
+            dProgressErr() << QApplication::tr("Frame-index is missing.");
+        } else {
+            invalidJsonValue(idxVal, QApplication::tr("Frame-index"));
+        }
         return false;
     }
-    int frameIdx = idxVal.toString().toInt();
+    int frameIdx = idxVal.toInt();
     if (comp.getCompFrameCount() <= frameIdx) {
+        dProgressErr() << QApplication::tr("Frame-index out of bound (%1 vs %2).").arg(frameIdx).arg(comp.getCompFrameCount());
         return false;
     }
     D1GfxCompFrame *compFrame = comp.getCompFrame(frameIdx);
     QJsonValue refVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_REF);
-    if (refVal.isString()) {
-        compFrame->cfFrameRef = refVal.toString().toUInt();
+    if (refVal.isDouble() && (int)refVal.toDouble() == refVal.toInt()) {
+        compFrame->cfFrameRef = refVal.toInt();
+    } else {
+        invalidJsonValue(refVal, QApplication::tr("Frame-reference"));
     }
     QJsonValue zVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_Z);
-    if (zVal.isString()) {
-        compFrame->cfZOrder = zVal.toString().toUInt();
+    if (zVal.isDouble() && (int)refVal.toDouble() == refVal.toInt()) {
+        compFrame->cfZOrder = zVal.toInt();
+    } else {
+        invalidJsonValue(refVal, QApplication::tr("Z-order"));
     }
     QJsonValue xVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_X);
-    if (xVal.isString()) {
-        compFrame->cfOffsetX = xVal.toString().toUInt();
+    if (xVal.isDouble() && (int)refVal.toDouble() == refVal.toInt()) {
+        compFrame->cfOffsetX = xVal.toInt();
+    } else {
+        invalidJsonValue(refVal, QApplication::tr("X-offset"));
     }
     QJsonValue yVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_Y);
-    if (yVal.isString()) {
-        compFrame->cfOffsetY = yVal.toString().toUInt();
+    if (yVal.isDouble() && (int)refVal.toDouble() == refVal.toInt()) {
+        compFrame->cfOffsetY = yVal.toInt();
+    } else {
+        invalidJsonValue(refVal, QApplication::tr("Y-offset"));
     }
     return true;
 }
@@ -108,6 +135,7 @@ bool D1Clc::loadCompFrame(D1GfxComp &comp, const QJsonValue &jsonVal)
 bool D1Clc::loadComponent(D1Gfx &gfx, const QJsonValue &jsonVal, const QString &workDir)
 {
     if (!jsonVal.isObject()) {
+        invalidJsonValue(jsonVal, "Component-object");
         return false;
     }
 
@@ -115,6 +143,11 @@ bool D1Clc::loadComponent(D1Gfx &gfx, const QJsonValue &jsonVal, const QString &
     QJsonValue gfxVal = jsonObj.value(D1Clc::CLC_COMP_GFX);
     if (!gfxVal.isString()) {
         // path to the component gfx is missing
+        if (gfxVal.isUndefined()) {
+            dProgressErr() << QApplication::tr("Component-gfx is missing.");
+        } else {
+            invalidJsonValue(idxVal, QApplication::tr("Component-gfx"));
+        }
         return false;
     }
 
@@ -124,6 +157,7 @@ bool D1Clc::loadComponent(D1Gfx &gfx, const QJsonValue &jsonVal, const QString &
     D1Gfx *compGfx = gfx.loadComponentGFX(gfxFilePath);
     if (compGfx == nullptr) {
         // component gfx file can not be loaded
+        // dProgressErr() << QApplication::tr("component gfx file can not be loaded %1.").arg(gfxFilePath);
         return false;
     }
 
@@ -212,12 +246,12 @@ bool D1Clc::save(D1Gfx &gfx, const SaveAsParam &params)
     }
     if (jsonFilePath.isEmpty()) {
         QFileInfo gfxfi = QFileInfo(gfxFilePath);
-        jsonFilePath = gfxfi.absolutePath() + gfxfi.completeBaseName() + ".clc";
+        jsonFilePath = gfxfi.absolutePath() + "/" + gfxfi.completeBaseName() + ".clc";
     }
 
     QFile saveJson(jsonFilePath);
     if (!saveJson.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        dProgress() << QString("Failed to open json '%1'").arg(jsonFilePath);
+        dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(jsonFilePath));
         return false;
     }
 
@@ -236,8 +270,6 @@ bool D1Clc::save(D1Gfx &gfx, const SaveAsParam &params)
     // store the (json)file
     QJsonDocument saveDoc(saveObj);
     saveJson.write(saveDoc.toJson());
-
-    dProgress() << QString("json saved to '%1'").arg(jsonFilePath);
 
     // update the file-path
     // bool wasModified = gfx.isModified();
