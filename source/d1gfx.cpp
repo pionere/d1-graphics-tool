@@ -1255,9 +1255,9 @@ D1GfxComp::~D1GfxComp()
     delete this->gfx;
 }
 
-D1Gfx *D1GfxComp::getGFX()
+D1Gfx *D1GfxComp::getGFX() const
 {
-    return this->gfx;
+    return const_cast<D1Gfx *>(this->gfx);
 }
 
 void D1GfxComp::setGFX(D1Gfx *g)
@@ -1266,7 +1266,7 @@ void D1GfxComp::setGFX(D1Gfx *g)
     this->gfx = g;
 }
 
-QString D1GfxComp::getLabel()
+QString D1GfxComp::getLabel() const
 {
     return this->label;
 }
@@ -1281,9 +1281,9 @@ int D1GfxComp::getCompFrameCount() const
     return this->compFrames.count();
 }
 
-D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx)
+D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx) const
 {
-    return &this->compFrames[frameIdx];
+    return const_cast<D1GfxCompFrame *>(&this->compFrames[frameIdx]);
 }
 
 QString D1Gfx::getCompFilePath() const

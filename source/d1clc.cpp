@@ -21,7 +21,7 @@ bool D1Clc::load(D1Gfx &gfx, const QString &jsonFilePath, const OpenAsParam &par
     }
     QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll());
     QJsonObject jsonObj = jsonDoc.object();
-    jsonDoc.close();
+    file.close();
 
     if (!jsonObj.contains(D1Clc::CLC_MAIN_GFX)) {
         // path to the main gfx is missing
@@ -81,10 +81,10 @@ bool D1Clc::loadCompFrame(D1GfxComp &comp, const QJsonValue &jsonVal)
     if (!idxVal.isString()) {
         return false;
     }
-    if (comp->getCompFrameCount() <= idxVal) {
+    if (comp.getCompFrameCount() <= idxVal) {
         return false;
     }
-    D1GfxCompFrame *compFrame = comp->getCompFrame(idxVal);
+    D1GfxCompFrame *compFrame = comp.getCompFrame(idxVal);
     QJsonValue refVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_REF);
     if (refVal.isString()) {
         compFrame->cfFrameRef = refVal.toString().toUInt();
@@ -161,18 +161,25 @@ void D1Clc::storeCompFrame(QJsonArray &jsonArray, const D1GfxComp &comp, int fra
     }
 
     QJsonObject saveObj;
-    saveObj.insert(D1Clc::CLC_COMP_FRAME_IDX, frameIdx);
+    {
+        QJsonValue jsonVal = QJsonValue(frameIdx);
+        saveObj.insert(D1Clc::CLC_COMP_FRAME_IDX, frameIdx);
+    }
     if (frame->cfFrameRef != 0) {
-        saveObj.insert(D1Clc::CLC_COMP_FRAME_REF, frame->cfFrameRef);
+        QJsonValue jsonVal = QJsonValue((int)frame->cfFrameRef);
+        saveObj.insert(D1Clc::CLC_COMP_FRAME_REF, jsonVal);
     }
     if (frame->cfZOrder != 0) {
-        saveObj.insert(D1Clc::CLC_COMP_FRAME_Z, frame->cfZOrder);
+        QJsonValue jsonVal = QJsonValue(frame->cfZOrder);
+        saveObj.insert(D1Clc::CLC_COMP_FRAME_Z, jsonVal);
     }
     if (frame->cfOffsetX != 0) {
-        saveObj.insert(D1Clc::CLC_COMP_FRAME_X, frame->cfOffsetX);
+        QJsonValue jsonVal = QJsonValue(frame->cfOffsetX);
+        saveObj.insert(D1Clc::CLC_COMP_FRAME_X, jsonVal);
     }
     if (frame->cfOffsetY != 0) {
-        saveObj.insert(D1Clc::CLC_COMP_FRAME_Y, frame->cfOffsetY);
+        QJsonValue jsonVal = QJsonValue(frame->cfOffsetY);
+        saveObj.insert(D1Clc::CLC_COMP_FRAME_Y, jsonVal);
     }
 
     jsonArray.push_back(saveObj);

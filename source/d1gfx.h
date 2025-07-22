@@ -251,12 +251,12 @@ public:
     D1GfxComp(const D1GfxComp &o);
     ~D1GfxComp();
 
-    D1Gfx *getGFX();
+    D1Gfx *getGFX() const;
     void setGFX(D1Gfx *g);
-    QString getLabel();
+    QString getLabel() const;
     void setLabel(QString lbl);
     int getCompFrameCount() const;
-    D1GfxCompFrame *getCompFrame(int frameIdx);
+    D1GfxCompFrame *getCompFrame(int frameIdx) const;
 
 private:
     D1Gfx *gfx;
