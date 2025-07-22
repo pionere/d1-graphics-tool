@@ -217,6 +217,7 @@ bool D1Clc::save(D1Gfx &gfx, const SaveAsParam &params)
 
     QFile saveJson(jsonFilePath);
     if (!saveJson.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        dProgress() << tr("Failed to open json '%1'").arg(jsonFilePath);
         return false;
     }
 
@@ -235,6 +236,8 @@ bool D1Clc::save(D1Gfx &gfx, const SaveAsParam &params)
     // store the (json)file
     QJsonDocument saveDoc(saveObj);
     saveJson.write(saveDoc.toJson());
+
+    dProgress() << tr("json saved to '%1'").arg(jsonFilePath);
 
     // update the file-path
     // bool wasModified = gfx.isModified();
