@@ -146,7 +146,7 @@ bool D1Clc::loadComponent(D1Gfx &gfx, const QJsonValue &jsonVal, const QString &
         if (gfxVal.isUndefined()) {
             dProgressErr() << QApplication::tr("Component-gfx is missing.");
         } else {
-            invalidJsonValue(idxVal, QApplication::tr("Component-gfx"));
+            invalidJsonValue(gfxVal, QApplication::tr("Component-gfx"));
         }
         return false;
     }

@@ -1847,7 +1847,6 @@ void MainWindow::saveFile(const SaveAsParam &params)
     }
 
     if (/*this->gfx != nullptr && */this->gfx->getComponentCount() != 0 || !this->gfx->getCompFilePath().isEmpty()) {
-        dProgress() << tr("Saving components %1").arg(this->gfx->getComponentCount());
         this->gfx->saveComponents();
         D1Clc::save(*this->gfx, params);
     }
