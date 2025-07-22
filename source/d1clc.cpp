@@ -127,22 +127,22 @@ bool D1Clc::loadCompFrame(D1GfxComp &comp, const QJsonValue &jsonVal)
         invalidJsonValue(refVal, QApplication::tr("Frame-reference"));
     }
     QJsonValue zVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_Z);
-    if (zVal.isDouble() && (int)refVal.toDouble() == refVal.toInt()) {
+    if (zVal.isDouble() && (int)zVal.toDouble() == zVal.toInt()) {
         compFrame->cfZOrder = zVal.toInt();
     } else {
-        invalidJsonValue(refVal, QApplication::tr("Z-order"));
+        invalidJsonValue(zVal, QApplication::tr("Z-order"));
     }
     QJsonValue xVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_X);
-    if (xVal.isDouble() && (int)refVal.toDouble() == refVal.toInt()) {
+    if (xVal.isDouble() && (int)xVal.toDouble() == xVal.toInt()) {
         compFrame->cfOffsetX = xVal.toInt();
     } else {
-        invalidJsonValue(refVal, QApplication::tr("X-offset"));
+        invalidJsonValue(xVal, QApplication::tr("X-offset"));
     }
     QJsonValue yVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_Y);
-    if (yVal.isDouble() && (int)refVal.toDouble() == refVal.toInt()) {
+    if (yVal.isDouble() && (int)yVal.toDouble() == yVal.toInt()) {
         compFrame->cfOffsetY = yVal.toInt();
     } else {
-        invalidJsonValue(refVal, QApplication::tr("Y-offset"));
+        invalidJsonValue(yVal, QApplication::tr("Y-offset"));
     }
     return true;
 }
