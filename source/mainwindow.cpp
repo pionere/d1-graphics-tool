@@ -27,6 +27,7 @@
 #include "d1cel.h"
 #include "d1celtileset.h"
 #include "d1cl2.h"
+#include "d1clc.h"
 #include "d1font.h"
 #include "d1pcx.h"
 #include "d1smk.h"
@@ -766,7 +767,7 @@ void MainWindow::on_actionNew_Gfxset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;CLC Files (*.clc *.CLC);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -1009,7 +1010,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 
     for (const QUrl &url : event->mimeData()->urls()) {
         QString fileLower = url.toLocalFile().toLower();
-        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || fileLower.endsWith(".rdun") || fileLower.endsWith(".tbl") || (unloaded && (fileLower.endsWith(".pcx") || fileLower.endsWith(".smk")))) {
+        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".clc") || fileLower.endsWith(".dun") || fileLower.endsWith(".rdun") || fileLower.endsWith(".tbl") || (unloaded && (fileLower.endsWith(".pcx") || fileLower.endsWith(".smk")))) {
             event->acceptProposedAction();
             return;
         }
@@ -1266,6 +1267,8 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
             fileType = FILE_CONTENT::CEL;
         else if (fileLower.endsWith(".cl2"))
             fileType = FILE_CONTENT::CL2;
+        else if (fileLower.endsWith(".clc"))
+            fileType = FILE_CONTENT::CLC;
         else if (fileLower.endsWith(".pcx"))
             fileType = FILE_CONTENT::PCX;
         else if (fileLower.endsWith(".tbl"))
@@ -1495,6 +1498,11 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     } else if (fileType == FILE_CONTENT::CL2) {
         if (!D1Cl2::load(*result->gfx, gfxFilePath, params)) {
             MainWindow::failWithError(instance, result, tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::CLC) {
+        if (!D1Clc::load(*result->gfx, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading CLC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else if (fileType == FILE_CONTENT::PCX) {
@@ -1836,6 +1844,11 @@ void MainWindow::saveFile(const SaveAsParam &params)
                 return;
             }
         }
+    }
+
+    if (this->gfx != nullptr && this->gfx->getComponentCount() != 0) {
+        this->gfx->saveComponents();
+        D1Clc::save(this->gfx, params);
     }
 
     if (this->tileset != nullptr) {
@@ -2245,7 +2258,8 @@ void MainWindow::on_actionDiff_triggered()
         switch (fileContent.fileType) {
         case FILE_CONTENT::EMPTY: dProgressErr() << tr("File is empty."); break;
         case FILE_CONTENT::CEL:
-        case FILE_CONTENT::CL2: this->gfx->compareTo(fileContent.gfx, header, patchData); break;
+        case FILE_CONTENT::CL2:
+        case FILE_CONTENT::CLC: this->gfx->compareTo(fileContent.gfx, header, patchData); break;
         case FILE_CONTENT::PCX: D1Pcx::compare(*this->gfx, this->pal, &fileContent, patchData); break;
         case FILE_CONTENT::TBL: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::TBL)); break;
         case FILE_CONTENT::CPP: dProgressErr() << tr("Not a graphics file (%1)").arg(FileContentTypeToStr(FILE_CONTENT::CPP)); break;

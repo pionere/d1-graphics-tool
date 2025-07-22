@@ -143,6 +143,7 @@ private slots:
     void on_editComponentPushButtonClicked();
     void on_reloadComponentPushButtonClicked();
     void on_closeComponentPushButtonClicked();
+    void on_componentsComboBox_activated(int index);
 
     void on_showComponentsCheckBox_clicked();
     void on_framesGroupCheckBox_clicked();

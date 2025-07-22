@@ -1286,6 +1286,17 @@ D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx)
     return &this->compFrames[frameIdx];
 }
 
+QString D1Gfx::getCompFilePath() const
+{
+    return this->compFilePath;
+}
+
+void D1Gfx::setCompFilePath(const QString &filePath)
+{
+    this->compFilePath = filePath;
+    // this->modified = true;
+}
+
 D1Gfx *D1Gfx::loadComponentGFX(QString gfxFilePath)
 {
     // TODO: merge with on_actionMerge_triggered ?
@@ -1974,10 +1985,12 @@ void D1Gfx::removeComponent(int compIndex)
     // this->modified = true;
 }
 
-void D1Gfx::insertComponent(int compIndex, D1Gfx *gfx)
+D1GfxComp *D1Gfx::insertComponent(int compIndex, D1Gfx *gfx)
 {
-    this->components.insert(compIndex, new D1GfxComp(gfx));
+    D1GfxComp *newComp = new D1GfxComp(gfx);
+    this->components.insert(compIndex, newComp);
     // this->modified = true;
+    return newComp;
 }
 
 bool D1Gfx::patchCathedralDoors(bool silent)

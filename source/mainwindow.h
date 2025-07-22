@@ -74,6 +74,7 @@ enum class FILE_CONTENT {
     EMPTY,
     CEL,
     CL2,
+    CLC,
     PCX,
     TBL,
     CPP,

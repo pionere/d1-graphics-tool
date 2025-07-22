@@ -1161,6 +1161,12 @@ void CelView::on_closeComponentPushButtonClicked()
     }
 }
 
+void CelView::on_componentsComboBox_activated(int index)
+{
+    // redraw the frame
+    this->displayFrame();
+}
+
 void CelView::on_showComponentsCheckBox_clicked()
 {
     // redraw the frame

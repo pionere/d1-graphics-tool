@@ -340,12 +340,14 @@ public:
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
+    QString getCompFilePath() const;
+    void setCompFilePath(const QString &filePath);
     D1Gfx *loadComponentGFX(QString gfxFilePath);
     void saveComponents();
     int getComponentCount() const;
     D1GfxComp *getComponent(int compIndex);
     void removeComponent(int compIndex);
-    void insertComponent(int compIndex, D1Gfx *gfx);
+    D1GfxComp *insertComponent(int compIndex, D1Gfx *gfx);
     QRect getFrameRect(int frameIndex, bool full) const;
 
     void patch(int gfxFileIndex, bool silent); // gfx_file_index
@@ -391,6 +393,7 @@ protected:
     QList<D1GfxFrame *> frames;
     // fields of cel/cl2-frames
     QList<D1GfxComp *> components;
+    QString compFilePath;
     bool clipped = false;
     // fields of tilesets
     bool patched = false;
