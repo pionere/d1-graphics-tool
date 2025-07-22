@@ -1730,16 +1730,16 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuTile->setEnabled(isTileset);
     this->ui->actionPatch->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
-    this->ui->actionUpscale->setEnabled(this->gfx != nullptr);
-    this->ui->actionMerge->setEnabled(this->gfx != nullptr);
-    this->ui->actionMask->setEnabled(this->gfx != nullptr);
+    this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionMask->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionOptimize->setEnabled(this->celView != nullptr);
     // - Reports
-    this->ui->actionReportBoundary->setEnabled(this->gfx != nullptr);
-    this->ui->actionReportColoredFrames->setEnabled(this->gfx != nullptr);
+    this->ui->actionReportBoundary->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
+    // this->ui->actionReportColoredFrames->setEnabled(true);
     this->ui->actionReportColoredSubtiles->setEnabled(isTileset);
     this->ui->actionReportColoredTiles->setEnabled(isTileset);
-    this->ui->actionReportActiveFrames->setEnabled(this->gfx != nullptr);
+    // this->ui->actionReportActiveFrames->setEnabled(true);
     this->ui->actionReportActiveSubtiles->setEnabled(isTileset);
     this->ui->actionReportActiveTiles->setEnabled(isTileset);
     this->ui->actionReportTilesetUse->setEnabled(isTileset);
@@ -1846,7 +1846,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
         }
     }
 
-    if (this->gfx != nullptr && this->gfx->getComponentCount() != 0) {
+    if (/*this->gfx != nullptr && */this->gfx->getComponentCount() != 0 || !this->gfx->getCompFilePath().isEmpty()) {
         dProgress() << tr("Saving components %1").arg(this->gfx->getComponentCount());
         this->gfx->saveComponents();
         D1Clc::save(*this->gfx, params);
