@@ -75,10 +75,25 @@ bool D1Clc::load(D1Gfx &gfx, const QString &jsonFilePath, const OpenAsParam &par
     return true;
 }
 
+static QString jsonValue2String(const QJsonValue &jsonVal)
+{
+    QString result;
+    switch (jsonVal.type()) {
+    case QJsonValue::Null:      result = "<null>";                                break;
+    case QJsonValue::Bool:      result = jsonVal.toBool() ? "<true>" : "<false>"; break;
+    case QJsonValue::Double:    result = QString("%1").arg(jsonVal.toDouble());   break;
+    case QJsonValue::String:    result = jsonVal.toString();                      break;
+    case QJsonValue::Array:     result = "<array>";                               break;
+    case QJsonValue::Object:    result = "<object>";                              break;
+    case QJsonValue::Undefined: result = "<undefined>";                           break;
+    }
+    return result;
+}
+
 static void invalidJsonValue(const QJsonValue &jsonVal, QString field)
 {
     if (!jsonVal.isUndefined()) {
-        dProgressErr() << QApplication::tr("%1 is invalid (%2).").arg(jsonVal.isString() ? jsonVal.toString() : QString("*type*: %1").arg(jsonVal.type()));
+        dProgressErr() << QApplication::tr("%1 is invalid (%2).").arg(field).arg(jsonValue2String(jsonVal));
     }
 }
 
