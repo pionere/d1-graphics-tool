@@ -1848,7 +1848,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
     if (this->gfx != nullptr && this->gfx->getComponentCount() != 0) {
         this->gfx->saveComponents();
-        D1Clc::save(this->gfx, params);
+        D1Clc::save(*this->gfx, params);
     }
 
     if (this->tileset != nullptr) {

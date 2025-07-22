@@ -81,10 +81,11 @@ bool D1Clc::loadCompFrame(D1GfxComp &comp, const QJsonValue &jsonVal)
     if (!idxVal.isString()) {
         return false;
     }
-    if (comp.getCompFrameCount() <= idxVal) {
+    int frameIdx = idxVal.toString().toInt();
+    if (comp.getCompFrameCount() <= frameIdx) {
         return false;
     }
-    D1GfxCompFrame *compFrame = comp.getCompFrame(idxVal);
+    D1GfxCompFrame *compFrame = comp.getCompFrame(frameIdx);
     QJsonValue refVal = jsonObj.value(D1Clc::CLC_COMP_FRAME_REF);
     if (refVal.isString()) {
         compFrame->cfFrameRef = refVal.toString().toUInt();
