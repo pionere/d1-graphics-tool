@@ -107,7 +107,8 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     for (const QString fileName : files) {
                         if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
                             continue;
-                        QString fileBase = fileName.chop(4);
+                        QString fileBase = fileName;
+                        fileBase.chop(4);
                         if (misName.compare(fileBase, Qt::CaseInsensitive) == 0) {
                             mn = i;
                             break;
@@ -131,7 +132,8 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     for (const QString fileName : files) {
                         if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
                             continue;
-                        QString fileBase = fileName.chop(4);
+                        QString fileBase = fileName;
+                        fileBase.chop(4);
                         if (plrName.compare(fileBase, Qt::CaseInsensitive) == 0) {
                             fileInMatchesPlr++;
                             if (plrName.compare(fileBase, Qt::CaseSensitive) == 0) {
@@ -216,7 +218,8 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 for (const QString fileName : files) {
                     if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
                         continue;
-                    QString fileBase = fileName.chop(4);
+                    QString fileBase = fileName;
+                    fileBase.chop(4);
                     if (baseName.compare(fileBase, Qt::CaseInsensitive) == 0) {
                         filePath = fileName;
                         break;
@@ -238,6 +241,9 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 }
                 if (!loaded || this->baseGfx->getType() != gfx->getType()) {
                     gfx->setType(this->baseGfx->getType());
+                    filePath.chop(1);
+                    filePath.push_back('2');
+                    gfx->setFilePath(filePath);
                 }
             } else {
                 gfx = this->baseGfx;
