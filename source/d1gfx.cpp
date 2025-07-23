@@ -354,6 +354,95 @@ bool D1GfxFrame::resize(int width, int height, RESIZE_PLACEMENT placement, const
     return change;
 }
 
+bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
+{
+    if (dx == 0 && dy == 0)
+        return false;
+    int width = this->width;
+    int height = this->height;
+    bool change = false;
+    if (dx <= 0) {
+        if (dy <= 0) {
+            // for (int y = std::max(sy, -dy); y < ey; y++) {
+            for (int y = sy; y < ey; y++) {
+                // for (int x = std::max(sx, -dx); x < ex; x++) {
+                for (int x = sx; x < ex; x++) {
+                    if (x + dx >= 0 /*&& x + dx < width*/ && y + dy >= 0 /*&& y + dy < height*/)
+                    {
+                        D1GfxPixel pixel = this->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= this->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } else {
+            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
+            for (int y = ey - 1; y >= sy; y--) {
+                // for (int x = std::max(sx, -dx); x < ex; x++) {
+                for (int x = sx; x < ex; x++) {
+                    if (x + dx >= 0 /*&& x + dx < width && y + dy >= 0 */&& y + dy < height)
+                    {
+                        D1GfxPixel pixel = this->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= this->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    } else {
+        if (dy <= 0) {
+            // for (int y = std::max(sy, -dy); y < ey; y++) {
+            for (int y = sy; y < ey; y++) {
+                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
+                for (int x = ex - 1; x >= sx; x--) {
+                    if (/*x + dx >= 0 && */x + dx < width && y + dy >= 0 /*&& y + dy < height*/)
+                    {
+                        D1GfxPixel pixel = this->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= this->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        } else {
+            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
+            for (int y = ey - 1; y >= sy; y--) {
+                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
+                for (int x = ex - 1; x >= sx; x--) {
+                    if (/*x + dx >= 0 && */x + dx < width /*&& y + dy >= 0 */&& y + dy < height)
+                    {
+                        D1GfxPixel pixel = this->getPixel(x, y);
+                        if (pixel.isTransparent())
+                            continue;
+                        change |= this->setPixel(x + dx, y + dy, pixel);
+                    }
+                    change |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+    }
+    return change;
+}
+
+bool D1GfxFrame::copy(int dx, int dy, const D1GfxFrame* srcFrame, int sx, int sy, int ex, int ey)
+{
+    bool change = false;
+    for (int y = sy; y < ey; y++) {
+        for (int x = sx; x < ex; x++) {
+            D1GfxPixel pixel = srcFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            change |= this->setPixel(x + dx, y + dy, pixel);
+        }
+    }
+    return change;
+}
+
 bool D1GfxFrame::flipHorizontal()
 {
     bool result = false;
@@ -2775,95 +2864,6 @@ bool D1Gfx::patchWarriorStand(bool silent)
     return result;
 }
 
-static bool ShiftFrame(D1GfxFrame *frame, int dx, int dy, int sx, int sy, int ex, int ey)
-{
-    if (dx == 0 && dy == 0)
-        return false;
-    int width = frame->getWidth();
-    int height = frame->getHeight();
-    bool change = false;
-    if (dx <= 0) {
-        if (dy <= 0) {
-            // for (int y = std::max(sy, -dy); y < ey; y++) {
-            for (int y = sy; y < ey; y++) {
-                // for (int x = std::max(sx, -dx); x < ex; x++) {
-                for (int x = sx; x < ex; x++) {
-                    if (x + dx >= 0 /*&& x + dx < width*/ && y + dy >= 0 /*&& y + dy < height*/)
-                    {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        change |= frame->setPixel(x + dx, y + dy, pixel);
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        } else {
-            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
-            for (int y = ey - 1; y >= sy; y--) {
-                // for (int x = std::max(sx, -dx); x < ex; x++) {
-                for (int x = sx; x < ex; x++) {
-                    if (x + dx >= 0 /*&& x + dx < width && y + dy >= 0 */&& y + dy < height)
-                    {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        change |= frame->setPixel(x + dx, y + dy, pixel);
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        }
-    } else {
-        if (dy <= 0) {
-            // for (int y = std::max(sy, -dy); y < ey; y++) {
-            for (int y = sy; y < ey; y++) {
-                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
-                for (int x = ex - 1; x >= sx; x--) {
-                    if (/*x + dx >= 0 && */x + dx < width && y + dy >= 0 /*&& y + dy < height*/)
-                    {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        change |= frame->setPixel(x + dx, y + dy, pixel);
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        } else {
-            // for (int y = std::min(ey, height - dy) - 1; y >= sy; y--) {
-            for (int y = ey - 1; y >= sy; y--) {
-                // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
-                for (int x = ex - 1; x >= sx; x--) {
-                    if (/*x + dx >= 0 && */x + dx < width /*&& y + dy >= 0 */&& y + dy < height)
-                    {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (pixel.isTransparent())
-                            continue;
-                        change |= frame->setPixel(x + dx, y + dy, pixel);
-                    }
-                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                }
-            }
-        }
-    }
-    return change;
-}
-
-static bool CopyFrame(D1GfxFrame* dstFrame, int dx, int dy, const D1GfxFrame* srcFrame, int sx, int sy, int ex, int ey)
-{
-    bool change = false;
-    for (int y = sy; y < ey; y++) {
-        for (int x = sx; x < ex; x++) {
-            D1GfxPixel pixel = srcFrame->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            change |= dstFrame->setPixel(x + dx, y + dy, pixel);
-        }
-    }
-    return change;
-}
-
 bool D1Gfx::patchFallGDie(bool silent)
 {
     constexpr int frameCount = 17;
@@ -2905,7 +2905,7 @@ bool D1Gfx::patchFallGDie(bool silent)
             bool change = false;
             int dx = 9, dy = -2;
 
-            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+            change |= currFrame->shift(dx, dy, 0, 0, width, height);
 
             // add missing pixels
             if (ii + 1 == 1) {
@@ -5545,7 +5545,7 @@ bool D1Gfx::patchGoatBDie(bool silent)
 
             // fix bouncying bow
             if (i + 1 == 4) {
-                change |= ShiftFrame(currFrame, -1, -3, 0, 106, width, height);
+                change |= currFrame->shift(-1, -3, 0, 106, width, height);
             }
 
             if (change) {
@@ -6103,107 +6103,107 @@ bool D1Gfx::patchSklAxDie(bool silent)
                 break;
             }
 
-            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+            change |= currFrame->shift(dx, dy, 0, 0, width, height);
 
             switch (ii + 1) {
             case 1:
                 if (i + 1 == 17) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 82);
                 }
                 break;
             case 2:
                 if (i + 1 == 17) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 82);
                 }
                 break;
             case 3:
                 if (i + 1 == 17) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 88);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 88);
                 }
                 break;
             case 4:
                 if (i + 1 == 11) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 83);
                 }
                 if (i + 1 == 12) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 82);
                 }
                 if (i + 1 == 13) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 89);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 89);
                 }
                 if (i + 1 == 14) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 67, 87, 70, 88);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 87);
+                    change |= currFrame->shift(0, 3, 67, 87, 70, 88);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 87);
                 }
                 if (i + 1 == 15) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 67, 85, 70, 87);
-                    change |= ShiftFrame(currFrame, 0, 3, 91, 85, 93, 86);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                    change |= currFrame->shift(0, 3, 67, 85, 70, 87);
+                    change |= currFrame->shift(0, 3, 91, 85, 93, 86);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 85);
                 }
                 if (i + 1 == 16) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 67, 87, 70, 89);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 87);
+                    change |= currFrame->shift(0, 3, 67, 87, 70, 89);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 87);
                 }
                 if (i + 1 == 17) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 67, 87);
-                    change |= ShiftFrame(currFrame, 0, 3, 88, 83, 97, 85);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                    change |= currFrame->shift(0, 3, 65, 83, 67, 87);
+                    change |= currFrame->shift(0, 3, 88, 83, 97, 85);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 83);
                 }
                 break;
             case 5:
                 if (i + 1 == 13) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 67, 85, 75, 89);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                    change |= currFrame->shift(0, 3, 67, 85, 75, 89);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 85);
                 }
                 if (i + 1 == 14) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 67, 83, 75, 88);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                    change |= currFrame->shift(0, 3, 67, 83, 75, 88);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 83);
                 }
                 if (i + 1 == 15) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 56, 81, 76, 90);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 81);
+                    change |= currFrame->shift(0, 3, 56, 81, 76, 90);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 81);
                 }
                 if (i + 1 == 16) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 57, 85, 67, 90); // axe
-                    change |= ShiftFrame(currFrame, 0, 3, 70, 83, width, height); // right arm
-                    change |= ShiftFrame(currFrame, 0, 3, 40, 77, width, 83); // body
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 77); // body
+                    change |= currFrame->shift(0, 3, 57, 85, 67, 90); // axe
+                    change |= currFrame->shift(0, 3, 70, 83, width, height); // right arm
+                    change |= currFrame->shift(0, 3, 40, 77, width, 83); // body
+                    change |= currFrame->shift(0, 3, 0, 0, width, 77); // body
 
-                    change |= ShiftFrame(currFrame, 0, -3, 48, 87, 54, 92); // left arm
+                    change |= currFrame->shift(0, -3, 48, 87, 54, 92); // left arm
                 }
                 if (i + 1 == 17) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 57, 85, 67, 91); // axe
-                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 74, 85); // axe
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);  // body
+                    change |= currFrame->shift(0, 3, 57, 85, 67, 91); // axe
+                    change |= currFrame->shift(0, 3, 65, 83, 74, 85); // axe
+                    change |= currFrame->shift(0, 3, 0, 0, width, 83);  // body
                 }
                 break;
             case 6:
                 if (i + 1 == 17) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 72, 83, 74, 85);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                    change |= currFrame->shift(0, 3, 72, 83, 74, 85);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 83);
                 }
                 break;
             case 8:
                 if (i + 1 == 17) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 65, 83, 67, 85);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                    change |= currFrame->shift(0, 3, 65, 83, 67, 85);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 83);
                 }
                 break;
             }
@@ -6211,54 +6211,54 @@ bool D1Gfx::patchSklAxDie(bool silent)
             // shift bone
             if (ii + 1 == 6) {
                 if (i + 1 == 9) {
-                    change |= ShiftFrame(currFrame, 0, -10, 52, 78, 54, 80);
-                    change |= ShiftFrame(currFrame, 0, -10, 49, 79, 52, 81);
+                    change |= currFrame->shift(0, -10, 52, 78, 54, 80);
+                    change |= currFrame->shift(0, -10, 49, 79, 52, 81);
                 }
                 if (i + 1 == 10) {
-                    change |= ShiftFrame(currFrame, 0, -10, 50, 83, 53, 85);
-                    change |= ShiftFrame(currFrame, 0, -10, 48, 85, 52, 89);
+                    change |= currFrame->shift(0, -10, 50, 83, 53, 85);
+                    change |= currFrame->shift(0, -10, 48, 85, 52, 89);
                 }
                 if (i + 1 == 11) {
-                    change |= ShiftFrame(currFrame, 4, -6, 48, 87, 53, 93);
-                    change |= ShiftFrame(currFrame, 4, -6, 47, 91, 48, 92);
+                    change |= currFrame->shift(4, -6, 48, 87, 53, 93);
+                    change |= currFrame->shift(4, -6, 47, 91, 48, 92);
                 }
             } else {
                 if (i + 1 == 9) {
                     if (ii + 1 == 1 || ii + 1 == 2) {
-                        change |= ShiftFrame(currFrame, 0, -10, 51, 77, 54, 79);
-                        change |= ShiftFrame(currFrame, 0, -10, 48, 79, 53, 82);
+                        change |= currFrame->shift(0, -10, 51, 77, 54, 79);
+                        change |= currFrame->shift(0, -10, 48, 79, 53, 82);
                     } else if (ii + 1 == 4) {
-                        change |= ShiftFrame(currFrame, 0, -10, 49, 78, 54, 82);
+                        change |= currFrame->shift(0, -10, 49, 78, 54, 82);
                     } else {
-                        change |= ShiftFrame(currFrame, 0, -10, 48, 77, 54, 82);
+                        change |= currFrame->shift(0, -10, 48, 77, 54, 82);
                     }
                 }
                 if (i + 1 == 10) {
                     if (ii + 1 == 3) {
                         // TODO:....
                     } else {
-                        change |= ShiftFrame(currFrame, 0, -10, 47, 83, 53, 89);
+                        change |= currFrame->shift(0, -10, 47, 83, 53, 89);
                     }
                 }
                 if (i + 1 == 11) {
-                    change |= ShiftFrame(currFrame, 4, -6, 47, 87, 53, 93);
+                    change |= currFrame->shift(4, -6, 47, 87, 53, 93);
                 }
             }
 
             if (i + 1 == 12) {
-                change |= ShiftFrame(currFrame, 7, -2, 49, 89, 53, 94);
+                change |= currFrame->shift(7, -2, 49, 89, 53, 94);
             }
             if (i + 1 == 13) {
-                change |= ShiftFrame(currFrame, 7, -2, 50, 92, 53, 95);
+                change |= currFrame->shift(7, -2, 50, 92, 53, 95);
             }
             if (i + 1 == 14) {
-                change |= ShiftFrame(currFrame, 7, -2, 50, 91, 53, 93);
+                change |= currFrame->shift(7, -2, 50, 91, 53, 93);
             }
             if (i + 1 == 15) {
-                change |= ShiftFrame(currFrame, 7, -2, 49, 88, 54, 92);
+                change |= currFrame->shift(7, -2, 49, 88, 54, 92);
             }
             if (i + 1 == 16) {
-                change |= ShiftFrame(currFrame, 7, -2, 48, 90, 54, 95);
+                change |= currFrame->shift(7, -2, 48, 90, 54, 95);
             }
             if (i + 1 == 17) {
                 if (ii + 1 == 3) {
@@ -6269,9 +6269,9 @@ bool D1Gfx::patchSklAxDie(bool silent)
                     }
 
                     D1GfxFrame* prevFrame = this->getFrame(n - 1);
-                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 56, 90, 61, 93);
+                    change |= currFrame->copy(0, 0, prevFrame, 56, 90, 61, 93);
                 } else {
-                    change |= ShiftFrame(currFrame, 7, -2, 49, 92, 54, 95);
+                    change |= currFrame->shift(7, -2, 49, 92, 54, 95);
                 }
             }
 
@@ -6398,7 +6398,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
                 break;
             }
 
-            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+            change |= currFrame->shift(dx, dy, 0, 0, width, height);
 
             if (change) {
                 result = true;
@@ -6491,68 +6491,68 @@ bool D1Gfx::patchSklSrDie(bool silent)
                 break;
             }
 
-            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+            change |= currFrame->shift(dx, dy, 0, 0, width, height);
 
             switch (ii + 1) {
             case 1:
                 // shift the sword
                 if (i + 1 == 9) {
-                    change |= ShiftFrame(currFrame, -1, 3, 47, 50, 61, 60);
+                    change |= currFrame->shift(-1, 3, 47, 50, 61, 60);
                 }
                 if (i + 1 == 10) {
-                    change |= ShiftFrame(currFrame, -2, 9, 47, 41, 64, 58);
+                    change |= currFrame->shift(-2, 9, 47, 41, 64, 58);
                 }
                 if (i + 1 == 11) {
-                    change |= ShiftFrame(currFrame, 1, 14, 42, 37, 60, 53);
+                    change |= currFrame->shift(1, 14, 42, 37, 60, 53);
                 }
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, 5, 15, 37, 36, 55, 52);
+                    change |= currFrame->shift(5, 15, 37, 36, 55, 52);
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 7, 15, 34, 34, 51, 52);
+                    change |= currFrame->shift(7, 15, 34, 34, 51, 52);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 9, 14, 34, 39, 50, 54);
+                    change |= currFrame->shift(9, 14, 34, 39, 50, 54);
                 }
                 // shift the shadow of the sword
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 3, 1, 25, 63, 43, 70);
+                    change |= currFrame->shift(3, 1, 25, 63, 43, 70);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 3, 0, 26, 65, 43, 70);
+                    change |= currFrame->shift(3, 0, 26, 65, 43, 70);
                 }
                 if (i + 1 == 15) {
                     // shift the main body
-                    change |= ShiftFrame(currFrame, 0, 3, 28, 66, 30, 68);
-                    change |= ShiftFrame(currFrame, 0, 3, 30, 56, 76, 87);
-                    change |= ShiftFrame(currFrame, 0, 3, 76, 56, 109, 80);
-                    change |= ShiftFrame(currFrame, 0, 3, 73, 37, 95, 56);
+                    change |= currFrame->shift(0, 3, 28, 66, 30, 68);
+                    change |= currFrame->shift(0, 3, 30, 56, 76, 87);
+                    change |= currFrame->shift(0, 3, 76, 56, 109, 80);
+                    change |= currFrame->shift(0, 3, 73, 37, 95, 56);
                     // shift the sword
-                    change |= ShiftFrame(currFrame, 9, 13, 34, 41, 50, 56);
+                    change |= currFrame->shift(9, 13, 34, 41, 50, 56);
                     // shift the shadow of the sword
-                    change |= ShiftFrame(currFrame, 2, 0, 28, 66, 38, 71);
+                    change |= currFrame->shift(2, 0, 28, 66, 38, 71);
                 }
                 // shift the left-leg
                 if (i + 1 == 14 || i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, -1, -1, 69, 78, 75, 90);
-                    change |= ShiftFrame(currFrame, -1, -4, 75, 78, 82, 96);
-                    change |= ShiftFrame(currFrame, -1, -4, 74, 92, 75, 96);
+                    change |= currFrame->shift(-1, -1, 69, 78, 75, 90);
+                    change |= currFrame->shift(-1, -4, 75, 78, 82, 96);
+                    change |= currFrame->shift(-1, -4, 74, 92, 75, 96);
                 }
                 // shift the right-leg
                 if (i + 1 == 11) {
-                    change |= ShiftFrame(currFrame, 3, -3, 17, 72, 40, 80);
+                    change |= currFrame->shift(3, -3, 17, 72, 40, 80);
                 }
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, 6, -6, 13, 78, 16, 79);
-                    change |= ShiftFrame(currFrame, 6, -6, 32, 77, 36, 79);
-                    change |= ShiftFrame(currFrame, 6, -6, 14, 79, 36, 85);
+                    change |= currFrame->shift(6, -6, 13, 78, 16, 79);
+                    change |= currFrame->shift(6, -6, 32, 77, 36, 79);
+                    change |= currFrame->shift(6, -6, 14, 79, 36, 85);
                     // eliminate shadow(?)
                     change |= currFrame->setPixel(16, 78, D1GfxPixel::transparentPixel());
                     change |= currFrame->setPixel(17, 78, D1GfxPixel::transparentPixel());
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 10, -6, 30, 77, 33, 79);
-                    change |= ShiftFrame(currFrame, 10, -6, 9, 79, 33, 85);
+                    change |= currFrame->shift(10, -6, 30, 77, 33, 79);
+                    change |= currFrame->shift(10, -6, 9, 79, 33, 85);
                     // eliminate shadow(?)
                     change |= currFrame->setPixel(9, 78, D1GfxPixel::transparentPixel());
                     change |= currFrame->setPixel(10, 78, D1GfxPixel::transparentPixel());
@@ -6561,116 +6561,116 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= currFrame->setPixel(13, 78, D1GfxPixel::transparentPixel());
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 11, -6, 8, 79, 32, 87);
+                    change |= currFrame->shift(11, -6, 8, 79, 32, 87);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 13, -3, 6, 76, 30, 85);
+                    change |= currFrame->shift(13, -3, 6, 76, 30, 85);
                 }
                 break;
             case 2:
                 // shift the right-leg
                 if (i + 1 == 9) {
-                    change |= ShiftFrame(currFrame, 0, 3, 24, 57, 43, 67);
+                    change |= currFrame->shift(0, 3, 24, 57, 43, 67);
                 }
                 if (i + 1 == 10) {
-                    change |= ShiftFrame(currFrame, 0, 6, 23, 53, 41, 65);
+                    change |= currFrame->shift(0, 6, 23, 53, 41, 65);
                 }
                 if (i + 1 == 11) {
-                    change |= ShiftFrame(currFrame, 1, 6, 19, 54, 38, 64);
+                    change |= currFrame->shift(1, 6, 19, 54, 38, 64);
                 }
                 if (i + 1 == 12) {
                     // shadow
-                    change |= ShiftFrame(currFrame, 5, 0, 9, 71, 30, 74);
+                    change |= currFrame->shift(5, 0, 9, 71, 30, 74);
                     // leg
-                    change |= ShiftFrame(currFrame, 5, 6, 14, 57, 33, 66);
+                    change |= currFrame->shift(5, 6, 14, 57, 33, 66);
                 }
                 if (i + 1 == 13) {
                     // shadow
-                    change |= ShiftFrame(currFrame, 9, 0, 5, 71, 26, 74);
+                    change |= currFrame->shift(9, 0, 5, 71, 26, 74);
                     // leg
-                    change |= ShiftFrame(currFrame, 8, 7, 10, 57, 29, 65);
+                    change |= currFrame->shift(8, 7, 10, 57, 29, 65);
                 }
                 if (i + 1 == 14) {
                     // shadow
-                    change |= ShiftFrame(currFrame, 10, 0, 3, 71, 24, 74);
+                    change |= currFrame->shift(10, 0, 3, 71, 24, 74);
                     // leg
-                    change |= ShiftFrame(currFrame, 9, 7, 8, 58, 27, 66);
+                    change |= currFrame->shift(9, 7, 8, 58, 27, 66);
                 }
                 if (i + 1 == 15) {
                     // shadow
-                    change |= ShiftFrame(currFrame, 12, 0, 1, 71, 23, 74);
+                    change |= currFrame->shift(12, 0, 1, 71, 23, 74);
                     // leg
-                    change |= ShiftFrame(currFrame, 10, 7, 6, 59, 26, 66);
+                    change |= currFrame->shift(10, 7, 6, 59, 26, 66);
                 }
 
                 // shift the left-leg
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 2, -2, 35, 76, 58, 93);
+                    change |= currFrame->shift(2, -2, 35, 76, 58, 93);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 2, -2, 36, 76, 58, 96);
-                    change |= ShiftFrame(currFrame, 2, -2, 38, 82, 49, 94);
+                    change |= currFrame->shift(2, -2, 36, 76, 58, 96);
+                    change |= currFrame->shift(2, -2, 38, 82, 49, 94);
                 }
                 // shift the shield
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 0, -2, 93, 76, 97, 78);
-                    change |= ShiftFrame(currFrame, 0, -2, 82, 78, 97, 79);
-                    change |= ShiftFrame(currFrame, 0, -2, 79, 79, 97, 81);
-                    change |= ShiftFrame(currFrame, 0, -2, 70, 81, 97, 85);
+                    change |= currFrame->shift(0, -2, 93, 76, 97, 78);
+                    change |= currFrame->shift(0, -2, 82, 78, 97, 79);
+                    change |= currFrame->shift(0, -2, 79, 79, 97, 81);
+                    change |= currFrame->shift(0, -2, 70, 81, 97, 85);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 0, -4, 83, 79, 85, 80);
-                    change |= ShiftFrame(currFrame, 0, -4, 79, 80, 95, 81);
-                    change |= ShiftFrame(currFrame, 0, -4, 70, 81, 97, 87);
-                    change |= ShiftFrame(currFrame, 0, -4, 75, 87, 88, 88);
+                    change |= currFrame->shift(0, -4, 83, 79, 85, 80);
+                    change |= currFrame->shift(0, -4, 79, 80, 95, 81);
+                    change |= currFrame->shift(0, -4, 70, 81, 97, 87);
+                    change |= currFrame->shift(0, -4, 75, 87, 88, 88);
                 }
                 break;
             case 4:
                 // shift the main body
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 85);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 85);
                 }
                 // shift the shield
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 0, -2, 30, 72, 46, 85);
-                    change |= ShiftFrame(currFrame, 0, -2, 46, 76, 47, 77);
-                    change |= ShiftFrame(currFrame, 0, -2, 46, 77, 48, 85);
-                    change |= ShiftFrame(currFrame, 0, -2, 48, 78, 50, 81);
+                    change |= currFrame->shift(0, -2, 30, 72, 46, 85);
+                    change |= currFrame->shift(0, -2, 46, 76, 47, 77);
+                    change |= currFrame->shift(0, -2, 46, 77, 48, 85);
+                    change |= currFrame->shift(0, -2, 48, 78, 50, 81);
                 }
                 break;
             case 5:
                 // shift the main body
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 77);
-                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 68);
+                    change |= currFrame->shift(0, 3, 0, 0, 70, 77);
+                    change |= currFrame->shift(0, 3, 70, 0, width, 68);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 79);
-                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 69);
+                    change |= currFrame->shift(0, 3, 0, 0, 70, 79);
+                    change |= currFrame->shift(0, 3, 70, 0, width, 69);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, 70, 80);
-                    change |= ShiftFrame(currFrame, 0, 3, 70, 0, width, 69);
+                    change |= currFrame->shift(0, 3, 0, 0, 70, 80);
+                    change |= currFrame->shift(0, 3, 70, 0, width, 69);
                 }
                 // shift the sword
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, -2, -1, 62, 73, width, height);
-                    change |= ShiftFrame(currFrame, -2, 0, 79, 72, width, height);
+                    change |= currFrame->shift(-2, -1, 62, 73, width, height);
+                    change |= currFrame->shift(-2, 0, 79, 72, width, height);
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, -3, 0, 64, 75, width, height);
-                    change |= ShiftFrame(currFrame, -4, 0, 83, 75, width, height);
+                    change |= currFrame->shift(-3, 0, 64, 75, width, height);
+                    change |= currFrame->shift(-4, 0, 83, 75, width, height);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, -2, -2, 64, 77, width, height);
-                    change |= ShiftFrame(currFrame, -4, 0, 84, 75, width, height);
+                    change |= currFrame->shift(-2, -2, 64, 77, width, height);
+                    change |= currFrame->shift(-4, 0, 84, 75, width, height);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, -2, -5, 64, 81, width, height);
-                    change |= ShiftFrame(currFrame, -4, 0, 84, 76, width, height);
+                    change |= currFrame->shift(-2, -5, 64, 81, width, height);
+                    change |= currFrame->shift(-4, 0, 84, 76, width, height);
                 }
                 // complete the sword
                 if (i + 1 == 14) {
@@ -6678,7 +6678,7 @@ bool D1Gfx::patchSklSrDie(bool silent)
                     change |= currFrame->setPixel(88, 94, D1GfxPixel::colorPixel(164));
                 }
                 if (i + 1 == 15) {
-                    change |= CopyFrame(currFrame, -2, 3, currFrame, 88, 88, 92, 91);
+                    change |= currFrame->copy(-2, 3, currFrame, 88, 88, 92, 91);
                     change |= currFrame->setPixel(86, 94, D1GfxPixel::colorPixel(248));
                     change |= currFrame->setPixel(87, 94, D1GfxPixel::colorPixel(247));
                 }
@@ -6686,121 +6686,121 @@ bool D1Gfx::patchSklSrDie(bool silent)
             case 6:
                 // shift the main body
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 80);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 80);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 79);
                 }
                 // shift the sword
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, 3, -4, 66, 81, 68, 93);
-                    change |= ShiftFrame(currFrame, 3, -4, 40, 82, 68, 93);
+                    change |= currFrame->shift(3, -4, 66, 81, 68, 93);
+                    change |= currFrame->shift(3, -4, 40, 82, 68, 93);
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 4, -7, 39, 86, 68, 96);
+                    change |= currFrame->shift(4, -7, 39, 86, 68, 96);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 6, -7, 38, 87, 68, 96);
+                    change |= currFrame->shift(6, -7, 38, 87, 68, 96);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 9, -12, 54, 92, 67, 96);
+                    change |= currFrame->shift(9, -12, 54, 92, 67, 96);
                 }
                 // complete the sword
                 if (i + 1 == 15) {
                     D1GfxFrame* prevFrame = this->getFrame(n - 1);
-                    change |= CopyFrame(currFrame, 2, 0, prevFrame, 44, 84, 71, 89);
+                    change |= currFrame->copy(2, 0, prevFrame, 44, 84, 71, 89);
                 }
                 break;
             case 7:
                 // shift the main body
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 79);
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 79);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 0, 3, 73, 79, 76, 81);
-                    change |= ShiftFrame(currFrame, 0, 3, 29, 74, 76, 79);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 74);
+                    change |= currFrame->shift(0, 3, 73, 79, 76, 81);
+                    change |= currFrame->shift(0, 3, 29, 74, 76, 79);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 74);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 0, 3, 29, 79, 76, 84);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 79);
+                    change |= currFrame->shift(0, 3, 29, 79, 76, 84);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 79);
                 }
                 // shift the sword
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, -1, -5, 4, 78, 38, 87);
+                    change |= currFrame->shift(-1, -5, 4, 78, 38, 87);
                 }
                 // shift the right-leg
                 if (i + 1 == 11) {
-                    change |= ShiftFrame(currFrame, -1, -3, 81, 78, 91, 92);
+                    change |= currFrame->shift(-1, -3, 81, 78, 91, 92);
                 }
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, -5, -6, 85, 79, 94, 94);
+                    change |= currFrame->shift(-5, -6, 85, 79, 94, 94);
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, -8, -7, 88, 80, 97, 88);
-                    change |= ShiftFrame(currFrame, -9, -7, 88, 88, 97, 95);
+                    change |= currFrame->shift(-8, -7, 88, 80, 97, 88);
+                    change |= currFrame->shift(-9, -7, 88, 88, 97, 95);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, -8, -8, 90, 81, 99, 83);
-                    change |= ShiftFrame(currFrame, -9, -8, 90, 83, 99, 84);
-                    change |= ShiftFrame(currFrame, -10, -8, 90, 84, 99, 87);
-                    change |= ShiftFrame(currFrame, -11, -8, 90, 87, 99, 89);
-                    change |= ShiftFrame(currFrame, -12, -8, 90, 89, 99, 96);
+                    change |= currFrame->shift(-8, -8, 90, 81, 99, 83);
+                    change |= currFrame->shift(-9, -8, 90, 83, 99, 84);
+                    change |= currFrame->shift(-10, -8, 90, 84, 99, 87);
+                    change |= currFrame->shift(-11, -8, 90, 87, 99, 89);
+                    change |= currFrame->shift(-12, -8, 90, 89, 99, 96);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, -8, -8, 90, 82, 99, 84);
-                    change |= ShiftFrame(currFrame, -9, -8, 90, 84, 99, 85);
-                    change |= ShiftFrame(currFrame, -10, -8, 90, 85, 99, 88);
-                    change |= ShiftFrame(currFrame, -11, -8, 90, 88, 99, 90);
-                    change |= ShiftFrame(currFrame, -12, -8, 90, 90, 99, 91);
-                    change |= ShiftFrame(currFrame, -13, -8, 90, 91, 99, 96);
+                    change |= currFrame->shift(-8, -8, 90, 82, 99, 84);
+                    change |= currFrame->shift(-9, -8, 90, 84, 99, 85);
+                    change |= currFrame->shift(-10, -8, 90, 85, 99, 88);
+                    change |= currFrame->shift(-11, -8, 90, 88, 99, 90);
+                    change |= currFrame->shift(-12, -8, 90, 90, 99, 91);
+                    change |= currFrame->shift(-13, -8, 90, 91, 99, 96);
                 }
                 break;
             case 8:
                 // shift the main body
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, 0, 3, 61, 82, width, height);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 82);
+                    change |= currFrame->shift(0, 3, 61, 82, width, height);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 82);
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 0, 3, 61, 83, width, height);
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 83);
+                    change |= currFrame->shift(0, 3, 61, 83, width, height);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 83);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 85);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 85);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, 0, 3, 0, 0, width, 86);
+                    change |= currFrame->shift(0, 3, 0, 0, width, 86);
                 }
                 // shift the left-leg
                 if (i + 1 == 11) {
-                    change |= ShiftFrame(currFrame, 2, -3, 45, 81, 61, 93);
+                    change |= currFrame->shift(2, -3, 45, 81, 61, 93);
                 }
                 if (i + 1 == 12) {
-                    change |= ShiftFrame(currFrame, 1, -6, 44, 82, 60, 96);
+                    change |= currFrame->shift(1, -6, 44, 82, 60, 96);
                 }
                 if (i + 1 == 13) {
-                    change |= ShiftFrame(currFrame, 0, -7, 43, 83, 61, 96);
+                    change |= currFrame->shift(0, -7, 43, 83, 61, 96);
                 }
                 if (i + 1 == 14) {
-                    change |= ShiftFrame(currFrame, -2, -8, 45, 85, 61, 96);
+                    change |= currFrame->shift(-2, -8, 45, 85, 61, 96);
                 }
                 if (i + 1 == 15) {
-                    change |= ShiftFrame(currFrame, -1, -9, 49, 86, 60, 96);
+                    change |= currFrame->shift(-1, -9, 49, 86, 60, 96);
                 }
                 // complete the left-leg
                 if (i + 1 == 14) {
                     D1GfxFrame* prevFrame = this->getFrame(n - 1);
-                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 44, 86, 48, 87);
-                    change |= CopyFrame(currFrame, 0, 1, prevFrame, 45, 87, 49, 88);
+                    change |= currFrame->copy(0, 0, prevFrame, 44, 86, 48, 87);
+                    change |= currFrame->copy(0, 1, prevFrame, 45, 87, 49, 88);
                     change |= currFrame->setPixel(45, 87, D1GfxPixel::colorPixel(165));
                 }
                 if (i + 1 == 15) {
                     D1GfxFrame* prevFrame = this->getFrame(n - 1);
-                    change |= CopyFrame(currFrame, 0, 0, prevFrame, 43, 86, 51, 89);
+                    change |= currFrame->copy(0, 0, prevFrame, 43, 86, 51, 89);
                 }
                 break;
             }
@@ -6867,7 +6867,7 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
             case GFX_MON_UNRAVW: dx = -15; dy = 0; break;
             }
 
-            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+            change |= currFrame->shift(dx, dy, 0, 0, width, height);
 
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
@@ -6977,7 +6977,7 @@ bool D1Gfx::patchZombieDie(bool silent)
                 break;
             }
 
-            change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+            change |= currFrame->shift(dx, dy, 0, 0, width, height);
 
             if (change) {
                 result = true;
@@ -7166,7 +7166,7 @@ bool D1Gfx::patchFireba(int gfxFileIndex, bool silent)
             break;
         }
 
-        change |= ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+        change |= currFrame->shift(dx, dy, 0, 0, width, height);
 
         if (change) {
             result = true;
@@ -7425,7 +7425,7 @@ bool D1Gfx::patchCursorIcons(bool silent)
             break;
         }
 
-        change = ShiftFrame(currFrame, dx, dy, 0, 0, width, height);
+        change = currFrame->shift(dx, dy, 0, 0, width, height);
         if (change) {
             result = true;
             this->setModified();
