@@ -154,7 +154,8 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     for (const QString fileName : files) {
                         if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
                             continue;
-                        QString fileBase = fileName.chop(4);
+                        QString fileBase = fileName;
+                        fileBase.chop(4);
                         if (monName.compare(fileBase, Qt::CaseInsensitive) == 0) {
                             fileInMatchesMon++;
                             if (monName.compare(fileBase, Qt::CaseSensitive) == 0) {
