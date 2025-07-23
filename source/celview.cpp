@@ -420,7 +420,9 @@ void CelView::updateFields()
     comboBox->clear();
     comboBox->addItem("", 0);
     count = this->gfx->getComponentCount();
-    if (prevIndex < 0 || count < prevIndex) {
+    if (prevIndex < 0) {
+        prevIndex = 0;
+    } else if (count < prevIndex) {
         prevIndex = count;
     }
     for (int i = 0; i < count; i++) {

@@ -755,7 +755,7 @@ void MainWindow::openNew(OPEN_GFX_TYPE gfxType, OPEN_CLIPPED_TYPE clipped, bool 
 
 void MainWindow::on_actionNew_Gfxset_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CL2 Files (*.cl2 *.CL2)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CL2 Files (*.cl2 *.CL2);;CLC Files (*.clc *.CLC)"));
 
     if (!openFilePath.isEmpty()) {
         OpenAsParam params = OpenAsParam();
@@ -1844,11 +1844,11 @@ void MainWindow::saveFile(const SaveAsParam &params)
                 return;
             }
         }
-    }
-
-    if (/*this->gfx != nullptr && */this->gfx->getComponentCount() != 0 || !this->gfx->getCompFilePath().isEmpty()) {
-        this->gfx->saveComponents();
-        D1Clc::save(*this->gfx, params);
+        // save the components and the meta-info
+        if (this->gfx->getComponentCount() != 0 || !this->gfx->getCompFilePath().isEmpty()) {
+            this->gfx->saveComponents();
+            D1Clc::save(*this->gfx, params);
+        }
     }
 
     if (this->tileset != nullptr) {

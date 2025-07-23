@@ -198,14 +198,6 @@
          <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout"/>
         </item>
        </layout>
-       <!--layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-       </layout-->
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
