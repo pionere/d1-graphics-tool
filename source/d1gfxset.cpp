@@ -212,9 +212,14 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
         D1Pal *pal = this->baseGfx->getPalette();
         bool baseMatch = false;
         const QStringList files = folder.entryList();
+        for (const QString fileName : files) {
+            dProgress() << QString("file in forlder: %1").arg(fileName);
+        }
         for (const QString &baseName : fileNames) {
             D1Gfx *gfx;
+            dProgress() << QString("loading %1").arg(baseName).arg(gfxFileInfo.completeBaseName());
             if (gfxFileInfo.completeBaseName().compare(baseName, Qt::CaseInsensitive) != 0) {
+                dProgress() << QString(" - not base");
                 QString filePath;
                 for (const QString fileName : files) {
                     if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
@@ -223,10 +228,12 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     fileBase.chop(4);
                     if (baseName.compare(fileBase, Qt::CaseInsensitive) == 0) {
                         filePath = fileName;
+                        dProgress() << QString("file found %1").arg(filePath);
                         break;
                     }
                 }
                 if (filePath.isEmpty()) {
+                    dProgress() << QString("file not found %1 - extension %2").arg(baseName).arg(extension);
                     filePath = baseName + "." + extension;
                 }
                 QFileInfo qfi = QFileInfo(folder, filePath);
@@ -237,8 +244,10 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 bool loaded = false;
                 if (filePath.endsWith(".cl2", Qt::CaseInsensitive) == 0) {
                     loaded = D1Cl2::load(*gfx, filePath, params);
+                    dProgress() << QString("loading cl2 %1 - %2").arg(filePath).arg(loaded);
                 } else {
                     loaded = D1Clc::load(*gfx, filePath, params);
+                    dProgress() << QString("loading clc %1 - %2").arg(filePath).arg(loaded);
                 }
                 if (!loaded || this->baseGfx->getType() != gfx->getType()) {
                     gfx->setType(this->baseGfx->getType());
