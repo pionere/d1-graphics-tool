@@ -232,6 +232,8 @@ static void RegisterPalette(D1Pal *pal, unsigned frameFrom, unsigned frameTo, QM
 
 bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePath, const OpenAsParam &params)
 {
+    gfx.clear();
+
     QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
@@ -257,24 +259,28 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     unsigned long SVidWidth, SVidHeight;
     double SVidFrameLength;
     smk_info_all(SVidSMK, &SVidWidth, &SVidHeight, &SVidFrameLength);
+
     unsigned char channels, depth;
     unsigned long rate;
     smk_info_audio(SVidSMK, &channels, &depth, &rate);
+
     smk_enable_video(SVidSMK, true);
     for (int i = 0; i < D1SMK_TRACKS; i++) {
         smk_enable_audio(SVidSMK, i, true);
     }
     // Decode first frame
+
     char result = smk_first(SVidSMK);
     if (SMK_ERR(result)) {
         MemFreeDbg(SVidBuffer);
         dProgressErr() << QApplication::tr("Empty SMK file.");
         return false;
     }
+
     // load the first palette
     D1Pal *pal = LoadPalette(SVidSMK);
+
     // load the frames
-    // gfx.frames.clear();
     if (params.celWidth != 0) {
         dProgressWarn() << QApplication::tr("Width setting is ignored when a SMK file is loaded.");
     }
@@ -329,7 +335,6 @@ bool D1Smk::load(D1Gfx &gfx, QMap<QString, D1Pal *> &pals, const QString &filePa
     smk_close(SVidSMK);
     MemFreeDbg(SVidBuffer);
 
-    gfx.groupFrameIndices.clear();
     gfx.groupFrameIndices.push_back(std::pair<int, int>(0, frameNum - 1));
 
     gfx.type = D1CEL_TYPE::SMK;
