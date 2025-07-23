@@ -68,11 +68,11 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
     if (!D1Cl2::load(*this->baseGfx, gfxFilePath, params)) {
         dProgressErr() << QApplication::tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
     } else {
-        QFileInfo celFileInfo = QFileInfo(gfxFilePath);
+        const QFileInfo gfxFileInfo = QFileInfo(gfxFilePath);
 
-        const QString extension = QString(".") + celFileInfo.suffix();
-        QDir folder = celFileInfo.dir();
-        QString baseName = celFileInfo.completeBaseName();
+        const QString extension = QString(".") + gfxFileInfo.suffix();
+        QDir folder = gfxFileInfo.dir();
+        QString baseName = gfxFileInfo.completeBaseName();
         std::vector<QString> filePaths;
         D1GFX_SET_TYPE type = D1GFX_SET_TYPE::Unknown;
         D1GFX_SET_CLASS_TYPE ctype = D1GFX_SET_CLASS_TYPE::Unknown;
@@ -89,7 +89,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             for (int i = 0; i < 16; i++) {
                 QString fileName = baseName + QString::number(i + 1) + extension;
                 QFileInfo qfi = QFileInfo(folder, fileName);
-                if (qfi == celFileInfo) {
+                if (qfi == gfxFileInfo) {
                     cn = i;
                 }
                 if (qfi.exists()) {
@@ -215,9 +215,9 @@ void D1Gfxset::save(const SaveAsParam &params)
     QString filePath = saveParams.celFilePath;
     QString extension = QString(".CL2");
     if (!filePath.isEmpty()) {
-        QFileInfo celFileInfo = QFileInfo(filePath);
+        const QFileInfo gfxFileInfo = QFileInfo(filePath);
 
-        extension = QString(".") + celFileInfo.suffix();
+        extension = QString(".") + gfxFileInfo.suffix();
         filePath.chop(extension.length());
 
         if (this->type == D1GFX_SET_TYPE::Missile) {
