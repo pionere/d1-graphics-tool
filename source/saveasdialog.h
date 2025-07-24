@@ -59,6 +59,9 @@ public:
 
     void initialize(D1Gfx *gfx, D1Tileset *tileset, D1Gfxset *gfxset, D1Dun *dun, D1Tableset *tableset, D1Cpp *cpp);
 
+private:
+    void updateFields();
+
 private slots:
     void on_outputCelFileBrowseButton_clicked();
 

@@ -51,7 +51,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     // reset fields
     this->ui->celClippedAutoRadioButton->setChecked(true);
     this->ui->celClippedLabel->setText(QString("(%1)").arg((isGfxset && !gfxset->isClippedConstant()) ? tr("N/A") : (this->gfx->isClipped() ? tr("yes") : tr("no"))));
-    this->ui->celGroupLabel->setText(QString("(%1)").arg((isGfxset && !gfxset->isGroupsConstant()) ? tr("N/A") : this->gfx->getGroupCount()));
+    this->ui->celGroupLabel->setText(QString("(%1)").arg((isGfxset && !gfxset->isGroupsConstant()) ? tr("N/A") : QString::number(this->gfx->getGroupCount())));
 
     this->ui->celPatchedAutoRadioButton->setChecked(true);
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
@@ -156,7 +156,7 @@ void SaveAsDialog::on_celClippedAutoRadioButton_toggled(bool checked)
 
 void SaveAsDialog::on_celGroupEdit_returnPressed()
 {
-    this->numGroups = this->ui->celGroupEdit->text()->nonNegInt();
+    this->numGroups = this->ui->celGroupEdit->nonNegInt();
 
     this->on_celGroupEdit_escPressed();
 }
