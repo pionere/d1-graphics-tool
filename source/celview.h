@@ -38,6 +38,8 @@ typedef enum _mouse_click_flags {
     SHIFT_CLICK  = 1 << 2,
 } _mouse_click_flags;
 
+class GfxComponentDialog;
+
 class CelScene : public QGraphicsScene {
     Q_OBJECT
 
@@ -137,6 +139,13 @@ signals:
     void palModified();
 
 private slots:
+    void on_newComponentPushButtonClicked();
+    void on_editComponentPushButtonClicked();
+    void on_reloadComponentPushButtonClicked();
+    void on_closeComponentPushButtonClicked();
+    void on_componentsComboBox_activated(int index);
+
+    void on_showComponentsCheckBox_clicked();
     void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
@@ -178,6 +187,7 @@ private slots:
 private:
     Ui::CelView *ui;
     CelScene celScene = CelScene(this);
+    GfxComponentDialog *gfxComponentDialog = nullptr;
     SmkAudioWidget *smkAudioWidget = nullptr;
     PushButtonWidget *audioBtn;
     bool audioMuted;

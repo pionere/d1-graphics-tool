@@ -26,6 +26,8 @@ class GfxsetView;
 
 enum class IMAGE_FILE_MODE;
 
+class GfxComponentDialog;
+
 class GfxsetView : public QWidget {
     Q_OBJECT
 
@@ -120,6 +122,13 @@ private slots:
 
     void on_loadGfxPushButtonClicked();
 
+    void on_newComponentPushButtonClicked();
+    void on_editComponentPushButtonClicked();
+    void on_reloadComponentPushButtonClicked();
+    void on_closeComponentPushButtonClicked();
+    void on_componentsComboBox_activated(int index);
+
+    void on_showComponentsCheckBox_clicked();
     void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
@@ -162,6 +171,7 @@ private:
     Ui::GfxsetView *ui;
     PushButtonWidget *loadGfxBtn;
     CelScene celScene = CelScene(this);
+    GfxComponentDialog *gfxComponentDialog = nullptr;
     unsigned assetMpl = 1;
 
     D1Pal *pal;

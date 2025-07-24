@@ -235,6 +235,35 @@ typedef enum gfx_file_index {
     GFX_ITEM_MOOSES1,  // item drop animation (mooses1.CEL)
 } gfx_file_index;
 
+class D1Gfx;
+typedef struct D1GfxCompFrame {
+    unsigned cfFrameRef;
+    int cfZOrder;
+    int cfOffsetX;
+    int cfOffsetY;
+} D1GfxCompFrame;
+class D1GfxComp : public QObject {
+    Q_OBJECT
+
+    friend class D1Gfx;
+public:
+    D1GfxComp(D1Gfx *gfx);
+    D1GfxComp(const D1GfxComp &o);
+    ~D1GfxComp();
+
+    D1Gfx *getGFX() const;
+    void setGFX(D1Gfx *g);
+    QString getLabel() const;
+    void setLabel(QString lbl);
+    int getCompFrameCount() const;
+    D1GfxCompFrame *getCompFrame(int frameIdx) const;
+
+private:
+    D1Gfx *gfx;
+    QString label;
+    QList<D1GfxCompFrame> compFrames;
+};
+
 class D1Gfx : public QObject {
     Q_OBJECT
 
@@ -260,7 +289,7 @@ public:
     bool isFrameSizeConstant() const;
     bool isGroupSizeConstant() const;
     QString getFramePixels(int frameIndex, bool values) const;
-    QImage getFrameImage(int frameIndex) const;
+    QImage getFrameImage(int frameIndex, int component = 0) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
     void insertFrame(int frameIndex, int width, int height);
     D1GfxFrame *insertFrame(int frameIndex);
@@ -282,6 +311,7 @@ public:
     int testResize(const ResizeParam &params);
     bool resize(const ResizeParam &params);
     void mask();
+    bool squash();
     void optimize();
 
     D1CEL_TYPE getType() const;
@@ -307,6 +337,16 @@ public:
     int getFrameWidth(int frameIndex) const;
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
+
+    QString getCompFilePath() const;
+    void setCompFilePath(const QString &filePath);
+    D1Gfx *loadComponentGFX(QString gfxFilePath);
+    void saveComponents();
+    int getComponentCount() const;
+    D1GfxComp *getComponent(int compIndex);
+    void removeComponent(int compIndex);
+    D1GfxComp *insertComponent(int compIndex, D1Gfx *gfx);
+    QRect getFrameRect(int frameIndex, bool full) const;
 
     void patch(int gfxFileIndex, bool silent); // gfx_file_index
     static int getPatchFileIndex(QString &filePath);
@@ -350,6 +390,8 @@ protected:
     std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
     // fields of cel/cl2-frames
+    QList<D1GfxComp *> components;
+    QString compFilePath;
     bool clipped = false;
     // fields of tilesets
     bool upscaled = false;
