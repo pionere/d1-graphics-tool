@@ -111,6 +111,25 @@ D1GfxFrame::~D1GfxFrame()
     delete this->frameAudio;
 }
 
+QRect D1GfxFrame::getBoundary() const
+{
+    int minx = INT_MAX, maxx = INT_MIN, miny = INT_MAX, maxy = INT_MIN;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            if (this->pixels[y][x].isTransparent()) continue;
+            if (x < minx)
+                minx = x;
+            if (x > maxx)
+                maxx = x;
+            if (y < miny)
+                miny = y;
+            if (y > maxy)
+                maxy = y;
+        }
+    }
+    return QRect(minx, miny, maxx - minx + 1, maxy - miny + 1);
+}
+
 int D1GfxFrame::getWidth() const
 {
     return this->width;
@@ -869,26 +888,11 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString &header, bool patchData) const
 
 QRect D1Gfx::getBoundary() const
 {
-    int minx = INT_MAX, maxx = INT_MIN, miny = INT_MAX, maxy = INT_MIN;
-    if (this->frames.isEmpty()) {
-        return QRect();
-    }
+    QRect result = QRect();
     for (const D1GfxFrame *frame : this->frames) {
-        for (int y = 0; y < frame->getHeight(); y++) {
-            for (int x = 0; x < frame->getWidth(); x++) {
-                if (frame->getPixel(x, y).isTransparent()) continue;
-                if (x < minx)
-                    minx = x;
-                if (x > maxx)
-                    maxx = x;
-                if (y < miny)
-                    miny = y;
-                if (y > maxy)
-                    maxy = y;
-            }
-        }
+        result = result.united(frame->getBoundary());
     }
-    return QRect(minx, miny, maxx - minx + 1, maxy - miny + 1);
+    return result;
 }
 
 bool D1Gfx::isFrameSizeConstant() const

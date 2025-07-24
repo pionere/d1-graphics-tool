@@ -97,6 +97,8 @@ public:
     D1GfxFrame(const D1GfxFrame &o);
     ~D1GfxFrame();
 
+    QRect getBoundary() const;
+
     int getWidth() const;
     void setWidth(int width);
     int getHeight() const;
