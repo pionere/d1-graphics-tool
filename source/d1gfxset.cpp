@@ -4,6 +4,7 @@
 #include <QMessageBox>
 
 #include "d1cl2.h"
+#include "d1clc.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 
@@ -65,13 +66,22 @@ D1Gfxset::~D1Gfxset()
 
 bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
 {
-    if (!D1Cl2::load(*this->baseGfx, gfxFilePath, params)) {
-        dProgressErr() << QApplication::tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
-        return false;
-    }
     const QFileInfo gfxFileInfo = QFileInfo(gfxFilePath);
-
-    const QString extension = gfxFileInfo.suffix();
+    QString extension = gfxFileInfo.suffix();
+    if (extension.compare("cl2", Qt::CaseInsensitive) == 0) {
+        if (!D1Cl2::load(*this->baseGfx, gfxFilePath, params)) {
+            dProgressErr() << QApplication::tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+            return false;
+        }
+    } else {
+        if (!D1Clc::load(*this->baseGfx, gfxFilePath, params)) {
+            dProgressErr() << QApplication::tr("Failed loading CLC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+            return false;
+        }
+        // assume(extension.toLower() == "clc");
+        extension.chop(1);
+        extension.push_back('2');
+    }
     const QDir folder = gfxFileInfo.dir();
     QString baseName = gfxFileInfo.completeBaseName();
     std::vector<QString> fileNames;
@@ -94,7 +104,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             for (int i = 9; i <= 16; i++) {
                 QString misName = baseName + QString::number(i);
                 for (const QString fileName : files) {
-                    if (!fileName.endsWith(".cl2", Qt::CaseInsensitive))
+                    if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
                         continue;
                     QString fileBase = fileName;
                     fileBase.chop(4);
@@ -119,7 +129,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
                 QString plrName = basePlrName + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1];
                 for (const QString fileName : files) {
-                    if (!fileName.endsWith(".cl2", Qt::CaseInsensitive))
+                    if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
                         continue;
                     QString fileBase = fileName;
                     fileBase.chop(4);
@@ -141,7 +151,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             for (int i = 0; i < lengthof(animletter); i++) {
                 QString monName = baseMonName + animletter[i];
                 for (const QString fileName : files) {
-                    if (!fileName.endsWith(".cl2", Qt::CaseInsensitive))
+                    if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
                         continue;
                     QString fileBase = fileName;
                     fileBase.chop(4);
@@ -206,7 +216,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
         if (gfxFileInfo.completeBaseName().compare(baseName, Qt::CaseInsensitive) != 0) {
             QString filePath;
             for (const QString fileName : files) {
-                if (!fileName.endsWith(".cl2", Qt::CaseInsensitive))
+                if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
                     continue;
                 QString fileBase = fileName;
                 fileBase.chop(4);
@@ -223,8 +233,16 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
 
             gfx = new D1Gfx();
             gfx->setPalette(pal);
-            if (!D1Cl2::load(*gfx, filePath, params) || this->baseGfx->getType() != gfx->getType()) {
+            bool loaded = false;
+            if (filePath.endsWith(".cl2", Qt::CaseInsensitive)) {
+                loaded = D1Cl2::load(*gfx, filePath, params);
+            } else {
+                loaded = D1Clc::load(*gfx, filePath, params);
+            }
+            if (!loaded || this->baseGfx->getType() != gfx->getType()) {
                 gfx->setType(this->baseGfx->getType());
+                filePath.chop(1);
+                filePath.push_back('2');
                 gfx->setFilePath(filePath);
             }
         } else {
@@ -285,6 +303,11 @@ void D1Gfxset::save(const SaveAsParam &params)
         D1Gfx *gfx = this->gfxList[i];
         if (gfx->getFrameCount() != 0) {
             D1Cl2::save(*gfx, saveParams);
+            // save the components and the meta-info
+            if (gfx->getComponentCount() != 0 || !gfx->getCompFilePath().isEmpty()) {
+                gfx->saveComponents();
+                D1Clc::save(*gfx, saveParams);
+            }
         } else {
             // CL2 without content -> delete
             QString cl2FilePath = saveParams.celFilePath;

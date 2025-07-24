@@ -1,6 +1,7 @@
 #include "d1gfx.h"
 
 #include <QApplication>
+#include <QMessageBox>
 
 #include "d1image.h"
 #include "d1cel.h"
@@ -671,8 +672,12 @@ D1Gfx::~D1Gfx()
 
 void D1Gfx::clear()
 {
+    // this->gfxFilePath ?
+    // this->compFilePath ?
     qDeleteAll(this->frames);
     this->frames.clear();
+    qDeleteAll(this->components);
+    this->components.clear();
     this->groupFrameIndices.clear();
     // this->type ?
     // this->palette = nullptr;
@@ -892,6 +897,8 @@ QRect D1Gfx::getBoundary() const
     for (const D1GfxFrame *frame : this->frames) {
         result = result.united(frame->getBoundary());
     }
+    // TODO: components ...
+
     return result;
 }
 
@@ -955,29 +962,124 @@ QString D1Gfx::getFramePixels(int frameIndex, bool values) const
     return pixels;
 }
 
-// builds QImage from a D1CelFrame of given index
-QImage D1Gfx::getFrameImage(int frameIndex) const
+QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
 {
-    if (this->palette == nullptr || frameIndex < 0 || frameIndex >= this->frames.count()) {
-        return QImage();
+    const D1GfxFrame *frame = this->frames[frameIndex];
+
+    QRect rect = QRect(0, 0, frame->getWidth(), frame->getHeight());
+    if (full) {
+        for (const D1GfxComp *comp : this->components) {
+            const D1GfxCompFrame *compFrame = &comp->compFrames[frameIndex];
+            if (compFrame->cfFrameRef == 0) continue;
+            if (compFrame->cfFrameRef > (unsigned)comp->gfx->frames.count()) {
+                // TODO: add warning?
+                continue;
+            }
+            const D1GfxFrame *compFrameGfx = comp->gfx->frames[compFrame->cfFrameRef - 1];
+
+            QRect fRect = compFrameGfx->getBoundary();
+            fRect.moveTo(fRect.x() + compFrame->cfOffsetX, fRect.y() + compFrame->cfOffsetY);
+
+            rect = rect.united(fRect);
+        }
     }
+    return rect;
+}
 
-    D1GfxFrame *frame = this->frames[frameIndex];
-
-    QImage image = QImage(frame->getWidth(), frame->getHeight(), QImage::Format_ARGB32);
+static void drawFrame(const D1GfxFrame *frame, const D1Pal *pal, QImage &image, int ox, int oy)
+{
     QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
+    destBits += oy * image.width() + ox;
     for (int y = 0; y < frame->getHeight(); y++) {
         for (int x = 0; x < frame->getWidth(); x++, destBits++) {
             D1GfxPixel d1pix = frame->getPixel(x, y);
 
             QColor color;
             if (d1pix.isTransparent())
-                color = QColor(Qt::transparent);
+                continue;
             else
-                color = this->palette->getColor(d1pix.getPaletteIndex());
+                color = pal->getColor(d1pix.getPaletteIndex());
 
             // image.setPixelColor(x, y, color);
             *destBits = color.rgba();
+        }
+        destBits += image.width() - frame->getWidth();
+    }
+}
+
+// builds QImage from a D1CelFrame of given index
+QImage D1Gfx::getFrameImage(int frameIndex, int component) const
+{
+    if (this->palette == nullptr || frameIndex < 0 || frameIndex >= this->frames.count()) {
+        return QImage();
+    }
+    QRect rect = this->getFrameRect(frameIndex, true);
+    rect.moveTo(-rect.x(), -rect.y());
+    QImage image = QImage(rect.width(), rect.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
+    image.fill(Qt::transparent);
+
+    QSet<const D1GfxComp *> drawn;
+    if (component != 0) {
+        while (true) {
+            const D1GfxComp *nextComp = NULL;
+            const D1GfxCompFrame *nextCompFrame;
+            for (int i = 0; i < this->components.count(); i++) {
+                const D1GfxComp *comp = this->components[i];
+                if (component > 0 && component - 1 != i) continue;
+                const D1GfxCompFrame *compFrame = &comp->compFrames[frameIndex];
+
+                if (compFrame->cfFrameRef == 0) continue;
+                if (compFrame->cfFrameRef > comp->gfx->frames.count()) {
+                    // TODO: add warning?
+                    continue;
+                }
+                if (drawn.contains(comp)) continue;
+                if (nextComp == NULL || compFrame->cfZOrder < nextCompFrame->cfZOrder) {
+                    nextComp = comp;
+                    nextCompFrame = compFrame;
+                }
+            }
+            if (nextComp == NULL || nextCompFrame->cfZOrder >= 0) {
+                break;
+            }
+            drawn.insert(nextComp);
+            const D1GfxFrame *compFrame = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
+            int ox = nextCompFrame->cfOffsetX + rect.x();
+            int oy = nextCompFrame->cfOffsetY + rect.y();
+            drawFrame(compFrame, this->palette, image, ox, oy);
+        }
+    }
+
+    drawFrame(this->frames[frameIndex], this->palette, image, rect.x(), rect.y());
+
+    if (component != 0) {
+        while (true) {
+            const D1GfxComp *nextComp = NULL;
+            const D1GfxCompFrame *nextCompFrame;
+            for (int i = 0; i < this->components.count(); i++) {
+                const D1GfxComp *comp = this->components[i];
+                if (component > 0 && component - 1 != i) continue;
+                const D1GfxCompFrame *compFrame = &comp->compFrames[frameIndex];
+
+                if (compFrame->cfFrameRef == 0) continue;
+                if (compFrame->cfFrameRef > comp->gfx->frames.count()) {
+                    // TODO: add warning?
+                    continue;
+                }
+                if (drawn.contains(comp)) continue;
+                if (nextComp == NULL || compFrame->cfZOrder < nextCompFrame->cfZOrder) {
+                    nextComp = comp;
+                    nextCompFrame = compFrame;
+                }
+            }
+            if (nextComp == NULL) {
+                break;
+            }
+            drawn.insert(nextComp);
+            const D1GfxFrame *compFrameGfx = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
+            int ox = nextCompFrame->cfOffsetX + rect.x();
+            int oy = nextCompFrame->cfOffsetY + rect.y();
+            drawFrame(compFrameGfx, this->palette, image, ox, oy);
         }
     }
 
@@ -1007,7 +1109,9 @@ D1GfxFrame *D1Gfx::insertFrame(int idx)
 {
     D1GfxFrame* newFrame = new D1GfxFrame();
     this->frames.insert(idx, newFrame);
-
+    for (D1GfxComp *comp : this->components) {
+        comp->compFrames.insert(idx, D1GfxCompFrame());
+    }
     if (this->groupFrameIndices.empty()) {
         // create new group if this is the first frame
         this->groupFrameIndices.push_back(std::pair<int, int>(0, 0));
@@ -1089,6 +1193,101 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
     return this->frames[idx];
 }
 
+D1GfxComp::D1GfxComp(D1Gfx *g)
+{
+    this->gfx = g;
+
+    QFileInfo fileInfo(g->getFilePath());
+    QString labelText = fileInfo.baseName();
+    this->label = labelText;
+
+    for (int i = 0; i < g->getFrameCount(); i++) {
+        this->compFrames.push_back(D1GfxCompFrame());
+    }
+}
+
+D1GfxComp::D1GfxComp(const D1GfxComp &o)
+{
+    // TODO: use D1Gfx copy-constructor?
+    D1Gfx* g = new D1Gfx();
+    g->setPalette(o.gfx->getPalette());
+    // g->setFilePath(o.gfx->getFilePath());
+    g->addGfx(o.gfx);
+    this->gfx = g;
+    this->label = o.label;
+    this->compFrames = o.compFrames;
+}
+
+D1GfxComp::~D1GfxComp()
+{
+    delete this->gfx;
+}
+
+D1Gfx *D1GfxComp::getGFX() const
+{
+    return const_cast<D1Gfx *>(this->gfx);
+}
+
+void D1GfxComp::setGFX(D1Gfx *g)
+{
+    delete this->gfx;
+    this->gfx = g;
+}
+
+QString D1GfxComp::getLabel() const
+{
+    return this->label;
+}
+
+void D1GfxComp::setLabel(QString lbl)
+{
+    this->label = lbl;
+}
+
+int D1GfxComp::getCompFrameCount() const
+{
+    return this->compFrames.count();
+}
+
+D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx) const
+{
+    return const_cast<D1GfxCompFrame *>(&this->compFrames[frameIdx]);
+}
+
+QString D1Gfx::getCompFilePath() const
+{
+    return this->compFilePath;
+}
+
+void D1Gfx::setCompFilePath(const QString &filePath)
+{
+    this->compFilePath = filePath;
+    // this->modified = true;
+}
+
+D1Gfx *D1Gfx::loadComponentGFX(QString gfxFilePath)
+{
+    // TODO: merge with on_actionMerge_triggered ?
+    OpenAsParam params = OpenAsParam();
+    QString fileLower = gfxFilePath.toLower();
+    D1Gfx* gfx = new D1Gfx();
+    gfx->setPalette(this->palette);
+    if (fileLower.endsWith(".cel")) {
+        if (!D1Cel::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return nullptr;
+        }
+    } else { // if (fileLower.endsWith(".cl2")) {
+        if (!D1Cl2::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return nullptr;
+        }
+    }
+    return gfx;
+}
+
 int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
 {
     const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
@@ -1104,6 +1303,9 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
             D1GfxFrame *frame = this->frames[n];
             frame = new D1GfxFrame(*frame);
             this->frames.push_back(frame);
+            for (D1GfxComp *comp : this->components) {
+                comp->compFrames.push_back(D1GfxCompFrame());
+            }
         }
         firstIdx = this->groupFrameIndices.back().second + 1;
         resIdx = firstIdx + idx - this->groupFrameIndices[i].first;
@@ -1112,6 +1314,9 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
         D1GfxFrame *frame = this->frames[idx];
         frame = new D1GfxFrame(*frame);
         this->frames.push_back(frame);
+        for (D1GfxComp *comp : this->components) {
+            comp->compFrames.push_back(D1GfxCompFrame());
+        }
 
         firstIdx = lastIdx = resIdx = this->frames.count() - 1;
     }
@@ -1140,6 +1345,9 @@ void D1Gfx::removeFrame(int idx, bool wholeGroup)
                 for (int n = idx; n <= this->groupFrameIndices[i].second; n++) {
                     delete this->frames[idx];
                     this->frames.removeAt(idx);
+                    for (D1GfxComp *comp : this->components) {
+                        comp->compFrames.removeAt(idx);
+                    }
                 }
                 this->groupFrameIndices.erase(this->groupFrameIndices.begin() + i);
                 i--;
@@ -1153,7 +1361,9 @@ void D1Gfx::removeFrame(int idx, bool wholeGroup)
     } else {
         delete this->frames[idx];
         this->frames.removeAt(idx);
-
+        for (D1GfxComp *comp : this->components) {
+            comp->compFrames.removeAt(idx);
+        }
         for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
             if (this->groupFrameIndices[i].second < idx)
                 continue;
@@ -1234,6 +1444,10 @@ void D1Gfx::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
         }
         D1GfxFrame *tmp = this->frames.takeAt(frameIndex1);
         this->frames.push_front(tmp);
+        for (D1GfxComp *comp : this->components) {
+            D1GfxCompFrame tmpComp = comp->compFrames.takeAt(frameIndex1);
+            comp->compFrames.push_front(tmpComp);
+        }
     } else if (frameIndex1 >= numFrames) {
         // move frameIndex0 to the end
         if (frameIndex0 == numFrames - 1) {
@@ -1241,6 +1455,10 @@ void D1Gfx::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
         }
         D1GfxFrame *tmp = this->frames.takeAt(frameIndex0);
         this->frames.push_back(tmp);
+        for (D1GfxComp *comp : this->components) {
+            D1GfxCompFrame tmpComp = comp->compFrames.takeAt(frameIndex0);
+            comp->compFrames.push_back(tmpComp);
+        }
     } else {
         // swap frameIndex0 and frameIndex1
         if (frameIndex0 == frameIndex1) {
@@ -1249,6 +1467,11 @@ void D1Gfx::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
         D1GfxFrame *tmp = this->frames[frameIndex0];
         this->frames[frameIndex0] = this->frames[frameIndex1];
         this->frames[frameIndex1] = tmp;
+        for (D1GfxComp *comp : this->components) {
+            D1GfxCompFrame tmpComp = comp->compFrames[frameIndex0];
+            comp->compFrames[frameIndex0] = comp->compFrames[frameIndex1];
+            comp->compFrames[frameIndex1] = tmpComp;
+        }
     }
     this->modified = true;
 }
@@ -1276,6 +1499,16 @@ void D1Gfx::addGfx(D1Gfx *gfx)
         //    newFrame->frameType = D1CEL_FRAME_TYPE::TransparentSquare;
         // }
         this->frames.append(newFrame);
+        for (D1GfxComp *comp : this->components) {
+            comp->compFrames.append(D1GfxCompFrame());
+        }
+    }
+    for (int i = 0; i < gfx->getComponentCount(); i++) {
+        D1GfxComp *newComp = new D1GfxComp(*gfx->getComponent(i));
+        for (int n = 0; n < this->getFrameCount() - numNewFrames; n++) {
+            newComp->compFrames.push_front(D1GfxCompFrame());
+        }
+        this->components.push_back(newComp);
     }
     const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     if (multiGroup) {
@@ -1420,6 +1653,77 @@ void D1Gfx::mask()
     }
 }
 
+bool D1Gfx::squash()
+{
+    const D1GfxPixel backPixel = D1GfxPixel::transparentPixel();
+    bool change = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        QRect rect = this->getFrameRect(i, true);
+        rect.moveTo(-rect.x(), -rect.y());
+
+        D1GfxFrame* frame = this->frames[i];
+        // resize the image if necessary
+        change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT, backPixel);
+
+        // move the image if necessary
+        change |= frame->shift(rect.x(), rect.y(), 0, 0, rect.width(), rect.height());
+
+        // add the components
+        QSet<const D1GfxComp *> added;
+        while (true) {
+            const D1GfxComp *nextComp = NULL;
+            const D1GfxCompFrame *nextCompFrame;
+            for (int n = 0; n < this->components.count(); n++) {
+                const D1GfxComp *comp = this->components[n];
+                const D1GfxCompFrame *compFrame = &comp->compFrames[i];
+
+                if (compFrame->cfFrameRef == 0) continue;
+                if (compFrame->cfFrameRef > comp->gfx->frames.count()) {
+                    // TODO: add warning?
+                    continue;
+                }
+                if (added.contains(comp)) continue;
+                if (nextComp == NULL || compFrame->cfZOrder < nextCompFrame->cfZOrder) {
+                    nextComp = comp;
+                    nextCompFrame = compFrame;
+                }
+            }
+            if (nextComp == NULL) {
+                break;
+            }
+            added.insert(nextComp);
+            const D1GfxFrame *compFrame = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
+            int ox = nextCompFrame->cfOffsetX + rect.x();
+            int oy = nextCompFrame->cfOffsetY + rect.y();
+            if (nextCompFrame->cfZOrder >= 0) {
+                // draw the component over the current frame
+                change |= frame->copy(ox, oy, compFrame, 0, 0, compFrame->getWidth(), compFrame->getHeight());
+            } else {
+                // prepare a 'work'-frame
+                D1GfxFrame* newFrame = new D1GfxFrame();
+                for (int y = 0; y < frame->getHeight(); y++) {
+                    std::vector<D1GfxPixel> pixelLine;
+                    for (int x = 0; x < frame->getWidth(); x++) {
+                        pixelLine.push_back(D1GfxPixel::transparentPixel());
+                    }
+                    newFrame->addPixelLine(std::move(pixelLine));
+                }
+                // draw the component under the current frame
+                change |= newFrame->copy(ox, oy, compFrame, 0, 0, compFrame->getWidth(), compFrame->getHeight());
+                newFrame->copy(0, 0, frame, 0, 0, frame->getWidth(), frame->getHeight());
+                delete frame;
+                frame = newFrame;
+                this->frames[i] = newFrame;
+            }
+        }
+    }
+
+    // eliminate the obsolete components
+    qDeleteAll(this->components);
+    this->components.clear();
+    return change;
+}
+
 void D1Gfx::optimize()
 {
     for (int i = 0; i < this->getFrameCount(); i++) {
@@ -1460,6 +1764,9 @@ void D1Gfx::frameModified(const D1GfxFrame *frame)
         if (iframe == frame) {
             this->modified = true;
         }
+    }
+    for (D1GfxComp *comp : components) {
+        comp->gfx->frameModified(frame);
     }
 }
 
@@ -1589,6 +1896,44 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     this->frames[frameIndex]->setFrameType(frameType);
     this->modified = true;
     return true;
+}
+
+void D1Gfx::saveComponents()
+{
+    for (int i = 0; i < this->getComponentCount(); i++) {
+        SaveAsParam compParams = SaveAsParam();
+        D1Gfx* gfx = this->components[i]->getGFX();
+        if (gfx->type == D1CEL_TYPE::V2_MONO_GROUP || gfx->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS) {
+            D1Cl2::save(*gfx, compParams);
+        } else {
+            D1Cel::save(*gfx, compParams);
+        }
+    }
+}
+
+int D1Gfx::getComponentCount() const
+{
+    return this->components.count();
+}
+
+D1GfxComp *D1Gfx::getComponent(int compIndex)
+{
+    return this->components[compIndex];
+}
+
+void D1Gfx::removeComponent(int compIndex)
+{
+    delete this->components[compIndex];
+    this->components.removeAt(compIndex);
+    // this->modified = true;
+}
+
+D1GfxComp *D1Gfx::insertComponent(int compIndex, D1Gfx *gfx)
+{
+    D1GfxComp *newComp = new D1GfxComp(gfx);
+    this->components.insert(compIndex, newComp);
+    // this->modified = true;
+    return newComp;
 }
 
 bool D1Gfx::patchCathedralDoors(bool silent)
