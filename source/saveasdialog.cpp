@@ -17,6 +17,9 @@ SaveAsDialog::SaveAsDialog(QWidget *parent)
     , ui(new Ui::SaveAsDialog)
 {
     ui->setupUi(this);
+
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->celGroupEdit, SIGNAL(cancel_signal()), this, SLOT(on_celGroupEdit_escPressed()));
 }
 
 SaveAsDialog::~SaveAsDialog()
@@ -40,13 +43,15 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     this->isTableset = isTableset;
     this->isCpp = isCpp;
     this->isSmk = isSmk;
+    this->numGroups = 0;
 
     // initialize the main file-path
     QString filePath = isTableset ? tableset->distTbl->getFilePath() : (isCpp ? cpp->getFilePath() : this->gfx->getFilePath());
     this->ui->outputCelFileEdit->setText(filePath);
     // reset fields
     this->ui->celClippedAutoRadioButton->setChecked(true);
-    this->ui->celGroupEdit->setText("0");
+    this->ui->celClippedLabel->setText(QString("(%1)").arg((isGfxset && !gfxset->isClippedConstant()) ? tr("N/A") : (this->gfx->isClipped() ? tr("yes") : tr("no"))));
+    this->ui->celGroupLabel->setText(QString("(%1)").arg((isGfxset && !gfxset->isGroupsConstant()) ? tr("N/A") : this->gfx->getGroupCount()));
 
     this->ui->celPatchedAutoRadioButton->setChecked(true);
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
@@ -84,6 +89,15 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx && !isTableset && !isGfxset && !isCpp && !isSmk);
     this->ui->tilSettingsGroupBox->setEnabled(isTilesetGfx);
     this->ui->tblSettingsGroupBox->setEnabled(isTableset);
+
+    this->updateFields();
+}
+
+void SaveAsDialog::updateFields()
+{
+    this->ui->celClippedLabel->setVisible(this->ui->celClippedAutoRadioButton->isChecked());
+    this->ui->celGroupEdit->setText(QString::number(this->numGroups));
+    this->ui->celGroupLabel->setVisible(this->numGroups == 0);
 }
 
 void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
@@ -123,6 +137,35 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
             // }
         }
     }
+}
+
+void SaveAsDialog::on_celClippedYesRadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void SaveAsDialog::on_celClippedNoRadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void SaveAsDialog::on_celClippedAutoRadioButton_toggled(bool checked)
+{
+    this->updateFields();
+}
+
+void SaveAsDialog::on_celGroupEdit_returnPressed()
+{
+    this->numGroups = this->ui->celGroupEdit->text()->nonNegInt();
+
+    this->on_celGroupEdit_escPressed();
+}
+
+void SaveAsDialog::on_celGroupEdit_escPressed()
+{
+    // update celGroupEdit
+    this->updateFields();
+    this->ui->celGroupEdit->clearFocus();
 }
 
 void SaveAsDialog::on_outputClsFileBrowseButton_clicked()
@@ -201,7 +244,7 @@ void SaveAsDialog::on_saveButton_clicked()
     // main cel file
     params.celFilePath = this->ui->outputCelFileEdit->text();
     // celSettingsGroupBox: groupNum, clipped
-    params.groupNum = this->ui->celGroupEdit->nonNegInt();
+    params.groupNum = this->numGroups;
     if (this->ui->celClippedYesRadioButton->isChecked()) {
         params.clipped = SAVE_CLIPPED_TYPE::TRUE;
     } else if (this->ui->celClippedNoRadioButton->isChecked()) {

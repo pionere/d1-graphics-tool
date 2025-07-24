@@ -61,6 +61,13 @@ public:
 
 private slots:
     void on_outputCelFileBrowseButton_clicked();
+
+    void on_celClippedYesRadioButton_toggled(bool checked);
+    void on_celClippedNoRadioButton_toggled(bool checked);
+    void on_celClippedAutoRadioButton_toggled(bool checked);
+    void on_celGroupEdit_returnPressed();
+    void on_celGroupEdit_escPressed();
+
     void on_outputClsFileBrowseButton_clicked();
     void on_outputMinFileBrowseButton_clicked();
     void on_outputTilFileBrowseButton_clicked();
@@ -83,4 +90,6 @@ private:
     bool isTableset;
     bool isCpp;
     bool isSmk;
+
+    int numGroups;
 };
