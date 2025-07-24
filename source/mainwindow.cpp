@@ -2763,7 +2763,7 @@ void MainWindow::on_actionReportBoundary_triggered()
     if (!rect.isNull()) {
         msg = tr("The upper left of the bounding rectangle is %1:%2, the lower right corner is %3:%4. (width %5, height %6)")
             .arg(rect.x()).arg(rect.y()).arg(rect.x() + rect.width() - 1).arg(rect.y() + rect.height() - 1).arg(rect.width()).arg(rect.height());
-    } else if (this->gfxset != nullptr) {
+    } else if (this->gfxset == nullptr) {
         msg = tr("The graphics is completely transparent.");
     } else {
         msg = tr("The graphics-set is completely transparent.");

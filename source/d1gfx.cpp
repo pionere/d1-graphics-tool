@@ -695,6 +695,7 @@ D1Gfx::~D1Gfx()
 void D1Gfx::clear()
 {
     // this->gfxFilePath ?
+    // this->compFilePath ?
     qDeleteAll(this->frames);
     this->frames.clear();
     qDeleteAll(this->components);
