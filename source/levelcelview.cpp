@@ -2515,44 +2515,6 @@ void LevelCelView::activeTiles() const
     ProgressDialog::decBar();
 }
 
-void LevelCelView::inefficientFrames() const
-{
-    ProgressDialog::incBar(tr("Scanning frames..."), 1);
-
-    const int limit = 10;
-    bool result = false;
-    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        const D1GfxFrame *frame = this->gfx->getFrame(i);
-        if (frame->getFrameType() != D1CEL_FRAME_TYPE::TransparentSquare) {
-            continue;
-        }
-        int diff = limit;
-        D1CEL_FRAME_TYPE effType = D1CelTilesetFrame::altFrameType(frame, &diff);
-        if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
-            diff = limit - diff;
-            dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(D1GfxFrame::frameTypeToStr(effType));
-            result = true;
-        }
-    }
-    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        const D1GfxFrame *frame1 = this->gfx->getFrame(i);
-        for (int j = i + 1; j < this->gfx->getFrameCount(); j++) {
-            int diff = limit;
-            const D1GfxFrame *frame2 = this->gfx->getFrame(j);
-            if (D1CelTilesetFrame::altFrame(frame1, frame2, &diff)) {
-                diff = limit - diff;
-                dProgress() << tr("The difference between Frame %1 and Frame %2 is only %n pixel(s).", "", diff).arg(i + 1).arg(j + 1);
-                result = true;
-            }
-        }
-    }
-    if (!result) {
-        dProgress() << tr("The frames are optimal.");
-    }
-
-    ProgressDialog::decBar();
-}
-
 void LevelCelView::resetFrameTypes()
 {
     ProgressDialog::incBar(tr("Checking frames..."), 1);

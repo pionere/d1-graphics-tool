@@ -1713,7 +1713,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuEdit->setEnabled(fileType != FILE_CONTENT::TBL);
     this->ui->menuView->setEnabled(fileType != FILE_CONTENT::CPP);
     this->ui->menuReports->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
-    this->ui->menuTileset->setEnabled(isTileset);
+    this->ui->menuTileset->setEnabled(this->levelCelView != nullptr);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
     this->ui->menuColors->setEnabled(fileType != FILE_CONTENT::CPP);
     this->ui->menuData->setEnabled(fileType == FILE_CONTENT::CPP);
@@ -1726,8 +1726,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionClose->setEnabled(true);
     // - Edit
     this->ui->menuFrame->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
-    this->ui->menuSubtile->setEnabled(isTileset);
-    this->ui->menuTile->setEnabled(isTileset);
+    this->ui->menuSubtile->setEnabled(this->levelCelView != nullptr);
+    this->ui->menuTile->setEnabled(this->levelCelView != nullptr);
     this->ui->actionPatch->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
@@ -1737,13 +1737,13 @@ void MainWindow::openFile(const OpenAsParam &params)
     // - Reports
     this->ui->actionReportBoundary->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     // this->ui->actionReportColoredFrames->setEnabled(true);
-    this->ui->actionReportColoredSubtiles->setEnabled(isTileset);
-    this->ui->actionReportColoredTiles->setEnabled(isTileset);
+    this->ui->actionReportColoredSubtiles->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportColoredTiles->setEnabled(this->levelCelView != nullptr);
     // this->ui->actionReportActiveFrames->setEnabled(true);
-    this->ui->actionReportActiveSubtiles->setEnabled(isTileset);
-    this->ui->actionReportActiveTiles->setEnabled(isTileset);
-    this->ui->actionReportTilesetUse->setEnabled(isTileset);
-    this->ui->actionReportTilesetInefficientFrames->setEnabled(isTileset);
+    this->ui->actionReportActiveSubtiles->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportActiveTiles->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportTilesetUse->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportTilesetInefficientFrames->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionReportCheckGraphics->setEnabled(this->gfxsetView != nullptr);
     this->updateDynamicMenus();
 
@@ -2862,7 +2862,7 @@ void MainWindow::on_actionReportTilesetInefficientFrames_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    this->levelCelView->inefficientFrames();
+    this->gfx->inefficientFrames();
 
     // Clear loading message from status bar
     ProgressDialog::done();
