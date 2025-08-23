@@ -6,7 +6,7 @@
     <message>
         <location filename="../source/builderwidget.ui" line="74"/>
         <source>Select position</source>
-        <translation type="unfinished"></translation>
+        <translation>Válassza ki a pozíciót</translation>
     </message>
     <message>
         <location filename="../source/builderwidget.ui" line="79"/>
@@ -136,13 +136,13 @@
         <translation>Nagyítás:</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1396"/>
+        <location filename="../source/celview.cpp" line="1406"/>
         <source>Stop</source>
         <translation>Megállítás</translation>
     </message>
     <message>
         <location filename="../source/celview.ui" line="101"/>
-        <location filename="../source/celview.cpp" line="1384"/>
+        <location filename="../source/celview.cpp" line="1394"/>
         <source>Play</source>
         <translation>Lejátszás</translation>
     </message>
@@ -187,250 +187,305 @@
         <translation>(L6) Fészek</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="187"/>
+        <location filename="../source/celview.ui" line="208"/>
         <source>Groups:</source>
         <translation>Csoportok:</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="207"/>
+        <location filename="../source/celview.ui" line="228"/>
         <source>First group</source>
         <translation>Első csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="223"/>
+        <location filename="../source/celview.ui" line="244"/>
         <source>Previous group</source>
         <translation>Előző csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="236"/>
+        <location filename="../source/celview.ui" line="257"/>
         <source>Current group</source>
         <translation>Aktuális csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="265"/>
+        <location filename="../source/celview.ui" line="286"/>
         <source>Number of groups</source>
         <translation>Csoportok száma</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="284"/>
+        <location filename="../source/celview.ui" line="305"/>
         <source>Next group</source>
         <translation>Következő csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="300"/>
+        <location filename="../source/celview.ui" line="321"/>
         <source>Last group</source>
         <translation>Utolsó csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="332"/>
+        <location filename="../source/celview.ui" line="353"/>
         <source>Show grid over the graphics</source>
         <translation>Rácsháló megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="342"/>
+        <location filename="../source/celview.ui" line="363"/>
         <source>Asset multiplier</source>
-        <translation type="unfinished"></translation>
+        <translation>Szorzótényező</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="357"/>
+        <location filename="../source/celview.ui" line="378"/>
         <source>Frames:</source>
         <translation>Képkockák:</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="364"/>
+        <location filename="../source/celview.ui" line="388"/>
+        <source>Show the components of the graphics</source>
+        <translation>Mutassa a grafika összetevőit</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.ui" line="395"/>
         <source>Handle frames in groups</source>
         <translation>Képkockák kezelése csoportokban</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="384"/>
+        <location filename="../source/celview.ui" line="415"/>
         <source>First frame</source>
         <translation>Első képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="400"/>
+        <location filename="../source/celview.ui" line="431"/>
         <source>Previous frame</source>
         <translation>Előző képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="413"/>
+        <location filename="../source/celview.ui" line="444"/>
         <source>Current frame</source>
         <translation>Aktuális képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="442"/>
+        <location filename="../source/celview.ui" line="473"/>
         <source>Number of frames</source>
         <translation>Képkockák száma</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="461"/>
+        <location filename="../source/celview.ui" line="492"/>
         <source>Next frame</source>
         <translation>Következő képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="477"/>
+        <location filename="../source/celview.ui" line="508"/>
         <source>Last frame</source>
         <translation>Utolsó képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="505"/>
+        <location filename="../source/celview.ui" line="536"/>
         <source>Current frame width</source>
         <translation>Aktuális képkocka szélessége</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="534"/>
+        <location filename="../source/celview.ui" line="565"/>
         <source>Current frame height</source>
         <translation>Aktuális képkocka magassága</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="554"/>
+        <location filename="../source/celview.ui" line="585"/>
         <source>Frames are stored with clipping information</source>
-        <translation type="unfinished"></translation>
+        <translation>A képkockák vágási információkkal együtt tárolódnak</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="534"/>
-        <location filename="../source/celview.cpp" line="574"/>
-        <location filename="../source/celview.cpp" line="624"/>
+        <location filename="../source/celview.cpp" line="586"/>
+        <location filename="../source/celview.cpp" line="626"/>
+        <location filename="../source/celview.cpp" line="676"/>
         <source>Failed to load file: %1.</source>
         <translation>A %1 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="548"/>
-        <location filename="../source/celview.cpp" line="594"/>
-        <location filename="../source/celview.cpp" line="641"/>
+        <location filename="../source/celview.cpp" line="600"/>
+        <location filename="../source/celview.cpp" line="646"/>
+        <location filename="../source/celview.cpp" line="693"/>
         <source>Failed to read file: %1.</source>
         <translation>A %1 fájl olvasása sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1131"/>
-        <source>Create Frame</source>
-        <translation>Képkocka hozzáadása</translation>
-    </message>
-    <message>
-        <location filename="../source/celview.cpp" line="1137"/>
-        <source>Insert Frame</source>
-        <translation>Képkocka beillesztése</translation>
-    </message>
-    <message>
-        <location filename="../source/celview.cpp" line="1143"/>
-        <source>Duplicate Frame</source>
-        <translation>Képkocka másolata</translation>
-    </message>
-    <message>
-        <location filename="../source/celview.cpp" line="1144"/>
+        <location filename="../source/celview.cpp" line="1070"/>
         <source>Duplicate the current frame</source>
         <translation>Az aktuális sor másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1125"/>
+        <location filename="../source/celview.cpp" line="1049"/>
         <source>Add Layer</source>
         <translation>Réteg hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="276"/>
-        <source>Show audio</source>
-        <translation type="unfinished"></translation>
+        <location filename="../source/celview.cpp" line="279"/>
+        <source>New Component</source>
+        <translation>Új komponens</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="722"/>
-        <location filename="../source/celview.cpp" line="757"/>
+        <location filename="../source/celview.cpp" line="280"/>
+        <source>Edit Component</source>
+        <translation>Összetevő szerkesztése</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="281"/>
+        <source>Reload Component Graphics</source>
+        <translation>Töltse be újra a komponens grafikát</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="282"/>
+        <source>Remove Component</source>
+        <translation>Távolítsa el a komponenst</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="285"/>
+        <source>Show audio</source>
+        <translation>Hang megjelenítése</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="792"/>
+        <location filename="../source/celview.cpp" line="827"/>
         <source>Checking frames...</source>
         <translation>Képkockák vizsgálata...</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="728"/>
+        <location filename="../source/celview.cpp" line="798"/>
         <source>Frames with transparent pixels:</source>
         <translation>Képkockák átlátszó pixelekkel:</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="730"/>
+        <location filename="../source/celview.cpp" line="800"/>
         <source>Frames with pixels in the [%1..%2] color range:</source>
         <translation>Képkockák melyek [%1..%2] színeket tartalmaznak:</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/celview.cpp" line="738"/>
-        <location filename="../source/celview.cpp" line="775"/>
+        <location filename="../source/celview.cpp" line="808"/>
+        <location filename="../source/celview.cpp" line="845"/>
         <source>Frame %1 has %n affected pixels.</source>
         <translation>
             <numerusform>A %1-es képkockában %n pixel érintett.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="745"/>
+        <location filename="../source/celview.cpp" line="815"/>
         <source>None of the frames have transparent pixel.</source>
         <translation>Egyik képkockában sincs átlátszó pixel.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="747"/>
+        <location filename="../source/celview.cpp" line="817"/>
         <source>None of the frames are using the colors [%1..%2].</source>
         <translation>Egyik képkockában sincs a [%1..%2] színekből.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="768"/>
+        <location filename="../source/celview.cpp" line="838"/>
         <source>Active frames (using &apos;%1&apos; playback mode):</source>
         <translation>Aktív képkockák (&apos;%1&apos; lejátszási módban):</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="781"/>
+        <location filename="../source/celview.cpp" line="851"/>
         <source>None of the frames are active in &apos;%1&apos; playback mode.</source>
         <translation>Egyik képkockára sincs hatással a &apos;%1&apos; lejátszási mód.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="785"/>
+        <location filename="../source/celview.cpp" line="855"/>
         <source>Colors are not affected if the playback mode is &apos;%1&apos;.</source>
         <translation>A színekre nincs hatással a &apos;%1&apos; lejátszási mód.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="872"/>
+        <location filename="../source/celview.cpp" line="866"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="872"/>
+        <location filename="../source/celview.cpp" line="866"/>
         <source>Pixels with non-background colors are going to be eliminated (At least Frame %1 is affected). Are you sure you want to proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>A nem háttérszínekkel rendelkező pixeleket el fogjuk távolítani (Legalább a %1. képkocka érintett). Biztosan folytatni szeretné?</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="878"/>
+        <location filename="../source/celview.cpp" line="872"/>
         <source>Resizing...</source>
         <translation>Átméretezés...</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1126"/>
+        <location filename="../source/celview.cpp" line="1050"/>
         <source>Add the content of an image to the current frame</source>
         <translation>Kép hozzáadása az aktuális képkockához</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1132"/>
+        <location filename="../source/celview.cpp" line="1057"/>
+        <source>Create</source>
+        <translation>Létrehozás</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1058"/>
         <source>Create a new frame</source>
         <translation>Képkocka hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1138"/>
+        <location filename="../source/celview.cpp" line="1063"/>
+        <source>Insert</source>
+        <translation>Beszúrás</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1064"/>
         <source>Add a new frame before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1149"/>
-        <source>Replace Frame</source>
-        <translation>Képkocka kicserélése</translation>
+        <location filename="../source/celview.cpp" line="1069"/>
+        <source>Duplicate</source>
+        <translation>Másolat</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1150"/>
+        <location filename="../source/celview.cpp" line="1075"/>
+        <source>Replace</source>
+        <translation>Kicserél</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1082"/>
+        <source>Del</source>
+        <translation>Töröl</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1091"/>
+        <source>Horizontal Flip</source>
+        <translation>Vízszintes tükrözés</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1092"/>
+        <source>Flip the current frame horizontally</source>
+        <translation>Az aktuális képkocka vízszintes tükrözése</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1098"/>
+        <source>Vertical Flip</source>
+        <translation>Függőleges tükrözés</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1099"/>
+        <source>Flip the current frame vertically</source>
+        <translation>Az aktuális képkocka függőleges tükrözése</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1109"/>
+        <source>Select Graphics</source>
+        <translation>Válasszon a Grafikát</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1109"/>
+        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
+        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2)</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="1076"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="1156"/>
-        <source>Del Frame</source>
-        <translation>Képkocka törlése</translation>
-    </message>
-    <message>
-        <location filename="../source/celview.cpp" line="1157"/>
+        <location filename="../source/celview.cpp" line="1083"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="280"/>
+        <location filename="../source/celview.cpp" line="289"/>
         <source>Start drawing</source>
         <translation>Rajzolás kezdése</translation>
     </message>
@@ -440,7 +495,7 @@
     <message>
         <location filename="../source/checkgfxsetstaskdialog.ui" line="14"/>
         <source>Check Gfxsets Task</source>
-        <translation type="unfinished"></translation>
+        <translation>Gfxsets feladat ellenőrzése</translation>
     </message>
     <message>
         <location filename="../source/checkgfxsetstaskdialog.ui" line="26"/>
@@ -485,7 +540,7 @@
     <message>
         <location filename="../source/checkgfxsetstaskdialog.cpp" line="55"/>
         <source>Checking assets...</source>
-        <translation type="unfinished"></translation>
+        <translation>Állományok ellenőrzése...</translation>
     </message>
     <message>
         <location filename="../source/checkgfxsetstaskdialog.cpp" line="106"/>
@@ -518,12 +573,12 @@
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="40"/>
         <source>String</source>
-        <translation type="unfinished"></translation>
+        <translation>String</translation>
     </message>
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="45"/>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Szöveg</translation>
     </message>
     <message>
         <location filename="../source/cppcolumnchangedialog.ui" line="50"/>
@@ -551,12 +606,12 @@
     <message>
         <location filename="../source/cppdataeditdialog.ui" line="15"/>
         <source>From:</source>
-        <translation type="unfinished"></translation>
+        <translation>-tól</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.ui" line="25"/>
         <source>To:</source>
-        <translation type="unfinished"></translation>
+        <translation>-ig</translation>
     </message>
     <message>
         <location filename="../source/cppdataeditdialog.ui" line="47"/>
@@ -614,12 +669,12 @@
     <message>
         <location filename="../source/cpprowchangedialog.ui" line="6"/>
         <source>Change Row</source>
-        <translation type="unfinished"></translation>
+        <translation>Sor módosítása</translation>
     </message>
     <message>
         <location filename="../source/cpprowchangedialog.ui" line="18"/>
         <source>Text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Szöveg:</translation>
     </message>
     <message>
         <location filename="../source/cpprowchangedialog.ui" line="44"/>
@@ -799,22 +854,22 @@
         <location filename="../source/cppviewentrywidget.cpp" line="70"/>
         <location filename="../source/cppviewentrywidget.cpp" line="196"/>
         <source>Show info</source>
-        <translation type="unfinished"></translation>
+        <translation>Információk megjelenítése</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="196"/>
         <source>Hide info</source>
-        <translation type="unfinished"></translation>
+        <translation>Információ elrejtése</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="236"/>
         <source>string</source>
-        <translation type="unfinished"></translation>
+        <translation>string</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="237"/>
         <source>text</source>
-        <translation type="unfinished"></translation>
+        <translation>szöveg</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="238"/>
@@ -830,22 +885,22 @@
         <location filename="../source/cppviewentrywidget.cpp" line="247"/>
         <location filename="../source/cppviewentrywidget.cpp" line="310"/>
         <source>Change...</source>
-        <translation type="unfinished"></translation>
+        <translation>Módosítás...</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="248"/>
         <source>Change the name or the type of this column</source>
-        <translation type="unfinished"></translation>
+        <translation>Módosítsa az oszlop nevét vagy típusát</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="252"/>
         <source>Trim</source>
-        <translation type="unfinished"></translation>
+        <translation>Vágás</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="253"/>
         <source>Trim the content in this column</source>
-        <translation type="unfinished"></translation>
+        <translation>Tartalom vágása ebben az oszlopban</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="257"/>
@@ -904,7 +959,7 @@
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="311"/>
         <source>Change the leader text of this row</source>
-        <translation type="unfinished"></translation>
+        <translation>A sor fejlécének módosítása</translation>
     </message>
     <message>
         <location filename="../source/cppviewentrywidget.cpp" line="316"/>
@@ -942,7 +997,7 @@
     <message>
         <location filename="../source/d1cpp.cpp" line="1373"/>
         <source>Entries added to unbalanced table %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejegyzések hozzáadása a(z) %1 kiegyensúlyozatlan táblához</translation>
     </message>
     <message>
         <location filename="../source/d1cpp.cpp" line="1609"/>
@@ -957,7 +1012,7 @@
     <message>
         <location filename="../source/d1cpp.cpp" line="1636"/>
         <source>Invalid header &apos;%1&apos; in table %2. (Followup headers are not empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>Érvénytelen fejléc &apos;%1&apos; a(z) %2 táblában. (A követő fejlécek nem üresek)</translation>
     </message>
 </context>
 <context>
@@ -1010,7 +1065,7 @@
     <message>
         <location filename="../source/d1dun.cpp" line="980"/>
         <source>Not a dungeon file (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem egy kazamatafájl (%1)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="2490"/>
@@ -1072,107 +1127,107 @@
         <location filename="../source/d1dun.cpp" line="3005"/>
         <location filename="../source/d1dun.cpp" line="3045"/>
         <source>&apos;%1&apos; at %2:%3 is on an undefined subtile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az &apos;%1&apos; a %2:%3 helyen egy meghatározatlan mezőn található.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="2964"/>
         <location filename="../source/d1dun.cpp" line="3008"/>
         <location filename="../source/d1dun.cpp" line="3048"/>
         <source>&apos;%1&apos; at %2:%3 is on an empty subtile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az &apos;%1&apos; a %2:%3 helyen egy üres mezőn található.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="2969"/>
         <location filename="../source/d1dun.cpp" line="3013"/>
         <source>&apos;%1&apos; at %2:%3 is on a subtile which is not accessible (solid or missile blocker).</source>
-        <translation type="unfinished"></translation>
+        <translation>Az &apos;%1&apos; a %2:%3 helyen egy olyan mezőn található, amely nem hozzáférhető (szilárd vagy rakétablokkoló).</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3052"/>
         <source>&apos;%1&apos; at %2:%3 is sharing a subtile with a monster.</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;%1&apos; a %2:%3 helyen egy szörnnyel oszt meg egy mezőt.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3056"/>
         <source>&apos;%1&apos; at %2:%3 is sharing a subtile with an item.</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;%1&apos; a %2:%3 helyen egy mezőt oszt meg egy tárggyal.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3177"/>
         <source>Tile &apos;%1&apos; at %2:%3 was replaced by &apos;%4&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>A &apos;%1&apos; lap a %2:%3 helyen &apos;%4&apos;-re cseréltük.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3200"/>
         <location filename="../source/d1dun.cpp" line="3760"/>
         <source>&apos;%1&apos; at %2:%3 was replaced by &apos;%4&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2:%3 helyen található &apos;%1&apos;-et &apos;%4&apos; váltotta fel;.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3232"/>
         <source>&apos;%1&apos;(%2) item at %3:%4 was replaced by &apos;%5&apos;(%6).</source>
-        <translation type="unfinished"></translation>
+        <translation>Az &apos;%1&apos; (%2) tárgyat a %3:%4 helyen &apos;%5&apos;(%6) váltotta fel.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3254"/>
         <source>&apos;%1&apos;(%2) %3monster at %4:%5 was replaced by &apos;%6&apos;(%7)%8.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az &apos;%1&apos;(%2) %3 szörny (%4:%5) helyére &apos;%6&apos;(%7)%8 került.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3278"/>
         <source>&apos;%1&apos;(%2) object at %3:%4 was replaced by &apos;%5&apos;(%6).</source>
-        <translation type="unfinished"></translation>
+        <translation>Az &apos;%1&apos;(%2) objektumot a %3:%4 helyen &apos;%5&apos;(%6) cserélte.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3494"/>
         <location filename="../source/d1dun.cpp" line="3524"/>
         <source>Tile at %1:%2 is now &apos;%3&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az %1:%2 helyen található lap mostantól &apos;%3&apos;.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3549"/>
         <source>Subtile at %1:%2 is now protected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az %1:%2 helyen található mező mostantól védett.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3707"/>
         <source>Removed Object &apos;%1&apos; from %2:%3.</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltávolította az &apos;%1&apos; objektumot innen: %2:%3.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3709"/>
         <source>Added Object &apos;%1&apos; to %2:%3.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hozzáadva az „%1” objektum ehhez: %2:%3.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3725"/>
         <source>Removed %1Monster &apos;%2&apos; from %3:%4.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1Szörny &apos;%2&apos; eltávolítva a(z) %3:%4-ből.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3727"/>
         <source>Added %1Monster &apos;%2&apos; to %3:%4.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1Szörny &apos;%2&apos; hozzáadva a(z) %3:%4-hez.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3729"/>
         <source>Changed Monster at %1:%2 from &apos;%3&apos;%4 to &apos;%5&apos;%6.</source>
-        <translation type="unfinished"></translation>
+        <translation>A szörny a %1:%2-nél megváltozott, a jelenlegi &apos;%3&apos;%4-ről &apos;%5&apos;%6-ra.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3743"/>
         <source>Removed Item &apos;%1&apos; from %2:%3.</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltávolította az &apos;%1&apos; tárgyat a %2:%3-ból.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3745"/>
         <source>Added Item &apos;%1&apos; to %2:%3.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az &apos;%1&apos; tárgy hozzáadva a %2:%3-hoz.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3747"/>
         <source>Changed Item at %1:%2 from &apos;%3&apos; to &apos;%4&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az %1:%2 helyen található tárgyat &apos;%3&apos;-ról &apos;%4&apos;-re módosította.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3774"/>
@@ -1236,7 +1291,7 @@
     <message>
         <location filename="../source/d1dun.cpp" line="663"/>
         <source>Undefined tiles (one at %1:%2) can not be saved in this format (DUN).</source>
-        <translation type="unfinished"></translation>
+        <translation>A nem definiált lapok (egy a %1:%2 helyen) nem menthetők ebben a formátumban (DUN).</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="672"/>
@@ -1253,7 +1308,7 @@
     <message>
         <location filename="../source/d1dun.cpp" line="704"/>
         <source>Subtile value at %1:%2 inconsistent with tile.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %1:%2 helyen található érték inkonzisztens a mezővel.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="716"/>
@@ -1273,22 +1328,22 @@
     <message>
         <location filename="../source/d1dun.cpp" line="734"/>
         <source>The DUN file has to have a layer for protections to be used in the game.</source>
-        <translation type="unfinished"></translation>
+        <translation>A DUN fájlnak rendelkeznie kell egy réteggel a védelmi funkciókhoz hogy használható legyen a játékban.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="747"/>
         <source>Undefined subtiles (one at %1:%2) can not be saved in this format (RDUN).</source>
-        <translation type="unfinished"></translation>
+        <translation>A nem definiált mezőkk (egy a %1:%2 helyen) nem menthetők ebben a formátumban (RDUN).</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="754"/>
         <source>Only the subtiles are saved in this format (RDUN).</source>
-        <translation type="unfinished"></translation>
+        <translation>Csak a mezők kerülnek mentésre ebben a formátumban (RDUN).</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="761"/>
         <source>Defined tile at %1:%2 is not saved in this format (RDUN).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1:%2 helyen definiált lap nincs ebben a formátumban (RDUN) mentve.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="790"/>
@@ -1324,12 +1379,12 @@
         <location filename="../source/d1dun.cpp" line="1848"/>
         <location filename="../source/d1dun.cpp" line="1920"/>
         <source>Some content are going to be eliminited. Are you sure you want to proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>Bizonyos tartalmak eltávolításra kerülnek. Biztosan folytatja?</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="741"/>
         <source>Non-square dungeons (%1:%2) can not be saved in this format (RDUN).</source>
-        <translation type="unfinished"></translation>
+        <translation>A nem négyzet alakú kazamaták (%1:%2) nem menthetők ebben a formátumban (RDUN).</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="2883"/>
@@ -1364,7 +1419,7 @@
     <message>
         <location filename="../source/d1dun.cpp" line="2997"/>
         <source>An unique monster is indicated at %1:%2, but its index is zero which is not supported by the game (Diablo 1/DevilutionX).</source>
-        <translation type="unfinished"></translation>
+        <translation>Egy egyedi szörny van jelölve a(z) %1:%2 címen, de az indexe nulla, amit a játék (Diablo 1/DevilutionX) nem támogat.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3020"/>
@@ -1395,7 +1450,7 @@
         <location filename="../source/d1dun.cpp" line="3447"/>
         <location filename="../source/d1dun.cpp" line="3516"/>
         <source>Size of the dungeon does not match. (%1x%2 vs. %3x%4)</source>
-        <translation type="unfinished"></translation>
+        <translation>A kazamata mérete nem egyezik. (%1x%2 vs. %3x%4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3289"/>
@@ -1408,12 +1463,12 @@
     <message>
         <location filename="../source/d1dun.cpp" line="3324"/>
         <source>Tile at %1:%2 is set to undefined, because no matching entry was found.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1:%2 helyen található lap definiálatlanra van állítva, mert nem található egyező bejegyzés.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3326"/>
         <source>Tile%1 at %2:%3 was replaced with %4.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2:%3 helyen található %1 lap helyére %4 került.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3334"/>
@@ -1435,284 +1490,292 @@
     <message>
         <location filename="../source/d1dun.cpp" line="3380"/>
         <source>Subtile at %1:%2 is set to undefined, because the corresponding tile is undefined.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1:%2 helyen található mező definiálatlanra van állítva, mert a hozzátartozó lap definiálatlan.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3382"/>
         <source>Subtile at %1:%2 is set to undefined, because there was no tile-info for the corresponding tile (%3).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1:%2 mező definiálatlan értékre lett állítva, mivel a hozzátartozó laphoz (%3) nincs lap-információ.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3385"/>
         <source>Subtile%1 at %2:%3 was replaced with %4.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2:%3 helyen található %1 mező lecserélve erre: %4.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3693"/>
         <source>Changed Tile at %1:%2 from &apos;%3&apos; to &apos;%4&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %1:%2 helyen található lapot &apos;%3&apos;-ról '%4'-re módosította.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3711"/>
         <source>Changed Object at %1:%2 from &apos;%3&apos; to &apos;%4&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1:%2 helyen található objektumot &apos;%3&apos;-ról &apos;%4&apos;-re módosította.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3823"/>
         <source>Size of the dungeon does not match.</source>
-        <translation type="unfinished"></translation>
+        <translation>A kazamata mérete nem egyezik.</translation>
     </message>
 </context>
 <context>
     <name>D1Gfx</name>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1004"/>
+        <location filename="../source/d1gfx.cpp" line="1545"/>
         <source>Replacing </source>
-        <translation type="unfinished"></translation>
+        <translation>Cseréje</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1006"/>
+        <location filename="../source/d1gfx.cpp" line="1547"/>
         <source> color %1 with %2,</source>
-        <translation type="unfinished"></translation>
+        <translation> a(z) %1-es színnek %2-vel,</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/d1gfx.cpp" line="1011"/>
+        <location filename="../source/d1gfx.cpp" line="1552"/>
         <source> in frame(s) %1-%2</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform> a(z) %1-%2 képkockában/képkockákban</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1016"/>
+        <location filename="../source/d1gfx.cpp" line="1557"/>
         <source> of %1</source>
-        <translation type="unfinished"></translation>
+        <translation> %1-nek</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1016"/>
+        <location filename="../source/d1gfx.cpp" line="1557"/>
         <source> in %1</source>
-        <translation type="unfinished"></translation>
+        <translation> %1-ben</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1036"/>
+        <location filename="../source/d1gfx.cpp" line="1623"/>
         <source>Framesize is not constant</source>
         <translation>A képkocka-méret nem állandó</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1049"/>
+        <location filename="../source/d1gfx.cpp" line="1636"/>
         <source>Groupsize is not constant</source>
         <translation>A csoport-méret nem állandó</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1240"/>
+        <location filename="../source/d1gfx.cpp" line="1948"/>
         <source>Framesize of the Cathedal-Doors does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation>A Katedrális ajtajának képkocka-mérete nem egyezik (%1:%2 várt %3:%4. Index %5.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1366"/>
+        <location filename="../source/d1gfx.cpp" line="2074"/>
         <source>Framesize of the Catacombs-Doors does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation>A Katakombák ajtajának képkocka-mérete nem egyezik (%1:%2 várt %3:%4. Index %5.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1418"/>
+        <location filename="../source/d1gfx.cpp" line="2126"/>
         <source>Framesize of the Caves-Doors does not match. (%1:%2 expected %3:%4. Index %5.)</source>
         <translation>A Barlangok ajtajának képkocka-mérete nem egyezik (%1:%2 várt %3:%4. Index %5.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1713"/>
+        <location filename="../source/d1gfx.cpp" line="2421"/>
         <source>Framesize of the Magic Circle does not match. (%1:%2 expected %3:%4. Index %5.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A Magic Circle képkockamérete nem egyezik. (%1:%2 várt érték: %3:%4. Index: %5.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1899"/>
+        <location filename="../source/d1gfx.cpp" line="2607"/>
         <source>Framesize of the Candle does not match. (%1:%2 expected %3:%4. Index %5.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A gyertya képkockamérete nem egyezik. (%1:%2 várt érték: %3:%4. Index: %5.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1940"/>
+        <location filename="../source/d1gfx.cpp" line="2648"/>
         <source>Framesize of the west-facing shrine does not match. (%1:%2 expected %3:%4. Index %5.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A nyugatra néző szentély képkockamérete nem egyezik. (%1:%2 várt érték: %3:%4. Index: %5.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1990"/>
+        <location filename="../source/d1gfx.cpp" line="2698"/>
         <source>Framesize of the east-facing shrine does not match. (%1:%2 expected %3:%4. Index %5.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A keletre néző szentély képkockamérete nem egyezik. (%1:%2 várt érték: %3:%4. Index: %5.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2031"/>
+        <location filename="../source/d1gfx.cpp" line="2739"/>
         <source>Framesize of the Light stand in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A világító állvány képkockamérete a kriptában nem egyezik. (%1:%2 várt érték: %3:%4. Index: %5.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2088"/>
-        <location filename="../source/d1gfx.cpp" line="2148"/>
-        <location filename="../source/d1gfx.cpp" line="2294"/>
-        <location filename="../source/d1gfx.cpp" line="2521"/>
-        <location filename="../source/d1gfx.cpp" line="3904"/>
-        <location filename="../source/d1gfx.cpp" line="3908"/>
-        <location filename="../source/d1gfx.cpp" line="5160"/>
-        <location filename="../source/d1gfx.cpp" line="5454"/>
-        <location filename="../source/d1gfx.cpp" line="5458"/>
-        <location filename="../source/d1gfx.cpp" line="5462"/>
-        <location filename="../source/d1gfx.cpp" line="5466"/>
-        <location filename="../source/d1gfx.cpp" line="5470"/>
-        <location filename="../source/d1gfx.cpp" line="5665"/>
-        <location filename="../source/d1gfx.cpp" line="5945"/>
-        <location filename="../source/d1gfx.cpp" line="6070"/>
-        <location filename="../source/d1gfx.cpp" line="6547"/>
+        <location filename="../source/d1gfx.cpp" line="2796"/>
+        <location filename="../source/d1gfx.cpp" line="2867"/>
+        <location filename="../source/d1gfx.cpp" line="3090"/>
+        <location filename="../source/d1gfx.cpp" line="3228"/>
+        <location filename="../source/d1gfx.cpp" line="4611"/>
+        <location filename="../source/d1gfx.cpp" line="4615"/>
+        <location filename="../source/d1gfx.cpp" line="5867"/>
+        <location filename="../source/d1gfx.cpp" line="6161"/>
+        <location filename="../source/d1gfx.cpp" line="6165"/>
+        <location filename="../source/d1gfx.cpp" line="6169"/>
+        <location filename="../source/d1gfx.cpp" line="6173"/>
+        <location filename="../source/d1gfx.cpp" line="6177"/>
+        <location filename="../source/d1gfx.cpp" line="6372"/>
+        <location filename="../source/d1gfx.cpp" line="6652"/>
+        <location filename="../source/d1gfx.cpp" line="6777"/>
+        <location filename="../source/d1gfx.cpp" line="7254"/>
         <source>Not enough frames in the frame group %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elég képkocka a(z) %1 képkockacsoportban.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2096"/>
-        <location filename="../source/d1gfx.cpp" line="2155"/>
-        <location filename="../source/d1gfx.cpp" line="2312"/>
-        <location filename="../source/d1gfx.cpp" line="2320"/>
-        <location filename="../source/d1gfx.cpp" line="2399"/>
-        <location filename="../source/d1gfx.cpp" line="2528"/>
-        <location filename="../source/d1gfx.cpp" line="2825"/>
-        <location filename="../source/d1gfx.cpp" line="2856"/>
-        <location filename="../source/d1gfx.cpp" line="2936"/>
-        <location filename="../source/d1gfx.cpp" line="3933"/>
-        <location filename="../source/d1gfx.cpp" line="3938"/>
-        <location filename="../source/d1gfx.cpp" line="4064"/>
-        <location filename="../source/d1gfx.cpp" line="5167"/>
-        <location filename="../source/d1gfx.cpp" line="5480"/>
-        <location filename="../source/d1gfx.cpp" line="5672"/>
-        <location filename="../source/d1gfx.cpp" line="5952"/>
-        <location filename="../source/d1gfx.cpp" line="6077"/>
-        <location filename="../source/d1gfx.cpp" line="6476"/>
-        <location filename="../source/d1gfx.cpp" line="6554"/>
-        <location filename="../source/d1gfx.cpp" line="6680"/>
-        <location filename="../source/d1gfx.cpp" line="6840"/>
+        <location filename="../source/d1gfx.cpp" line="2804"/>
+        <location filename="../source/d1gfx.cpp" line="2874"/>
+        <location filename="../source/d1gfx.cpp" line="3108"/>
+        <location filename="../source/d1gfx.cpp" line="3116"/>
+        <location filename="../source/d1gfx.cpp" line="3195"/>
+        <location filename="../source/d1gfx.cpp" line="3235"/>
+        <location filename="../source/d1gfx.cpp" line="3532"/>
+        <location filename="../source/d1gfx.cpp" line="3563"/>
+        <location filename="../source/d1gfx.cpp" line="3643"/>
+        <location filename="../source/d1gfx.cpp" line="4640"/>
+        <location filename="../source/d1gfx.cpp" line="4645"/>
+        <location filename="../source/d1gfx.cpp" line="4771"/>
+        <location filename="../source/d1gfx.cpp" line="5874"/>
+        <location filename="../source/d1gfx.cpp" line="6187"/>
+        <location filename="../source/d1gfx.cpp" line="6379"/>
+        <location filename="../source/d1gfx.cpp" line="6659"/>
+        <location filename="../source/d1gfx.cpp" line="6784"/>
+        <location filename="../source/d1gfx.cpp" line="7183"/>
+        <location filename="../source/d1gfx.cpp" line="7261"/>
+        <location filename="../source/d1gfx.cpp" line="7387"/>
+        <location filename="../source/d1gfx.cpp" line="7547"/>
         <source>Framesize of &apos;%1&apos; does not fit (Expected %2x%3).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) &apos;%1&apos; képkockamérete nem megfelelő (várt érték: %2x%3).</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2109"/>
-        <location filename="../source/d1gfx.cpp" line="2112"/>
-        <location filename="../source/d1gfx.cpp" line="2121"/>
-        <location filename="../source/d1gfx.cpp" line="5973"/>
-        <location filename="../source/d1gfx.cpp" line="6654"/>
+        <location filename="../source/d1gfx.cpp" line="2817"/>
+        <location filename="../source/d1gfx.cpp" line="2820"/>
+        <location filename="../source/d1gfx.cpp" line="2829"/>
+        <location filename="../source/d1gfx.cpp" line="6680"/>
+        <location filename="../source/d1gfx.cpp" line="7361"/>
         <source>Removed frame %1 of group %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %2 csoport %1. képkockáját eltávolította.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2246"/>
+        <location filename="../source/d1gfx.cpp" line="3042"/>
         <source>Unrecognized file-path. Expected *WMH\WMHAS.CL2</source>
-        <translation type="unfinished"></translation>
+        <translation>Ismeretlen fájlútvonal. Várt érték: *WMH\WMHAS.CL2</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2254"/>
-        <location filename="../source/d1gfx.cpp" line="2265"/>
-        <location filename="../source/d1gfx.cpp" line="2800"/>
-        <location filename="../source/d1gfx.cpp" line="3883"/>
+        <location filename="../source/d1gfx.cpp" line="3050"/>
+        <location filename="../source/d1gfx.cpp" line="3061"/>
+        <location filename="../source/d1gfx.cpp" line="3507"/>
+        <location filename="../source/d1gfx.cpp" line="4590"/>
         <source>Could not find %1 to be used as a template file</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem található a(z) %1 fájl, amelyet sablonfájlként használhatnának.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2274"/>
-        <location filename="../source/d1gfx.cpp" line="2281"/>
-        <location filename="../source/d1gfx.cpp" line="2808"/>
-        <location filename="../source/d1gfx.cpp" line="3891"/>
+        <location filename="../source/d1gfx.cpp" line="1284"/>
+        <location filename="../source/d1gfx.cpp" line="3070"/>
+        <location filename="../source/d1gfx.cpp" line="3077"/>
+        <location filename="../source/d1gfx.cpp" line="3515"/>
+        <location filename="../source/d1gfx.cpp" line="4598"/>
         <source>Failed loading CL2 file: %1.</source>
         <translation>A(z) %1 CL2 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2302"/>
-        <location filename="../source/d1gfx.cpp" line="2816"/>
-        <location filename="../source/d1gfx.cpp" line="3916"/>
+        <location filename="../source/d1gfx.cpp" line="3098"/>
+        <location filename="../source/d1gfx.cpp" line="3523"/>
+        <location filename="../source/d1gfx.cpp" line="4623"/>
         <source>Not enough frames in the frame group %1 in &apos;%2&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elég képkocka a(z) %1 képkockacsoportban a(z) '%2'-ben.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2792"/>
+        <location filename="../source/d1gfx.cpp" line="3499"/>
         <source>Unrecognized file-path. Expected *Magmad.CL2</source>
-        <translation type="unfinished"></translation>
+        <translation>Ismeretlen fájlútvonal. Várt érték: *Magmad.CL2</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="6672"/>
+        <location filename="../source/d1gfx.cpp" line="7379"/>
         <source>Not enough frames in the graphics.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elég képkocka a grafikán.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2082"/>
-        <location filename="../source/d1gfx.cpp" line="2142"/>
-        <location filename="../source/d1gfx.cpp" line="2290"/>
-        <location filename="../source/d1gfx.cpp" line="2516"/>
-        <location filename="../source/d1gfx.cpp" line="2786"/>
-        <location filename="../source/d1gfx.cpp" line="3900"/>
-        <location filename="../source/d1gfx.cpp" line="5155"/>
-        <location filename="../source/d1gfx.cpp" line="5450"/>
-        <location filename="../source/d1gfx.cpp" line="5660"/>
-        <location filename="../source/d1gfx.cpp" line="5940"/>
-        <location filename="../source/d1gfx.cpp" line="6065"/>
-        <location filename="../source/d1gfx.cpp" line="6469"/>
-        <location filename="../source/d1gfx.cpp" line="6542"/>
-        <location filename="../source/d1gfx.cpp" line="6643"/>
-        <location filename="../source/d1gfx.cpp" line="6668"/>
+        <location filename="../source/d1gfx.cpp" line="2790"/>
+        <location filename="../source/d1gfx.cpp" line="2861"/>
+        <location filename="../source/d1gfx.cpp" line="3086"/>
+        <location filename="../source/d1gfx.cpp" line="3223"/>
+        <location filename="../source/d1gfx.cpp" line="3493"/>
+        <location filename="../source/d1gfx.cpp" line="4607"/>
+        <location filename="../source/d1gfx.cpp" line="5862"/>
+        <location filename="../source/d1gfx.cpp" line="6157"/>
+        <location filename="../source/d1gfx.cpp" line="6367"/>
+        <location filename="../source/d1gfx.cpp" line="6647"/>
+        <location filename="../source/d1gfx.cpp" line="6772"/>
+        <location filename="../source/d1gfx.cpp" line="7176"/>
+        <location filename="../source/d1gfx.cpp" line="7249"/>
+        <location filename="../source/d1gfx.cpp" line="7350"/>
+        <location filename="../source/d1gfx.cpp" line="7375"/>
         <source>Not enough frame groups in the graphics.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elég képkockacsoport a grafikán.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2298"/>
-        <location filename="../source/d1gfx.cpp" line="2306"/>
-        <location filename="../source/d1gfx.cpp" line="2812"/>
-        <location filename="../source/d1gfx.cpp" line="3912"/>
+        <location filename="../source/d1gfx.cpp" line="3094"/>
+        <location filename="../source/d1gfx.cpp" line="3102"/>
+        <location filename="../source/d1gfx.cpp" line="3519"/>
+        <location filename="../source/d1gfx.cpp" line="4619"/>
         <source>Not enough frame groups in &apos;%1&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elég képkockacsoport a(z) &apos;%1&apos; mappában.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="3875"/>
+        <location filename="../source/d1gfx.cpp" line="4582"/>
         <source>Unrecognized file-path. Expected *Fallgw.CL2</source>
-        <translation type="unfinished"></translation>
+        <translation>Ismeretlen fájlútvonal. Várt érték: *Fallgw.CL2</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="6875"/>
+        <location filename="../source/d1gfx.cpp" line="7582"/>
         <source>Invalid ObjCurs.CEL (Number of frames: %1. Expected at least 179.)</source>
-        <translation type="unfinished"></translation>
+        <translation>Érvénytelen ObjCurs.CEL (Képkockák száma: %1. A várt érték legalább 179.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="6890"/>
+        <location filename="../source/d1gfx.cpp" line="1278"/>
+        <location filename="../source/d1gfx.cpp" line="7597"/>
         <source>Failed loading CEL file: %1.</source>
         <translation>A(z) %1 CEL fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="6894"/>
-        <source>Invalid file: %1. (Number of frames: %2. Expected 61.)</source>
-        <translation type="unfinished"></translation>
+        <location filename="../source/d1gfx.cpp" line="1278"/>
+        <location filename="../source/d1gfx.cpp" line="1284"/>
+        <source>Error</source>
+        <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="6906"/>
+        <location filename="../source/d1gfx.cpp" line="7601"/>
+        <source>Invalid file: %1. (Number of frames: %2. Expected 61.)</source>
+        <translation>Érvénytelen fájl: %1. (Képkockák száma: %2. Várt érték: 61.)</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfx.cpp" line="7613"/>
         <source>File not found (%1).</source>
         <translation>Fájl nem található (%1).</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="6911"/>
+        <location filename="../source/d1gfx.cpp" line="7618"/>
         <source>Skipped CEL-merge for Hellfire (%1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Kihagyva a CEL-merge a Hellfire (%1) esetében.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="6911"/>
+        <location filename="../source/d1gfx.cpp" line="7618"/>
         <source>ObjCurs2.CEL not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Az ObjCurs2.CEL nem található.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="6911"/>
+        <location filename="../source/d1gfx.cpp" line="7618"/>
         <source>Frame-count is %1</source>
         <translation>Képkockák száma %1</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="7095"/>
+        <location filename="../source/d1gfx.cpp" line="7802"/>
         <source>Invalid SpelIcon.CEL (Number of frames: %1. Expected: 43 or 52.)</source>
-        <translation type="unfinished"></translation>
+        <translation>Érvénytelen SpelIcon.CEL (Képkockák száma: %1. Várt érték: 43 vagy 52.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="7117"/>
+        <location filename="../source/d1gfx.cpp" line="7824"/>
         <source>Framesize of the Item animation (%1) does not match. (%2:%3 expected %4:%5. Index %6.)</source>
-        <translation type="unfinished"></translation>
+        <translation>Az tárgy animációjának képkockamérete (%1) nem egyezik. (%2:%3 várt érték: %4:%5. Index: %6.)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="7605"/>
+        <location filename="../source/d1gfx.cpp" line="8323"/>
         <source>No change was necessary.</source>
         <translation>Nincs szükség módosításra.</translation>
     </message>
@@ -1720,42 +1783,42 @@
 <context>
     <name>D1GfxFrame</name>
     <message>
-        <location filename="../source/d1gfx.cpp" line="87"/>
+        <location filename="../source/d1gfx.cpp" line="89"/>
         <source>Unknown</source>
         <translation>Ismeretlen</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="89"/>
+        <location filename="../source/d1gfx.cpp" line="91"/>
         <source>Square</source>
         <translation>Négyzet</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="90"/>
+        <location filename="../source/d1gfx.cpp" line="92"/>
         <source>Transparent square</source>
         <translation>Átlátszó négyzet</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="91"/>
+        <location filename="../source/d1gfx.cpp" line="93"/>
         <source>Left Triangle</source>
         <translation>Bal Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="92"/>
+        <location filename="../source/d1gfx.cpp" line="94"/>
         <source>Right Triangle</source>
         <translation>Jobb Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="93"/>
+        <location filename="../source/d1gfx.cpp" line="95"/>
         <source>Left Trapezoid</source>
         <translation>Bal Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="94"/>
+        <location filename="../source/d1gfx.cpp" line="96"/>
         <source>Right Trapezoid</source>
         <translation>Jobb Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="95"/>
+        <location filename="../source/d1gfx.cpp" line="97"/>
         <source>Empty</source>
         <translation>Üres</translation>
     </message>
@@ -1808,27 +1871,27 @@
     <message>
         <location filename="../source/d1min.cpp" line="238"/>
         <source>The type of frame %1 is %2 (was %3)</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 keret típusa %2 (korábban %3)</translation>
     </message>
     <message>
         <location filename="../source/d1min.cpp" line="245"/>
         <source>Subtile-width is %1 (was %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>A mező szélessége %1 (korábban %2)</translation>
     </message>
     <message>
         <location filename="../source/d1min.cpp" line="251"/>
         <source>Subtile-height is %1 (was %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>A mező magassága %1 (korábban %2)</translation>
     </message>
     <message>
         <location filename="../source/d1min.cpp" line="258"/>
         <source>Number of subtiles is %1 (was %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>A mezők száma %1 (korábban %2)</translation>
     </message>
     <message>
         <location filename="../source/d1min.cpp" line="269"/>
         <source>The micro :%1: of subtile %2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %2 mező mikro :%1: értéke %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1min.cpp" line="459"/>
@@ -1862,22 +1925,22 @@
     <message>
         <location filename="../source/d1sla.cpp" line="202"/>
         <source>The number of tiles is %1 (was %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>A lapok száma %1 (korábban %2)</translation>
     </message>
     <message>
         <location filename="../source/d1sla.cpp" line="210"/>
         <source>The collision settings of tile %1 is [%2:%3:%4] (was [%5:%6:%7])</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lap ütközési beállításai: [%2:%3:%4] (korábban: [%5:%6:%7])</translation>
     </message>
     <message>
         <location filename="../source/d1sla.cpp" line="218"/>
         <source>The light radius of tile %1 is %2 (was %3)</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lap világos sugara %2 (korábban %3)</translation>
     </message>
     <message>
         <location filename="../source/d1sla.cpp" line="224"/>
         <source>The trap settings of tile %1 is &apos;%2&apos; (was &apos;%3&apos;)</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lap átfedési beállításai &apos;%2&apos; (korábban &apos;%3&apos; volt).</translation>
     </message>
     <message>
         <location filename="../source/d1sla.cpp" line="225"/>
@@ -1906,22 +1969,22 @@
     <message>
         <location filename="../source/d1sla.cpp" line="231"/>
         <source>The special cell of tile %1 is %2 (was %3)</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lap speciális cellája %2 (korábban %3)</translation>
     </message>
     <message>
         <location filename="../source/d1sla.cpp" line="237"/>
         <source>The render settings of tile %1 is [%2 left %3:%4:%5 right %6:%7:%8] (was [%9 left %10:%11:%12 right %13:%14:%15])</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lap nyújtási beállításai: [%2 balra %3:%4:%5 jobbra %6:%7:%8] (korábban: [%9 balra %10:%11:%12 jobbra %13:%14:%15])</translation>
     </message>
     <message>
         <location filename="../source/d1sla.cpp" line="248"/>
         <source>The map type of tile %1 is &apos;%2&apos; (was &apos;%3&apos;)</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lap térképtípusa &apos;%2&apos; (korábban &apos;%3&apos; volt).</translation>
     </message>
     <message>
         <location filename="../source/d1sla.cpp" line="254"/>
         <source>The map walls of tile %1 is [%2:%3:%4:%5] (was [%6:%7:%8:%9])</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 laphoz tartozó térképfalak mérete [%2:%3:%4:%5] (korábban [%6:%7:%8:%9])</translation>
     </message>
 </context>
 <context>
@@ -1949,7 +2012,7 @@
     <message>
         <location filename="../source/d1tbl.cpp" line="155"/>
         <source>Ray-tracing with offset is not supported.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az eltolásos sugárkövetés nem támogatott.</translation>
     </message>
 </context>
 <context>
@@ -1982,12 +2045,12 @@
     <message>
         <location filename="../source/d1til.cpp" line="129"/>
         <source>The number of tiles is %1 (was %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>A lapok száma %1 (korábban %2)</translation>
     </message>
     <message>
         <location filename="../source/d1til.cpp" line="146"/>
         <source>The subtile :%1: of tile %2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2 laphoz tartozó :%1: mező jelenlegi állapota %3 (korábban %4)</translation>
     </message>
 </context>
 <context>
@@ -2020,17 +2083,17 @@
     <message>
         <location filename="../source/d1tla.cpp" line="142"/>
         <source>The number of tiles is %1 (was %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>A lapok száma %1 (korábban %2)</translation>
     </message>
     <message>
         <location filename="../source/d1tla.cpp" line="151"/>
         <source>The room propagation of tile %1 is [%2:%3:%4:%5] (was [%6:%7:%8:%9])</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lap terjedési iránya [%2:%3:%4:%5] (korábban [%6:%7:%8:%9])</translation>
     </message>
     <message>
         <location filename="../source/d1tla.cpp" line="156"/>
         <source>The shadow flags of tile %1 is [%2:%3:%4:%5] (was [%6:%7:%8:%9])</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lap árnyékbeállításai [%2:%3:%4:%5] (korábban [%6:%7:%8:%9])</translation>
     </message>
 </context>
 <context>
@@ -2163,27 +2226,27 @@
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="146"/>
         <source>Skeleton King</source>
-        <translation type="unfinished"></translation>
+        <translation>Csontváz király</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="151"/>
         <source>Chamber of Bone</source>
-        <translation type="unfinished"></translation>
+        <translation>Csontkamra</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="156"/>
         <source>Poisoned Water</source>
-        <translation type="unfinished"></translation>
+        <translation>Mérgezett víz</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="161"/>
         <source>Vile Betrayer</source>
-        <translation type="unfinished"></translation>
+        <translation>Aljas Áruló</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="166"/>
         <source>Custom Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyéni szint</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="183"/>
@@ -2228,13 +2291,13 @@
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="249"/>
         <source>Nightmare</source>
-        <translation type="unfinished"></translation>
+        <translation>Lidércnyomás</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="203"/>
         <location filename="../source/dungeongeneratedialog.ui" line="254"/>
         <source>Hell</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokol</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="262"/>
@@ -2254,7 +2317,7 @@
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="313"/>
         <source>A hellfire game</source>
-        <translation>Hellfire mód</translation>
+        <translation>Hellfire játék</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="303"/>
@@ -2264,17 +2327,17 @@
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="6"/>
         <source>Generate Dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>A Kazamata létrehozása</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="320"/>
         <source>Seed:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mag:</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="338"/>
         <source>Quest:</source>
-        <translation type="unfinished"></translation>
+        <translation>Küldetés:</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="356"/>
@@ -2284,22 +2347,22 @@
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="366"/>
         <source>Extras:</source>
-        <translation type="unfinished"></translation>
+        <translation>Extrák:</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="378"/>
         <source>Number of extra maps to generate</source>
-        <translation type="unfinished"></translation>
+        <translation>A generálandó további térképek száma</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="385"/>
         <source>Rand. Quests:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rand. Küldetések:</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="395"/>
         <source>Randomize the quests on the extra maps</source>
-        <translation type="unfinished"></translation>
+        <translation>Küldetések véletlenszerű hozzáadása az extra térképeken</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="404"/>
@@ -2314,12 +2377,12 @@
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="421"/>
         <source>Patch:</source>
-        <translation type="unfinished"></translation>
+        <translation>Javítás:</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="428"/>
         <source>Patch the DUN files</source>
-        <translation type="unfinished"></translation>
+        <translation>Javítsa ki a DUN fájlokat</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.ui" line="454"/>
@@ -2336,12 +2399,12 @@
     <message>
         <location filename="../source/dungeongeneratedialog.cpp" line="18"/>
         <source>Entrance</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejárat</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.cpp" line="19"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Kijárat</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.cpp" line="20"/>
@@ -2351,7 +2414,7 @@
     <message>
         <location filename="../source/dungeongeneratedialog.cpp" line="21"/>
         <source>Return</source>
-        <translation type="unfinished"></translation>
+        <translation>Visszatérés</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.cpp" line="128"/>
@@ -2362,12 +2425,12 @@
     <message>
         <location filename="../source/dungeongeneratedialog.cpp" line="128"/>
         <source>Failed to parse the seed to a 32-bit integer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült a magot 32 bites egész számmá alakítani.</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.cpp" line="134"/>
         <source>Failed to parse the quest-seed to a 32-bit integer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült a küldetés-magot 32 bites egész számmá alakítani.</translation>
     </message>
     <message>
         <location filename="../source/dungeongeneratedialog.cpp" line="144"/>
@@ -2417,7 +2480,7 @@
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="106"/>
         <source>Base TRN:</source>
-        <translation type="unfinished"></translation>
+        <translation>Alap TRN:</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="127"/>
@@ -2433,7 +2496,7 @@
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="143"/>
         <source>Unique monster</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi szörnyeteg</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.ui" line="185"/>
@@ -2448,17 +2511,17 @@
     <message>
         <location filename="../source/dungeonresourcedialog.cpp" line="39"/>
         <source>Object parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>Objektum paraméterei</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.cpp" line="42"/>
         <source>Monster parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>Szörny paraméterei</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.cpp" line="45"/>
         <source>Item parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>Tárgy paraméterei</translation>
     </message>
     <message>
         <location filename="../source/dungeonresourcedialog.cpp" line="81"/>
@@ -2532,17 +2595,17 @@
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="41"/>
         <source>Monster protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Szörnyvédelem</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="46"/>
         <source>Object protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Objektumvédelem</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="51"/>
         <source>Room</source>
-        <translation type="unfinished"></translation>
+        <translation>Szoba</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="56"/>
@@ -2568,17 +2631,17 @@
         <location filename="../source/dungeonsearchdialog.ui" line="108"/>
         <location filename="../source/dungeonsearchdialog.ui" line="158"/>
         <source>Index of a special monster</source>
-        <translation type="unfinished"></translation>
+        <translation>Egy különleges szörny indexe</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="124"/>
         <source>Replace:</source>
-        <translation type="unfinished"></translation>
+        <translation>Csere:</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="174"/>
         <source>Area:</source>
-        <translation type="unfinished"></translation>
+        <translation>Terület:</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="201"/>
@@ -2593,22 +2656,22 @@
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="269"/>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Szélesség</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="298"/>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Magasság</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="317"/>
         <source>Scroll:</source>
-        <translation type="unfinished"></translation>
+        <translation>Görgetés:</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="324"/>
         <source>Scroll to the first match</source>
-        <translation type="unfinished"></translation>
+        <translation>Görgessen az első találathoz</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.ui" line="350"/>
@@ -2633,57 +2696,57 @@
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="99"/>
         <source>Searching for %1 with index %2%3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 keresése %2%3 indexszel</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="101"/>
         <source>Searching for Undefined Tiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem definiált lapok keresése</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="103"/>
         <source>Searching for Undefined Subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem definiált mezők keresése</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="106"/>
         <source> starting from %1:%2</source>
-        <translation type="unfinished"></translation>
+        <translation> %1:%2-től kezdve</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="108"/>
         <source>. The search is limited to %1 width and %2 height</source>
-        <translation type="unfinished"></translation>
+        <translation>. A keresés a következőre korlátozódik: %1 szélesség és %2 magasság</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="155"/>
         <source>Not found.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem található.</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="158"/>
         <source>Found at:</source>
-        <translation type="unfinished"></translation>
+        <translation>Itt található:</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="163"/>
         <source>Found at</source>
-        <translation type="unfinished"></translation>
+        <translation>Talált</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="181"/>
         <source>Replaced with %1%2 at %3:%4.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1%2-re cserélve a következő helyen: %3:%4.</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="190"/>
         <source>Replaced with %1%2.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1%2-vel helyettesítve.</translation>
     </message>
     <message>
         <location filename="../source/dungeonsearchdialog.cpp" line="203"/>
         <source>Reached the end of the dungeon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elértem a kazamata végét.</translation>
     </message>
 </context>
 <context>
@@ -2691,62 +2754,62 @@
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="84"/>
         <source>&lt;b&gt;Status:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Állapot:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="94"/>
         <source>&lt;b&gt;AI-Int:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;AI-Int:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="105"/>
         <source>&lt;b&gt;Damage:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Kár:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="115"/>
         <source>&lt;b&gt;To Hit:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Ütés:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="126"/>
         <source>&lt;b&gt;Damage2:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Kár2:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="136"/>
         <source>&lt;b&gt;To Hit2:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Ütés2:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="147"/>
         <source>&lt;b&gt;Magic Hit:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Mágikus találat:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="159"/>
         <source>&lt;b&gt;Hit Points:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Életpontok:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="169"/>
         <source>&lt;b&gt;Armor:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Páncél:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="179"/>
         <source>&lt;b&gt;Evasion:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Kitérés:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="190"/>
         <source>&lt;b&gt;Resists:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Ellenáll:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="352"/>
         <source>&lt;b&gt;Flags:&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Jelzők:&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="364"/>
@@ -2756,42 +2819,42 @@
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="374"/>
         <source>Steals life</source>
-        <translation type="unfinished"></translation>
+        <translation>Életet lop</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="384"/>
         <source>Opens doors</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajtókat nyit</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="394"/>
         <source>Searches for enemy</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellenséget keres</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="404"/>
         <source>Bleeds</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérzik</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="414"/>
         <source>Knocks back</source>
-        <translation type="unfinished"></translation>
+        <translation>Visszatol</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="424"/>
         <source>Immune to stone curse</source>
-        <translation type="unfinished"></translation>
+        <translation>Immunis a kőátokkal szemben</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="434"/>
         <source>Starts in a special mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Speciális módban indul</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="444"/>
         <source>No loot</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs zsákmány</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.ui" line="461"/>
@@ -2811,7 +2874,7 @@
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="152"/>
         <source>(Level %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>(Szint %1)</translation>
     </message>
 </context>
 <context>
@@ -2976,7 +3039,7 @@
     <message>
         <location filename="../source/exportdialog.cpp" line="725"/>
         <source>Exporting audio...</source>
-        <translation type="unfinished"></translation>
+        <translation>Hang exportálása...</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="809"/>
@@ -2990,64 +3053,217 @@
     </message>
 </context>
 <context>
+    <name>GfxComponentDialog</name>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="6"/>
+        <source>Graphics Component</source>
+        <translation>Grafikai komponens</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="35"/>
+        <source>Groups:</source>
+        <translation>Csoportok:</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="55"/>
+        <source>First group of the graphics</source>
+        <translation>A grafikák első csoportja</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="71"/>
+        <source>Previous group of the graphics</source>
+        <translation>A grafikák előző csoportja</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="84"/>
+        <source>Current group of the graphics</source>
+        <translation>A grafikák jelenlegi csoportja</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="113"/>
+        <source>Number of groups in the graphics</source>
+        <translation>Csoportok száma a grafikonon</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="132"/>
+        <source>Next group of the graphics</source>
+        <translation>A grafikák következő csoportja</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="148"/>
+        <source>Last group of the graphics</source>
+        <translation>A grafikák utolsó csoportja</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="161"/>
+        <source>Frame:</source>
+        <translation>Képkocka:</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="168"/>
+        <source>Handle frames in groups</source>
+        <translation>Képkockák kezelése csoportokban</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="181"/>
+        <source>First frame of the graphics</source>
+        <translation>A grafika első képkockája</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="197"/>
+        <source>Previous frame of the graphics</source>
+        <translation>A grafika előző képkockája</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="210"/>
+        <source>Current frame of the graphics</source>
+        <translation>A grafika aktuális képkockája</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="239"/>
+        <source>Number of frames in the graphics</source>
+        <translation>Képkockák száma a grafikában</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="258"/>
+        <source>Next frame of the graphics</source>
+        <translation>A grafika következő képkockája</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="274"/>
+        <source>Last frame of the graphics</source>
+        <translation>A grafika utolsó képkockája</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="287"/>
+        <source>Name:</source>
+        <translation>Név:</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="297"/>
+        <source>Label of the graphics component</source>
+        <translation>A grafikus komponens címkéje</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="313"/>
+        <source>Z-Order:</source>
+        <translation>Z-sorrend:</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="338"/>
+        <source>Z-Order of the graphics component</source>
+        <translation>A grafikus komponens Z-sorrendje</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="376"/>
+        <source>Offset:</source>
+        <translation>Eltolás:</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="388"/>
+        <source>X-Offset of the graphics component</source>
+        <translation>A grafikus komponens X-eltolása</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="417"/>
+        <source>Y-Offset of the graphics component</source>
+        <translation>A grafikus komponens Y-eltolása</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="439"/>
+        <source>Ref:</source>
+        <translation>Ref:</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="454"/>
+        <source>Previous frame of the graphics component</source>
+        <translation>A grafikus komponens előző képkockája</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="467"/>
+        <source>Frame of the graphics component</source>
+        <translation>A grafikus komponens kerete</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="499"/>
+        <source>Number of frames in the graphics component</source>
+        <translation>Képkockák száma a grafikus komponensben</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="518"/>
+        <source>Next frame of the graphics component</source>
+        <translation>A grafikus komponens következő képkockája</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="597"/>
+        <source>Submit</source>
+        <translation>Elfogad</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxcomponentdialog.ui" line="604"/>
+        <source>Cancel</source>
+        <translation>Mégse</translation>
+    </message>
+</context>
+<context>
     <name>GfxsetView</name>
     <message>
         <location filename="../source/gfxsetview.ui" line="288"/>
         <location filename="../source/gfxsetview.ui" line="372"/>
         <location filename="../source/gfxsetview.ui" line="392"/>
         <source>Stand</source>
-        <translation type="unfinished"></translation>
+        <translation>Állás</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="301"/>
         <location filename="../source/gfxsetview.ui" line="438"/>
         <source>Attack</source>
-        <translation type="unfinished"></translation>
+        <translation>Támadás</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="314"/>
         <location filename="../source/gfxsetview.ui" line="405"/>
         <location filename="../source/gfxsetview.ui" line="425"/>
         <source>Walk</source>
-        <translation type="unfinished"></translation>
+        <translation>Járás</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="327"/>
         <source>Spec</source>
-        <translation type="unfinished"></translation>
+        <translation>Spec</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="340"/>
         <location filename="../source/gfxsetview.ui" line="510"/>
         <source>Hit</source>
-        <translation type="unfinished"></translation>
+        <translation>Találat</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="353"/>
         <location filename="../source/gfxsetview.ui" line="523"/>
         <source>Death</source>
-        <translation type="unfinished"></translation>
+        <translation>Halál</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="458"/>
         <source>Block</source>
-        <translation type="unfinished"></translation>
+        <translation>Lezár</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="471"/>
         <source>Fire</source>
-        <translation type="unfinished"></translation>
+        <translation>Tűz</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="484"/>
-        <location filename="../source/gfxsetview.cpp" line="215"/>
+        <location filename="../source/gfxsetview.cpp" line="224"/>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Fény</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="497"/>
         <source>Magic</source>
-        <translation type="unfinished"></translation>
+        <translation>Mágikus</translation>
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="544"/>
@@ -3056,7 +3272,7 @@
     </message>
     <message>
         <location filename="../source/gfxsetview.ui" line="594"/>
-        <location filename="../source/gfxsetview.cpp" line="1515"/>
+        <location filename="../source/gfxsetview.cpp" line="1519"/>
         <source>Play</source>
         <translation>Lejátszás</translation>
     </message>
@@ -3101,373 +3317,428 @@
         <translation>(L6) Fészek</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="680"/>
+        <location filename="../source/gfxsetview.ui" line="701"/>
         <source>Groups:</source>
         <translation>Csoportok:</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="700"/>
+        <location filename="../source/gfxsetview.ui" line="721"/>
         <source>First group</source>
         <translation>Első csoport</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="716"/>
+        <location filename="../source/gfxsetview.ui" line="737"/>
         <source>Previous group</source>
         <translation>Előző csoport</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="729"/>
+        <location filename="../source/gfxsetview.ui" line="750"/>
         <source>Current group</source>
         <translation>Aktuális csoport</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="758"/>
+        <location filename="../source/gfxsetview.ui" line="779"/>
         <source>Number of groups</source>
         <translation>Csoportok száma</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="777"/>
+        <location filename="../source/gfxsetview.ui" line="798"/>
         <source>Next group</source>
         <translation>Következő csoport</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="793"/>
+        <location filename="../source/gfxsetview.ui" line="814"/>
         <source>Last group</source>
         <translation>Utolsó csoport</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="825"/>
+        <location filename="../source/gfxsetview.ui" line="846"/>
         <source>Show grid over the graphics</source>
         <translation>Rácsháló megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="835"/>
+        <location filename="../source/gfxsetview.ui" line="856"/>
         <source>Asset multiplier</source>
-        <translation type="unfinished"></translation>
+        <translation>Szorzótényező</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="850"/>
+        <location filename="../source/gfxsetview.ui" line="871"/>
         <source>Frames:</source>
         <translation>Képkockák:</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="857"/>
+        <location filename="../source/gfxsetview.ui" line="881"/>
+        <source>Show the components of the graphics</source>
+        <translation>Mutassa be a grafika összetevőit</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.ui" line="888"/>
         <source>Handle frames in groups</source>
         <translation>Képkockák kezelése csoportokban</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="877"/>
+        <location filename="../source/gfxsetview.ui" line="908"/>
         <source>First frame</source>
         <translation>Első képkocka</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="893"/>
+        <location filename="../source/gfxsetview.ui" line="924"/>
         <source>Previous frame</source>
         <translation>Előző képkocka</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="906"/>
+        <location filename="../source/gfxsetview.ui" line="937"/>
         <source>Current frame</source>
         <translation>Aktuális képkocka</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="935"/>
+        <location filename="../source/gfxsetview.ui" line="966"/>
         <source>Number of frames</source>
         <translation>Képkockák száma</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="954"/>
+        <location filename="../source/gfxsetview.ui" line="985"/>
         <source>Next frame</source>
         <translation>Következő képkocka</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="970"/>
+        <location filename="../source/gfxsetview.ui" line="1001"/>
         <source>Last frame</source>
         <translation>Utolsó képkocka</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="998"/>
+        <location filename="../source/gfxsetview.ui" line="1029"/>
         <source>Current frame width</source>
         <translation>Aktuális képkocka szélessége</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="1027"/>
+        <location filename="../source/gfxsetview.ui" line="1058"/>
         <source>Current frame height</source>
         <translation>Aktuális képkocka magassága</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.ui" line="1047"/>
+        <location filename="../source/gfxsetview.ui" line="1078"/>
         <source>Frames are stored with clipping information</source>
-        <translation type="unfinished"></translation>
+        <translation>A képkockák vágási információkkal együtt tárolódnak</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="34"/>
+        <location filename="../source/gfxsetview.cpp" line="36"/>
+        <source>New Component</source>
+        <translation>Új komponens</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="37"/>
+        <source>Edit Component</source>
+        <translation>Összetevő szerkesztése</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="38"/>
+        <source>Reload Component Graphics</source>
+        <translation>Töltse be újra a komponens grafikát</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="39"/>
+        <source>Remove Component</source>
+        <translation>Távolítsa el a komponenst</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="42"/>
         <source>Start drawing</source>
         <translation>Rajzolás kezdése</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="37"/>
+        <location filename="../source/gfxsetview.cpp" line="45"/>
         <source>Replace graphics</source>
-        <translation></translation>
+        <translation>Cserélje ki a grafikát</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="197"/>
+        <location filename="../source/gfxsetview.cpp" line="206"/>
         <source>Warrior</source>
         <translation>Harcos</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="200"/>
+        <location filename="../source/gfxsetview.cpp" line="209"/>
         <source>Rogue</source>
         <translation>Vadász</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="203"/>
+        <location filename="../source/gfxsetview.cpp" line="212"/>
         <source>Mage</source>
         <translation>Mágus</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="206"/>
+        <location filename="../source/gfxsetview.cpp" line="215"/>
         <source>Monk</source>
         <translation>Szerzetes</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="209"/>
-        <location filename="../source/gfxsetview.cpp" line="224"/>
-        <location filename="../source/gfxsetview.cpp" line="257"/>
+        <location filename="../source/gfxsetview.cpp" line="218"/>
+        <location filename="../source/gfxsetview.cpp" line="233"/>
+        <location filename="../source/gfxsetview.cpp" line="266"/>
         <source>N/A</source>
         <translation>N/A</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="218"/>
+        <location filename="../source/gfxsetview.cpp" line="227"/>
         <source>Medium</source>
         <translation>Médium</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="221"/>
+        <location filename="../source/gfxsetview.cpp" line="230"/>
         <source>Heavy</source>
         <translation>Nehéz</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="230"/>
+        <location filename="../source/gfxsetview.cpp" line="239"/>
         <source>Unarmed</source>
         <translation>Fegyvertelen</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="233"/>
+        <location filename="../source/gfxsetview.cpp" line="242"/>
         <source>Shield</source>
         <translation>Pajzs</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="236"/>
+        <location filename="../source/gfxsetview.cpp" line="245"/>
         <source>Sword</source>
         <translation>Kard</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="239"/>
+        <location filename="../source/gfxsetview.cpp" line="248"/>
         <source>Sword+</source>
         <translation>Kard+</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="242"/>
+        <location filename="../source/gfxsetview.cpp" line="251"/>
         <source>Bow</source>
-        <translation type="unfinished"></translation>
+        <translation>Íj</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="245"/>
+        <location filename="../source/gfxsetview.cpp" line="254"/>
         <source>Axe</source>
         <translation>Balta</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="248"/>
+        <location filename="../source/gfxsetview.cpp" line="257"/>
         <source>Blunt</source>
-        <translation type="unfinished"></translation>
+        <translation>Tompa</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="251"/>
+        <location filename="../source/gfxsetview.cpp" line="260"/>
         <source>Blunt+</source>
-        <translation type="unfinished"></translation>
+        <translation>Tompa+</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="254"/>
+        <location filename="../source/gfxsetview.cpp" line="263"/>
         <source>Staff</source>
         <translation>Bot</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="419"/>
-        <location filename="../source/gfxsetview.cpp" line="459"/>
-        <location filename="../source/gfxsetview.cpp" line="509"/>
+        <location filename="../source/gfxsetview.cpp" line="470"/>
+        <location filename="../source/gfxsetview.cpp" line="510"/>
+        <location filename="../source/gfxsetview.cpp" line="560"/>
         <source>Failed to load file: %1.</source>
         <translation>A(z) %1 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="433"/>
-        <location filename="../source/gfxsetview.cpp" line="479"/>
-        <location filename="../source/gfxsetview.cpp" line="526"/>
+        <location filename="../source/gfxsetview.cpp" line="484"/>
+        <location filename="../source/gfxsetview.cpp" line="530"/>
+        <location filename="../source/gfxsetview.cpp" line="577"/>
         <source>Failed to read file: %1.</source>
         <translation>A(z) %1 fájl olvasása sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="607"/>
-        <location filename="../source/gfxsetview.cpp" line="647"/>
+        <location filename="../source/gfxsetview.cpp" line="676"/>
+        <location filename="../source/gfxsetview.cpp" line="716"/>
         <source>Checking frames...</source>
         <translation>Képkockák vizsgálata...</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="607"/>
-        <location filename="../source/gfxsetview.cpp" line="647"/>
+        <location filename="../source/gfxsetview.cpp" line="676"/>
+        <location filename="../source/gfxsetview.cpp" line="716"/>
         <source>Checking graphics...</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafika ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="613"/>
+        <location filename="../source/gfxsetview.cpp" line="682"/>
         <source>Frames with transparent pixels:</source>
         <translation>Képkockák átlátszó pixelekkel:</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="615"/>
+        <location filename="../source/gfxsetview.cpp" line="684"/>
         <source>Frames with pixels in the [%1..%2] color range:</source>
         <translation>Képkockák melyek [%1..%2] színeket tartalmaznak:</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/gfxsetview.cpp" line="627"/>
-        <location filename="../source/gfxsetview.cpp" line="669"/>
+        <location filename="../source/gfxsetview.cpp" line="696"/>
+        <location filename="../source/gfxsetview.cpp" line="738"/>
         <source>Frame %1 of %2 has %n affected pixels.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation >
+            <numerusform>A %2-ből %1 képkocka %n érintett pixelt tartalmaz.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="635"/>
+        <location filename="../source/gfxsetview.cpp" line="704"/>
         <source>None of the frames have transparent pixel.</source>
         <translation>Egyik képkockában sincs átlátszó pixel.</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="637"/>
+        <location filename="../source/gfxsetview.cpp" line="706"/>
         <source>None of the frames are using the colors [%1..%2].</source>
         <translation>Egyik képkockában sincs a [%1..%2] színekből.</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="658"/>
+        <location filename="../source/gfxsetview.cpp" line="727"/>
         <source>Active frames (using &apos;%1&apos; playback mode):</source>
         <translation>Aktív képkockák (&apos;%1&apos; lejátszási módban):</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="676"/>
+        <location filename="../source/gfxsetview.cpp" line="745"/>
         <source>None of the frames are active in &apos;%1&apos; playback mode.</source>
         <translation>Egyik mezőre sincs hatással a &apos;%1&apos; lejátszási mód.</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="680"/>
+        <location filename="../source/gfxsetview.cpp" line="749"/>
         <source>Colors are not affected if the playback mode is &apos;%1&apos;.</source>
         <translation>A színekre nincs hatással a &apos;%1&apos; lejátszási mód.</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="692"/>
+        <location filename="../source/gfxsetview.cpp" line="761"/>
         <source>Inconsistencies in the graphics of the gfx-set:</source>
-        <translation type="unfinished"></translation>
+        <translation>A gfx-set grafikájának ellentmondásai:</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="698"/>
+        <location filename="../source/gfxsetview.cpp" line="767"/>
         <source>No inconsistency detected in the current gfx.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem észleltem inkonzisztenciát a jelenlegi grafikus effektekben.</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="698"/>
+        <location filename="../source/gfxsetview.cpp" line="767"/>
         <source>No inconsistency detected in the gfx-set.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem észleltem inkonzisztenciát a gfx-setben.</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="791"/>
+        <location filename="../source/gfxsetview.cpp" line="788"/>
         <source>Frame %1 of %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1. képkocka / %2</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="792"/>
+        <location filename="../source/gfxsetview.cpp" line="789"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="792"/>
+        <location filename="../source/gfxsetview.cpp" line="789"/>
         <source>Pixels with non-background colors are going to be eliminated (At least %1 is affected). Are you sure you want to proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>A nem háttérszínekkel rendelkező képpontok eltávolításra kerülnek (legalább %1 érintett). Biztosan folytatja?</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="798"/>
+        <location filename="../source/gfxsetview.cpp" line="795"/>
         <source>Resizing...</source>
         <translation>Átméretezés...</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1063"/>
+        <location filename="../source/gfxsetview.cpp" line="981"/>
         <source>Add Layer</source>
         <translation>Réteg hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1064"/>
+        <location filename="../source/gfxsetview.cpp" line="982"/>
         <source>Add the content of an image to the current frame</source>
         <translation>Kép hozzáadása az aktuális képkockához</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1069"/>
-        <source>Insert Frame</source>
-        <translation>Képkocka beillesztése</translation>
+        <location filename="../source/gfxsetview.cpp" line="989"/>
+        <source>Insert</source>
+        <translation>Beszúrás</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1070"/>
+        <location filename="../source/gfxsetview.cpp" line="995"/>
+        <source>Duplicate</source>
+        <translation>Másolat</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1001"/>
+        <source>Append</source>
+        <translation>Mellékel</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1007"/>
+        <source>Replace</source>
+        <translation>Csere</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1014"/>
+        <source>Del</source>
+        <translation>Del</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="990"/>
         <source>Add new frames before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1075"/>
-        <source>Duplicate Frame</source>
-        <translation>Képkocka másolata</translation>
-    </message>
-    <message>
-        <location filename="../source/gfxsetview.cpp" line="1076"/>
+        <location filename="../source/gfxsetview.cpp" line="996"/>
         <source>Duplicate the current frame</source>
         <translation>Az aktuális képkocka másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1081"/>
-        <source>Append Frame</source>
-        <translation>Képkocka hozzáadása</translation>
-    </message>
-    <message>
-        <location filename="../source/gfxsetview.cpp" line="1082"/>
+        <location filename="../source/gfxsetview.cpp" line="1002"/>
         <source>Append new frames at the end</source>
         <translation>Képkockák hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1087"/>
-        <source>Replace Frame</source>
-        <translation>Képkocka kicserélése</translation>
-    </message>
-    <message>
-        <location filename="../source/gfxsetview.cpp" line="1088"/>
+        <location filename="../source/gfxsetview.cpp" line="1008"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1094"/>
-        <source>Del Frame</source>
-        <translation>Képkocka törlése</translation>
-    </message>
-    <message>
-        <location filename="../source/gfxsetview.cpp" line="1095"/>
+        <location filename="../source/gfxsetview.cpp" line="1015"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1283"/>
+        <location filename="../source/gfxsetview.cpp" line="1023"/>
+        <source>Horizontal Flip</source>
+        <translation>Vízszintes átfedés</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1024"/>
+        <source>Flip the current frame horizontally</source>
+        <translation>Az aktuális képkocka vízszintes tükrözése</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1030"/>
+        <source>Vertical Flip</source>
+        <translation>Függőleges tükrözés</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1031"/>
+        <source>Flip the current frame vertically</source>
+        <translation>Aktuális képkocka függőleges tükrözése</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1219"/>
         <source>Load Graphics</source>
         <translation>Grafika betöltése</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1283"/>
+        <location filename="../source/gfxsetview.cpp" line="1219"/>
         <source>CL2 Files (*.cl2 *.CL2)</source>
         <translation>CL2 Fájlok (*.cl2 *.CL2)</translation>
     </message>
     <message>
-        <location filename="../source/gfxsetview.cpp" line="1527"/>
+        <location filename="../source/gfxsetview.cpp" line="1238"/>
+        <source>Select Graphics</source>
+        <translation>Grafika</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1238"/>
+        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
+        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2)</translation>
+    </message>
+    <message>
+        <location filename="../source/gfxsetview.cpp" line="1531"/>
         <source>Stop</source>
         <translation>Megállítás</translation>
     </message>
@@ -3573,7 +3844,7 @@
     <message>
         <location filename="../source/importdialog.ui" line="262"/>
         <source>Palette Index</source>
-        <translation type="unfinished"></translation>
+        <translation>Paletta index</translation>
     </message>
     <message>
         <location filename="../source/importdialog.ui" line="291"/>
@@ -3583,7 +3854,7 @@
     <message>
         <location filename="../source/importdialog.cpp" line="76"/>
         <source>Select Dungeon or Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Válasszon kazamatát vagy grafikát</translation>
     </message>
     <message>
         <location filename="../source/importdialog.cpp" line="77"/>
@@ -3615,423 +3886,428 @@
     <name>LevelCelView</name>
     <message>
         <location filename="../source/levelcelview.ui" line="62"/>
-        <location filename="../source/levelcelview.ui" line="728"/>
+        <location filename="../source/levelcelview.ui" line="739"/>
         <source>Zoom:</source>
         <translation>Nagyítás:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="4108"/>
-        <location filename="../source/levelcelview.cpp" line="4109"/>
+        <location filename="../source/levelcelview.cpp" line="4215"/>
+        <location filename="../source/levelcelview.cpp" line="4216"/>
         <source>Stop</source>
         <translation>Megállítás</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="112"/>
-        <location filename="../source/levelcelview.ui" line="778"/>
-        <location filename="../source/levelcelview.cpp" line="4092"/>
-        <location filename="../source/levelcelview.cpp" line="4093"/>
+        <location filename="../source/levelcelview.ui" line="789"/>
+        <location filename="../source/levelcelview.cpp" line="4199"/>
+        <location filename="../source/levelcelview.cpp" line="4200"/>
         <source>Play</source>
         <translation>Lejátszás</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="145"/>
-        <location filename="../source/levelcelview.ui" line="811"/>
-        <location filename="../source/levelcelview.ui" line="876"/>
+        <location filename="../source/levelcelview.ui" line="822"/>
+        <location filename="../source/levelcelview.ui" line="887"/>
         <source>(L3) Caves</source>
         <translation>(L3) Barlangok</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="150"/>
-        <location filename="../source/levelcelview.ui" line="816"/>
-        <location filename="../source/levelcelview.ui" line="881"/>
+        <location filename="../source/levelcelview.ui" line="827"/>
+        <location filename="../source/levelcelview.ui" line="892"/>
         <source>(L4) Hell</source>
         <translation>(L4) Pokol</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="155"/>
-        <location filename="../source/levelcelview.ui" line="821"/>
-        <location filename="../source/levelcelview.ui" line="886"/>
+        <location filename="../source/levelcelview.ui" line="832"/>
+        <location filename="../source/levelcelview.ui" line="897"/>
         <source>(L5) Crypt</source>
         <translation>(L5) Kripta</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="160"/>
-        <location filename="../source/levelcelview.ui" line="826"/>
-        <location filename="../source/levelcelview.ui" line="891"/>
+        <location filename="../source/levelcelview.ui" line="837"/>
+        <location filename="../source/levelcelview.ui" line="902"/>
         <source>(L6) Nest</source>
         <translation>(L6) Fészek</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="185"/>
+        <location filename="../source/levelcelview.ui" line="196"/>
         <source>Tiles:</source>
         <translation>Lapok:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="212"/>
+        <location filename="../source/levelcelview.ui" line="223"/>
         <source>First tile</source>
         <translation>Első lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="394"/>
+        <location filename="../source/levelcelview.ui" line="405"/>
         <source>First subtile</source>
         <translation>Első mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="925"/>
+        <location filename="../source/levelcelview.ui" line="936"/>
         <source>Move up</source>
         <translation>Mozgás felfele</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="851"/>
+        <location filename="../source/levelcelview.ui" line="862"/>
         <source>Dungeon:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata:</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="122"/>
-        <location filename="../source/levelcelview.ui" line="788"/>
+        <location filename="../source/levelcelview.ui" line="799"/>
         <source>Current playback delay (microseconds)</source>
         <translation>Aktuális lejátszás késleltetése (mikrosekundum)</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="132"/>
-        <location filename="../source/levelcelview.ui" line="798"/>
+        <location filename="../source/levelcelview.ui" line="809"/>
         <source>us</source>
         <translation>us</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="140"/>
-        <location filename="../source/levelcelview.ui" line="806"/>
+        <location filename="../source/levelcelview.ui" line="817"/>
         <source>Normal</source>
         <translation>Normál</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="192"/>
+        <location filename="../source/levelcelview.ui" line="177"/>
+        <source>Draw to the special cels</source>
+        <translation>Rajzolj a speciális cellákhoz</translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="203"/>
         <source>Draw special cels over the tile</source>
-        <translation type="unfinished"></translation>
+        <translation>Rajzolj speciális cellákat a lapra</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="374"/>
+        <location filename="../source/levelcelview.ui" line="385"/>
         <source>Draw special cel over the subtile</source>
-        <translation type="unfinished"></translation>
+        <translation>Rajzolj speciális cellákat a mezőre</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="861"/>
+        <location filename="../source/levelcelview.ui" line="872"/>
         <source>Town</source>
         <translation>Falu</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="866"/>
+        <location filename="../source/levelcelview.ui" line="877"/>
         <source>(L1) Cathedral</source>
         <translation>(L1) Katedrális</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="871"/>
+        <location filename="../source/levelcelview.ui" line="882"/>
         <source>(L2) Catacombs</source>
         <translation>(L2) Katakombák</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="896"/>
+        <location filename="../source/levelcelview.ui" line="907"/>
         <source>None</source>
         <translation>Nincs megadva</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="907"/>
+        <location filename="../source/levelcelview.ui" line="918"/>
         <source>Default tile if the dungeon tile is set to zero</source>
-        <translation type="unfinished"></translation>
+        <translation>Alapértelmezett lap, ha a kazamata lap nullára van állítva</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="935"/>
+        <location filename="../source/levelcelview.ui" line="946"/>
         <source>Entities:</source>
-        <translation>Elemek:</translation>
+        <translation>Entitások:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="944"/>
+        <location filename="../source/levelcelview.ui" line="955"/>
         <source>Draw grid only</source>
-        <translation type="unfinished"></translation>
+        <translation>Rajzolj csak rácsot</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="954"/>
+        <location filename="../source/levelcelview.ui" line="965"/>
         <source>Draw floor only</source>
         <translation>Csak a talajt ábrázolja</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="967"/>
+        <location filename="../source/levelcelview.ui" line="978"/>
         <source>Draw tiles</source>
         <translation>Lapok megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="984"/>
+        <location filename="../source/levelcelview.ui" line="995"/>
         <source>Draw objects</source>
         <translation>Objektumok megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="991"/>
+        <location filename="../source/levelcelview.ui" line="1002"/>
         <source>Draw monsters</source>
         <translation>Szörnyek megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="998"/>
+        <location filename="../source/levelcelview.ui" line="1009"/>
         <source>Draw items</source>
         <translation>Tárgyak megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1020"/>
+        <location filename="../source/levelcelview.ui" line="1031"/>
         <source>Move left</source>
         <translation>Mozgatás balra</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1049"/>
+        <location filename="../source/levelcelview.ui" line="1060"/>
         <source>Move right</source>
         <translation>Mozgatás jobbra</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1078"/>
+        <location filename="../source/levelcelview.ui" line="1089"/>
         <source>Clear tileset</source>
-        <translation type="unfinished"></translation>
+        <translation>Töröld a lapkészletet</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1152"/>
+        <location filename="../source/levelcelview.ui" line="1163"/>
         <source>Width of the dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>A kazamata szélessége</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1178"/>
+        <location filename="../source/levelcelview.ui" line="1189"/>
         <source>Height of the dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>A kazamata magassága</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1139"/>
+        <location filename="../source/levelcelview.ui" line="1150"/>
         <source>Move down</source>
-        <translation type="unfinished"></translation>
+        <translation>Mozgás lefelé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1033"/>
+        <location filename="../source/levelcelview.ui" line="1044"/>
         <source>Coordinate of the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiválasztott pozíció koordinátája</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1205"/>
+        <location filename="../source/levelcelview.ui" line="1216"/>
         <source>Current tile at the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuális lap a kiválasztott pozícióban</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1239"/>
+        <location filename="../source/levelcelview.ui" line="1250"/>
         <source>Current subtile at the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuális mező a kiválasztott pozícióban</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1303"/>
+        <location filename="../source/levelcelview.ui" line="1314"/>
         <source>Object:</source>
-        <translation type="unfinished"></translation>
+        <translation>Objektum</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1313"/>
+        <location filename="../source/levelcelview.ui" line="1324"/>
         <source>Current object at the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuális objektum a kiválasztott pozícióban</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1340"/>
+        <location filename="../source/levelcelview.ui" line="1351"/>
         <source>Monster:</source>
-        <translation type="unfinished"></translation>
+        <translation>Szörnyeteg:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1350"/>
+        <location filename="../source/levelcelview.ui" line="1361"/>
         <source>Current monster at the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelenlegi szörny a kiválasztott pozícióban</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1360"/>
+        <location filename="../source/levelcelview.ui" line="1371"/>
         <source>Current monster at the selected position is unique</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiválasztott pozícióban lévő jelenlegi szörny egyedi</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1388"/>
+        <location filename="../source/levelcelview.ui" line="1399"/>
         <source>X-Offset of the monster at the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>A szörny X-eltolása a kiválasztott pozícióban</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1395"/>
+        <location filename="../source/levelcelview.ui" line="1406"/>
         <source>Y-Offset of the monster at the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>A szörny Y-eltolása a kiválasztott pozícióban</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1411"/>
+        <location filename="../source/levelcelview.ui" line="1422"/>
         <source>Item:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tárgy:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1421"/>
+        <location filename="../source/levelcelview.ui" line="1432"/>
         <source>Current item at the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuális tárgy a kiválasztott pozícióban</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="333"/>
         <source>Select asset folder of the entites</source>
-        <translation type="unfinished"></translation>
+        <translation>Válassza ki az entitások eszközmappáját</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1075"/>
-        <location filename="../source/levelcelview.ui" line="1291"/>
+        <location filename="../source/levelcelview.ui" line="1086"/>
+        <location filename="../source/levelcelview.ui" line="1302"/>
         <source>Clear</source>
         <translation>Törlés</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1087"/>
+        <location filename="../source/levelcelview.ui" line="1098"/>
         <source>Overlay:</source>
-        <translation type="unfinished"></translation>
+        <translation>Borítás:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1100"/>
+        <location filename="../source/levelcelview.ui" line="1111"/>
         <source>Map</source>
-        <translation type="unfinished"></translation>
+        <translation>Térkép</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1105"/>
+        <location filename="../source/levelcelview.ui" line="1116"/>
         <source>Rooms</source>
-        <translation type="unfinished"></translation>
+        <translation>Szobák</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1110"/>
+        <location filename="../source/levelcelview.ui" line="1121"/>
         <source>Tile protections</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapvédelmek</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1115"/>
+        <location filename="../source/levelcelview.ui" line="1126"/>
         <source>Subtile protections</source>
-        <translation type="unfinished"></translation>
+        <translation>Mezővédelmek</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1120"/>
+        <location filename="../source/levelcelview.ui" line="1131"/>
         <source>Tile numbers</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapszámok</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1125"/>
+        <location filename="../source/levelcelview.ui" line="1136"/>
         <source>Subtile numbers</source>
-        <translation type="unfinished"></translation>
+        <translation>Mezőszámok</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1195"/>
+        <location filename="../source/levelcelview.ui" line="1206"/>
         <source>Tile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1229"/>
+        <location filename="../source/levelcelview.ui" line="1240"/>
         <source>Subtile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1262"/>
+        <location filename="../source/levelcelview.ui" line="1273"/>
         <source>Room:</source>
-        <translation type="unfinished"></translation>
+        <translation>Szoba:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1272"/>
+        <location filename="../source/levelcelview.ui" line="1283"/>
         <source>Room-ID of the selected position</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiválasztott pozíció helyiségazonosítója</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="1294"/>
+        <location filename="../source/levelcelview.ui" line="1305"/>
         <source>Clear asset folder of the entites</source>
-        <translation type="unfinished"></translation>
+        <translation>Az entitások eszközmappájának törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="228"/>
+        <location filename="../source/levelcelview.ui" line="239"/>
         <source>Previous tile</source>
         <translation>Előző lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="410"/>
+        <location filename="../source/levelcelview.ui" line="421"/>
         <source>Previous subtile</source>
         <translation>Előző mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="241"/>
+        <location filename="../source/levelcelview.ui" line="252"/>
         <source>Current tile</source>
         <translation>Aktuális lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="423"/>
+        <location filename="../source/levelcelview.ui" line="434"/>
         <source>Current subtile</source>
         <translation>Aktuális mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="273"/>
+        <location filename="../source/levelcelview.ui" line="284"/>
         <source>Number of tiles</source>
         <translation>Lapok száma</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="452"/>
+        <location filename="../source/levelcelview.ui" line="463"/>
         <source>Number of subtiles</source>
         <translation>Mezők száma</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="295"/>
+        <location filename="../source/levelcelview.ui" line="306"/>
         <source>Next tile</source>
         <translation>Következő lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="471"/>
+        <location filename="../source/levelcelview.ui" line="482"/>
         <source>Next subtile</source>
         <translation>Következő mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="311"/>
+        <location filename="../source/levelcelview.ui" line="322"/>
         <source>Last tile</source>
         <translation>Utolsó lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="487"/>
+        <location filename="../source/levelcelview.ui" line="498"/>
         <source>Last subtile</source>
         <translation>Utolsó mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="367"/>
+        <location filename="../source/levelcelview.ui" line="378"/>
         <source>Subtiles:</source>
         <translation>Mezők:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="537"/>
+        <location filename="../source/levelcelview.ui" line="548"/>
         <source>Frames:</source>
         <translation>Képkockák:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="557"/>
+        <location filename="../source/levelcelview.ui" line="568"/>
         <source>First frame</source>
         <translation>Első képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="573"/>
+        <location filename="../source/levelcelview.ui" line="584"/>
         <source>Previous frame</source>
         <translation>Előző képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="586"/>
+        <location filename="../source/levelcelview.ui" line="597"/>
         <source>Current frame</source>
         <translation>Aktuális képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="615"/>
+        <location filename="../source/levelcelview.ui" line="626"/>
         <source>Number of frames</source>
         <translation>Képkockák száma</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="634"/>
+        <location filename="../source/levelcelview.ui" line="645"/>
         <source>Next frame</source>
         <translation>Következő képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="650"/>
+        <location filename="../source/levelcelview.ui" line="661"/>
         <source>Last frame</source>
         <translation>Utolsó képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="670"/>
+        <location filename="../source/levelcelview.ui" line="681"/>
         <source>Current frame width</source>
         <translation>Aktuális képkocka szélessége</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="699"/>
+        <location filename="../source/levelcelview.ui" line="710"/>
         <source>Current frame height</source>
         <translation>Aktuális képkocka magassága</translation>
     </message>
@@ -4051,18 +4327,18 @@
         <translation>Képkocka beállításai</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1840"/>
+        <location filename="../source/levelcelview.cpp" line="1929"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="981"/>
-        <location filename="../source/levelcelview.cpp" line="1205"/>
-        <location filename="../source/levelcelview.cpp" line="1545"/>
-        <location filename="../source/levelcelview.cpp" line="1625"/>
-        <location filename="../source/levelcelview.cpp" line="1688"/>
-        <location filename="../source/levelcelview.cpp" line="1801"/>
-        <location filename="../source/levelcelview.cpp" line="1901"/>
+        <location filename="../source/levelcelview.cpp" line="1052"/>
+        <location filename="../source/levelcelview.cpp" line="1276"/>
+        <location filename="../source/levelcelview.cpp" line="1616"/>
+        <location filename="../source/levelcelview.cpp" line="1696"/>
+        <location filename="../source/levelcelview.cpp" line="1759"/>
+        <location filename="../source/levelcelview.cpp" line="1890"/>
+        <location filename="../source/levelcelview.cpp" line="1990"/>
         <source>Failed to read file: %1.</source>
         <translation>A(z) %1 fájl olvasása sikertelen.</translation>
     </message>
@@ -4074,193 +4350,193 @@
     <message>
         <location filename="../source/levelcelview.cpp" line="55"/>
         <source>Switch to dungeon view</source>
-        <translation type="unfinished"></translation>
+        <translation>Váltás a kazamata nézetre</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="61"/>
         <source>Switch to tileset view</source>
-        <translation type="unfinished"></translation>
+        <translation>Váltás lapkészlet nézetre</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="67"/>
         <source>Show Subtile Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Mezőinformáció megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="911"/>
-        <location filename="../source/levelcelview.cpp" line="936"/>
+        <location filename="../source/levelcelview.cpp" line="982"/>
+        <location filename="../source/levelcelview.cpp" line="1007"/>
         <source>The image must contain 32px * 32px blocks to be used as a frame.</source>
         <translation>A képnek 32px * 32px blokkokból kell állnia ahhoz, hogy képkockaként legyen használható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="969"/>
-        <location filename="../source/levelcelview.cpp" line="1193"/>
-        <location filename="../source/levelcelview.cpp" line="1533"/>
+        <location filename="../source/levelcelview.cpp" line="1040"/>
+        <location filename="../source/levelcelview.cpp" line="1264"/>
         <location filename="../source/levelcelview.cpp" line="1604"/>
-        <location filename="../source/levelcelview.cpp" line="1665"/>
-        <location filename="../source/levelcelview.cpp" line="1778"/>
-        <location filename="../source/levelcelview.cpp" line="1877"/>
+        <location filename="../source/levelcelview.cpp" line="1675"/>
+        <location filename="../source/levelcelview.cpp" line="1736"/>
+        <location filename="../source/levelcelview.cpp" line="1867"/>
+        <location filename="../source/levelcelview.cpp" line="1966"/>
         <source>Failed to load file: %1.</source>
         <translation>A(z) %1 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1139"/>
-        <location filename="../source/levelcelview.cpp" line="1164"/>
+        <location filename="../source/levelcelview.cpp" line="1210"/>
+        <location filename="../source/levelcelview.cpp" line="1235"/>
         <source>The image must contain %1px * %2px blocks to be used as a subtile.</source>
         <translation>A képnek %1px * %2px blokkokból kell állnia ahhoz, hogy mezőként legyen használható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1432"/>
-        <location filename="../source/levelcelview.cpp" line="1484"/>
+        <location filename="../source/levelcelview.cpp" line="1503"/>
+        <location filename="../source/levelcelview.cpp" line="1555"/>
         <source>The image must contain %1px * %2px blocks to be used as a tile.</source>
         <translation>A képnek %1px * %2px blokkokból kell állnia ahhoz, hogy lapként legyen használható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1670"/>
-        <location filename="../source/levelcelview.cpp" line="1693"/>
+        <location filename="../source/levelcelview.cpp" line="1741"/>
+        <location filename="../source/levelcelview.cpp" line="1764"/>
         <source>The image must be 32px * 32px to be used as a frame.</source>
         <translation>Csak 32px * 32px méretű képek használhatóak képkockának.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1722"/>
+        <location filename="../source/levelcelview.cpp" line="1793"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1722"/>
+        <location filename="../source/levelcelview.cpp" line="1793"/>
         <source>The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?</source>
         <translation>A képkocka használatban van a(z) %1 mező (és esetleg továbbiak) által. Biztosan folytatod?</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1782"/>
-        <location filename="../source/levelcelview.cpp" line="1806"/>
+        <location filename="../source/levelcelview.cpp" line="1871"/>
+        <location filename="../source/levelcelview.cpp" line="1895"/>
         <source>The image must be %1px * %2px to be used as a subtile.</source>
         <translation>Csak %1px * %2px méretű képek használhatóak mezőnek.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1840"/>
+        <location filename="../source/levelcelview.cpp" line="1929"/>
         <source>The subtile is used by tile %1 (and maybe others).</source>
         <translation>A mező használatban van a(z) %1 lap (és esetleg továbbiak) által.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1881"/>
-        <location filename="../source/levelcelview.cpp" line="1906"/>
+        <location filename="../source/levelcelview.cpp" line="1970"/>
+        <location filename="../source/levelcelview.cpp" line="1995"/>
         <source>The image must be %1px * %2px to be used as a tile.</source>
         <translation>Csak %1px * %2px méretű képek használhatóak lapnak.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1999"/>
+        <location filename="../source/levelcelview.cpp" line="2088"/>
         <source>The image can not be used as a frame or as a subtile.</source>
         <translation>A kép nem használható mezőként vagy képkockaként.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2032"/>
-        <location filename="../source/levelcelview.cpp" line="3234"/>
+        <location filename="../source/levelcelview.cpp" line="2121"/>
+        <location filename="../source/levelcelview.cpp" line="3323"/>
         <source>Scanning...</source>
         <translation>Vizsgálat folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2041"/>
+        <location filename="../source/levelcelview.cpp" line="2130"/>
         <source>Frame %1 is not used by any subtile.</source>
         <translation>Képkocka %1 nincs használva egyetlen mező által sem.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2048"/>
+        <location filename="../source/levelcelview.cpp" line="2137"/>
         <source>Frame %1 is used by subtile %2.</source>
         <translation>
             <numerusform>Képkocka %1 használatban van a(z) %2 mező által.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2063"/>
+        <location filename="../source/levelcelview.cpp" line="2152"/>
         <source>Subtile %1 is not used by any tile.</source>
         <translation>Mező %1 nincs használva egyetlen lap által sem.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2070"/>
+        <location filename="../source/levelcelview.cpp" line="2159"/>
         <source>Subtile %1 is used by tile %2.</source>
         <translation>
             <numerusform>Mező %1 használatban van a(z) %2 lap által.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2088"/>
+        <location filename="../source/levelcelview.cpp" line="2177"/>
         <source>No valid special frame use in the tileset.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs érvényes speciális képkocka-használat a lapkészletben.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2096"/>
-        <location filename="../source/levelcelview.cpp" line="2112"/>
+        <location filename="../source/levelcelview.cpp" line="2185"/>
+        <location filename="../source/levelcelview.cpp" line="2201"/>
         <source>Special-Frame %1 is used by subtile %2.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>A(z) %1 speciális képkockát a(z) %2 mező használja.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2118"/>
+        <location filename="../source/levelcelview.cpp" line="2207"/>
         <source>The tileset is empty.</source>
         <translation>Mezőkészlet üres.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2177"/>
-        <location filename="../source/levelcelview.cpp" line="2285"/>
+        <location filename="../source/levelcelview.cpp" line="2266"/>
+        <location filename="../source/levelcelview.cpp" line="2374"/>
         <source>Subtile %1 has %n affected pixels.</source>
         <translation>
             <numerusform>Mező %1-ben %n pixel érintett.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2287"/>
+        <location filename="../source/levelcelview.cpp" line="2376"/>
         <source> The subtile is not lit.</source>
         <translation> A mező nem rendelkezik saját fénnyel.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2289"/>
+        <location filename="../source/levelcelview.cpp" line="2378"/>
         <source> The subtile is lit.</source>
         <translation> A mező saját fénnyel rendelkezik.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2304"/>
+        <location filename="../source/levelcelview.cpp" line="2393"/>
         <source>Lit subtiles:</source>
-        <translation type="unfinished"></translation>
+        <translation>Világító mezők</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2315"/>
+        <location filename="../source/levelcelview.cpp" line="2404"/>
         <source>Radius %1: </source>
-        <translation type="unfinished"></translation>
+        <translation>Sugár %1: </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2323"/>
+        <location filename="../source/levelcelview.cpp" line="2412"/>
         <source>None of the subtiles are lit.</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyik mező sem világít.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2212"/>
-        <location filename="../source/levelcelview.cpp" line="2351"/>
+        <location filename="../source/levelcelview.cpp" line="2301"/>
+        <location filename="../source/levelcelview.cpp" line="2440"/>
         <source>Tile %1 has %n affected pixels.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>A %1 lapon %n érintett képpont található.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2421"/>
+        <location filename="../source/levelcelview.cpp" line="2510"/>
         <source>No change was necessary.</source>
         <translation>Nincs szükség módosításra.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2399"/>
+        <location filename="../source/levelcelview.cpp" line="2488"/>
         <source>The frames are optimal.</source>
         <translation>A képkockák optimálisak.</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="58"/>
         <source>Start building</source>
-        <translation type="unfinished"></translation>
+        <translation>Kezdje el az építkezést</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="65"/>
         <source>Center Dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Középső kazamata</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="127"/>
@@ -4279,9 +4555,9 @@
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="223"/>
-        <location filename="../source/levelcelview.cpp" line="4510"/>
+        <location filename="../source/levelcelview.cpp" line="4617"/>
         <source>Select tileset</source>
-        <translation type="unfinished"></translation>
+        <translation>Válassza ki a lapkészletet</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="395"/>
@@ -4319,692 +4595,712 @@
         <translation>Objektum kerülhet erre a mezőre</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2161"/>
-        <location filename="../source/levelcelview.cpp" line="2267"/>
+        <location filename="../source/levelcelview.cpp" line="2250"/>
+        <location filename="../source/levelcelview.cpp" line="2356"/>
         <source>Checking subtiles...</source>
         <translation>Mezők ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2278"/>
+        <location filename="../source/levelcelview.cpp" line="2367"/>
         <source>Active subtiles (using &apos;%1&apos; playback mode):</source>
         <translation>Aktív mezők (&apos;%1&apos; lejátszási módban):</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2296"/>
+        <location filename="../source/levelcelview.cpp" line="2385"/>
         <source>None of the subtiles are active in &apos;%1&apos; playback mode.</source>
         <translation>Egyik mezőre sincs hatással a &apos;%1&apos; lejátszási mód.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2259"/>
-        <location filename="../source/levelcelview.cpp" line="2300"/>
-        <location filename="../source/levelcelview.cpp" line="2361"/>
+        <location filename="../source/levelcelview.cpp" line="2348"/>
+        <location filename="../source/levelcelview.cpp" line="2389"/>
+        <location filename="../source/levelcelview.cpp" line="2450"/>
         <source>Colors are not affected if the playback mode is &apos;%1&apos;.</source>
         <translation>A színekre nincs hatással a &apos;%1&apos; lejátszási mód.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2196"/>
-        <location filename="../source/levelcelview.cpp" line="2333"/>
+        <location filename="../source/levelcelview.cpp" line="2285"/>
+        <location filename="../source/levelcelview.cpp" line="2422"/>
         <source>Checking tiles...</source>
         <translation>Lapok ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2344"/>
+        <location filename="../source/levelcelview.cpp" line="2433"/>
         <source>Active tiles (using &apos;%1&apos; playback mode):</source>
         <translation>Aktív lapok (&apos;%1&apos; lejátszási módban):</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2357"/>
+        <location filename="../source/levelcelview.cpp" line="2446"/>
         <source>None of the tiles are active in &apos;%1&apos; playback mode.</source>
         <translation>Egyik lapra sincs hatással a &apos;%1&apos; lejátszási mód.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2393"/>
+        <location filename="../source/levelcelview.cpp" line="2482"/>
         <source>The difference between Frame %1 and Frame %2 is only %n pixel(s).</source>
         <translation>
             <numerusform>A(z) %1-es és a(z) %2-es képkocka közötti különbség csak %n képpont.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2523"/>
+        <location filename="../source/levelcelview.cpp" line="2612"/>
         <source>Subtile %1 blocks the light, but still passable (not solid).</source>
         <translation>A(z) %1. mező blokkolja a fényt, de átjárható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2527"/>
+        <location filename="../source/levelcelview.cpp" line="2616"/>
         <source>Subtile %1 blocks the light, but it does not block missiles.</source>
         <translation>A(z) %1. mező blokkolja a fényt, de a lövedékeket nem.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2534"/>
+        <location filename="../source/levelcelview.cpp" line="2623"/>
         <source>Subtile %1 blocks missiles, but still passable (not solid).</source>
         <translation>A(z) %1. mező blokkolja a lövedékeket, de átjárható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2553"/>
+        <location filename="../source/levelcelview.cpp" line="2642"/>
         <source>Subtile %1 blocks the light or missiles, but it is completely transparent above the floor.</source>
         <translation>A(z) %1. mező blokkolja a fényt vagy a lövedékeket, de teljesen átlátszó a talajszint felett.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2593"/>
+        <location filename="../source/levelcelview.cpp" line="2682"/>
         <source>Subtile %1 has an invalid trap-setting [%2:%3].</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező érvénytelen csapda-beállítással rendelkezik [%2:%3].</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2636"/>
+        <location filename="../source/levelcelview.cpp" line="2725"/>
         <source>Subtile %1 has wall transparency set, but it is completely transparent above the floor.</source>
         <translation>A(z) %1. mezőn a fal áttetsző, de a mező teljesen átlátszó a talajszint felett.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2644"/>
+        <location filename="../source/levelcelview.cpp" line="2733"/>
         <source>Subtile %1 has floor transparency on the left side, but no wall transparency.</source>
         <translation>A(z) %1. mező bal talajszintje áttetsző, de a mező fala nem áttetsző.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2652"/>
+        <location filename="../source/levelcelview.cpp" line="2741"/>
         <source>Subtile %1 has floor transparency on the right side, but no wall transparency.</source>
         <translation>A(z) %1. mező jobb talajszintje áttetsző, de a mező fala nem áttetsző.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2688"/>
+        <location filename="../source/levelcelview.cpp" line="2777"/>
         <source>Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.</source>
         <translation>A(z) %1. mezőn a fal áttetsző és a képkockák nem üresek a bal talajszint felett, de a bal talajszint nem áttetsző miközben sok (%2) talajból kiálló képpont található rajta.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2693"/>
+        <location filename="../source/levelcelview.cpp" line="2782"/>
         <source>Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.</source>
         <translation>A(z) %1. mezőn a fal áttetsző és a képkockák nem üresek a jobb talajszint felett, de a jobb talajszint nem áttetsző miközben sok (%2) talajból kiálló képpont található rajta.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2724"/>
+        <location filename="../source/levelcelview.cpp" line="2813"/>
         <source>Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.</source>
         <translation>A(z) %1. mező bal oldalán kiálló elemek vannak jelezve, de a talaj ott nem rendelkezik kiálló képpontokkal.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2732"/>
+        <location filename="../source/levelcelview.cpp" line="2821"/>
         <source>Subtile %1 has left floor transparency set, but the left side is completely transparent above the floor.</source>
         <translation>A(z) %1. mező bal oldalán áttetszőség van beállítva, de a bal talaj felett teljesen átlátszó.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2737"/>
+        <location filename="../source/levelcelview.cpp" line="2826"/>
         <source>Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
         <translation>A(z) %1. mező bal oldalán áttetszőség van beállítva, de a bal talaj felett nem lesz áttetsző (fal áttetszőség nincs beállítva).</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2750"/>
+        <location filename="../source/levelcelview.cpp" line="2839"/>
         <source>Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.</source>
         <translation>A(z) %1. mező jobb oldalán kiálló elemek vannak jelezve, de a talaj ott nem rendelkezik kiálló képpontokkal.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2758"/>
+        <location filename="../source/levelcelview.cpp" line="2847"/>
         <source>Subtile %1 has right floor transparency set, but the right side is completely transparent above the floor.</source>
         <translation>A(z) %1. mező bal oldalán áttetszőség van beállítva, de a bal talaj felett teljesen átlátszó.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2763"/>
+        <location filename="../source/levelcelview.cpp" line="2852"/>
         <source>Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
         <translation>A(z) %1. mező jobb oldalán áttetszőség van beállítva, de a jobb talaj felett nem lesz áttetsző (fal áttetszőség nincs beállítva).</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2930"/>
+        <location filename="../source/levelcelview.cpp" line="3019"/>
         <source>Removing unused frames...</source>
         <translation>Nem használt képkockák törlése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2943"/>
+        <location filename="../source/levelcelview.cpp" line="3032"/>
         <source>Removed frame %1.</source>
         <translation>A(z) %1 képkocka törlésre került.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2957"/>
+        <location filename="../source/levelcelview.cpp" line="3046"/>
         <source>Removing unused subtiles...</source>
         <translation>Nem használt mezők törlése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2975"/>
+        <location filename="../source/levelcelview.cpp" line="3064"/>
         <source>Removed subtile %1.</source>
         <translation>A(z) %1 mező törlésre került.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2993"/>
+        <location filename="../source/levelcelview.cpp" line="3082"/>
         <source>Every frame is used.</source>
         <translation>Mindegyik képkocka használatban van.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3006"/>
+        <location filename="../source/levelcelview.cpp" line="3095"/>
         <source>Every subtile is used.</source>
         <translation>Mindegyik mező használatban van.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3031"/>
+        <location filename="../source/levelcelview.cpp" line="3120"/>
         <source>Every subtile and frame are used.</source>
         <translation>Mindegyik mező és képkocka használatban van.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3247"/>
+        <location filename="../source/levelcelview.cpp" line="3336"/>
         <source>There is no available space in the dungeon to generate monsters or objects.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elérhető hely a kazamatában szörnyek vagy objektumok létrehozására.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3257"/>
+        <location filename="../source/levelcelview.cpp" line="3346"/>
         <source>There are no items in the dungeon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincsenek tárgyak a kazamatában.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="3267"/>
-        <location filename="../source/levelcelview.cpp" line="3288"/>
-        <location filename="../source/levelcelview.cpp" line="3309"/>
+        <location filename="../source/levelcelview.cpp" line="3356"/>
+        <location filename="../source/levelcelview.cpp" line="3377"/>
+        <location filename="../source/levelcelview.cpp" line="3398"/>
         <source>There are %1 in the dungeon.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 van a kazamatában.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3278"/>
+        <location filename="../source/levelcelview.cpp" line="3367"/>
         <source>There are no monsters in the dungeon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincsenek szörnyek a kazamatában.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3264"/>
-        <location filename="../source/levelcelview.cpp" line="3285"/>
-        <location filename="../source/levelcelview.cpp" line="3306"/>
+        <location filename="../source/levelcelview.cpp" line="3353"/>
+        <location filename="../source/levelcelview.cpp" line="3374"/>
+        <location filename="../source/levelcelview.cpp" line="3395"/>
         <source>%1 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 %2</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2505"/>
+        <location filename="../source/levelcelview.cpp" line="2594"/>
         <source>Checking Collision settings...</source>
         <translation>Ütközési beállítások ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2512"/>
+        <location filename="../source/levelcelview.cpp" line="2601"/>
         <source>Inconsistencies in the Collision settings:</source>
         <translation>Ütközési beállítások ellentmondásai:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2560"/>
+        <location filename="../source/levelcelview.cpp" line="2649"/>
         <source>No inconsistency detected in the Collision settings.</source>
         <translation>Nem talált ellentmondást az ütközési beállításokban.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2565"/>
+        <location filename="../source/levelcelview.cpp" line="2654"/>
         <source>Checking Special settings...</source>
         <translation>Speciális beállítások ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2570"/>
+        <location filename="../source/levelcelview.cpp" line="2659"/>
         <source>Inconsistencies in the Special settings:</source>
         <translation>Speciális beállítások ellentmondásai:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2607"/>
+        <location filename="../source/levelcelview.cpp" line="2696"/>
         <source>No inconsistency detected in the Special settings.</source>
         <translation>Nem talált ellentmondást a speciális beállításokban.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2612"/>
+        <location filename="../source/levelcelview.cpp" line="2701"/>
         <source>Checking Render settings...</source>
         <translation>Renderelési beállítások ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2617"/>
+        <location filename="../source/levelcelview.cpp" line="2706"/>
         <source>Inconsistencies in the Render settings:</source>
         <translation>Renderelési beállítások ellentmondásai:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3299"/>
+        <location filename="../source/levelcelview.cpp" line="3388"/>
         <source>There are no objects in the dungeon.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincsenek objektumok a kazamatában.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3726"/>
+        <location filename="../source/levelcelview.cpp" line="3817"/>
         <source>Create a new frame</source>
         <translation>Új képkocka létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3732"/>
+        <location filename="../source/levelcelview.cpp" line="3823"/>
         <source>Add a new frame before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3763"/>
+        <location filename="../source/levelcelview.cpp" line="3870"/>
         <source>Create a new subtile</source>
         <translation>Új mező létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3769"/>
+        <location filename="../source/levelcelview.cpp" line="3876"/>
         <source>Add a new subtile before the current one</source>
         <translation>Új mező beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3800"/>
+        <location filename="../source/levelcelview.cpp" line="3907"/>
         <source>Create a new tile</source>
         <translation>Új lap létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3807"/>
+        <location filename="../source/levelcelview.cpp" line="3914"/>
         <source>Add a new tile before the current one</source>
         <translation>Új lap beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="4496"/>
-        <location filename="../source/levelcelview.cpp" line="4524"/>
+        <location filename="../source/levelcelview.cpp" line="4603"/>
+        <location filename="../source/levelcelview.cpp" line="4631"/>
         <source>Loading...</source>
         <translation>Betöltés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="4510"/>
+        <location filename="../source/levelcelview.cpp" line="4617"/>
         <source>CEL Files (*.cel *.CEL)</source>
         <translation>CEL Fájlok (*.cel *.CEL)</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="4538"/>
+        <location filename="../source/levelcelview.cpp" line="4645"/>
         <source>Select Assets Folder</source>
         <translation>Állományok könyvtára</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2126"/>
-        <location filename="../source/levelcelview.cpp" line="2231"/>
-        <location filename="../source/levelcelview.cpp" line="2407"/>
+        <location filename="../source/levelcelview.cpp" line="2215"/>
+        <location filename="../source/levelcelview.cpp" line="2320"/>
+        <location filename="../source/levelcelview.cpp" line="2496"/>
         <source>Checking frames...</source>
         <translation>Képkockák vizsgálata...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2416"/>
+        <location filename="../source/levelcelview.cpp" line="2505"/>
         <source>Changed Frame %1 from &apos;%2&apos; to &apos;%3&apos;.</source>
         <translation>A(z) %1. képkocka  módosítva &apos;%2&apos;-ről &apos;%3&apos;-re.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2369"/>
+        <location filename="../source/levelcelview.cpp" line="2458"/>
         <source>Scanning frames...</source>
         <translation>Képkockák vizsgálata...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2132"/>
+        <location filename="../source/levelcelview.cpp" line="2221"/>
         <source>Frames with transparent pixels:</source>
         <translation>Képkockák átlátszó pixelekkel:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2134"/>
+        <location filename="../source/levelcelview.cpp" line="2223"/>
         <source>Frames with pixels in the [%1..%2] color range:</source>
         <translation>Képkockák melyek [%1..%2] színeket tartalmaznak:</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2142"/>
-        <location filename="../source/levelcelview.cpp" line="2249"/>
+        <location filename="../source/levelcelview.cpp" line="2231"/>
+        <location filename="../source/levelcelview.cpp" line="2338"/>
         <source>Frame %1 has %n affected pixels.</source>
         <translation>
             <numerusform>A %1-es képkockában %n pixel érintett.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2149"/>
+        <location filename="../source/levelcelview.cpp" line="2238"/>
         <source>None of the frames have transparent pixel.</source>
         <translation>Egyik képkockában sincs átlátszó pixel.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2151"/>
+        <location filename="../source/levelcelview.cpp" line="2240"/>
         <source>None of the frames are using the colors [%1..%2].</source>
         <translation>Egyik képkockában sincs a [%1..%2] színekből.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2167"/>
+        <location filename="../source/levelcelview.cpp" line="2256"/>
         <source>Subtiles with transparent pixels:</source>
         <translation>Mezők átlátszó pixelekkel:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2169"/>
+        <location filename="../source/levelcelview.cpp" line="2258"/>
         <source>Subtiles with pixels in the [%1..%2] color range:</source>
         <translation>Mezők melyek [%1..%2] színeket tartalmaznak:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2184"/>
+        <location filename="../source/levelcelview.cpp" line="2273"/>
         <source>None of the subtiles have transparent pixel.</source>
         <translation>Egyik mezőben sincs átlátszó pixel.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2186"/>
+        <location filename="../source/levelcelview.cpp" line="2275"/>
         <source>None of the subtiles are using the colors [%1..%2].</source>
         <translation>Egyik mezőben sincs a [%1..%2] színekből.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2202"/>
+        <location filename="../source/levelcelview.cpp" line="2291"/>
         <source>Tiles with transparent pixels:</source>
         <translation>Lapok átlátszó pixelekkel:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2204"/>
+        <location filename="../source/levelcelview.cpp" line="2293"/>
         <source>Tiles with pixels in the [%1..%2] color range:</source>
         <translation>Lapok melyek [%1..%2] színeket tartalmaznak:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2219"/>
+        <location filename="../source/levelcelview.cpp" line="2308"/>
         <source>None of the tiles have transparent pixel.</source>
         <translation>Egyik lapon sincs átlátszó pixel.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2221"/>
+        <location filename="../source/levelcelview.cpp" line="2310"/>
         <source>None of the tiles are using the colors [%1..%2].</source>
         <translation>Egyik lapon sincs a [%1..%2] színekből.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2242"/>
+        <location filename="../source/levelcelview.cpp" line="2331"/>
         <source>Active frames (using &apos;%1&apos; playback mode):</source>
         <translation>Aktív képkockák (&apos;%1&apos; lejátszási módban):</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2255"/>
+        <location filename="../source/levelcelview.cpp" line="2344"/>
         <source>None of the frames are active in &apos;%1&apos; playback mode.</source>
         <translation>Egyik képkockára sincs hatással a &apos;%1&apos; lejátszási mód.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="2382"/>
+        <location filename="../source/levelcelview.cpp" line="2471"/>
         <source>Frame %1 could be &apos;%2&apos; by changing %n pixel(s).</source>
         <translation>
             <numerusform>A(z) %1. képkocka lehetne &apos;%2&apos; %n pixel megváltoztatásával.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2581"/>
+        <location filename="../source/levelcelview.cpp" line="2670"/>
         <source>Subtile %1 is for traps, but the frames above the floor is not square on the left side.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező csapdát tartalmazhat, de a padló feletti keretek bal oldalon nem négyzet alakúak.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2589"/>
+        <location filename="../source/levelcelview.cpp" line="2678"/>
         <source>Subtile %1 is for traps, but the frames above the floor is not square on the right side.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező csapdát tartalmazhat, de a padló feletti keretek nem négyzet alakúak a jobb oldalon.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2599"/>
+        <location filename="../source/levelcelview.cpp" line="2688"/>
         <source>Subtile %1 has a too high special cel-frame setting: %2. Limit it %3</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező speciális cel-frame beállítása túl magas: %2. Korlátozza: %3</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2602"/>
+        <location filename="../source/levelcelview.cpp" line="2691"/>
         <source>The special cel-frame (%1) referenced by Subtile %2 does not exist.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2 mező által hivatkozott speciális cel-frame (%1) nem létezik.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2699"/>
+        <location filename="../source/levelcelview.cpp" line="2788"/>
         <source>Subtile %1 has second pass set on the left side, but the floor-frame is empty.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező bal oldalán második menet van beállítva, de a keret üres.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2702"/>
+        <location filename="../source/levelcelview.cpp" line="2791"/>
         <source>Subtile %1 has second pass set on the left side, but it is just a left triangle on the floor and the right side is not redrawn.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező bal oldalán második menet van beállítva, de ez csak egy bal oldali háromszög az alapon, és a jobb oldal nincs újrarajzolva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2708"/>
+        <location filename="../source/levelcelview.cpp" line="2797"/>
         <source>Subtile %1 has second pass set on the right side, but the floor-frame is empty.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező jobb oldalán második menet van beállítva, de a keret üres.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2711"/>
+        <location filename="../source/levelcelview.cpp" line="2800"/>
         <source>Subtile %1 has second pass set on the right side, but it is just a right triangle on the floor and the left side is not redrawn.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező jobb oldalán második menet van beállítva, de ez csak egy derékszögű háromszög az alján, és a bal oldal nincs újrarajzolva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2719"/>
+        <location filename="../source/levelcelview.cpp" line="2808"/>
         <source>Subtile %1 has foliage set on the left, but not second pass.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező bal oldalán lombozat van beállítva, de nincs második menet.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2745"/>
+        <location filename="../source/levelcelview.cpp" line="2834"/>
         <source>Subtile %1 has foliage set on the right, but not second pass.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező jobb oldalán lombozat van beállítva, de nincs második menet.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2770"/>
+        <location filename="../source/levelcelview.cpp" line="2859"/>
         <source>No inconsistency detected in the Render settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem észlelhető ellentmondás a renderelési beállításokban.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2775"/>
+        <location filename="../source/levelcelview.cpp" line="2864"/>
         <source>Checking Map settings...</source>
-        <translation type="unfinished"></translation>
+        <translation>A térképbeállítások ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2780"/>
+        <location filename="../source/levelcelview.cpp" line="2869"/>
         <source>Inconsistencies in the Map settings:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellentmondások a Térkép beállításaiban:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2786"/>
+        <location filename="../source/levelcelview.cpp" line="2875"/>
         <source>Subtile %1 is for doors, but it has also walls.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %1. mező ajtókhoz való, de falakkal is rendelkezik.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2803"/>
+        <location filename="../source/levelcelview.cpp" line="2892"/>
         <source>Subtile %1 is for closed east-doors, but Subtile %2 is not for open east-doors.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező zárt keleti ajtókhoz való, de a(z) %2. mező nem nyitott keleti ajtókhoz.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2806"/>
+        <location filename="../source/levelcelview.cpp" line="2895"/>
         <source>Subtile %1 is for closed west-doors, but Subtile %2 is not for open west-doors.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező zárt nyugati ajtókhoz való, de a(z) %2. számú mező nem nyitott nyugati ajtókhoz.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2811"/>
+        <location filename="../source/levelcelview.cpp" line="2900"/>
         <source>Subtile %1 is for closed doors, but Subtile %2 is a path-blocker.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező zárt ajtókhoz való, de a(z) %2. mező utat blokkoló.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2818"/>
+        <location filename="../source/levelcelview.cpp" line="2907"/>
         <source>Subtile %1 is for open east-doors, but Subtile %2 is not for closed east-doors.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező nyitott keleti ajtókhoz való, de a(z) %2. mező nem zárt keleti ajtókhoz.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2821"/>
+        <location filename="../source/levelcelview.cpp" line="2910"/>
         <source>Subtile %1 is for open west-doors, but Subtile %2 is not for closed west-doors.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező nyitott nyugati ajtókhoz való, de a(z) %2. mező nem zárt nyugati ajtókhoz.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2826"/>
+        <location filename="../source/levelcelview.cpp" line="2915"/>
         <source>Subtile %1 is for open doors, but Subtile %2 is not a path-blocker.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező nyitott ajtókhoz való, de a(z) %2. mező nem akadályozza az utat.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2836"/>
+        <location filename="../source/levelcelview.cpp" line="2925"/>
         <source>No inconsistency detected in the Map settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem észleltem ellentmondást a Térkép beállításaiban.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2845"/>
+        <location filename="../source/levelcelview.cpp" line="2934"/>
         <source>Checking TLA flags...</source>
         <translation>TLA beállítások ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2851"/>
+        <location filename="../source/levelcelview.cpp" line="2940"/>
         <source>TLA inconsistencies:</source>
         <translation>TLA ellentmondásai:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2861"/>
-        <location filename="../source/levelcelview.cpp" line="2875"/>
-        <location filename="../source/levelcelview.cpp" line="2889"/>
-        <location filename="../source/levelcelview.cpp" line="2903"/>
+        <location filename="../source/levelcelview.cpp" line="2950"/>
+        <location filename="../source/levelcelview.cpp" line="2964"/>
+        <location filename="../source/levelcelview.cpp" line="2978"/>
+        <location filename="../source/levelcelview.cpp" line="2992"/>
         <source>Unreachable Subtile %1 in Tile %2 propagates the room-index.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %2 lapon található %1 mező elérhetetlen, és a szobaindexet terjeszti.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2866"/>
-        <location filename="../source/levelcelview.cpp" line="2880"/>
-        <location filename="../source/levelcelview.cpp" line="2894"/>
-        <location filename="../source/levelcelview.cpp" line="2908"/>
+        <location filename="../source/levelcelview.cpp" line="2955"/>
+        <location filename="../source/levelcelview.cpp" line="2969"/>
+        <location filename="../source/levelcelview.cpp" line="2983"/>
+        <location filename="../source/levelcelview.cpp" line="2997"/>
         <source>Walkable Subtile %1 in Tile %2 does not propagate the room-index.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2 lapon található %1 járható mező nem terjeszti ki a szobaindexet.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2915"/>
+        <location filename="../source/levelcelview.cpp" line="3004"/>
         <source>No inconsistency detected in the TLA flags.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem észleltem ellentmondást a TLA jelzőkben.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3012"/>
+        <location filename="../source/levelcelview.cpp" line="3101"/>
         <source>Scanning tileset...</source>
         <translation>Mezőkészlet vizsgálata...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3110"/>
+        <location filename="../source/levelcelview.cpp" line="3199"/>
         <source>Compressing tileset...</source>
         <translation>Mezőkészlet tömörítése...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="3239"/>
+        <location filename="../source/levelcelview.cpp" line="3328"/>
         <source>There are %n subtiles in the dungeon for monsters.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>A kazamatában %n mező található szörnyekhez.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="3243"/>
+        <location filename="../source/levelcelview.cpp" line="3332"/>
         <source>There are %n subtiles in the dungeon for objects.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>A kazamatában %n mező található objektumokhoz.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3683"/>
+        <location filename="../source/levelcelview.cpp" line="3772"/>
         <source>Insert Tile-Row</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapsor beszúrása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3684"/>
+        <location filename="../source/levelcelview.cpp" line="3773"/>
         <source>Add a tile-row before the one at the current position</source>
-        <translation type="unfinished"></translation>
+        <translation>Új lapsor hozzáadása az aktuális pozícióban lévő elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3689"/>
+        <location filename="../source/levelcelview.cpp" line="3778"/>
         <source>Insert Tile-Column</source>
-        <translation type="unfinished"></translation>
+        <translation>Laposzlop beszúrása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3690"/>
+        <location filename="../source/levelcelview.cpp" line="3779"/>
         <source>Add a tile-column before the one at the current position</source>
-        <translation type="unfinished"></translation>
+        <translation>Új laposzlop hozzáadása az aktuális pozícióban lévő elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3695"/>
+        <location filename="../source/levelcelview.cpp" line="3784"/>
         <source>Delete Tile-Row</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapsor törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3696"/>
+        <location filename="../source/levelcelview.cpp" line="3785"/>
         <source>Delete the tile-row at the current position</source>
-        <translation type="unfinished"></translation>
+        <translation>Törölje a lapsort az aktuális pozícióban</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3702"/>
+        <location filename="../source/levelcelview.cpp" line="3791"/>
         <source>Delete Tile-Column</source>
-        <translation type="unfinished"></translation>
+        <translation>Laposzlop törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3703"/>
+        <location filename="../source/levelcelview.cpp" line="3792"/>
         <source>Delete the tile-column at the current position</source>
-        <translation type="unfinished"></translation>
+        <translation>Törölje a laposzlopot az aktuális pozícióban</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3715"/>
+        <location filename="../source/levelcelview.cpp" line="3804"/>
         <source>Frame</source>
         <translation>Képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3719"/>
+        <location filename="../source/levelcelview.cpp" line="3808"/>
         <source>Add Layer</source>
         <translation>Réteg hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3720"/>
+        <location filename="../source/levelcelview.cpp" line="3809"/>
         <source>Add the content of an image to the current frame</source>
         <translation>Kép hozzáadása az aktuális képkockához</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3731"/>
-        <location filename="../source/levelcelview.cpp" line="3768"/>
-        <location filename="../source/levelcelview.cpp" line="3806"/>
+        <location filename="../source/levelcelview.cpp" line="3822"/>
+        <location filename="../source/levelcelview.cpp" line="3875"/>
+        <location filename="../source/levelcelview.cpp" line="3913"/>
         <source>Insert</source>
         <translation>Beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3737"/>
-        <location filename="../source/levelcelview.cpp" line="3774"/>
-        <location filename="../source/levelcelview.cpp" line="3812"/>
+        <location filename="../source/levelcelview.cpp" line="3828"/>
+        <location filename="../source/levelcelview.cpp" line="3881"/>
+        <location filename="../source/levelcelview.cpp" line="3919"/>
         <source>Duplicate</source>
         <translation>Másolat</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3738"/>
+        <location filename="../source/levelcelview.cpp" line="3829"/>
         <source>Duplicate the current frame</source>
         <translation>Az aktuális képkocka másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3743"/>
-        <location filename="../source/levelcelview.cpp" line="3780"/>
-        <location filename="../source/levelcelview.cpp" line="3818"/>
+        <location filename="../source/levelcelview.cpp" line="3834"/>
+        <location filename="../source/levelcelview.cpp" line="3887"/>
+        <location filename="../source/levelcelview.cpp" line="3925"/>
         <source>Replace</source>
         <translation>Csere</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3744"/>
+        <location filename="../source/levelcelview.cpp" line="3835"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3750"/>
-        <location filename="../source/levelcelview.cpp" line="3787"/>
-        <location filename="../source/levelcelview.cpp" line="3825"/>
+        <location filename="../source/levelcelview.cpp" line="3841"/>
+        <location filename="../source/levelcelview.cpp" line="3894"/>
+        <location filename="../source/levelcelview.cpp" line="3932"/>
         <source>Delete</source>
         <translation>Törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3751"/>
+        <location filename="../source/levelcelview.cpp" line="3842"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3758"/>
+        <location filename="../source/levelcelview.cpp" line="3850"/>
+        <source>Horizontal Flip</source>
+        <translation>Vízszintes tükrözés</translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3851"/>
+        <source>Flip the current frame horizontally</source>
+        <translation>Az aktuális képkocka vízszintes tükrözése</translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3857"/>
+        <source>Vertical Flip</source>
+        <translation>Függőleges tükrözés</translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3858"/>
+        <source>Flip the current frame vertically</source>
+        <translation>Aktuális képkocka függőleges tükrözése</translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="3865"/>
         <source>Subtile</source>
         <translation>Mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3725"/>
-        <location filename="../source/levelcelview.cpp" line="3762"/>
-        <location filename="../source/levelcelview.cpp" line="3799"/>
+        <location filename="../source/levelcelview.cpp" line="3816"/>
+        <location filename="../source/levelcelview.cpp" line="3869"/>
+        <location filename="../source/levelcelview.cpp" line="3906"/>
         <source>Create</source>
         <translation>Létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3775"/>
+        <location filename="../source/levelcelview.cpp" line="3882"/>
         <source>Duplicate the current subtile</source>
         <translation>Az aktuális mező másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3781"/>
+        <location filename="../source/levelcelview.cpp" line="3888"/>
         <source>Replace the current subtile</source>
         <translation>Cserélje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3788"/>
+        <location filename="../source/levelcelview.cpp" line="3895"/>
         <source>Delete the current subtile</source>
         <translation>Az aktuális mező törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3795"/>
+        <location filename="../source/levelcelview.cpp" line="3902"/>
         <source>Tile</source>
         <translation>Lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3813"/>
+        <location filename="../source/levelcelview.cpp" line="3920"/>
         <source>Duplicate the current tile</source>
         <translation>Az aktuális lap másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3819"/>
+        <location filename="../source/levelcelview.cpp" line="3926"/>
         <source>Replace the current tile</source>
         <translation>Cserélje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="3826"/>
+        <location filename="../source/levelcelview.cpp" line="3933"/>
         <source>Delete the current tile</source>
         <translation>Az aktuális lap törlése</translation>
     </message>
@@ -5093,7 +5389,7 @@
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="127"/>
         <source>Spec:</source>
-        <translation type="unfinished"></translation>
+        <translation>Spec:</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="140"/>
@@ -5146,32 +5442,32 @@
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="76"/>
         <source>Light Radius:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fény sugara:</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="83"/>
         <source>Inherent light radius of this subtile</source>
-        <translation type="unfinished"></translation>
+        <translation>Ennek a mezőnek a saját fénysugara</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="159"/>
         <source>Render settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Renderelési beállítások</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="231"/>
         <source>Map settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Térképbeállítások</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="237"/>
         <source>Map feature:</source>
-        <translation type="unfinished"></translation>
+        <translation>A térkép jellemzője:</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="250"/>
         <source>Extern</source>
-        <translation type="unfinished"></translation>
+        <translation>Külső</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="255"/>
@@ -5249,37 +5545,37 @@
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="38"/>
         <source>Tile flags</source>
-        <translation type="unfinished"></translation>
+        <translation>Lap jelzők</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="44"/>
         <source>Room propagation:</source>
-        <translation type="unfinished"></translation>
+        <translation>Szobaterjedés:</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="66"/>
         <source>Shadow flags:</source>
-        <translation type="unfinished"></translation>
+        <translation>Árnyék jelzők</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="73"/>
         <source>Western Arch (or Grate)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyugati ív (vagy rács)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="80"/>
         <source>Eastern Arch (or Grate) | Eastern Door in Cathedral</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyugati ív (vagy rács)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="87"/>
         <source>Pillar with shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlop árnyékkal</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="94"/>
         <source>Western Wall in Cathedral or in Crypt | Eastern Door in Catacombs</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyugati fal a székesegyházban vagy a kriptában | Keleti ajtó a katakombákban</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="112"/>
@@ -5341,11 +5637,11 @@
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="160"/>
-        <location filename="../source/mainwindow.ui" line="469"/>
-        <location filename="../source/mainwindow.ui" line="924"/>
-        <location filename="../source/mainwindow.ui" line="948"/>
-        <location filename="../source/mainwindow.ui" line="972"/>
-        <location filename="../source/mainwindow.ui" line="996"/>
+        <location filename="../source/mainwindow.ui" line="473"/>
+        <location filename="../source/mainwindow.ui" line="952"/>
+        <location filename="../source/mainwindow.ui" line="976"/>
+        <location filename="../source/mainwindow.ui" line="1000"/>
+        <location filename="../source/mainwindow.ui" line="1024"/>
         <source>Tileset</source>
         <translation>Mezőkészlet</translation>
     </message>
@@ -5371,7 +5667,7 @@
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="249"/>
-        <location filename="../source/mainwindow.cpp" line="1484"/>
+        <location filename="../source/mainwindow.cpp" line="1536"/>
         <source>Palette</source>
         <translation>Paletta</translation>
     </message>
@@ -5383,12 +5679,12 @@
     <message>
         <location filename="../source/mainwindow.ui" line="290"/>
         <source>Translation Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Fordítókészlet</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="301"/>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Színek</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="317"/>
@@ -5411,380 +5707,410 @@
         <translation>Feladatok</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="414"/>
+        <location filename="../source/mainwindow.ui" line="417"/>
         <source>Edit</source>
         <translation>Szerkesztés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="449"/>
-        <location filename="../source/mainwindow.cpp" line="3786"/>
+        <location filename="../source/mainwindow.ui" line="453"/>
+        <location filename="../source/mainwindow.cpp" line="3895"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="454"/>
-        <location filename="../source/mainwindow.cpp" line="3791"/>
+        <location filename="../source/mainwindow.ui" line="458"/>
+        <location filename="../source/mainwindow.cpp" line="3900"/>
         <source>About Qt</source>
         <translation>Qt névjegye</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="474"/>
+        <location filename="../source/mainwindow.ui" line="478"/>
         <source>Gfxset</source>
-        <translation type="unfinished"></translation>
+        <translation>Gfxset</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="484"/>
+        <location filename="../source/mainwindow.ui" line="488"/>
         <source>Quit</source>
         <translation>Kilépés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="492"/>
-        <location filename="../source/mainwindow.ui" line="1227"/>
-        <location filename="../source/mainwindow.ui" line="1247"/>
+        <location filename="../source/mainwindow.ui" line="496"/>
+        <location filename="../source/mainwindow.ui" line="1255"/>
         <location filename="../source/mainwindow.ui" line="1275"/>
+        <location filename="../source/mainwindow.ui" line="1303"/>
         <source>Close</source>
         <translation>Bezárás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="500"/>
+        <location filename="../source/mainwindow.ui" line="504"/>
         <source>Open</source>
         <translation>Megnyitás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="508"/>
+        <location filename="../source/mainwindow.ui" line="512"/>
         <source>Open As...</source>
         <translation>Megnyitás mint...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="516"/>
+        <location filename="../source/mainwindow.ui" line="520"/>
         <source>Import</source>
         <translation>Importálás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="532"/>
-        <location filename="../source/mainwindow.ui" line="1222"/>
-        <location filename="../source/mainwindow.ui" line="1242"/>
+        <location filename="../source/mainwindow.ui" line="536"/>
+        <location filename="../source/mainwindow.ui" line="1250"/>
         <location filename="../source/mainwindow.ui" line="1270"/>
+        <location filename="../source/mainwindow.ui" line="1298"/>
         <source>Save As...</source>
         <translation>Mentés mint...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="540"/>
-        <location filename="../source/mainwindow.ui" line="548"/>
-        <location filename="../source/mainwindow.ui" line="556"/>
+        <location filename="../source/mainwindow.ui" line="544"/>
+        <location filename="../source/mainwindow.ui" line="552"/>
+        <location filename="../source/mainwindow.ui" line="560"/>
         <source>Open...</source>
         <translation>Megnyitás mint...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="572"/>
+        <location filename="../source/mainwindow.ui" line="576"/>
         <source>Diff</source>
-        <translation type="unfinished"></translation>
+        <translation>Diff</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="585"/>
+        <location filename="../source/mainwindow.ui" line="589"/>
         <source>Check Gfxsets</source>
-        <translation type="unfinished"></translation>
+        <translation>Gfxsets ellenőrzése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="588"/>
+        <location filename="../source/mainwindow.ui" line="592"/>
         <source>Check gfxsets of Diablo 1 / Hellfire</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellenőrizd a Diablo 1 / Hellfire gfxsets-eit</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="753"/>
+        <location filename="../source/mainwindow.ui" line="658"/>
+        <source>Horizontal Flip</source>
+        <translation>Vízszintes tükrözés</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="661"/>
+        <source>Flip the current frame horizontally</source>
+        <translation>Az aktuális képkocka vízszintes tükrözése</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="666"/>
+        <source>Vertical Flip</source>
+        <translation>Függőleges tükrözés</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="669"/>
+        <source>Flip the current frame vertically</source>
+        <translation>Az aktuális képkocka függőleges tükrözése</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="773"/>
         <source>Upscale/Downscale the current graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Az aktuális grafika lekicsinyítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="766"/>
+        <location filename="../source/mainwindow.ui" line="786"/>
+        <source>Squash</source>
+        <translation>Összeprésel</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="789"/>
+        <source>Add components to the main graphics</source>
+        <translation>Komponensek hozzáadása a fő grafikához</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.ui" line="794"/>
         <source>Mask</source>
-        <translation type="unfinished"></translation>
+        <translation>Maszkolás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="769"/>
+        <location filename="../source/mainwindow.ui" line="797"/>
         <source>Select the common pixels of the current graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Válassza ki az aktuális grafika közös képpontjait</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="774"/>
+        <location filename="../source/mainwindow.ui" line="802"/>
         <source>Optimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Optimalizálás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="777"/>
+        <location filename="../source/mainwindow.ui" line="805"/>
         <source>Optimize graphics assuming a black background</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafikák optimalizálása fekete háttér feltételezésével</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="804"/>
+        <location filename="../source/mainwindow.ui" line="832"/>
         <source>Graphics Boundary</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafikai határ</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="807"/>
+        <location filename="../source/mainwindow.ui" line="835"/>
         <source>Report the rectangle in which the graphics have non-transparent pixels</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelenítse meg azt a téglalapot, amelyben a grafika nem átlátszó pixeleket tartalmaz</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="812"/>
+        <location filename="../source/mainwindow.ui" line="840"/>
         <source>Colored Frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Színes képkockák</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="815"/>
+        <location filename="../source/mainwindow.ui" line="843"/>
         <source>List frames which are affected by the currently selected colors</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenleg kiválasztott színek által érintett képkockák listája</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="820"/>
+        <location filename="../source/mainwindow.ui" line="848"/>
         <source>Colored Subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Színes mezők</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="823"/>
+        <location filename="../source/mainwindow.ui" line="851"/>
         <source>List subtiles which are affected by the currently selected colors</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiválasztott színek által érintett mezők listája</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="828"/>
+        <location filename="../source/mainwindow.ui" line="856"/>
         <source>Colored Tiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Színes lapok</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="831"/>
+        <location filename="../source/mainwindow.ui" line="859"/>
         <source>List tiles which are affected by the currently selected colors</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenleg kiválasztott színek által érintett lapok listája</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="836"/>
+        <location filename="../source/mainwindow.ui" line="864"/>
         <source>Active Frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktív képkockák</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="839"/>
+        <location filename="../source/mainwindow.ui" line="867"/>
         <source>List frames which are affected by the current playback mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Az aktuális lejátszási mód által érintett képkockák listája</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="876"/>
+        <location filename="../source/mainwindow.ui" line="904"/>
         <source>Check Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellenőrizze a grafikát</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="879"/>
+        <location filename="../source/mainwindow.ui" line="907"/>
         <source>List inconsistencies of the graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorolja fel a grafikák ellentmondásait</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="900"/>
+        <location filename="../source/mainwindow.ui" line="928"/>
         <source>Light Subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Világos mezők</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="903"/>
+        <location filename="../source/mainwindow.ui" line="931"/>
         <source>Adjust the light radius of the subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Állítsa be a mezők fényének sugarát</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="911"/>
+        <location filename="../source/mainwindow.ui" line="939"/>
         <source>List inconsistent subtile settings</source>
         <translation>Ellentmondások keresése a mezők beállításaiban</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="919"/>
+        <location filename="../source/mainwindow.ui" line="947"/>
         <source>List inconsistent tile settings</source>
         <translation>Ellentmondások keresése a lapok beállításaiban</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="927"/>
+        <location filename="../source/mainwindow.ui" line="955"/>
         <source>List inconsistent tile and subtile settings</source>
         <translation>Ellentmondások keresése a mezők és a lapok beállításaiban</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1288"/>
+        <location filename="../source/mainwindow.ui" line="1316"/>
         <source>Display Colors</source>
         <translation>Színek megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1291"/>
+        <location filename="../source/mainwindow.ui" line="1319"/>
         <source>Show palette colors on a chart</source>
-        <translation type="unfinished"></translation>
+        <translation>Palettaszínek megjelenítése egy diagramon</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1304"/>
+        <location filename="../source/mainwindow.ui" line="1332"/>
         <source>Smack Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Hirtelen színek</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1307"/>
+        <location filename="../source/mainwindow.ui" line="1335"/>
         <source>Ensure the palette colors are SMK compliant</source>
-        <translation type="unfinished"></translation>
+        <translation>Győződjön meg arról, hogy a paletta színei megfelelnek az SMK előírásainak</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1312"/>
+        <location filename="../source/mainwindow.ui" line="1340"/>
         <source>Generate Light Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Fokozatos átmenetek létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1315"/>
+        <location filename="../source/mainwindow.ui" line="1343"/>
         <source>Generate light translations using the current palette</source>
-        <translation type="unfinished"></translation>
+        <translation>Fokozatos átmenetek generálása az aktuális paletta használatával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1320"/>
+        <location filename="../source/mainwindow.ui" line="1348"/>
         <source>Load Translation Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Fokozatos átmenetek betöltése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1323"/>
+        <location filename="../source/mainwindow.ui" line="1351"/>
         <source>Load a translation set as unique translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Fokozatos átmenet készlet betöltése egyedi átmenetekként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1328"/>
+        <location filename="../source/mainwindow.ui" line="1356"/>
         <source>Save Translation Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Átmenetkészlet mentése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1331"/>
+        <location filename="../source/mainwindow.ui" line="1359"/>
         <source>Save the current unique translations as a translation set</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi egyedi átmenetek mentése átmenetkészletként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1336"/>
-        <location filename="../source/mainwindow.ui" line="1416"/>
+        <location filename="../source/mainwindow.ui" line="1364"/>
+        <location filename="../source/mainwindow.ui" line="1444"/>
         <source>Add</source>
         <translation>Hozzáadás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1339"/>
+        <location filename="../source/mainwindow.ui" line="1367"/>
         <source>Add a column to the end of the table</source>
         <translation>Oszlop hozzáadása a tábla végére</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1347"/>
+        <location filename="../source/mainwindow.ui" line="1375"/>
         <source>Add a new column before the current one</source>
         <translation>Oszlop hozzáadása az aktuális oszlop elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1355"/>
+        <location filename="../source/mainwindow.ui" line="1383"/>
         <source>Duplicate the current column</source>
         <translation>Az aktuális oszlop másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1363"/>
+        <location filename="../source/mainwindow.ui" line="1391"/>
         <source>Delete the current column</source>
         <translation>Az aktuális oszlop törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1368"/>
-        <location filename="../source/mainwindow.ui" line="1448"/>
+        <location filename="../source/mainwindow.ui" line="1396"/>
+        <location filename="../source/mainwindow.ui" line="1476"/>
         <source>Hide</source>
         <translation>Elrejtés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1371"/>
+        <location filename="../source/mainwindow.ui" line="1399"/>
         <source>Hide the current column</source>
         <translation>Az aktuális oszlop elrejtése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1379"/>
+        <location filename="../source/mainwindow.ui" line="1407"/>
         <source>Move the current column to the left</source>
         <translation>Az aktuális oszlop mozgatása balra</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1387"/>
+        <location filename="../source/mainwindow.ui" line="1415"/>
         <source>Move the current column to the right</source>
         <translation>Az aktuális oszlop mozgatása jobbra</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1392"/>
-        <location filename="../source/mainwindow.ui" line="1472"/>
+        <location filename="../source/mainwindow.ui" line="1420"/>
+        <location filename="../source/mainwindow.ui" line="1500"/>
         <source>Delete...</source>
         <translation>Töröl...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1395"/>
+        <location filename="../source/mainwindow.ui" line="1423"/>
         <source>Delete columns</source>
         <translation>Oszlopok törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1400"/>
-        <location filename="../source/mainwindow.ui" line="1480"/>
+        <location filename="../source/mainwindow.ui" line="1428"/>
+        <location filename="../source/mainwindow.ui" line="1508"/>
         <source>Hide...</source>
         <translation>Elrejt...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1403"/>
+        <location filename="../source/mainwindow.ui" line="1431"/>
         <source>Hide columns</source>
         <translation>Oszlopok elrejtése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1408"/>
-        <location filename="../source/mainwindow.ui" line="1488"/>
+        <location filename="../source/mainwindow.ui" line="1436"/>
+        <location filename="../source/mainwindow.ui" line="1516"/>
         <source>Show...</source>
         <translation>Mutat...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1411"/>
+        <location filename="../source/mainwindow.ui" line="1439"/>
         <source>Show columns</source>
         <translation>Oszlopok megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1419"/>
+        <location filename="../source/mainwindow.ui" line="1447"/>
         <source>Add a row to the end of the table</source>
         <translation>Sor hozzáadása a tábla végére</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1427"/>
+        <location filename="../source/mainwindow.ui" line="1455"/>
         <source>Add a new row before the current one</source>
         <translation>Sor hozzáadása az aktuális sor elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1435"/>
+        <location filename="../source/mainwindow.ui" line="1463"/>
         <source>Duplicate the current row</source>
         <translation>Az aktuális sor másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1443"/>
+        <location filename="../source/mainwindow.ui" line="1471"/>
         <source>Delete the current row</source>
         <translation>Az aktuális sor törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1451"/>
+        <location filename="../source/mainwindow.ui" line="1479"/>
         <source>Hide the current row</source>
         <translation>Az aktuális sor elrejtése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1459"/>
+        <location filename="../source/mainwindow.ui" line="1487"/>
         <source>Move the current row up</source>
         <translation>Az aktuális sor mozgatása feljebb</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1467"/>
+        <location filename="../source/mainwindow.ui" line="1495"/>
         <source>Move the current row down</source>
         <translation>Az aktuális sor mozgatása lentebb</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1475"/>
+        <location filename="../source/mainwindow.ui" line="1503"/>
         <source>Delete rows</source>
         <translation>Sorok törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1483"/>
+        <location filename="../source/mainwindow.ui" line="1511"/>
         <source>Hide rows</source>
         <translation>Sorok elrejtése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1491"/>
+        <location filename="../source/mainwindow.ui" line="1519"/>
         <source>Show rows</source>
         <translation>Sorok megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="524"/>
-        <location filename="../source/mainwindow.ui" line="1217"/>
-        <location filename="../source/mainwindow.ui" line="1237"/>
+        <location filename="../source/mainwindow.ui" line="528"/>
+        <location filename="../source/mainwindow.ui" line="1245"/>
         <location filename="../source/mainwindow.ui" line="1265"/>
+        <location filename="../source/mainwindow.ui" line="1293"/>
         <source>Save</source>
         <translation>Mentés</translation>
     </message>
@@ -5794,207 +6120,207 @@
         <translation>Jelentések</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="564"/>
+        <location filename="../source/mainwindow.ui" line="568"/>
         <source>Export</source>
         <translation>Exportálás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="577"/>
+        <location filename="../source/mainwindow.ui" line="581"/>
         <source>Upscale Assets</source>
         <translation>Állományok felméretezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="580"/>
+        <location filename="../source/mainwindow.ui" line="584"/>
         <source>Upscale the assets of Diablo 1 / Hellfire</source>
         <translation>Diablo 1 / Hellfire állományok felméretezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="593"/>
+        <location filename="../source/mainwindow.ui" line="597"/>
         <source>Settings</source>
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="734"/>
-        <location filename="../source/mainwindow.ui" line="1252"/>
+        <location filename="../source/mainwindow.ui" line="754"/>
         <location filename="../source/mainwindow.ui" line="1280"/>
+        <location filename="../source/mainwindow.ui" line="1308"/>
         <source>Patch</source>
-        <translation type="unfinished"></translation>
+        <translation>Javítás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="737"/>
+        <location filename="../source/mainwindow.ui" line="757"/>
         <source>Patch the current graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Javítsa ki az aktuális grafikát</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="742"/>
+        <location filename="../source/mainwindow.ui" line="762"/>
         <source>Resize</source>
-        <translation type="unfinished"></translation>
+        <translation>Átméretezés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="745"/>
+        <location filename="../source/mainwindow.ui" line="765"/>
         <source>Resize the current graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Méretezze át az aktuális grafikát</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="860"/>
-        <location filename="../source/mainwindow.ui" line="1004"/>
+        <location filename="../source/mainwindow.ui" line="888"/>
+        <location filename="../source/mainwindow.ui" line="1032"/>
         <source>Usage Report</source>
         <translation>Használati jelentés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="932"/>
-        <location filename="../source/mainwindow.ui" line="980"/>
+        <location filename="../source/mainwindow.ui" line="960"/>
+        <location filename="../source/mainwindow.ui" line="1008"/>
         <source>Frames</source>
         <translation>Képkockák</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="940"/>
-        <location filename="../source/mainwindow.ui" line="956"/>
-        <location filename="../source/mainwindow.ui" line="988"/>
-        <location filename="../source/mainwindow.ui" line="1060"/>
+        <location filename="../source/mainwindow.ui" line="968"/>
+        <location filename="../source/mainwindow.ui" line="984"/>
+        <location filename="../source/mainwindow.ui" line="1016"/>
+        <location filename="../source/mainwindow.ui" line="1088"/>
         <source>Subtiles</source>
         <translation>Mezők</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="964"/>
-        <location filename="../source/mainwindow.ui" line="1044"/>
-        <location filename="../source/mainwindow.ui" line="1068"/>
-        <location filename="../source/mainwindow.ui" line="1116"/>
-        <location filename="../source/mainwindow.ui" line="1124"/>
+        <location filename="../source/mainwindow.ui" line="992"/>
+        <location filename="../source/mainwindow.ui" line="1072"/>
+        <location filename="../source/mainwindow.ui" line="1096"/>
+        <location filename="../source/mainwindow.ui" line="1144"/>
+        <location filename="../source/mainwindow.ui" line="1152"/>
         <source>Tiles</source>
         <translation>Lapok</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1036"/>
+        <location filename="../source/mainwindow.ui" line="1064"/>
         <source>Mask Tiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Maszkolja a lapot</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1039"/>
+        <location filename="../source/mainwindow.ui" line="1067"/>
         <source>Mask tiles with the tiles of an another dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Maszkolja a lapokat egy másik kazamata lapjaival</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1047"/>
+        <location filename="../source/mainwindow.ui" line="1075"/>
         <source>Mark tiles protected if the tile is set or there is an actor on the tile</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelöld védettnek a lapokat, ha a lap be van állítva, vagy van rajta szereplő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1052"/>
+        <location filename="../source/mainwindow.ui" line="1080"/>
         <source>Tiles From</source>
-        <translation type="unfinished"></translation>
+        <translation>Lap -tól</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1055"/>
+        <location filename="../source/mainwindow.ui" line="1083"/>
         <source>Mark tiles protected if the tile is set in an another dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelöld védettnek a lapokat, ha a lap egy másik kazamatában van</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1063"/>
+        <location filename="../source/mainwindow.ui" line="1091"/>
         <source>Mark subtiles protected if there is an actor on the tile</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelöld védettként a mezőket, ha van szereplő a lapon</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1071"/>
+        <location filename="../source/mainwindow.ui" line="1099"/>
         <source>List inconsistent tiles/subtiles</source>
         <translation>Ellentmondások keresése a lapok és a mezők között</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1076"/>
-        <location filename="../source/mainwindow.ui" line="1132"/>
-        <location filename="../source/mainwindow.ui" line="1140"/>
+        <location filename="../source/mainwindow.ui" line="1104"/>
+        <location filename="../source/mainwindow.ui" line="1160"/>
+        <location filename="../source/mainwindow.ui" line="1168"/>
         <source>Protections</source>
         <translation>Védelmek</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1079"/>
+        <location filename="../source/mainwindow.ui" line="1107"/>
         <source>List inconsistent protections</source>
         <translation>Ellentmondások keresése a védelmekben</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1084"/>
-        <location filename="../source/mainwindow.ui" line="1148"/>
-        <location filename="../source/mainwindow.ui" line="1156"/>
+        <location filename="../source/mainwindow.ui" line="1112"/>
+        <location filename="../source/mainwindow.ui" line="1176"/>
+        <location filename="../source/mainwindow.ui" line="1184"/>
         <source>Items</source>
         <translation>Tárgyak</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1092"/>
-        <location filename="../source/mainwindow.ui" line="1164"/>
-        <location filename="../source/mainwindow.ui" line="1172"/>
+        <location filename="../source/mainwindow.ui" line="1120"/>
+        <location filename="../source/mainwindow.ui" line="1192"/>
+        <location filename="../source/mainwindow.ui" line="1200"/>
         <source>Monsters</source>
         <translation>Szörnyek</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1100"/>
-        <location filename="../source/mainwindow.ui" line="1180"/>
-        <location filename="../source/mainwindow.ui" line="1188"/>
+        <location filename="../source/mainwindow.ui" line="1128"/>
+        <location filename="../source/mainwindow.ui" line="1208"/>
+        <location filename="../source/mainwindow.ui" line="1216"/>
         <source>Objects</source>
         <translation>Objektumok</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1108"/>
+        <location filename="../source/mainwindow.ui" line="1136"/>
         <source>Entities</source>
-        <translation type="unfinished"></translation>
+        <translation>Entitások</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1119"/>
+        <location filename="../source/mainwindow.ui" line="1147"/>
         <source>Remove every tile from the dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolíts el minden lapot a kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1127"/>
+        <location filename="../source/mainwindow.ui" line="1155"/>
         <source>Load tiles from another dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapok betöltése egy másik kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1135"/>
+        <location filename="../source/mainwindow.ui" line="1163"/>
         <source>Remove every protection from the dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolíts el minden védelmet a kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1143"/>
+        <location filename="../source/mainwindow.ui" line="1171"/>
         <source>Load protections from another dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Tölts le védelmet egy másik kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1204"/>
+        <location filename="../source/mainwindow.ui" line="1232"/>
         <source>Search</source>
         <translation>Keresés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1207"/>
+        <location filename="../source/mainwindow.ui" line="1235"/>
         <source>Search for entities in the current dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Entitások keresése az aktuális kazamatában</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1255"/>
         <location filename="../source/mainwindow.ui" line="1283"/>
+        <location filename="../source/mainwindow.ui" line="1311"/>
         <source>Replace translation values of 255 with 0</source>
-        <translation type="unfinished"></translation>
+        <translation>A 255-ös átrendelő értékek 0-ra cserélése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1296"/>
+        <location filename="../source/mainwindow.ui" line="1324"/>
         <source>Remap Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Színek újratervezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1299"/>
+        <location filename="../source/mainwindow.ui" line="1327"/>
         <source>Replace colors of the graphics with another colors from the palette or with transparent pixels</source>
-        <translation type="unfinished"></translation>
+        <translation>A grafika színeinek cseréje a paletta más színeivel vagy átlátszó pixelekkel</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="884"/>
+        <location filename="../source/mainwindow.ui" line="912"/>
         <source>Reset Frame Types</source>
         <translation>Képkockatípusok visszaállítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="887"/>
+        <location filename="../source/mainwindow.ui" line="915"/>
         <source>Reinitialize the frame types of every frame</source>
         <translation>A képkockák típusainak alaphelyzetbe állítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="868"/>
+        <location filename="../source/mainwindow.ui" line="896"/>
         <source>Inefficient Frames</source>
         <translation>Pazarló képkockák</translation>
     </message>
@@ -6005,847 +6331,857 @@
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="227"/>
-        <location filename="../source/mainwindow.ui" line="479"/>
+        <location filename="../source/mainwindow.ui" line="483"/>
         <source>Dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="598"/>
-        <location filename="../source/mainwindow.ui" line="758"/>
+        <location filename="../source/mainwindow.ui" line="602"/>
+        <location filename="../source/mainwindow.ui" line="778"/>
         <source>Merge</source>
-        <translation type="unfinished"></translation>
+        <translation>Összevon</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="601"/>
+        <location filename="../source/mainwindow.ui" line="605"/>
         <source>Merge frames of the current graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Az aktuális grafika képkockáinak egyesítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="617"/>
+        <location filename="../source/mainwindow.ui" line="621"/>
         <source>Create a new (empty) frame (or multiple frames from images with SHIFT)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hozzon létre egy új (üres) képkockát (vagy több képkockát képekből a SHIFT billentyűvel)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="625"/>
+        <location filename="../source/mainwindow.ui" line="629"/>
         <source>Add a new frame before the current one (or multiple frames from images with SHIFT)</source>
         <translation>Egy vagy több (SHIFT segítségével) képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="630"/>
-        <location filename="../source/mainwindow.ui" line="662"/>
-        <location filename="../source/mainwindow.ui" line="710"/>
-        <location filename="../source/mainwindow.ui" line="1352"/>
-        <location filename="../source/mainwindow.ui" line="1432"/>
+        <location filename="../source/mainwindow.ui" line="634"/>
+        <location filename="../source/mainwindow.ui" line="682"/>
+        <location filename="../source/mainwindow.ui" line="730"/>
+        <location filename="../source/mainwindow.ui" line="1380"/>
+        <location filename="../source/mainwindow.ui" line="1460"/>
         <source>Duplicate</source>
         <translation>Másolat</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="633"/>
+        <location filename="../source/mainwindow.ui" line="637"/>
         <source>Duplicate the current frame</source>
         <translation>Az aktuális képkocka másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="665"/>
+        <location filename="../source/mainwindow.ui" line="685"/>
         <source>Duplicate the current subtile</source>
         <translation>Az aktuális mező másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="713"/>
+        <location filename="../source/mainwindow.ui" line="733"/>
         <source>Duplicate the current tile</source>
         <translation>Az aktuális lap másolatának létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="761"/>
+        <location filename="../source/mainwindow.ui" line="781"/>
         <source>Add frames from an other graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Képkockák hozzáadása más grafikákból</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="782"/>
+        <location filename="../source/mainwindow.ui" line="810"/>
         <source>Show PAL &amp;&amp; TRNs</source>
-        <translation type="unfinished"></translation>
+        <translation>PAL &amp;&amp; és TRN-ek megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="793"/>
+        <location filename="../source/mainwindow.ui" line="821"/>
         <source>Show Bottom Panel</source>
-        <translation type="unfinished"></translation>
+        <translation>Alsó panel megjelenítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="863"/>
+        <location filename="../source/mainwindow.ui" line="891"/>
         <source>List the uses of the current frame/subtile</source>
         <translation>Listázza a felhasználóit az aktuális képkockának és mezőnek</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="844"/>
+        <location filename="../source/mainwindow.ui" line="872"/>
         <source>Active Subtiles</source>
         <translation>Aktív mezők</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="847"/>
+        <location filename="../source/mainwindow.ui" line="875"/>
         <source>List subtiles which are affected by the current playback mode</source>
         <translation>Mezők összegyûjtése melyekre az aktuális lejátszási mód hatással van</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="852"/>
+        <location filename="../source/mainwindow.ui" line="880"/>
         <source>Active Tiles</source>
         <translation>Aktív lapok</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="855"/>
+        <location filename="../source/mainwindow.ui" line="883"/>
         <source>List tiles which are affected by the current playback mode</source>
         <translation>Lapok összegyûjtése melyekre az aktuális lejátszási mód hatással van</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="871"/>
+        <location filename="../source/mainwindow.ui" line="899"/>
         <source>List frames which are almost standard</source>
         <translation>Majdnem standard képkockák listázása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="892"/>
+        <location filename="../source/mainwindow.ui" line="920"/>
         <source>Patch Tileset</source>
         <translation>Mezőkészlet javítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="895"/>
+        <location filename="../source/mainwindow.ui" line="923"/>
         <source>Patch subtiles of the vanilla game</source>
         <translation>Az eredeti játékbeli mezők javítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="935"/>
+        <location filename="../source/mainwindow.ui" line="963"/>
         <source>Eliminate unused frames</source>
         <translation>Nem használt képkockák törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="943"/>
+        <location filename="../source/mainwindow.ui" line="971"/>
         <source>Eliminate unused subtiles</source>
         <translation>Nem használt mezők törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="951"/>
+        <location filename="../source/mainwindow.ui" line="979"/>
         <source>Eliminate unused subtiles and frames</source>
         <translation>Nem használt mezők és képkockák törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="959"/>
+        <location filename="../source/mainwindow.ui" line="987"/>
         <source>Reuse frames in subtiles</source>
         <translation>Mezők tömörítése képkockák újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="967"/>
+        <location filename="../source/mainwindow.ui" line="995"/>
         <source>Reuse subtiles in tiles</source>
         <translation>Lapok tömörítése mezők újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="975"/>
+        <location filename="../source/mainwindow.ui" line="1003"/>
         <source>Reuse subtiles in tiles and frames in subtiles</source>
         <translation>Mezőkészlet tömörítése mezők és képkockák újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="983"/>
+        <location filename="../source/mainwindow.ui" line="1011"/>
         <source>Sort the frames based on the subtiles</source>
         <translation>Képkockák rendezése a mezők sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="991"/>
+        <location filename="../source/mainwindow.ui" line="1019"/>
         <source>Sort the subtiles based on the tiles</source>
         <translation>Mezők rendezése a lapok sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="999"/>
+        <location filename="../source/mainwindow.ui" line="1027"/>
         <source>Sort the subtiles and frames based on the tiles</source>
         <translation>Mezők és a képkockák rendezése a lapok sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1007"/>
+        <location filename="../source/mainwindow.ui" line="1035"/>
         <source>List the type of monsters/items/objects in the dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorold fel a szörnyek/tárgyak/objektumok típusait a kazamatában</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1012"/>
+        <location filename="../source/mainwindow.ui" line="1040"/>
         <source>Patch Dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata javítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1015"/>
+        <location filename="../source/mainwindow.ui" line="1043"/>
         <source>Patch subtiles in the dungeon of the vanilla game</source>
-        <translation type="unfinished"></translation>
+        <translation>Javítsd a mezőket az eredeti játék kazamatájában</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1020"/>
+        <location filename="../source/mainwindow.ui" line="1048"/>
         <source>Reset Tiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapok alaphelyzetbe állítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1023"/>
+        <location filename="../source/mainwindow.ui" line="1051"/>
         <source>Reinitialize the tiles based on the subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>A lapok alaphelyzetbe állítása a mezők alapján</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1028"/>
+        <location filename="../source/mainwindow.ui" line="1056"/>
         <source>Reset Subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Mezők visszaállítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1031"/>
+        <location filename="../source/mainwindow.ui" line="1059"/>
         <source>Reinitialize the subtiles based on the tiles</source>
-        <translation type="unfinished"></translation>
+        <translation>A mezők alaphelyzetbe állítása a lapok alapján</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1087"/>
+        <location filename="../source/mainwindow.ui" line="1115"/>
         <source>List inconsistent items</source>
         <translation>Ellentmondások keresése a tárgyak között</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1095"/>
+        <location filename="../source/mainwindow.ui" line="1123"/>
         <source>List inconsistent monsters</source>
         <translation>Ellentmondások keresése a szörnyek között</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1103"/>
+        <location filename="../source/mainwindow.ui" line="1131"/>
         <source>List inconsistent objects</source>
         <translation>Ellentmondások keresése az objektumok között</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1111"/>
+        <location filename="../source/mainwindow.ui" line="1139"/>
         <source>List inconsistent items/monsters/objects</source>
         <translation>Ellentmondások keresése a tárgyak, a szörnyek és az okjektumok között</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1151"/>
+        <location filename="../source/mainwindow.ui" line="1179"/>
         <source>Remove every item from the dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolíts el minden tárgyat a kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1159"/>
+        <location filename="../source/mainwindow.ui" line="1187"/>
         <source>Load items from another dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Tárgyak betöltése egy másik kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1167"/>
+        <location filename="../source/mainwindow.ui" line="1195"/>
         <source>Remove every monster from the dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolíts el minden szörnyet a kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1175"/>
+        <location filename="../source/mainwindow.ui" line="1203"/>
         <source>Load monsters from another dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Szörnyek betöltése egy másik kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1183"/>
+        <location filename="../source/mainwindow.ui" line="1211"/>
         <source>Remove every object from the dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolíts el minden objektumot a kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1191"/>
+        <location filename="../source/mainwindow.ui" line="1219"/>
         <source>Load objects from another dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Objektumok betöltése egy másik kazamatából</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1196"/>
+        <location filename="../source/mainwindow.ui" line="1224"/>
         <source>Generate</source>
         <translation>Generálás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="1199"/>
+        <location filename="../source/mainwindow.ui" line="1227"/>
         <source>Create a dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="459"/>
+        <location filename="../source/mainwindow.ui" line="463"/>
         <source>CEL graphics</source>
         <translation>CEL grafika</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="464"/>
+        <location filename="../source/mainwindow.ui" line="468"/>
         <source>CL2 graphics</source>
         <translation>CL2 grafika</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1123"/>
+        <location filename="../source/mainwindow.cpp" line="1168"/>
         <source>Undo</source>
         <translation>Visszavonás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1124"/>
+        <location filename="../source/mainwindow.cpp" line="1169"/>
         <source>Redo</source>
         <translation>Ismétlés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="622"/>
-        <location filename="../source/mainwindow.ui" line="670"/>
-        <location filename="../source/mainwindow.ui" line="702"/>
-        <location filename="../source/mainwindow.ui" line="1344"/>
-        <location filename="../source/mainwindow.ui" line="1424"/>
+        <location filename="../source/mainwindow.ui" line="626"/>
+        <location filename="../source/mainwindow.ui" line="690"/>
+        <location filename="../source/mainwindow.ui" line="722"/>
+        <location filename="../source/mainwindow.ui" line="1372"/>
+        <location filename="../source/mainwindow.ui" line="1452"/>
         <source>Insert</source>
         <translation>Beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="638"/>
-        <location filename="../source/mainwindow.ui" line="678"/>
-        <location filename="../source/mainwindow.ui" line="718"/>
+        <location filename="../source/mainwindow.ui" line="642"/>
+        <location filename="../source/mainwindow.ui" line="698"/>
+        <location filename="../source/mainwindow.ui" line="738"/>
         <source>Replace</source>
         <translation>Cseréje</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="641"/>
+        <location filename="../source/mainwindow.ui" line="645"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="646"/>
-        <location filename="../source/mainwindow.ui" line="686"/>
-        <location filename="../source/mainwindow.ui" line="726"/>
-        <location filename="../source/mainwindow.ui" line="1360"/>
-        <location filename="../source/mainwindow.ui" line="1440"/>
+        <location filename="../source/mainwindow.ui" line="650"/>
+        <location filename="../source/mainwindow.ui" line="706"/>
+        <location filename="../source/mainwindow.ui" line="746"/>
+        <location filename="../source/mainwindow.ui" line="1388"/>
+        <location filename="../source/mainwindow.ui" line="1468"/>
         <source>Delete</source>
         <translation>Törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="649"/>
+        <location filename="../source/mainwindow.ui" line="653"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="614"/>
-        <location filename="../source/mainwindow.ui" line="654"/>
-        <location filename="../source/mainwindow.ui" line="694"/>
+        <location filename="../source/mainwindow.ui" line="618"/>
+        <location filename="../source/mainwindow.ui" line="674"/>
+        <location filename="../source/mainwindow.ui" line="714"/>
         <source>Create</source>
         <translation>Létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="657"/>
+        <location filename="../source/mainwindow.ui" line="677"/>
         <source>Create a new subtile</source>
         <translation>Új mező létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="673"/>
+        <location filename="../source/mainwindow.ui" line="693"/>
         <source>Add new subtiles before the current one</source>
         <translation>Új mező beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="681"/>
+        <location filename="../source/mainwindow.ui" line="701"/>
         <source>Replace the current subtile</source>
         <translation>Cserélje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="689"/>
+        <location filename="../source/mainwindow.ui" line="709"/>
         <source>Delete the current subtile</source>
         <translation>Az aktuális mező törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="697"/>
+        <location filename="../source/mainwindow.ui" line="717"/>
         <source>Create a new tile</source>
         <translation>Új lap létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="705"/>
+        <location filename="../source/mainwindow.ui" line="725"/>
         <source>Add new tiles before the current one</source>
         <translation>Új lap beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="721"/>
+        <location filename="../source/mainwindow.ui" line="741"/>
         <source>Replace the current tile</source>
         <translation>Cserélje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="729"/>
+        <location filename="../source/mainwindow.ui" line="749"/>
         <source>Delete the current tile</source>
         <translation>Az aktuális lap törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="750"/>
+        <location filename="../source/mainwindow.ui" line="770"/>
         <source>Upscale</source>
         <translation>Felméretezés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2949"/>
+        <location filename="../source/mainwindow.cpp" line="3058"/>
         <source>Dungeon map file</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata térképfájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2974"/>
+        <location filename="../source/mainwindow.cpp" line="3083"/>
         <source>Pre-Dungeon map file</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata elő-térképfájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3071"/>
+        <location filename="../source/mainwindow.cpp" line="3180"/>
         <source>Failed loading DUN file.</source>
         <translation>A(z) %1 DUN fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3113"/>
+        <location filename="../source/mainwindow.cpp" line="3222"/>
         <source>Source of the flags</source>
-        <translation type="unfinished"></translation>
+        <translation>A beállítások forrása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3139"/>
+        <location filename="../source/mainwindow.cpp" line="3248"/>
         <source>Source of the items</source>
         <translation>A tárgyak forrása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3165"/>
+        <location filename="../source/mainwindow.cpp" line="3274"/>
         <source>Source of the monsters</source>
         <translation>A szörnyek forrása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3191"/>
+        <location filename="../source/mainwindow.cpp" line="3300"/>
         <source>Source of the objects</source>
         <translation>Az objektumok forrása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3246"/>
+        <location filename="../source/mainwindow.cpp" line="3355"/>
         <source>Select Palette Files</source>
         <translation>Paletta fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3327"/>
+        <location filename="../source/mainwindow.cpp" line="3436"/>
         <source>Select Unique Translation Files</source>
         <translation>Egyedi átrendelő fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3413"/>
+        <location filename="../source/mainwindow.cpp" line="3522"/>
         <source>Select Base Translation Files</source>
         <translation>Alap átrendelő fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="279"/>
-        <location filename="../source/mainwindow.cpp" line="300"/>
-        <location filename="../source/mainwindow.cpp" line="321"/>
-        <location filename="../source/mainwindow.cpp" line="1760"/>
-        <location filename="../source/mainwindow.cpp" line="2114"/>
-        <location filename="../source/mainwindow.cpp" line="3071"/>
-        <location filename="../source/mainwindow.cpp" line="3230"/>
-        <location filename="../source/mainwindow.cpp" line="3311"/>
-        <location filename="../source/mainwindow.cpp" line="3397"/>
-        <location filename="../source/mainwindow.cpp" line="3632"/>
+        <location filename="../source/mainwindow.cpp" line="294"/>
+        <location filename="../source/mainwindow.cpp" line="315"/>
+        <location filename="../source/mainwindow.cpp" line="336"/>
+        <location filename="../source/mainwindow.cpp" line="1811"/>
+        <location filename="../source/mainwindow.cpp" line="2170"/>
+        <location filename="../source/mainwindow.cpp" line="3180"/>
+        <location filename="../source/mainwindow.cpp" line="3339"/>
+        <location filename="../source/mainwindow.cpp" line="3420"/>
+        <location filename="../source/mainwindow.cpp" line="3506"/>
+        <location filename="../source/mainwindow.cpp" line="3741"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="279"/>
-        <location filename="../source/mainwindow.cpp" line="3230"/>
+        <location filename="../source/mainwindow.cpp" line="294"/>
+        <location filename="../source/mainwindow.cpp" line="3339"/>
         <source>Failed loading PAL file.</source>
         <translation>A PAL fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="300"/>
-        <location filename="../source/mainwindow.cpp" line="321"/>
-        <location filename="../source/mainwindow.cpp" line="3311"/>
-        <location filename="../source/mainwindow.cpp" line="3397"/>
+        <location filename="../source/mainwindow.cpp" line="315"/>
+        <location filename="../source/mainwindow.cpp" line="336"/>
+        <location filename="../source/mainwindow.cpp" line="3420"/>
+        <location filename="../source/mainwindow.cpp" line="3506"/>
         <source>Failed loading TRN file.</source>
         <translation>A TRN fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="703"/>
-        <location filename="../source/mainwindow.cpp" line="715"/>
-        <location filename="../source/mainwindow.cpp" line="2550"/>
+        <location filename="../source/mainwindow.cpp" line="728"/>
+        <location filename="../source/mainwindow.cpp" line="740"/>
+        <location filename="../source/mainwindow.cpp" line="2643"/>
         <source>Open Graphics</source>
         <translation>Grafika megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1071"/>
-        <location filename="../source/mainwindow.cpp" line="1183"/>
+        <location filename="../source/mainwindow.cpp" line="1116"/>
+        <location filename="../source/mainwindow.cpp" line="1228"/>
         <source>Loading...</source>
         <translation>Betöltés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="606"/>
+        <location filename="../source/mainwindow.ui" line="610"/>
         <source>Add Layer</source>
         <translation>Réteg hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="609"/>
+        <location filename="../source/mainwindow.ui" line="613"/>
         <source>Add the content of an image to the current frame</source>
         <translation>Kép hozzáadása az aktuális képkockához</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="826"/>
-        <location filename="../source/mainwindow.cpp" line="905"/>
-        <location filename="../source/mainwindow.cpp" line="1379"/>
-        <location filename="../source/mainwindow.cpp" line="2193"/>
+        <location filename="../source/mainwindow.cpp" line="851"/>
+        <location filename="../source/mainwindow.cpp" line="930"/>
+        <location filename="../source/mainwindow.cpp" line="1426"/>
+        <location filename="../source/mainwindow.cpp" line="2250"/>
         <source>Failed loading MIN file: %1.</source>
         <translation>A(z) %1 MIN fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="841"/>
-        <location filename="../source/mainwindow.cpp" line="1385"/>
-        <location filename="../source/mainwindow.cpp" line="2203"/>
+        <location filename="../source/mainwindow.cpp" line="866"/>
+        <location filename="../source/mainwindow.cpp" line="1432"/>
+        <location filename="../source/mainwindow.cpp" line="2260"/>
         <source>Failed loading TIL file: %1.</source>
         <translation>A(z) %1 TIL fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="902"/>
-        <location filename="../source/mainwindow.cpp" line="1397"/>
+        <location filename="../source/mainwindow.cpp" line="927"/>
+        <location filename="../source/mainwindow.cpp" line="1444"/>
         <source>Failed loading Tileset-CEL file: %1.</source>
         <translation>A(z) %1 Mezőkészlet-CEL fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="810"/>
-        <location filename="../source/mainwindow.cpp" line="1411"/>
+        <location filename="../source/mainwindow.cpp" line="835"/>
+        <location filename="../source/mainwindow.cpp" line="1458"/>
         <source>Failed loading DUN file: %1.</source>
         <translation>A(z) %1 DUN fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="715"/>
-        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)</source>
-        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2);;PCX Fájlok (*.pcx *.PCX);;SMK Fájlok (*.smk *.SMK);;DUN Fájlok (*.dun *.DUN *.rdun *.RDUN);;TBL Fájlok (*.tbl *.TBL);;CPP Fájlok (*.cpp *.CPP *.c *.C)</translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="1301"/>
+        <location filename="../source/mainwindow.cpp" line="1348"/>
         <source>Could not find the other table file for TBL file: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem található a TBL fájl másik táblafájlja: %1.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="856"/>
-        <location filename="../source/mainwindow.cpp" line="1372"/>
-        <location filename="../source/mainwindow.cpp" line="2212"/>
+        <location filename="../source/mainwindow.cpp" line="881"/>
+        <location filename="../source/mainwindow.cpp" line="1419"/>
+        <location filename="../source/mainwindow.cpp" line="2269"/>
         <source>Failed loading SLA file: %1.</source>
         <translation>A(z) %1 SLA fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="773"/>
+        <location filename="../source/mainwindow.cpp" line="728"/>
+        <source>CL2 Files (*.cl2 *.CL2);;CLC Files (*.clc *.CLC)</source>
+        <translation>CL2 fájlok (*.cl2 *.CL2);;CLC fájlok (*.clc *.CLC)</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="740"/>
+        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;CLC Files (*.clc *.CLC);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)</source>
+        <translation>CEL/CL2 fájlok (*.cel *.CEL *.cl2 *.CL2);;CLC fájlok (*.clc *.CLC);;PCX fájlok (*.pcx *.PCX);;SMK fájlok (*.smk *.SMK);;DUN fájlok (*.dun *.DUN *.rdun *.RDUN);;TBL fájlok (*.tbl *.TBL);;CPP fájlok (*.cpp *.CPP *.c *.C)</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="798"/>
         <source>Importing...</source>
-        <translation type="unfinished"></translation>
+        <translation>Importálás...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1218"/>
+        <location filename="../source/mainwindow.cpp" line="1265"/>
         <source>Could not recognize file-type based on its extension.</source>
-        <translation type="unfinished"></translation>
+        <translation>A fájltípus nem ismerhető fel a kiterjesztése alapján.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1350"/>
+        <location filename="../source/mainwindow.cpp" line="1397"/>
         <source>Opening as standard CEL file because the SLA file (%1) is missing.</source>
-        <translation type="unfinished"></translation>
+        <translation>Normál CEL fájlként nyílik meg, mert az SLA fájl (%1) hiányzik.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1418"/>
-        <location filename="../source/mainwindow.cpp" line="2568"/>
+        <location filename="../source/mainwindow.cpp" line="1465"/>
+        <location filename="../source/mainwindow.cpp" line="2661"/>
         <source>Failed loading CEL file: %1.</source>
         <translation>A(z) %1 CEL fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1423"/>
-        <location filename="../source/mainwindow.cpp" line="2573"/>
+        <location filename="../source/mainwindow.cpp" line="1470"/>
+        <location filename="../source/mainwindow.cpp" line="2666"/>
         <source>Failed loading CL2 file: %1.</source>
         <translation>A(z) %1 CL2 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1428"/>
+        <location filename="../source/mainwindow.cpp" line="1475"/>
+        <source>Failed loading CLC file: %1.</source>
+        <translation>Nem sikerült betölteni a CLC fájlt: %1.</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="1480"/>
         <source>Failed loading PCX file: %1.</source>
         <translation>A(z) %1 PCX fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1434"/>
+        <location filename="../source/mainwindow.cpp" line="1486"/>
         <source>Failed loading TBL file: %1.</source>
         <translation>A(z) %1 TBL fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1440"/>
+        <location filename="../source/mainwindow.cpp" line="1492"/>
         <source>Failed loading CPP file: %1.</source>
         <translation>A(z) %1 CPP fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1445"/>
+        <location filename="../source/mainwindow.cpp" line="1497"/>
         <source>Failed loading SMK file: %1.</source>
         <translation>A(z) %1 SMK fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1485"/>
+        <location filename="../source/mainwindow.cpp" line="1537"/>
         <source>Unique translation</source>
         <translation>Egyedi átrendelő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2089"/>
+        <location filename="../source/mainwindow.cpp" line="2145"/>
         <source>Select Graphics</source>
         <translation>Grafika</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2093"/>
+        <location filename="../source/mainwindow.cpp" line="2149"/>
         <source>CEL Files (*.cel *.CEL);;MIN Files (*.min *.MIN);;TIL Files (*.til *.TIL);;SLA Files (*.sla *.SLA);;TLA Files (*.tla *.TLA)</source>
         <translation>CEL Fájlok (*.cel *.CEL);;MIN Fájlok (*.min *.MIN);;TIL Fájlok (*.til *.TIL);;SLA Fájlok (*.sla *.SLA);;TLA Fájlok (*.tla *.TLA)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2095"/>
+        <location filename="../source/mainwindow.cpp" line="2151"/>
         <source>Select Dungeon or Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Válasszon kazamatát vagy grafikát</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2106"/>
+        <location filename="../source/mainwindow.cpp" line="2162"/>
         <source>CEL Files (*.cel *.CEL)</source>
         <translation>CEL Fájlok (*.cel *.CEL)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2110"/>
+        <location filename="../source/mainwindow.cpp" line="2166"/>
         <source>PCX Files (*.pcx *.PCX)</source>
         <translation>PCX Fájlok (*.pcx *.PCX)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2112"/>
+        <location filename="../source/mainwindow.cpp" line="2168"/>
         <source>SMK Files (*.smk *.SMK)</source>
         <translation>SMK Fájlok (*.smk *.SMK)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2157"/>
+        <location filename="../source/mainwindow.cpp" line="2213"/>
         <source>Comparing...</source>
-        <translation type="unfinished"></translation>
+        <translation>Összehasonlítás...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2171"/>
+        <location filename="../source/mainwindow.cpp" line="2227"/>
         <source>File is empty.</source>
         <translation>A fájl üres.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2175"/>
-        <location filename="../source/mainwindow.cpp" line="2176"/>
-        <location filename="../source/mainwindow.cpp" line="2178"/>
+        <location filename="../source/mainwindow.cpp" line="2232"/>
+        <location filename="../source/mainwindow.cpp" line="2233"/>
+        <location filename="../source/mainwindow.cpp" line="2235"/>
         <source>Not a graphics file (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem grafikus fájl (%1)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2493"/>
+        <location filename="../source/mainwindow.cpp" line="2582"/>
         <source>%1:</source>
-        <translation type="unfinished"></translation>
+        <translation>%1:</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3589"/>
+        <location filename="../source/mainwindow.cpp" line="3698"/>
         <source>Load Translation-Set File</source>
-        <translation type="unfinished"></translation>
+        <translation>Átrendelőkészlet-fájl betöltése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3589"/>
-        <location filename="../source/mainwindow.cpp" line="3636"/>
+        <location filename="../source/mainwindow.cpp" line="3698"/>
+        <location filename="../source/mainwindow.cpp" line="3745"/>
         <source>TRS Files (*.trs *.TRS)</source>
         <translation>TRS Fájlok (*.trs *.TRS)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3632"/>
+        <location filename="../source/mainwindow.cpp" line="3741"/>
         <source>Built-in TRN files can not be saved to a translation set.</source>
-        <translation type="unfinished"></translation>
+        <translation>A beépített TRN fájlok nem menthetők átrendelő készletbe.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3636"/>
+        <location filename="../source/mainwindow.cpp" line="3745"/>
         <source>Save Translation-Set File as...</source>
-        <translation type="unfinished"></translation>
+        <translation>Átrendelőkészlet-fájl mentése más néven...</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="262"/>
-        <location filename="../source/mainwindow.cpp" line="1486"/>
+        <location filename="../source/mainwindow.cpp" line="1538"/>
         <source>Base Translation</source>
         <translation>Alap átrendelő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1677"/>
-        <location filename="../source/mainwindow.cpp" line="1697"/>
-        <location filename="../source/mainwindow.cpp" line="2264"/>
-        <location filename="../source/mainwindow.cpp" line="2313"/>
-        <location filename="../source/mainwindow.cpp" line="2369"/>
-        <location filename="../source/mainwindow.cpp" line="2408"/>
+        <location filename="../source/mainwindow.cpp" line="1728"/>
+        <location filename="../source/mainwindow.cpp" line="1748"/>
+        <location filename="../source/mainwindow.cpp" line="2321"/>
+        <location filename="../source/mainwindow.cpp" line="2370"/>
+        <location filename="../source/mainwindow.cpp" line="2456"/>
+        <location filename="../source/mainwindow.cpp" line="2495"/>
         <source>Reading...</source>
         <translation>Betöltés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1734"/>
+        <location filename="../source/mainwindow.cpp" line="1785"/>
         <source>Saving...</source>
         <translation>Mentés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1742"/>
+        <location filename="../source/mainwindow.cpp" line="1793"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1742"/>
+        <location filename="../source/mainwindow.cpp" line="1793"/>
         <source>Are you sure you want to save as %1? Data conversion is not supported.</source>
         <translation>Biztosan %1-ként akarod menteni? Adatok konvertálása nem támogatott.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1760"/>
-        <location filename="../source/mainwindow.cpp" line="2114"/>
-        <location filename="../source/mainwindow.cpp" line="2179"/>
+        <location filename="../source/mainwindow.cpp" line="1811"/>
+        <location filename="../source/mainwindow.cpp" line="2170"/>
+        <location filename="../source/mainwindow.cpp" line="2236"/>
         <source>Not supported.</source>
         <translation>Nem támogatott.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1833"/>
+        <location filename="../source/mainwindow.cpp" line="1889"/>
         <source>Upscaling...</source>
         <translation>Felméretezés...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1890"/>
-        <location filename="../source/mainwindow.cpp" line="1911"/>
-        <location filename="../source/mainwindow.cpp" line="1924"/>
+        <location filename="../source/mainwindow.cpp" line="1946"/>
+        <location filename="../source/mainwindow.cpp" line="1967"/>
+        <location filename="../source/mainwindow.cpp" line="1980"/>
         <source>Select Image Files</source>
         <translation>Kép fájlok</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2258"/>
+        <location filename="../source/mainwindow.cpp" line="2315"/>
         <source>Composite Image File</source>
         <translation>Összetevő kép fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2307"/>
-        <location filename="../source/mainwindow.cpp" line="2363"/>
-        <location filename="../source/mainwindow.cpp" line="2402"/>
+        <location filename="../source/mainwindow.cpp" line="2364"/>
+        <location filename="../source/mainwindow.cpp" line="2450"/>
+        <location filename="../source/mainwindow.cpp" line="2489"/>
         <source>Replacement Image File</source>
         <translation>Helyettesítő kép fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="117"/>
-        <location filename="../source/mainwindow.cpp" line="2484"/>
-        <location filename="../source/mainwindow.cpp" line="2510"/>
-        <location filename="../source/mainwindow.cpp" line="2556"/>
-        <location filename="../source/mainwindow.cpp" line="2588"/>
-        <location filename="../source/mainwindow.cpp" line="2601"/>
-        <location filename="../source/mainwindow.cpp" line="2613"/>
-        <location filename="../source/mainwindow.cpp" line="2640"/>
-        <location filename="../source/mainwindow.cpp" line="2659"/>
-        <location filename="../source/mainwindow.cpp" line="2671"/>
-        <location filename="../source/mainwindow.cpp" line="2685"/>
-        <location filename="../source/mainwindow.cpp" line="2702"/>
-        <location filename="../source/mainwindow.cpp" line="2712"/>
+        <location filename="../source/mainwindow.cpp" line="118"/>
+        <location filename="../source/mainwindow.cpp" line="2573"/>
+        <location filename="../source/mainwindow.cpp" line="2599"/>
+        <location filename="../source/mainwindow.cpp" line="2649"/>
+        <location filename="../source/mainwindow.cpp" line="2681"/>
+        <location filename="../source/mainwindow.cpp" line="2697"/>
+        <location filename="../source/mainwindow.cpp" line="2710"/>
         <location filename="../source/mainwindow.cpp" line="2722"/>
-        <location filename="../source/mainwindow.cpp" line="2734"/>
-        <location filename="../source/mainwindow.cpp" line="2744"/>
-        <location filename="../source/mainwindow.cpp" line="2754"/>
-        <location filename="../source/mainwindow.cpp" line="2778"/>
-        <location filename="../source/mainwindow.cpp" line="2788"/>
-        <location filename="../source/mainwindow.cpp" line="2798"/>
-        <location filename="../source/mainwindow.cpp" line="2808"/>
-        <location filename="../source/mainwindow.cpp" line="2818"/>
-        <location filename="../source/mainwindow.cpp" line="2828"/>
-        <location filename="../source/mainwindow.cpp" line="2847"/>
-        <location filename="../source/mainwindow.cpp" line="2861"/>
-        <location filename="../source/mainwindow.cpp" line="2875"/>
-        <location filename="../source/mainwindow.cpp" line="2880"/>
-        <location filename="../source/mainwindow.cpp" line="2890"/>
-        <location filename="../source/mainwindow.cpp" line="2900"/>
-        <location filename="../source/mainwindow.cpp" line="2910"/>
-        <location filename="../source/mainwindow.cpp" line="2929"/>
-        <location filename="../source/mainwindow.cpp" line="2939"/>
-        <location filename="../source/mainwindow.cpp" line="2954"/>
-        <location filename="../source/mainwindow.cpp" line="2964"/>
-        <location filename="../source/mainwindow.cpp" line="2979"/>
+        <location filename="../source/mainwindow.cpp" line="2749"/>
+        <location filename="../source/mainwindow.cpp" line="2768"/>
+        <location filename="../source/mainwindow.cpp" line="2780"/>
+        <location filename="../source/mainwindow.cpp" line="2794"/>
+        <location filename="../source/mainwindow.cpp" line="2811"/>
+        <location filename="../source/mainwindow.cpp" line="2821"/>
+        <location filename="../source/mainwindow.cpp" line="2831"/>
+        <location filename="../source/mainwindow.cpp" line="2843"/>
+        <location filename="../source/mainwindow.cpp" line="2853"/>
+        <location filename="../source/mainwindow.cpp" line="2863"/>
+        <location filename="../source/mainwindow.cpp" line="2887"/>
+        <location filename="../source/mainwindow.cpp" line="2897"/>
+        <location filename="../source/mainwindow.cpp" line="2907"/>
+        <location filename="../source/mainwindow.cpp" line="2917"/>
+        <location filename="../source/mainwindow.cpp" line="2927"/>
+        <location filename="../source/mainwindow.cpp" line="2937"/>
+        <location filename="../source/mainwindow.cpp" line="2956"/>
+        <location filename="../source/mainwindow.cpp" line="2970"/>
+        <location filename="../source/mainwindow.cpp" line="2984"/>
         <location filename="../source/mainwindow.cpp" line="2989"/>
         <location filename="../source/mainwindow.cpp" line="2999"/>
         <location filename="../source/mainwindow.cpp" line="3009"/>
         <location filename="../source/mainwindow.cpp" line="3019"/>
-        <location filename="../source/mainwindow.cpp" line="3029"/>
-        <location filename="../source/mainwindow.cpp" line="3039"/>
-        <location filename="../source/mainwindow.cpp" line="3049"/>
-        <location filename="../source/mainwindow.cpp" line="3077"/>
-        <location filename="../source/mainwindow.cpp" line="3092"/>
-        <location filename="../source/mainwindow.cpp" line="3103"/>
+        <location filename="../source/mainwindow.cpp" line="3038"/>
+        <location filename="../source/mainwindow.cpp" line="3048"/>
+        <location filename="../source/mainwindow.cpp" line="3063"/>
+        <location filename="../source/mainwindow.cpp" line="3073"/>
+        <location filename="../source/mainwindow.cpp" line="3088"/>
+        <location filename="../source/mainwindow.cpp" line="3098"/>
+        <location filename="../source/mainwindow.cpp" line="3108"/>
         <location filename="../source/mainwindow.cpp" line="3118"/>
-        <location filename="../source/mainwindow.cpp" line="3129"/>
-        <location filename="../source/mainwindow.cpp" line="3144"/>
-        <location filename="../source/mainwindow.cpp" line="3155"/>
-        <location filename="../source/mainwindow.cpp" line="3170"/>
-        <location filename="../source/mainwindow.cpp" line="3181"/>
-        <location filename="../source/mainwindow.cpp" line="3196"/>
-        <location filename="../source/mainwindow.cpp" line="3488"/>
+        <location filename="../source/mainwindow.cpp" line="3128"/>
+        <location filename="../source/mainwindow.cpp" line="3138"/>
+        <location filename="../source/mainwindow.cpp" line="3148"/>
+        <location filename="../source/mainwindow.cpp" line="3158"/>
+        <location filename="../source/mainwindow.cpp" line="3186"/>
+        <location filename="../source/mainwindow.cpp" line="3201"/>
+        <location filename="../source/mainwindow.cpp" line="3212"/>
+        <location filename="../source/mainwindow.cpp" line="3227"/>
+        <location filename="../source/mainwindow.cpp" line="3238"/>
+        <location filename="../source/mainwindow.cpp" line="3253"/>
+        <location filename="../source/mainwindow.cpp" line="3264"/>
+        <location filename="../source/mainwindow.cpp" line="3279"/>
+        <location filename="../source/mainwindow.cpp" line="3290"/>
+        <location filename="../source/mainwindow.cpp" line="3305"/>
+        <location filename="../source/mainwindow.cpp" line="3597"/>
         <source>Processing...</source>
         <translation>Feldolgozás folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="703"/>
-        <location filename="../source/mainwindow.cpp" line="2108"/>
+        <location filename="../source/mainwindow.cpp" line="2164"/>
         <source>CL2 Files (*.cl2 *.CL2)</source>
         <translation>CL2 Fájlok (*.cl2 *.CL2)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2096"/>
+        <location filename="../source/mainwindow.cpp" line="2152"/>
         <source>DUN Files (*.dun *.DUN *.rdun *.RDUN)</source>
         <translation>DUN Fájlok (*.dun *.DUN *.rdun *.RDUN)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2091"/>
-        <location filename="../source/mainwindow.cpp" line="2550"/>
+        <location filename="../source/mainwindow.cpp" line="2147"/>
+        <location filename="../source/mainwindow.cpp" line="2643"/>
         <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
         <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="919"/>
-        <location filename="../source/mainwindow.cpp" line="1365"/>
+        <location filename="../source/mainwindow.cpp" line="964"/>
+        <location filename="../source/mainwindow.cpp" line="1412"/>
         <source>Failed loading GFX file: %1.</source>
         <translation>A(z) %1 GFX fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="871"/>
-        <location filename="../source/mainwindow.cpp" line="1391"/>
-        <location filename="../source/mainwindow.cpp" line="2221"/>
+        <location filename="../source/mainwindow.cpp" line="896"/>
+        <location filename="../source/mainwindow.cpp" line="1438"/>
+        <location filename="../source/mainwindow.cpp" line="2278"/>
         <source>Failed loading TLA file: %1.</source>
         <translation>A(z) %1 TLA fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="887"/>
-        <location filename="../source/mainwindow.cpp" line="1403"/>
-        <location filename="../source/mainwindow.cpp" line="2232"/>
+        <location filename="../source/mainwindow.cpp" line="912"/>
+        <location filename="../source/mainwindow.cpp" line="1450"/>
+        <location filename="../source/mainwindow.cpp" line="2289"/>
         <source>Failed loading Special-CEL file: %1.</source>
         <translation>A(z) %1 speciális-CEL fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2623"/>
+        <location filename="../source/mainwindow.cpp" line="2732"/>
         <source>The upper left of the bounding rectangle is %1:%2, the lower right corner is %3:%4. (width %5, height %6)</source>
-        <translation type="unfinished"></translation>
+        <translation>A határoló téglalap bal felső sarka %1:%2, jobb alsó sarka %3:%4. (szélesség %5, magasság %6)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2626"/>
+        <location filename="../source/mainwindow.cpp" line="2735"/>
         <source>The graphics is completely transparent.</source>
-        <translation type="unfinished"></translation>
+        <translation>A grafika teljesen átlátszó.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2628"/>
+        <location filename="../source/mainwindow.cpp" line="2737"/>
         <source>The graphics-set is completely transparent.</source>
-        <translation type="unfinished"></translation>
+        <translation>A grafika-készlet teljesen átlátszó.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3087"/>
+        <location filename="../source/mainwindow.cpp" line="3196"/>
         <source>Source of the tiles</source>
-        <translation type="unfinished"></translation>
+        <translation>A lapok forrása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3217"/>
+        <location filename="../source/mainwindow.cpp" line="3326"/>
         <source>New Palette File</source>
         <translation>Új paletta fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3217"/>
-        <location filename="../source/mainwindow.cpp" line="3246"/>
-        <location filename="../source/mainwindow.cpp" line="3263"/>
+        <location filename="../source/mainwindow.cpp" line="3326"/>
+        <location filename="../source/mainwindow.cpp" line="3355"/>
+        <location filename="../source/mainwindow.cpp" line="3372"/>
         <source>PAL Files (*.pal *.PAL)</source>
         <translation>PAL Fájlok (*.pal *.PAL)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3263"/>
+        <location filename="../source/mainwindow.cpp" line="3372"/>
         <source>Save Palette File as...</source>
         <translation>Paletta mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3298"/>
-        <location filename="../source/mainwindow.cpp" line="3384"/>
+        <location filename="../source/mainwindow.cpp" line="3407"/>
+        <location filename="../source/mainwindow.cpp" line="3493"/>
         <source>New Translation File</source>
         <translation>Új átrendelő fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3298"/>
-        <location filename="../source/mainwindow.cpp" line="3327"/>
-        <location filename="../source/mainwindow.cpp" line="3344"/>
-        <location filename="../source/mainwindow.cpp" line="3384"/>
-        <location filename="../source/mainwindow.cpp" line="3413"/>
-        <location filename="../source/mainwindow.cpp" line="3430"/>
+        <location filename="../source/mainwindow.cpp" line="3407"/>
+        <location filename="../source/mainwindow.cpp" line="3436"/>
+        <location filename="../source/mainwindow.cpp" line="3453"/>
+        <location filename="../source/mainwindow.cpp" line="3493"/>
+        <location filename="../source/mainwindow.cpp" line="3522"/>
+        <location filename="../source/mainwindow.cpp" line="3539"/>
         <source>TRN Files (*.trn *.TRN)</source>
         <translation>TRN Fájlok (*.trn *.TRN)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="3344"/>
-        <location filename="../source/mainwindow.cpp" line="3430"/>
+        <location filename="../source/mainwindow.cpp" line="3453"/>
+        <location filename="../source/mainwindow.cpp" line="3539"/>
         <source>Save Translation File as...</source>
         <translation>Átrendelő fájl mentése másként</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="56"/>
-        <location filename="../source/mainwindow.ui" line="1212"/>
-        <location filename="../source/mainwindow.ui" line="1232"/>
+        <location filename="../source/mainwindow.ui" line="1240"/>
         <location filename="../source/mainwindow.ui" line="1260"/>
+        <location filename="../source/mainwindow.ui" line="1288"/>
         <source>New</source>
         <translation>Új</translation>
     </message>
@@ -6855,14 +7191,14 @@
         <translation>Képkocka</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="388"/>
-        <location filename="../source/mainwindow.ui" line="908"/>
+        <location filename="../source/mainwindow.ui" line="391"/>
+        <location filename="../source/mainwindow.ui" line="936"/>
         <source>Subtile</source>
         <translation>Mező</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="401"/>
-        <location filename="../source/mainwindow.ui" line="916"/>
+        <location filename="../source/mainwindow.ui" line="404"/>
+        <location filename="../source/mainwindow.ui" line="944"/>
         <source>Tile</source>
         <translation>Lap</translation>
     </message>
@@ -6872,7 +7208,7 @@
     <message>
         <location filename="../source/mergeframesdialog.ui" line="6"/>
         <source>Merge Frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Képkockák egyesítése</translation>
     </message>
     <message>
         <location filename="../source/mergeframesdialog.ui" line="35"/>
@@ -6902,7 +7238,7 @@
     <message>
         <location filename="../source/mergeframesdialog.cpp" line="51"/>
         <source>Mismatching framesize (%1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltérő képkockaméret (%1).</translation>
     </message>
 </context>
 <context>
@@ -6971,7 +7307,7 @@
     <message>
         <location filename="../source/openasdialog.ui" line="91"/>
         <source>Gfxset</source>
-        <translation type="unfinished"></translation>
+        <translation>Gfxset</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.ui" line="129"/>
@@ -7052,12 +7388,12 @@
     <message>
         <location filename="../source/openasdialog.ui" line="461"/>
         <source>Create dungeon:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata létrehozása:</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.ui" line="468"/>
         <source>Create a dungeon file if it is not selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Létrehoz egy kazamatafájlt, ha nincs kiválasztva</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.ui" line="487"/>
@@ -7175,67 +7511,67 @@
     <message>
         <location filename="../source/paintwidget.ui" line="80"/>
         <source>Select</source>
-        <translation type="unfinished"></translation>
+        <translation>Válassza ki</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="93"/>
         <source>Draw</source>
-        <translation type="unfinished"></translation>
+        <translation>Rajzolj</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="103"/>
         <source>Fill</source>
-        <translation type="unfinished"></translation>
+        <translation>Töltse ki</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="137"/>
         <source>Square shape</source>
-        <translation type="unfinished"></translation>
+        <translation>Négyzet alakú</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="150"/>
         <source>Round shape</source>
-        <translation type="unfinished"></translation>
+        <translation>Kerek alakú</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="187"/>
         <source>Decrease the size of the brush</source>
-        <translation type="unfinished"></translation>
+        <translation>Csökkentsd az ecset méretét</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="200"/>
         <source>Brush size</source>
-        <translation type="unfinished"></translation>
+        <translation>Ecset mérete</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="216"/>
         <source>Increase the size of the brush</source>
-        <translation type="unfinished"></translation>
+        <translation>Növelje az ecset méretét</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="250"/>
         <source>Decrease the length of the brushstrokes</source>
-        <translation type="unfinished"></translation>
+        <translation>Csökkentse az ecsetvonások hosszát</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="263"/>
         <source>Brushstroke length</source>
-        <translation type="unfinished"></translation>
+        <translation>Ecsetvonás hossza</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="279"/>
         <source>Increase the length of the brushstrokes</source>
-        <translation type="unfinished"></translation>
+        <translation>Növelje az ecsetvonások hosszát</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="307"/>
         <source>A line&apos;s gradient in the x direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Egy vonal &apos;s meredeksége x irányban</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="336"/>
         <source>A line&apos;s gradient in the y direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Egy vonal &apos;s meredeksége y irányban</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="346"/>
@@ -7245,7 +7581,7 @@
     <message>
         <location filename="../source/paintwidget.ui" line="349"/>
         <source>Clear the gradient-settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Töröld a gradiens-beállításokat</translation>
     </message>
     <message>
         <location filename="../source/paintwidget.ui" line="378"/>
@@ -7350,32 +7686,32 @@
     <message>
         <location filename="../source/paletteshowdialog.cpp" line="92"/>
         <source>Non opaque pixels are ignored.</source>
-        <translation type="unfinished"></translation>
+        <translation>A nem átlátszatlan pixeleket figyelmen kívül hagyja a rendszer.</translation>
     </message>
     <message>
         <location filename="../source/paletteshowdialog.cpp" line="124"/>
         <source>GRB Square</source>
-        <translation type="unfinished"></translation>
+        <translation>GRB terület</translation>
     </message>
     <message>
         <location filename="../source/paletteshowdialog.cpp" line="126"/>
         <source>RGB Square</source>
-        <translation type="unfinished"></translation>
+        <translation>RGB terület</translation>
     </message>
     <message>
         <location filename="../source/paletteshowdialog.cpp" line="128"/>
         <source>RGB Wheel</source>
-        <translation type="unfinished"></translation>
+        <translation>RGB kerék</translation>
     </message>
     <message>
         <location filename="../source/paletteshowdialog.cpp" line="130"/>
         <source>CIE Chromaticity</source>
-        <translation type="unfinished"></translation>
+        <translation>CIE kromatikusság</translation>
     </message>
     <message>
         <location filename="../source/paletteshowdialog.cpp" line="132"/>
         <source>CIExy Chromaticity</source>
-        <translation type="unfinished"></translation>
+        <translation>CIExy kromatikusság</translation>
     </message>
     <message>
         <location filename="../source/paletteshowdialog.cpp" line="161"/>
@@ -7443,12 +7779,12 @@
     <message>
         <location filename="../source/palettewidget.cpp" line="766"/>
         <source>_default.pal</source>
-        <translation type="unfinished"></translation>
+        <translation>_default.pal</translation>
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="766"/>
         <source>_null.trn</source>
-        <translation type="unfinished"></translation>
+        <translation>_null.trn</translation>
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="366"/>
@@ -7458,7 +7794,7 @@
     <message>
         <location filename="../source/palettewidget.ui" line="201"/>
         <source>Enter the color index to which the selected color(s) should map to.</source>
-        <translation type="unfinished"></translation>
+        <translation>Adja meg azt a színindexet, amelyet a kiválasztott szín(ek)nek leképeznie kell.</translation>
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="369"/>
@@ -7556,142 +7892,142 @@
     <message>
         <location filename="../source/patchdungeondialog.ui" line="6"/>
         <source>Patch Dungeon</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata javítása</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="32"/>
         <source>Dungeon:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata:</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="40"/>
         <source>Entrance to Skeleton King&apos;s Lair (SKngDO.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejárat a Csontvázkirály barlangjába (SKngDO.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="45"/>
         <source>Skeleton King&apos;s Lair - Before (SklKng2.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Csontvázkirály barlangja - Előtte (SklKng2.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="50"/>
         <source>Skeleton King&apos;s Lair - After (SklKng1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Csontvázkirály barlangja - Utána (SklKng1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="55"/>
         <source>Ogden&apos;s Sign - Before (Banner2.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ogden táblája - Előtte (Banner2.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="60"/>
         <source>Ogden&apos;s Sign - After (Banner1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ogden táblája - Utána (Banner1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="65"/>
         <source>Entrance to Chamber of Bone - Before (Bonestr1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejárat a Csontkamrába - Előtte (Bonestr1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="70"/>
         <source>Entrance to Chamber of Bone - After (Bonestr2.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejárat a Csontkamrába - Utána (Bonestr2.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="75"/>
         <source>Chamber of Bone - Before (Bonecha1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Csontkamra - Előtte (Bonecha1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="80"/>
         <source>Chamber of Bone - After (Bonecha2.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Csontkamra - Utána (Bonecha2.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="85"/>
         <source>Halls of the Blind - Before (Blind2.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Vakok Csarnokai - Előtte (Blind2.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="90"/>
         <source>Halls of the Blind - After (Blind1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Vakok Csarnokai - Utána (Blind1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="95"/>
         <source>Valor - Before (Blood2.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Vitézség - Előtte (Blood2.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="100"/>
         <source>Valor - After (Blood1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Vitézség - Utána (Blood1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="105"/>
         <source>Poisoned Water (Foulwatr.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Mérgezett víz (Foulwatr.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="110"/>
         <source>Archbishop Lazarus - Before (Vile2.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Lázár érsek - Előtte (Vile2.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="115"/>
         <source>Archbishop Lazarus - After (Vile1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Lázár érsek - Utána (Vile1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="120"/>
         <source>Warlord - Before (Warlord2.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hadúr - Előtte (Warlord2.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="125"/>
         <source>Warlord - After (Warlord.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hadúr - Utána (Hadúr.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="130"/>
         <source>Diablo Quad 1 (Diab1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Diablo Quad 1 (Diab1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="135"/>
         <source>Diablo Quad 2 - Before (Diab2a.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Diablo Quad 2 - Előtte (Diab2a.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="140"/>
         <source>Diablo Quad 2 - After (Diab2b.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Diablo Quad 2 - Utána (Diab2b.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="145"/>
         <source>Diablo Quad 3 - Before (Diab3a.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Diablo Quad 3 - Előtte (Diab3a.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="150"/>
         <source>Diablo Quad 3 - After (Diab3b.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Diablo Quad 3 - Utána (Diab3b.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="155"/>
         <source>Diablo Quad 4 - Before (Diab4a.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Diablo Quad 4 - Előtte (Diab4a.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="160"/>
         <source>Diablo Quad 4 - After (Diab4b.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Diablo Quad 4 - Utána (Diab4b.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="165"/>
         <source>Betrayer (Vile1.DUN)</source>
-        <translation type="unfinished"></translation>
+        <translation>Áruló (Vile1.DUN)</translation>
     </message>
     <message>
         <location filename="../source/patchdungeondialog.ui" line="184"/>
@@ -7714,7 +8050,7 @@
     <message>
         <location filename="../source/patchgfxdialog.ui" line="6"/>
         <source>Patch Graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafika javítása</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="32"/>
@@ -7724,435 +8060,490 @@
     <message>
         <location filename="../source/patchgfxdialog.ui" line="40"/>
         <source>Doors in the Cathedral (L1Doors.CEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajtók a katedrálisban (L1Doors.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="45"/>
         <source>Doors in the Catacombs (L2Doors.CEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajtók a katakombákban (L2Doors.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="50"/>
         <source>Doors in the Caves (L3Doors.CEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajtók a barlangokban (L3Doors.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="55"/>
         <source>Magic circle object (Mcirl.CEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Mágikus kör objektum (Mcirl.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="60"/>
         <source>Light stand with a candle (Candle2.CEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Világító állvány gyertyával (Candle2.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="65"/>
         <source>West-facing shrine (LShrineG.CEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyugatra néző szentély (LShrineG.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="70"/>
         <source>East-facing shrine (RShrineG.CEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Keletre néző szentély (RShrineG.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="75"/>
         <source>Light stand in Crypt (L5Light.CEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Világítóállvány a Kriptában (L5Light.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="80"/>
         <source>Rogue in heavy armor with staff attacking (RHTAT.CL2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nehéz páncélzatú, bottal támadó zsivány (RHTAT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="85"/>
         <source>Rogue in heavy armor with shield getting hit (RHUHT.CL2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nehéz páncélzatú, pajzsos zsivány találat ér (RHUHT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="90"/>
         <source>Rogue in heavy armor with shield casting magic (RHUQM.CL2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nehéz páncélzatú, pajzsos zsivány mágiával támad (RHUQM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="95"/>
-        <source>Rogue in light armor with mace attacking (RLMAT.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield standing in dungeon (RLHAS.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzos zsivány áll a kazamatában (RLHAS.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="100"/>
-        <source>Rogue in medium armor with mace and shield attacking (RMHAT.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield attacking (RLHAT.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzsos zsivány támad (RLHAT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="105"/>
-        <source>Rogue in medium armor with mace attacking (RMMAT.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield walking in dungeon (RLHAW.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzos zsivány sétál a kazamatában (RLHAW.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="110"/>
-        <source>Rogue in medium armor with bow casting fire (RMBFM.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield blocking (RLHBL.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzsos zsivány blokkol (RLHBL.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="115"/>
-        <source>Rogue in medium armor with bow casting lightning (RMBLM.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield casting fire (RLHFM.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzsos zsivány tűz-mágiával támad (RLHFM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="120"/>
-        <source>Rogue in medium armor with bow casting magic (RMBQM.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield casting lightning (RLHLM.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzsos zsivány villám-mágiával támad (RLHLM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="125"/>
-        <source>Rogue in medium armor with staff attacking (RMTAT.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield getting hit (RLHHT.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzsos zsiványt találat ér (RLHHT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="130"/>
-        <source>Warrior in heavy armor with mace attacking (WHMAT.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield casting magic (RLHQM.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzsos zsivány mágiával támad (RLHQM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="135"/>
-        <source>Warrior in light armor unarmed casting lightning (WLNLM.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield standing in town (RLHST.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogánnyal és pajzsos zsivány áll a faluban (RLHST.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="140"/>
-        <source>Warrior in medium armor with sword and shield casting lightning (WMDLM.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace and shield walking (RLHWL.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos és pajzsos zsivány sétál (RLHWL.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="145"/>
-        <source>Warrior in medium armor standing with mace and shield in dungeon (WMHAS.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in light armor with mace attacking (RLMAT.CL2)</source>
+        <translation>Könnyű páncélzatú, buzogányos zsivány támad (RLMAT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="150"/>
-        <source>Devil Kin Brute dying (Fallgd.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in medium armor with sword and shield walking in dungeon (RMDAW.CL2)</source>
+        <translation>Közepes páncélzatú, kardos és pajzsos zsivány sétál a kazamatában (RMDAW.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="155"/>
-        <source>Devil Kin Brute walking (Fallgw.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in medium armor with mace and shield attacking (RMHAT.CL2)</source>
+        <translation>Közepes páncélzatú, buzogányos és pajzsos zsivány támad (RMHAT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="160"/>
-        <source>Magma Demon dying (Magmad.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in medium armor with mace attacking (RMMAT.CL2)</source>
+        <translation>Közepes páncélzatú, buzogányos zsivány támad (RMMAT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="165"/>
-        <source>Flesh Clan (Bow) dying (GoatBd.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in medium armor with bow casting fire (RMBFM.CL2)</source>
+        <translation>Közepes páncélzatú, íjas zsivány tűz-mágiával támad (RMBFM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="170"/>
-        <source>Satyr Lord dying (GoatLd.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in medium armor with bow casting lightning (RMBLM.CL2)</source>
+        <translation>Közepes páncélzatú, íjas zsivány villám-mágiával támad (RMBLM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="175"/>
-        <source>Skeleton Axe dying (SklAxd.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in medium armor with bow casting magic (RMBQM.CL2)</source>
+        <translation>Közepes páncélzatú, íjas zsivány mágiával támad (RMBQM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="180"/>
-        <source>Skeleton Bow dying (SklBwd.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Rogue in medium armor with staff attacking (RMTAT.CL2)</source>
+        <translation>Közepes páncélzatú, botos zsivány támad (RMTAT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="185"/>
-        <source>Skeleton Sword dying (SklSrd.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Warrior in heavy armor with mace attacking (WHMAT.CL2)</source>
+        <translation>Nehéz páncélzatú harcos buzogánnyal támad (WHMAT.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="190"/>
-        <source>The Shredded attacking (Unrava.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Warrior in light armor unarmed casting lightning (WLNLM.CL2)</source>
+        <translation>Fegyvertelen, könnyű páncélos harcos villám-mágiával támad (WLNLM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="195"/>
-        <source>The Shredded dying (Unravd.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Warrior in medium armor with sword and shield casting lightning (WMDLM.CL2)</source>
+        <translation>Közepes páncélzatú harcos karddal és pajzzsal villám-mágiával támad (WMDLM.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="200"/>
-        <source>The Shredded getting hit (Unravh.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Warrior in medium armor standing with mace and shield in dungeon (WMHAS.CL2)</source>
+        <translation>Közepes páncélzatú harcos buzogánnyal és pajzzsal áll a kazamatában (WMHAS.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="205"/>
-        <source>The Shredded standing (Unravn.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Devil Kin Brute dying (Fallgd.CL2)</source>
+        <translation>Ördög Kin Brute halála (Fallgd.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="210"/>
-        <source>The Shredded special movement (Unravs.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Devil Kin Brute walking (Fallgw.CL2)</source>
+        <translation>Ördög Kin Brute sétál (Fallgw.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="215"/>
-        <source>The Shredded walking (Unravw.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Magma Demon dying (Magmad.CL2)</source>
+        <translation>Magma Demon halála (Magmad.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="220"/>
-        <source>Zombie dying (Zombied.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Flesh Clan (Bow) dying (GoatBd.CL2)</source>
+        <translation>Húsklán (Íj) halála (GoatBd.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="225"/>
-        <source>Acid missile South (Acidbf1.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Satyr Lord dying (GoatLd.CL2)</source>
+        <translation>Szatír Úr halála (GoatLd.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="230"/>
-        <source>Acid missile North/North-East (Acidbf10.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Skeleton Axe dying (SklAxd.CL2)</source>
+        <translation>Csontvázbalta halála (SklAxd.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="235"/>
-        <source>Acid missile North-East (Acidbf11.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Skeleton Bow dying (SklBwd.CL2)</source>
+        <translation>Csontváz íj halála (SklBwd.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="240"/>
-        <source>Firaball missile South/South-West (Fireba2.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Skeleton Sword dying (SklSrd.CL2)</source>
+        <translation>Csontvázkard halála (SklSrd.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="245"/>
-        <source>Firaball missile South-West (Fireba3.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>The Shredded attacking (Unrava.CL2)</source>
+        <translation>A Széttépett támad (Unrava.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="250"/>
-        <source>Firaball missile West (Fireba5.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>The Shredded dying (Unravd.CL2)</source>
+        <translation>A Széttépett halála (Unravd.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="255"/>
-        <source>Firaball missile West/North-West (Fireba6.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>The Shredded getting hit (Unravh.CL2)</source>
+        <translation>A Shredded eltalálva (Unravh.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="260"/>
-        <source>Firaball missile North/North-West (Fireba8.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>The Shredded standing (Unravn.CL2)</source>
+        <translation>A Shredded áll (Unravn.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="265"/>
-        <source>Firaball missile North (Fireba9.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>The Shredded special movement (Unravs.CL2)</source>
+        <translation>A Széttépett különleges mozgása (Unravs.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="270"/>
-        <source>Firaball missile North/North-East (Fireba10.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>The Shredded walking (Unravw.CL2)</source>
+        <translation>A Shredded sétálása (Unravw.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="275"/>
-        <source>Firaball missile North-East (Fireba11.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Zombie dying (Zombied.CL2)</source>
+        <translation>Zombi halála (Zombied.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="280"/>
-        <source>Firaball missile East/North-East (Fireba12.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Acid missile South (Acidbf1.CL2)</source>
+        <translation>Savas rakéta Dél (Acidbf1.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="285"/>
-        <source>Firaball missile South-East (Fireba15.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Acid missile North/North-East (Acidbf10.CL2)</source>
+        <translation>Savas rakéta Észak/Északkelet (Acidbf10.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="290"/>
-        <source>Firaball missile South/South-East (Fireba16.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Acid missile North-East (Acidbf11.CL2)</source>
+        <translation>Savas rakéta Északkelet (Acidbf11.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="295"/>
-        <source>Holybolt missile South/South-West (Holy2.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile South/South-West (Fireba2.CL2)</source>
+        <translation>Firaball rakéta dél/délnyugat (Fireba2.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="300"/>
-        <source>Holybolt missile South-West (Holy3.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile South-West (Fireba3.CL2)</source>
+        <translation>Firaball rakéta South-West (Fireba3.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="305"/>
-        <source>Holybolt missile West (Holy5.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile West (Fireba5.CL2)</source>
+        <translation>Firaball rakéta Nyugat (Fireba5.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="310"/>
-        <source>Holybolt missile West/North-West (Holy6.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile West/North-West (Fireba6.CL2)</source>
+        <translation>Firaball rakéta Nyugat/Északnyugat (Fireba6.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="315"/>
-        <source>Holybolt missile North/North-West (Holy8.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile North/North-West (Fireba8.CL2)</source>
+        <translation>Firaball rakéta Észak/Északnyugat (Fireba8.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="320"/>
-        <source>Holybolt missile North (Holy9.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile North (Fireba9.CL2)</source>
+        <translation>Firaball rakéta Észak (Fireba9.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="325"/>
-        <source>Holybolt missile North/North-East (Holy10.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile North/North-East (Fireba10.CL2)</source>
+        <translation>Firaball rakéta Észak/Északkelet (Fireba10.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="330"/>
-        <source>Holybolt missile North-East (Holy11.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile North-East (Fireba11.CL2)</source>
+        <translation>Firaball rakéta Északkelet (Fireba11.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="335"/>
-        <source>Holybolt missile East/North-East (Holy12.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile East/North-East (Fireba12.CL2)</source>
+        <translation>Firaball rakéta kelet/északkelet (Fireba12.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="340"/>
-        <source>Holybolt missile South-East (Holy15.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile South-East (Fireba15.CL2)</source>
+        <translation>Firaball rakéta Délkelet (Fireba15.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="345"/>
-        <source>Holybolt missile South/South-East (Holy16.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Firaball missile South/South-East (Fireba16.CL2)</source>
+        <translation>Firaball rakéta dél/délkelet (Fireba16.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="350"/>
-        <source>Magmaball missile South/South-West (Magball2.CL2)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile South/South-West (Holy2.CL2)</source>
+        <translation>Holybolt rakéta dél/délnyugat (Holy2.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="355"/>
-        <source>Spell icons (SpelIcon.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile South-West (Holy3.CL2)</source>
+        <translation>Holybolt rakéta délnyugatra (Holy3.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="360"/>
-        <source>Cursor icons (ObjCurs.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile West (Holy5.CL2)</source>
+        <translation>Holybolt rakéta Nyugat (Holy5.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="365"/>
-        <source>Armor Item animation (Armor2.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile West/North-West (Holy6.CL2)</source>
+        <translation>Holybolt rakéta Nyugat/Északnyugat (Holy6.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="370"/>
-        <source>Gold Item animation (GoldFlip.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile North/North-West (Holy8.CL2)</source>
+        <translation>Holybolt rakéta Észak/Északnyugat (Holy8.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="375"/>
-        <source>Mace Item animation (Mace.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile North (Holy9.CL2)</source>
+        <translation>Holybolt rakéta Észak (Holy9.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="380"/>
-        <source>Staff Item animation (Staff.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile North/North-East (Holy10.CL2)</source>
+        <translation>Holybolt rakéta Észak/Északkelet (Holy10.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="385"/>
-        <source>Ring Item animation (Ring.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile North-East (Holy11.CL2)</source>
+        <translation>Holybolt rakéta Északkelet (Holy11.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="390"/>
-        <source>Crown Item animation (CrownF.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile East/North-East (Holy12.CL2)</source>
+        <translation>Holybolt rakéta kelet/északkelet (Holy12.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="395"/>
-        <source>Light Armor Item animation (LArmor.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile South-East (Holy15.CL2)</source>
+        <translation>Holybolt rakéta délkelet (Holy15.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="400"/>
-        <source>Warrior Shield Item animation (WShield.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Holybolt missile South/South-East (Holy16.CL2)</source>
+        <translation>Holybolt rakéta dél/délkelet (Holy16.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="405"/>
-        <source>Scroll Item animation (Scroll.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Magmaball missile South/South-West (Magball2.CL2)</source>
+        <translation>Magmaball rakéta dél/dél-nyugat (Magball2.CL2)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="410"/>
-        <source>Ear Item animation (FEar.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Spell icons (SpelIcon.CEL)</source>
+        <translation>Varázslat ikonok (SpelIcon.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="415"/>
-        <source>Brain Item animation (FBrain.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Cursor icons (ObjCurs.CEL)</source>
+        <translation>Kurzor ikonok (ObjCurs.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="420"/>
-        <source>Mushroom Item animation (FMush.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Armor Item animation (Armor2.CEL)</source>
+        <translation>Páncéltárgy animációja (Armor2.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="425"/>
-        <source>Innsign Item animation (Innsign.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Gold Item animation (GoldFlip.CEL)</source>
+        <translation>Arany tárgy animáció (GoldFlip.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="430"/>
-        <source>Bloodstone Item animation (Bldstn.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Mace Item animation (Mace.CEL)</source>
+        <translation>Buzogány tárgy animáció (Mace.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="435"/>
-        <source>Anvil Item animation (Fanvil.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Staff Item animation (Staff.CEL)</source>
+        <translation>Személyzeti tárgy animáció (Staff.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="440"/>
-        <source>Lazarus&apos;s Staff Item animation (FLazStaf.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Ring Item animation (Ring.CEL)</source>
+        <translation>Gyűrű tárgy animáció (Ring.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="445"/>
-        <source>Teddy Item animation (teddys1.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Crown Item animation (CrownF.CEL)</source>
+        <translation>Korona tárgy animáció (CrownF.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="450"/>
-        <source>Cow Hide Item animation (cows1.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Light Armor Item animation (LArmor.CEL)</source>
+        <translation>Könnyű páncél tárgy animáció (LArmor.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="455"/>
-        <source>Donkey Hide Item animation (donkys1.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Warrior Shield Item animation (WShield.CEL)</source>
+        <translation>Harcos Pajzs tárgy animáció (WShield.CEL)</translation>
     </message>
     <message>
         <location filename="../source/patchgfxdialog.ui" line="460"/>
-        <source>Moose Hide Item animation (mooses1.CEL)</source>
-        <translation type="unfinished"></translation>
+        <source>Scroll Item animation (Scroll.CEL)</source>
+        <translation>Tekercs tárgy animáció (Scroll.CEL)</translation>
     </message>
     <message>
-        <location filename="../source/patchgfxdialog.ui" line="479"/>
+        <location filename="../source/patchgfxdialog.ui" line="465"/>
+        <source>Ear Item animation (FEar.CEL)</source>
+        <translation>Fül tárgy animáció (FEar.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="470"/>
+        <source>Brain Item animation (FBrain.CEL)</source>
+        <translation>Agy tárgy animáció (FBrain.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="475"/>
+        <source>Mushroom Item animation (FMush.CEL)</source>
+        <translation>Gomba tárgy animáció (FMush.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="480"/>
+        <source>Innsign Item animation (Innsign.CEL)</source>
+        <translation>Innsign-tárgy animáció (Innsign.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="485"/>
+        <source>Bloodstone Item animation (Bldstn.CEL)</source>
+        <translation>Vérkő tárgy animáció (Bldstn.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="490"/>
+        <source>Anvil Item animation (Fanvil.CEL)</source>
+        <translation>Üllő tárgy animáció (Fanvil.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="495"/>
+        <source>Lazarus&apos;s Staff Item animation (FLazStaf.CEL)</source>
+        <translation>Lazarus botjának animációja (FLazStaf.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="500"/>
+        <source>Teddy Item animation (teddys1.CEL)</source>
+        <translation>Teddy tárgy animációja (teddys1.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="505"/>
+        <source>Cow Hide Item animation (cows1.CEL)</source>
+        <translation>Tehénbőr tárgy animáció (cows1.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="510"/>
+        <source>Donkey Hide Item animation (donkys1.CEL)</source>
+        <translation>Szamárbőr animáció (donkys1.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="515"/>
+        <source>Moose Hide Item animation (mooses1.CEL)</source>
+        <translation>Jávorszarvas bőr animáció (mooses1.CEL)</translation>
+    </message>
+    <message>
+        <location filename="../source/patchgfxdialog.ui" line="534"/>
         <source>Run</source>
         <translation>Futtatás</translation>
     </message>
     <message>
-        <location filename="../source/patchgfxdialog.ui" line="486"/>
+        <location filename="../source/patchgfxdialog.ui" line="541"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>
@@ -8261,68 +8652,69 @@
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="152"/>
+        <location filename="../source/d1cel.cpp" line="150"/>
         <location filename="../source/d1cl2.cpp" line="152"/>
         <source>Could not determine the width of Frame %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka szélessége nem határozható meg.</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="154"/>
+        <location filename="../source/d1cel.cpp" line="152"/>
         <location filename="../source/d1cl2.cpp" line="154"/>
         <source>Frame %1 is invalid.</source>
         <translation>A(z) %1 képkocka hibás.</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="160"/>
+        <location filename="../source/d1cel.cpp" line="158"/>
         <location filename="../source/d1cl2.cpp" line="160"/>
         <source>Inconsistent clipping (Frame %1 is %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Inkonzisztens vágás (A %1. képkocka jelenlegi állapota %2).</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="160"/>
-        <location filename="../source/d1gfx.cpp" line="479"/>
+        <location filename="../source/d1cel.cpp" line="158"/>
+        <location filename="../source/d1gfx.cpp" line="765"/>
         <source>not clipped</source>
-        <translation type="unfinished"></translation>
+        <translation>nincs nyírva</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="160"/>
-        <location filename="../source/d1gfx.cpp" line="479"/>
+        <location filename="../source/d1cel.cpp" line="158"/>
+        <location filename="../source/d1gfx.cpp" line="765"/>
         <source>clipped</source>
-        <translation type="unfinished"></translation>
+        <translation>nyírva</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="286"/>
+        <location filename="../source/d1cel.cpp" line="284"/>
         <location filename="../source/d1cl2.cpp" line="316"/>
         <source>Frames can not be split to equal groups.</source>
         <translation>A képkockák nem oszthatóak egyforma csoportokba.</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="361"/>
+        <location filename="../source/d1cel.cpp" line="359"/>
         <location filename="../source/d1celtileset.cpp" line="209"/>
         <location filename="../source/d1cl2.cpp" line="400"/>
-        <location filename="../source/d1smk.cpp" line="1254"/>
+        <location filename="../source/d1smk.cpp" line="1259"/>
         <location filename="../source/d1tileset.cpp" line="120"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="361"/>
+        <location filename="../source/d1cel.cpp" line="359"/>
         <location filename="../source/d1celtileset.cpp" line="209"/>
         <location filename="../source/d1cl2.cpp" line="400"/>
-        <location filename="../source/d1smk.cpp" line="1254"/>
+        <location filename="../source/d1smk.cpp" line="1259"/>
         <location filename="../source/d1tileset.cpp" line="120"/>
         <source>Are you sure you want to overwrite %1?</source>
         <translation>Biztosan felül akarod írni a %1 fájlt?</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="377"/>
+        <location filename="../source/d1cel.cpp" line="375"/>
         <location filename="../source/d1celtileset.cpp" line="225"/>
         <location filename="../source/d1cl2.cpp" line="416"/>
+        <location filename="../source/d1clc.cpp" line="271"/>
         <location filename="../source/d1cpp.cpp" line="1647"/>
         <location filename="../source/d1pal.cpp" line="115"/>
         <location filename="../source/d1pcx.cpp" line="307"/>
-        <location filename="../source/d1smk.cpp" line="238"/>
-        <location filename="../source/d1smk.cpp" line="1270"/>
+        <location filename="../source/d1smk.cpp" line="240"/>
+        <location filename="../source/d1smk.cpp" line="1275"/>
         <location filename="../source/d1trn.cpp" line="35"/>
         <location filename="../source/d1trs.cpp" line="54"/>
         <location filename="../source/d1wav.cpp" line="278"/>
@@ -8340,7 +8732,7 @@
     <message>
         <location filename="../source/d1celtileset.cpp" line="142"/>
         <source>Frame %1 is invalid (type %2 offset:0x%3-0x%4 (%5)).</source>
-        <translation type="unfinished"></translation>
+        <translation>Az %1 képkocka érvénytelen (%2 típus, eltolás: 0x%3-0x%4 (%5)).</translation>
     </message>
     <message>
         <location filename="../source/d1celtilesetframe.cpp" line="238"/>
@@ -8458,13 +8850,13 @@
         <translation>Javasolt típus: &apos;Jobb Trapézoid&apos;</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="2035"/>
+        <location filename="../source/mainwindow.cpp" line="2091"/>
         <source>empty</source>
         <translation>üres</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="413"/>
-        <location filename="../source/mainwindow.cpp" line="3781"/>
+        <location filename="../source/d1gfx.cpp" line="699"/>
+        <location filename="../source/mainwindow.cpp" line="3890"/>
         <source>Unknown</source>
         <translation>Ismeretlen</translation>
     </message>
@@ -8479,13 +8871,13 @@
         <translation>Hibás (nem átlátszó) képpont a (%1:%2) pozícióban.</translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="54"/>
+        <location filename="../source/d1pcx.cpp" line="56"/>
         <source>Width setting is ignored when a PCX file is loaded.</source>
         <translation>A PCX fájl betöltésekor a szélesség beállítás figyelmen kívül van hagyva.</translation>
     </message>
     <message>
         <location filename="../source/d1pcx.cpp" line="86"/>
-        <location filename="../source/d1smk.cpp" line="246"/>
+        <location filename="../source/d1smk.cpp" line="248"/>
         <location filename="../source/d1wav.cpp" line="34"/>
         <location filename="../source/main.cpp" line="19"/>
         <source>Failed to read file: %1.</source>
@@ -8532,7 +8924,7 @@
         <translation>Paletta:</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1882"/>
+        <location filename="../source/mainwindow.cpp" line="1938"/>
         <source>Image files (%1)</source>
         <translation>Kép fájlok (%1)</translation>
     </message>
@@ -8551,12 +8943,12 @@
     <message>
         <location filename="../source/exportdialog.cpp" line="692"/>
         <source>track%1</source>
-        <translation type="unfinished"></translation>
+        <translation>pálya%1</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="756"/>
         <source>Mismatching audio formats (ch%1,w%2,%3 vs. ch%1,w%2,%3).</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltérő hangformátumok (ch%1,w%2,%3 vs. ch%1,w%2,%3).</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="139"/>
@@ -8584,46 +8976,46 @@
         <translation>%1. képkocka kicsinyítése</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/upscaler.cpp" line="3267"/>
+        <location filename="../source/upscaler.cpp" line="3268"/>
         <source>Upscaled %n frame(s).</source>
         <translation>
             <numerusform>%n képkocka felméretezve.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/upscaler.cpp" line="3267"/>
+        <location filename="../source/upscaler.cpp" line="3268"/>
         <source>Downscaled %n frame(s).</source>
         <translation>
             <numerusform>%n képkocka kicsinyítve.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3361"/>
+        <location filename="../source/upscaler.cpp" line="3362"/>
         <source>Downscaling of a tileset is not supported.</source>
         <translation>Mezőkészlet kicsinyítése nem támogatott.</translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3366"/>
+        <location filename="../source/upscaler.cpp" line="3367"/>
         <source>Upscaling tileset...</source>
         <translation>Mezőkészlet felméretezése...</translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3382"/>
+        <location filename="../source/upscaler.cpp" line="3383"/>
         <source>Upscaling subtile %1.</source>
         <translation>Mező %1 felméretezése.</translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3418"/>
+        <location filename="../source/upscaler.cpp" line="3419"/>
         <source>Subtile height is not supported by the game (Diablo 1/DevilutionX).</source>
         <translation>Mező magassága nem támogatott a játékban (Diablo 1/DevilutionX).</translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3424"/>
+        <location filename="../source/upscaler.cpp" line="3425"/>
         <source>Empty frames were added to match the required height of the game (DevilutionX).</source>
         <translation>Üres képkockák kerültek hozzáadásra, hogy megfeleljen a játék követelményeinek (DevilutionX).</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/upscaler.cpp" line="3431"/>
+        <location filename="../source/upscaler.cpp" line="3432"/>
         <source>Upscaled %n subtile(s).</source>
         <translation>
             <numerusform>%n mező felméretezve.</numerusform>
@@ -8635,160 +9027,160 @@
         <translation>Hibás CEL állomány (0x00 érték)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="173"/>
+        <location filename="../source/d1gfx.cpp" line="194"/>
         <source>Mismatching framesizes.</source>
         <translation>Eltérő képkockaméret.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="415"/>
+        <location filename="../source/d1gfx.cpp" line="701"/>
         <source>regular (v1)</source>
-        <translation type="unfinished"></translation>
+        <translation>normál (v1)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="416"/>
+        <location filename="../source/d1gfx.cpp" line="702"/>
         <source>compilation (v1)</source>
-        <translation type="unfinished"></translation>
+        <translation>összeállítás (v1)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="417"/>
+        <location filename="../source/d1gfx.cpp" line="703"/>
         <source>level (v1)</source>
-        <translation type="unfinished"></translation>
+        <translation>szint (v1)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="418"/>
+        <location filename="../source/d1gfx.cpp" line="704"/>
         <source>mono group (v2)</source>
-        <translation type="unfinished"></translation>
+        <translation>mono csoport (v2)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="419"/>
+        <location filename="../source/d1gfx.cpp" line="705"/>
         <source>multi group (v2)</source>
-        <translation type="unfinished"></translation>
+        <translation>többcsoportos (v2)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="420"/>
+        <location filename="../source/d1gfx.cpp" line="706"/>
         <source>smacker file</source>
-        <translation type="unfinished"></translation>
+        <translation>smacker fájl</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="465"/>
+        <location filename="../source/d1gfx.cpp" line="751"/>
         <source>Frame %1:</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 képkocka:</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="467"/>
+        <location filename="../source/d1gfx.cpp" line="753"/>
         <source>Frame %1 (compared to %2):</source>
-        <translation type="unfinished"></translation>
+        <translation>%1. képkocka (a %2. képkockához képest):</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="469"/>
+        <location filename="../source/d1gfx.cpp" line="755"/>
         <source>  pixel %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1:%2 pixel jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="470"/>
-        <location filename="../source/d1gfx.cpp" line="471"/>
+        <location filename="../source/d1gfx.cpp" line="756"/>
+        <location filename="../source/d1gfx.cpp" line="757"/>
         <source>transparent</source>
-        <translation type="unfinished"></translation>
+        <translation>átlátszó</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="470"/>
-        <location filename="../source/d1gfx.cpp" line="471"/>
+        <location filename="../source/d1gfx.cpp" line="756"/>
+        <location filename="../source/d1gfx.cpp" line="757"/>
         <source>color%1</source>
-        <translation type="unfinished"></translation>
+        <translation>szín%1</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="485"/>
+        <location filename="../source/d1gfx.cpp" line="771"/>
         <source>type is %1 (was %2)</source>
         <translation>típusa %1 (ezelőtt %2)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="488"/>
+        <location filename="../source/d1gfx.cpp" line="774"/>
         <source>%1 (was %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 (ezelőtt %2)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="496"/>
+        <location filename="../source/d1gfx.cpp" line="782"/>
         <source>group %1 is frames %2..%3 (was %4..%5)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 csoport: képkockák %2..%3 (korábban %4..%5)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="502"/>
+        <location filename="../source/d1gfx.cpp" line="788"/>
         <source>groupcount is %1 (was %2)</source>
         <translation>csoportok száma %1 (ezelőtt %2)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="507"/>
+        <location filename="../source/d1gfx.cpp" line="793"/>
         <source>framecount is %1 (was %2)</source>
         <translation>képkockák száma %1 (ezelőtt %2)</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/d1gfx.cpp" line="569"/>
-        <location filename="../source/d1gfx.cpp" line="603"/>
+        <location filename="../source/d1gfx.cpp" line="855"/>
+        <location filename="../source/d1gfx.cpp" line="889"/>
         <source>%n frame deleted [%1..%2)</source>
         <translation>
             <numerusform>%n képkocka [%1..%2) törölve</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/d1gfx.cpp" line="573"/>
-        <location filename="../source/d1gfx.cpp" line="599"/>
+        <location filename="../source/d1gfx.cpp" line="859"/>
+        <location filename="../source/d1gfx.cpp" line="885"/>
         <source>%n frame added [%1..%2)</source>
         <translation>
             <numerusform>%1 képkocka [%1..%2) hozzáadva</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="584"/>
+        <location filename="../source/d1gfx.cpp" line="870"/>
         <source>frame %1 is %2x%3 pixel (was %4x%5)</source>
         <translation>%1 képkocka %2x%3 pixel (ezelőtt %4x%5)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="586"/>
+        <location filename="../source/d1gfx.cpp" line="872"/>
         <source>frame %1 (compared to %2) is %3x%4 pixel (was %5x%6)</source>
         <translation>%1 képkocka (%2-hoz hasonlítva) %3x%4 pixel (ezelőtt %5x%6)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1075"/>
-        <location filename="../source/d1gfx.cpp" line="1340"/>
-        <location filename="../source/d1gfx.cpp" line="1387"/>
-        <location filename="../source/d1gfx.cpp" line="1695"/>
-        <location filename="../source/d1gfx.cpp" line="1883"/>
-        <location filename="../source/d1gfx.cpp" line="1921"/>
-        <location filename="../source/d1gfx.cpp" line="1970"/>
-        <location filename="../source/d1gfx.cpp" line="2011"/>
-        <location filename="../source/d1gfx.cpp" line="2060"/>
-        <location filename="../source/d1gfx.cpp" line="7075"/>
-        <location filename="../source/d1gfx.cpp" line="7449"/>
+        <location filename="../source/d1gfx.cpp" line="1733"/>
+        <location filename="../source/d1gfx.cpp" line="2048"/>
+        <location filename="../source/d1gfx.cpp" line="2095"/>
+        <location filename="../source/d1gfx.cpp" line="2403"/>
+        <location filename="../source/d1gfx.cpp" line="2591"/>
+        <location filename="../source/d1gfx.cpp" line="2629"/>
+        <location filename="../source/d1gfx.cpp" line="2678"/>
+        <location filename="../source/d1gfx.cpp" line="2719"/>
+        <location filename="../source/d1gfx.cpp" line="2768"/>
+        <location filename="../source/d1gfx.cpp" line="7782"/>
+        <location filename="../source/d1gfx.cpp" line="8156"/>
         <source>Frame %1 is modified.</source>
         <translation>A(z) %1-es képkocka módosításra került.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="1968"/>
-        <location filename="../source/d1gfx.cpp" line="2009"/>
-        <location filename="../source/d1gfx.cpp" line="2058"/>
+        <location filename="../source/d1gfx.cpp" line="2676"/>
+        <location filename="../source/d1gfx.cpp" line="2717"/>
+        <location filename="../source/d1gfx.cpp" line="2766"/>
         <source>Frame %1 is removed.</source>
         <translation>A(z) %1-es képkocka törlésre került.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="2234"/>
-        <location filename="../source/d1gfx.cpp" line="2413"/>
-        <location filename="../source/d1gfx.cpp" line="2770"/>
-        <location filename="../source/d1gfx.cpp" line="3863"/>
-        <location filename="../source/d1gfx.cpp" line="5140"/>
-        <location filename="../source/d1gfx.cpp" line="5197"/>
-        <location filename="../source/d1gfx.cpp" line="5644"/>
-        <location filename="../source/d1gfx.cpp" line="5924"/>
-        <location filename="../source/d1gfx.cpp" line="6049"/>
-        <location filename="../source/d1gfx.cpp" line="6454"/>
-        <location filename="../source/d1gfx.cpp" line="6527"/>
-        <location filename="../source/d1gfx.cpp" line="6628"/>
-        <location filename="../source/d1gfx.cpp" line="6817"/>
-        <location filename="../source/d1gfx.cpp" line="6862"/>
+        <location filename="../source/d1gfx.cpp" line="3030"/>
+        <location filename="../source/d1gfx.cpp" line="3209"/>
+        <location filename="../source/d1gfx.cpp" line="3477"/>
+        <location filename="../source/d1gfx.cpp" line="4570"/>
+        <location filename="../source/d1gfx.cpp" line="5847"/>
+        <location filename="../source/d1gfx.cpp" line="5904"/>
+        <location filename="../source/d1gfx.cpp" line="6351"/>
+        <location filename="../source/d1gfx.cpp" line="6631"/>
+        <location filename="../source/d1gfx.cpp" line="6756"/>
+        <location filename="../source/d1gfx.cpp" line="7161"/>
+        <location filename="../source/d1gfx.cpp" line="7234"/>
+        <location filename="../source/d1gfx.cpp" line="7335"/>
+        <location filename="../source/d1gfx.cpp" line="7524"/>
+        <location filename="../source/d1gfx.cpp" line="7569"/>
         <source>Frame %1 of group %2 is modified.</source>
         <translation>A(z) %1-es képkocka a %2. csoportban módosításra került.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="7103"/>
+        <location filename="../source/d1gfx.cpp" line="7810"/>
         <source>Removed the last 8 frames.</source>
         <translation>Az utólsó 8 képkocka törlésre került.</translation>
     </message>
@@ -8820,7 +9212,7 @@
     <message>
         <location filename="../source/d1tileset.cpp" line="131"/>
         <source>Non-clipped Special-CEL %1 file is not supported by the game (Diablo 1/DevilutionX).</source>
-        <translation type="unfinished"></translation>
+        <translation>A játék (Diablo 1/DevilutionX) nem támogatja a nem vágott Special-CEL %1 fájlt.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="502"/>
@@ -8864,7 +9256,7 @@
     <message>
         <location filename="../source/d1tileset.cpp" line="680"/>
         <source>Tile %1 has the same subtiles as Tile %2, but the TLA-properties are different.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 lapnak ugyanazok a mezői vannak, mint a(z) %2 lapnak, de a TLA-tulajdonságok eltérőek.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="703"/>
@@ -8888,7 +9280,7 @@
     <message>
         <location filename="../source/d1tileset.cpp" line="800"/>
         <source>Frame %1 of Subtile %2 is set to Frame %3.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2 mező %1. képkockája %3-ra van állítva.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="912"/>
@@ -8917,18 +9309,18 @@
         <location filename="../source/d1tileset.cpp" line="23395"/>
         <location filename="../source/d1tileset.cpp" line="23598"/>
         <source>Frame %1 of subtile %2 is modified.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2 mező %1 képkockája módosult.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="4065"/>
         <location filename="../source/d1tileset.cpp" line="4087"/>
         <source>Removed Subtile %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltávolította a(z) %1 mezőt.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="8908"/>
         <source>Framesize of the Cathedal&apos;s Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A katedrális speciális celláinak képkockamérete nem egyezik. (%1:%2 várható érték: %3:%4. Index: %5.)</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="8895"/>
@@ -8936,48 +9328,48 @@
         <location filename="../source/d1tileset.cpp" line="11264"/>
         <location filename="../source/d1tileset.cpp" line="22939"/>
         <source>Special-Frame %1 is modified.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 speciális képkocka módosult.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="13231"/>
         <source>At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).</source>
-        <translation type="unfinished"></translation>
+        <translation>Az upgrade-mezők (%1, %2, %3, %4, %5) közül legalább egy érvénytelen (felméretezve?).</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="13257"/>
         <source>The back-stairs tile (%1) has invalid (missing) frames.</source>
-        <translation type="unfinished"></translation>
+        <translation>A hátsó lépcső lapjának (%1) érvénytelen (hiányzó) keretei vannak.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="13264"/>
         <source>The stairs subtiles (%1) are already patched.</source>
-        <translation type="unfinished"></translation>
+        <translation>A lépcső mezői (%1) már javítva vannak.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="13286"/>
         <source>The back-stairs tile (%1) has invalid (mismatching) frames.</source>
-        <translation type="unfinished"></translation>
+        <translation>A hátsó lépcső lapjának (%1) érvénytelen (egyező) keretei vannak.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="13293"/>
         <source>The stairs subtile (%1) has invalid (mismatching) frames I.</source>
-        <translation type="unfinished"></translation>
+        <translation>A lépcső mezőjének (%1) érvénytelen (egyező) keretei vannak I.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="13299"/>
         <source>The stairs subtile (%1) has invalid (mismatching) frames II.</source>
-        <translation type="unfinished"></translation>
+        <translation>A lépcső mező (%1) érvénytelen (nem egyező) kereteket tartalmaz II.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="13448"/>
         <source>The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.</source>
-        <translation type="unfinished"></translation>
+        <translation>A hátsó lépcsőlapokat (%1, %2) és a lépcsőalsó mezőket (%2, %3, %4, %5) módosították.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="844"/>
         <location filename="../source/d1tileset.cpp" line="856"/>
         <source>Subtile (%1) is invalid (upscaled?).</source>
-        <translation type="unfinished"></translation>
+        <translation>A mező (%1) érvénytelen (felméretezve?).</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="89"/>
@@ -8987,42 +9379,42 @@
     <message>
         <location filename="../source/d1tileset.cpp" line="602"/>
         <source>Subtile %1 has the same frames as Subtile %2, but the Special-properties are different.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező ugyanazokkal a képkockákkal rendelkezik, mint a(z) %2 mező, de a speciális tulajdonságok eltérőek.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="606"/>
         <source>Subtile %1 has the same frames as Subtile %2, but the Map-properties are different.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező ugyanazokkal a képkockákkal rendelkezik, mint a(z) %2. mező, de a térkép tulajdonságok eltérőek.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="610"/>
         <source>Subtile %1 has the same frames as Subtile %2, but the Collision-properties are different.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1. mező ugyanazokkal a képkockákkal rendelkezik, mint a(z) %2. mező, de az ütközési tulajdonságok eltérőek.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="614"/>
         <source>Subtile %1 has the same frames as Subtile %2, but the Render-properties are different.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 mező ugyanazokkal a képkockákkal rendelkezik, mint a(z) %2 mező, de a renderelési tulajdonságai eltérőek.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="739"/>
         <source>Removed Frame (%1) @%2 in Subtile %3.</source>
-        <translation type="unfinished"></translation>
+        <translation>Képkocka (%1) eltávolítva @%2 a(z) %3 mezőben.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="782"/>
         <source>Frame %1(%2) of Subtile %3 is empty.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %3 mező %1(%2) képkockában üres.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="851"/>
         <source>Subtile (%1) has invalid (missing) frames.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) (%1) mező érvénytelen (hiányzó) képkockákat tartalmaz.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="8205"/>
         <source>Framesize of the Town&apos;s Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A falu&apos; különleges celláinak képkockamérete nem egyezik. (%1:%2 várt érték: %3:%4. Index: %5.)</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="8265"/>
@@ -9050,29 +9442,29 @@
         <location filename="../source/d1tileset.cpp" line="8851"/>
         <location filename="../source/d1tileset.cpp" line="8873"/>
         <source>Missing micro to be used as a template to patch the town&apos;s Special-Cel %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiányzik a mikro, amit sablonként lehetne használni a falu&apos; %1 különleges egységének javításához.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="22591"/>
         <source>Framesize of the Crypt&apos;s Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A kripta speciális celláinak képkockamérete nem egyezik. (%1:%2 várt érték: %3:%4. Index: %5.)</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="22615"/>
         <location filename="../source/d1tileset.cpp" line="22771"/>
         <source>Missing &apos;template&apos; subtile-frame (%1:%2) to create Crypt&apos;s Special-Cels.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiányzik a &apos;template&apos; mező-képkocka (%1:%2) a kripta speciális celláinak létrehozásához.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="22619"/>
         <location filename="../source/d1tileset.cpp" line="22775"/>
         <source>Framesize of the &apos;template&apos; subtile-frame does not fit to create Crypt&apos;s Special-Cels. (%1:%2 expected %3:%4. Index %5:%6.)</source>
-        <translation type="unfinished"></translation>
+        <translation>A &apos;template&apos; mező-képkockájának képmérete nem megfelelő a kripta speciális celláinak létrehozásához. (%1:%2 várható érték: %3:%4. Index: %5:%6.)</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="25430"/>
         <source>Special-Frames are using clipped-encoding.</source>
-        <translation type="unfinished"></translation>
+        <translation>A speciális képkockák vágott kódolást használnak.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="25447"/>
@@ -9087,12 +9479,12 @@
     <message>
         <location filename="../source/d1tileset.cpp" line="750"/>
         <source>Not enough subtiles in Tile %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elég mező a(z) %1. lapon.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="756"/>
         <source>Subtile %1 of Tile%2 is set to %3.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2 lap %1. mezője %3-ra van állítva.</translation>
     </message>
     <message>
         <location filename="../source/d1tileset.cpp" line="180"/>
@@ -9107,7 +9499,7 @@
     <message>
         <location filename="../source/progressdialog.cpp" line="342"/>
         <source>Too many progression bars.</source>
-        <translation>Nincs elég haladás visszajelző elem.</translation>
+        <translation>Túl sok haladás visszajelző elem.</translation>
     </message>
     <message>
         <location filename="../source/progressdialog.cpp" line="375"/>
@@ -9144,62 +9536,62 @@
     <message>
         <location filename="../source/d1dun.cpp" line="889"/>
         <source>Dungeon:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata:</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="897"/>
         <source>tile %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1:%2 lap jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="907"/>
         <source>subtile %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>A %1:%2 mező jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="917"/>
         <source>tile-protection %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>a %1:%2 lapvédelem jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="927"/>
         <source>subtile-protection %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>A %1:%2 mező-védelem jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="937"/>
         <source>item %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1:%2 tárgy jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="947"/>
         <source>object %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1:%2 objektum jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="957"/>
         <source>monster %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1:%2 szörny jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="967"/>
         <source>room %1:%2 is %3 (was %4)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1:%2 szoba jelenlegi állapota %3 (korábban %4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="975"/>
         <source>size is %1x%2 (was %3x%4)</source>
-        <translation type="unfinished"></translation>
+        <translation>méret %1x%2 (korábban %3x%4)</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="2161"/>
         <source>Subtile %1 was used at %2:%3.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %1 mezőt használták a következő helyen: %2:%3.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="2182"/>
         <source>Tile %1 was used at %2:%3.</source>
-        <translation type="unfinished"></translation>
+        <translation>A %1 lapot ekkor használták: %2:%3.</translation>
     </message>
     <message>
         <location filename="../source/d1dun.cpp" line="3156"/>
@@ -9225,12 +9617,12 @@
     <message>
         <location filename="../source/d1tableset.cpp" line="34"/>
         <source>The table files have the same type of content.</source>
-        <translation type="unfinished"></translation>
+        <translation>A táblázatfájlok azonos típusú tartalommal rendelkeznek.</translation>
     </message>
     <message>
         <location filename="../source/dungeon/engine.cpp" line="165"/>
         <source>Skipping file: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Fájl kihagyása: %1.</translation>
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="629"/>
@@ -9240,410 +9632,415 @@
     <message>
         <location filename="../source/dungeon/objects.cpp" line="729"/>
         <source>ObjIndex: Active object not found at (%1,%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>ObjIndex: Az aktív objektum nem található a következő helyen: (%1,%2)</translation>
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="692"/>
         <source>Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.</source>
-        <translation type="unfinished"></translation>
+        <translation>Több objektum a %1:%2 lapon - írja be a következőt: %3, index: %4, és írja be a következőt: %5, index: %6.</translation>
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="475"/>
         <source>Non-blocking door pn:%1 type:%2 tile:%3</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem blokkoló ajtó pn:%1 tipus:%2 lap:%3</translation>
     </message>
     <message>
         <location filename="../source/dungeon/objects.cpp" line="700"/>
         <source>Reserved object on tile %1:%2 - type %3 with index %4.</source>
-        <translation type="unfinished"></translation>
+        <translation>Foglalt objektum a(z) %1:%2 lapon - típus: %3, index: %4.</translation>
     </message>
     <message>
         <location filename="../source/dungeon/themes.cpp" line="348"/>
         <source>Invalid theme room @%1:%2 .. %3:%4.</source>
-        <translation type="unfinished"></translation>
+        <translation>Érvénytelen témaszoba @%1:%2 .. %3:%4.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="69"/>
+        <location filename="../source/d1gfxset.cpp" line="73"/>
         <source>Failed loading CL2 file: %1.</source>
         <translation>A(z) %1 CL2 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="264"/>
+        <location filename="../source/d1gfxset.cpp" line="78"/>
+        <source>Failed loading CLC file: %1.</source>
+        <translation>Nem sikerült betölteni a CLC fájlt: %1.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="315"/>
         <location filename="../source/d1tileset.cpp" line="145"/>
         <source>Failed to remove file: %1.</source>
         <translation>Nem sikerült törölni a(z) %1 fájlt.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="296"/>
-        <location filename="../source/d1gfxset.cpp" line="332"/>
-        <location filename="../source/d1gfxset.cpp" line="359"/>
-        <source>Added gfx %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1gfxset.cpp" line="299"/>
-        <location filename="../source/d1gfxset.cpp" line="335"/>
-        <location filename="../source/d1gfxset.cpp" line="369"/>
-        <source>Deleted gfx %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1gfxset.cpp" line="304"/>
-        <location filename="../source/d1gfxset.cpp" line="343"/>
-        <location filename="../source/d1gfxset.cpp" line="378"/>
-        <source>Gfx %1 (%2):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1gfxset.cpp" line="306"/>
-        <source>Gfx %1 vs. %2 (%3):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1gfxset.cpp" line="341"/>
-        <source>Gfx %1 (%2 vs %3):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/d1gfxset.cpp" line="347"/>
-        <source>Gfx %1 vs %2 (%3):</source>
-        <translation type="unfinished"></translation>
+        <location filename="../source/d1gfxset.cpp" line="383"/>
+        <location filename="../source/d1gfxset.cpp" line="410"/>
+        <source>Added gfx %1.</source>
+        <translation>%1 grafikus effekt hozzáadva.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="349"/>
-        <source>Gfx %1 (%2) vs %3 (%4):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1gfxset.cpp" line="384"/>
-        <source>Not a graphics file (%1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1gfxset.cpp" line="414"/>
-        <source>framecount of group %1 of %2 does not match with the game (%3 vs %4).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
+        <location filename="../source/d1gfxset.cpp" line="350"/>
+        <location filename="../source/d1gfxset.cpp" line="386"/>
         <location filename="../source/d1gfxset.cpp" line="420"/>
-        <source>framewidth of frame %1 of group %2 in %3 does not match with the game (%4 vs %5).</source>
-        <translation type="unfinished"></translation>
+        <source>Deleted gfx %1.</source>
+        <translation>%1 grafikus effektus törölve.</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="442"/>
+        <location filename="../source/d1gfxset.cpp" line="355"/>
+        <location filename="../source/d1gfxset.cpp" line="394"/>
+        <location filename="../source/d1gfxset.cpp" line="429"/>
+        <source>Gfx %1 (%2):</source>
+        <translation>Gfx %1 (%2):</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="357"/>
+        <source>Gfx %1 vs. %2 (%3):</source>
+        <translation>Gfx %1 vs. %2 (%3):</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="392"/>
+        <source>Gfx %1 (%2 vs %3):</source>
+        <translation>Gfx %1 (%2 vs %3):</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="398"/>
+        <source>Gfx %1 vs %2 (%3):</source>
+        <translation>Gfx %1 vs %2 (%3):</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="400"/>
+        <source>Gfx %1 (%2) vs %3 (%4):</source>
+        <translation>Gfx %1 (%2) vs %3 (%4):</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="435"/>
+        <source>Not a graphics file (%1)</source>
+        <translation>Nem grafikus fájl (%1)</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="465"/>
+        <source>framecount of group %1 of %2 does not match with the game (%3 vs %4).</source>
+        <translation>A %2-ből %1 csoport képkockáinak száma nem egyezik a játékkal (%3 vs %4).</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="471"/>
+        <source>framewidth of frame %1 of group %2 in %3 does not match with the game (%4 vs %5).</source>
+        <translation>A %3 csoport %1. képkockájának képkocka szélessége nem egyezik a játékkal (%4 vs %5).</translation>
+    </message>
+    <message>
+        <location filename="../source/d1gfxset.cpp" line="493"/>
         <source>Frame %1 of %2 has pixels in a range which is level-dependent in the game.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %2-ből %1 képkocka képpontjai olyan tartományban vannak, amely szintfüggő a játékban.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/d1gfxset.cpp" line="462"/>
+        <location filename="../source/d1gfxset.cpp" line="513"/>
         <source>%1 has %2 instead of %n groups.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 %n helyett %2 csoportot tartalmaz.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="476"/>
+        <location filename="../source/d1gfxset.cpp" line="527"/>
         <source>group %1 of %2 has inconsistent framecount (%3 vs %4).</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2-ből %1 csoport képkockáinak száma inkonzisztens (%3 vs. %4).</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="495"/>
+        <location filename="../source/d1gfxset.cpp" line="546"/>
         <source>Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).</source>
-        <translation type="unfinished"></translation>
+        <translation>A %2 csoportban található %1 képkocka mérete inkonzisztens (%3x%4 vs. %5x%6).</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="638"/>
-        <location filename="../source/d1gfxset.cpp" line="650"/>
+        <location filename="../source/d1gfxset.cpp" line="689"/>
+        <location filename="../source/d1gfxset.cpp" line="701"/>
         <source>Framesize is not constant</source>
         <translation>A képkocka-méret nem állandó</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="642"/>
-        <location filename="../source/d1gfxset.cpp" line="654"/>
+        <location filename="../source/d1gfxset.cpp" line="693"/>
+        <location filename="../source/d1gfxset.cpp" line="705"/>
         <source>Groupsize is not constant</source>
         <translation>A csoport-méret nem állandó</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="743"/>
+        <location filename="../source/d1gfxset.cpp" line="794"/>
         <source>Unknown%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ismeretlen%1</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="745"/>
+        <location filename="../source/d1gfxset.cpp" line="796"/>
         <source>Dir%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Irány%1</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="748"/>
+        <location filename="../source/d1gfxset.cpp" line="799"/>
         <source>Stand</source>
-        <translation type="unfinished"></translation>
+        <translation>Áll</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="749"/>
-        <location filename="../source/d1gfxset.cpp" line="762"/>
+        <location filename="../source/d1gfxset.cpp" line="800"/>
+        <location filename="../source/d1gfxset.cpp" line="813"/>
         <source>Attack</source>
-        <translation type="unfinished"></translation>
+        <translation>Támadás</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="750"/>
+        <location filename="../source/d1gfxset.cpp" line="801"/>
         <source>Walk</source>
-        <translation type="unfinished"></translation>
+        <translation>Séta</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="751"/>
+        <location filename="../source/d1gfxset.cpp" line="802"/>
         <source>Spec</source>
-        <translation type="unfinished"></translation>
+        <translation>Spec</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="752"/>
-        <location filename="../source/d1gfxset.cpp" line="767"/>
+        <location filename="../source/d1gfxset.cpp" line="803"/>
+        <location filename="../source/d1gfxset.cpp" line="818"/>
         <source>Hit</source>
-        <translation type="unfinished"></translation>
+        <translation>Találat</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="753"/>
-        <location filename="../source/d1gfxset.cpp" line="768"/>
+        <location filename="../source/d1gfxset.cpp" line="804"/>
+        <location filename="../source/d1gfxset.cpp" line="819"/>
         <source>Death</source>
-        <translation type="unfinished"></translation>
+        <translation>Halál</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="758"/>
+        <location filename="../source/d1gfxset.cpp" line="809"/>
         <source>Stand (town)</source>
-        <translation type="unfinished"></translation>
+        <translation>Áll (falu)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="759"/>
+        <location filename="../source/d1gfxset.cpp" line="810"/>
         <source>Stand (dungeon)</source>
-        <translation type="unfinished"></translation>
+        <translation>Áll (kazamata)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="760"/>
+        <location filename="../source/d1gfxset.cpp" line="811"/>
         <source>Walk (town)</source>
-        <translation type="unfinished"></translation>
+        <translation>Séta (falu)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="761"/>
+        <location filename="../source/d1gfxset.cpp" line="812"/>
         <source>Walk (dungeon)</source>
-        <translation type="unfinished"></translation>
+        <translation>Séta (kazamata)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="763"/>
+        <location filename="../source/d1gfxset.cpp" line="814"/>
         <source>Fire</source>
-        <translation type="unfinished"></translation>
+        <translation>Tűz</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="764"/>
+        <location filename="../source/d1gfxset.cpp" line="815"/>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Villám</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="765"/>
+        <location filename="../source/d1gfxset.cpp" line="816"/>
         <source>Magic</source>
-        <translation type="unfinished"></translation>
+        <translation>Mágikus</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="766"/>
+        <location filename="../source/d1gfxset.cpp" line="817"/>
         <source>Block</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokk</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="253"/>
+        <location filename="../source/d1smk.cpp" line="255"/>
         <source>Invalid SMK file.</source>
         <translation>Hibás SMK fájl.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="271"/>
+        <location filename="../source/d1smk.cpp" line="276"/>
         <source>Empty SMK file.</source>
         <translation>Üres SMK fájl.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="279"/>
+        <location filename="../source/d1smk.cpp" line="285"/>
         <source>Width setting is ignored when a SMK file is loaded.</source>
         <translation>A szélesség-beállítás figyelmen kívül van hagyva SMK fájl betöltésekor.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="325"/>
+        <location filename="../source/d1smk.cpp" line="331"/>
         <source>SMK not fully loaded.</source>
         <translation>Az SMK fájl nem került egészében betöltésre.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="463"/>
+        <location filename="../source/d1smk.cpp" line="468"/>
         <source>ERROR: Missing entry for leaf %1 in the low paths.</source>
-        <translation type="unfinished"></translation>
+        <translation>HIBA: Hiányzik a(z) %1. levél bejegyzése az alsó elérési utakon.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="472"/>
+        <location filename="../source/d1smk.cpp" line="477"/>
         <source>ERROR: Missing entry for leaf %1 in the high paths.</source>
-        <translation type="unfinished"></translation>
+        <translation>HIBA: Hiányzik a %1. levél bejegyzése a magasabb elérési utakon.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="484"/>
+        <location filename="../source/d1smk.cpp" line="489"/>
         <source>writeTreeLeafs ERROR: depth %1 too much.</source>
-        <translation type="unfinished"></translation>
+        <translation>writeTreeLeafs HIBA: a %1 mélység túl nagy.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="617"/>
+        <location filename="../source/d1smk.cpp" line="622"/>
         <source>Congratulation, you managed to break SMK.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gratulálok, sikerült feltörnöd az SMK-t.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="715"/>
+        <location filename="../source/d1smk.cpp" line="720"/>
         <source>ERROR: writeTreeValue missing entry %1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>HIBA: writeTreeValue hiányzó bejegyzés %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="820"/>
+        <location filename="../source/d1smk.cpp" line="825"/>
         <source>Could not find matching color value for the %1 component of color %2 in the palette of frame %3. Using %4 instead of %5.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem található egyező színérték a %2 szín %1 összetevőjéhez a %3 képkocka palettáján. %5 helyett %4-et használunk.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="975"/>
+        <location filename="../source/d1smk.cpp" line="980"/>
         <source>ERROR: writeTreeValue missing entry %1 in byte paths.</source>
-        <translation type="unfinished"></translation>
+        <translation>HIBA: a writeTreeValue függvényben hiányzik a %1 bejegyzés a bájtútvonalak között.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1117"/>
+        <location filename="../source/d1smk.cpp" line="1122"/>
         <source>SMK requires width/height to be multiple of 4.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az SMK megköveteli, hogy a szélesség/magasság 4 többszöröse legyen.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1121"/>
+        <location filename="../source/d1smk.cpp" line="1126"/>
         <source>Mismatching framesize (%1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltérő képkockaméret (%1).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1128"/>
+        <location filename="../source/d1smk.cpp" line="1133"/>
         <source>Transparent pixel in frame %1. at %2:%3</source>
-        <translation type="unfinished"></translation>
+        <translation>Átlátszó képpont a %1. képkockában, %2:%3 helyen</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1180"/>
+        <location filename="../source/d1smk.cpp" line="1185"/>
         <source>Audio chunk of frame %1 (track %2) is too large (%3 Max. %4).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkja túl nagy (%3, max. %4).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1189"/>
+        <location filename="../source/d1smk.cpp" line="1194"/>
         <source>Audio chunk of frame %1 (track %2) has mismatching compression setting (%3 vs %4).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkjának tömörítési beállítása eltér (%3 vs. %4).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1193"/>
+        <location filename="../source/d1smk.cpp" line="1198"/>
         <source>Audio chunk of frame %1 (track %2) has mismatching sample size (%3 vs %4).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkjának mintavételezési mérete eltér (%3 vs. %4).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1197"/>
+        <location filename="../source/d1smk.cpp" line="1202"/>
         <source>Audio chunk of frame %1 (track %2) has mismatching channel-count (%3 vs %4).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkjának csatornaszáma eltér (%3 vs. %4).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1201"/>
+        <location filename="../source/d1smk.cpp" line="1206"/>
         <source>Audio chunk of frame %1 (track %2) has mismatching bitrate (%3 vs %4).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkjának bitrátája eltér (%3 vs. %4).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1211"/>
+        <location filename="../source/d1smk.cpp" line="1216"/>
         <source>Compression mode of the audio chunk of frame %1 (track %2) is not supported (%3 Must be 0 or 1).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkjának tömörítési módja nem támogatott (%3 értékének 0-nak vagy 1-nek kell lennie).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1215"/>
+        <location filename="../source/d1smk.cpp" line="1220"/>
         <source>Sample size of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 8 or 16).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkjának mintavételi mérete nem kompatibilis az SMK-val (%3 értékének 8-nak vagy 16-nak kell lennie).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1219"/>
+        <location filename="../source/d1smk.cpp" line="1224"/>
         <source>Channel-count of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 1 or 2).</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkjának csatornaszáma nem kompatibilis az SMK-val (%3 értékének 1-nek vagy 2-nek kell lennie).</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1223"/>
+        <location filename="../source/d1smk.cpp" line="1228"/>
         <source>Bitrate of the audio chunk of frame %1 (track %2) is incompatible with SMK (%3 Must be 1-%4).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1smk.cpp" line="1239"/>
-        <source>Frame length is not set. Defaulting to 100000us.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka (%2 sáv) hangblokkjának bitrátája nem kompatibilis az SMK-val (%3, 1-%4 között kell lennie).</translation>
     </message>
     <message>
         <location filename="../source/d1smk.cpp" line="1244"/>
+        <source>Frame length is not set. Defaulting to 100000us.</source>
+        <translation>A képkocka hossza nincs beállítva. Az alapértelmezett érték 100000us.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1249"/>
         <source>Frame length is rounded to %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>A képkocka hossza %1-re van kerekítve.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1428"/>
+        <location filename="../source/d1smk.cpp" line="1433"/>
         <source>The palette is not set in the first frame. Defaulting to the current palette.</source>
-        <translation type="unfinished"></translation>
+        <translation>A paletta nincs beállítva az első képkockában. Alapértelmezés szerint az aktuális paletta lesz használva.</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1551"/>
+        <location filename="../source/d1smk.cpp" line="1556"/>
         <source>Content:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tartalom:</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1554"/>
+        <location filename="../source/d1smk.cpp" line="1559"/>
         <source>Palettes:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1smk.cpp" line="1560"/>
-        <source>Palette &apos;%1&apos; is added.</source>
-        <translation type="unfinished"></translation>
+        <translation>Paletták:</translation>
     </message>
     <message>
         <location filename="../source/d1smk.cpp" line="1565"/>
+        <source>Palette &apos;%1&apos; is added.</source>
+        <translation>A(z) &apos;%1&apos; paletta hozzáadva.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1570"/>
         <source>Palette &apos;%1&apos; is removed.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) &apos;%1&apos; paletta eltávolításra került.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/d1smk.cpp" line="1696"/>
-        <source> for frame(s) %1-%2</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-        </translation>
-    </message>
-    <message>
         <location filename="../source/d1smk.cpp" line="1701"/>
-        <source> of %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1smk.cpp" line="1735"/>
-        <source>The %1 component of color %2 is adjusted in the palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/d1smk.cpp" line="1737"/>
-        <source> (Using %1 instead of %2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../source/d1smk.cpp" line="1777"/>
-        <source>Ignored the %1 undefined color(s) in the palette</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <source> for frame(s) %1-%2</source>
+        <translation>
+            <numerusform>a(z) %1-%2 képkockához/képkockákhoz</numerusform>
         </translation>
     </message>
     <message>
+        <location filename="../source/d1smk.cpp" line="1706"/>
+        <source> of %1</source>
+        <translation> %1-nek</translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1740"/>
+        <source>The %1 component of color %2 is adjusted in the palette</source>
+        <translation>A %2 szín %1 összetevője módosítva van a palettán</translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1742"/>
+        <source> (Using %1 instead of %2)</source>
+        <translation> (%1 használata %2 helyett)</translation>
+    </message>
+    <message numerus="yes">
         <location filename="../source/d1smk.cpp" line="1782"/>
+        <source>Ignored the %1 undefined color(s) in the palette</source>
+        <translation>
+            <numerusform>A palettán található %1 definiálatlan színt figyelmen kívül hagyta</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../source/d1smk.cpp" line="1787"/>
         <source>The palette</source>
-        <translation type="unfinished"></translation>
+        <translation>A paletta</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1785"/>
+        <location filename="../source/d1smk.cpp" line="1790"/>
         <source> is SMK compliant</source>
-        <translation type="unfinished"></translation>
+        <translation> SMK-kompatibilis</translation>
     </message>
     <message>
-        <location filename="../source/d1smk.cpp" line="1844"/>
+        <location filename="../source/d1smk.cpp" line="1849"/>
         <source>Palette of frame %1 is obsolete.</source>
-        <translation type="unfinished"></translation>
+        <translation>A(z) %1 képkocka palettája elavult.</translation>
     </message>
     <message>
         <location filename="../source/d1trs.cpp" line="250"/>
         <source>Light%1.trn</source>
-        <translation type="unfinished"></translation>
+        <translation>Fény%1.trn</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="42"/>
@@ -9664,47 +10061,47 @@
     <message>
         <location filename="../source/d1wav.cpp" line="72"/>
         <source>Invalid chunk length in the WAV file (%1. Min 8).</source>
-        <translation type="unfinished"></translation>
+        <translation>Érvénytelen adatblokkhossz a WAV fájlban (%1. Min. 8).</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="77"/>
         <source>Invalid chunk in the WAV header.</source>
-        <translation type="unfinished"></translation>
+        <translation>Érvénytelen adattömb a WAV fejlécben.</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="83"/>
         <source>Unrecognized content in the WAV file (length: %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Ismeretlen tartalom a WAV fájlban (hossz: %1).</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="88"/>
         <source>Ignored chunk &apos;%1&apos; in the WAV header.</source>
-        <translation type="unfinished"></translation>
+        <translation>A WAV fejlécben található &apos;%1&apos; rész figyelmen kívül hagyva.</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="99"/>
         <source>Mismatching content in the WAV file (length: %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltérő tartalom a WAV fájlban (hossz: %1).</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="106"/>
         <source>Failed to allocate memory (%1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült memória-lefoglalást végezni (%1).</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="125"/>
         <source>Mismatching audio channels (%1 vs %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltérő hangcsatornák (%1 vs %2).</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="127"/>
         <source>Mismatching audio bit-depth (%1 vs %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltérő hang bitmélység (%1 vs %2).</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="129"/>
         <source>Mismatching audio bit-rate (%1 vs %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltérő hang bitráta (%1 vs. %2).</translation>
     </message>
     <message>
         <location filename="../source/d1wav.cpp" line="229"/>
@@ -9724,114 +10121,114 @@
     <message>
         <location filename="../source/dungeon/monster.cpp" line="561"/>
         <source>Bad Na-Krul placement. Received-Id:%1 instead of %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hibás Na-Krul elhelyezés. A kapott azonosító: %1 %2 helyett.</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="73"/>
         <source>Minion</source>
-        <translation type="unfinished"></translation>
+        <translation>Követő</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="76"/>
         <source>Lost</source>
-        <translation type="unfinished"></translation>
+        <translation>Elveszett</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="80"/>
         <source>Leader</source>
-        <translation type="unfinished"></translation>
+        <translation>Vezető</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="96"/>
         <source>Vulnerable to %1 damage</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 sebezhető</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="100"/>
         <source>Protected against %1 damage</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 sebzés ellen védett</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="104"/>
         <source>Resists %1 damage</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 sebzést hárít el</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="108"/>
         <source>Immune to %1 damage</source>
-        <translation type="unfinished"></translation>
+        <translation>Immunis %1 sebzésre</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="111"/>
         <source>???</source>
-        <translation type="unfinished"></translation>
+        <translation>???</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="116"/>
         <source>slash</source>
-        <translation type="unfinished"></translation>
+        <translation>vágás</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="117"/>
         <source>blunt</source>
-        <translation type="unfinished"></translation>
+        <translation>tompa</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="118"/>
         <source>puncture</source>
-        <translation type="unfinished"></translation>
+        <translation>szúrás</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="119"/>
         <source>fire</source>
-        <translation type="unfinished"></translation>
+        <translation>tűz</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="120"/>
         <source>lightning</source>
-        <translation type="unfinished"></translation>
+        <translation>villám</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="121"/>
         <source>magic</source>
-        <translation type="unfinished"></translation>
+        <translation>mágikus</translation>
     </message>
     <message>
         <location filename="../source/dungeonsubtilewidget.cpp" line="122"/>
         <source>acid</source>
-        <translation type="unfinished"></translation>
+        <translation>sav</translation>
     </message>
     <message numerus="yes">
         <location filename="../source/smkaudiowidget.cpp" line="275"/>
         <source>Not enough frames for the audio files. The last %n audio file(s) are ignored.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Nincs elég képkocka a hangfájlokhoz. Az utolsó %n hangfájlt figyelmen kívül hagyja a rendszer.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../source/smkaudiowidget.cpp" line="308"/>
         <source>Not enough tracks for the audio files. The last %n audio file(s) are ignored.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Nincs elég sáv a hangfájlokhoz. Az utolsó %n hangfájlt figyelmen kívül hagyja.</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../source/d1font.cpp" line="21"/>
         <source>Font could not be loaded.</source>
-        <translation type="unfinished"></translation>
+        <translation>A betűtípus nem tölthető be.</translation>
     </message>
     <message>
         <location filename="../source/d1font.cpp" line="27"/>
         <source>No font families loaded.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincsenek betöltve betűtípuscsaládok.</translation>
     </message>
     <message>
         <location filename="../source/d1pal.cpp" line="150"/>
         <source>color %1 is %2 (was %3)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 szín jelenlegi állapota %2 (korábban %3)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfxset.cpp" line="773"/>
+        <location filename="../source/d1gfxset.cpp" line="824"/>
         <location filename="../source/d1sla.cpp" line="186"/>
         <source>N/A</source>
         <translation>N/A</translation>
@@ -9861,53 +10258,128 @@
         <source>East Door</source>
         <translation>Keleti ajtó</translation>
     </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="28"/>
+        <source>path to the main gfx is missing.</source>
+        <translation>hiányzik az elérési út a fő grafikus effektushoz.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="42"/>
+        <source>main gfx cel file can not be loaded %1.</source>
+        <translation>a fő gfx cel fájl nem tölthető be: %1.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="48"/>
+        <source>main gfx cl2 file can not be loaded %1.</source>
+        <translation>a fő gfx cl2 fájl nem tölthető be: %1.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="61"/>
+        <source>invalid component in array</source>
+        <translation>érvénytelen multi komponens</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="68"/>
+        <source>invalid flat component</source>
+        <translation>érvénytelen lapos komponens</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="96"/>
+        <source>%1 is invalid (%2).</source>
+        <translation>%1 érvénytelen (%2).</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="111"/>
+        <source>Frame-index is missing.</source>
+        <translation>Hiányzik a képkocka-index.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="113"/>
+        <source>Frame-index</source>
+        <translation>Képkocka-index</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="119"/>
+        <source>Frame-index out of bound (%1 vs %2).</source>
+        <translation>A képkockaindex a határon kívül esik (%1 vs %2).</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="127"/>
+        <source>Frame-reference</source>
+        <translation>Képkocka-referencia</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="133"/>
+        <source>Z-order</source>
+        <translation>Z-rend</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="139"/>
+        <source>X-offset</source>
+        <translation>X-eltolás</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="145"/>
+        <source>Y-offset</source>
+        <translation>Y-eltolás</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="162"/>
+        <source>Component-gfx is missing.</source>
+        <translation>Hiányzik a gfx komponens.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1clc.cpp" line="164"/>
+        <source>Component-gfx</source>
+        <translation>Komponens-gfx</translation>
+    </message>
 </context>
 <context>
     <name>RemapDialog</name>
     <message>
         <location filename="../source/remapdialog.ui" line="6"/>
         <source>Remap</source>
-        <translation type="unfinished"></translation>
+        <translation>Átrendelés</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="18"/>
         <source>From Colors:</source>
-        <translation type="unfinished"></translation>
+        <translation>A színekből:</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="21"/>
         <source>Palette index (range) of the colors to be replaced or 256 if transparent</source>
-        <translation type="unfinished"></translation>
+        <translation>A lecserélendő színek palettaindexe (tartománya), vagy 256, ha átlátszó</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="48"/>
         <source>(Palette-)Index of the first color</source>
-        <translation type="unfinished"></translation>
+        <translation>(Paletta-)Az első szín indexe</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="77"/>
         <source>(Palette-)Index of the last color</source>
-        <translation type="unfinished"></translation>
+        <translation>(Paletta-)Az utolsó szín indexe</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="96"/>
         <source>To Colors:</source>
-        <translation type="unfinished"></translation>
+        <translation>A színekhez:</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="99"/>
         <source>Palette index (range) of the replacement color or 256 if transparent</source>
-        <translation type="unfinished"></translation>
+        <translation>A csere szín palettaindexe (tartománya), vagy 256, ha átlátszó</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="126"/>
         <source>(Palette-)Index of the first replacement color</source>
-        <translation type="unfinished"></translation>
+        <translation>Az első csereszín (Paletta)indexe</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="155"/>
         <source>(Palette-)Index of the last replacement color</source>
-        <translation type="unfinished"></translation>
+        <translation>Az utolsó csereszín (Paletta)indexe</translation>
     </message>
     <message>
         <location filename="../source/remapdialog.ui" line="174"/>
@@ -9946,7 +10418,7 @@
         <location filename="../source/resizedialog.ui" line="6"/>
         <location filename="../source/resizedialog.ui" line="302"/>
         <source>Resize</source>
-        <translation type="unfinished"></translation>
+        <translation>Átméretezés</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="18"/>
@@ -9961,12 +10433,12 @@
     <message>
         <location filename="../source/resizedialog.ui" line="52"/>
         <source>Back color index:</source>
-        <translation type="unfinished"></translation>
+        <translation>Háttérszín index:</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="55"/>
         <source>Palette index of the background color or 256 if transparent</source>
-        <translation type="unfinished"></translation>
+        <translation>A háttérszín palettaindexe vagy 256, ha átlátszó</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="79"/>
@@ -9976,52 +10448,52 @@
     <message>
         <location filename="../source/resizedialog.ui" line="82"/>
         <source>Placement of the current image</source>
-        <translation type="unfinished"></translation>
+        <translation>Az jelenlegi kép elhelyezése</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="92"/>
         <source>The current image is on the top left</source>
-        <translation type="unfinished"></translation>
+        <translation>Az jelenlegi kép a bal felső sarokban található</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="102"/>
         <source>The current image is on the top</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi kép felül van</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="112"/>
         <source>The current image is on the top right</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi kép jobb felső sarokban található</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="129"/>
         <source>The current image is on the left</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi kép bal oldalon van</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="139"/>
         <source>The current image is in the center</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi kép középen van</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="149"/>
         <source>The current image is on the right</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi kép jobb oldalon van</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="159"/>
         <source>The current image is on the bottom left</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi kép a bal alsó sarokban található</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="169"/>
         <source>The current image is on the bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi kép alul van</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="179"/>
         <source>The current image is on the bottom right</source>
-        <translation type="unfinished"></translation>
+        <translation>A jelenlegi kép jobb alsó sarokban található</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="192"/>
@@ -10031,7 +10503,7 @@
     <message>
         <location filename="../source/resizedialog.ui" line="195"/>
         <source>The frames which needs to be resized</source>
-        <translation type="unfinished"></translation>
+        <translation>Az átméretezendő képkockák</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="222"/>
@@ -10046,7 +10518,7 @@
     <message>
         <location filename="../source/resizedialog.ui" line="267"/>
         <source>Resize the complete gfxset</source>
-        <translation type="unfinished"></translation>
+        <translation>Méretezd át a teljes gfxset-et</translation>
     </message>
     <message>
         <location filename="../source/resizedialog.ui" line="309"/>
@@ -10261,7 +10733,7 @@
     <message>
         <location filename="../source/saveasdialog.cpp" line="91"/>
         <source>Save Dist TBL as...</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolsági TBL mentése más néven...</translation>
     </message>
     <message>
         <location filename="../source/saveasdialog.cpp" line="91"/>
@@ -10366,8 +10838,8 @@
     <message numerus="yes">
         <location filename="../source/saveasdialog.cpp" line="278"/>
         <source>%1 path is missing.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 elérési út hiányzik.</numerusform>
         </translation>
     </message>
 </context>
@@ -10497,7 +10969,7 @@
     <message>
         <location filename="../source/smkaudiowidget.ui" line="133"/>
         <source>Compressed audio data</source>
-        <translation type="unfinished"></translation>
+        <translation>Tömörített audio adatok</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="34"/>
@@ -10507,12 +10979,12 @@
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="35"/>
         <source>Load chunk</source>
-        <translation type="unfinished"></translation>
+        <translation>Töltsön be egy darabot</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="36"/>
         <source>Load track</source>
-        <translation type="unfinished"></translation>
+        <translation>Töltsön be egy pályát</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="38"/>
@@ -10522,17 +10994,17 @@
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="40"/>
         <source>Remove chunk</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolítsa el a darabot</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="41"/>
         <source>Remove track</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolítsa el a pályát</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="42"/>
         <source>Mute</source>
-        <translation type="unfinished"></translation>
+        <translation>Néma</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="43"/>
@@ -10542,12 +11014,12 @@
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="155"/>
         <source>Track %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pálya %1</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="155"/>
         <source>- Track %1 -</source>
-        <translation type="unfinished"></translation>
+        <translation>- Pálya %1 -</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="164"/>
@@ -10573,7 +11045,7 @@
         <location filename="../source/smkaudiowidget.cpp" line="269"/>
         <location filename="../source/smkaudiowidget.cpp" line="302"/>
         <source>Select Audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio választása</translation>
     </message>
     <message>
         <location filename="../source/smkaudiowidget.cpp" line="269"/>
@@ -10643,7 +11115,7 @@
     <message>
         <location filename="../source/tblview.ui" line="228"/>
         <source>Dungeon:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kazamata:</translation>
     </message>
     <message>
         <location filename="../source/tblview.ui" line="238"/>
@@ -10688,7 +11160,7 @@
     <message>
         <location filename="../source/tblview.ui" line="361"/>
         <source>Clear light-TRS</source>
-        <translation type="unfinished"></translation>
+        <translation>A fény-TRS tisztítása</translation>
     </message>
     <message>
         <location filename="../source/tblview.ui" line="373"/>
@@ -10698,7 +11170,7 @@
     <message>
         <location filename="../source/tblview.ui" line="383"/>
         <source>Use ray-tracing</source>
-        <translation type="unfinished"></translation>
+        <translation>Sugárkövetés használata</translation>
     </message>
     <message>
         <location filename="../source/tblview.ui" line="396"/>
@@ -10733,12 +11205,12 @@
     <message>
         <location filename="../source/tblview.ui" line="553"/>
         <source>Equalize the brightness level in the selected range</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiválasztott tartomány fényerejének kiegyenlítése</translation>
     </message>
     <message>
         <location filename="../source/tblview.ui" line="556"/>
         <source>Equalize</source>
-        <translation type="unfinished"></translation>
+        <translation>Kiegyenlíteni</translation>
     </message>
     <message>
         <location filename="../source/tblview.ui" line="180"/>
@@ -10748,7 +11220,7 @@
     <message>
         <location filename="../source/tblview.cpp" line="142"/>
         <source>Select light-TRS</source>
-        <translation type="unfinished"></translation>
+        <translation>Válasszon fény TRS-t</translation>
     </message>
     <message>
         <location filename="../source/tblview.cpp" line="374"/>
@@ -10771,7 +11243,7 @@
     <message>
         <location filename="../source/tilesetlightdialog.ui" line="6"/>
         <source>Light the subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Világítsd meg a mezőket</translation>
     </message>
     <message>
         <location filename="../source/tilesetlightdialog.ui" line="18"/>
@@ -10781,12 +11253,12 @@
     <message>
         <location filename="../source/tilesetlightdialog.ui" line="60"/>
         <source>Decrement the radius of the lit subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Csökkentse a megvilágított mezők sugarát</translation>
     </message>
     <message>
         <location filename="../source/tilesetlightdialog.ui" line="76"/>
         <source>Increment the radius of the lit subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Növelje a megvilágított mezők sugarát</translation>
     </message>
     <message>
         <location filename="../source/tilesetlightdialog.ui" line="90"/>
@@ -10809,17 +11281,17 @@
     <message>
         <location filename="../source/tilesetlightentrywidget.ui" line="32"/>
         <source>Index of the first subtile</source>
-        <translation type="unfinished"></translation>
+        <translation>Az első mező indexe</translation>
     </message>
     <message>
         <location filename="../source/tilesetlightentrywidget.ui" line="49"/>
         <source>Index of the last subtile</source>
-        <translation type="unfinished"></translation>
+        <translation>Az utolsó mező indexe</translation>
     </message>
     <message>
         <location filename="../source/tilesetlightentrywidget.ui" line="59"/>
         <source>Light radius of the selected subtiles</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiválasztott mezők fénysugara</translation>
     </message>
     <message>
         <location filename="../source/tilesetlightentrywidget.cpp" line="18"/>
@@ -10832,32 +11304,32 @@
     <message>
         <location filename="../source/trngeneratecolentrywidget.ui" line="32"/>
         <source>Index of the first color</source>
-        <translation type="unfinished"></translation>
+        <translation>Az első szín indexe</translation>
     </message>
     <message>
         <location filename="../source/trngeneratecolentrywidget.ui" line="49"/>
         <source>Index of the last color</source>
-        <translation type="unfinished"></translation>
+        <translation>Az utolsó szín indexe</translation>
     </message>
     <message>
         <location filename="../source/trngeneratecolentrywidget.ui" line="59"/>
         <source>Number of steps to become pitch black</source>
-        <translation type="unfinished"></translation>
+        <translation>Lépések száma a koromsötétséghez</translation>
     </message>
     <message>
         <location filename="../source/trngeneratecolentrywidget.ui" line="66"/>
         <source>Treat steps as delta</source>
-        <translation type="unfinished"></translation>
+        <translation>A lépéseket deltaként kezelje</translation>
     </message>
     <message>
         <location filename="../source/trngeneratecolentrywidget.ui" line="76"/>
         <source>Steps multiplier</source>
-        <translation type="unfinished"></translation>
+        <translation>Lépések szorzója</translation>
     </message>
     <message>
         <location filename="../source/trngeneratecolentrywidget.ui" line="83"/>
         <source>Prevent the colors to be used as a shade</source>
-        <translation type="unfinished"></translation>
+        <translation>Akadályozza meg, hogy a színek árnyékként használatosak legyenek</translation>
     </message>
     <message>
         <location filename="../source/trngeneratecolentrywidget.cpp" line="19"/>
@@ -10870,17 +11342,17 @@
     <message>
         <location filename="../source/trngeneratedialog.ui" line="6"/>
         <source>Generate Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Átrendelők generálása</translation>
     </message>
     <message>
         <location filename="../source/trngeneratedialog.ui" line="18"/>
         <source>Color groups:</source>
-        <translation type="unfinished"></translation>
+        <translation>Színcsoportok:</translation>
     </message>
     <message>
         <location filename="../source/trngeneratedialog.ui" line="31"/>
         <source>Palettes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Paletták:</translation>
     </message>
     <message>
         <location filename="../source/trngeneratedialog.ui" line="44"/>
@@ -10925,7 +11397,7 @@
     <message>
         <location filename="../source/trngeneratedialog.ui" line="93"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyik sem</translation>
     </message>
     <message>
         <location filename="../source/trngeneratedialog.ui" line="113"/>
@@ -10935,7 +11407,7 @@
     <message>
         <location filename="../source/trngeneratedialog.ui" line="126"/>
         <source>Shade level:</source>
-        <translation type="unfinished"></translation>
+        <translation>Árnyékolási szint:</translation>
     </message>
     <message>
         <location filename="../source/trngeneratedialog.ui" line="210"/>
@@ -11040,7 +11512,7 @@
     <message>
         <location filename="../source/upscaledialog.ui" line="31"/>
         <source>&apos;2&apos;, &apos;3&apos; ... to upscale, &apos;1/2&apos;, &apos;1/3&apos; ... to downscale</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;2&apos;, &apos;3&apos; ... felméretezéshez, &apos;1/2&apos;, &apos;1/3&apos; ... összenyomáshoz</translation>
     </message>
     <message>
         <location filename="../source/upscaledialog.ui" line="38"/>
@@ -11191,7 +11663,7 @@
     <message>
         <location filename="../source/upscaletaskdialog.ui" line="126"/>
         <source>Fixed Tilesets</source>
-        <translation type="unfinished"></translation>
+        <translation>Rögzített mezőkészletek</translation>
     </message>
     <message>
         <location filename="../source/upscaletaskdialog.ui" line="136"/>
@@ -11201,17 +11673,17 @@
     <message>
         <location filename="../source/upscaletaskdialog.ui" line="143"/>
         <source>Deselect All</source>
-        <translation type="unfinished"></translation>
+        <translation>Törölje az Összes kijelölését</translation>
     </message>
     <message>
         <location filename="../source/upscaletaskdialog.ui" line="152"/>
         <source>Patch Graphics:</source>
-        <translation type="unfinished"></translation>
+        <translation>Grafika javítása:</translation>
     </message>
     <message>
         <location filename="../source/upscaletaskdialog.ui" line="162"/>
         <source>Fix the original graphics</source>
-        <translation type="unfinished"></translation>
+        <translation>Javítsa ki az eredeti grafikát</translation>
     </message>
     <message>
         <location filename="../source/upscaletaskdialog.ui" line="169"/>
@@ -11221,7 +11693,7 @@
     <message>
         <location filename="../source/upscaletaskdialog.ui" line="179"/>
         <source>Fix and optimize the original tilesets</source>
-        <translation type="unfinished"></translation>
+        <translation>Eredeti mezőkészletek javítása és optimalizálása</translation>
     </message>
     <message>
         <location filename="../source/upscaletaskdialog.ui" line="186"/>
