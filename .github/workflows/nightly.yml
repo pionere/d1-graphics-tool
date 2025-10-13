@@ -208,7 +208,7 @@ jobs:
       shell: bash
 
     - name: Release
-      uses: softprops/action-gh-release@v2.3.3
+      uses: softprops/action-gh-release@v2.4.1
       with:
         tag_name: dgt-nightly
         body_path: ${{ github.workspace }}/RELEASE_NOTE.md
