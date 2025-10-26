@@ -114,7 +114,8 @@ void InitLvlItems()
 
 static void PlaceInitItems()
 {
-	int ii, i, seed;
+	int ii, i;
+	int32_t seed;
 	unsigned lvl;
 
 	lvl = items_get_currlevel();
@@ -183,9 +184,6 @@ void SetItemSData(ItemStruct* is, int idata)
 
 	is->_iIdx = idata;
 	ids = &AllItemList[idata];
-//	DISABLE_WARNING(deprecated-declarations, deprecated-declarations, 4996)
-//	strcpy(is->_iName, ids->iName);
-//	ENABLE_WARNING(deprecated-declarations, deprecated-declarations, 4996)
 	is->_iCurs = ids->iCurs;
 	is->_itype = ids->itype;
 	is->_iMiscId = ids->iMiscId;
@@ -211,8 +209,6 @@ void SetItemSData(ItemStruct* is, int idata)
 		is->_iMaxCharges = is->_iCharges;
 	}
 
-	is->_iPrePower = IPL_INVALID;
-	is->_iSufPower = IPL_INVALID;
 	static_assert(ITEM_QUALITY_NORMAL == 0, "Zero-fill expects ITEM_QUALITY_NORMAL == 0.");
 	//is->_iMagical = ITEM_QUALITY_NORMAL;
 	static_assert(SPL_NULL == 0, "Zero-fill expects SPL_NULL == 0.");
@@ -355,7 +351,7 @@ static void GetSuperItemSpace(int x, int y, int ii)
 		const int8_t* cr;
 		bool ignoreLine = false;
 restart:
-		for (i = 2; i < lengthof(CrawlNum); i--) {
+		for (i = 2; i < lengthof(CrawlNum); i++) {
 			cr = &CrawlTable[CrawlNum[i]];
 			for (j = (BYTE)*cr; j > 0; j--) {
 				xx = x + *++cr;
@@ -417,9 +413,6 @@ static void GetBookSpell(int ii, unsigned lvl)
 	is = &items[ii];
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-//	DISABLE_WARNING(deprecated-declarations, deprecated-declarations, 4996)
-//	strcat(is->_iName, sd->sNameText);
-//	ENABLE_WARNING(deprecated-declarations, deprecated-declarations, 4996)
 	is->_iMinMag = sd->sMinInt;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sBookCost;
@@ -472,9 +465,6 @@ static void GetScrollSpell(int ii, unsigned lvl)
 	is = &items[ii];
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-//	DISABLE_WARNING(deprecated-declarations, deprecated-declarations, 4996)
-//	strcat(is->_iName, sd->sNameText);
-//	ENABLE_WARNING(deprecated-declarations, deprecated-declarations, 4996)
 	is->_iMinMag = sd->sMinInt > 20 ? sd->sMinInt - 20 : 0;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sStaffCost;
@@ -507,9 +497,6 @@ static void GetRuneSpell(int ii, unsigned lvl)
 	is = &items[ii];
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-//	DISABLE_WARNING(deprecated-declarations, deprecated-declarations, 4996)
-//	strcat(is->_iName, sd->sNameText);
-//	ENABLE_WARNING(deprecated-declarations, deprecated-declarations, 4996)
 	is->_iMinMag = sd->sMinInt;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sStaffCost;
@@ -557,9 +544,6 @@ static void GetStaffSpell(int ii, unsigned lvl)
 
 	is = &items[ii];
 	sd = &spelldata[bs];
-
-	if ((unsigned)snprintf(is->_iName, sizeof(is->_iName), "%s of %s", is->_iName, sd->sNameText) >= sizeof(is->_iName))
-		snprintf(is->_iName, sizeof(is->_iName), "Staff of %s", sd->sNameText);
 
 	is->_iSpell = bs;
 	is->_iCharges = RandRangeLow(sd->sStaffMin, sd->sStaffMax);
@@ -635,10 +619,17 @@ static int PLVal(const AffixData* affix, int pv)
 static int SaveItemPower(int ii, int power, int param1, int param2)
 {
 	ItemStruct* is;
+	ItemAffixStruct* ias;
 	int r2;
 
 	is = &items[ii];
+	ias = &is->_iAffixes[is->_iNumAffixes];
+	is->_iNumAffixes++;
+	ias->asPower = power;
+
 	const int r = param1 == param2 ? param1 : RandRangeLow(param1, param2);
+	ias->asValue0 = r;
+
 	switch (power) {
 	case IPL_TOHIT:
 		is->_iPLToHit = r;
@@ -652,67 +643,29 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		is->_iPLToHit = r2;
 		break;
 	case IPL_ACP:
-		is->_iPLAC = r;
-		break;
 	case IPL_TOBLOCK:
-		is->_iPLToBlk = r;
-		break;
 	case IPL_FIRERES:
-		is->_iPLFR = r;
-		break;
 	case IPL_LIGHTRES:
-		is->_iPLLR = r;
-		break;
 	case IPL_MAGICRES:
-		is->_iPLMR = r;
-		break;
 	case IPL_ACIDRES:
-		is->_iPLAR = r;
-		break;
 	case IPL_ALLRES:
-		is->_iPLFR = r;
-		//if (is->_iPLFR < 0)
-		//	is->_iPLFR = 0;
-		is->_iPLLR = r;
-		//if (is->_iPLLR < 0)
-		//	is->_iPLLR = 0;
-		is->_iPLMR = r;
-		//if (is->_iPLMR < 0)
-		//	is->_iPLMR = 0;
-		is->_iPLAR = r;
-		//if (is->_iPLAR < 0)
-		//	is->_iPLAR = 0;
-		break;
 	case IPL_CRITP:
-		is->_iPLCrit = r;
 		break;
 	case IPL_SKILLLVL:
-		is->_iPLSkillLvl = r;
-		static_assert(NUM_SPELLS < UINT8_MAX, "Skill-index can not be stored in a BYTE field.");
-		is->_iPLSkill = GetItemSpell();
+		ias->asValue1 = GetItemSpell();
 		break;
 	case IPL_SKILLLEVELS:
-		is->_iPLSkillLevels = r;
 		break;
 	case IPL_CHARGES:
 		is->_iCharges *= r;
 		is->_iMaxCharges = is->_iCharges;
 		break;
 	case IPL_FIREDAM:
-		is->_iPLFMinDam = param1;
-		is->_iPLFMaxDam = param2;
-		break;
 	case IPL_LIGHTDAM:
-		is->_iPLLMinDam = param1;
-		is->_iPLLMaxDam = param2;
-		break;
 	case IPL_MAGICDAM:
-		is->_iPLMMinDam = param1;
-		is->_iPLMMaxDam = param2;
-		break;
 	case IPL_ACIDDAM:
-		is->_iPLAMinDam = param1;
-		is->_iPLAMaxDam = param2;
+		ias->asFrom = param1;
+		ias->asTo = param2;
 		break;
 	case IPL_STR:
 		is->_iPLStr = r;
@@ -733,16 +686,9 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		is->_iPLVit = r;
 		break;
 	case IPL_ABS_ANYHIT:
-		is->_iPLAbsAnyHit = r;
-		break;
 	case IPL_ABS_PHYHIT:
-		is->_iPLAbsPhyHit = r;
-		break;
 	case IPL_LIFE:
-		is->_iPLHP = r << 6;
-		break;
 	case IPL_MANA:
-		is->_iPLMana = r << 6;
 		break;
 	case IPL_DUR:
 		r2 = r * is->_iMaxDur / 100;
@@ -752,56 +698,25 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		is->_iDurability = is->_iMaxDur = DUR_INDESTRUCTIBLE;
 		break;
 	case IPL_LIGHT:
-		is->_iPLLight = r;
 		break;
 	// case IPL_INVCURS:
 	//	is->_iCurs = param1;
 	//	break;
 	//case IPL_THORNS:
-	//	is->_iPLFlags |= ISPL_THORNS;
 	//	break;
 	case IPL_NOMANA:
-		is->_iPLFlags |= ISPL_NOMANA;
-		break;
 	case IPL_KNOCKBACK:
-		is->_iPLFlags |= ISPL_KNOCKBACK;
-		break;
 	case IPL_STUN:
-		is->_iPLFlags |= ISPL_STUN;
-		break;
 	case IPL_NO_BLEED:
-		is->_iPLFlags |= ISPL_NO_BLEED;
-		break;
 	case IPL_BLEED:
-		is->_iPLFlags |= ISPL_BLEED;
-		break;
 	//case IPL_NOHEALMON:
-	//	is->_iPLFlags |= ISPL_NOHEALMON;
-	//	break;
 	case IPL_STEALMANA:
-		is->_iPLManaSteal = r;
-		break;
 	case IPL_STEALLIFE:
-		is->_iPLLifeSteal = r;
-		break;
 	case IPL_PENETRATE_PHYS:
-		is->_iPLFlags |= ISPL_PENETRATE_PHYS;
-		break;
 	case IPL_FASTATTACK:
-		is->_iPLAtkSpdMod = r;
-		break;
 	case IPL_FASTRECOVER:
-		static_assert((ISPL_FASTRECOVER & (ISPL_FASTRECOVER - 1)) == 0, "Optimized SaveItemPower depends simple flag-like hit-recovery modifiers.");
-		static_assert(ISPL_FASTRECOVER == ISPL_FASTERRECOVER / 2, "SaveItemPower depends on ordered hit-recovery modifiers I.");
-		static_assert(ISPL_FASTERRECOVER == ISPL_FASTESTRECOVER / 2, "SaveItemPower depends on ordered hit-recovery modifiers II.");
-		// assert((unsigned)(r - 1) < 3);
-			is->_iPLFlags |= ISPL_FASTRECOVER << (r - 1);
-		break;
 	case IPL_FASTBLOCK:
-		is->_iPLFlags |= ISPL_FASTBLOCK;
-		break;
 	case IPL_DAMMOD:
-		is->_iPLDamMod = r;
 		break;
 	case IPL_SETDAM:
 		is->_iMinDam = param1;
@@ -817,20 +732,15 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		is->_iSpell = param1;
 		is->_iCharges = param2;
 		is->_iMaxCharges = param2;
-		// TODO: is->_iMinMag = spelldata[param1].sMinInt; ?
+		is->_iMinMag = spelldata[param1].sMinInt;
 		break;
 	case IPL_ONEHAND:
 		is->_iLoc = ILOC_ONEHAND;
 		break;
 	case IPL_ALLRESZERO:
-		is->_iPLFlags |= ISPL_ALLRESZERO;
-		break;
 	case IPL_DRAINLIFE:
-		is->_iPLFlags |= ISPL_DRAINLIFE;
-		break;
 	//case IPL_INFRAVISION:
-	//	is->_iPLFlags |= ISPL_INFRAVISION;
-	//	break;
+		break;
 	case IPL_SETAC:
 		is->_iAC = r;
 		break;
@@ -842,24 +752,9 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		is->_iDurability = is->_iMaxDur = r < 100 ? (is->_iMaxDur - r * is->_iMaxDur / 100) : 1;
 		break;
 	case IPL_MANATOLIFE:
-		is->_iPLFlags |= ISPL_MANATOLIFE;
-		break;
 	case IPL_LIFETOMANA:
-		is->_iPLFlags |= ISPL_LIFETOMANA;
-		break;
 	case IPL_FASTCAST:
-		static_assert((ISPL_FASTCAST & (ISPL_FASTCAST - 1)) == 0, "Optimized SaveItemPower depends simple flag-like cast-speed modifiers.");
-		static_assert(ISPL_FASTCAST == ISPL_FASTERCAST / 2, "SaveItemPower depends on ordered cast-speed modifiers I.");
-		static_assert(ISPL_FASTERCAST == ISPL_FASTESTCAST / 2, "SaveItemPower depends on ordered cast-speed modifiers II.");
-		// assert((unsigned)(r - 1) < 3);
-			is->_iPLFlags |= ISPL_FASTCAST << (r - 1);
-		break;
 	case IPL_FASTWALK:
-		static_assert((ISPL_FASTWALK & (ISPL_FASTWALK - 1)) == 0, "Optimized SaveItemPower depends simple flag-like walk-speed modifiers.");
-		static_assert(ISPL_FASTWALK == ISPL_FASTERWALK / 2, "SaveItemPower depends on ordered walk-speed modifiers I.");
-		static_assert(ISPL_FASTERWALK == ISPL_FASTESTWALK / 2, "SaveItemPower depends on ordered walk-speed modifiers II.");
-		// assert((unsigned)(r - 1) < 3);
-			is->_iPLFlags |= ISPL_FASTWALK << (r - 1);
 		break;
 	default:
 		ASSUME_UNREACHABLE
@@ -904,7 +799,6 @@ static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygo
 			// assert(nl <= 0x7FFF);
 			pres = l[random_low(23, nl)];
 			items[ii]._iMagical = ITEM_QUALITY_MAGIC;
-			items[ii]._iPrePower = pres->PLPower;
 			v = SaveItemPower(
 			    ii,
 			    pres->PLPower,
@@ -929,7 +823,6 @@ static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygo
 			// assert(nl <= 0x7FFF);
 			sufs = l[random_low(23, nl)];
 			items[ii]._iMagical = ITEM_QUALITY_MAGIC;
-			items[ii]._iSufPower = sufs->PLPower;
 			v = SaveItemPower(
 			    ii,
 			    sufs->PLPower,
@@ -953,7 +846,14 @@ static void GetItemPower(int ii, unsigned lvl, BYTE range, int flgs, bool onlygo
 				v = 1;
 			}
 		} else {
-			v = ((1 << MAXCAMPAIGNSIZE) - 1) >> (6 - items[ii]._iPLLight);
+			v = 6;
+			for (unsigned i = 0; i < items[ii]._iNumAffixes; i++) {
+				const ItemAffixStruct* ias = &items[ii]._iAffixes[i];
+				if (ias->asPower == IMP_AREAMOD) {
+					v -= ias->asValue0;
+				}
+			}
+			v = ((1 << MAXCAMPAIGNSIZE) - 1) >> v;
 			items[ii]._ivalue = v;
 		}
 		items[ii]._iIvalue = v;
@@ -1016,149 +916,97 @@ static void GetItemBonus(int ii, unsigned lvl, BYTE range, bool onlygood, bool a
 	GetItemPower(ii, lvl, range, flgs, onlygood);
 }
 
+static int RndDropItem(bool func(const ItemData& item, void* arg), void* arg, unsigned lvl)
+{
+#if UNOPTIMIZED_RNDITEMS
+	int i, j, ri;
+	int ril[ITEM_RNDDROP_MAX];
+
+	ri = 0;
+	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
+		if (!func(AllItemList[i], arg) || lvl < AllItemList[i].iMinMLvl)
+			continue;
+		for (j = AllItemList[i].iRnd; j > 0; j--) {
+			ril[ri] = i;
+			ri++;
+		}
+	}
+	assert(ri != 0);
+	return ril[random_(50, ri)];
+#else
+	int i, ri;
+	int ril[NUM_IDI - IDI_RNDDROP_FIRST];
+
+	for (i = IDI_RNDDROP_FIRST; i < (IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO); i++) {
+		ril[i - IDI_RNDDROP_FIRST] = (!func(AllItemList[i], arg) || lvl < AllItemList[i].iMinMLvl) ? 0 : AllItemList[i].iRnd;
+	}
+	ri = 0;
+	for (i = 0; i < (NUM_IDI - IDI_RNDDROP_FIRST); i++)
+		ri += ril[i];
+	// assert(ri != 0 && ri <= 0x7FFF);
+	ri = random_low(50, ri);
+	for (i = 0; ; i++) {
+		ri -= ril[i];
+		if (ri < 0)
+			break;
+	}
+	return i + IDI_RNDDROP_FIRST;
+#endif
+}
+
+static bool RndUItemOk(const ItemData& item, void* arg)
+{
+	// assert(item.itype != ITYPE_GOLD);
+	return item.itype != ITYPE_MISC || item.iMiscId == IMISC_BOOK || item.iMiscId == IMISC_MAP;
+}
+
 static int RndUItem(unsigned lvl)
 {
-#if UNOPTIMIZED_RNDITEMS
-	int i, j, ri;
-	int ril[ITEM_RNDDROP_MAX];
-
-	ri = 0;
-	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
-		if (lvl < AllItemList[i].iMinMLvl
-		 // || AllItemList[i].itype == ITYPE_GOLD
-		 || (AllItemList[i].itype == ITYPE_MISC && AllItemList[i].iMiscId != IMISC_BOOK))
-			continue;
-		for (j = AllItemList[i].iRnd; j > 0; j--) {
-			ril[ri] = i;
-			ri++;
-		}
-	}
-	assert(ri != 0);
-	return ril[random_(25, ri)];
-#else
-	int i, ri;
-	int ril[NUM_IDI - IDI_RNDDROP_FIRST];
-
-	for (i = IDI_RNDDROP_FIRST; i < (IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO); i++) {
-		ril[i - IDI_RNDDROP_FIRST] = (lvl < AllItemList[i].iMinMLvl ||
-			(AllItemList[i].itype == ITYPE_MISC && AllItemList[i].iMiscId != IMISC_BOOK && AllItemList[i].iMiscId != IMISC_MAP)) ? 0 : AllItemList[i].iRnd;
-	}
-	ri = 0;
-	for (i = 0; i < ((IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO) - IDI_RNDDROP_FIRST); i++)
-		ri += ril[i];
-	// assert(ri != 0 && ri <= 0x7FFF);
-	ri = random_low(25, ri);
-	for (i = 0; ; i++) {
-		ri -= ril[i];
-		if (ri < 0)
-			break;
-	}
-	return i + IDI_RNDDROP_FIRST;
-#endif
+	return RndDropItem(RndUItemOk, NULL, lvl);
 }
 
-static int RndAllItems(unsigned lvl)
+static bool RndItemOk(const ItemData& item, void* arg)
 {
-#if UNOPTIMIZED_RNDITEMS
-	int i, j, ri;
-	int ril[ITEM_RNDDROP_MAX];
+	return true;
+}
 
+static int RndAnyItem(unsigned lvl)
+{
 	if (random_(26, 128) > 32)
 		return IDI_GOLD;
 
-	ri = 0;
-	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
-		if (lvl < AllItemList[i].iMinMLvl)
-			continue;
-		for (j = AllItemList[i].iRnd; j > 0; j--) {
-			ril[ri] = i;
-			ri++;
-		}
-	}
-	assert(ri != 0);
-	return ril[random_(26, ri)];
-#else
-	int i, ri;
-	int ril[NUM_IDI - IDI_RNDDROP_FIRST];
-
-	if (random_(26, 128) > 32)
-		return IDI_GOLD;
-
-	for (i = IDI_RNDDROP_FIRST; i < (IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO); i++) {
-		ril[i - IDI_RNDDROP_FIRST] = lvl < AllItemList[i].iMinMLvl ? 0 : AllItemList[i].iRnd;
-	}
-	ri = 0;
-	for (i = 0; i < ((IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO) - IDI_RNDDROP_FIRST); i++)
-		ri += ril[i];
-	// assert(ri != 0 && ri <= 0x7FFF);
-	ri = random_low(26, ri);
-	for (i = 0; ; i++) {
-		ri -= ril[i];
-		if (ri < 0)
-			break;
-	}
-	return i + IDI_RNDDROP_FIRST;
-#endif
+	return RndDropItem(RndItemOk, NULL, lvl);
 }
 
-static int RndTypeItems(int itype, int imid, unsigned lvl)
+typedef struct RndTypeItemParam {
+	int itype;
+	int imid;
+} RndTypeItemParam;
+
+static bool RndTypeItemOk(const ItemData& item, void* arg)
 {
-#if UNOPTIMIZED_RNDITEMS
-	int i, j, ri;
-	int ril[ITEM_RNDDROP_MAX];
+	RndTypeItemParam* param = (RndTypeItemParam*)arg;
+	return item.itype == param->itype && /*imid == IMISC_INVALID ||*/ item.iMiscId == param->imid;
+}
 
+static int RndTypeItem(int itype, int imid, unsigned lvl)
+{
+	RndTypeItemParam param = { itype, imid };
 	// assert(itype != ITYPE_GOLD);
-
-	ri = 0;
-	for (i = IDI_RNDDROP_FIRST; i < NUM_IDI; i++) {
-		if (lvl < AllItemList[i].iMinMLvl
-		 || AllItemList[i].itype != itype
-		 || (/*imid != IMISC_INVALID &&*/ AllItemList[i].iMiscId != imid))
-			continue;
-		for (j = AllItemList[i].iRnd; j > 0; j--) {
-			ril[ri] = i;
-			ri++;
-		}
-	}
-	assert(ri != 0);
-	return ril[random_(27, ri)];
-#else
-	int i, ri;
-	int ril[NUM_IDI - IDI_RNDDROP_FIRST];
-
-	// assert(itype != ITYPE_GOLD);
-
-	for (i = IDI_RNDDROP_FIRST; i < (IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO); i++) {
-		ril[i - IDI_RNDDROP_FIRST] = (lvl < AllItemList[i].iMinMLvl ||
-			AllItemList[i].itype != itype ||
-			(/*imid != IMISC_INVALID &&*/ AllItemList[i].iMiscId != imid)) ? 0 : AllItemList[i].iRnd;
-	}
-	ri = 0;
-	for (i = 0; i < ((IsHellfireGame ? NUM_IDI : NUM_IDI_DIABLO) - IDI_RNDDROP_FIRST); i++)
-		ri += ril[i];
-	// assert(ri != 0 && ri <= 0x7FFF);
-	ri = random_low(27, ri);
-	for (i = 0; ; i++) {
-		ri -= ril[i];
-		if (ri < 0)
-			break;
-	}
-	return i + IDI_RNDDROP_FIRST;
-#endif
+	return RndDropItem(RndTypeItemOk, &param, lvl);
 }
 
 static int CheckUnique(int ii, unsigned lvl, unsigned quality)
 {
 	int i, ui;
 	BYTE uok[NUM_UITEM];
-	BYTE uid;
-
-	if (random_(28, 100) > (quality == CFDQ_UNIQUE ? 15 : 1))
+	const ItemData &item = AllItemList[items[ii]._iIdx];
+	const BYTE uid = item.iUniqType;
+	if (uid == UITYPE_NONE || (item.iRnd != 0 && random_(28, 100) > (quality == CFDQ_UNIQUE ? 15 : 1)))
 		return -1;
 
 	static_assert(NUM_UITEM <= UCHAR_MAX, "Unique index must fit to a BYTE in CheckUnique.");
 
-	uid = AllItemList[items[ii]._iIdx].iUniqType;
 	ui = 0;
 	for (i = 0; i < (IsHellfireGame ? NUM_UITEM : NUM_UITEM_DIABLO); i++) {
 		if (UniqueItemList[i].UIUniqType == uid
@@ -1196,9 +1044,6 @@ static void GetUniqueItem(int ii, int uid)
 	items[ii]._iCurs = ui->UICurs;
 	items[ii]._iIvalue = ui->UIValue;
 
-	// if (items[ii]._iMiscId == IMISC_UNIQUE)
-	//	assert(items[ii]._iSeed == uid);
-
 	items[ii]._iUid = uid;
 	items[ii]._iMagical = ITEM_QUALITY_UNIQUE;
 	// items[ii]._iCreateInfo |= CF_UNIQUE;
@@ -1213,7 +1058,7 @@ static void ItemRndDur(int ii)
 	}
 }
 
-static void SetupAllItems(int ii, int idx, int iseed, unsigned lvl, unsigned quality)
+static void SetupItem(int ii, int idx, int32_t iseed, unsigned lvl, unsigned quality)
 {
 	int uid;
 
@@ -1224,7 +1069,6 @@ static void SetupAllItems(int ii, int idx, int iseed, unsigned lvl, unsigned qua
 
 	items[ii]._iCreateInfo |= quality << 11;
 
-	//if (items[ii]._iMiscId != IMISC_UNIQUE) {
 		if (quality >= CFDQ_GOOD
 		 || items[ii]._itype == ITYPE_STAFF
 		 || items[ii]._itype == ITYPE_RING
@@ -1240,37 +1084,39 @@ static void SetupAllItems(int ii, int idx, int iseed, unsigned lvl, unsigned qua
 		}
 		// if (items[ii]._iMagical != ITEM_QUALITY_UNIQUE)
 			ItemRndDur(ii);
-	/*} else {
-		assert(items[ii]._iLoc != ILOC_UNEQUIPABLE);
-		GetUniqueItem(ii, iseed);
-	}*/
 }
 
-void CreateRndItem(int x, int y, unsigned quality)
+static void SpawnRndItem(unsigned quality, unsigned lvl, int x, int y)
 {
 	int idx, ii;
-	unsigned lvl;
 
-	lvl = items_get_currlevel();
-
-	if (quality == CFDQ_GOOD)
+	if (quality >= CFDQ_GOOD)
 		idx = RndUItem(lvl);
 	else
-		idx = RndAllItems(lvl);
+		idx = RndAnyItem(lvl);
 
 	if (numitems >= MAXITEMS)
 		return; // should never be the case
 	ii = itemactive[numitems];
 	numitems++;
 
-	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
+	SetupItem(ii, idx, NextRndSeed(), lvl, quality);
 
 	GetSuperItemSpace(x, y, ii);
 
 	RespawnItem(ii);
 }
 
-static void SetupAllUseful(int ii, int iseed, unsigned lvl)
+void CreateRndItem(int x, int y, unsigned quality)
+{
+	unsigned lvl;
+
+	lvl = items_get_currlevel();
+
+	SpawnRndItem(quality, lvl, x, y);
+}
+
+static void SetupUsefulItem(int ii, int32_t iseed, unsigned lvl)
 {
 	int idx;
 
@@ -1307,7 +1153,7 @@ void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
 	lvl = items_get_currlevel();
 
 	if (itype != ITYPE_GOLD)
-		idx = RndTypeItems(itype, imisc, lvl);
+		idx = RndTypeItem(itype, imisc, lvl);
 	else
 		idx = IDI_GOLD;
 	if (numitems >= MAXITEMS)
@@ -1315,7 +1161,7 @@ void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
 	ii = itemactive[numitems];
 	numitems++;
 
-	SetupAllItems(ii, idx, NextRndSeed(), lvl, quality);
+	SetupItem(ii, idx, NextRndSeed(), lvl, quality);
 
 	GetSuperItemSpace(x, y, ii);
 
