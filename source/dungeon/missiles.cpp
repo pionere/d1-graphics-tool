@@ -62,12 +62,13 @@ static const BYTE BloodBoilLocs[][2] = {
 	// clang-format on
 };
 #if 0
-void GetDamageAmt(int sn, int sl, int* minv, int* maxv)
+void GetSkillDetails(int sn, int sl, SkillDetails* skd)
 {
-	int k, magic, mind, maxd;
+	int k, type, magic, mind, maxd;
 
 	assert((unsigned)mypnum < MAX_PLRS);
 	assert((unsigned)sn < NUM_SPELLS);
+	type = SDT_DAMAGE;
 	magic = myplr._pMagic;
 #ifdef HELLFIRE
 	if (SPELL_RUNE(sn))
@@ -97,18 +98,14 @@ void GetDamageAmt(int sn, int sl, int* minv, int* maxv)
 		mind >>= 6;
 		maxd >>= 6;
 		break;
+	case SPL_PULSE:
+		k = (magic >> 2) + (sl << 2);
+		mind = k * 3 / 4u;
+		maxd = k * 5 / 2u;
+		break;
 	case SPL_NULL:
 	case SPL_WALK:
 	case SPL_BLOCK:
-	case SPL_ATTACK:
-	case SPL_WHIPLASH:
-	case SPL_WALLOP:
-	case SPL_SWIPE:
-	case SPL_RATTACK:
-	case SPL_POINT_BLANK:
-	case SPL_FAR_SHOT:
-	case SPL_PIERCE_SHOT:
-	case SPL_MULTI_SHOT:
 	case SPL_CHARGE:
 	case SPL_RAGE:
 	case SPL_SHROUD:
@@ -134,8 +131,46 @@ void GetDamageAmt(int sn, int sl, int* minv, int* maxv)
 	case SPL_WHITTLE:
 	case SPL_RUNESTONE:
 #endif
-		mind = -1;
-		maxd = -1;
+		type = SDT_NONE;
+		break;
+	case SPL_ATTACK:
+	case SPL_WHIPLASH:
+	case SPL_WALLOP:
+	case SPL_SWIPE:
+		type = SDT_DAMAGE_MELEE;
+		switch (sn) {
+		case SPL_ATTACK:
+			mind = maxd = 128; break;
+		case SPL_WHIPLASH:
+			mind = maxd = (128 * (24 + sl)) >> 6; break;
+		case SPL_WALLOP:
+			mind = maxd = (128 * (112 + sl)) >> 6; break;
+		case SPL_SWIPE:
+			mind = maxd = (128 * (48 + sl)) >> 6; break;
+		default:
+			ASSUME_UNREACHABLE
+		}
+		break;
+	case SPL_RATTACK:
+	case SPL_POINT_BLANK:
+	case SPL_FAR_SHOT:
+	case SPL_PIERCE_SHOT:
+	case SPL_MULTI_SHOT:
+		type = SDT_DAMAGE_RANGED;
+		switch (sn) {
+		case SPL_RATTACK:
+			mind = maxd = 128; break;
+		case SPL_POINT_BLANK:
+			mind = 0; maxd = (128 * (64 + /*32 +*/ sl)) >> 6; break;
+		case SPL_FAR_SHOT:
+			mind = (128 * (8 * 2 - 16 + sl)) >> 5; maxd = 0; break;
+		case SPL_PIERCE_SHOT:
+			mind = maxd = (128 * (32 + sl)) >> 6; break;
+		case SPL_MULTI_SHOT:
+			mind = maxd = (128 * (16 + sl)) >> 6; break;
+		default:
+			ASSUME_UNREACHABLE
+		}
 		break;
 #ifdef HELLFIRE
 	case SPL_FIRERING:
@@ -241,8 +276,11 @@ void GetDamageAmt(int sn, int sl, int* minv, int* maxv)
 		break;
 	}
 
-	*minv = mind;
-	*maxv = maxd;
+	skd->type = type;
+	// if (type != SDT_NONE) {
+		skd->v0 = mind;
+		skd->v1 = maxd;
+	// }
 }
 void RemovePortalMissile(int pnum)
 {
@@ -381,8 +419,8 @@ static void DoTeleport(int pnum, int dx, int dy)
 	ChangeLightXY(plr._plid, px, py);
 	ChangeVisionXY(plr._pvid, px, py);
 	if (pnum == mypnum) {
-		ViewX = px; // - ScrollInfo._sdx;
-		ViewY = py; // - ScrollInfo._sdy;
+		myview.x = px; // - ScrollInfo._sdx;
+		myview.y = py; // - ScrollInfo._sdy;
 	}
 }
 #endif
@@ -795,9 +833,9 @@ int AddElementalExplosion(int fdam, int ldam, int mdam, int adam, bool isMonster
 	/*int gfx = random_(8, dam);
 	if (gfx >= dam - (fdam + ldam)) {
 		if (gfx < dam - ldam) {
-			AddMissile(dx, dy, 0, 0, 0, MIS_WEAPFEXP, MST_NA, 0);
+			AddMissile(dx, dy, 0, 0, 0, MIS_WEAPFEXP, MST_NA, 0, 0);
 		} else {
-			AddMissile(dx, dy, 0, 0, 0, MIS_WEAPLEXP, MST_NA, 0);
+			AddMissile(dx, dy, 0, 0, 0, MIS_WEAPLEXP, MST_NA, 0, 0);
 		}
 	}*/
 	return dam;
@@ -941,18 +979,18 @@ static bool MissMonHitByPlr(int mnum, int mi)
 		switch (mis->_miType) {
 		case MIS_ARROW:
 			break;
-		case MIS_PBARROW:
+		case MIS_PBARROW: // SPL_POINT_BLANK
 			// assert(mis->_miVar7 <= 6); -- guaranteed by _miRange
 			dam = (dam * (64 + 32 - 16 * mis->_miVar7 + mis->_miSpllvl)) >> 6; // MISDIST
 			break;
-		case MIS_ASARROW:
+		case MIS_ASARROW: // SPL_FAR_SHOT
 			// assert(mis->_miVar7 >= 2);
 			dam = (dam * (8 * mis->_miVar7 - 16 + mis->_miSpllvl)) >> 5; // MISDIST
 			break;
-		case MIS_MLARROW:
+		case MIS_MLARROW: // SPL_MULTI_SHOT
 			dam = (dam * (16 + mis->_miSpllvl)) >> 6;
 			break;
-		case MIS_PCARROW:
+		case MIS_PCARROW: // SPL_PIERCE_SHOT
 			dam = (dam * (32 + mis->_miSpllvl)) >> 6;
 			break;
 		default:
@@ -980,8 +1018,9 @@ static bool MissMonHitByPlr(int mnum, int mi)
 	} else {
 		dam = CalcMonsterDam(mon->_mMagicRes, mis->_miResist, mis->_miMinDam, mis->_miMaxDam, false);
 	}
-	if (dam == 0)
-		return false;
+	if (dam <= 0) {
+		dam = 1;
+	}
 
 	if (!CheckMonsterHit(mnum, &ret))
 		return ret;
@@ -1113,12 +1152,14 @@ static bool MissPlrHitByMon(int pnum, int mi)
 	}
 
 	dam = CalcPlrDam(pnum, mis->_miResist, mis->_miMinDam, mis->_miMaxDam);
-	if (dam == 0)
-		return false;
 	if (!(mis->_miFlags & MIF_DOT)) {
-		dam += plr._pIGetHit;
-		if (dam < 64)
-			dam = 64;
+		dam -= plr._pIAbsAnyHit;
+		// assert(mis->_miResist != MISR_SLASH && mis->_miResist != MISR_PUNCTURE);
+		if (/*mis->_miResist == MISR_SLASH || */mis->_miResist == MISR_BLUNT/* || mis->_miResist == MISR_PUNCTURE*/)
+			dam -= plr._pIAbsPhyHit;
+	}
+	if (dam <= 0) {
+		dam = 1;
 	}
 
 	if (!PlrDecHp(pnum, dam, DMGTYPE_NPC)) {
@@ -1135,7 +1176,7 @@ static bool MissPlrHitByMon(int pnum, int mi)
 static bool MissPlrHitByPlr(int pnum, int mi)
 {
 	MissileStruct* mis;
-	int offp, dam, dir, hper;
+	int offp, hper, dir, dam;
 	unsigned hitFlags;
 
 	mis = &missile[mi];
@@ -1193,18 +1234,18 @@ static bool MissPlrHitByPlr(int pnum, int mi)
 		switch (mis->_miType) {
 		case MIS_ARROW:
 			break;
-		case MIS_PBARROW:
+		case MIS_PBARROW: // SPL_POINT_BLANK
 			// assert(mis->_miVar7 <= 6); -- guaranteed by _miRange
 			dam = (dam * (64 + 32 - 16 * mis->_miVar7 + mis->_miSpllvl)) >> 6; // MISDIST
 			break;
-		case MIS_ASARROW:
+		case MIS_ASARROW: // SPL_FAR_SHOT
 			// assert(mis->_miVar7 >= 2);
 			dam = (dam * (8 * mis->_miVar7 - 16 + mis->_miSpllvl)) >> 5; // MISDIST
 			break;
-		case MIS_MLARROW:
+		case MIS_MLARROW: // SPL_MULTI_SHOT
 			dam = (dam * (16 + mis->_miSpllvl)) >> 6;
 			break;
-		case MIS_PCARROW:
+		case MIS_PCARROW: // SPL_PIERCE_SHOT
 			dam = (dam * (32 + mis->_miSpllvl)) >> 6;
 			break;
 		default:
@@ -1212,7 +1253,11 @@ static bool MissPlrHitByPlr(int pnum, int mi)
 			break;
 		}
 
-		if (plx(offp)._pILifeSteal != 0) {
+		// assert(!(mis->_miFlags & MIF_DOT));
+		dam -= plr._pIAbsAnyHit;
+		// assert(mis->_miResist == MISR_SLASH || mis->_miResist == MISR_BLUNT || mis->_miResist == MISR_PUNCTURE);
+		dam -= plr._pIAbsPhyHit;
+		if (dam > 0 && plx(offp)._pILifeSteal != 0) {
 			PlrIncHp(offp, (dam * plx(offp)._pILifeSteal) >> 7);
 		}
 
@@ -1236,15 +1281,16 @@ static bool MissPlrHitByPlr(int pnum, int mi)
 	} else {
 		dam = CalcPlrDam(pnum, mis->_miResist, mis->_miMinDam, mis->_miMaxDam);
 		dam >>= 1;
+		if (!(mis->_miFlags & MIF_DOT)) {
+			dam -= plr._pIAbsAnyHit;
+			// assert(mis->_miResist != MISR_SLASH && mis->_miResist != MISR_PUNCTURE);
+			if (/*mis->_miResist == MISR_SLASH || */mis->_miResist == MISR_BLUNT/* || mis->_miResist == MISR_PUNCTURE*/)
+				dam -= plr._pIAbsPhyHit;
+		}
 	}
 
-	if (dam == 0)
-		return false;
-
-	if (!(mis->_miFlags & MIF_DOT)) {
-		dam += plr._pIGetHit;
-		if (dam < 64)
-			dam = 64;
+	if (dam <= 0) {
+		dam = 1;
 	}
 
 	if (!PlrDecHp(pnum, dam, DMGTYPE_PLAYER)) {
@@ -2368,7 +2414,14 @@ int AddMisexp(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, i
 static bool CheckIfTrig(int x, int y)
 {
 	int i;
-
+#if 0
+	for (i = 0; i < MAXPORTAL; i++) {
+		// if (portals[i]._rlevel == DLV_TOWN)
+		//	continue;
+		if (portals[i]._rlevel == currLvl._dLevelIdx && portals[i]._rx == x && portals[i]._ry == y)
+			return true;
+	}
+#endif
 	for (i = 0; i < numtrigs; i++) {
 		if (abs(trigs[i]._tx - x) < 2 && abs(trigs[i]._ty - y) < 2)
 			return true;
@@ -2395,7 +2448,7 @@ int AddTown(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int
 				tx = dx + *++cr;
 				ty = dy + *++cr;
 				assert(IN_DUNGEON_AREA(tx, ty));
-				if (PosOkMissile(tx, ty) && !CheckIfTrig(tx, ty) && LineClear(sx, sy, tx, ty)) {
+				if (PosOkActor(tx, ty) && !CheckIfTrig(tx, ty) && LineClear(sx, sy, tx, ty)) {
 					goto done;
 				}
 			}
@@ -2425,6 +2478,7 @@ int AddPortal(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, i
 	mis = &missile[mi];
 	mis->_mix = mis->_misx = dx;
 	mis->_miy = mis->_misy = dy;
+	static_assert(MAX_LIGHT_RAD >= 15, "AddPortal needs at least light-radius of 15.");
 	mis->_miLid = AddLight(dx, dy, spllvl >= 0 ? 1 : 15);
 	if (spllvl >= 0) {
 		PlaySfxLoc(LS_SENTINEL, dx, dy);
@@ -2616,7 +2670,7 @@ int AddCharge(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, i
 	if (pnum == mypnum) {
 		// assert(ScrollInfo._sdx == 0);
 		// assert(ScrollInfo._sdy == 0);
-		ScrollInfo._sdir = 1 + OPPOSITE(midir); // == dir2sdir[midir]
+		ScrollInfo._sdir = 1 + midir; // == dir2sdir[midir]
 	}
 	//mis->_miLid = mon->_mlid;
 	//PutMissile(mi);
@@ -2855,7 +2909,7 @@ int AddHealOther(int mi, int sx, int sy, int dx, int dy, int midir, int micaster
 	if (tnum != 0) {
 		// - player
 		tnum = tnum >= 0 ? tnum - 1 : -(tnum + 1);
-		if (tnum != misource && plx(tnum)._pHitPoints != 0)
+		if (tnum != misource)
 			PlrIncHp(tnum, hp);
 	} else {
 		// - minion
@@ -3125,7 +3179,7 @@ int AddCbolt(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, in
 	//mis->_miVar3 = 0;
 	mis->_miVar4 = random_(0, 16);
 	if (micaster & MST_PLAYER) {
-		mindam = 1;
+		mindam = 1 << 6;
 		maxdam = (plx(misource)._pMagic << (-2 + 6)) + (spllvl << (2 + 6));
 	} else {
 		mindam = monsters[misource]._mMinDamage << 6;
@@ -3335,6 +3389,53 @@ int AddRage(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int
 	}
 #endif
 	return MIRES_DELETE;
+}
+
+/**
+ * Var1: min-damage modifier on hit
+ * Var2: max-damage modifier on hit
+ */
+int AddPulse(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
+{
+#if 0
+	MissileStruct* mis;
+	int mindam, maxdam, i, j, tx, ty;
+	const int8_t* cr;
+	mis = &missile[mi];
+
+	// (micaster & MST_PLAYER);
+	// assert((unsigned)pnum < MAX_PLRS);
+	// if (micaster & MST_PLAYER) {
+		mindam = 1 << 6;
+		maxdam = (plx(misource)._pMagic << (-2 + 6)) + (spllvl << (2 + 6));
+	// }
+	mis->_miVar1 = mindam / 4u;
+	mis->_miVar2 = maxdam / 4u;
+	mis->_miMinDam = mindam - mis->_miVar1;
+	mis->_miMaxDam = maxdam - mis->_miVar2;
+	mis->_miAnimFrame = RandRange(1, misfiledata[MFILE_MINILTNG].mfAnimLen[0]);
+
+	static_assert(DBORDERX >= 5 && DBORDERY >= 5, "AddPulse expects a large enough border.");
+	static_assert(lengthof(CrawlNum) > 5, "AddPulse uses CrawlTable/CrawlNum up to radius 5.");
+	for (i = 0; i <= 5; i++) {
+		cr = &CrawlTable[CrawlNum[i]];
+		for (j = (BYTE)*cr; j > 0; j--) {
+			tx = dx + *++cr;
+			ty = dy + *++cr;
+			assert(IN_DUNGEON_AREA(tx, ty));
+			if (PosOkMis2(tx, ty) && LineClear(sx, sy, tx, ty)) {
+				mis->_mix = tx;
+				mis->_miy = ty;
+				//mis->_misx = tx; -- unused
+				//mis->_misy = ty;
+				static_assert(MAX_LIGHT_RAD >= 4, "AddPulse needs at least light-radius of 4.");
+				mis->_miLid = AddLight(tx, ty, 4);
+				return MIRES_DONE;
+			}
+		}
+	}
+#endif
+	return MIRES_FAIL_DELETE;
 }
 
 int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, int micaster, int misource, int spllvl)
@@ -4703,9 +4804,9 @@ void MI_Charge(int mi)
 		assert(ScrollInfo._sdir != SDIR_NONE);
 		ScrollInfo._sxoff = -mis->_mixoff;
 		ScrollInfo._syoff = -mis->_miyoff;
-		//if (ViewX != bx || ViewY != by) {
-			ViewX = bx; // - ScrollInfo._sdx;
-			ViewY = by; // - ScrollInfo._sdy;
+		//if (myview.x != bx || myview.y != by) {
+			myview.x = bx; // - ScrollInfo._sdx;
+			myview.y = by; // - ScrollInfo._sdy;
 		//}
 	}
 	//ShiftMissilePos(mi);
@@ -4952,6 +5053,42 @@ void MI_Elemental(int mi)
 	CheckSplashCol(mi, hit);
 
 	ConvertMissile(mi, MIS_EXFBALL);
+}
+
+void MI_Pulse(int mi)
+{
+	MissileStruct* mis;
+	int dir, tmp;
+
+	mis = &missile[mi];
+	mis->_miRange--;
+	if (mis->_miRange < 0) {
+		mis->_miDelFlag = TRUE; // + AddUnLight
+		return;
+	}
+
+	dir = mis->_miRange % 8u; // NUM_DIRS
+	if (dir == 0) {
+		// assert(misfiledata[MFILE_MINILTNG].mfAnimLen[0] == misfiledata[MFILE_LGHNING].mfAnimLen[0]);
+		mis->_miAnimFrame = (mis->_miAnimFrame % misfiledata[MFILE_LGHNING].mfAnimLen[0]) + 1;
+		if (CheckMissileCol(mi, mis->_mix, mis->_miy, MICM_NONE) != 0) {
+			// AddMissile(mis->_mix, mis->_miy, -1, 0, 0, MIS_EXLGHT, MST_NA, 0, 0);
+
+			mis->_miMinDam += mis->_miVar1;
+			mis->_miMaxDam += mis->_miVar2;
+
+			mis->_miVar1 *= 2;
+			mis->_miVar2 *= 2;
+		}
+	}
+
+	mis->_miFileNum = dir != 0 ? MFILE_MINILTNG : MFILE_LGHNING;
+	tmp = mis->_miAnimFrame;
+	SetMissAnim(mi, 0);
+	mis->_miAnimFrame = tmp;
+	mis->_miPreFlag = dir != 0;
+	mis->_miyoff = dir != 0 ? TILE_HEIGHT/2 - ((NUM_DIRS - 1) + dir) * ASSET_MPL : 0;
+	PutMissileF(mi, dir != 0 ? BFLAG_MISSILE_PRE : 0);
 }
 
 void ProcessMissiles()
