@@ -68,7 +68,7 @@ jobs:
         directory: 'dist'
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Windows-x64.zip
@@ -113,7 +113,7 @@ jobs:
         directory: 'dist'
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Windows-x86.zip
@@ -144,7 +144,7 @@ jobs:
         zip -j -q D1GraphicsTool.zip build/D1GraphicsTool build/D1GraphicsTool-Linux-x64.deb
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Linux-x64.zip
