@@ -2333,6 +2333,7 @@ typedef enum _monster_id {
 	MT_NTHIN,
 	MT_XTHIN,
 	MT_GTHIN,
+	MT_WTHIN,
 	MT_NGARG,
 	MT_XGARG,
 	MT_DGARG,
