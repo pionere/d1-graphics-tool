@@ -92,7 +92,6 @@ int random_low(BYTE idx, int v)
 	// assert(v > 0);
 	// assert(v < 0x7FFF);
 	return (NextRndValue() >> 16) % v;
-	//return ((unsigned)NextRndValue()) % v;
 }
 
 /**

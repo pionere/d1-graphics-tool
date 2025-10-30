@@ -2052,6 +2052,7 @@ typedef enum missile_id {
 	MIS_INFRA,
 	MIS_RAGE,
 	MIS_PULSE,
+	MIS_CTA,
 #ifdef HELLFIRE
 	//MIS_LIGHTWALLC,
 	//MIS_LIGHTWALL,
@@ -2288,6 +2289,7 @@ typedef enum _monster_id {
 	MT_BSNEAK,
 	MT_YSNEAK,
 	MT_NGOATMC,
+	MT_AGOATMC,
 	MT_BGOATMC,
 	MT_RGOATMC,
 	MT_GGOATMC,
