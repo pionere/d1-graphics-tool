@@ -494,13 +494,13 @@ bool D1Gfxset::checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx*
         std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
         int fc = gfi.second - gfi.first + 1;
         if (fc != frameCount) {
-            dProgress() << QApplication::tr("framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+            dProgress() << QApplication::tr("Framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
             result = true;
         }
         for (int ii = 0; ii < fc; ii++) {
             int w = currGfx->getFrame(gfi.first + ii)->getWidth();
             if (w != animWidth) {
-                dProgress() << QApplication::tr("framewidth of frame %1 of group %2 in %3 does not match with the game (%4 vs %5).").arg(ii + 1).arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(animWidth);
+                dProgress() << QApplication::tr("Framewidth of frame %1 of group %2 in %3 does not match with the game (%4 vs %5).").arg(ii + 1).arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(animWidth);
                 result = true;
             }
         }
@@ -556,7 +556,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 if (frameCount < 0) {
                     frameCount = fc;
                 } else {
-                    dProgress() << QApplication::tr("group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+                    dProgress() << QApplication::tr("Group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
                     result = true;
                 }
             }
@@ -827,30 +827,34 @@ QString D1Gfxset::getGfxLabel(int index) const
     case D1GFX_SET_TYPE::Missile:
         return QApplication::tr("Dir%1").arg(index + 1);
     case D1GFX_SET_TYPE::Monster:
+        if ((unsigned)index >= NUM_MON_ANIM) break;
+        QString res = QString("\"%1\" [%2]").arg(QChar(animletter[index]).toUpper());
         switch (index) {
-        case MA_STAND:   return QApplication::tr("Stand");
-        case MA_ATTACK:  return QApplication::tr("Attack");
-        case MA_WALK:    return QApplication::tr("Walk");
-        case MA_SPECIAL: return QApplication::tr("Spec");
-        case MA_GOTHIT:  return QApplication::tr("Hit");
-        case MA_DEATH:   return QApplication::tr("Death");
+        case MA_STAND:   res.arg(QApplication::tr("Stand"));
+        case MA_ATTACK:  res.arg(QApplication::tr("Attack"));
+        case MA_WALK:    res.arg(QApplication::tr("Walk"));
+        case MA_SPECIAL: res.arg(QApplication::tr("Spec"));
+        case MA_GOTHIT:  res.arg(QApplication::tr("Hit"));
+        case MA_DEATH:   res.arg(QApplication::tr("Death"));
         }
-        break;
+        return res;
     case D1GFX_SET_TYPE::Player:
+        if ((unsigned)index >= NUM_PGTS) break;
+        QString res = QString("\"%1\" [%2]").arg(PlrAnimTypes[index].patTxt);
         switch (index) {
-        case PGT_STAND_TOWN:    return QApplication::tr("Stand (town)");
-        case PGT_STAND_DUNGEON: return QApplication::tr("Stand (dungeon)");
-        case PGT_WALK_TOWN:     return QApplication::tr("Walk (town)");
-        case PGT_WALK_DUNGEON:  return QApplication::tr("Walk (dungeon)");
-        case PGT_ATTACK:        return QApplication::tr("Attack");
-        case PGT_FIRE:          return QApplication::tr("Fire");
-        case PGT_LIGHTNING:     return QApplication::tr("Light");
-        case PGT_MAGIC:         return QApplication::tr("Magic");
-        case PGT_BLOCK:         return QApplication::tr("Block");
-        case PGT_GOTHIT:        return QApplication::tr("Hit");
-        case PGT_DEATH:         return QApplication::tr("Death");
+        case PGT_STAND_TOWN:    res.arg(QApplication::tr("Stand (town)"));
+        case PGT_STAND_DUNGEON: res.arg(QApplication::tr("Stand (dungeon)"));
+        case PGT_WALK_TOWN:     res.arg(QApplication::tr("Walk (town)"));
+        case PGT_WALK_DUNGEON:  res.arg(QApplication::tr("Walk (dungeon)"));
+        case PGT_ATTACK:        res.arg(QApplication::tr("Attack"));
+        case PGT_FIRE:          res.arg(QApplication::tr("Fire"));
+        case PGT_LIGHTNING:     res.arg(QApplication::tr("Light"));
+        case PGT_MAGIC:         res.arg(QApplication::tr("Magic"));
+        case PGT_BLOCK:         res.arg(QApplication::tr("Block"));
+        case PGT_GOTHIT:        res.arg(QApplication::tr("Hit"));
+        case PGT_DEATH:         res.arg(QApplication::tr("Death"));
         }
-        break;
+        return res;
     }
 
     return QApplication::tr("N/A");
