@@ -821,6 +821,7 @@ QList<D1Gfx *> &D1Gfxset::getGfxList() const
 
 QString D1Gfxset::getGfxLabel(int index) const
 {
+    QString res = QString("\"%1\" [%2]");
     switch (this->type) {
     case D1GFX_SET_TYPE::Unknown:
         return QApplication::tr("Unknown%1").arg(index + 1);
@@ -828,31 +829,31 @@ QString D1Gfxset::getGfxLabel(int index) const
         return QApplication::tr("Dir%1").arg(index + 1);
     case D1GFX_SET_TYPE::Monster:
         if ((unsigned)index >= NUM_MON_ANIM) break;
-        QString res = QString("\"%1\" [%2]").arg(QChar(animletter[index]).toUpper());
+        res = res.arg(QChar(animletter[index]).toUpper());
         switch (index) {
-        case MA_STAND:   res.arg(QApplication::tr("Stand"));
-        case MA_ATTACK:  res.arg(QApplication::tr("Attack"));
-        case MA_WALK:    res.arg(QApplication::tr("Walk"));
-        case MA_SPECIAL: res.arg(QApplication::tr("Spec"));
-        case MA_GOTHIT:  res.arg(QApplication::tr("Hit"));
-        case MA_DEATH:   res.arg(QApplication::tr("Death"));
+        case MA_STAND:   res = res.arg(QApplication::tr("Stand"));
+        case MA_ATTACK:  res = res.arg(QApplication::tr("Attack"));
+        case MA_WALK:    res = res.arg(QApplication::tr("Walk"));
+        case MA_SPECIAL: res = res.arg(QApplication::tr("Spec"));
+        case MA_GOTHIT:  res = res.arg(QApplication::tr("Hit"));
+        case MA_DEATH:   res = res.arg(QApplication::tr("Death"));
         }
         return res;
     case D1GFX_SET_TYPE::Player:
         if ((unsigned)index >= NUM_PGTS) break;
-        QString res = QString("\"%1\" [%2]").arg(PlrAnimTypes[index].patTxt);
+        res = res.arg(PlrAnimTypes[index].patTxt);
         switch (index) {
-        case PGT_STAND_TOWN:    res.arg(QApplication::tr("Stand (town)"));
-        case PGT_STAND_DUNGEON: res.arg(QApplication::tr("Stand (dungeon)"));
-        case PGT_WALK_TOWN:     res.arg(QApplication::tr("Walk (town)"));
-        case PGT_WALK_DUNGEON:  res.arg(QApplication::tr("Walk (dungeon)"));
-        case PGT_ATTACK:        res.arg(QApplication::tr("Attack"));
-        case PGT_FIRE:          res.arg(QApplication::tr("Fire"));
-        case PGT_LIGHTNING:     res.arg(QApplication::tr("Light"));
-        case PGT_MAGIC:         res.arg(QApplication::tr("Magic"));
-        case PGT_BLOCK:         res.arg(QApplication::tr("Block"));
-        case PGT_GOTHIT:        res.arg(QApplication::tr("Hit"));
-        case PGT_DEATH:         res.arg(QApplication::tr("Death"));
+        case PGT_STAND_TOWN:    res = res.arg(QApplication::tr("Stand (town)"));
+        case PGT_STAND_DUNGEON: res = res.arg(QApplication::tr("Stand (dungeon)"));
+        case PGT_WALK_TOWN:     res = res.arg(QApplication::tr("Walk (town)"));
+        case PGT_WALK_DUNGEON:  res = res.arg(QApplication::tr("Walk (dungeon)"));
+        case PGT_ATTACK:        res = res.arg(QApplication::tr("Attack"));
+        case PGT_FIRE:          res = res.arg(QApplication::tr("Fire"));
+        case PGT_LIGHTNING:     res = res.arg(QApplication::tr("Light"));
+        case PGT_MAGIC:         res = res.arg(QApplication::tr("Magic"));
+        case PGT_BLOCK:         res = res.arg(QApplication::tr("Block"));
+        case PGT_GOTHIT:        res = res.arg(QApplication::tr("Hit"));
+        case PGT_DEATH:         res = res.arg(QApplication::tr("Death"));
         }
         return res;
     }
