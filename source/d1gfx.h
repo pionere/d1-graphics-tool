@@ -286,8 +286,8 @@ public:
 
     void clear();
 
-    bool isFrameSizeConstant() const;
-    bool isGroupSizeConstant() const;
+    QSize getFrameSize() const;
+    int getGroupSize() const;
     QString getFramePixels(int frameIndex, bool values) const;
     QImage getFrameImage(int frameIndex, int component = 0) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
@@ -314,6 +314,7 @@ public:
     void mask();
     bool squash();
     void optimize();
+    bool check() const;
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);

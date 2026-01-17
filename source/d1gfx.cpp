@@ -928,10 +928,10 @@ QRect D1Gfx::getBoundary() const
     return result;
 }
 
-bool D1Gfx::isFrameSizeConstant() const
+QSize D1Gfx::getFrameSize() const
 {
     if (this->frames.isEmpty()) {
-        return false;
+        return QSize(0, 0);
     }
 
     int frameWidth = this->frames[0]->getWidth();
@@ -940,16 +940,16 @@ bool D1Gfx::isFrameSizeConstant() const
     for (int i = 1; i < this->frames.count(); i++) {
         if (this->frames[i]->getWidth() != frameWidth
             || this->frames[i]->getHeight() != frameHeight)
-            return false;
+            return QSize();
     }
 
-    return true;
+    return QSize(frameWidth, frameHeight);
 }
 
-bool D1Gfx::isGroupSizeConstant() const
+int D1Gfx::getGroupSize() const
 {
     if (this->frames.isEmpty()) {
-        return false;
+        return 0;
     }
 
     int groupSize = -1;
@@ -957,12 +957,12 @@ bool D1Gfx::isGroupSizeConstant() const
         int gs = git->second - git->first + 1;
         if (groupSize != gs) {
             if (groupSize >= 0) {
-                return false;
+                return -1;
             }
             groupSize = gs;
         }
     }
-    return true;
+    return groupSize;
 }
 
 // builds QString from a D1CelFrame of given index
@@ -1693,7 +1693,7 @@ void D1Gfx::mask()
 {
     if (this->getFrameCount() <= 1)
         return;
-    if (!this->isFrameSizeConstant()) {
+    if (this->getFrameSize().isValid()) {
         dProgressErr() << tr("Framesize is not constant");
         return;
     }
@@ -1706,7 +1706,7 @@ void D1Gfx::mask()
             }
         }
     } else {
-        if (!this->isGroupSizeConstant()) {
+        if (this->getGroupSize() < 0) {
             dProgressErr() << tr("Groupsize is not constant");
             return;
         }
@@ -1725,6 +1725,57 @@ void D1Gfx::mask()
             }
         }
     }
+}
+
+bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
+{
+    bool result = false;
+    // test whether a graphic have the same frame-size in each group
+    if (!this->getFrameSize().isValid()) {
+        dProgress() << tr("Framesize is not constant");
+        result = true;
+    }
+    // test whether a graphic have the same frame-count in each group
+    int gs = this->getGroupSize();
+    if (gs < 0) {
+        dProgress() << tr("Groupsize is not constant");
+        result = true;
+    }
+    // 
+    QString filePath = this->getFilePath();
+    QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
+    bool typetested = false;
+    for (int i = 0; i < numtowners; i++) {
+        QString townerPath = towners[i].tsPath;
+        townerPath = townerPath.mid(townerPath.lastIndexOf('\\')+1);
+        QString townerPathLower = QDir::toNativeSeparators(townerPath).toLower();
+        if (filePathLower.endsWith(townerPathLower)) {
+            int8_t *ao = towners[i].tsAnimOrder;
+            if (ao != NULL) {
+                int mf = 0;
+                while (*ao > 0) {
+                    if (mf < *ao) {
+                        mf = *ao;
+                    }
+                    ao++;
+                }
+                if (mf > gs) {
+                    dProgress() << QApplication::tr("Not enough frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
+                    result = true;
+                } else if (gs > mf) {
+                    dProgress() << QApplication::tr("Too many frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
+                    result = true;
+                }
+            }
+            typetested = true;
+            break;
+        }
+    }
+    if (!typetested) {
+        dProgress() << QApplication::tr("Unrecognized graphics -> Checking with game-code is skipped.");
+        result = true;
+    }
+    return result;
 }
 
 bool D1Gfx::squash()

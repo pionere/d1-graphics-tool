@@ -546,42 +546,40 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             result = true;
         }
         // test whether a graphic have the same frame-count in each group
-        if (this->type != D1GFX_SET_TYPE::Missile) {
-            frameCount = -1;
-        }
-        for (int n = 0; n < currGfx->getGroupCount(); n++) {
-            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
-            int fc = gfi.second - gfi.first + 1;
-            if (fc != frameCount) {
+        int fc = currGfx->getGroupSize();
+        if (fc < 0) {
+            dProgress() << QApplication::tr("Groupsize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
+            result = true;
+        } else if (this->type == D1GFX_SET_TYPE::Missile) {
+            if (frameCount != fc) {
                 if (frameCount < 0) {
                     frameCount = fc;
                 } else {
-                    dProgress() << QApplication::tr("Group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+                    dProgress() << QApplication::tr("Gfx %1 has inconsistent groupsize (%2 vs %3).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
                     result = true;
                 }
             }
         }
         // test whether a graphic have the same frame-size in each group
-        if (this->type != D1GFX_SET_TYPE::Missile) {
-            width = -1;
-            height = -1;
-        }
-        for (int i = 0; i < currGfx->getFrameCount(); i++) {
-            D1GfxFrame* frame = currGfx->getFrame(i);
-            int w = frame->getWidth();
-            int h = frame->getHeight();
+        QSize fs = currGfx->getFrameSize();
+        if (!fs.isValid()) {
+            dProgress() << QApplication::tr("Framesize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
+            result = true;
+        } else if (this->type == D1GFX_SET_TYPE::Missile) {
+            int w = fs->width();
+            int h = fs->height();
             if (w != width || h != height) {
                 if (width < 0) {
                     width = w;
                     height = h;
                 } else {
-                    dProgress() << QApplication::tr("Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(h).arg(width).arg(height);
+                    dProgress() << QApplication::tr("Gfx %1 has inconsistent framesize (%2x%3 vs %4x%5).").arg(this->getGfxLabel(gn)).arg(w).arg(h).arg(width).arg(height);
                     result = true;
                 }
             }
         }
     }
-
+    bool typetested = false;
     switch (this->type) {
     case D1GFX_SET_TYPE::Missile: {
         // - test against game code if possible
@@ -606,6 +604,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         int animWidth = mfdata.mfAnimWidth * assetMpl;
                         result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
                     }
+                    typetested = true;
                     break;
                 }
             }
@@ -626,6 +625,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         int animWidth = mfdata.moWidth * assetMpl;
                         result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
                     }
+                    typetested = true;
                     break;
                 }
             }
@@ -704,8 +704,14 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
 
                 result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
             }
+
+            typetested = true;
         }
     } break;
+    }
+    if (!typetested) {
+        dProgress() << QApplication::tr("Unrecognized graphics -> Checking with game-code is skipped.");
+        result = true;
     }
     return result;
 }
@@ -717,17 +723,18 @@ void D1Gfxset::mask()
     bool first = true;
     for (D1Gfx *gfx : this->gfxList) {
         if (gfx->getFrameCount() == 0) continue;
-        if (!gfx->isFrameSizeConstant()) {
+        QSize fs = gfx->getFrameSize();
+        if (!fs->isValid()) {
             dProgressErr() << QApplication::tr("Framesize is not constant");
             return;
         }
-        if (!gfx->isGroupSizeConstant()) {
+        gs = gfx->getGroupSize();
+        if (gs < 0) {
             dProgressErr() << QApplication::tr("Groupsize is not constant");
             return;
         }
-        w = gfx->getFrameWidth(0);
-        h = gfx->getFrameHeight(0);
-        gs = gfx->getGroupFrameIndices(0).second - gfx->getGroupFrameIndices(0).first + 1;
+        w = fs->width();
+        h = fs->height();
         if (!first) {
             if (w != width || h != height) {
                 dProgressErr() << QApplication::tr("Framesize is not constant");
