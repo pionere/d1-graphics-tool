@@ -202,6 +202,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Acid Beast dying (Acidd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Devil Kin Brute dying (Fallgd.CL2)</string>
         </property>
        </item>
@@ -217,12 +222,22 @@
        </item>
        <item>
         <property name="text">
+         <string>Magma Demon walking (Magmaw.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Flesh Clan (Bow) dying (GoatBd.CL2)</string>
         </property>
        </item>
        <item>
         <property name="text">
          <string>Satyr Lord dying (GoatLd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Scavenger getting hit (Scavh.CL2)</string>
         </property>
        </item>
        <item>
@@ -237,7 +252,22 @@
        </item>
        <item>
         <property name="text">
+         <string>Skeleton King special movement (Skings.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Skeleton King walking (Skingw.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Skeleton Sword dying (SklSrd.CL2)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Snake getting hit (Snakeh.CL2)</string>
         </property>
        </item>
        <item>

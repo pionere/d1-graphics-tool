@@ -541,7 +541,9 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             }
         }
         int gc = currGfx->getGroupCount();
-        if (gc != numGroups) {
+        if (this->type == D1GFX_SET_TYPE::Monster && gc == 0) {
+            ; // accept empty/missing monster-graphics (might be optional or non-extant like the golem standing animation)
+        } else if (gc != numGroups) {
             dProgress() << QApplication::tr("%1 has %2 instead of %n groups.", "", numGroups).arg(this->getGfxLabel(gn)).arg(gc);
             result = true;
         }
