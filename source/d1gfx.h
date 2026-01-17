@@ -372,6 +372,7 @@ private:
     bool patchRightShrine(bool silent);
     bool patchCryptLight(bool silent);
     bool patchPlrFrames(int gfxFileIndex, bool silent);
+    bool patchMonFrames(int gfxFileIndex, bool silent);    
     bool patchRogueExtraPixels(int gfxFileIndex, bool silent);
     bool patchWarriorStand(bool silent);
     bool patchFallGDie(bool silent);

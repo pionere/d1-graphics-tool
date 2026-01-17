@@ -201,6 +201,7 @@ bool D1Clc::loadComponent(D1Gfx &gfx, const QJsonValue &jsonVal, const QString &
            }
        }
     }
+    return true;
 }
 
 void D1Clc::storeCompFrame(QJsonArray &jsonArray, const D1GfxComp &comp, int frameIdx)
