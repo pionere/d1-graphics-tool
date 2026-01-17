@@ -724,7 +724,7 @@ void D1Gfxset::mask()
     for (D1Gfx *gfx : this->gfxList) {
         if (gfx->getFrameCount() == 0) continue;
         QSize fs = gfx->getFrameSize();
-        if (!fs->isValid()) {
+        if (!fs.isValid()) {
             dProgressErr() << QApplication::tr("Framesize is not constant");
             return;
         }
