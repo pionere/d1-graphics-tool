@@ -13,8 +13,8 @@ extern "C" {
 #endif
 
 typedef struct TownerStruct {
-    char* tsPath;
-    int8_t* tsAnimOrder;
+    const char* tsPath;
+    const int8_t* tsAnimOrder;
 } TownerStruct;
 
 void InitTowners();
