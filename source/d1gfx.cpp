@@ -8724,6 +8724,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
         fileIndex = GFX_PLR_WMHAS;
     }
     // - monsters
+    if (baseName == "acidd") {
+        fileIndex = GFX_MON_ACIDD;
+    }
     if (baseName == "fallgd") {
         fileIndex = GFX_MON_FALLGD;
     }
@@ -8733,11 +8736,17 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "magmad") {
         fileIndex = GFX_MON_MAGMAD;
     }
+    if (baseName == "magmaw") {
+        fileIndex = GFX_MON_MAGMAW;
+    }
     if (baseName == "goatbd") {
         fileIndex = GFX_MON_GOATBD;
     }
     if (baseName == "goatld") {
         fileIndex = GFX_MON_GOATLD;
+    }
+    if (baseName == "scavh") {
+        fileIndex = GFX_MON_SCAVH;
     }
     if (baseName == "sklaxd") {
         fileIndex = GFX_MON_SKLAXD;
@@ -8745,8 +8754,17 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "sklbwd") {
         fileIndex = GFX_MON_SKLBWD;
     }
+    if (baseName == "skings") {
+        fileIndex = GFX_MON_SKINGS;
+    }
+    if (baseName == "skingw") {
+        fileIndex = GFX_MON_SKINGW;
+    }
     if (baseName == "sklsrd") {
         fileIndex = GFX_MON_SKLSRD;
+    }
+    if (baseName == "snakeh") {
+        fileIndex = GFX_MON_SNAKEH;
     }
     if (baseName == "unrava") {
         fileIndex = GFX_MON_UNRAVA;
