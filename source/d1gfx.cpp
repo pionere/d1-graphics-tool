@@ -1727,7 +1727,7 @@ void D1Gfx::mask()
     }
 }
 
-bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
+bool D1Gfx::check() const
 {
     bool result = false;
     // test whether a graphic have the same frame-size in each group
@@ -1750,7 +1750,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
         townerPath = townerPath.mid(townerPath.lastIndexOf('\\')+1);
         QString townerPathLower = QDir::toNativeSeparators(townerPath).toLower();
         if (filePathLower.endsWith(townerPathLower)) {
-            int8_t *ao = towners[i].tsAnimOrder;
+            const int8_t* ao = towners[i].tsAnimOrder;
             if (ao != NULL) {
                 int mf = 0;
                 while (*ao > 0) {

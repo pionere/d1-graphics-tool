@@ -861,7 +861,7 @@ void CelView::activeFrames() const
     ProgressDialog::decBar();
 }
 
-void CelView::checkGraphics()
+void CelView::checkGraphics() const
 {
     bool result = false;
 

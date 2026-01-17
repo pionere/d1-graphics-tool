@@ -555,7 +555,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 if (frameCount < 0) {
                     frameCount = fc;
                 } else {
-                    dProgress() << QApplication::tr("Gfx %1 has inconsistent groupsize (%2 vs %3).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+                    dProgress() << QApplication::tr("Gfx %1 has inconsistent groupsize (%2 vs %3).").arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
                     result = true;
                 }
             }
@@ -566,8 +566,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             dProgress() << QApplication::tr("Framesize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
             result = true;
         } else if (this->type == D1GFX_SET_TYPE::Missile) {
-            int w = fs->width();
-            int h = fs->height();
+            int w = fs.width();
+            int h = fs.height();
             if (w != width || h != height) {
                 if (width < 0) {
                     width = w;
@@ -733,8 +733,8 @@ void D1Gfxset::mask()
             dProgressErr() << QApplication::tr("Groupsize is not constant");
             return;
         }
-        w = fs->width();
-        h = fs->height();
+        w = fs.width();
+        h = fs.height();
         if (!first) {
             if (w != width || h != height) {
                 dProgressErr() << QApplication::tr("Framesize is not constant");
