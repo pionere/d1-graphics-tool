@@ -509,47 +509,47 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             }
         }
         int gc = currGfx->getGroupCount();
-        if (gc != numGroups) {
+        if (this->type == D1GFX_SET_TYPE::Monster && gc == 0) {
+            ; // accept empty/missing monster-graphics (might be optional or non-extant like the golem standing animation)
+        } else if (gc != numGroups) {
             dProgress() << QApplication::tr("%1 has %2 instead of %n groups.", "", numGroups).arg(this->getGfxLabel(gn)).arg(gc);
             result = true;
         }
         // test whether a graphic have the same frame-count in each group
-        if (this->type != D1GFX_SET_TYPE::Missile) {
-            frameCount = -1;
-        }
-        for (int n = 0; n < currGfx->getGroupCount(); n++) {
-            std::pair<int, int> gfi = currGfx->getGroupFrameIndices(n);
-            int fc = gfi.second - gfi.first + 1;
-            if (fc != frameCount) {
+        int fc = currGfx->getGroupSize();
+        if (fc < 0) {
+            dProgress() << QApplication::tr("Groupsize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
+            result = true;
+        } else if (this->type == D1GFX_SET_TYPE::Missile) {
+            if (frameCount != fc) {
                 if (frameCount < 0) {
                     frameCount = fc;
                 } else {
-                    dProgress() << QApplication::tr("Group %1 of %2 has inconsistent framecount (%3 vs %4).").arg(n + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
+                    dProgress() << QApplication::tr("Gfx %1 has inconsistent groupsize (%2 vs %3).").arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
                     result = true;
                 }
             }
         }
         // test whether a graphic have the same frame-size in each group
-        if (this->type != D1GFX_SET_TYPE::Missile) {
-            width = -1;
-            height = -1;
-        }
-        for (int i = 0; i < currGfx->getFrameCount(); i++) {
-            D1GfxFrame* frame = currGfx->getFrame(i);
-            int w = frame->getWidth();
-            int h = frame->getHeight();
+        QSize fs = currGfx->getFrameSize();
+        if (!fs.isValid()) {
+            dProgress() << QApplication::tr("Framesize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
+            result = true;
+        } else if (this->type == D1GFX_SET_TYPE::Missile) {
+            int w = fs.width();
+            int h = fs.height();
             if (w != width || h != height) {
                 if (width < 0) {
                     width = w;
                     height = h;
                 } else {
-                    dProgress() << QApplication::tr("Frame %1 in group %2 has inconsistent framesize (%3x%4 vs %5x%6).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(h).arg(width).arg(height);
+                    dProgress() << QApplication::tr("Gfx %1 has inconsistent framesize (%2x%3 vs %4x%5).").arg(this->getGfxLabel(gn)).arg(w).arg(h).arg(width).arg(height);
                     result = true;
                 }
             }
         }
     }
-
+    bool typetested = false;
     switch (this->type) {
     case D1GFX_SET_TYPE::Missile: {
         // - test against game code if possible
@@ -574,6 +574,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         int animWidth = mfdata.mfAnimWidth * assetMpl;
                         result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
                     }
+                    typetested = true;
                     break;
                 }
             }
@@ -594,6 +595,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         int animWidth = mfdata.moWidth * assetMpl;
                         result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
                     }
+                    typetested = true;
                     break;
                 }
             }
@@ -672,8 +674,14 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
 
                 result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
             }
+
+            typetested = true;
         }
     } break;
+    }
+    if (!typetested) {
+        dProgress() << QApplication::tr("Unrecognized graphics -> Checking with game-code is skipped.");
+        result = true;
     }
     return result;
 }
