@@ -328,6 +328,38 @@ static QString getGfxName(const D1Gfx* gfx)
     return qfi.completeBaseName();
 }
 
+bool D1Gfxset::isClippedConstant() const
+{
+    int clipped = -1;
+    for (const D1Gfx* gfx : this->gfxList) {
+        int gc = gfx->isClipped() ? 1 : 0;
+        if (clipped >= 0) {
+            if (gc != clipped) {
+                return false;
+            }
+        } else {
+            clipped = gc;
+        }
+    }
+    return true;
+}
+
+bool D1Gfxset::isGroupsConstant() const
+{
+    int numGroups = -1;
+    for (const D1Gfx* gfx : this->gfxList) {
+        int gc = gfx->getGroupCount();
+        if (numGroups >= 0) {
+            if (gc != numGroups) {
+                return false;
+            }
+        } else {
+            numGroups = gc;
+        }
+    }
+    return true;
+}
+
 void D1Gfxset::compareTo(const LoadFileContent *fileContent, bool patchData) const
 {
     if (fileContent->gfxset != nullptr) {

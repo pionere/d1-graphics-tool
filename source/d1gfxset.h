@@ -57,6 +57,8 @@ public:
     bool load(const QString &gfxFilePath, const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
+    bool isClippedConstant() const;
+    bool isGroupsConstant() const;
     void compareTo(const LoadFileContent *fileContent, bool patchData) const;
     QRect getBoundary() const;
     bool check(const D1Gfx *gfx, int assetMpl) const;
