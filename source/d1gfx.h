@@ -319,6 +319,7 @@ public:
     void mask();
     bool squash();
     void optimize();
+    bool check() const;
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);

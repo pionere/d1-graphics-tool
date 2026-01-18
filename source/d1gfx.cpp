@@ -1653,6 +1653,58 @@ void D1Gfx::mask()
     }
 }
 
+bool D1Gfx::check() const
+{
+    bool result = false;
+    // test whether a graphic have the same frame-size in each group
+    if (!this->getFrameSize().isValid()) {
+        dProgress() << tr("Framesize is not constant");
+        result = true;
+    }
+    // test whether a graphic have the same frame-count in each group
+    int gs = this->getGroupSize();
+    if (gs < 0) {
+        dProgress() << tr("Groupsize is not constant");
+        result = true;
+    }
+    // test towner graphics
+    QString filePath = this->getFilePath();
+    QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
+    bool typetested = false;
+    InitTowners();
+    for (int i = 0; i < numtowners; i++) {
+        QString townerPath = towners[i].tsPath;
+        townerPath = townerPath.mid(townerPath.lastIndexOf('\\')+1);
+        QString townerPathLower = QDir::toNativeSeparators(townerPath).toLower();
+        if (filePathLower.endsWith(townerPathLower)) {
+            const int8_t* ao = towners[i].tsAnimOrder;
+            if (ao != NULL) {
+                int mf = 0;
+                while (*ao > 0) {
+                    if (mf < *ao) {
+                        mf = *ao;
+                    }
+                    ao++;
+                }
+                if (mf > gs) {
+                    dProgress() << QApplication::tr("Not enough frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
+                    result = true;
+                } else if (gs > mf) {
+                    dProgress() << QApplication::tr("Too many frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
+                    result = true;
+                }
+            }
+            typetested = true;
+            break;
+        }
+    }
+    if (!typetested) {
+        dProgress() << QApplication::tr("Unrecognized graphics -> Checking with game-code is skipped.");
+        result = true;
+    }
+    return result;
+}
+
 bool D1Gfx::squash()
 {
     const D1GfxPixel backPixel = D1GfxPixel::transparentPixel();

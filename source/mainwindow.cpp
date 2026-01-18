@@ -1712,7 +1712,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionReportActiveTiles->setEnabled(isTileset);
     this->ui->actionReportTilesetUse->setEnabled(isTileset);
     this->ui->actionReportTilesetInefficientFrames->setEnabled(isTileset);
-    this->ui->actionReportCheckGraphics->setEnabled(this->gfxsetView != nullptr);
+    this->ui->actionReportCheckGraphics->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->updateDynamicMenus();
 
     // Clear loading message from status bar
@@ -2842,7 +2842,10 @@ void MainWindow::on_actionReportCheckGraphics_triggered()
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_OPEN_DIALOG);
 
-    this->gfxsetView->checkGraphics(gfxOnly);
+    if (this->celView != nullptr)
+        this->celView->checkGraphics();
+    if (this->gfxsetView != nullptr)
+        this->gfxsetView->checkGraphics(gfxOnly);
 
     // Clear loading message from status bar
     ProgressDialog::done();

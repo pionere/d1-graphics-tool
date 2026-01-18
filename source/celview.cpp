@@ -858,6 +858,23 @@ void CelView::activeFrames() const
     ProgressDialog::decBar();
 }
 
+void CelView::checkGraphics() const
+{
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Inconsistencies in the graphics:");
+
+    dProgress() << progress;
+    result = this->gfx->check();
+
+    if (!result) {
+        progress.second = tr("No inconsistency detected in the current gfx.");
+        dProgress() << progress;
+    }
+}
+
 void CelView::resize(const ResizeParam &params)
 {
     int frameWithPixelLost = this->gfx->testResize(params);
