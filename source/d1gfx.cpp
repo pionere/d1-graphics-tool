@@ -1745,6 +1745,7 @@ bool D1Gfx::check() const
     QString filePath = this->getFilePath();
     QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
     bool typetested = false;
+    InitTowners();
     for (int i = 0; i < numtowners; i++) {
         QString townerPath = towners[i].tsPath;
         townerPath = townerPath.mid(townerPath.lastIndexOf('\\')+1);
