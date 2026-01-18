@@ -2833,6 +2833,53 @@ bool D1Gfx::patchPlrFrames(int gfxFileIndex, bool silent)
     return result;
 }
 
+bool D1Gfx::patchMonFrames(int gfxFileIndex, bool silent)
+{
+    int frameCount = 0, width = 0, height = 0;
+    switch (gfxFileIndex) {
+    case GFX_MON_ACIDD:  frameCount = 24 - 8; width = 128; height =  96; break;
+    case GFX_MON_MAGMAW: frameCount = 14 - 4; width = 128; height = 128; break;
+    case GFX_MON_SCAVH:  frameCount =  8 - 2; width = 128; height =  96; break;
+    case GFX_MON_SKINGS: frameCount = 12 - 6; width = 160; height = 160; break;
+    case GFX_MON_SKINGW: frameCount =  8 - 2; width = 160; height = 160; break;
+    case GFX_MON_SNAKEH: frameCount =  6 - 1; width = 160; height = 160; break;
+    }
+
+    if (this->getGroupCount() != NUM_DIRS) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        if ((this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first + 1) < frameCount) {
+            dProgressErr() << tr("Not enough frames in the frame group %1.").arg(ii + 1);
+            return false;
+        }
+#if 0
+        for (int i = 0; i < frameCount; i++) {
+            int n = this->getGroupFrameIndices(ii).first + i;
+            D1GfxFrame* currFrame = this->getFrame(n);
+            if (currFrame->getWidth() != width || currFrame->getHeight() != height) {
+                dProgressErr() << tr("Framesize of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+                return false;
+            }
+        }
+#endif
+    }
+    bool result = false;
+    for (int ii = 0; ii < NUM_DIRS; ii++) {
+        while (true) {
+            int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
+            if (i < frameCount)
+                break;
+            this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+            dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
+            result = true;
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
 {
     constexpr BYTE TRANS_COLOR = 1;
@@ -8255,6 +8302,14 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_ZOMBIED: // patch Zombied.CL2
         change = this->patchZombieDie(silent);
         break;
+    case GFX_MON_ACIDD:  // patch Acidd.CL2
+    case GFX_MON_MAGMAW: // patch Magmaw.CL2
+    case GFX_MON_SCAVH:  // patch Scavh.CL2
+    case GFX_MON_SKINGS: // patch Skings.CL2
+    case GFX_MON_SKINGW: // patch Skingw.CL2
+    case GFX_MON_SNAKEH: // patch Snakeh.CL2
+        change = this->patchMonFrames(gfxFileIndex, silent);
+        break;
     case GFX_MIS_ACIDBF1:
     case GFX_MIS_ACIDBF10:
     case GFX_MIS_ACIDBF11: // patch Acidbf*.CL2
@@ -8497,6 +8552,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
         fileIndex = GFX_PLR_WMHAS;
     }
     // - monsters
+    if (baseName == "acidd") {
+        fileIndex = GFX_MON_ACIDD;
+    }
     if (baseName == "fallgd") {
         fileIndex = GFX_MON_FALLGD;
     }
@@ -8506,11 +8564,17 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "magmad") {
         fileIndex = GFX_MON_MAGMAD;
     }
+    if (baseName == "magmaw") {
+        fileIndex = GFX_MON_MAGMAW;
+    }
     if (baseName == "goatbd") {
         fileIndex = GFX_MON_GOATBD;
     }
     if (baseName == "goatld") {
         fileIndex = GFX_MON_GOATLD;
+    }
+    if (baseName == "scavh") {
+        fileIndex = GFX_MON_SCAVH;
     }
     if (baseName == "sklaxd") {
         fileIndex = GFX_MON_SKLAXD;
@@ -8518,8 +8582,17 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "sklbwd") {
         fileIndex = GFX_MON_SKLBWD;
     }
+    if (baseName == "skings") {
+        fileIndex = GFX_MON_SKINGS;
+    }
+    if (baseName == "skingw") {
+        fileIndex = GFX_MON_SKINGW;
+    }
     if (baseName == "sklsrd") {
         fileIndex = GFX_MON_SKLSRD;
+    }
+    if (baseName == "snakeh") {
+        fileIndex = GFX_MON_SNAKEH;
     }
     if (baseName == "unrava") {
         fileIndex = GFX_MON_UNRAVA;
