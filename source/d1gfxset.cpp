@@ -648,8 +648,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                                 dProgress() << QApplication::tr("Special animation of %1 is not used.").arg(this->getGfxLabel(gn));
                             result = true;
                         }
-                        if ((gn == MA_WALK || gn == MA_ATTACK || gn == MA_SPECIAL) && fc * mfdata.moAnimFrames[gn] >= SQUELCH_LOW) {
-                            dProgress() << QApplication::tr("Animation (%1) too long to finish before relax (expected < %2 got %3).").arg(this->getGfxLabel(gn)).arg(SQUELCH_LOW).arg(fc * mfdata.moAnimFrames[gn]);
+                        if ((gn == MA_WALK || gn == MA_ATTACK || gn == MA_SPECIAL) && fc * mfdata.moAnimFrameLen[gn] >= SQUELCH_LOW) {
+                            dProgress() << QApplication::tr("Animation (%1) too long to finish before relax (expected < %2 got %3).").arg(this->getGfxLabel(gn)).arg(SQUELCH_LOW).arg(fc * mfdata.moAnimFrameLen[gn]);
                             result = true;
                         }
                     }
@@ -742,7 +742,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 if (gfx != nullptr && gfx != currGfx)
                     continue;
                 const int fc = currGfx->getGroupSize();
-                if ((gn == PGF_WALK_TOWN || gn == PGF_WALK_DUNGEON) && fc != PLR_WALK_ANIMLEN) {
+                if ((gn == PGT_WALK_TOWN || gn == PGT_WALK_DUNGEON) && fc != PLR_WALK_ANIMLEN) {
                     dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (StartWalk expects %2 got %3).").arg(this->getGfxLabel(gn)).arg(PLR_WALK_ANIMLEN).arg(fc);
                     result = true;
                 }
