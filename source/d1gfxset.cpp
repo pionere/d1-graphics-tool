@@ -624,9 +624,6 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         D1Gfx* currGfx = this->getGfx(gn);
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
-                        //int frameCount = gn < lengthof(mfdata.moAnimFrames) ? mfdata.moAnimFrames[gn] : 0;
-                        //int animWidth = mfdata.moWidth * assetMpl;
-                        //result |= this->checkGraphics(frameCount, animWidth, gn, currGfx);
 
                         const int fc = currGfx->getGroupSize();
                         if (gn == MA_STAND && fc > 0x7FFFF) {
@@ -692,6 +689,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             }
             plr._pClass = pc;
             plr._pgfxnum = plrgfx;
+
+            SetPlrAnims(0);
             /*
             currLvl._dType = DTYPE_TOWN;
             SetPlrAnims(0);

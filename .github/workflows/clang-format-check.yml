@@ -17,8 +17,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      #with:
+      #  fetch-depth: 0
 
     - name: Formatting Check (Source)
       #uses: jidicula/clang-format-action@v4.11.0
