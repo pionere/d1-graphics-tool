@@ -484,12 +484,9 @@ QRect D1Gfxset::getBoundary() const
     return rect;
 }
 
-bool D1Gfxset::checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx* gfx) const
+bool D1Gfxset::checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx* currGfx) const
 {
     bool result = false;
-    D1Gfx* currGfx = this->getGfx(gn);
-    if (gfx != nullptr && gfx != currGfx)
-        return false;
     for (int i = 0; i < currGfx->getGroupCount(); i++) {
         std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
         int fc = gfi.second - gfi.first + 1;
@@ -592,19 +589,20 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 char pszName[DATA_ARCHIVE_MAX_PATH];
                 int n = mfdata.mfAnimFAmt;
                 const char* name = mfdata.mfName;
+                const char* fmt;
                 if (name == NULL)
                     continue;
-                if (n == 1) {
-                    snprintf(pszName, sizeof(pszName), "Missiles\\%s.CL2", name);
-                } else {
-                    snprintf(pszName, sizeof(pszName), "Missiles\\%s%d.CL2", name, 1);
-                }
+                fmt = n == 1 ? "Missiles\\%s.CL2" : "Missiles\\%s%d.CL2";
+                snprintf(pszName, sizeof(pszName), fmt, name, 1);
                 QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
                 if (filePathLower.endsWith(misGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
+                        D1Gfx* currGfx = this->getGfx(gn);
+                        if (gfx != nullptr && gfx != currGfx)
+                            continue;
                         int frameCount = gn < lengthof(mfdata.mfAnimLen) ? mfdata.mfAnimLen[gn] : 0;
                         int animWidth = mfdata.mfAnimWidth * assetMpl;
-                        result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
+                        result |= this->checkGraphics(frameCount, animWidth, gn, currGfx);
                     }
                     typetested = true;
                     break;
@@ -623,9 +621,37 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 QString monGfxName = QDir::toNativeSeparators(QString(strBuff)).toLower();
                 if (filePathLower.endsWith(monGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
-                        int frameCount = gn < lengthof(mfdata.moAnimFrames) ? mfdata.moAnimFrames[gn] : 0;
-                        int animWidth = mfdata.moWidth * assetMpl;
-                        result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
+                        D1Gfx* currGfx = this->getGfx(gn);
+                        if (gfx != nullptr && gfx != currGfx)
+                            continue;
+                        //int frameCount = gn < lengthof(mfdata.moAnimFrames) ? mfdata.moAnimFrames[gn] : 0;
+                        //int animWidth = mfdata.moWidth * assetMpl;
+                        //result |= this->checkGraphics(frameCount, animWidth, gn, currGfx);
+
+                        const int fc = currGfx->getGroupSize();
+                        if (gn == MA_STAND && fc > 0x7FFFF) {
+                            dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (InitMonster expects < %2 got %3).").arg(this->getGfxLabel(gn)).arg(0x7FFF).arg(fc);
+                            result = true;
+                        }
+                        if (gn == MA_WALK && fc > 24) { // lengthof(MWVel)
+                            dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (MonWalkDir expects <= %2 got %3).").arg(this->getGfxLabel(gn)).arg(24).arg(fc);
+                            result = true;
+                        }
+                        if (&mfdata == &monfiledata[MOFILE_SNAKE] && gn == MA_ATTACK && fc != 13) {
+                            dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (MI_Rhino expects %2 got %3).").arg(this->getGfxLabel(gn)).arg(13).arg(fc);
+                            result = true;
+                        }
+                        if (gn == MA_SPECIAL && (mfdata.moAnimFrameLen[gn] == 0) != (fc == 0)) {
+                            if (fc == 0)
+                                dProgress() << QApplication::tr("Missing special animation of %1.").arg(this->getGfxLabel(gn));
+                            else
+                                dProgress() << QApplication::tr("Special animation of %1 is not used.").arg(this->getGfxLabel(gn));
+                            result = true;
+                        }
+                        if ((gn == MA_WALK || gn == MA_ATTACK || gn == MA_SPECIAL) && fc * mfdata.moAnimFrames[gn] >= SQUELCH_LOW) {
+                            dProgress() << QApplication::tr("Animation (%1) too long to finish before relax (expected < %2 got %3).").arg(this->getGfxLabel(gn)).arg(SQUELCH_LOW).arg(fc * mfdata.moAnimFrames[gn]);
+                            result = true;
+                        }
                     }
                     typetested = true;
                     break;
@@ -666,7 +692,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             }
             plr._pClass = pc;
             plr._pgfxnum = plrgfx;
-
+            /*
             currLvl._dType = DTYPE_TOWN;
             SetPlrAnims(0);
             // assert(this->getGfxCount() == NUM_PGTS);
@@ -683,8 +709,10 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 case PGX_GOTHIT:    gn = PGT_GOTHIT;     break;
                 case PGX_DEATH:     gn = PGT_DEATH;      break;
                 }
-
-                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
+                D1Gfx* currGfx = this->getGfx(gn);
+                if (gfx != nullptr && gfx != currGfx)
+                    continue;
+                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, currGfx);
             }
 
             currLvl._dType = DTYPE_CATHEDRAL;
@@ -703,8 +731,29 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 case PGX_GOTHIT:
                 case PGX_DEATH: continue;
                 }
+                D1Gfx* currGfx = this->getGfx(gn);
+                if (gfx != nullptr && gfx != currGfx)
+                    continue;
+                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, currGfx);
+            }*/
 
-                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
+            for (int gn = 0; gn < this->getGfxCount(); gn++) {
+                D1Gfx* currGfx = this->getGfx(gn);
+                if (gfx != nullptr && gfx != currGfx)
+                    continue;
+                const int fc = currGfx->getGroupSize();
+                if ((gn == PGF_WALK_TOWN || gn == PGF_WALK_DUNGEON) && fc != PLR_WALK_ANIMLEN) {
+                    dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (StartWalk expects %2 got %3).").arg(this->getGfxLabel(gn)).arg(PLR_WALK_ANIMLEN).arg(fc);
+                    result = true;
+                }
+                if ((gn == PGT_FIRE || gn == PGT_MAGIC || gn == PGT_LIGHTNING) && plr._pSFNum > fc) {
+                    dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (PlrDoSpell expects >= %2 got %3).").arg(this->getGfxLabel(gn)).arg(plr._pSFNum).arg(fc);
+                    result = true;
+                }
+                if (gn == PGT_ATTACK && plr._pAFNum > fc) {
+                    dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (PlrDoSpell expects >= %2 got %3).").arg(this->getGfxLabel(gn)).arg(plr._pAFNum).arg(fc);
+                    result = true;
+                }
             }
 
             typetested = true;

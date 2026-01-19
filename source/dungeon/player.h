@@ -11,6 +11,8 @@ DEVILUTION_BEGIN_NAMESPACE
 #define plr            players[pnum]
 #define plx(x)         players[x]
 
+#define PLR_WALK_ANIMLEN 8
+
 extern int mypnum;
 extern PlayerStruct players[MAX_PLRS];
 

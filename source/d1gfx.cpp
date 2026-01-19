@@ -1741,7 +1741,7 @@ bool D1Gfx::check() const
         dProgress() << tr("Groupsize is not constant");
         result = true;
     }
-    // 
+    // test towner graphics
     QString filePath = this->getFilePath();
     QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
     bool typetested = false;

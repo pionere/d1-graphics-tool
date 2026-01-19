@@ -201,6 +201,7 @@ bool D1Clc::loadComponent(D1Gfx &gfx, const QJsonValue &jsonVal, const QString &
            }
        }
     }
+
     return true;
 }
 
