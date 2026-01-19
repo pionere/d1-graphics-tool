@@ -643,9 +643,9 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         }
                         if (gn == MA_SPECIAL && (mfdata.moAnimFrameLen[gn] == 0) != (fc == 0)) {
                             if (fc == 0)
-                                dProgress() << QApplication::tr("Missing special animation of %1.").arg(this->getGfxLabel(gn));
+                                dProgress() << QApplication::tr("Missing/empty special animation (%1).").arg(this->getGfxLabel(gn));
                             else
-                                dProgress() << QApplication::tr("Special animation of %1 is not used.").arg(this->getGfxLabel(gn));
+                                dProgress() << QApplication::tr("Special animation (%1) is not used.").arg(this->getGfxLabel(gn));
                             result = true;
                         }
                         if ((gn == MA_WALK || gn == MA_ATTACK || gn == MA_SPECIAL) && fc * mfdata.moAnimFrameLen[gn] >= SQUELCH_LOW) {
@@ -761,7 +761,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
     } break;
     }
     if (!typetested) {
-        dProgress() << QApplication::tr("Unrecognized graphics -> Checking with game-code is skipped.");
+        dProgress() << QApplication::tr("Unrecognized graphics (type: %1, base-path:%2) -> Checking with game-code is skipped.").arg(this->type).arg(this->getBaseGfx()->getFilePath());
         result = true;
     }
     return result;
