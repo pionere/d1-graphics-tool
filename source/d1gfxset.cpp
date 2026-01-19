@@ -761,7 +761,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
     } break;
     }
     if (!typetested) {
-        dProgress() << QApplication::tr("Unrecognized graphics (type: %1, base-path:%2) -> Checking with game-code is skipped.").arg(this->type).arg(this->getBaseGfx()->getFilePath());
+        dProgress() << QApplication::tr("Unrecognized graphics (type: %1, base-path:%2) -> Checking with game-code is skipped.").arg(this->getGfxLabel(-1)).arg(this->getBaseGfx()->getFilePath());
         result = true;
     }
     return result;
@@ -882,11 +882,16 @@ QString D1Gfxset::getGfxLabel(int index) const
     QString res = QString("\"%1\" [%2]");
     switch (this->type) {
     case D1GFX_SET_TYPE::Unknown:
-        return QApplication::tr("Unknown%1").arg(index + 1);
+        res = QApplication::tr("Unknown%1").arg(index + 1);
+        break;
     case D1GFX_SET_TYPE::Missile:
-        return QApplication::tr("Dir%1").arg(index + 1);
+        res = QApplication::tr("Dir%1").arg(index + 1);
+        break;
     case D1GFX_SET_TYPE::Monster:
-        if ((unsigned)index >= NUM_MON_ANIM) break;
+        if ((unsigned)index >= NUM_MON_ANIM) {
+            res = QApplication::tr("Monster");
+            break;
+        }
         res = res.arg(QChar(animletter[index]).toUpper());
         switch (index) {
         case MA_STAND:   res = res.arg(QApplication::tr("Stand"));
@@ -896,9 +901,12 @@ QString D1Gfxset::getGfxLabel(int index) const
         case MA_GOTHIT:  res = res.arg(QApplication::tr("Hit"));
         case MA_DEATH:   res = res.arg(QApplication::tr("Death"));
         }
-        return res;
+        break;
     case D1GFX_SET_TYPE::Player:
-        if ((unsigned)index >= NUM_PGTS) break;
+        if ((unsigned)index >= NUM_PGTS) {
+            res = QApplication::tr("Player");
+            break;
+        }
         res = res.arg(PlrAnimTypes[index].patTxt);
         switch (index) {
         case PGT_STAND_TOWN:    res = res.arg(QApplication::tr("Stand (town)"));
@@ -913,10 +921,9 @@ QString D1Gfxset::getGfxLabel(int index) const
         case PGT_GOTHIT:        res = res.arg(QApplication::tr("Hit"));
         case PGT_DEATH:         res = res.arg(QApplication::tr("Death"));
         }
-        return res;
+        break;
     }
-
-    return QApplication::tr("N/A");
+    return res;
 }
 
 void D1Gfxset::frameModified(const D1GfxFrame *frame)
