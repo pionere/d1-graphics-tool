@@ -15,6 +15,7 @@
 #include <QMimeData>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QMovie>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QStringList>
