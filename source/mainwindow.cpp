@@ -1962,14 +1962,15 @@ void MainWindow::supportedImageFormats(QStringList &allSupportedImageFormats)
 void MainWindow::supportedMovieFormats(QStringList &supportedMovieFormats)
 {
     // get supported movie file types
-    QStringList mimeTypeFilters;
+    // QStringList mimeTypeFilters;
     const QList<QByteArray> supportedMimeTypes = QMovie::supportedFormats();
     for (const QByteArray &mimeTypeName : supportedMimeTypes) {
-        mimeTypeFilters.append(mimeTypeName);
+        // mimeTypeFilters.append(mimeTypeName);
+        supportedMovieFormats.append(QString(mimeTypeName));
     }
 
     // compose filter for all supported types
-    QMimeDatabase mimeDB;
+    /*QMimeDatabase mimeDB;
     for (const QString &mimeTypeFilter : mimeTypeFilters) {
         QMimeType mimeType = mimeDB.mimeTypeForName(mimeTypeFilter);
         if (mimeType.isValid()) {
@@ -1979,7 +1980,7 @@ void MainWindow::supportedMovieFormats(QStringList &supportedMovieFormats)
                 supportedMovieFormats.append(mimePatterns[i].toUpper());
             }
         }
-    }
+    }*/
 }
 
 static QString imageNameFilter()
