@@ -1958,6 +1958,29 @@ void MainWindow::supportedImageFormats(QStringList &allSupportedImageFormats)
     }
 }
 
+void MainWindow::supportedMovieFormats(QStringList &supportedMovieFormats)
+{
+    // get supported movie file types
+    QStringList mimeTypeFilters;
+    const QList<QByteArray> supportedMimeTypes = QMovie::supportedFormats();
+    for (const QByteArray &mimeTypeName : supportedMimeTypes) {
+        mimeTypeFilters.append(mimeTypeName);
+    }
+
+    // compose filter for all supported types
+    QMimeDatabase mimeDB;
+    for (const QString &mimeTypeFilter : mimeTypeFilters) {
+        QMimeType mimeType = mimeDB.mimeTypeForName(mimeTypeFilter);
+        if (mimeType.isValid()) {
+            QStringList mimePatterns = mimeType.globPatterns();
+            for (int i = 0; i < mimePatterns.count(); i++) {
+                supportedMovieFormats.append(mimePatterns[i]);
+                supportedMovieFormats.append(mimePatterns[i].toUpper());
+            }
+        }
+    }
+}
+
 static QString imageNameFilter()
 {
     // get supported image file types
@@ -1968,6 +1991,18 @@ static QString imageNameFilter()
     allSupportedFormats.append("*.PCX");
 
     QString allSupportedFormatsFilter = QApplication::tr("Image files (%1)").arg(allSupportedFormats.join(' '));
+    // add supported movie file types
+    QStringList movieFormats;
+    MainWindow::supportedMovieFormats(movieFormats);
+    QStringList movieOnlyFormats;
+    for (const QString format : movieFormats) {
+        if (!allSupportedFormats.contains(format)) {
+            movieOnlyFormats.append(format);
+        }
+    }
+    if (!movieOnlyFormats.isEmpty()) {
+        allSupportedFormatsFilter += QApplication::tr(";;Movie files (%1)").arg(movieOnlyFormats.join(' '));
+    }
     return allSupportedFormatsFilter;
 }
 

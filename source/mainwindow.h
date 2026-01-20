@@ -150,6 +150,7 @@ public:
     static bool hasImageUrl(const QMimeData *mimeData);
     static bool isResourcePath(const QString &path);
     static void supportedImageFormats(QStringList &allSupportedImageFormats);
+    static void supportedMovieFormats(QStringList &supportedMovieFormats);
     static QString FileContentTypeToStr(FILE_CONTENT fileType);
 
 private:
