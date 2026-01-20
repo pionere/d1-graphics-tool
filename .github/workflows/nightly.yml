@@ -186,7 +186,7 @@ jobs:
         echo '------------ | -------------' >> RELEASE_NOTE.md
         echo '`Windows x64` | [Windows-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x64.zip)' >> RELEASE_NOTE.md
         echo '`Windows x86` | [Windows-x86.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x86.zip)' >> RELEASE_NOTE.md
-        echo '`Linux x64 | [Linux-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Linux-x64.zip)`' >> RELEASE_NOTE.md
+        echo '`Linux x64` | [Linux-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Linux-x64.zip)' >> RELEASE_NOTE.md
 
     #- name: Show content of workspace
     #  run: find $RUNNER_WORKSPACE
