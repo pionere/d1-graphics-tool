@@ -3877,7 +3877,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
         return;
     }
     MainWindow *mw = &dMainWindow();
-    QAction actions[18];
+    QAction actions[19];
     QMenu contextMenu(this);
 
     QMenu frameMenu(tr("Frame"), this);

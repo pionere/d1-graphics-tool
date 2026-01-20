@@ -1997,9 +1997,9 @@ static QString imageNameFilter()
     MainWindow::supportedMovieFormats(movieFormats);
     QStringList movieOnlyFormats;
     for (const QString format : movieFormats) {
-        if (!allSupportedFormats.contains(format)) {
+        // if (!allSupportedFormats.contains(format)) {
             movieOnlyFormats.append(format);
-        }
+        // }
     }
     if (!movieOnlyFormats.isEmpty()) {
         allSupportedFormatsFilter += QApplication::tr(";;Movie files (%1)").arg(movieOnlyFormats.join(' '));

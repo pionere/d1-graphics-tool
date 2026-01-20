@@ -1324,9 +1324,9 @@ D1Gfx *D1Gfx::loadComponentGFX(QString gfxFilePath)
 
 int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
 {
-    const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     int firstIdx, lastIdx, resIdx;
-    if (wholeGroup && multiGroup) {
+    if (wholeGroup) {
         unsigned i = 0;
         for ( ; i < this->groupFrameIndices.size(); i++) {
             if (/*this->groupFrameIndices[i].first <= idx &&*/ this->groupFrameIndices[i].second >= idx) {
@@ -1344,6 +1344,8 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
         firstIdx = this->groupFrameIndices.back().second + 1;
         resIdx = firstIdx + idx - this->groupFrameIndices[i].first;
         lastIdx = this->frames.count() - 1;
+
+        multiGroup = true;
     } else {
         D1GfxFrame *frame = this->frames[idx];
         frame = new D1GfxFrame(*frame);
