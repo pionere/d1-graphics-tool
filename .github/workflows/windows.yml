@@ -21,10 +21,10 @@ jobs:
       with:
         version: '6.2.4'
         cache: 'true'
-        modules: 'qtmultimedia'
+        modules: 'qtmultimedia qtimageformats'
 
-    - name: List Qt
-      run: aqt list-qt windows desktop --long-modules 6.2.4 win64_mingw
+    #- name: List Qt
+    #  run: aqt list-qt windows desktop --long-modules 6.2.4 win64_mingw
 
     - name: Configure
       run: cmake -S. -Bbuild
