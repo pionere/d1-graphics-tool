@@ -1371,8 +1371,8 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
 
 void D1Gfx::removeFrame(int idx, bool wholeGroup)
 {
-    const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
-    if (wholeGroup && multiGroup) {
+    //const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    if (wholeGroup /*&& multiGroup*/) {
         for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
             if (this->groupFrameIndices[i].second < idx)
                 continue;
