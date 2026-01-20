@@ -23,9 +23,6 @@ jobs:
         cache: 'true'
         modules: 'qtmultimedia qtimageformats'
 
-    #- name: List Qt
-    #  run: aqt list-qt windows desktop --long-modules 6.2.4 win64_mingw
-
     - name: Configure
       run: cmake -S. -Bbuild
 

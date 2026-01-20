@@ -44,6 +44,7 @@ jobs:
       uses: jurplel/install-qt-action@v3
       with:
         version: '6.2.4'
+        modules: 'qtmultimedia qtimageformats'
 
     - name: Configure
       run: cmake -S. -Bbuild
@@ -89,6 +90,7 @@ jobs:
       with:
         version: '5.15.2'
         arch: 'win32_msvc2019'
+        modules: 'all'
 
     - name: Configure
       run: cmake -S. -Bbuild -A Win32
