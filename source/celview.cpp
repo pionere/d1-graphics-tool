@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QMovie>
 
 #include "config.h"
 #include "d1cel.h"
@@ -600,11 +601,20 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        QString msg = tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
-        if (mode != IMAGE_FILE_MODE::AUTO) {
-            dProgressFail() << msg;
-        } else {
-            dProgressErr() << msg;
+        QMovie mov = QMovie(imagefilePath);
+        if (!mov.isValid()) {
+            QString msg = tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
+            if (mode != IMAGE_FILE_MODE::AUTO) {
+                dProgressFail() << msg;
+            } else {
+                dProgressErr() << msg;
+            }
+            return;
+        }
+        for (int i = 0; mov.jumpToFrame(i); i++) {
+            QImage image = mov.currentImage();
+            this->gfx->insertFrame(index, image);
+            index++;
         }
         return;
     }
