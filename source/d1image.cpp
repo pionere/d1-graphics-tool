@@ -68,7 +68,7 @@ static QColor weightColor(unsigned weight)
     }
     return QColor(r % 256, g % 256, b % 256);
 }
-static bool frameDone = false;
+static bool frameDone = 0;
 bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
 {
     frame.width = image.width();
@@ -107,7 +107,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         unsigned n = frame.width * frame.height;
         n = (n + D1PAL_COLORS - 1) / D1PAL_COLORS;
 
-        if (!frameDone)
+        if (frameDone < 100)
             dProgress() << QApplication::tr("Starting w %1:%2 groups: %3 colors %4").arg(frame.width).arg(frame.height).arg(n).arg(wmap.size());
 
         std::map<int, int> cmap; // weight to palette-index
@@ -118,7 +118,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 break;
             }
             QColor c = weightColor(mi->first);
-            if (!frameDone)
+            if (frameDone < 100)
             dProgress() << QApplication::tr("Keeping color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(n).arg(c.red()).arg(c.green()).arg(c.blue());
             pal->setColor(i, c);
             cmap[mi->first] = i;
@@ -132,7 +132,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 break;
             }
             QColor c = weightColor(mi->first);
-            if (!frameDone)
+            if (frameDone < 100)
             dProgress() << QApplication::tr("Keeping color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(n).arg(c.red()).arg(c.green()).arg(c.blue());
             pal->setColor(i, c);
             cmap[mi->first] = i;
@@ -167,7 +167,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
 
             QColor c = weightColor(res);
             pal->setColor(i, c);
-            if (!frameDone)
+            if (frameDone < 100)
             dProgress() << QApplication::tr("Using color w %1 in %2 with %3 refs (rgb=%4:%5:%6) cc:%7").arg(res).arg(i).arg(sum).arg(c.red()).arg(c.green()).arg(c.blue()).arg(cc);
 
             std::vector<PaletteColor> colors;
@@ -223,7 +223,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             frame.pixels.push_back(std::move(pixelLine));
         }
     }
-    frameDone = true;
+    frameDone++;
     return true;
 }
 
