@@ -1788,6 +1788,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
             }
         }
         if (firstPal) {
+            this->gfx->setType(D1CEL_TYPE::SMK);
             this->setPal(firstPal->getFilePath());
         }
     }
