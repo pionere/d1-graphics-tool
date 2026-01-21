@@ -127,9 +127,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             dProgressWarn() << QApplication::tr("Starting %1 w %2:%3 groups: %4 colors %5 pixels %6").arg(frameDone).arg(frame.width).arg(frame.height).arg(pixels / D1PAL_COLORS).arg(wmap.size()).arg(pixels);
 
         std::map<int, int> cmap; // weight to palette-index
-        unsigned n;
+        int n, i = 0;
 #if 0
-        int i = 0;
         while (true) {
             n = (pixels + D1PAL_COLORS - 1) / D1PAL_COLORS;
             std::map<int, int>::iterator mi = wmap.begin();
