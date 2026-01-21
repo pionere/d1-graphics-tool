@@ -21,7 +21,6 @@ jobs:
         version: '5.15.2'
         arch: 'win32_msvc2019'
         cache: 'true'
-        modules: 'all'
 
     - name: Configure
       run: cmake -S. -Bbuild -A Win32
