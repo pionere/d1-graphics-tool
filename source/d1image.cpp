@@ -107,7 +107,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         std::map<int, int> cmap; // weight to palette-index
         int i = 0;
         while (true) {
-            std::map<int, int>::reverse_iterator mi = wmap.begin();
+            std::map<int, int>::iterator mi = wmap.begin();
             if (mi == wmap.end() || mi->second < n) {
                 break;
             }
@@ -134,8 +134,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         std::vector<int> lastmap;
         for ( ; i < D1PAL_COLORS; i++) {
             std::vector<int> currmap;
-            unsigned cc = 0, sum = 0;
-            while (mi != wmap.end() && c < n) {
+            int cc = 0, sum = 0;
+            while (mi != wmap.end() && cc < n) {
                 cc += mi->second;
                 sum += mi->first *  mi->second;
                 currmap.push_back(mi->first);
@@ -148,7 +148,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             int best = INT_MAX;
             int res = 0;
             for (const int ce : currmap) {
-                int diff = abs(ce- sum);
+                int diff = abs(ce - sum);
                 if (diff < best) {
                     best = diff;
                     res = ce;
@@ -189,8 +189,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         for (const std::vector<int> wline : weights) {
             std::vector<D1GfxPixel> pixelLine;
             for (int w : wline) {
-                QColor color = w == -1 ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(cmap[w]);
-                pixelLine.push_back(color);
+                D1GfxPixel pixel = w == -1 ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(cmap[w]);
+                pixelLine.push_back(pixel);
             }
             frame.pixels.push_back(std::move(pixelLine));
         }
