@@ -88,8 +88,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             }
             frame.pixels.push_back(std::move(pixelLine));
         }
-        frame.setFramePal(pal);
-        return;
+        // frame.setFramePal((D1Pal *)pal);
+        return true;
     }
 
     std::vector<PaletteColor> colors;
@@ -112,7 +112,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 } else {
                     w = colorWeight(color);
                     if (wmap.count(w) == 0) {
-                        dProgressWarn() << QApplication::tr("New color %1 w %2 at %3:%4").arg(color).arg(w).arg(x).arg(y);
+                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(c.red()).arg(c.green()).arg(c.blue()).arg(w).arg(x).arg(y);
                     }
                     wmap[w] += 1;
                 }
