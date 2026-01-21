@@ -69,12 +69,28 @@ static QColor weightColor(unsigned weight)
     return QColor(r % 256, g % 256, b % 256);
 }
 static int frameDone = 0;
+static int frameLimit = 30;
 bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
 {
     frame.width = image.width();
     frame.height = image.height();
 
     frame.pixels.clear();
+
+    if (frameDone >= frameLimit) {
+        for (int y = 0; y < frame.height; y++) {
+            std::vector<D1GfxPixel> pixelLine;
+            for (int x = 0; x < frame.width; x++, srcBits++) {
+                // QColor color = image.pixelColor(x, y);
+                QColor color = QColor::fromRgba(*srcBits);
+                // if (color == QColor(Qt::transparent)) {
+                pixelLine.push_back(D1GfxPixel::transparentPixel());
+            }
+            frame.pixels.push_back(std::move(pixelLine));
+        }
+        frame.setFramePal(pal);
+        return;
+    }
 
     std::vector<PaletteColor> colors;
     pal->getValidColors(colors);
@@ -95,6 +111,9 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                     w = -1;
                 } else {
                     w = colorWeight(color);
+                    if (wmap.count(w) == 0) {
+                        dProgressWarn() << QApplication::tr("New color %1 w %2 at %3:%4").arg(color).arg(w).arg(x).arg(y);
+                    }
                     wmap[w] += 1;
                 }
                 wLine.push_back(w);
@@ -117,11 +136,13 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             n = (pixels + D1PAL_COLORS - 1) / D1PAL_COLORS;
             std::map<int, int>::iterator mi = wmap.begin();
             if (mi == wmap.end() || mi->second < n) {
+                if (mi != wmap.end())
+                dProgressWarn() << QApplication::tr("Not enough front color w %1 refs %2 gs: %3").arg(mi->first).arg(mi->second).arg(n);
                 break;
             }
             QColor c = weightColor(mi->first);
             if (frameDone < 100)
-            dProgressWarn() << QApplication::tr("Keeping color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
+            dProgressWarn() << QApplication::tr("Keeping front color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
             pixels -= mi->second;
             framePal->setColor(i, c);
             cmap[mi->first] = i;
@@ -133,11 +154,13 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             n = (pixels + D1PAL_COLORS - 1) / D1PAL_COLORS;
             std::map<int, int>::reverse_iterator mi = wmap.rbegin();
             if (mi == wmap.rend() || mi->second < n) {
+                if (mi != wmap.rend())
+                dProgressWarn() << QApplication::tr("Not enough back color w %1 refs %2 gs: %3").arg(mi->first).arg(mi->second).arg(n);
                 break;
             }
             QColor c = weightColor(mi->first);
             if (frameDone < 100)
-            dProgressWarn() << QApplication::tr("Keeping color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
+            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
             pixels -= mi->second;
             framePal->setColor(i, c);
             cmap[mi->first] = i;
@@ -174,7 +197,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             QColor c = weightColor(res);
             framePal->setColor(i, c);
             if (frameDone < 100)
-            dProgressWarn() << QApplication::tr("Using color w %1 in %2 with %3 refs (rgb=%4:%5:%6) cc:%7").arg(res).arg(i).arg(sum).arg(c.red()).arg(c.green()).arg(c.blue()).arg(cc);
+            dProgressWarn() << QApplication::tr("Using color w %1 in %2 with %3 refs (rgb=%4:%5:%6) cc:%7 in %8").arg(res).arg(i).arg(sum).arg(c.red()).arg(c.green()).arg(c.blue()).arg(cc).arg(currmap.size());
 
             std::vector<PaletteColor> colors;
             colors.push_back(PaletteColor(c, i));
