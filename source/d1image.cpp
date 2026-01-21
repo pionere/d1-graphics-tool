@@ -130,7 +130,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             i++;
         }
         int ei = i;
-        std::map<int, int>::reverse_iterator mi = wmap.begin();
+        std::map<int, int>::iterator mi = wmap.begin();
         std::vector<int> lastmap;
         for ( ; i < D1PAL_COLORS; i++) {
             std::vector<int> currmap;
