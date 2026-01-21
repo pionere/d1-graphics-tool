@@ -1329,7 +1329,7 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
             this->groupFrameIndices.back().second = resIdx;
         }
     }
-
+    this->modified = true;
     return resIdx;
 }
 
