@@ -108,7 +108,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         for (std::map<int, int>::const_iterator mi = wmap.cbegin(); mi != wmap.cend(); mi++)
             pixels += mi->second;
         if (frameDone < 100)
-            dProgressWarn() << QApplication::tr("Starting w %1:%2 groups: %3 colors %4 pixels %5").arg(frame.width).arg(frame.height).arg(pixels / D1PAL_COLORS).arg(wmap.size()).arg(pixels);
+            dProgressWarn() << QApplication::tr("Starting %1 w %2:%3 groups: %4 colors %5 pixels %6").arg(frameDone).arg(frame.width).arg(frame.height).arg(pixels / D1PAL_COLORS).arg(wmap.size()).arg(pixels);
 
         std::map<int, int> cmap; // weight to palette-index
         unsigned n;
@@ -149,10 +149,11 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         std::vector<int> lastmap;
         for ( ; i < D1PAL_COLORS; i++) {
             std::vector<int> currmap;
-            int cc = 0, sum = 0;
+            int cc = 0;
+            uint64_t sum = 0;
             while (mi != wmap.end() && cc < n) {
                 cc += mi->second;
-                sum += mi->first *  mi->second;
+                sum += (uint64_t)mi->first *  mi->second;
                 currmap.push_back(mi->first);
                 mi++;
             }
@@ -163,7 +164,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             int best = INT_MAX;
             int res = 0;
             for (const int ce : currmap) {
-                int diff = abs(ce - sum);
+                int diff = abs(ce - (int)sum);
                 if (diff < best) {
                     best = diff;
                     res = ce;
