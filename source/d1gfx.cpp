@@ -1326,7 +1326,7 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
 {
     bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     int firstIdx, lastIdx, resIdx;
-    if (wholeGroup) {
+    if (wholeGroup /*&& multiGroup*/) {
         unsigned i = 0;
         for ( ; i < this->groupFrameIndices.size(); i++) {
             if (/*this->groupFrameIndices[i].first <= idx &&*/ this->groupFrameIndices[i].second >= idx) {
@@ -1970,6 +1970,75 @@ D1Pal *D1Gfx::getPalette() const
 void D1Gfx::setPalette(D1Pal *pal)
 {
     this->palette = pal;
+}
+
+static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
+{
+    unsigned res = 0;
+    int best = INT_MAX;
+
+    for (const PaletteColor &palColor : colors) {
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        int curr = currR * currR + currG * currG + currB * currB;
+        if (curr < best) {
+            best = curr;
+            res = palColor.index();
+        }
+    }
+
+    return res;
+}
+
+void D1Gfx::reencode(D1Pal *pal)
+{
+    int palmap[D1PAL_COLORS];
+    int uc = -1;
+    {   // find an index of an undefined color in the new palette
+        const QColor undefColor = pal->getUndefinedColor();
+        for (unsigned i = 0; i < D1PAL_COLORS; i++) {
+            QColor color = pal->getColor(i);
+            if (undefColor == color) {
+                uc = i;
+                break;
+            }
+        }
+    }
+    {   // find the best valid colors for the current palette entries
+        std::vector<PaletteColor> dynColors;
+        pal->getValidColors(dynColors);
+        const QColor undefColor = this->palette->getUndefinedColor();
+        for (unsigned i = 0; i < D1PAL_COLORS; i++) {
+            QColor color = this->palette->getColor(i);
+            if (color != undefColor) {
+                palmap[i] = getPalColor(dynColors, color);
+            } else {
+                palmap[i] = uc;
+            }
+        }
+    }
+    // change the pixels of the frames
+    for (D1GfxFrame* frame : this->frames) {
+        for (int y = 0; y < frame->getHeight(); y++) {
+            for (int x = 0; x < frame->getWidth(); x++) {
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (!pixel.isTransparent()) {
+                    quint8 color = pixel.getPaletteIndex();
+                    int ci = palmap[color];
+                    if (ci < 0) {
+                        palmap[color] = 0;
+                        dProgressWarn() << tr("Pixel with undefined color (%1) is replaced by 0.").arg(color);
+                        ci = 0;
+                    }
+                    if (color != ci) {
+                        frame->setPixel(x, y, D1GfxPixel::colorPixel(ci));
+                        this->modified = true;
+                    }
+                }
+            }
+        }
+    }
 }
 
 int D1Gfx::getGroupCount() const
