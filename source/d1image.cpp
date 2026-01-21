@@ -80,10 +80,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
     if (frameDone >= frameLimit) {
         for (int y = 0; y < frame.height; y++) {
             std::vector<D1GfxPixel> pixelLine;
-            for (int x = 0; x < frame.width; x++, srcBits++) {
-                // QColor color = image.pixelColor(x, y);
-                QColor color = QColor::fromRgba(*srcBits);
-                // if (color == QColor(Qt::transparent)) {
+            for (int x = 0; x < frame.width; x++) {
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
             }
             frame.pixels.push_back(std::move(pixelLine));
@@ -112,7 +109,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 } else {
                     w = colorWeight(color);
                     if (wmap.count(w) == 0) {
-                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(c.red()).arg(c.green()).arg(c.blue()).arg(w).arg(x).arg(y);
+                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y);
                     }
                     wmap[w] += 1;
                 }
