@@ -1769,6 +1769,29 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
         this->gfxsetView->insertImageFiles(mode, filePaths, append);
     }
 
+    std::vector<PaletteColor> colors;
+    this->pal->getValidColors(colors);
+    if (colors.empty()) {
+        D1Pal* firstPal = nullptr;
+        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+            D1GfxFrame* frame = this->gfx->getFrame(i);
+            QPointer<D1Pal> &framePal = frame->getFramePal();
+
+            // RegisterPalette
+            QString path = QString("Frame%1").arg(i + 1, 4, 10, QChar('0'));
+            framePal->setFilePath(path);
+            if (this->pals.contains(path))
+                delete this->pals[path];
+            this->pals[path] = framePal;
+            if (firstPal == nullptr) {
+                firstPal = framePal;
+            }
+        }
+        if (firstPal) {
+            this->setPal(firstPal->getFilePath());
+        }
+    }
+    
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -2682,7 +2705,7 @@ void MainWindow::on_actionReencode_triggered()
     if (!newPal->load(palFilePath)) {
         delete newPal;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file."));
-        return false;
+        return;
     }
 
     this->gfx->reencode(newPal);
