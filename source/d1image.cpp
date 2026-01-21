@@ -170,15 +170,23 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         int ei = i;
         std::map<int, int>::iterator mi = wmap.begin();
         std::vector<int> lastmap;
+        int nl = 0; 
         for ( ; i < D1PAL_COLORS; i++) {
+            nl += n;
             std::vector<int> currmap;
             int cc = 0;
             uint64_t sum = 0;
-            while (mi != wmap.end() && cc < n) {
-                cc += mi->second;
-                sum += (uint64_t)mi->first *  mi->second;
-                currmap.push_back(mi->first);
+            while (mi != wmap.end()) {
+                int cw = mi->first;
+                int nc = mi->second;
+                cc += nc;
+                sum += (uint64_t)cw *  nc;
+                currmap.push_back(cw);
                 mi++;
+                nl -= nc;
+                if (nl <= 0) {
+                    break;
+                }
             }
             if (cc == 0) {
                 break;
