@@ -1775,7 +1775,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
         D1Pal* firstPal = nullptr;
         for (int i = 0; i < this->gfx->getFrameCount(); i++) {
             D1GfxFrame* frame = this->gfx->getFrame(i);
-            QPointer<D1Pal> &framePal = frame->getFramePal();
+            D1Pal* framePal = frame->getFramePal().data();
 
             // RegisterPalette
             QString path = QString("Frame%1").arg(i + 1, 4, 10, QChar('0'));
