@@ -128,6 +128,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
 
         std::map<int, int> cmap; // weight to palette-index
         unsigned n;
+#if 0
         int i = 0;
         while (true) {
             n = (pixels + D1PAL_COLORS - 1) / D1PAL_COLORS;
@@ -164,9 +165,33 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             wmap.erase(mi->first);
             i++;
         }
-        int ei = i;
-        std::map<int, int>::iterator mi = wmap.begin();
         std::vector<int> lastmap;
+#else
+        n = (pixels + D1PAL_COLORS - 1) / D1PAL_COLORS;
+        for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); ) {
+            if (mi->second < n) {
+                mi++;
+                continue;
+            }
+            QColor c = weightColor(mi->first);
+            if (frameDone < 100)
+            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
+            pixels -= mi->second;
+            framePal->setColor(i, c);
+            cmap[mi->first] = i;
+            i++;
+            if (i == D1PAL_COLORS)
+                break;
+            n = (pixels + (D1PAL_COLORS - i) - 1) / (D1PAL_COLORS - i);
+            wmap.erase(mi);
+            mi = wmap.begin();
+        }
+        std::vector<PaletteColor> colors;
+        for (int c = 0; c < i; c++) {
+            colors.push_back(PaletteColor(framePal->getColor(c), c));
+        }
+#endif
+        std::map<int, int>::iterator mi = wmap.begin();
         int nl = 0; 
         for ( ; i < D1PAL_COLORS; i++) {
             nl += n;
@@ -203,7 +228,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             framePal->setColor(i, c);
             if (frameDone < 100)
             dProgressWarn() << QApplication::tr("Using color w %1 in %2 with %3 refs (rgb=%4:%5:%6) cc:%7 in %8").arg(res).arg(i).arg(sum).arg(c.red()).arg(c.green()).arg(c.blue()).arg(cc).arg(currmap.size());
-
+#if 0
             std::vector<PaletteColor> colors;
             colors.push_back(PaletteColor(c, i));
             if (!lastmap.empty()) {
@@ -228,6 +253,14 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                     lastmap.push_back(ce);
                 }
             }
+#else
+            colors.push_back(PaletteColor(c, i));
+
+            for (const int ce : currmap) {
+                QColor wc = weightColor(ce);
+                cmap[ce] = getPalColor(colors, wc);
+            }
+#endif
         }
 
         frame.setFramePal(framePal);
