@@ -3798,13 +3798,19 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
         return;
     }
     MainWindow *mw = &dMainWindow();
-    QAction actions[18];
+    QAction actions[19];
     QMenu contextMenu(this);
 
     QMenu frameMenu(tr("Frame"), this);
     frameMenu.setToolTipsVisible(true);
 
     int cursor = 0;
+    actions[cursor].setText(tr("Merge"));
+    actions[cursor].setToolTip(tr("Merge frames of the current graphics"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionMerge_Frame_triggered()));
+    frameMenu.addAction(&actions[cursor]);
+
+    cursor++;
     actions[cursor].setText(tr("Add Layer"));
     actions[cursor].setToolTip(tr("Add the content of an image to the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddTo_Frame_triggered()));
