@@ -3,6 +3,7 @@
 #include <climits>
 #include <vector>
 
+#include <QApplication>
 #include <QColor>
 #include <QImage>
 #include <QList>
@@ -42,10 +43,10 @@ static int colorWeight(const QColor color)
         }
     } else {
         if (g >= b) {
-            return (r * 256 * 256 + g * 256 + b) * 8 + 2;
+            return (r * 256 * 256 + g * 256 + b) * 8 + 3;
         } else {
             if (r >= b) {
-                return (r * 256 * 256 + b * 256 + g) * 8 + 3;
+                return (r * 256 * 256 + b * 256 + g) * 8 + 2;
             } else {
                 return (b * 256 * 256 + r * 256 + g) * 8 + 0;
             }
@@ -60,8 +61,8 @@ static QColor weightColor(unsigned weight)
     switch (weight % 8) {
     case 0: r = c / 256; g = c; b = c / (256 * 256); break;
     case 1: r = c; g = c / 256; b = c / (256 * 256); break;
-    case 2: r = c / (256 * 256); g = c / 256; b = c; break;
-    case 3: r = c / (256 * 256); g = c; b = c / 256; break;
+    case 2: r = c / (256 * 256); g = c; b = c / 256; break;
+    case 3: r = c / (256 * 256); g = c / 256; b = c; break;
     case 4: r = c; g = c / (256 * 256); b = c / 256; break;
     case 5: r = c / 256; g = c / (256 * 256); b = c; break;
     }
@@ -167,7 +168,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             QColor c = weightColor(res);
             pal->setColor(i, c);
             if (!frameDone)
-            dProgress() << QApplication::tr("Using color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(res).arg(i).arg(sum).arg(c.red()).arg(c.green()).arg(c.blue()).arg(cc);
+            dProgress() << QApplication::tr("Using color w %1 in %2 with %3 refs (rgb=%4:%5:%6) cc:%7").arg(res).arg(i).arg(sum).arg(c.red()).arg(c.green()).arg(c.blue()).arg(cc);
 
             std::vector<PaletteColor> colors;
             colors.push_back(PaletteColor(c, i));
