@@ -1727,6 +1727,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     D1Pal *pal = fix.pal;
     QColor undefColor = pal->getUndefinedColor();
     QList<quint8> ignored;
+    bool result = false;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
         QColor col = pal->getColor(i);
         if (col == undefColor) {
@@ -1737,6 +1738,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         smkColor[0] = col.red();
         smkColor[1] = col.green();
         smkColor[2] = col.blue();
+        bool change = false;
         for (int n = 0; n < 3; n++) {
             unsigned char cv = smkColor[n];
             const unsigned char *p = &palmap[0];
@@ -1760,14 +1762,32 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                         if (n == 2) {
                             col.setBlue(*p);
                         }
-                        pal->setColor(i, col);
-                        if (fix.colors.isEmpty() || fix.colors.back() != i) {
-                            fix.colors.push_back(i);
-                        }
+                        change = true;
                     }
                     break;
                 }
             }
+        }
+        if (change) {
+            // fix.colors.push_back(i);
+            // find possible replacement for the modified color
+            std::vector<PaletteColor> colors;
+            pal->getValidColors(colors);
+            for (const PaletteColor pc : colors) {
+                if (col.red() == pc.red() && col.green() == pc.green() && col.blue() == pc.blue() && pc.index() != i) {
+                    QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+                    replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), D1GfxPixel::colorPixel(pc.index())));
+                    RemapParam params;
+                    params.frames = std::pair<int, int>(fix.frameFrom, fix.frameTo);
+                    fix.gfx->replacePixels(replacements, params, verbose);
+
+                    col = undefColor;
+                    break;
+                }
+            }
+            pal->setColor(i, col);
+
+            result = true;
         }
     }
     QString ignoredColors;
@@ -1793,15 +1813,15 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         msg = addDetails(msg, verbose, fix);
         dProgressWarn() << msg;
     }
-    if (fix.colors.isEmpty()) {
+    // if (fix.colors.isEmpty()) {
+    if (!result) {
         QString msg = QApplication::tr("The palette");
         msg = addDetails(msg, verbose, fix);
         msg.chop(1);
         msg.append(QApplication::tr(" is SMK compliant"));
         dProgress() << msg;
-        return false;
     }
-    return true;
+    return result;
 }
 
 void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix> &frameColorMods)
@@ -1865,7 +1885,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                                     if (cc.index() == pc.index()) {
                                         iden++;
                                     } else {
-                                        replacements.push(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(cc.index()), D1GfxPixel::colorPixel(pc.index())));
+                                        replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(cc.index()), D1GfxPixel::colorPixel(pc.index())));
                                     }
                                     break;
                                 }
@@ -1897,7 +1917,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                                     if (cc.index() == pc.index()) {
                                         iden++;
                                     } else {
-                                        replacements.push(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(pc.index()), D1GfxPixel::colorPixel(cc.index())));
+                                        replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(pc.index()), D1GfxPixel::colorPixel(cc.index())));
                                     }
                                     break;
                                 }
