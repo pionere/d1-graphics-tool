@@ -1936,8 +1936,10 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                                 params.frames = std::pair<int, int>(n, i);
                                 cf.gfx->replacePixels(replacements, params, verbose);
                             }
-                            QPointer<D1Pal> &pp = cf.gfx->getFrame(n)->getFramePal();
-                            pp.clear();
+                            // QPointer<D1Pal> &pp = cf.gfx->getFrame(n)->getFramePal();
+                            // pp.clear();
+                            cf.gfx->getFrame(n)->setFramePal(cp);
+                            fp.clear();
                             cf.gfx->setModified();
                             dProgress() << QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);
                         }
