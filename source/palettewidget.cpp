@@ -763,7 +763,8 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
     for (const QString &option : options) {
         if (!MainWindow::isResourcePath(option))
             continue;
-        QString name = option.replace(QString(":/"), QString("_"));
+        QString name = option;
+        name.replace(":/", "_");
         pcb->addItem(name, option);
         if (selectedOption == option) {
             pcb->setCurrentIndex(idx);
