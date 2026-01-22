@@ -1304,6 +1304,9 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     D1Pal *newPal = new D1Pal();
     newPal->load(D1Pal::DEFAULT_PATH);
     result->pals[D1Pal::DEFAULT_PATH] = newPal;
+    D1Pal *emptyPal = new D1Pal();
+    emptyPal->load(D1Pal::EMPTY_PATH);
+    result->pals[D1Pal::EMPTY_PATH] = emptyPal;
     result->pal = newPal;
 
     // Loading default null.trn

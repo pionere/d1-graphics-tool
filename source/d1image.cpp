@@ -10,7 +10,7 @@
 
 #include "progressdialog.h"
 
-static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
+static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, QColor color)
 {
     unsigned res = 0;
     int best = INT_MAX;
@@ -26,9 +26,9 @@ static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
         }
     }
 
-    return res;
+    return std::pair<quint8, int>(res, best);
 }
-
+#if 0
 static int colorWeight(const QColor color)
 {
     int r = color.red(), g = color.green(), b = color.blue();
@@ -68,6 +68,20 @@ static QColor weightColor(unsigned weight)
     }
     return QColor(r % 256, g % 256, b % 256);
 }
+#else
+static int colorWeight(const QColor color)
+{
+    int r = color.red(), g = color.green(), b = color.blue();
+    return (r * 256 * 256 + g * 256 + b);
+}
+static QColor weightColor(unsigned weight)
+{
+    unsigned c = weight;
+    unsigned r, g, b;
+    r = c / (256 * 256); g = c / 256; b = c;
+    return QColor(r % 256, g % 256, b % 256);
+}
+#endif
 static int frameDone = 0;
 static int frameLimit = 30;
 bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
@@ -165,31 +179,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             i++;
         }
         std::vector<int> lastmap;
-#else
-        n = (pixels + D1PAL_COLORS - 1) / D1PAL_COLORS;
-        for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); ) {
-            if (mi->second < n) {
-                mi++;
-                continue;
-            }
-            QColor c = weightColor(mi->first);
-            if (frameDone < 100)
-            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
-            pixels -= mi->second;
-            framePal->setColor(i, c);
-            cmap[mi->first] = i;
-            i++;
-            if (i == D1PAL_COLORS)
-                break;
-            n = (pixels + (D1PAL_COLORS - i) - 1) / (D1PAL_COLORS - i);
-            wmap.erase(mi);
-            mi = wmap.begin();
-        }
-        std::vector<PaletteColor> colors;
-        for (int c = 0; c < i; c++) {
-            colors.push_back(PaletteColor(framePal->getColor(c), c));
-        }
-#endif
+
         std::map<int, int>::iterator mi = wmap.begin();
         int nl = 0; 
         for ( ; i < D1PAL_COLORS; i++) {
@@ -227,7 +217,6 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             framePal->setColor(i, c);
             if (frameDone < 100)
             dProgressWarn() << QApplication::tr("Using color w %1 in %2 with %3 refs (rgb=%4:%5:%6) cc:%7 in %8").arg(res).arg(i).arg(sum).arg(c.red()).arg(c.green()).arg(c.blue()).arg(cc).arg(currmap.size());
-#if 0
             std::vector<PaletteColor> colors;
             colors.push_back(PaletteColor(c, i));
             if (!lastmap.empty()) {
@@ -252,16 +241,58 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                     lastmap.push_back(ce);
                 }
             }
+        }
 #else
-            colors.push_back(PaletteColor(c, i));
-
-            for (const int ce : currmap) {
-                QColor wc = weightColor(ce);
-                cmap[ce] = getPalColor(colors, wc);
+        n = (pixels + D1PAL_COLORS - 1) / D1PAL_COLORS;
+        for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); ) {
+            if (mi->second < n) {
+                mi++;
+                continue;
             }
-#endif
+            QColor c = weightColor(mi->first);
+            if (frameDone < 100)
+            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
+            pixels -= mi->second;
+            framePal->setColor(i, c);
+            cmap[mi->first] = i;
+            wmap.erase(mi);
+            i++;
+            if (i == D1PAL_COLORS)
+                break;
+            n = (pixels + (D1PAL_COLORS - i) - 1) / (D1PAL_COLORS - i);
+            mi = wmap.begin();
+        }
+        std::vector<PaletteColor> colors;
+        for (int c = 0; c < i; c++) {
+            colors.push_back(PaletteColor(framePal->getColor(c), c));
         }
 
+        for ( ; i < D1PAL_COLORS; i++) {
+            uint64_t worst = 0;
+            int c = -1;
+            for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
+                QColor wc = weightColor(mi->first);
+                std::pair<quint8, int> pc = getPalColor(colors, wc);
+                uint64_t curr = (uint64_t)mi->second * pc.second; 
+                if (curr > worst || c < 0) {
+                    c = mi->first;
+                    worst = curr;
+                }
+            }
+            if (c < 0) {
+                break;
+            }
+            colors.push_back(PaletteColor(weightColor(c), i));
+            cmap[c] = i;
+            wmap.erase(c);
+        }
+
+        for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
+            QColor wc = weightColor(mi->first);
+            std::pair<quint8, int> pc = getPalColor(colors, wc);
+            cmap[mi->first] = pc.first;
+        }
+#endif
         frame.setFramePal(framePal);
 
         for (const std::vector<int> wline : weights) {
