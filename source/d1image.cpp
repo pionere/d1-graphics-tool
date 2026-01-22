@@ -92,13 +92,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
     frame.pixels.clear();
 
     if (frameDone >= frameLimit) {
-        for (int y = 0; y < frame.height; y++) {
-            std::vector<D1GfxPixel> pixelLine;
-            for (int x = 0; x < frame.width; x++) {
-                pixelLine.push_back(D1GfxPixel::transparentPixel());
-            }
-            frame.pixels.push_back(std::move(pixelLine));
-        }
+        frame.width = 0;
+        frame.height = 0;
         // frame.setFramePal((D1Pal *)pal);
         return true;
     }

@@ -44,7 +44,7 @@ public:
 private:
     D1GfxPixel() = default;
 
-    bool transparent = false;
+    quint8 transparent = 0;
     quint8 paletteIndex = 0;
 };
 

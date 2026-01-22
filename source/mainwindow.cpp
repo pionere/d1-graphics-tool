@@ -3713,6 +3713,7 @@ void MainWindow::on_actionRemap_Colors_triggered()
 
 void MainWindow::on_actionSmack_Colors_triggered()
 {
+#if 0
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     QList<D1SmkColorFix> frameColorMods;
@@ -3767,6 +3768,13 @@ void MainWindow::on_actionSmack_Colors_triggered()
 
     // Clear loading message from status bar
     ProgressDialog::done();
+#else
+    std::function<void()> func = [this]() {
+        QList<D1SmkColorFix> frameColorMods;
+        D1Smk::fixColors(this->gfxset, this->gfx, this->pal, frameColorMods);
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 1, PAF_UPDATE_WINDOW, std::move(func));
+#endif
 }
 
 void MainWindow::on_actionGenTrns_Colors_triggered()
