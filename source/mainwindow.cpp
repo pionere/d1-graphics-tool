@@ -3773,7 +3773,7 @@ void MainWindow::on_actionSmack_Colors_triggered()
         QList<D1SmkColorFix> frameColorMods;
         D1Smk::fixColors(this->gfxset, this->gfx, this->pal, frameColorMods);
     };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 1, PAF_UPDATE_WINDOW, std::move(func));
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 3, PAF_UPDATE_WINDOW, std::move(func));
 #endif
 }
 

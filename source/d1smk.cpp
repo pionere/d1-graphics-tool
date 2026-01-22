@@ -1775,7 +1775,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             pal->getValidColors(colors);
             for (const PaletteColor pc : colors) {
                 if (col.red() == pc.red() && col.green() == pc.green() && col.blue() == pc.blue() && pc.index() != i) {
-                    dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%1..%2)").arg(pc.index()).arg(i).arg(fix.frameFrom).arg(fix.frameTo);
+                    dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%3..%4)").arg(pc.index()).arg(i).arg(fix.frameFrom).arg(fix.frameTo);
                     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), D1GfxPixel::colorPixel(pc.index())));
                     RemapParam params;
@@ -1866,6 +1866,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
         // eliminate matching palettes
         D1Pal *pal = nullptr;
         for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
+            if (ProgressDialog::wasCanceled()) {
+                break;
+            }
             QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
             if (!fp.isNull()) {
                 D1Pal *cp = fp.data();
@@ -1909,7 +1912,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                             dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
                             cp = pal;
                         }
-                    } else {
+                    /*} else {
                         // try to use the current palette instead of the previous one
                         unsigned iden = 0;
                         QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
@@ -1941,7 +1944,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                             cf.gfx->getFrame(n)->setFramePal(cp);
                             fp.clear();
                             cf.gfx->setModified();
-                            dProgress() << QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);
+                            dProgress() << QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);*/
                         }
                     }
 #else
