@@ -268,23 +268,56 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         }
 
         for ( ; i < D1PAL_COLORS; i++) {
+#if 0
             uint64_t worst = 0;
-            int c = -1;
+            int res = -1;
             for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
                 QColor wc = weightColor(mi->first);
                 std::pair<quint8, int> pc = getPalColor(colors, wc);
                 uint64_t curr = (uint64_t)mi->second * pc.second; 
-                if (curr > worst || c < 0) {
-                    c = mi->first;
+                if (curr > worst || res < 0) {
+                    res = mi->first;
                     worst = curr;
                 }
             }
-            if (c < 0) {
+            if (res < 0) {
                 break;
             }
-            colors.push_back(PaletteColor(weightColor(c), i));
-            cmap[c] = i;
-            wmap.erase(c);
+#else
+            uint64_t r = 0, g = 0, b = 0; uint64_t tw = 0;
+            for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
+                QColor wc = weightColor(mi->first);
+                std::pair<quint8, int> pc = getPalColor(colors, wc);
+                uint64_t cw = (uint64_t)mi->second * pc.second;
+                r += cw * wc.red();
+                g += cw * wc.green();
+                b += cw * wc.blue();
+                num += cw;
+            }
+            if (tw == 0) {
+                break;
+            }
+
+            QColor color = QColor(r / tw, g / tw, b / tw);
+
+            unsigned res = 0;
+            int best = INT_MAX;
+
+            for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
+                QColor palColor = weightColor(mi->first);
+                int currR = color.red() - palColor.red();
+                int currG = color.green() - palColor.green();
+                int currB = color.blue() - palColor.blue();
+                int curr = currR * currR + currG * currG + currB * currB;
+                if (curr < best) {
+                    best = curr;
+                    res = mi->first;
+                }
+            }
+#endif
+            colors.push_back(PaletteColor(weightColor(res), i));
+            cmap[res] = i;
+            wmap.erase(res);
         }
 
         for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
@@ -314,7 +347,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 if (color.alpha() < COLOR_ALPHA_LIMIT) {
                     pixelLine.push_back(D1GfxPixel::transparentPixel());
                 } else {
-                    pixelLine.push_back(D1GfxPixel::colorPixel(getPalColor(colors, color)));
+                    pixelLine.push_back(D1GfxPixel::colorPixel(getPalColor(colors, color).first));
                 }
             }
             frame.pixels.push_back(std::move(pixelLine));
@@ -356,7 +389,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QString &pixels, const D1Pal *p
                 bool valid;
                 quint8 color = pixel.toInt(&valid);
                 if (!valid) {
-                    color = getPalColor(colors, QColor(pixel.right(7)));
+                    color = getPalColor(colors, QColor(pixel.right(7))).first;
                 }
                 pixelLine.push_back(D1GfxPixel::colorPixel(color));
             }
