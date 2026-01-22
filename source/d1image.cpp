@@ -83,7 +83,7 @@ static QColor weightColor(unsigned weight)
 }
 #endif
 static int frameDone = 0;
-static int frameLimit = 30;
+static int frameLimit = 100;
 bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
 {
     frame.width = image.width();
@@ -315,14 +315,24 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 }
             }
 #endif
-            colors.push_back(PaletteColor(weightColor(res), i));
+            QColor c = weightColor(res);
+            if (frameDone < 100)
+            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(res).arg(i).arg(wmap[res]).arg(c.red()).arg(c.green()).arg(c.blue());
+            colors.push_back(PaletteColor(c, i));
             cmap[res] = i;
             wmap.erase(res);
         }
 
+        for ( ; i < D1PAL_COLORS; i++) {
+            framePal->setColor(i, framePal->getUndefinedColor());
+        }
         for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
             QColor wc = weightColor(mi->first);
             std::pair<quint8, int> pc = getPalColor(colors, wc);
+            if (frameDone < 100) {
+                QColor c = framePal->getColor(pc.first);
+                dProgressWarn() << QApplication::tr("Replacing color w %1 from %2 with %3 refs (rgb=%4:%5:%6 -> %7:%8:%9)").arg(mi->first).arg(pc.first).arg(mi->second).arg(wc.red()).arg(wc.green()).arg(wc.blue()).arg(c.red()).arg(c.green()).arg(c.blue());
+            }
             cmap[mi->first] = pc.first;
         }
 #endif

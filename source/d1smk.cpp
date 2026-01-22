@@ -1847,6 +1847,79 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
             if (!fp.isNull()) {
                 D1Pal *cp = fp.data();
                 if (pal != nullptr) {
+#if 1
+                    std::vector<PaletteColor> currColors;
+                    cp->getValidColors(currColors);
+
+                    std::vector<PaletteColor> prevColors;
+                    pal->getValidColors(prevColors);
+
+                    if (prevColors.size() >= currColors.size()) {
+                        // try to use the previous palette
+                        unsigned iden = 0;
+                        QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+
+                        for (const PaletteColor cc : currColors) {
+                            for (const PaletteColor pc : prevColors) {
+                                if (cc.red() == pc.red() && cc.green() == pc.green() && cc.blue() == pc.blue()) {
+                                    if (cc.index() == pc.index()) {
+                                        iden++;
+                                    } else {
+                                        replacements.push(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(cc.index()), D1GfxPixel::colorPixel(pc.index())));
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if (iden + replacements.size() == currColors.size()) {
+                            if (!replacements.isEmpty()) {
+                                int n = i;
+                                while (++n < cf.gfx->getFrameCount() && cf.gfx->getFrame(n)->getFramePal().isNull()) {
+                                    ;
+                                }
+                                RemapParam params;
+                                params.frames = std::pair<int, int>(i, n);
+                                cf.gfx->replacePixels(replacements, params, verbose);
+                            }
+                            fp.clear();
+                            cf.gfx->setModified();
+                            dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
+                            cp = pal;
+                        }
+                    } else {
+                        // try to use the current palette instead of the previous one
+                        unsigned iden = 0;
+                        QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+
+                        for (const PaletteColor cc : prevColors) {
+                            for (const PaletteColor pc : currColors) {
+                                if (cc.red() == pc.red() && cc.green() == pc.green() && cc.blue() == pc.blue()) {
+                                    if (cc.index() == pc.index()) {
+                                        iden++;
+                                    } else {
+                                        replacements.push(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(pc.index()), D1GfxPixel::colorPixel(cc.index())));
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if (iden + replacements.size() == prevColors.size()) {
+                            int n = i;
+                            while (cf.gfx->getFrame(--n)->getFramePal().isNull()) {
+                                ;
+                            }
+                            if (!replacements.isEmpty()) {
+                                RemapParam params;
+                                params.frames = std::pair<int, int>(n, i);
+                                cf.gfx->replacePixels(replacements, params, verbose);
+                            }
+                            QPointer<D1Pal> &pp = cf.gfx->getFrame(n)->getFramePal();
+                            pp.clear();
+                            cf.gfx->setModified();
+                            dProgress() << QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);
+                        }
+                    }
+#else
                     int n = 0;
                     for ( ; n < D1PAL_COLORS; n++) {
                         if (pal->getColor(n) != cp->getColor(n)) {
@@ -1859,6 +1932,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                         dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
                         cp = pal;
                     }
+#endif
                 }
                 pal = cp;
             }
