@@ -1944,8 +1944,8 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                             cf.gfx->getFrame(n)->setFramePal(cp);
                             fp.clear();
                             cf.gfx->setModified();
-                            dProgress() << QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);*/
-                        }
+                            dProgress() << QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);
+                        }*/
                     }
 #else
                     int n = 0;
