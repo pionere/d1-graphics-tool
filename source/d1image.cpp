@@ -292,7 +292,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 r += cw * wc.red();
                 g += cw * wc.green();
                 b += cw * wc.blue();
-                num += cw;
+                tw += cw;
             }
             if (tw == 0) {
                 break;
