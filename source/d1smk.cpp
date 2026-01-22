@@ -1904,7 +1904,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                                     ;
                                 }
                                 RemapParam params;
-                                params.frames = std::pair<int, int>(i + 1, n + 1);
+                                params.frames = std::pair<int, int>(i + 1, n);
                                 cf.gfx->replacePixels(replacements, params, 1); // verbose);
                             }
                             fp.clear();
@@ -1936,7 +1936,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                             }
                             if (!replacements.isEmpty()) {
                                 RemapParam params;
-                                params.frames = std::pair<int, int>(n + 1, i + 1);
+                                params.frames = std::pair<int, int>(n + 1, i);
                                 cf.gfx->replacePixels(replacements, params, 1); // verbose);
                             }
                             // QPointer<D1Pal> &pp = cf.gfx->getFrame(n)->getFramePal();
