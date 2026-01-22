@@ -82,22 +82,22 @@ static QColor weightColor(unsigned weight)
     return QColor(r % 256, g % 256, b % 256);
 }
 #endif
-static int frameDone = 0;
-static int frameLimit = 27;
+//static int frameDone = 0;
+//static int frameLimit = 27;
 bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
 {
     frame.width = image.width();
     frame.height = image.height();
 
     frame.pixels.clear();
-
+/*
     if (frameDone >= frameLimit) {
         frame.width = 0;
         frame.height = 0;
         // frame.setFramePal((D1Pal *)pal);
         return true;
     }
-
+*/
     std::vector<PaletteColor> colors;
     pal->getValidColors(colors);
 
@@ -130,8 +130,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         unsigned pixels = 0;
         for (std::map<int, int>::const_iterator mi = wmap.cbegin(); mi != wmap.cend(); mi++)
             pixels += mi->second;
-        if (frameDone < 100)
-            dProgressWarn() << QApplication::tr("Starting %1 w %2:%3 groups: %4 colors %5 pixels %6").arg(frameDone).arg(frame.width).arg(frame.height).arg(pixels / D1PAL_COLORS).arg(wmap.size()).arg(pixels);
+//        if (frameDone < 100)
+//            dProgressWarn() << QApplication::tr("Starting %1 w %2:%3 groups: %4 colors %5 pixels %6").arg(frameDone).arg(frame.width).arg(frame.height).arg(pixels / D1PAL_COLORS).arg(wmap.size()).arg(pixels);
 
         std::map<int, int> cmap; // weight to palette-index
         int n, i = 0;
@@ -243,8 +243,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 continue;
             }
             QColor c = weightColor(mi->first);
-            if (frameDone < 100)
-            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
+//            if (frameDone < 100)
+//            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
             pixels -= mi->second;
             // framePal->setColor(i, c);
             colors.push_back(PaletteColor(c, i));
@@ -306,8 +306,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             }
 #endif
             QColor c = weightColor(res);
-            if (frameDone < 100)
-            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(res).arg(i).arg(wmap[res]).arg(c.red()).arg(c.green()).arg(c.blue());
+//            if (frameDone < 100)
+//            dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(res).arg(i).arg(wmap[res]).arg(c.red()).arg(c.green()).arg(c.blue());
             colors.push_back(PaletteColor(c, i));
             cmap[res] = i;
             wmap.erase(res);
@@ -321,10 +321,10 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
             QColor wc = weightColor(mi->first);
             std::pair<quint8, int> pc = getPalColor(colors, wc);
-            if (frameDone < 100) {
-                QColor c = framePal->getColor(pc.first);
-                dProgressWarn() << QApplication::tr("Replacing color w %1 from %2 with %3 refs (rgb=%4:%5:%6 -> %7:%8:%9)").arg(mi->first).arg(pc.first).arg(mi->second).arg(wc.red()).arg(wc.green()).arg(wc.blue()).arg(c.red()).arg(c.green()).arg(c.blue());
-            }
+//            if (frameDone < 100) {
+//                QColor c = framePal->getColor(pc.first);
+//                dProgressWarn() << QApplication::tr("Replacing color w %1 from %2 with %3 refs (rgb=%4:%5:%6 -> %7:%8:%9)").arg(mi->first).arg(pc.first).arg(mi->second).arg(wc.red()).arg(wc.green()).arg(wc.blue()).arg(c.red()).arg(c.green()).arg(c.blue());
+//            }
             cmap[mi->first] = pc.first;
         }
 #endif
@@ -355,7 +355,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             frame.pixels.push_back(std::move(pixelLine));
         }
     }
-    frameDone++;
+//    frameDone++;
     return true;
 }
 
