@@ -83,7 +83,7 @@ static QColor weightColor(unsigned weight)
 }
 #endif
 static int frameDone = 0;
-static int frameLimit = 100;
+static int frameLimit = 27;
 bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
 {
     frame.width = image.width();
@@ -132,8 +132,6 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             weights.push_back(std::move(wLine));
         }
 
-        D1Pal *framePal = new D1Pal();
-        // RegisterPalette
         unsigned pixels = 0;
         for (std::map<int, int>::const_iterator mi = wmap.cbegin(); mi != wmap.cend(); mi++)
             pixels += mi->second;
@@ -253,7 +251,8 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             if (frameDone < 100)
             dProgressWarn() << QApplication::tr("Keeping back color w %1 in %2 with %3 refs (rgb=%4:%5:%6").arg(mi->first).arg(i).arg(mi->second).arg(c.red()).arg(c.green()).arg(c.blue());
             pixels -= mi->second;
-            framePal->setColor(i, c);
+            // framePal->setColor(i, c);
+            colors.push_back(PaletteColor(c, i));
             cmap[mi->first] = i;
             wmap.erase(mi);
             i++;
@@ -261,10 +260,6 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
                 break;
             n = (pixels + (D1PAL_COLORS - i) - 1) / (D1PAL_COLORS - i);
             mi = wmap.begin();
-        }
-        std::vector<PaletteColor> colors;
-        for (int c = 0; c < i; c++) {
-            colors.push_back(PaletteColor(framePal->getColor(c), c));
         }
 
         for ( ; i < D1PAL_COLORS; i++) {
@@ -322,9 +317,11 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             cmap[res] = i;
             wmap.erase(res);
         }
-
-        for ( ; i < D1PAL_COLORS; i++) {
-            framePal->setColor(i, framePal->getUndefinedColor());
+        // RegisterPalette
+        D1Pal *framePal = new D1Pal();
+        framePal->load(D1Pal::EMPTY_PATH);
+        for (const PaletteColor pc : colors) {
+            framePal->setColor(pc.index(), QColor(pc.red(), pc.green(), pc.blue()));
         }
         for (std::map<int, int>::iterator mi = wmap.begin(); mi != wmap.end(); mi++) {
             QColor wc = weightColor(mi->first);
