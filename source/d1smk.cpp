@@ -1775,6 +1775,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             pal->getValidColors(colors);
             for (const PaletteColor pc : colors) {
                 if (col.red() == pc.red() && col.green() == pc.green() && col.blue() == pc.blue() && pc.index() != i) {
+                    dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%1..%2)").arg(pc.index()).arg(i).arg(fix.frameFrom).arg(fix.frameTo);
                     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), D1GfxPixel::colorPixel(pc.index())));
                     RemapParam params;
@@ -1836,6 +1837,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
         gfxs.append(g);
     }
 
+    ProgressDialog::incBar(QApplication::tr("Fixing graphics..."), gfxs.count() + 1);
     for (D1Gfx *gfx : gfxs) {
         // adjust colors of the palette(s)
         D1SmkColorFix cf;
@@ -1843,6 +1845,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
         cf.gfx = gfx;
         cf.frameFrom = 0;
         int i = 0;
+        ProgressDialog::incBar(QApplication::tr("Fixing frame..."), cf.gfx->getFrameCount() + 1);
         for ( ; i < cf.gfx->getFrameCount(); i++) {
             QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
             if (!fp.isNull()) {
@@ -1956,6 +1959,12 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                 }
                 pal = cp;
             }
+            if (!ProgressDialog::incValue()) {
+                break;
+            }
         }
+        ProgressDialog::decBar();
     }
+
+    ProgressDialog::decBar();
 }

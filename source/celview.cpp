@@ -1020,6 +1020,17 @@ void CelView::setFrameIndex(int frameIndex)
     this->currentFrameIndex = frameIndex;
     this->updateGroupIndex();
 
+    const bool switchPal = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    if (switchPal && frameIndex >= 0) {
+        int palIndex = frameIndex;
+        while (palIndex >= 0 && this->gfx->getFrame(palIndex)->getFramePal().isNull()) {
+            palIndex--;
+        }
+        if (palIndex >= 0) {
+            dMainWindow().updatePalette(this->gfx->getFrame(palIndex)->getFramePal().data());
+        }
+    }
+    
     this->displayFrame();
 }
 
