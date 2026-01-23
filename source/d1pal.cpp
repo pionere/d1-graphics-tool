@@ -533,17 +533,23 @@ bool D1Pal::genColors(const QImage &image)
                     umap[pc.first].second += dist;
                 }
                 // eliminate unused new colors
-                for (auto it = new_colors.begin(); it != new_colors.end(); ) {
-                    if (umap.count(it->index()) != 0) {
-                        it++;
-                        continue;
-                    } else {
-                        freeIdxs.insert(it->index());
-                        it = new_colors.erase(it);
+                {
+                    auto ni = next_colors.begin() + curr_colors.size();
+                    for (auto it = new_colors.begin(); it != new_colors.end(); ) {
+                        if (umap.count(it->index()) != 0) {
+                            it++;
+                            ni++;
+                            continue;
+                        }
+                        else {
+                            freeIdxs.insert(it->index());
+                            it = new_colors.erase(it);
+                            ni = next_colors.erase(ni);
+                        }
                     }
                 }
                 // add new color to replace an eliminated one
-                if (!freeIdxs.isEmpty()) {
+                while (!freeIdxs.isEmpty()) {
                     // select the largest group
                     int res = 0;
                     uint64_t best = 0;
@@ -553,22 +559,39 @@ bool D1Pal::genColors(const QImage &image)
                             res = mi->first;
                         }
                     }
-                    if (best != 0) {
-                        umap[res].second = 0;
-                        // select the largest distance
-                        best = 0;
-                        for (const std::pair<int, uint64_t>& user : umap[res].first) {
-                            if (user.second > best) {
-                                best = user.second;
-                                res = user.first;
-                            }
-                        }
+                    if (best == 0) {
+                        break;
+                    }
+                    change = true;
 
+                    // select the largest distance
+                    const std::vector<std::pair<int, uint64_t>> users = umap[res].first;
+                    best = 0;
+                    for (const std::pair<int, uint64_t>& user : users) {
+                        if (user.second > best) {
+                            best = user.second;
+                            res = user.first;
+                        }
+                    }
+                    {   // add the new color
                         QColor color = weightColor(res);
                         auto fi = freeIdxs.begin();
-                        new_colors.push_back(PaletteColor(color, *fi));
+                        const PaletteColor pc = PaletteColor(color, *fi);
+                        new_colors.push_back(pc);
+                        next_colors.push_back(pc);
                         freeIdxs.erase(fi);
-                        continue;
+                    }
+
+                    // split the users
+                    umap[res].second = 0;
+                    umap[res].first.clear();
+                    for (const std::pair<int, uint64_t> &user : users) {
+                        auto it = wmap.find(user.first);
+                        QColor color = weightColor(it->first);
+                        auto pc = getPalColor(next_colors, color);
+                        uint64_t dist = (uint64_t)it->second * pc.second;
+                        umap[pc.first].first.push_back(std::pair<int, uint64_t>(it->first, dist));
+                        umap[pc.first].second += dist;
                     }
                 }
 

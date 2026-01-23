@@ -619,17 +619,24 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         return;
     }
     ProgressDialog::incBar(QApplication::tr("Inserting frames..."), reader.imageCount() + 1);
+    QPair<int, QString> progress;
+    progress.first = -1;
+    int first = index;
     while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;
         }
+        progress.second = QString(QApplication::tr("Processing frame %1.")).arg(index + 1);
+        dProgress() << progress;
         this->gfx->insertFrame(index, image);
         index++;
         if (!ProgressDialog::incValue()) {
             break;
         }
     }
+    progress.second = QApplication::tr("Added %n frame(s).", "", index - first);
+    dProgress() << progress;
     ProgressDialog::decBar();
 }
 
