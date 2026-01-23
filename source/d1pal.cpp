@@ -460,11 +460,14 @@ bool D1Pal::genColors(const QImage &image)
 
     // prepare the new colors
     std::vector<PaletteColor> new_colors;
-    for (auto it = colors.cbegin(), auto fi = freeIdxs.cbegin(); it != colors.cend(); it++) {
-        if (it->marbles != 0) {
-            QColor color = valueColor(it->colorCode);
-            new_colors.push_back(PaletteColor(color, *fi));
-            fi++;
+    {
+        auto fi = freeIdxs.cbegin();
+        for (auto it = colors.cbegin(); it != colors.cend(); it++) {
+            if (it->marbles != 0) {
+                QColor color = valueColor(it->colorCode);
+                new_colors.push_back(PaletteColor(color, *fi));
+                fi++;
+            }
         }
     }
 
@@ -500,7 +503,8 @@ bool D1Pal::genColors(const QImage &image)
 
         if (wmap.size() < (unsigned)new_colors.count()) {
             new_colors.clear();
-            for (auto it = wmap.cbegin(), auto fi = freeIdxs.cbegin(); it != wmap.cend(); it++, fi++) {
+            auto fi = freeIdxs.cbegin();
+            for (auto it = wmap.cbegin(); it != wmap.cend(); it++, fi++) {
                 QColor color = weightColor(it->first);
                 new_colors.push_back(PaletteColor(color, *fi));
             }
