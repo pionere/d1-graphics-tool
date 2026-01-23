@@ -518,11 +518,12 @@ bool D1Pal::genColors(const QImage &image)
         } else {
             freeIdxs.clear();
 
+            std::vector<PaletteColor> next_colors = curr_colors;
+            next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
+
             while (true) {
                 bool change = false;
                 // check the next color mapping
-                std::vector<PaletteColor> next_colors = curr_colors;
-                next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
 
                 std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>> umap;
                 for (auto it = wmap.cbegin(); it != wmap.cend(); it++) {
@@ -533,21 +534,16 @@ bool D1Pal::genColors(const QImage &image)
                     umap[pc.first].second += dist;
                 }
                 // eliminate unused new colors
-                {
-                    auto ni = next_colors.begin() + curr_colors.size();
-                    for (auto it = new_colors.begin(); it != new_colors.end(); ) {
-                        if (umap.count(it->index()) != 0) {
-                            it++;
-                            ni++;
-                            continue;
-                        }
-                        else {
-                            freeIdxs.insert(it->index());
-                            it = new_colors.erase(it);
-                            ni = next_colors.erase(ni);
-                        }
+                for (auto it = next_colors.begin() + curr_colors.size(); it != next_colors.end(); ) {
+                    if (umap.count(it->index()) != 0) {
+                        it++;
+                        continue;
+                    } else {
+                        freeIdxs.insert(it->index());
+                        it = next_colors.erase(it);
                     }
                 }
+#if 0
                 // add new color to replace an eliminated ones
                 while (!freeIdxs.isEmpty()) {
                     // select the largest group
@@ -562,7 +558,7 @@ bool D1Pal::genColors(const QImage &image)
                     if (best == 0) {
                         break;
                     }
-                    change = true;
+                    // change = true;
 
                     // select the largest distance
                     const std::vector<std::pair<int, uint64_t>> users = umap[res].first;
@@ -577,7 +573,6 @@ bool D1Pal::genColors(const QImage &image)
                         QColor color = weightColor(res);
                         auto fi = freeIdxs.begin();
                         const PaletteColor pc = PaletteColor(color, *fi);
-                        new_colors.push_back(pc);
                         next_colors.push_back(pc);
                         freeIdxs.erase(fi);
                     }
@@ -595,15 +590,49 @@ bool D1Pal::genColors(const QImage &image)
                         umap[pc.first].second += dist;
                     }
                 }
+#else
+                // add new color to replace an eliminated one
+                if (!freeIdxs.isEmpty()) {
+                    // select the largest group
+                    int res = 0;
+                    uint64_t best = 0;
+                    for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
+                        if (mi->second.second > best) {
+                            best = mi->second.second;
+                            res = mi->first;
+                        }
+                    }
+                    if (best != 0) {
+                        umap[res].second = 0;
+                        // select the largest distance
+                        best = 0;
+                        for (const std::pair<int, uint64_t>& user : umap[res].first) {
+                            if (user.second > best) {
+                                best = user.second;
+                                res = user.first;
+                            }
+                        }
+
+                        QColor color = weightColor(res);
+                        auto fi = freeIdxs.begin();
+                        next_colors.push_back(PaletteColor(color, *fi));
+                        freeIdxs.erase(fi);
+                        continue;
+                    }
+                }
+#endif
 
                 // select better colors for the color-groups
 
 
 
-                //if (!change) {
+                if (!change) {
                     break;
-                // }
+                }
             }
+
+            new_colors.clear();
+            new_colors.insert(next_colors.end(), next_colors.begin() + curr_colors.size(), next_colors.end());
         }
     } else {
         dProgress() << tr("Palette generated without image-file.");
