@@ -478,13 +478,13 @@ bool D1Pal::genColors(const QImage &image)
 
         QSet<QColor> currcolors;
         for (const PaletteColor pc : curr_colors) {
-            currcolors.insert(rc.color());
+            currcolors.insert(pc.color());
         }
 
         const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
         std::map<int, int> wmap;
-        for (int y = 0; y < frame.height; y++) {
-            for (int x = 0; x < frame.width; x++, srcBits++) {
+        for (int y = 0; y < image.height(); y++) {
+            for (int x = 0; x < image.width(); x++, srcBits++) {
                 // QColor color = image.pixelColor(x, y);
                 QColor color = QColor::fromRgba(*srcBits);
                 int w;
@@ -502,14 +502,13 @@ bool D1Pal::genColors(const QImage &image)
         }
 
         if (wmap.size() < (unsigned)new_colors.count()) {
-            new_colors.clear();
-            auto fi = freeIdxs.cbegin();
-            for (auto it = wmap.cbegin(); it != wmap.cend(); it++, fi++) {
+            new_colors.resize(wmap.size());
+            auto ni = new_colors.begin();
+            for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
                 QColor color = weightColor(it->first);
-                new_colors.push_back(PaletteColor(color, *fi));
+                *ni = PaletteColor(color, ni->index());
             }
         } else {
-            //QMap<int, int> wmap;
             freeIdxs.clear();
 
             while (true) {
@@ -536,10 +535,10 @@ bool D1Pal::genColors(const QImage &image)
                         it = new_colors.erase(it);
                     }
                 }
-                // add new colors to replace the eliminated ones
-                for (auto fi = freeIdxs.begin(); fi != freeIdxs.end(); ) {
+                // add new color to replace an eliminated one
+                if (!freeIdxs.isEmpty()) {
                     // select the largest group
-                    int res = -1;
+                    int res = 0;
                     uint64_t best = 0;
                     for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
                         if (mi->second.second > best) {
@@ -547,27 +546,23 @@ bool D1Pal::genColors(const QImage &image)
                             res = mi->first;
                         }
                     }
-                    if (best == 0) {
-                        break;
-                    }
-                    change = true;
-                    umap[res].second = 0;
-                    // new color
-
-                    best = 0;
-                    for (const std::pair<int, uint64_t>& user : umap[res].first) {
-                        if (user.second > best) {
-                            best = user.second;
-                            res = user.first;
+                    if (best != 0) {
+                        umap[res].second = 0;
+                        // select the largest distance
+                        best = 0;
+                        for (const std::pair<int, uint64_t>& user : umap[res].first) {
+                            if (user.second > best) {
+                                best = user.second;
+                                res = user.first;
+                            }
                         }
-                    }
 
-                    QColor color = weightColor(res);
-                    new_colors.push_back(PaletteColor(color, *fi));
-                    fi = freeIdxs.erase(fi);
-                }
-                if (change) {
-                    continue;
+                        QColor color = weightColor(res);
+                        fi = freeIdxs.begin();
+                        new_colors.push_back(PaletteColor(color, *fi));
+                        freeIdxs.erase(fi);
+                        continue;
+                    }
                 }
 
                 // select better colors for the color-groups
