@@ -19,6 +19,14 @@ PaletteColor::PaletteColor(const QColor &color, int index)
 {
 }
 
+PaletteColor::PaletteColor(const PaletteColor &o)
+    : xv(o.index())
+    , rv(o.red())
+    , gv(o.green())
+    , bv(o.blue())
+{
+}
+
 D1Pal::D1Pal(const D1Pal &opal)
     : QObject()
 {

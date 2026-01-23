@@ -22,6 +22,7 @@ enum class D1PAL_CYCLE_TYPE {
 class PaletteColor {
 public:
     PaletteColor(const QColor &color, int index);
+    PaletteColor(const PaletteColor &o);
     ~PaletteColor() = default;
 
     int red() const
