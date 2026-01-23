@@ -482,14 +482,6 @@ bool D1Pal::genColors(const QImage &image)
 
     // use the colors of the image to optimize the new colors
     if (!image.isNull()) {
-        std::vector<PaletteColor> curr_colors;
-        this->getValidColors(curr_colors);
-
-        QSet<QColor> currcolors;
-        for (const PaletteColor pc : curr_colors) {
-            currcolors.insert(pc.color());
-        }
-
         const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
         std::map<int, int> wmap;
         for (int y = 0; y < image.height(); y++) {
@@ -500,7 +492,7 @@ bool D1Pal::genColors(const QImage &image)
                 // if (color == QColor(Qt::transparent)) {
                 if (color.alpha() < COLOR_ALPHA_LIMIT) {
                     ;
-                } else if (!currcolors.contains(color)) {
+                } else {
                     w = colorWeight(color);
                     // if (wmap.count(w) == 0) {
                     //     dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y);
@@ -508,6 +500,12 @@ bool D1Pal::genColors(const QImage &image)
                     wmap[w] += 1;
                 }
             }
+        }
+
+        std::vector<PaletteColor> curr_colors;
+        this->getValidColors(curr_colors);
+        for (const PaletteColor pc : curr_colors) {
+            wmap.erase(colorWeight(pc.color()));
         }
 
         if (wmap.size() < new_colors.size()) {
