@@ -1710,7 +1710,7 @@ static QString addDetails(QString &msg, int verbose, D1SmkColorFix &fix)
     if (fix.frameFrom != 0 || fix.frameTo != fix.gfx->getFrameCount()) {
         msg = msg.append(QApplication::tr(" for frame(s) %1-%2", "", fix.frameTo - fix.frameFrom + 1).arg(fix.frameFrom + 1).arg(fix.frameTo + 1));
     }
-    if (verbose) {
+    if (verbose != 1) {
         QFileInfo fileInfo(fix.gfx->getFilePath());
         QString labelText = fileInfo.fileName();
         msg = msg.append(QApplication::tr(" of %1").arg(labelText));
@@ -1775,12 +1775,12 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             pal->getValidColors(colors);
             for (const PaletteColor pc : colors) {
                 if (col.red() == pc.red() && col.green() == pc.green() && col.blue() == pc.blue() && pc.index() != i) {
-                    dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%3..%4)").arg(pc.index()).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo + 1);
+                    // dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%3..%4)").arg(pc.index()).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo + 1);
                     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), D1GfxPixel::colorPixel(pc.index())));
                     RemapParam params;
                     params.frames = std::pair<int, int>(fix.frameFrom + 1, fix.frameTo);
-                    fix.gfx->replacePixels(replacements, params, 1); // verbose);
+                    fix.gfx->replacePixels(replacements, params, verbose);
 
                     col = undefColor;
                     break;
@@ -1830,10 +1830,10 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
     QList<D1Gfx *> gfxs;
     int verbose;
     if (gfxSet != nullptr) {
-        verbose = 1;
+        verbose = 2;
         gfxs.append(gfxSet->getGfxList());
     } else {
-        verbose = 0;
+        verbose = 1;
         gfxs.append(g);
     }
 
@@ -1905,7 +1905,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                                 }
                                 RemapParam params;
                                 params.frames = std::pair<int, int>(i + 1, n);
-                                cf.gfx->replacePixels(replacements, params, 1); // verbose);
+                                cf.gfx->replacePixels(replacements, params, verbose);
                             }
                             fp.clear();
                             cf.gfx->setModified();
@@ -1937,7 +1937,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                             if (!replacements.isEmpty()) {
                                 RemapParam params;
                                 params.frames = std::pair<int, int>(n + 1, i);
-                                cf.gfx->replacePixels(replacements, params, 1); // verbose);
+                                cf.gfx->replacePixels(replacements, params, verbose);
                             }
                             // QPointer<D1Pal> &pp = cf.gfx->getFrame(n)->getFramePal();
                             // pp.clear();

@@ -1,5 +1,7 @@
 #include "d1pal.h"
 
+#include <set>
+
 #include <QApplication>
 #include <QDataStream>
 #include <QDir>
@@ -323,8 +325,8 @@ static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &color
 bool D1Pal::genColors(const QImage &image)
 {
     // find new color options
-    QSet<int> col32s;
-    QSet<int> freeIdxs;
+    std::set<int> col32s;
+    std::set<int> freeIdxs;
     for (int i = 0; i < D1PAL_COLORS; i++) {
         if (this->colors[i] == this->undefinedColor) {
             freeIdxs.insert(i);
@@ -333,7 +335,7 @@ bool D1Pal::genColors(const QImage &image)
         }
     }
 
-    if (freeIdxs.isEmpty()) {
+    if (freeIdxs.empty()) {
         return false; // no place for new colors -> done
     }
     // cover the color-space as much as possible
@@ -343,13 +345,13 @@ bool D1Pal::genColors(const QImage &image)
         int closed;
         int marbles;
     } colorData;
-    QList<colorData> ranges;
-    if (col32s.count() == 0) {
+    std::vector<colorData> ranges;
+    if (col32s.size() == 0) {
         colorData cd;
         cd.colorCode = 0;
         cd.rangeLen = 0xFFFFFF;
         cd.closed = 0;
-        cd.marbles = freeIdxs.count();
+        cd.marbles = freeIdxs.size();
         ranges.push_back(cd);
     } else {
         if (*col32s.begin() != 0) {
@@ -360,7 +362,7 @@ bool D1Pal::genColors(const QImage &image)
             cd.marbles = 0;
             ranges.push_back(cd);
         }
-        for (auto it = col32s.begin(); it != col32s.end(); it++) {
+        for (const int cc : col32s) {
             int cc = *it;
             colorData cd;
             cd.colorCode = cc;
@@ -382,7 +384,7 @@ bool D1Pal::genColors(const QImage &image)
             }
         }
         // select colors at the longest gaps
-        for (int i = 0; i < freeIdxs.count(); i++) {
+        for (const int idx : freeIdxs) {
             std::sort(ranges.begin(), ranges.end(), [](colorData &a, colorData &b) {
                 int acw = a.rangeLen;
                 int bcw = b.rangeLen;
@@ -402,7 +404,7 @@ bool D1Pal::genColors(const QImage &image)
     }
     
     // designate the colors
-    QList<colorData> colors;
+    std::vector<colorData> colors;
     for (auto it = ranges.begin(); it != ranges.end(); it++) {
         int cc = it->colorCode;
         int n = it->marbles;
@@ -502,9 +504,9 @@ bool D1Pal::genColors(const QImage &image)
             }
         }
 
-        std::vector<PaletteColor> curr_colors;
-        this->getValidColors(curr_colors);
-        for (const PaletteColor pc : curr_colors) {
+        std::vector<PaletteColor> next_colors;
+        this->getValidColors(next_colors);
+        for (const PaletteColor pc : next_colors) {
             wmap.erase(colorWeight(pc.color()));
         }
 
@@ -518,7 +520,7 @@ bool D1Pal::genColors(const QImage &image)
         } else {
             freeIdxs.clear();
 
-            std::vector<PaletteColor> next_colors = curr_colors;
+            const unsigned prev_colornum = next_colors.size();
             next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
             new_colors.clear();
 
@@ -535,7 +537,7 @@ bool D1Pal::genColors(const QImage &image)
                     umap[pc.first].second += dist;
                 }
                 // eliminate unused new colors
-                for (auto it = next_colors.begin() + curr_colors.size(); it != next_colors.end(); ) {
+                for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); ) {
                     if (umap.count(it->index()) != 0) {
                         it++;
                         continue;
@@ -546,7 +548,7 @@ bool D1Pal::genColors(const QImage &image)
                 }
 #if 0
                 // add new color to replace an eliminated ones
-                while (!freeIdxs.isEmpty()) {
+                while (!freeIdxs.empty()) {
                     // select the largest group
                     int res = 0;
                     uint64_t best = 0;
@@ -593,7 +595,7 @@ bool D1Pal::genColors(const QImage &image)
                 }
 #else
                 // add new color to replace an eliminated one
-                if (!freeIdxs.isEmpty()) {
+                if (!freeIdxs.empty()) {
                     // select the largest group
                     int res = 0;
                     uint64_t best = 0;
@@ -632,7 +634,7 @@ bool D1Pal::genColors(const QImage &image)
                 }
             }
 
-            new_colors.insert(new_colors.end(), next_colors.begin() + curr_colors.size(), next_colors.end());
+            new_colors.insert(new_colors.end(), next_colors.begin() + prev_colornum, next_colors.end());
         }
     } else {
         dProgress() << tr("Palette generated without image-file.");
