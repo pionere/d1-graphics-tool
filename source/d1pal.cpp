@@ -251,32 +251,80 @@ bool D1Pal::genColors(const QString &imagefilePath)
 
     QImage image = QImage(imagefilePath);
 
-    if (image.isNull()) {
-        dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
-        return false;
+    return this->genColors(image);
+}
+
+static int colorWeight(const QColor color)
+{
+    int r = color.red(), g = color.green(), b = color.blue();
+    return (r * 256 * 256 + g * 256 + b);
+}
+static QColor weightColor(unsigned weight)
+{
+    unsigned c = weight;
+    unsigned r, g, b;
+    r = c / (256 * 256); g = c / 256; b = c;
+    return QColor(r % 256, g % 256, b % 256);
+}
+
+static int colorValue(const QColor color)
+{
+    int cv = 0;
+    unsigned r = color.red(), g = color.green(), b = color.blue();
+    for (int n = 0; n < 8; n++) {
+        cv |= ((r & 1) | ((g & 1) << 1) | ((b & 1) << 2)) << (n * 3);
+        r >>= 1;
+        g >>= 1;
+        b >>= 1;
     }
-    // find new color options
-    int newColors = 0;
-    QSet<int> col32s;
-    for (int i = 0; i < D1PAL_COLORS; i++) {
-        if (this->colors[i] == this->undefinedColor) {
-            newColors++;
-        } else if (this->colors[i].alpha() == 255) {
-            int cv = 0;
-            unsigned r = this->colors[i].red();
-            unsigned g = this->colors[i].green();
-            unsigned b = this->colors[i].blue();
-            for (int n = 0; n < 8; n++) {
-                cv |= ((r & 1) | ((g & 1) << 1) | ((b & 1) << 2)) << (n * 3);
-                r >>= 1;
-                g >>= 1;
-                b >>= 1;
-            }
-            col32s.insert(cv);
+    return cv;
+}
+static QColor valueColor(unsigned cv)
+{
+    unsigned r = 0;
+    unsigned g = 0;
+    unsigned b = 0;
+    for (int n = 0; n < 8; n++) {
+        r |= ((cv & 1) >> 0) << n;
+        g |= ((cv & 2) >> 1) << n;
+        b |= ((cv & 4) >> 2) << n;
+        cv >>= 3;
+    }
+    return QColor(r, g, b);
+}
+static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, QColor color)
+{
+    unsigned res = 0;
+    int best = INT_MAX;
+
+    for (const PaletteColor &palColor : colors) {
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        int curr = currR * currR + currG * currG + currB * currB;
+        if (curr < best) {
+            best = curr;
+            res = palColor.index();
         }
     }
 
-    if (newColors == 0) {
+    return std::pair<quint8, int>(res, best);
+}
+
+bool D1Pal::genColors(const QImage &image)
+{
+    // find new color options
+    QSet<int> col32s;
+    QSet<int> freeIdxs;
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        if (this->colors[i] == this->undefinedColor) {
+            freeIdxs.insert(i);
+        } else if (this->colors[i].alpha() == 255) {
+            col32s.insert(colorValue(this->colors[i]));
+        }
+    }
+
+    if (freeIdxs.isEmpty()) {
         return false; // no place for new colors -> done
     }
     // cover the color-space as much as possible
@@ -292,7 +340,7 @@ bool D1Pal::genColors(const QString &imagefilePath)
         cd.colorCode = 0;
         cd.rangeLen = 0xFFFFFF;
         cd.closed = 0;
-        cd.marbles = newColors;
+        cd.marbles = freeIdxs.count();
         ranges.push_back(cd);
     } else {
         if (*col32s.begin() != 0) {
@@ -325,7 +373,7 @@ bool D1Pal::genColors(const QString &imagefilePath)
             }
         }
         // select colors at the longest gaps
-        for (int i = 0; i < newColors; i++) {
+        for (int i = 0; i < freeIdxs.count(); i++) {
             std::sort(ranges.begin(), ranges.end(), [](colorData &a, colorData &b) {
                 int acw = a.rangeLen;
                 int bcw = b.rangeLen;
@@ -410,29 +458,130 @@ bool D1Pal::genColors(const QString &imagefilePath)
         }
     }
 
-    // use the colors of the image to optimize the new colors
-    /// tbc ...
-
-    // update the palette
-    for (auto it = colors.begin(); it != colors.end(); it++) {
+    // prepare the new colors
+    std::vector<PaletteColor> new_colors;
+    for (auto it = colors.cbegin(), auto fi = freeIdxs.cbegin(); it != colors.cend(); it++) {
         if (it->marbles != 0) {
-            unsigned cv = it->colorCode;
-            unsigned r = 0;
-            unsigned g = 0;
-            unsigned b = 0;
-            for (int n = 0; n < 8; n++) {
-                r |= ((cv & 1) >> 0) << n;
-                g |= ((cv & 2) >> 1) << n;
-                b |= ((cv & 4) >> 2) << n;
-                cv >>= 3;
-            }
-            QColor color = QColor(r, g, b);
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                if (this->colors[i] == this->undefinedColor) {
-                    this->colors[i] = color;
+            QColor color = valueColor(it->colorCode);
+            new_colors.push_back(PaletteColor(color, *fi));
+            fi++;
+        }
+    }
+
+    // use the colors of the image to optimize the new colors
+    if (!image.isNull()) {
+        std::vector<PaletteColor> curr_colors;
+        this->getValidColors(curr_colors);
+
+        QSet<QColor> currcolors;
+        for (const PaletteColor pc : curr_colors) {
+            currcolors.insert(rc.color());
+        }
+
+        const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
+        std::map<int, int> wmap;
+        for (int y = 0; y < frame.height; y++) {
+            for (int x = 0; x < frame.width; x++, srcBits++) {
+                // QColor color = image.pixelColor(x, y);
+                QColor color = QColor::fromRgba(*srcBits);
+                int w;
+                // if (color == QColor(Qt::transparent)) {
+                if (color.alpha() < COLOR_ALPHA_LIMIT) {
+                    ;
+                } else if (!currcolors.contains(color)) {
+                    w = colorWeight(color);
+                    // if (wmap.count(w) == 0) {
+                    //     dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y);
+                    // }
+                    wmap[w] += 1;
                 }
             }
         }
+
+        if (wmap.size() < (unsigned)new_colors.count()) {
+            new_colors.clear();
+            for (auto it = wmap.cbegin(), auto fi = freeIdxs.cbegin(); it != wmap.cend(); it++, fi++) {
+                QColor color = weightColor(it->first);
+                new_colors.push_back(PaletteColor(color, *fi));
+            }
+        } else {
+            //QMap<int, int> wmap;
+            freeIdxs.clear();
+
+            while (true) {
+                bool change = false;
+                // check the next color mapping
+                std::vector<PaletteColor> next_colors = curr_colors;
+                next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
+
+                std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>> umap;
+                for (auto it = wmap.cbegin(); it != wmap.cend(); it++) {
+                    QColor color = weightColor(it->first);
+                    auto pc = getPalColor(next_colors, color);
+                    uint64_t dist = (uint64_t)it->second * pc.second;
+                    umap[pc.first].first.push_back(std::pair<int, uint64_t>(it->first, dist));
+                    umap[pc.first].second += dist;
+                }
+                // eliminate unused new colors
+                for (auto it = new_colors.begin(); it != new_colors.end(); ) {
+                    if (umap.count(it->index()) != 0) {
+                        it++;
+                        continue;
+                    } else {
+                        freeIdxs.insert(it->index());
+                        it = new_colors.erase(it);
+                    }
+                }
+                // add new colors to replace the eliminated ones
+                for (auto fi = freeIdxs.begin(); fi != freeIdxs.end(); ) {
+                    // select the largest group
+                    int res = -1;
+                    uint64_t best = 0;
+                    for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
+                        if (mi->second.second > best) {
+                            best = mi->second.second;
+                            res = mi->first;
+                        }
+                    }
+                    if (best == 0) {
+                        break;
+                    }
+                    change = true;
+                    umap[res].second = 0;
+                    // new color
+
+                    best = 0;
+                    for (const std::pair<int, uint64_t>& user : umap[res].first) {
+                        if (user.second > best) {
+                            best = user.second;
+                            res = user.first;
+                        }
+                    }
+
+                    QColor color = weightColor(res);
+                    new_colors.push_back(PaletteColor(color, *fi));
+                    fi = freeIdxs.erase(fi);
+                }
+                if (change) {
+                    continue;
+                }
+
+                // select better colors for the color-groups
+
+
+
+                if (!change) {
+                    break;
+                }
+            }
+        }
+    } else {
+        dProgress() << tr("Palette generated without image-file.");
+    }
+
+    // update the palette
+    for (const PaletteColor pc : new_colors) {
+        this->colors[pc.index()] = pc.color();
     }
 
     // update the view - done by the caller

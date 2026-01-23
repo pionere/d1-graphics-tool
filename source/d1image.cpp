@@ -102,6 +102,18 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
     pal->getValidColors(colors);
 
     if (colors.empty()) {
+#if 2
+        D1Pal *framePal = new D1Pal();
+        framePal->load(D1Pal::EMPTY_PATH);
+
+        framePal->genColors(image);
+
+        frame.setFramePal(framePal);
+
+        framePal->getValidColors(colors);
+    }
+    {
+#else
         const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
         std::vector<std::vector<int>> weights;
         std::map<int, int> wmap;
@@ -338,7 +350,9 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             }
             frame.pixels.push_back(std::move(pixelLine));
         }
-    } else {
+    }
+    else {
+#endif
         const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
         for (int y = 0; y < frame.height; y++) {
             std::vector<D1GfxPixel> pixelLine;

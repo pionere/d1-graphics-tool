@@ -4,6 +4,7 @@
 
 #include <QColor>
 #include <QFile>
+#include <QImage>
 #include <QObject>
 #include <QString>
 
@@ -39,7 +40,10 @@ public:
     {
         return xv;
     };
-
+    QColor color() const
+    {
+        return QColor(rv, gv, bv);
+    }
 private:
     int rv;
     int gv;
@@ -77,6 +81,7 @@ public:
     void getValidColors(std::vector<PaletteColor> &colors) const;
     void updateColors(const D1Pal &opal);
     bool genColors(const QString &imagefilePath);
+    bool genColors(const QImage &image);
     void cycleColors(D1PAL_CYCLE_TYPE type);
     static int getCycleColors(D1PAL_CYCLE_TYPE type);
 
