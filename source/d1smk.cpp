@@ -1969,6 +1969,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
             }
         }
         ProgressDialog::decBar();
+        if (!ProgressDialog::incValue()) {
+            break;
+        }
     }
 
     ProgressDialog::decBar();

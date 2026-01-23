@@ -549,12 +549,17 @@ void CelView::createFrame(bool append)
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
 {
-    int prevFrameCount = this->gfx->getFrameCount();
+    const int numFiles = imagefilePaths.count();
+    ProgressDialog::incBar(QApplication::tr("Inserting graphics..."), numFiles + 1);
 
+    int prevFrameCount = this->gfx->getFrameCount();
     if (append) {
         // append the frame(s)
-        for (int i = 0; i < imagefilePaths.count(); i++) {
+        for (int i = 0; i < numFiles; i++) {
             this->insertFrame(mode, this->gfx->getFrameCount(), imagefilePaths[i]);
+            if (!ProgressDialog::incValue()) {
+                break;
+            }
         }
         int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
         if (deltaFrameCount == 0) {
@@ -565,8 +570,11 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
         this->updateGroupIndex();
     } else {
         // insert the frame(s)
-        for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
+        for (int i = numFiles - 1; i >= 0; i--) {
             this->insertFrame(mode, this->currentFrameIndex, imagefilePaths[i]);
+            if (!ProgressDialog::incValue()) {
+                break;
+            }
         }
         int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
         if (deltaFrameCount == 0) {
@@ -575,6 +583,8 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
     }
     // update the view - done by the caller
     // this->displayFrame();
+
+    ProgressDialog::decBar();
 }
 
 void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
@@ -608,6 +618,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         }
         return;
     }
+    ProgressDialog::incBar(QApplication::tr("Inserting frames..."), reader.imageCount() + 1);
     while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
@@ -615,7 +626,11 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         }
         this->gfx->insertFrame(index, image);
         index++;
+        if (!ProgressDialog::incValue()) {
+            break;
+        }
     }
+    ProgressDialog::decBar();
 }
 
 void CelView::addToCurrentFrame(const QString &imagefilePath)

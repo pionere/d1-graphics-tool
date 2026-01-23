@@ -1760,7 +1760,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
         return;
     }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 2, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->insertImageFiles(mode, filePaths, append);
@@ -3713,12 +3713,12 @@ void MainWindow::on_actionRemap_Colors_triggered()
 
 void MainWindow::on_actionSmack_Colors_triggered()
 {
-#if 0
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+#if 1
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 2, PAF_UPDATE_WINDOW);
 
     QList<D1SmkColorFix> frameColorMods;
     D1Smk::fixColors(this->gfxset, this->gfx, this->pal, frameColorMods);
-
+#if 0
     if (!frameColorMods.isEmpty()) {
         // find possible replacement for the modified colors
         for (D1SmkColorFix &frameColorMod : frameColorMods) {
@@ -3765,7 +3765,7 @@ void MainWindow::on_actionSmack_Colors_triggered()
             }
         }
     }
-
+#endif
     // Clear loading message from status bar
     ProgressDialog::done();
 #else
@@ -3773,7 +3773,7 @@ void MainWindow::on_actionSmack_Colors_triggered()
         QList<D1SmkColorFix> frameColorMods;
         D1Smk::fixColors(this->gfxset, this->gfx, this->pal, frameColorMods);
     };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 3, PAF_UPDATE_WINDOW, std::move(func));
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 2, PAF_UPDATE_WINDOW, std::move(func));
 #endif
 }
 
