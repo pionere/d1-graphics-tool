@@ -548,7 +548,7 @@ bool D1Pal::genColors(const QImage &image)
                         }
                     }
                 }
-                // add new color to replace an eliminated one
+                // add new color to replace an eliminated ones
                 while (!freeIdxs.isEmpty()) {
                     // select the largest group
                     int res = 0;
@@ -583,8 +583,9 @@ bool D1Pal::genColors(const QImage &image)
                     }
 
                     // split the users
-                    umap[res].second = 0;
-                    umap[res].first.clear();
+                    // umap[res].second = 0;
+                    // umap[res].first.clear();
+                    umap.erase(res);
                     for (const std::pair<int, uint64_t> &user : users) {
                         auto it = wmap.find(user.first);
                         QColor color = weightColor(it->first);
@@ -599,9 +600,9 @@ bool D1Pal::genColors(const QImage &image)
 
 
 
-                if (!change) {
+                //if (!change) {
                     break;
-                }
+                // }
             }
         }
     } else {
