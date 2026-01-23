@@ -7,6 +7,7 @@
 #include <QTextStream>
 
 #include "config.h"
+#include "d1image.h"
 #include "d1pcx.h"
 #include "progressdialog.h"
 
@@ -501,7 +502,7 @@ bool D1Pal::genColors(const QImage &image)
             }
         }
 
-        if (wmap.size() < (unsigned)new_colors.count()) {
+        if (wmap.size() < new_colors.size()) {
             new_colors.resize(wmap.size());
             auto ni = new_colors.begin();
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
@@ -558,7 +559,7 @@ bool D1Pal::genColors(const QImage &image)
                         }
 
                         QColor color = weightColor(res);
-                        fi = freeIdxs.begin();
+                        auto fi = freeIdxs.begin();
                         new_colors.push_back(PaletteColor(color, *fi));
                         freeIdxs.erase(fi);
                         continue;
