@@ -511,7 +511,7 @@ bool D1Pal::genColors(const QImage &image)
         }
 
         if (wmap.size() < new_colors.size()) {
-            new_colors.resize(wmap.size());
+            new_colors.erase(new_colors.begin() + wmap.size(), new_colors.end());
             auto ni = new_colors.begin();
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
                 QColor color = weightColor(it->first);
