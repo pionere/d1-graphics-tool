@@ -520,6 +520,7 @@ bool D1Pal::genColors(const QImage &image)
 
             std::vector<PaletteColor> next_colors = curr_colors;
             next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
+            new_colors.clear();
 
             while (true) {
                 bool change = false;
@@ -631,8 +632,7 @@ bool D1Pal::genColors(const QImage &image)
                 }
             }
 
-            new_colors.clear();
-            new_colors.insert(next_colors.end(), next_colors.begin() + curr_colors.size(), next_colors.end());
+            new_colors.insert(new_colors.end(), next_colors.begin() + curr_colors.size(), next_colors.end());
         }
     } else {
         dProgress() << tr("Palette generated without image-file.");
