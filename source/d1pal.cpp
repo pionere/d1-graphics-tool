@@ -363,7 +363,6 @@ bool D1Pal::genColors(const QImage &image)
             ranges.push_back(cd);
         }
         for (const int cc : col32s) {
-            int cc = *it;
             colorData cd;
             cd.colorCode = cc;
             cd.rangeLen = 0;
