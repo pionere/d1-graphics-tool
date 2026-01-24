@@ -1917,8 +1917,8 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
                         unsigned iden = 0;
                         QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
 
-                        for (const PaletteColor cc : prevColors) {
-                            for (const PaletteColor pc : currColors) {
+                        for (const PaletteColor pc : prevColors) {
+                            for (const PaletteColor cc : currColors) {
                                 if (cc.red() == pc.red() && cc.green() == pc.green() && cc.blue() == pc.blue()) {
                                     if (cc.index() == pc.index()) {
                                         iden++;
