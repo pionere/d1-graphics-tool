@@ -251,7 +251,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, D1Pal *basePal, D1P
             dataPtr += srcSkip;
         }
 
-        D1ImageFrame::load(frame, image, resPal);
+        D1ImageFrame::load(frame, image, false, resPal);
     }
 
     if (pcxPal != resPal && pcxPal != basePal) {

@@ -309,7 +309,7 @@ void PaintWidget::pasteCurrentImage(const QImage &image)
 {
     // load the image
     D1GfxFrame srcFrame;
-    D1ImageFrame::load(srcFrame, image, this->pal);
+    D1ImageFrame::load(srcFrame, image, this->gfx->getType() == D1CEL_TYPE::SMK, this->pal);
 
     this->pasteCurrentFrame(srcFrame);
 }

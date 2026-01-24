@@ -269,7 +269,7 @@ bool D1Pal::genColors(const QString &imagefilePath, bool forSmk)
 
 static void smackColor(QColor &col, bool forSmk)
 {
-    if (!forsmk) {
+    if (!forSmk) {
         return;
     }
     unsigned char smkColor[3];

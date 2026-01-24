@@ -1204,7 +1204,7 @@ D1GfxFrame *D1Gfx::addToFrame(int idx, const D1GfxFrame &frame)
 D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
 {
     D1GfxFrame frame;
-    D1ImageFrame::load(frame, image, this->palette);
+    D1ImageFrame::load(frame, image, this->type == D1CEL_TYPE::SMK, this->palette);
 
     return this->addToFrame(idx, frame);
 }
@@ -1221,7 +1221,7 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QString &pixels)
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
 {
     D1GfxFrame *frame = new D1GfxFrame();
-    D1ImageFrame::load(*frame, image, this->palette);
+    D1ImageFrame::load(*frame, image, this->type == D1CEL_TYPE::SMK, this->palette);
     this->setFrame(idx, frame);
 
     return this->frames[idx];
