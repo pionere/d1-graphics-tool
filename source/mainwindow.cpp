@@ -3495,7 +3495,7 @@ void MainWindow::on_actionGen_PAL_triggered()
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
 
-    if (this->pal->genColors(imgFilePath)) {
+    if (this->pal->genColors(imgFilePath, this->gfx->getType() == D1CEL_TYPE::SMK)) {
         // updatePalette(this->pal);
         this->updateWindow();
     }

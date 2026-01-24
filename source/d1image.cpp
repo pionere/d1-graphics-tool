@@ -84,7 +84,7 @@ static QColor weightColor(unsigned weight)
 #endif
 //static int frameDone = 0;
 //static int frameLimit = 27;
-bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
+bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool forSmk, const D1Pal *pal)
 {
     frame.width = image.width();
     frame.height = image.height();
@@ -106,7 +106,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
         D1Pal *framePal = new D1Pal();
         framePal->load(D1Pal::EMPTY_PATH);
 
-        framePal->genColors(image);
+        framePal->genColors(image, forSmk);
 
         frame.setFramePal(framePal);
 

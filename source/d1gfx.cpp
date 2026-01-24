@@ -1180,7 +1180,7 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QString &pixels)
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 {
     D1GfxFrame *frame = this->insertFrame(idx);
-    D1ImageFrame::load(*frame, image, this->palette);
+    D1ImageFrame::load(*frame, image, this->type == D1CEL_TYPE::SMK, this->palette);
     // this->modified = true;
 
     return this->frames[idx];
