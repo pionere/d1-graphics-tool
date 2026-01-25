@@ -1754,7 +1754,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         }
         if (!palUse[i]) {
             int amount = fix.frameTo - fix.frameFrom;
-            dProgress() << QApplication::tr("Color %1 set to undefined color for frame(s) %1-%2", "", amount).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo);
+            dProgress() << QApplication::tr("Color %1 set to undefined color for frame(s) %2-%3", "", amount).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo);
             fix.pal->setColor(i, undefColor);
             result = true;
             continue;
