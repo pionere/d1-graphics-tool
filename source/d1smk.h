@@ -20,7 +20,7 @@ typedef struct D1SmkColorFix {
     D1Gfx *gfx;
     int frameFrom;
     int frameTo;
-    QList<quint8> colors;
+//    QList<quint8> colors;
 } D1SmkColorFix;
 
 class D1SmkAudioData : public QObject {
@@ -61,5 +61,5 @@ public:
     static void playAudio(D1GfxFrame &gfxFrame, int track = -1);
     static void stopAudio();
 
-    static void fixColors(D1Gfxset *gfxSet, D1Gfx *gfx, D1Pal *pal, QList<D1SmkColorFix> &frameColorMods);
+    static void fixColors(D1Gfxset *gfxSet, D1Gfx *gfx, D1Pal *pal/*, QList<D1SmkColorFix> &frameColorMods*/);
 };

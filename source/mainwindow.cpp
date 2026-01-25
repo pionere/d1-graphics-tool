@@ -1762,7 +1762,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Reading..."), 2, PAF_UPDATE_WINDOW);
 
-    int frameIndex = -1;
+    int frameIndex = 0;
     if (this->celView != nullptr) {
         this->celView->insertImageFiles(mode, filePaths, append);
         frameIndex = this->celView->getCurrentFrameIndex();
@@ -2475,7 +2475,7 @@ void MainWindow::on_actionDel_Frame_triggered()
     this->getFramePals(framePals);
     QString nextPath = this->pal->getFilePath();
 
-    int frameIndex = -1;
+    int frameIndex = 0;
     if (this->celView != nullptr) {
         this->celView->removeCurrentFrame(wholeGroup);
         frameIndex = this->celView->getCurrentFrameIndex();
@@ -3843,8 +3843,8 @@ void MainWindow::on_actionSmack_Colors_triggered()
 #if 1
     ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 2, PAF_UPDATE_WINDOW);
 
-    QList<D1SmkColorFix> frameColorMods;
-    D1Smk::fixColors(this->gfxset, this->gfx, this->pal, frameColorMods);
+    // QList<D1SmkColorFix> frameColorMods;
+    D1Smk::fixColors(this->gfxset, this->gfx, this->pal); // , frameColorMods);
 #if 0
     if (!frameColorMods.isEmpty()) {
         // find possible replacement for the modified colors

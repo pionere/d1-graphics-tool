@@ -1724,14 +1724,39 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     if (fix.frameFrom == fix.frameTo) {
         return false;
     }
+    const QColor undefColor = pal->getUndefinedColor();
+    bool palUse[D1PAL_COLORS] = { 0 };
+    for (int i = fix.frameFrom; i < fix.frameTo; i++) {
+        D1GfxFrame *frame = gfx.getFrame(i);
+        for (int y = 0; y < frame->getHeight(); y++) {
+            for (int x = 0; x < frame->getWidth(); x++) {
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (!pixel.isTransparent()) {
+                    quint8 color = pixel.getPaletteIndex();
+                    palUse[color] = true;
+                    if (pal->getColor(color) == undefColor) {
+                        dProgressErr() << QApplication::tr("Pixel with undefined color in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
+                    }
+                } else {
+                    dProgressErr() << QApplication::tr("Transparent pixel in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
+                }
+            }
+        }
+    }
     D1Pal *pal = fix.pal;
-    QColor undefColor = pal->getUndefinedColor();
     QList<quint8> ignored;
     bool result = false;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
         QColor col = pal->getColor(i);
         if (col == undefColor) {
             ignored.push_back(i);
+            continue;
+        }
+        if (!palUse[i]) {
+            int amount = fix.frameTo - fix.frameFrom;
+            dProgress() << QApplication::tr("Color %1 set to undefined color for frame(s) %1-%2", "", amount).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo);
+            pal->setColor(i, undefColor);
+            result = true;
             continue;
         }
         unsigned char smkColor[3];
@@ -1770,7 +1795,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         }
         if (change) {
             if (col == undefColor)
-                dProgressWarn() << tr("The undefined color is selected as a valid palette-entry.");
+                dProgressWarn() << QApplication::tr("The undefined color is selected as a valid palette-entry.");
 
             // fix.colors.push_back(i);
             // find possible replacement for the modified color
@@ -1828,7 +1853,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     return result;
 }
 
-void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix> &frameColorMods)
+void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFix> &frameColorMods*/)
 {
     QList<D1Gfx *> gfxs;
     int verbose;
@@ -1854,8 +1879,8 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
             if (!fp.isNull()) {
                 cf.frameTo = i;
                 if (fixPalColors(cf, verbose)) {
-                    frameColorMods.push_back(cf);
-                    cf.colors.clear();
+//                    frameColorMods.push_back(cf);
+//                    cf.colors.clear();
                 }
                 cf.frameFrom = i;
                 cf.pal = fp.data();
@@ -1863,7 +1888,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
         }
         cf.frameTo = i;
         if (fixPalColors(cf, verbose)) {
-            frameColorMods.push_back(cf);
+//            frameColorMods.push_back(cf);
             // cf.colors.clear();
         }
         // eliminate matching palettes
