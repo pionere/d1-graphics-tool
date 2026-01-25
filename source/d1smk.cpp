@@ -1724,17 +1724,17 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     if (fix.frameFrom == fix.frameTo) {
         return false;
     }
-    const QColor undefColor = pal->getUndefinedColor();
+    const QColor undefColor = fix.pal->getUndefinedColor();
     bool palUse[D1PAL_COLORS] = { 0 };
     for (int i = fix.frameFrom; i < fix.frameTo; i++) {
-        D1GfxFrame *frame = gfx.getFrame(i);
+        D1GfxFrame *frame = fix.gfx.getFrame(i);
         for (int y = 0; y < frame->getHeight(); y++) {
             for (int x = 0; x < frame->getWidth(); x++) {
                 D1GfxPixel pixel = frame->getPixel(x, y);
                 if (!pixel.isTransparent()) {
                     quint8 color = pixel.getPaletteIndex();
                     palUse[color] = true;
-                    if (pal->getColor(color) == undefColor) {
+                    if (fix.pal->getColor(color) == undefColor) {
                         dProgressErr() << QApplication::tr("Pixel with undefined color in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
                     }
                 } else {
@@ -1743,11 +1743,10 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             }
         }
     }
-    D1Pal *pal = fix.pal;
     QList<quint8> ignored;
     bool result = false;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
-        QColor col = pal->getColor(i);
+        QColor col = fix.pal->getColor(i);
         if (col == undefColor) {
             ignored.push_back(i);
             continue;
@@ -1755,7 +1754,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         if (!palUse[i]) {
             int amount = fix.frameTo - fix.frameFrom;
             dProgress() << QApplication::tr("Color %1 set to undefined color for frame(s) %1-%2", "", amount).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo);
-            pal->setColor(i, undefColor);
+            fix.pal->setColor(i, undefColor);
             result = true;
             continue;
         }
@@ -1800,7 +1799,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             // fix.colors.push_back(i);
             // find possible replacement for the modified color
             std::vector<PaletteColor> colors;
-            pal->getValidColors(colors);
+            fix.pal->getValidColors(colors);
             for (const PaletteColor pc : colors) {
                 if (col.red() == pc.red() && col.green() == pc.green() && col.blue() == pc.blue() && pc.index() != i) {
                     // dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%3..%4)").arg(pc.index()).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo + 1);
@@ -1814,7 +1813,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                     break;
                 }
             }
-            pal->setColor(i, col);
+            fix.pal->setColor(i, col);
 
             result = true;
         }
