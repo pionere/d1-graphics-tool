@@ -1977,7 +1977,7 @@ void D1Gfx::setPalette(D1Pal *pal)
     this->palette = pal;
 }
 
-bool D1Gfx::setFramePalette(int frameIndex, D1Pal *pal)
+void D1Gfx::setFramePalette(int frameIndex, D1Pal *pal)
 {
     this->frames[frameIndex]->setFramePal(pal);
     if (pal != nullptr) {
