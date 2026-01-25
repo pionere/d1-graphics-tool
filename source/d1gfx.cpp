@@ -1985,7 +1985,7 @@ bool D1Gfx::setFramePalette(int frameIndex, D1Pal *pal)
         for (int i = frameIndex + 1; i < this->getFrameCount(); i++) {
             QPointer<D1Pal> &fp = this->frames[i]->getFramePal();
             if (!fp.isNull()) {
-                if (fp.data() == p) {
+                if (fp.data() == pal) {
                     fp.clear();
                 }
                 break;
