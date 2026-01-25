@@ -1791,12 +1791,14 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
         }
     //}
     // update the current palette
-    for ( ; frameIndex >= 0; frameIndex--) {
-        D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
-        D1Pal* framePal = frame->getFramePal().data();
-        if (framePal != nullptr) {
-            this->setPal(framePal->getFilePath());
-            break;
+    if (this->gfx->getFrameCount() > frameIndex) {
+        for ( ; frameIndex >= 0; frameIndex--) {
+            D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
+            D1Pal* framePal = frame->getFramePal().data();
+            if (framePal != nullptr) {
+                this->setPal(framePal->getFilePath());
+                break;
+            }
         }
     }
     
@@ -2494,12 +2496,14 @@ void MainWindow::on_actionDel_Frame_triggered()
         this->pals.take(framePal);
     }
     // update the current palette
-    for ( ; frameIndex >= 0; frameIndex--) {
-        D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
-        D1Pal* framePal = frame->getFramePal().data();
-        if (framePal != nullptr) {
-            this->setPal(framePal->getFilePath());
-            break;
+    if (this->gfx->getFrameCount() > frameIndex) {
+        for (; frameIndex >= 0; frameIndex--) {
+            D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
+            D1Pal* framePal = frame->getFramePal().data();
+            if (framePal != nullptr) {
+                this->setPal(framePal->getFilePath());
+                break;
+            }
         }
     }
 
