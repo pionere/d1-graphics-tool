@@ -2473,6 +2473,7 @@ void MainWindow::on_actionDel_Frame_triggered()
 
     QSet<QString> framePals;
     this->getFramePals(framePals);
+    QString nextPath = this->pal->getFilePath();
 
     int frameIndex = -1;
     if (this->celView != nullptr) {
@@ -2501,11 +2502,14 @@ void MainWindow::on_actionDel_Frame_triggered()
             D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
             D1Pal* framePal = frame->getFramePal().data();
             if (framePal != nullptr) {
-                this->setPal(framePal->getFilePath());
+                nextPath = framePal->getFilePath();
                 break;
             }
         }
+    } else {
+        nextPath = D1Pal::DEFAULT_PATH;
     }
+    this->setPal(nextPath);
 
     this->updateWindow();
 }
