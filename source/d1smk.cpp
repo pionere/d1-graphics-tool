@@ -1769,6 +1769,9 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             }
         }
         if (change) {
+            if (col == undefColor)
+                dProgressWarn() << tr("The undefined color is selected as a valid palette-entry.");
+
             // fix.colors.push_back(i);
             // find possible replacement for the modified color
             std::vector<PaletteColor> colors;

@@ -698,7 +698,10 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
 
     // update the palette
     for (const PaletteColor pc : new_colors) {
-        this->colors[pc.index()] = pc.color();
+        const QColor nc = pc.color();
+        if (nc == this->undefinedColor)
+            dProgressWarn() << tr("The undefined color is selected as a valid palette-entry.");
+        this->colors[pc.index()] = nc;
     }
 
     // update the view - done by the caller

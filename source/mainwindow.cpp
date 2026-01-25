@@ -2493,8 +2493,8 @@ void MainWindow::on_actionDel_Frame_triggered()
     QSet<QString> framePalsNow;
     this->getFramePals(framePalsNow);
     for (QString framePal : framePals) {
-        if (framePalsNow.contains(framePal)) continue;
-        this->pals.take(framePal);
+        if (!framePalsNow.contains(framePal))
+            this->pals.take(framePal);
     }
     // update the current palette
     if (this->gfx->getFrameCount() > frameIndex) {
@@ -2506,9 +2506,9 @@ void MainWindow::on_actionDel_Frame_triggered()
                 break;
             }
         }
-    } else {
-        nextPath = D1Pal::DEFAULT_PATH;
     }
+    if (!this->pals.contains(nextPath))
+        nextPath = D1Pal::DEFAULT_PATH;
     this->setPal(nextPath);
 
     this->updateWindow();
