@@ -663,9 +663,27 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 }
 #endif
 
-                // select better colors for the color-groups
+                // select better colors for the color-groups with new colors
 
+                for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
+                    uint64_t r = 0, g = 0, b = 0; uint64_t tw = 0;
+                    for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
+                        QColor wc = weightColor(user.first);
+                        uint64_t cw = wmap[user.first];
+                        r += cw * (wc.red() * wc.red());
+                        g += cw * (wc.green() * wc.green());
+                        b += cw * (wc.blue() * wc.blue());
+                        tw += cw;
+                    }
 
+                    r = round(sqrt((double)r / tw));
+                    g = round(sqrt((double)g / tw));
+                    b = round(sqrt((double)b / tw));
+
+                    // change |= it->red() != r || it->green() != g || it->blue() != b;
+
+                    *it = PaletteColor(QColor(r, g, b), it->index());
+                }
 
                 if (!change) {
                     break;

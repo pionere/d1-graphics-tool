@@ -5,6 +5,8 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QPair>
+#include <QSet>
+#include <QString>
 #include <QStringList>
 #include <QTranslator>
 #include <QUndoCommand>
@@ -172,6 +174,8 @@ private:
     void addFrames(bool append);
     void addSubtiles(bool append);
     void addTiles(bool append);
+
+    void getFramePals(QSet<QString> &framePals) const;
 
 public slots:
     void on_actionMerge_Frame_triggered();

@@ -1182,7 +1182,12 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
     D1GfxFrame *frame = this->insertFrame(idx);
     D1ImageFrame::load(*frame, image, this->type == D1CEL_TYPE::SMK, this->palette);
     // this->modified = true;
-
+    // RegisterPalette
+    D1Pal* pal = frame->getFramePal().data();
+    if (pal != nullptr) {
+        QString palPath = QString("Frame%1-%2").arg(idx + 1, 4, 10, QChar('0')).arg(idx + 1, 4, 10, QChar('0'));
+        pal->setFilePath(palPath);
+    }
     return this->frames[idx];
 }
 
@@ -1204,7 +1209,7 @@ D1GfxFrame *D1Gfx::addToFrame(int idx, const D1GfxFrame &frame)
 D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
 {
     D1GfxFrame frame;
-    D1ImageFrame::load(frame, image, this->type == D1CEL_TYPE::SMK, this->palette);
+    D1ImageFrame::load(frame, image, false, this->palette);
 
     return this->addToFrame(idx, frame);
 }
@@ -1221,7 +1226,7 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QString &pixels)
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
 {
     D1GfxFrame *frame = new D1GfxFrame();
-    D1ImageFrame::load(*frame, image, this->type == D1CEL_TYPE::SMK, this->palette);
+    D1ImageFrame::load(*frame, image, false, this->palette);
     this->setFrame(idx, frame);
 
     return this->frames[idx];

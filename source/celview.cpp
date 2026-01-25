@@ -562,12 +562,11 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
             }
         }
         int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
-        if (deltaFrameCount == 0) {
-            return; // no new frame -> done
+        if (deltaFrameCount != 0) {
+            // jump to the first appended frame
+            this->currentFrameIndex = prevFrameCount;
+            this->updateGroupIndex();
         }
-        // jump to the first appended frame
-        this->currentFrameIndex = prevFrameCount;
-        this->updateGroupIndex();
     } else {
         // insert the frame(s)
         for (int i = numFiles - 1; i >= 0; i--) {
@@ -576,10 +575,11 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
                 break;
             }
         }
-        int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
-        if (deltaFrameCount == 0) {
-            return; // no new frame -> done
-        }
+        //int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
+        //if (deltaFrameCount != 0) {
+        //   // jump to the first appended frame
+        //   ;
+        //}
     }
     // update the view - done by the caller
     // this->displayFrame();
