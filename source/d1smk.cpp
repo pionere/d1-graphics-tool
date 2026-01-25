@@ -1120,22 +1120,22 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
 bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 {
     // validate the content
-    int width = 0, height = 0;
-    int frameCount = gfx.getFrameCount();
+    QSize fs = gfx.getFrameSize();
+    if (fs.isValid()) {
+        dProgressErr() << QApplication::tr("Framesize is not constant");
+        return false;
+    }
+    const int width = fs.width();
+    const int height = fs.height();
+    if ((width & 3) || (height & 3)) {
+        dProgressErr() << QApplication::tr("SMK requires width/height to be multiple of 4.");
+        return false;
+    }
+
+    const int frameCount = gfx.getFrameCount();
     bool palUse[D1PAL_COLORS] = { 0 };
     for (int i = 0; i < frameCount; i++) {
         D1GfxFrame *frame = gfx.getFrame(i);
-        if (i == 0) {
-            width = frame->getWidth();
-            height = frame->getHeight();
-            if ((width & 3) || (height & 3)) {
-                dProgressErr() << QApplication::tr("SMK requires width/height to be multiple of 4.").arg(i + 1);
-                return false;
-            }
-        } else if (width != frame->getWidth() || height != frame->getHeight()) {
-            dProgressErr() << QApplication::tr("Mismatching framesize (%1).").arg(i + 1);
-            return false;
-        }
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 D1GfxPixel pixel = frame->getPixel(x, y);
@@ -1152,7 +1152,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     for (int n = 0; n < frameCount; n++) {
         uint8_t frameType = 0;
         D1GfxFrame *frame = gfx.getFrame(n);
-        if (!frame->getFramePal().isNull()) {
+        if (!frame->getFramePal().isNull() || n == 0) {
             frameType |= 1;
         }
         D1SmkAudioData *audioData = frame->getFrameAudio();
