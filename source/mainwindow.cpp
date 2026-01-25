@@ -3567,13 +3567,13 @@ void MainWindow::on_actionClose_PAL_triggered()
     this->getFramePals(framePals);
     if (allPals) {
         for (auto it = this->pals.begin(); it != this->pals.end(); ) {
-            QString palPath = it->second->getFilePath();
+            QString palPath = it.value()->getFilePath();
             if (MainWindow::isResourcePath(palPath) || palPath == nextPath) {
                 it++;
                 continue;
             }
             if (!framePals.contains(palPath)) {
-                MemFree(it->second);
+                MemFree(it.value());
             }
             // remove path in palWidget
             // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), D1Pal::DEFAULT_PATH);
@@ -3674,12 +3674,12 @@ void MainWindow::on_actionClose_Translation_Unique_triggered()
     }
     if (allTrns) {
         for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
-            QString trnPath = it->second->getFilePath();
+            QString trnPath = it.value()->getFilePath();
             if (MainWindow::isResourcePath(trnPath) || trnPath == nextPath) {
                 it++;
                 continue;
             }
-            MemFree(it->second);
+            MemFree(it.value());
             // remove path in trnUniqueWidget
             // this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), D1Trn::IDENTITY_PATH);
             it = this.uniqueTrns.erase(it);
@@ -3781,12 +3781,12 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
     }
     if (allTrns) {
         for (auto it = this->baseTrns.begin(); it != this->baseTrns.end(); ) {
-            QString trnPath = it->second->getFilePath();
+            QString trnPath = it.value()->getFilePath();
             if (MainWindow::isResourcePath(trnPath) || trnPath == nextPath) {
                 it++;
                 continue;
             }
-            MemFree(it->second);
+            MemFree(it.value());
             // remove path in trnBaseWidget
             // this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), D1Trn::IDENTITY_PATH);
             it = this.baseTrns.erase(it);
