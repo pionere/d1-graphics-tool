@@ -345,18 +345,7 @@ void CelView::setPal(D1Pal *p)
                     for ( ; i >= 0; i--) {
                         QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
                         if (!fp.isNull()) {
-                            p = fp.data();
-                            // remove subsequent palette if it matches
-                            i = this->currentFrameIndex;
-                            while (++i < this->gfx->getFrameCount()) {
-                                QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-                                if (!fp.isNull()) {
-                                    if (fp.data() == p) {
-                                        this->gfx->getFrame(i)->setFramePal(nullptr);
-                                    }
-                                    break;
-                                }
-                            }
+                            this->gfx->setFramePalette(i, fp.data());
                             break;
                         }
                     }
@@ -371,37 +360,13 @@ void CelView::setPal(D1Pal *p)
                 if (!fp.isNull()) {
                     if (fp.data() != p) {
                         // update the palette of the current frame if it does not match
-                        i = this->currentFrameIndex;
-                        this->gfx->getFrame(i)->setFramePal(p);
-                        // remove subsequent palette if it matches
-                        while (++i < this->gfx->getFrameCount()) {
-                            QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-                            if (!fp.isNull()) {
-                                if (fp.data() == p) {
-                                    this->gfx->getFrame(i)->setFramePal(nullptr);
-                                }
-                                break;
-                            }
-                        }
-                        this->gfx->setModified();
+                        this->gfx->setFramePalette(this->currentFrameIndex, p);
                     }
                     break;
                 }
             }
             if (i < 0) {
-                i = this->currentFrameIndex;
-                this->gfx->getFrame(i)->setFramePal(p);
-                // remove subsequent palette if it matches
-                while (++i < this->gfx->getFrameCount()) {
-                    QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-                    if (!fp.isNull()) {
-                        if (fp.data() == p) {
-                            this->gfx->getFrame(i)->setFramePal(nullptr);
-                        }
-                        break;
-                    }
-                }
-                this->gfx->setModified();
+                this->gfx->setFramePalette(this->currentFrameIndex, p);
             }
         }
     }

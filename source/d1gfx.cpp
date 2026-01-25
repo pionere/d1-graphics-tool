@@ -1977,6 +1977,24 @@ void D1Gfx::setPalette(D1Pal *pal)
     this->palette = pal;
 }
 
+bool D1Gfx::setFramePalette(int frameIndex, D1Pal *pal)
+{
+    this->frames[frameIndex]->setFramePal(pal);
+    if (pal != nullptr) {
+        // remove subsequent palette if it matches
+        for (int i = frameIndex + 1; i < this->getFrameCount(); i++) {
+            QPointer<D1Pal> &fp = this->frames[i]->getFramePal();
+            if (!fp.isNull()) {
+                if (fp.data() == p) {
+                    fp.clear();
+                }
+                break;
+            }
+        }
+    }
+    this->modified = true;
+}
+
 static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
 {
     unsigned res = 0;

@@ -680,9 +680,18 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     g = round(sqrt((double)g / tw));
                     b = round(sqrt((double)b / tw));
 
-                    // change |= it->red() != r || it->green() != g || it->blue() != b;
-
-                    *it = PaletteColor(QColor(r, g, b), it->index());
+                    QColor color = QColor(r, g, b);
+                    smackColor(color, forSmk);
+                    auto nit = next_colors.begin();
+                    for ( ; nit != next_colors.end(); nit++) {
+                        if (nit->red() == color.red() && nit->green() == color.green() && nit->red() == color.red()) {
+                            break;
+                        }
+                    }
+                    if (nit == next_colors.end()) {
+                        *it = PaletteColor(color, it->index());
+                        // change = true;
+                    }
                 }
 
                 if (!change) {
