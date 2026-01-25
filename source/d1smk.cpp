@@ -1727,7 +1727,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     const QColor undefColor = fix.pal->getUndefinedColor();
     bool palUse[D1PAL_COLORS] = { 0 };
     for (int i = fix.frameFrom; i < fix.frameTo; i++) {
-        D1GfxFrame *frame = fix.gfx.getFrame(i);
+        D1GfxFrame *frame = fix.gfx->getFrame(i);
         for (int y = 0; y < frame->getHeight(); y++) {
             for (int x = 0; x < frame->getWidth(); x++) {
                 D1GfxPixel pixel = frame->getPixel(x, y);
