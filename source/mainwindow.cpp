@@ -3682,7 +3682,7 @@ void MainWindow::on_actionClose_Translation_Unique_triggered()
             MemFree(it.value());
             // remove path in trnUniqueWidget
             // this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), D1Trn::IDENTITY_PATH);
-            it = this.uniqueTrns.erase(it);
+            it = this->uniqueTrns.erase(it);
         }
     } else {
         if (MainWindow::isResourcePath(filePath)) {
