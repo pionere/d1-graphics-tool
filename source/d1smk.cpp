@@ -1122,7 +1122,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 {
     // validate the content
     QSize fs = gfx.getFrameSize();
-    if (fs.isValid()) {
+    if (!fs.isValid()) {
         dProgressErr() << QApplication::tr("Framesize is not constant");
         return false;
     }
