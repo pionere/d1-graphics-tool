@@ -585,7 +585,7 @@ static void addTreeValue(unsigned byteValue, QList<QPair<unsigned, unsigned>> &b
 static void prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &cursor, unsigned &bitNum)
 {
     // reduce inflated cache frequencies
-    for (int i = 0; i < 3; i++) {
+    /*for (int i = 0; i < 3; i++) {
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
             for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
@@ -602,7 +602,7 @@ static void prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &curso
                 }
             }
         }
-    }
+    }*/
     // convert cache values to normal values
     bool hasEntries = !tree.treeStat.isEmpty();
     int dummyLeaf = UINT16_MAX + 1;
