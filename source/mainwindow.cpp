@@ -3789,7 +3789,7 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
             MemFree(it.value());
             // remove path in trnBaseWidget
             // this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), D1Trn::IDENTITY_PATH);
-            it = this.baseTrns.erase(it);
+            it = this->baseTrns.erase(it);
         }
     } else {
         if (MainWindow::isResourcePath(filePath)) {
