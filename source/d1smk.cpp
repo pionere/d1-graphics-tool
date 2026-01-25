@@ -810,11 +810,11 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
     cursor = (size_t)res - (size_t)frameData;
 }
 
-static unsigned char oldPalette[D1SMK_COLORS][3];
+static unsigned char oldPalette[D1SMK_COLORS][4];
 static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS], uint8_t *dest)
 {
     // convert pal to smk-palette
-    unsigned char newPalette[D1SMK_COLORS][3];
+    unsigned char newPalette[D1SMK_COLORS][4];
     static_assert(D1PAL_COLORS == D1SMK_COLORS, "encodePalette conversion from D1PAL to SMK_PAL must be adjusted.");
     for (int i = 0; i < D1PAL_COLORS; i++) {
         QColor col = pal->getColor(i);
@@ -822,6 +822,7 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
         newPalette[i][0] = col.red();
         newPalette[i][1] = col.green();
         newPalette[i][2] = col.blue();
+        newPalette[i][3] = col != pal->getUndefinedColor();
         for (int n = 0; n < 3; n ++) {
             unsigned char cv = newPalette[i][n];
             const unsigned char *p = &palmap[0];
@@ -1839,7 +1840,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         ignoredColors.chop(2);
         QString msg = QApplication::tr("Ignored the %1 undefined color(s) in the palette", "", numIgnored).arg(ignoredColors);
         msg = addDetails(msg, verbose, fix);
-        dProgressWarn() << msg;
+        dProgress() << msg;
     }
     // if (fix.colors.isEmpty()) {
     if (!result) {

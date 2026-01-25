@@ -182,7 +182,18 @@ void MainWindow::setPal(const QString &path)
     // update the widgets
     // - views
     if (this->celView != nullptr) {
+        QSet<QString> framePals;
+        this->getFramePals(framePals);
+
         this->celView->setPal(pal);
+
+        // update palettes
+        QSet<QString> framePalsNow;
+        this->getFramePals(framePalsNow);
+        for (const QString framePal : framePals) {
+            if (!framePalsNow.contains(framePal))
+                this->pals.take(framePal);
+        }
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->setPal(pal);

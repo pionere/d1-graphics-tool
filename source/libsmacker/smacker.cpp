@@ -3078,7 +3078,13 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 
 			/* OK!  Copy the color-palette entries. */
 			memmove(&s->palette[i][0], &oldPalette[src][0], count * 3);
+            // memcpy(&s->palette[i][0], &oldPalette[src][0], count * 3);
 			i += count;
+            /*for ( ; count > 0; count--, i++, src++) {
+                s->palette[i][0] = oldPalette[src][0];
+                s->palette[i][1] = oldPalette[src][1];
+                s->palette[i][2] = oldPalette[src][2];
+            }*/
 		} else {
 			/* 0x00: Set Color block
 				Direct-set the next 3 bytes for palette index */
