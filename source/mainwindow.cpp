@@ -3577,7 +3577,7 @@ void MainWindow::on_actionClose_PAL_triggered()
             }
             // remove path in palWidget
             // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), D1Pal::DEFAULT_PATH);
-            it = this.pals.erase(it);
+            it = this->pals.erase(it);
         }
     } else {
         if (MainWindow::isResourcePath(filePath)) {
