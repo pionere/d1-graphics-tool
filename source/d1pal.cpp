@@ -373,7 +373,9 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             col32s.insert(colorValue(this->colors[i]));
         }
     }
-
+    if (forSmk && !freeIdxs.empty()) {
+        freeIdxs.erase(std::prev(freeIdxs.end()));
+    }
     if (freeIdxs.empty()) {
         return false; // no place for new colors -> done
     }
