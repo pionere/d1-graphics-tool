@@ -373,7 +373,7 @@ typedef struct _SmkTreeInfo {
 static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValues)[3])
 {
     QList<QPair<unsigned, unsigned>> *stat = &tree.treeStat;
-/*
+
     for (int i = 0; i < 3; i++) {
         if (value == cacheValues[i]) {
             stat = &tree.cacheStat[i];
@@ -381,7 +381,7 @@ static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValu
             break;
         }
     }
-*/
+
     /*auto val = std::find_if(stat->begin(), stat->end(), [value](const QPair<unsigned, unsigned> &entry) { return entry.first == value; });
     if (val == tree.treeStat.end()) {
         stat->push_back(QPair<unsigned, unsigned>(value, 1));
@@ -630,7 +630,7 @@ static void prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &curso
                 }
             }
             if (n >= UINT16_MAX) {
-                dProgressFail() << QApplication::tr("Congratulation, you managed to break SMK.");
+                dProgressFail() << QApplication::tr("Congratulation, you managed to break SMK in tree %1.", i);
             }
         }
         if (hasEntry) {
