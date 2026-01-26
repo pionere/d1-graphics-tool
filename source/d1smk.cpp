@@ -373,6 +373,7 @@ typedef struct _SmkTreeInfo {
 static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValues)[3])
 {
     QList<QPair<unsigned, unsigned>> *stat = &tree.treeStat;
+/*
     for (int i = 0; i < 3; i++) {
         if (value == cacheValues[i]) {
             stat = &tree.cacheStat[i];
@@ -380,7 +381,7 @@ static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValu
             break;
         }
     }
-
+*/
     /*auto val = std::find_if(stat->begin(), stat->end(), [value](const QPair<unsigned, unsigned> &entry) { return entry.first == value; });
     if (val == tree.treeStat.end()) {
         stat->push_back(QPair<unsigned, unsigned>(value, 1));
@@ -1744,12 +1745,12 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             }
         }
     }
-    QList<quint8> ignored;
+    // QList<quint8> ignored;
     bool result = false;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
         QColor col = fix.pal->getColor(i);
         if (col == undefColor) {
-            ignored.push_back(i);
+            // ignored.push_back(i);
             continue;
         }
         if (!palUse[i]) {
@@ -1793,32 +1794,33 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                 }
             }
         }
-        if (change) {
-            if (col == undefColor)
+        if (change && col == undefColor) {
                 dProgressWarn() << QApplication::tr("The undefined color is selected as a valid palette-entry.");
-
-            // fix.colors.push_back(i);
-            // find possible replacement for the modified color
-            std::vector<PaletteColor> colors;
-            fix.pal->getValidColors(colors);
-            for (const PaletteColor pc : colors) {
-                if (col.red() == pc.red() && col.green() == pc.green() && col.blue() == pc.blue() && pc.index() != i) {
+        } else {
+        // find possible replacement for the color
+        for (unsigned n = 0; n < i; n++) {
+            QColor pc = fix.pal->getColor(n);
+            if (pc == col) {
                     // dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%3..%4)").arg(pc.index()).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo + 1);
                     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
-                    replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), D1GfxPixel::colorPixel(pc.index())));
+                    replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), D1GfxPixel::colorPixel(n)));
                     RemapParam params;
                     params.frames = std::pair<int, int>(fix.frameFrom + 1, fix.frameTo);
                     fix.gfx->replacePixels(replacements, params, verbose);
 
                     col = undefColor;
+                    change = true;
                     break;
                 }
             }
+        }
+        if (change) {
             fix.pal->setColor(i, col);
 
             result = true;
         }
     }
+/*
     QString ignoredColors;
     const int numIgnored = ignored.count();
     for (int n = 0; n < numIgnored; n++) {
@@ -1842,14 +1844,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         msg = addDetails(msg, verbose, fix);
         dProgress() << msg;
     }
-    // if (fix.colors.isEmpty()) {
-    if (!result) {
-        QString msg = QApplication::tr("The palette");
-        msg = addDetails(msg, verbose, fix);
-        msg.chop(1);
-        msg.append(QApplication::tr(" is SMK compliant"));
-        dProgress() << msg;
-    }
+*/
     return result;
 }
 
@@ -1866,6 +1861,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
     }
 
     ProgressDialog::incBar(QApplication::tr("Fixing graphics..."), gfxs.count() + 1);
+    bool result = false;
     for (D1Gfx *gfx : gfxs) {
         // adjust colors of the palette(s)
         D1SmkColorFix cf;
@@ -1881,6 +1877,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                 if (fixPalColors(cf, verbose)) {
 //                    frameColorMods.push_back(cf);
 //                    cf.colors.clear();
+                    result = true;
                 }
                 cf.frameFrom = i;
                 cf.pal = fp.data();
@@ -1890,6 +1887,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
         if (fixPalColors(cf, verbose)) {
 //            frameColorMods.push_back(cf);
             // cf.colors.clear();
+            result = true;
         }
         // eliminate matching palettes
         D1Pal *pal = nullptr;
@@ -1937,6 +1935,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             }
                             fp.clear();
                             cf.gfx->setModified();
+                            result = true;
                             dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
                             cp = pal;
                         }
@@ -1972,6 +1971,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             cf.gfx->getFrame(n)->setFramePal(cp);
                             fp.clear();
                             cf.gfx->setModified();
+                            result = true;
                             dProgress() << QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);
                         }
                     }
@@ -2000,6 +2000,10 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
         if (!ProgressDialog::incValue()) {
             break;
         }
+    }
+
+    if (!result) {
+        dProgress() << QApplication::tr("The palettes of the graphics are SMK compliant");
     }
 
     ProgressDialog::decBar();
