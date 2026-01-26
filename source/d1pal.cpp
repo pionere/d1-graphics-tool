@@ -692,7 +692,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     }
                     if (nit == next_colors.end()) {
                         *it = PaletteColor(color, it->index());
-                        // change = true;
+                        change = true;
                     }
                 }
 
