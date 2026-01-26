@@ -1928,12 +1928,13 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                         }
                         if (prevColors.size() + newidxs.count() <= (D1PAL_COLORS - 1)) {
                             // use the previous palette
+                            const QColor undefColor = pal->getUndefinedColor();
                             for (const int nc : newidxs) {
                                 // TODO: ensure the new color does not conflict with the undefined color of the previous palette
 
                                 // select a new entry
                                 for (unsigned r = 0; r < D1PAL_COLORS; r++) {
-                                    if (pal->getColor(r) != pal->getUndefinedColor) continue;
+                                    if (pal->getColor(r) != undefColor) continue;
                                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(nc), D1GfxPixel::colorPixel(r)));
                                     pal->setColor(r, cp->getColor(nc));
                                     break;
@@ -1985,12 +1986,13 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             }
                         }
                         if (currColors.size() + previdxs.count() <= (D1PAL_COLORS - 1)) {
+                            const QColor undefColor = cp->getUndefinedColor();
                             for (const int pc : previdxs) {
                                 // TODO: ensure the previous color does not conflict with the undefined color of the new palette
 
                                 // select a new entry
                                 for (unsigned r = 0; r < D1PAL_COLORS; r++) {
-                                    if (cp->getColor(r) != cp->getUndefinedColor) continue;
+                                    if (cp->getColor(r) != undefColor) continue;
                                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(pc), D1GfxPixel::colorPixel(r)));
                                     cp->setColor(r, pal->getColor(pc));
                                     break;
