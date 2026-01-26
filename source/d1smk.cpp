@@ -1982,7 +1982,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                                 }
                             }
                             if (!match) {
-                                previdxs.push_back(cc.index());
+                                previdxs.push_back(pc.index());
                             }
                         }
                         if (currColors.size() + previdxs.count() <= (D1PAL_COLORS - 1)) {
