@@ -630,7 +630,7 @@ static void prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &curso
                 }
             }
             if (n >= UINT16_MAX) {
-                dProgressFail() << QApplication::tr("Congratulation, you managed to break SMK in tree %1.", i);
+                dProgressFail() << QApplication::tr("Congratulation, you managed to break SMK in tree %1.").arg(i);
             }
         }
         if (hasEntry) {
