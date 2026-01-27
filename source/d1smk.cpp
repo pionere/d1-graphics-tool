@@ -218,6 +218,7 @@ uint8_t D1SmkAudioData::getCompress(unsigned track) const
 static D1Pal* LoadPalette(smk SVidSMK)
 {
     D1Pal *pal = new D1Pal();
+    pal->load(D1Pal::EMPTY_PATH);
 
     const unsigned char *smkPal = smk_get_palette(SVidSMK);
     for (int i = 0; i < D1SMK_COLORS; i++) {
@@ -1909,8 +1910,11 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
         cf.gfx = gfx;
         cf.frameFrom = 0;
         int i = 0;
-        ProgressDialog::incBar(QApplication::tr("Fixing frame..."), cf.gfx->getFrameCount() + 1);
+        ProgressDialog::incBar(QApplication::tr("Fixing frames..."), 2 * cf.gfx->getFrameCount() + 1);
         for ( ; i < cf.gfx->getFrameCount(); i++) {
+            if (ProgressDialog::wasCanceled()) {
+                break;
+            }
             QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
             if (!fp.isNull()) {
                 cf.frameTo = i;
@@ -1921,6 +1925,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                 }
                 cf.frameFrom = i;
                 cf.pal = fp.data();
+            }
+            if (!ProgressDialog::incValue()) {
+                break;
             }
         }
         cf.frameTo = i;
