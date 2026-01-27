@@ -586,7 +586,7 @@ static void addTreeValue(unsigned byteValue, QList<QPair<unsigned, unsigned>> &b
 static void prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &cursor, unsigned &bitNum)
 {
     // reduce inflated cache frequencies
-    /*for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
         for (int n = 0; n < tree.cacheStat[i].count(); n++) {
             unsigned value = tree.cacheStat[i][n].first;
             for (auto it = tree.treeStat.begin(); it != tree.treeStat.end(); it++) {
@@ -603,7 +603,7 @@ static void prepareVideoTree(SmkTreeInfo &tree, uint8_t *treeData, size_t &curso
                 }
             }
         }
-    }*/
+    }
     // convert cache values to normal values
     bool hasEntries = !tree.treeStat.isEmpty();
     int dummyLeaf = UINT16_MAX + 1;
@@ -1954,15 +1954,15 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             result = true;
                             QString msg;
                             if (newidxs.isEmpty()) {
-                                msg = QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
+                                msg = QApplication::tr("Palette of frame %1 is obsolete.");
                             } else {
                                 int n = i;
                                 while (cf.gfx->getFrame(--n)->getFramePal().isNull()) {
                                     ;
                                 }
-                                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(i + 1).arg(n + 1);
+                                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.");
                             }
-                            dProgress() << msg;
+                            dProgress() << msg.arg(i + 1).arg(n + 1);
                             cp = pal;
                         }
                     } else {
@@ -2015,11 +2015,11 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             result = true;
                             QString msg;
                             if (previdxs.isEmpty()) {
-                                msg = QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);
+                                msg = QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.");
                             } else {
-                                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(n + 1).arg(i + 1);
+                                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.");
                             }
-                            dProgress() << msg;
+                            dProgress() << msg.arg(n + 1).arg(i + 1);
                         }
                     }
 #else
