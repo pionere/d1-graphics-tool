@@ -711,7 +711,6 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 }
                 break;
             }
-
         }
         // sort the new colors by the number of users 
         // if (forSmk) {
@@ -736,12 +735,12 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             }
             return a.first.blue() < b.first.blue();
             });
-        for (const PaletteColor pc : new_colors) {
-            freeIdxs.insert(pc.index());
+        for (const std::pair<PaletteColor, uint64_t> &nc : new_colors) {
+            freeIdxs.insert(nc.first.index());
         }
         auto ni = new_colors.begin();
         for (auto it = freeIdxs.cbegin(); it != freeIdxs.cend(); it++, ni++) {
-            *ni = std::pair<PaletteColor, uint64_t>(PaletteColor(ni->color(), *it), 0);
+            *ni = std::pair<PaletteColor, uint64_t>(PaletteColor(ni->first.color(), *it), 0);
         }
         // }
     } else {
