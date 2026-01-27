@@ -752,7 +752,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
         const QColor nc = nci.first.color();
         if (nc == this->undefinedColor)
             dProgressWarn() << tr("The undefined color is selected as a valid palette-entry.");
-        this->colors[pc.index()] = nc;
+        this->colors[nci.first.index()] = nc;
     }
 
     // update the view - done by the caller
