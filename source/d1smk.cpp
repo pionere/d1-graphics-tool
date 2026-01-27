@@ -221,7 +221,9 @@ static D1Pal* LoadPalette(smk SVidSMK)
 
     const unsigned char *smkPal = smk_get_palette(SVidSMK);
     for (int i = 0; i < D1SMK_COLORS; i++) {
-        pal->setColor(i, QColor(smkPal[i * 3 + 0], smkPal[i * 3 + 1], smkPal[i * 3 + 2]));
+        if (smkPal[i * 4 + 3] != 0) {
+            pal->setColor(i, QColor(smkPal[i * 4 + 0], smkPal[i * 4 + 1], smkPal[i * 4 + 2]));
+        }
     }
     return pal;
 }
@@ -1122,7 +1124,7 @@ static size_t encodeAudio(uint8_t *audioData, size_t len, const SmkAudioInfo &au
 bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
 {
     // validate the content
-    QSize fs = gfx.getFrameSize();
+    const QSize fs = gfx.getFrameSize();
     if (!fs.isValid()) {
         dProgressErr() << QApplication::tr("Framesize is not constant");
         return false;
@@ -1347,20 +1349,19 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
                             // SOLID BLOCK
                             ctype = 3 | (color1 << 8);
                         }
+                    } else {
+                        // FULL BLOCK -> SMK_TREE_FULL
+                        unsigned color1, color2;
+                        for (int yy = 0; yy < 4; yy++) {
+                            color1 = frame->getPixel(x + 2, y + yy).getPaletteIndex();
+                            color2 = frame->getPixel(x + 3, y + yy).getPaletteIndex();
+                            addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
+                            color1 = frame->getPixel(x + 0, y + yy).getPaletteIndex();
+                            color2 = frame->getPixel(x + 1, y + yy).getPaletteIndex();
+                            addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
+                        }
+                        // ctype = 1;
                     }
-                }
-                if (ctype == 1) {
-                    // FULL BLOCK -> SMK_TREE_FULL
-                    unsigned color1, color2;
-                    for (int yy = 0; yy < 4; yy++) {
-                        color1 = frame->getPixel(x + 2, y + yy).getPaletteIndex();
-                        color2 = frame->getPixel(x + 3, y + yy).getPaletteIndex();
-                        addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
-                        color1 = frame->getPixel(x + 0, y + yy).getPaletteIndex();
-                        color2 = frame->getPixel(x + 1, y + yy).getPaletteIndex();
-                        addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
-                    }
-                    // ctype = 1;
                 }
                 if (type != ctype) {
                     addTreeTypeValue(type, typelen, videoTree[SMK_TREE_TYPE], cacheValues[SMK_TREE_TYPE]);
@@ -1514,11 +1515,10 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
                             // SOLID BLOCK
                             ctype = 3 | (color1 << 8);
                         }
+                    } else {
+                        // FULL BLOCK -> SMK_TREE_FULL
+                        // ctype = 1;
                     }
-                }
-                if (ctype == 1) {
-                    // FULL BLOCK -> SMK_TREE_FULL
-                    // ctype = 1;
                 }
                 if (type != ctype) {
                     encodePixels(x, y, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
@@ -1774,8 +1774,13 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                         if (p[0] - cv > cv - p[-1]) {
                             p--;
                         }
-                        const char *compontent[3] = { "red", "green", "blue" };
-                        QString msg = QApplication::tr("The %1 component of color %2 is adjusted in the palette").arg(compontent[n]).arg(i);
+                        QString cn;
+                        switch (n) {
+                        case 0: cn = QApplication::tr("red"); break;
+                        case 1: cn = QApplication::tr("green"); break;
+                        case 2: cn = QApplication::tr("blue"); break;
+                        }
+                        QString msg = QApplication::tr("The %1 component of color %2 is adjusted in the palette").arg(cn).arg(i);
                         msg = addDetails(msg, verbose, fix);
                         msg = msg.append(QApplication::tr(" (Using %1 instead of %2)").arg(*p).arg(cv));
                         dProgress() << msg;
