@@ -1954,15 +1954,15 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             result = true;
                             QString msg;
                             if (newidxs.isEmpty()) {
-                                msg = QApplication::tr("Palette of frame %1 is obsolete.");
+                                msg = QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
                             } else {
                                 int n = i;
                                 while (cf.gfx->getFrame(--n)->getFramePal().isNull()) {
                                     ;
                                 }
-                                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.");
+                                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(i + 1).arg(n + 1);
                             }
-                            dProgress() << msg.arg(i + 1).arg(n + 1);
+                            dProgress() << msg;
                             cp = pal;
                         }
                     } else {
@@ -2015,11 +2015,11 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             result = true;
                             QString msg;
                             if (previdxs.isEmpty()) {
-                                msg = QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.");
+                                msg = QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);
                             } else {
-                                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.");
+                                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(n + 1).arg(i + 1);
                             }
-                            dProgress() << msg.arg(n + 1).arg(i + 1);
+                            dProgress() << msg;
                         }
                     }
 #else
