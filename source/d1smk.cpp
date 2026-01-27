@@ -1835,10 +1835,10 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     // sort the palette by usage in a descending order
     std::sort(std::begin(palUse), std::end(palUse), [](std::pair<uint64_t, unsigned> &a, std::pair<uint64_t, unsigned> &b) {
         if (a.first < b.first) {
-            return b;
+            return false;
         }
         if (b.first < a.first) {
-            return a;
+            return true;
         }
         return a.second < b.second;
     });
