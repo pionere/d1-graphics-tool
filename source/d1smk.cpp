@@ -1846,11 +1846,10 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
     QList<QPair<unsigned, QColor>> newColors;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
-        if (palUse[i].second == i || !palUse[i].first) {
-            continue;
-        }
-        replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(palUse[i].second), D1GfxPixel::colorPixel(i)));
+        if (palUse[i].second == i) continue;
         newColors.push_back(QPair<unsigned, QColor>(i, fix.pal->getColor(palUse[i].second)));
+        if (palUse[i].first) 
+            replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(palUse[i].second), D1GfxPixel::colorPixel(i)));
     }
     if (!replacements.isEmpty()) {
         for (const QPair<unsigned, QColor> col : newColors) {

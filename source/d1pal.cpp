@@ -734,7 +734,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 return false;
             }
             return a.first.blue() < b.first.blue();
-            });
+        });
         for (const std::pair<PaletteColor, uint64_t> &nc : new_colors) {
             freeIdxs.insert(nc.first.index());
         }
@@ -748,8 +748,8 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
     }
 
     // update the palette
-    for (const PaletteColor pc : new_colors) {
-        const QColor nc = pc.color();
+    for (const std::pair<PaletteColor, uint64_t> nci : new_colors) {
+        const QColor nc = nci.first.color();
         if (nc == this->undefinedColor)
             dProgressWarn() << tr("The undefined color is selected as a valid palette-entry.");
         this->colors[pc.index()] = nc;
