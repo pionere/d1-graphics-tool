@@ -556,7 +556,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             auto ni = new_colors.begin();
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
                 QColor color = weightColor(it->first);
-                *ni = std::pair<PaletteColor, uint64_t>(PaletteColor(color, ni->index()), it->second);
+                *ni = std::pair<PaletteColor, uint64_t>(PaletteColor(color, ni->first.index()), it->second);
             }
         } else {
 
@@ -698,18 +698,20 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     }
                 }
 
-                if (!change) {
-                    break;
+                if (change) {
+                    continue;
                 }
+
+                for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
+                    uint64_t uc = 0;
+                    for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
+                        uc += wmap[user.first];
+                    }
+                    new_colors.push_back(std::pair<PaletteColor, uint64_t>(*it, uc));
+                }
+                break;
             }
 
-            for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
-                uint64_t uc = 0;
-                for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
-                    uc += wmap[user.first];
-                }
-                new_colors.push_back(std::pair<PaletteColor, uint64_t>(*it, uc));
-            }
         }
         // sort the new colors by the number of users 
         // if (forSmk) {
