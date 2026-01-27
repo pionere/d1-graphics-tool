@@ -510,22 +510,23 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
     }
 
     // prepare the new colors
-    std::vector<PaletteColor> new_colors;
+    std::vector<std::pair<PaletteColor, uint64_t>> new_colors;
     {
         auto fi = freeIdxs.cbegin();
         for (auto it = colors.cbegin(); it != colors.cend(); it++) {
             if (it->marbles != 0) {
                 QColor color = valueColor(it->colorCode, forSmk);
-                new_colors.push_back(PaletteColor(color, *fi));
+                new_colors.push_back(std::pair<PaletteColor, uint64_t>(PaletteColor(color, *fi), 0));
                 fi++;
             }
         }
+        freeIdxs.clear();
     }
 
     // use the colors of the image to optimize the new colors
     if (!image.isNull()) {
         const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
-        std::map<int, int> wmap;
+        std::map<int, uint64_t> wmap;
         for (int y = 0; y < image.height(); y++) {
             for (int x = 0; x < image.width(); x++, srcBits++) {
                 // QColor color = image.pixelColor(x, y);
@@ -555,13 +556,14 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             auto ni = new_colors.begin();
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
                 QColor color = weightColor(it->first);
-                *ni = PaletteColor(color, ni->index());
+                *ni = std::pair<PaletteColor, uint64_t>(PaletteColor(color, ni->index()), it->second);
             }
         } else {
-            freeIdxs.clear();
 
             const unsigned prev_colornum = next_colors.size();
-            next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
+            for (auto it = new_colors.begin(); it != new_colors.end(); it++) {
+                next_colors.push_back(it->first);
+            }
             new_colors.clear();
 
             while (true) {
@@ -701,8 +703,45 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 }
             }
 
-            new_colors.insert(new_colors.end(), next_colors.begin() + prev_colornum, next_colors.end());
+            for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
+                uint64_t uc = 0;
+                for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
+                    uc += wmap[user.first];
+                }
+                new_colors.push_back(std::pair<PaletteColor, uint64_t>(*it, uc));
+            }
         }
+        // sort the new colors by the number of users 
+        // if (forSmk) {
+        std::sort(new_colors.begin(), new_colors.end(), [](std::pair<PaletteColor, uint64_t> &a, std::pair<PaletteColor, uint64_t> &b) {
+            if (a.second < b.second) {
+                return false;
+            }
+            if (b.second < a.second) {
+                return true;
+            }
+            if (a.first.red() < b.first.red()) {
+                return true;
+            }
+            if (b.first.red() < a.first.red()) {
+                return false;
+            }
+            if (a.first.green() < b.first.green()) {
+                return true;
+            }
+            if (b.first.green() < a.first.green()) {
+                return false;
+            }
+            return a.first.blue() < b.first.blue();
+            });
+        for (const PaletteColor pc : new_colors) {
+            freeIdxs.insert(pc.index());
+        }
+        auto ni = new_colors.begin();
+        for (auto it = freeIdxs.cbegin(); it != freeIdxs.cend(); it++, ni++) {
+            *ni = std::pair<PaletteColor, uint64_t>(PaletteColor(ni->color(), *it), 0);
+        }
+        // }
     } else {
         dProgress() << tr("Palette generated without image-file.");
     }
