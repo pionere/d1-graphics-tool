@@ -861,10 +861,12 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
             for (int n = 0; n < D1PAL_COLORS; n++) {
                 int curr = 0;
                 for (int k = n; k < D1PAL_COLORS; k++, curr++) {
-                    if (!palUse[i + curr]) {
+                    // if (!palUse[i + curr]) {
+                    if (!newPalette[i + curr][3]) {
                         continue; // destination color is unused -> ok
                     }
-                    if (!palUse[k]) {
+                    //if (!palUse[k]) {
+                    if (!oldPalette[k][3]) {
                         break; // source color is unused while the destination is used -> stop
                     }
                     if (oldPalette[k][0] != newPalette[i + curr][0] || oldPalette[k][1] != newPalette[i + curr][1] || oldPalette[k][2] != newPalette[i + curr][2]) {
@@ -950,7 +952,8 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
         len = 0;
         for (int i = 0; i < D1PAL_COLORS; i++) {
             int direct;
-            if (palUse[i]) {
+            // if (palUse[i]) {
+            if (newPalette[i][3]) {
                 // 0x00: Set Color block
                 dest[len] = newPalette[i][0];
                 len++;
@@ -961,7 +964,8 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
             } else {
                 // 0x80: Skip block(s)
                 for (direct = 0; (i + direct) < D1PAL_COLORS; direct++) {
-                    if (palUse[i + direct]) {
+                    // if (palUse[i + direct]) {
+                    if (newPalette[i + direct][3]) {
                         break;
                     }
                     // do not write garbage to the file even if it does not matter
