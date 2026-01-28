@@ -266,7 +266,7 @@ bool D1Pal::genColors(const QString &imagefilePath, bool forSmk)
 
     return this->genColors(image, forSmk);
 }
-
+static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const QColor &color);
 static void smackColor(QColor &col, bool forSmk)
 {
     if (!forSmk) {
@@ -276,6 +276,7 @@ static void smackColor(QColor &col, bool forSmk)
     smkColor[0] = col.red();
     smkColor[1] = col.green();
     smkColor[2] = col.blue();
+#if 0
     for (int n = 0; n < 3; n++) {
         unsigned char cv = smkColor[n];
         const unsigned char *p = &palmap[0];
@@ -299,6 +300,44 @@ static void smackColor(QColor &col, bool forSmk)
             }
         }
     }
+#else
+    std::vector<PaletteColor> colors;
+    colors.push_back(PaletteColor(col, 0));
+    for (int n = 0; n < 3; n++) {
+        unsigned char cv = smkColor[n];
+        const unsigned char *p = &palmap[0];
+        for ( ; /*p < lengthof(palmap)*/; p++) {
+            if (cv <= p[0]) {
+                if (cv != p[0]) {
+                    unsigned num = colors.size();
+                    for (int i = 0; i < num; i++) {
+                        QColor c0, c1;
+                        c0 = c1 = colors[i].color();
+                        if (n == 0) {
+                            c0.setRed(p[0]);
+                            c1.setRed(p[-1]);
+                        }
+                        if (n == 1) {
+                            c0.setGreen(p[0]);
+                            c1.setGreen(p[-1]);
+                        }
+                        if (n == 2) {
+                            c0.setBlue(p[0]);
+                            c1.setBlue(p[-1]);
+                        }
+                        colors[i] = PaletteColor(c0, i);
+                        colors.push_back(PaletteColor(c1, num + i));
+                    }
+                }
+                break;
+            }
+        }
+    }
+    PaletteColor pc = colors[getPalColor(colors, col).first];
+    col.setRed(pc.red());
+    col.setGreen(pc.green());
+    col.setBlue(pc.blue());
+#endif
 }
 
 static int colorWeight(QColor color, bool forSmk)
