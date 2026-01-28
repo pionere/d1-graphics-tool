@@ -373,9 +373,9 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             col32s.insert(colorValue(this->colors[i]));
         }
     }
-    if (forSmk && !freeIdxs.empty()) {
-        freeIdxs.erase(std::prev(freeIdxs.end()));
-    }
+    //if (forSmk && !freeIdxs.empty()) {
+    //    freeIdxs.erase(std::prev(freeIdxs.end()));
+    //}
     if (freeIdxs.empty()) {
         return false; // no place for new colors -> done
     }
@@ -442,7 +442,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             ranges.front().marbles++;
         }
     }
-    
+
     // designate the colors
     std::vector<colorData> colors;
     for (auto it = ranges.begin(); it != ranges.end(); it++) {
@@ -468,7 +468,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 colors.push_back(cd);
             }
         } else if (it->closed == 1) {
-            n--;            
+            n--;
             if (cc == 0) {
                 if (n < 0) {
                     continue;
