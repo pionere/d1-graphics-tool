@@ -2280,7 +2280,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             }
                             auto pit = replacements.find(pal);
                             if (pit == replacements.end()) continue;
-                            uint16_t k = pit->value();
+                            uint16_t k = pit.value();
                             quint8 rc1 = k & 0xFF;
                             quint8 rc2 = k >> 8;
                             const QColor undefColor = pal->getUndefinedColor();
@@ -2360,7 +2360,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             }
                         }
 
-                        keyUses[n].erase(bestKey);
+                        keyUses[n].remove(bestKey);
                         change = true;
                     } continue;
                     }
