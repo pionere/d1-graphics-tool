@@ -1957,7 +1957,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
         gfxs.append(g);
     }
 
-    ProgressDialog::incBar(QApplication::tr("Fixing graphics..."), gfxs.count() + 1);
+    ProgressDialog::incBar(QApplication::tr("Checking graphics..."), gfxs.count() + 1);
     bool result = false;
     for (D1Gfx *gfx : gfxs) {
         // adjust colors of the palette(s)
@@ -1966,7 +1966,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
         cf.gfx = gfx;
         cf.frameFrom = 0;
         int i = 0;
-        ProgressDialog::incBar(QApplication::tr("Fixing frames..."), 3 * cf.gfx->getFrameCount() + SMK_TREE_COUNT + 1);
+        ProgressDialog::incBar(QApplication::tr("Checking frames..."), 3 * cf.gfx->getFrameCount() + SMK_TREE_COUNT + 1);
         bool change = false;
         for ( ; i < cf.gfx->getFrameCount(); i++) {
             if (ProgressDialog::wasCanceled()) {
@@ -2223,11 +2223,11 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                                 const QColor undefColor = pal->getUndefinedColor();
                                 uint32_t bestDist = UINT32_MAX;
                                 uint16_t pk;
-                                const QColor cc1 = pal->getColor(c1);
-                                const QColor cc2 = pal->getColor(c2);
+                                const PaletteColor cc1 = PaletteColor(pal->getColor(c1));
+                                const PaletteColor cc2 = PaletteColor(pal->getColor(c2));
                                 for (int c = 0; c < D1PAL_COLORS; c++) {
                                     // TODO: check all possible combination?
-                                    QColor cc = pal->getColor(c);
+                                    PaletteColor cc = PaletteColor(pal->getColor(c));
                                     if (c != c1) {
                                         uint16_t ck = (k & 0xFF00) | c;
                                         if (keyUses[n].contains(ck)) {

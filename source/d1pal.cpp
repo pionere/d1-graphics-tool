@@ -23,6 +23,28 @@ PaletteColor::PaletteColor(const QColor &color, int index)
 {
 }
 
+PaletteColor::PaletteColor(const QColor &color)
+    : rv(color.red())
+    , gv(color.green())
+    , bv(color.blue())
+{
+}
+
+PaletteColor::PaletteColor(int r, int g, int b, int x)
+    : xv(x)
+    , rv(r)
+    , gv(g)
+    , bv(b)
+{
+}
+
+PaletteColor::PaletteColor(int r, int g, int b)
+    : rv(r)
+    , gv(g)
+    , bv(b)
+{
+}
+
 PaletteColor::PaletteColor(const PaletteColor &o)
     : xv(o.index())
     , rv(o.red())
@@ -266,8 +288,8 @@ bool D1Pal::genColors(const QString &imagefilePath, bool forSmk)
 
     return this->genColors(image, forSmk);
 }
-static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const QColor &color);
-static void smackColor(QColor &col, bool forSmk)
+static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color);
+static void smackColor(PaletteColor &col, bool forSmk)
 {
     if (!forSmk) {
         return;
@@ -302,7 +324,7 @@ static void smackColor(QColor &col, bool forSmk)
     }
 #else
     std::vector<PaletteColor> colors;
-    colors.push_back(PaletteColor(col, 0));
+    colors.push_back(col);
     for (int n = 0; n < 3; n++) {
         unsigned char cv = smkColor[n];
         const unsigned char *p = &palmap[0];
@@ -311,8 +333,9 @@ static void smackColor(QColor &col, bool forSmk)
                 if (cv != p[0]) {
                     unsigned num = colors.size();
                     for (int i = 0; i < num; i++) {
-                        QColor c0, c1;
-                        c0 = c1 = colors[i].color();
+                        PaletteColor &c0 = colors[i];
+                        PaletteColor c1 = PaletteColor(colors[i]);
+                        c1.setIndex(num + i);
                         if (n == 0) {
                             c0.setRed(p[0]);
                             c1.setRed(p[-1]);
@@ -325,33 +348,32 @@ static void smackColor(QColor &col, bool forSmk)
                             c0.setBlue(p[0]);
                             c1.setBlue(p[-1]);
                         }
-                        colors[i] = PaletteColor(c0, i);
-                        colors.push_back(PaletteColor(c1, num + i));
+                        colors.push_back(c1);
                     }
                 }
                 break;
             }
         }
     }
-    PaletteColor pc = colors[getPalColor(colors, col).first];
+    PaletteColor &pc = colors[getPalColor(colors, col).first];
     col.setRed(pc.red());
     col.setGreen(pc.green());
     col.setBlue(pc.blue());
 #endif
 }
 
-static int colorWeight(QColor color, bool forSmk)
+static int colorWeight(PaletteColor color, bool forSmk)
 {
     smackColor(color, forSmk);
     int r = color.red(), g = color.green(), b = color.blue();
     return (r * 256 * 256 + g * 256 + b);
 }
-static QColor weightColor(unsigned weight)
+static PaletteColor weightColor(unsigned weight)
 {
     unsigned c = weight;
     unsigned r, g, b;
     r = c / (256 * 256); g = c / 256; b = c;
-    return QColor(r % 256, g % 256, b % 256);
+    return PaletteColor(r % 256, g % 256, b % 256);
 }
 
 static int colorValue(const QColor &color)
@@ -366,7 +388,7 @@ static int colorValue(const QColor &color)
     }
     return cv;
 }
-static QColor valueColor(unsigned cv, bool forSmk)
+static PaletteColor valueColor(unsigned cv, bool forSmk)
 {
     unsigned r = 0;
     unsigned g = 0;
@@ -377,11 +399,11 @@ static QColor valueColor(unsigned cv, bool forSmk)
         b |= ((cv & 4) >> 2) << n;
         cv >>= 3;
     }
-    QColor color = QColor(r, g, b);
+    PaletteColor color = PaletteColor(r, g, b);
     smackColor(color, forSmk);
     return color;
 }
-int D1Pal::getColorDist(const QColor &color, const QColor &palColor)
+int D1Pal::getColorDist(const PaletteColor &color, const PaletteColor &palColor)
 {
     int currR = color.red() - palColor.red();
     int currG = color.green() - palColor.green();
@@ -389,7 +411,7 @@ int D1Pal::getColorDist(const QColor &color, const QColor &palColor)
     int curr = currR * currR + currG * currG + currB * currB;
     return curr;
 }
-static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const QColor &color)
+static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color)
 {
     unsigned res = 0;
     int best = INT_MAX;
@@ -562,8 +584,9 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
         auto fi = freeIdxs.cbegin();
         for (auto it = colors.cbegin(); it != colors.cend(); it++) {
             if (it->marbles != 0) {
-                QColor color = valueColor(it->colorCode, forSmk);
-                new_colors.push_back(std::pair<PaletteColor, uint64_t>(PaletteColor(color, *fi), 0));
+                PaletteColor color = valueColor(it->colorCode, forSmk);
+                color.setIndex(*fi);
+                new_colors.push_back(std::pair<PaletteColor, uint64_t>(color, 0));
                 fi++;
             }
         }
@@ -583,7 +606,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 if (color.alpha() < COLOR_ALPHA_LIMIT) {
                     ;
                 } else {
-                    w = colorWeight(color, forSmk);
+                    w = colorWeight(PaletteColor(color), forSmk);
                     // if (wmap.count(w) == 0) {
                     //     dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y);
                     // }
@@ -595,15 +618,16 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
         std::vector<PaletteColor> next_colors;
         this->getValidColors(next_colors);
         for (const PaletteColor pc : next_colors) {
-            wmap.erase(colorWeight(pc.color(), forSmk));
+            wmap.erase(colorWeight(pc, forSmk));
         }
 
         if (wmap.size() < new_colors.size()) {
             new_colors.erase(new_colors.begin() + wmap.size(), new_colors.end());
             auto ni = new_colors.begin();
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
-                QColor color = weightColor(it->first);
-                *ni = std::pair<PaletteColor, uint64_t>(PaletteColor(color, ni->first.index()), it->second);
+                PaletteColor color = weightColor(it->first);
+                color.setIndex(ni->first.index());
+                *ni = std::pair<PaletteColor, uint64_t>(color, it->second);
             }
         } else {
 
@@ -619,7 +643,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
 
                 std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>> umap;
                 for (auto it = wmap.cbegin(); it != wmap.cend(); it++) {
-                    QColor color = weightColor(it->first);
+                    PaletteColor color = weightColor(it->first);
                     auto pc = getPalColor(next_colors, color);
                     uint64_t dist = (uint64_t)it->second * pc.second;
                     umap[pc.first].first.push_back(std::pair<int, uint64_t>(it->first, dist));
@@ -662,10 +686,10 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                         }
                     }
                     {   // add the new color
-                        QColor color = weightColor(res);
+                        PaletteColor color = weightColor(res);
                         auto fi = freeIdxs.begin();
-                        const PaletteColor pc = PaletteColor(color, *fi);
-                        next_colors.push_back(pc);
+                        color.setIndex(*fi)
+                        next_colors.push_back(color);
                         freeIdxs.erase(fi);
                     }
 
@@ -675,7 +699,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     umap.erase(res);
                     for (const std::pair<int, uint64_t> &user : users) {
                         auto it = wmap.find(user.first);
-                        QColor color = weightColor(it->first);
+                        PaletteColor color = weightColor(it->first);
                         auto pc = getPalColor(next_colors, color);
                         uint64_t dist = (uint64_t)it->second * pc.second;
                         umap[pc.first].first.push_back(std::pair<int, uint64_t>(it->first, dist));
@@ -705,9 +729,10 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                             }
                         }
 
-                        QColor color = weightColor(res);
+                        PaletteColor color = weightColor(res);
                         auto fi = freeIdxs.begin();
-                        next_colors.push_back(PaletteColor(color, *fi));
+                        color.setIndex(*fi);
+                        next_colors.push_back(color);
                         freeIdxs.erase(fi);
                         continue;
                     }
@@ -719,7 +744,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
                     uint64_t r = 0, g = 0, b = 0; uint64_t tw = 0;
                     for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
-                        QColor wc = weightColor(user.first);
+                        PaletteColor wc = weightColor(user.first);
                         uint64_t cw = wmap[user.first];
                         r += cw * (wc.red() * wc.red());
                         g += cw * (wc.green() * wc.green());
@@ -731,7 +756,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     g = round(sqrt((double)g / tw));
                     b = round(sqrt((double)b / tw));
 
-                    QColor color = QColor(r, g, b);
+                    PaletteColor color = PaletteColor(r, g, b, it->index());
                     smackColor(color, forSmk);
 
                     // ensure the new color is unique
@@ -745,20 +770,19 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
 
                     // check if there is really a gain
                     {
-                        QColor pc = it->color();
                         int64_t dd = 0;
                         for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
-                            QColor uc = weightColor(user.first);
+                            PaletteColor uc = weightColor(user.first);
                             uint64_t cw = wmap[user.first];
 
-                            uint64_t pd = D1Pal::getColorDist(uc, pc);
+                            uint64_t pd = D1Pal::getColorDist(uc, *it);
                             uint64_t nd = D1Pal::getColorDist(uc, color);
                             dd += (int64_t)cw * (int64_t)(nd - pd);
                         }
                         if (dd <= 0) continue;
                     }
                     // select the new color
-                    *it = PaletteColor(color, it->index());
+                    *it = color;
                     change = true;
                 }
 

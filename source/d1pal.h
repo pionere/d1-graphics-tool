@@ -22,6 +22,9 @@ enum class D1PAL_CYCLE_TYPE {
 class PaletteColor {
 public:
     PaletteColor(const QColor &color, int index);
+    PaletteColor(const QColor &color);
+    PaletteColor(int r, int g, int b, int index);
+    PaletteColor(int r, int g, int b);
     PaletteColor(const PaletteColor &o);
     ~PaletteColor() = default;
 
@@ -45,6 +48,10 @@ public:
     {
         return QColor(rv, gv, bv);
     }
+    void setRed(int r) { rv = r); };
+    void setGreen(int g) { gv = g); };
+    void setBlue(int b) { bv = b); };
+    void setIndex(int x) { xv = x); };
 private:
     int rv;
     int gv;
