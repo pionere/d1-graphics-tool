@@ -381,7 +381,7 @@ static QColor valueColor(unsigned cv, bool forSmk)
     smackColor(color, forSmk);
     return color;
 }
-static int D1Pal::getColorDist(const QColor &color, const QColor &palColor)
+int D1Pal::getColorDist(const QColor &color, const QColor &palColor)
 {
     int currR = color.red() - palColor.red();
     int currG = color.green() - palColor.green();
