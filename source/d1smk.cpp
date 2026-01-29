@@ -1856,6 +1856,8 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(palUse[i].second), D1GfxPixel::colorPixel(i)));
     }
     if (!replacements.isEmpty()) {
+        int amount = fix.frameTo - fix.frameFrom;
+        dProgress() << QApplication::tr("Reordered colors of the palette for frame(s) %1-%2", "", amount).arg(fix.frameFrom + 1).arg(fix.frameTo);
         for (const QPair<unsigned, QColor> col : newColors) {
             fix.pal->setColor(col.first, col.second);
         }
@@ -1941,15 +1943,6 @@ static SmkBlockInfo getBlockInfo(const D1GfxFrame *frame, int x, int y)
         result.ctype = 1;
     }
     return result;
-}
-
-static int getColorDist(const QColor &color, const QColor &palColor)
-{
-    int currR = color.red() - palColor.red();
-    int currG = color.green() - palColor.green();
-    int currB = color.blue() - palColor.blue();
-    int curr = currR * currR + currG * currG + currB * currB;
-    return curr;
 }
 
 void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFix> &frameColorMods*/)
@@ -2058,7 +2051,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                                 }
                                 RemapParam params;
                                 params.frames = std::pair<int, int>(i + 1, n);
-                                cf.gfx->replacePixels(replacements, params, verbose);
+                                cf.gfx->replacePixels(replacements, params, 0);
                             }
                             fp.clear();
                             change = true;
@@ -2115,7 +2108,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             if (!replacements.isEmpty()) {
                                 RemapParam params;
                                 params.frames = std::pair<int, int>(n + 1, i);
-                                cf.gfx->replacePixels(replacements, params, verbose);
+                                cf.gfx->replacePixels(replacements, params, 0);
                             }
                             // QPointer<D1Pal> &pp = cf.gfx->getFrame(n)->getFramePal();
                             // pp.clear();
@@ -2238,7 +2231,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                                     if (c != c1) {
                                         uint16_t ck = (k & 0xFF00) | c;
                                         if (keyUses[n].contains(ck)) {
-                                            unsigned cd = cc == undefColor ? 0 : getColorDist(cc1, cc);
+                                            unsigned cd = cc == undefColor ? 0 : D1Pal::getColorDist(cc1, cc);
                                             if (cd < bestDist) {
                                                 bestDist = cd;
                                                 pk = ck;
@@ -2248,7 +2241,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                                     if (c != c2) {
                                         uint16_t ck = (k & 0xFF) | (c << 8);
                                         if (keyUses[n].contains(ck)) {
-                                            unsigned cd = cc == undefColor ? 0 : getColorDist(cc2, cc);
+                                            unsigned cd = cc == undefColor ? 0 : D1Pal::getColorDist(cc2, cc);
                                             if (cd < bestDist) {
                                                 bestDist = cd;
                                                 pk = ck;

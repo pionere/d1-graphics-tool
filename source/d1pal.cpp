@@ -381,6 +381,14 @@ static QColor valueColor(unsigned cv, bool forSmk)
     smackColor(color, forSmk);
     return color;
 }
+static int D1Pal::getColorDist(const QColor &color, const QColor &palColor)
+{
+    int currR = color.red() - palColor.red();
+    int currG = color.green() - palColor.green();
+    int currB = color.blue() - palColor.blue();
+    int curr = currR * currR + currG * currG + currB * currB;
+    return curr;
+}
 static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const QColor &color)
 {
     unsigned res = 0;
@@ -725,16 +733,33 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
 
                     QColor color = QColor(r, g, b);
                     smackColor(color, forSmk);
+
+                    // ensure the new color is unique
                     auto nit = next_colors.begin();
                     for ( ; nit != next_colors.end(); nit++) {
                         if (nit->red() == color.red() && nit->green() == color.green() && nit->red() == color.red()) {
                             break;
                         }
                     }
-                    if (nit == next_colors.end()) {
-                        *it = PaletteColor(color, it->index());
-                        change = true;
+                    if (nit != next_colors.end()) continue;
+
+                    // check if there is really a gain
+                    {
+                        QColor pc = it->color();
+                        int64_t dd = 0;
+                        for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
+                            QColor uc = weightColor(user.first);
+                            uint64_t cw = wmap[user.first];
+
+                            uint64_t pd = D1Pal::getColorDist(uc, pc);
+                            uint64_t nd = D1Pal::getColorDist(uc, color);
+                            dd += (int64_t)cw * (int64_t)(nd - pd);
+                        }
+                        if (dd <= 0) continue;
                     }
+                    // select the new color
+                    *it = PaletteColor(color, it->index());
+                    change = true;
                 }
 
                 if (change) {
