@@ -48,7 +48,7 @@ public:
     {
         return QColor(rv, gv, bv);
     }
-    bool eq(const PaletteColor &o) { return o.rv == rv && o.gv == gv && o.bv == bv; };
+    bool eq(const PaletteColor &o) const { return o.rv == rv && o.gv == gv && o.bv == bv; };
     void setRed(int r) { rv = r; };
     void setGreen(int g) { gv = g; };
     void setBlue(int b) { bv = b; };
