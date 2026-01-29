@@ -2220,7 +2220,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                             QMap<D1Pal*, uint16_t> currReplace;
                             for (auto pit = it.value().begin(); pit != it.value().end(); pit++) {
                                 D1Pal* pal = pit.key();
-                                const QColor undefColor = pal->getUndefinedColor();
+                                const PaletteColor undefColor = PaletteColor(pal->getUndefinedColor());
                                 uint32_t bestDist = UINT32_MAX;
                                 uint16_t pk;
                                 const PaletteColor cc1 = PaletteColor(pal->getColor(c1));
@@ -2231,7 +2231,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                                     if (c != c1) {
                                         uint16_t ck = (k & 0xFF00) | c;
                                         if (keyUses[n].contains(ck)) {
-                                            unsigned cd = cc == undefColor ? 0 : D1Pal::getColorDist(cc1, cc);
+                                            unsigned cd = undefColor.eq(cc) ? 0 : D1Pal::getColorDist(cc1, cc);
                                             if (cd < bestDist) {
                                                 bestDist = cd;
                                                 pk = ck;
@@ -2241,7 +2241,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                                     if (c != c2) {
                                         uint16_t ck = (k & 0xFF) | (c << 8);
                                         if (keyUses[n].contains(ck)) {
-                                            unsigned cd = cc == undefColor ? 0 : D1Pal::getColorDist(cc2, cc);
+                                            unsigned cd = undefColor.eq(cc) ? 0 : D1Pal::getColorDist(cc2, cc);
                                             if (cd < bestDist) {
                                                 bestDist = cd;
                                                 pk = ck;
