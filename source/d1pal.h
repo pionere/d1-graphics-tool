@@ -92,7 +92,7 @@ public:
     bool genColors(const QImage &image, bool forSmk);
     void cycleColors(D1PAL_CYCLE_TYPE type);
     static int getCycleColors(D1PAL_CYCLE_TYPE type);
-    static int getColorDist(const QColor &color, const QColor &palColor);
+    static int getColorDist(const PaletteColor &c0, const PaletteColor &c1);
 
 private:
     void loadRegularPalette(QFile &file);
