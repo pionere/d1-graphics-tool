@@ -48,10 +48,10 @@ public:
     {
         return QColor(rv, gv, bv);
     }
-    void setRed(int r) { rv = r); };
-    void setGreen(int g) { gv = g); };
-    void setBlue(int b) { bv = b); };
-    void setIndex(int x) { xv = x); };
+    void setRed(int r) { rv = r; };
+    void setGreen(int g) { gv = g; };
+    void setBlue(int b) { bv = b; };
+    void setIndex(int x) { xv = x; };
 private:
     int rv;
     int gv;
