@@ -685,10 +685,10 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     ;
                 } else {
                     w = colorWeight(PaletteColor(color), forSmk);
-//                    if (wmap.count(w) == 0) {
-//                        PaletteColor wc = weightColor(w);
-//                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6 -> %7:%8:%9").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y).arg(wc.red()).arg(wc.green()).arg(wc.blue());
-//                    }
+                    if (wmap.count(w) == 0) {
+                        PaletteColor wc = weightColor(w);
+                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6 -> %7:%8:%9").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y).arg(wc.red()).arg(wc.green()).arg(wc.blue());
+                    }
                     wmap[w] += 1;
                 }
             }
