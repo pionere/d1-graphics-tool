@@ -740,7 +740,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 D1Gfx* currGfx = this->getGfx(gn);
                 if (gfx != nullptr && gfx != currGfx)
                     continue;
-                const int fc = currGfx->getGroupSize();
+                const unsigned fc = currGfx->getGroupSize();
                 if ((gn == PGT_WALK_TOWN || gn == PGT_WALK_DUNGEON) && fc != PLR_WALK_ANIMLEN) {
                     dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (StartWalk expects %2 got %3).").arg(this->getGfxLabel(gn)).arg(PLR_WALK_ANIMLEN).arg(fc);
                     result = true;

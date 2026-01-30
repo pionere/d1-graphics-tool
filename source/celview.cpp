@@ -639,10 +639,10 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         }
         progress.second = QString(QApplication::tr("Processing frame %1.")).arg(index + 1);
         dProgress() << progress;
-        if (index + 1 < 27) {
-            image = QImage(0, 0, image.format());
+        if (index + 1 == 27) {
+            this->gfx->insertFrame(0, image);
         }
-        this->gfx->insertFrame(index, image);
+        //this->gfx->insertFrame(index, image);
         index++;
         if (!ProgressDialog::incValue() || index > 27) {
             break;

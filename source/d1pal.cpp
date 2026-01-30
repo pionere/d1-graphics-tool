@@ -331,7 +331,7 @@ static void smackColor(PaletteColor &col, bool forSmk)
         for ( ; /*p < lengthof(palmap)*/; p++) {
             if (cv <= p[0]) {
                 if (cv != p[0]) {
-                    unsigned num = colors.size();
+                    int num = colors.size();
                     for (int i = 0; i < num; i++) {
                         PaletteColor &c0 = colors[i];
                         PaletteColor c1 = PaletteColor(colors[i]);
