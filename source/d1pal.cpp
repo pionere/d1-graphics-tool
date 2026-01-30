@@ -873,7 +873,7 @@ debugSort = true;
 
                 change = sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr, wmap);
 
-                if (change) {
+                /*if (change) {
                     if (++ch < 10) {
                     continue;
                     }
@@ -881,7 +881,7 @@ debugSort = true;
                     if (++ch < 20) {
                     continue;
                     }
-                }
+                }*/
 
                 break;
             }
