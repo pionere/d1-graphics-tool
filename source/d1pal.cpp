@@ -324,7 +324,7 @@ static void smackColor(PaletteColor &col, bool forSmk)
         }
     }
 #else
-debugPalColor = col.red() == 9 && col.green() == 2 && col.blue() == 7;
+// debugPalColor = col.red() == 9 && col.green() == 2 && col.blue() == 7;
     std::vector<PaletteColor> colors;
     colors.push_back(PaletteColor(col.red(), col.green(), col.blue(), 0));
     for (int n = 3 - 1; n >= 0; n--) {
@@ -685,10 +685,10 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     ;
                 } else {
                     w = colorWeight(PaletteColor(color), forSmk);
-                    if (wmap.count(w) == 0) {
-                        PaletteColor wc = weightColor(w);
-                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6 -> %7:%8:%9").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y).arg(wc.red()).arg(wc.green()).arg(wc.blue());
-                    }
+//                    if (wmap.count(w) == 0) {
+//                        PaletteColor wc = weightColor(w);
+//                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6 -> %7:%8:%9").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y).arg(wc.red()).arg(wc.green()).arg(wc.blue());
+//                    }
                     wmap[w] += 1;
                 }
             }
@@ -700,7 +700,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
         for (const PaletteColor pc : next_colors) {
             wmap.erase(colorWeight(pc, false));
         }
-debugSort = true;
+// debugSort = true;
         if (wmap.size() <= new_colors.size()) {
 #if 0
             new_colors.erase(new_colors.begin() + wmap.size(), new_colors.end());
@@ -894,7 +894,8 @@ if (debugSort) {
 
                 change = sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr, wmap);
 
-                /*if (change) {
+                if (change) {
+                    continue;
                     if (++ch < 10) {
                     continue;
                     }
@@ -902,7 +903,7 @@ if (debugSort) {
                     if (++ch < 20) {
                     continue;
                     }
-                }*/
+                }
 
                 break;
             }
