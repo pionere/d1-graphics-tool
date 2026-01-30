@@ -434,6 +434,9 @@ static bool debugSort = false;
 static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum,
     const std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>>* umap, const std::map<int, uint64_t> &wmap)
 {
+if (debugSort) {
+    dProgress() << "++++++++++++++++++++";
+}
     // prepare a separate vector with the user-count information
     std::vector<std::pair<PaletteColor, uint64_t>> new_colors;
     for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
@@ -444,6 +447,9 @@ static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_
             }
         }
         new_colors.push_back(std::pair<PaletteColor, uint64_t>(*it, uc));
+if (debugSort) {
+    dProgress() << QApplication::tr("%1.(%2:%3:%4) : %5").arg(it->index()).arg(it->red()).arg(it->green()).arg(it->blue()).arg(uc);
+}
     }
     // sort the new vector
     std::sort(new_colors.begin(), new_colors.end(), [](std::pair<PaletteColor, uint64_t> &a, std::pair<PaletteColor, uint64_t> &b) {
@@ -696,7 +702,9 @@ debugSort = true;
             }
 #else
             std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>> umap;
-
+if (debugSort) {
+    dProgress() << QApplication::tr("******************** ... %1 vs %2").arg(wmap.size()).arg(new_colors.size());
+}
             auto ni = new_colors.begin();
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
                 const int w = it->first;
@@ -706,6 +714,9 @@ debugSort = true;
                 // *ni = color;
                 next_colors.push_back(color);
                 umap[idx].first.push_back(std::pair<int, uint64_t>(w, 0));
+if (debugSort) {
+    dProgress() << QApplication::tr("%1.(%2:%3:%4) : %5").arg(idx).arg(color.red()).arg(color.green()).arg(color.blue()).arg(wmap[w]);
+}
             }
 
             // next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.begin() + wmap.size());
