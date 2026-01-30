@@ -443,9 +443,11 @@ static bool debugSort = false;
 static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum,
     const std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>>* umap, const std::map<int, uint64_t> &wmap)
 {
+#if 0
 if (debugSort) {
     dProgress() << "++++++++++++++++++++";
 }
+#endif
     // prepare a separate vector with the user-count information
     std::vector<std::pair<PaletteColor, uint64_t>> new_colors;
     for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
@@ -456,6 +458,7 @@ if (debugSort) {
             }
         }
         new_colors.push_back(std::pair<PaletteColor, uint64_t>(*it, uc));
+
 if (debugSort) {
     dProgress() << QApplication::tr("%1.(%2:%3:%4) : %5").arg(it->index()).arg(it->red()).arg(it->green()).arg(it->blue()).arg(uc);
 }
@@ -685,10 +688,12 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     ;
                 } else {
                     w = colorWeight(PaletteColor(color), forSmk);
+#if 0
                     if (wmap.count(w) == 0) {
                         PaletteColor wc = weightColor(w);
                         dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6 -> %7:%8:%9").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y).arg(wc.red()).arg(wc.green()).arg(wc.blue());
                     }
+#endif
                     wmap[w] += 1;
                 }
             }
@@ -700,11 +705,14 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
         for (const PaletteColor pc : next_colors) {
             wmap.erase(colorWeight(pc, false));
         }
+#if 0
 debugSort = true;
 if (debugSort) {
     dProgress() << QApplication::tr("mapping %1 vs %2").arg(wmap.size()).arg(new_colors.size());
 }
-        if (wmap.size() <= new_colors.size()) {
+#endif
+        // if (wmap.size() <= new_colors.size()) {
+        if (false) {
 #if 0
             new_colors.erase(new_colors.begin() + wmap.size(), new_colors.end());
             auto ni = new_colors.begin();
@@ -907,9 +915,11 @@ if (debugSort) {
                     continue;
                     }
                 }
+#if 0
 if (debugSort) {
-    dProgress() << QApplication::tr("mapping free %1 new: %2").arg(freeIdxs.size()).arg(new_colors.size());
+    dProgress() << QApplication::tr("mapping free %1 new: %2").arg(freeIdxs.size()).arg(next_colors.size());
 }
+#endif
                 break;
             }
         }
