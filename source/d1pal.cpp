@@ -684,7 +684,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
         for (const PaletteColor pc : next_colors) {
             wmap.erase(colorWeight(pc, false));
         }
-debugSort = false;
+debugSort = true;
         if (wmap.size() <= new_colors.size()) {
 #if 0
             new_colors.erase(new_colors.begin() + wmap.size(), new_colors.end());
