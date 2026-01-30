@@ -431,15 +431,16 @@ static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &color
 }
 
 // sort colors by the number of users and/or by the RGB values
-static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum, const std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>>* umap)
+static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum,
+    const std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>>* umap, const std::map<int, uint64_t> &wmap)
 {
     // prepare a separate vector with the user-count information
     std::vector<std::pair<PaletteColor, uint64_t>> new_colors;
     for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
         uint64_t uc = 0;
         if (umap) {
-            for (const std::pair<int, uint64_t>& user : (*umap)[it->index()].first) {
-                uc += wmap[user.first];
+            for (const std::pair<int, uint64_t>& user : umap->at(it->index()).first) {
+                uc += wmap.at(user.first);
             }
         }
         new_colors.push_back(std::pair<PaletteColor, uint64_t>(*it, uc));
@@ -701,7 +702,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             // next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.begin() + wmap.size());
             new_colors.clear();
 
-            sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr);
+            sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr, wmap);
 #endif
         } else {
             next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
@@ -860,7 +861,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     continue;
                 }
 
-                change = sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr);
+                change = sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr, wmap);
 
                 if (change) {
                     continue;
