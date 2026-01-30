@@ -429,7 +429,7 @@ static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &color
 
     return std::pair<quint8, int>(res, best);
 }
-
+static bool debugSort = false;
 // sort colors by the number of users and/or by the RGB values
 static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum,
     const std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>>* umap, const std::map<int, uint64_t> &wmap)
@@ -476,11 +476,20 @@ static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_
     bool change = false;
     auto ni = new_colors.cbegin();
     auto fi = freeIdxs.cbegin();
+if (debugSort) {
+    dProgress() << "-------------------";
+}
     for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++, fi++, ni++) {
         if (it->eq(ni->first) && it->index() == *fi) continue;
+if (debugSort) {
+    dProgress() << QApplication::tr("%1.(%2:%3:%4) -> %5. (%6:%7:%8)").arg(it->index()).arg(it->red()).arg(it->green()).arg(it->blue()).arg(*fi).arg(ni->first.red()).arg(ni->first.green()).arg(ni->first.blue());
+}
         *it = PaletteColor(ni->first.red(), ni->first.green(), ni->first.blue(), *fi);
         change = true;
     }
+if (debugSort) {
+    dProgress() << "-------------------";
+}
     return change;
 }
 
@@ -675,7 +684,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
         for (const PaletteColor pc : next_colors) {
             wmap.erase(colorWeight(pc, false));
         }
-
+debugSort = false;
         if (wmap.size() <= new_colors.size()) {
 #if 0
             new_colors.erase(new_colors.begin() + wmap.size(), new_colors.end());
@@ -708,6 +717,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
             new_colors.clear();
 
+            int ch = 0;
             while (true) {
                 bool change = false;
                 // check the next color mapping
@@ -864,7 +874,13 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 change = sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr, wmap);
 
                 if (change) {
+                    if (++ch < 10) {
                     continue;
+                    }
+                    debugSort = true;
+                    if (++ch < 20) {
+                    continue;
+                    }
                 }
 
                 break;
