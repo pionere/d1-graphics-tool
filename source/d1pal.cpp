@@ -324,7 +324,7 @@ static void smackColor(PaletteColor &col, bool forSmk)
         }
     }
 #else
-debugPalColor = col.red() == 30 && col.green() == 10 && col.blue() == 3;
+debugPalColor = col.red() == 9 && col.green() == 2 && col.blue() == 7;
     std::vector<PaletteColor> colors;
     colors.push_back(PaletteColor(col.red(), col.green(), col.blue(), 0));
     for (int n = 3 - 1; n >= 0; n--) {
