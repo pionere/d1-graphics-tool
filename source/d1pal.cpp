@@ -339,16 +339,16 @@ debugPalColor = col.red() == 30 && col.green() == 10 && col.blue() == 3;
                         PaletteColor c1 = PaletteColor(colors[i]);
                         c1.setIndex(num + i);
                         if (n == 0) {
-                            c0.setRed(p[0]);
-                            c1.setRed(p[-1]);
+                            c0.setRed(p[-1]);
+                            c1.setRed(p[0]);
                         }
                         if (n == 1) {
-                            c0.setGreen(p[0]);
-                            c1.setGreen(p[-1]);
+                            c0.setGreen(p[-1]);
+                            c1.setGreen(p[0]);
                         }
                         if (n == 2) {
-                            c0.setBlue(p[0]);
-                            c1.setBlue(p[-1]);
+                            c0.setBlue(p[-1]);
+                            c1.setBlue(p[0]);
                         }
                         colors.push_back(c1);
                     }
