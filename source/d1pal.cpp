@@ -324,7 +324,9 @@ static void smackColor(PaletteColor &col, bool forSmk)
     }
 #else
     std::vector<PaletteColor> colors;
-    colors.push_back(col);
+    PaletteColor co = col;
+    co.setIndex(0);
+    colors.push_back(co);
     for (int n = 0; n < 3; n++) {
         unsigned char cv = smkColor[n];
         const unsigned char *p = &palmap[0];
@@ -676,9 +678,9 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     ;
                 } else {
                     w = colorWeight(PaletteColor(color), forSmk);
-                    // if (wmap.count(w) == 0) {
-                    //     dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y);
-                    // }
+                    if (wmap.count(w) == 0) {
+                         dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y);
+                    }
                     wmap[w] += 1;
                 }
             }
@@ -715,7 +717,7 @@ if (debugSort) {
                 next_colors.push_back(color);
                 umap[idx].first.push_back(std::pair<int, uint64_t>(w, 0));
 if (debugSort) {
-    dProgress() << QApplication::tr("%1.(%2:%3:%4) : %5").arg(idx).arg(color.red()).arg(color.green()).arg(color.blue()).arg(wmap[w]);
+    dProgress() << QApplication::tr("%1.(%2:%3:%4) : %5").arg(idx).arg(color.red()).arg(color.green()).arg(color.blue()).arg(it->second);
 }
             }
 
