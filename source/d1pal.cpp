@@ -640,7 +640,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             if (it->marbles != 0) {
                 PaletteColor color = valueColor(it->colorCode, forSmk);
                 color.setIndex(*fi);
-                new_colors.push_back(color, 0);
+                new_colors.push_back(color);
                 fi++;
             }
         }
@@ -692,7 +692,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
                 const int w = it->first;
                 PaletteColor color = weightColor(w);
-                const int idx = ni->first.index();
+                const int idx = ni->index();
                 color.setIndex(idx);
                 // *ni = color;
                 next_colors.push_back(color);
