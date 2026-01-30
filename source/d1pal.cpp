@@ -327,7 +327,7 @@ static void smackColor(PaletteColor &col, bool forSmk)
 debugPalColor = col.red() == 30 && col.green() == 10 && col.blue() == 3;
     std::vector<PaletteColor> colors;
     colors.push_back(PaletteColor(col.red(), col.green(), col.blue(), 0));
-    for (int n = 0; n < 3; n++) {
+    for (int n = 3 - 1; n >= 0; n--) {
         unsigned char cv = smkColor[n];
         const unsigned char *p = &palmap[0];
         for ( ; /*p < lengthof(palmap)*/; p++) {
