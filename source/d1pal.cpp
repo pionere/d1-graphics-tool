@@ -288,6 +288,7 @@ bool D1Pal::genColors(const QString &imagefilePath, bool forSmk)
 
     return this->genColors(image, forSmk);
 }
+static bool debugPalColor = false;
 static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color);
 static void smackColor(PaletteColor &col, bool forSmk)
 {
@@ -323,6 +324,7 @@ static void smackColor(PaletteColor &col, bool forSmk)
         }
     }
 #else
+debugPalColor = col.red() == 30 && col.green() == 10 && col.blue() == 3;
     std::vector<PaletteColor> colors;
     colors.push_back(PaletteColor(col.red(), col.green(), col.blue(), 0));
     for (int n = 0; n < 3; n++) {
@@ -355,7 +357,14 @@ static void smackColor(PaletteColor &col, bool forSmk)
             }
         }
     }
-    PaletteColor &pc = colors[getPalColor(colors, col).first];
+    auto co = getPalColor(colors, col);
+    PaletteColor &pc = colors[co.first];
+if (debugPalColor) {
+    for (auto it = colors.begin(); it != colors.end(); it++) {
+        dProgress() << QApplication::tr("option %1.(%2:%3:%4)").arg(it->index()).arg(it->red()).arg(it->green()).arg(it->blue());
+    }
+    dProgress() << QApplication::tr("selected %1.(%2:%3:%4) : %5, %6").arg(pc.index()).arg(pc.red()).arg(pc.green()).arg(pc.blue()).arg(co.first).arg(co.second);
+}
     col.setRed(pc.red());
     col.setGreen(pc.green());
     col.setBlue(pc.blue());
