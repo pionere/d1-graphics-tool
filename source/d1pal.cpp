@@ -700,7 +700,10 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
         for (const PaletteColor pc : next_colors) {
             wmap.erase(colorWeight(pc, false));
         }
-// debugSort = true;
+debugSort = true;
+if (debugSort) {
+    dProgress() << QApplication::tr("mapping %1 vs %2").arg(wmap.size()).arg(new_colors.size());
+}
         if (wmap.size() <= new_colors.size()) {
 #if 0
             new_colors.erase(new_colors.begin() + wmap.size(), new_colors.end());
@@ -904,7 +907,9 @@ if (debugSort) {
                     continue;
                     }
                 }
-
+if (debugSort) {
+    dProgress() << QApplication::tr("mapping free %1 new: %2").arg(freeIdxs.size()).arg(new_colors.size());
+}
                 break;
             }
         }
