@@ -324,9 +324,7 @@ static void smackColor(PaletteColor &col, bool forSmk)
     }
 #else
     std::vector<PaletteColor> colors;
-    PaletteColor co = col;
-    co.setIndex(0);
-    colors.push_back(co);
+    colors.push_back(PaletteColor(col.red(), col.green(), col.blue(), 0));
     for (int n = 0; n < 3; n++) {
         unsigned char cv = smkColor[n];
         const unsigned char *p = &palmap[0];
@@ -679,7 +677,8 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 } else {
                     w = colorWeight(PaletteColor(color), forSmk);
                     if (wmap.count(w) == 0) {
-                         dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y);
+                        PaletteColor wc = weightColor(w);
+                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6 -> %7:%8:%9").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y).arg(wc.red()).arg(wc.green()).arg(wc.blue());
                     }
                     wmap[w] += 1;
                 }
