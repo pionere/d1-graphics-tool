@@ -687,7 +687,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                 if (color.alpha() < COLOR_ALPHA_LIMIT) {
                     ;
                 } else {
-                    w = colorWeight(PaletteColor(color), forSmk);
+                    w = colorWeight(PaletteColor(color), false);
 #if 0
                     if (wmap.count(w) == 0) {
                         PaletteColor wc = weightColor(w);
@@ -775,6 +775,7 @@ if (debugSort) {
 
                 // add new color to replace an eliminated one
                 if (!freeIdxs.empty()) {
+#if 0
                     // select the largest group
                     int res = 0;
                     uint64_t best = 0;
@@ -788,7 +789,7 @@ if (debugSort) {
                         // umap[res].second = 0;
                         // select the largest distance
                         best = 0;
-                        for (const std::pair<int, uint64_t>& user : umap[res].first) {
+                        for (const std::pair<int, uint64_t>& user : umap.at(res).first) {
                             if (user.second > best) {
                                 best = user.second;
                                 res = user.first;
@@ -802,15 +803,44 @@ if (debugSort) {
                         freeIdxs.erase(fi);
                         continue;
                     }
+#else
+                    // select the largest distance
+                    PaletteColor res;
+                    uint64_t best = 0;
+                    for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
+                        for (const std::pair<int, uint64_t>& user : mi->second.first) {
+                            if (user.second > best) {
+                                PaletteColor color = weightColor(user.first);
+                                PaletteColor sc = color;
+                                smackColor(sc, forSmk);
+                                uint64_t nd = D1Pal::getColorDist(sc, color);
+                                uint64_t pd = user.second;
+                                nd *= wmap.at(user.first);
+
+                                if (nd < pd) {
+                                    best = pd - nd;
+                                    res = sc;
+                                }
+                            }
+                        }
+                    }
+                    if (best != 0) {
+                        auto fi = freeIdxs.begin();
+                        res.setIndex(*fi);
+                        next_colors.push_back(res);
+                        freeIdxs.erase(fi);
+                        continue;
+                    }
+#endif
                 }
 
                 // select better colors for the color-groups with new colors
 
                 for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
                     uint64_t r = 0, g = 0, b = 0; uint64_t tw = 0;
-                    for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
+                    for (const std::pair<int, uint64_t>& user : umap.at(it->index()).first) {
                         PaletteColor wc = weightColor(user.first);
-                        uint64_t cw = wmap[user.first];
+                        uint64_t cw = wmap.at(user.first);
                         r += cw * (wc.red() * wc.red());
                         g += cw * (wc.green() * wc.green());
                         b += cw * (wc.blue() * wc.blue());
@@ -836,9 +866,9 @@ if (debugSort) {
                     // check if there is really a gain
                     {
                         int64_t dd = 0;
-                        for (const std::pair<int, uint64_t>& user : umap[it->index()].first) {
+                        for (const std::pair<int, uint64_t>& user : umap.at(it->index()).first) {
                             PaletteColor uc = weightColor(user.first);
-                            uint64_t cw = wmap[user.first];
+                            uint64_t cw = wmap.at(user.first);
 
                             uint64_t pd = D1Pal::getColorDist(uc, *it);
                             uint64_t nd = D1Pal::getColorDist(uc, color);
