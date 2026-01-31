@@ -772,54 +772,7 @@ if (debugSort) {
                         it = next_colors.erase(it);
                     }
                 }
-#if 0
-                // add new color to replace an eliminated ones
-                while (!freeIdxs.empty()) {
-                    // select the largest group
-                    int res = 0;
-                    uint64_t best = 0;
-                    for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
-                        if (mi->second.second > best) {
-                            best = mi->second.second;
-                            res = mi->first;
-                        }
-                    }
-                    if (best == 0) {
-                        break;
-                    }
-                    // change = true;
 
-                    // select the largest distance
-                    const std::vector<std::pair<int, uint64_t>> users = umap[res].first;
-                    best = 0;
-                    for (const std::pair<int, uint64_t>& user : users) {
-                        if (user.second > best) {
-                            best = user.second;
-                            res = user.first;
-                        }
-                    }
-                    {   // add the new color
-                        PaletteColor color = weightColor(res);
-                        auto fi = freeIdxs.begin();
-                        color.setIndex(*fi)
-                        next_colors.push_back(color);
-                        freeIdxs.erase(fi);
-                    }
-
-                    // split the users
-                    // umap[res].second = 0;
-                    // umap[res].first.clear();
-                    umap.erase(res);
-                    for (const std::pair<int, uint64_t> &user : users) {
-                        auto it = wmap.find(user.first);
-                        PaletteColor color = weightColor(it->first);
-                        auto pc = getPalColor(next_colors, color);
-                        uint64_t dist = (uint64_t)it->second * pc.second;
-                        umap[pc.first].first.push_back(std::pair<int, uint64_t>(it->first, dist));
-                        umap[pc.first].second += dist;
-                    }
-                }
-#else
                 // add new color to replace an eliminated one
                 if (!freeIdxs.empty()) {
                     // select the largest group
@@ -850,7 +803,6 @@ if (debugSort) {
                         continue;
                     }
                 }
-#endif
 
                 // select better colors for the color-groups with new colors
 

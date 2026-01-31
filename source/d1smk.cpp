@@ -1945,14 +1945,17 @@ static SmkBlockInfo getBlockInfo(const D1GfxFrame *frame, int x, int y)
     return result;
 }
 
-static int mergePals(D1Pal* pal, D1Pal* cp, D1Gfx* gfx, int i)
+static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
 {
-    int result = 0;
+    if (pf.pal == nullptr) {
+        return false;
+    }
+    bool result = false;
     std::vector<PaletteColor> currColors;
-    cp->getValidColors(currColors);
+    cf.pal->getValidColors(currColors);
 
     std::vector<PaletteColor> prevColors;
-    pal->getValidColors(prevColors);
+    pf.pal->getValidColors(prevColors);
 
     if (prevColors.size() >= currColors.size()) {
         // try to use the previous palette
@@ -1974,41 +1977,43 @@ static int mergePals(D1Pal* pal, D1Pal* cp, D1Gfx* gfx, int i)
                 newidxs.push_back(cc.index());
             }
         }
-        if (prevColors.size() + newidxs.count() <= (D1PAL_COLORS - 1)) {
+        if (prevColors.size() + newidxs.count() <= (D1PAL_COLORS - 0)) {
             // use the previous palette
-            const QColor undefColor = pal->getUndefinedColor();
+            const QColor undefColor = pf.pal->getUndefinedColor();
             for (const int nc : newidxs) {
                 // TODO: ensure the new color does not conflict with the undefined color of the previous palette
 
                 // select a new entry
                 for (unsigned r = 0; r < D1PAL_COLORS; r++) {
-                    if (pal->getColor(r) != undefColor) continue;
+                    if (pf.pal->getColor(r) != undefColor) continue;
                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(nc), D1GfxPixel::colorPixel(r)));
-                    pal->setColor(r, cp->getColor(nc));
+                    pf.pal->setColor(r, cf.pal->getColor(nc));
                     break;
                 }
             }
             if (!replacements.isEmpty()) {
-                int n = i;
-                while (++n < gfx->getFrameCount() && gfx->getFrame(n)->getFramePal().isNull()) {
-                    ;
-                }
+                // int n = i;
+                // while (++n < pf.gfx->getFrameCount() && pf.gfx->getFrame(n)->getFramePal().isNull()) {
+                //     ;
+                // }
                 RemapParam params;
-                params.frames = std::pair<int, int>(i + 1, n);
-                gfx->replacePixels(replacements, params, 0);
+                params.frames = std::pair<int, int>(cf.frameFrom + 1, cf.frameTo);
+                cf.gfx->replacePixels(replacements, params, 0);
             }
-            result = 1;
+            result = true;
             QString msg;
             if (newidxs.isEmpty()) {
-                msg = QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
+                msg = QApplication::tr("Palette of frame %1 is obsolete.").arg(cf.frameFrom + 1);
             } else {
-                int n = i;
-                while (gfx->getFrame(--n)->getFramePal().isNull()) {
+                /*int n = i;
+                while (pf.gfx->getFrame(--n)->getFramePal().isNull()) {
                     ;
-                }
-                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(i + 1).arg(n + 1);
+                }*/
+                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(cf.frameFrom + 1).arg(pf.frameFrom + 1);
             }
             dProgress() << msg;
+
+            cf.pal = pf.pal;
         }
     } else {
         // try to use the current palette instead of the previous one
@@ -2030,40 +2035,44 @@ static int mergePals(D1Pal* pal, D1Pal* cp, D1Gfx* gfx, int i)
                 previdxs.push_back(pc.index());
             }
         }
-        if (currColors.size() + previdxs.count() <= (D1PAL_COLORS - 1)) {
-            const QColor undefColor = cp->getUndefinedColor();
+        if (currColors.size() + previdxs.count() <= (D1PAL_COLORS - 0)) {
+            const QColor undefColor = cf.pal->getUndefinedColor();
             for (const int pc : previdxs) {
                 // TODO: ensure the previous color does not conflict with the undefined color of the new palette
 
                 // select a new entry
                 for (unsigned r = 0; r < D1PAL_COLORS; r++) {
-                    if (cp->getColor(r) != undefColor) continue;
+                    if (cf.pal->getColor(r) != undefColor) continue;
                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(pc), D1GfxPixel::colorPixel(r)));
-                    cp->setColor(r, pal->getColor(pc));
+                    cf.pal->setColor(r, pf.pal->getColor(pc));
                     break;
                 }
             }
-            int n = i;
-            while (gfx->getFrame(--n)->getFramePal().isNull()) {
+            /*int n = i;
+            while (cf.gfx->getFrame(--n)->getFramePal().isNull()) {
                 ;
-            }
+            }*/
             if (!replacements.isEmpty()) {
                 RemapParam params;
-                params.frames = std::pair<int, int>(n + 1, i);
-                gfx->replacePixels(replacements, params, 0);
+                params.frames = std::pair<int, int>(pf.frameFrom + 1, pf.frameTo);
+                pf.gfx->replacePixels(replacements, params, 0);
             }
             // QPointer<D1Pal> &pp = gfx->getFrame(n)->getFramePal();
             // pp.clear();
-            gfx->getFrame(n)->setFramePal(cp);
-            result = 2;
+            cf.gfx->getFrame(pf.frameFrom)->setFramePal(cf.pal);
+            result = true;
             QString msg;
             if (previdxs.isEmpty()) {
-                msg = QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(n + 1).arg(i + 1);
+                msg = QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(pf.frameFrom + 1).arg(cf.frameFrom + 1);
             } else {
-                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(n + 1).arg(i + 1);
+                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(pf.frameFrom + 1).arg(cf.frameFrom + 1);
             }
             dProgress() << msg;
         }
+    }
+    if (result) {
+        cf.gfx->getFrame(cf.frameFrom)->setFramePal(nullptr);
+        cf.frameFrom = pf.frameFrom;
     }
     return result;
 }
@@ -2084,12 +2093,13 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
     bool result = false;
     for (D1Gfx *gfx : gfxs) {
         // adjust colors of the palette(s)
-        D1SmkColorFix cf;
+        D1SmkColorFix cf, pf;
         cf.pal = p;
         cf.gfx = gfx;
         cf.frameFrom = 0;
+        pf.pal = nullptr;
         int i = 0;
-        ProgressDialog::incBar(QApplication::tr("Checking frames..."), 3 * cf.gfx->getFrameCount() + SMK_TREE_COUNT + 1);
+        ProgressDialog::incBar(QApplication::tr("Checking frames..."), 2 * cf.gfx->getFrameCount() + SMK_TREE_COUNT + 1);
         bool change = false;
         for ( ; i < cf.gfx->getFrameCount(); i++) {
             if (ProgressDialog::wasCanceled()) {
@@ -2103,6 +2113,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
 //                    cf.colors.clear();
                     change = true;
                 }
+                change |= mergePals(pf, cf);
+
+                pf = cf;
                 cf.frameFrom = i;
                 cf.pal = fp.data();
             }
@@ -2116,6 +2129,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
             // cf.colors.clear();
             change = true;
         }
+#if 0
         // eliminate matching palettes
         D1Pal *pal = nullptr;
         for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
@@ -2141,6 +2155,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
                 break;
             }
         }
+#endif
         { // ensure there is space for the cache-references
         const QSize fs = cf.gfx->getFrameSize();
         const int width = fs.width();

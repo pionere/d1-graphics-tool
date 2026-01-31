@@ -1197,9 +1197,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
-    if (kc == Qt::ALT) {
+    if (kc == Qt::ALT || kc == (Qt::ALT | Qt::AltModifier)) {
         if (this->isPainting()) {
             this->paintWidget->toggleMode();
+        }
+        if (event->isAutoRepeat()) {
+            QMessageBox::critical(this, tr("Error"), tr("Autorepeat press."));
         }
         return;
     }
@@ -1210,9 +1213,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
     const int kc = event->key() | event->modifiers();
-    if (kc == Qt::ALT) {
+    if (kc == Qt::ALT || kc == (Qt::ALT | Qt::AltModifier)) {
         if (this->isPainting()) {
             this->paintWidget->toggleMode();
+        }
+        if (event->isAutoRepeat()) {
+            QMessageBox::critical(this, tr("Error"), tr("Autorepeat release."));
         }
         return;
     }
