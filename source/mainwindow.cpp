@@ -1207,6 +1207,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    QMessageBox::critical(this, tr("Error"), tr("Keypress %1 : %2 : %3").arg(kc).arg(event->key()).arg(event->modifiers()));
+
+
     QMainWindow::keyPressEvent(event);
 }
 
