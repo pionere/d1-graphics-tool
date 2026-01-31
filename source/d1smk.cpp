@@ -1728,7 +1728,7 @@ static QString addDetails(QString &msg, int verbose, D1SmkColorFix &fix)
 
 static bool fixPalColors(D1SmkColorFix &fix, int verbose)
 {
-    if (fix.frameFrom == fix.frameTo) {
+    if (fix.frameFrom < 0) {
         return false;
     }
     const QColor undefColor = fix.pal->getUndefinedColor();
@@ -1947,7 +1947,7 @@ static SmkBlockInfo getBlockInfo(const D1GfxFrame *frame, int x, int y)
 
 static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
 {
-    if (pf.pal == nullptr) {
+    if (pf.frameFrom < 0) {
         return false;
     }
     dProgress() <<  QApplication::tr("Checking pals of frame %1 .. %2 and frame %3 .. %4.").arg(pf.frameFrom + 1).arg(pf.frameTo + 1).arg(cf.frameFrom + 1).arg(cf.frameTo + 1);
@@ -2098,8 +2098,8 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         D1SmkColorFix cf, pf;
         cf.pal = p;
         cf.gfx = gfx;
-        cf.frameFrom = 0;
-        pf.pal = nullptr;
+        cf.frameFrom = -1;
+        pf.frameFrom = -1;
         int i = 0;
         ProgressDialog::incBar(QApplication::tr("Checking frames..."), 2 * cf.gfx->getFrameCount() + SMK_TREE_COUNT + 1);
         bool change = false;
