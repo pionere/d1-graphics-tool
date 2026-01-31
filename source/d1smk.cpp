@@ -2129,6 +2129,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
             // cf.colors.clear();
             change = true;
         }
+        change |= mergePals(pf, cf);
 #if 0
         // eliminate matching palettes
         D1Pal *pal = nullptr;
