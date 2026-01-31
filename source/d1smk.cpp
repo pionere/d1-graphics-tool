@@ -1950,6 +1950,9 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
     if (pf.frameFrom < 0) {
         return false;
     }
+
+    dProgress() << QApplication::tr("checking of frame %1 .. %2 with palette of frame %3 .. %4 (%5 , %6).").arg(pf.frameFrom + 1).arg(pf.frameTo).arg(cf.frameFrom + 1).arg(cf.frameTo).arg(pf.pal->getFilePath()).arg(cf.pal->getFilePath());
+
     bool result = false;
     std::vector<PaletteColor> currColors;
     cf.pal->getValidColors(currColors);
