@@ -805,7 +805,7 @@ if (debugSort) {
                     }
 #else
                     // select the largest distance
-                    PaletteColor res;
+                    PaletteColor res = PaletteColor(0, 0, 0, 0);
                     uint64_t best = 0;
                     for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
                         for (const std::pair<int, uint64_t>& user : mi->second.first) {
