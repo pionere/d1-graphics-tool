@@ -1201,9 +1201,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         if (this->isPainting()) {
             this->paintWidget->toggleMode();
         }
-        if (event->isAutoRepeat()) {
-            QMessageBox::critical(this, tr("Error"), tr("Autorepeat press."));
-        }
         return;
     }
 
@@ -1216,9 +1213,6 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
     if (kc == Qt::Key_Alt || kc == (Qt::Key_Alt | Qt::AltModifier)) {
         if (this->isPainting()) {
             this->paintWidget->toggleMode();
-        }
-        if (event->isAutoRepeat()) {
-            QMessageBox::critical(this, tr("Error"), tr("Autorepeat release."));
         }
         return;
     }

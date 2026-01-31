@@ -2113,7 +2113,10 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
 //                    cf.colors.clear();
                     change = true;
                 }
-                change |= mergePals(pf, cf);
+                if (mergePals(pf, cf)) {
+                    fixPalColors(cf, verbose);
+                    change = true;
+                }
 
                 pf = cf;
                 cf.frameFrom = i;
@@ -2129,7 +2132,10 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
             // cf.colors.clear();
             change = true;
         }
-        change |= mergePals(pf, cf);
+        if (mergePals(pf, cf)) {
+            fixPalColors(cf, verbose);
+            change = true;
+        }
 #if 0
         // eliminate matching palettes
         D1Pal *pal = nullptr;
