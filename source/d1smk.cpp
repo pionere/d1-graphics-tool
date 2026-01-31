@@ -1947,9 +1947,11 @@ static SmkBlockInfo getBlockInfo(const D1GfxFrame *frame, int x, int y)
 
 static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
 {
-    if (pf.frameFrom == pf.frameTo) {
+    if (pf.pal == nullptr) {
         return false;
     }
+    dProgress() <<  QApplication::tr("Checking pals of frame %1 .. %2 and frame %3 .. %4.").arg(pf.frameFrom + 1).arg(pf.frameTo + 1).arg(cf.frameFrom + 1).arg(cf.frameTo + 1);
+
     bool result = false;
     std::vector<PaletteColor> currColors;
     cf.pal->getValidColors(currColors);
@@ -2097,7 +2099,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         cf.pal = p;
         cf.gfx = gfx;
         cf.frameFrom = 0;
-        pf.frameFrom = 0;
+        pf.pal = nullptr;
         int i = 0;
         ProgressDialog::incBar(QApplication::tr("Checking frames..."), 2 * cf.gfx->getFrameCount() + SMK_TREE_COUNT + 1);
         bool change = false;
@@ -2114,6 +2116,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                 if (mergePals(pf, cf)) {
                     fixPalColors(cf, verbose);
                     change = true;
+                    dProgress() <<  QApplication::tr("Merged pals of frame %1 .. %2.").arg(cf.frameFrom + 1).arg(cf.frameTo + 1);
                 }
 
                 pf = cf;
