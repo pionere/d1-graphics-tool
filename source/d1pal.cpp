@@ -440,7 +440,7 @@ static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &color
 }
 static bool debugSort = false;
 // sort colors by the number of users and/or by the RGB values
-static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum,
+static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum, std::set<int> &freeIdxs,
     const std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>>* umap, const std::map<int, uint64_t> &wmap)
 {
 #if 0
@@ -486,18 +486,17 @@ if (debugSort) {
         return a.first.blue() < b.first.blue();
     });
     // collect the available indices
-    std::set<int> freeIdxs;
     for (const std::pair<PaletteColor, uint64_t> &nc : new_colors) {
         freeIdxs.insert(nc.first.index());
     }
     // update the colors
     bool change = false;
     auto ni = new_colors.cbegin();
-    auto fi = freeIdxs.cbegin();
+    auto fi = freeIdxs.begin();
 if (debugSort) {
     dProgress() << "-------------------";
 }
-    for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++, fi++, ni++) {
+    for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++, fi = freeIdxs.erase(fi), ni++) {
         if (it->eq(ni->first) && it->index() == *fi) continue;
 if (debugSort) {
     dProgress() << QApplication::tr("%1.(%2:%3:%4) -> %5. (%6:%7:%8)").arg(it->index()).arg(it->red()).arg(it->green()).arg(it->blue()).arg(*fi).arg(ni->first.red()).arg(ni->first.green()).arg(ni->first.blue());
@@ -743,7 +742,7 @@ if (debugSort) {
             // next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.begin() + wmap.size());
             new_colors.clear();
 
-            sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr, wmap);
+            sortNewColors(next_colors, prev_colornum, freeIdxs, forSmk ? &umap : nullptr, wmap);
 #endif
         } else {
             next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
@@ -885,7 +884,7 @@ if (debugSort) {
                     continue;
                 }
 
-                change = sortNewColors(next_colors, prev_colornum, forSmk ? &umap : nullptr, wmap);
+                change = sortNewColors(next_colors, prev_colornum, freeIdxs, forSmk ? &umap : nullptr, wmap);
 
                 if (change) {
                     continue;
