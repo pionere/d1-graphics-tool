@@ -1950,8 +1950,6 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
     if (pf.frameFrom < 0) {
         return false;
     }
-    dProgress() <<  QApplication::tr("Checking pals of frame %1 .. %2 and frame %3 .. %4.").arg(pf.frameFrom + 1).arg(pf.frameTo + 1).arg(cf.frameFrom + 1).arg(cf.frameTo + 1);
-
     bool result = false;
     std::vector<PaletteColor> currColors;
     cf.pal->getValidColors(currColors);
@@ -2116,7 +2114,6 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                 if (mergePals(pf, cf)) {
                     fixPalColors(cf, verbose);
                     change = true;
-                    dProgress() <<  QApplication::tr("Merged pals of frame %1 .. %2.").arg(cf.frameFrom + 1).arg(cf.frameTo + 1);
                 }
 
                 pf = cf;
