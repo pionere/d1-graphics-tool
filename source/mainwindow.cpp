@@ -3873,62 +3873,12 @@ void MainWindow::on_actionSmack_Colors_triggered()
 #if 1
     ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 2, PAF_UPDATE_WINDOW);
 
-    // QList<D1SmkColorFix> frameColorMods;
-    D1Smk::fixColors(this->gfxset, this->gfx, this->pal); // , frameColorMods);
-#if 0
-    if (!frameColorMods.isEmpty()) {
-        // find possible replacement for the modified colors
-        for (D1SmkColorFix &frameColorMod : frameColorMods) {
-            QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
-            D1Pal *pal = frameColorMod.pal;
-            for (quint8 colIdx : frameColorMod.colors) {
-                QColor col = pal->getColor(colIdx);
-                unsigned i = 0; unsigned n = D1PAL_COLORS;
-                for ( ; i < D1PAL_COLORS; i++) {
-                    if (pal->getColor(i) != col/* || i == colIdx*/) {
-                        continue;
-                    }
-                    auto it = frameColorMod.colors.begin();
-                    for (; it != frameColorMod.colors.end(); it++) {
-                        if (*it == i) {
-                            break;
-                        }
-                    }
-                    if (it == frameColorMod.colors.end()) {
-                        break;
-                    } else if (i < n) {
-                        n = i;
-                    }
-                }
-                if (i == D1PAL_COLORS) {
-                    /*if (n == D1PAL_COLORS) {
-                        // the color is still unique
-                        continue;
-                    }*/
-                    // multiple colors were changed to the same new one -> use the lowest
-                    if (n == colIdx) {
-                        // no change -> skip
-                        continue;
-                    }
-                    i = n;
-                }
-                replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(colIdx), D1GfxPixel::colorPixel(i)));
-            }
-            if (!replacements.isEmpty()) {
-                RemapParam params;
-                params.frames.first = frameColorMod.frameFrom;
-                params.frames.second = frameColorMod.frameTo;
-                frameColorMod.gfx->replacePixels(replacements, params, this->gfxset != nullptr ? 2 : 1);
-            }
-        }
-    }
-#endif
+    D1Smk::fixColors(this->gfxset, this->gfx, this->pal);
     // Clear loading message from status bar
     ProgressDialog::done();
 #else
     std::function<void()> func = [this]() {
-        QList<D1SmkColorFix> frameColorMods;
-        D1Smk::fixColors(this->gfxset, this->gfx, this->pal, frameColorMods);
+        D1Smk::fixColors(this->gfxset, this->gfx, this->pal);
     };
     ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 2, PAF_UPDATE_WINDOW, std::move(func));
 #endif

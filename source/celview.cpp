@@ -647,7 +647,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         this->gfx->insertFrame(index, image);
 #endif
         index++;
-        if (!ProgressDialog::incValue()) { // || index > 27) {
+        if (!ProgressDialog::incValue() || index > 42) {
             break;
         }
     }

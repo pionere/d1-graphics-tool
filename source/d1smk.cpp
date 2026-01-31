@@ -1947,7 +1947,7 @@ static SmkBlockInfo getBlockInfo(const D1GfxFrame *frame, int x, int y)
 
 static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
 {
-    if (pf.pal == nullptr) {
+    if (pf.frameFrom == pf.frameTo) {
         return false;
     }
     bool result = false;
@@ -1998,7 +1998,7 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
                 // }
                 RemapParam params;
                 params.frames = std::pair<int, int>(cf.frameFrom + 1, cf.frameTo);
-                cf.gfx->replacePixels(replacements, params, 0);
+                cf.gfx->replacePixels(replacements, params, verbose);
             }
             result = true;
             QString msg;
@@ -2055,7 +2055,7 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
             if (!replacements.isEmpty()) {
                 RemapParam params;
                 params.frames = std::pair<int, int>(pf.frameFrom + 1, pf.frameTo);
-                pf.gfx->replacePixels(replacements, params, 0);
+                pf.gfx->replacePixels(replacements, params, verbose);
             }
             // QPointer<D1Pal> &pp = gfx->getFrame(n)->getFramePal();
             // pp.clear();
@@ -2077,7 +2077,7 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
     return result;
 }
 
-void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFix> &frameColorMods*/)
+void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
 {
     QList<D1Gfx *> gfxs;
     int verbose;
@@ -2092,12 +2092,12 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
     ProgressDialog::incBar(QApplication::tr("Checking graphics..."), gfxs.count() + 1);
     bool result = false;
     for (D1Gfx *gfx : gfxs) {
-        // adjust colors of the palette(s)
+        // fix and optmize the palette(s)
         D1SmkColorFix cf, pf;
         cf.pal = p;
         cf.gfx = gfx;
         cf.frameFrom = 0;
-        pf.pal = nullptr;
+        pf.frameFrom = 0;
         int i = 0;
         ProgressDialog::incBar(QApplication::tr("Checking frames..."), 2 * cf.gfx->getFrameCount() + SMK_TREE_COUNT + 1);
         bool change = false;
@@ -2109,8 +2109,6 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
             if (!fp.isNull()) {
                 cf.frameTo = i;
                 if (fixPalColors(cf, verbose)) {
-//                    frameColorMods.push_back(cf);
-//                    cf.colors.clear();
                     change = true;
                 }
                 if (mergePals(pf, cf)) {
@@ -2128,41 +2126,12 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p/*, QList<D1SmkColorFi
         }
         cf.frameTo = i;
         if (fixPalColors(cf, verbose)) {
-//            frameColorMods.push_back(cf);
-            // cf.colors.clear();
             change = true;
         }
         if (mergePals(pf, cf)) {
             fixPalColors(cf, verbose);
             change = true;
         }
-#if 0
-        // eliminate matching palettes
-        D1Pal *pal = nullptr;
-        for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
-            if (ProgressDialog::wasCanceled()) {
-                break;
-            }
-            QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
-            if (!fp.isNull()) {
-                D1Pal *cp = fp.data();
-                if (pal != nullptr) {
-                    int pc = mergePals(pal, cp, cf.gfx, i);
-                    if (pc != 0) {
-                        if (pc == 1) {
-                            cp = pal;
-                        }
-                        fp.clear();
-                        change = true;
-                    }
-                }
-                pal = cp;
-            }
-            if (!ProgressDialog::incValue()) {
-                break;
-            }
-        }
-#endif
         { // ensure there is space for the cache-references
         const QSize fs = cf.gfx->getFrameSize();
         const int width = fs.width();
