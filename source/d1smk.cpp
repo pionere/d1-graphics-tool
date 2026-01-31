@@ -2000,7 +2000,7 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
                 // }
                 RemapParam params;
                 params.frames = std::pair<int, int>(cf.frameFrom + 1, cf.frameTo);
-                cf.gfx->replacePixels(replacements, params, verbose);
+                cf.gfx->replacePixels(replacements, params, 0);
             }
             result = true;
             QString msg;
@@ -2057,7 +2057,7 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
             if (!replacements.isEmpty()) {
                 RemapParam params;
                 params.frames = std::pair<int, int>(pf.frameFrom + 1, pf.frameTo);
-                pf.gfx->replacePixels(replacements, params, verbose);
+                pf.gfx->replacePixels(replacements, params, 0);
             }
             // QPointer<D1Pal> &pp = gfx->getFrame(n)->getFramePal();
             // pp.clear();
