@@ -53,6 +53,7 @@ public:
     void setGreen(int g) { gv = g; };
     void setBlue(int b) { bv = b; };
     void setIndex(int x) { xv = x; };
+    void setRgb(int idx, int v);
 private:
     int rv;
     int gv;

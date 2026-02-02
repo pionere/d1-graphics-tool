@@ -53,6 +53,13 @@ PaletteColor::PaletteColor(const PaletteColor &o)
 {
 }
 
+void PaletteColor::setRgb(int idx, int v)
+{
+    static_assert(offsetof(PaletteColor, rv) + sizeof(rv) == offsetof(PaletteColor, gv));
+    static_assert(offsetof(PaletteColor, gv) + sizeof(gv) == offsetof(PaletteColor, bv));
+    ((int*)&rv)[idx] = v;
+}
+
 D1Pal::D1Pal(const D1Pal &opal)
     : QObject()
 {
@@ -288,6 +295,16 @@ bool D1Pal::genColors(const QString &imagefilePath, bool forSmk)
 
     return this->genColors(image, forSmk);
 }
+
+typedef struct SmkRgb {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t align[sizeof(int) - 3];
+
+    bool operator=(const SmkRgb &o) const { return *(int*)this == *(int*)&o; };
+    bool operator<(const SmkRgb &o) const { return *(int*)this < *(int*)&o; };
+} SmkRgb;
 static bool debugPalColor = false;
 static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color);
 static void smackColor(PaletteColor &col, bool forSmk)
@@ -338,18 +355,8 @@ static void smackColor(PaletteColor &col, bool forSmk)
                         PaletteColor &c0 = colors[i];
                         PaletteColor c1 = PaletteColor(colors[i]);
                         c1.setIndex(num + i);
-                        if (n == 0) {
-                            c0.setRed(p[-1]);
-                            c1.setRed(p[0]);
-                        }
-                        if (n == 1) {
-                            c0.setGreen(p[-1]);
-                            c1.setGreen(p[0]);
-                        }
-                        if (n == 2) {
-                            c0.setBlue(p[-1]);
-                            c1.setBlue(p[0]);
-                        }
+                        c0.setRgb(n, p[-1]);
+                        c1.setRgb(n, p[0]);
                         colors.push_back(c1);
                     }
                 }
@@ -371,18 +378,15 @@ if (debugPalColor) {
 #endif
 }
 
-static int colorWeight(PaletteColor color, bool forSmk)
+static SmkRgb colorWeight(PaletteColor color, bool forSmk)
 {
     smackColor(color, forSmk);
     int r = color.red(), g = color.green(), b = color.blue();
-    return (r * 256 * 256 + g * 256 + b);
+    return { r, g, b, };
 }
-static PaletteColor weightColor(unsigned weight)
+static PaletteColor weightColor(SmkRgb rgb)
 {
-    unsigned c = weight;
-    unsigned r, g, b;
-    r = c / (256 * 256); g = c / 256; b = c;
-    return PaletteColor(r % 256, g % 256, b % 256);
+    return PaletteColor(rgb.r, rgb.g, rgb.b);
 }
 
 static int colorValue(const QColor &color)
@@ -441,7 +445,7 @@ static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &color
 static bool debugSort = false;
 // sort colors by the number of users and/or by the RGB values
 static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum, std::set<int> &freeIdxs,
-    const std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>>* umap, const std::map<int, std::pair<unsigned, int>> &wmap)
+    const std::map<int, std::pair<std::vector<std::pair<SmkRgb, uint64_t>>, uint64_t>>* umap, const std::map<SmkRgb, std::pair<unsigned, SmkRgb>> &wmap)
 {
 #if 0
 if (debugSort) {
@@ -453,7 +457,7 @@ if (debugSort) {
     for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
         uint64_t uc = 0;
         if (umap) {
-            for (const std::pair<int, uint64_t>& user : umap->at(it->index()).first) {
+            for (const std::pair<SmkRgb, uint64_t>& user : umap->at(it->index()).first) {
                 uc += wmap.at(user.first).first;
             }
         }
@@ -676,24 +680,23 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
     // use the colors of the image to optimize the new colors
     if (!image.isNull()) {
         const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
-        std::map<int, std::pair<unsigned, int>> wmap; // w -> (hits, smk_w)
+        std::map<SmkRgb, std::pair<unsigned, SmkRgb>> wmap; // w -> (hits, smk_w)
         for (int y = 0; y < image.height(); y++) {
             for (int x = 0; x < image.width(); x++, srcBits++) {
                 // QColor color = image.pixelColor(x, y);
                 QColor color = QColor::fromRgba(*srcBits);
-                int w;
                 // if (color == QColor(Qt::transparent)) {
                 if (color.alpha() < COLOR_ALPHA_LIMIT) {
                     ;
                 } else {
-                    w = colorWeight(PaletteColor(color), false);
+                    SmkRgb rgb = colorWeight(PaletteColor(color), false);
 #if 0
-                    if (wmap.count(w) == 0) {
-                        PaletteColor wc = weightColor(w);
-                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6 -> %7:%8:%9").arg(color.red()).arg(color.green()).arg(color.blue()).arg(w).arg(x).arg(y).arg(wc.red()).arg(wc.green()).arg(wc.blue());
+                    if (wmap.count(rgb) == 0) {
+                        PaletteColor wc = weightColor(rgb);
+                        dProgressWarn() << QApplication::tr("New color %1:%2:%3 w %4 at %5:%6 -> %7:%8:%9").arg(color.red()).arg(color.green()).arg(color.blue()).arg((int)rgb).arg(x).arg(y).arg(wc.red()).arg(wc.green()).arg(wc.blue());
                     }
 #endif
-                    wmap[w].first += 1;
+                    wmap[rgb].first += 1;
                 }
             }
         }
@@ -725,19 +728,19 @@ if (debugSort) {
                 *ni = std::pair<PaletteColor, uint64_t>(color, it->second);
             }
 #else
-            std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>> umap;
+            std::map<int, std::pair<std::vector<std::pair<SmkRgb, uint64_t>>, uint64_t>> umap;
 if (debugSort) {
     dProgress() << QApplication::tr("******************** ... %1 vs %2").arg(wmap.size()).arg(new_colors.size());
 }
             auto ni = new_colors.begin();
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
-                const int w = it->first;
+                const SmkRgb w = it->first;
                 PaletteColor color = weightColor(w);
                 const int idx = ni->index();
                 color.setIndex(idx);
                 // *ni = color;
                 next_colors.push_back(color);
-                umap[idx].first.push_back(std::pair<int, uint64_t>(w, 0));
+                umap[idx].first.push_back(std::pair<SmkRgb, uint64_t>(w, 0));
 if (debugSort) {
     dProgress() << QApplication::tr("%1.(%2:%3:%4) : %5").arg(idx).arg(color.red()).arg(color.green()).arg(color.blue()).arg(it->second.first);
 }
@@ -757,12 +760,12 @@ if (debugSort) {
                 bool change = false;
                 // check the next color mapping
 
-                std::map<int, std::pair<std::vector<std::pair<int, uint64_t>>, uint64_t>> umap; // idx -> ([w, dist], sum-dist)
+                std::map<int, std::pair<std::vector<std::pair<SmkRgb, uint64_t>>, uint64_t>> umap; // idx -> ([w, dist], sum-dist)
                 for (auto it = wmap.cbegin(); it != wmap.cend(); it++) {
                     PaletteColor color = weightColor(it->first);
                     auto pc = getPalColor(next_colors, color);
                     uint64_t dist = (uint64_t)it->second.first * pc.second;
-                    umap[pc.first].first.push_back(std::pair<int, uint64_t>(it->first, dist));
+                    umap[pc.first].first.push_back(std::pair<SmkRgb, uint64_t>(it->first, dist));
                     umap[pc.first].second += dist;
                 }
                 // eliminate unused new colors
@@ -811,7 +814,10 @@ if (debugSort) {
                     PaletteColor res = PaletteColor(0, 0, 0, 0);
                     uint64_t best = 0;
                     for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
-                        for (const std::pair<int, uint64_t>& user : mi->second.first) {
+                        if (mi->second.second <= best) continue;
+                        std::set<SmkRgb> smks;
+                        for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
+#if 0
                             if (user.second > best) {
                                 PaletteColor color = weightColor(user.first);
                                 // PaletteColor sc = color;
@@ -826,6 +832,27 @@ if (debugSort) {
                                     res = sc;
                                 }
                             }
+#else
+                            SmkRgb rgb = wmap.at(user.first).second;
+                            if (smks.count(rgb)) continue;
+                            smks.insert(rgb);
+                            uint64_t cw = 0;
+                            const PaletteColor sc = weightColor(rgb);
+                            // smackColor(sc, forSmk);
+                            for (const std::pair<SmkRgb, uint64_t>& usr : mi->second.first) {
+                                const PaletteColor color = weightColor(usr.first);
+                                uint64_t nd = (uint64_t)wmap.at(usr.first).first * D1Pal::getColorDist(sc, color);
+                                uint64_t pd = usr.second;
+
+                                if (nd < pd) {
+                                    cw += pd - nd;
+                                }
+                            }
+                            if (best < cw) {
+                                best = cw;
+                                res = sc;
+                            }
+#endif
                         }
                     }
                     if (best != 0) {
@@ -842,7 +869,7 @@ if (debugSort) {
 
                 for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
                     uint64_t r = 0, g = 0, b = 0; uint64_t tw = 0;
-                    for (const std::pair<int, uint64_t>& user : umap.at(it->index()).first) {
+                    for (const std::pair<SmkRgb, uint64_t>& user : umap.at(it->index()).first) {
                         PaletteColor wc = weightColor(user.first);
                         uint64_t cw = wmap.at(user.first).first;
                         r += cw * (wc.red() * wc.red());
@@ -870,7 +897,7 @@ if (debugSort) {
                     // check if there is really a gain
                     {
                         int64_t dd = 0;
-                        for (const std::pair<int, uint64_t>& user : umap.at(it->index()).first) {
+                        for (const std::pair<SmkRgb, uint64_t>& user : umap.at(it->index()).first) {
                             PaletteColor uc = weightColor(user.first);
                             uint64_t cw = wmap.at(user.first).first;
 
