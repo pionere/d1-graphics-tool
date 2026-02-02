@@ -307,7 +307,9 @@ bool D1Pal::genColors(const QString &imagefilePath, bool forSmk)
 
     return this->genColors(image, forSmk);
 }
-
+#if 1
+typedef unsigned SmkRgb;
+#else
 typedef struct SmkRgb {
     uint8_t r;
     uint8_t g;
@@ -321,6 +323,7 @@ typedef struct SmkRgb {
     bool operator<(const SmkRgb &o) const { return r < o.r || (r == o.r && (g < o.g || g == o.g && b < o.b)); };
 #endif
 } SmkRgb;
+#endif
 static bool debugPalColor = false;
 static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color);
 static void smackColor(PaletteColor &col, bool forSmk)
@@ -371,8 +374,23 @@ static void smackColor(PaletteColor &col, bool forSmk)
                         PaletteColor &c0 = colors[i];
                         PaletteColor c1 = PaletteColor(colors[i]);
                         c1.setIndex(num + i);
+#if 0
+                        if (n == 0) {
+                            c0.setRed(p[-1]);
+                            c1.setRed(p[0]);
+                        }
+                        if (n == 1) {
+                            c0.setGreen(p[-1]);
+                            c1.setGreen(p[0]);
+                        }
+                        if (n == 2) {
+                            c0.setBlue(p[-1]);
+                            c1.setBlue(p[0]);
+                        }
+#else
                         c0.setRgb(n, p[-1]);
                         c1.setRgb(n, p[0]);
+#endif
                         colors.push_back(c1);
                     }
                 }
@@ -398,7 +416,9 @@ static SmkRgb colorWeight(PaletteColor color, bool forSmk)
 {
     smackColor(color, forSmk);
     int r = color.red(), g = color.green(), b = color.blue();
-#if 0
+#if 1
+    return (r * 256 * 256 + g * 256 + b);
+#elif
     return { (uint8_t)r, (uint8_t)g, (uint8_t)b, };
 #else
     SmkRgb rgb = { 0 };
@@ -410,7 +430,14 @@ static SmkRgb colorWeight(PaletteColor color, bool forSmk)
 }
 static PaletteColor weightColor(SmkRgb rgb)
 {
+#if 1
+    unsigned c = weight;
+    unsigned r, g, b;
+    r = c / (256 * 256); g = c / 256; b = c;
+    return PaletteColor(r % 256, g % 256, b % 256);
+#else
     return PaletteColor(rgb.r, rgb.g, rgb.b);
+#endif
 }
 
 static int colorValue(const QColor &color)
