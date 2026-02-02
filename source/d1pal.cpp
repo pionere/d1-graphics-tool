@@ -431,7 +431,7 @@ static SmkRgb colorWeight(PaletteColor color, bool forSmk)
 static PaletteColor weightColor(SmkRgb rgb)
 {
 #if 1
-    unsigned c = weight;
+    unsigned c = rgb;
     unsigned r, g, b;
     r = c / (256 * 256); g = c / 256; b = c;
     return PaletteColor(r % 256, g % 256, b % 256);
