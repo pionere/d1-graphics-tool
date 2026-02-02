@@ -415,10 +415,14 @@ if (debugPalColor) {
 static SmkRgb colorWeight(PaletteColor color, bool forSmk)
 {
     smackColor(color, forSmk);
-    int r = color.red(), g = color.green(), b = color.blue();
-#if 1
+    unsigned r = color.red(), g = color.green(), b = color.blue();
+#if 0
     return (r * 256 * 256 + g * 256 + b);
-#elif
+#elif 1
+    return (r * 256 * 256) | (g * 256) | b;
+#elif 0
+    return ((r % 256) * 256 * 256) | ((g % 256) * 256) | (b % 256);
+#elif 0
     return { (uint8_t)r, (uint8_t)g, (uint8_t)b, };
 #else
     SmkRgb rgb = { 0 };
@@ -865,25 +869,24 @@ if (debugSort) {
                     PaletteColor res = PaletteColor(0, 0, 0, 0);
                     uint64_t best = 0;
                     for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
-#if 0
+                        if (mi->second.second <= best) continue;
+#if 1
                         for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
-                            if (user.second > best) {
-                                PaletteColor color = weightColor(user.first);
-                                // PaletteColor sc = color;
-                                // smackColor(sc, forSmk);
-                                PaletteColor sc = weightColor(wmap.at(user.first).second);
-                                uint64_t nd = D1Pal::getColorDist(sc, color);
-                                uint64_t pd = user.second;
-                                nd *= wmap.at(user.first).first;
+                            if (user.second <= best) continue;
+                            PaletteColor color = weightColor(user.first);
+                            // PaletteColor sc = color;
+                            // smackColor(sc, forSmk);
+                            PaletteColor sc = weightColor(wmap.at(user.first).second);
+                            uint64_t nd = D1Pal::getColorDist(sc, color);
+                            uint64_t pd = user.second;
+                            nd *= wmap.at(user.first).first;
 
-                                if (nd < pd) {
-                                    best = pd - nd;
-                                    res = sc;
-                                }
+                            if (nd < pd) {
+                                best = pd - nd;
+                                res = sc;
                             }
                         }
-#elif 1
-                        if (mi->second.second <= best) continue;
+#elif 0
                         std::set<SmkRgb> smks;
                         for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
                             SmkRgb rgb = wmap.at(user.first).second;
@@ -901,39 +904,6 @@ if (debugSort) {
                                     cw += pd - nd;
                                 }
                             }
-                            if (best < cw) {
-                                best = cw;
-                                res = sc;
-                            }
-                        }
-#else
-                        if (mi->second.second <= best) {
-                            dProgress() << QApplication::tr("Skipping %1 : %2 vs %3").arg(mi->second.second).arg(best).arg(mi->first);
-                            continue;
-                        }
-                        std::set<SmkRgb> smks;
-                        for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
-                            SmkRgb rgb = wmap.at(user.first).second;
-                            if (smks.count(rgb)) {
-                                dProgress() << QApplication::tr("%1:%2:%3 already tested").arg(rgb.r).arg(rgb.g).arg(rgb.b);
-                                continue;
-                            }
-                            smks.insert(rgb);
-                            dProgress() << QApplication::tr("testing %1:%2:%3").arg(rgb.r).arg(rgb.g).arg(rgb.b);
-                            uint64_t cw = 0;
-                            const PaletteColor sc = weightColor(rgb);
-                            // smackColor(sc, forSmk);
-                            for (const std::pair<SmkRgb, uint64_t>& usr : mi->second.first) {
-                                const PaletteColor color = weightColor(usr.first);
-                                uint64_t nd = (uint64_t)wmap.at(usr.first).first * D1Pal::getColorDist(sc, color);
-                                uint64_t pd = usr.second;
-
-                                dProgress() << QApplication::tr("gain %1 .. %2 w: %3").arg(nd).arg(pd).arg(wmap.at(usr.first).first);
-                                if (nd < pd) {
-                                    cw += pd - nd;
-                                }
-                            }
-                            dProgress() << QApplication::tr("total gain %1 vs %2").arg(cw).arg(best);
                             if (best < cw) {
                                 best = cw;
                                 res = sc;

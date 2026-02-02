@@ -3380,7 +3380,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
-        progress.second = QString(QApplication::tr("Upscaling subtile %1.")).arg(i + 1);
+        progress.second = QApplication::tr("Upscaling subtile %1.").arg(i + 1);
         dProgress() << progress;
         if (ProgressDialog::wasCanceled()) {
             qDeleteAll(newFrames);
