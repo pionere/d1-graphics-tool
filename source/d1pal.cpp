@@ -55,21 +55,9 @@ PaletteColor::PaletteColor(const PaletteColor &o)
 
 void PaletteColor::setRgb(int idx, int v)
 {
-#if 1
     static_assert(offsetof(PaletteColor, rv) + sizeof(rv) == offsetof(PaletteColor, gv));
     static_assert(offsetof(PaletteColor, gv) + sizeof(gv) == offsetof(PaletteColor, bv));
     ((int*)&rv)[idx] = v;
-#else
-    if (idx == 0) {
-        rv = v;
-    }
-    if (idx == 1) {
-        gv = v;
-    }
-    if (idx == 2) {
-        bv = v;
-    }
-#endif
 }
 
 D1Pal::D1Pal(const D1Pal &opal)
@@ -324,7 +312,7 @@ typedef struct SmkRgb {
 #endif
 } SmkRgb;
 #endif
-static bool debugPalColor = false;
+
 static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color);
 static void smackColor(PaletteColor &col, bool forSmk)
 {
@@ -345,22 +333,13 @@ static void smackColor(PaletteColor &col, bool forSmk)
                     if (p[0] - cv > cv - p[-1]) {
                         p--;
                     }
-                    if (n == 0) {
-                        col.setRed(*p);
-                    }
-                    if (n == 1) {
-                        col.setGreen(*p);
-                    }
-                    if (n == 2) {
-                        col.setBlue(*p);
-                    }
+                    col.setRgb(n, p[0]);
                 }
                 break;
             }
         }
     }
 #else
-// debugPalColor = col.red() == 9 && col.green() == 2 && col.blue() == 7;
     std::vector<PaletteColor> colors;
     colors.push_back(PaletteColor(col.red(), col.green(), col.blue(), 0));
     for (int n = 3 - 1; n >= 0; n--) {
@@ -374,23 +353,8 @@ static void smackColor(PaletteColor &col, bool forSmk)
                         PaletteColor &c0 = colors[i];
                         PaletteColor c1 = PaletteColor(colors[i]);
                         c1.setIndex(num + i);
-#if 0
-                        if (n == 0) {
-                            c0.setRed(p[-1]);
-                            c1.setRed(p[0]);
-                        }
-                        if (n == 1) {
-                            c0.setGreen(p[-1]);
-                            c1.setGreen(p[0]);
-                        }
-                        if (n == 2) {
-                            c0.setBlue(p[-1]);
-                            c1.setBlue(p[0]);
-                        }
-#else
                         c0.setRgb(n, p[-1]);
                         c1.setRgb(n, p[0]);
-#endif
                         colors.push_back(c1);
                     }
                 }
@@ -400,12 +364,6 @@ static void smackColor(PaletteColor &col, bool forSmk)
     }
     auto co = getPalColor(colors, col);
     PaletteColor &pc = colors[co.first];
-if (debugPalColor) {
-    for (auto it = colors.begin(); it != colors.end(); it++) {
-        dProgress() << QApplication::tr("option %1.(%2:%3:%4)").arg(it->index()).arg(it->red()).arg(it->green()).arg(it->blue());
-    }
-    dProgress() << QApplication::tr("selected %1.(%2:%3:%4) : %5, %6").arg(pc.index()).arg(pc.red()).arg(pc.green()).arg(pc.blue()).arg(co.first).arg(co.second);
-}
     col.setRed(pc.red());
     col.setGreen(pc.green());
     col.setBlue(pc.blue());
@@ -497,16 +455,11 @@ static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &color
 
     return std::pair<quint8, int>(res, best);
 }
-static bool debugSort = false;
+
 // sort colors by the number of users and/or by the RGB values
 static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum, std::set<int> &freeIdxs,
     const std::map<int, std::pair<std::vector<std::pair<SmkRgb, uint64_t>>, uint64_t>>* umap, const std::map<SmkRgb, std::pair<unsigned, SmkRgb>> &wmap)
 {
-#if 0
-if (debugSort) {
-    dProgress() << "++++++++++++++++++++";
-}
-#endif
     // prepare a separate vector with the user-count information
     std::vector<std::pair<PaletteColor, uint64_t>> new_colors;
     for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
@@ -517,10 +470,6 @@ if (debugSort) {
             }
         }
         new_colors.push_back(std::pair<PaletteColor, uint64_t>(*it, uc));
-
-if (debugSort) {
-    dProgress() << QApplication::tr("%1.(%2:%3:%4) : %5").arg(it->index()).arg(it->red()).arg(it->green()).arg(it->blue()).arg(uc);
-}
     }
     // sort the new vector
     std::sort(new_colors.begin(), new_colors.end(), [](std::pair<PaletteColor, uint64_t> &a, std::pair<PaletteColor, uint64_t> &b) {
@@ -552,20 +501,11 @@ if (debugSort) {
     bool change = false;
     auto ni = new_colors.cbegin();
     auto fi = freeIdxs.begin();
-if (debugSort) {
-    dProgress() << "-------------------";
-}
     for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++, fi = freeIdxs.erase(fi), ni++) {
         if (it->eq(ni->first) && it->index() == *fi) continue;
-if (debugSort) {
-    dProgress() << QApplication::tr("%1.(%2:%3:%4) -> %5. (%6:%7:%8)").arg(it->index()).arg(it->red()).arg(it->green()).arg(it->blue()).arg(*fi).arg(ni->first.red()).arg(ni->first.green()).arg(ni->first.blue());
-}
         *it = PaletteColor(ni->first.red(), ni->first.green(), ni->first.blue(), *fi);
         change = true;
     }
-if (debugSort) {
-    dProgress() << "-------------------";
-}
     return change;
 }
 
@@ -767,50 +707,26 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
             it->second.second = colorWeight(weightColor(it->first), forSmk);
         }
 #if 0
-debugSort = true;
-if (debugSort) {
-    dProgress() << QApplication::tr("mapping %1 vs %2").arg(wmap.size()).arg(new_colors.size());
-}
-#endif
-        // if (wmap.size() <= new_colors.size()) {
-        if (false) {
-#if 0
-            new_colors.erase(new_colors.begin() + wmap.size(), new_colors.end());
-            auto ni = new_colors.begin();
-            for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
-                PaletteColor color = weightColor(it->first);
-                color.setIndex(ni->first.index());
-                *ni = std::pair<PaletteColor, uint64_t>(color, it->second);
-            }
-#else
+        if (wmap.size() <= new_colors.size()) {
             std::map<int, std::pair<std::vector<std::pair<SmkRgb, uint64_t>>, uint64_t>> umap;
-if (debugSort) {
-    dProgress() << QApplication::tr("******************** ... %1 vs %2").arg(wmap.size()).arg(new_colors.size());
-}
             auto ni = new_colors.begin();
             for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
                 const SmkRgb w = it->first;
                 PaletteColor color = weightColor(w);
                 const int idx = ni->index();
                 color.setIndex(idx);
-                // *ni = color;
                 next_colors.push_back(color);
                 umap[idx].first.push_back(std::pair<SmkRgb, uint64_t>(w, 0));
-if (debugSort) {
-    dProgress() << QApplication::tr("%1.(%2:%3:%4) : %5").arg(idx).arg(color.red()).arg(color.green()).arg(color.blue()).arg(it->second.first);
-}
             }
-
-            // next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.begin() + wmap.size());
             new_colors.clear();
 
             sortNewColors(next_colors, prev_colornum, freeIdxs, forSmk ? &umap : nullptr, wmap);
+        } else
 #endif
-        } else {
+        {
             next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
             new_colors.clear();
 
-            int ch = 0;
             while (true) {
                 bool change = false;
                 // check the next color mapping
@@ -836,35 +752,6 @@ if (debugSort) {
 
                 // add new color to replace an eliminated one
                 if (!freeIdxs.empty()) {
-#if 0
-                    // select the largest group
-                    int res = 0;
-                    uint64_t best = 0;
-                    for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
-                        if (mi->second.second > best) {
-                            best = mi->second.second;
-                            res = mi->first;
-                        }
-                    }
-                    if (best != 0) {
-                        // umap[res].second = 0;
-                        // select the largest distance
-                        best = 0;
-                        for (const std::pair<int, uint64_t>& user : umap.at(res).first) {
-                            if (user.second > best) {
-                                best = user.second;
-                                res = user.first;
-                            }
-                        }
-
-                        PaletteColor color = weightColor(res);
-                        auto fi = freeIdxs.begin();
-                        color.setIndex(*fi);
-                        next_colors.push_back(color);
-                        freeIdxs.erase(fi);
-                        continue;
-                    }
-#else
                     // select the largest distance
                     PaletteColor res = PaletteColor(0, 0, 0, 0);
                     uint64_t best = 0;
@@ -874,19 +761,16 @@ if (debugSort) {
                         for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
                             if (user.second <= best) continue;
                             PaletteColor color = weightColor(user.first);
-                            // PaletteColor sc = color;
-                            // smackColor(sc, forSmk);
                             PaletteColor sc = weightColor(wmap.at(user.first).second);
-                            uint64_t nd = D1Pal::getColorDist(sc, color);
+                            uint64_t nd = (uint64_t)wmap.at(user.first).first * D1Pal::getColorDist(sc, color);
                             uint64_t pd = user.second;
-                            nd *= wmap.at(user.first).first;
 
                             if (nd < pd) {
                                 best = pd - nd;
                                 res = sc;
                             }
                         }
-#elif 0
+#else
                         std::set<SmkRgb> smks;
                         for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
                             SmkRgb rgb = wmap.at(user.first).second;
@@ -894,7 +778,6 @@ if (debugSort) {
                             smks.insert(rgb);
                             uint64_t cw = 0;
                             const PaletteColor sc = weightColor(rgb);
-                            // smackColor(sc, forSmk);
                             for (const std::pair<SmkRgb, uint64_t>& usr : mi->second.first) {
                                 const PaletteColor color = weightColor(usr.first);
                                 uint64_t nd = (uint64_t)wmap.at(usr.first).first * D1Pal::getColorDist(sc, color);
@@ -918,7 +801,6 @@ if (debugSort) {
                         freeIdxs.erase(fi);
                         continue;
                     }
-#endif
                 }
 
                 // select better colors for the color-groups with new colors
@@ -976,19 +858,8 @@ if (debugSort) {
 
                 if (change) {
                     continue;
-                    if (++ch < 10) {
-                    continue;
-                    }
-                    debugSort = true;
-                    if (++ch < 20) {
-                    continue;
-                    }
                 }
-#if 0
-if (debugSort) {
-    dProgress() << QApplication::tr("mapping free %1 new: %2").arg(freeIdxs.size()).arg(next_colors.size());
-}
-#endif
+
                 break;
             }
         }
