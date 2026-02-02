@@ -382,7 +382,15 @@ static SmkRgb colorWeight(PaletteColor color, bool forSmk)
 {
     smackColor(color, forSmk);
     int r = color.red(), g = color.green(), b = color.blue();
+#if 0
     return { (uint8_t)r, (uint8_t)g, (uint8_t)b, };
+#else
+    SmkRgb rgb = { 0 };
+    rgb.r = r;
+    rgb.g = g;
+    rgb.b = b;
+    return rgb;
+#endif
 }
 static PaletteColor weightColor(SmkRgb rgb)
 {
