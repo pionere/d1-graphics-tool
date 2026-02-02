@@ -826,7 +826,7 @@ if (debugSort) {
                     PaletteColor res = PaletteColor(0, 0, 0, 0);
                     uint64_t best = 0;
                     for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
-#if 0
+#if 1
                         for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
                             if (user.second > best) {
                                 PaletteColor color = weightColor(user.first);
