@@ -55,9 +55,21 @@ PaletteColor::PaletteColor(const PaletteColor &o)
 
 void PaletteColor::setRgb(int idx, int v)
 {
+#if 0
     static_assert(offsetof(PaletteColor, rv) + sizeof(rv) == offsetof(PaletteColor, gv));
     static_assert(offsetof(PaletteColor, gv) + sizeof(gv) == offsetof(PaletteColor, bv));
     ((int*)&rv)[idx] = v;
+#else
+    if (idx == 0) {
+        rv = v;
+    }
+    if (idx == 1) {
+        gv = v;
+    }
+    if (idx == 2) {
+        bv = v;
+    }
+#endif
 }
 
 D1Pal::D1Pal(const D1Pal &opal)
