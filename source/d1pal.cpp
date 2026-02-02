@@ -301,9 +301,13 @@ typedef struct SmkRgb {
     uint8_t g;
     uint8_t b;
     uint8_t align[sizeof(int) - 3];
-
+#if 0
     bool operator=(const SmkRgb &o) const { return *(int*)this == *(int*)&o; };
     bool operator<(const SmkRgb &o) const { return *(int*)this < *(int*)&o; };
+#else
+    bool operator=(const SmkRgb &o) const { return r == o.r && g == o.g && b == o.b; };
+    bool operator<(const SmkRgb &o) const { return r < o.r || (r == o.r && (g < o.g || g == o.g && b < o.b)); };
+#endif
 } SmkRgb;
 static bool debugPalColor = false;
 static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color);
@@ -822,10 +826,8 @@ if (debugSort) {
                     PaletteColor res = PaletteColor(0, 0, 0, 0);
                     uint64_t best = 0;
                     for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
-                        if (mi->second.second <= best) continue;
-                        std::set<SmkRgb> smks;
-                        for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
 #if 0
+                        for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
                             if (user.second > best) {
                                 PaletteColor color = weightColor(user.first);
                                 // PaletteColor sc = color;
@@ -840,7 +842,11 @@ if (debugSort) {
                                     res = sc;
                                 }
                             }
+                        }
 #else
+                        if (mi->second.second <= best) continue;
+                        std::set<SmkRgb> smks;
+                        for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
                             SmkRgb rgb = wmap.at(user.first).second;
                             if (smks.count(rgb)) continue;
                             smks.insert(rgb);
@@ -860,8 +866,8 @@ if (debugSort) {
                                 best = cw;
                                 res = sc;
                             }
-#endif
                         }
+#endif
                     }
                     if (best != 0) {
                         auto fi = freeIdxs.begin();
