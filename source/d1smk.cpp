@@ -1711,7 +1711,10 @@ static QString addDetails(QString &msg, int verbose, D1SmkColorFix &fix)
 
 static bool fixPalColors(D1SmkColorFix &fix, int verbose)
 {
-    if (fix.frameFrom == fix.frameTo) {
+    if (fix.frameFrom < 0) {
+        if (fix.frameTo != 0) {
+            dProgressWarn() << QApplication::tr("The palette is not set in the first frame.");
+        }
         return false;
     }
     const QColor undefColor = fix.pal->getUndefinedColor();
@@ -1831,7 +1834,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p, QList<D1SmkColorFix>
         D1SmkColorFix cf;
         cf.pal = p;
         cf.gfx = gfx;
-        cf.frameFrom = 0;
+        cf.frameFrom = -1;
         int i = 0;
         for ( ; i < cf.gfx->getFrameCount(); i++) {
             QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
