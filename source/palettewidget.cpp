@@ -763,7 +763,8 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
     for (const QString &option : options) {
         if (!MainWindow::isResourcePath(option))
             continue;
-        QString name = option == D1Pal::DEFAULT_PATH ? tr("_default.pal") : tr("_null.trn"); // TODO: check if D1Trn::IDENTITY_PATH?
+        QString name = option;
+        name.replace(":/", "_");
         pcb->addItem(name, option);
         if (selectedOption == option) {
             pcb->setCurrentIndex(idx);
