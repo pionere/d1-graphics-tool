@@ -1714,8 +1714,24 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     if (fix.frameFrom == fix.frameTo) {
         return false;
     }
-    QColor undefColor = fix.pal->getUndefinedColor();
+    const QColor undefColor = fix.pal->getUndefinedColor();
     QList<quint8> ignored;
+    for (int i = fix.frameFrom; i < fix.frameTo; i++) {
+        D1GfxFrame *frame = fix.gfx->getFrame(i);
+        for (int y = 0; y < frame->getHeight(); y++) {
+            for (int x = 0; x < frame->getWidth(); x++) {
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (!pixel.isTransparent()) {
+                    quint8 color = pixel.getPaletteIndex();
+                    if (fix.pal->getColor(color) == undefColor) {
+                        dProgressErr() << QApplication::tr("Pixel with undefined color in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
+                    }
+                } else {
+                    dProgressErr() << QApplication::tr("Transparent pixel in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
+                }
+            }
+        }
+    }
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
         QColor col = fix.pal->getColor(i);
         if (col == undefColor) {
