@@ -1747,7 +1747,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
         return;
     }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Reading..."), 2, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->insertImageFiles(mode, filePaths, append);
