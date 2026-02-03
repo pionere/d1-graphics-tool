@@ -1880,6 +1880,57 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     return result;
 }
 
+typedef struct SmkBlockInfo {
+    uint8_t ctype;
+    uint8_t numColors;
+    uint16_t colors;
+    uint16_t color1;
+    uint16_t color2;
+} SmkBlockInfo;
+
+static SmkBlockInfo getBlockInfo(const D1GfxFrame *frame, int x, int y)
+{
+    unsigned numColors = 1, color1, color2 = D1PAL_COLORS, colors = 0;
+    color1 = frame->getPixel(x + 0, y + 0).getPaletteIndex();
+    for (int yy = 4 - 1; yy >= 0 && numColors <= 2; yy--) {
+        for (int xx = 4 - 1; xx >= 0; xx--) {
+            colors <<= 1;
+            unsigned color = frame->getPixel(x + xx, y + yy).getPaletteIndex();
+            if (color == color1) {
+                colors |= 1;
+                continue;
+            }
+            if (color == color2) {
+                continue;
+            }
+            ++numColors;
+            if (numColors == 2) {
+                color2 = color;
+                continue;
+            }
+            break;
+        }
+    }
+    SmkBlockInfo result;
+    result.colors = colors;
+    result.numColors = numColors;
+    result.color1 = color1;
+    result.color2 = color2;
+    if (numColors <= 2) {
+        if (numColors == 2) {
+            // 2COLOR BLOCK -> SMK_TREE_MMAP/SMK_TREE_MCLR
+            result.ctype = 0;
+        } else {
+            // SOLID BLOCK
+            result.ctype = 3 | (color1 << 8);
+        }
+    } else {
+        // FULL BLOCK -> SMK_TREE_FULL
+        result.ctype = 1;
+    }
+    return result;
+}
+
 static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
 {
     if (pf.frameFrom < 0) {
@@ -2021,7 +2072,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         cf.frameFrom = -1;
         pf.frameFrom = -1;
         int i = 0;
-        ProgressDialog::incBar(QApplication::tr("Checking frames..."), cf.gfx->getFrameCount());
+        ProgressDialog::incBar(QApplication::tr("Checking frames..."), 2 * cf.gfx->getFrameCount() + SMK_TREE_COUNT + 1);
         bool change = false;
         for ( ; i < cf.gfx->getFrameCount(); i++) {
             if (ProgressDialog::wasCanceled()) {
@@ -2053,6 +2104,227 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         if (mergePals(pf, cf)) {
             fixPalColors(cf, verbose);
             change = true;
+        }
+        { // ensure there is space for the cache-references
+        const QSize fs = cf.gfx->getFrameSize();
+        const int width = fs.width();
+        const int height = fs.height();
+        if (!fs.isValid()) {
+            dProgressErr() << QApplication::tr("Framesize is not constant");
+        } else if ((width & 3) || (height & 3)) {
+            dProgressErr() << QApplication::tr("SMK requires width/height to be multiple of 4.");
+        } else {
+            QMap<uint16_t, QMap<D1Pal*, uint64_t>> keyUses[SMK_TREE_COUNT];
+            D1Pal *cp = p;
+            for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
+                if (ProgressDialog::wasCanceled()) {
+                    break;
+                }
+                D1GfxFrame *frame = cf.gfx->getFrame(i);
+                QPointer<D1Pal> &fp = frame->getFramePal();
+                if (!fp.isNull()) {
+                    cp = fp.data();
+                }
+                for (int y = 0; y < height; y += 4) {
+                    for (int x = 0; x < width; x += 4) {
+                        const SmkBlockInfo sbi = getBlockInfo(frame, x, y);
+                        if (sbi.ctype == 0) {
+                            // 2COLOR BLOCK -> SMK_TREE_MMAP/SMK_TREE_MCLR
+                            keyUses[SMK_TREE_MCLR][sbi.color1 << 8 | sbi.color2][cp]++;
+                            keyUses[SMK_TREE_MMAP][sbi.colors][nullptr]++;
+                        } else if (sbi.ctype == 1) {
+                            // FULL BLOCK -> SMK_TREE_FULL
+                            unsigned color1, color2;
+                            for (int yy = 0; yy < 4; yy++) {
+                                color1 = frame->getPixel(x + 2, y + yy).getPaletteIndex();
+                                color2 = frame->getPixel(x + 3, y + yy).getPaletteIndex();
+                                keyUses[SMK_TREE_FULL][color2 << 8 | color1][cp]++;
+                                color1 = frame->getPixel(x + 0, y + yy).getPaletteIndex();
+                                color2 = frame->getPixel(x + 1, y + yy).getPaletteIndex();
+                                keyUses[SMK_TREE_FULL][color2 << 8 | color1][cp]++;
+                            }
+                        }
+                    }
+                }
+
+                if (!ProgressDialog::incValue()) {
+                    break;
+                }
+            }
+            for (int n = 0; n < SMK_TREE_COUNT; n++) {
+                if (ProgressDialog::wasCanceled()) {
+                    break;
+                }
+                // dProgress() << QApplication::tr("SMK tree %1 size: %2 (limit %3).").arg(n).arg(keyUses[n].count()).arg(UINT16_MAX - 3);
+
+                while (keyUses[n].count() > UINT16_MAX - 3) {
+                    switch (n) {
+                    case SMK_TREE_MMAP: {
+                        // should not happen
+                        for (uint16_t key : keyUses[n].keys()) {
+                            if (key == 0 || key == 0xFFFF || !(key & (1 << 15))) {
+                                dProgressErr() << QApplication::tr("SMK MMAP-tree contains %1.").arg(key);
+                            }
+                        }
+                    } break;
+                    case SMK_TREE_MCLR:
+                    case SMK_TREE_FULL: {
+                        QMap<D1Pal*, uint16_t> replacements;
+                        uint16_t bestKey;
+                        uint64_t best = UINT64_MAX;
+                        for (auto it = keyUses[n].begin(); it != keyUses[n].end(); it++) {
+                            uint16_t k = it.key();
+                            quint8 c1 = k & 0xFF;
+                            quint8 c2 = k >> 8;
+                            uint64_t curr = 0;
+                            QMap<D1Pal*, uint16_t> currReplace;
+                            for (auto pit = it.value().begin(); pit != it.value().end(); pit++) {
+                                D1Pal* pal = pit.key();
+                                const PaletteColor undefColor = PaletteColor(pal->getUndefinedColor());
+                                uint32_t bestDist = UINT32_MAX;
+                                uint16_t pk;
+                                const PaletteColor cc1 = PaletteColor(pal->getColor(c1));
+                                const PaletteColor cc2 = PaletteColor(pal->getColor(c2));
+                                for (int c = 0; c < D1PAL_COLORS; c++) {
+                                    // TODO: check all possible combination?
+                                    PaletteColor cc = PaletteColor(pal->getColor(c));
+                                    if (c != c1) {
+                                        uint16_t ck = (k & 0xFF00) | c;
+                                        if (keyUses[n].contains(ck)) {
+                                            unsigned cd = undefColor.eq(cc) ? 0 : D1Pal::getColorDist(cc1, cc);
+                                            if (cd < bestDist) {
+                                                bestDist = cd;
+                                                pk = ck;
+                                            }
+                                        }
+                                    }
+                                    if (c != c2) {
+                                        uint16_t ck = (k & 0xFF) | (c << 8);
+                                        if (keyUses[n].contains(ck)) {
+                                            unsigned cd = undefColor.eq(cc) ? 0 : D1Pal::getColorDist(cc2, cc);
+                                            if (cd < bestDist) {
+                                                bestDist = cd;
+                                                pk = ck;
+                                            }
+                                        }
+                                    }
+                                }
+                                uint64_t w = pit.value();
+                                uint64_t cw = bestDist < (UINT64_MAX / w) ? w * bestDist : (UINT64_MAX - 1);
+                                curr = cw < (UINT64_MAX - curr) ? curr + cw : (UINT64_MAX - 1);
+                                currReplace[pal] = pk;
+                            }
+
+                            if (curr < best) {
+                                best = curr;
+                                bestKey = k;
+                                replacements = currReplace;
+                            }
+                        }
+
+                        quint8 c1 = bestKey & 0xFF;
+                        quint8 c2 = bestKey >> 8;
+                        D1Pal* pal = p;
+                        for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
+                            D1GfxFrame *frame = cf.gfx->getFrame(i);
+                            QPointer<D1Pal> &fp = frame->getFramePal();
+                            if (!fp.isNull()) {
+                                pal = fp.data();
+                            }
+                            auto pit = replacements.find(pal);
+                            if (pit == replacements.end()) continue;
+                            uint16_t k = pit.value();
+                            quint8 rc1 = k & 0xFF;
+                            quint8 rc2 = k >> 8;
+                            const QColor undefColor = pal->getUndefinedColor();
+                            //if (rc1 != c1) {
+                                if (pal->getColor(rc1) == undefColor) {
+                                    pal->setColor(rc1, pal->getColor(c1)); // TODO: prevent loop with fixPalColors?
+                                    dProgress() << QApplication::tr("Replaced undefined color %1 with %2 in the palette of frame %3.").arg(rc1).arg(c1).arg(i + 1);
+                                }
+                            //}
+                            //if (rc2 != c2) {
+                                if (pal->getColor(rc2) == undefColor) {
+                                    pal->setColor(rc2, pal->getColor(c2)); // TODO: prevent loop with fixPalColors?
+                                    dProgress() << QApplication::tr("Replaced undefined color %1 with %2 in the palette of frame %3.").arg(rc2).arg(c2).arg(i + 1);
+                                }
+                            //}
+                            int start = i;
+                            while (true) {
+                                for (int y = 0; y < height; y += 4) {
+                                    for (int x = 0; x < width; x += 4) {
+                                        const SmkBlockInfo sbi = getBlockInfo(frame, x, y);
+                                        if (sbi.ctype == 0 && sbi.color1 == c1 && sbi.color2 == c2 && n == SMK_TREE_MCLR) {
+                                            // 2COLOR BLOCK -> SMK_TREE_MMAP/SMK_TREE_MCLR
+                                            for (int yy = 4 - 1; yy >= 0; yy--) {
+                                                for (int xx = 4 - 1; xx >= 0; xx--) {
+                                                    quint8 color = frame->getPixel(x + xx, y + yy).getPaletteIndex();
+                                                    frame->setPixel(x + xx, y + yy, D1GfxPixel::colorPixel(color == c1 ? rc1 : rc2));
+                                                }
+                                            }
+                                        }
+                                        if (sbi.ctype == 1 && n == SMK_TREE_FULL) {
+                                            // FULL BLOCK -> SMK_TREE_FULL
+                                            unsigned color1, color2;
+                                            for (int yy = 0; yy < 4; yy++) {
+                                                color1 = frame->getPixel(x + 2, y + yy).getPaletteIndex();
+                                                color2 = frame->getPixel(x + 3, y + yy).getPaletteIndex();
+                                                if (color1 == c1 && color2 == c2) {
+                                                    frame->setPixel(x + 2, y + yy, D1GfxPixel::colorPixel(rc1));
+                                                    frame->setPixel(x + 3, y + yy, D1GfxPixel::colorPixel(rc2));
+                                                }
+                                                color1 = frame->getPixel(x + 0, y + yy).getPaletteIndex();
+                                                color2 = frame->getPixel(x + 1, y + yy).getPaletteIndex();
+                                                if (color1 == c1 && color2 == c2) {
+                                                    frame->setPixel(x + 0, y + yy, D1GfxPixel::colorPixel(rc1));
+                                                    frame->setPixel(x + 1, y + yy, D1GfxPixel::colorPixel(rc2));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                i++;
+                                if (i < cf.gfx->getFrameCount()) {
+                                    frame = cf.gfx->getFrame(i);
+                                    QPointer<D1Pal> &fp = frame->getFramePal();
+                                    if (fp.isNull()) {
+                                        continue;
+                                    }
+                                    i--;
+                                }
+                                break;
+                            }
+                            int amount = i - start;
+                            if (n == SMK_TREE_FULL) {
+                                if (c1 == rc1) {
+                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in full blocks of frame %3-%4 if paired with %5 on the right.", "", amount).arg(c2).arg(rc2).arg(start + 1).arg(i + 1).arg(c1);
+                                } else if (c2 == rc2) {
+                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in full blocks of frame %3-%4 if paired with %5 on the left.", "", amount).arg(c1).arg(rc1).arg(start + 1).arg(i + 1).arg(c2);
+                                } else {
+                                    dProgress() << QApplication::tr("Replaced color %1:%2 pairs with color %3:%4 in full blocks of frame %5-%6.", "", amount).arg(c1).arg(c2).arg(rc1).arg(rc2).arg(start + 1).arg(i + 1);
+                                }
+                            } else {
+                                if (c1 == rc1) {
+                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in 2color blocks of frame %3-%4 if starting with %5.", "", amount).arg(c2).arg(rc2).arg(start + 1).arg(i + 1).arg(c1);
+                                } else if (c2 == rc2) {
+                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in 2color blocks of frame %3-%4 if paired with %5.", "", amount).arg(c1).arg(rc1).arg(start + 1).arg(i + 1).arg(c2);
+                                } else {
+                                    dProgress() << QApplication::tr("Replaced color %1:%2 pairs with color %3:%4 in 2color blocks of frame %5-%6.", "", amount).arg(c1).arg(c2).arg(rc1).arg(rc2).arg(start + 1).arg(i + 1);
+                                }
+                            }
+                        }
+
+                        keyUses[n].remove(bestKey);
+                        change = true;
+                    } continue;
+                    }
+                    break;
+                }
+                if (!ProgressDialog::incValue()) {
+                    break;
+                }
+            }
+        }
         }
         if (change) {
             cf.gfx->setModified();
