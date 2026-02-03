@@ -4,6 +4,7 @@
 
 #include <QColor>
 #include <QFile>
+#include <QImage>
 #include <QObject>
 #include <QString>
 
@@ -21,6 +22,10 @@ enum class D1PAL_CYCLE_TYPE {
 class PaletteColor {
 public:
     PaletteColor(const QColor &color, int index);
+    PaletteColor(const QColor &color);
+    PaletteColor(int r, int g, int b, int index);
+    PaletteColor(int r, int g, int b);
+    PaletteColor(const PaletteColor &o);
     ~PaletteColor() = default;
 
     int red() const
@@ -39,7 +44,16 @@ public:
     {
         return xv;
     };
-
+    QColor color() const
+    {
+        return QColor(rv, gv, bv);
+    }
+    bool eq(const PaletteColor &o) const { return o.rv == rv && o.gv == gv && o.bv == bv; };
+    void setRed(int r) { rv = r; };
+    void setGreen(int g) { gv = g; };
+    void setBlue(int b) { bv = b; };
+    void setIndex(int x) { xv = x; };
+    void setRgb(int idx, int v);
 private:
     int rv;
     int gv;
@@ -76,8 +90,11 @@ public:
 
     void getValidColors(std::vector<PaletteColor> &colors) const;
     void updateColors(const D1Pal &opal);
+    bool genColors(const QString &imagefilePath, bool forSmk);
+    bool genColors(const QImage &image, bool forSmk);
     void cycleColors(D1PAL_CYCLE_TYPE type);
     static int getCycleColors(D1PAL_CYCLE_TYPE type);
+    static int getColorDist(const PaletteColor &c0, const PaletteColor &c1);
 
 private:
     void loadRegularPalette(QFile &file);

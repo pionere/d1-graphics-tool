@@ -287,6 +287,7 @@ private slots:
     void on_actionOpen_PAL_triggered();
     void on_actionSave_PAL_triggered();
     void on_actionSave_PAL_as_triggered();
+    void on_actionGen_PAL_triggered();
     void on_actionClose_PAL_triggered();
 
     void on_actionNew_Translation_Unique_triggered();

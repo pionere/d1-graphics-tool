@@ -1293,6 +1293,9 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     D1Pal *newPal = new D1Pal();
     newPal->load(D1Pal::DEFAULT_PATH);
     result->pals[D1Pal::DEFAULT_PATH] = newPal;
+    D1Pal *emptyPal = new D1Pal();
+    emptyPal->load(D1Pal::EMPTY_PATH);
+    result->pals[D1Pal::EMPTY_PATH] = emptyPal;
     result->pal = newPal;
 
     // Loading default null.trn
@@ -3353,7 +3356,6 @@ void MainWindow::on_actionNew_PAL_triggered()
 
     QFileInfo palFileInfo(palFilePath);
     const QString &path = palFilePath; // palFileInfo.absoluteFilePath();
-    const QString name = palFileInfo.fileName();
 
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(D1Pal::DEFAULT_PATH)) {
@@ -3405,6 +3407,26 @@ void MainWindow::on_actionSave_PAL_as_triggered()
     }
     // select the 'new' palette
     this->setPal(palFilePath); // path
+}
+
+void MainWindow::on_actionGen_PAL_triggered()
+{
+    QString filter = imageNameFilter();
+    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Image File"), filter.toLatin1().data());
+
+    if (imgFilePath.isEmpty()) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
+
+    if (this->pal->genColors(imgFilePath, this->gfx->getType() == D1CEL_TYPE::SMK)) {
+        // updatePalette(this->pal);
+        this->updateWindow();
+    }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionClose_PAL_triggered()

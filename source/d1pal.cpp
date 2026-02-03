@@ -1,5 +1,7 @@
 #include "d1pal.h"
 
+#include <set>
+
 #include <QApplication>
 #include <QDataStream>
 #include <QDir>
@@ -7,7 +9,13 @@
 #include <QTextStream>
 
 #include "config.h"
+#include "d1image.h"
+#include "d1pcx.h"
 #include "progressdialog.h"
+
+#include "libsmacker/smacker.h"
+
+#define SIMPLE_WEIGHT 1
 
 PaletteColor::PaletteColor(const QColor &color, int index)
     : xv(index)
@@ -15,6 +23,43 @@ PaletteColor::PaletteColor(const QColor &color, int index)
     , gv(color.green())
     , bv(color.blue())
 {
+}
+
+PaletteColor::PaletteColor(const QColor &color)
+    : rv(color.red())
+    , gv(color.green())
+    , bv(color.blue())
+{
+}
+
+PaletteColor::PaletteColor(int r, int g, int b, int x)
+    : xv(x)
+    , rv(r)
+    , gv(g)
+    , bv(b)
+{
+}
+
+PaletteColor::PaletteColor(int r, int g, int b)
+    : rv(r)
+    , gv(g)
+    , bv(b)
+{
+}
+
+PaletteColor::PaletteColor(const PaletteColor &o)
+    : xv(o.index())
+    , rv(o.red())
+    , gv(o.green())
+    , bv(o.blue())
+{
+}
+
+void PaletteColor::setRgb(int idx, int v)
+{
+    static_assert(offsetof(PaletteColor, rv) + sizeof(rv) == offsetof(PaletteColor, gv));
+    static_assert(offsetof(PaletteColor, gv) + sizeof(gv) == offsetof(PaletteColor, bv));
+    ((int*)&rv)[idx] = v;
 }
 
 D1Pal::D1Pal(const D1Pal &opal)
@@ -226,6 +271,581 @@ void D1Pal::updateColors(const D1Pal &opal)
     for (int i = 0; i < D1PAL_COLORS; i++) {
         this->colors[i] = opal.colors[i];
     }
+}
+
+bool D1Pal::genColors(const QString &imagefilePath, bool forSmk)
+{
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool palMod;
+        D1GfxFrame frame;
+        D1Pal basePal = D1Pal(*this);
+        bool success = D1Pcx::load(frame, imagefilePath, &basePal, this, &palMod);
+        if (!success) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
+            return false;
+        }
+        if (palMod) {
+            // update the palette
+            this->updateColors(basePal);
+        }
+        // update the view - done by the caller
+        // this->displayFrame();
+        return palMod;
+    }
+
+    QImage image = QImage(imagefilePath);
+
+    return this->genColors(image, forSmk);
+}
+
+int D1Pal::getColorDist(const PaletteColor &color, const PaletteColor &palColor)
+{
+    int currR = color.red() - palColor.red();
+    int currG = color.green() - palColor.green();
+    int currB = color.blue() - palColor.blue();
+    int curr = currR * currR + currG * currG + currB * currB;
+    return curr;
+}
+static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color)
+{
+    unsigned res = 0;
+    int best = INT_MAX;
+
+    for (const PaletteColor &palColor : colors) {
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        int curr = currR * currR + currG * currG + currB * currB;
+        if (curr < best) {
+            best = curr;
+            res = palColor.index();
+        }
+    }
+
+    return std::pair<quint8, int>(res, best);
+}
+
+static void smackColor(PaletteColor &col, bool forSmk)
+{
+    if (!forSmk) {
+        return;
+    }
+    unsigned char smkColor[3];
+    smkColor[0] = col.red();
+    smkColor[1] = col.green();
+    smkColor[2] = col.blue();
+#if 0
+    for (int n = 0; n < 3; n++) {
+        unsigned char cv = smkColor[n];
+        const unsigned char *p = &palmap[0];
+        for (; /*p < lengthof(palmap)*/; p++) {
+            if (cv <= p[0]) {
+                if (cv != p[0]) {
+                    if (p[0] - cv > cv - p[-1]) {
+                        p--;
+                    }
+                    col.setRgb(n, p[0]);
+                }
+                break;
+            }
+        }
+    }
+#else
+    std::vector<PaletteColor> colors;
+    colors.push_back(PaletteColor(col.red(), col.green(), col.blue(), 0));
+    for (int n = 3 - 1; n >= 0; n--) {
+        unsigned char cv = smkColor[n];
+        const unsigned char *p = &palmap[0];
+        for ( ; /*p < lengthof(palmap)*/; p++) {
+            if (cv <= p[0]) {
+                if (cv != p[0]) {
+                    int num = colors.size();
+                    for (int i = 0; i < num; i++) {
+                        PaletteColor &c0 = colors[i];
+                        PaletteColor c1 = PaletteColor(colors[i]);
+                        c1.setIndex(num + i);
+                        c0.setRgb(n, p[-1]);
+                        c1.setRgb(n, p[0]);
+                        colors.push_back(c1);
+                    }
+                }
+                break;
+            }
+        }
+    }
+    auto co = getPalColor(colors, col);
+    PaletteColor &pc = colors[co.first];
+    col.setRed(pc.red());
+    col.setGreen(pc.green());
+    col.setBlue(pc.blue());
+#endif
+}
+
+typedef unsigned SmkRgb;
+
+static SmkRgb colorWeight(PaletteColor color, bool forSmk)
+{
+    smackColor(color, forSmk);
+    unsigned r = color.red(), g = color.green(), b = color.blue();
+
+    return (r * 256 * 256) | (g * 256) | b;
+}
+
+static PaletteColor weightColor(SmkRgb rgb)
+{
+    unsigned c = rgb;
+    unsigned r, g, b;
+    r = c / (256 * 256); g = c / 256; b = c;
+    return PaletteColor(r % 256, g % 256, b % 256);
+}
+
+static int colorValue(const QColor &color)
+{
+    int cv = 0;
+    unsigned r = color.red(), g = color.green(), b = color.blue();
+    for (int n = 0; n < 8; n++) {
+        cv |= ((r & 1) | ((g & 1) << 1) | ((b & 1) << 2)) << (n * 3);
+        r >>= 1;
+        g >>= 1;
+        b >>= 1;
+    }
+    return cv;
+}
+static PaletteColor valueColor(unsigned cv, bool forSmk)
+{
+    unsigned r = 0;
+    unsigned g = 0;
+    unsigned b = 0;
+    for (int n = 0; n < 8; n++) {
+        r |= ((cv & 1) >> 0) << n;
+        g |= ((cv & 2) >> 1) << n;
+        b |= ((cv & 4) >> 2) << n;
+        cv >>= 3;
+    }
+    PaletteColor color = PaletteColor(r, g, b);
+    smackColor(color, forSmk);
+    return color;
+}
+
+// sort colors by the number of users and/or by the RGB values
+static bool sortNewColors(std::vector<PaletteColor> &next_colors, unsigned prev_colornum, std::set<int> &freeIdxs,
+    const std::map<int, std::pair<std::vector<std::pair<SmkRgb, uint64_t>>, uint64_t>>* umap, const std::map<SmkRgb, std::pair<unsigned, SmkRgb>> &wmap)
+{
+    // prepare a separate vector with the user-count information
+    std::vector<std::pair<PaletteColor, uint64_t>> new_colors;
+    for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
+        uint64_t uc = 0;
+        if (umap) {
+            for (const std::pair<SmkRgb, uint64_t>& user : umap->at(it->index()).first) {
+                uc += wmap.at(user.first).first;
+            }
+        }
+        new_colors.push_back(std::pair<PaletteColor, uint64_t>(*it, uc));
+    }
+    // sort the new vector
+    std::sort(new_colors.begin(), new_colors.end(), [](std::pair<PaletteColor, uint64_t> &a, std::pair<PaletteColor, uint64_t> &b) {
+        if (a.second < b.second) {
+            return false;
+        }
+        if (b.second < a.second) {
+            return true;
+        }
+        if (a.first.red() < b.first.red()) {
+            return true;
+        }
+        if (b.first.red() < a.first.red()) {
+            return false;
+        }
+        if (a.first.green() < b.first.green()) {
+            return true;
+        }
+        if (b.first.green() < a.first.green()) {
+            return false;
+        }
+        return a.first.blue() < b.first.blue();
+    });
+    // collect the available indices
+    for (const std::pair<PaletteColor, uint64_t> &nc : new_colors) {
+        freeIdxs.insert(nc.first.index());
+    }
+    // update the colors
+    bool change = false;
+    auto ni = new_colors.cbegin();
+    auto fi = freeIdxs.begin();
+    for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++, fi = freeIdxs.erase(fi), ni++) {
+        if (it->eq(ni->first) && it->index() == *fi) continue;
+        *it = PaletteColor(ni->first.red(), ni->first.green(), ni->first.blue(), *fi);
+        change = true;
+    }
+    return change;
+}
+
+bool D1Pal::genColors(const QImage &image, bool forSmk)
+{
+    // find new color options
+    std::set<int> col32s;
+    std::set<int> freeIdxs;
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        if (this->colors[i] == this->undefinedColor) {
+            freeIdxs.insert(i);
+        } else if (this->colors[i].alpha() == 255) {
+            col32s.insert(colorValue(this->colors[i]));
+        }
+    }
+    //if (forSmk && !freeIdxs.empty()) {
+    //    freeIdxs.erase(std::prev(freeIdxs.end()));
+    //}
+    if (freeIdxs.empty()) {
+        return false; // no place for new colors -> done
+    }
+    // cover the color-space as much as possible
+    typedef struct colorData {
+        int colorCode;
+        int rangeLen;
+        int closed;
+        int marbles;
+    } colorData;
+    std::vector<colorData> ranges;
+    if (col32s.size() == 0) {
+        colorData cd;
+        cd.colorCode = 0;
+        cd.rangeLen = 0xFFFFFF;
+        cd.closed = 0;
+        cd.marbles = freeIdxs.size();
+        ranges.push_back(cd);
+    } else {
+        if (*col32s.begin() != 0) {
+            colorData cd;
+            cd.colorCode = 0;
+            cd.rangeLen = 0;
+            cd.closed = 1;
+            cd.marbles = 0;
+            ranges.push_back(cd);
+        }
+        for (const int cc : col32s) {
+            colorData cd;
+            cd.colorCode = cc;
+            cd.rangeLen = 0;
+            cd.closed = 2;
+            cd.marbles = 0;
+            ranges.push_back(cd);
+        }
+        if (ranges.back().colorCode != 0xFFFFFF) {
+            ranges.back().closed = 1;
+        }
+        // initialize rangeLen
+        for (auto it = ranges.begin(); it != ranges.end(); it++) {
+            auto nit = it + 1;
+            if (nit != ranges.end()) {
+                it->rangeLen = nit->colorCode - it->colorCode;
+            } else {
+                it->rangeLen = 0xFFFFFF - it->colorCode;
+            }
+        }
+        // select colors at the longest gaps
+        for (const int idx : freeIdxs) {
+            std::sort(ranges.begin(), ranges.end(), [](colorData &a, colorData &b) {
+                int acw = a.rangeLen;
+                int bcw = b.rangeLen;
+                if (a.closed == 1 && a.marbles == 0)
+                    acw *= 2;
+                else
+                    bcw *= a.marbles + (a.closed == 1 ? 0 : 1);
+                if (b.closed == 1 && b.marbles == 0)
+                    bcw *= 2;
+                else
+                    acw *= b.marbles + (b.closed == 1 ? 0 : 1);
+                return acw > bcw || (acw == bcw && a.colorCode < b.colorCode);
+            });
+
+            ranges.front().marbles++;
+        }
+    }
+
+    // designate the colors
+    std::vector<colorData> colors;
+    for (auto it = ranges.begin(); it != ranges.end(); it++) {
+        int cc = it->colorCode;
+        int n = it->marbles;
+        int rl = it->rangeLen;
+        if (it->closed == 0) {
+            // assert(n > 0);
+            n -= 2;
+            {
+                colorData cd;
+                cd.colorCode = 0;
+                cd.marbles = 1;
+                colors.push_back(cd);
+            }
+            if (n < 0) {
+                continue;
+            }
+            {
+                colorData cd;
+                cd.colorCode = 0xFFFFFF;
+                cd.marbles = 1;
+                colors.push_back(cd);
+            }
+        } else if (it->closed == 1) {
+            n--;
+            if (cc == 0) {
+                if (n < 0) {
+                    continue;
+                }
+
+                colorData cd;
+                cd.colorCode = 0;
+                cd.marbles = 1;
+                colors.push_back(cd);
+            } else {
+                colorData cd;
+                cd.colorCode = cc;
+                cd.marbles = 0;
+                colors.push_back(cd);
+                if (n < 0) {
+                    continue;
+                }
+
+                colorData cde;
+                cde.colorCode = 0xFFFFFF;
+                cde.marbles = 1;
+                colors.push_back(cde);
+            }
+        } else {
+            {
+                colorData cd;
+                cd.colorCode = cc;
+                cd.marbles = 0;
+                colors.push_back(cd);
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            colorData cd;
+            cd.colorCode = cc + rl * (i + 1) / (n + 1);
+            cd.marbles = 1;
+            colors.push_back(cd);
+        }
+    }
+
+    // prepare the new colors
+    std::vector<PaletteColor> new_colors;
+    {
+        auto fi = freeIdxs.cbegin();
+        for (auto it = colors.cbegin(); it != colors.cend(); it++) {
+            if (it->marbles != 0) {
+                PaletteColor color = valueColor(it->colorCode, forSmk);
+                color.setIndex(*fi);
+                new_colors.push_back(color);
+                fi++;
+            }
+        }
+        freeIdxs.clear();
+    }
+
+    // use the colors of the image to optimize the new colors
+    if (!image.isNull()) {
+        const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
+        std::map<SmkRgb, std::pair<unsigned, SmkRgb>> wmap; // w -> (hits, smk_w)
+        for (int y = 0; y < image.height(); y++) {
+            for (int x = 0; x < image.width(); x++, srcBits++) {
+                // QColor color = image.pixelColor(x, y);
+                QColor color = QColor::fromRgba(*srcBits);
+                // if (color == QColor(Qt::transparent)) {
+                if (color.alpha() < COLOR_ALPHA_LIMIT) {
+                    ;
+                } else {
+                    SmkRgb rgb = colorWeight(PaletteColor(color), false);
+                    wmap[rgb].first += 1;
+                }
+            }
+        }
+
+        std::vector<PaletteColor> next_colors;
+        this->getValidColors(next_colors);
+        const unsigned prev_colornum = next_colors.size();
+        for (const PaletteColor pc : next_colors) {
+            wmap.erase(colorWeight(pc, false));
+        }
+
+        for (auto it = wmap.begin(); it != wmap.cend(); it++) {
+            it->second.second = colorWeight(weightColor(it->first), forSmk);
+        }
+#if 0
+        if (wmap.size() <= new_colors.size()) {
+            std::map<int, std::pair<std::vector<std::pair<SmkRgb, uint64_t>>, uint64_t>> umap;
+            auto ni = new_colors.begin();
+            for (auto it = wmap.cbegin(); it != wmap.cend(); it++, ni++) {
+                const SmkRgb w = it->first;
+                PaletteColor color = weightColor(w);
+                const int idx = ni->index();
+                color.setIndex(idx);
+                next_colors.push_back(color);
+                umap[idx].first.push_back(std::pair<SmkRgb, uint64_t>(w, 0));
+            }
+            new_colors.clear();
+
+            sortNewColors(next_colors, prev_colornum, freeIdxs, forSmk ? &umap : nullptr, wmap);
+        } else
+#endif
+        {
+            next_colors.insert(next_colors.end(), new_colors.begin(), new_colors.end());
+            new_colors.clear();
+
+            while (true) {
+                bool change = false;
+                // check the next color mapping
+
+                std::map<int, std::pair<std::vector<std::pair<SmkRgb, uint64_t>>, uint64_t>> umap; // idx -> ([w, dist], sum-dist)
+                for (auto it = wmap.cbegin(); it != wmap.cend(); it++) {
+                    PaletteColor color = weightColor(it->first);
+                    auto pc = getPalColor(next_colors, color);
+                    uint64_t dist = (uint64_t)it->second.first * pc.second;
+                    umap[pc.first].first.push_back(std::pair<SmkRgb, uint64_t>(it->first, dist));
+                    umap[pc.first].second += dist;
+                }
+                // eliminate unused new colors
+                for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); ) {
+                    if (umap.count(it->index()) != 0) {
+                        it++;
+                        continue;
+                    } else {
+                        freeIdxs.insert(it->index());
+                        it = next_colors.erase(it);
+                    }
+                }
+
+                // add new color to replace an eliminated one
+                if (!freeIdxs.empty()) {
+                    // select the largest distance
+                    PaletteColor res = PaletteColor(0, 0, 0, 0);
+                    uint64_t best = 0;
+                    for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
+                        if (mi->second.second <= best) continue;
+#if SIMPLE_WEIGHT
+                        for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
+                            if (user.second <= best) continue;
+                            PaletteColor color = weightColor(user.first);
+                            PaletteColor sc = weightColor(wmap.at(user.first).second);
+                            uint64_t nd = (uint64_t)wmap.at(user.first).first * D1Pal::getColorDist(sc, color);
+                            uint64_t pd = user.second;
+
+                            if (nd < pd) {
+                                best = pd - nd;
+                                res = sc;
+                            }
+                        }
+#else
+                        std::set<SmkRgb> smks;
+                        for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
+                            SmkRgb rgb = wmap.at(user.first).second;
+                            if (smks.count(rgb)) continue;
+                            smks.insert(rgb);
+                            uint64_t cw = 0;
+                            const PaletteColor sc = weightColor(rgb);
+                            for (const std::pair<SmkRgb, uint64_t>& usr : mi->second.first) {
+                                const PaletteColor color = weightColor(usr.first);
+                                uint64_t nd = (uint64_t)wmap.at(usr.first).first * D1Pal::getColorDist(sc, color);
+                                uint64_t pd = usr.second;
+
+                                if (nd < pd) {
+                                    cw += pd - nd;
+                                }
+                            }
+                            if (best < cw) {
+                                best = cw;
+                                res = sc;
+                            }
+                        }
+#endif
+                    }
+                    if (best != 0) {
+                        auto fi = freeIdxs.begin();
+                        res.setIndex(*fi);
+                        next_colors.push_back(res);
+                        freeIdxs.erase(fi);
+                        continue;
+                    }
+                }
+
+                // select better colors for the color-groups with new colors
+
+                for (auto it = next_colors.begin() + prev_colornum; it != next_colors.end(); it++) {
+                    uint64_t r = 0, g = 0, b = 0; uint64_t tw = 0;
+                    for (const std::pair<SmkRgb, uint64_t>& user : umap.at(it->index()).first) {
+                        PaletteColor wc = weightColor(user.first);
+                        uint64_t cw = wmap.at(user.first).first;
+                        r += cw * (wc.red() * wc.red());
+                        g += cw * (wc.green() * wc.green());
+                        b += cw * (wc.blue() * wc.blue());
+                        tw += cw;
+                    }
+
+                    r = round(sqrt((double)r / tw));
+                    g = round(sqrt((double)g / tw));
+                    b = round(sqrt((double)b / tw));
+
+                    PaletteColor color = PaletteColor(r, g, b, it->index());
+                    smackColor(color, forSmk);
+
+                    // ensure the new color is unique
+                    auto nit = next_colors.begin();
+                    for ( ; nit != next_colors.end(); nit++) {
+                        if (nit->red() == color.red() && nit->green() == color.green() && nit->red() == color.red()) {
+                            break;
+                        }
+                    }
+                    if (nit != next_colors.end()) continue;
+
+                    // check if there is really a gain
+                    {
+                        int64_t dd = 0;
+                        for (const std::pair<SmkRgb, uint64_t>& user : umap.at(it->index()).first) {
+                            PaletteColor uc = weightColor(user.first);
+                            uint64_t cw = wmap.at(user.first).first;
+
+                            uint64_t pd = D1Pal::getColorDist(uc, *it);
+                            uint64_t nd = D1Pal::getColorDist(uc, color);
+                            dd += (int64_t)cw * (int64_t)(nd - pd);
+                        }
+                        if (dd <= 0) continue;
+                    }
+                    // select the new color
+                    *it = color;
+                    change = true;
+                }
+
+                if (change) {
+                    continue;
+                }
+
+                change = sortNewColors(next_colors, prev_colornum, freeIdxs, forSmk ? &umap : nullptr, wmap);
+
+                if (change) {
+                    continue;
+                }
+
+                break;
+            }
+        }
+
+        // new_colors.clear();
+        new_colors.insert(new_colors.end(), next_colors.begin() + prev_colornum, next_colors.end());
+    } else {
+        dProgress() << tr("Palette generated without image-file.");
+    }
+
+    // update the palette
+    for (const PaletteColor &pc : new_colors) {
+        const QColor nc = pc.color();
+        if (nc == this->undefinedColor)
+            dProgressWarn() << tr("The undefined color is selected as a valid palette-entry.");
+        this->colors[pc.index()] = nc;
+    }
+
+    // update the view - done by the caller
+    // this->displayFrame();
+    return true;
 }
 
 void D1Pal::cycleColors(D1PAL_CYCLE_TYPE type)
