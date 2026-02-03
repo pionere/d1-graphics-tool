@@ -1906,11 +1906,13 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         cf.gfx = gfx;
         cf.frameFrom = -1;
         int i = 0;
+        bool change = false;
         for ( ; i < cf.gfx->getFrameCount(); i++) {
             QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
             if (!fp.isNull()) {
                 cf.frameTo = i;
                 if (fixPalColors(cf, verbose)) {
+                    change = true;
                 }
                 cf.frameFrom = i;
                 cf.pal = fp.data();
@@ -1918,6 +1920,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         }
         cf.frameTo = i;
         if (fixPalColors(cf, verbose)) {
+            change = true;
         }
         // eliminate matching palettes
         D1Pal *pal = nullptr;
@@ -1934,13 +1937,16 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                     }
                     if (n >= D1PAL_COLORS) {
                         fp.clear();
-                        cf.gfx->setModified();
+                        change = true;
                         dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
                         cp = pal;
                     }
                 }
                 pal = cp;
             }
+        }
+        if (change) {
+            cf.gfx->setModified();
         }
     }
 }
