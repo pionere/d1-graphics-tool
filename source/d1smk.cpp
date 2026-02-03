@@ -1877,13 +1877,6 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         dProgressWarn() << msg;
     }
 */
-    if (!result) {
-        QString msg = QApplication::tr("The palette");
-        msg = addDetails(msg, verbose, fix);
-        msg.chop(1);
-        msg.append(QApplication::tr(" is SMK compliant"));
-        dProgress() << msg;
-    }
     return result;
 }
 
@@ -1899,6 +1892,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         gfxs.append(g);
     }
 
+    bool result = false;
     for (D1Gfx *gfx : gfxs) {
         // adjust colors of the palette(s)
         D1SmkColorFix cf;
@@ -1947,6 +1941,11 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         }
         if (change) {
             cf.gfx->setModified();
+            result = true;
         }
+    }
+
+    if (!result) {
+        dProgress() << QApplication::tr("The palettes of the graphics are SMK compliant");
     }
 }
