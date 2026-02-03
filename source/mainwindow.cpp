@@ -1074,7 +1074,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
-    if (kc == (Qt::CTRL | Qt::Key_E) || kc == (Qt::CTRL | Qt::Key_E | Qt::ShiftModifier)) {
+    if (kc == (Qt::ControlModifier | Qt::Key_E) || kc == (Qt::ControlModifier | Qt::Key_E | Qt::ShiftModifier)) {
         bool shift = (kc & Qt::ShiftModifier) != 0;
         QString pixels;
         if (this->isPainting()) {
@@ -1140,7 +1140,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
-    if (kc == (Qt::CTRL | Qt::Key_R)) {
+    if (kc == (Qt::ControlModifier | Qt::Key_R)) {
         QClipboard *clipboard = QGuiApplication::clipboard();
         QString pixels = clipboard->text();
         if (!pixels.isEmpty()) {
