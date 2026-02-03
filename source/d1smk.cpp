@@ -1718,7 +1718,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         return false;
     }
     const QColor undefColor = fix.pal->getUndefinedColor();
-    QList<quint8> ignored;
+    // QList<quint8> ignored;
     for (int i = fix.frameFrom; i < fix.frameTo; i++) {
         D1GfxFrame *frame = fix.gfx->getFrame(i);
         for (int y = 0; y < frame->getHeight(); y++) {
@@ -1738,7 +1738,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
         QColor col = fix.pal->getColor(i);
         if (col == undefColor) {
-            ignored.push_back(i);
+            // ignored.push_back(i);
             continue;
         }
         unsigned char smkColor[3];
@@ -1783,6 +1783,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             }
         }
     }
+/*
     QString ignoredColors;
     const int numIgnored = ignored.count();
     for (int n = 0; n < numIgnored; n++) {
@@ -1806,6 +1807,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         msg = addDetails(msg, verbose, fix);
         dProgressWarn() << msg;
     }
+*/
     if (fix.colors.isEmpty()) {
         QString msg = QApplication::tr("The palette");
         msg = addDetails(msg, verbose, fix);
