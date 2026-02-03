@@ -482,7 +482,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
     ProgressDialog::incBar("", totalSteps + 1);
 
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
 
     if (params.steps[REGULAR_CEL]) {
         // upscale regular cel files of listfiles.txt
@@ -514,7 +514,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
+            dProgress() << QApplication::tr("Upscaling asset %1.").arg(asset);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -528,7 +528,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[REGULAR_CEL]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[OBJECT_CEL]) {
         // upscale objects with level-specific palette
         ProgressDialog::incBar("Object CEL Files", lengthof(objects));
@@ -550,7 +550,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(objects[i].path);
+            dProgress() << QApplication::tr("Upscaling asset %1.").arg(objects[i].path);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -567,7 +567,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[OBJECT_CEL]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[CUTSCENE]) {
         // upscale cutscenes
         const QString celPalPairs[][2] = {
@@ -605,7 +605,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(celPalPairs[i][0]);
+            dProgress() << QApplication::tr("Upscaling asset %1.").arg(celPalPairs[i][0]);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -627,7 +627,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::addValue(stepWeights[CUTSCENE]);
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[ART_CEL]) {
         // upscale non-standard CELs of the menu (converted from PCX)
         ProgressDialog::incBar("Art CEL Files", lengthof(menuarts));
@@ -649,7 +649,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(menuarts[i].first);
+            dProgress() << QApplication::tr("Upscaling asset %1.").arg(menuarts[i].first);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -671,7 +671,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[ART_CEL]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[REGULAR_CL2_MISSILES]) {
         // upscale missiles cl2 files of listfiles.txt
         ProgressDialog::incBar("Regular CL2 Files - Missiles", numRegularCl2s_Missiles);
@@ -693,7 +693,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
+            dProgress() << QApplication::tr("Upscaling asset %1.").arg(asset);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -707,7 +707,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[REGULAR_CL2_MISSILES]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[REGULAR_CL2_MONSTERS]) {
         // upscale monsters cl2 files of listfiles.txt
         ProgressDialog::incBar("Regular CL2 Files - Monsters", numRegularCl2s_Monsters);
@@ -729,7 +729,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
+            dProgress() << QApplication::tr("Upscaling asset %1.").arg(asset);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -743,7 +743,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[REGULAR_CL2_MONSTERS]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[REGULAR_CL2_PLRGFX]) {
         // upscale plrgfx cl2 files of listfiles.txt
         ProgressDialog::incBar("Regular CL2 Files - PlrGfx", numRegularCl2s_PlrGfx);
@@ -769,7 +769,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
+            dProgress() << QApplication::tr("Upscaling asset %1.").arg(asset);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -783,7 +783,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[REGULAR_CL2_PLRGFX]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[FIXED_CL2]) {
         // special cases to upscale cl2 files (must be done manually, because width detection fails)
         ProgressDialog::incBar("Fixed CL2 Files", lengthof(botchedCL2s));
@@ -806,7 +806,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(botchedCL2s[i]);
+            dProgress() << QApplication::tr("Upscaling asset %1.").arg(botchedCL2s[i]);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -820,7 +820,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[FIXED_CL2]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[TILESET]) {
         // upscale tiles of the levels
         const MinAssetConfig celPalPairs[] = {
@@ -859,7 +859,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(opParams.celFilePath);
+            dProgress() << QApplication::tr("Upscaling tileset %1.").arg(opParams.celFilePath);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -877,7 +877,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[TILESET]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[FIXED_TILESET]) {
         // special cases to upscale tilesets (must be done manually, because height detection fails)
         ProgressDialog::incBar("Fixed Tilesets", lengthof(botchedMINs));
@@ -900,7 +900,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, opParams.celFilePath)) {
                 continue;
             }
-            dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(opParams.celFilePath);
+            dProgress() << QApplication::tr("Upscaling tileset %1.").arg(opParams.celFilePath);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
@@ -917,7 +917,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[FIXED_TILESET]);
     }
-    // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));*/
+    // dProgress() << QApplication::tr("Time:%1").arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));*/
 
     ProgressDialog::decBar();
 }
