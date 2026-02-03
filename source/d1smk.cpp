@@ -1719,6 +1719,11 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     }
     const QColor undefColor = fix.pal->getUndefinedColor();
     // QList<quint8> ignored;
+    // validate the pixels and create statistics
+    std::pair<uint64_t, unsigned> palUse[D1PAL_COLORS];
+    for (unsigned i = 0; i < D1PAL_COLORS; i++) {
+        palUse[i] = std::pair<uint64_t, int>(0, i);
+    }
     for (int i = fix.frameFrom; i < fix.frameTo; i++) {
         D1GfxFrame *frame = fix.gfx->getFrame(i);
         for (int y = 0; y < frame->getHeight(); y++) {
@@ -1726,6 +1731,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                 D1GfxPixel pixel = frame->getPixel(x, y);
                 if (!pixel.isTransparent()) {
                     quint8 color = pixel.getPaletteIndex();
+                    palUse[color].first++;
                     if (fix.pal->getColor(color) == undefColor) {
                         dProgressErr() << QApplication::tr("Pixel with undefined color in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
                     }
@@ -1735,11 +1741,19 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             }
         }
     }
+    // clear unused colors and ensure the values can be represented by SMK
     bool result = false;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
         QColor col = fix.pal->getColor(i);
         if (col == undefColor) {
             // ignored.push_back(i);
+            continue;
+        }
+        if (!palUse[i].first) {
+            int amount = fix.frameTo - fix.frameFrom;
+            dProgress() << QApplication::tr("Color %1 set to undefined color for frame(s) %2-%3", "", amount).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo);
+            fix.pal->setColor(i, undefColor);
+            result = true;
             continue;
         }
         unsigned char smkColor[3];
@@ -1795,6 +1809,8 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                     params.frames = std::pair<int, int>(fix.frameFrom + 1, fix.frameTo);
                     fix.gfx->replacePixels(replacements, params, verbose);
 
+                    palUse[n].first += palUse[i].first;
+                    palUse[i].first = 0;
                     col = undefColor;
                     change = true;
                     break;
