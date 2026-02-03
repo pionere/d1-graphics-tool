@@ -626,7 +626,11 @@ struct smk_t {
 		struct smk_huff16_t tree[SMK_TREE_COUNT];
 
 		/* Palette data type: pointer to last-decoded-palette */
+#ifdef FULL
 		unsigned char palette[256][3];
+#else
+		unsigned char palette[256][4];
+#endif
 		/* Last-unpacked frame */
 		unsigned char * frame;
 	} video;
@@ -1500,7 +1504,11 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 	unsigned short i = 0;
 	/* Helper variables */
 	unsigned short count, src;
+#ifdef FULL
 	static unsigned char oldPalette[256][3];
+#else
+	static unsigned char oldPalette[256][4];
+#endif
 #ifdef FULL
 	/* Smacker palette map: smk colors are 6-bit, this table expands them to 8. */
 	const unsigned char palmap[64] = {
@@ -1518,7 +1526,11 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 	assert(s);
 	assert(p);
 	/* Copy palette to old palette */
+#ifdef FULL
 	memcpy(oldPalette, s->palette, 256 * 3);
+#else
+	memcpy(oldPalette, s->palette, 256 * 4);
+#endif
 
 	/* Loop until palette is complete, or we are out of bytes to process */
 	while ((i < 256) && (size > 0)) {
@@ -1566,7 +1578,7 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 #ifdef FULL
 			memmove(&s->palette[i][0], &oldPalette[src][0], count * 3);
 #else
-			memcpy(&s->palette[i][0], &oldPalette[src][0], count * 3);
+			memcpy(&s->palette[i][0], &oldPalette[src][0], count * 4);
 #endif
 			i += count;
 		} else {
@@ -1587,6 +1599,9 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 				p++;
 				size --;
 			}
+#ifndef FULL
+			s->palette[i][3] = 1;
+#endif
 
 			i ++;
 		}

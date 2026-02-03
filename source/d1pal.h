@@ -52,6 +52,7 @@ class D1Pal : public QObject {
 
 public:
     static constexpr const char *DEFAULT_PATH = ":/default.pal";
+    static constexpr const char *EMPTY_PATH = ":/null.pal";
 
     D1Pal() = default;
     D1Pal(const D1Pal &opal);

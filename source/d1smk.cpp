@@ -215,10 +215,13 @@ uint8_t D1SmkAudioData::getCompress(unsigned track) const
 static D1Pal* LoadPalette(smk SVidSMK)
 {
     D1Pal *pal = new D1Pal();
+    pal->load(D1Pal::EMPTY_PATH);
 
     const unsigned char *smkPal = smk_get_palette(SVidSMK);
     for (int i = 0; i < D1SMK_COLORS; i++) {
-        pal->setColor(i, QColor(smkPal[i * 3 + 0], smkPal[i * 3 + 1], smkPal[i * 3 + 2]));
+        if (smkPal[i * 4 + 3] != 0) {
+            pal->setColor(i, QColor(smkPal[i * 4 + 0], smkPal[i * 4 + 1], smkPal[i * 4 + 2]));
+        }
     }
     return pal;
 }
