@@ -803,11 +803,11 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
     cursor = (size_t)res - (size_t)frameData;
 }
 
-static unsigned char oldPalette[D1SMK_COLORS][3];
-static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS], uint8_t *dest)
+static unsigned char oldPalette[D1SMK_COLORS][4];
+static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
 {
     // convert pal to smk-palette
-    unsigned char newPalette[D1SMK_COLORS][3];
+    unsigned char newPalette[D1SMK_COLORS][4];
     static_assert(D1PAL_COLORS == D1SMK_COLORS, "encodePalette conversion from D1PAL to SMK_PAL must be adjusted.");
     for (int i = 0; i < D1PAL_COLORS; i++) {
         QColor col = pal->getColor(i);
@@ -815,6 +815,7 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
         newPalette[i][0] = col.red();
         newPalette[i][1] = col.green();
         newPalette[i][2] = col.blue();
+        newPalette[i][3] = col != pal->getUndefinedColor();
         for (int n = 0; n < 3; n ++) {
             unsigned char cv = newPalette[i][n];
             const unsigned char *p = &palmap[0];
@@ -849,10 +850,10 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
             for (int n = 0; n < D1PAL_COLORS; n++) {
                 int curr = 0;
                 for (int k = n; k < D1PAL_COLORS; k++, curr++) {
-                    if (!palUse[i + curr]) {
+                    if (!newPalette[i + curr][3]) {
                         continue; // destination color is unused -> ok
                     }
-                    if (!palUse[k]) {
+                    if (!oldPalette[k][3]) {
                         break; // source color is unused while the destination is used -> stop
                     }
                     if (oldPalette[k][0] != newPalette[i + curr][0] || oldPalette[k][1] != newPalette[i + curr][1] || oldPalette[k][2] != newPalette[i + curr][2]) {
@@ -938,7 +939,7 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
         len = 0;
         for (int i = 0; i < D1PAL_COLORS; i++) {
             int direct;
-            if (palUse[i]) {
+            if (newPalette[i][3]) {
                 // 0x00: Set Color block
                 dest[len] = newPalette[i][0];
                 len++;
@@ -949,7 +950,7 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
             } else {
                 // 0x80: Skip block(s)
                 for (direct = 0; (i + direct) < D1PAL_COLORS; direct++) {
-                    if (palUse[i + direct]) {
+                    if (newPalette[i + direct][3]) {
                         break;
                     }
                     // do not write garbage to the file even if it does not matter
@@ -1115,7 +1116,6 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     // validate the content
     int width = 0, height = 0;
     int frameCount = gfx.getFrameCount();
-    bool palUse[D1PAL_COLORS] = { 0 };
     for (int i = 0; i < frameCount; i++) {
         D1GfxFrame *frame = gfx.getFrame(i);
         if (i == 0) {
@@ -1136,7 +1136,6 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
                     dProgressErr() << QApplication::tr("Transparent pixel in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
                     return false;
                 }
-                palUse[pixel.getPaletteIndex()] = true;
             }
         }
     }
@@ -1437,7 +1436,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
             framePal = gfx.getPalette();
         }
         if (framePal != nullptr) {
-            unsigned pallen = encodePalette(framePal, n, palUse, frameData + cursor + 1);
+            unsigned pallen = encodePalette(framePal, n, frameData + cursor + 1);
             pallen = (pallen + 1 + 3) / 4;
             *&frameData[cursor] = pallen;
             cursor += pallen * 4;
