@@ -1537,7 +1537,7 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
         rangeFrom--;
     }
     int rangeTo = params.frames.second;
-    if (rangeTo == 0 || rangeTo >= this->getFrameCount()) {
+    if (rangeTo == 0 || rangeTo > this->getFrameCount()) {
         rangeTo = this->getFrameCount();
     }
     rangeTo--;
@@ -1549,7 +1549,7 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
         }
         msg.chop(1);
         bool ofTxt = false;
-        if (rangeFrom != 0 || rangeTo != this->getFrameCount()) {
+        if (rangeFrom != 0 || rangeTo + 1 != this->getFrameCount()) {
             msg.append(tr(" in frame(s) %1-%2", "", rangeTo - rangeFrom + 1).arg(rangeFrom + 1).arg(rangeTo + 1));
             ofTxt = true;
         }
