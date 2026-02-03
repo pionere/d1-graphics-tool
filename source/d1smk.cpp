@@ -1880,6 +1880,125 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     return result;
 }
 
+static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
+{
+    if (pf.frameFrom < 0) {
+        return false;
+    }
+
+    bool result = false;
+    std::vector<PaletteColor> currColors;
+    cf.pal->getValidColors(currColors);
+
+    std::vector<PaletteColor> prevColors;
+    pf.pal->getValidColors(prevColors);
+
+    if (prevColors.size() >= currColors.size()) {
+        // try to use the previous palette
+        QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+        QList<int> newidxs;
+
+        for (const PaletteColor cc : currColors) {
+            bool match = false;
+            for (const PaletteColor pc : prevColors) {
+                if (cc.red() == pc.red() && cc.green() == pc.green() && cc.blue() == pc.blue()) {
+                    if (cc.index() != pc.index()) {
+                        replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(cc.index()), D1GfxPixel::colorPixel(pc.index())));
+                    }
+                    match = true;
+                    break;
+                }
+            }
+            if (!match) {
+                newidxs.push_back(cc.index());
+            }
+        }
+        if (prevColors.size() + newidxs.count() <= (D1PAL_COLORS - 0)) {
+            // use the previous palette
+            const QColor undefColor = pf.pal->getUndefinedColor();
+            for (const int nc : newidxs) {
+                // TODO: ensure the new color does not conflict with the undefined color of the previous palette
+
+                // select a new entry
+                for (unsigned r = 0; r < D1PAL_COLORS; r++) {
+                    if (pf.pal->getColor(r) != undefColor) continue;
+                    replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(nc), D1GfxPixel::colorPixel(r)));
+                    pf.pal->setColor(r, cf.pal->getColor(nc));
+                    break;
+                }
+            }
+            if (!replacements.isEmpty()) {
+                RemapParam params;
+                params.frames = std::pair<int, int>(cf.frameFrom + 1, cf.frameTo);
+                cf.gfx->replacePixels(replacements, params, 0);
+            }
+            result = true;
+            QString msg;
+            if (newidxs.isEmpty()) {
+                msg = QApplication::tr("Palette of frame %1 is obsolete.").arg(cf.frameFrom + 1);
+            } else {
+                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(cf.frameFrom + 1).arg(pf.frameFrom + 1);
+            }
+            dProgress() << msg;
+
+            cf.pal = pf.pal;
+        }
+    } else {
+        // try to use the current palette instead of the previous one
+        QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+        QList<int> previdxs;
+
+        for (const PaletteColor pc : prevColors) {
+            bool match = false;
+            for (const PaletteColor cc : currColors) {
+                if (cc.red() == pc.red() && cc.green() == pc.green() && cc.blue() == pc.blue()) {
+                    if (cc.index() != pc.index()) {
+                        replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(pc.index()), D1GfxPixel::colorPixel(cc.index())));
+                    }
+                    match = true;
+                    break;
+                }
+            }
+            if (!match) {
+                previdxs.push_back(pc.index());
+            }
+        }
+        if (currColors.size() + previdxs.count() <= (D1PAL_COLORS - 0)) {
+            const QColor undefColor = cf.pal->getUndefinedColor();
+            for (const int pc : previdxs) {
+                // TODO: ensure the previous color does not conflict with the undefined color of the new palette
+
+                // select a new entry
+                for (unsigned r = 0; r < D1PAL_COLORS; r++) {
+                    if (cf.pal->getColor(r) != undefColor) continue;
+                    replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(pc), D1GfxPixel::colorPixel(r)));
+                    cf.pal->setColor(r, pf.pal->getColor(pc));
+                    break;
+                }
+            }
+            if (!replacements.isEmpty()) {
+                RemapParam params;
+                params.frames = std::pair<int, int>(pf.frameFrom + 1, pf.frameTo);
+                pf.gfx->replacePixels(replacements, params, 0);
+            }
+            cf.gfx->getFrame(pf.frameFrom)->setFramePal(cf.pal);
+            result = true;
+            QString msg;
+            if (previdxs.isEmpty()) {
+                msg = QApplication::tr("Palette of frame %1 is replaced by the palette of frame %2.").arg(pf.frameFrom + 1).arg(cf.frameFrom + 1);
+            } else {
+                msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(pf.frameFrom + 1).arg(cf.frameFrom + 1);
+            }
+            dProgress() << msg;
+        }
+    }
+    if (result) {
+        cf.gfx->getFrame(cf.frameFrom)->setFramePal(nullptr);
+        cf.frameFrom = pf.frameFrom;
+    }
+    return result;
+}
+
 void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
 {
     QList<D1Gfx *> gfxs;
@@ -1895,13 +2014,14 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
     ProgressDialog::incBar(QApplication::tr("Checking graphics..."), gfxs.count() + 1);
     bool result = false;
     for (D1Gfx *gfx : gfxs) {
-        // adjust colors of the palette(s)
-        D1SmkColorFix cf;
+        // fix and optmize the palette(s)
+        D1SmkColorFix cf, pf;
         cf.pal = p;
         cf.gfx = gfx;
         cf.frameFrom = -1;
+        pf.frameFrom = -1;
         int i = 0;
-        ProgressDialog::incBar(QApplication::tr("Checking frames..."), 2 * cf.gfx->getFrameCount());
+        ProgressDialog::incBar(QApplication::tr("Checking frames..."), cf.gfx->getFrameCount());
         bool change = false;
         for ( ; i < cf.gfx->getFrameCount(); i++) {
             if (ProgressDialog::wasCanceled()) {
@@ -1913,6 +2033,12 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                 if (fixPalColors(cf, verbose)) {
                     change = true;
                 }
+                if (mergePals(pf, cf)) {
+                    fixPalColors(cf, verbose);
+                    change = true;
+                }
+
+                pf = cf;
                 cf.frameFrom = i;
                 cf.pal = fp.data();
             }
@@ -1924,34 +2050,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         if (fixPalColors(cf, verbose)) {
             change = true;
         }
-        // eliminate matching palettes
-        D1Pal *pal = nullptr;
-        for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
-            if (ProgressDialog::wasCanceled()) {
-                break;
-            }
-            QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
-            if (!fp.isNull()) {
-                D1Pal *cp = fp.data();
-                if (pal != nullptr) {
-                    int n = 0;
-                    for ( ; n < D1PAL_COLORS; n++) {
-                        if (pal->getColor(n) != cp->getColor(n)) {
-                            break;
-                        }
-                    }
-                    if (n >= D1PAL_COLORS) {
-                        fp.clear();
-                        change = true;
-                        dProgress() << QApplication::tr("Palette of frame %1 is obsolete.").arg(i + 1);
-                        cp = pal;
-                    }
-                }
-                pal = cp;
-            }
-            if (!ProgressDialog::incValue()) {
-                break;
-            }
+        if (mergePals(pf, cf)) {
+            fixPalColors(cf, verbose);
+            change = true;
         }
         if (change) {
             cf.gfx->setModified();
