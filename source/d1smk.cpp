@@ -1736,8 +1736,13 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                         if (p[0] - cv > cv - p[-1]) {
                             p--;
                         }
-                        const char *compontent[3] = { "red", "green", "blue" };
-                        QString msg = QApplication::tr("The %1 component of color %2 is adjusted in the palette").arg(compontent[n]).arg(i);
+                        QString cn;
+                        switch (n) {
+                        case 0: cn = QApplication::tr("red"); break;
+                        case 1: cn = QApplication::tr("green"); break;
+                        case 2: cn = QApplication::tr("blue"); break;
+                        }
+                        QString msg = QApplication::tr("The %1 component of color %2 is adjusted in the palette").arg(cn).arg(i);
                         msg = addDetails(msg, verbose, fix);
                         msg = msg.append(QApplication::tr(" (Using %1 instead of %2)").arg(*p).arg(cv));
                         dProgress() << msg;
