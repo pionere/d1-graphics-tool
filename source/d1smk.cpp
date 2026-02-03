@@ -1714,11 +1714,10 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
     if (fix.frameFrom == fix.frameTo) {
         return false;
     }
-    D1Pal *pal = fix.pal;
-    QColor undefColor = pal->getUndefinedColor();
+    QColor undefColor = fix.pal->getUndefinedColor();
     QList<quint8> ignored;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
-        QColor col = pal->getColor(i);
+        QColor col = fix.pal->getColor(i);
         if (col == undefColor) {
             ignored.push_back(i);
             continue;
@@ -1755,7 +1754,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                         if (n == 2) {
                             col.setBlue(*p);
                         }
-                        pal->setColor(i, col);
+                        fix.pal->setColor(i, col);
                         if (fix.colors.isEmpty() || fix.colors.back() != i) {
                             fix.colors.push_back(i);
                         }
