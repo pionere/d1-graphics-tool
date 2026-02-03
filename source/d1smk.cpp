@@ -1337,20 +1337,19 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
                             // SOLID BLOCK
                             ctype = 3 | (color1 << 8);
                         }
+                    } else {
+                        // FULL BLOCK -> SMK_TREE_FULL
+                        unsigned color1, color2;
+                        for (int yy = 0; yy < 4; yy++) {
+                            color1 = frame->getPixel(x + 2, y + yy).getPaletteIndex();
+                            color2 = frame->getPixel(x + 3, y + yy).getPaletteIndex();
+                            addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
+                            color1 = frame->getPixel(x + 0, y + yy).getPaletteIndex();
+                            color2 = frame->getPixel(x + 1, y + yy).getPaletteIndex();
+                            addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
+                        }
+                        // ctype = 1;
                     }
-                }
-                if (ctype == 1) {
-                    // FULL BLOCK -> SMK_TREE_FULL
-                    unsigned color1, color2;
-                    for (int yy = 0; yy < 4; yy++) {
-                        color1 = frame->getPixel(x + 2, y + yy).getPaletteIndex();
-                        color2 = frame->getPixel(x + 3, y + yy).getPaletteIndex();
-                        addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
-                        color1 = frame->getPixel(x + 0, y + yy).getPaletteIndex();
-                        color2 = frame->getPixel(x + 1, y + yy).getPaletteIndex();
-                        addTreeValue(color2 << 8 | color1, videoTree[SMK_TREE_FULL], cacheValues[SMK_TREE_FULL]);
-                    }
-                    // ctype = 1;
                 }
                 if (type != ctype) {
                     addTreeTypeValue(type, typelen, videoTree[SMK_TREE_TYPE], cacheValues[SMK_TREE_TYPE]);
@@ -1504,11 +1503,10 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
                             // SOLID BLOCK
                             ctype = 3 | (color1 << 8);
                         }
+                    } else {
+                        // FULL BLOCK -> SMK_TREE_FULL
+                        // ctype = 1;
                     }
-                }
-                if (ctype == 1) {
-                    // FULL BLOCK -> SMK_TREE_FULL
-                    // ctype = 1;
                 }
                 if (type != ctype) {
                     encodePixels(x, y, frame, type, typelen, videoTree, cacheValues, frameData, cursor, bitNum);
