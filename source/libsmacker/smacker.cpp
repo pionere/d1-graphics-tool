@@ -1563,7 +1563,11 @@ static char smk_render_palette(struct smk_t::smk_video_t * s, unsigned char * p,
 			}
 
 			/* OK!  Copy the color-palette entries. */
+#ifdef FULL
 			memmove(&s->palette[i][0], &oldPalette[src][0], count * 3);
+#else
+			memcpy(&s->palette[i][0], &oldPalette[src][0], count * 3);
+#endif
 			i += count;
 		} else {
 			/* 0x00: Set Color block
