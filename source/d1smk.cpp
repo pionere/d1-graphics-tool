@@ -1892,6 +1892,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         gfxs.append(g);
     }
 
+    ProgressDialog::incBar(QApplication::tr("Checking graphics..."), gfxs.count() + 1);
     bool result = false;
     for (D1Gfx *gfx : gfxs) {
         // adjust colors of the palette(s)
@@ -1900,8 +1901,12 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         cf.gfx = gfx;
         cf.frameFrom = -1;
         int i = 0;
+        ProgressDialog::incBar(QApplication::tr("Checking frames..."), 2 * cf.gfx->getFrameCount());
         bool change = false;
         for ( ; i < cf.gfx->getFrameCount(); i++) {
+            if (ProgressDialog::wasCanceled()) {
+                break;
+            }
             QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
             if (!fp.isNull()) {
                 cf.frameTo = i;
@@ -1911,6 +1916,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                 cf.frameFrom = i;
                 cf.pal = fp.data();
             }
+            if (!ProgressDialog::incValue()) {
+                break;
+            }
         }
         cf.frameTo = i;
         if (fixPalColors(cf, verbose)) {
@@ -1919,6 +1927,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
         // eliminate matching palettes
         D1Pal *pal = nullptr;
         for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
+            if (ProgressDialog::wasCanceled()) {
+                break;
+            }
             QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
             if (!fp.isNull()) {
                 D1Pal *cp = fp.data();
@@ -1938,14 +1949,23 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                 }
                 pal = cp;
             }
+            if (!ProgressDialog::incValue()) {
+                break;
+            }
         }
         if (change) {
             cf.gfx->setModified();
             result = true;
+        }
+        ProgressDialog::decBar();
+        if (!ProgressDialog::incValue()) {
+            break;
         }
     }
 
     if (!result) {
         dProgress() << QApplication::tr("The palettes of the graphics are SMK compliant");
     }
+
+    ProgressDialog::decBar();
 }

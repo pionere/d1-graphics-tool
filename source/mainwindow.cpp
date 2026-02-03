@@ -3638,11 +3638,18 @@ void MainWindow::on_actionRemap_Colors_triggered()
 
 void MainWindow::on_actionSmack_Colors_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+#if 1
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 2, PAF_UPDATE_WINDOW);
 
     D1Smk::fixColors(this->gfxset, this->gfx, this->pal);
     // Clear loading message from status bar
     ProgressDialog::done();
+#else
+    std::function<void()> func = [this]() {
+        D1Smk::fixColors(this->gfxset, this->gfx, this->pal);
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 2, PAF_UPDATE_WINDOW, std::move(func));
+#endif
 }
 
 void MainWindow::on_actionGenTrns_Colors_triggered()
