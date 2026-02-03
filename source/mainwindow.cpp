@@ -1156,8 +1156,27 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
+    if (kc == Qt::Key_Alt || kc == (Qt::Key_Alt | Qt::AltModifier)) {
+        if (this->isPainting()) {
+            this->paintWidget->toggleMode();
+        }
+        return;
+    }
 
     QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    const int kc = event->key() | event->modifiers();
+    if (kc == Qt::Key_Alt || kc == (Qt::Key_Alt | Qt::AltModifier)) {
+        if (this->isPainting()) {
+            this->paintWidget->toggleMode();
+        }
+        return;
+    }
+
+    QMainWindow::keyReleaseEvent(event);
 }
 
 void MainWindow::changeEvent(QEvent *event)

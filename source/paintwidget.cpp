@@ -346,6 +346,19 @@ void PaintWidget::deleteCurrent()
     }
 }
 
+void PaintWidget::toggleMode()
+{
+    if (this->ui->selectModeRadioButton->isChecked()) {
+        if (this->prevmode == 0)
+            this->ui->drawModeRadioButton->setChecked(true);
+        else
+            this->ui->fillModeRadioButton->setChecked(true);
+    } else {
+        this->prevmode = this->ui->fillModeRadioButton->isChecked() ? 1 : 0;
+        this->ui->selectModeRadioButton->setChecked(true);
+    }
+}
+
 D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
 {
     unsigned numColors = this->selectedColors.size();

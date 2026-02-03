@@ -54,6 +54,7 @@ public:
     QImage copyCurrentImage() const;
     void pasteCurrentImage(const QImage &image);
     void deleteCurrent();
+    void toggleMode();
 
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
@@ -111,6 +112,7 @@ private:
     int distance;
     D1Pal *pal;
     std::vector<quint8> selectedColors;
+    int prevmode = 0;
     unsigned brushWidth = 1;
     unsigned brushLength = 1;
 };
