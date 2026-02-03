@@ -1823,6 +1823,35 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             result = true;
         }
     }
+    // sort the palette by usage in a descending order
+    std::sort(std::begin(palUse), std::end(palUse), [](std::pair<uint64_t, unsigned> &a, std::pair<uint64_t, unsigned> &b) {
+        if (a.first < b.first) {
+            return false;
+        }
+        if (b.first < a.first) {
+            return true;
+        }
+        return a.second < b.second;
+    });
+    QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+    QList<QPair<unsigned, QColor>> newColors;
+    for (unsigned i = 0; i < D1PAL_COLORS; i++) {
+        if (palUse[i].second == i) continue;
+        newColors.push_back(QPair<unsigned, QColor>(i, fix.pal->getColor(palUse[i].second)));
+        if (palUse[i].first) 
+            replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(palUse[i].second), D1GfxPixel::colorPixel(i)));
+    }
+    if (!replacements.isEmpty()) {
+        int amount = fix.frameTo - fix.frameFrom;
+        dProgress() << QApplication::tr("Reordered colors of the palette for frame(s) %1-%2", "", amount).arg(fix.frameFrom + 1).arg(fix.frameTo);
+        for (const QPair<unsigned, QColor> col : newColors) {
+            fix.pal->setColor(col.first, col.second);
+        }
+        RemapParam params;
+        params.frames = std::pair<int, int>(fix.frameFrom + 1, fix.frameTo);
+        fix.gfx->replacePixels(replacements, params, 0);
+        result = true;
+    }
 /*
     QString ignoredColors;
     const int numIgnored = ignored.count();
