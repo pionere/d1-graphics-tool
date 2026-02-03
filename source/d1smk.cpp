@@ -1144,7 +1144,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     for (int n = 0; n < frameCount; n++) {
         uint8_t frameType = 0;
         D1GfxFrame *frame = gfx.getFrame(n);
-        if (!frame->getFramePal().isNull()) {
+        if (!frame->getFramePal().isNull() || n == 0) {
             frameType |= 1;
         }
         D1SmkAudioData *audioData = frame->getFrameAudio();
