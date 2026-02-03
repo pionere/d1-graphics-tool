@@ -1781,7 +1781,9 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                 }
             }
         }
-        if (change) {
+        if (change && col == undefColor) {
+            dProgressWarn() << QApplication::tr("The undefined color is selected as a valid palette-entry.");
+        } else {
             // find possible replacement for the color
             for (unsigned n = 0; n < i; n++) {
                 QColor pc = fix.pal->getColor(n);
@@ -1794,9 +1796,12 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                     fix.gfx->replacePixels(replacements, params, verbose);
 
                     col = undefColor;
+                    change = true;
                     break;
                 }
             }
+        }
+        if (change) {
             fix.pal->setColor(i, col);
 
             result = true;
