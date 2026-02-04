@@ -26,7 +26,7 @@ static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
     return res;
 }
 
-bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal)
+bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool forSmk, const D1Pal *pal)
 {
     frame.width = image.width();
     frame.height = image.height();
@@ -36,6 +36,16 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
     std::vector<PaletteColor> colors;
     pal->getValidColors(colors);
 
+    if (colors.empty()) {
+        D1Pal *framePal = new D1Pal();
+        framePal->load(D1Pal::EMPTY_PATH);
+
+        framePal->genColors(image, forSmk);
+
+        frame.setFramePal(framePal);
+
+        framePal->getValidColors(colors);
+    }
     const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
     for (int y = 0; y < frame.height; y++) {
         std::vector<D1GfxPixel> pixelLine;
@@ -46,6 +56,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal
             if (color.alpha() < COLOR_ALPHA_LIMIT) {
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
             } else {
+                // smackColor(color, forSmk);
                 pixelLine.push_back(D1GfxPixel::colorPixel(getPalColor(colors, color)));
             }
         }

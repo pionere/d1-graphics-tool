@@ -13,7 +13,7 @@
 
 class D1ImageFrame {
 public:
-    static bool load(D1GfxFrame &frame, const QImage &image, const D1Pal *pal);
+    static bool load(D1GfxFrame &frame, const QImage &image, bool forSmk, const D1Pal *pal);
     static bool load(D1GfxFrame &frame, const QString &pixels, const D1Pal *pal);
 };
 
