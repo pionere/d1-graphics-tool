@@ -1310,6 +1310,8 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
         firstIdx = this->groupFrameIndices.back().second + 1;
         resIdx = firstIdx + idx - this->groupFrameIndices[i].first;
         lastIdx = this->frames.count() - 1;
+
+        multiGroup = true;
     } else {
         D1GfxFrame *frame = this->frames[idx];
         frame = new D1GfxFrame(*frame);
@@ -1319,7 +1321,6 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
         }
 
         firstIdx = lastIdx = resIdx = this->frames.count() - 1;
-        multiGroup = true;
     }
     if (multiGroup) {
         this->groupFrameIndices.push_back(std::pair<int, int>(firstIdx, lastIdx));
