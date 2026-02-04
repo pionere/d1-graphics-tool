@@ -901,12 +901,12 @@
     <string>List the uses of the current frame/subtile</string>
    </property>
   </action>
-  <action name="actionReportTilesetInefficientFrames">
+  <action name="actionReportInefficientFrames">
    <property name="text">
     <string>Inefficient Frames</string>
    </property>
    <property name="toolTip">
-    <string>List frames which are almost standard</string>
+    <string>List frames which are almost standard tiles and frames which are almost the same</string>
    </property>
   </action>
   <action name="actionReportCheckGraphics">

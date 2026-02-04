@@ -5,6 +5,7 @@
 
 #include "d1image.h"
 #include "d1cel.h"
+#include "d1celtilesetframe.h"
 #include "d1cl2.h"
 #include "d1smk.h"
 #include "openasdialog.h"
@@ -1574,6 +1575,46 @@ void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacemen
             this->setModified();
         }
     }
+}
+
+void D1Gfx::inefficientFrames() const
+{
+    ProgressDialog::incBar(tr("Scanning frames..."), 1);
+
+    const int limit = 10;
+    bool result = false;
+    if (this->type == D1CEL_TYPE::V1_LEVEL) {
+        for (int i = 0; i < this->getFrameCount(); i++) {
+            const D1GfxFrame *frame = this->frames[i];
+            if (frame->getFrameType() != D1CEL_FRAME_TYPE::TransparentSquare) {
+                continue;
+            }
+            int diff = limit;
+            D1CEL_FRAME_TYPE effType = D1CelTilesetFrame::altFrameType(frame, &diff);
+            if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
+                diff = limit - diff;
+                dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(D1GfxFrame::frameTypeToStr(effType));
+                result = true;
+            }
+        }
+    }
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        const D1GfxFrame *frame1 = this->frames[i];
+        for (int j = i + 1; j < this->getFrameCount(); j++) {
+            int diff = limit;
+            const D1GfxFrame *frame2 = this->frames[j];
+            if (D1CelTilesetFrame::altFrame(frame1, frame2, &diff)) {
+                diff = limit - diff;
+                dProgress() << tr("The difference between Frame %1 and Frame %2 is only %n pixel(s).", "", diff).arg(i + 1).arg(j + 1);
+                result = true;
+            }
+        }
+    }
+    if (!result) {
+        dProgress() << tr("The frames are optimal.");
+    }
+
+    ProgressDialog::decBar();
 }
 
 int D1Gfx::testResize(const ResizeParam &params)

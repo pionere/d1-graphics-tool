@@ -93,7 +93,6 @@ public:
     void activeSubtiles() const;
     void activeTiles() const;
     void reportUsage() const;
-    void inefficientFrames() const;
     void resetFrameTypes();
     void lightSubtiles();
     void checkSubtileFlags() const;

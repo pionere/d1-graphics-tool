@@ -1744,7 +1744,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionReportActiveSubtiles->setEnabled(this->levelCelView != nullptr);
     this->ui->actionReportActiveTiles->setEnabled(this->levelCelView != nullptr);
     this->ui->actionReportTilesetUse->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportTilesetInefficientFrames->setEnabled(this->levelCelView != nullptr);
+    this->ui->actionReportInefficientFrames->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionReportCheckGraphics->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->updateDynamicMenus();
 
@@ -2958,11 +2958,11 @@ void MainWindow::on_actionReportActiveTiles_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionReportTilesetInefficientFrames_triggered()
+void MainWindow::on_actionReportInefficientFrames_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    this->levelCelView->inefficientFrames();
+    this->gfx->inefficientFrames();
 
     // Clear loading message from status bar
     ProgressDialog::done();
