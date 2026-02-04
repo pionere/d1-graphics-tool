@@ -2660,6 +2660,28 @@ void MainWindow::on_actionUpscale_triggered()
     this->upscaleDialog->show();
 }
 
+void MainWindow::on_actionReencode_triggered()
+{
+    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Palette File"), tr("PAL Files (*.pal *.PAL)"));
+
+    if (palFilePath.isEmpty()) {
+        return;
+    }
+
+    D1Pal *newPal = new D1Pal();
+    if (!newPal->load(palFilePath)) {
+        delete newPal;
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file."));
+        return;
+    }
+
+    this->gfx->reencode(newPal);
+    delete newPal;
+
+    this->loadPal(palFilePath);
+    this->setPal(palFilePath);
+}
+
 void MainWindow::on_actionMerge_triggered()
 {
     QStringList gfxFilePaths = this->filesDialog(tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));

@@ -336,6 +336,7 @@ public:
     void frameModified(const D1GfxFrame *frame);
     D1Pal *getPalette() const;
     void setPalette(D1Pal *pal);
+    void reencode(const D1Pal *pal);
     int getGroupCount() const;
     std::pair<int, int> getGroupFrameIndices(int groupIndex) const;
     int getFrameCount() const;

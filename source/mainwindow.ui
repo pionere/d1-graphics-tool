@@ -428,6 +428,7 @@
     <addaction name="actionPatch"/>
     <addaction name="actionResize"/>
     <addaction name="actionUpscale"/>
+    <addaction name="actionReencode"/>
     <addaction name="actionMerge"/>
     <addaction name="actionSquash"/>
     <addaction name="actionMask"/>
@@ -772,6 +773,14 @@
    </property>
    <property name="toolTip">
     <string>Upscale/Downscale the current graphics</string>
+   </property>
+  </action>
+  <action name="actionReencode">
+   <property name="text">
+    <string>Reencode</string>
+   </property>
+   <property name="toolTip">
+    <string>Reencode the current graphics to use a new palette</string>
    </property>
   </action>
   <action name="actionMerge">
