@@ -694,6 +694,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             }
             plr._pClass = pc;
             plr._pgfxnum = plrgfx;
+
+            SetPlrAnims(0);
 #if 0
             currLvl._dType = DTYPE_TOWN;
             SetPlrAnims(0);
