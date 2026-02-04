@@ -2405,6 +2405,25 @@ void MainWindow::on_actionReplace_Frame_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::getFramePals(QSet<QString> &framePals) const
+{
+    QList<const D1Gfx*> gfxs;
+    gfxs.push_back(this->gfx);
+    if (this->gfxset != nullptr) {
+        for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
+            gfxs.push_back(this->gfxset->getGfx(i));
+        }
+    }
+    for (const D1Gfx* agfx : gfxs) {
+        for (int i = 0; i < agfx->getFrameCount(); i++) {
+            const D1GfxFrame* frame = agfx->getFrame(i);
+            const D1Pal* framePal = frame->getFramePal().data();
+            if (framePal != nullptr)
+                framePals.insert(framePal->getFilePath());
+        }
+    }
+}
+
 void MainWindow::on_actionDel_Frame_triggered()
 {
     const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
@@ -3453,19 +3472,47 @@ void MainWindow::on_actionGen_PAL_triggered()
 
 void MainWindow::on_actionClose_PAL_triggered()
 {
+    bool allPals = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool allButCurrent = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
     QString filePath = this->pal->getFilePath();
-    if (MainWindow::isResourcePath(filePath)) {
-        this->pal->load(filePath);
-        this->setPal(filePath);
-        return;
+    QString nextPath = D1Pal::DEFAULT_PATH;
+    if (allButCurrent) {
+        nextPath = filePath;
+        allPals = true;
     }
-    // remove entry from the pals map
-    D1Pal *pal = this->pals.take(filePath);
-    MemFree(pal);
-    // remove path in palWidget
-    // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), D1Pal::DEFAULT_PATH);
-    // select the default palette
-    this->setPal(D1Pal::DEFAULT_PATH);
+    QSet<QString> framePals;
+    this->getFramePals(framePals);
+    if (allPals) {
+        for (auto it = this->pals.begin(); it != this->pals.end(); ) {
+            QString palPath = it.value()->getFilePath();
+            if (MainWindow::isResourcePath(palPath) || palPath == nextPath) {
+                it++;
+                continue;
+            }
+            if (!framePals.contains(palPath)) {
+                MemFree(it.value());
+            }
+            // remove path in palWidget
+            // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), D1Pal::DEFAULT_PATH);
+            it = this->pals.erase(it);
+        }
+    } else {
+        if (MainWindow::isResourcePath(filePath)) {
+            this->pal->load(filePath);
+            nextPath = filePath;
+        } else {
+            // remove entry from the pals map
+            D1Pal *pal = this->pals.take(filePath);
+            if (!framePals.contains(filePath)) {
+                MemFree(pal);
+            }
+            // remove path in palWidget
+            // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), D1Pal::DEFAULT_PATH);
+            nextPath = D1Pal::DEFAULT_PATH;
+        }
+    }
+    // select the next palette
+    this->setPal(nextPath);
 }
 
 void MainWindow::on_actionNew_Translation_Unique_triggered()
@@ -3534,19 +3581,40 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
 
 void MainWindow::on_actionClose_Translation_Unique_triggered()
 {
+    bool allTrns = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool allButCurrent = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
     QString filePath = this->trnUnique->getFilePath();
-    if (MainWindow::isResourcePath(filePath)) {
-        this->trnUnique->load(filePath, this->pal);
-        this->setUniqueTrn(filePath);
-        return;
+    QString nextPath = D1Trn::IDENTITY_PATH;
+    if (allButCurrent) {
+        nextPath = filePath;
+        allTrns = true;
     }
-    // remove entry from the uniqueTrns map
-    D1Trn *trn = this->uniqueTrns.take(filePath);
-    MemFree(trn);
-    // remove path in trnUniqueWidget
-    // this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), D1Trn::IDENTITY_PATH);
-    // select the default trn
-    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
+    if (allTrns) {
+        for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
+            QString trnPath = it.value()->getFilePath();
+            if (MainWindow::isResourcePath(trnPath) || trnPath == nextPath) {
+                it++;
+                continue;
+            }
+            MemFree(it.value());
+            // remove path in trnUniqueWidget
+            // this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), D1Trn::IDENTITY_PATH);
+            it = this->uniqueTrns.erase(it);
+        }
+    } else {
+        if (MainWindow::isResourcePath(filePath)) {
+            this->trnUnique->load(filePath, this->pal);
+            // nextPath = filePath;
+        } else {
+            // remove entry from the uniqueTrns map
+            D1Trn *trn = this->uniqueTrns.take(filePath);
+            MemFree(trn);
+            // remove path in trnUniqueWidget
+            // this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), D1Trn::IDENTITY_PATH);
+        }
+    }
+    // select the next trn
+    this->setUniqueTrn(nextPath);
 }
 
 void MainWindow::on_actionPatch_Translation_Unique_triggered()
@@ -3620,19 +3688,40 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
 
 void MainWindow::on_actionClose_Translation_Base_triggered()
 {
+    bool allTrns = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool allButCurrent = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
     QString filePath = this->trnBase->getFilePath();
-    if (MainWindow::isResourcePath(filePath)) {
-        this->trnBase->load(filePath, this->trnUnique->getResultingPalette());
-        this->setBaseTrn(filePath);
-        return;
+    QString nextPath = D1Trn::IDENTITY_PATH;
+    if (allButCurrent) {
+        nextPath = filePath;
+        allTrns = true;
     }
-    // remove entry from the baseTrns map
-    D1Trn *trn = this->baseTrns.take(filePath);
-    MemFree(trn);
-    // remove path in trnBaseWidget
-    // this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), D1Trn::IDENTITY_PATH);
-    // select the default trn
-    this->setBaseTrn(D1Trn::IDENTITY_PATH);
+    if (allTrns) {
+        for (auto it = this->baseTrns.begin(); it != this->baseTrns.end(); ) {
+            QString trnPath = it.value()->getFilePath();
+            if (MainWindow::isResourcePath(trnPath) || trnPath == nextPath) {
+                it++;
+                continue;
+            }
+            MemFree(it.value());
+            // remove path in trnBaseWidget
+            // this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), D1Trn::IDENTITY_PATH);
+            it = this->baseTrns.erase(it);
+        }
+    } else {
+        if (MainWindow::isResourcePath(filePath)) {
+            this->trnBase->load(filePath, this->trnUnique->getResultingPalette());
+            // nextPath = filePath;
+        } else {
+            // remove entry from the baseTrns map
+            D1Trn *trn = this->baseTrns.take(filePath);
+            MemFree(trn);
+            // remove path in trnBaseWidget
+            // this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), D1Trn::IDENTITY_PATH);
+        }
+    }
+    // select the next trn
+    this->setBaseTrn(nextPath);
 }
 
 void MainWindow::on_actionPatch_Translation_Base_triggered()

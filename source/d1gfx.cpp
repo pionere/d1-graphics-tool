@@ -650,9 +650,9 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
     return result;
 }
 
-QPointer<D1Pal>& D1GfxFrame::getFramePal()
+QPointer<D1Pal>& D1GfxFrame::getFramePal() const
 {
-    return this->framePal;
+    return const_cast<QPointer<D1Pal> &>(this->framePal);
 }
 
 void D1GfxFrame::setFramePal(D1Pal *pal)

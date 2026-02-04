@@ -121,7 +121,7 @@ public:
     bool optimize(D1CEL_TYPE type);
 
     // functions for smk-frames
-    QPointer<D1Pal>& getFramePal();
+    QPointer<D1Pal>& getFramePal() const;
     void setFramePal(D1Pal *pal);
     D1SmkAudioData *getFrameAudio();
 
