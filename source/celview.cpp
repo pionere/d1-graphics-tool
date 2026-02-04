@@ -333,27 +333,37 @@ void CelView::setPal(D1Pal *p)
 {
     this->pal = p;
 
-    if (this->gfx->getType() == D1CEL_TYPE::SMK) {
-        for (int i = this->currentFrameIndex; i >= 0; i--) {
-            QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-            if (!fp.isNull()) {
-                if (fp.data() != p) {
-                    // update the palette of the current frame if it does not match
-                    i = this->currentFrameIndex;
-                    this->gfx->getFrame(i)->setFramePal(p);
-                    // remove subsequent palette if it matches
-                    while (++i < this->gfx->getFrameCount()) {
+    if (this->gfx->getType() == D1CEL_TYPE::SMK && this->currentFrameIndex < this->gfx->getFrameCount()) {
+        if (MainWindow::isResourcePath(p->getFilePath())) {
+            for (int i = this->currentFrameIndex; i >= 0; i--) {
+                QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
+                if (!fp.isNull()) {
+                    fp.clear();
+                    for ( ; i >= 0; i--) {
                         QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
                         if (!fp.isNull()) {
-                            if (fp.data() == p) {
-                                this->gfx->getFrame(i)->setFramePal(nullptr);
-                            }
+                            this->gfx->setFramePalette(i, fp.data());
                             break;
                         }
                     }
                     this->gfx->setModified();
+                    break;
                 }
-                break;
+            }
+        } else {
+            int i = this->currentFrameIndex;
+            for ( ; i >= 0; i--) {
+                QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
+                if (!fp.isNull()) {
+                    if (fp.data() != p) {
+                        // update the palette of the current frame if it does not match
+                        this->gfx->setFramePalette(this->currentFrameIndex, p);
+                    }
+                    break;
+                }
+            }
+            if (i < 0) {
+                this->gfx->setFramePalette(this->currentFrameIndex, p);
             }
         }
     }

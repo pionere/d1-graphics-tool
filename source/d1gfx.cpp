@@ -1148,7 +1148,12 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
     D1GfxFrame *frame = this->insertFrame(idx);
     D1ImageFrame::load(*frame, image, this->type == D1CEL_TYPE::SMK, this->palette);
     // this->modified = true;
-
+    // RegisterPalette
+    D1Pal* pal = frame->getFramePal().data();
+    if (pal != nullptr) {
+        QString palPath = QString("Frame%1-%2").arg(idx + 1, 4, 10, QChar('0')).arg(idx + 1, 4, 10, QChar('0'));
+        pal->setFilePath(palPath);
+    }
     return this->frames[idx];
 }
 
@@ -1883,6 +1888,24 @@ D1Pal *D1Gfx::getPalette() const
 void D1Gfx::setPalette(D1Pal *pal)
 {
     this->palette = pal;
+}
+
+void D1Gfx::setFramePalette(int frameIndex, D1Pal *pal)
+{
+    this->frames[frameIndex]->setFramePal(pal);
+    if (pal != nullptr) {
+        // remove subsequent palette if it matches
+        for (int i = frameIndex + 1; i < this->getFrameCount(); i++) {
+            QPointer<D1Pal> &fp = this->frames[i]->getFramePal();
+            if (!fp.isNull()) {
+                if (fp.data() == pal) {
+                    fp.clear();
+                }
+                break;
+            }
+        }
+    }
+    this->modified = true;
 }
 
 static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
