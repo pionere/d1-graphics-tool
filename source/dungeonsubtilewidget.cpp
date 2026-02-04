@@ -93,33 +93,33 @@ static void MonResistText(unsigned resist, unsigned idx, QProgressBar *label)
     switch ((resist >> idx) & 3) {
     case MORT_NONE:
         value = 0;
-        tooltip = "Vulnerable to %1 damage";
+        tooltip = QApplication::tr("Vulnerable to %1 damage");
         break;
     case MORT_PROTECTED:
         value = 50 - 50 / 4;
-        tooltip = "Protected against %1 damage";
+        tooltip = QApplication::tr("Protected against %1 damage");
         break;
     case MORT_RESIST:
         value = 75;
-        tooltip = "Resists %1 damage";
+        tooltip = QApplication::tr("Resists %1 damage");
         break;
     case MORT_IMMUNE:
         value = 100;
-        tooltip = "Immune to %1 damage";
+        tooltip = QApplication::tr("Immune to %1 damage");
         break;
     default:
-        tooltip = "???";
+        tooltip = QApplication::tr("???");
         break;
     }
-    const char *type;
+    QString type;
     switch (idx) {
-    case MORS_IDX_SLASH:     type = "slash";     break;
-    case MORS_IDX_BLUNT:     type = "blunt";     break;
-    case MORS_IDX_PUNCTURE:  type = "puncture";  break;
-    case MORS_IDX_FIRE:      type = "fire";      break;
-    case MORS_IDX_LIGHTNING: type = "lightning"; break;
-    case MORS_IDX_MAGIC:     type = "magic";     break;
-    case MORS_IDX_ACID:      type = "acid";      break;
+    case MORS_IDX_SLASH:     type = QApplication::tr("slash");     break;
+    case MORS_IDX_BLUNT:     type = QApplication::tr("blunt");     break;
+    case MORS_IDX_PUNCTURE:  type = QApplication::tr("puncture");  break;
+    case MORS_IDX_FIRE:      type = QApplication::tr("fire");      break;
+    case MORS_IDX_LIGHTNING: type = QApplication::tr("lightning"); break;
+    case MORS_IDX_MAGIC:     type = QApplication::tr("magic");     break;
+    case MORS_IDX_ACID:      type = QApplication::tr("acid");      break;
     }
     label->setValue(value);
     label->setToolTip(tooltip.arg(type));

@@ -763,8 +763,8 @@ void LevelCelView::framePixelClicked(const QPoint &pos, int flags)
         // if (frameChanged || drawn) {
             this->displayFrame();
         // }
-        // highlight selection
         if (!drawn) {
+            // highlight selection
             QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
             QPen pen(borderColor);
             pen.setWidth(PALETTE_SELECTION_WIDTH);

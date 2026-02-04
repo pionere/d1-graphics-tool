@@ -1,6 +1,5 @@
 #include "d1min.h"
 
-#include <QApplication>
 #include <QBuffer>
 #include <QDebug>
 #include <QDir>
@@ -230,10 +229,6 @@ void D1Min::compareTo(const D1Min *min, const std::map<unsigned, D1CEL_FRAME_TYP
 {
     if (!min->tileset->gfx->isUpscaled()) {
         for (int i = 0; i < this->tileset->gfx->getFrameCount(); i++) {
-            /*if (celFrameTypes.count(i) == 0) {
-                continue;
-            }
-            D1CEL_FRAME_TYPE frameType = celFrameTypes[i];*/
             auto it = celFrameTypes.find(i + 1);
             if (it == celFrameTypes.end())
                 continue;

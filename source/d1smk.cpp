@@ -23,8 +23,6 @@ typedef QAudioOutput SmkAudioOutput;
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
-//#include <smacker.h>
-//#include "../3rdParty/libsmacker/smacker.h"
 #include "libsmacker/smacker.h"
 
 class AudioBuffer;
@@ -34,7 +32,6 @@ static SmkAudioOutput *audioOutput[D1SMK_TRACKS] = { nullptr };
 static AudioBuffer *smkAudioBuffer[D1SMK_TRACKS] = { nullptr };
 
 class AudioBuffer : public QIODevice {
-//    Q_OBJECT
 
 public:
     AudioBuffer();
@@ -376,7 +373,6 @@ typedef struct _SmkTreeInfo {
 static void addTreeValue(uint16_t value, SmkTreeInfo &tree, unsigned (&cacheValues)[3])
 {
     QList<QPair<unsigned, unsigned>> *stat = &tree.treeStat;
-
     for (int i = 0; i < 3; i++) {
         if (value == cacheValues[i]) {
             stat = &tree.cacheStat[i];
@@ -815,7 +811,7 @@ static void encodePixels(int x, int y, D1GfxFrame *frame, int type, int typelen,
 }
 
 static unsigned char oldPalette[D1SMK_COLORS][4];
-static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS], uint8_t *dest)
+static unsigned encodePalette(D1Pal *pal, int frameNum, uint8_t *dest)
 {
     // convert pal to smk-palette
     unsigned char newPalette[D1SMK_COLORS][4];
@@ -861,11 +857,9 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
             for (int n = 0; n < D1PAL_COLORS; n++) {
                 int curr = 0;
                 for (int k = n; k < D1PAL_COLORS; k++, curr++) {
-                    // if (!palUse[i + curr]) {
                     if (!newPalette[i + curr][3]) {
                         continue; // destination color is unused -> ok
                     }
-                    //if (!palUse[k]) {
                     if (!oldPalette[k][3]) {
                         break; // source color is unused while the destination is used -> stop
                     }
@@ -952,7 +946,6 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
         len = 0;
         for (int i = 0; i < D1PAL_COLORS; i++) {
             int direct;
-            // if (palUse[i]) {
             if (newPalette[i][3]) {
                 // 0x00: Set Color block
                 dest[len] = newPalette[i][0];
@@ -964,7 +957,6 @@ static unsigned encodePalette(D1Pal *pal, int frameNum, bool palUse[D1SMK_COLORS
             } else {
                 // 0x80: Skip block(s)
                 for (direct = 0; (i + direct) < D1PAL_COLORS; direct++) {
-                    // if (palUse[i + direct]) {
                     if (newPalette[i + direct][3]) {
                         break;
                     }
@@ -1142,7 +1134,6 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     }
 
     const int frameCount = gfx.getFrameCount();
-    bool palUse[D1PAL_COLORS] = { 0 };
     for (int i = 0; i < frameCount; i++) {
         D1GfxFrame *frame = gfx.getFrame(i);
         for (int y = 0; y < height; y++) {
@@ -1152,7 +1143,6 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
                     dProgressErr() << QApplication::tr("Transparent pixel in frame %1. at %2:%3").arg(i + 1).arg(x).arg(y);
                     return false;
                 }
-                palUse[pixel.getPaletteIndex()] = true;
             }
         }
     }
@@ -1452,7 +1442,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
             framePal = gfx.getPalette();
         }
         if (framePal != nullptr) {
-            unsigned pallen = encodePalette(framePal, n, palUse, frameData + cursor + 1);
+            unsigned pallen = encodePalette(framePal, n, frameData + cursor + 1);
             pallen = (pallen + 1 + 3) / 4;
             *&frameData[cursor] = pallen;
             cursor += pallen * 4;
@@ -1729,9 +1719,13 @@ static QString addDetails(QString &msg, int verbose, D1SmkColorFix &fix)
 static bool fixPalColors(D1SmkColorFix &fix, int verbose)
 {
     if (fix.frameFrom < 0) {
+        if (fix.frameTo != 0) {
+            dProgressWarn() << QApplication::tr("The palette is not set in the first frame.");
+        }
         return false;
     }
     const QColor undefColor = fix.pal->getUndefinedColor();
+    // QList<quint8> ignored;
     // validate the pixels and create statistics
     std::pair<uint64_t, unsigned> palUse[D1PAL_COLORS];
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
@@ -1754,7 +1748,6 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             }
         }
     }
-    // QList<quint8> ignored;
     // clear unused colors and ensure the values can be represented by SMK
     bool result = false;
     for (unsigned i = 0; i < D1PAL_COLORS; i++) {
@@ -1810,12 +1803,12 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
             }
         }
         if (change && col == undefColor) {
-                dProgressWarn() << QApplication::tr("The undefined color is selected as a valid palette-entry.");
+            dProgressWarn() << QApplication::tr("The undefined color is selected as a valid palette-entry.");
         } else {
-        // find possible replacement for the color
-        for (unsigned n = 0; n < i; n++) {
-            QColor pc = fix.pal->getColor(n);
-            if (pc == col) {
+            // find possible replacement for the color
+            for (unsigned n = 0; n < i; n++) {
+                QColor pc = fix.pal->getColor(n);
+                if (pc == col) {
                     // dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%3..%4)").arg(pc.index()).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo + 1);
                     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), D1GfxPixel::colorPixel(n)));
@@ -1888,7 +1881,7 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         ignoredColors.chop(2);
         QString msg = QApplication::tr("Ignored the %1 undefined color(s) in the palette", "", numIgnored).arg(ignoredColors);
         msg = addDetails(msg, verbose, fix);
-        dProgress() << msg;
+        dProgressWarn() << msg;
     }
 */
     return result;
@@ -1995,10 +1988,6 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
                 }
             }
             if (!replacements.isEmpty()) {
-                // int n = i;
-                // while (++n < pf.gfx->getFrameCount() && pf.gfx->getFrame(n)->getFramePal().isNull()) {
-                //     ;
-                // }
                 RemapParam params;
                 params.frames = std::pair<int, int>(cf.frameFrom + 1, cf.frameTo);
                 cf.gfx->replacePixels(replacements, params, 0);
@@ -2008,10 +1997,6 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
             if (newidxs.isEmpty()) {
                 msg = QApplication::tr("Palette of frame %1 is obsolete.").arg(cf.frameFrom + 1);
             } else {
-                /*int n = i;
-                while (pf.gfx->getFrame(--n)->getFramePal().isNull()) {
-                    ;
-                }*/
                 msg = QApplication::tr("Palette of frame %1 merged with palette of frame %2.").arg(cf.frameFrom + 1).arg(pf.frameFrom + 1);
             }
             dProgress() << msg;
@@ -2051,17 +2036,11 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
                     break;
                 }
             }
-            /*int n = i;
-            while (cf.gfx->getFrame(--n)->getFramePal().isNull()) {
-                ;
-            }*/
             if (!replacements.isEmpty()) {
                 RemapParam params;
                 params.frames = std::pair<int, int>(pf.frameFrom + 1, pf.frameTo);
                 pf.gfx->replacePixels(replacements, params, 0);
             }
-            // QPointer<D1Pal> &pp = gfx->getFrame(n)->getFramePal();
-            // pp.clear();
             cf.gfx->getFrame(pf.frameFrom)->setFramePal(cf.pal);
             result = true;
             QString msg;
@@ -2324,21 +2303,22 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                                 }
                                 break;
                             }
+                            int amount = i - start;
                             if (n == SMK_TREE_FULL) {
                                 if (c1 == rc1) {
-                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in full blocks of frame %3-%4 if paired with %5 on the right.").arg(c2).arg(rc2).arg(start + 1).arg(i).arg(c1);
+                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in full blocks of frame %3-%4 if paired with %5 on the right.", "", amount).arg(c2).arg(rc2).arg(start + 1).arg(i + 1).arg(c1);
                                 } else if (c2 == rc2) {
-                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in full blocks of frame %3-%4 if paired with %5 on the left.").arg(c1).arg(rc1).arg(start + 1).arg(i).arg(c2);
+                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in full blocks of frame %3-%4 if paired with %5 on the left.", "", amount).arg(c1).arg(rc1).arg(start + 1).arg(i + 1).arg(c2);
                                 } else {
-                                    dProgress() << QApplication::tr("Replaced color %1:%2 pairs with color %3:%4 in full blocks of frame %5-%6.").arg(c1).arg(c2).arg(rc1).arg(rc2).arg(start + 1).arg(i);
+                                    dProgress() << QApplication::tr("Replaced color %1:%2 pairs with color %3:%4 in full blocks of frame %5-%6.", "", amount).arg(c1).arg(c2).arg(rc1).arg(rc2).arg(start + 1).arg(i + 1);
                                 }
                             } else {
                                 if (c1 == rc1) {
-                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in 2color blocks of frame %3-%4 if starting with %5.").arg(c2).arg(rc2).arg(start + 1).arg(i).arg(c1);
+                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in 2color blocks of frame %3-%4 if starting with %5.", "", amount).arg(c2).arg(rc2).arg(start + 1).arg(i + 1).arg(c1);
                                 } else if (c2 == rc2) {
-                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in 2color blocks of frame %3-%4 if paired with %5.").arg(c1).arg(rc1).arg(start + 1).arg(i).arg(c2);
+                                    dProgress() << QApplication::tr("Replaced color %1 with %2 in 2color blocks of frame %3-%4 if paired with %5.", "", amount).arg(c1).arg(rc1).arg(start + 1).arg(i + 1).arg(c2);
                                 } else {
-                                    dProgress() << QApplication::tr("Replaced color %1:%2 pairs with color %3:%4 in 2color blocks of frame %5-%6.").arg(c1).arg(c2).arg(rc1).arg(rc2).arg(start + 1).arg(i);
+                                    dProgress() << QApplication::tr("Replaced color %1:%2 pairs with color %3:%4 in 2color blocks of frame %5-%6.", "", amount).arg(c1).arg(c2).arg(rc1).arg(rc2).arg(start + 1).arg(i + 1);
                                 }
                             }
                         }

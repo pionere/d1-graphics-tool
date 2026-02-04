@@ -34,8 +34,6 @@
 #include "d1trs.h"
 #include "ui_mainwindow.h"
 
-#include "dungeon/all.h"
-
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
@@ -1776,7 +1774,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionReportActiveSubtiles->setEnabled(this->levelCelView != nullptr);
     this->ui->actionReportActiveTiles->setEnabled(this->levelCelView != nullptr);
     this->ui->actionReportTilesetUse->setEnabled(this->levelCelView != nullptr);
-    this->ui->actionReportTilesetInefficientFrames->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
+    this->ui->actionReportInefficientFrames->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionReportCheckGraphics->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->updateDynamicMenus();
 
@@ -1807,19 +1805,15 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
     }
 
     // update palettes
-    //std::vector<PaletteColor> colors;
-    //this->pal->getValidColors(colors);
-    //if (colors.empty()) {
-        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-            D1GfxFrame* frame = this->gfx->getFrame(i);
-            D1Pal* framePal = frame->getFramePal().data();
-            if (framePal == nullptr) continue;
-            QString path = framePal->getFilePath();
-            if (this->pals.contains(path) && this->pals[path] != framePal)
-                delete this->pals[path];
-            this->pals[path] = framePal;
-        }
-    //}
+    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        D1GfxFrame* frame = this->gfx->getFrame(i);
+        D1Pal* framePal = frame->getFramePal().data();
+        if (framePal == nullptr) continue;
+        QString path = framePal->getFilePath();
+        if (this->pals.contains(path) && this->pals[path] != framePal)
+            delete this->pals[path];
+        this->pals[path] = framePal;
+    }
     // update the current palette
     if (this->gfx->getFrameCount() > frameIndex) {
         for ( ; frameIndex >= 0; frameIndex--) {
@@ -1831,7 +1825,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
             }
         }
     }
-    
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -2994,7 +2988,7 @@ void MainWindow::on_actionReportActiveTiles_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionReportTilesetInefficientFrames_triggered()
+void MainWindow::on_actionReportInefficientFrames_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
@@ -3517,7 +3511,6 @@ void MainWindow::on_actionNew_PAL_triggered()
 
     QFileInfo palFileInfo(palFilePath);
     const QString &path = palFilePath; // palFileInfo.absoluteFilePath();
-    // const QString name = palFileInfo.fileName();
 
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(D1Pal::DEFAULT_PATH)) {

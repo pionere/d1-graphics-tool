@@ -15,6 +15,8 @@
 
 #include "libsmacker/smacker.h"
 
+#define SIMPLE_WEIGHT 1
+
 PaletteColor::PaletteColor(const QColor &color, int index)
     : xv(index)
     , rv(color.red())
@@ -295,25 +297,34 @@ bool D1Pal::genColors(const QString &imagefilePath, bool forSmk)
 
     return this->genColors(image, forSmk);
 }
-#if 1
-typedef unsigned SmkRgb;
-#else
-typedef struct SmkRgb {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t align[sizeof(int) - 3];
-#if 0
-    bool operator=(const SmkRgb &o) const { return *(int*)this == *(int*)&o; };
-    bool operator<(const SmkRgb &o) const { return *(int*)this < *(int*)&o; };
-#else
-    bool operator=(const SmkRgb &o) const { return r == o.r && g == o.g && b == o.b; };
-    bool operator<(const SmkRgb &o) const { return r < o.r || (r == o.r && (g < o.g || g == o.g && b < o.b)); };
-#endif
-} SmkRgb;
-#endif
 
-static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color);
+int D1Pal::getColorDist(const PaletteColor &color, const PaletteColor &palColor)
+{
+    int currR = color.red() - palColor.red();
+    int currG = color.green() - palColor.green();
+    int currB = color.blue() - palColor.blue();
+    int curr = currR * currR + currG * currG + currB * currB;
+    return curr;
+}
+static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color)
+{
+    unsigned res = 0;
+    int best = INT_MAX;
+
+    for (const PaletteColor &palColor : colors) {
+        int currR = color.red() - palColor.red();
+        int currG = color.green() - palColor.green();
+        int currB = color.blue() - palColor.blue();
+        int curr = currR * currR + currG * currG + currB * currB;
+        if (curr < best) {
+            best = curr;
+            res = palColor.index();
+        }
+    }
+
+    return std::pair<quint8, int>(res, best);
+}
+
 static void smackColor(PaletteColor &col, bool forSmk)
 {
     if (!forSmk) {
@@ -370,6 +381,24 @@ static void smackColor(PaletteColor &col, bool forSmk)
 #endif
 }
 
+#if 1
+typedef unsigned SmkRgb;
+#else
+typedef struct SmkRgb {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t align[sizeof(int) - 3];
+#if 0
+    bool operator=(const SmkRgb &o) const { return *(int*)this == *(int*)&o; };
+    bool operator<(const SmkRgb &o) const { return *(int*)this < *(int*)&o; };
+#else
+    bool operator=(const SmkRgb &o) const { return r == o.r && g == o.g && b == o.b; };
+    bool operator<(const SmkRgb &o) const { return r < o.r || (r == o.r && (g < o.g || g == o.g && b < o.b)); };
+#endif
+} SmkRgb;
+#endif
+
 static SmkRgb colorWeight(PaletteColor color, bool forSmk)
 {
     smackColor(color, forSmk);
@@ -390,6 +419,7 @@ static SmkRgb colorWeight(PaletteColor color, bool forSmk)
     return rgb;
 #endif
 }
+
 static PaletteColor weightColor(SmkRgb rgb)
 {
 #if 1
@@ -428,32 +458,6 @@ static PaletteColor valueColor(unsigned cv, bool forSmk)
     PaletteColor color = PaletteColor(r, g, b);
     smackColor(color, forSmk);
     return color;
-}
-int D1Pal::getColorDist(const PaletteColor &color, const PaletteColor &palColor)
-{
-    int currR = color.red() - palColor.red();
-    int currG = color.green() - palColor.green();
-    int currB = color.blue() - palColor.blue();
-    int curr = currR * currR + currG * currG + currB * currB;
-    return curr;
-}
-static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, const PaletteColor &color)
-{
-    unsigned res = 0;
-    int best = INT_MAX;
-
-    for (const PaletteColor &palColor : colors) {
-        int currR = color.red() - palColor.red();
-        int currG = color.green() - palColor.green();
-        int currB = color.blue() - palColor.blue();
-        int curr = currR * currR + currG * currG + currB * currB;
-        if (curr < best) {
-            best = curr;
-            res = palColor.index();
-        }
-    }
-
-    return std::pair<quint8, int>(res, best);
 }
 
 // sort colors by the number of users and/or by the RGB values
@@ -757,7 +761,7 @@ bool D1Pal::genColors(const QImage &image, bool forSmk)
                     uint64_t best = 0;
                     for (auto mi = umap.cbegin(); mi != umap.cend(); mi++) {
                         if (mi->second.second <= best) continue;
-#if 1
+#if SIMPLE_WEIGHT
                         for (const std::pair<SmkRgb, uint64_t>& user : mi->second.first) {
                             if (user.second <= best) continue;
                             PaletteColor color = weightColor(user.first);

@@ -44,7 +44,7 @@ public:
 private:
     D1GfxPixel() = default;
 
-    quint8 transparent = 0;
+    bool transparent = false;
     quint8 paletteIndex = 0;
 };
 
@@ -340,7 +340,7 @@ public:
     D1Pal *getPalette() const;
     void setPalette(D1Pal *pal);
     void setFramePalette(int frameIndex, D1Pal *pal);
-    void reencode(D1Pal *pal);
+    void reencode(const D1Pal *pal);
     int getGroupCount() const;
     std::pair<int, int> getGroupFrameIndices(int groupIndex) const;
     int getFrameCount() const;
@@ -374,7 +374,7 @@ private:
     bool patchRightShrine(bool silent);
     bool patchCryptLight(bool silent);
     bool patchPlrFrames(int gfxFileIndex, bool silent);
-    bool patchMonFrames(int gfxFileIndex, bool silent);    
+    bool patchMonFrames(int gfxFileIndex, bool silent);
     bool patchRogueExtraPixels(int gfxFileIndex, bool silent);
     bool patchWarriorStand(bool silent);
     bool patchFallGDie(bool silent);

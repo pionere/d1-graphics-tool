@@ -3,14 +3,11 @@
 #include <climits>
 #include <vector>
 
-#include <QApplication>
 #include <QColor>
 #include <QImage>
 #include <QList>
 
-#include "progressdialog.h"
-
-static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &colors, QColor color)
+static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
 {
     unsigned res = 0;
     int best = INT_MAX;
@@ -26,7 +23,7 @@ static std::pair<quint8, int> getPalColor(const std::vector<PaletteColor> &color
         }
     }
 
-    return std::pair<quint8, int>(res, best);
+    return res;
 }
 
 bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool forSmk, const D1Pal *pal)
@@ -49,24 +46,23 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool forSmk, con
 
         framePal->getValidColors(colors);
     }
-    {
-        const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
-        for (int y = 0; y < frame.height; y++) {
-            std::vector<D1GfxPixel> pixelLine;
-            for (int x = 0; x < frame.width; x++, srcBits++) {
-                // QColor color = image.pixelColor(x, y);
-                QColor color = QColor::fromRgba(*srcBits);
-                // if (color == QColor(Qt::transparent)) {
-                if (color.alpha() < COLOR_ALPHA_LIMIT) {
-                    pixelLine.push_back(D1GfxPixel::transparentPixel());
-                } else {
-                    // smackColor(color, forSmk);
-                    pixelLine.push_back(D1GfxPixel::colorPixel(getPalColor(colors, color).first));
-                }
+    const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
+    for (int y = 0; y < frame.height; y++) {
+        std::vector<D1GfxPixel> pixelLine;
+        for (int x = 0; x < frame.width; x++, srcBits++) {
+            // QColor color = image.pixelColor(x, y);
+            QColor color = QColor::fromRgba(*srcBits);
+            // if (color == QColor(Qt::transparent)) {
+            if (color.alpha() < COLOR_ALPHA_LIMIT) {
+                pixelLine.push_back(D1GfxPixel::transparentPixel());
+            } else {
+                // smackColor(color, forSmk);
+                pixelLine.push_back(D1GfxPixel::colorPixel(getPalColor(colors, color)));
             }
-            frame.pixels.push_back(std::move(pixelLine));
         }
+        frame.pixels.push_back(std::move(pixelLine));
     }
+
     return true;
 }
 
@@ -102,7 +98,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QString &pixels, const D1Pal *p
                 bool valid;
                 quint8 color = pixel.toInt(&valid);
                 if (!valid) {
-                    color = getPalColor(colors, QColor(pixel.right(7))).first;
+                    color = getPalColor(colors, QColor(pixel.right(7)));
                 }
                 pixelLine.push_back(D1GfxPixel::colorPixel(color));
             }

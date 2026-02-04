@@ -9,8 +9,6 @@
 #include "d1smk.h"
 #include "progressdialog.h"
 
-#include "dungeon/all.h"
-
 typedef struct _WavHeader {
     quint32 RiffMarker;
     quint32 FileSize;

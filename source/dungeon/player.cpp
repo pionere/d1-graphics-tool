@@ -39,7 +39,7 @@ static const BYTE PlrSplFrames[NUM_CLASSES] = {
 void SetPlrAnims(int pnum)
 {
 	int pc, gn;
-// LogErrorF("SetPlrAnims %d class%d", pnum, plr._pClass);
+
 	if ((unsigned)pnum >= MAX_PLRS) {
 		dev_fatal("SetPlrAnims: illegal player %d", pnum);
 	}

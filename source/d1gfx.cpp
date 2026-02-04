@@ -916,9 +916,6 @@ void D1Gfx::compareTo(const D1Gfx *gfx, QString &header, bool patchData) const
 
 QRect D1Gfx::getBoundary() const
 {
-    /*if (this->frames.isEmpty()) {
-        return QRect();
-    }*/
     QRect result = QRect();
     for (const D1GfxFrame *frame : this->frames) {
         result = result.united(frame->getBoundary());
@@ -1007,8 +1004,6 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
             const D1GfxFrame *compFrameGfx = comp->gfx->frames[compFrame->cfFrameRef - 1];
 
             QRect fRect = compFrameGfx->getBoundary();
-            // fRect.setX(fRect.x() + compFrame->cfOffsetX);
-            // fRect.setY(fRect.y() + compFrame->cfOffsetY);
             fRect.moveTo(fRect.x() + compFrame->cfOffsetX, fRect.y() + compFrame->cfOffsetY);
 
             rect = rect.united(fRect);
@@ -1376,7 +1371,7 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
 
 void D1Gfx::removeFrame(int idx, bool wholeGroup)
 {
-    //const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    // const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     if (wholeGroup /*&& multiGroup*/) {
         for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
             if (this->groupFrameIndices[i].second < idx)
@@ -2014,7 +2009,7 @@ static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
     return res;
 }
 
-void D1Gfx::reencode(D1Pal *pal)
+void D1Gfx::reencode(const D1Pal *pal)
 {
     int palmap[D1PAL_COLORS];
     int uc = -1;

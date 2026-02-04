@@ -1068,7 +1068,7 @@ void CelView::setFrameIndex(int frameIndex)
             dMainWindow().updatePalette(this->gfx->getFrame(palIndex)->getFramePal().data());
         }
     }
-    
+
     this->displayFrame();
 }
 

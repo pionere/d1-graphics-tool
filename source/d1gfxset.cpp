@@ -484,9 +484,12 @@ QRect D1Gfxset::getBoundary() const
     return rect;
 }
 
-bool D1Gfxset::checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx* currGfx) const
+bool D1Gfxset::checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx* gfx) const
 {
     bool result = false;
+    D1Gfx* currGfx = this->getGfx(gn);
+    if (gfx != nullptr && gfx != currGfx)
+        return false;
     for (int i = 0; i < currGfx->getGroupCount(); i++) {
         std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
         int fc = gfi.second - gfi.first + 1;
@@ -597,12 +600,9 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
                 if (filePathLower.endsWith(misGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
-                        D1Gfx* currGfx = this->getGfx(gn);
-                        if (gfx != nullptr && gfx != currGfx)
-                            continue;
                         int frameCount = gn < lengthof(mfdata.mfAnimLen) ? mfdata.mfAnimLen[gn] : 0;
                         int animWidth = mfdata.mfAnimWidth * assetMpl;
-                        result |= this->checkGraphics(frameCount, animWidth, gn, currGfx);
+                        result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
                     }
                     typetested = true;
                     break;
@@ -621,6 +621,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 QString monGfxName = QDir::toNativeSeparators(QString(strBuff)).toLower();
                 if (filePathLower.endsWith(monGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
+#if 0
+                        int frameCount = gn < lengthof(mfdata.moAnimFrames) ? mfdata.moAnimFrames[gn] : 0;
+                        int animWidth = mfdata.moWidth * assetMpl;
+                        result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
+#endif
                         D1Gfx* currGfx = this->getGfx(gn);
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
@@ -691,7 +696,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             plr._pgfxnum = plrgfx;
 
             SetPlrAnims(0);
-            /*
+#if 0
             currLvl._dType = DTYPE_TOWN;
             SetPlrAnims(0);
             // assert(this->getGfxCount() == NUM_PGTS);
@@ -708,10 +713,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 case PGX_GOTHIT:    gn = PGT_GOTHIT;     break;
                 case PGX_DEATH:     gn = PGT_DEATH;      break;
                 }
-                D1Gfx* currGfx = this->getGfx(gn);
-                if (gfx != nullptr && gfx != currGfx)
-                    continue;
-                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, currGfx);
+
+                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
             }
 
             currLvl._dType = DTYPE_CATHEDRAL;
@@ -730,12 +733,10 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 case PGX_GOTHIT:
                 case PGX_DEATH: continue;
                 }
-                D1Gfx* currGfx = this->getGfx(gn);
-                if (gfx != nullptr && gfx != currGfx)
-                    continue;
-                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, currGfx);
-            }*/
 
+                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
+            }
+#endif
             for (int gn = 0; gn < this->getGfxCount(); gn++) {
                 D1Gfx* currGfx = this->getGfx(gn);
                 if (gfx != nullptr && gfx != currGfx)

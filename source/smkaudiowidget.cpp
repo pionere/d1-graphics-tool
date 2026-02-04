@@ -10,7 +10,6 @@
 #include <QGraphicsView>
 #include <QImage>
 #include <QList>
-#include <QMessageBox>
 #include <QPainter>
 #include <QString>
 
@@ -21,8 +20,6 @@
 #include "mainwindow.h"
 #include "pushbuttonwidget.h"
 #include "ui_smkaudiowidget.h"
-
-#include "dungeon/all.h"
 
 SmkAudioWidget::SmkAudioWidget(CelView *parent)
     : QDialog(parent)
@@ -213,8 +210,6 @@ void SmkAudioWidget::frameModified()
     // Add the backgrond and CEL frame while aligning it in the center
     this->audioScene.addPixmap(QPixmap::fromImage(audioFrame))
         ->setPos(SMK_AUDIO_SCENE_MARGIN, SMK_AUDIO_SCENE_MARGIN);
-
-    // this->adjustSize();
 }
 
 void SmkAudioWidget::on_trackComboBox_activated(int index)
