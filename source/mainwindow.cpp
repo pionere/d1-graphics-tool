@@ -2498,7 +2498,7 @@ void MainWindow::updateFramePals()
                 break;
             }
         }
-        QString palPath = QString("Frame%1-%2").arg(idx + 1, 4, 10, QChar('0')).arg(n, 4, 10, QChar('0'));
+        QString palPath = QString("Frame%1-%2").arg(i + 1, 4, 10, QChar('0')).arg(n, 4, 10, QChar('0'));
         if (path == palPath) continue;
         framePal->setFilePath(palPath);
         this->pals.take(path);

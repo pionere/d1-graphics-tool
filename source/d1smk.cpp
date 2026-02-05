@@ -1436,7 +1436,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
         // reset pointers of the work-buffer
         size_t cursor = 0; unsigned bitNum = 0;
         // add optional palette
-        D1Pal *framePal = frame->getFramePal().data();
+        D1Pal *framePal = frame->getFramePal();
         if (framePal == nullptr && n == 0) {
             dProgressWarn() << QApplication::tr("The palette is not set in the first frame. Defaulting to the current palette.");
             framePal = gfx.getPalette();
