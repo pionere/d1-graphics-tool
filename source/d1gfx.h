@@ -6,7 +6,6 @@
 #include <QImage>
 #include <QList>
 #include <QPair>
-#include <QPointer>
 #include <QRect>
 #include <QString>
 #include <QtEndian>
@@ -121,7 +120,7 @@ public:
     bool optimize(D1CEL_TYPE type);
 
     // functions for smk-frames
-    QPointer<D1Pal>& getFramePal() const;
+    D1Pal* getFramePal() const;
     void setFramePal(D1Pal *pal);
     D1SmkAudioData *getFrameAudio();
 
@@ -132,7 +131,7 @@ protected:
     // fields of tileset-frames
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
     // fields of smk-frames
-    QPointer<D1Pal> framePal = nullptr;
+    D1Pal* framePal = nullptr;
     D1SmkAudioData *frameAudio = nullptr;
 };
 

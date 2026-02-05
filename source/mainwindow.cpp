@@ -152,18 +152,7 @@ void MainWindow::setPal(const QString &path)
     // update the widgets
     // - views
     if (this->celView != nullptr) {
-        QSet<QString> framePals;
-        this->getFramePals(framePals);
-
         this->celView->setPal(pal);
-
-        // update palettes
-        QSet<QString> framePalsNow;
-        this->getFramePals(framePalsNow);
-        for (const QString framePal : framePals) {
-            if (!framePalsNow.contains(framePal))
-                this->pals.take(framePal);
-        }
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->setPal(pal);
@@ -1690,8 +1679,8 @@ void MainWindow::openFile(const OpenAsParam &params)
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     } else if (fileType == FILE_CONTENT::SMK && this->gfx->getFrameCount() > 0) {
         D1GfxFrame *frame = this->gfx->getFrame(0);
-        QPointer<D1Pal>& pal = frame->getFramePal();
-        // assert(!pal.isNull());
+        D1Pal *pal = frame->getFramePal();
+        // assert(pal != nullptr);
         firstPaletteFound = pal->getFilePath();
         // assert(this->pals.contains(firstPaletteFound));
     }
@@ -1760,41 +1749,22 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Reading..."), 2, PAF_UPDATE_WINDOW);
 
-    int frameIndex = 0;
     if (this->celView != nullptr) {
         this->celView->insertImageFiles(mode, filePaths, append);
-        frameIndex = this->celView->getCurrentFrameIndex();
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->insertImageFiles(mode, filePaths, append);
-        frameIndex = this->levelCelView->getCurrentFrameIndex();
     }
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->insertImageFiles(mode, filePaths, append);
-        frameIndex = this->gfxsetView->getCurrentFrameIndex();
     }
 
-    // update palettes
-    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        D1GfxFrame* frame = this->gfx->getFrame(i);
-        D1Pal* framePal = frame->getFramePal().data();
-        if (framePal == nullptr) continue;
-        QString path = framePal->getFilePath();
-        if (this->pals.contains(path) && this->pals[path] != framePal)
-            delete this->pals[path];
-        this->pals[path] = framePal;
-    }
-    // update the current palette
-    if (this->gfx->getFrameCount() > frameIndex) {
-        for ( ; frameIndex >= 0; frameIndex--) {
-            D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
-            D1Pal* framePal = frame->getFramePal().data();
-            if (framePal != nullptr) {
-                this->setPal(framePal->getFilePath());
-                break;
-            }
-        }
-    }
+    // if (mode == IMAGE_FILE_MODE::FRAME) {
+        // update palettes
+        this->updateFramePals();
+        // select the new frame palette if necessary
+        this->selectFramePal();
+    // }
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -2016,6 +1986,12 @@ void MainWindow::addFrames(bool append)
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->createFrame(append);
     }
+
+    // update palettes
+    this->updateFramePals();
+    // select the new frame palette if necessary
+    this->selectFramePal();
+
     this->updateWindow();
 }
 
@@ -2415,6 +2391,10 @@ void MainWindow::on_actionDuplicate_Frame_triggered()
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->duplicateCurrentFrame(wholeGroup);
     }
+    // update palettes
+    this->updateFramePals();
+    // select the new frame palette if necessary
+    this->selectFramePal();
 }
 
 void MainWindow::on_actionReplace_Frame_triggered()
@@ -2438,6 +2418,11 @@ void MainWindow::on_actionReplace_Frame_triggered()
         this->gfxsetView->replaceCurrentFrame(imgFilePath);
     }
 
+    // update palettes
+    this->updateFramePals();
+    // select the new frame palette if necessary
+    this->selectFramePal();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -2454,56 +2439,102 @@ void MainWindow::getFramePals(QSet<QString> &framePals) const
     for (const D1Gfx* agfx : gfxs) {
         for (int i = 0; i < agfx->getFrameCount(); i++) {
             const D1GfxFrame* frame = agfx->getFrame(i);
-            const D1Pal* framePal = frame->getFramePal().data();
+            const D1Pal* framePal = frame->getFramePal();
             if (framePal != nullptr)
                 framePals.insert(framePal->getFilePath());
         }
     }
 }
 
-void MainWindow::on_actionDel_Frame_triggered()
+void MainWindow::updateFramePals()
 {
-    const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    // QString currPath = this->pal->getFilePath();
+    const QRegularExpression re("^Frame[0-9]{4}-[0-9]{4}$");
+    QSet<D1Pal *> oldPals;
+    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        D1GfxFrame* frame = this->gfx->getFrame(i);
+        D1Pal* framePal = frame->getFramePal();
+        if (framePal == nullptr) continue;
+        QString path = framePal->getFilePath();
+        if (!path.isEmpty() && path != D1Pal::EMPTY_PATH) {
+            const QRegularExpressionMatch qmatch = re.match(path);
+            if (!qmatch.hasMatch()) {
+                continue;
+            }
+        }
+        int n = i;
+        while (++n < this->gfx->getFrameCount()) {
+            if (this->gfx->getFrame(n)->getFramePal() != nullptr) {
+                break;
+            }
+        }
+        QString palPath = QString("Frame%1-%2").arg(i + 1, 4, 10, QChar('0')).arg(n, 4, 10, QChar('0'));
+        if (path == palPath) continue;
+        framePal->setFilePath(palPath);
+        this->pals.take(path);
+        oldPals.insert(this->pals[palPath]);
+        this->pals[palPath] = framePal;
+        // if (currPath == path) {
+        //     currPath = palPath;
+        // }
+        // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), currPath);
+    }
+    oldPals.remove(nullptr);
+    for (D1Pal *pal : this->pals.values()) {
+        oldPals.remove(pal);
+    }
+    for (D1Pal *pal : oldPals) {
+        delete pal;
+    }
+}
 
-    QSet<QString> framePals;
-    this->getFramePals(framePals);
+void MainWindow::selectFramePal()
+{
     QString nextPath = this->pal->getFilePath();
 
+    // update the current palette
     int frameIndex = 0;
     if (this->celView != nullptr) {
-        this->celView->removeCurrentFrame(wholeGroup);
         frameIndex = this->celView->getCurrentFrameIndex();
     }
     if (this->levelCelView != nullptr) {
-        this->levelCelView->removeCurrentFrame(wholeGroup);
         frameIndex = this->levelCelView->getCurrentFrameIndex();
     }
     if (this->gfxsetView != nullptr) {
-        this->gfxsetView->removeCurrentFrame(wholeGroup);
         frameIndex = this->gfxsetView->getCurrentFrameIndex();
     }
 
-    // update palettes
-    QSet<QString> framePalsNow;
-    this->getFramePals(framePalsNow);
-    for (QString framePal : framePals) {
-        if (!framePalsNow.contains(framePal))
-            this->pals.take(framePal);
-    }
-    // update the current palette
     if (this->gfx->getFrameCount() > frameIndex) {
-        for (; frameIndex >= 0; frameIndex--) {
+        for ( ; frameIndex >= 0; frameIndex--) {
             D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
-            D1Pal* framePal = frame->getFramePal().data();
+            D1Pal* framePal = frame->getFramePal();
             if (framePal != nullptr) {
                 nextPath = framePal->getFilePath();
                 break;
             }
         }
     }
-    if (!this->pals.contains(nextPath))
-        nextPath = D1Pal::DEFAULT_PATH;
     this->setPal(nextPath);
+}
+
+void MainWindow::on_actionDel_Frame_triggered()
+{
+    const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    if (this->celView != nullptr) {
+        this->celView->removeCurrentFrame(wholeGroup);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->removeCurrentFrame(wholeGroup);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->removeCurrentFrame(wholeGroup);
+    }
+
+    // update palettes
+    this->updateFramePals();
+    // select the new frame palette if necessary
+    this->selectFramePal();
 
     this->updateWindow();
 }
@@ -3543,38 +3574,37 @@ void MainWindow::on_actionClose_PAL_triggered()
 {
     bool allPals = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     const bool allButCurrent = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    QSet<QString> framePals;
+    this->getFramePals(framePals);
     QString filePath = this->pal->getFilePath();
     QString nextPath = D1Pal::DEFAULT_PATH;
     if (allButCurrent) {
         nextPath = filePath;
         allPals = true;
     }
-    QSet<QString> framePals;
-    this->getFramePals(framePals);
+    if (framePals.contains(filePath)) {
+        nextPath = filePath;
+    }
     if (allPals) {
         for (auto it = this->pals.begin(); it != this->pals.end(); ) {
             QString palPath = it.value()->getFilePath();
-            if (MainWindow::isResourcePath(palPath) || palPath == nextPath) {
+            if (MainWindow::isResourcePath(palPath) || framePals.contains(palPath) || palPath == nextPath) {
                 it++;
                 continue;
             }
-            if (!framePals.contains(palPath)) {
-                MemFree(it.value());
-            }
+            MemFree(it.value());
             // remove path in palWidget
             // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), D1Pal::DEFAULT_PATH);
             it = this->pals.erase(it);
         }
     } else {
-        if (MainWindow::isResourcePath(filePath)) {
+        if (MainWindow::isResourcePath(filePath) || framePals.contains(filePath)) {
             this->pal->load(filePath);
             nextPath = filePath;
         } else {
             // remove entry from the pals map
             D1Pal *pal = this->pals.take(filePath);
-            if (!framePals.contains(filePath)) {
-                MemFree(pal);
-            }
+            MemFree(pal);
             // remove path in palWidget
             // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), D1Pal::DEFAULT_PATH);
             nextPath = D1Pal::DEFAULT_PATH;

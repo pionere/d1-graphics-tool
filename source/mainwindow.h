@@ -176,6 +176,8 @@ private:
     void addTiles(bool append);
 
     void getFramePals(QSet<QString> &framePals) const;
+    void updateFramePals();
+    void selectFramePal();
 
 public slots:
     void on_actionMerge_Frame_triggered();
