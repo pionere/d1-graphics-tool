@@ -1151,7 +1151,7 @@ bool D1Smk::save(D1Gfx &gfx, const SaveAsParam &params)
     for (int n = 0; n < frameCount; n++) {
         uint8_t frameType = 0;
         D1GfxFrame *frame = gfx.getFrame(n);
-        if (!frame->getFramePal().isNull() || n == 0) {
+        if (frame->getFramePal() != nullptr || n == 0) {
             frameType |= 1;
         }
         D1SmkAudioData *audioData = frame->getFrameAudio();
@@ -2087,8 +2087,8 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
             if (ProgressDialog::wasCanceled()) {
                 break;
             }
-            QPointer<D1Pal> &fp = cf.gfx->getFrame(i)->getFramePal();
-            if (!fp.isNull()) {
+            D1Pal *fp = cf.gfx->getFrame(i)->getFramePal();
+            if (fp != nullptr) {
                 cf.frameTo = i;
                 if (fixPalColors(cf, verbose)) {
                     change = true;
@@ -2100,7 +2100,7 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
 
                 pf = cf;
                 cf.frameFrom = i;
-                cf.pal = fp.data();
+                cf.pal = fp;
             }
             if (!ProgressDialog::incValue()) {
                 break;
@@ -2130,9 +2130,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                     break;
                 }
                 D1GfxFrame *frame = cf.gfx->getFrame(i);
-                QPointer<D1Pal> &fp = frame->getFramePal();
-                if (!fp.isNull()) {
-                    cp = fp.data();
+                D1Pal *fp = frame->getFramePal();
+                if (fp != nullptr) {
+                    cp = fp;
                 }
                 for (int y = 0; y < height; y += 4) {
                     for (int x = 0; x < width; x += 4) {
@@ -2236,9 +2236,9 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                         D1Pal* pal = p;
                         for (int i = 0; i < cf.gfx->getFrameCount(); i++) {
                             D1GfxFrame *frame = cf.gfx->getFrame(i);
-                            QPointer<D1Pal> &fp = frame->getFramePal();
-                            if (!fp.isNull()) {
-                                pal = fp.data();
+                            D1Pal *fp = frame->getFramePal();
+                            if (fp != nullptr) {
+                                pal = fp;
                             }
                             auto pit = replacements.find(pal);
                             if (pit == replacements.end()) continue;
@@ -2295,8 +2295,8 @@ void D1Smk::fixColors(D1Gfxset *gfxSet, D1Gfx *g, D1Pal *p)
                                 i++;
                                 if (i < cf.gfx->getFrameCount()) {
                                     frame = cf.gfx->getFrame(i);
-                                    QPointer<D1Pal> &fp = frame->getFramePal();
-                                    if (fp.isNull()) {
+                                    D1Pal *fp = frame->getFramePal();
+                                    if (fp == nullptr) {
                                         continue;
                                     }
                                     i--;

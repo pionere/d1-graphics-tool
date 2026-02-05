@@ -673,9 +673,9 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type)
     return result;
 }
 
-QPointer<D1Pal>& D1GfxFrame::getFramePal() const
+D1Pal* D1GfxFrame::getFramePal() const
 {
-    return const_cast<QPointer<D1Pal> &>(this->framePal);
+    return const_cast<D1Pal *>(this->framePal);
 }
 
 void D1GfxFrame::setFramePal(D1Pal *pal)
@@ -1177,12 +1177,6 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
     D1GfxFrame *frame = this->insertFrame(idx);
     D1ImageFrame::load(*frame, image, this->type == D1CEL_TYPE::SMK, this->palette);
     // this->modified = true;
-    // RegisterPalette
-    D1Pal* pal = frame->getFramePal().data();
-    if (pal != nullptr) {
-        QString palPath = QString("Frame%1-%2").arg(idx + 1, 4, 10, QChar('0')).arg(idx + 1, 4, 10, QChar('0'));
-        pal->setFilePath(palPath);
-    }
     return this->frames[idx];
 }
 
@@ -1978,10 +1972,10 @@ void D1Gfx::setFramePalette(int frameIndex, D1Pal *pal)
     if (pal != nullptr) {
         // remove subsequent palette if it matches
         for (int i = frameIndex + 1; i < this->getFrameCount(); i++) {
-            QPointer<D1Pal> &fp = this->frames[i]->getFramePal();
-            if (!fp.isNull()) {
-                if (fp.data() == pal) {
-                    fp.clear();
+            D1Pal* fp = this->frames[i]->getFramePal();
+            if (fp != nullptr) {
+                if (fp == pal) {
+                    this->frames[i]->setFramePal(nullptr);
                 }
                 break;
             }

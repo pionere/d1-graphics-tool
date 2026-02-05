@@ -339,13 +339,13 @@ void CelView::setPal(D1Pal *p)
     if (this->gfx->getType() == D1CEL_TYPE::SMK && this->currentFrameIndex < this->gfx->getFrameCount()) {
         if (MainWindow::isResourcePath(p->getFilePath())) {
             for (int i = this->currentFrameIndex; i >= 0; i--) {
-                QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-                if (!fp.isNull()) {
-                    fp.clear();
+                D1Pal *fp = this->gfx->getFrame(i)->getFramePal();
+                if (fp != nullptr) {
+                    this->gfx->setFramePalette(i, nullptr);
                     for ( ; i >= 0; i--) {
-                        QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-                        if (!fp.isNull()) {
-                            this->gfx->setFramePalette(i, fp.data());
+                        fp = this->gfx->getFrame(i)->getFramePal();
+                        if (fp != nullptr) {
+                            this->gfx->setFramePalette(i, fp);
                             break;
                         }
                     }
@@ -356,9 +356,9 @@ void CelView::setPal(D1Pal *p)
         } else {
             int i = this->currentFrameIndex;
             for ( ; i >= 0; i--) {
-                QPointer<D1Pal> &fp = this->gfx->getFrame(i)->getFramePal();
-                if (!fp.isNull()) {
-                    if (fp.data() != p) {
+                D1Pal *fp = this->gfx->getFrame(i)->getFramePal();
+                if (fp != nullptr) {
+                    if (fp != p) {
                         // update the palette of the current frame if it does not match
                         this->gfx->setFramePalette(this->currentFrameIndex, p);
                     }
@@ -1061,12 +1061,16 @@ void CelView::setFrameIndex(int frameIndex)
     const bool switchPal = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
     if (switchPal && frameIndex >= 0) {
         int palIndex = frameIndex;
-        while (palIndex >= 0 && this->gfx->getFrame(palIndex)->getFramePal().isNull()) {
+        while (true) {
+            D1Pal *pal = this->gfx->getFrame(palIndex)->getFramePal();
+            if (pal != nullptr) {
+                dMainWindow().updatePalette(pal);
+                break;
+            }
             palIndex--;
+            if (palIndex < 0) break;
         }
-        if (palIndex >= 0) {
-            dMainWindow().updatePalette(this->gfx->getFrame(palIndex)->getFramePal().data());
-        }
+        
     }
 
     this->displayFrame();
@@ -1521,9 +1525,9 @@ void CelView::timerEvent(QTimerEvent *event)
         if (!this->audioMuted) {
             D1Smk::playAudio(*frame);
         }
-        QPointer<D1Pal>& pal = frame->getFramePal();
-        if (!pal.isNull()) {
-            dMainWindow().updatePalette(pal.data());
+        D1Pal* pal = frame->getFramePal();
+        if (pal != nullptr) {
+            dMainWindow().updatePalette(pal);
         }
     }
     int cycleType = this->ui->playComboBox->currentIndex();
