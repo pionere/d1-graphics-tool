@@ -1788,7 +1788,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->insertImageFiles(mode, filePaths, append);
     }
-    dProgress() << tr("openImageFiles %1").arg(this->gfx->getFrameCount());
+
     // if (mode == IMAGE_FILE_MODE::FRAME) {
         // update palettes
         this->updateFramePals();
@@ -2486,10 +2486,9 @@ void MainWindow::updateFramePals()
         D1Pal* framePal = frame->getFramePal();
         if (framePal == nullptr) continue;
         QString path = framePal->getFilePath();
-        if (!path.isEmpty()) {
+        if (!path.isEmpty() && path != D1Pal::EMPTY_PATH) {
             const QRegularExpressionMatch qmatch = re.match(path);
             if (!qmatch.hasMatch()) {
-                dProgress() << tr("skipping %1. %2").arg(i).arg(path);
                 continue;
             }
         }
@@ -2500,7 +2499,6 @@ void MainWindow::updateFramePals()
             }
         }
         QString palPath = QString("Frame%1-%2").arg(i + 1, 4, 10, QChar('0')).arg(n, 4, 10, QChar('0'));
-        dProgress() << tr("adding %1 vs. %2").arg(palPath).arg(path);
         if (path == palPath) continue;
         framePal->setFilePath(palPath);
         this->pals.take(path);
