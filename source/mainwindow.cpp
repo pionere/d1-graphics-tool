@@ -3619,14 +3619,17 @@ void MainWindow::on_actionClose_PAL_triggered()
 {
     bool allPals = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     const bool allButCurrent = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    QSet<QString> framePals;
+    this->getFramePals(framePals);
     QString filePath = this->pal->getFilePath();
     QString nextPath = D1Pal::DEFAULT_PATH;
     if (allButCurrent) {
         nextPath = filePath;
         allPals = true;
     }
-    QSet<QString> framePals;
-    this->getFramePals(framePals);
+    if (framePals.contains(filePath)) {
+        nextPath = filePath;
+    }
     if (allPals) {
         for (auto it = this->pals.begin(); it != this->pals.end(); ) {
             QString palPath = it.value()->getFilePath();
