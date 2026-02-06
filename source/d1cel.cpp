@@ -132,7 +132,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         }
 
         if (!frameOffsets.empty() && frameOffsets.back().second != fileSize) {
-            dProgressWarn() << QApplication::tr("Failed to read the complete CEL. Finished at %1 while filesize is %2.").arg(frameOffsets.back().second).arg(fileSize));
+            dProgressWarn() << QApplication::tr("Failed to read the complete CEL. Finished at %1 while filesize is %2.").arg(frameOffsets.back().second).arg(fileSize);
         } else {
 dProgressErr() << "CEL compilation read";
         }

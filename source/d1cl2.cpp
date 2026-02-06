@@ -139,7 +139,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         }
 
         if (!frameOffsets.empty() && frameOffsets.back().second != fileSize) {
-            dProgressWarn() << QApplication::tr("Failed to read the complete CL2. Finished at %1 while filesize is %2.").arg(frameOffsets.back().second).arg(fileSize));
+            dProgressWarn() << QApplication::tr("Failed to read the complete CL2. Finished at %1 while filesize is %2.").arg(frameOffsets.back().second).arg(fileSize);
         } else {
 dProgressErr() << "Multigroup CL2 read";
         }
