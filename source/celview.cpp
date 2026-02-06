@@ -302,8 +302,8 @@ CelView::CelView(QWidget *parent)
     layout->setAlignment(btn, Qt::AlignRight);
 
     QTextEdit *edit = this->ui->animOrderEdit;
-    QFontMetrics m = edit->font();
-    int RowHeight = m.lineSpacing() ;
+    QFontMetrics fm = this->fontMetrics();
+    int RowHeight = fm.lineSpacing() ;
     edit->setFixedHeight(2 * RowHeight);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
