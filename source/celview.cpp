@@ -292,6 +292,16 @@ CelView::CelView(QWidget *parent)
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
+    layout = this->ui->switchToMetaHorizontalLayout;
+    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, tr("Switch to metadata view"), this, &CelView::on_actionToggle_Mode_triggered);
+    layout->setAlignment(btn, Qt::AlignRight);
+
+    layout = this->ui->switchToDisplayHorizontalLayout;
+    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to display view"), this, &CelView::on_actionToggle_Mode_triggered);
+    layout->setAlignment(btn, Qt::AlignRight);
+
+    // this->ui->mainStackedLayout->setCurrentIndex(0);
+
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
     // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);
@@ -1495,6 +1505,11 @@ void CelView::on_playStopButton_clicked()
     qint64 nextTickNS = timer.nsecsElapsed() + this->currentPlayDelay * 1000;
     QTimer::singleShot(this->currentPlayDelay / 1000, Qt::PreciseTimer, this, &CelView::timerEvent);
 */
+}
+
+void CelView::on_actionToggle_Mode_triggered()
+{
+    this->ui->mainStackedLayout->setCurrentIndex(1 - this->ui->mainStackedLayout->currentIndex());
 }
 
 void CelView::timerEvent(QTimerEvent *event)

@@ -41,6 +41,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <layout class="QStackedLayout" name="mainStackedLayout">
+      <item>
+       <widget class="QWidget">
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
@@ -586,9 +589,133 @@
           </property>
          </widget>
         </item>
+        <item>
+         <layout class="QHBoxLayout" name="switchToMetaHorizontalLayout">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </item>
        </layout>
       </item>
      </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget">
+        <layout class="QGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>48</number>
+           </property>
+           <property name="text">
+            <string>Type:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="metaTypeComboBox">
+           <item>
+            <property name="text">
+             <string>Dimensions</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Animation Order</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Action Frames</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QWidget">
+           <layout class="QStackedLayout">
+            <item>
+             <widget class="QWidget">
+              <layout class="QHBoxLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="LineEditWidget" name="celFrameWidthEditt">
+                 <property name="charWidth">
+                  <number>7</number>
+                 </property>
+                 <property name="toolTip">
+                  <string>Current frame width</string>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignCenter</enum>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="minimumWidth">
+                  <number>8</number>
+                 </property>
+                 <property name="maximumWidth">
+                  <number>8</number>
+                 </property>
+                 <property name="text">
+                  <string notr="true">*</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="LineEditWidget" name="celFrameHeightEditt">
+                 <property name="charWidth">
+                  <number>7</number>
+                 </property>
+                 <property name="toolTip">
+                  <string>Current frame height</string>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignCenter</enum>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <item row="2" column="18">
+          <layout class="QHBoxLayout" name="switchToDisplayHorizontalLayout">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          </layout>
+         </item>
+
+        
+       </layout>
+        </widget>
+      </item>
+     </layout>      
     </widget>
    </item>
   </layout>

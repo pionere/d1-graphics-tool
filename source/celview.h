@@ -177,6 +177,8 @@ private slots:
     void on_playDelayEdit_escPressed();
     void on_playStopButton_clicked();
 
+    void on_actionToggle_Mode_triggered();
+
     void timerEvent(QTimerEvent *event) override;
 
     void dragEnterEvent(QDragEnterEvent *event) override;
