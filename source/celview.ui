@@ -523,17 +523,17 @@
        </spacer>
       </item>
       <item row="2" column="18">
-         <layout class="QHBoxLayout" name="switchToMetaHorizontalLayout">
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-         </layout>
+       <layout class="QHBoxLayout" name="switchToMetaHorizontalLayout">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
       </item>
      </layout>
-       </widget>
+    </widget>
       </item>
       <item>
        <widget class="QWidget">
@@ -680,30 +680,30 @@
                <property name="bottomMargin">
                 <number>0</number>
                </property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="minimumWidth">
+                  <number>48</number>
+                 </property>
+                 <property name="text">
+                  <string>Action Frames:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="LineEditWidget" name="actionFramesEdit">
+                 <property name="charWidth">
+                  <number>5</number>
+                 </property>
+                 <property name="toolTip">
+                  <string>Comma separated list of frames</string>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignCenter</enum>
+                 </property>
+                </widget>
+               </item>
               </layout>
-              <item row="0" column="0">
-               <widget class="QLabel">
-                <property name="minimumWidth">
-                 <number>48</number>
-                </property>
-                <property name="text">
-                 <string>Action Frames:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="LineEditWidget" name="actionFramesEdit">
-                <property name="charWidth">
-                 <number>5</number>
-                </property>
-                <property name="toolTip">
-                 <string>Comma separated list of frames</string>
-                </property>
-                <property name="alignment">
-                 <enum>Qt::AlignCenter</enum>
-                </property>
-               </widget>
-              </item>
              </widget>
             </item>
            </layout>
@@ -750,10 +750,10 @@
            </property>
           </layout>
          </item>
-       </layout>
-        </widget>
+        </layout>
+       </widget>
       </item>
-     </layout>      
+     </layout>
     </widget>
    </item>
   </layout>
