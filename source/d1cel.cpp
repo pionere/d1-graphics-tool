@@ -64,6 +64,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             frameOffsets.push_back(std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
         }
     } else {
+#if 0
         // Read offset of the last CEL of the CEL compilation
         device->seek(firstDword - 4);
         quint32 lastCelOffset;
@@ -91,7 +92,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         if (fileSize != (lastCelOffset + lastCelSize)) {
             return false;
         }
-
+#endif
         // Going through all groups
         int cursor = 0;
         for (unsigned int i = 0; i * 4 < firstDword; i++) {
@@ -128,6 +129,12 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                         celOffset + celFrameEndOffset));
             }
             cursor += celFrameCount;
+        }
+
+        if (!frameOffsets.empty() && frameOffsets.back().second != fileSize) {
+            dProgressWarn() << tr("Failed to read the complete CEL. Finished at %1 while filesize is %2.").arg(frameOffsets.back().second).arg(fileSize));
+        } else {
+dProgressErr() << "CEL compilation read";
         }
     }
 

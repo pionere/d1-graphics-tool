@@ -300,6 +300,11 @@ CelView::CelView(QWidget *parent)
     btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to display view"), this, &CelView::on_actionToggle_Mode_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
+    QTextEdit *edit = this->ui->animOrderEdit;
+    QFontMetrics m edit->font();
+    int RowHeight = m.lineSpacing() ;
+    edit->setFixedHeight(2 * RowHeight);
+
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
     // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);

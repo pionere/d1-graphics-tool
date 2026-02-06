@@ -91,7 +91,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4" colspan="2">
+      <item row="0" column="4" colspan="3">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -515,7 +515,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="12" colspan="4">
+      <item row="2" column="12" colspan="6">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -567,7 +567,7 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="1" rowspan="1">
+         <item row="1" column="1" rowspan="2">
           <widget class="QWidget">
            <layout class="QStackedLayout" name="metaTypeStackedLayout">
             <item>
@@ -624,6 +624,20 @@
                  </property>
                 </widget>
                </item>
+               <item row="0" column="3">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" colspan="4">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
               </layout>
              </widget>
             </item>
@@ -646,7 +660,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1" colspan="1">
+               <item row="0" column="1" rowspan="2">
                 <widget class="QTextEdit" name="animOrderEdit">
                  <property name="toolTip">
                   <string>Comma separated list of frames</string>
@@ -703,6 +717,20 @@
                  </property>
                 </widget>
                </item>
+               <item row="0" column="2">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" colspan="3">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
               </layout>
              </widget>
             </item>
@@ -716,7 +744,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="3" colspan="14">
+         <item row="0" column="3" colspan="15">
           <layout class="QHBoxLayout">
            <property name="topMargin">
             <number>0</number>

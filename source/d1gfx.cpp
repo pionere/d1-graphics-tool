@@ -1282,6 +1282,43 @@ D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx) const
     return const_cast<D1GfxCompFrame *>(&this->compFrames[frameIdx]);
 }
 
+D1GfxMeta::D1GfxMeta()
+{
+}
+
+D1GfxMeta::D1GfxMeta(const D1GfxMeta &o)
+{
+    this->mStored = o.mStored;
+    this->mWidth = o.mWidth;
+    this->mHeight = o.mHeight;
+    this->mContent = o.mContent;
+}
+
+bool D1GfxMeta::setStored(bool stored)
+{
+    if (this->mStored == stored) return false;
+    this->mStored = stored;
+    return true;
+}
+bool D1GfxMeta::setWidth(int w)
+{
+    if (this->mWidth == w) return false;
+    this->mWidth = w;
+    return true;
+}
+bool D1GfxMeta::setHeight(int h)
+{
+    if (this->mHeight == h) return false;
+    this->mHeight = h;
+    return true;
+}
+bool D1GfxMeta::setContent(const QString &content)
+{
+    if (this->mContent == content) return false;
+    this->mContent = content;
+    return true;
+}
+
 QString D1Gfx::getCompFilePath() const
 {
     return this->compFilePath;
