@@ -50,7 +50,6 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     D1CEL_TYPE type = fileSize == fileSizeDword ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
 #if 0
     if (type == D1CEL_TYPE::V2_MULTIPLE_GROUPS) {
-
         // Read offset of the last CL2 group header
         device->seek(firstDword - 4);
         quint32 lastCl2GroupHeaderOffset;
@@ -140,7 +139,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         }
 
         if (!frameOffsets.empty() && frameOffsets.back().second != fileSize) {
-            dProgressWarn() << tr("Failed to read the complete CL2. Finished at %1 while filesize is %2.").arg(frameOffsets.back().second).arg(fileSize));
+            dProgressWarn() << QApplication::tr("Failed to read the complete CL2. Finished at %1 while filesize is %2.").arg(frameOffsets.back().second).arg(fileSize));
         } else {
 dProgressErr() << "Multigroup CL2 read";
         }

@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QDebug>
 #include <QFileInfo>
+#include <QFontMetrics>
 #include <QGraphicsPixmapItem>
 #include <QImageReader>
 #include <QMenu>
@@ -301,7 +302,7 @@ CelView::CelView(QWidget *parent)
     layout->setAlignment(btn, Qt::AlignRight);
 
     QTextEdit *edit = this->ui->animOrderEdit;
-    QFontMetrics m edit->font();
+    QFontMetrics m = edit->font();
     int RowHeight = m.lineSpacing() ;
     edit->setFixedHeight(2 * RowHeight);
 
