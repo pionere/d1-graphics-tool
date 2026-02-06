@@ -1526,7 +1526,7 @@ void CelView::on_actionToggle_Mode_triggered()
     this->ui->mainStackedLayout->setCurrentIndex(1 - this->ui->mainStackedLayout->currentIndex());
 }
 
-void on_metaTypeComboBox_activated(int index)
+void CelView::on_metaTypeComboBox_activated(int index)
 {
     this->ui->metaTypeStackedLayout->setCurrentIndex(index);
 
