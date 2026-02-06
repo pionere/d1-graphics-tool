@@ -300,8 +300,6 @@ CelView::CelView(QWidget *parent)
     btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to display view"), this, &CelView::on_actionToggle_Mode_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
-    // this->ui->mainStackedLayout->setCurrentIndex(0);
-
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
     // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);
@@ -433,7 +431,7 @@ void CelView::updateFields()
     // update visiblity of the audio icon
     this->audioBtn->setVisible(this->gfx->getType() == D1CEL_TYPE::SMK && this->gfx->getFrameCount() != 0);
 
-    // update the components
+    { // update the components
     QComboBox *comboBox = this->ui->componentsComboBox;
     int prevIndex = comboBox->currentIndex();
     comboBox->hide();
@@ -455,6 +453,7 @@ void CelView::updateFields()
     }
     comboBox->show();
     comboBox->setCurrentIndex(prevIndex);
+    }
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
@@ -477,6 +476,21 @@ void CelView::updateFields()
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
+
+    { // update metatypes
+        QComboBox *comboBox = this->ui->metaTypeComboBox;
+        int prevIndex = comboBox->currentIndex();
+        comboBox->hide();
+        comboBox->clear();
+        comboBox->addItem(tr("- Dimensions -"), 0);
+        comboBox->addItem(tr("- Animation Order -"), 1);
+        comboBox->addItem(tr("- Action Frames -"), 2);
+        comboBox->show();
+        comboBox->setCurrentIndex(prevIndex);
+
+        // this->ui->metaTypeStackedLayout->currentIndex();
+        this->ui->metaStoredCheckBox->setChecked(false);
+    }
 
     // update clipped checkbox
     this->ui->celFramesClippedCheckBox->setChecked(this->gfx->isClipped());
@@ -1510,6 +1524,13 @@ void CelView::on_playStopButton_clicked()
 void CelView::on_actionToggle_Mode_triggered()
 {
     this->ui->mainStackedLayout->setCurrentIndex(1 - this->ui->mainStackedLayout->currentIndex());
+}
+
+void on_metaTypeComboBox_activated(int index)
+{
+    this->ui->metaTypeStackedLayout->setCurrentIndex(index);
+
+    this->updateFields();
 }
 
 void CelView::timerEvent(QTimerEvent *event)

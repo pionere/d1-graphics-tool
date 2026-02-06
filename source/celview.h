@@ -178,6 +178,7 @@ private slots:
     void on_playStopButton_clicked();
 
     void on_actionToggle_Mode_triggered();
+    void on_metaTypeComboBox_activated(int index);
 
     void timerEvent(QTimerEvent *event) override;
 

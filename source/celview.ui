@@ -523,73 +523,6 @@
        </spacer>
       </item>
       <item row="2" column="18">
-       <layout class="QHBoxLayout">
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="LineEditWidget" name="celFrameWidthEdit">
-          <property name="charWidth">
-           <number>7</number>
-          </property>
-          <property name="toolTip">
-           <string>Current frame width</string>
-          </property>
-          <property name="alignment">
-           <enum>Qt::AlignCenter</enum>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>8</number>
-          </property>
-          <property name="maximumWidth">
-           <number>8</number>
-          </property>
-          <property name="text">
-           <string notr="true">*</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="LineEditWidget" name="celFrameHeightEdit">
-          <property name="charWidth">
-           <number>7</number>
-          </property>
-          <property name="toolTip">
-           <string>Current frame height</string>
-          </property>
-          <property name="alignment">
-           <enum>Qt::AlignCenter</enum>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="celFramesClippedCheckBox">
-          <property name="toolTip">
-           <string>Frames are stored with clipping information</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="switchToMetaHorizontalLayout">
           <property name="topMargin">
            <number>0</number>
@@ -598,8 +531,6 @@
            <number>0</number>
           </property>
          </layout>
-        </item>
-       </layout>
       </item>
      </layout>
        </widget>
@@ -636,20 +567,20 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="1" column="1" rowspan="1">
           <widget class="QWidget">
-           <layout class="QStackedLayout">
+           <layout class="QStackedLayout" name="metaTypeStackedLayout">
             <item>
              <widget class="QWidget">
-              <layout class="QHBoxLayout">
+              <layout class="QGridLayout">
                <property name="topMargin">
                 <number>0</number>
                </property>
                <property name="bottomMargin">
                 <number>0</number>
                </property>
-               <item>
-                <widget class="LineEditWidget" name="celFrameWidthEditt">
+               <item row="0" column="0">
+                <widget class="LineEditWidget" name="celFrameWidthEdit">
                  <property name="charWidth">
                   <number>7</number>
                  </property>
@@ -664,7 +595,7 @@
                  </property>
                 </widget>
                </item>
-               <item>
+               <item row="0" column="1">
                 <widget class="QLabel">
                  <property name="minimumWidth">
                   <number>8</number>
@@ -677,8 +608,8 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <widget class="LineEditWidget" name="celFrameHeightEditt">
+               <item row="0" column="2">
+                <widget class="LineEditWidget" name="celFrameHeightEdit">
                  <property name="charWidth">
                   <number>7</number>
                  </property>
@@ -696,10 +627,119 @@
               </layout>
              </widget>
             </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QGridLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="minimumWidth">
+                  <number>48</number>
+                 </property>
+                 <property name="text">
+                  <string>FrameOrder:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" colspan="1">
+                <widget class="QTextEdit" name="animOrderEdit">
+                 <property name="toolTip">
+                  <string>Comma separated list of frames</string>
+                 </property>
+                 <property name="acceptRichText">
+                  <bool>false</bool>
+                 </property>
+                 <property name="lineWrapMode">
+                  <enum>QTextEdit::FixedColumnWidth</enum>
+                 </property>
+                 <property name="lineWrapColumnOrWidth">
+                  <number>50</number>
+                 </property>
+                 <property name="tabChangesFocus">
+                  <bool>true</bool>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignLeft</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QGridLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+              </layout>
+              <item row="0" column="0">
+               <widget class="QLabel">
+                <property name="minimumWidth">
+                 <number>48</number>
+                </property>
+                <property name="text">
+                 <string>Action Frames:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="LineEditWidget" name="actionFramesEdit">
+                <property name="charWidth">
+                 <number>5</number>
+                </property>
+                <property name="toolTip">
+                 <string>Comma separated list of frames</string>
+                </property>
+                <property name="alignment">
+                 <enum>Qt::AlignCenter</enum>
+                </property>
+               </widget>
+              </item>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>
-
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="metaStoredCheckBox">
+           <property name="toolTip">
+            <string>The selected metadata is stored with the graphics</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3" colspan="14">
+          <layout class="QHBoxLayout">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="celFramesClippedCheckBox">
+             <property name="toolTip">
+              <string>Frames are stored with clipping information</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
          <item row="2" column="18">
           <layout class="QHBoxLayout" name="switchToDisplayHorizontalLayout">
            <property name="topMargin">
@@ -710,8 +750,6 @@
            </property>
           </layout>
          </item>
-
-        
        </layout>
         </widget>
       </item>
