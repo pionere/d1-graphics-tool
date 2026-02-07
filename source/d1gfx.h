@@ -279,6 +279,8 @@ class D1GfxMeta : public QObject {
     Q_OBJECT
 
 public:
+    static QString metaTypeToStr(D1CEL_META_TYPE type);
+
     D1GfxMeta();
     D1GfxMeta(const D1GfxMeta &o);
 

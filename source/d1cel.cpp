@@ -44,7 +44,7 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
                         idx = frameCount;
                     }
                     meta->setWidth(width);
-                    meta->setHeight(height);                    
+                    meta->setHeight(height);
                 } else {
                     meta->setContent("x");
                 }
@@ -58,7 +58,7 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
         case D1CEL_META_TYPE::ACTIONFRAMES:
             while (true) {
                 if (endOffset < startOffset + 1) {
-                    dProgressErr() << QApplication::tr("Open frame list in meta type %1.").arg(type);
+                    dProgressErr() << QApplication::tr("Open frame list in meta type %1.").arg(D1GfxMeta::metaTypeToStr(type));
                     return false;
                 }
                 startOffset++;
@@ -72,7 +72,7 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
             }
             break;
         default:
-            dProgressErr() << QApplication::tr("Invalid meta type %1.").arg(type);
+            dProgressErr() << QApplication::tr("Invalid meta type %1.").arg(value);
             return false;
         }
     }
@@ -231,28 +231,28 @@ dProgressErr() << "CEL compilation read";
     // BUILDING {CEL FRAMES}
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
-    for (const auto &offset : frameOffsets) {
+    for (unsigned i = 0; i < frameOffsets.size(); i++) {
+        const auto &offset = frameOffsets[i];
         D1GfxFrame *frame = new D1GfxFrame();
         if (fileSize >= offset.second && offset.second >= offset.first) {
         device->seek(offset.first);
         QByteArray celFrameRawData = device->read(offset.second - offset.first);
 
         int res = D1CelFrame::load(*frame, celFrameRawData, params);
-        quint16 frameIndex = gfx.frames.size();
         if (res < 0) {
             if (res == -1)
-                dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(frameIndex + 1);
+                dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(i + 1);
             else
-                dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
-            // invalidFrames.push(frameIndex);
+                dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(i + 1);
+            // invalidFrames.push(i);
         } else if (clipped != res) {
             if (clipped == -1)
                 clipped = res;
             else
-                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
+                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(i + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
         }
         } else {
-            dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(frameIndex + 1).arg(offset.first).arg(offset.second).arg(fileSize);
+            dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(i + 1).arg(offset.first).arg(offset.second).arg(fileSize);
         }
         gfx.frames.append(frame);
     }
@@ -317,17 +317,18 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
     int META_SIZE = 0;
     result.dimensions = 0;
     for (int i = 0; i < 3; i++) {
-        const D1GfxMeta *meta = &gfx.getMeta(i);
+        D1CEL_META_TYPE type = (D1CEL_META_TYPE)i;
+        const D1GfxMeta *meta = gfx.getMeta(type);
         if (!meta->isStored()) continue;
         META_SIZE++;
-        switch (i) {
+        switch (type) {
         case D1CEL_META_TYPE::DIMENSIONS:
             result.dimensions = meta->getContent().isEmpty() ? 1 : gfx.getFrameCount();
             META_SIZE += result.dimensions * 8;
             break;
         case D1CEL_META_TYPE::ANIMORDER:
         case D1CEL_META_TYPE::ACTIONFRAMES: {
-            QList<int> *dest = i == D1CEL_META_TYPE::ANIMORDER ? &result.animOrder, &result.actionFrames;
+            QList<int> *dest = type == D1CEL_META_TYPE::ANIMORDER ? &result.animOrder, &result.actionFrames;
             parseFrameList(meta->getContent(), *dest);
             dest->append(0);
             META_SIZE += dest->count();

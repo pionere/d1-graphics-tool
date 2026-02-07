@@ -1285,6 +1285,16 @@ D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx) const
     return const_cast<D1GfxCompFrame *>(&this->compFrames[frameIdx]);
 }
 
+QString D1GfxMeta::metaTypeToStr(D1CEL_META_TYPE type)
+{
+    switch (type) {
+    case D1CEL_META_TYPE::DIMENSIONS:   return tr("Dimensions");
+    case D1CEL_META_TYPE::ANIMORDER:    return tr("Animation Order");
+    case D1CEL_META_TYPE::ACTIONFRAMES: return tr("Action Frames");
+    }
+    return tr("Unknown");
+}
+
 D1GfxMeta::D1GfxMeta()
 {
 }

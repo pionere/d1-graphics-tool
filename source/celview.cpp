@@ -11,7 +11,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
-#include <QRegExp>
+#include <QRegularExpression>
 
 #include "config.h"
 #include "d1cel.h"
@@ -490,10 +490,9 @@ void CelView::updateFields()
         int prevIndex = comboBox->currentIndex();
         comboBox->hide();
         comboBox->clear();
-        QString labels[3] = { tr("Dimensions"), tr("Animation Order"), tr("Action Frames")};
         for (int i = 0; i < 3; i++) {
             const D1GfxMeta *meta = this->gfx->getMeta(i);
-            comboBox->addItem(QString(meta->isStored() ? "+ %1 +" : "- %1 -").arg(labels[i]), i);
+            comboBox->addItem(QString(meta->isStored() ? "+ %1 +" : "- %1 -").arg(D1GfxMeta::metaTypeToStr(i)), i);
         }
         comboBox->show();
         comboBox->setCurrentIndex(prevIndex);
