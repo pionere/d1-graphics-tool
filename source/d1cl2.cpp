@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QMessageBox>
 
+#include "d1cel.h"
 #include "d1cl2frame.h"
 #include "progressdialog.h"
 
@@ -84,12 +85,14 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
     // CL2 FRAMES OFFSETS CALCULATION
     std::vector<std::pair<quint32, quint32>> frameOffsets;
+    quint32 contentOffset;
     if (gfx.type == D1CEL_TYPE::V2_MONO_GROUP) {
         // Going through all frames of the only group
         if (firstDword > 0) {
             gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
         }
-        for (unsigned i = 1; i <= firstDword; i++) {
+        unsigned i = 1;
+        for ( ; i <= firstDword; i++) {
             device->seek(i * 4);
             quint32 cl2FrameStartOffset;
             in >> cl2FrameStartOffset;
@@ -99,16 +102,21 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             frameOffsets.push_back(
                 std::pair<quint32, quint32>(cl2FrameStartOffset, cl2FrameEndOffset));
         }
+
+        contentOffset = 4 + i * 4;
     } else {
         // Going through all groups
         int cursor = 0;
-        for (unsigned i = 0; i * 4 < firstDword; i++) {
+        unsigned i = 0;
+        for ( ; i * 4 < firstDword; i++) {
             device->seek(i * 4);
             quint32 cl2GroupOffset;
             in >> cl2GroupOffset;
 
-            if (fileSize < (cl2GroupOffset + 4))
-                return false;
+            if (fileSize < (cl2GroupOffset + 4)) {
+                dProgressErr() << QApplication::tr("Invalid frameoffset %1 of %2 for group %3.").arg(cl2GroupOffset).arg(fileSize).arg(i);
+                break;
+            }
 
             device->seek(cl2GroupOffset);
             quint32 cl2GroupFrameCount;
@@ -117,8 +125,10 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (cl2GroupFrameCount == 0) {
                 continue;
             }
-            if (fileSize < (cl2GroupOffset + cl2GroupFrameCount * 4 + 4 + 4))
-                return false;
+            if (fileSize < (cl2GroupOffset + cl2GroupFrameCount * 4 + 4 + 4)) {
+                dProgressErr() << QApplication::tr("Not enough space for %1 frameoffsets at %2 in %3 for group %4.").arg(cl2GroupFrameCount).arg(cl2GroupOffset).arg(fileSize).arg(i);
+                break;
+            }
 
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + cl2GroupFrameCount - 1));
 
@@ -136,6 +146,10 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                         cl2GroupOffset + cl2FrameEndOffset));
             }
             cursor += cl2GroupFrameCount;
+
+            if (frameOffsets.back().second == fileSize) {
+                break;
+            }
         }
 
         if (!frameOffsets.empty() && frameOffsets.back().second != fileSize) {
@@ -143,16 +157,21 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         } else {
 dProgressErr() << "Multigroup CL2 read";
         }
+
+        contentOffset = i * 4;
     }
+
+    D1Cel::readMeta(device, in, contentOffset, frameOffsets.size() != 0 ? frameOffsets[0].first : fileSize, frameOffsets.size(), gfx);
 
     // BUILDING {CL2 FRAMES}
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
     for (const auto &offset : frameOffsets) {
+        D1GfxFrame *frame = new D1GfxFrame();
+        if (fileSize >= offset.second && offset.second >= offset.first) {
         device->seek(offset.first);
         QByteArray cl2FrameRawData = device->read(offset.second - offset.first);
 
-        D1GfxFrame *frame = new D1GfxFrame();
         int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params);
         quint16 frameIndex = gfx.frames.size();
         if (res < 0) {
@@ -166,6 +185,8 @@ dProgressErr() << "Multigroup CL2 read";
                 clipped = res;
             else
                 dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(D1Gfx::clippedtoStr(res != 0));
+        } else {
+            dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(frameIndex + 1).arg(offset.first).arg(offset.second).arg(fileSize);
         }
         gfx.frames.append(frame);
     }
@@ -352,6 +373,10 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     bool clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && gfx.clipped);
     gfx.clipped = clipped;
 
+    // calculate the meta info size
+    CelMetaInfo meta;
+    int metaSize = D1Cel::prepareCelMeta(gfx, meta);
+
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
     for (D1GfxFrame *frame : gfx.frames) {
@@ -362,7 +387,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         }
     }
     // estimate data size
-    int maxSize = headerSize;
+    int maxSize = headerSize + metaSize;
     for (D1GfxFrame *frame : gfx.frames) {
         if (clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
@@ -374,10 +399,17 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     fileData.append(maxSize, 0);
 
     quint8 *buf = (quint8 *)fileData.data();
+    // write meta
+    { // write the metadata
+    quint8 *pBuf = &buf[numGroups > 1 ? numGroups * sizeof(quint32) : headerSize];
+    pBuf = D1Cel::writeDimensions(meta.dimensions , gfx, pBuf);
+    pBuf = D1Cel::writeFrameList(meta.animOrder, D1CEL_META_TYPE::ANIMORDER, pBuf);
+    pBuf = D1Cel::writeFrameList(meta.actionFrames, D1CEL_META_TYPE::ACTIONFRAMES, pBuf);
+    }
     quint8 *hdr = buf;
     if (numGroups > 1) {
         // add optional {CL2 GROUP HEADER}
-        int offset = numGroups * 4;
+        int offset = numGroups * sizeof(quint32) + metaSize;
         for (int i = 0; i < numGroups; i++, hdr += 4) {
             *(quint32 *)&hdr[0] = offset;
             std::pair<int, int> gfi = gfx.getGroupFrameIndices(i);
@@ -386,7 +418,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         }
     }
 
-    quint8 *pBuf = &buf[headerSize];
+    quint8 *pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
         std::pair<int, int> gfi = gfx.getGroupFrameIndices(ii);

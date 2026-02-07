@@ -304,7 +304,8 @@ CelView::CelView(QWidget *parent)
     QTextEdit *edit = this->ui->animOrderEdit;
     QFontMetrics fm = this->fontMetrics();
     int RowHeight = fm.lineSpacing() ;
-    edit->setFixedHeight(2 * RowHeight);
+    const QMargins qm = edit->contentsMargins();
+    edit->setFixedHeight(2 * RowHeight + qm.top() + qm.bottom());
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
@@ -488,14 +489,20 @@ void CelView::updateFields()
         int prevIndex = comboBox->currentIndex();
         comboBox->hide();
         comboBox->clear();
-        comboBox->addItem(tr("- Dimensions -"), 0);
-        comboBox->addItem(tr("- Animation Order -"), 1);
-        comboBox->addItem(tr("- Action Frames -"), 2);
+        QString labels[3] = { tr("Dimensions"), tr("Animation Order"), tr("Action Frames")};
+        for (int i = 0; i < 3; i++) {
+            const D1GfxMeta *meta = this->gfx->getMeta(i);
+            comboBox->addItem(QString(meta->isStored() ? "+ %1 +" : "- %1 -").arg(labels[i]), i);
+        }
         comboBox->show();
         comboBox->setCurrentIndex(prevIndex);
 
-        // this->ui->metaTypeStackedLayout->currentIndex();
-        this->ui->metaStoredCheckBox->setChecked(false);
+        const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
+        this->ui->metaStoredCheckBox->setChecked(meta->isStored());
+
+        this->ui->metaDimensionsPerFrameCheckBox->setEnabled(this->gfx->getFrameCount() > 1 && this->gfx->getFrameSize().isValid());
+
+        this->ui->metaDimensionsPerFrameCheckBox->setChecked(this->gfx->getFrameCount() <= 1 || !this->gfx->getMeta(D1CEL_META_TYPE::DIMENSIONS)->getContent().isEmpty());
     }
 
     // update clipped checkbox
@@ -1537,6 +1544,54 @@ void CelView::on_metaTypeComboBox_activated(int index)
     this->ui->metaTypeStackedLayout->setCurrentIndex(index);
 
     this->updateFields();
+}
+
+void CelView::on_metaStoredCheckBox_clicked()
+{
+    D1GfxMeta *meta = this->gfx->getMeta(this->ui->metaTypeStackedLayout->currentIndex());
+    meta->setStored(!meta->isStored());
+    this->gfx->setModified();
+
+    this->updateFields();
+}
+
+void CelView::on_metaDimensionsPerFrameCheckBox_clicked()
+{
+    D1GfxMeta *meta = this->gfx->getMeta(D1CEL_META_TYPE::DIMENSIONS);
+    if (meta->getContent().isEmpty()) {
+        meta->setContent("x");
+    } else {
+        meta->setContent("");
+    }
+    this->gfx->setModified();
+
+    this->updateFields();
+}
+
+static void formatFramesList(QString &text)
+{
+    text.replace(QRegExp("[\w]+"), " ");
+    text.replace(QRegExp("[^0-9 ,]*"), "");
+    text.replace(QRegExp("([0-9]) ([0-9])"), "\\1, \\2");
+    text.replace(QRegExp(",([0-9])"), ", \\1");
+}
+
+void CelView::on_formatAnimOrderButton_clicked()
+{
+    QString text = this->ui->animOrderEdit->toPlainText();
+
+    formatFramesList(text);
+
+    this->ui->animOrderEdit->setPlainText(text);
+}
+
+void CelView::on_formatActionFramesButton_clicked()
+{
+    QString text = this->ui->actionFramesEdit->text();
+
+    formatFramesList(text);
+
+    this->ui->actionFramesEdit->setText(text);
 }
 
 void CelView::timerEvent(QTimerEvent *event)

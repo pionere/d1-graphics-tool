@@ -699,6 +699,9 @@ void D1Gfx::clear()
     // this->compFilePath ?
     qDeleteAll(this->frames);
     this->frames.clear();
+    for (D1GfxMeta &meta : this->metas) {
+        meta.clear();
+    }
     qDeleteAll(this->components);
     this->components.clear();
     this->groupFrameIndices.clear();
@@ -1292,6 +1295,14 @@ D1GfxMeta::D1GfxMeta(const D1GfxMeta &o)
     this->mWidth = o.mWidth;
     this->mHeight = o.mHeight;
     this->mContent = o.mContent;
+}
+
+void D1GfxMeta::clear()
+{
+    this->mStored = false;
+    this->mWidth = 0;
+    this->mHeight = 0;
+    this->mContent.clear();
 }
 
 bool D1GfxMeta::setStored(bool stored)
@@ -2167,6 +2178,11 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     this->frames[frameIndex]->setFrameType(frameType);
     this->modified = true;
     return true;
+}
+
+D1GfxMeta *D1Gfx::getMeta(int idx) const
+{
+    return const_cast<D1GfxMeta *>&this->metas[idx];
 }
 
 void D1Gfx::saveComponents()

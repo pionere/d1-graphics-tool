@@ -270,9 +270,9 @@ private:
 };
 
 enum class D1CEL_META_TYPE {
-    D1META_DIMENSIONS,
-    D1META_ANIMORDER,
-    D1META_ACTIONFRAMES,
+    DIMENSIONS,
+    ANIMORDER,
+    ACTIONFRAMES,
 };
 
 class D1GfxMeta : public QObject {
@@ -281,6 +281,8 @@ class D1GfxMeta : public QObject {
 public:
     D1GfxMeta();
     D1GfxMeta(const D1GfxMeta &o);
+
+    void clear();
 
     bool setStored(bool stored);
     bool isStored() const { return mStored; };
@@ -378,6 +380,8 @@ public:
     int getFrameWidth(int frameIndex) const;
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
+
+    D1GfxMeta *getMeta(int idx) const;
 
     QString getCompFilePath() const;
     void setCompFilePath(const QString &filePath);

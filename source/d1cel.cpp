@@ -11,6 +11,74 @@
 #include "d1celframe.h"
 #include "progressdialog.h"
 
+bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, quint32 endOffset, unsigned frameCount, D1Gfx &gfx)
+{
+    device->seek(startOffset);
+    while (startOffset < endOffset) {
+        startOffset++;
+
+        quint8 type;
+        in >> type;
+
+        D1GfxMeta *meta = gfx.getMeta(type);
+        switch (type) {
+        case D1CEL_META_TYPE::DIMENSIONS: {
+            unsigned idx = 0;
+            while (true) {
+                if (endOffset < startOffset + 8) {
+                    dProgressErr() << QApplication::tr("Not enough dimensions in the meta info.");
+                    return false;
+                }
+                startOffset += 8;
+
+                quint32 width;
+                quint32 height;
+                in >> width;
+                in >> height;
+
+                if (idx == 0) {
+                    if ((qint32)height < 0) {
+                        height &= 0x7FFFFFFF;
+                    } else {
+                        idx = frameCount;
+                    }
+                    meta->setWidth(width);
+                    meta->setHeight(height);                    
+                } else {
+                    meta->setContent("x");
+                }
+                idx++;
+                if (idx >= frameCount) {
+                    break;
+                }
+            }
+        } break;
+        case D1CEL_META_TYPE::ANIMORDER:
+        case D1CEL_META_TYPE::ACTIONFRAMES:
+            while (true) {
+                if (endOffset < startOffset + 1) {
+                    dProgressErr() << QApplication::tr("Open frame list in meta type %1.").arg(type);
+                    return false;
+                }
+                startOffset++;
+
+                quint8 idx;
+                in >> idx;
+                if (idx == 0) {
+                    break;
+                }
+                meta->setContent(QString("%1, %2").arg(meta->getContent()).arg(idx));
+            }
+            break;
+        default:
+            dProgressErr() << QApplication::tr("Invalid meta type %1.").arg(type);
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
@@ -46,15 +114,17 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in >> fileSizeDword;
 
     // If the dword is not equal to the file size then
-    // check if it's a CEL compilation
-    D1CEL_TYPE type = fileSize == fileSizeDword ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
+    // try to read it as a CEL compilation
+    D1CEL_TYPE type = (firstDword == 0 || fileSize == fileSizeDword) ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
     std::vector<std::pair<quint32, quint32>> frameOffsets;
+    quint32 contentOffset;
     if (type == D1CEL_TYPE::V1_REGULAR) {
         // Going through all frames of the CEL
         if (firstDword > 0) {
             gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
         }
-        for (unsigned int i = 1; i <= firstDword; i++) {
+        unsigned i = 1;
+        for ( ; i <= firstDword; i++) {
             device->seek(i * 4);
             quint32 celFrameStartOffset;
             in >> celFrameStartOffset;
@@ -63,6 +133,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
             frameOffsets.push_back(std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
         }
+
+        contentOffset = 4 + i * 4;
     } else {
 #if 0
         // Read offset of the last CEL of the CEL compilation
@@ -95,13 +167,16 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 #endif
         // Going through all groups
         int cursor = 0;
-        for (unsigned int i = 0; i * 4 < firstDword; i++) {
+        unsigned i = 0;
+        for ( ; i * 4 < firstDword; i++) {
             device->seek(i * 4);
             quint32 celOffset;
             in >> celOffset;
 
-            if (fileSize < (celOffset + 4))
-                return false;
+            if (fileSize < (celOffset + 4)) {
+                dProgressErr() << QApplication::tr("Invalid frameoffset %1 of %2 for group %3.").arg(celOffset).arg(fileSize).arg(i);
+                break;
+            }
 
             device->seek(celOffset);
             quint32 celFrameCount;
@@ -110,8 +185,10 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (celFrameCount == 0) {
                 continue;
             }
-            if (fileSize < (celOffset + celFrameCount * 4 + 4 + 4))
-                return false;
+            if (fileSize < (celOffset + celFrameCount * 4 + 4 + 4)) {
+                dProgressErr() << QApplication::tr("Not enough space for %1 frameoffsets at %2 in %3 for group %4.").arg(celFrameCount).arg(celOffset).arg(fileSize).arg(i);
+                break;
+            }
 
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + celFrameCount - 1));
 
@@ -129,6 +206,10 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                         celOffset + celFrameEndOffset));
             }
             cursor += celFrameCount;
+
+            if (frameOffsets.back().second == fileSize) {
+                break;
+            }
         }
 
         if (!frameOffsets.empty() && frameOffsets.back().second != fileSize) {
@@ -136,7 +217,11 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         } else {
 dProgressErr() << "CEL compilation read";
         }
+
+        contentOffset = i * 4;
     }
+
+    readMeta(device, in, contentOffset, frameOffsets.size() != 0 ? frameOffsets[0].first : fileSize, frameOffsets.size(), gfx);
 
     gfx.type = type;
 
@@ -146,10 +231,11 @@ dProgressErr() << "CEL compilation read";
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
     for (const auto &offset : frameOffsets) {
+        D1GfxFrame *frame = new D1GfxFrame();
+        if (fileSize >= offset.second && offset.second >= offset.first) {
         device->seek(offset.first);
         QByteArray celFrameRawData = device->read(offset.second - offset.first);
 
-        D1GfxFrame *frame = new D1GfxFrame();
         int res = D1CelFrame::load(*frame, celFrameRawData, params);
         quint16 frameIndex = gfx.frames.size();
         if (res < 0) {
@@ -163,6 +249,8 @@ dProgressErr() << "CEL compilation read";
                 clipped = res;
             else
                 dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
+        } else {
+            dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(frameIndex + 1).arg(offset.first).arg(offset.second).arg(fileSize);
         }
         gfx.frames.append(frame);
     }
@@ -222,6 +310,70 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
     return pBuf;
 }
 
+int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
+{
+    int META_SIZE = 0;
+    result.dimensions = 0;
+    for (int i = 0; i < 3; i++) {
+        const D1GfxMeta *meta = &gfx.getMeta(i);
+        if (!meta->isStored()) continue;
+        META_SIZE++;
+        switch (i) {
+        case D1CEL_META_TYPE::DIMENSIONS:
+            result.dimensions = meta->getContent().isEmpty() ? 1 : gfx.getFrameCount();
+            META_SIZE += result.dimensions * 8;
+            break;
+        case D1CEL_META_TYPE::ANIMORDER:
+        case D1CEL_META_TYPE::ACTIONFRAMES: {
+            QList<int> *dest = i == D1CEL_META_TYPE::ANIMORDER ? &result.animOrder, &result.actionFrames;
+            parseFrameList(meta->getContent(), *dest);
+            dest->append(0);
+            META_SIZE += dest->count();
+        } break;
+        }
+    }
+    return META_SIZE;
+}
+
+void D1Cel::parseFrameList(const QString &content, QList<int> &result)
+{
+    QStringList frames = content.split(",");
+    for (const QString &frame : frames) {
+        result.append(frame.toInt());
+    }
+}
+
+quint8* D1Cel::writeDimensions(int dimensions, const D1Gfx &gfx, quint8 *dest)
+{
+    if (dimensions > 0) {
+        *pBuf = D1CEL_META_TYPE::DIMENSIONS;
+        pBuf++;
+        for (int n = 0; n < dimensions; n++) {
+            D1GfxFrame *frame = gfx.getFrame(n);
+            *(quint32 *)&pBuf[0] = SwapLE32(frame->getWidth());
+            *(quint32 *)&pBuf[4] = SwapLE32(frame->getHeight());
+            pBuf += 8;
+        }
+    }
+    return pBuf;
+}
+
+quint8* D1Cel::writeFrameList(const QList<int> &frames, D1CEL_META_TYPE type, quint8 *dest)
+{
+    if (!frames.isEmpty()) {
+        return;
+    }
+    *dest = type;
+    dest++;
+
+    for (int idx : frames) {
+        *dest = idx;
+        dest++;
+    }
+
+    return dest;
+}
+
 bool D1Cel::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 {
     const int numFrames = gfx.frames.count();
@@ -243,8 +395,11 @@ bool D1Cel::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
             subHeaderSize = std::max(subHeaderSize, hs);
         }
     }
+    // calculate the meta info size
+    CelMetaInfo meta;
+    int META_SIZE = prepareCelMeta(gfx, meta);
     // estimate data size
-    int maxSize = HEADER_SIZE;
+    int maxSize = HEADER_SIZE + META_SIZE;
     for (D1GfxFrame *frame : gfx.frames) {
         if (clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
@@ -256,13 +411,23 @@ bool D1Cel::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     fileData.append(maxSize, 0);
 
     quint8 *buf = (quint8 *)fileData.data();
+    // setup the header
     *(quint32 *)&buf[0] = SwapLE32(numFrames);
-    *(quint32 *)&buf[4] = SwapLE32(HEADER_SIZE);
+    *(quint32 *)&buf[4] = SwapLE32(HEADER_SIZE + META_SIZE);
+    { // write the metadata
     quint8 *pBuf = &buf[HEADER_SIZE];
+    pBuf = writeDimensions(meta.dimensions , gfx, pBuf);
+    pBuf = writeFrameList(meta.animOrder, D1CEL_META_TYPE::ANIMORDER, pBuf);
+    pBuf = writeFrameList(meta.actionFrames, D1CEL_META_TYPE::ACTIONFRAMES, pBuf);
+    }
+    { // write the content
+    quint8 *pBuf = &buf[HEADER_SIZE + META_SIZE];
     for (int n = 0; n < numFrames; n++) {
         D1GfxFrame *frame = gfx.getFrame(n);
         pBuf = writeFrameData(frame, pBuf, subHeaderSize, clipped);
+        // update the offset
         *(quint32 *)&buf[4 + 4 * (n + 1)] = SwapLE32(pBuf - buf);
+    }
     }
 
     // write to file
@@ -309,6 +474,10 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     bool clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && gfx.clipped);
     gfx.clipped = clipped;
 
+    // calculate the meta info size
+    CelMetaInfo meta;
+    int metaSize = prepareCelMeta(gfx, meta);
+
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
     for (D1GfxFrame *frame : gfx.frames) {
@@ -319,7 +488,7 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
         }
     }
     // estimate data size
-    int maxSize = headerSize;
+    int maxSize = headerSize + metaSize;
     for (D1GfxFrame *frame : gfx.frames) {
         if (clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
@@ -330,8 +499,17 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     QByteArray fileData;
     fileData.append(maxSize, 0);
 
+    headerSize = sizeof(quint32) * numGroups;
+
     quint8 *buf = (quint8 *)fileData.data();
-    quint8 *pBuf = &buf[sizeof(quint32) * numGroups];
+    { // write the metadata
+    quint8 *pBuf = &buf[headerSize];
+    pBuf = writeDimensions(meta.dimensions , gfx, pBuf);
+    pBuf = writeFrameList(meta.animOrder, D1CEL_META_TYPE::ANIMORDER, pBuf);
+    pBuf = writeFrameList(meta.actionFrames, D1CEL_META_TYPE::ACTIONFRAMES, pBuf);
+    }
+    { // write the content
+    quint8 *pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
         std::pair<int, int> gfi = gfx.getGroupFrameIndices(ii);
@@ -348,6 +526,7 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
             pBuf = writeFrameData(frame, pBuf, subHeaderSize, clipped);
             *(quint32 *)&hdr[4 + 4 * (n + 1)] = SwapLE32(pBuf - hdr);
         }
+    }
     }
     // write to file
     QDataStream out(&outFile);
