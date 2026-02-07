@@ -349,7 +349,7 @@ void D1Cel::parseFrameList(const QString &content, QList<int> &result)
 quint8* D1Cel::writeDimensions(int dimensions, const D1Gfx &gfx, quint8 *dest)
 {
     if (dimensions > 0) {
-        *dest = D1CEL_META_TYPE::DIMENSIONS;
+        *dest = (quint8)D1CEL_META_TYPE::DIMENSIONS;
         dest++;
         for (int n = 0; n < dimensions; n++) {
             D1GfxFrame *frame = gfx.getFrame(n);
@@ -364,7 +364,7 @@ quint8* D1Cel::writeDimensions(int dimensions, const D1Gfx &gfx, quint8 *dest)
 quint8* D1Cel::writeFrameList(const QList<int> &frames, D1CEL_META_TYPE type, quint8 *dest)
 {
     if (!frames.isEmpty()) {
-        *dest = type;
+        *dest = (quint8)type;
         dest++;
 
         for (int idx : frames) {
