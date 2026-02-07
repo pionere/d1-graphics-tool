@@ -323,8 +323,9 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
         case D1CEL_META_TYPE::ANIMORDER:
         case D1CEL_META_TYPE::ACTIONFRAMES: {
             QList<int> *dest = type == D1CEL_META_TYPE::ANIMORDER ? &result.animOrder : &result.actionFrames;
-            if (!parseFrameList(meta->getContent(), type, *dest)) {
-                dProgressWarn() << QApplication::tr("Not all frames are stored of the meta type %1 (%2 instead of %3).").arg(D1GfxMeta::metaTypeToStr(type)).arg(result.count()).arg(frames.count());
+            int num = parseFrameList(meta->getContent(), type, *dest);
+            if (num != dest->count()) {
+                dProgressWarn() << QApplication::tr("Not all frames are stored of the meta type %1 (%2 instead of %3).").arg(D1GfxMeta::metaTypeToStr(type)).arg(dest->count()).arg(num);
             }
             dest->append(0);
             META_SIZE += dest->count();
@@ -334,7 +335,7 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
     return META_SIZE;
 }
 
-bool D1Cel::parseFrameList(const QString &content, D1CEL_META_TYPE type, QList<int> &result)
+int D1Cel::parseFrameList(const QString &content, D1CEL_META_TYPE type, QList<int> &result)
 {
     QStringList frames = content.split(",");
     for (const QString &frame : frames) {
@@ -344,7 +345,7 @@ bool D1Cel::parseFrameList(const QString &content, D1CEL_META_TYPE type, QList<i
         }
         result.append(idx);
     }
-    return result.count() == frames.count();
+    return frames.count();
 }
 
 quint8* D1Cel::writeDimensions(int dimensions, const D1Gfx &gfx, quint8 *dest)
