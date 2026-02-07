@@ -26,7 +26,7 @@ public:
 private:
     static bool readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, quint32 endOffset, unsigned frameCount, D1Gfx &gfx);
     static int prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result);
-    static void parseFrameList(const QString &content, D1CEL_META_TYPE type, QList<int> &result);
+    static bool parseFrameList(const QString &content, D1CEL_META_TYPE type, QList<int> &result);
     static quint8* writeDimensions(int dimensions, const D1Gfx &gfx, quint8 *dest);
     static quint8* writeFrameList(const QList<int> &frames, D1CEL_META_TYPE type, quint8 *dest);
 
