@@ -491,13 +491,14 @@ void CelView::updateFields()
         comboBox->hide();
         comboBox->clear();
         for (int i = 0; i < 3; i++) {
-            const D1GfxMeta *meta = this->gfx->getMeta(i);
-            comboBox->addItem(QString(meta->isStored() ? "+ %1 +" : "- %1 -").arg(D1GfxMeta::metaTypeToStr(i)), i);
+            D1CEL_META_TYPE type = (D1CEL_META_TYPE)i;
+            const D1GfxMeta *meta = this->gfx->getMeta(type);
+            comboBox->addItem(QString(meta->isStored() ? "+ %1 +" : "- %1 -").arg(D1GfxMeta::metaTypeToStr(type)), i);
         }
         comboBox->show();
         comboBox->setCurrentIndex(prevIndex);
 
-        const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
+        const D1GfxMeta *meta = this->gfx->getMeta((D1CEL_META_TYPE)prevIndex);
         this->ui->metaStoredCheckBox->setChecked(meta->isStored());
 
         this->ui->metaDimensionsPerFrameCheckBox->setEnabled(this->gfx->getFrameCount() > 1 && this->gfx->getFrameSize().isValid());
@@ -1548,7 +1549,7 @@ void CelView::on_metaTypeComboBox_activated(int index)
 
 void CelView::on_metaStoredCheckBox_clicked()
 {
-    D1GfxMeta *meta = this->gfx->getMeta(this->ui->metaTypeStackedLayout->currentIndex());
+    D1GfxMeta *meta = this->gfx->getMeta((D1CEL_META_TYPE)this->ui->metaTypeStackedLayout->currentIndex());
     meta->setStored(!meta->isStored());
     this->gfx->setModified();
 
@@ -1570,10 +1571,10 @@ void CelView::on_metaDimensionsPerFrameCheckBox_clicked()
 
 static void formatFramesList(QString &text)
 {
-    text.replace(QRegExp("[\w]+"), " ");
-    text.replace(QRegExp("[^0-9 ,]*"), "");
-    text.replace(QRegExp("([0-9]) ([0-9])"), "\\1, \\2");
-    text.replace(QRegExp(",([0-9])"), ", \\1");
+    text.replace(QRegularExpression("[\w]+"), " ");
+    text.replace(QRegularExpression("[^0-9 ,]*"), "");
+    text.replace(QRegularExpression("([0-9]) ([0-9])"), "\\1, \\2");
+    text.replace(QRegularExpression(",([0-9])"), ", \\1");
 }
 
 void CelView::on_formatAnimOrderButton_clicked()

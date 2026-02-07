@@ -167,7 +167,7 @@ dProgressErr() << "Multigroup CL2 read";
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
     for (unsigned i = 0; i < frameOffsets.size(); i++) {
-        const auto &offset = frameOffsets[i]
+        const auto &offset = frameOffsets[i];
         D1GfxFrame *frame = new D1GfxFrame();
         if (fileSize >= offset.second && offset.second >= offset.first) {
         device->seek(offset.first);
@@ -400,9 +400,10 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     fileData.append(maxSize, 0);
 
     quint8 *buf = (quint8 *)fileData.data();
+    quint8 *pBuf;
     // write meta
     { // write the metadata
-    quint8 *pBuf = &buf[numGroups > 1 ? numGroups * sizeof(quint32) : headerSize];
+    pBuf = &buf[numGroups > 1 ? numGroups * sizeof(quint32) : headerSize];
     pBuf = D1Cel::writeDimensions(meta.dimensions , gfx, pBuf);
     pBuf = D1Cel::writeFrameList(meta.animOrder, D1CEL_META_TYPE::ANIMORDER, pBuf);
     pBuf = D1Cel::writeFrameList(meta.actionFrames, D1CEL_META_TYPE::ACTIONFRAMES, pBuf);
@@ -419,7 +420,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         }
     }
 
-    quint8 *pBuf = &buf[headerSize + metaSize];
+    pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
         std::pair<int, int> gfi = gfx.getGroupFrameIndices(ii);

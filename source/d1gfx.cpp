@@ -2192,7 +2192,7 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
 
 D1GfxMeta *D1Gfx::getMeta(D1CEL_META_TYPE type) const
 {
-    return const_cast<D1GfxMeta *>&this->metas[type];
+    return const_cast<D1GfxMeta *>(&this->metas[(int)type]);
 }
 
 void D1Gfx::saveComponents()

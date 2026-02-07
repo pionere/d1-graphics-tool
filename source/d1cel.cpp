@@ -328,7 +328,7 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
             break;
         case D1CEL_META_TYPE::ANIMORDER:
         case D1CEL_META_TYPE::ACTIONFRAMES: {
-            QList<int> *dest = type == D1CEL_META_TYPE::ANIMORDER ? &result.animOrder, &result.actionFrames;
+            QList<int> *dest = type == D1CEL_META_TYPE::ANIMORDER ? &result.animOrder : &result.actionFrames;
             parseFrameList(meta->getContent(), *dest);
             dest->append(0);
             META_SIZE += dest->count();
@@ -349,31 +349,29 @@ void D1Cel::parseFrameList(const QString &content, QList<int> &result)
 quint8* D1Cel::writeDimensions(int dimensions, const D1Gfx &gfx, quint8 *dest)
 {
     if (dimensions > 0) {
-        *pBuf = D1CEL_META_TYPE::DIMENSIONS;
-        pBuf++;
+        *dest = D1CEL_META_TYPE::DIMENSIONS;
+        dest++;
         for (int n = 0; n < dimensions; n++) {
             D1GfxFrame *frame = gfx.getFrame(n);
-            *(quint32 *)&pBuf[0] = SwapLE32(frame->getWidth());
-            *(quint32 *)&pBuf[4] = SwapLE32(frame->getHeight());
-            pBuf += 8;
+            *(quint32 *)&dest[0] = SwapLE32(frame->getWidth());
+            *(quint32 *)&dest[4] = SwapLE32(frame->getHeight());
+            dest += 8;
         }
     }
-    return pBuf;
+    return dest;
 }
 
 quint8* D1Cel::writeFrameList(const QList<int> &frames, D1CEL_META_TYPE type, quint8 *dest)
 {
     if (!frames.isEmpty()) {
-        return;
-    }
-    *dest = type;
-    dest++;
-
-    for (int idx : frames) {
-        *dest = idx;
+        *dest = type;
         dest++;
-    }
 
+        for (int idx : frames) {
+            *dest = idx;
+            dest++;
+        }
+    }
     return dest;
 }
 
@@ -414,17 +412,18 @@ bool D1Cel::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     fileData.append(maxSize, 0);
 
     quint8 *buf = (quint8 *)fileData.data();
+    quint8 *pBuf;
     // setup the header
     *(quint32 *)&buf[0] = SwapLE32(numFrames);
     *(quint32 *)&buf[4] = SwapLE32(HEADER_SIZE + META_SIZE);
     { // write the metadata
-    quint8 *pBuf = &buf[HEADER_SIZE];
+    pBuf = &buf[HEADER_SIZE];
     pBuf = writeDimensions(meta.dimensions , gfx, pBuf);
     pBuf = writeFrameList(meta.animOrder, D1CEL_META_TYPE::ANIMORDER, pBuf);
     pBuf = writeFrameList(meta.actionFrames, D1CEL_META_TYPE::ACTIONFRAMES, pBuf);
     }
     { // write the content
-    quint8 *pBuf = &buf[HEADER_SIZE + META_SIZE];
+    pBuf = &buf[HEADER_SIZE + META_SIZE];
     for (int n = 0; n < numFrames; n++) {
         D1GfxFrame *frame = gfx.getFrame(n);
         pBuf = writeFrameData(frame, pBuf, subHeaderSize, clipped);
@@ -505,14 +504,15 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     headerSize = sizeof(quint32) * numGroups;
 
     quint8 *buf = (quint8 *)fileData.data();
+    quint8 *pBuf;
     { // write the metadata
-    quint8 *pBuf = &buf[headerSize];
+    pBuf = &buf[headerSize];
     pBuf = writeDimensions(meta.dimensions , gfx, pBuf);
     pBuf = writeFrameList(meta.animOrder, D1CEL_META_TYPE::ANIMORDER, pBuf);
     pBuf = writeFrameList(meta.actionFrames, D1CEL_META_TYPE::ACTIONFRAMES, pBuf);
     }
     { // write the content
-    quint8 *pBuf = &buf[headerSize + metaSize];
+    pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
         std::pair<int, int> gfi = gfx.getGroupFrameIndices(ii);
