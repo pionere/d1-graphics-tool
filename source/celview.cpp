@@ -11,6 +11,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QRegExp>
 
 #include "config.h"
 #include "d1cel.h"

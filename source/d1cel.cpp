@@ -17,9 +17,10 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
     while (startOffset < endOffset) {
         startOffset++;
 
-        quint8 type;
-        in >> type;
+        quint8 value;
+        in >> value;
 
+        D1CEL_META_TYPE type = (D1CEL_META_TYPE)value;
         D1GfxMeta *meta = gfx.getMeta(type);
         switch (type) {
         case D1CEL_META_TYPE::DIMENSIONS: {
@@ -249,6 +250,7 @@ dProgressErr() << "CEL compilation read";
                 clipped = res;
             else
                 dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
+        }
         } else {
             dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(frameIndex + 1).arg(offset.first).arg(offset.second).arg(fileSize);
         }

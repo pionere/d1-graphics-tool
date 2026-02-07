@@ -185,6 +185,7 @@ dProgressErr() << "Multigroup CL2 read";
                 clipped = res;
             else
                 dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(D1Gfx::clippedtoStr(res != 0));
+        }
         } else {
             dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(frameIndex + 1).arg(offset.first).arg(offset.second).arg(fileSize);
         }
