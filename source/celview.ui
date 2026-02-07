@@ -650,7 +650,7 @@
             </item>
             <item>
              <widget class="QWidget">
-              <layout class="QGridLayout">
+              <layout class="QGridLayout" name="animOrderGridLayout">
                <property name="topMargin">
                 <number>0</number>
                </property>

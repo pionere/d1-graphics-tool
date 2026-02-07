@@ -213,12 +213,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             }
         }
 
-        if (!frameOffsets.empty() && frameOffsets.back().second != fileSize) {
-            dProgressWarn() << QApplication::tr("Failed to read the complete CEL. Finished at %1 while filesize is %2.").arg(frameOffsets.back().second).arg(fileSize);
-        } else {
-dProgressErr() << "CEL compilation read";
-        }
-
         contentOffset = i * 4;
     }
 
@@ -329,7 +323,7 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
         case D1CEL_META_TYPE::ANIMORDER:
         case D1CEL_META_TYPE::ACTIONFRAMES: {
             QList<int> *dest = type == D1CEL_META_TYPE::ANIMORDER ? &result.animOrder : &result.actionFrames;
-            parseFrameList(meta->getContent(), *dest);
+            parseFrameList(meta->getContent(), type, *dest);
             dest->append(0);
             META_SIZE += dest->count();
         } break;
@@ -338,11 +332,18 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
     return META_SIZE;
 }
 
-void D1Cel::parseFrameList(const QString &content, QList<int> &result)
+void D1Cel::parseFrameList(const QString &content, D1CEL_META_TYPE type, QList<int> &result)
 {
     QStringList frames = content.split(",");
     for (const QString &frame : frames) {
-        result.append(frame.toInt());
+        int idx = frame.toInt();
+        if (idx == 0 || idx > UINT8_MAX) {
+            break;
+        }
+        result.append(idx);
+    }
+    if (result.count() < frames.count()) {
+        dProgressWarn() << tr("Not all frames are stored of the meta type %1 (%2 instead of %3).").arg(D1GfxMeta::metaTypeToStr(type)).arg(result.count()).arg(frames.count());
     }
 }
 

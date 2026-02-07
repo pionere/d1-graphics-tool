@@ -306,7 +306,8 @@ CelView::CelView(QWidget *parent)
     QFontMetrics fm = this->fontMetrics();
     int RowHeight = fm.lineSpacing() ;
     const QMargins qm = edit->contentsMargins();
-    edit->setFixedHeight(2 * RowHeight + qm.top() + qm.bottom());
+    QGridLayout *grid = this->ui->animOrderGridLayout;
+    edit->setFixedHeight(2 * RowHeight + qm.top() + qm.bottom() + grid->verticalSpacing());
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
@@ -1571,10 +1572,15 @@ void CelView::on_metaDimensionsPerFrameCheckBox_clicked()
 
 static void formatFramesList(QString &text)
 {
-    text.replace(QRegularExpression("[\w]+"), " ");
-    text.replace(QRegularExpression("[^0-9 ,]*"), "");
-    text.replace(QRegularExpression("([0-9]) ([0-9])"), "\\1, \\2");
-    text.replace(QRegularExpression(",([0-9])"), ", \\1");
+    while (true) {
+        QString tx = text;
+        text.replace(QRegularExpression("[\w]+"), " ");
+        text.replace(QRegularExpression("[^0-9 ,]*"), "");
+        text.replace(QRegularExpression("([0-9]) ([0-9])"), "\\1, \\2");
+        text.replace(QRegularExpression(",([0-9])"), ", \\1");
+        if (tx == text)
+            break;
+    }
 }
 
 void CelView::on_formatAnimOrderButton_clicked()
