@@ -516,7 +516,9 @@ void CelView::updateFields()
         const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
         this->ui->metaStoredCheckBox->setChecked(meta->isStored());
 
-        this->ui->animOrderEdit->setText(this->gfx->getMeta(CELMETA_ANIMORDER)->getContent());
+        this->ui->animOrderEdit->blockSignals(true);
+        this->ui->animOrderEdit->setPlainText(this->gfx->getMeta(CELMETA_ANIMORDER)->getContent());
+        this->ui->animOrderEdit->blockSignals(false);
         this->ui->actionFramesEdit->setText(this->gfx->getMeta(CELMETA_ACTIONFRAMES)->getContent());
     }
 
@@ -1513,7 +1515,7 @@ void CelView::on_formatAnimOrderButton_clicked()
 
     this->ui->animOrderEdit->setPlainText(text);
 
-    this->on_animOrderEdit_textChanged();
+    // this->on_animOrderEdit_textChanged();
 }
 
 void CelView::on_actionFramesEdit_returnPressed()
