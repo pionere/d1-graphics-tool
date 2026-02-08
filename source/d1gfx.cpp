@@ -1289,7 +1289,7 @@ QString D1GfxMeta::metaTypeToStr(int type)
 {
     switch (type) {
     case CELMETA_DIMENSIONS:           return tr("Dimensions");
-    case CELMETA_DIMENSIONS_PRE_FRAME: return tr("Dimensions Per Frame");
+    case CELMETA_DIMENSIONS_PER_FRAME: return tr("Dimensions Per Frame");
     case CELMETA_ANIMORDER:            return tr("Animation Order");
     case CELMETA_ACTIONFRAMES:         return tr("Action Frames");
     }

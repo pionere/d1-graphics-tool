@@ -70,7 +70,7 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
             }
             break;
         default:
-            dProgressErr() << QApplication::tr("Invalid meta type %1.").arg(value);
+            dProgressErr() << QApplication::tr("Invalid meta type %1.").arg(type);
             return false;
         }
         meta->setStored(true);
@@ -325,7 +325,7 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
         case CELMETA_ANIMORDER:
         case CELMETA_ACTIONFRAMES: {
             QList<int> *dest = i == CELMETA_ANIMORDER ? &result.animOrder : &result.actionFrames;
-            int num = parseFrameList(meta->getContent(), i, *dest);
+            int num = parseFrameList(meta->getContent(), *dest);
             if (num != dest->count()) {
                 dProgressWarn() << QApplication::tr("Not all frames are stored of the meta type %1 (%2 instead of %3).").arg(D1GfxMeta::metaTypeToStr(i)).arg(dest->count()).arg(num);
             }
@@ -350,7 +350,7 @@ int D1Cel::parseFrameList(const QString &content, QList<int> &result)
     return frames.count();
 }
 
-static quint8* writeDimensions(int dimensions, cel_meta_type type, const D1Gfx &gfx, quint8 *dest)
+static quint8* writeDimensions(cel_meta_type type, const D1Gfx &gfx, quint8 *dest)
 {
     *dest = type;
     dest++;
