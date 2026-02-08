@@ -513,7 +513,7 @@ void CelView::updateFields()
             comboBox->addItem(QString("%1 %2 %1").arg(mark).arg(D1GfxMeta::metaTypeToStr(i)), i);
         }
         comboBox->show();
-        comboBox->setCurrentIndex(prevIndex);
+        comboBox->setCurrentIndex(std::max(0, prevIndex));
 
         const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
         this->ui->metaStoredCheckBox->setChecked(meta->isStored());
@@ -536,8 +536,6 @@ void CelView::updateFields()
             }
             this->ui->metaFrameWidthEdit->setText(QString::number(w));
             this->ui->metaFrameHeightEdit->setText(QString::number(h));
-
-            this->ui->metaFrameHeightEdit->setToolTip(tr("w:%1 h:%2 content %3 gw:%4 gh:%5 ix:%6").arg(w).arg(h).arg(meta->getContent()).arg(meta->getWidth()).arg(meta->getHeight()).arg(meta->getContent().indexOf('x')));
         }
         {
             QString txt = this->gfx->getMeta(CELMETA_ANIMORDER)->getContent();

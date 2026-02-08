@@ -575,13 +575,13 @@
           </property>
          </widget>
         </item>
-        <item>
+        <!--item>
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </spacer>
-        </item>
+        </item-->
        </layout>
       </item>
       <item row="2" column="18">

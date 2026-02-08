@@ -1321,11 +1321,7 @@ bool D1GfxMeta::setStored(bool stored)
 
 bool D1GfxMeta::setWidth(int w)
 {
-    QString nc = this->mContent;
-    if (nc.isEmpty()) {
-        nc = "0x0";
-    }
-    nc.replace(QRegularExpression("[0-9]*x"), QString::number(w) + "x");
+    QString nc = QString("%1x%2").arg(w).arg(this->getHeight());
 
     if (this->mContent == nc) return false;
     this->mContent = nc;
@@ -1340,11 +1336,7 @@ int D1GfxMeta::getWidth() const
 }
 bool D1GfxMeta::setHeight(int h)
 {
-    QString nc = this->mContent;
-    if (nc.isEmpty()) {
-        nc = "0x0";
-    }
-    nc.replace(QRegularExpression("x[0-9]*"), QString("x") + QString::number(h));
+    QString nc = QString("%1x%2").arg(this->getWidth()).arg(h);
 
     if (this->mContent == nc) return false;
     this->mContent = nc;

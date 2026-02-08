@@ -35,7 +35,8 @@ quint32 so = startOffset;
             in >> width;
             in >> height;
 
-            // meta->setWidth(width); meta->setHeight(height);
+            meta->setWidth(width);
+            meta->setHeight(height);
         } break;
         case CELMETA_DIMENSIONS_PER_FRAME: {
             for (unsigned idx = 0; idx < frameCount; idx++) {
