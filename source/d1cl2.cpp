@@ -398,9 +398,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // write meta
     { // write the metadata
     pBuf = &buf[numGroups > 1 ? numGroups * sizeof(quint32) : headerSize];
-    pBuf = D1Cel::writeDimensions(meta.dimensions , gfx, pBuf);
-    pBuf = D1Cel::writeFrameList(meta.animOrder, D1CEL_META_TYPE::ANIMORDER, pBuf);
-    pBuf = D1Cel::writeFrameList(meta.actionFrames, D1CEL_META_TYPE::ACTIONFRAMES, pBuf);
+    pBuf = D1Cel::writeCelMeta(meta, gfx, pBuf);
     }
     quint8 *hdr = buf;
     if (numGroups > 1) {

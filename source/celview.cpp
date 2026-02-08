@@ -491,20 +491,29 @@ void CelView::updateFields()
         int prevIndex = comboBox->currentIndex();
         comboBox->hide();
         comboBox->clear();
-        for (int i = 0; i < 3; i++) {
-            D1CEL_META_TYPE type = (D1CEL_META_TYPE)i;
-            const D1GfxMeta *meta = this->gfx->getMeta(type);
-            comboBox->addItem(QString(meta->isStored() ? "+ %1 +" : "- %1 -").arg(D1GfxMeta::metaTypeToStr(type)), i);
+        for (int i = 0; i < NUM_CELMETA; i++) {
+            const D1GfxMeta *meta = this->gfx->getMeta(i);
+            QString mark = "-";
+            if (meta->isStored()) {
+                mark = "+";
+                if ((i == CELMETA_DIMENSIONS && !this->gfx->getFrameSize().isValid()) ||
+                    (i == CELMETA_DIMENSIONS_PER_FRAME && this->gfx->getFrameCount() == 0))
+                    mark = "?";
+                if (i == CELMETA_ACTIONFRAMES || i == CELMETA_ANIMORDER) {
+                    QList<int> result;
+                    int num = D1Cel::parseFrameList(meta->getContent(), result);
+                    if (result.isEmpty() || num != result.count()) {
+                        mark = "?";
+                    }
+                }
+            }
+            comboBox->addItem(QString("%1 %2 %1").arg(mark).arg(D1GfxMeta::metaTypeToStr(i)), i);
         }
         comboBox->show();
         comboBox->setCurrentIndex(prevIndex);
 
-        const D1GfxMeta *meta = this->gfx->getMeta((D1CEL_META_TYPE)prevIndex);
+        const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
         this->ui->metaStoredCheckBox->setChecked(meta->isStored());
-
-        this->ui->metaDimensionsPerFrameCheckBox->setEnabled(this->gfx->getFrameCount() > 1 && this->gfx->getFrameSize().isValid());
-
-        this->ui->metaDimensionsPerFrameCheckBox->setChecked(this->gfx->getFrameCount() <= 1 || !this->gfx->getMeta(D1CEL_META_TYPE::DIMENSIONS)->getContent().isEmpty());
     }
 
     // update clipped checkbox
@@ -1550,21 +1559,8 @@ void CelView::on_metaTypeComboBox_activated(int index)
 
 void CelView::on_metaStoredCheckBox_clicked()
 {
-    D1GfxMeta *meta = this->gfx->getMeta((D1CEL_META_TYPE)this->ui->metaTypeStackedLayout->currentIndex());
+    D1GfxMeta *meta = this->gfx->getMeta(this->ui->metaTypeStackedLayout->currentIndex());
     meta->setStored(!meta->isStored());
-    this->gfx->setModified();
-
-    this->updateFields();
-}
-
-void CelView::on_metaDimensionsPerFrameCheckBox_clicked()
-{
-    D1GfxMeta *meta = this->gfx->getMeta(D1CEL_META_TYPE::DIMENSIONS);
-    if (meta->getContent().isEmpty()) {
-        meta->setContent("x");
-    } else {
-        meta->setContent("");
-    }
     this->gfx->setModified();
 
     this->updateFields();

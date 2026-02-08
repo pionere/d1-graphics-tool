@@ -1285,12 +1285,13 @@ D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx) const
     return const_cast<D1GfxCompFrame *>(&this->compFrames[frameIdx]);
 }
 
-QString D1GfxMeta::metaTypeToStr(D1CEL_META_TYPE type)
+QString D1GfxMeta::metaTypeToStr(int type)
 {
     switch (type) {
-    case D1CEL_META_TYPE::DIMENSIONS:   return tr("Dimensions");
-    case D1CEL_META_TYPE::ANIMORDER:    return tr("Animation Order");
-    case D1CEL_META_TYPE::ACTIONFRAMES: return tr("Action Frames");
+    case CELMETA_DIMENSIONS:           return tr("Dimensions");
+    case CELMETA_DIMENSIONS_PRE_FRAME: return tr("Dimensions Per Frame");
+    case CELMETA_ANIMORDER:            return tr("Animation Order");
+    case CELMETA_ACTIONFRAMES:         return tr("Action Frames");
     }
     return tr("Unknown");
 }
@@ -1302,16 +1303,12 @@ D1GfxMeta::D1GfxMeta()
 D1GfxMeta::D1GfxMeta(const D1GfxMeta &o)
 {
     this->mStored = o.mStored;
-    this->mWidth = o.mWidth;
-    this->mHeight = o.mHeight;
     this->mContent = o.mContent;
 }
 
 void D1GfxMeta::clear()
 {
     this->mStored = false;
-    this->mWidth = 0;
-    this->mHeight = 0;
     this->mContent.clear();
 }
 
@@ -1321,18 +1318,32 @@ bool D1GfxMeta::setStored(bool stored)
     this->mStored = stored;
     return true;
 }
+#if 0
 bool D1GfxMeta::setWidth(int w)
 {
-    if (this->mWidth == w) return false;
-    this->mWidth = w;
+    QString nc = this->mContent;
+    if (nc.isEmpty()) {
+        nc = "0x0";
+    }
+    nc.replace(QRegularExpression("^([0-9]*)"), QString::number(w));
+
+    if (this->mContent == nc) return false;
+    this->mContent = nc;
     return true;
 }
 bool D1GfxMeta::setHeight(int h)
 {
-    if (this->mHeight == h) return false;
-    this->mHeight = h;
+    QString nc = this->mContent;
+    if (nc.isEmpty()) {
+        nc = "0x0";
+    }
+    nc.replace(QRegularExpression("([0-9]*)$"), QString::number(h));
+
+    if (this->mContent == nc) return false;
+    this->mContent = nc;
     return true;
 }
+#endif
 bool D1GfxMeta::setContent(const QString &content)
 {
     if (this->mContent == content) return false;
@@ -2190,9 +2201,9 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     return true;
 }
 
-D1GfxMeta *D1Gfx::getMeta(D1CEL_META_TYPE type) const
+D1GfxMeta *D1Gfx::getMeta(int type) const
 {
-    return const_cast<D1GfxMeta *>(&this->metas[(int)type]);
+    return const_cast<D1GfxMeta *>(&this->metas[type]);
 }
 
 void D1Gfx::saveComponents()

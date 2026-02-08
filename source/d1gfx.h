@@ -269,17 +269,19 @@ private:
     QList<D1GfxCompFrame> compFrames;
 };
 
-enum class D1CEL_META_TYPE {
-    DIMENSIONS,
-    ANIMORDER,
-    ACTIONFRAMES,
-};
+typedef enum cel_meta_type {
+    CELMETA_DIMENSIONS,
+    CELMETA_DIMENSIONS_PER_FRAME,
+    CELMETA_ANIMORDER,
+    CELMETA_ACTIONFRAMES,
+    NUM_CELMETA
+} cel_meta_type;
 
 class D1GfxMeta : public QObject {
     Q_OBJECT
 
 public:
-    static QString metaTypeToStr(D1CEL_META_TYPE type);
+    static QString metaTypeToStr(int type);
 
     D1GfxMeta();
     D1GfxMeta(const D1GfxMeta &o);
@@ -288,17 +290,14 @@ public:
 
     bool setStored(bool stored);
     bool isStored() const { return mStored; };
-
+#if 0
     bool setWidth(int w);
-    int getWidth() const { return mWidth; };
     bool setHeight(int h);
-    int getHeight() const { return mHeight; };
+#endif
     bool setContent(const QString &content);
     QString getContent() const { return mContent; };
 
 private:
-    int mWidth;
-    int mHeight;
     QString mContent;
     bool mStored;
 };
@@ -383,7 +382,7 @@ public:
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
-    D1GfxMeta *getMeta(D1CEL_META_TYPE type) const;
+    D1GfxMeta *getMeta(int type) const;
 
     QString getCompFilePath() const;
     void setCompFilePath(const QString &filePath);
@@ -438,7 +437,7 @@ protected:
     std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
     // fields of cel/cl2-frames
-    D1GfxMeta metas[3];
+    D1GfxMeta metas[NUM_CELMETA];
     QList<D1GfxComp *> components;
     QString compFilePath;
     bool clipped = false;
