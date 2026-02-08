@@ -57,7 +57,7 @@ std::pair<int, int> LineEditWidget::nonNegRange() const
 
 void LineEditWidget::setReadOnly(bool ro)
 {
-    super->setReadOnly(ro);
+    QLineEdit::setReadOnly(ro);
 
     // update the lineedit widget (thanks qt...)
     this->style()->unpolish(this);
