@@ -110,7 +110,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         // Going through all groups
         int cursor = 0;
         unsigned i = 0;
-        for ( ; i * 4 < firstDword; i++) {
+        while (i * 4 < firstDword) {
             device->seek(i * 4);
             quint32 cl2GroupOffset;
             in >> cl2GroupOffset;
@@ -152,6 +152,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             }
             cursor += cl2GroupFrameCount;
 
+            i++;
             if (frameOffsets.back().second == fileSize) {
                 break;
             }

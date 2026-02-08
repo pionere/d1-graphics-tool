@@ -1483,7 +1483,7 @@ static void formatFramesList(QString &text)
 {
     while (true) {
         QString tx = text;
-        text.replace(QRegularExpression("[\w]+"), " ");
+        text.replace(QRegularExpression("[\s]+"), " ");
         text.replace(QRegularExpression("[^0-9 ,]*"), "");
         text.replace(QRegularExpression("([0-9]) ([0-9])"), "\\1, \\2");
         text.replace(QRegularExpression(",([0-9])"), ", \\1");
@@ -1624,6 +1624,13 @@ void CelView::on_playStopButton_clicked()
     D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMORDER);
     this->animOrder.clear();
     D1Cel::parseFrameList(meta->getContent(), this->animOrder);
+    for (auto it = this->animOrder.begin(); it != this->animOrder.end(); ) {
+        if (*it < this->gfx->getFrameCount()) {
+            it++;
+        } else {
+            it = this->animOrder.erase(it);
+        }
+    }
     this->animFrameIndex = 0;
 
     this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
