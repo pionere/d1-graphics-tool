@@ -19,7 +19,7 @@ public:
     int nonNegInt() const;
     std::pair<int, int> nonNegRange() const;
 
-    public void setReadOnly() override;
+    void setReadOnly() override;
 
 signals:
     void cancel_signal();
