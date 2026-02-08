@@ -522,7 +522,7 @@ void CelView::updateFields()
             bool isReadOnly = !this->ui->metaFrameDimensionsCheckBox->isChecked();
             this->ui->metaFrameWidthEdit->setReadOnly(isReadOnly);
             this->ui->metaFrameHeightEdit->setReadOnly(isReadOnly);
-            const D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
+            D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
             int w, h;
             if (isReadOnly) {
                 QSize fs = this->gfx->getFrameSize();
@@ -541,7 +541,7 @@ void CelView::updateFields()
             QString txt = this->gfx->getMeta(CELMETA_ANIMORDER)->getContent();
             if (txt != this->ui->animOrderEdit->toPlainText()) {
                 this->ui->animOrderEdit->blockSignals(true);
-                this->ui->animOrderEdit->setPlainText();
+                this->ui->animOrderEdit->setPlainText(txt);
                 this->ui->animOrderEdit->blockSignals(false);
             }
         }
