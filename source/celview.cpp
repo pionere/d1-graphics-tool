@@ -1458,94 +1458,6 @@ void CelView::on_celFramesClippedCheckBox_clicked()
     this->updateFields();
 }
 
-void CelView::on_zoomOutButton_clicked()
-{
-    this->celScene.zoomOut();
-    this->on_zoomEdit_escPressed();
-}
-
-void CelView::on_zoomInButton_clicked()
-{
-    this->celScene.zoomIn();
-    this->on_zoomEdit_escPressed();
-}
-
-void CelView::on_zoomEdit_returnPressed()
-{
-    QString zoom = this->ui->zoomEdit->text();
-
-    this->celScene.setZoom(zoom);
-
-    this->on_zoomEdit_escPressed();
-}
-
-void CelView::on_zoomEdit_escPressed()
-{
-    this->ui->zoomEdit->setText(this->celScene.zoomText());
-    this->ui->zoomEdit->clearFocus();
-}
-
-void CelView::on_playDelayEdit_returnPressed()
-{
-    unsigned playDelay = this->ui->playDelayEdit->text().toUInt();
-
-    if (playDelay != 0)
-        this->currentPlayDelay = playDelay;
-
-    this->on_playDelayEdit_escPressed();
-}
-
-void CelView::on_playDelayEdit_escPressed()
-{
-    // update playDelayEdit
-    this->updateFields();
-    this->ui->playDelayEdit->clearFocus();
-}
-
-void CelView::on_playStopButton_clicked()
-{
-    if (this->playTimer != 0) {
-        this->killTimer(this->playTimer);
-        this->playTimer = 0;
-        D1Smk::stopAudio();
-
-        // restore the currentFrameIndex
-        this->currentFrameIndex = this->origFrameIndex;
-        // update group-index because the user might have changed it in the meantime
-        this->updateGroupIndex();
-        // restore palette
-        if (!this->origPal.isNull()) {
-            dMainWindow().updatePalette(this->origPal.data());
-        }
-        dMainWindow().resetPaletteCycle();
-        // change the label of the button
-        this->ui->playStopButton->setText(tr("Play"));
-        // enable the related fields
-        this->ui->playDelayEdit->setReadOnly(false);
-        this->ui->playComboBox->setEnabled(true);
-        this->ui->playFrameCheckBox->setEnabled(true);
-        return;
-    }
-    // disable the related fields
-    this->ui->playDelayEdit->setReadOnly(true);
-    this->ui->playComboBox->setEnabled(false);
-    this->ui->playFrameCheckBox->setEnabled(false);
-    // change the label of the button
-    this->ui->playStopButton->setText(tr("Stop"));
-    // preserve the currentFrameIndex
-    this->origFrameIndex = this->currentFrameIndex;
-    // preserve the palette
-    this->origPal = this->pal;
-    dMainWindow().initPaletteCycle();
-
-    this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
-/*
-    this->timer.start();
-    qint64 nextTickNS = timer.nsecsElapsed() + this->currentPlayDelay * 1000;
-    QTimer::singleShot(this->currentPlayDelay / 1000, Qt::PreciseTimer, this, &CelView::timerEvent);
-*/
-}
-
 void CelView::on_actionToggle_Mode_triggered()
 {
     this->ui->mainStackedLayout->setCurrentIndex(1 - this->ui->mainStackedLayout->currentIndex());
@@ -1627,6 +1539,101 @@ void CelView::on_formatActionFramesButton_clicked()
     this->on_actionFramesEdit_returnPressed();
 }
 
+void CelView::on_zoomOutButton_clicked()
+{
+    this->celScene.zoomOut();
+    this->on_zoomEdit_escPressed();
+}
+
+void CelView::on_zoomInButton_clicked()
+{
+    this->celScene.zoomIn();
+    this->on_zoomEdit_escPressed();
+}
+
+void CelView::on_zoomEdit_returnPressed()
+{
+    QString zoom = this->ui->zoomEdit->text();
+
+    this->celScene.setZoom(zoom);
+
+    this->on_zoomEdit_escPressed();
+}
+
+void CelView::on_zoomEdit_escPressed()
+{
+    this->ui->zoomEdit->setText(this->celScene.zoomText());
+    this->ui->zoomEdit->clearFocus();
+}
+
+void CelView::on_playDelayEdit_returnPressed()
+{
+    unsigned playDelay = this->ui->playDelayEdit->text().toUInt();
+
+    if (playDelay != 0)
+        this->currentPlayDelay = playDelay;
+
+    this->on_playDelayEdit_escPressed();
+}
+
+void CelView::on_playDelayEdit_escPressed()
+{
+    // update playDelayEdit
+    this->updateFields();
+    this->ui->playDelayEdit->clearFocus();
+}
+
+void CelView::on_playStopButton_clicked()
+{
+    if (this->playTimer != 0) {
+        this->killTimer(this->playTimer);
+        this->playTimer = 0;
+        D1Smk::stopAudio();
+
+        // restore the currentFrameIndex
+        this->currentFrameIndex = this->origFrameIndex;
+        // update group-index because the user might have changed it in the meantime
+        this->updateGroupIndex();
+        // restore palette
+        if (!this->origPal.isNull()) {
+            dMainWindow().updatePalette(this->origPal.data());
+        }
+        dMainWindow().resetPaletteCycle();
+        // change the label of the button
+        this->ui->playStopButton->setText(tr("Play"));
+        // enable the related fields
+        this->ui->playDelayEdit->setReadOnly(false);
+        this->ui->playComboBox->setEnabled(true);
+        this->ui->playFrameCheckBox->setEnabled(true);
+        this->ui->animOrderEdit->setReadOnly(false);
+        return;
+    }
+    // disable the related fields
+    this->ui->playDelayEdit->setReadOnly(true);
+    this->ui->playComboBox->setEnabled(false);
+    this->ui->playFrameCheckBox->setEnabled(false);
+    this->ui->animOrderEdit->setReadOnly(true);
+    // change the label of the button
+    this->ui->playStopButton->setText(tr("Stop"));
+    // preserve the currentFrameIndex
+    this->origFrameIndex = this->currentFrameIndex;
+    // preserve the palette
+    this->origPal = this->pal;
+    dMainWindow().initPaletteCycle();
+    // initialize animation-order
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMORDER);
+    this->animOrder.clear();
+    D1Cel::parseFrameList(meta->getContent(), this->animOrder);
+    this->animFrameIndex = 0;
+
+    this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
+/*
+    this->timer.start();
+    qint64 nextTickNS = timer.nsecsElapsed() + this->currentPlayDelay * 1000;
+    QTimer::singleShot(this->currentPlayDelay / 1000, Qt::PreciseTimer, this, &CelView::timerEvent);
+*/
+}
+
 void CelView::timerEvent(QTimerEvent *event)
 {
     if (this->gfx->getGroupCount() == 0) {
@@ -1635,6 +1642,13 @@ void CelView::timerEvent(QTimerEvent *event)
     std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
     int nextFrameIndex = this->currentFrameIndex + 1;
+    if (!this->animOrder.isEmpty()) {
+        int currAnimFrameIndex = this->animFrameIndex;
+        if (currAnimFrameIndex >= this->animOrder.count())
+            currAnimFrameIndex = 0;
+        nextFrameIndex = this->animOrder[currAnimFrameIndex];
+        this->animFrameIndex = currAnimFrameIndex + 1;
+    }
     Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
     if (playType == Qt::Unchecked) {
         // normal playback

@@ -118,8 +118,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // try to read it as a CEL compilation
     D1CEL_TYPE type = (firstDword == 0 || fileSize == fileSizeDword) ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
     std::vector<std::pair<quint32, quint32>> frameOffsets;
-    quint32 metaOffset;
-    quint32 contentOffset;
+    quint32 metaOffset, contentOffset = fileSize;
     if (type == D1CEL_TYPE::V1_REGULAR) {
         // Going through all frames of the CEL
         if (firstDword > 0) {
@@ -137,7 +136,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         }
 
         metaOffset = 4 + i * 4;
-        contentOffset = frameOffsets.size() != 0 ? frameOffsets[0].first : fileSize;
+        if (frameOffsets.size() != 0)
+            contentOffset = frameOffsets[0].first;
     } else {
 #if 0
         // Read offset of the last CEL of the CEL compilation
@@ -171,31 +171,30 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         // Going through all groups
         int cursor = 0;
         unsigned i = 0;
-        contentOffset = fileSize;
         for ( ; i * 4 < firstDword; i++) {
             device->seek(i * 4);
-            quint32 celOffset;
-            in >> celOffset;
+            quint32 celGroupOffset;
+            in >> celGroupOffset;
 
-            if (fileSize < (celOffset + 4)) {
-                dProgressErr() << QApplication::tr("Invalid frameoffset %1 of %2 for group %3.").arg(celOffset).arg(fileSize).arg(i);
+            if (fileSize < (celGroupOffset + 4)) {
+                dProgressErr() << QApplication::tr("Invalid frameoffset %1 of %2 for group %3.").arg(celGroupOffset).arg(fileSize).arg(i);
                 break;
             }
 
-            device->seek(celOffset);
+            device->seek(celGroupOffset);
             quint32 celFrameCount;
             in >> celFrameCount;
 
             if (celFrameCount == 0) {
                 continue;
             }
-            if (fileSize < (celOffset + celFrameCount * 4 + 4 + 4)) {
-                dProgressErr() << QApplication::tr("Not enough space for %1 frameoffsets at %2 in %3 for group %4.").arg(celFrameCount).arg(celOffset).arg(fileSize).arg(i);
+            if (fileSize < (celGroupOffset + celFrameCount * 4 + 4 + 4)) {
+                dProgressErr() << QApplication::tr("Not enough space for %1 frameoffsets at %2 in %3 for group %4.").arg(celFrameCount).arg(celGroupOffset).arg(fileSize).arg(i);
                 break;
             }
 
-            if (celOffset < contentOffset) {
-                contentOffset = celOffset;
+            if (celGroupOffset < contentOffset) {
+                contentOffset = celGroupOffset;
             }
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + celFrameCount - 1));
 
@@ -204,13 +203,13 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 quint32 celFrameStartOffset;
                 quint32 celFrameEndOffset;
 
-                device->seek(celOffset + j * 4);
+                device->seek(celGroupOffset + j * 4);
                 in >> celFrameStartOffset;
                 in >> celFrameEndOffset;
 
                 frameOffsets.push_back(
-                    std::pair<quint32, quint32>(celOffset + celFrameStartOffset,
-                        celOffset + celFrameEndOffset));
+                    std::pair<quint32, quint32>(celGroupOffset + celFrameStartOffset,
+                        celGroupOffset + celFrameEndOffset));
             }
             cursor += celFrameCount;
 

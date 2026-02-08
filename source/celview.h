@@ -168,15 +168,6 @@ private slots:
 
     void on_celFramesClippedCheckBox_clicked();
 
-    void on_zoomOutButton_clicked();
-    void on_zoomInButton_clicked();
-    void on_zoomEdit_returnPressed();
-    void on_zoomEdit_escPressed();
-
-    void on_playDelayEdit_returnPressed();
-    void on_playDelayEdit_escPressed();
-    void on_playStopButton_clicked();
-
     void on_actionToggle_Mode_triggered();
     void on_metaTypeComboBox_activated(int index);
     void on_metaStoredCheckBox_clicked();
@@ -187,6 +178,15 @@ private slots:
     void on_actionFramesEdit_returnPressed();
     void on_actionFramesEdit_escPressed();
     void on_formatActionFramesButton_clicked();
+
+    void on_zoomOutButton_clicked();
+    void on_zoomInButton_clicked();
+    void on_zoomEdit_returnPressed();
+    void on_zoomEdit_escPressed();
+
+    void on_playDelayEdit_returnPressed();
+    void on_playDelayEdit_escPressed();
+    void on_playStopButton_clicked();
 
     void timerEvent(QTimerEvent *event) override;
 
@@ -209,6 +209,8 @@ private:
     D1Gfx *gfx;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
+    QList<int> animOrder;
+    int animFrameIndex;
     int origFrameIndex = 0;
     QPointer<D1Pal> origPal;
     unsigned currentPlayDelay = 50000; // microsec

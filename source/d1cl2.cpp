@@ -85,7 +85,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
     // CL2 FRAMES OFFSETS CALCULATION
     std::vector<std::pair<quint32, quint32>> frameOffsets;
-    quint32 contentOffset;
+    quint32 metaOffset, contentOffset = fileSize;
     if (gfx.type == D1CEL_TYPE::V2_MONO_GROUP) {
         // Going through all frames of the only group
         if (firstDword > 0) {
@@ -103,7 +103,9 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 std::pair<quint32, quint32>(cl2FrameStartOffset, cl2FrameEndOffset));
         }
 
-        contentOffset = 4 + i * 4;
+        metaOffset = 4 + i * 4;
+        if (frameOffsets.size() != 0)
+            contentOffset = frameOffsets[0].first;
     } else {
         // Going through all groups
         int cursor = 0;
@@ -130,6 +132,9 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 break;
             }
 
+            if (cl2GroupOffset < contentOffset) {
+                contentOffset = cl2GroupOffset;
+            }
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + cl2GroupFrameCount - 1));
 
             // Going through all frames of the group
@@ -152,10 +157,10 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             }
         }
 
-        contentOffset = i * 4;
+        metaOffset = i * 4;
     }
 
-    D1Cel::readMeta(device, in, contentOffset, frameOffsets.size() != 0 ? frameOffsets[0].first : fileSize, frameOffsets.size(), gfx);
+    D1Cel::readMeta(device, in, metaOffset, contentOffset, frameOffsets.size(), gfx);
 
     // BUILDING {CL2 FRAMES}
     // std::stack<quint16> invalidFrames;
