@@ -13,6 +13,7 @@
 
 bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, quint32 endOffset, unsigned frameCount, D1Gfx &gfx)
 {
+quint32 so = startOffset;
     device->seek(startOffset);
     while (startOffset < endOffset) {
         startOffset++;
@@ -70,7 +71,7 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
             }
             break;
         default:
-            dProgressErr() << QApplication::tr("Invalid meta type %1.").arg(type);
+            dProgressErr() << QApplication::tr("Invalid meta type %1. (%2 : %3 : %4)").arg(type).arg(so).arg(startOffset).arg(endOffset);
             return false;
         }
         meta->setStored(true);
@@ -117,6 +118,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // try to read it as a CEL compilation
     D1CEL_TYPE type = (firstDword == 0 || fileSize == fileSizeDword) ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
     std::vector<std::pair<quint32, quint32>> frameOffsets;
+    quint32 metaOffset;
     quint32 contentOffset;
     if (type == D1CEL_TYPE::V1_REGULAR) {
         // Going through all frames of the CEL
@@ -134,7 +136,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             frameOffsets.push_back(std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
         }
 
-        contentOffset = 4 + i * 4;
+        metaOffset = 4 + i * 4;
+        contentOffset = frameOffsets.size() != 0 ? frameOffsets[0].first : fileSize;
     } else {
 #if 0
         // Read offset of the last CEL of the CEL compilation
@@ -168,6 +171,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         // Going through all groups
         int cursor = 0;
         unsigned i = 0;
+        contentOffset = fileSize;
         for ( ; i * 4 < firstDword; i++) {
             device->seek(i * 4);
             quint32 celOffset;
@@ -190,6 +194,9 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 break;
             }
 
+            if (celOffset < contentOffset) {
+                contentOffset = celOffset;
+            }
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + celFrameCount - 1));
 
             // Going through all frames of the CEL
@@ -212,10 +219,10 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             }
         }
 
-        contentOffset = i * 4;
+        metaOffset = i * 4;
     }
 
-    readMeta(device, in, contentOffset, frameOffsets.size() != 0 ? frameOffsets[0].first : fileSize, frameOffsets.size(), gfx);
+    readMeta(device, in, metaOffset, contentOffset, frameOffsets.size(), gfx);
 
     gfx.type = type;
 

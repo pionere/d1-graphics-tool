@@ -319,6 +319,7 @@ CelView::CelView(QWidget *parent)
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
     QObject::connect(this->ui->assetMplEdit, SIGNAL(cancel_signal()), this, SLOT(on_assetMplEdit_escPressed()));
+    QObject::connect(this->ui->actionFramesEdit, SIGNAL(cancel_signal()), this, SLOT(on_actionFramesEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -1579,6 +1580,16 @@ static void formatFramesList(QString &text)
     }
 }
 
+void CelView::on_animOrderEdit_textChanged()
+{
+    QString text = this->ui->animOrderEdit->toPlainText();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMORDER);
+    meta->setContent(text);
+
+    this->updateFields();
+}
+
 void CelView::on_formatAnimOrderButton_clicked()
 {
     QString text = this->ui->animOrderEdit->toPlainText();
@@ -1588,6 +1599,23 @@ void CelView::on_formatAnimOrderButton_clicked()
     this->ui->animOrderEdit->setPlainText(text);
 }
 
+void CelView::on_actionFramesEdit_returnPressed()
+{
+    QString text = this->ui->actionFramesEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ACTIONFRAMES);
+    meta->setContent(text);
+
+    this->on_actionFramesEdit_escPressed();
+}
+
+void CelView::on_actionFramesEdit_escPressed()
+{
+    // update actionFramesEdit
+    this->updateFields();
+    this->ui->actionFramesEdit->clearFocus();
+}
+
 void CelView::on_formatActionFramesButton_clicked()
 {
     QString text = this->ui->actionFramesEdit->text();
@@ -1595,6 +1623,8 @@ void CelView::on_formatActionFramesButton_clicked()
     formatFramesList(text);
 
     this->ui->actionFramesEdit->setText(text);
+
+    this->on_actionFramesEdit_returnPressed();
 }
 
 void CelView::timerEvent(QTimerEvent *event)

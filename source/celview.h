@@ -180,7 +180,12 @@ private slots:
     void on_actionToggle_Mode_triggered();
     void on_metaTypeComboBox_activated(int index);
     void on_metaStoredCheckBox_clicked();
+    
+    void on_animOrderEdit_textChanged();
     void on_formatAnimOrderButton_clicked();
+
+    void on_actionFramesEdit_returnPressed();
+    void on_actionFramesEdit_escPressed();
     void on_formatActionFramesButton_clicked();
 
     void timerEvent(QTimerEvent *event) override;
