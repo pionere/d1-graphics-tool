@@ -515,6 +515,9 @@ void CelView::updateFields()
 
         const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
         this->ui->metaStoredCheckBox->setChecked(meta->isStored());
+
+        this->ui->animOrderEdit->setText(this->gfx->getMeta(CELMETA_ANIMORDER)->getContent());
+        this->ui->actionFramesEdit->setText(this->gfx->getMeta(CELMETA_ACTIONFRAMES)->getContent());
     }
 
     // update clipped checkbox
@@ -1483,7 +1486,7 @@ static void formatFramesList(QString &text)
 {
     while (true) {
         QString tx = text;
-        text.replace(QRegularExpression("[\s]+"), " ");
+        text.replace(QRegularExpression("[\\s]+"), " ");
         text.replace(QRegularExpression("[^0-9 ,]*"), "");
         text.replace(QRegularExpression("([0-9]) ([0-9])"), "\\1, \\2");
         text.replace(QRegularExpression(",([0-9])"), ", \\1");
@@ -1509,6 +1512,8 @@ void CelView::on_formatAnimOrderButton_clicked()
     formatFramesList(text);
 
     this->ui->animOrderEdit->setPlainText(text);
+
+    this->on_animOrderEdit_textChanged();
 }
 
 void CelView::on_actionFramesEdit_returnPressed()
