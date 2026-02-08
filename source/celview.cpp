@@ -517,11 +517,11 @@ void CelView::updateFields()
 
         const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
         this->ui->metaStoredCheckBox->setChecked(meta->isStored());
-
         {
             bool isReadOnly = !this->ui->metaFrameDimensionsCheckBox->isChecked();
             this->ui->metaFrameWidthEdit->setReadOnly(isReadOnly);
             this->ui->metaFrameHeightEdit->setReadOnly(isReadOnly);
+            this->ui->metaFrameHeightEdit->update();
             D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
             int w, h;
             if (isReadOnly) {

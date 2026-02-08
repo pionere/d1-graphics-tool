@@ -52,9 +52,6 @@ void DungeonDecorateDialog::on_lvlComboBox_activated(int index)
         static_assert(DTYPE_NEST == 6, "DungeonDecorateDialog has hardcoded enum values VII.");
         ltc->setCurrentIndex((int)AllLevels[index + 1].dType);
     }
-    // update the lineedit widget (thanks qt...)
-    lew->style()->unpolish(lew);
-    lew->style()->polish(lew);
 }
 
 void DungeonDecorateDialog::on_lvlTypeComboBox_activated(int index)

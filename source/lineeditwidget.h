@@ -19,6 +19,8 @@ public:
     int nonNegInt() const;
     std::pair<int, int> nonNegRange() const;
 
+    public void setReadOnly() override;
+
 signals:
     void cancel_signal();
     void focus_gain_signal();

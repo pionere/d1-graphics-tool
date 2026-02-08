@@ -1325,7 +1325,7 @@ bool D1GfxMeta::setWidth(int w)
     if (nc.isEmpty()) {
         nc = "0x0";
     }
-    nc.replace(QRegularExpression("^([0-9]*)"), QString::number(w));
+    nc.replace(QRegularExpression("[0-9]*x"), QString::number(w) + "x");
 
     if (this->mContent == nc) return false;
     this->mContent = nc;
@@ -1344,7 +1344,7 @@ bool D1GfxMeta::setHeight(int h)
     if (nc.isEmpty()) {
         nc = "0x0";
     }
-    nc.replace(QRegularExpression("([0-9]*)$"), QString::number(h));
+    nc.replace(QRegularExpression("x[0-9]*"), QString("x") + QString::number(h));
 
     if (this->mContent == nc) return false;
     this->mContent = nc;
