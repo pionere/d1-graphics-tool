@@ -55,7 +55,7 @@ std::pair<int, int> LineEditWidget::nonNegRange() const
     return result;
 }
 
-public void LineEditWidget::setReadOnly(bool ro)
+void LineEditWidget::setReadOnly(bool ro)
 {
     super->setReadOnly(ro);
 
