@@ -290,10 +290,12 @@ public:
 
     bool setStored(bool stored);
     bool isStored() const { return mStored; };
-#if 0
+
     bool setWidth(int w);
+    int getWidth() const;
     bool setHeight(int h);
-#endif
+    int getHeight() const;
+
     bool setContent(const QString &content);
     QString getContent() const { return mContent; };
 

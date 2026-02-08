@@ -516,11 +516,73 @@
        </widget>
       </item>
       <item row="2" column="12" colspan="6">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <layout class="QHBoxLayout">
+        <property name="topMargin">
+         <number>0</number>
         </property>
-       </spacer>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="celFrameWidthEdit">
+          <property name="charWidth">
+           <number>7</number>
+          </property>
+          <property name="toolTip">
+           <string>Current frame width</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="minimumWidth">
+           <number>8</number>
+          </property>
+          <property name="maximumWidth">
+           <number>8</number>
+          </property>
+          <property name="text">
+           <string notr="true">*</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="celFrameHeightEdit">
+          <property name="charWidth">
+           <number>7</number>
+          </property>
+          <property name="toolTip">
+           <string>Current frame height</string>
+          </property>
+          <property name="alignment">
+           <enum>Qt::AlignCenter</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
       <item row="2" column="18">
        <layout class="QHBoxLayout" name="switchToMetaHorizontalLayout">
@@ -580,18 +642,15 @@
                 <number>0</number>
                </property>
                <item row="0" column="0">
-                <widget class="LineEditWidget" name="celFrameWidthEdit">
+                <widget class="LineEditWidget" name="metaFrameWidthEdit">
                  <property name="charWidth">
                   <number>7</number>
                  </property>
                  <property name="toolTip">
-                  <string>Current frame width</string>
+                  <string>Meta frame width</string>
                  </property>
                  <property name="alignment">
                   <enum>Qt::AlignCenter</enum>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -609,18 +668,22 @@
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="LineEditWidget" name="celFrameHeightEdit">
+                <widget class="LineEditWidget" name="metaFrameHeightEdit">
                  <property name="charWidth">
                   <number>7</number>
                  </property>
                  <property name="toolTip">
-                  <string>Current frame height</string>
+                  <string>Meta frame height</string>
                  </property>
                  <property name="alignment">
                   <enum>Qt::AlignCenter</enum>
                  </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QCheckBox" name="metaFrameDimensionsCheckBox">
+                 <property name="toolTip">
+                  <string>Override the dimensions of the frames</string>
                  </property>
                 </widget>
                </item>
@@ -687,12 +750,15 @@
                  <property name="acceptRichText">
                   <bool>false</bool>
                  </property>
-                 <property name="lineWrapMode">
+                 <property name="wordWrapMode">
+                  <enum>QTextOption::WrapAtWordBoundaryOrAnywhere</enum>
+                 </property>
+                 <!--property name="lineWrapMode">
                   <enum>QTextEdit::FixedColumnWidth</enum>
                  </property>
                  <property name="lineWrapColumnOrWidth">
                   <number>50</number>
-                 </property>
+                 </property-->
                  <property name="tabChangesFocus">
                   <bool>true</bool>
                  </property>

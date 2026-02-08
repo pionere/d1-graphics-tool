@@ -54,7 +54,8 @@ quint32 so = startOffset;
             }
         } break;
         case CELMETA_ANIMORDER:
-        case CELMETA_ACTIONFRAMES:
+        case CELMETA_ACTIONFRAMES: {
+            QString content;
             while (true) {
                 if (endOffset < startOffset + 1) {
                     dProgressErr() << QApplication::tr("Open frame list in meta type %1.").arg(D1GfxMeta::metaTypeToStr(type));
@@ -67,9 +68,11 @@ quint32 so = startOffset;
                 if (idx == 0) {
                     break;
                 }
-                meta->setContent(QString("%1, %2").arg(meta->getContent()).arg(idx));
+                content.append(QString::number(idx) + ", ");
             }
-            break;
+            content.chop(2);
+            meta->setContent(content);
+        } break;
         default:
             dProgressErr() << QApplication::tr("Invalid meta type %1. (%2 : %3 : %4)").arg(type).arg(so).arg(startOffset).arg(endOffset);
             return false;

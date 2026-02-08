@@ -319,6 +319,8 @@ CelView::CelView(QWidget *parent)
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
     QObject::connect(this->ui->assetMplEdit, SIGNAL(cancel_signal()), this, SLOT(on_assetMplEdit_escPressed()));
+    QObject::connect(this->ui->metaFrameWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_metaFrameWidthEdit_escPressed()));
+    QObject::connect(this->ui->metaFrameHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_metaFrameHeightEdit_escPressed()));
     QObject::connect(this->ui->actionFramesEdit, SIGNAL(cancel_signal()), this, SLOT(on_actionFramesEdit_escPressed()));
 
     // setup context menu
@@ -497,7 +499,7 @@ void CelView::updateFields()
             QString mark = "-";
             if (meta->isStored()) {
                 mark = "+";
-                if ((i == CELMETA_DIMENSIONS && !this->gfx->getFrameSize().isValid()) ||
+                if ((i == CELMETA_DIMENSIONS && !this->gfx->getFrameSize().isValid() && !this->ui->metaFrameDimensionsCheckBox->isChecked()) ||
                     (i == CELMETA_DIMENSIONS_PER_FRAME && this->gfx->getFrameCount() == 0))
                     mark = "?";
                 if (i == CELMETA_ACTIONFRAMES || i == CELMETA_ANIMORDER) {
@@ -516,9 +518,33 @@ void CelView::updateFields()
         const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
         this->ui->metaStoredCheckBox->setChecked(meta->isStored());
 
-        this->ui->animOrderEdit->blockSignals(true);
-        this->ui->animOrderEdit->setPlainText(this->gfx->getMeta(CELMETA_ANIMORDER)->getContent());
-        this->ui->animOrderEdit->blockSignals(false);
+        {
+            bool isReadOnly = !this->ui->metaFrameDimensionsCheckBox->isChecked();
+            this->ui->metaFrameWidthEdit->setReadOnly(isReadOnly);
+            this->ui->metaFrameHeightEdit->setReadOnly(isReadOnly);
+            const D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
+            int w, h;
+            if (isReadOnly) {
+                QSize fs = this->gfx->getFrameSize();
+                w = fs.width();
+                h = fs.height();
+                meta->setWidth(w);
+                meta->setHeight(h);
+            } else {
+                w = meta->getWidth();
+                h = meta->getHeight();
+            }
+            this->ui->metaFrameWidthEdit->setText(QString::number(w));
+            this->ui->metaFrameHeightEdit->setText(QString::number(h));
+        }
+        {
+            QString txt = this->gfx->getMeta(CELMETA_ANIMORDER)->getContent();
+            if (txt != this->ui->animOrderEdit->toPlainText()) {
+                this->ui->animOrderEdit->blockSignals(true);
+                this->ui->animOrderEdit->setPlainText();
+                this->ui->animOrderEdit->blockSignals(false);
+            }
+        }
         this->ui->actionFramesEdit->setText(this->gfx->getMeta(CELMETA_ACTIONFRAMES)->getContent());
     }
 
@@ -1481,6 +1507,45 @@ void CelView::on_metaStoredCheckBox_clicked()
     meta->setStored(!meta->isStored());
     this->gfx->setModified();
 
+    this->updateFields();
+}
+
+void CelView::on_metaFrameWidthEdit_returnPressed()
+{
+    QString text = this->ui->metaFrameWidthEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
+    meta->setWidth(text.toInt());
+
+    this->on_metaFrameWidthEdit_escPressed();
+}
+
+void CelView::on_metaFrameWidthEdit_escPressed()
+{
+    // update metaFrameWidthEdit
+    this->updateFields();
+    this->ui->metaFrameWidthEdit->clearFocus();
+}
+
+void CelView::on_metaFrameHeightEdit_returnPressed()
+{
+    QString text = this->ui->metaFrameHeightEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
+    meta->setHeight(text.toInt());
+
+    this->on_metaFrameHeightEdit_escPressed();
+}
+
+void CelView::on_metaFrameHeightEdit_escPressed()
+{
+    // update metaFrameHeightEdit
+    this->updateFields();
+    this->ui->metaFrameHeightEdit->clearFocus();
+}
+
+void CelView::on_metaFrameDimensionsCheckBox_clicked()
+{
     this->updateFields();
 }
 

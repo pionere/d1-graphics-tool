@@ -1318,7 +1318,7 @@ bool D1GfxMeta::setStored(bool stored)
     this->mStored = stored;
     return true;
 }
-#if 0
+
 bool D1GfxMeta::setWidth(int w)
 {
     QString nc = this->mContent;
@@ -1330,6 +1330,13 @@ bool D1GfxMeta::setWidth(int w)
     if (this->mContent == nc) return false;
     this->mContent = nc;
     return true;
+}
+int D1GfxMeta::getWidth() const
+{
+    if (this->mContent.isEmpty()) {
+        return 0;
+    }
+    return this->mContent.left(this->mContent.indexOf('x')).toInt();
 }
 bool D1GfxMeta::setHeight(int h)
 {
@@ -1343,7 +1350,14 @@ bool D1GfxMeta::setHeight(int h)
     this->mContent = nc;
     return true;
 }
-#endif
+int D1GfxMeta::getHeight() const
+{
+    if (this->mContent.isEmpty()) {
+        return 0;
+    }
+    return this->mContent.mid(this->mContent.indexOf('x') + 1).toInt();
+}
+
 bool D1GfxMeta::setContent(const QString &content)
 {
     if (this->mContent == content) return false;
