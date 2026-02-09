@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <QMimeData>
 #include <QRegularExpression>
+#include <QScrollBar>
 
 #include "config.h"
 #include "d1cel.h"
@@ -295,8 +296,8 @@ CelView::CelView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
-    this->ui->celGraphicsView->horizontalScrollBar()->installEventFilter(WheelEventFilter(this->ui->celGraphicsView->horizontalScrollBar()));
-    this->ui->celGraphicsView->verticalScrollBar()->installEventFilter(WheelEventFilter(this->ui->celGraphicsView->verticalScrollBar()));
+    this->ui->celGraphicsView->horizontalScrollBar()->installEventFilter(new WheelEventFilter(this->ui->celGraphicsView->horizontalScrollBar()));
+    this->ui->celGraphicsView->verticalScrollBar()->installEventFilter(new WheelEventFilter(this->ui->celGraphicsView->verticalScrollBar()));
 
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
