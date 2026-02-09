@@ -515,8 +515,8 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="12" colspan="7" name="switchToMetaHorizontalLayout">
-       <layout class="QHBoxLayout">
+      <item row="2" column="12" colspan="7">
+       <layout class="QHBoxLayout" name="switchToMetaHorizontalLayout">
         <property name="topMargin">
          <number>0</number>
         </property>
