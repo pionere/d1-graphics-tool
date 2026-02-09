@@ -492,6 +492,7 @@ void CelView::updateFields()
     { // update metatypes
         QComboBox *comboBox = this->ui->metaTypeComboBox;
         int prevIndex = comboBox->currentIndex();
+        const QSize fs = this->gfx->getFrameSize();
         comboBox->hide();
         comboBox->clear();
         for (int i = 0; i < NUM_CELMETA; i++) {
@@ -499,7 +500,7 @@ void CelView::updateFields()
             QString mark = "-";
             if (meta->isStored()) {
                 mark = "+";
-                if ((i == CELMETA_DIMENSIONS && !this->gfx->getFrameSize().isValid() && !this->ui->metaFrameDimensionsCheckBox->isChecked()) ||
+                if ((i == CELMETA_DIMENSIONS && !fs.isValid() && !this->ui->metaFrameDimensionsCheckBox->isChecked()) ||
                     (i == CELMETA_DIMENSIONS_PER_FRAME && this->gfx->getFrameCount() == 0))
                     mark = "?";
                 if (i == CELMETA_ACTIONFRAMES || i == CELMETA_ANIMORDER) {
@@ -519,13 +520,15 @@ void CelView::updateFields()
         this->ui->metaStoredCheckBox->setChecked(meta->isStored());
         {
             bool isReadOnly = !this->ui->metaFrameDimensionsCheckBox->isChecked();
+            if (this->gfx->getFrameCount() == 0 || !fs.isValid()) {
+                isReadOnly = false;
+            }
             this->ui->metaFrameWidthEdit->setReadOnly(isReadOnly);
             this->ui->metaFrameHeightEdit->setReadOnly(isReadOnly);
             this->ui->metaFrameHeightEdit->update();
             D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
             int w, h;
             if (isReadOnly) {
-                QSize fs = this->gfx->getFrameSize();
                 w = fs.width();
                 h = fs.height();
                 meta->setWidth(w);

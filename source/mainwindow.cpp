@@ -1207,6 +1207,51 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
     QMainWindow::keyReleaseEvent(event);
 }
 
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    const bool noZoom = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    QPoint numPixels = event->pixelDelta();
+    QPoint numDegrees = event->angleDelta() / 8;
+    int dir = 0;
+    if (numPixels.isNull()) {
+        numPixels = numDegrees / 15;
+    }
+    if (!numPixels.isNull()) {
+        dir = numPixels.x();
+        int dy = numPixels.y();
+        if (abs(dy) > abs(dir)) {
+            dir = dy;
+        }
+    }
+    if (dir != 0) {
+        if (noZoom) {
+            if (this->isPainting()) {
+                this->paintWidget->adjustBrush(dir);
+            }
+        } else {
+            CelScene *scene = nullptr;
+            if (this->celView != nullptr) {
+                scene = this->celView->getCelScene();
+            } else if (this->levelCelView != nullptr) {
+                scene = this->levelCelView->getCelScene();
+            } else if (this->gfxsetView != nullptr) {
+                scene = this->gfxsetView->getCelScene();
+            }
+            if (scene != nullptr) {
+                if (dir >= 0) {
+                    scene->zoomIn();
+                } else {
+                    scene->zoomOut();
+                }
+            }
+        }
+    }
+
+
+    event->accept();
+}
+
 void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {

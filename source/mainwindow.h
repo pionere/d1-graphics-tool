@@ -354,6 +354,8 @@ private slots:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
+    void wheelEvent(QWheelEvent *event) override;
+
     // this event is called, when a new translator is loaded or the system language is changed
     void changeEvent(QEvent *event) override;
 

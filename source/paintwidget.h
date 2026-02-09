@@ -55,6 +55,7 @@ public:
     void pasteCurrentImage(const QImage &image);
     void deleteCurrent();
     void toggleMode();
+    void adjustBrush(int dir);
 
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;

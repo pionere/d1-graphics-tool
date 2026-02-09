@@ -1,5 +1,7 @@
 #include "d1gfx.h"
 
+#include <set>
+
 #include <QApplication>
 #include <QMessageBox>
 
@@ -1811,6 +1813,57 @@ bool D1Gfx::check() const
     if (gs < 0) {
         dProgress() << tr("Groupsize is not constant");
         result = true;
+    }
+    { // test whether the meta-data is used
+        if (this->clipped  && (this->getMeta(CELMETA_DIMENSIONS)->isStored() || this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored())) {
+            dProgressWarn() << tr("Dimensions are not required for clipped graphics");
+        }
+        if (this->getGroupCount() > 1 && this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored()) {
+            dProgressWarn() << tr("Groupped graphics should not require Dimensions Per Frame");
+        }
+        if (this->getGroupCount() > 1 && this->getMeta(CELMETA_ANIMORDER)->isStored()) {
+            dProgressWarn() << tr("Animation Order is not used in groupped graphics");
+        }
+        if (this->getGroupCount() != NUM_DIRS && this->getMeta(CELMETA_ACTIONFRAMES)->isStored()) {
+            dProgressWarn() << tr("Action Frames are not used in non-directional graphics");
+        }
+    }
+    { // test anim order meta
+    const D1GfxMeta *meta = this->getMeta(CELMETA_ANIMORDER);
+    if (meta->isStored()) {
+        QList<int> aoList;
+        int num = D1Cel::parseFrameList(meta->getContent(), aoList);
+        if (aoList.isEmpty() || num != aoList.count()) {
+             dProgressErr() << tr("AnimOrder is not valid");
+             result = true;
+        }
+        const int fc = this->getFrameCount();
+        std::set<int> frameSet;
+        for (int i = 0; i < fc; i++) {
+            frameSet.insert(i + 1);
+        }
+        for (int ao : aoList) {
+            frameSet.erase(i);
+            if (ao > fc) {
+                dProgressErr() << tr("Frame number %1 in the AnimOrder is too high (Limit : %2)").arg(ao).arg(fc);
+                result = true;
+            }
+        }
+        for (auto it = frameSet.begin(); it != frameSet.end(); ) {
+            int fn = *it;
+            int ln = fn;
+            auto nit = it;
+            while (true) {
+                nit++;
+                if (nit == frameSet.end() || *nit != ln + 1) break;
+                ln++;
+            }
+            it = nit;
+
+            dProgressWarn() << tr("Frames %1-%2 are not used in the AnimOrder", "", ln - fn + 1).arg(fn).arg(ln);
+            result = true;
+        }
+    }
     }
     // test towner graphics
     QString filePath = this->getFilePath();
