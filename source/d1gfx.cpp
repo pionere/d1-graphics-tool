@@ -1842,10 +1842,10 @@ bool D1Gfx::check() const
         for (int i = 0; i < fc; i++) {
             frameSet.insert(i + 1);
         }
-        for (int ao : aoList) {
-            frameSet.erase(i);
-            if (ao > fc) {
-                dProgressErr() << tr("Frame number %1 in the AnimOrder is too high (Limit : %2)").arg(ao).arg(fc);
+        for (int fn : aoList) {
+            frameSet.erase(fn);
+            if (fn > fc) {
+                dProgressErr() << tr("Frame number %1 in the AnimOrder is too high (Limit : %2)").arg(fn).arg(fc);
                 result = true;
             }
         }
