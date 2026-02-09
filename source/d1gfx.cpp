@@ -690,6 +690,20 @@ D1SmkAudioData *D1GfxFrame::getFrameAudio()
     return this->frameAudio;
 }
 
+QString D1Gfx::gfxTypeToStr(D1CEL_TYPE type)
+{
+    QString result = QApplication::tr("Unknown");
+    switch (type) {
+    case D1CEL_TYPE::V1_REGULAR:         result = QApplication::tr("regular (v1)");     break;
+    case D1CEL_TYPE::V1_COMPILATION:     result = QApplication::tr("compilation (v1)"); break;
+    case D1CEL_TYPE::V1_LEVEL:           result = QApplication::tr("level (v1)");       break;
+    case D1CEL_TYPE::V2_MONO_GROUP:      result = QApplication::tr("mono group (v2)");  break;
+    case D1CEL_TYPE::V2_MULTIPLE_GROUPS: result = QApplication::tr("multi group (v2)"); break;
+    case D1CEL_TYPE::SMK:                result = QApplication::tr("smacker file");     break;
+    }
+    return result;
+}
+
 D1Gfx::~D1Gfx()
 {
     this->clear();
@@ -720,20 +734,6 @@ static void reportDiff(const QString text, QString &header)
         header.clear();
     }
     dProgress() << text;
-}
-
-static QString celTypeToStr(D1CEL_TYPE type)
-{
-    QString result = QApplication::tr("Unknown");
-    switch (type) {
-    case D1CEL_TYPE::V1_REGULAR:         result = QApplication::tr("regular (v1)");     break;
-    case D1CEL_TYPE::V1_COMPILATION:     result = QApplication::tr("compilation (v1)"); break;
-    case D1CEL_TYPE::V1_LEVEL:           result = QApplication::tr("level (v1)");       break;
-    case D1CEL_TYPE::V2_MONO_GROUP:      result = QApplication::tr("mono group (v2)");  break;
-    case D1CEL_TYPE::V2_MULTIPLE_GROUPS: result = QApplication::tr("multi group (v2)"); break;
-    case D1CEL_TYPE::SMK:                result = QApplication::tr("smacker file");     break;
-    }
-    return result;
 }
 
 static int getFrameDiff(const D1GfxFrame *frameA, const D1GfxFrame *frameB)
@@ -796,7 +796,7 @@ QString D1Gfx::clippedtoStr(bool clipped)
 void D1Gfx::compareTo(const D1Gfx *gfx, QString &header, bool patchData) const
 {
     if (gfx->type != this->type) {
-        reportDiff(QApplication::tr("type is %1 (was %2)").arg(celTypeToStr(this->type)).arg(celTypeToStr(gfx->type)), header);
+        reportDiff(QApplication::tr("type is %1 (was %2)").arg(D1Gfx::gfxTypeToStr(this->type)).arg(D1Gfx::gfxTypeToStr(gfx->type)), header);
     }
     if (gfx->clipped != this->clipped) {
         reportDiff(QApplication::tr("%1 (was %2)").arg(D1Gfx::clippedtoStr(this->clipped)).arg(D1Gfx::clippedtoStr(gfx->clipped)), header);

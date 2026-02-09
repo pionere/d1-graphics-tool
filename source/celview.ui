@@ -622,6 +622,23 @@
            <item>
             <widget class="QLabel">
              <property name="text">
+              <string>Type:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="gfxTypeComboBox">
+             <property name="toolTip">
+              <string>Type of the graphics</string>
+             </property>
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel">
+             <property name="text">
               <string>Clipped:</string>
              </property>
             </widget>

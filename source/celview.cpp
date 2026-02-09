@@ -494,6 +494,16 @@ void CelView::updateFields()
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
 
+    { // update gfxtype
+        QComboBox *comboBox = this->ui->gfxTypeComboBox;
+        comboBox->hide();
+        comboBox->clear();
+        for (int i = 0; i < 6; i++) {
+            comboBox->addItem(D1Gfx::gfxTypeToStr((D1CEL_TYPE)i), i);
+        }
+        comboBox->show();
+        comboBox->setCurrentIndex((int)this->gfx->getType());
+    }
     { // update metatypes
         QComboBox *comboBox = this->ui->metaTypeComboBox;
         int prevIndex = comboBox->currentIndex();
@@ -1779,6 +1789,11 @@ void CelView::timerEvent(QTimerEvent *event)
         this->timerEvent();
     }
 */
+}
+
+void CelView::wheelEvent(QWheelEvent *event)
+{
+    // skip to let MainWindow handle it
 }
 
 void CelView::dragEnterEvent(QDragEnterEvent *event)
