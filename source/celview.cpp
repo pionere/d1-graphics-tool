@@ -24,6 +24,19 @@
 #include "ui_celview.h"
 #include "upscaler.h"
 
+
+bool WheelEventFilter::eventFilter(QObject* object, QEvent* event)
+{
+    if (/*object == verticalScrollBar() &&*/ event->type() == QEvent::Wheel)  {
+        return true;
+    }
+    if (/*object == horizontalScrollBar() &&*/ event->type() == QEvent::Wheel)  {
+        return true;
+    }
+
+    return false;
+}
+
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene(v)
 {
@@ -163,12 +176,12 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     this->mouseHoverEvent(event);
 }
-
+#if 0
 void CelScene::wheelEvent(QGraphicsSceneWheelEvent *event)
 {
     // skip to let MainWindow handle it
 }
-
+#endif
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     this->dragMoveEvent(event);
@@ -282,6 +295,9 @@ CelView::CelView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
+    this->ui->celGraphicsView->horizontalScrollBar()->installEventFilter(WheelEventFilter(this->ui->celGraphicsView->horizontalScrollBar()));
+    this->ui->celGraphicsView->verticalScrollBar()->installEventFilter(WheelEventFilter(this->ui->celGraphicsView->verticalScrollBar()));
+
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();
@@ -1791,11 +1807,14 @@ void CelView::timerEvent(QTimerEvent *event)
 */
 }
 
+#if 0
 void CelView::wheelEvent(QWheelEvent *event)
 {
+    // dMainWindow().wheelEvent(event);
+    // event->accept();
     // skip to let MainWindow handle it
 }
-
+#endif
 void CelView::dragEnterEvent(QDragEnterEvent *event)
 {
     this->dragMoveEvent(event);
