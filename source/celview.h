@@ -81,7 +81,7 @@ private:
     QPoint lastPos;
 };
 
-class WheelEventFilter {
+class WheelEventFilter : public QObject {
     Q_OBJECT
 
 public:
