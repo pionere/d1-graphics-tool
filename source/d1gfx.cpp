@@ -1817,15 +1817,19 @@ bool D1Gfx::check() const
     { // test whether the meta-data is used
         if (this->clipped  && (this->getMeta(CELMETA_DIMENSIONS)->isStored() || this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored())) {
             dProgressWarn() << tr("Dimensions are not required for clipped graphics");
+            result = true;
         }
         if (this->getGroupCount() > 1 && this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored()) {
             dProgressWarn() << tr("Groupped graphics should not require Dimensions Per Frame");
+            result = true;
         }
         if (this->getGroupCount() > 1 && this->getMeta(CELMETA_ANIMORDER)->isStored()) {
             dProgressWarn() << tr("Animation Order is not used in groupped graphics");
+            result = true;
         }
         if (this->getGroupCount() != NUM_DIRS && this->getMeta(CELMETA_ACTIONFRAMES)->isStored()) {
             dProgressWarn() << tr("Action Frames are not used in non-directional graphics");
+            result = true;
         }
     }
     { // test anim order meta
@@ -1864,6 +1868,23 @@ bool D1Gfx::check() const
             result = true;
         }
     }
+    { // test action frames meta
+    const D1GfxMeta *meta = this->getMeta(CELMETA_ACTIONFRAMES);
+    if (meta->isStored()) {
+        QList<int> afList;
+        int num = D1Cel::parseFrameList(meta->getContent(), afList);
+        if (afList.isEmpty() || num != afList.count()) {
+             dProgressErr() << tr("Action Frames are not valid");
+             result = true;
+        }
+        const int fc = this->getFrameCount();
+        for (int fn : afList) {
+            if (fn > fc) {
+                dProgressErr() << tr("Frame number %1 in the Action Frames is too high (Limit : %2)").arg(fn).arg(fc);
+                result = true;
+            }
+        }
+    }
     }
     // test towner graphics
     QString filePath = this->getFilePath();
@@ -1885,10 +1906,10 @@ bool D1Gfx::check() const
                     ao++;
                 }
                 if (mf > gs) {
-                    dProgress() << QApplication::tr("Not enough frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
+                    dProgressErr() << QApplication::tr("Not enough frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
                     result = true;
                 } else if (gs > mf) {
-                    dProgress() << QApplication::tr("Too many frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
+                    dProgressWarn() << QApplication::tr("Too many frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
                     result = true;
                 }
             }

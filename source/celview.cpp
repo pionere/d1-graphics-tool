@@ -164,6 +164,11 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     this->mouseHoverEvent(event);
 }
 
+void wheelEvent(QGraphicsSceneWheelEvent *event)
+{
+    // skip to let MainWindow handle it
+}
+
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     this->dragMoveEvent(event);

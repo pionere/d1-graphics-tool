@@ -515,7 +515,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="12" colspan="6">
+      <item row="2" column="12" colspan="7" name="switchToMetaHorizontalLayout">
        <layout class="QHBoxLayout">
         <property name="topMargin">
          <number>0</number>
@@ -582,16 +582,6 @@
           </property>
          </spacer>
         </item-->
-       </layout>
-      </item>
-      <item row="2" column="18">
-       <layout class="QHBoxLayout" name="switchToMetaHorizontalLayout">
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
        </layout>
       </item>
      </layout>
