@@ -197,6 +197,7 @@ private slots:
 
     void timerEvent(QTimerEvent *event) override;
 
+    void wheelEvent(QWheelEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
