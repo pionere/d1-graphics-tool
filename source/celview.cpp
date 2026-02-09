@@ -549,7 +549,7 @@ void CelView::updateFields()
             comboBox->addItem(QString("%1 %2 %1").arg(mark).arg(D1GfxMeta::metaTypeToStr(i)), i);
         }
         comboBox->show();
-        comboBox->setCurrentIndex();
+        comboBox->setCurrentIndex(prevIndex);
 
         const bool isStored = this->gfx->getMeta(prevIndex)->isStored();
         this->ui->metaStoredCheckBox->setChecked(isStored);
