@@ -296,8 +296,11 @@ CelView::CelView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
-    this->ui->celGraphicsView->horizontalScrollBar()->installEventFilter(new WheelEventFilter(this->ui->celGraphicsView->horizontalScrollBar()));
-    this->ui->celGraphicsView->verticalScrollBar()->installEventFilter(new WheelEventFilter(this->ui->celGraphicsView->verticalScrollBar()));
+    QScrollBar *sb;
+    sb = this->ui->celGraphicsView->horizontalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+    sb = this->ui->celGraphicsView->verticalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
 
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
@@ -523,7 +526,7 @@ void CelView::updateFields()
     }
     { // update metatypes
         QComboBox *comboBox = this->ui->metaTypeComboBox;
-        int prevIndex = comboBox->currentIndex();
+        int prevIndex = std::max(0, comboBox->currentIndex());
         const QSize fs = this->gfx->getFrameSize();
         comboBox->hide();
         comboBox->clear();
@@ -546,10 +549,10 @@ void CelView::updateFields()
             comboBox->addItem(QString("%1 %2 %1").arg(mark).arg(D1GfxMeta::metaTypeToStr(i)), i);
         }
         comboBox->show();
-        comboBox->setCurrentIndex(std::max(0, prevIndex));
+        comboBox->setCurrentIndex();
 
-        const D1GfxMeta *meta = this->gfx->getMeta(prevIndex);
-        this->ui->metaStoredCheckBox->setChecked(meta->isStored());
+        const bool isStored = this->gfx->getMeta(prevIndex)->isStored();
+        this->ui->metaStoredCheckBox->setChecked(isStored);
         {
             bool isReadOnly = !this->ui->metaFrameDimensionsCheckBox->isChecked();
             if (this->gfx->getFrameCount() == 0 || !fs.isValid()) {
