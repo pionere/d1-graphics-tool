@@ -1868,6 +1868,7 @@ bool D1Gfx::check() const
             result = true;
         }
     }
+    }
     { // test action frames meta
     const D1GfxMeta *meta = this->getMeta(CELMETA_ACTIONFRAMES);
     if (meta->isStored()) {
