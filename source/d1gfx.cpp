@@ -3688,14 +3688,15 @@ bool D1Gfx::patchWarriorStand(bool silent)
 bool D1Gfx::addAnimDelayInfo(int gfxFileIndex, bool silent)
 {
     int frameDelay = 0;
-    switch (index) {
-    case FILE_TWN_FARMER:
-    case FILE_TWN_CFARMER:
-    case FILE_TWN_MFARMER: frameDelay = 3; break;
-    case FILE_TWN_GIRLW:
-    case FILE_TWN_GIRLS:   frameDelay = 6; break;
+    switch (gfxFileIndex) {
+    case GFX_TWN_FARMER:
+    case GFX_TWN_CFARMER:
+    case GFX_TWN_MFARMER: frameDelay = 3; break;
+    case GFX_TWN_GIRLW:
+    case GFX_TWN_GIRLS:   frameDelay = 6; break;
     }
     D1GfxMeta *meta = this->getMeta(CELMETA_ANIMDELAY);
+    bool result = false;
     if (meta->setStored(true)) {
         result = true;
         meta->setContent(QString::number(frameDelay));
@@ -8736,11 +8737,11 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
-    case GFX_TWN_FARMER,  // Farmrn2.CEL
-    case GFX_TWN_CFARMER, // cfrmrn2.CEL
-    case GFX_TWN_MFARMER, // mfrmrn2.CEL
-    case GFX_TWN_GIRLW,   // Girlw1.CEL
-    case GFX_TWN_GIRLS,   // Girls1.CEL
+    case GFX_TWN_FARMER:  // Farmrn2.CEL
+    case GFX_TWN_CFARMER: // cfrmrn2.CEL
+    case GFX_TWN_MFARMER: // mfrmrn2.CEL
+    case GFX_TWN_GIRLW:   // Girlw1.CEL
+    case GFX_TWN_GIRLS:   // Girls1.CEL
         change = this->addAnimDelayInfo(gfxFileIndex, silent);
         break;
     case GFX_MON_FALLGD: // patch Fallgd.CL2
