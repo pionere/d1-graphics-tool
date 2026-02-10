@@ -593,7 +593,7 @@ void CelView::updateFields()
             }
         }
         {
-            D1GfxMeta *meta = this->getMeta(CELMETA_ANIMDELAY);
+            D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMDELAY);
             QString animDelay = meta->getContent();
             QCheckBox *cb = this->ui->metaAnimDelayCheckBox;
             Qt::CheckState mode = cb->checkState();

@@ -1851,7 +1851,7 @@ bool D1Gfx::check() const
     { // test anim delay
     const D1GfxMeta *meta = this->getMeta(CELMETA_ANIMDELAY);
     if (meta->isStored()) {
-        int delay = meta->getContent()->toInt();
+        int delay = meta->getContent().toInt();
         if (delay <= 0) {
              dProgressErr() << tr("Animation Delay is not valid");
              result = true;

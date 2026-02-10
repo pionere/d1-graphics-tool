@@ -54,7 +54,7 @@ quint32 so = startOffset;
                 // meta->setContent("x");
             }
         } break;
-        case CELMETA_ANIMORDER: {
+        case CELMETA_ANIMDELAY: {
             startOffset++;
 
             quint8 delay;
