@@ -1673,6 +1673,11 @@ void CelView::on_animDelayEdit_escPressed()
     this->ui->animDelayEdit->clearFocus();
 }
 
+void CelView::on_metaAnimDelayCheckBox_clicked()
+{
+    this->updateFields();
+}
+
 void CelView::on_actionFramesEdit_returnPressed()
 {
     QString text = this->ui->actionFramesEdit->text();
