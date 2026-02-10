@@ -1631,7 +1631,7 @@ void CelView::on_formatAnimOrderButton_clicked()
 {
     QString text = this->ui->animOrderEdit->toPlainText();
 
-    formatFrameList(text);
+    D1Cel::formatFrameList(text);
 
     this->ui->animOrderEdit->setPlainText(text);
 
@@ -1681,7 +1681,7 @@ void CelView::on_formatActionFramesButton_clicked()
 {
     QString text = this->ui->actionFramesEdit->text();
 
-    formatFrameList(text);
+    D1Cel::formatFrameList(text);
 
     this->ui->actionFramesEdit->setText(text);
 

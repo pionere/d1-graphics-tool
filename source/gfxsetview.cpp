@@ -109,6 +109,7 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
         const D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMDELAY);
         if (meta->isStored()) {
             this->currentPlayDelay = meta->getContent().toInt() * (1000000 / 20);
+        }
     }
 
     this->updateFields();
@@ -1676,7 +1677,7 @@ void GfxsetView::on_formatAnimOrderButton_clicked()
 {
     QString text = this->ui->animOrderEdit->toPlainText();
 
-    formatFrameList(text);
+    D1Cel::formatFrameList(text);
 
     this->ui->animOrderEdit->setPlainText(text);
 
@@ -1726,7 +1727,7 @@ void GfxsetView::on_formatActionFramesButton_clicked()
 {
     QString text = this->ui->actionFramesEdit->text();
 
-    formatFrameList(text);
+    D1Cel::formatFrameList(text);
 
     this->ui->actionFramesEdit->setText(text);
 
