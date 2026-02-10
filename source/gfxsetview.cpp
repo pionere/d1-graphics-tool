@@ -433,7 +433,7 @@ void GfxsetView::updateFields()
                 h = fs.height();
                 bool change = meta->setWidth(w);
                 change |= meta->setHeight(h);
-                if (change)
+                if (change && meta->isStored())
                     this->gfx->setModified();
             } else {
                 w = meta->getWidth();
@@ -1631,7 +1631,7 @@ void GfxsetView::on_metaFrameWidthEdit_returnPressed()
     QString text = this->ui->metaFrameWidthEdit->text();
 
     D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
-    if (meta->setWidth(text.toInt()))
+    if (meta->setWidth(text.toInt()) && meta->isStored())
         this->gfx->setModified();
 
     this->on_metaFrameWidthEdit_escPressed();
@@ -1649,7 +1649,7 @@ void GfxsetView::on_metaFrameHeightEdit_returnPressed()
     QString text = this->ui->metaFrameHeightEdit->text();
 
     D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
-    if (meta->setHeight(text.toInt()))
+    if (meta->setHeight(text.toInt()) && meta->isStored())
         this->gfx->setModified();
 
     this->on_metaFrameHeightEdit_escPressed();

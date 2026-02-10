@@ -272,8 +272,7 @@ gfx.modified = true;
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
-extern QString log;
-log.clear();
+dProgress() << tr("gfx loaded with %1").arg(this->metas[CELMETA_ANIMDELAY].getContent());
     /*while (!invalidFrames.empty()) {
         quint16 frameIndex = invalidFrames.top();
         invalidFrames.pop();

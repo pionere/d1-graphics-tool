@@ -18,8 +18,6 @@
 #include "dungeon/enums.h"
 #include "dungeon/patchdat.h"
 
-QString log;
-
 D1GfxPixel D1GfxPixel::transparentPixel()
 {
     D1GfxPixel pixel;
@@ -1358,7 +1356,7 @@ int D1GfxMeta::getHeight() const
 bool D1GfxMeta::setContent(const QString &content)
 {
     if (this->mContent == content) return false;
-    log.append(tr("%1 to %2").arg(this->mContent).arg(content));
+dProgress() << tr("setContent %1 to %2").arg(this->mContent).arg(content);
     this->mContent = content;
     return true;
 }
@@ -2322,11 +2320,8 @@ D1GfxMeta *D1Gfx::getMeta(int type) const
 
 void D1Gfx::setMetaContent(int type, const QString &content)
 {
-    if (this->metas[type].setContent(content)) {
-QMessageBox::critical(nullptr, "Error", log);
-log.clear();
+    if (this->metas[type].setContent(content) && this->metas[type].isStored())
         this->modified = true;
-    }
 }
 
 void D1Gfx::saveComponents()
