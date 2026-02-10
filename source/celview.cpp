@@ -570,8 +570,10 @@ void CelView::updateFields()
             if (isReadOnly) {
                 w = fs.width();
                 h = fs.height();
-                meta->setWidth(w);
-                meta->setHeight(h);
+                bool change = meta->setWidth(w);
+                change |= meta->setHeight(h);
+                if (change)
+                    this->gfx->setModified();
             } else {
                 w = meta->getWidth();
                 h = meta->getHeight();
@@ -599,7 +601,7 @@ void CelView::updateFields()
                 isReadOnly = true;
                 int adInt = this->currentPlayDelay * 20 / 1000000;
                 animDelay = QString::number(adInt);
-                meta->setContent(animDelay);
+                this->gfx->setMetaContent(CELMETA_ANIMDELAY, animDelay);
             } else if (mode == Qt::PartiallyChecked) {
                 cb->setToolTip(tr("Update the playback setting"));
 
@@ -1583,7 +1585,8 @@ void CelView::on_metaFrameWidthEdit_returnPressed()
     QString text = this->ui->metaFrameWidthEdit->text();
 
     D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
-    meta->setWidth(text.toInt());
+    if (meta->setWidth(text.toInt()))
+        this->gfx->setModified();
 
     this->on_metaFrameWidthEdit_escPressed();
 }
@@ -1600,7 +1603,8 @@ void CelView::on_metaFrameHeightEdit_returnPressed()
     QString text = this->ui->metaFrameHeightEdit->text();
 
     D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
-    meta->setHeight(text.toInt());
+    if (meta->setHeight(text.toInt()))
+        this->gfx->setModified();
 
     this->on_metaFrameHeightEdit_escPressed();
 }
@@ -1621,8 +1625,7 @@ void CelView::on_animOrderEdit_textChanged()
 {
     QString text = this->ui->animOrderEdit->toPlainText();
 
-    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMORDER);
-    meta->setContent(text);
+    this->gfx->setMetaContent(CELMETA_ANIMORDER, text);
 
     this->updateFields();
 }
@@ -1642,8 +1645,7 @@ void CelView::on_animDelayEdit_returnPressed()
 {
     QString text = this->ui->animDelayEdit->text();
 
-    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMDELAY);
-    meta->setContent(text);
+    this->gfx->setMetaContent(CELMETA_ANIMDELAY, text);
 
     this->on_animDelayEdit_escPressed();
 }
@@ -1664,8 +1666,7 @@ void CelView::on_actionFramesEdit_returnPressed()
 {
     QString text = this->ui->actionFramesEdit->text();
 
-    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ACTIONFRAMES);
-    meta->setContent(text);
+    this->gfx->setMetaContent(CELMETA_ACTIONFRAMES, text);
 
     this->on_actionFramesEdit_escPressed();
 }

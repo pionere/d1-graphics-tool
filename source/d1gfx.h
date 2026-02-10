@@ -393,6 +393,7 @@ public:
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
     D1GfxMeta *getMeta(int type) const;
+    void setMetaContent(int type, const QString &content);
 
     QString getCompFilePath() const;
     void setCompFilePath(const QString &filePath);

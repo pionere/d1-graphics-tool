@@ -2317,6 +2317,12 @@ D1GfxMeta *D1Gfx::getMeta(int type) const
     return const_cast<D1GfxMeta *>(&this->metas[type]);
 }
 
+void D1Gfx::setMetaContent(int type, const QString &content)
+{
+    if (this->metas[type].setContent(content))
+        this->modified = true;
+}
+
 void D1Gfx::saveComponents()
 {
     for (int i = 0; i < this->getComponentCount(); i++) {
