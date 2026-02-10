@@ -95,7 +95,7 @@ quint32 so = startOffset;
 bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
-
+gfx.modified = true;
     // Opening CEL file and load it in RAM
     QFile file = QFile(filePath);
 
@@ -272,6 +272,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
+extern QString log;
+log.clear();
     /*while (!invalidFrames.empty()) {
         quint16 frameIndex = invalidFrames.top();
         invalidFrames.pop();
