@@ -3679,6 +3679,28 @@ bool D1Gfx::patchWarriorStand(bool silent)
     return result;
 }
 
+bool D1Gfx::addAnimDelayInfo(int gfxFileIndex, bool silent)
+{
+    int frameDelay = 0;
+    switch (index) {
+    case FILE_TWN_FARMER:
+    case FILE_TWN_CFARMER:
+    case FILE_TWN_MFARMER: frameDelay = 3; break;
+    case FILE_TWN_GIRLW:
+    case FILE_TWN_GIRLS:   frameDelay = 6; break;
+    }
+    D1GfxMeta *meta = this->getMeta(CELMETA_ANIMDELAY);
+    if (meta->setStored(true)) {
+        result = true;
+        meta->setContent(QString::number(frameDelay));
+        this->setModified();
+        if (!silent) {
+            dProgress() << QApplication::tr("Added FrameDelay %1 meta info.").arg(frameDelay);
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchFallGDie(bool silent)
 {
     constexpr int frameCount = 17;
@@ -8708,6 +8730,13 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
+    case GFX_TWN_FARMER,  // Farmrn2.CEL
+    case GFX_TWN_CFARMER, // cfrmrn2.CEL
+    case GFX_TWN_MFARMER, // mfrmrn2.CEL
+    case GFX_TWN_GIRLW,   // Girlw1.CEL
+    case GFX_TWN_GIRLS,   // Girls1.CEL
+        change = this->addAnimDelayInfo(gfxFileIndex, silent);
+        break;
     case GFX_MON_FALLGD: // patch Fallgd.CL2
         change = this->patchFallGDie(silent);
         break;
@@ -8848,6 +8877,21 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "l5light") {
         fileIndex = GFX_OBJ_L5LIGHT;
+    }
+    if (baseName == "farmrn2") {
+        fileIndex = GFX_TWN_FARMER;
+    }
+    if (baseName == "cfrmrn2") {
+        fileIndex = GFX_TWN_CFARMER;
+    }
+    if (baseName == "mfrmrn2") {
+        fileIndex = GFX_TWN_MFARMER;
+    }
+    if (baseName == "girlw1") {
+        fileIndex = GFX_TWN_GIRLW;
+    }
+    if (baseName == "girls1") {
+        fileIndex = GFX_TWN_GIRLS;
     }
     if (baseName == "spelicon") {
         fileIndex = GFX_SPL_ICONS;
