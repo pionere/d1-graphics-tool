@@ -5,11 +5,14 @@
 #include <QAction>
 #include <QDebug>
 #include <QFileInfo>
+#include <QFontMetrics>
 #include <QGraphicsPixmapItem>
 #include <QImageReader>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QRegularExpression>
+#include <QScrollBar>
 
 #include "config.h"
 #include "d1cel.h"
@@ -29,6 +32,12 @@ GfxsetView::GfxsetView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
+    QScrollBar *sb;
+    sb = this->ui->celGraphicsView->horizontalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+    sb = this->ui->celGraphicsView->verticalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();
@@ -42,6 +51,21 @@ GfxsetView::GfxsetView(QWidget *parent)
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
+    layout = this->ui->switchToMetaHorizontalLayout;
+    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, tr("Switch to metadata view"), this, &GfxsetView::on_actionToggle_Mode_triggered);
+    layout->setAlignment(btn, Qt::AlignRight);
+
+    layout = this->ui->switchToDisplayHorizontalLayout;
+    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to display view"), this, &GfxsetView::on_actionToggle_Mode_triggered);
+    layout->setAlignment(btn, Qt::AlignRight);
+
+    QTextEdit *edit = this->ui->animOrderEdit;
+    QFontMetrics fm = this->fontMetrics();
+    int RowHeight = fm.lineSpacing() ;
+    const QMargins qm = edit->contentsMargins();
+    QGridLayout *grid = this->ui->animOrderGridLayout;
+    edit->setFixedHeight(2 * RowHeight + qm.top() + qm.bottom() + grid->verticalSpacing());
+
     this->loadGfxBtn = PushButtonWidget::addButton(this, QStyle::SP_FileDialogNewFolder, tr("Replace graphics"), this, &GfxsetView::on_loadGfxPushButtonClicked);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
@@ -54,6 +78,10 @@ GfxsetView::GfxsetView(QWidget *parent)
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
     QObject::connect(this->ui->assetMplEdit, SIGNAL(cancel_signal()), this, SLOT(on_assetMplEdit_escPressed()));
+    QObject::connect(this->ui->metaFrameWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_metaFrameWidthEdit_escPressed()));
+    QObject::connect(this->ui->metaFrameHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_metaFrameHeightEdit_escPressed()));
+    QObject::connect(this->ui->animDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_animDelayEdit_escPressed()));
+    QObject::connect(this->ui->actionFramesEdit, SIGNAL(cancel_signal()), this, SLOT(on_actionFramesEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -77,6 +105,12 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
+    {
+        const D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMDELAY);
+        if (meta->isStored()) {
+            this->currentPlayDelay = meta->getContent().toInt() * (1000000 / 20);
+    }
+
     this->updateFields();
 }
 
@@ -93,6 +127,13 @@ void GfxsetView::setGfx(D1Gfx *gfx)
     }
 
     this->gfx = gfx;
+
+    {
+        const D1GfxMeta *meta = gfx->getMeta(CELMETA_ANIMDELAY);
+        if (meta->isStored()) {
+            this->currentPlayDelay = meta->getContent().toInt() * (1000000 / 20);
+        }
+    }
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
         this->currentFrameIndex = 0;
@@ -291,10 +332,7 @@ void GfxsetView::updateFields()
         this->buttons[i]->update();
     }
 
-    // set play-delay text
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
-
-    // update the components
+    { // update the components
     QComboBox *comboBox = this->ui->componentsComboBox;
     int prevIndex = comboBox->currentIndex();
     comboBox->hide();
@@ -316,6 +354,7 @@ void GfxsetView::updateFields()
     }
     comboBox->show();
     comboBox->setCurrentIndex(prevIndex);
+    }
 
     // update the asset multiplier field
     this->ui->assetMplEdit->setText(QString::number(this->assetMpl));
@@ -339,8 +378,106 @@ void GfxsetView::updateFields()
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
 
+    { // update gfxtype
+        QComboBox *comboBox = this->ui->gfxTypeComboBox;
+        comboBox->hide();
+        comboBox->clear();
+        for (int i = 0; i < 6; i++) {
+            comboBox->addItem(D1Gfx::gfxTypeToStr((D1CEL_TYPE)i), i);
+        }
+        comboBox->show();
+        comboBox->setCurrentIndex((int)this->gfx->getType());
+    }
+    { // update metatypes
+        QComboBox *comboBox = this->ui->metaTypeComboBox;
+        int prevIndex = std::max(0, comboBox->currentIndex());
+        const QSize fs = this->gfx->getFrameSize();
+        comboBox->hide();
+        comboBox->clear();
+        for (int i = 0; i < NUM_CELMETA; i++) {
+            const D1GfxMeta *meta = this->gfx->getMeta(i);
+            QString mark = "-";
+            if (meta->isStored()) {
+                mark = "+";
+                if ((i == CELMETA_DIMENSIONS && !fs.isValid() && !this->ui->metaFrameDimensionsCheckBox->isChecked()) ||
+                    (i == CELMETA_DIMENSIONS_PER_FRAME && this->gfx->getFrameCount() == 0))
+                    mark = "?";
+                if (i == CELMETA_ACTIONFRAMES || i == CELMETA_ANIMORDER) {
+                    QList<int> result;
+                    int num = D1Cel::parseFrameList(meta->getContent(), result);
+                    if (result.isEmpty() || num != result.count()) {
+                        mark = "?";
+                    }
+                }
+            }
+            comboBox->addItem(QString("%1 %2 %1").arg(mark).arg(D1GfxMeta::metaTypeToStr(i)), i);
+        }
+        comboBox->show();
+        comboBox->setCurrentIndex(prevIndex);
+
+        const bool isStored = this->gfx->getMeta(prevIndex)->isStored();
+        this->ui->metaStoredCheckBox->setChecked(isStored);
+        {
+            bool isReadOnly = !this->ui->metaFrameDimensionsCheckBox->isChecked();
+            if (this->gfx->getFrameCount() == 0 || !fs.isValid()) {
+                isReadOnly = false;
+            }
+            this->ui->metaFrameWidthEdit->setReadOnly(isReadOnly);
+            this->ui->metaFrameHeightEdit->setReadOnly(isReadOnly);
+            this->ui->metaFrameHeightEdit->update();
+            D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
+            int w, h;
+            if (isReadOnly) {
+                w = fs.width();
+                h = fs.height();
+                meta->setWidth(w);
+                meta->setHeight(h);
+            } else {
+                w = meta->getWidth();
+                h = meta->getHeight();
+            }
+            this->ui->metaFrameWidthEdit->setText(QString::number(w));
+            this->ui->metaFrameHeightEdit->setText(QString::number(h));
+        }
+        {
+            QString txt = this->gfx->getMeta(CELMETA_ANIMORDER)->getContent();
+            if (txt != this->ui->animOrderEdit->toPlainText()) {
+                this->ui->animOrderEdit->blockSignals(true);
+                this->ui->animOrderEdit->setPlainText(txt);
+                this->ui->animOrderEdit->blockSignals(false);
+            }
+        }
+        {
+            D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMDELAY);
+            QString animDelay = meta->getContent();
+            QCheckBox *cb = this->ui->metaAnimDelayCheckBox;
+            Qt::CheckState mode = cb->checkState();
+            bool isReadOnly = false;
+            if (mode == Qt::Unchecked) {
+                cb->setToolTip(tr("Set from the playback setting"));
+
+                isReadOnly = true;
+                int adInt = this->currentPlayDelay * 20 / 1000000;
+                animDelay = QString::number(adInt);
+                meta->setContent(animDelay);
+            } else if (mode == Qt::PartiallyChecked) {
+                cb->setToolTip(tr("Update the playback setting"));
+
+                this->currentPlayDelay = animDelay.toInt() * (1000000 / 20);
+            } else {
+                cb->setToolTip(tr("Ignore the playback setting"));
+            }
+            this->ui->animDelayEdit->setReadOnly(isReadOnly);
+            this->ui->animDelayEdit->setText(animDelay);
+        }
+        this->ui->actionFramesEdit->setText(this->gfx->getMeta(CELMETA_ACTIONFRAMES)->getContent());
+    }
+
     // update clipped checkbox
     this->ui->celFramesClippedCheckBox->setChecked(this->gfx->isClipped());
+
+    // set play-delay text
+    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
 }
 
 CelScene *GfxsetView::getCelScene() const
@@ -1465,6 +1602,137 @@ void GfxsetView::on_celFramesClippedCheckBox_clicked()
     this->updateFields();
 }
 
+void GfxsetView::on_actionToggle_Mode_triggered()
+{
+    this->ui->mainStackedLayout->setCurrentIndex(1 - this->ui->mainStackedLayout->currentIndex());
+}
+
+void GfxsetView::on_metaTypeComboBox_activated(int index)
+{
+    this->ui->metaTypeStackedLayout->setCurrentIndex(index);
+
+    this->updateFields();
+}
+
+void GfxsetView::on_metaStoredCheckBox_clicked()
+{
+    D1GfxMeta *meta = this->gfx->getMeta(this->ui->metaTypeStackedLayout->currentIndex());
+    meta->setStored(!meta->isStored());
+    this->gfx->setModified();
+
+    this->updateFields();
+}
+
+void GfxsetView::on_metaFrameWidthEdit_returnPressed()
+{
+    QString text = this->ui->metaFrameWidthEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
+    meta->setWidth(text.toInt());
+
+    this->on_metaFrameWidthEdit_escPressed();
+}
+
+void GfxsetView::on_metaFrameWidthEdit_escPressed()
+{
+    // update metaFrameWidthEdit
+    this->updateFields();
+    this->ui->metaFrameWidthEdit->clearFocus();
+}
+
+void GfxsetView::on_metaFrameHeightEdit_returnPressed()
+{
+    QString text = this->ui->metaFrameHeightEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_DIMENSIONS);
+    meta->setHeight(text.toInt());
+
+    this->on_metaFrameHeightEdit_escPressed();
+}
+
+void GfxsetView::on_metaFrameHeightEdit_escPressed()
+{
+    // update metaFrameHeightEdit
+    this->updateFields();
+    this->ui->metaFrameHeightEdit->clearFocus();
+}
+
+void GfxsetView::on_metaFrameDimensionsCheckBox_clicked()
+{
+    this->updateFields();
+}
+
+void GfxsetView::on_animOrderEdit_textChanged()
+{
+    QString text = this->ui->animOrderEdit->toPlainText();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMORDER);
+    meta->setContent(text);
+
+    this->updateFields();
+}
+
+void GfxsetView::on_formatAnimOrderButton_clicked()
+{
+    QString text = this->ui->animOrderEdit->toPlainText();
+
+    formatFrameList(text);
+
+    this->ui->animOrderEdit->setPlainText(text);
+
+    // this->on_animOrderEdit_textChanged();
+}
+
+void GfxsetView::on_animDelayEdit_returnPressed()
+{
+    QString text = this->ui->animDelayEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMDELAY);
+    meta->setContent(text);
+
+    this->on_animDelayEdit_escPressed();
+}
+
+void GfxsetView::on_animDelayEdit_escPressed()
+{
+    // update actionFramesEdit
+    this->updateFields();
+    this->ui->animDelayEdit->clearFocus();
+}
+
+void GfxsetView::on_metaAnimDelayCheckBox_clicked()
+{
+    this->updateFields();
+}
+
+void GfxsetView::on_actionFramesEdit_returnPressed()
+{
+    QString text = this->ui->actionFramesEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ACTIONFRAMES);
+    meta->setContent(text);
+
+    this->on_actionFramesEdit_escPressed();
+}
+
+void GfxsetView::on_actionFramesEdit_escPressed()
+{
+    // update actionFramesEdit
+    this->updateFields();
+    this->ui->actionFramesEdit->clearFocus();
+}
+
+void GfxsetView::on_formatActionFramesButton_clicked()
+{
+    QString text = this->ui->actionFramesEdit->text();
+
+    formatFrameList(text);
+
+    this->ui->actionFramesEdit->setText(text);
+
+    this->on_actionFramesEdit_returnPressed();
+}
+
 void GfxsetView::on_zoomOutButton_clicked()
 {
     this->celScene.zoomOut();
@@ -1527,18 +1795,32 @@ void GfxsetView::on_playStopButton_clicked()
         this->ui->playDelayEdit->setReadOnly(false);
         this->ui->playComboBox->setEnabled(true);
         this->ui->playFrameCheckBox->setEnabled(true);
+        this->ui->animOrderEdit->setReadOnly(false);
         return;
     }
     // disable the related fields
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(false);
     this->ui->playFrameCheckBox->setEnabled(false);
+    this->ui->animOrderEdit->setReadOnly(true);
     // change the label of the button
     this->ui->playStopButton->setText(tr("Stop"));
     // preserve the currentFrameIndex
     this->origFrameIndex = this->currentFrameIndex;
     // preserve the palette
     dMainWindow().initPaletteCycle();
+    // initialize animation-order
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMORDER);
+    this->animOrder.clear();
+    D1Cel::parseFrameList(meta->getContent(), this->animOrder);
+    for (auto it = this->animOrder.begin(); it != this->animOrder.end(); ) {
+        if (*it < this->gfx->getFrameCount()) {
+            it++;
+        } else {
+            it = this->animOrder.erase(it);
+        }
+    }
+    this->animFrameIndex = 0;
 
     this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
 }
@@ -1551,6 +1833,13 @@ void GfxsetView::timerEvent(QTimerEvent *event)
     std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
     int nextFrameIndex = this->currentFrameIndex + 1;
+    if (!this->animOrder.isEmpty()) {
+        int currAnimFrameIndex = this->animFrameIndex;
+        if (currAnimFrameIndex >= this->animOrder.count())
+            currAnimFrameIndex = 0;
+        nextFrameIndex = this->animOrder[currAnimFrameIndex];
+        this->animFrameIndex = currAnimFrameIndex + 1;
+    }
     Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
     if (playType == Qt::Unchecked) {
         // normal playback

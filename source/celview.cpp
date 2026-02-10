@@ -177,12 +177,7 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     this->mouseHoverEvent(event);
 }
-#if 0
-void CelScene::wheelEvent(QGraphicsSceneWheelEvent *event)
-{
-    // skip to let MainWindow handle it
-}
-#endif
+
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     this->dragMoveEvent(event);
@@ -376,7 +371,7 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     } else {
         const D1GfxMeta *meta = g->getMeta(CELMETA_ANIMDELAY);
         if (meta->isStored()) {
-            this->currentPlayDelay = meta->getContent().toInt() * (1000 / 20);
+            this->currentPlayDelay = meta->getContent().toInt() * (1000000 / 20);
         }
     }
 
@@ -436,7 +431,7 @@ void CelView::setGfx(D1Gfx *g)
     } else {
         const D1GfxMeta *meta = g->getMeta(CELMETA_ANIMDELAY);
         if (meta->isStored()) {
-            this->currentPlayDelay = meta->getContent().toInt() * (1000 / 20);
+            this->currentPlayDelay = meta->getContent().toInt() * (1000000 / 20);
         }
     }
 
@@ -602,13 +597,13 @@ void CelView::updateFields()
                 cb->setToolTip(tr("Set from the playback setting"));
 
                 isReadOnly = true;
-                int adInt = this->currentPlayDelay * 20 / 1000;
+                int adInt = this->currentPlayDelay * 20 / 1000000;
                 animDelay = QString::number(adInt);
                 meta->setContent(animDelay);
             } else if (mode == Qt::PartiallyChecked) {
                 cb->setToolTip(tr("Update the playback setting"));
 
-                this->currentPlayDelay = animDelay.toInt() * (1000 / 20);
+                this->currentPlayDelay = animDelay.toInt() * (1000000 / 20);
             } else {
                 cb->setToolTip(tr("Ignore the playback setting"));
             }
@@ -1622,19 +1617,6 @@ void CelView::on_metaFrameDimensionsCheckBox_clicked()
     this->updateFields();
 }
 
-static void formatFramesList(QString &text)
-{
-    while (true) {
-        QString tx = text;
-        text.replace(QRegularExpression("[\\s]+"), " ");
-        text.replace(QRegularExpression("[^0-9 ,]*"), "");
-        text.replace(QRegularExpression("([0-9]) ([0-9])"), "\\1, \\2");
-        text.replace(QRegularExpression(",([0-9])"), ", \\1");
-        if (tx == text)
-            break;
-    }
-}
-
 void CelView::on_animOrderEdit_textChanged()
 {
     QString text = this->ui->animOrderEdit->toPlainText();
@@ -1649,7 +1631,7 @@ void CelView::on_formatAnimOrderButton_clicked()
 {
     QString text = this->ui->animOrderEdit->toPlainText();
 
-    formatFramesList(text);
+    formatFrameList(text);
 
     this->ui->animOrderEdit->setPlainText(text);
 
@@ -1699,7 +1681,7 @@ void CelView::on_formatActionFramesButton_clicked()
 {
     QString text = this->ui->actionFramesEdit->text();
 
-    formatFramesList(text);
+    formatFrameList(text);
 
     this->ui->actionFramesEdit->setText(text);
 
@@ -1868,14 +1850,6 @@ void CelView::timerEvent(QTimerEvent *event)
 */
 }
 
-#if 0
-void CelView::wheelEvent(QWheelEvent *event)
-{
-    // dMainWindow().wheelEvent(event);
-    // event->accept();
-    // skip to let MainWindow handle it
-}
-#endif
 void CelView::dragEnterEvent(QDragEnterEvent *event)
 {
     this->dragMoveEvent(event);

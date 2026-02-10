@@ -374,6 +374,19 @@ int D1Cel::parseFrameList(const QString &content, QList<int> &result)
     return frames.count();
 }
 
+void D1Cel::formatFrameList(QString &text)
+{
+    while (true) {
+        QString tx = text;
+        text.replace(QRegularExpression("[\\s]+"), " ");
+        text.replace(QRegularExpression("[^0-9 ,]*"), "");
+        text.replace(QRegularExpression("([0-9]) ([0-9])"), "\\1, \\2");
+        text.replace(QRegularExpression(",([0-9])"), ", \\1");
+        if (tx == text)
+            break;
+    }
+}
+
 static quint8* writeDimensions(cel_meta_type type, const D1Gfx &gfx, quint8 *dest)
 {
     *dest = type;

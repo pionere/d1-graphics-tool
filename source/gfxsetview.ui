@@ -531,6 +531,9 @@
       </widget>
      </item>
      <item>
+     <layout class="QStackedLayout" name="mainStackedLayout">
+      <item>
+       <widget class="QWidget">
      <layout class="QGridLayout">
       <property name="alignment">
        <enum>Qt::AlignTop</enum>
@@ -581,7 +584,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4" colspan="2">
+      <item row="0" column="4" colspan="3">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -1005,21 +1008,21 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="12" colspan="4">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="2" column="18">
-       <layout class="QHBoxLayout">
+      <item row="2" column="12" colspan="7">
+       <layout class="QHBoxLayout" name="switchToMetaHorizontalLayout">
         <property name="topMargin">
          <number>0</number>
         </property>
         <property name="bottomMargin">
          <number>0</number>
         </property>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="LineEditWidget" name="celFrameWidthEdit">
           <property name="charWidth">
@@ -1065,21 +1068,358 @@
           </property>
          </widget>
         </item>
-        <item>
+        <!--item>
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </spacer>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="celFramesClippedCheckBox">
-          <property name="toolTip">
-           <string>Frames are stored with clipping information</string>
-          </property>
-         </widget>
-        </item>
+        </item-->
        </layout>
+      </item>
+     </layout>
+    </widget>
+      </item>
+      <item>
+       <widget class="QWidget">
+        <layout class="QGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>48</number>
+           </property>
+           <property name="text">
+            <string>Type:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" colspan="18">
+          <layout class="QHBoxLayout">
+           <item>
+            <widget class="QComboBox" name="metaTypeComboBox"/>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="metaStoredCheckBox">
+             <property name="toolTip">
+              <string>The selected metadata is stored with the graphics</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel">
+             <property name="text">
+              <string>Type:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="gfxTypeComboBox">
+             <property name="toolTip">
+              <string>Type of the graphics</string>
+             </property>
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel">
+             <property name="text">
+              <string>Clipped:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="celFramesClippedCheckBox">
+             <property name="toolTip">
+              <string>Frames are stored with clipping information</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="1" rowspan="2" colspan="16">
+          <widget class="QWidget">
+           <layout class="QStackedLayout" name="metaTypeStackedLayout">
+            <item>
+             <widget class="QWidget">
+              <layout class="QGridLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="LineEditWidget" name="metaFrameWidthEdit">
+                 <property name="charWidth">
+                  <number>7</number>
+                 </property>
+                 <property name="toolTip">
+                  <string>Meta frame width</string>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignCenter</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel">
+                 <property name="minimumWidth">
+                  <number>8</number>
+                 </property>
+                 <property name="maximumWidth">
+                  <number>8</number>
+                 </property>
+                 <property name="text">
+                  <string notr="true">*</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="LineEditWidget" name="metaFrameHeightEdit">
+                 <property name="charWidth">
+                  <number>7</number>
+                 </property>
+                 <property name="toolTip">
+                  <string>Meta frame height</string>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignCenter</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QCheckBox" name="metaFrameDimensionsCheckBox">
+                 <property name="toolTip">
+                  <string>Override the dimensions of the frames</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" colspan="5">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QGridLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="1" column="0">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QGridLayout" name="animOrderGridLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="minimumWidth">
+                  <number>48</number>
+                 </property>
+                 <property name="text">
+                  <string>Anim Order:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" rowspan="2">
+                <widget class="QTextEdit" name="animOrderEdit">
+                 <property name="toolTip">
+                  <string>Comma separated list of frames</string>
+                 </property>
+                 <property name="acceptRichText">
+                  <bool>false</bool>
+                 </property>
+                 <property name="wordWrapMode">
+                  <enum>QTextOption::WrapAtWordBoundaryOrAnywhere</enum>
+                 </property>
+                 <!--property name="lineWrapMode">
+                  <enum>QTextEdit::FixedColumnWidth</enum>
+                 </property>
+                 <property name="lineWrapColumnOrWidth">
+                  <number>50</number>
+                 </property-->
+                 <property name="tabChangesFocus">
+                  <bool>true</bool>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignLeft</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="formatAnimOrderButton">
+                 <property name="text">
+                  <string notr="true">Format</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QGridLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="minimumWidth">
+                  <number>48</number>
+                 </property>
+                 <property name="text">
+                  <string>Anim Delay:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="LineEditWidget" name="animDelayEdit">
+                 <property name="charWidth">
+                  <number>5</number>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delay between frame-switches when the graphics is animated (n * 0.05s)</string>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignCenter</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QCheckBox" name="metaAnimDelayCheckBox">
+                 <property name="tristate">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" colspan="4">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QGridLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="minimumWidth">
+                  <number>48</number>
+                 </property>
+                 <property name="text">
+                  <string>Action Frames:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="LineEditWidget" name="actionFramesEdit">
+                 <property name="charWidth">
+                  <number>5</number>
+                 </property>
+                 <property name="toolTip">
+                  <string>Comma separated list of frames</string>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignCenter</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QPushButton" name="formatActionFramesButton">
+                 <property name="text">
+                  <string notr="true">Format</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" colspan="4">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="2" column="18">
+          <layout class="QHBoxLayout" name="switchToDisplayHorizontalLayout">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
      </item>

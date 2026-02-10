@@ -30,6 +30,7 @@ private:
 
 public:
     static int parseFrameList(const QString &content, QList<int> &result);
+    static void formatFrameList(QString &content);
 private:
     static bool readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, quint32 endOffset, unsigned frameCount, D1Gfx &gfx);
     static int prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result);
