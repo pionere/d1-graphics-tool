@@ -1293,6 +1293,7 @@ QString D1GfxMeta::metaTypeToStr(int type)
     case CELMETA_DIMENSIONS:           return tr("Dimensions");
     case CELMETA_DIMENSIONS_PER_FRAME: return tr("Dimensions Per Frame");
     case CELMETA_ANIMORDER:            return tr("Animation Order");
+    case CELMETA_ANIMDELAY:            return tr("Animation Delay");
     case CELMETA_ACTIONFRAMES:         return tr("Action Frames");
     }
     return tr("Unknown");
@@ -1832,13 +1833,42 @@ bool D1Gfx::check() const
             result = true;
         }
     }
+    { // test dimensions meta
+    const D1GfxMeta *meta = this->getMeta(CELMETA_DIMENSIONS);
+    if (meta->isStored()) {
+        int w = meta->getWidth();
+        int h = meta->getHeight();
+        if (w <= 0) {
+             dProgressErr() << tr("Dimensions width is not valid");
+             result = true;
+        }
+        if (h <= 0) {
+             dProgressErr() << tr("Dimensions height is not valid");
+             result = true;
+        }
+    }
+    }
+    { // test anim delay
+    const D1GfxMeta *meta = this->getMeta(CELMETA_ANIMDELAY);
+    if (meta->isStored()) {
+        int delay = meta->getContent()->toInt();
+        if (delay <= 0) {
+             dProgressErr() << tr("Animation Delay is not valid");
+             result = true;
+        }
+        if (delay > UINT8_MAX) {
+             dProgressErr() << tr("Animation Delay is too high");
+             result = true;
+        }
+    }
+    }
     { // test anim order meta
     const D1GfxMeta *meta = this->getMeta(CELMETA_ANIMORDER);
     if (meta->isStored()) {
         QList<int> aoList;
         int num = D1Cel::parseFrameList(meta->getContent(), aoList);
         if (aoList.isEmpty() || num != aoList.count()) {
-             dProgressErr() << tr("AnimOrder is not valid");
+             dProgressErr() << tr("Animation Order is not valid");
              result = true;
         }
         const int fc = this->getFrameCount();
@@ -1907,10 +1937,10 @@ bool D1Gfx::check() const
                     ao++;
                 }
                 if (mf > gs) {
-                    dProgressErr() << QApplication::tr("Not enough frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
+                    dProgressErr() << tr("Not enough frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
                     result = true;
                 } else if (gs > mf) {
-                    dProgressWarn() << QApplication::tr("Too many frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
+                    dProgressWarn() << tr("Too many frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
                     result = true;
                 }
             }
@@ -1919,7 +1949,7 @@ bool D1Gfx::check() const
         }
     }
     if (!typetested) {
-        dProgress() << QApplication::tr("Unrecognized graphics -> Checking with game-code is skipped.");
+        dProgress() << tr("Unrecognized graphics -> Checking with game-code is skipped.");
         result = true;
     }
     return result;

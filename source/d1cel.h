@@ -13,6 +13,7 @@
 typedef struct CelMetaInfo
 {
     int dimensions;
+    int animDelay;
     QList<int> animOrder;
     QList<int> actionFrames;
 } CelMetaInfo;

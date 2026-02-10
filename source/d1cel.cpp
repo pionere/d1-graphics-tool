@@ -54,6 +54,14 @@ quint32 so = startOffset;
                 // meta->setContent("x");
             }
         } break;
+        case CELMETA_ANIMORDER: {
+            startOffset++;
+
+            quint8 delay;
+            in >> delay;
+
+            meta->setContent(QString::number(delay));
+        } break;
         case CELMETA_ANIMORDER:
         case CELMETA_ACTIONFRAMES: {
             QString content;
@@ -320,6 +328,7 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
 {
     int META_SIZE = 0;
     result.dimensions = 0;
+    result.animDelay = 0;
     for (int i = 0; i < NUM_CELMETA; i++) {
         const D1GfxMeta *meta = gfx.getMeta(i);
         if (!meta->isStored()) continue;
@@ -332,6 +341,10 @@ int D1Cel::prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result)
         case CELMETA_DIMENSIONS_PER_FRAME:
             result.dimensions |= 2;
             META_SIZE += gfx.getFrameCount() * 8;
+            break;
+        case CELMETA_ANIMDELAY:
+            result.animDelay = meta->getContent().toInt();
+            META_SIZE++;
             break;
         case CELMETA_ANIMORDER:
         case CELMETA_ACTIONFRAMES: {
@@ -405,6 +418,12 @@ quint8* D1Cel::writeCelMeta(const CelMetaInfo &meta, const D1Gfx &gfx, quint8 *d
     }
     if (meta.dimensions & 2) {
         dest = writeDimensions(CELMETA_DIMENSIONS_PER_FRAME, gfx, dest);
+    }
+    if (meta.animDelay != 0) {
+        *dest = CELMETA_ANIMDELAY;
+        dest++;
+        *dest = meta.animDelay;
+        dest++;
     }
     dest = writeFrameList(meta.animOrder, CELMETA_ANIMORDER, dest);
     dest = writeFrameList(meta.actionFrames, CELMETA_ACTIONFRAMES, dest);

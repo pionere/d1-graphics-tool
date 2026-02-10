@@ -761,7 +761,7 @@
                   <number>48</number>
                  </property>
                  <property name="text">
-                  <string>Frame Order:</string>
+                  <string>Anim Order:</string>
                  </property>
                 </widget>
                </item>
@@ -815,6 +815,62 @@
                   <number>48</number>
                  </property>
                  <property name="text">
+                  <string>Anim Delay:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="LineEditWidget" name="animDelayEdit">
+                 <property name="charWidth">
+                  <number>5</number>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delay between frame-switches when the graphics is animated (n * 0.05s)</string>
+                 </property>
+                 <property name="alignment">
+                  <enum>Qt::AlignCenter</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QCheckBox" name="metaAnimDelayCheckBox">
+                 <property name="tristate">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" colspan="4">
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget">
+              <layout class="QGridLayout">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="minimumWidth">
+                  <number>48</number>
+                 </property>
+                 <property name="text">
                   <string>Action Frames:</string>
                  </property>
                 </widget>
@@ -846,7 +902,7 @@
                  </property>
                 </spacer>
                </item>
-               <item row="1" column="0" colspan="3">
+               <item row="1" column="0" colspan="4">
                 <spacer>
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>

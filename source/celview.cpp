@@ -346,6 +346,7 @@ CelView::CelView(QWidget *parent)
     QObject::connect(this->ui->assetMplEdit, SIGNAL(cancel_signal()), this, SLOT(on_assetMplEdit_escPressed()));
     QObject::connect(this->ui->metaFrameWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_metaFrameWidthEdit_escPressed()));
     QObject::connect(this->ui->metaFrameHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_metaFrameHeightEdit_escPressed()));
+    QObject::connect(this->ui->animDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_animDelayEdit_escPressed()));
     QObject::connect(this->ui->actionFramesEdit, SIGNAL(cancel_signal()), this, SLOT(on_actionFramesEdit_escPressed()));
 
     // setup context menu
@@ -372,6 +373,11 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
     this->audioBtn->setVisible(smkGfx);
     if (smkGfx) {
         this->currentPlayDelay = g->getFrameLen();
+    } else {
+        const D1GfxMeta *meta = g->getMeta(CELMETA_ANIMDELAY);
+        if (meta->isStored()) {
+            this->currentPlayDelay = meta->getContent().toInt() * (1000 / 20);
+        }
     }
 
     this->updateFields();
@@ -427,6 +433,11 @@ void CelView::setGfx(D1Gfx *g)
     this->gfx = g;
     if (g->getType() == D1CEL_TYPE::SMK) {
         this->currentPlayDelay = g->getFrameLen();
+    } else {
+        const D1GfxMeta *meta = g->getMeta(CELMETA_ANIMDELAY);
+        if (meta->isStored()) {
+            this->currentPlayDelay = meta->getContent().toInt() * (1000 / 20);
+        }
     }
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
@@ -463,8 +474,6 @@ void CelView::updateFields()
     int count;
 
     this->updateLabel();
-    // set play-delay text
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
     // update visiblity of the audio icon
     this->audioBtn->setVisible(this->gfx->getType() == D1CEL_TYPE::SMK && this->gfx->getFrameCount() != 0);
 
@@ -583,11 +592,37 @@ void CelView::updateFields()
                 this->ui->animOrderEdit->blockSignals(false);
             }
         }
+        {
+            D1GfxMeta *meta = this->getMeta(CELMETA_ANIMDELAY);
+            QString animDelay = meta->getContent();
+            QCheckBox *cb = this->ui->metaAnimDelayCheckBox;
+            Qt::CheckState mode = cb->checkState();
+            bool isReadOnly = false;
+            if (mode == Qt::Unchecked) {
+                cb->setToolTip(tr("Set from the playback setting"));
+
+                isReadOnly = true;
+                int adInt = this->currentPlayDelay * 20 / 1000;
+                animDelay = QString::number(adInt);
+                meta->setContent(animDelay);
+            } else if (mode == Qt::PartiallyChecked) {
+                cb->setToolTip(tr("Update the playback setting"));
+
+                this->currentPlayDelay = animDelay.toInt() * (1000 / 20);
+            } else {
+                cb->setToolTip(tr("Ignore the playback setting"));
+            }
+            this->ui->animDelayEdit->setReadOnly(isReadOnly);
+            this->ui->animDelayEdit->setText(animDelay);
+        }
         this->ui->actionFramesEdit->setText(this->gfx->getMeta(CELMETA_ACTIONFRAMES)->getContent());
     }
 
     // update clipped checkbox
     this->ui->celFramesClippedCheckBox->setChecked(this->gfx->isClipped());
+
+    // set play-delay text
+    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
 }
 
 CelScene *CelView::getCelScene() const
@@ -1619,6 +1654,23 @@ void CelView::on_formatAnimOrderButton_clicked()
     this->ui->animOrderEdit->setPlainText(text);
 
     // this->on_animOrderEdit_textChanged();
+}
+
+void CelView::on_animDelayEdit_returnPressed()
+{
+    QString text = this->ui->animDelayEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMDELAY);
+    meta->setContent(text);
+
+    this->on_animDelayEdit_escPressed();
+}
+
+void CelView::on_animDelayEdit_escPressed()
+{
+    // update actionFramesEdit
+    this->updateFields();
+    this->ui->animDelayEdit->clearFocus();
 }
 
 void CelView::on_actionFramesEdit_returnPressed()
