@@ -80,6 +80,15 @@ private:
     QPoint lastPos;
 };
 
+class WheelEventFilter : public QObject {
+    Q_OBJECT
+
+public:
+    explicit WheelEventFilter(QObject* parent = nullptr) : QObject(parent) { };
+
+    bool eventFilter(QObject* object, QEvent* event);
+};
+
 class CelView : public QWidget {
     Q_OBJECT
 

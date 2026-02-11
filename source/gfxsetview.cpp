@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QScrollBar>
 
 #include "config.h"
 #include "d1cel.h"
@@ -29,6 +30,12 @@ GfxsetView::GfxsetView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
+    QScrollBar *sb;
+    sb = this->ui->celGraphicsView->horizontalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+    sb = this->ui->celGraphicsView->verticalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();

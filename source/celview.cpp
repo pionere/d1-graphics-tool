@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QScrollBar>
 
 #include "config.h"
 #include "d1cel.h"
@@ -21,6 +22,12 @@
 #include "progressdialog.h"
 #include "ui_celview.h"
 #include "upscaler.h"
+
+
+bool WheelEventFilter::eventFilter(QObject* object, QEvent* event)
+{
+    return event->type() == QEvent::Wheel;
+}
 
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene(v)
@@ -272,6 +279,12 @@ CelView::CelView(QWidget *parent)
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->ui->celGraphicsView->setMouseTracking(true);
+    QScrollBar *sb;
+    sb = this->ui->celGraphicsView->horizontalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+    sb = this->ui->celGraphicsView->verticalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+
     this->on_zoomEdit_escPressed();
     // this->on_playDelayEdit_escPressed();
     // this->on_assetMplEdit_escPressed();
