@@ -15,7 +15,6 @@
 #include "remapdialog.h"
 #include "resizedialog.h"
 
-#include "dungeon/enums.h"
 #include "dungeon/patchdat.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()

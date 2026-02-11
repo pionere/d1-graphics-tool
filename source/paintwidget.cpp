@@ -359,7 +359,6 @@ void PaintWidget::toggleMode()
     }
 }
 
-
 void PaintWidget::adjustBrush(int dir)
 {
     const bool size = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;

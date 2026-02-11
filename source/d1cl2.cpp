@@ -206,6 +206,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 static void pushHead(quint8 **prevHead, quint8 **lastHead, quint8 *head)
 {
     if (*lastHead != nullptr && *prevHead != nullptr && head != nullptr) {
+        // check for [len0 col0 .. coln] [rle3 col] [len1 col00 .. colnn] -> [(len0 + 3 + len1) col0 .. coln col col col col00 .. colnn]
         if (**lastHead == 0xBF - 3 && *head >= 0xBF && **prevHead >= 0xBF) {
             unsigned len = 3 + (256 - *head) + (256 - **prevHead);
             if (len <= (256 - 0xBF)) {
@@ -410,7 +411,6 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     if (numGroups > 1) {
         // add optional {CL2 GROUP HEADER}
         int offset = numGroups * sizeof(quint32) + metaSize;
-        // hdr += metaSize;
         for (int i = 0; i < numGroups; i++, hdr += 4) {
             *(quint32 *)&hdr[0] = offset;
             std::pair<int, int> gfi = gfx.getGroupFrameIndices(i);

@@ -12,6 +12,8 @@
 
 #include "d1pal.h"
 
+#include "dungeon/enums.h"
+
 // TODO: move these to some persistency class?
 #define SUB_HEADER_SIZE 0x0A
 #define CEL_BLOCK_HEIGHT 32
@@ -273,15 +275,6 @@ private:
     QString label;
     QList<D1GfxCompFrame> compFrames;
 };
-
-typedef enum cel_meta_type {
-    CELMETA_DIMENSIONS,
-    CELMETA_DIMENSIONS_PER_FRAME,
-    CELMETA_ANIMORDER,
-    CELMETA_ANIMDELAY,
-    CELMETA_ACTIONFRAMES,
-    NUM_CELMETA
-} cel_meta_type;
 
 class D1GfxMeta : public QObject {
     Q_OBJECT
