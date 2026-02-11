@@ -12,6 +12,7 @@
 
 #include "d1pal.h"
 
+#include "dungeon/defs.h"
 #include "dungeon/enums.h"
 
 // TODO: move these to some persistency class?
