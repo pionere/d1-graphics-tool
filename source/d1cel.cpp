@@ -136,26 +136,28 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // CEL FRAMES OFFSETS CALCULATION
 
     // BUILDING {CEL FRAMES}
-    // std::stack<quint16> invalidFrames;
     int clipped = -1;
-    for (const auto &offset : frameOffsets) {
-        device->seek(offset.first);
-        QByteArray celFrameRawData = device->read(offset.second - offset.first);
-
+    for (unsigned i = 0; i < frameOffsets.size(); i++) {
+        const auto &offset = frameOffsets[i];
         D1GfxFrame *frame = new D1GfxFrame();
-        int res = D1CelFrame::load(*frame, celFrameRawData, params);
-        quint16 frameIndex = gfx.frames.size();
-        if (res < 0) {
-            if (res == -1)
-                dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(frameIndex + 1);
-            else
-                dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
-            // invalidFrames.push(frameIndex);
-        } else if (clipped != res) {
-            if (clipped == -1)
-                clipped = res;
-            else
-                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(frameIndex + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
+        if (fileSize >= offset.second && offset.second >= offset.first) {
+            device->seek(offset.first);
+            QByteArray celFrameRawData = device->read(offset.second - offset.first);
+
+            int res = D1CelFrame::load(*frame, celFrameRawData, params);
+            if (res < 0) {
+                if (res == -1)
+                    dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(i + 1);
+                else
+                    dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(i + 1);
+            } else if (clipped != res) {
+                if (clipped == -1)
+                    clipped = res;
+                else
+                    dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(i + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
+            }
+        } else {
+            dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(i + 1).arg(offset.first).arg(offset.second).arg(fileSize);
         }
         gfx.frames.append(frame);
     }
@@ -163,11 +165,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
-    /*while (!invalidFrames.empty()) {
-        quint16 frameIndex = invalidFrames.top();
-        invalidFrames.pop();
-        gfx.removeFrame(frameIndex);
-    }*/
     return true;
 }
 
