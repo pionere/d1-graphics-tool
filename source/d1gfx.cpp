@@ -1918,41 +1918,6 @@ bool D1Gfx::check() const
         }
     }
     }
-    // test towner graphics
-    QString filePath = this->getFilePath();
-    QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
-    bool typetested = false;
-    InitTowners();
-    for (int i = 0; i < numtowners; i++) {
-        QString townerPath = towners[i].tsPath;
-        townerPath = townerPath.mid(townerPath.lastIndexOf('\\')+1);
-        QString townerPathLower = QDir::toNativeSeparators(townerPath).toLower();
-        if (filePathLower.endsWith(townerPathLower)) {
-            const int8_t* ao = towners[i].tsAnimOrder;
-            if (ao != NULL) {
-                int mf = 0;
-                while (*ao > 0) {
-                    if (mf < *ao) {
-                        mf = *ao;
-                    }
-                    ao++;
-                }
-                if (mf > gs) {
-                    dProgressErr() << tr("Not enough frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
-                    result = true;
-                } else if (gs > mf) {
-                    dProgressWarn() << tr("Too many frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
-                    result = true;
-                }
-            }
-            typetested = true;
-            break;
-        }
-    }
-    if (!typetested) {
-        dProgress() << tr("Unrecognized graphics -> Checking with game-code is skipped.");
-        result = true;
-    }
     return result;
 }
 
