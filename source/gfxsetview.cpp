@@ -108,7 +108,7 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
     {
         const D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMDELAY);
         if (meta->isStored()) {
-            this->currentPlayDelay = meta->getContent().toInt() * (1000000 / 20);
+            this->currentPlayDelay = meta->getContent().toInt() * (1000000 / SPEED_NORMAL);
         }
     }
 
@@ -132,7 +132,7 @@ void GfxsetView::setGfx(D1Gfx *gfx)
     {
         const D1GfxMeta *meta = gfx->getMeta(CELMETA_ANIMDELAY);
         if (meta->isStored()) {
-            this->currentPlayDelay = meta->getContent().toInt() * (1000000 / 20);
+            this->currentPlayDelay = meta->getContent().toInt() * (1000000 / SPEED_NORMAL);
         }
     }
 
@@ -460,13 +460,13 @@ void GfxsetView::updateFields()
                 cb->setToolTip(tr("Set from the playback setting"));
 
                 isReadOnly = true;
-                int adInt = this->currentPlayDelay * 20 / 1000000;
+                int adInt = this->currentPlayDelay * SPEED_NORMAL / 1000000;
                 animDelay = QString::number(adInt);
                 this->gfx->setMetaContent(CELMETA_ANIMDELAY, animDelay);
             } else if (mode == Qt::PartiallyChecked) {
                 cb->setToolTip(tr("Update the playback setting"));
 
-                this->currentPlayDelay = animDelay.toInt() * (1000000 / 20);
+                this->currentPlayDelay = animDelay.toInt() * (1000000 / SPEED_NORMAL);
             } else {
                 cb->setToolTip(tr("Ignore the playback setting"));
             }

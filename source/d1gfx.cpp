@@ -1356,7 +1356,6 @@ int D1GfxMeta::getHeight() const
 bool D1GfxMeta::setContent(const QString &content)
 {
     if (this->mContent == content) return false;
-dProgress() << tr("setContent %1 to %2").arg(this->mContent).arg(content);
     this->mContent = content;
     return true;
 }
@@ -1806,7 +1805,8 @@ bool D1Gfx::check() const
 {
     bool result = false;
     // test whether a graphic have the same frame-size in each group
-    if (!this->getFrameSize().isValid()) {
+    const QSize fs = this->getFrameSize();
+    if (!fs.isValid()) {
         dProgress() << tr("Framesize is not constant");
         result = true;
     }
@@ -1817,7 +1817,7 @@ bool D1Gfx::check() const
         result = true;
     }
     { // test whether the meta-data is used
-        if (this->clipped  && (this->getMeta(CELMETA_DIMENSIONS)->isStored() || this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored())) {
+        if (this->clipped  && fs.height() >= CEL_BLOCK_HEIGHT && (this->getMeta(CELMETA_DIMENSIONS)->isStored() || this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored())) {
             dProgressWarn() << tr("Dimensions are not required for clipped graphics");
             result = true;
         }
