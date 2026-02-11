@@ -404,9 +404,9 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // write meta
     { // write the metadata
     pBuf = &buf[numGroups > 1 ? numGroups * sizeof(quint32) : headerSize];
-    dProgress() << tr("writing meta to %1").arg((size_t)pBuf - (size_t)buf);
+    dProgress() << QApplication::tr("writing meta to %1").arg((size_t)pBuf - (size_t)buf);
     pBuf = D1Cel::writeCelMeta(meta, gfx, pBuf);
-    dProgress() << tr("meta written till %1").arg((size_t)pBuf - (size_t)buf);
+    dProgress() << QApplication::tr("meta written till %1").arg((size_t)pBuf - (size_t)buf);
     }
     quint8 *hdr = buf;
     if (numGroups > 1) {
@@ -421,7 +421,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         }
     }
     if (pBuf != &buf[headerSize + metaSize])
-    dProgress() << tr("pBuf difference: %1").arg((int)((size_t)pBuf - (size_t)&buf[headerSize + metaSize]));
+    dProgress() << QApplication::tr("pBuf difference: %1").arg((int)((size_t)pBuf - (size_t)&buf[headerSize + metaSize]));
     // pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
