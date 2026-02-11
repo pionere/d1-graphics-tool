@@ -412,17 +412,18 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     if (numGroups > 1) {
         // add optional {CL2 GROUP HEADER}
         int offset = numGroups * sizeof(quint32) + metaSize;
-        hdr += metaSize;
+        // hdr += metaSize;
         for (int i = 0; i < numGroups; i++, hdr += 4) {
             *(quint32 *)&hdr[0] = offset;
             std::pair<int, int> gfi = gfx.getGroupFrameIndices(i);
             int ni = gfi.second - gfi.first + 1;
             offset += 4 + 4 * (ni + 1);
         }
+        hdr += metaSize;
     }
-    if (pBuf != &buf[headerSize + metaSize])
-    dProgress() << QApplication::tr("pBuf difference: %1").arg((int)((size_t)pBuf - (size_t)&buf[headerSize + metaSize]));
-    // pBuf = &buf[headerSize + metaSize];
+    //if (pBuf != &buf[headerSize + metaSize])
+    //dProgress() << QApplication::tr("pBuf difference: %1").arg((int)((size_t)pBuf - (size_t)&buf[headerSize + metaSize]));
+    pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
         std::pair<int, int> gfi = gfx.getGroupFrameIndices(ii);
