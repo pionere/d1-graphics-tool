@@ -129,6 +129,9 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // If the dword is not equal to the file size then
     // try to read it as a CEL compilation
     D1CEL_TYPE type = (firstDword == 0 || fileSize == fileSizeDword) ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
+    gfx.type = type;
+
+    // CEL FRAMES OFFSETS CALCULATION
     std::vector<std::pair<quint32, quint32>> frameOffsets;
     quint32 metaOffset, contentOffset = fileSize;
     if (type == D1CEL_TYPE::V1_REGULAR) {
@@ -151,35 +154,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         if (frameOffsets.size() != 0)
             contentOffset = frameOffsets[0].first;
     } else {
-#if 0
-        // Read offset of the last CEL of the CEL compilation
-        device->seek(firstDword - 4);
-        quint32 lastCelOffset;
-        in >> lastCelOffset;
-
-        // Go to last CEL of the CEL compilation
-        // Read last CEL header
-        if (fileSize < (lastCelOffset + 4))
-            return false;
-
-        device->seek(lastCelOffset);
-        quint32 lastCelFrameCount;
-        in >> lastCelFrameCount;
-
-        // Read the last CEL size
-        if (fileSize < (lastCelOffset + 4 + lastCelFrameCount * 4 + 4))
-            return false;
-
-        device->seek(lastCelOffset + 4 + lastCelFrameCount * 4);
-        quint32 lastCelSize;
-        in >> lastCelSize;
-
-        // If the last CEL size plus the last CEL offset is equal to
-        // the file size then it's a CEL compilation
-        if (fileSize != (lastCelOffset + lastCelSize)) {
-            return false;
-        }
-#endif
         // Going through all groups
         int cursor = 0;
         unsigned i = 0;
@@ -198,6 +172,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             in >> celFrameCount;
 
             if (celFrameCount == 0) {
+                i++;
                 continue;
             }
             if (fileSize < (celGroupOffset + celFrameCount * 4 + 4 + 4)) {
@@ -235,8 +210,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     }
 
     readMeta(device, in, metaOffset, contentOffset, frameOffsets.size(), gfx);
-
-    gfx.type = type;
 
     // CEL FRAMES OFFSETS CALCULATION
 

@@ -575,13 +575,6 @@
           </property>
          </widget>
         </item>
-        <!--item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item-->
        </layout>
       </item>
      </layout>
@@ -825,7 +818,7 @@
                   <number>5</number>
                  </property>
                  <property name="toolTip">
-                  <string>Delay between frame-switches when the graphics is animated (n * 0.05s)</string>
+                  <string>Delay between frame-switches when the graphics is animated (number of game turns)</string>
                  </property>
                  <property name="alignment">
                   <enum>Qt::AlignCenter</enum>

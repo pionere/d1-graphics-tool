@@ -28,14 +28,7 @@
 
 bool WheelEventFilter::eventFilter(QObject* object, QEvent* event)
 {
-    if (/*object == verticalScrollBar() &&*/ event->type() == QEvent::Wheel)  {
-        return true;
-    }
-    if (/*object == horizontalScrollBar() &&*/ event->type() == QEvent::Wheel)  {
-        return true;
-    }
-
-    return false;
+    return event->type() == QEvent::Wheel;
 }
 
 CelScene::CelScene(QWidget *v)
@@ -1220,7 +1213,6 @@ void CelView::setFrameIndex(int frameIndex)
             palIndex--;
             if (palIndex < 0) break;
         }
-        
     }
 
     this->displayFrame();
