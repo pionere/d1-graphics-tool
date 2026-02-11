@@ -1,5 +1,7 @@
 #include "d1gfx.h"
 
+#include <set>
+
 #include <QApplication>
 #include <QMessageBox>
 
@@ -13,7 +15,6 @@
 #include "remapdialog.h"
 #include "resizedialog.h"
 
-#include "dungeon/enums.h"
 #include "dungeon/patchdat.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
@@ -691,6 +692,9 @@ void D1Gfx::clear()
     // this->compFilePath ?
     qDeleteAll(this->frames);
     this->frames.clear();
+    for (D1GfxMeta &meta : this->metas) {
+        meta.clear();
+    }
     qDeleteAll(this->components);
     this->components.clear();
     this->groupFrameIndices.clear();
@@ -1254,6 +1258,79 @@ D1GfxCompFrame *D1GfxComp::getCompFrame(int frameIdx) const
     return const_cast<D1GfxCompFrame *>(&this->compFrames[frameIdx]);
 }
 
+QString D1GfxMeta::metaTypeToStr(int type)
+{
+    switch (type) {
+    case CELMETA_DIMENSIONS:           return tr("Dimensions");
+    case CELMETA_DIMENSIONS_PER_FRAME: return tr("Dimensions Per Frame");
+    case CELMETA_ANIMORDER:            return tr("Animation Order");
+    case CELMETA_ANIMDELAY:            return tr("Animation Delay");
+    case CELMETA_ACTIONFRAMES:         return tr("Action Frames");
+    }
+    return tr("Unknown");
+}
+
+D1GfxMeta::D1GfxMeta()
+{
+}
+
+D1GfxMeta::D1GfxMeta(const D1GfxMeta &o)
+{
+    this->mStored = o.mStored;
+    this->mContent = o.mContent;
+}
+
+void D1GfxMeta::clear()
+{
+    this->mStored = false;
+    this->mContent.clear();
+}
+
+bool D1GfxMeta::setStored(bool stored)
+{
+    if (this->mStored == stored) return false;
+    this->mStored = stored;
+    return true;
+}
+
+bool D1GfxMeta::setWidth(int w)
+{
+    QString nc = QString("%1x%2").arg(w).arg(this->getHeight());
+
+    if (this->mContent == nc) return false;
+    this->mContent = nc;
+    return true;
+}
+int D1GfxMeta::getWidth() const
+{
+    if (this->mContent.isEmpty()) {
+        return 0;
+    }
+    return this->mContent.left(this->mContent.indexOf('x')).toInt();
+}
+bool D1GfxMeta::setHeight(int h)
+{
+    QString nc = QString("%1x%2").arg(this->getWidth()).arg(h);
+
+    if (this->mContent == nc) return false;
+    this->mContent = nc;
+    return true;
+}
+int D1GfxMeta::getHeight() const
+{
+    if (this->mContent.isEmpty()) {
+        return 0;
+    }
+    return this->mContent.mid(this->mContent.indexOf('x') + 1).toInt();
+}
+
+bool D1GfxMeta::setContent(const QString &content)
+{
+    if (this->mContent == content) return false;
+    this->mContent = content;
+    return true;
+}
+
 QString D1Gfx::getCompFilePath() const
 {
     return this->compFilePath;
@@ -1699,7 +1776,8 @@ bool D1Gfx::check() const
 {
     bool result = false;
     // test whether a graphic have the same frame-size in each group
-    if (!this->getFrameSize().isValid()) {
+    const QSize fs = this->getFrameSize();
+    if (!fs.isValid()) {
         dProgress() << tr("Framesize is not constant");
         result = true;
     }
@@ -1708,6 +1786,108 @@ bool D1Gfx::check() const
     if (gs < 0) {
         dProgress() << tr("Groupsize is not constant");
         result = true;
+    }
+    { // test whether the meta-data is used
+        if (this->clipped  && fs.height() >= CEL_BLOCK_HEIGHT && (this->getMeta(CELMETA_DIMENSIONS)->isStored() || this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored())) {
+            dProgressWarn() << tr("Dimensions are not required for clipped graphics");
+            result = true;
+        }
+        if (this->getGroupCount() > 1 && this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored()) {
+            dProgressWarn() << tr("Groupped graphics should not require Dimensions Per Frame");
+            result = true;
+        }
+        if (this->getGroupCount() > 1 && this->getMeta(CELMETA_ANIMORDER)->isStored()) {
+            dProgressWarn() << tr("Animation Order is not used in groupped graphics");
+            result = true;
+        }
+        if (this->getGroupCount() != NUM_DIRS && this->getMeta(CELMETA_ACTIONFRAMES)->isStored()) {
+            dProgressWarn() << tr("Action Frames are not used in non-directional graphics");
+            result = true;
+        }
+    }
+    { // test dimensions meta
+    const D1GfxMeta *meta = this->getMeta(CELMETA_DIMENSIONS);
+    if (meta->isStored()) {
+        int w = meta->getWidth();
+        int h = meta->getHeight();
+        if (w <= 0) {
+             dProgressErr() << tr("Dimensions width is not valid");
+             result = true;
+        }
+        if (h <= 0) {
+             dProgressErr() << tr("Dimensions height is not valid");
+             result = true;
+        }
+    }
+    }
+    { // test anim delay
+    const D1GfxMeta *meta = this->getMeta(CELMETA_ANIMDELAY);
+    if (meta->isStored()) {
+        int delay = meta->getContent().toInt();
+        if (delay <= 0) {
+             dProgressErr() << tr("Animation Delay is not valid");
+             result = true;
+        }
+        if (delay > UINT8_MAX) {
+             dProgressErr() << tr("Animation Delay is too high");
+             result = true;
+        }
+    }
+    }
+    { // test anim order meta
+    const D1GfxMeta *meta = this->getMeta(CELMETA_ANIMORDER);
+    if (meta->isStored()) {
+        QList<int> aoList;
+        int num = D1Cel::parseFrameList(meta->getContent(), aoList);
+        if (aoList.isEmpty() || num != aoList.count()) {
+             dProgressErr() << tr("Animation Order is not valid");
+             result = true;
+        }
+        const int fc = this->getFrameCount();
+        std::set<int> frameSet;
+        for (int i = 0; i < fc; i++) {
+            frameSet.insert(i + 1);
+        }
+        for (int fn : aoList) {
+            frameSet.erase(fn);
+            if (fn > fc) {
+                dProgressErr() << tr("Frame number %1 in the AnimOrder is too high (Limit : %2)").arg(fn).arg(fc);
+                result = true;
+            }
+        }
+        for (auto it = frameSet.begin(); it != frameSet.end(); ) {
+            int fn = *it;
+            int ln = fn;
+            auto nit = it;
+            while (true) {
+                nit++;
+                if (nit == frameSet.end() || *nit != ln + 1) break;
+                ln++;
+            }
+            it = nit;
+
+            dProgressWarn() << tr("Frames %1-%2 are not used in the AnimOrder", "", ln - fn + 1).arg(fn).arg(ln);
+            result = true;
+        }
+    }
+    }
+    { // test action frames meta
+    const D1GfxMeta *meta = this->getMeta(CELMETA_ACTIONFRAMES);
+    if (meta->isStored()) {
+        QList<int> afList;
+        int num = D1Cel::parseFrameList(meta->getContent(), afList);
+        if (afList.isEmpty() || num != afList.count()) {
+             dProgressErr() << tr("Action Frames are not valid");
+             result = true;
+        }
+        const int fc = this->getFrameCount();
+        for (int fn : afList) {
+            if (fn > fc) {
+                dProgressErr() << tr("Frame number %1 in the Action Frames is too high (Limit : %2)").arg(fn).arg(fc);
+                result = true;
+            }
+        }
+    }
     }
     // test towner graphics
     QString filePath = this->getFilePath();
@@ -2077,6 +2257,17 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     this->frames[frameIndex]->setFrameType(frameType);
     this->modified = true;
     return true;
+}
+
+D1GfxMeta *D1Gfx::getMeta(int type) const
+{
+    return const_cast<D1GfxMeta *>(&this->metas[type]);
+}
+
+void D1Gfx::setMetaContent(int type, const QString &content)
+{
+    if (this->metas[type].setContent(content) && this->metas[type].isStored())
+        this->modified = true;
 }
 
 void D1Gfx::saveComponents()

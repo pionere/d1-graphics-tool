@@ -150,6 +150,27 @@ private slots:
 
     void on_celFramesClippedCheckBox_clicked();
 
+    void on_actionToggle_Mode_triggered();
+    void on_metaTypeComboBox_activated(int index);
+    void on_metaStoredCheckBox_clicked();
+
+    void on_metaFrameWidthEdit_returnPressed();
+    void on_metaFrameWidthEdit_escPressed();
+    void on_metaFrameHeightEdit_returnPressed();
+    void on_metaFrameHeightEdit_escPressed();
+    void on_metaFrameDimensionsCheckBox_clicked();
+
+    void on_animOrderEdit_textChanged();
+    void on_formatAnimOrderButton_clicked();
+
+    void on_animDelayEdit_returnPressed();
+    void on_animDelayEdit_escPressed();
+    void on_metaAnimDelayCheckBox_clicked();
+
+    void on_actionFramesEdit_returnPressed();
+    void on_actionFramesEdit_escPressed();
+    void on_formatActionFramesButton_clicked();
+
     void on_zoomOutButton_clicked();
     void on_zoomInButton_clicked();
     void on_zoomEdit_returnPressed();

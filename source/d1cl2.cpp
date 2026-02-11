@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QMessageBox>
 
+#include "d1cel.h"
 #include "d1cl2frame.h"
 #include "progressdialog.h"
 
@@ -47,17 +48,19 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
     // If the dword is not equal to the file size then
     // try to read it as a CL2 with multiple groups
-    D1CEL_TYPE type = fileSize == fileSizeDword ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    D1CEL_TYPE type = (firstDword == 0 || fileSize == fileSizeDword) ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     gfx.type = type;
 
     // CL2 FRAMES OFFSETS CALCULATION
     std::vector<std::pair<quint32, quint32>> frameOffsets;
+    quint32 metaOffset, contentOffset = fileSize;
     if (type == D1CEL_TYPE::V2_MONO_GROUP) {
         // Going through all frames of the only group
         if (firstDword > 0) {
             gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
         }
-        for (unsigned i = 1; i <= firstDword; i++) {
+        unsigned i = 1;
+        for ( ; i <= firstDword; i++) {
             device->seek(i * 4);
             quint32 cl2FrameStartOffset;
             in >> cl2FrameStartOffset;
@@ -67,10 +70,15 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             frameOffsets.push_back(
                 std::pair<quint32, quint32>(cl2FrameStartOffset, cl2FrameEndOffset));
         }
+
+        metaOffset = 4 + i * 4;
+        if (frameOffsets.size() != 0)
+            contentOffset = frameOffsets[0].first;
     } else {
         // Going through all groups
         int cursor = 0;
-        for (unsigned i = 0; i * 4 < firstDword; ) {
+        unsigned i = 0;
+        while (i * 4 < firstDword) {
             device->seek(i * 4);
             quint32 cl2GroupOffset;
             in >> cl2GroupOffset;
@@ -93,6 +101,9 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 break;
             }
 
+            if (cl2GroupOffset < contentOffset) {
+                contentOffset = cl2GroupOffset;
+            }
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + cl2GroupFrameCount - 1));
 
             // Going through all frames of the group
@@ -115,7 +126,11 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 break;
             }
         }
+
+        metaOffset = i * 4;
     }
+
+    D1Cel::readMeta(device, in, metaOffset, contentOffset, frameOffsets.size(), gfx);
 
     // BUILDING {CL2 FRAMES}
     int clipped = -1;
@@ -310,6 +325,10 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     bool clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && gfx.clipped);
     gfx.clipped = clipped;
 
+    // calculate the meta info size
+    CelMetaInfo meta;
+    int metaSize = D1Cel::prepareCelMeta(gfx, meta);
+
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
     for (D1GfxFrame *frame : gfx.frames) {
@@ -320,7 +339,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         }
     }
     // estimate data size
-    int maxSize = headerSize;
+    int maxSize = headerSize + metaSize;
     for (D1GfxFrame *frame : gfx.frames) {
         if (clipped) {
             maxSize += subHeaderSize; // SUB_HEADER_SIZE
@@ -332,19 +351,26 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     fileData.append(maxSize, 0);
 
     quint8 *buf = (quint8 *)fileData.data();
+    quint8 *pBuf;
+    // write meta
+    { // write the metadata
+    pBuf = &buf[groupped ? numGroups * sizeof(quint32) : headerSize];
+    pBuf = D1Cel::writeCelMeta(meta, gfx, pBuf);
+    }
     quint8 *hdr = buf;
     if (groupped) {
         // add optional {CL2 GROUP HEADER}
-        int offset = numGroups * 4;
+        int offset = numGroups * sizeof(quint32) + metaSize;
         for (int i = 0; i < numGroups; i++, hdr += 4) {
             *(quint32 *)&hdr[0] = offset;
             std::pair<int, int> gfi = gfx.getGroupFrameIndices(i);
             int ni = gfi.second - gfi.first + 1;
             offset += 4 + 4 * (ni + 1);
         }
+        hdr += metaSize;
     }
 
-    quint8 *pBuf = &buf[headerSize];
+    pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
         std::pair<int, int> gfi = gfx.getGroupFrameIndices(ii);
