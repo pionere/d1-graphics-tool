@@ -48,36 +48,6 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // If the dword is not equal to the file size then
     // check if it's a CL2 with multiple groups
     D1CEL_TYPE type = fileSize == fileSizeDword ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
-    if (type == D1CEL_TYPE::V2_MULTIPLE_GROUPS) {
-        // Read offset of the last CL2 group header
-        device->seek(firstDword - 4);
-        quint32 lastCl2GroupHeaderOffset;
-        in >> lastCl2GroupHeaderOffset;
-
-        // Read the number of frames of the last CL2 group
-        if (fileSize < (lastCl2GroupHeaderOffset + 4))
-            return false;
-
-        device->seek(lastCl2GroupHeaderOffset);
-        quint32 lastCl2GroupFrameCount;
-        in >> lastCl2GroupFrameCount;
-
-        // Read the last frame offset corresponding to the file size
-        if (fileSize < (lastCl2GroupHeaderOffset + lastCl2GroupFrameCount * 4 + 4 + 4))
-            return false;
-
-        device->seek(lastCl2GroupHeaderOffset + lastCl2GroupFrameCount * 4 + 4);
-        in >> fileSizeDword;
-        // The offset is from the beginning of the last group header
-        // so we need to add the offset of the lasr group header
-        // to have an offset from the beginning of the file
-        fileSizeDword += lastCl2GroupHeaderOffset;
-
-        if (fileSize != fileSizeDword) {
-            return false;
-        }
-    }
-
     gfx.type = type;
 
     // CL2 FRAMES OFFSETS CALCULATION
@@ -100,23 +70,28 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     } else {
         // Going through all groups
         int cursor = 0;
-        for (unsigned i = 0; i * 4 < firstDword; i++) {
+        for (unsigned i = 0; i * 4 < firstDword; ) {
             device->seek(i * 4);
             quint32 cl2GroupOffset;
             in >> cl2GroupOffset;
 
-            if (fileSize < (cl2GroupOffset + 4))
-                return false;
+            if (fileSize < (cl2GroupOffset + 4)) {
+                dProgressErr() << QApplication::tr("Invalid frameoffset %1 of %2 for group %3.").arg(cl2GroupOffset).arg(fileSize).arg(i);
+                break;
+            }
 
             device->seek(cl2GroupOffset);
             quint32 cl2GroupFrameCount;
             in >> cl2GroupFrameCount;
 
             if (cl2GroupFrameCount == 0) {
+                i++;
                 continue;
             }
-            if (fileSize < (cl2GroupOffset + cl2GroupFrameCount * 4 + 4 + 4))
-                return false;
+            if (fileSize < (cl2GroupOffset + cl2GroupFrameCount * 4 + 4 + 4)) {
+                dProgressErr() << QApplication::tr("Not enough space for %1 frameoffsets at %2 in %3 for group %4.").arg(cl2GroupFrameCount).arg(cl2GroupOffset).arg(fileSize).arg(i);
+                break;
+            }
 
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + cl2GroupFrameCount - 1));
 
@@ -134,6 +109,11 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                         cl2GroupOffset + cl2FrameEndOffset));
             }
             cursor += cl2GroupFrameCount;
+
+            i++;
+            if (frameOffsets.back().second == fileSize) {
+                break;
+            }
         }
     }
 

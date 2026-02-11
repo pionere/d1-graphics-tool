@@ -64,53 +64,30 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             frameOffsets.push_back(std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
         }
     } else {
-        // Read offset of the last CEL of the CEL compilation
-        device->seek(firstDword - 4);
-        quint32 lastCelOffset;
-        in >> lastCelOffset;
-
-        // Go to last CEL of the CEL compilation
-        // Read last CEL header
-        if (fileSize < (lastCelOffset + 4))
-            return false;
-
-        device->seek(lastCelOffset);
-        quint32 lastCelFrameCount;
-        in >> lastCelFrameCount;
-
-        // Read the last CEL size
-        if (fileSize < (lastCelOffset + 4 + lastCelFrameCount * 4 + 4))
-            return false;
-
-        device->seek(lastCelOffset + 4 + lastCelFrameCount * 4);
-        quint32 lastCelSize;
-        in >> lastCelSize;
-
-        // If the last CEL size plus the last CEL offset is equal to
-        // the file size then it's a CEL compilation
-        if (fileSize != (lastCelOffset + lastCelSize)) {
-            return false;
-        }
-
         // Going through all groups
         int cursor = 0;
-        for (unsigned int i = 0; i * 4 < firstDword; i++) {
+        for (unsigned int i = 0; i * 4 < firstDword; ) {
             device->seek(i * 4);
             quint32 celGroupOffset;
             in >> celGroupOffset;
 
-            if (fileSize < (celGroupOffset + 4))
-                return false;
+            if (fileSize < (celGroupOffset + 4)) {
+                dProgressErr() << QApplication::tr("Invalid frameoffset %1 of %2 for group %3.").arg(celGroupOffset).arg(fileSize).arg(i);
+                break;
+            }
 
             device->seek(celGroupOffset);
             quint32 celFrameCount;
             in >> celFrameCount;
 
             if (celFrameCount == 0) {
+                i++;
                 continue;
             }
-            if (fileSize < (celGroupOffset + celFrameCount * 4 + 4 + 4))
-                return false;
+            if (fileSize < (celGroupOffset + celFrameCount * 4 + 4 + 4)) {
+                dProgressErr() << QApplication::tr("Not enough space for %1 frameoffsets at %2 in %3 for group %4.").arg(celFrameCount).arg(celGroupOffset).arg(fileSize).arg(i);
+                break;
+            }
 
             gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + celFrameCount - 1));
 
@@ -128,6 +105,11 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                         celGroupOffset + celFrameEndOffset));
             }
             cursor += celFrameCount;
+
+            i++;
+            if (frameOffsets.back().second == fileSize) {
+                break;
+            }
         }
     }
 
