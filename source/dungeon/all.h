@@ -38,7 +38,6 @@
 #include "quests.h"
 #include "spelldat.h"
 #include "themes.h"
-#include "towners.h"
 #include "trigs.h"
 
 #endif /* __ALL_H__ */

@@ -1889,41 +1889,6 @@ bool D1Gfx::check() const
         }
     }
     }
-    // test towner graphics
-    QString filePath = this->getFilePath();
-    QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
-    bool typetested = false;
-    InitTowners();
-    for (int i = 0; i < numtowners; i++) {
-        QString townerPath = towners[i].tsPath;
-        townerPath = townerPath.mid(townerPath.lastIndexOf('\\')+1);
-        QString townerPathLower = QDir::toNativeSeparators(townerPath).toLower();
-        if (filePathLower.endsWith(townerPathLower)) {
-            const int8_t* ao = towners[i].tsAnimOrder;
-            if (ao != NULL) {
-                int mf = 0;
-                while (*ao > 0) {
-                    if (mf < *ao) {
-                        mf = *ao;
-                    }
-                    ao++;
-                }
-                if (mf > gs) {
-                    dProgress() << QApplication::tr("Not enough frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
-                    result = true;
-                } else if (gs > mf) {
-                    dProgress() << QApplication::tr("Too many frames to be used in the animation order. (Expected %1 got %2)").arg(mf).arg(gs);
-                    result = true;
-                }
-            }
-            typetested = true;
-            break;
-        }
-    }
-    if (!typetested) {
-        dProgress() << QApplication::tr("Unrecognized graphics -> Checking with game-code is skipped.");
-        result = true;
-    }
     return result;
 }
 
@@ -3627,6 +3592,29 @@ bool D1Gfx::patchWarriorStand(bool silent)
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of group %2 is modified.").arg(n + 1).arg(DIR_SW + 1);
             }
+        }
+    }
+    return result;
+}
+
+bool D1Gfx::addAnimDelayInfo(int gfxFileIndex, bool silent)
+{
+    int frameDelay = 0;
+    switch (gfxFileIndex) {
+    case GFX_TWN_FARMER:
+    case GFX_TWN_CFARMER:
+    case GFX_TWN_MFARMER: frameDelay = 3; break;
+    case GFX_TWN_GIRLW:
+    case GFX_TWN_GIRLS:   frameDelay = 6; break;
+    }
+    D1GfxMeta *meta = this->getMeta(CELMETA_ANIMDELAY);
+    bool result = false;
+    if (meta->setStored(true)) {
+        result = true;
+        meta->setContent(QString::number(frameDelay));
+        this->setModified();
+        if (!silent) {
+            dProgress() << QApplication::tr("Added FrameDelay %1 meta info.").arg(frameDelay);
         }
     }
     return result;
@@ -8639,6 +8627,13 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
+    case GFX_TWN_FARMER:  // Farmrn2.CEL
+    case GFX_TWN_CFARMER: // cfrmrn2.CEL
+    case GFX_TWN_MFARMER: // mfrmrn2.CEL
+    case GFX_TWN_GIRLW:   // Girlw1.CEL
+    case GFX_TWN_GIRLS:   // Girls1.CEL
+        change = this->addAnimDelayInfo(gfxFileIndex, silent);
+        break;
     case GFX_MON_FALLGD: // patch Fallgd.CL2
         change = this->patchFallGDie(silent);
         break;
@@ -8779,6 +8774,21 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "l5light") {
         fileIndex = GFX_OBJ_L5LIGHT;
+    }
+    if (baseName == "farmrn2") {
+        fileIndex = GFX_TWN_FARMER;
+    }
+    if (baseName == "cfrmrn2") {
+        fileIndex = GFX_TWN_CFARMER;
+    }
+    if (baseName == "mfrmrn2") {
+        fileIndex = GFX_TWN_MFARMER;
+    }
+    if (baseName == "girlw1") {
+        fileIndex = GFX_TWN_GIRLW;
+    }
+    if (baseName == "girls1") {
+        fileIndex = GFX_TWN_GIRLS;
     }
     if (baseName == "spelicon") {
         fileIndex = GFX_SPL_ICONS;

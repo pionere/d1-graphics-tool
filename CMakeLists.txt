@@ -149,7 +149,6 @@ set(PROJECT_SOURCES
         source/dungeon/quests.cpp
         source/dungeon/spelldat.cpp
         source/dungeon/themes.cpp
-        source/dungeon/towners.cpp
         source/dungeon/trigs.cpp
         source/dungeongeneratedialog.cpp
         source/dungeongeneratedialog.h
