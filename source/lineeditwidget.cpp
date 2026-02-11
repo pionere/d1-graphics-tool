@@ -1,6 +1,7 @@
 #include "lineeditwidget.h"
 
 #include <QFontMetrics>
+#include <QStyle>
 
 LineEditWidget::LineEditWidget(QWidget *parent)
     : QLineEdit(parent)
@@ -53,6 +54,15 @@ std::pair<int, int> LineEditWidget::nonNegRange() const
         result.second = 0;
     }
     return result;
+}
+
+void LineEditWidget::setReadOnly(bool ro)
+{
+    QLineEdit::setReadOnly(ro);
+
+    // update the lineedit widget (thanks qt...)
+    this->style()->unpolish(this);
+    this->style()->polish(this);
 }
 
 void LineEditWidget::keyPressEvent(QKeyEvent *event)
