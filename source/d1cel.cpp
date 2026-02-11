@@ -46,8 +46,11 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in >> fileSizeDword;
 
     // If the dword is not equal to the file size then
-    // check if it's a CEL compilation
+    // try to read it as a CEL compilation
     D1CEL_TYPE type = fileSize == fileSizeDword ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
+    gfx.type = type;
+
+    // CEL FRAMES OFFSETS CALCULATION
     std::vector<std::pair<quint32, quint32>> frameOffsets;
     if (type == D1CEL_TYPE::V1_REGULAR) {
         // Going through all frames of the CEL
@@ -112,8 +115,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             }
         }
     }
-
-    gfx.type = type;
 
     // CEL FRAMES OFFSETS CALCULATION
 

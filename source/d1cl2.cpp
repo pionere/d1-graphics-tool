@@ -46,13 +46,13 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in >> fileSizeDword;
 
     // If the dword is not equal to the file size then
-    // check if it's a CL2 with multiple groups
+    // try to read it as a CL2 with multiple groups
     D1CEL_TYPE type = fileSize == fileSizeDword ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     gfx.type = type;
 
     // CL2 FRAMES OFFSETS CALCULATION
     std::vector<std::pair<quint32, quint32>> frameOffsets;
-    if (gfx.type == D1CEL_TYPE::V2_MONO_GROUP) {
+    if (type == D1CEL_TYPE::V2_MONO_GROUP) {
         // Going through all frames of the only group
         if (firstDword > 0) {
             gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
