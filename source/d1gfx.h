@@ -286,6 +286,8 @@ public:
     D1Gfx() = default;
     ~D1Gfx();
 
+    static QString gfxTypeToStr(D1CEL_TYPE type);
+
     void compareTo(const D1Gfx *gfx, QString &header, bool patchData) const;
     QRect getBoundary() const;
 
