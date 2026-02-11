@@ -1197,7 +1197,11 @@ void MainWindow::wheelEvent(QWheelEvent *event)
         }
     }
     if (dir != 0) {
-        {
+        if (noZoom) {
+            if (this->isPainting()) {
+                this->paintWidget->adjustBrush(dir);
+            }
+        } else {
             CelScene *scene = nullptr;
             if (this->celView != nullptr) {
                 scene = this->celView->getCelScene();

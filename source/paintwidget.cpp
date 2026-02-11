@@ -359,6 +359,22 @@ void PaintWidget::toggleMode()
     }
 }
 
+void PaintWidget::adjustBrush(int dir)
+{
+    const bool size = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    if (size) {
+        if (dir >= 0)
+            this->on_brushWidthIncButton_clicked();
+        else
+            this->on_brushWidthDecButton_clicked();
+    } else {
+        if (dir >= 0)
+            this->on_brushLengthIncButton_clicked();
+        else
+            this->on_brushLengthDecButton_clicked();
+    }
+}
+
 D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
 {
     unsigned numColors = this->selectedColors.size();
