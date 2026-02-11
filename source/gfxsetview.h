@@ -202,6 +202,8 @@ private:
     D1GFX_SET_TYPE currType = D1GFX_SET_TYPE::Unknown;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
+    QList<int> animOrder;
+    int animFrameIndex;
     int origFrameIndex = 0;
     unsigned currentPlayDelay = 50000; // microsec
     int playTimer = 0;

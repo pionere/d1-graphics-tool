@@ -1797,18 +1797,32 @@ void GfxsetView::on_playStopButton_clicked()
         this->ui->playDelayEdit->setReadOnly(false);
         this->ui->playComboBox->setEnabled(true);
         this->ui->playFrameCheckBox->setEnabled(true);
+        this->ui->animOrderEdit->setReadOnly(false);
         return;
     }
     // disable the related fields
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(false);
     this->ui->playFrameCheckBox->setEnabled(false);
+    this->ui->animOrderEdit->setReadOnly(true);
     // change the label of the button
     this->ui->playStopButton->setText(tr("Stop"));
     // preserve the currentFrameIndex
     this->origFrameIndex = this->currentFrameIndex;
     // preserve the palette
     dMainWindow().initPaletteCycle();
+    // initialize animation-order
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMORDER);
+    this->animOrder.clear();
+    D1Cel::parseFrameList(meta->getContent(), this->animOrder);
+    for (auto it = this->animOrder.begin(); it != this->animOrder.end(); ) {
+        if (*it < this->gfx->getFrameCount()) {
+            it++;
+        } else {
+            it = this->animOrder.erase(it);
+        }
+    }
+    this->animFrameIndex = 0;
 
     this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
 }
@@ -1821,6 +1835,13 @@ void GfxsetView::timerEvent(QTimerEvent *event)
     std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
     int nextFrameIndex = this->currentFrameIndex + 1;
+    if (!this->animOrder.isEmpty()) {
+        int currAnimFrameIndex = this->animFrameIndex;
+        if (currAnimFrameIndex >= this->animOrder.count())
+            currAnimFrameIndex = 0;
+        nextFrameIndex = this->animOrder[currAnimFrameIndex];
+        this->animFrameIndex = currAnimFrameIndex + 1;
+    }
     Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
     if (playType == Qt::Unchecked) {
         // normal playback

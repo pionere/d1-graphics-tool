@@ -228,6 +228,8 @@ private:
     D1Gfx *gfx;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
+    QList<int> animOrder;
+    int animFrameIndex;
     int origFrameIndex = 0;
     QPointer<D1Pal> origPal;
     unsigned currentPlayDelay = 50000; // microsec
