@@ -1358,14 +1358,13 @@ bool D1GfxMeta::setDimensions(int w, int h)
 {
     QString nc = QString("%1x%2").arg(w).arg(h);
 
-    if (this->mContent == content) return false;
-    this->mContent = content;
+    if (this->mContent == nc) return false;
+    this->mContent = nc;
     return true;
 }
 
 void D1GfxMeta::upscale(int multiplier)
 {
-    // assert(type == CELMETA_DIMENSIONS);
     int w = this->getWidth();
     int h = this->getHeight();
     if (w != 0 || h != 0) {
