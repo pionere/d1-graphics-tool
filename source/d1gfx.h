@@ -291,13 +291,17 @@ public:
     bool setStored(bool stored);
     bool isStored() const { return mStored; };
 
+    bool setContent(const QString &content);
+    QString getContent() const { return mContent; };
+    // dimensions-meta helpers
     bool setWidth(int w);
     int getWidth() const;
     bool setHeight(int h);
     int getHeight() const;
 
-    bool setContent(const QString &content);
-    QString getContent() const { return mContent; };
+    void upscale(int multiplier);
+private:
+    bool setDimensions(int w, int h);
 
 private:
     QString mContent;
