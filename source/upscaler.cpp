@@ -3260,6 +3260,9 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
         }
     }
     gfx->frames.swap(newFrames);
+    // 'upscale' metadata
+    gfx->getMeta(CELMETA_DIMENSIONS)->upscale(upParams.multiplier);
+    // gfx->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->upscale(upParams.multiplier);
     // TODO: gfx->components ?
     gfx->upscaled = !params.downscale;
     gfx->modified = true;

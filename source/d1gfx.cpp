@@ -1321,14 +1321,18 @@ bool D1GfxMeta::setStored(bool stored)
     return true;
 }
 
-bool D1GfxMeta::setWidth(int w)
+bool D1GfxMeta::setContent(const QString &content)
 {
-    QString nc = QString("%1x%2").arg(w).arg(this->getHeight());
-
-    if (this->mContent == nc) return false;
-    this->mContent = nc;
+    if (this->mContent == content) return false;
+    this->mContent = content;
     return true;
 }
+
+bool D1GfxMeta::setWidth(int w)
+{
+    return this->setDimensions(w, this->getHeight());
+}
+
 int D1GfxMeta::getWidth() const
 {
     if (this->mContent.isEmpty()) {
@@ -1336,14 +1340,12 @@ int D1GfxMeta::getWidth() const
     }
     return this->mContent.left(this->mContent.indexOf('x')).toInt();
 }
+
 bool D1GfxMeta::setHeight(int h)
 {
-    QString nc = QString("%1x%2").arg(this->getWidth()).arg(h);
-
-    if (this->mContent == nc) return false;
-    this->mContent = nc;
-    return true;
+    return this->setDimensions(this->getWidth(), h);
 }
+
 int D1GfxMeta::getHeight() const
 {
     if (this->mContent.isEmpty()) {
@@ -1352,11 +1354,23 @@ int D1GfxMeta::getHeight() const
     return this->mContent.mid(this->mContent.indexOf('x') + 1).toInt();
 }
 
-bool D1GfxMeta::setContent(const QString &content)
+bool D1GfxMeta::setDimensions(int w, int h)
 {
+    QString nc = QString("%1x%2").arg(w).arg(h);
+
     if (this->mContent == content) return false;
     this->mContent = content;
     return true;
+}
+
+void D1GfxMeta::upscale(int multiplier)
+{
+    // assert(type == CELMETA_DIMENSIONS);
+    int w = this->getWidth();
+    int h = this->getHeight();
+    if (w != 0 || h != 0) {
+        this->setDimensions(w * multiplier, h * multiplier);
+    }
 }
 
 QString D1Gfx::getCompFilePath() const
