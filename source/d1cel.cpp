@@ -117,7 +117,7 @@ bool D1Cel::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1
 
     // CEL FRAMES OFFSETS CALCULATION
     quint32 metaOffset, contentOffset = fileSize;
-    if (type == D1CEL_TYPE::V1_REGULAR) {
+    if (!hi.groupped) {
         // Going through all frames of the CEL
         if (firstDword > 0) {
             gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
