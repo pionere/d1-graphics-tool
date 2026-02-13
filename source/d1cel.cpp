@@ -92,6 +92,111 @@ quint32 so = startOffset;
     return startOffset == endOffset;
 }
 
+bool D1Cel::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1Gfx &gfx)
+{
+    auto fileSize = device->size();
+    // CEL HEADER CHECKS
+    // Read first DWORD
+    if (fileSize < 4)
+        return false;
+
+    quint32 firstDword;
+    in >> firstDword;
+
+    // Trying to find file size in CEL header
+    if (fileSize < (4 + firstDword * 4 + 4))
+        return false;
+
+    device->seek(4 + firstDword * 4);
+    quint32 fileSizeDword;
+    in >> fileSizeDword;
+
+    // If the dword is not equal to the file size then
+    // try to read it as a groupped CEL
+    hi.groupped = (firstDword != 0 && fileSize != fileSizeDword);
+
+    // CEL FRAMES OFFSETS CALCULATION
+    quint32 metaOffset, contentOffset = fileSize;
+    if (type == D1CEL_TYPE::V1_REGULAR) {
+        // Going through all frames of the CEL
+        if (firstDword > 0) {
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
+        }
+        unsigned i = 1;
+        for ( ; i <= firstDword; i++) {
+            device->seek(i * 4);
+            quint32 celFrameStartOffset;
+            in >> celFrameStartOffset;
+            quint32 celFrameEndOffset;
+            in >> celFrameEndOffset;
+
+            hi.frameOffsets.push_back(
+                QPair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
+        }
+
+        metaOffset = 4 + i * 4;
+        if (!hi.frameOffsets.isEmpty())
+            contentOffset = hi.frameOffsets[0].first;
+    } else {
+        // Going through all groups
+        int cursor = 0;
+        unsigned i = 0;
+        while (i * 4 < firstDword) {
+            device->seek(i * 4);
+            quint32 celGroupOffset;
+            in >> celGroupOffset;
+
+            if (fileSize < (celGroupOffset + 4)) {
+                dProgressErr() << QApplication::tr("Invalid frameoffset %1 of %2 for group %3.").arg(celGroupOffset).arg(fileSize).arg(i);
+                break;
+            }
+
+            device->seek(celGroupOffset);
+            quint32 celFrameCount;
+            in >> celFrameCount;
+
+            if (celFrameCount == 0) {
+                i++;
+                continue;
+            }
+            if (fileSize < (celGroupOffset + celFrameCount * 4 + 4 + 4)) {
+                dProgressErr() << QApplication::tr("Not enough space for %1 frameoffsets at %2 in %3 for group %4.").arg(celFrameCount).arg(celGroupOffset).arg(fileSize).arg(i);
+                break;
+            }
+
+            if (celGroupOffset < contentOffset) {
+                contentOffset = celGroupOffset;
+            }
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + celFrameCount - 1));
+
+            // Going through all frames of the CEL
+            for (unsigned int j = 1; j <= celFrameCount; j++) {
+                quint32 celFrameStartOffset;
+                quint32 celFrameEndOffset;
+
+                device->seek(celGroupOffset + j * 4);
+                in >> celFrameStartOffset;
+                in >> celFrameEndOffset;
+
+                hi.frameOffsets.push_back(
+                    QPair<quint32, quint32>(celGroupOffset + celFrameStartOffset,
+                        celGroupOffset + celFrameEndOffset));
+            }
+            cursor += celFrameCount;
+
+            i++;
+            if (hi.frameOffsets.back().second == fileSize) {
+                break;
+            }
+        }
+
+        metaOffset = i * 4;
+    }
+
+    readMeta(device, in, metaOffset, contentOffset, hi.frameOffsets.size(), gfx);
+    return true;
+}
+
 bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
@@ -109,6 +214,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in.setByteOrder(QDataStream::LittleEndian);
 
     QIODevice *device = in.device();
+#if 0
     auto fileSize = device->size();
     // CEL HEADER CHECKS
     // Read first DWORD
@@ -147,7 +253,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             quint32 celFrameEndOffset;
             in >> celFrameEndOffset;
 
-            frameOffsets.push_back(std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
+            frameOffsets.push_back(
+                std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
         }
 
         metaOffset = 4 + i * 4;
@@ -210,32 +317,40 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     }
 
     readMeta(device, in, metaOffset, contentOffset, frameOffsets.size(), gfx);
+#else
+    CelHeaderInfo hi;
+    if (!readHeader(device, in, hi, gfx)) {
+        return false;
+    }
+    gfx.type = hi.groupped ? D1CEL_TYPE::V1_COMPILATION : D1CEL_TYPE::V1_REGULAR;
+    auto fileSize = device->size();
+#endif
 
     // CEL FRAMES OFFSETS CALCULATION
 
     // BUILDING {CEL FRAMES}
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
-    for (unsigned i = 0; i < frameOffsets.size(); i++) {
-        const auto &offset = frameOffsets[i];
+    for (unsigned i = 0; i < hi.frameOffsets.size(); i++) {
+        const auto &offset = hi.frameOffsets[i];
         D1GfxFrame *frame = new D1GfxFrame();
         if (fileSize >= offset.second && offset.second >= offset.first) {
-        device->seek(offset.first);
-        QByteArray celFrameRawData = device->read(offset.second - offset.first);
+            device->seek(offset.first);
+            QByteArray celFrameRawData = device->read(offset.second - offset.first);
 
-        int res = D1CelFrame::load(*frame, celFrameRawData, params);
-        if (res < 0) {
-            if (res == -1)
-                dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(i + 1);
-            else
-                dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(i + 1);
-            // invalidFrames.push(i);
-        } else if (clipped != res) {
-            if (clipped == -1)
-                clipped = res;
-            else
-                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(i + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
-        }
+            int res = D1CelFrame::load(*frame, celFrameRawData, params);
+            if (res < 0) {
+                if (res == -1)
+                    dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(i + 1);
+                else
+                    dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(i + 1);
+                // invalidFrames.push(i);
+            } else if (clipped != res) {
+                if (clipped == -1)
+                    clipped = res;
+                else
+                    dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(i + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));
+            }
         } else {
             dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(i + 1).arg(offset.first).arg(offset.second).arg(fileSize);
         }

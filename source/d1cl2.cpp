@@ -29,6 +29,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in.setByteOrder(QDataStream::LittleEndian);
 
     QIODevice *device = in.device();
+#if 0
     auto fileSize = device->size();
     // CL2 HEADER CHECKS
     if (fileSize < 4)
@@ -47,7 +48,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in >> fileSizeDword;
 
     // If the dword is not equal to the file size then
-    //try to read it as a CL2 with multiple groups
+    // try to read it as a CL2 with multiple groups
     D1CEL_TYPE type = (firstDword == 0 || fileSize == fileSizeDword) ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     gfx.type = type;
 
@@ -131,30 +132,38 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     }
 
     D1Cel::readMeta(device, in, metaOffset, contentOffset, frameOffsets.size(), gfx);
+#else
+    CelHeaderInfo hi;
+    if (!D1Cel::readHeader(device, in, hi, gfx)) {
+        return false;
+    }
+    gfx.type = hi.groupped ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
+    auto fileSize = device->size();
+#endif
 
     // BUILDING {CL2 FRAMES}
     // std::stack<quint16> invalidFrames;
     int clipped = -1;
-    for (unsigned i = 0; i < frameOffsets.size(); i++) {
-        const auto &offset = frameOffsets[i];
+    for (unsigned i = 0; i < hi.frameOffsets.size(); i++) {
+        const auto &offset = hi.frameOffsets[i];
         D1GfxFrame *frame = new D1GfxFrame();
         if (fileSize >= offset.second && offset.second >= offset.first) {
-        device->seek(offset.first);
-        QByteArray cl2FrameRawData = device->read(offset.second - offset.first);
+            device->seek(offset.first);
+            QByteArray cl2FrameRawData = device->read(offset.second - offset.first);
 
-        int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params);
-        if (res < 0) {
-            if (res == -1)
-                dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(i + 1);
-            else
-                dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(i + 1);
-            // invalidFrames.push(i);
-        } else if (clipped != res) {
-            if (clipped == -1)
-                clipped = res;
-            else
-                dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(i + 1).arg(D1Gfx::clippedtoStr(res != 0));
-        }
+            int res = D1Cl2Frame::load(*frame, cl2FrameRawData, params);
+            if (res < 0) {
+                if (res == -1)
+                    dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(i + 1);
+                else
+                    dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(i + 1);
+                // invalidFrames.push(i);
+            } else if (clipped != res) {
+                if (clipped == -1)
+                    clipped = res;
+                else
+                    dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(i + 1).arg(D1Gfx::clippedtoStr(res != 0));
+            }
         } else {
             dProgressErr() << QApplication::tr("Address of Frame %1 is invalid (%2-%3 of %4).").arg(i + 1).arg(offset.first).arg(offset.second).arg(fileSize);
         }

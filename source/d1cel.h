@@ -18,6 +18,12 @@ typedef struct CelMetaInfo
     QList<int> actionFrames;
 } CelMetaInfo;
 
+typedef struct CelHeaderInfo
+{
+    bool groupped;
+    QList<QPair<quint32, quint32>> frameOffsets;
+} CelHeaderInfo;
+
 class D1Cel {
     friend class D1Cl2;
 public:
@@ -33,6 +39,7 @@ public:
     static void formatFrameList(QString &content);
 private:
     static bool readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, quint32 endOffset, unsigned frameCount, D1Gfx &gfx);
+    static bool readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &headerInfo, D1Gfx &gfx);
     static int prepareCelMeta(const D1Gfx &gfx, CelMetaInfo &result);
     static quint8* writeCelMeta(const CelMetaInfo &metaInfo, const D1Gfx &gfx, quint8 *dest);
 
