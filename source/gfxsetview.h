@@ -179,6 +179,7 @@ private slots:
     void on_playDelayEdit_returnPressed();
     void on_playDelayEdit_escPressed();
     void on_playStopButton_clicked();
+    void on_playReverseCheckBox_clicked();
 
     void timerEvent(QTimerEvent *event) override;
 
@@ -203,6 +204,7 @@ private:
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     QList<int> animOrder;
+    int animAdd = 1;
     int animFrameIndex;
     int origFrameIndex = 0;
     unsigned currentPlayDelay = 50000; // microsec

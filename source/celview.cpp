@@ -1770,6 +1770,11 @@ void CelView::on_playStopButton_clicked()
     this->playTimer = this->startTimer(this->currentPlayDelay / 1000, Qt::PreciseTimer);
 }
 
+void CelView::on_playReverseCheckBox_clicked()
+{
+    this->animAdd = -this->animAdd;
+}
+
 void CelView::timerEvent(QTimerEvent *event)
 {
     if (this->gfx->getGroupCount() == 0) {
@@ -1777,27 +1782,35 @@ void CelView::timerEvent(QTimerEvent *event)
     }
     std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
-    int nextFrameIndex = this->currentFrameIndex + 1;
+    int nextFrameIndex;
     if (!this->animOrder.isEmpty()) {
         int currAnimFrameIndex = this->animFrameIndex;
         if (currAnimFrameIndex >= this->animOrder.count())
             currAnimFrameIndex = 0;
         nextFrameIndex = this->animOrder[currAnimFrameIndex];
         this->animFrameIndex = currAnimFrameIndex + 1;
-    }
-    Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
-    if (playType == Qt::Unchecked) {
-        // normal playback
-        if (nextFrameIndex > groupFrameIndices.second)
-            nextFrameIndex = groupFrameIndices.first;
-    } else if (playType == Qt::PartiallyChecked) {
-        // playback till the original frame
-        if (nextFrameIndex > this->origFrameIndex)
-            nextFrameIndex = groupFrameIndices.first;
     } else {
-        // playback from the original frame
-        if (nextFrameIndex > groupFrameIndices.second)
-            nextFrameIndex = this->origFrameIndex;
+        nextFrameIndex = this->currentFrameIndex + this->animAdd;
+        Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
+        if (playType == Qt::Unchecked) {
+            // normal playback
+            if (nextFrameIndex > groupFrameIndices.second)
+                nextFrameIndex = groupFrameIndices.first;
+            else if (nextFrameIndex < groupFrameIndices.first)
+                nextFrameIndex = groupFrameIndices.second;
+        } else if (playType == Qt::PartiallyChecked) {
+            // playback till the original frame
+            if (nextFrameIndex > this->origFrameIndex)
+                nextFrameIndex = groupFrameIndices.first;
+            else if (nextFrameIndex < groupFrameIndices.first)
+                nextFrameIndex = this->origFrameIndex;
+        } else {
+            // playback from the original frame
+            if (nextFrameIndex > groupFrameIndices.second)
+                nextFrameIndex = this->origFrameIndex;
+            else if (nextFrameIndex < this->origFrameIndex)
+                nextFrameIndex = groupFrameIndices.second;
+        }
     }
     this->currentFrameIndex = nextFrameIndex;
     if (this->gfx->getType() == D1CEL_TYPE::SMK) {

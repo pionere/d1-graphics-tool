@@ -657,7 +657,14 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="14" colspan="4">
+      <item row="0" column="14">
+       <widget class="QCheckBox" name="playReverseCheckBox">
+        <property name="toolTip">
+         <string>Reverse the playback direction</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="15" colspan="3">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
