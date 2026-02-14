@@ -5920,7 +5920,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customMonster.path = params.path;
                 customMonster.baseTrnPath = params.baseTrnPath;
                 customMonster.uniqueTrnPath = params.uniqueTrnPath;
-                customMonster.width = params.width;
+                // customMonster.width = params.width;
                 return true;
             }
         }
@@ -5931,7 +5931,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMonster.path = params.path;
         customMonster.baseTrnPath = params.baseTrnPath;
         customMonster.uniqueTrnPath = params.uniqueTrnPath;
-        customMonster.width = params.width;
+        // customMonster.width = params.width;
         this->customMonsterTypes.push_back(customMonster);
     } break;
     case DUN_ENTITY_TYPE::ITEM: {
@@ -6063,7 +6063,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customMissile.name = params.name;
                 customMissile.path = params.path;
                 customMissile.trnPath = params.baseTrnPath;
-                customMissile.width = params.width;
+                // customMissile.width = params.width;
                 return true;
             }
         }
@@ -6073,7 +6073,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMissile.name = params.name;
         customMissile.path = params.path;
         customMissile.trnPath = params.baseTrnPath;
-        customMissile.width = params.width;
+        // customMissile.width = params.width;
         customMissile.cmiPreFlag = params.preFlag;
         this->customMissileTypes.push_back(customMissile);
     } break;
