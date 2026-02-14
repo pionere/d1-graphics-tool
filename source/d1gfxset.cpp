@@ -232,17 +232,21 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
 
             gfx = new D1Gfx();
             gfx->setPalette(pal);
-            bool loaded = false;
+            bool loaded;
             if (filePath.endsWith(".cl2", Qt::CaseInsensitive)) {
                 loaded = D1Cl2::load(*gfx, filePath, params);
+                if (!loaded) {
+                    dProgressErr() << QApplication::tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(filePath));
+                }
             } else {
                 loaded = D1Clc::load(*gfx, filePath, params);
+                if (!loaded) {
+                    dProgressErr() << QApplication::tr("Failed loading CLC file: %1.").arg(QDir::toNativeSeparators(filePath));
+                }
             }
             if (!loaded || this->baseGfx->getType() != gfx->getType()) {
-                if (!loaded) {
-                    dProgressErr() << QApplication::tr("failed to load %1").arg(QDir::toNativeSeparators(filePath));
-                } else {
-                    dProgressErr() << QApplication::tr("mismatching type in %1 (%2 vs %3)").arg(QDir::toNativeSeparators(filePath)).arg(D1Gfx::gfxTypeToStr(this->baseGfx->getType())).arg(D1Gfx::gfxTypeToStr(gfx->getType()));
+                if (loaded) {
+                    dProgressErr() << QApplication::tr("Mismatching type in %1 (%2 vs %3)").arg(QDir::toNativeSeparators(filePath)).arg(D1Gfx::gfxTypeToStr(this->baseGfx->getType())).arg(D1Gfx::gfxTypeToStr(gfx->getType()));
                 }
                 gfx->setType(this->baseGfx->getType());
                 filePath.chop(1);
@@ -250,9 +254,6 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 gfx->setFilePath(filePath);
             }
         } else {
-            if (baseMatch) {
-                dProgressErr() << QApplication::tr("duplicate base match %1 : %2").arg(baseName).arg(gfxFileInfo.completeBaseName());
-            }
             gfx = this->baseGfx;
             baseMatch = true;
         }
@@ -523,6 +524,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
         D1Gfx *currGfx = this->getGfx(gn);
         if (gfx != nullptr && gfx != currGfx)
             continue;
+        // test the graphics
+        result |= currGfx->check();
         // test whether the graphics use colors from the level-dependent range 
         const std::pair<int, int> colors = { 1, 128 - 1 };
         for (int i = 0; i < currGfx->getFrameCount(); i++) {
@@ -557,8 +560,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
         // test whether a graphic have the same frame-count in each group
         int fc = currGfx->getGroupSize();
         if (fc < 0) {
-            dProgress() << QApplication::tr("Groupsize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
-            result = true;
+            // dProgress() << QApplication::tr("Groupsize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
+            // result = true;
         } else if (this->type == D1GFX_SET_TYPE::Missile) {
             if (frameCount != fc) {
                 if (frameCount < 0) {
@@ -572,8 +575,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
         // test whether a graphic have the same frame-size in each group
         QSize fs = currGfx->getFrameSize();
         if (!fs.isValid()) {
-            dProgress() << QApplication::tr("Framesize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
-            result = true;
+            // dProgress() << QApplication::tr("Framesize of gfx %1 is not constant.").arg(this->getGfxLabel(gn));
+            // result = true;
         } else if (this->type == D1GFX_SET_TYPE::Missile) {
             int w = fs.width();
             int h = fs.height();
