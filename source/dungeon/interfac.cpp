@@ -629,6 +629,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     QElapsedTimer tmr;
     timer = &tmr;
     tmr.start();
+    LogErrorF("EnterGameLevel 0");
     // SetRndSeed(params.seed);
     while (!stopgen /*true*/) {
         //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, questSeed, params.entryMode);
@@ -680,6 +681,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             dun->setTileAt(DBORDERX + x * TILE_WIDTH, DBORDERY + y * TILE_HEIGHT, dungeon[x][y]);
         }
     }
+    LogErrorF("EnterGameLevel 1");
     std::vector<ObjStruct> objectTypes;
     std::set<int> itemTypes;
     // std::vector<int> monUniques;
@@ -734,7 +736,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             dun->setRoomAt(x, y, dTransVal[x][y]);
         }
     }
-
+    LogErrorF("EnterGameLevel 2");
     dun->clearAssets();
     // add items
     for (int itype : itemTypes) {
@@ -746,6 +748,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         // itemRes.width = ITEM_ANIM_WIDTH;
         dun->addResource(itemRes);
     }
+    LogErrorF("EnterGameLevel 3");
     // add monsters
     // - normal
     for (int i = 1; i < nummtypes; i++) {
@@ -763,6 +766,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.uniqueMon = false;
         dun->addResource(monRes);
     }
+    LogErrorF("EnterGameLevel 4");
     // - unique
     /*for (unsigned i = 0; i < monUniques.size(); i++) {
         int mon = monUniques[i];
@@ -785,6 +789,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.uniqueMon = true;
         dun->addResource(monRes);
     }*/
+    LogErrorF("EnterGameLevel 5");
     // add objects
     for (unsigned i = 0; i < objectTypes.size(); i++) {
         const ObjStruct &objType = objectTypes[i];
@@ -798,9 +803,11 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         objRes.frame = objType.animFrame;
         dun->addResource(objRes);
     }
+    LogErrorF("EnterGameLevel 6");
     view->updateEntityOptions();
-
+    LogErrorF("EnterGameLevel 7");
     view->scrollTo(ViewX, ViewY);
+    LogErrorF("EnterGameLevel 8");
 }
 
 MonsterStruct* GetMonsterAt(int x, int y)

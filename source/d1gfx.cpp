@@ -1813,6 +1813,20 @@ void D1Gfx::mask()
     }
 }
 
+static bool checkGraphics(const D1Gfx* gfx, int frameCount) const
+{
+    bool result = false;
+    for (int i = 0; i < gfx->getGroupCount(); i++) {
+        std::pair<int, int> gfi = gfx->getGroupFrameIndices(i);
+        int fc = gfi.second - gfi.first + 1;
+        if (fc != frameCount) {
+            dProgress() << QApplication::tr("Framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(QDir::toNativeSeparators(gfx->getFilePath()).arg(fc).arg(frameCount);
+            result = true;
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::check() const
 {
     bool result = false;
@@ -1929,6 +1943,23 @@ bool D1Gfx::check() const
             }
         }
     }
+    }
+    { // - test against game code if possible
+        QString filePathLower = QDir::toNativeSeparators(this->gfxFilePath).toLower();
+        for (const ItemFileData &ifdata : itemfiledata) {
+            char filestr[DATA_ARCHIVE_MAX_PATH];
+            snprintf(filestr, sizeof(filestr), "Items\\%s.CEL", ifdata.ifName);
+            QString itmGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
+            if (filePathLower.endsWith(itmGfxName)) {
+                if (fs.width() != ITEM_ANIM_WIDTH) {
+                    dProgressErr() << tr("Framewidth of the item %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
+                    result = true;
+                }
+                result |= checkGraphics(this, ifdata.iAnimLen);
+                typetested = true;
+                break;
+            }
+        }
     }
     return result;
 }
