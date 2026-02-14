@@ -242,7 +242,7 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 if (!loaded) {
                     dProgressErr() << QApplication::tr("failed to load %1").arg(QDir::toNativeSeparators(filePath));
                 } else {
-                    dProgressErr() << QApplication::tr("mismatching type in %1 (%2 vs %3)").arg(QDir::toNativeSeparators(filePath)).arg(this->baseGfx->getType()).arg(gfx->getType());
+                    dProgressErr() << QApplication::tr("mismatching type in %1 (%2 vs %3)").arg(QDir::toNativeSeparators(filePath)).arg(D1Gfx::gfxTypeToStr(this->baseGfx->getType())).arg(D1Gfx::gfxTypeToStr(gfx->getType()));
                 }
                 gfx->setType(this->baseGfx->getType());
                 filePath.chop(1);
