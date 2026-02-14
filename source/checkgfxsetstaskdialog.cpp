@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QSet>
 
+#include "d1cel.h"
 #include "d1gfx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
@@ -89,10 +90,29 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
         } else {
             QFileInfo xfi(sPath);
             QString extension = xfi.suffix();
-            if (extension.toLower() != "cl2")
-                continue;
-
             D1Gfx* gfx = new D1Gfx();
+            if (extension.toLower() != "cl2") {
+                if (extension.toLower() == "cel") {
+                    OpenAsParam pm;
+                    if (D1Cel::load(*gfx, sPath, pm)) {
+                        QPair<int, QString> progress;
+                        progress.first = -1;
+                        progress.second = tr("Inconsistencies in '%1':").arg(sPath);
+
+                        dProgress() << progress;
+                        bool result = gfx->check();
+                        if (!result) {
+                            progress.second = tr("No inconsistency detected in '%1'.").arg(sPath);
+                            dProgress() << progress;
+                        }
+                    } else {
+                        dProgressErr() << tr("Failed loading CEL: %1.").arg(sPath);
+                    }
+                }
+                delete gfx;
+                continue;
+            }
+
             D1Gfxset* gfxset = new D1Gfxset(gfx);
             OpenAsParam pm;
             if (gfxset->load(sPath, pm)) {

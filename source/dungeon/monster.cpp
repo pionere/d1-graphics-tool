@@ -255,7 +255,7 @@ void InitLvlMonsters()
 
 	// reset monsters
 	for (i = 0; i < MAXMONSTERS; i++) {
-		monsters[i]._mmode = MM_UNUSED;
+		monsters[i]._mmode = i < MAX_MINIONS ? MM_RESERVED : MM_UNUSED;
 		// reset _mMTidx value to simplify SyncMonsterAnim (loadsave.cpp)
 		monsters[i]._mMTidx = 0;
 		// reset _muniqtype value to simplify SyncMonsterAnim (loadsave.cpp)
@@ -272,14 +272,6 @@ void InitLvlMonsters()
 	}
 	// reserve minions
 	nummonsters = MAX_MINIONS;
-	if (currLvl._dLevelIdx != DLV_TOWN) {
-		AddMonsterType(MT_GOLEM, FALSE);
-		mapMonTypes[0].cmFlags |= MFLAG_NOCORPSE | MFLAG_NODROP;
-		for (i = 0; i < MAX_MINIONS; i++) {
-			InitMonster(i, DIR_S, 0, 0, 0);
-			monsters[i]._mmode = MM_RESERVED;
-		}
-	}
 }
 
 void GetLevelMTypes()
