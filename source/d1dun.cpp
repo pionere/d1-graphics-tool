@@ -2876,7 +2876,7 @@ void D1Dun::loadObject(int objectIndex)
     this->objectCache.push_back(result);
 }
 
-void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
+void D1Dun::loadMonsterGfx(const QString &filePath, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
 {
     // check for existing entry
     unsigned i = 0;
@@ -2893,7 +2893,6 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &ba
         result.monGfx = new D1Gfx();
         // result.monGfx->setPalette(this->pal);
         OpenAsParam params = OpenAsParam();
-        params.celWidth = width;
         D1Cl2::load(*result.monGfx, filePath, params);
         if (result.monGfx->getFrameCount() != 0) {
             this->monDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.monGfx, 1));
@@ -2953,7 +2952,7 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
         if (customMonster.type == mapMon.moType) {
             QString cl2FilePath = customMonster.path;
-            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
+            this->loadMonsterGfx(cl2FilePath, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
             break;
         }
     }
@@ -2970,7 +2969,7 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
                 baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
             }
             QString uniqueTrnFilePath;
-            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
+            this->loadMonsterGfx(cl2FilePath, baseTrnFilePath, uniqueTrnFilePath, result);
         }
         // load unique monster
         unsigned monUniqueType = mapMon.moType.monIndex - 1;
@@ -2987,7 +2986,7 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
             if (uniqMonData[monUniqueType].mTrnName != nullptr) {
                 uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monUniqueType].mTrnName + ".TRN";
             }
-            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
+            this->loadMonsterGfx(cl2FilePath, baseTrnFilePath, uniqueTrnFilePath, result);
         }
     }
     this->monsterCache.push_back(result);
@@ -3018,7 +3017,7 @@ void D1Dun::loadItemGfx(const QString &filePath, int width, ItemCacheEntry &resu
     }
 }
 
-void D1Dun::loadMissileGfx(const QString &filePath, int width, const QString &trnFilePath, MissileCacheEntry &result)
+void D1Dun::loadMissileGfx(const QString &filePath, const QString &trnFilePath, MissileCacheEntry &result)
 {
     // check for existing entry
     unsigned i = 0;
@@ -3032,7 +3031,6 @@ void D1Dun::loadMissileGfx(const QString &filePath, int width, const QString &tr
     }
     if (i >= this->missileDataCache.size()) {
         OpenAsParam params = OpenAsParam();
-        params.celWidth = width;
         MissileDataEntry mde;
         mde.numrefs = 1;
         mde.midPath = filePath;
@@ -3108,7 +3106,7 @@ void D1Dun::loadMissile(int misIndex)
         const CustomMissileStruct &customMissile = this->customMissileTypes[i];
         if (customMissile.type == misIndex) {
             QString cl2FilePath = customMissile.path;
-            this->loadMissileGfx(cl2FilePath, customMissile.width, customMissile.trnPath, result);
+            this->loadMissileGfx(cl2FilePath, customMissile.trnPath, result);
             break;
         }
     }
@@ -3125,7 +3123,7 @@ void D1Dun::loadMissile(int misIndex)
             if (mfd.mfAnimTrans != nullptr) {
                 trnFilePath = this->assetPath + "/" + mfd.mfAnimTrans;
             }
-            this->loadMissileGfx(cl2FilePath, mfd.mfAnimWidth, trnFilePath, result);
+            this->loadMissileGfx(cl2FilePath, trnFilePath, result);
         }
     }
     this->missileCache.push_back(result);

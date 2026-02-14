@@ -756,7 +756,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.path = monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
-        monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
+        // monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
         if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
             monRes.baseTrnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
         }

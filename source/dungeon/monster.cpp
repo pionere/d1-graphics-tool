@@ -108,7 +108,8 @@ static void InitMonsterGFX(int midx)
 	auto& monAnims = cmon->cmAnims;
 	// static_assert(lengthof(animletter) == lengthof(monsterdata[0].maFrames), "");
 	for (anim = 0; anim < NUM_MON_ANIM; anim++) {
-		monAnims[anim].maFrames = mfdata->moAnimFrames[anim];
+		// monAnims[anim].maFrames = mfdata->moAnimFrames[anim];
+        monAnims[anim].maFrames = 0;
 		monAnims[anim].maFrameLen = mfdata->moAnimFrameLen[anim];
 		/*if (mfdata->moAnimFrames[anim] > 0) {
 			snprintf(strBuff, sizeof(strBuff), mfdata->moGfxFile, animletter[anim]);

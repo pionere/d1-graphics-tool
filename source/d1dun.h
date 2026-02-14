@@ -129,7 +129,6 @@ typedef struct DunMonsterStruct {
 
 typedef struct CustomMonsterStruct {
     DunMonsterType type;
-    int width;
     QString path;
     QString baseTrnPath;
     QString uniqueTrnPath;
@@ -149,7 +148,6 @@ typedef struct DunMissileStruct {
 
 typedef struct CustomMissileStruct {
     int type;
-    int width;
     QString path;
     QString trnPath;
     QString name;
@@ -332,9 +330,9 @@ private:
     void drawLayer(QPainter &dungeon, const DunDrawParam &params, int layer);
     void initVectors(int width, int height);
     void loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result);
-    void loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
+    void loadMonsterGfx(const QString &filePath, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
     void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
-    void loadMissileGfx(const QString &filePath, int width, const QString &trnFilePath, MissileCacheEntry &result);
+    void loadMissileGfx(const QString &filePath, const QString &trnFilePath, MissileCacheEntry &result);
     void loadObject(int objectIndex);
     void loadMonster(const MapMonster &mapMon);
     void loadItem(int itemIndex);
