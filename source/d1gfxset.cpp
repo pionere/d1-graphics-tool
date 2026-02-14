@@ -207,7 +207,6 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
     this->wtype = wtype;
 
     // load the files
-    std::vector<D1Gfx *> gfxs;
     D1Pal *pal = this->baseGfx->getPalette();
     bool baseMatch = false;
     const QStringList files = folder.entryList();
@@ -240,12 +239,20 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 loaded = D1Clc::load(*gfx, filePath, params);
             }
             if (!loaded || this->baseGfx->getType() != gfx->getType()) {
+                if (!loaded) {
+                    dProgressErr() << QApplication::tr("failed to load %1").arg(QDir::toNativeSeparators(filePath));
+                } else {
+                    dProgressErr() << QApplication::tr("mismatching type in %1 (%2 vs %3)").arg(QDir::toNativeSeparators(filePath)).arg(this->baseGfx->getType()).arg(gfx->getType());
+                }
                 gfx->setType(this->baseGfx->getType());
                 filePath.chop(1);
                 filePath.push_back('2');
                 gfx->setFilePath(filePath);
             }
         } else {
+            if (baseMatch) {
+                dProgressErr() << QApplication::tr("duplicate base match %1 : %2").arg(baseName).arg(gfxFileInfo.completeBaseName());
+            }
             gfx = this->baseGfx;
             baseMatch = true;
         }
