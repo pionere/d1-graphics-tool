@@ -1809,14 +1809,20 @@ void CelView::timerEvent(QTimerEvent *event)
             // normal playback
             if (nextFrameIndex > groupFrameIndices.second)
                 nextFrameIndex = groupFrameIndices.first;
+            else if (nextFrameIndex < groupFrameIndices.first)
+                nextFrameIndex = groupFrameIndices.second;
         } else if (playType == Qt::PartiallyChecked) {
             // playback till the original frame
             if (nextFrameIndex > this->origFrameIndex)
                 nextFrameIndex = groupFrameIndices.first;
+            else if (nextFrameIndex < groupFrameIndices.first)
+                nextFrameIndex = this->origFrameIndex;
         } else {
             // playback from the original frame
             if (nextFrameIndex > groupFrameIndices.second)
                 nextFrameIndex = this->origFrameIndex;
+            else if (nextFrameIndex < this->origFrameIndex)
+                nextFrameIndex = groupFrameIndices.second;
         }
     }
     this->currentFrameIndex = nextFrameIndex;
