@@ -1813,14 +1813,14 @@ void D1Gfx::mask()
     }
 }
 
-static bool checkGraphics(const D1Gfx* gfx, int frameCount) const
+static bool checkGraphics(const D1Gfx* gfx, int frameCount)
 {
     bool result = false;
     for (int i = 0; i < gfx->getGroupCount(); i++) {
         std::pair<int, int> gfi = gfx->getGroupFrameIndices(i);
         int fc = gfi.second - gfi.first + 1;
         if (fc != frameCount) {
-            dProgress() << QApplication::tr("Framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(QDir::toNativeSeparators(gfx->getFilePath()).arg(fc).arg(frameCount);
+            dProgress() << QApplication::tr("Framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(QDir::toNativeSeparators(gfx->getFilePath())).arg(fc).arg(frameCount);
             result = true;
         }
     }
@@ -1956,7 +1956,7 @@ bool D1Gfx::check() const
                     result = true;
                 }
                 result |= checkGraphics(this, ifdata.iAnimLen);
-                typetested = true;
+                // typetested = true;
                 break;
             }
         }
