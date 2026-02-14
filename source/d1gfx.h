@@ -198,9 +198,6 @@ typedef enum gfx_file_index {
     GFX_MON_UNRAVS,  // graphics of the The Shredded special movement (Unravs.CL2)
     GFX_MON_UNRAVW,  // graphics of the The Shredded walking (Unravw.CL2)
     GFX_MON_ZOMBIED, // graphics of the Zombie dying (Zombied.CL2)
-    GFX_MIS_ACIDBF1,  // missile animation (Acidbf1.CL2)
-    GFX_MIS_ACIDBF10, // missile animation (Acidbf10.CL2)
-    GFX_MIS_ACIDBF11, // missile animation (Acidbf11.CL2)
     GFX_MIS_FIREBA2,  // missile animation (Fireba2.CL2)
     GFX_MIS_FIREBA3,  // missile animation (Fireba3.CL2)
     GFX_MIS_FIREBA5,  // missile animation (Fireba5.CL2)
@@ -429,7 +426,6 @@ private:
     bool patchSklSrDie(bool silent);
     bool patchUnrav(int gfxFileIndex, bool silent);
     bool patchZombieDie(bool silent);
-    bool patchAcidbf(int gfxFileIndex, bool silent);
     bool patchFireba(int gfxFileIndex, bool silent);
     bool patchHoly(int gfxFileIndex, bool silent);
     bool patchMagball(bool silent);

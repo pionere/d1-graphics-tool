@@ -7760,22 +7760,31 @@ bool D1Gfx::patchZombieDie(bool silent)
 
     return result;
 }
-
-bool D1Gfx::patchAcidbf(int gfxFileIndex, bool silent)
+#if 0
+bool D1Gfx::patchMisFrames(int gfxFileIndex, bool silent)
 {
-    constexpr int frameCount = 9;
-    constexpr int obsoleteFrameCount = 1;
-
     if (this->getGroupCount() == 0) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
+    }
+
+    int frameCount = 0, width = 0, height = 0;
+    switch (gfxFileIndex) {
+    case GFX_MIS_ACIDBF1:
+    case GFX_MIS_ACIDBF10:
+    case GFX_MIS_ACIDBF11:
+    case GFX_MIS_ACIDSPLA: frameCount =  9 - 1; width =  96; height =  96; break;
+    case GFX_MIS_BIGEXP:   frameCount = 16 - 1; width = 160; height = 160; break;
+    case GFX_MIS_SCBEXPB:
+    case GFX_MIS_SCBEXPC:
+    case GFX_MIS_SCBEXPD:  frameCount =  7 - 1; width = 128; height = 128; break;
     }
 
     bool result = false;
     int ii = 0;
     while (true) {
         int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
-        if (i < frameCount - obsoleteFrameCount)
+        if (i < frameCount)
             break;
         this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
         dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
@@ -7784,7 +7793,7 @@ bool D1Gfx::patchAcidbf(int gfxFileIndex, bool silent)
 
     return result;
 }
-
+#endif
 bool D1Gfx::patchFireba(int gfxFileIndex, bool silent)
 {
     constexpr int frameCount = 14;
@@ -8690,11 +8699,6 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_MON_SNAKEH: // patch Snakeh.CL2
         change = this->patchMonFrames(gfxFileIndex, silent);
         break;
-    case GFX_MIS_ACIDBF1:
-    case GFX_MIS_ACIDBF10:
-    case GFX_MIS_ACIDBF11: // patch Acidbf*.CL2
-        change = this->patchAcidbf(gfxFileIndex, silent);
-        break;
     case GFX_MIS_FIREBA2:
     case GFX_MIS_FIREBA3:
     case GFX_MIS_FIREBA5:
@@ -9011,15 +9015,6 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
         fileIndex = GFX_MON_ZOMBIED;
     }
     // - missiles
-    if (baseName == "acidbf1") {
-        fileIndex = GFX_MIS_ACIDBF1;
-    }
-    if (baseName == "acidbf10") {
-        fileIndex = GFX_MIS_ACIDBF10;
-    }
-    if (baseName == "acidbf11") {
-        fileIndex = GFX_MIS_ACIDBF11;
-    }
     if (baseName == "fireba2") {
         fileIndex = GFX_MIS_FIREBA2;
     }
