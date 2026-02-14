@@ -91,23 +91,8 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
     return startOffset == endOffset;
 }
 
-bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
+bool D1Cel::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1Gfx &gfx)
 {
-    gfx.clear();
-
-    // Opening CEL file and load it in RAM
-    QFile file = QFile(filePath);
-
-    if (!file.open(QIODevice::ReadOnly))
-        return false;
-
-    const QByteArray fileData = file.readAll();
-
-    // Read CEL binary data
-    QDataStream in(fileData);
-    in.setByteOrder(QDataStream::LittleEndian);
-
-    QIODevice *device = in.device();
     auto fileSize = device->size();
     // CEL HEADER CHECKS
     // Read first DWORD
@@ -126,14 +111,12 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in >> fileSizeDword;
 
     // If the dword is not equal to the file size then
-    // try to read it as a CEL compilation
-    D1CEL_TYPE type = (firstDword == 0 || fileSize == fileSizeDword) ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
-    gfx.type = type;
+    // try to read it as a groupped CEL
+    hi.groupped = (firstDword != 0 && fileSize != fileSizeDword);
 
     // CEL FRAMES OFFSETS CALCULATION
-    std::vector<std::pair<quint32, quint32>> frameOffsets;
     quint32 metaOffset, contentOffset = fileSize;
-    if (type == D1CEL_TYPE::V1_REGULAR) {
+    if (!hi.groupped) {
         // Going through all frames of the CEL
         if (firstDword > 0) {
             gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
@@ -146,12 +129,13 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             quint32 celFrameEndOffset;
             in >> celFrameEndOffset;
 
-            frameOffsets.push_back(std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
+            hi.frameOffsets.push_back(
+                QPair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
         }
 
         metaOffset = 4 + i * 4;
-        if (frameOffsets.size() != 0)
-            contentOffset = frameOffsets[0].first;
+        if (!hi.frameOffsets.isEmpty())
+            contentOffset = hi.frameOffsets[0].first;
     } else {
         // Going through all groups
         int cursor = 0;
@@ -193,14 +177,14 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 in >> celFrameStartOffset;
                 in >> celFrameEndOffset;
 
-                frameOffsets.push_back(
-                    std::pair<quint32, quint32>(celGroupOffset + celFrameStartOffset,
+                hi.frameOffsets.push_back(
+                    QPair<quint32, quint32>(celGroupOffset + celFrameStartOffset,
                         celGroupOffset + celFrameEndOffset));
             }
             cursor += celFrameCount;
 
             i++;
-            if (frameOffsets.back().second == fileSize) {
+            if (hi.frameOffsets.back().second == fileSize) {
                 break;
             }
         }
@@ -208,14 +192,40 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         metaOffset = i * 4;
     }
 
-    readMeta(device, in, metaOffset, contentOffset, frameOffsets.size(), gfx);
+    readMeta(device, in, metaOffset, contentOffset, hi.frameOffsets.size(), gfx);
+    return true;
+}
+
+bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
+{
+    gfx.clear();
+
+    // Opening CEL file and load it in RAM
+    QFile file = QFile(filePath);
+
+    if (!file.open(QIODevice::ReadOnly))
+        return false;
+
+    const QByteArray fileData = file.readAll();
+
+    // Read CEL binary data
+    QDataStream in(fileData);
+    in.setByteOrder(QDataStream::LittleEndian);
+
+    QIODevice *device = in.device();
+    CelHeaderInfo hi;
+    if (!readHeader(device, in, hi, gfx)) {
+        return false;
+    }
+    gfx.type = hi.groupped ? D1CEL_TYPE::V1_COMPILATION : D1CEL_TYPE::V1_REGULAR;
+    auto fileSize = device->size();
 
     // CEL FRAMES OFFSETS CALCULATION
 
     // BUILDING {CEL FRAMES}
     int clipped = -1;
-    for (unsigned i = 0; i < frameOffsets.size(); i++) {
-        const auto &offset = frameOffsets[i];
+    for (unsigned i = 0; i < hi.frameOffsets.size(); i++) {
+        const auto &offset = hi.frameOffsets[i];
         D1GfxFrame *frame = new D1GfxFrame();
         if (fileSize >= offset.second && offset.second >= offset.first) {
             device->seek(offset.first);
