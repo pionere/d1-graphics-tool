@@ -61,7 +61,7 @@ public:
     bool isGroupsConstant() const;
     void compareTo(const LoadFileContent *fileContent, bool patchData) const;
     QRect getBoundary() const;
-    bool check(const D1Gfx *gfx, int assetMpl) const;
+    bool check(const D1Gfx *gfx) const;
     void mask();
 
     D1GFX_SET_TYPE getType() const;
@@ -78,7 +78,7 @@ public:
     void setPalette(D1Pal *pal);
 
 private:
-    bool checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx* gfx) const;
+    bool checkGraphics(int frameCount, int gn, const D1Gfx* gfx) const;
 
     D1GFX_SET_TYPE type = D1GFX_SET_TYPE::Unknown;
     D1GFX_SET_CLASS_TYPE ctype = D1GFX_SET_CLASS_TYPE::Unknown;

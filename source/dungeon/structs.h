@@ -376,10 +376,8 @@ typedef struct MisFileData {
 	BOOLEAN mfAnimFlag;
 	BOOLEAN mfLightFlag;
 	BOOLEAN mfPreFlag;
-	BYTE mfAnimFrameLen[16];
+	BYTE mfAnimFrameLen;
 	BYTE mfAnimLen[16];
-	int mfAnimWidth;
-	int mfAnimXOffset; // could be calculated
 } MisFileData;
 
 typedef struct MissileStruct {
@@ -476,9 +474,7 @@ typedef struct MonFileData {
 	int moImage;
 	const char* moGfxFile;
 	const char* moSndFile;
-	int moAnimFrames[NUM_MON_ANIM];
 	int moAnimFrameLen[NUM_MON_ANIM];
-	BYTE moWidth;
 	BOOLEAN moSndSpecial;
 	BYTE moAFNum;
 	BYTE moAFNum2;

@@ -7,7 +7,6 @@ class CheckGfxsetsTaskParam {
 public:
     QString folder;
     bool recursive;
-    int multiplier;
 };
 
 namespace Ui {

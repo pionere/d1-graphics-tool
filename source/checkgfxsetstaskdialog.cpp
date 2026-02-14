@@ -39,7 +39,6 @@ void CheckGfxsetsTaskDialog::on_checkRunButton_clicked()
 {
     CheckGfxsetsTaskParam params;
     params.folder = this->ui->assetsFolderLineEdit->text();
-    params.multiplier = this->ui->multiplierLineEdit->text().toInt();
     params.recursive = this->ui->recursiveCheckBox->isChecked();
 
     this->close();
@@ -106,7 +105,7 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
                 progress.second = tr("Inconsistencies in the graphics of the '%1' gfx-set:").arg(gfxsetName);
 
                 dProgress() << progress;
-                bool result = gfxset->check(nullptr, params.multiplier);
+                bool result = gfxset->check(nullptr);
                 if (!result) {
                     progress.second = tr("No inconsistency detected in the '%1' gfx-set.").arg(gfxsetName);
                     dProgress() << progress;
