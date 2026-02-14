@@ -635,10 +635,14 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, questSeed, params.entryMode);
         dProgress() << QApplication::tr("Generating dungeon %1: %2/%3 with seed: %4 / %5. Entry mode: %6").arg(rounds).arg(params.levelIdx).arg(params.levelNum).arg(lvlSeed).arg(questSeed).arg(params.entryMode);
         // dooDebug = lvlSeed == 952458269 && questSeed == 1654566178;
+    LogErrorF("EnterGameLevel 01");
         LoadGameLevel(params.entryMode, dun);
+    LogErrorF("EnterGameLevel 02");
         FreeLvlDungeon();
+    LogErrorF("EnterGameLevel 03");
         extern int nRoomCnt;
         dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms. (%8:%9)").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt).arg(counter1).arg(counter2).arg(counter2 - lc2);
+    LogErrorF("EnterGameLevel 4");
         rounds++;
         lc2 = counter2;
         totalMonsters += (nummonsters - MAX_MINIONS);
@@ -665,17 +669,20 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         // lvlSeed = (lvlSeed >> 8) | (lvlSeed << 24); // _rotr(lvlSeed, 8)
         EnterLevel(params.levelIdx, lvlSeed);
     }
+    LogErrorF("EnterGameLevel 001");
     dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: avg:%7 total:%8 min:%9 max:%10 Leveltype %11. times(dun%12, mon%13, obj%14, themes%15)").arg(params.extraRounds - extraRounds).arg(tmr.elapsed()).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(totalThemes / rounds).arg(totalThemes).arg(minThemes).arg(maxThemes).arg(currLvl._dType).arg(dt[0]).arg(dt[1]).arg(dt[2]).arg(dt[3]);
     dProgress() << QApplication::tr("minareas(%1, %2, %3) maxareas(%4, %5, %6) avgareas(%7, %8, %9) (%10, %11, %12) cnt%13:%14").arg(minars[1]).arg(minars[2]).arg(minars[3]).arg(maxars[1]).arg(maxars[2]).arg(maxars[3]).arg(cntars[1] == 0 ? 0 : (avgars[1] / cntars[1])).arg(cntars[2] == 0 ? 0 : (avgars[2] / cntars[2])).arg(cntars[3] == 0 ? 0 : (avgars[3] / cntars[3])).arg(cntars[1]).arg(cntars[2]).arg(cntars[3]).arg(counter1 / rounds).arg(counter2 / rounds);
+    LogErrorF("EnterGameLevel 002");
 
     dun->setLevelType(currLvl._dType);
-
+    LogErrorF("EnterGameLevel 003");
     int baseTile = GetBaseTile();
     for (int y = 0; y < MAXDUNY; y += TILE_HEIGHT) {
         for (int x = 0; x < MAXDUNX; x += TILE_WIDTH) {
             dun->setTileAt(x, y, baseTile);
         }
     }
+    LogErrorF("EnterGameLevel 004");
     for (int y = 0; y < DMAXY; y++) {
         for (int x = 0; x < DMAXX; x++) {
             dun->setTileAt(DBORDERX + x * TILE_WIDTH, DBORDERY + y * TILE_HEIGHT, dungeon[x][y]);
