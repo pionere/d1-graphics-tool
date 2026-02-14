@@ -209,26 +209,21 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
 	// extern int32_t sglGameSeed;
 	// int32_t gameSeed = sglGameSeed;
-LogErrorF("LoadGameLevel 01");
+
 	IncProgress();
 	InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
 	IncProgress();
-LogErrorF("LoadGameLevel 02");
+
 	InitLvlAutomap();
-LogErrorF("LoadGameLevel 03");
+
 	//if (lvldir != ENTRY_LOAD) {
 //		InitLvlLighting();
 //		InitLvlVision();
 	//}
-LogErrorF("LoadGameLevel 04");
 	InitLvlMonsters(); // reset monsters
-LogErrorF("LoadGameLevel 05");
 	InitLvlObjects();  // reset objects
-LogErrorF("LoadGameLevel 06");
 	InitLvlThemes();   // reset themes
-LogErrorF("LoadGameLevel 07");
 	InitLvlItems();    // reset items
-LogErrorF("LoadGameLevel 08");
 	IncProgress();
 
 	// SetRndSeed(gameSeed); // restore seed after InitLvlMonsters
@@ -236,24 +231,16 @@ LogErrorF("LoadGameLevel 08");
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
 	CreateDungeon();
-LogErrorF("LoadGameLevel 09");
 	// LoadLvlPalette();
 	int rv = RandRange(1, 4);
 	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
-LogErrorF("LoadGameLevel 10");
 	StoreProtections(dun);
-LogErrorF("LoadGameLevel 11");
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
-LogErrorF("LoadGameLevel 12");
 		GetLevelMTypes(); // select monster types and load their fx
-LogErrorF("LoadGameLevel 13");
 		InitThemes();     // protect themes with dFlags and select theme types
-LogErrorF("LoadGameLevel 14");
 		IncProgress();
-LogErrorF("LoadGameLevel 15");
 		InitMonsters();   // place monsters
-LogErrorF("LoadGameLevel 16");
 	} else {
 //		InitLvlStores();
 		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
@@ -262,26 +249,19 @@ LogErrorF("LoadGameLevel 16");
 
 //		InitTowners();
 	}
-LogErrorF("LoadGameLevel 17");
 	IncProgress();
 	InitObjectGFX();    // load object graphics
-LogErrorF("LoadGameLevel 18");
 	IncProgress();
 	InitObjects();      // place objects
-LogErrorF("LoadGameLevel 19");
 	InitItems();        // place items
-LogErrorF("LoadGameLevel 20");
     baseMonsters = nummonsters;
 	CreateThemeRooms(); // populate theme rooms
-LogErrorF("LoadGameLevel 21");
 	FreeSetPieces();
-LogErrorF("LoadGameLevel 22");
 	IncProgress();
 //	InitMissiles();  // reset missiles
 //	SavePreLighting(); // fill dPreLight
-LogErrorF("LoadGameLevel 23");
 	InitView(lvldir);
-LogErrorF("LoadGameLevel 24");
+
 	IncProgress();
 
 //	music_start(AllLevels[currLvl._dLevelNum].dMusic);
@@ -649,20 +629,15 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     QElapsedTimer tmr;
     timer = &tmr;
     tmr.start();
-    LogErrorF("EnterGameLevel 0");
     // SetRndSeed(params.seed);
     while (!stopgen /*true*/) {
         //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, questSeed, params.entryMode);
         dProgress() << QApplication::tr("Generating dungeon %1: %2/%3 with seed: %4 / %5. Entry mode: %6").arg(rounds).arg(params.levelIdx).arg(params.levelNum).arg(lvlSeed).arg(questSeed).arg(params.entryMode);
         // dooDebug = lvlSeed == 952458269 && questSeed == 1654566178;
-    LogErrorF("EnterGameLevel 01");
         LoadGameLevel(params.entryMode, dun);
-    LogErrorF("EnterGameLevel 02");
         FreeLvlDungeon();
-    LogErrorF("EnterGameLevel 03");
         extern int nRoomCnt;
         dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms. (%8:%9)").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt).arg(counter1).arg(counter2).arg(counter2 - lc2);
-    LogErrorF("EnterGameLevel 4");
         rounds++;
         lc2 = counter2;
         totalMonsters += (nummonsters - MAX_MINIONS);
@@ -689,26 +664,22 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         // lvlSeed = (lvlSeed >> 8) | (lvlSeed << 24); // _rotr(lvlSeed, 8)
         EnterLevel(params.levelIdx, lvlSeed);
     }
-    LogErrorF("EnterGameLevel 001");
     dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms. Monsters avg:%3/%4 min:%5 max:%6. Themes: avg:%7 total:%8 min:%9 max:%10 Leveltype %11. times(dun%12, mon%13, obj%14, themes%15)").arg(params.extraRounds - extraRounds).arg(tmr.elapsed()).arg(totalMonsters / rounds).arg(themeMonsters / rounds).arg(minMonsters - MAX_MINIONS).arg(maxMonsters - MAX_MINIONS).arg(totalThemes / rounds).arg(totalThemes).arg(minThemes).arg(maxThemes).arg(currLvl._dType).arg(dt[0]).arg(dt[1]).arg(dt[2]).arg(dt[3]);
     dProgress() << QApplication::tr("minareas(%1, %2, %3) maxareas(%4, %5, %6) avgareas(%7, %8, %9) (%10, %11, %12) cnt%13:%14").arg(minars[1]).arg(minars[2]).arg(minars[3]).arg(maxars[1]).arg(maxars[2]).arg(maxars[3]).arg(cntars[1] == 0 ? 0 : (avgars[1] / cntars[1])).arg(cntars[2] == 0 ? 0 : (avgars[2] / cntars[2])).arg(cntars[3] == 0 ? 0 : (avgars[3] / cntars[3])).arg(cntars[1]).arg(cntars[2]).arg(cntars[3]).arg(counter1 / rounds).arg(counter2 / rounds);
-    LogErrorF("EnterGameLevel 002");
 
     dun->setLevelType(currLvl._dType);
-    LogErrorF("EnterGameLevel 003");
+
     int baseTile = GetBaseTile();
     for (int y = 0; y < MAXDUNY; y += TILE_HEIGHT) {
         for (int x = 0; x < MAXDUNX; x += TILE_WIDTH) {
             dun->setTileAt(x, y, baseTile);
         }
     }
-    LogErrorF("EnterGameLevel 004");
     for (int y = 0; y < DMAXY; y++) {
         for (int x = 0; x < DMAXX; x++) {
             dun->setTileAt(DBORDERX + x * TILE_WIDTH, DBORDERY + y * TILE_HEIGHT, dungeon[x][y]);
         }
     }
-    LogErrorF("EnterGameLevel 1");
     std::vector<ObjStruct> objectTypes;
     std::set<int> itemTypes;
     // std::vector<int> monUniques;
@@ -763,7 +734,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
             dun->setRoomAt(x, y, dTransVal[x][y]);
         }
     }
-    LogErrorF("EnterGameLevel 2");
+
     dun->clearAssets();
     // add items
     for (int itype : itemTypes) {
@@ -775,10 +746,9 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         // itemRes.width = ITEM_ANIM_WIDTH;
         dun->addResource(itemRes);
     }
-    LogErrorF("EnterGameLevel 3");
     // add monsters
     // - normal
-    for (int i = 1; i < nummtypes; i++) {
+    for (int i = 0; i < nummtypes; i++) {
         AddResourceParam monRes = AddResourceParam();
         monRes.type = DUN_ENTITY_TYPE::MONSTER;
         monRes.index = lengthof(DunMonstConvTbl) + i;
@@ -793,7 +763,6 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.uniqueMon = false;
         dun->addResource(monRes);
     }
-    LogErrorF("EnterGameLevel 4");
     // - unique
     /*for (unsigned i = 0; i < monUniques.size(); i++) {
         int mon = monUniques[i];
@@ -816,7 +785,6 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.uniqueMon = true;
         dun->addResource(monRes);
     }*/
-    LogErrorF("EnterGameLevel 5");
     // add objects
     for (unsigned i = 0; i < objectTypes.size(); i++) {
         const ObjStruct &objType = objectTypes[i];
@@ -830,11 +798,9 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         objRes.frame = objType.animFrame;
         dun->addResource(objRes);
     }
-    LogErrorF("EnterGameLevel 6");
     view->updateEntityOptions();
-    LogErrorF("EnterGameLevel 7");
+
     view->scrollTo(ViewX, ViewY);
-    LogErrorF("EnterGameLevel 8");
 }
 
 MonsterStruct* GetMonsterAt(int x, int y)
