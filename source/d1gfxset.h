@@ -54,7 +54,7 @@ public:
     D1Gfxset(D1Gfx *gfx);
     ~D1Gfxset();
 
-    bool load(const QString &gfxFilePath, const OpenAsParam &params);
+    bool load(const QString &gfxFilePath, const OpenAsParam &params, bool optional = false);
     void save(const SaveAsParam &params);
 
     bool isClippedConstant() const;

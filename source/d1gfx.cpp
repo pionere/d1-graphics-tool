@@ -3238,6 +3238,33 @@ bool D1Gfx::patchCryptLight(bool silent)
     return result;
 }
 
+bool D1Gfx::patchCELFrames(int gfxFileIndex, bool silent)
+{
+    int frameCount = 0, width = 0, height = 0;
+    switch (gfxFileIndex) {
+    case GFX_OBJ_URN:     frameCount = 10 - 1; width =  96; height =  96; break;
+    case GFX_OBJ_TFOUNTN: frameCount =  8 - 4; width = 128; height =  96; break;
+    }
+
+    if (this->getGroupCount() < 1) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+
+    bool result = false;
+    for (int ii = 0; ii < 1; ii++) {
+        while (true) {
+            int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
+            if (i < frameCount)
+                break;
+            this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+            dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
+            result = true;
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchPlrFrames(int gfxFileIndex, bool silent)
 {
     int frameCount = 0, width = 0, height = 0;
@@ -3251,7 +3278,7 @@ bool D1Gfx::patchPlrFrames(int gfxFileIndex, bool silent)
     case GFX_PLR_WMDLM: frameCount = 21 - 1; width =  96; height =  96; break;
     }
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -8356,12 +8383,36 @@ bool D1Gfx::patchSplIcons(bool silent)
     return true;
 }
 
-bool D1Gfx::patchItemFlips(int gfxFileIndex, bool silent)
+bool D1Gfx::patchFloorItems(int gfxFileIndex, bool silent)
 {
     constexpr int FRAME_WIDTH = 96;
     int FRAME_HEIGHT = (gfxFileIndex == GFX_ITEM_CROWNF || gfxFileIndex == GFX_ITEM_FEAR || gfxFileIndex == GFX_ITEM_LARMOR || gfxFileIndex == GFX_ITEM_WSHIELD) ? 128 : 160;
 
+    int frameCount = 0;
+    switch (gfxFileIndex) {
+    case GFX_ITEM_BOMBS1:
+    case GFX_ITEM_RUNES1:
+    case GFX_ITEM_TEDDYS1: frameCount = 11 - 1; break;
+    }
+
+    if (frameCount != 0) {
+    if (this->getGroupCount() == 0) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+
     bool result = false;
+    int ii = 0;
+    while (true) {
+        int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
+        if (i < frameCount)
+            break;
+        this->removeFrame(this->getGroupFrameIndices(ii).first + i, false);
+        dProgress() << tr("Removed frame %1 of group %2.").arg(i + 1).arg(ii + 1);
+        result = true;
+    }
+    }
+
     for (int i = 0; i < this->getFrameCount(); i++) {
         D1GfxFrame *frame = this->frames[i];
         if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
@@ -8752,8 +8803,14 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_RSHR: // patch RShrineG.CEL
         change = this->patchRightShrine(silent);
         break;
+    case GFX_OBJ_TFOUNTN: // patch TFountn.CEL
+        change = this->patchCELFrames(gfxFileIndex, silent);
+        break;
     case GFX_OBJ_L5LIGHT: // patch L5Light.CEL
         change = this->patchCryptLight(silent);
+        break;
+    case GFX_OBJ_URN: // patch Urn.CEL
+        change = this->patchCELFrames(gfxFileIndex, silent);
         break;
     case GFX_PLR_RHTAT: // patch RHTAT.CL2
     case GFX_PLR_RHUHT: // patch RHUHT.CL2
@@ -8888,12 +8945,13 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_ITEM_FANVIL:   // patch Fanvil.CEL
     case GFX_ITEM_FLAZSTAF: // patch FLazStaf.CEL
     case GFX_ITEM_TEDDYS1:  // patch teddys1.CEL
+    case GFX_ITEM_BOMBS1:   // patch bombs1.CEL
+    case GFX_ITEM_RUNES1:   // patch runes1.CEL
     case GFX_ITEM_COWS1:    // patch cows1.CEL
     case GFX_ITEM_DONKYS1:  // patch donkys1.CEL
     case GFX_ITEM_MOOSES1:  // patch mooses1.CEL
-        change = this->patchItemFlips(gfxFileIndex, silent);
+        change = this->patchFloorItems(gfxFileIndex, silent);
         break;
-
     }
     if (!change && !silent) {
         dProgress() << tr("No change was necessary.");
@@ -8926,8 +8984,14 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "rshrineg") {
         fileIndex = GFX_OBJ_RSHR;
     }
+    if (baseName == "tfountn") {
+        fileIndex = GFX_OBJ_TFOUNTN;
+    }
     if (baseName == "l5light") {
         fileIndex = GFX_OBJ_L5LIGHT;
+    }
+    if (baseName == "urn") {
+        fileIndex = GFX_OBJ_URN;
     }
     if (baseName == "farmrn2") {
         fileIndex = GFX_TWN_FARMER;
@@ -8997,6 +9061,12 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "flazstaf") {
         fileIndex = GFX_ITEM_FLAZSTAF;
+    }
+    if (baseName == "bombs1") {
+        fileIndex = GFX_ITEM_BOMBS1;
+    }
+    if (baseName == "runes1") {
+        fileIndex = GFX_ITEM_RUNES1;
     }
     if (baseName == "teddys1") {
         fileIndex = GFX_ITEM_TEDDYS1;

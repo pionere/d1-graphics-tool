@@ -7,6 +7,7 @@
 #include <QSet>
 
 #include "d1cel.h"
+#include "d1cl2.h"
 #include "d1gfx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
@@ -92,31 +93,9 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
             QFileInfo xfi(sPath);
             QString extension = xfi.suffix();
             D1Gfx* gfx = new D1Gfx();
-            if (extension.toLower() != "cl2") {
-                if (extension.toLower() == "cel") {
-                    OpenAsParam pm;
-                    if (D1Cel::load(*gfx, sPath, pm)) {
-                        QPair<int, QString> progress;
-                        progress.first = -1;
-                        progress.second = tr("Inconsistencies in '%1':").arg(sPath);
-
-                        dProgress() << progress;
-                        bool result = gfx->check(params.multiplier);
-                        if (!result) {
-                            progress.second = tr("No inconsistency detected in '%1'.").arg(sPath);
-                            dProgress() << progress;
-                        }
-                    } else {
-                        dProgressErr() << tr("Failed loading CEL: %1.").arg(sPath);
-                    }
-                }
-                delete gfx;
-                continue;
-            }
-
             D1Gfxset* gfxset = new D1Gfxset(gfx);
             OpenAsParam pm;
-            if (gfxset->load(sPath, pm)) {
+            if (gfxset->load(sPath, pm, true)) {
                 QString gfxsetName = gfx->getFilePath();
                 gfxsetName.chop(extension.length() + 1 + (gfxset->getType() == D1GFX_SET_TYPE::Player ? 1 : 0));
                 gfxsetName[gfxsetName.length() - 1] = 'x';
@@ -134,6 +113,31 @@ void CheckGfxsetsTaskDialog::runTask(const CheckGfxsetsTaskParam &params)
 
                 for (int i = 0; i < gfxset->getGfxCount(); i++) {
                     checked.insert(gfxset->getGfx(i)->getFilePath());
+                }
+            } else {
+                bool loaded = false;
+                if (extension.toLower() == "cl2") {
+                    loaded = D1Cl2::load(*gfx, sPath, pm);
+                    if (!loaded) {
+                        dProgressErr() << tr("Failed loading CL2: %1.").arg(sPath);
+                    }
+                } else if (extension.toLower() == "cel") {
+                    loaded = D1Cel::load(*gfx, sPath, pm);
+                    if (!loaded) {
+                        dProgressErr() << tr("Failed loading CEL: %1.").arg(sPath);
+                    }
+                }
+                if (loaded) {
+                    QPair<int, QString> progress;
+                    progress.first = -1;
+                    progress.second = tr("Inconsistencies in '%1':").arg(sPath);
+
+                    dProgress() << progress;
+                    bool result = gfx->check(params.multiplier);
+                    if (!result) {
+                        progress.second = tr("No inconsistency detected in '%1'.").arg(sPath);
+                        dProgress() << progress;
+                    }
                 }
             }
             delete gfxset;
