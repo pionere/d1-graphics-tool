@@ -1827,7 +1827,7 @@ static bool checkGraphics(const D1Gfx* gfx, int frameCount)
     return result;
 }
 
-bool D1Gfx::check(int assetMpl) const
+bool D1Gfx::check(int assetMpl, bool *typetested) const
 {
     bool result = false;
     // test whether a graphic have the same frame-size in each group
@@ -1945,8 +1945,26 @@ bool D1Gfx::check(int assetMpl) const
     }
     }
     { // - test against game code if possible
+        bool tt = false;
         const QString nativeFilePath = QDir::toNativeSeparators(this->gfxFilePath);
         QString filePathLower = nativeFilePath.toLower();
+        for (const MisFileData &mfdata : misfiledata) {
+            char pszName[DATA_ARCHIVE_MAX_PATH];
+            int n = mfdata.mfAnimFAmt;
+            const char* name = mfdata.mfName;
+            const char* fmt;
+            fmt = n == 1 ? "Missiles\\%s.CL2" : "Missiles\\%s%d.CL2";
+            for (int i = 0; i < n; i++) {
+                snprintf(pszName, sizeof(pszName), fmt, name, i + 1);
+                QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
+                if (filePathLower.endsWith(misGfxName)) {
+                    int frameCount = mfdata.mfAnimLen[n];
+                    result |= checkGraphics(this, frameCount);
+                    tt = true;
+                    break;
+                }
+            }
+        }
         for (const ItemFileData &ifdata : itemfiledata) {
             char filestr[DATA_ARCHIVE_MAX_PATH];
             snprintf(filestr, sizeof(filestr), "Items\\%s.CEL", ifdata.ifName);
@@ -1965,7 +1983,7 @@ bool D1Gfx::check(int assetMpl) const
                     dProgress() << QApplication::tr("Framecount of the item %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ifdata.iAnimLen);
                     result = true;
                 }
-                // typetested = true;
+                tt = true;
                 break;
             }
         }
@@ -1987,9 +2005,15 @@ bool D1Gfx::check(int assetMpl) const
                     dProgress() << QApplication::tr("Framecount of the object %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ofdata.oAnimLen);
                     result = true;
                 }
-                // typetested = true;
+                tt = true;
                 break;
             }
+        }
+        if (typetested != nullptr) {
+            *typetested = tt;
+        } else if (!tt) {
+            dProgress() << QApplication::tr("Unrecognized graphics (%1) -> Checking with game-code is skipped.").arg(nativeFilePath);
+            result = true;
         }
     }
     return result;

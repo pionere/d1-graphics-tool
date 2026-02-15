@@ -525,13 +525,14 @@ bool D1Gfxset::checkGraphics(int frameCount, int gn, const D1Gfx* gfx) const
 bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
 {
     bool result = false;
+    bool typetested = false;
     int frameCount = -1, width = -1, height = -1;
     for (int gn = 0; gn < this->getGfxCount(); gn++) {
         D1Gfx *currGfx = this->getGfx(gn);
         if (gfx != nullptr && gfx != currGfx)
             continue;
         // test the graphics
-        result |= currGfx->check(assetMpl);
+        result |= currGfx->check(assetMpl, &typetested);
         // test whether the graphics use colors from the level-dependent range 
         const std::pair<int, int> colors = { 1, 128 - 1 };
         for (int i = 0; i < currGfx->getFrameCount(); i++) {
@@ -597,11 +598,10 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             }
         }
     }
-    bool typetested = false;
     switch (this->type) {
     case D1GFX_SET_TYPE::Missile: {
         // - test against game code if possible
-        if (this->getGfxCount() >= 1) {
+        if (false) { // this->getGfxCount() >= 1) {
             QString filePath = this->getGfx(0)->getFilePath();
             QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
             for (const MisFileData &mfdata : misfiledata) {
