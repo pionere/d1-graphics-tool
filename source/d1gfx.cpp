@@ -1813,14 +1813,14 @@ void D1Gfx::mask()
     }
 }
 
-static bool checkGraphics(const D1Gfx* gfx, int frameCount, int n, const char* misname)
+static bool checkGraphics(const D1Gfx* gfx, int frameCount)
 {
     bool result = false;
     for (int i = 0; i < gfx->getGroupCount(); i++) {
         std::pair<int, int> gfi = gfx->getGroupFrameIndices(i);
         int fc = gfi.second - gfi.first + 1;
         if (fc != frameCount) {
-            dProgress() << QApplication::tr("Framecount of group %1 of %2 does not match with the game (%3 vs %4 ... %5 name %6).").arg(i + 1).arg(QDir::toNativeSeparators(gfx->getFilePath())).arg(fc).arg(frameCount).arg(n).arg(misname);
+            dProgress() << QApplication::tr("Framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(QDir::toNativeSeparators(gfx->getFilePath())).arg(fc).arg(frameCount);
             result = true;
         }
     }
@@ -1958,8 +1958,8 @@ bool D1Gfx::check(int assetMpl, bool *typetested) const
                 snprintf(pszName, sizeof(pszName), fmt, name, i + 1);
                 QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
                 if (filePathLower.endsWith(misGfxName)) {
-                    int frameCount = mfdata.mfAnimLen[n];
-                    result |= checkGraphics(this, frameCount, n, pszName);
+                    int frameCount = mfdata.mfAnimLen[i];
+                    result |= checkGraphics(this, frameCount);
                     tt = true;
                     break;
                 }
