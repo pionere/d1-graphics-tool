@@ -1945,19 +1945,24 @@ bool D1Gfx::check(int assetMpl) const
     }
     }
     { // - test against game code if possible
-        QString filePathLower = QDir::toNativeSeparators(this->gfxFilePath).toLower();
+        const QString nativeFilePath = QDir::toNativeSeparators(this->gfxFilePath);
+        QString filePathLower = nativeFilePath.toLower();
         for (const ItemFileData &ifdata : itemfiledata) {
             char filestr[DATA_ARCHIVE_MAX_PATH];
             snprintf(filestr, sizeof(filestr), "Items\\%s.CEL", ifdata.ifName);
             QString itmGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
             if (filePathLower.endsWith(itmGfxName)) {
+                if (!this->isClipped) {
+                    dProgress() << tr("Item %1 is not clipped.").arg(nativeFilePath);
+                    result = true;
+                }
                 if (fs.width() != ITEM_ANIM_WIDTH * assetMpl) {
-                    dProgress() << tr("Framewidth of the item %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
+                    dProgress() << tr("Framewidth of the item %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
                     result = true;
                 }
                 int fc = this->getFrameCount();
                 if (this->getFrameCount() != ifdata.iAnimLen) {
-                    dProgress() << QApplication::tr("Framecount of %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fc).arg(ifdata.iAnimLen);
+                    dProgress() << QApplication::tr("Framecount of the item %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ifdata.iAnimLen);
                     result = true;
                 }
                 // typetested = true;
@@ -1969,13 +1974,17 @@ bool D1Gfx::check(int assetMpl) const
             snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", ofdata.ofName);
             QString obGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
             if (filePathLower.endsWith(obGfxName)) {
-                if (fs.width() != ofdata.oAnimWidth * assetMpl) {
-                    dProgress() << tr("Framewidth of the item %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
+                if (!this->isClipped) {
+                    dProgress() << tr("Object %1 is not clipped.").arg(nativeFilePath);
                     result = true;
                 }
-                int fc = this->getFrameCount();
-                if (fc != ofdata.oAnimLen) {
-                    dProgress() << QApplication::tr("Framecount of %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fc).arg(ofdata.oAnimLen);
+                if (fs.width() != ofdata.oAnimWidth * assetMpl) {
+                    dProgress() << tr("Framewidth of the object %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
+                    result = true;
+                }
+                const int fc = this->getFrameCount();
+                if (ofdata.oAnimLen != 0 && fc != ofdata.oAnimLen) {
+                    dProgress() << QApplication::tr("Framecount of the object %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ofdata.oAnimLen);
                     result = true;
                 }
                 // typetested = true;

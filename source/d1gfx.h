@@ -357,7 +357,7 @@ public:
     void mask();
     bool squash();
     void optimize();
-    bool check() const;
+    bool check(int assetMpl) const;
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);
