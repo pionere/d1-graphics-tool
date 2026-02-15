@@ -1827,7 +1827,7 @@ static bool checkGraphics(const D1Gfx* gfx, int frameCount)
     return result;
 }
 
-bool D1Gfx::check() const
+bool D1Gfx::check(int assetMpl) const
 {
     bool result = false;
     // test whether a graphic have the same frame-size in each group
@@ -1951,11 +1951,33 @@ bool D1Gfx::check() const
             snprintf(filestr, sizeof(filestr), "Items\\%s.CEL", ifdata.ifName);
             QString itmGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
             if (filePathLower.endsWith(itmGfxName)) {
-                if (fs.width() != ITEM_ANIM_WIDTH) {
-                    dProgressErr() << tr("Framewidth of the item %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
+                if (fs.width() != ITEM_ANIM_WIDTH * assetMpl) {
+                    dProgress() << tr("Framewidth of the item %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
                     result = true;
                 }
-                result |= checkGraphics(this, ifdata.iAnimLen);
+                int fc = this->getFrameCount();
+                if (this->getFrameCount() != ifdata.iAnimLen) {
+                    dProgress() << QApplication::tr("Framecount of %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fc).arg(ifdata.iAnimLen);
+                    result = true;
+                }
+                // typetested = true;
+                break;
+            }
+        }
+        for (const ObjFileData &ofdata : objfiledata) {
+            char filestr[DATA_ARCHIVE_MAX_PATH];
+            snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", ofdata.ofName);
+            QString obGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
+            if (filePathLower.endsWith(obGfxName)) {
+                if (fs.width() != ofdata.oAnimWidth * assetMpl) {
+                    dProgress() << tr("Framewidth of the item %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
+                    result = true;
+                }
+                int fc = this->getFrameCount();
+                if (fc != ofdata.oAnimLen) {
+                    dProgress() << QApplication::tr("Framecount of %1 does not match with the game (%2 vs %3).").arg(QDir::toNativeSeparators(this->gfxFilePath)).arg(fc).arg(ofdata.oAnimLen);
+                    result = true;
+                }
                 // typetested = true;
                 break;
             }

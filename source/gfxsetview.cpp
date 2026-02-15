@@ -901,7 +901,7 @@ void GfxsetView::checkGraphics(bool gfxOnly) const
     progress.second = tr("Inconsistencies in the graphics of the gfx-set:");
 
     dProgress() << progress;
-    result = this->gfxset->check(gfxOnly ? this->gfx : nullptr);
+    result = this->gfxset->check(gfxOnly ? this->gfx : nullptr, this->assetMpl);
 
     if (!result) {
         progress.second = gfxOnly ? tr("No inconsistency detected in the current gfx.") : tr("No inconsistency detected in the gfx-set.");

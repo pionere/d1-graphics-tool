@@ -509,7 +509,7 @@ bool D1Gfxset::checkGraphics(int frameCount, int gn, const D1Gfx* gfx) const
     return result;
 }
 
-bool D1Gfxset::check(const D1Gfx *gfx) const
+bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
 {
     bool result = false;
     int frameCount = -1, width = -1, height = -1;
@@ -518,7 +518,7 @@ bool D1Gfxset::check(const D1Gfx *gfx) const
         if (gfx != nullptr && gfx != currGfx)
             continue;
         // test the graphics
-        result |= currGfx->check();
+        result |= currGfx->check(assetMpl);
         // test whether the graphics use colors from the level-dependent range 
         const std::pair<int, int> colors = { 1, 128 - 1 };
         for (int i = 0; i < currGfx->getFrameCount(); i++) {

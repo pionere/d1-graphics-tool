@@ -61,7 +61,7 @@ public:
     bool isGroupsConstant() const;
     void compareTo(const LoadFileContent *fileContent, bool patchData) const;
     QRect getBoundary() const;
-    bool check(const D1Gfx *gfx) const;
+    bool check(const D1Gfx *gfx, int assetMpl) const;
     void mask();
 
     D1GFX_SET_TYPE getType() const;

@@ -1051,7 +1051,7 @@ void CelView::checkGraphics() const
     progress.second = tr("Inconsistencies in the graphics:");
 
     dProgress() << progress;
-    result = this->gfx->check();
+    result = this->gfx->check(this->assetMpl);
 
     if (!result) {
         progress.second = tr("No inconsistency detected in the current gfx.");
