@@ -8395,13 +8395,13 @@ bool D1Gfx::patchFloorItems(int gfxFileIndex, bool silent)
     case GFX_ITEM_TEDDYS1: frameCount = 11 - 1; break;
     }
 
+    bool result = false;
     if (frameCount != 0) {
     if (this->getGroupCount() == 0) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
 
-    bool result = false;
     int ii = 0;
     while (true) {
         int i = this->getGroupFrameIndices(ii).second - this->getGroupFrameIndices(ii).first;
