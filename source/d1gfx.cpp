@@ -1952,7 +1952,7 @@ bool D1Gfx::check(int assetMpl) const
             snprintf(filestr, sizeof(filestr), "Items\\%s.CEL", ifdata.ifName);
             QString itmGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
             if (filePathLower.endsWith(itmGfxName)) {
-                if (!this->isClipped) {
+                if (!this->clipped) {
                     dProgress() << tr("Item %1 is not clipped.").arg(nativeFilePath);
                     result = true;
                 }
@@ -1974,7 +1974,7 @@ bool D1Gfx::check(int assetMpl) const
             snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", ofdata.ofName);
             QString obGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
             if (filePathLower.endsWith(obGfxName)) {
-                if (!this->isClipped) {
+                if (!this->clipped) {
                     dProgress() << tr("Object %1 is not clipped.").arg(nativeFilePath);
                     result = true;
                 }
