@@ -3136,7 +3136,7 @@ bool D1Gfx::patchPlrFrames(int gfxFileIndex, bool silent)
     case GFX_PLR_WMDLM: frameCount = 21 - 1; width =  96; height =  96; break;
     }
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -3195,7 +3195,7 @@ bool D1Gfx::patchMonFrames(int gfxFileIndex, bool silent)
     case GFX_MON_SNAKEH: frameCount =  6 - 1; width = 160; height = 160; break;
     }
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -3254,7 +3254,7 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
     case GFX_PLR_RMBQM: frameCount = 16; width =  96; height =  96; break;
     }
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -3639,7 +3639,7 @@ bool D1Gfx::patchFallGDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 128;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -3909,7 +3909,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 128;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -6278,7 +6278,7 @@ bool D1Gfx::patchGoatBDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 128;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -6783,7 +6783,7 @@ bool D1Gfx::patchSklAxDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 96;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -7063,7 +7063,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 96;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -7188,7 +7188,7 @@ bool D1Gfx::patchSklSrDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 96;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -7592,7 +7592,7 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
     constexpr int width = 96;
     constexpr int height = 128;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -7665,7 +7665,7 @@ bool D1Gfx::patchZombieDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 96;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
