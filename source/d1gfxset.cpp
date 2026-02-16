@@ -492,30 +492,6 @@ QRect D1Gfxset::getBoundary() const
     return rect;
 }
 
-bool D1Gfxset::checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx* gfx) const
-{
-    bool result = false;
-    D1Gfx* currGfx = this->getGfx(gn);
-    if (gfx != nullptr && gfx != currGfx)
-        return false;
-    for (int i = 0; i < currGfx->getGroupCount(); i++) {
-        std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
-        int fc = gfi.second - gfi.first + 1;
-        if (fc != frameCount) {
-            dProgress() << QApplication::tr("Framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
-            result = true;
-        }
-        for (int ii = 0; ii < fc; ii++) {
-            int w = currGfx->getFrame(gfi.first + ii)->getWidth();
-            if (w != animWidth) {
-                dProgress() << QApplication::tr("Framewidth of frame %1 of group %2 in %3 does not match with the game (%4 vs %5).").arg(ii + 1).arg(i + 1).arg(this->getGfxLabel(gn)).arg(w).arg(animWidth);
-                result = true;
-            }
-        }
-    }
-    return result;
-}
-
 bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
 {
     bool result = false;
@@ -606,11 +582,6 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 QString monGfxName = QDir::toNativeSeparators(QString(strBuff)).toLower();
                 if (filePathLower.endsWith(monGfxName)) {
                     for (int gn = 0; gn < this->getGfxCount(); gn++) {
-#if 0
-                        int frameCount = gn < lengthof(mfdata.moAnimFrames) ? mfdata.moAnimFrames[gn] : 0;
-                        int animWidth = mfdata.moWidth * assetMpl;
-                        result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
-#endif
                         D1Gfx* currGfx = this->getGfx(gn);
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
@@ -691,47 +662,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             plr._pgfxnum = plrgfx;
 
             SetPlrAnims(0);
-#if 0
-            currLvl._dType = DTYPE_TOWN;
-            SetPlrAnims(0);
-            // assert(this->getGfxCount() == NUM_PGTS);
-            for (int n = 0; n < NUM_PGXS; n++) {
-                int gn = 0;
-                switch (n) {
-                case PGX_STAND:     gn = PGT_STAND_TOWN; break;
-                case PGX_WALK:      gn = PGT_WALK_TOWN;  break;
-                case PGX_ATTACK:    gn = PGT_ATTACK;     break;
-                case PGX_FIRE:      gn = PGT_FIRE;       break;
-                case PGX_LIGHTNING: gn = PGT_LIGHTNING;  break;
-                case PGX_MAGIC:     gn = PGT_MAGIC;      break;
-                case PGX_BLOCK:     gn = PGT_BLOCK;      break;
-                case PGX_GOTHIT:    gn = PGT_GOTHIT;     break;
-                case PGX_DEATH:     gn = PGT_DEATH;      break;
-                }
 
-                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
-            }
-
-            currLvl._dType = DTYPE_CATHEDRAL;
-            SetPlrAnims(0);
-
-            for (int n = 0; n < NUM_PGXS; n++) {
-                int gn = 0;
-                switch (n) {
-                case PGX_STAND: gn = PGT_STAND_DUNGEON; break;
-                case PGX_WALK:  gn = PGT_WALK_DUNGEON;  break;
-                case PGX_ATTACK:
-                case PGX_FIRE:
-                case PGX_LIGHTNING:
-                case PGX_MAGIC:
-                case PGX_BLOCK:
-                case PGX_GOTHIT:
-                case PGX_DEATH: continue;
-                }
-
-                result |= this->checkGraphics(plr._pAnims[n].paFrames, plr._pAnims[n].paAnimWidth * assetMpl, gn, gfx);
-            }
-#endif
             for (int gn = 0; gn < this->getGfxCount(); gn++) {
                 D1Gfx* currGfx = this->getGfx(gn);
                 if (gfx != nullptr && gfx != currGfx)
