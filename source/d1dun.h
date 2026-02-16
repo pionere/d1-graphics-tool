@@ -90,7 +90,6 @@ typedef struct DunObjectStruct {
 
 typedef struct CustomObjectStruct {
     int type;
-    int width;
     QString path;
     QString name;
     int frameNum;
@@ -102,7 +101,6 @@ typedef struct DunMonsterStruct {
 
 typedef struct CustomMonsterStruct {
     DunMonsterType type;
-    int width;
     int animGroup;
     QString path;
     QString baseTrnPath;
@@ -271,8 +269,8 @@ private:
     void drawMeta(QPainter &dungeon, unsigned cellWidth, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void drawLayer(QPainter &dungeon, const DunDrawParam &params, int layer);
     void initVectors(int width, int height);
-    void loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result);
-    void loadMonsterGfx(const QString &filePath, int width, int dir, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
+    void loadObjectGfx(const QString &filePath, ObjectCacheEntry &result);
+    void loadMonsterGfx(const QString &filePath, int dir, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
     void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
     void loadObject(int objectIndex);
     void loadMonster(const DunMonsterType &monType);

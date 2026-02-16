@@ -440,7 +440,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     }
     // add monsters
     // - normal
-    for (int i = 1; i < nummtypes; i++) {
+    for (int i = 0; i < nummtypes; i++) {
         AddResourceParam monRes = AddResourceParam();
         monRes.type = DUN_ENTITY_TYPE::MONSTER;
         monRes.index = lengthof(DunMonstConvTbl) + i;
@@ -448,7 +448,6 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.path = monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
-        monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
         if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
             monRes.baseTrnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
         }
@@ -467,7 +466,6 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.path = monfiledata[md.cmFileNum].moGfxFile;
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
-        monRes.width = monfiledata[md.cmFileNum].moWidth;
         if (monsterdata[md.cmType].mTransFile != NULL) {
             monRes.baseTrnPath = assetPath + "/" + monsterdata[md.cmType].mTransFile;
         }
@@ -486,7 +484,6 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         objRes.index = lengthof(DunObjConvTbl) + i;
         objRes.name = objType.name.isEmpty() ? objfiledata[objectdata[otype].ofindex].ofName : objType.name;
         objRes.path = assetPath + "/Objects/" + objfiledata[objectdata[otype].ofindex].ofName + ".CEL";
-        objRes.width = objfiledata[objectdata[otype].ofindex].oAnimWidth;
         objRes.frame = objType.animFrame;
         dun->addResource(objRes);
     }

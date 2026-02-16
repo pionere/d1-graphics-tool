@@ -26,7 +26,8 @@ DEVILUTION_BEGIN_NAMESPACE
 #define FLAMETRAP_INACTIVE_FRAME 2
 
 int trapid;
-static BYTE* objanimdata[NUM_OFILE_TYPES] = { 0 };
+// static BYTE* objanimdata[NUM_OFILE_TYPES] = { 0 };
+// static int objanimdim[NUM_OFILE_TYPES];
 // int objectactive[MAXOBJECTS];
 /** Specifies the number of active objects. */
 int numobjects;
@@ -136,27 +137,29 @@ const char* const BookName[NUM_BOOKS] = {
 #endif
 };
 
-void AddObjectType(int ofindex)
+static void AddObjectType(const ObjectData* ods)
 {
-	/*char filestr[DATA_ARCHIVE_MAX_PATH];
+#if 0
+	const int ofindex = ods->ofindex;
+	char filestr[DATA_ARCHIVE_MAX_PATH];
 
 	if (objanimdata[ofindex] != NULL) {
 		return;
 	}
 
 	snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", objfiledata[ofindex].ofName);
-	objanimdata[ofindex] = LoadFileInMem(filestr);*/
+	objanimdata[ofindex] = LoadFileInMem(filestr);
+	objanimdim[ofindex] = CelClippedWidth(objanimdata[ofindex]);
+#endif
 }
 
 void InitObjectGFX()
 {
 	/*const ObjectData* ods;
 	bool themeload[NUM_THEMES];
-	bool fileload[NUM_OFILE_TYPES];
 	int i;
 
-	static_assert(false == 0, "InitObjectGFX fills fileload and themeload with 0 instead of false values.");
-	memset(fileload, 0, sizeof(fileload));
+	static_assert(false == 0, "InitObjectGFX fills themeload with 0 instead of false values.");
 	memset(themeload, 0, sizeof(themeload));
 
 	for (i = 0; i < numthemes; i++)
@@ -170,11 +173,7 @@ void InitObjectGFX()
 		 && (ods->oquest == Q_INVALID || !QuestStatus(ods->oquest))) {
 			continue;
 		}
-		if (fileload[ods->ofindex]) {
-			continue;
-		}
-		fileload[ods->ofindex] = true;
-		AddObjectType(ods->ofindex);
+		AddObjectType(ods);
 	}*/
 }
 
@@ -629,7 +628,7 @@ static void LoadMapSetObjects(int idx)
 					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(oidx).arg(i).arg(j);
 				} else {
 				oidx = ObjConvTbl[oidx];
-				AddObjectType(objectdata[oidx].ofindex);
+				AddObjectType(&objectdata[oidx]);
 				AddObject(oidx, i, j);
 				}
 			}
@@ -677,7 +676,7 @@ static int SetupObject(int type, int ox, int oy)
 		os->_oAnimCnt = random_low(146, os->_oAnimFrameLen);
 		os->_oAnimFrame = RandRangeLow(1, os->_oAnimLen);
 	}
-//	os->_oAnimWidth = ofd->oAnimWidth * ASSET_MPL;
+//	os->_oAnimWidth = objanimdim[ods->ofindex];
 //	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
 	os->_oSolidFlag = ofd->oSolidFlag;
 	os->_oBreak = ofd->oBreak;

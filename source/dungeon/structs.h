@@ -376,10 +376,8 @@ typedef struct MisFileData {
 	BOOLEAN mfAnimFlag;
 	BOOLEAN mfLightFlag;
 	BOOLEAN mfPreFlag;
-	BYTE mfAnimFrameLen[16];
+	BYTE mfAnimFrameLen;
 	BYTE mfAnimLen[16];
-	int mfAnimWidth;
-	int mfAnimXOffset; // could be calculated
 } MisFileData;
 
 typedef struct MissileStruct {
@@ -476,9 +474,7 @@ typedef struct MonFileData {
 	int moImage;
 	const char* moGfxFile;
 	const char* moSndFile;
-	int moAnimFrames[NUM_MON_ANIM];
 	int moAnimFrameLen[NUM_MON_ANIM];
-	BYTE moWidth;
 	BOOLEAN moSndSpecial;
 	BYTE moAFNum;
 	BYTE moAFNum2;
@@ -625,26 +621,24 @@ typedef struct UniqMonData {
 //////////////////////////////////////////////////
 
 typedef struct ObjectData {
-	BYTE ofindex;     // object_graphic_id
-	BYTE oLvlTypes;   // dungeon_type_mask
-	BYTE otheme;      // theme_id
-	BYTE oquest;      // quest_id
+	BYTE ofindex;        // object_graphic_id
+	BYTE oLvlTypes;      // dungeon_type_mask
+	BYTE otheme;         // theme_id
+	BYTE oquest;         // quest_id
 	//BYTE oAnimFlag;
 	BYTE oAnimBaseFrame; // The starting/base frame of (initially) non-animated objects
 	//int oAnimFrameLen; // Tick length of each frame in the current animation
-	//int oAnimLen;   // Number of frames in current animation
+	//int oAnimLen;      // Number of frames in current animation
 	//int oAnimWidth;
 	//int oSFX;
 	//BYTE oSFXCnt;
-	BYTE oLightRadius;
-	int8_t oLightOffX;
-	int8_t oLightOffY;
-	BYTE oProc;       // object_proc_func
-	BYTE oModeFlags;  // object_mode_flags
+	BYTE oLightRadius;   // light radius with optional x/y offset
+	BYTE oProc;          // object_proc_func
+	BYTE oModeFlags;     // object_mode_flags
 	//BOOL oSolidFlag;
 	//BYTE oBreak;
 	BOOLEAN oMissFlag;
-	BYTE oDoorFlag;   // object_door_type
+	BYTE oDoorFlag;      // object_door_type
 	BYTE oSelFlag;
 	BYTE oPreFlag;
 	BOOLEAN oTrapFlag;
@@ -657,7 +651,6 @@ typedef struct ObjFileData {
 	BYTE oAnimFlag; // object_anim_mode
 	int oAnimFrameLen; // Tick length of each frame in the current animation
 	int oAnimLen;   // Number of frames in current animation
-	int oAnimWidth;
 	BOOLEAN oSolidFlag;
 	BYTE oBreak; // object_break_mode
 } ObjFileData;

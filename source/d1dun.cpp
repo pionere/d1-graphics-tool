@@ -2507,7 +2507,7 @@ QString D1Dun::getObjectName(int objectIndex) const
     return tr("Object%1").arg(objectIndex);
 }
 
-void D1Dun::loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result)
+void D1Dun::loadObjectGfx(const QString &filePath, ObjectCacheEntry &result)
 {
     // check for existing entry
     for (auto &dataEntry : this->objDataCache) {
@@ -2521,7 +2521,6 @@ void D1Dun::loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &
     result.objGfx = new D1Gfx();
     result.objGfx->setPalette(this->pal);
     OpenAsParam params = OpenAsParam();
-    params.celWidth = width;
     D1Cel::load(*result.objGfx, filePath, params);
     if (result.objGfx->getFrameCount() != 0) {
         this->objDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.objGfx, 1));
@@ -2541,7 +2540,7 @@ void D1Dun::loadObject(int objectIndex)
         if (customObject.type == objectIndex) {
             result.frameNum = customObject.frameNum;
             QString celFilePath = customObject.path;
-            this->loadObjectGfx(celFilePath, customObject.width, result);
+            this->loadObjectGfx(celFilePath, result);
             break;
         }
     }
@@ -2554,12 +2553,12 @@ void D1Dun::loadObject(int objectIndex)
             result.frameNum = 1;
         }
         QString celFilePath = this->assetPath + "/Objects/" + ofd.ofName + ".CEL";
-        this->loadObjectGfx(celFilePath, ofd.oAnimWidth, result);
+        this->loadObjectGfx(celFilePath, result);
     }
     this->objectCache.push_back(result);
 }
 
-void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
+void D1Dun::loadMonsterGfx(const QString &filePath, int dir, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
 {
     // check for existing entry
     unsigned i = 0;
@@ -2576,7 +2575,6 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, int dir, const QS
         result.monGfx = new D1Gfx();
         // result.monGfx->setPalette(this->pal);
         OpenAsParam params = OpenAsParam();
-        params.celWidth = width;
         D1Cl2::load(*result.monGfx, filePath, params);
         if (result.monGfx->getFrameCount() != 0) {
             this->monDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.monGfx, 1));
@@ -2637,7 +2635,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
         if (customMonster.type == monType) {
             QString cl2FilePath = customMonster.path;
-            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.animGroup, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
+            this->loadMonsterGfx(cl2FilePath, customMonster.animGroup, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
             break;
         }
     }
@@ -2654,7 +2652,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
                 baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
             }
             QString uniqueTrnFilePath;
-            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, 0, baseTrnFilePath, uniqueTrnFilePath, result);
+            this->loadMonsterGfx(cl2FilePath, 0, baseTrnFilePath, uniqueTrnFilePath, result);
         }
         // load unique monster
         unsigned monUniqueType = monType.monIndex - 1;
@@ -2671,7 +2669,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             if (uniqMonData[monUniqueType].mTrnName != nullptr) {
                 uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monUniqueType].mTrnName + ".TRN";
             }
-            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, 0, baseTrnFilePath, uniqueTrnFilePath, result);
+            this->loadMonsterGfx(cl2FilePath, 0, baseTrnFilePath, uniqueTrnFilePath, result);
         }
     }
     this->monsterCache.push_back(result);
@@ -5360,7 +5358,6 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customObject.name = params.name;
                 customObject.path = params.path;
                 customObject.frameNum = params.frame;
-                customObject.width = params.width;
                 return true;
             }
         }
@@ -5370,7 +5367,6 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customObject.name = params.name;
         customObject.path = params.path;
         customObject.frameNum = params.frame;
-        customObject.width = params.width;
         this->customObjectTypes.push_back(customObject);
     } break;
     case DUN_ENTITY_TYPE::MONSTER: {
@@ -5452,7 +5448,6 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customMonster.path = params.path;
                 customMonster.baseTrnPath = params.baseTrnPath;
                 customMonster.uniqueTrnPath = params.uniqueTrnPath;
-                customMonster.width = params.width;
                 customMonster.animGroup = params.frameGroup;
                 return true;
             }
@@ -5464,7 +5459,6 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMonster.path = params.path;
         customMonster.baseTrnPath = params.baseTrnPath;
         customMonster.uniqueTrnPath = params.uniqueTrnPath;
-        customMonster.width = params.width;
         customMonster.animGroup = params.frameGroup;
         this->customMonsterTypes.push_back(customMonster);
     } break;
