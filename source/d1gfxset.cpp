@@ -641,7 +641,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                             continue;
 
                         const int fc = currGfx->getGroupSize();
-                        if (gn == MA_STAND && fc > 0x7FFFF) {
+                        if (gn == MA_STAND && fc > 0x7FFF) {
                             dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (InitMonster expects < %2 got %3).").arg(this->getGfxLabel(gn)).arg(0x7FFF).arg(fc);
                             result = true;
                         }
