@@ -1751,7 +1751,7 @@ void D1Gfx::mask()
 {
     if (this->getFrameCount() <= 1)
         return;
-    if (this->getFrameSize().isValid()) {
+    if (!this->getFrameSize().isValid()) {
         dProgressErr() << tr("Framesize is not constant");
         return;
     }
