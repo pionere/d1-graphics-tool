@@ -2824,7 +2824,7 @@ QString D1Dun::getMissileName(int misIndex) const
     return result.arg(misIndex);
 }
 
-void D1Dun::loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result)
+void D1Dun::loadObjectGfx(const QString &filePath, ObjectCacheEntry &result)
 {
     // check for existing entry
     for (auto &dataEntry : this->objDataCache) {
@@ -2838,7 +2838,6 @@ void D1Dun::loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &
     result.objGfx = new D1Gfx();
     result.objGfx->setPalette(this->pal);
     OpenAsParam params = OpenAsParam();
-    params.celWidth = width;
     D1Cel::load(*result.objGfx, filePath, params);
     if (result.objGfx->getFrameCount() != 0) {
         this->objDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.objGfx, 1));
@@ -2858,7 +2857,7 @@ void D1Dun::loadObject(int objectIndex)
         if (customObject.type == objectIndex) {
             result.frameNum = customObject.frameNum;
             QString celFilePath = customObject.path;
-            this->loadObjectGfx(celFilePath, customObject.width, result);
+            this->loadObjectGfx(celFilePath, result);
             break;
         }
     }
@@ -2871,7 +2870,7 @@ void D1Dun::loadObject(int objectIndex)
             result.frameNum = 1;
         }
         QString celFilePath = this->assetPath + "/Objects/" + ofd.ofName + ".CEL";
-        this->loadObjectGfx(celFilePath, ofd.oAnimWidth, result);
+        this->loadObjectGfx(celFilePath, result);
     }
     this->objectCache.push_back(result);
 }

@@ -137,9 +137,10 @@ const char* const BookName[NUM_BOOKS] = {
 #endif
 };
 
-void AddObjectType(int ofindex)
+static void AddObjectType(const ObjectData* ods)
 {
 #if 0
+	const int ofindex = ods->ofindex;
 	char filestr[DATA_ARCHIVE_MAX_PATH];
 
 	if (objanimdata[ofindex] != NULL) {
@@ -178,7 +179,7 @@ void InitObjectGFX()
 			continue;
 		}
 		fileload[ods->ofindex] = true;
-		AddObjectType(ods->ofindex);
+		AddObjectType(ods);
 	}*/
 }
 
@@ -633,7 +634,7 @@ static void LoadMapSetObjects(int idx)
 					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(oidx).arg(i).arg(j);
 				} else {
 				oidx = ObjConvTbl[oidx];
-				AddObjectType(objectdata[oidx].ofindex);
+				AddObjectType(&objectdata[oidx]);
 				AddObject(oidx, i, j);
 				}
 			}

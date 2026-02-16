@@ -794,7 +794,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         objRes.index = lengthof(DunObjConvTbl) + i;
         objRes.name = objType.name.isEmpty() ? objfiledata[objectdata[otype].ofindex].ofName : objType.name;
         objRes.path = assetPath + "/Objects/" + objfiledata[objectdata[otype].ofindex].ofName + ".CEL";
-        objRes.width = objfiledata[objectdata[otype].ofindex].oAnimWidth;
+        // objRes.width = objfiledata[objectdata[otype].ofindex].oAnimWidth;
         objRes.frame = objType.animFrame;
         dun->addResource(objRes);
     }

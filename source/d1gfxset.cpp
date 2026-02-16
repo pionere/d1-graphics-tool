@@ -642,7 +642,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         }
                         for (int m = 0; m < NUM_CELMETA; m++) {
                             if (currGfx->getMeta(m)->isStored()) {
-                                dProgress() << tr("Meta %1 of the monster animation %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(this->getGfxLabel(gn));
+                                dProgress() << QApplication::tr("Meta %1 of the monster animation %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(this->getGfxLabel(gn));
                             }
                         }
                     }
@@ -707,7 +707,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 }
                 for (int m = 0; m < NUM_CELMETA; m++) {
                     if (currGfx->getMeta(m)->isStored()) {
-                        dProgress() << tr("Meta %1 of the player animation %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(this->getGfxLabel(gn));
+                        dProgress() << QApplication::tr("Meta %1 of the player animation %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(this->getGfxLabel(gn));
                         result = true;
                     }
                 }
