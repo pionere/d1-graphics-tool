@@ -2945,7 +2945,7 @@ void MainWindow::on_actionMask_triggered()
     }
 
     if (this->gfxset != nullptr)
-        this->gfxset->mask();
+        this->gfxset->mask(frameIndex);
     else
         this->gfx->mask(frameIndex);
 
