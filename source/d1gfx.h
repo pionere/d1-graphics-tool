@@ -146,7 +146,9 @@ typedef enum gfx_file_index {
     GFX_OBJ_CANDLE2, // graphics of a light stand with a candle (Candle2.CEL)
     GFX_OBJ_LSHR,    // graphics of the west-facing shrine (LShrineG.CEL)
     GFX_OBJ_RSHR,    // graphics of the east-facing shrine (RShrineG.CEL)
+    GFX_OBJ_TFOUNTN, // graphics of the tear fountain (TFountn.CEL)
     GFX_OBJ_L5LIGHT, // graphics of the light stand in Crypt (L5Light.CEL)
+    GFX_OBJ_URN,     // graphics of the urn in Crypt (Urn.CEL)
     GFX_PLR_RHTAT,   // graphics of rogue in heavy armor with staff attacking (RHTAT.CL2)
     GFX_PLR_RHUHT,   // graphics of rogue in heavy armor with shield getting hit (RHUHT.CL2)
     GFX_PLR_RHUQM,   // graphics of rogue in heavy armor with shield casting magic (RHUQM.CL2)
@@ -239,6 +241,8 @@ typedef enum gfx_file_index {
     GFX_ITEM_BLDSTN,   // item drop animation (Bldstn.CEL)
     GFX_ITEM_FANVIL,   // item drop animation (Fanvil.CEL)
     GFX_ITEM_FLAZSTAF, // item drop animation (FLazStaf.CEL)
+    GFX_ITEM_BOMBS1,   // item drop animation (bombs1.CEL)
+    GFX_ITEM_RUNES1,   // item drop animation (runes1.CEL)
     GFX_ITEM_TEDDYS1,  // item drop animation (teddys1.CEL)
     GFX_ITEM_COWS1,    // item drop animation (cows1.CEL)
     GFX_ITEM_DONKYS1,  // item drop animation (donkys1.CEL)
@@ -411,6 +415,7 @@ private:
     bool patchLeftShrine(bool silent);
     bool patchRightShrine(bool silent);
     bool patchCryptLight(bool silent);
+    bool patchCELFrames(int gfxFileIndex, bool silent);
     bool patchPlrFrames(int gfxFileIndex, bool silent);
     bool patchMonFrames(int gfxFileIndex, bool silent);
     bool patchRogueExtraPixels(int gfxFileIndex, bool silent);
@@ -431,7 +436,7 @@ private:
     bool patchMagball(bool silent);
     bool patchSplIcons(bool silent);
     bool patchCursorIcons(bool silent);
-    bool patchItemFlips(int gfxFileIndex, bool silent);
+    bool patchFloorItems(int gfxFileIndex, bool silent);
 
 protected:
     D1CEL_TYPE type = D1CEL_TYPE::V1_REGULAR;
