@@ -615,6 +615,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
 
+                        const int gc = currGfx->getGroupCount();
+                        if (gc != NUM_DIRS) {
+                            dProgress() << QApplication::tr("Groupcount of %1 is not handled by the game (expected %2 got %3).").arg(this->getGfxLabel(gn)).arg(NUM_DIRS).arg(gc);
+                            result = true;
+                        }
                         const int fc = currGfx->getGroupSize();
                         if (gn == MA_STAND && fc > 0x7FFF) {
                             dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (InitMonster expects < %2 got %3).").arg(this->getGfxLabel(gn)).arg(0x7FFF).arg(fc);
@@ -638,6 +643,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         if ((gn == MA_WALK || gn == MA_ATTACK || gn == MA_SPECIAL) && fc * mfdata.moAnimFrameLen[gn] >= SQUELCH_LOW) {
                             dProgress() << QApplication::tr("Animation (%1) too long to finish before relax (expected < %2 got %3).").arg(this->getGfxLabel(gn)).arg(SQUELCH_LOW).arg(fc * mfdata.moAnimFrameLen[gn]);
                             result = true;
+                        }
+                        for (int m = 0; m < NUM_CELMETA; m++) {
+                            if (currGfx->getMeta(m)->isStored()) {
+                                dProgress() << QApplication::tr("Meta %1 of the monster animation %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(this->getGfxLabel(gn));
+                            }
                         }
                     }
                     typetested = true;
@@ -726,6 +736,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 D1Gfx* currGfx = this->getGfx(gn);
                 if (gfx != nullptr && gfx != currGfx)
                     continue;
+                const int gc = currGfx->getGroupCount();
+                if (gc != NUM_DIRS) {
+                    dProgress() << QApplication::tr("Groupcount of %1 is not handled by the game (expected %2 got %3).").arg(this->getGfxLabel(gn)).arg(NUM_DIRS).arg(gc);
+                    result = true;
+                }
                 const unsigned fc = currGfx->getGroupSize();
                 if ((gn == PGT_WALK_TOWN || gn == PGT_WALK_DUNGEON) && fc != PLR_WALK_ANIMLEN) {
                     dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (StartWalk expects %2 got %3).").arg(this->getGfxLabel(gn)).arg(PLR_WALK_ANIMLEN).arg(fc);
@@ -738,6 +753,12 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 if (gn == PGT_ATTACK && plr._pAFNum > fc) {
                     dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (PlrDoSpell expects >= %2 got %3).").arg(this->getGfxLabel(gn)).arg(plr._pAFNum).arg(fc);
                     result = true;
+                }
+                for (int m = 0; m < NUM_CELMETA; m++) {
+                    if (currGfx->getMeta(m)->isStored()) {
+                        dProgress() << QApplication::tr("Meta %1 of the player animation %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(this->getGfxLabel(gn));
+                        result = true;
+                    }
                 }
             }
 
