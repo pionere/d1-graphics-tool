@@ -62,7 +62,7 @@ public:
     void compareTo(const LoadFileContent *fileContent, bool patchData) const;
     QRect getBoundary() const;
     bool check(const D1Gfx *gfx, int assetMpl) const;
-    void mask();
+    void mask(int frameIndex);
 
     D1GFX_SET_TYPE getType() const;
     D1GFX_SET_CLASS_TYPE getClassType() const;

@@ -2025,7 +2025,7 @@ bool D1Gfx::check(int assetMpl, bool *typetested) const
                     dProgress() << tr("Object %1 is groupped.").arg(nativeFilePath);
                     result = true;
                 }
-                if (ofdata.oAnimLen != 0 && fc != ofdata.oAnimLen) {
+                if (fc != ofdata.oAnimLen) {
                     dProgress() << tr("Framecount of the object %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ofdata.oAnimLen);
                     result = true;
                 }
