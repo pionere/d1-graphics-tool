@@ -5830,7 +5830,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customObject.name = params.name;
                 customObject.path = params.path;
                 customObject.frameNum = params.frame;
-                customObject.width = params.width;
+                // customObject.width = params.width;
                 customObject.coPreFlag = params.preFlag;
                 return true;
             }
@@ -5841,7 +5841,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customObject.name = params.name;
         customObject.path = params.path;
         customObject.frameNum = params.frame;
-        customObject.width = params.width;
+        // customObject.width = params.width;
         customObject.coPreFlag = params.preFlag;
         this->customObjectTypes.push_back(customObject);
     } break;
