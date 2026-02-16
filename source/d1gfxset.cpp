@@ -64,16 +64,21 @@ D1Gfxset::~D1Gfxset()
     this->gfxList.clear();
 }
 
-bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
+bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params, bool optional)
 {
     const QFileInfo gfxFileInfo = QFileInfo(gfxFilePath);
     QString extension = gfxFileInfo.suffix();
     if (extension.compare("cl2", Qt::CaseInsensitive) == 0) {
         if (!D1Cl2::load(*this->baseGfx, gfxFilePath, params)) {
-            dProgressErr() << QApplication::tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+            if (!optional) {
+                dProgressErr() << QApplication::tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+            }
             return false;
         }
     } else {
+        if (optional) {
+            return false;
+        }
         if (!D1Clc::load(*this->baseGfx, gfxFilePath, params)) {
             dProgressErr() << QApplication::tr("Failed loading CLC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
             return false;
@@ -99,9 +104,10 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
             cn += 10;
         }
         int mn = cn;
-        if (mn <= 8) {
+        int fileMatchesMis = 0;
+        {
             const QStringList files = folder.entryList();
-            for (int i = 9; i <= 16; i++) {
+            for (int i = 1; i <= 16; i++) {
                 QString misName = baseName + QString::number(i);
                 for (const QString fileName : files) {
                     if (!fileName.endsWith(".cl2", Qt::CaseInsensitive) && !fileName.endsWith(".clc", Qt::CaseInsensitive))
@@ -110,10 +116,14 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     fileBase.chop(4);
                     if (misName.compare(fileBase, Qt::CaseInsensitive) == 0) {
                         mn = i;
+                        fileMatchesMis++;
                         break;
                     }
                 }
             }
+        }
+        if (optional && (fileMatchesMis != 8 && fileMatchesMis != 16)) {
+            return false;
         }
         int n = mn > 8 ? 16 : 8;
         for (int i = 1; i <= n; i++) {
@@ -168,6 +178,9 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
         if (fileInMatchesMon == fileInMatchesPlr) {
             fileInMatchesPlr = fileMatchesPlr;
             fileInMatchesMon = fileMatchesMon;
+        }
+        if (optional && std::max(fileInMatchesMon, fileInMatchesPlr) <= 3) {
+            return false;
         }
         if (fileInMatchesMon >= fileInMatchesPlr) {
             type = D1GFX_SET_TYPE::Monster;
