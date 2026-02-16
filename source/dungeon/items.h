@@ -19,6 +19,8 @@ static_assert((int)ITYPE_LARMOR + 1 == (int)ITYPE_MARMOR, "ITYPE_DURABLE check r
 static_assert((int)ITYPE_MARMOR + 1 == (int)ITYPE_HARMOR, "ITYPE_DURABLE check requires a specific ITYPE order IX.");
 #define ITYPE_DURABLE(itype) (itype >= ITYPE_SWORD && itype <= ITYPE_HARMOR)
 
+#define ITEM_ANIM_WIDTH (96 * ASSET_MPL)
+
 extern int itemactive[MAXITEMS];
 extern ItemStruct items[MAXITEMS + 1];
 extern int numitems;

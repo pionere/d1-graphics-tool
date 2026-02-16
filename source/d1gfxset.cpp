@@ -519,13 +519,14 @@ bool D1Gfxset::checkGraphics(int frameCount, int animWidth, int gn, const D1Gfx*
 bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
 {
     bool result = false;
+    bool typetested = false;
     int frameCount = -1, width = -1, height = -1;
     for (int gn = 0; gn < this->getGfxCount(); gn++) {
         D1Gfx *currGfx = this->getGfx(gn);
         if (gfx != nullptr && gfx != currGfx)
             continue;
         // test the graphics
-        result |= currGfx->check();
+        result |= currGfx->check(assetMpl, &typetested);
         // test whether the graphics use colors from the level-dependent range 
         const std::pair<int, int> colors = { 1, 128 - 1 };
         for (int i = 0; i < currGfx->getFrameCount(); i++) {
@@ -591,35 +592,9 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
             }
         }
     }
-    bool typetested = false;
     switch (this->type) {
-    case D1GFX_SET_TYPE::Missile: {
-        // - test against game code if possible
-        if (this->getGfxCount() >= 1) {
-            QString filePath = this->getGfx(0)->getFilePath();
-            QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
-            for (const MisFileData &mfdata : misfiledata) {
-                char pszName[DATA_ARCHIVE_MAX_PATH];
-                int n = mfdata.mfAnimFAmt;
-                const char* name = mfdata.mfName;
-                const char* fmt;
-                if (name == NULL)
-                    continue;
-                fmt = n == 1 ? "Missiles\\%s.CL2" : "Missiles\\%s%d.CL2";
-                snprintf(pszName, sizeof(pszName), fmt, name, 1);
-                QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
-                if (filePathLower.endsWith(misGfxName)) {
-                    for (int gn = 0; gn < this->getGfxCount(); gn++) {
-                        int frameCount = gn < lengthof(mfdata.mfAnimLen) ? mfdata.mfAnimLen[gn] : 0;
-                        int animWidth = mfdata.mfAnimWidth * assetMpl;
-                        result |= this->checkGraphics(frameCount, animWidth, gn, gfx);
-                    }
-                    typetested = true;
-                    break;
-                }
-            }
-        }
-    } break;
+    case D1GFX_SET_TYPE::Missile:
+        break;
     case D1GFX_SET_TYPE::Monster: {
         // - test against game code if possible
         if (this->getGfxCount() >= (int)MA_STAND + 1) {

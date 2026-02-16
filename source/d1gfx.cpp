@@ -1785,7 +1785,7 @@ void D1Gfx::mask()
     }
 }
 
-bool D1Gfx::check() const
+bool D1Gfx::check(int assetMpl, bool *typetested) const
 {
     bool result = false;
     // test whether a graphic have the same frame-size in each group
@@ -1800,20 +1800,22 @@ bool D1Gfx::check() const
         dProgress() << tr("Groupsize is not constant");
         result = true;
     }
+    const int gc = this->getGroupCount();
+    const int fc = this->getFrameCount();
     { // test whether the meta-data is used
         if (this->clipped  && fs.height() >= CEL_BLOCK_HEIGHT && (this->getMeta(CELMETA_DIMENSIONS)->isStored() || this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored())) {
             dProgressWarn() << tr("Dimensions are not required for clipped graphics");
             result = true;
         }
-        if (this->getGroupCount() > 1 && this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored()) {
+        if (gc > 1 && this->getMeta(CELMETA_DIMENSIONS_PER_FRAME)->isStored()) {
             dProgressWarn() << tr("Groupped graphics should not require Dimensions Per Frame");
             result = true;
         }
-        if (this->getGroupCount() > 1 && this->getMeta(CELMETA_ANIMORDER)->isStored()) {
+        if (gc > 1 && this->getMeta(CELMETA_ANIMORDER)->isStored()) {
             dProgressWarn() << tr("Animation Order is not used in groupped graphics");
             result = true;
         }
-        if (this->getGroupCount() != NUM_DIRS && this->getMeta(CELMETA_ACTIONFRAMES)->isStored()) {
+        if (gc != NUM_DIRS && this->getMeta(CELMETA_ACTIONFRAMES)->isStored()) {
             dProgressWarn() << tr("Action Frames are not used in non-directional graphics");
             result = true;
         }
@@ -1856,7 +1858,6 @@ bool D1Gfx::check() const
              dProgressErr() << tr("Animation Order is not valid");
              result = true;
         }
-        const int fc = this->getFrameCount();
         std::set<int> frameSet;
         for (int i = 0; i < fc; i++) {
             frameSet.insert(i + 1);
@@ -1893,7 +1894,6 @@ bool D1Gfx::check() const
              dProgressErr() << tr("Action Frames are not valid");
              result = true;
         }
-        const int fc = this->getFrameCount();
         for (int fn : afList) {
             if (fn > fc) {
                 dProgressErr() << tr("Frame number %1 in the Action Frames is too high (Limit : %2)").arg(fn).arg(fc);
@@ -1901,6 +1901,120 @@ bool D1Gfx::check() const
             }
         }
     }
+    }
+    { // - test against game code if possible
+        bool tt = false;
+        const QString nativeFilePath = QDir::toNativeSeparators(this->gfxFilePath);
+        QString filePathLower = nativeFilePath.toLower();
+        for (const MisFileData &mfdata : misfiledata) {
+            char pszName[DATA_ARCHIVE_MAX_PATH];
+            int n = mfdata.mfAnimFAmt;
+            const char* name = mfdata.mfName;
+            const char* fmt;
+            fmt = n == 1 ? "Missiles\\%s.CL2" : "Missiles\\%s%d.CL2";
+            for (int i = 0; i < n; i++) {
+                snprintf(pszName, sizeof(pszName), fmt, name, i + 1);
+                QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
+                if (filePathLower.endsWith(misGfxName)) {
+                    if (!this->clipped) {
+                        dProgress() << tr("Missile %1 is not clipped.").arg(nativeFilePath);
+                        result = true;
+                    }
+                    if (fs.height() < CEL_BLOCK_HEIGHT) {
+                        dProgress() << tr("Height of the missile %1 is too low to calculate the width (%2 expected %3).").arg(nativeFilePath).arg(fs.height()).arg(CEL_BLOCK_HEIGHT);
+                        result = true;
+                    }
+                    if (gc != 1) {
+                        dProgress() << tr("Missile %1 is groupped.").arg(nativeFilePath);
+                        result = true;
+                    }
+                    if (fc != mfdata.mfAnimLen[i]) {
+                        dProgress() << tr("Framecount of the missile %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(mfdata.mfAnimLen[i]);
+                        result = true;
+                    }
+                    for (int m = 0; m < NUM_CELMETA; m++) {
+                        if (this->getMeta(m)->isStored()) {
+                            dProgress() << tr("Meta %1 of the missile %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(nativeFilePath);
+                            result = true;
+                        }
+                    }
+                    tt = true;
+                    break;
+                }
+            }
+        }
+        for (const ItemFileData &ifdata : itemfiledata) {
+            char filestr[DATA_ARCHIVE_MAX_PATH];
+            snprintf(filestr, sizeof(filestr), "Items\\%s.CEL", ifdata.ifName);
+            QString itmGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
+            if (filePathLower.endsWith(itmGfxName)) {
+                if (!this->clipped) {
+                    dProgress() << tr("Item %1 is not clipped.").arg(nativeFilePath);
+                    result = true;
+                }
+                if (fs.height() < CEL_BLOCK_HEIGHT) {
+                    dProgress() << tr("Height of the item %1 is too low to calculate the width (%2 expected %3).").arg(nativeFilePath).arg(fs.height()).arg(CEL_BLOCK_HEIGHT);
+                    result = true;
+                }
+                if (fs.width() != ITEM_ANIM_WIDTH * assetMpl) {
+                    dProgress() << tr("Framewidth of the item %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fs.width()).arg(ITEM_ANIM_WIDTH);
+                    result = true;
+                }
+                if (gc != 1) {
+                    dProgress() << tr("Item %1 is groupped.").arg(nativeFilePath);
+                    result = true;
+                }
+                if (fc != ifdata.iAnimLen) {
+                    dProgress() << tr("Framecount of the item %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ifdata.iAnimLen);
+                    result = true;
+                }
+                for (int m = 0; m < NUM_CELMETA; m++) {
+                    if (this->getMeta(m)->isStored()) {
+                        dProgress() << tr("Meta %1 of the item %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(nativeFilePath);
+                        result = true;
+                    }
+                }
+                tt = true;
+                break;
+            }
+        }
+        for (const ObjFileData &ofdata : objfiledata) {
+            char filestr[DATA_ARCHIVE_MAX_PATH];
+            snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", ofdata.ofName);
+            QString obGfxName = QDir::toNativeSeparators(QString(filestr)).toLower();
+            if (filePathLower.endsWith(obGfxName)) {
+                if (!this->clipped) {
+                    dProgress() << tr("Object %1 is not clipped.").arg(nativeFilePath);
+                    result = true;
+                }
+                if (fs.height() < CEL_BLOCK_HEIGHT) {
+                    dProgress() << tr("Height of the object %1 is too low to calculate the width (%2 expected %3).").arg(nativeFilePath).arg(fs.height()).arg(CEL_BLOCK_HEIGHT);
+                    result = true;
+                }
+                if (gc != 1) {
+                    dProgress() << tr("Object %1 is groupped.").arg(nativeFilePath);
+                    result = true;
+                }
+                if (ofdata.oAnimLen != 0 && fc != ofdata.oAnimLen) {
+                    dProgress() << tr("Framecount of the object %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ofdata.oAnimLen);
+                    result = true;
+                }
+                for (int m = 0; m < NUM_CELMETA; m++) {
+                    if (this->getMeta(m)->isStored()) {
+                        dProgress() << tr("Meta %1 of the object %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(nativeFilePath);
+                        result = true;
+                    }
+                }
+                tt = true;
+                break;
+            }
+        }
+        if (typetested != nullptr) {
+            *typetested = tt;
+        } else if (!tt) {
+            dProgress() << tr("Unrecognized graphics (%1) -> Checking with game-code is skipped.").arg(nativeFilePath);
+            result = true;
+        }
     }
     return result;
 }
