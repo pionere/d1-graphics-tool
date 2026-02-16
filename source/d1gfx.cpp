@@ -1775,28 +1775,30 @@ bool D1Gfx::resize(const ResizeParam &params)
     return change;
 }
 
-void D1Gfx::mask()
+void D1Gfx::mask(int frameIndex)
 {
     if (this->getFrameCount() <= 1)
         return;
-    if (this->getFrameSize().isValid()) {
+    if (!this->getFrameSize().isValid()) {
         dProgressErr() << tr("Framesize is not constant");
         return;
     }
 
-    if (this->groupFrameIndices.size() <= 1) {
-        D1GfxFrame *frameA = this->frames[0];
+    if (this->getGroupCount() == 1) {
+        D1GfxFrame *frameA = this->frames[frameIndex];
         for (const D1GfxFrame *frameB : this->frames) {
             if (frameA->mask(frameB)) {
                 this->setModified();
             }
         }
     } else {
-        if (this->getGroupSize() < 0) {
+        const int gs = this->getGroupSize();
+        if (gs < 0) {
             dProgressErr() << tr("Groupsize is not constant");
             return;
         }
-        for (int n = this->groupFrameIndices[0].first; n <= this->groupFrameIndices[0].second; n++) {
+        const int gi = frameIndex / gs;
+        for (int n = this->groupFrameIndices[gi].first; n <= this->groupFrameIndices[gi].second; n++) {
             D1GfxFrame *frameA = this->frames[n];
             auto git = this->groupFrameIndices.begin();
             while (true) {
@@ -1804,7 +1806,7 @@ void D1Gfx::mask()
                 if (git == this->groupFrameIndices.end()) {
                     break;
                 }
-                const D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[0].first];
+                const D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[gi].first];
                 if (frameA->mask(frameB)) {
                     this->setModified();
                 }
@@ -3389,7 +3391,7 @@ bool D1Gfx::patchMonFrames(int gfxFileIndex, bool silent)
     case GFX_MON_SNAKEH: frameCount =  6 - 1; width = 160; height = 160; break;
     }
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -3448,7 +3450,7 @@ bool D1Gfx::patchRogueExtraPixels(int gfxFileIndex, bool silent)
     case GFX_PLR_RMBQM: frameCount = 16; width =  96; height =  96; break;
     }
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -3833,7 +3835,7 @@ bool D1Gfx::patchFallGDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 128;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -4103,7 +4105,7 @@ bool D1Gfx::patchMagmaDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 128;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -6472,7 +6474,7 @@ bool D1Gfx::patchGoatBDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 128;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -6977,7 +6979,7 @@ bool D1Gfx::patchSklAxDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 96;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -7257,7 +7259,7 @@ bool D1Gfx::patchSklBwDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 96;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -7382,7 +7384,7 @@ bool D1Gfx::patchSklSrDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 96;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -7786,7 +7788,7 @@ bool D1Gfx::patchUnrav(int gfxFileIndex, bool silent)
     constexpr int width = 96;
     constexpr int height = 128;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }
@@ -7859,7 +7861,7 @@ bool D1Gfx::patchZombieDie(bool silent)
     constexpr int width = 128;
     constexpr int height = 96;
 
-    if (this->getGroupCount() != NUM_DIRS) {
+    if (this->getGroupCount() < NUM_DIRS) {
         dProgressErr() << tr("Not enough frame groups in the graphics.");
         return false;
     }

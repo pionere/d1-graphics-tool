@@ -358,7 +358,7 @@ public:
     void inefficientFrames() const;
     int testResize(const ResizeParam &params);
     bool resize(const ResizeParam &params);
-    void mask();
+    void mask(int frameIndex);
     bool squash();
     void optimize();
     bool check(int assetMpl, bool *typetested = nullptr) const;

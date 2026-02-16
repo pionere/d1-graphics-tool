@@ -505,23 +505,6 @@ QRect D1Gfxset::getBoundary() const
     return rect;
 }
 
-bool D1Gfxset::checkGraphics(int frameCount, int gn, const D1Gfx* gfx) const
-{
-    bool result = false;
-    D1Gfx* currGfx = this->getGfx(gn);
-    if (gfx != nullptr && gfx != currGfx)
-        return false;
-    for (int i = 0; i < currGfx->getGroupCount(); i++) {
-        std::pair<int, int> gfi = currGfx->getGroupFrameIndices(i);
-        int fc = gfi.second - gfi.first + 1;
-        if (fc != frameCount) {
-            dProgress() << QApplication::tr("Framecount of group %1 of %2 does not match with the game (%3 vs %4).").arg(i + 1).arg(this->getGfxLabel(gn)).arg(fc).arg(frameCount);
-            result = true;
-        }
-    }
-    return result;
-}
-
 bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
 {
     bool result = false;
@@ -616,6 +599,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         if (gfx != nullptr && gfx != currGfx)
                             continue;
 
+                        const int gc = currGfx->getGroupCount();
+                        if (gc != NUM_DIRS) {
+                            dProgress() << QApplication::tr("Groupcount of %1 is not handled by the game (expected %2 got %3).").arg(this->getGfxLabel(gn)).arg(NUM_DIRS).arg(gc);
+                            result = true;
+                        }
                         const int fc = currGfx->getGroupSize();
                         if (gn == MA_STAND && fc > 0x7FFF) {
                             dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (InitMonster expects < %2 got %3).").arg(this->getGfxLabel(gn)).arg(0x7FFF).arg(fc);
@@ -692,6 +680,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 D1Gfx* currGfx = this->getGfx(gn);
                 if (gfx != nullptr && gfx != currGfx)
                     continue;
+                const int gc = currGfx->getGroupCount();
+                if (gc != NUM_DIRS) {
+                    dProgress() << QApplication::tr("Groupcount of %1 is not handled by the game (expected %2 got %3).").arg(this->getGfxLabel(gn)).arg(NUM_DIRS).arg(gc);
+                    result = true;
+                }
                 const unsigned fc = currGfx->getGroupSize();
                 if ((gn == PGT_WALK_TOWN || gn == PGT_WALK_DUNGEON) && fc != PLR_WALK_ANIMLEN) {
                     dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (StartWalk expects %2 got %3).").arg(this->getGfxLabel(gn)).arg(PLR_WALK_ANIMLEN).arg(fc);
@@ -724,10 +717,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
     return result;
 }
 
-void D1Gfxset::mask()
+void D1Gfxset::mask(int frameIndex)
 {
     int width, height, w, h;
     int groupSize, gs;
+    int groupCount, gc;
     bool first = true;
     for (D1Gfx *gfx : this->gfxList) {
         if (gfx->getFrameCount() == 0) continue;
@@ -741,6 +735,7 @@ void D1Gfxset::mask()
             dProgressErr() << QApplication::tr("Groupsize is not constant");
             return;
         }
+        gc = gfx->getGroupCount();
         w = fs.width();
         h = fs.height();
         if (!first) {
@@ -752,39 +747,41 @@ void D1Gfxset::mask()
                 dProgressErr() << QApplication::tr("Groupsize is not constant");
                 return;
             }
+            if (gc != groupCount) {
+                dProgressErr() << QApplication::tr("Groupcount is not constant");
+                return;
+            }
         } else {
             width = w;
             height = h;
             groupSize = gs;
+            groupCount = gc;
             first = false;
         }
     }
     for (D1Gfx *gfx : this->gfxList) {
-        gfx->mask();
+        gfx->mask(frameIndex);
     }
-    if (this->gfxList.count() <= 1)
+    D1Gfx *gfxA = this->baseGfx;
+    if (this->gfxList.indexOf(gfxA) < 0)
         return;
-    D1Gfx *gfxA = NULL;
     for (D1Gfx *gfxB : this->gfxList) {
         if (gfxB->getFrameCount() == 0) continue;
-        if (gfxA != NULL) {
-            if (gs == 1) {
-                D1GfxFrame *frameA = gfxA->getFrame(0);
-                D1GfxFrame *frameB = gfxB->getFrame(0);
+        if (gfxA->getGroupCount() == 1) {
+            D1GfxFrame *frameA = gfxA->getFrame(frameIndex);
+            D1GfxFrame *frameB = gfxB->getFrame(frameIndex);
+            if (frameA->mask(frameB)) {
+                gfxA->setModified();
+            }
+        } else {
+            const int gi = frameIndex / gs;
+            for (int n = 0; n < gs; n++) {
+                D1GfxFrame *frameA = gfxA->getFrame(gfxA->getGroupFrameIndices(gi).first + n);
+                D1GfxFrame *frameB = gfxB->getFrame(gfxB->getGroupFrameIndices(gi).first + n);
                 if (frameA->mask(frameB)) {
                     gfxA->setModified();
                 }
-            } else {
-                for (int n = 0; n < gs; n++) {
-                    D1GfxFrame *frameA = gfxA->getFrame(gfxA->getGroupFrameIndices(n).first);
-                    D1GfxFrame *frameB = gfxB->getFrame(gfxB->getGroupFrameIndices(n).first);
-                    if (frameA->mask(frameB)) {
-                        gfxA->setModified();
-                    }
-                }
             }
-        } else {
-            gfxA = gfxB;
         }
     }
 }

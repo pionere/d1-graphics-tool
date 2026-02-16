@@ -2933,10 +2933,21 @@ void MainWindow::on_actionMask_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
+    int frameIndex = 0;
+    if (this->celView != nullptr) {
+        frameIndex = this->celView->getCurrentFrameIndex();
+    }
+    if (this->levelCelView != nullptr) {
+        frameIndex = this->levelCelView->getCurrentFrameIndex();
+    }
+    if (this->gfxsetView != nullptr) {
+        frameIndex = this->gfxsetView->getCurrentFrameIndex();
+    }
+
     if (this->gfxset != nullptr)
         this->gfxset->mask();
     else
-        this->gfx->mask();
+        this->gfx->mask(frameIndex);
 
     // Clear loading message from status bar
     ProgressDialog::done();
