@@ -26,7 +26,8 @@ DEVILUTION_BEGIN_NAMESPACE
 #define FLAMETRAP_INACTIVE_FRAME 2
 
 int trapid;
-static BYTE* objanimdata[NUM_OFILE_TYPES] = { 0 };
+// static BYTE* objanimdata[NUM_OFILE_TYPES] = { 0 };
+// static int objanimdim[NUM_OFILE_TYPES];
 // int objectactive[MAXOBJECTS];
 /** Specifies the number of active objects. */
 int numobjects;
@@ -138,14 +139,17 @@ const char* const BookName[NUM_BOOKS] = {
 
 void AddObjectType(int ofindex)
 {
-	/*char filestr[DATA_ARCHIVE_MAX_PATH];
+#if 0
+	char filestr[DATA_ARCHIVE_MAX_PATH];
 
 	if (objanimdata[ofindex] != NULL) {
 		return;
 	}
 
 	snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", objfiledata[ofindex].ofName);
-	objanimdata[ofindex] = LoadFileInMem(filestr);*/
+	objanimdata[ofindex] = LoadFileInMem(filestr);
+	objanimdim[ofindex] = CelClippedWidth(objanimdata[ofindex]);
+#endif
 }
 
 void InitObjectGFX()
@@ -690,7 +694,7 @@ static int SetupObject(int type, int ox, int oy)
 		os->_oAnimCnt = random_low(146, os->_oAnimFrameLen);
 		os->_oAnimFrame = RandRangeLow(1, os->_oAnimLen);
 	}
-//	os->_oAnimWidth = ofd->oAnimWidth * ASSET_MPL;
+//	os->_oAnimWidth = objanimdim[type];
 //	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
 	os->_oSolidFlag = ofd->oSolidFlag;
 	os->_oBreak = ofd->oBreak;

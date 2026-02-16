@@ -599,32 +599,8 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
         }
     }
     switch (this->type) {
-    case D1GFX_SET_TYPE::Missile: {
-        // - test against game code if possible
-        if (false) { // this->getGfxCount() >= 1) {
-            QString filePath = this->getGfx(0)->getFilePath();
-            QString filePathLower = QDir::toNativeSeparators(filePath).toLower();
-            for (const MisFileData &mfdata : misfiledata) {
-                char pszName[DATA_ARCHIVE_MAX_PATH];
-                int n = mfdata.mfAnimFAmt;
-                const char* name = mfdata.mfName;
-                const char* fmt;
-                if (name == NULL)
-                    continue;
-                fmt = n == 1 ? "Missiles\\%s.CL2" : "Missiles\\%s%d.CL2";
-                snprintf(pszName, sizeof(pszName), fmt, name, 1);
-                QString misGfxName = QDir::toNativeSeparators(QString(pszName)).toLower();
-                if (filePathLower.endsWith(misGfxName)) {
-                    for (int gn = 0; gn < this->getGfxCount(); gn++) {
-                        int frameCount = gn < lengthof(mfdata.mfAnimLen) ? mfdata.mfAnimLen[gn] : 0;
-                        result |= this->checkGraphics(frameCount, gn, gfx);
-                    }
-                    typetested = true;
-                    break;
-                }
-            }
-        }
-    } break;
+    case D1GFX_SET_TYPE::Missile:
+        break;
     case D1GFX_SET_TYPE::Monster: {
         // - test against game code if possible
         if (this->getGfxCount() >= (int)MA_STAND + 1) {
@@ -641,7 +617,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                             continue;
 
                         const int fc = currGfx->getGroupSize();
-                        if (gn == MA_STAND && fc > 0x7FFFF) {
+                        if (gn == MA_STAND && fc > 0x7FFF) {
                             dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (InitMonster expects < %2 got %3).").arg(this->getGfxLabel(gn)).arg(0x7FFF).arg(fc);
                             result = true;
                         }
@@ -663,6 +639,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                         if ((gn == MA_WALK || gn == MA_ATTACK || gn == MA_SPECIAL) && fc * mfdata.moAnimFrameLen[gn] >= SQUELCH_LOW) {
                             dProgress() << QApplication::tr("Animation (%1) too long to finish before relax (expected < %2 got %3).").arg(this->getGfxLabel(gn)).arg(SQUELCH_LOW).arg(fc * mfdata.moAnimFrameLen[gn]);
                             result = true;
+                        }
+                        for (int m = 0; m < NUM_CELMETA; m++) {
+                            if (currGfx->getMeta(m)->isStored()) {
+                                dProgress() << tr("Meta %1 of the monster animation %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(this->getGfxLabel(gn));
+                            }
                         }
                     }
                     typetested = true;
@@ -723,6 +704,12 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
                 if (gn == PGT_ATTACK && plr._pAFNum > fc) {
                     dProgress() << QApplication::tr("Framecount of %1 is not handled by the game (PlrDoSpell expects >= %2 got %3).").arg(this->getGfxLabel(gn)).arg(plr._pAFNum).arg(fc);
                     result = true;
+                }
+                for (int m = 0; m < NUM_CELMETA; m++) {
+                    if (currGfx->getMeta(m)->isStored()) {
+                        dProgress() << tr("Meta %1 of the player animation %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(this->getGfxLabel(gn));
+                        result = true;
+                    }
                 }
             }
 
