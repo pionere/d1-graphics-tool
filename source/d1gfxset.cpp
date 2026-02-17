@@ -767,6 +767,7 @@ void D1Gfxset::mask(int frameIndex, bool subtract)
         return;
     for (D1Gfx *gfxB : this->gfxList) {
         if (gfxB->getFrameCount() == 0) continue;
+        if (gfxA == gfxB) continue;
         if (gfxA->getGroupCount() == 1) {
             D1GfxFrame *frameA = gfxA->getFrame(frameIndex);
             D1GfxFrame *frameB = gfxB->getFrame(frameIndex);

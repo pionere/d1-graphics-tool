@@ -1840,6 +1840,7 @@ void D1Gfx::mask(int frameIndex, bool subtract)
     if (this->getGroupCount() == 1) {
         D1GfxFrame *frameA = this->frames[frameIndex];
         for (D1GfxFrame *frameB : this->frames) {
+            if (frameA == frameB) continue;
             if (subtract) {
                 if (frameB->subtract(frameA)) {
                     this->setModified();
@@ -1866,6 +1867,7 @@ void D1Gfx::mask(int frameIndex, bool subtract)
                     break;
                 }
                 D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[gi].first];
+                if (frameA == frameB) continue;
                 if (subtract) {
                     if (frameB->subtract(frameA)) {
                         this->setModified();
