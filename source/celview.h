@@ -231,7 +231,7 @@ private:
 
     D1Pal *pal;
     D1Gfx *gfx;
-    int selectedColor = -1;
+    int selectedColor = 0;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     QList<int> animOrder;

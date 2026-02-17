@@ -205,7 +205,7 @@ private:
     D1Gfxset *gfxset;
     QPushButton *buttons[16];
     D1GFX_SET_TYPE currType = D1GFX_SET_TYPE::Unknown;
-    int selectedColor = -1;
+    int selectedColor = 0;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     QList<int> animOrder;
