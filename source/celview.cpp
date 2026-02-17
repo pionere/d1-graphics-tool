@@ -1119,7 +1119,7 @@ void CelView::displayFrame()
     // Getting the current frame to display
     Qt::CheckState compType = this->ui->showComponentsCheckBox->checkState();
     int component = compType == Qt::Unchecked ? 0 : (compType == Qt::PartiallyChecked ? this->ui->componentsComboBox->currentIndex() : -1);
-    const int outline = this->ui->showGridCheckBox->isChecked() ? this->selectedColor : -1;
+    const int outline = this->ui->showOutlineCheckBox->isChecked() ? this->selectedColor : -1;
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex, component, outline) : QImage();
 
     // add grid if requested
@@ -1333,6 +1333,7 @@ void CelView::palColorsSelected(const std::vector<quint8> &indices)
     } else {
         this->selectedColor = indices.front();
     }
+    this->displayFrame();
 }
 
 void CelView::on_newComponentPushButtonClicked()
