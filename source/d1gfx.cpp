@@ -526,6 +526,7 @@ bool D1GfxFrame::flipVertical()
 bool D1GfxFrame::mask(const D1GfxFrame *frame)
 {
     bool result = false;
+    // assert(this->width == frame->width && this->height == frame->height);
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             D1GfxPixel pixelA = this->pixels[y][x]; // this->getPixel(x, y);
@@ -535,6 +536,25 @@ bool D1GfxFrame::mask(const D1GfxFrame *frame)
                 this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
                 result = true;
             }
+        }
+    }
+    return result;
+}
+
+bool D1GfxFrame::subtract(const D1GfxFrame *frame)
+{
+    bool result = false;
+    // assert(this->width == frame->width && this->height == frame->height);
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            D1GfxPixel pixelA = this->pixels[y][x]; // this->getPixel(x, y);
+            if (pixelA.isTransparent()) continue;
+            D1GfxPixel pixelB = frame->pixels[y][x]; // frame->getPixel(x, y);
+            if (pixelB.isTransparent()) continue;
+            // if (pixelA.getPaletteIndex() == pixelB.getPaletteIndex()) {
+                this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                result = true;
+            // }
         }
     }
     return result;
@@ -1016,8 +1036,41 @@ QRect D1Gfx::getFrameRect(int frameIndex, bool full) const
     return rect;
 }
 
-static void drawFrame(const D1GfxFrame *frame, const D1Pal *pal, QImage &image, int ox, int oy)
+static void drawOutline(const D1GfxFrame *frame, const QColor &color, QImage &image, int ox, int oy)
 {
+    const int iw = image.width();
+    const int ih = image.height();
+    const int sx = ox > 0 ? 0 : 1;
+    const int sy = oy > 0 ? 0 : 1;
+    const int w = frame->getWidth();
+    const int h = frame->getHeight();
+    const int ex = (iw <= ox + w) ? w - 1 : w;
+    const int ey = (ih <= oy + h) ? h - 1 : h;
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
+    destBits += (sy + oy) * iw + (ox + sx);
+    const QRgb rgb = color.rgba();
+    for (int y = sy; y < ey; y++) {
+        for (int x = sx; x < ex; x++, destBits++) {
+            D1GfxPixel d1pix = frame->getPixel(x, y);
+
+            if (d1pix.isTransparent() || d1pix.getPaletteIndex() == 0)
+                continue;
+
+            *(destBits - iw) = rgb;
+            *(destBits - 1) = rgb;
+            *(destBits + 1) = rgb;
+            *(destBits + iw) = rgb;
+        }
+        destBits += image.width() - (ex - sx);
+    }
+}
+
+static void drawFrame(const D1GfxFrame *frame, const D1Pal *pal, QImage &image, int ox, int oy, int outline)
+{
+    if (outline >= 0) {
+        QColor color = pal->getColor(outline);
+        drawOutline(frame,  color, image, ox, oy);
+    }
     QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
     destBits += oy * image.width() + ox;
     for (int y = 0; y < frame->getHeight(); y++) {
@@ -1038,7 +1091,7 @@ static void drawFrame(const D1GfxFrame *frame, const D1Pal *pal, QImage &image, 
 }
 
 // builds QImage from a D1CelFrame of given index
-QImage D1Gfx::getFrameImage(int frameIndex, int component) const
+QImage D1Gfx::getFrameImage(int frameIndex, int component, int outline) const
 {
     if (this->palette == nullptr || frameIndex < 0 || frameIndex >= this->frames.count()) {
 #ifdef QT_DEBUG
@@ -1079,11 +1132,11 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
             const D1GfxFrame *compFrame = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
             int ox = nextCompFrame->cfOffsetX + rect.x();
             int oy = nextCompFrame->cfOffsetY + rect.y();
-            drawFrame(compFrame, this->palette, image, ox, oy);
+            drawFrame(compFrame, this->palette, image, ox, oy, outline);
         }
     }
 
-    drawFrame(this->frames[frameIndex], this->palette, image, rect.x(), rect.y());
+    drawFrame(this->frames[frameIndex], this->palette, image, rect.x(), rect.y(), outline);
 
     if (component != 0) {
         while (true) {
@@ -1112,7 +1165,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component) const
             const D1GfxFrame *compFrameGfx = nextComp->gfx->frames[nextCompFrame->cfFrameRef - 1];
             int ox = nextCompFrame->cfOffsetX + rect.x();
             int oy = nextCompFrame->cfOffsetY + rect.y();
-            drawFrame(compFrameGfx, this->palette, image, ox, oy);
+            drawFrame(compFrameGfx, this->palette, image, ox, oy, outline);
         }
     }
 
@@ -1775,7 +1828,7 @@ bool D1Gfx::resize(const ResizeParam &params)
     return change;
 }
 
-void D1Gfx::mask(int frameIndex)
+void D1Gfx::mask(int frameIndex, bool subtract)
 {
     if (this->getFrameCount() <= 1)
         return;
@@ -1786,9 +1839,15 @@ void D1Gfx::mask(int frameIndex)
 
     if (this->getGroupCount() == 1) {
         D1GfxFrame *frameA = this->frames[frameIndex];
-        for (const D1GfxFrame *frameB : this->frames) {
-            if (frameA->mask(frameB)) {
-                this->setModified();
+        for (D1GfxFrame *frameB : this->frames) {
+            if (subtract) {
+                if (frameB->subtract(frameA)) {
+                    this->setModified();
+                }
+            } else {
+                if (frameA->mask(frameB)) {
+                    this->setModified();
+                }
             }
         }
     } else {
@@ -1806,9 +1865,15 @@ void D1Gfx::mask(int frameIndex)
                 if (git == this->groupFrameIndices.end()) {
                     break;
                 }
-                const D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[gi].first];
-                if (frameA->mask(frameB)) {
-                    this->setModified();
+                D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[gi].first];
+                if (subtract) {
+                    if (frameB->subtract(frameA)) {
+                        this->setModified();
+                    }
+                } else {
+                    if (frameA->mask(frameB)) {
+                        this->setModified();
+                    }
                 }
             }
         }

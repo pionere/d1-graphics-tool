@@ -120,6 +120,7 @@ public:
     bool flipHorizontal();
     bool flipVertical();
     bool mask(const D1GfxFrame *frame);
+    bool subtract(const D1GfxFrame *frame);
     bool optimize(D1CEL_TYPE type);
 
     // functions for smk-frames
@@ -336,7 +337,7 @@ public:
     QSize getFrameSize() const;
     int getGroupSize() const;
     QString getFramePixels(int frameIndex, bool values) const;
-    QImage getFrameImage(int frameIndex, int component = 0) const;
+    QImage getFrameImage(int frameIndex, int component = 0, int outline = -1) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
     void insertFrame(int frameIndex, int width, int height);
     D1GfxFrame *insertFrame(int frameIndex);
@@ -358,7 +359,7 @@ public:
     void inefficientFrames() const;
     int testResize(const ResizeParam &params);
     bool resize(const ResizeParam &params);
-    void mask(int frameIndex);
+    void mask(int frameIndex, bool subtract);
     bool squash();
     void optimize();
     bool check(int assetMpl, bool *typetested = nullptr) const;

@@ -858,6 +858,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="showOutlineCheckBox">
+          <property name="toolTip">
+           <string>Draw outline of the graphics</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="LineEditWidget" name="assetMplEdit">
           <property name="charWidth">
            <number>2</number>

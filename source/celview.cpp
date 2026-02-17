@@ -1119,7 +1119,8 @@ void CelView::displayFrame()
     // Getting the current frame to display
     Qt::CheckState compType = this->ui->showComponentsCheckBox->checkState();
     int component = compType == Qt::Unchecked ? 0 : (compType == Qt::PartiallyChecked ? this->ui->componentsComboBox->currentIndex() : -1);
-    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex, component) : QImage();
+    const int outline = this->ui->showGridCheckBox->isChecked() ? this->selectedColor : -1;
+    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex, component, outline) : QImage();
 
     // add grid if requested
     if (this->ui->showGridCheckBox->isChecked()) {
@@ -1325,6 +1326,15 @@ void CelView::ShowContextMenu(const QPoint &pos)
     contextMenu.exec(mapToGlobal(pos));
 }
 
+void CelView::palColorsSelected(const std::vector<quint8> &indices)
+{
+    if (indices.empty()) {
+        this->selectedColor = -1;
+    } else {
+        this->selectedColor = indices.front();
+    }
+}
+
 void CelView::on_newComponentPushButtonClicked()
 {
     QString gfxFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
@@ -1522,6 +1532,11 @@ void CelView::on_lastGroupButton_clicked()
 }
 
 void CelView::on_showGridCheckBox_clicked()
+{
+    this->displayFrame();
+}
+
+void CelView::on_showOutlineCheckBox_clicked()
 {
     this->displayFrame();
 }

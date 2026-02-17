@@ -1740,6 +1740,13 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (this->paintWidget != nullptr) {
         QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintWidget, &PaintWidget::palColorsSelected);
     }
+    // Refresh cel/gfxset-view when the selected color is changed
+    if (this->celView != nullptr) {
+        QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->celView, &CelView::palColorsSelected);
+    }
+    if (this->gfxsetView != nullptr) {
+        QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->gfxsetView, &GfxsetView::palColorsSelected);
+    }
     // Refresh tbl-view when the selected color is changed
     if (this->tblView != nullptr) {
         QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->tblView, &TblView::palColorsSelected);
@@ -2931,6 +2938,8 @@ void MainWindow::on_actionSquash_triggered()
 
 void MainWindow::on_actionMask_triggered()
 {
+    const bool subtract = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     int frameIndex = 0;
@@ -2945,9 +2954,9 @@ void MainWindow::on_actionMask_triggered()
     }
 
     if (this->gfxset != nullptr)
-        this->gfxset->mask(frameIndex);
+        this->gfxset->mask(frameIndex, subtract);
     else
-        this->gfx->mask(frameIndex);
+        this->gfx->mask(frameIndex, subtract);
 
     // Clear loading message from status bar
     ProgressDialog::done();
