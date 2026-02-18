@@ -1348,6 +1348,7 @@ QString D1GfxMeta::metaTypeToStr(int type)
     case CELMETA_DIMENSIONS_PER_FRAME: return tr("Dimensions Per Frame");
     case CELMETA_ANIMORDER:            return tr("Animation Order");
     case CELMETA_ANIMDELAY:            return tr("Animation Delay");
+    case CELMETA_ANIMOFFSET:           return tr("Animation Offset");
     case CELMETA_ACTIONFRAMES:         return tr("Action Frames");
     }
     return tr("Unknown");

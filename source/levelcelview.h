@@ -147,6 +147,7 @@ public:
     void updateEntityOptions();
     void displayFrame();
     void toggleBottomPanel();
+    void zoomInOut(int dir);
 
     void scrollTo(int posx, int posy); // initiate scrolling
     void scrollToCurrent();            // do the scrolling

@@ -11,8 +11,14 @@ GfxComponentDialog::GfxComponentDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::GfxComponentDialog())
 {
-    ui->setupUi(this);
+    this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
+    QScrollBar *sb;
+    sb = this->ui->celGraphicsView->horizontalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+    sb = this->ui->celGraphicsView->verticalScrollBar();
+    sb->installEventFilter(new WheelEventFilter(sb));
+
     this->on_zoomEdit_escPressed();
 
     // connect esc events of LineEditWidgets

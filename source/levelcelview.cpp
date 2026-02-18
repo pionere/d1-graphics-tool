@@ -3808,6 +3808,15 @@ void LevelCelView::toggleBottomPanel()
     layout->setVisible(layout->isHidden());
 }
 
+void LevelCelView::zoomInOut(int dir)
+{
+    if (dir >= 0) {
+        this->on_zoomInButton_clicked();
+    } else {
+        this->on_zoomOutButton_clicked();
+    }
+}
+
 void LevelCelView::setFrameIndex(int frameIndex)
 {
     const int frameCount = this->gfx->getFrameCount();
