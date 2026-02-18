@@ -541,7 +541,7 @@ bool D1GfxFrame::mask(const D1GfxFrame *frame)
     return result;
 }
 
-bool D1GfxFrame::subtract(const D1GfxFrame *frame)
+bool D1GfxFrame::subtract(const D1GfxFrame *frame, unsigned flags)
 {
     bool result = false;
     // assert(this->width == frame->width && this->height == frame->height);
@@ -552,9 +552,10 @@ bool D1GfxFrame::subtract(const D1GfxFrame *frame)
             D1GfxPixel pixelB = frame->pixels[y][x]; // frame->getPixel(x, y);
             if (pixelB.isTransparent()) continue;
             // if (pixelA.getPaletteIndex() == pixelB.getPaletteIndex()) {
+            if ((flags & 2) || pixelA.getPaletteIndex() == pixelB.getPaletteIndex()) {
                 this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
                 result = true;
-            // }
+            }
         }
     }
     return result;
@@ -1828,7 +1829,7 @@ bool D1Gfx::resize(const ResizeParam &params)
     return change;
 }
 
-void D1Gfx::mask(int frameIndex, bool subtract)
+void D1Gfx::mask(int frameIndex, unsigned flags)
 {
     if (this->getFrameCount() <= 1)
         return;
@@ -1841,8 +1842,8 @@ void D1Gfx::mask(int frameIndex, bool subtract)
         D1GfxFrame *frameA = this->frames[frameIndex];
         for (D1GfxFrame *frameB : this->frames) {
             if (frameA == frameB) continue;
-            if (subtract) {
-                if (frameB->subtract(frameA)) {
+            if (flags & 1) {
+                if (frameB->subtract(frameA, flags)) {
                     this->setModified();
                 }
             } else {
@@ -1868,8 +1869,8 @@ void D1Gfx::mask(int frameIndex, bool subtract)
                 }
                 D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[gi].first];
                 if (frameA == frameB) continue;
-                if (subtract) {
-                    if (frameB->subtract(frameA)) {
+                if (flags & 1) {
+                    if (frameB->subtract(frameA, flags)) {
                         this->setModified();
                     }
                 } else {

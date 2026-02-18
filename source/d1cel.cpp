@@ -25,7 +25,7 @@ quint32 so = startOffset;
         switch (type) {
         case CELMETA_DIMENSIONS: {
             if (endOffset < startOffset + 8) {
-                dProgressErr() << QApplication::tr("Not enough dimensions in the meta info.");
+                dProgressErr() << QApplication::tr("Not enough space for dimensions in the meta info.");
                 return false;
             }
             startOffset += 8;
@@ -61,6 +61,21 @@ quint32 so = startOffset;
             in >> delay;
 
             meta->setContent(QString::number(delay));
+        } break;
+        case CELMETA_ANIMOFFSET: {
+            if (endOffset < startOffset + 4) {
+                dProgressErr() << QApplication::tr("Not enough space for anim offset in the meta info.");
+                return false;
+            }
+            startOffset += 4;
+
+            qint16 width;
+            qint16 height;
+            in >> width;
+            in >> height;
+
+            meta->setWidth(width);
+            meta->setHeight(height);
         } break;
         case CELMETA_ANIMORDER:
         case CELMETA_ACTIONFRAMES: {

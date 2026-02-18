@@ -2939,6 +2939,8 @@ void MainWindow::on_actionSquash_triggered()
 void MainWindow::on_actionMask_triggered()
 {
     const bool subtract = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool matchColors = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    const unsigned flags = (subtract ? 1 : 0) | (matchColors ? 2 : 0);
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
@@ -2954,9 +2956,9 @@ void MainWindow::on_actionMask_triggered()
     }
 
     if (this->gfxset != nullptr)
-        this->gfxset->mask(frameIndex, subtract);
+        this->gfxset->mask(frameIndex, flags);
     else
-        this->gfx->mask(frameIndex, subtract);
+        this->gfx->mask(frameIndex, flags);
 
     // Clear loading message from status bar
     ProgressDialog::done();

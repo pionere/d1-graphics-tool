@@ -717,7 +717,7 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
     return result;
 }
 
-void D1Gfxset::mask(int frameIndex, bool subtract)
+void D1Gfxset::mask(int frameIndex, unsigned flags)
 {
     int width, height, w, h;
     int groupSize, gs;
@@ -760,7 +760,7 @@ void D1Gfxset::mask(int frameIndex, bool subtract)
         }
     }
     for (D1Gfx *gfx : this->gfxList) {
-        gfx->mask(frameIndex, subtract);
+        gfx->mask(frameIndex, flags);
     }
     D1Gfx *gfxA = this->baseGfx;
     if (this->gfxList.indexOf(gfxA) < 0)
@@ -771,8 +771,8 @@ void D1Gfxset::mask(int frameIndex, bool subtract)
         if (gfxA->getGroupCount() == 1) {
             D1GfxFrame *frameA = gfxA->getFrame(frameIndex);
             D1GfxFrame *frameB = gfxB->getFrame(frameIndex);
-            if (subtract) {
-                if (frameB->subtract(frameA)) {
+            if (flags & 1) {
+                if (frameB->subtract(frameA, flags)) {
                     gfxB->setModified();
                 }
             } else {
@@ -785,8 +785,8 @@ void D1Gfxset::mask(int frameIndex, bool subtract)
             for (int n = 0; n < gs; n++) {
                 D1GfxFrame *frameA = gfxA->getFrame(gfxA->getGroupFrameIndices(gi).first + n);
                 D1GfxFrame *frameB = gfxB->getFrame(gfxB->getGroupFrameIndices(gi).first + n);
-                if (subtract) {
-                    if (frameB->subtract(frameA)) {
+                if (flags & 1) {
+                    if (frameB->subtract(frameA, flags)) {
                         gfxB->setModified();
                     }
                 } else {
