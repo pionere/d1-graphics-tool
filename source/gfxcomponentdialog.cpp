@@ -1,6 +1,7 @@
 #include "gfxcomponentdialog.h"
 
 #include <QMessageBox>
+#include <QScrollBar>
 
 #include "config.h"
 #include "mainwindow.h"
