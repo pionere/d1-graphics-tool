@@ -515,3 +515,41 @@ void GfxComponentDialog::changeEvent(QEvent *event)
     }
     QDialog::changeEvent(event);
 }
+
+void GfxComponentDialog::zoomInOut(int dir)
+{
+    if (dir >= 0) {
+        this->on_zoomInButton_clicked();
+    } else {
+        this->on_zoomOutButton_clicked();
+    }
+}
+
+void GfxComponentDialog::wheelEvent(QWheelEvent *event)
+{
+    const bool noZoom = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    QPoint numPixels = event->pixelDelta();
+    QPoint numDegrees = event->angleDelta() / 8;
+    int dir = 0;
+    if (numPixels.isNull()) {
+        numPixels = numDegrees / 15;
+    }
+    if (!numPixels.isNull()) {
+        dir = numPixels.x();
+        int dy = numPixels.y();
+        if (abs(dy) > abs(dir)) {
+            dir = dy;
+        }
+    }
+    if (dir != 0) {
+        if (noZoom) {
+            ;
+        } else {
+            this->zoomInOut(dir);
+        }
+    }
+
+    event->accept();
+}
+

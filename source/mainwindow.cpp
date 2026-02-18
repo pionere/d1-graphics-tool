@@ -11,6 +11,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLocale>
+#include <QMap>
 #include <QMessageBox>
 #include <QMimeData>
 #include <QMimeDatabase>
@@ -2050,6 +2051,9 @@ void MainWindow::addFrames(bool append)
         this->openImageFiles(IMAGE_FILE_MODE::FRAME, files, append);
         return;
     }
+
+    const bool maskFrame = append && QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+
     if (this->celView != nullptr) {
         this->celView->createFrame(append);
     }
@@ -2058,6 +2062,39 @@ void MainWindow::addFrames(bool append)
     }
     if (this->gfxsetView != nullptr) {
         this->gfxsetView->createFrame(append);
+    }
+
+    if (maskFrame) {
+        // create a 'mask' frame
+        const QSize fs = this->gfx->getFrameSize();
+        if (fs.isValid()) {
+            const int fc = this->gfx->getFrameCount();
+            D1GfxFrame *newFrame = this->gfx->getFrame(fc - 1);
+            for (int y = 0; y < fs.height(); y++) {
+                for (int x = 0; x < fs.width(); x++) {
+                    QMap<quint8, int> votes;
+                    for (int i = 0; i < fc - 1; i++) {
+                        const D1GfxFrame *frame = this->gfx->getFrame(i);
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (pixel.isTransparent()) {
+                            votes.clear();
+                            break;
+                        }
+                        votes[pixel.getPaletteIndex()]++;
+                    }
+                    if (votes.isEmpty()) continue;
+                    int best = 0;
+                    quint8 color = 0;
+                    for (auto v : votes) {
+                        if (v.value() > best) {
+                            best = v.value();
+                            color = v.key();
+                        }
+                    }
+                    newFrame->setPixel(x, y, D1GfxPixel::colorPixel(color));
+                }
+            }
+        }
     }
 
     // update palettes
