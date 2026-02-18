@@ -2085,10 +2085,10 @@ void MainWindow::addFrames(bool append)
                     if (votes.isEmpty()) continue;
                     int best = 0;
                     quint8 color = 0;
-                    for (auto v : votes) {
-                        if (v.value() > best) {
-                            best = v.value();
-                            color = v.key();
+                    for (auto it = votes.begin(); it != votes.end(); it++) {
+                        if (it.value() > best) {
+                            best = it.value();
+                            color = it.key();
                         }
                     }
                     newFrame->setPixel(x, y, D1GfxPixel::colorPixel(color));
