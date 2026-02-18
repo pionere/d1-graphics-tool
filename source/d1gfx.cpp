@@ -595,6 +595,21 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 gaps.push_back(QPair<int, int>(sx, this->width - sx));
             }
 
+            if (maskFrame) {
+                for (auto it = gaps.begin(); it != gaps.end(); ) {
+                    const bool trLeft = it->first != 0 && this->pixels[y][it->first - 1].isTransparent();
+                    const bool trRight = it->first + it->second != this->width && this->pixels[y][it->first + it->second].isTransparent();
+                    if (!trLeft && !trRight) {
+                        it++;
+                        continue;
+                    }
+                    for (int x = it->first; x < it->first + it->second; x++) {
+                        result |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                    it = gaps.erase(it);
+                }
+            }
+
             for (auto it = gaps.begin(); it != gaps.end(); ) {
                 bool shortgap = it->second <= 2;
                 if (shortgap) {
