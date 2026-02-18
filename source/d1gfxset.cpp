@@ -776,7 +776,7 @@ void D1Gfxset::mask(int frameIndex, unsigned flags)
                     gfxB->setModified();
                 }
             } else {
-                if (frameA->mask(frameB)) {
+                if (frameA->mask(frameB, flags)) {
                     gfxA->setModified();
                 }
             }
@@ -790,7 +790,7 @@ void D1Gfxset::mask(int frameIndex, unsigned flags)
                         gfxB->setModified();
                     }
                 } else {
-                    if (frameA->mask(frameB)) {
+                    if (frameA->mask(frameB, flags)) {
                         gfxA->setModified();
                     }
                 }

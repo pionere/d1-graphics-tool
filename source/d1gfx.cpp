@@ -523,7 +523,7 @@ bool D1GfxFrame::flipVertical()
     return result;
 }
 
-bool D1GfxFrame::mask(const D1GfxFrame *frame)
+bool D1GfxFrame::mask(const D1GfxFrame *frame, unsigned flags)
 {
     bool result = false;
     // assert(this->width == frame->width && this->height == frame->height);
@@ -532,10 +532,11 @@ bool D1GfxFrame::mask(const D1GfxFrame *frame)
             D1GfxPixel pixelA = this->pixels[y][x]; // this->getPixel(x, y);
             if (pixelA.isTransparent()) continue;
             D1GfxPixel pixelB = frame->pixels[y][x]; // frame->getPixel(x, y);
-            if (pixelB.isTransparent() || pixelA.getPaletteIndex() != pixelB.getPaletteIndex()) {
-                this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
-                result = true;
+            if (!pixelB.isTransparent()) {
+                if ((flags & 2) || pixelA.getPaletteIndex() == pixelB.getPaletteIndex()) continue;
             }
+            this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
+            result = true;
         }
     }
     return result;
@@ -1847,7 +1848,7 @@ void D1Gfx::mask(int frameIndex, unsigned flags)
                     this->setModified();
                 }
             } else {
-                if (frameA->mask(frameB)) {
+                if (frameA->mask(frameB, flags)) {
                     this->setModified();
                 }
             }
@@ -1874,7 +1875,7 @@ void D1Gfx::mask(int frameIndex, unsigned flags)
                         this->setModified();
                     }
                 } else {
-                    if (frameA->mask(frameB)) {
+                    if (frameA->mask(frameB, flags)) {
                         this->setModified();
                     }
                 }
