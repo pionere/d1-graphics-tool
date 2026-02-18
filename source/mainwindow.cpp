@@ -2052,7 +2052,7 @@ void MainWindow::addFrames(bool append)
         return;
     }
 
-    const bool maskFrame = append && QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    const bool maskFrame = append && (QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier);
 
     if (this->celView != nullptr) {
         this->celView->createFrame(append);
