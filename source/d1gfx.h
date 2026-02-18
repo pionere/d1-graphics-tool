@@ -121,7 +121,7 @@ public:
     bool flipVertical();
     bool mask(const D1GfxFrame *frame, unsigned flags);
     bool subtract(const D1GfxFrame *frame, unsigned flags);
-    bool optimize(D1CEL_TYPE type);
+    bool optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame);
 
     // functions for smk-frames
     D1Pal* getFramePal() const;
@@ -361,7 +361,7 @@ public:
     bool resize(const ResizeParam &params);
     void mask(int frameIndex, unsigned flags);
     bool squash();
-    void optimize();
+    void optimize(bool maskedGfx);
     bool check(int assetMpl, bool *typetested = nullptr) const;
 
     D1CEL_TYPE getType() const;

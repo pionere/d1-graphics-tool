@@ -2999,8 +2999,8 @@ void MainWindow::on_actionOptimize_triggered()
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    if (!maskedGfx) {
-        this->gfx->optimize();
+    if (true) { // !maskedGfx) {
+        this->gfx->optimize(maskedGfx);
     } else {
         const QSize fs = this->gfx->getFrameSize();
         if (fs.isValid()) {
