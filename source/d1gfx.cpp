@@ -578,6 +578,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 int back_rle;
             } RleMatch;
             for (int y = 0; y < this->height; y++) {
+                dProgress() << QApplication::tr("line %1").arg(y);
                 QList<RleMatch> matches;
                 int rle = 0;
                 RleMatch *lastMatch = nullptr;
