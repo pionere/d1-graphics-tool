@@ -82,7 +82,7 @@ EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 startColorIndex,
     : QUndoCommand(nullptr)
     , trn(t)
 {
-    for (quint8 i = startColorIndex; i <= endColorIndex; i++) {
+    for (unsigned i = startColorIndex; i <= endColorIndex; i++) {
         this->modTranslations.push_back(std::pair<quint8, quint8>(i, nt == nullptr ? i : (*nt)[i - startColorIndex]));
     }
 }
