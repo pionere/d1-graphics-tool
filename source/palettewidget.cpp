@@ -15,8 +15,6 @@
 #include "pushbuttonwidget.h"
 #include "ui_palettewidget.h"
 
-#include "dungeon/all.h"
-
 #define COLORIDX_TRANSPARENT -1
 
 enum class COLORFILTER_TYPE {
@@ -84,11 +82,9 @@ EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 startColorIndex,
     : QUndoCommand(nullptr)
     , trn(t)
 {
-    LogErrorF("EditTranslationCommand 0 %d %d : %d", nt ? nt->size() : 0, startColorIndex, endColorIndex);
     for (unsigned i = startColorIndex; i <= endColorIndex; i++) {
         this->modTranslations.push_back(std::pair<quint8, quint8>(i, nt == nullptr ? i : (*nt)[i - startColorIndex]));
     }
-    LogErrorF("EditTranslationCommand 1");
 }
 
 EditTranslationCommand::EditTranslationCommand(D1Trn *t, const std::vector<std::pair<quint8, quint8>> &mt)
@@ -411,18 +407,16 @@ void PaletteWidget::checkTranslationsSelection(const std::vector<quint8> &indexe
         QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
         return;
     }
-    LogErrorF("checkTranslationsSelection 0 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
+
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditTranslationCommand *command = new EditTranslationCommand(
         this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &indexes);
-    LogErrorF("checkTranslationsSelection 1 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
     QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
-    LogErrorF("checkTranslationsSelection 2 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
+
     this->undoStack->push(command);
-    LogErrorF("checkTranslationsSelection 3 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
+
     emit this->colorPicking_stopped(); // finish color picking
-    LogErrorF("checkTranslationsSelection 4 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
 }
 
 QList<QPair<int, QColor>> clipboardToColors()
@@ -594,7 +588,6 @@ void PaletteWidget::changeColorSelection(int dir, bool extend)
 
 void PaletteWidget::finishColorSelection()
 {
-    LogErrorF("finishColorSelection 0 %d %d", this->selectedFirstColorIndex, this->selectedLastColorIndex);
     if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
         // If only one color is selected which is the same as before -> deselect the colors
         if (this->prevSelectedColorIndex == this->selectedFirstColorIndex) {
@@ -605,22 +598,21 @@ void PaletteWidget::finishColorSelection()
         // If second selected color has an index less than the first one swap them
         std::swap(this->selectedFirstColorIndex, this->selectedLastColorIndex);
     }
-    LogErrorF("finishColorSelection 1 %d %d", this->selectedFirstColorIndex, this->selectedLastColorIndex);
+
     this->updateFields();
-    LogErrorF("finishColorSelection 2 %d %d", this->selectedFirstColorIndex, this->selectedLastColorIndex);
+
     // emit selected colors
     std::vector<quint8> indexes;
     for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex && i != COLORIDX_TRANSPARENT; i++)
         indexes.push_back(i);
-    LogErrorF("finishColorSelection 3 %d %d", this->selectedFirstColorIndex, this->selectedLastColorIndex);
+
     emit this->colorsSelected(indexes);
-    LogErrorF("finishColorSelection 4 %d %d : %d", this->selectedFirstColorIndex, this->selectedLastColorIndex, this->pickingTranslationColor);
+
     if (this->pickingTranslationColor) {
         emit this->colorsPicked(indexes);
     } else {
         this->initStopColorPicking();
     }
-    LogErrorF("finishColorSelection 5 %d %d : %d", this->selectedFirstColorIndex, this->selectedLastColorIndex, this->pickingTranslationColor);
 }
 
 void PaletteWidget::initStopColorPicking()
