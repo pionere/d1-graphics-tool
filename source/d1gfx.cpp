@@ -581,7 +581,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 dProgress() << QApplication::tr("line %1").arg(y);
                 QList<RleMatch> matches;
                 int rle = 0;
-                RleMatch *lastMatch = nullptr;
+                bool lastMatch = false;
                 int sx = 0;
                 for (int x = 0; x < this->width; x++) {
                     const D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
@@ -593,26 +593,26 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                         match = dmpix == d1pix;
                     }
                     if (match) {
-                        if (lastMatch != nullptr)
-                            dProgress() << QApplication::tr("match no last");
-                        lastMatch = nullptr;
+                        // if (lastMatch)
+                        //     dProgress() << QApplication::tr("match no last");
+                        lastMatch = false;
                         continue;
                     }
-                    bool colored = match || !d1pix.isTransparent();
+                    bool colored = /*match || */!d1pix.isTransparent();
                     if (colored) {
-                        if (lastMatch != nullptr) {
-                            dProgress() << QApplication::tr("match %1 len %2 rle %3 += 1").arg(lastMatch->pos).arg(lastMatch->len).arg(lastMatch->back_rle);
-                            lastMatch->back_rle++;
+                        if (lastMatch) {
+                            // dProgress() << QApplication::tr("match %1 len %2 rle %3 += 1").arg(matches.back().pos).arg(matches.back().len).arg(matches.back().back_rle);
+                            matches.back().back_rle++;
                         }
                     } else {
-                        if (lastMatch != nullptr)
-                            dProgress() << QApplication::tr("no color no last");
-                        lastMatch = nullptr;
+                        // if (lastMatch)
+                        //     dProgress() << QApplication::tr("no color no last");
+                        lastMatch = false;
                     }
                     if (sx < x) {
-                        dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(x - sx).arg(rle);
+                        // dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(x - sx).arg(rle);
                         matches.push_back({ sx, x - sx, rle, colored ? 1 : 0 });
-                        lastMatch = &matches.back();
+                        lastMatch = true;
                         rle = 0;
                     }
                     if (colored) {
@@ -623,7 +623,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                     sx = x + 1;
                 }
                 if (sx != this->width) {
-                    dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(this->width - sx).arg(rle);
+                    // dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(this->width - sx).arg(rle);
                     matches.push_back({ sx, this->width - sx, rle, 0 });
                 }
 #if 0
@@ -638,7 +638,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
 #endif
                 const int maxrle = 0x7F;
                 for (auto it = matches.begin(); it != matches.end(); ++it) {
-                    dProgress() << QApplication::tr("check match %1 len %2 rle %3 : %4").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle);
+                    // dProgress() << QApplication::tr("check match %1 len %2 rle %3 : %4").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle);
                     if (it->back_rle != 0) {
                         if (it->front_rle != 0) {
                             bool colorit = false;
@@ -658,7 +658,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                                 if (units < newunits) {
                                     colorit = false;
                                 }
-                                dProgress() << QApplication::tr("match %1 len %2 rle %3:%4 -> %5 vs %6").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle).arg(units).arg(newunits);
+                                // dProgress() << QApplication::tr("match %1 len %2 rle %3:%4 -> %5 vs %6").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle).arg(units).arg(newunits);
                             }
 
                             if (colorit) {
@@ -668,7 +668,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                                 }
                                 auto nit = it + 1;
                                 if (nit != matches.end() && nit->pos == it->pos + it->len + it->back_rle) {
-                                    dProgress() << QApplication::tr("next match %1 len %2 -> front rle %3 += %4").arg(nit->pos).arg(nit->len).arg(nit->front_rle).arg(it->len + it->front_rle);
+                                    // dProgress() << QApplication::tr("next match %1 len %2 -> front rle %3 += %4").arg(nit->pos).arg(nit->len).arg(nit->front_rle).arg(it->len + it->front_rle);
                                     nit->front_rle += it->len + it->front_rle;
                                 }
                                 continue;
@@ -2345,26 +2345,28 @@ void D1Gfx::optimize(bool maskedGfx)
             dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
         }
     }
-    if (maskFrame) {
+    if (maskFrame && fc != 0) {
         bool change = false;
-        for (int y = 0; y < maskFrame->getHeight(); y++) {
-            for (int x = 0; x < maskFrame->getWidth(); x++) {
-                const D1GfxPixel pixel = maskFrame->getPixel(x, y);
+        D1GfxFrame *tmpFrame = this->frames[0];
+        tmpFrame = new D1GfxFrame(*tmpFrame);
+        for (int y = 0; y < tmpFrame->getHeight(); y++) {
+            for (int x = 0; x < tmpFrame->getWidth(); x++) {
+                const D1GfxPixel pixel = tmpFrame->getPixel(x, y);
                 if (pixel.isTransparent()) continue;
-                int i = 0;
-                for ( ; i < fc; i++) {
+                for (int i = 1; i < fc; i++) {
                     const D1GfxFrame *frame = this->frames[i];
-                    if (frame->getPixel(x, y) != pixel) break;
-                }
-                if (i >= fc) {
-                    change |= maskFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    if (frame->getPixel(x, y) != pixel) {
+                        tmpFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        break;
+                    }
                 }
             }
         }
-        if (change) {
+        if (maskFrame->optimize(this->type, tmpFrame)) {
             this->setModified();
             dProgress() << QApplication::tr("Mask Frame %1 is modified.").arg(fc + 1);
         }
+        delete tmpFrame;
     }
 }
 

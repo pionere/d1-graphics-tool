@@ -15,6 +15,8 @@
 #include "pushbuttonwidget.h"
 #include "ui_palettewidget.h"
 
+#include "dungeon/all.h"
+
 #define COLORIDX_TRANSPARENT -1
 
 enum class COLORFILTER_TYPE {
@@ -588,6 +590,7 @@ void PaletteWidget::changeColorSelection(int dir, bool extend)
 
 void PaletteWidget::finishColorSelection()
 {
+    LogErrorF("finishColorSelection 0 %d %d", this->selectedFirstColorIndex, this->selectedLastColorIndex);
     if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
         // If only one color is selected which is the same as before -> deselect the colors
         if (this->prevSelectedColorIndex == this->selectedFirstColorIndex) {
@@ -598,21 +601,22 @@ void PaletteWidget::finishColorSelection()
         // If second selected color has an index less than the first one swap them
         std::swap(this->selectedFirstColorIndex, this->selectedLastColorIndex);
     }
-
+    LogErrorF("finishColorSelection 1 %d %d", this->selectedFirstColorIndex, this->selectedLastColorIndex);
     this->updateFields();
-
+    LogErrorF("finishColorSelection 2 %d %d", this->selectedFirstColorIndex, this->selectedLastColorIndex);
     // emit selected colors
     std::vector<quint8> indexes;
     for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex && i != COLORIDX_TRANSPARENT; i++)
         indexes.push_back(i);
-
+    LogErrorF("finishColorSelection 3 %d %d", this->selectedFirstColorIndex, this->selectedLastColorIndex);
     emit this->colorsSelected(indexes);
-
+    LogErrorF("finishColorSelection 4 %d %d : %d", this->selectedFirstColorIndex, this->selectedLastColorIndex, this->pickingTranslationColor);
     if (this->pickingTranslationColor) {
         emit this->colorsPicked(indexes);
     } else {
         this->initStopColorPicking();
     }
+    LogErrorF("finishColorSelection 5 %d %d : %d", this->selectedFirstColorIndex, this->selectedLastColorIndex, this->pickingTranslationColor);
 }
 
 void PaletteWidget::initStopColorPicking()
