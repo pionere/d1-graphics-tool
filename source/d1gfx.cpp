@@ -578,7 +578,6 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 int back_rle;
             } RleMatch;
             for (int y = 0; y < this->height; y++) {
-                dProgress() << QApplication::tr("line %1").arg(y);
                 QList<RleMatch> matches;
                 int rle = 0;
                 bool lastMatch = false;
@@ -691,16 +690,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
             int sx = 0;
             for (int x = 0; x < this->width; x++) {
                 const D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
-                if (!maskFrame) {
-                    if (d1pix.isTransparent() || d1pix.getPaletteIndex() == 0) continue;
-                } else {
-                    const D1GfxPixel dmpix = maskFrame->pixels[y][x]; // maskFrame->getPixel(x, y);
-                    if (d1pix.isTransparent()) {
-                        if (!dmpix.isTransparent()) continue;
-                    } else {
-                        if (dmpix == d1pix) continue;
-                    }
-                }
+                if (d1pix.isTransparent() || d1pix.getPaletteIndex() == 0) continue;
                 if (sx < x) {
                     // dProgress() << QApplication::tr("gap %1 len %2").arg(sx).arg(x - sx);
                     gaps.push_back(QPair<int, int>(sx, x - sx));
@@ -710,21 +700,6 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
             if (sx != this->width) {
                 // dProgress() << QApplication::tr("gap %1 len %2").arg(sx).arg(this->width - sx);
                 gaps.push_back(QPair<int, int>(sx, this->width - sx));
-            }
-
-            if (maskFrame) {
-                for (auto it = gaps.begin(); it != gaps.end(); ) {
-                    const bool trLeft = it->first != 0 && this->pixels[y][it->first - 1].isTransparent();
-                    const bool trRight = it->first + it->second != this->width && this->pixels[y][it->first + it->second].isTransparent();
-                    if (!trLeft && !trRight) {
-                        it++;
-                        continue;
-                    }
-                    for (int x = it->first; x < it->first + it->second; x++) {
-                        result |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
-                    }
-                    it = gaps.erase(it);
-                }
             }
 
             for (auto it = gaps.begin(); it != gaps.end(); ) {
@@ -750,8 +725,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 if (shortgap) {
                     // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
                     for (int x = it->first; x < it->first + it->second; x++) {
-                        const D1GfxPixel d1pix = maskFrame ? maskFrame->getPixel(x, y) : D1GfxPixel::colorPixel(0);
-                        result |= this->setPixel(x, y, d1pix);
+                        result |= this->setPixel(x, y, D1GfxPixel::colorPixel(0));
                     }
                     it = gaps.erase(it);
                 } else {
@@ -782,8 +756,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 if (shortgap) {
                     // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
                     for (int x = it->first; x < it->first + it->second; x++) {
-                        const D1GfxPixel d1pix = maskFrame ? maskFrame->getPixel(x, y) : D1GfxPixel::colorPixel(0);
-                        result |= this->setPixel(x, y, d1pix);
+                        result |= this->setPixel(x, y, D1GfxPixel::colorPixel(0));
                     }
                     it = gaps.erase(it);
                 } else {
@@ -814,8 +787,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 if (shortgap) {
                     // dProgress() << QApplication::tr("short gap %1 len %2").arg(it->first).arg(it->second);
                     for (int x = it->first; x < it->first + it->second; x++) {
-                        const D1GfxPixel d1pix = maskFrame ? maskFrame->getPixel(x, y) : D1GfxPixel::colorPixel(0);
-                        result |= this->setPixel(x, y, d1pix);
+                        result |= this->setPixel(x, y, D1GfxPixel::colorPixel(0));
                     }
                     it = gaps.erase(it);
                 } else {
@@ -2346,7 +2318,6 @@ void D1Gfx::optimize(bool maskedGfx)
         }
     }
     if (maskFrame && fc != 0) {
-        bool change = false;
         D1GfxFrame *tmpFrame = this->frames[0];
         tmpFrame = new D1GfxFrame(*tmpFrame);
         for (int y = 0; y < tmpFrame->getHeight(); y++) {

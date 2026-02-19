@@ -409,16 +409,18 @@ void PaletteWidget::checkTranslationsSelection(const std::vector<quint8> &indexe
         QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
         return;
     }
-
+    LogErrorF("checkTranslationsSelection 0 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->pickingTranslationColor);
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditTranslationCommand *command = new EditTranslationCommand(
         this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &indexes);
+    LogErrorF("checkTranslationsSelection 1 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->pickingTranslationColor);
     QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
-
+    LogErrorF("checkTranslationsSelection 2 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->pickingTranslationColor);
     this->undoStack->push(command);
-
+    LogErrorF("checkTranslationsSelection 3 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->pickingTranslationColor);
     emit this->colorPicking_stopped(); // finish color picking
+    LogErrorF("checkTranslationsSelection 4 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->pickingTranslationColor);
 }
 
 QList<QPair<int, QColor>> clipboardToColors()
