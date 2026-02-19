@@ -593,6 +593,8 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                         match = dmpix == d1pix;
                     }
                     if (match) {
+                        if (lastMatch != nullptr)
+                            dProgress() << QApplication::tr("match no last");
                         lastMatch = nullptr;
                         continue;
                     }
@@ -603,6 +605,8 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                             lastMatch->back_rle++;
                         }
                     } else {
+                        if (lastMatch != nullptr)
+                            dProgress() << QApplication::tr("no color no last");
                         lastMatch = nullptr;
                     }
                     if (sx < x) {
