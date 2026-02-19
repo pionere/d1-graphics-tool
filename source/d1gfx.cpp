@@ -605,7 +605,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                     }
                     if (sx < x) {
                         dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(x - sx).arg(rle);
-                        matches.push_back(RleMatch(sx, x - sx, rle, 0));
+                        matches.push_back({ sx, x - sx, rle, 0 });
                         lastMatch = &matches.back();
                         rle = 0;
                     }
@@ -618,7 +618,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 }
                 if (sx != this->width) {
                     dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(this->width - sx).arg(rle);
-                    gaps.push_back(RleMatch(sx, this->width - sx, rle, 0));
+                    gaps.push_back({ sx, this->width - sx, rle, 0 });
                 }
 
                 for (auto it = matches.begin(); it != matches.end(); ++it) {
@@ -660,7 +660,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                                     result |= this->setPixel(x, y, d1pix);
                                 }
                                 auto nit = it + 1;
-                                if (nit != matches.end() && nit->pos = it->pos + it->len + it->back_rle) {
+                                if (nit != matches.end() && nit->pos == it->pos + it->len + it->back_rle) {
                                     dProgress() << QApplication::tr("next match %1 len %2 -> front rle %3 += %4").arg(nit->pos).arg(nit->len).arg(nit->front_rle).arg(it->len + it->front_rle);
                                     nit->front_rle += it->len + it->front_rle;
                                 }
