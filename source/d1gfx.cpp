@@ -565,10 +565,120 @@ bool D1GfxFrame::subtract(const D1GfxFrame *frame, unsigned flags)
 bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
 {
     bool result = false;
+
     switch (type) {
     case D1CEL_TYPE::V1_REGULAR:
     case D1CEL_TYPE::V1_COMPILATION:
     {
+        if (maskFrame) {
+            typedef struct RleMatch {
+                int pos;
+                int len;
+                int front_rle;
+                int back_rle;
+            } RleMatch;
+            for (int y = 0; y < this->height; y++) {
+                QList<RleMatch> matches;
+                int rle = 0;
+                RleMatch *lastMatch = nullptr;
+                int sx = 0;
+                for (int x = 0; x < this->width; x++) {
+                    const D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
+                    const D1GfxPixel dmpix = maskFrame->pixels[y][x]; // maskFrame->getPixel(x, y);
+                    bool match = false;
+                    if (d1pix.isTransparent()) {
+                        match = !dmpix.isTransparent();
+                    } else {
+                        match = dmpix == d1pix;
+                    }
+                    if (match) {
+                        lastMatch = nullptr;
+                        continue;
+                    }
+                    bool colored = match || !d1pix.isTransparent();
+                    if (colored) {
+                        if (lastMatch != nullptr) {
+                            lastMatch->back_rle++;
+                        }
+                    } else {
+                        lastMatch = nullptr;
+                    }
+                    if (sx < x) {
+                        dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(x - sx).arg(rle);
+                        matches.push_back(RleMatch(sx, x - sx, rle, 0));
+                        lastMatch = &matches.back();
+                        rle = 0;
+                    }
+                    if (colored) {
+                        rle++;
+                    } else {
+                        rle = 0;
+                    }
+                    sx = x + 1;
+                }
+                if (sx != this->width) {
+                    dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(this->width - sx).arg(rle);
+                    gaps.push_back(RleMatch(sx, this->width - sx, rle, 0));
+                }
+
+                for (auto it = matches.begin(); it != matches.end(); ++it) {
+                    if (it->back_rle != 0) continue;
+                    auto nit = it + 1;
+                    if (nit != matches.end() && nit->pos - nit->front_rle == it->pos + it->len/* + it->back_rle*/) {
+                        dProgress() << QApplication::tr("match %1 len %2 -> back rle %3").arg(it->pos).arg(it->len).arg(nit->front_rle);
+                        it->back_rle = nit->front_rle;
+                    }
+                }
+
+                const int maxrle = 0x7F;
+                for (auto it = matches.begin(); it != matches.end(); ++it) {
+                    if (it->back_rle != 0) {
+                        if (it->front_rle != 0) {
+                            bool colorit = false;
+                            //if (it->len <= 2) {
+                            {
+                                colorit = true;
+                                int units = (it->len - 1) / 128 + 1;
+                                units += (it->front_rle - 1) / 0x7F + 1;
+                                units += (it->back_rle - 1) / 0x7F + 1;
+                                // units += it->front_rle;
+                                // units += it->back_rle;
+                                int drawlen = it->len + it->front_rle + it->back_rle;
+                                int newunits = (drawlen - 1) / 0x7F + 1;
+                                // newunits += it->front_rle;
+                                // newunits += it->back_rle;
+                                newunits += it->len;
+                                if (units < newunits) {
+                                    colorit = false;
+                                }
+                                dProgress() << QApplication::tr("match %1 len %2 rle %3:%4 -> %5 vs %6").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle).arg(units).arg(newunits);
+                            }
+
+                            if (colorit) {
+                                for (int x = it->pos; x < it->pos + it->len; x++) {
+                                    const D1GfxPixel d1pix = maskFrame->getPixel(x, y);
+                                    result |= this->setPixel(x, y, d1pix);
+                                }
+                                auto nit = it + 1;
+                                if (nit != matches.end() && nit->pos = it->pos + it->len + it->back_rle) {
+                                    dProgress() << QApplication::tr("next match %1 len %2 -> front rle %3 += %4").arg(nit->pos).arg(nit->len).arg(nit->front_rle).arg(it->len + it->front_rle);
+                                    nit->front_rle += it->len + it->front_rle;
+                                }
+                                continue;
+                            }
+                        }
+                    }
+                    for (int x = it->pos; x < it->pos + it->len; x++) {
+                        result |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                    // auto nit = it + 1;
+                    // if (nit != matches.end() && nit->pos = it->pos + it->len + it->back_rle) {
+                    // }
+                }
+            }
+            break;
+        }
+
         for (int y = 0; y < this->height; y++) {
             QList<QPair<int, int>> gaps;
             int sx = 0;
