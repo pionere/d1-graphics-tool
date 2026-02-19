@@ -599,6 +599,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                     bool colored = match || !d1pix.isTransparent();
                     if (colored) {
                         if (lastMatch != nullptr) {
+                            dProgress() << QApplication::tr("match %1 len %2 rle %3 += 1").arg(lastMatch->pos).arg(lastMatch->len).arg(lastMatch->back_rle);
                             lastMatch->back_rle++;
                         }
                     } else {
@@ -633,6 +634,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
 
                 const int maxrle = 0x7F;
                 for (auto it = matches.begin(); it != matches.end(); ++it) {
+                    dProgress() << QApplication::tr("check match %1 len %2 rle %3 : %4").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle);
                     if (it->back_rle != 0) {
                         if (it->front_rle != 0) {
                             bool colorit = false;
