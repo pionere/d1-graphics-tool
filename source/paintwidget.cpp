@@ -554,6 +554,14 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
 void PaintWidget::selectArea(const QRect &area)
 {
     QRect sceneRect = area;
+    if (!sceneRect.isValid()) {
+        sceneRect = QRect();
+        D1GfxFrame *frame = this->getCurrentFrame();
+        if (frame != nullptr) {
+            sceneRect->setWidth(frame->getWidth());
+            sceneRect->setHeight(frame->getHeight());
+        }
+    }
     sceneRect.adjust(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     QPolygon poly = this->graphView->mapFromScene(sceneRect);
     QRect vpRect = poly.boundingRect();

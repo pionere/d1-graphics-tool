@@ -56,6 +56,7 @@ public:
     void deleteCurrent();
     void toggleMode();
     void adjustBrush(int dir);
+    void selectArea(const QRect &area);
 
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
@@ -67,7 +68,6 @@ private:
     void collectPixelsSquare(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);
     void collectPixelsRound(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);
     void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels, void (PaintWidget::*collectorFunc)(int, int, int, std::vector<FramePixel> &));
-    void selectArea(const QRect &area);
 
 public slots:
     bool frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags);

@@ -1185,6 +1185,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
+    if (kc == (Qt::ControlModifier | Qt::Key_A)) {
+        if (this->isPainting()) {
+            const QRect area = QRect(0, 0, -1, -1);
+            this->paintWidget->selectArea(area);
+        }
+        return;
+    }
     if (kc == Qt::Key_Alt || kc == (Qt::Key_Alt | Qt::AltModifier)) {
         if (this->isPainting()) {
             this->paintWidget->toggleMode();
