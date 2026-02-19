@@ -2357,7 +2357,7 @@ void D1Gfx::optimize(bool maskedGfx)
                     if (!dmpix.isTransparent()) {
                         if (dmpix.getPaletteIndex() == color) continue;
                         for (int i = 0; i < fc; i++) {
-                            const D1GfxFrame *frame = this->frames[i];
+                            D1GfxFrame *frame = this->frames[i];
                             if (frame->getPixel(x, y).isTransparent()) {
                                 frame->setPixel(x, y, dmpix);
                                 changes.insert(i);
