@@ -618,7 +618,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                 }
                 if (sx != this->width) {
                     dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(this->width - sx).arg(rle);
-                    gaps.push_back({ sx, this->width - sx, rle, 0 });
+                    matches.push_back({ sx, this->width - sx, rle, 0 });
                 }
 
                 for (auto it = matches.begin(); it != matches.end(); ++it) {
