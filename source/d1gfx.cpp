@@ -2306,10 +2306,10 @@ bool D1Gfx::squash()
     return change;
 }
 
-void D1Gfx::optimize(bool maskedGfx)
+void D1Gfx::optimize(unsigned flags)
 {
-    const int fc = this->getFrameCount() - (maskedGfx ? 1 : 0);
-    D1GfxFrame *maskFrame = maskedGfx ? this->frames[fc] : nullptr;
+    const int fc = this->getFrameCount() - ((flags & 1) ? 1 : 0);
+    D1GfxFrame *maskFrame = (flags & 1) ? this->frames[fc] : nullptr;
     // offsets?
     std::set<int> changes;
     // try to choose better opaque colors in the mask-frame
@@ -2346,6 +2346,7 @@ void D1Gfx::optimize(bool maskedGfx)
                         votes[color]++;
                     }
                     if (votes.isEmpty()) continue;
+                    if (votes.count() != 1 && !(flags & 2)) continue;
                     int best = 0;
                     quint8 color = 0;
                     for (auto it = votes.begin(); it != votes.end(); it++) {

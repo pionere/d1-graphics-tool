@@ -361,7 +361,7 @@ public:
     bool resize(const ResizeParam &params);
     void mask(int frameIndex, unsigned flags);
     bool squash();
-    void optimize(bool maskedGfx);
+    void optimize(unsigned flags);
     bool check(int assetMpl, bool *typetested = nullptr) const;
 
     D1CEL_TYPE getType() const;

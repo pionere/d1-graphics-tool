@@ -3002,46 +3002,13 @@ void MainWindow::on_actionMask_triggered()
 
 void MainWindow::on_actionOptimize_triggered()
 {
-    const bool maskedGfx = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    const bool maskedGfx = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool voteColors = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    const unsigned flags = (maskedGfx ? 1 : 0) | (voteColors ? 2 : 0);
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    if (true) { // !maskedGfx) {
-        this->gfx->optimize(maskedGfx);
-    } else {
-        const QSize fs = this->gfx->getFrameSize();
-        if (fs.isValid()) {
-            const int fc = this->gfx->getFrameCount();
-            const D1GfxFrame *maskFrame = this->gfx->getFrame(fc - 1);
-            for (int y = 0; y < fs.height(); y++) {
-                for (int x = 0; x < fs.width() - 2; x++) {
-                    const D1GfxPixel pixel0 = maskFrame->getPixel(x, y);
-                    if (pixel0.isTransparent()) continue;
-                    const D1GfxPixel pixel1 = maskFrame->getPixel(x + 1, y);
-                    if (pixel1.isTransparent()) continue;
-                    const D1GfxPixel pixel2 = maskFrame->getPixel(x + 2, y);
-                    if (pixel2.isTransparent()) continue;
-                    for (int i = 0; i < fc - 1; i++) {
-                        D1GfxFrame *frame = this->gfx->getFrame(i);
-                        const D1GfxPixel p0 = frame->getPixel(x + 0, y);
-                        if (p0.isTransparent()) continue;
-                        const D1GfxPixel p1 = frame->getPixel(x + 1, y);
-                        if (!p1.isTransparent()) continue;
-                        const D1GfxPixel p2 = frame->getPixel(x + 2, y);
-                        if (p2.isTransparent()) {
-                            if (x < fs.width() - 3 && (frame->getPixel(x + 3, y).isTransparent() || maskFrame->getPixel(x + 3, y).isTransparent()))
-                                continue;
-                        }
-
-                        frame->setPixel(x + 1, y, pixel1);
-                        if (p2.isTransparent())
-                            frame->setPixel(x + 2, y, pixel2);
-                        this->gfx->setModified();
-                    }
-                }
-            }
-        }
-    }
+    this->gfx->optimize(flags);
 
     // Clear loading message from status bar
     ProgressDialog::done();
