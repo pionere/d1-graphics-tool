@@ -3,6 +3,7 @@
 #include <set>
 
 #include <QApplication>
+#include <QMap>
 #include <QMessageBox>
 
 #include "d1image.h"
@@ -2310,13 +2311,74 @@ void D1Gfx::optimize(bool maskedGfx)
     const int fc = this->getFrameCount() - (maskedGfx ? 1 : 0);
     D1GfxFrame *maskFrame = maskedGfx ? this->frames[fc] : nullptr;
     // offsets?
+    std::set<int> changes;
+    // try to choose better opaque colors in the mask-frame
+    if (maskFrame && fc != 0) {
+        // calculate the frame-size
+        int w, h;
+        for (int i = 0; i < fc + 1; i++) {
+            const D1GfxFrame *frame = this->frames[i];
+            int cw = frame->getWidth(), ch = frame->getHeight();
+            if (cw != w || ch != h) {
+                w = cw;
+                h = ch;
+                if (i == 0) continue;
+                w = -1;
+                break;
+            }
+        }
+        if (w > 0) {
+            for (int y = 0; y < h; y++) {
+                for (int x = 0; x < w; x++) {
+                    QMap<quint8, int> votes;
+                    const D1GfxPixel dmpix = maskFrame->getPixel(x, y);
+                    for (int i = 0; i < fc; i++) {
+                        const D1GfxFrame *frame = this->frames[i];
+                        const D1GfxPixel pixel = frame->getPixel(x, y);
+                        quint8 color = pixel.getPaletteIndex();
+                        if (pixel.isTransparent()) {
+                            if (dmpix.isTransparent()) {
+                                votes.clear();
+                                break;
+                            }
+                            color = dmpix.getPaletteIndex();
+                        }
+                        votes[color]++;
+                    }
+                    if (votes.isEmpty()) continue;
+                    int best = 0;
+                    quint8 color = 0;
+                    for (auto it = votes.begin(); it != votes.end(); it++) {
+                        if (it.value() > best) {
+                            best = it.value();
+                            color = it.key();
+                        }
+                    }
+                    if (!dmpix.isTransparent()) {
+                        if (dmpix.getPaletteIndex() == color) continue;
+                        for (int i = 0; i < fc; i++) {
+                            const D1GfxFrame *frame = this->frames[i];
+                            if (frame->getPixel(x, y).isTransparent()) {
+                                frame->setPixel(x, y, dmpix);
+                                changes.insert(i);
+                            }
+                        }
+                    }
+
+                    maskFrame->setPixel(x, y, D1GfxPixel::colorPixel(color));
+                    changes.insert(fc);
+                }
+            }
+        }
+    }
+    // optimize 'standard' frames using the mask-frame or assuming black background
     for (int i = 0; i < fc; i++) {
         D1GfxFrame *frame = this->frames[i];
         if (frame->optimize(this->type, maskFrame)) {
-            this->setModified();
-            dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            changes.insert(i);
         }
     }
+    // optimize the mask-frame by eliminating unused pixels
     if (maskFrame && fc != 0) {
         D1GfxFrame *tmpFrame = this->frames[0];
         tmpFrame = new D1GfxFrame(*tmpFrame);
@@ -2334,10 +2396,19 @@ void D1Gfx::optimize(bool maskedGfx)
             }
         }
         if (maskFrame->optimize(this->type, tmpFrame)) {
-            this->setModified();
-            dProgress() << QApplication::tr("Mask Frame %1 is modified.").arg(fc + 1);
+            changes.insert(fc);
         }
         delete tmpFrame;
+    }
+    if (!changes.empty()) {
+        for (int i : changes) {
+            if (i != fc) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            } else {
+                dProgress() << QApplication::tr("Mask Frame %1 is modified.").arg(fc + 1);
+            }
+        }
+        this->setModified();
     }
 }
 
