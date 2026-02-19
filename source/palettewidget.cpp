@@ -85,7 +85,7 @@ EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 startColorIndex,
     , trn(t)
 {
     LogErrorF("EditTranslationCommand 0 %d %d : %d", nt ? nt->size() : 0, startColorIndex, endColorIndex);
-    for (quint8 i = startColorIndex; i <= endColorIndex; i++) {
+    for (unsigned i = startColorIndex; i <= endColorIndex; i++) {
         this->modTranslations.push_back(std::pair<quint8, quint8>(i, nt == nullptr ? i : (*nt)[i - startColorIndex]));
     }
     LogErrorF("EditTranslationCommand 1");
@@ -411,18 +411,18 @@ void PaletteWidget::checkTranslationsSelection(const std::vector<quint8> &indexe
         QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
         return;
     }
-    LogErrorF("checkTranslationsSelection 0 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->selectedLastColorIndex);
+    LogErrorF("checkTranslationsSelection 0 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditTranslationCommand *command = new EditTranslationCommand(
         this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &indexes);
-    LogErrorF("checkTranslationsSelection 1 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->selectedLastColorIndex);
+    LogErrorF("checkTranslationsSelection 1 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
     QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
-    LogErrorF("checkTranslationsSelection 2 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->selectedLastColorIndex);
+    LogErrorF("checkTranslationsSelection 2 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
     this->undoStack->push(command);
-    LogErrorF("checkTranslationsSelection 3 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->selectedLastColorIndex);
+    LogErrorF("checkTranslationsSelection 3 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
     emit this->colorPicking_stopped(); // finish color picking
-    LogErrorF("checkTranslationsSelection 4 %d %d : %d", indexes.size(), this->selectedLastColorIndex, this->selectedLastColorIndex);
+    LogErrorF("checkTranslationsSelection 4 %d %d : %d", indexes.size(), this->selectedFirstColorIndex, this->selectedLastColorIndex);
 }
 
 QList<QPair<int, QColor>> clipboardToColors()
