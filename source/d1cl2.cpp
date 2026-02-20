@@ -112,7 +112,9 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
     bool first = false; // true; - does not matter
     quint8 *pPrevHead = nullptr;
     quint8 *pLastHead = nullptr;
-    for (int i = 1; i <= frame->getHeight(); i++) {
+    const int width = frame->getWidth();
+    const int height = frame->getHeight();
+    for (int i = 1; i <= height; i++) {
         if (clipped && (i % CEL_BLOCK_HEIGHT) == 1 /*&& (i / CEL_BLOCK_HEIGHT) * 2 < SUB_HEADER_SIZE*/) {
             pushHead(&pPrevHead, &pLastHead, pHead);
             //if (first) {
@@ -127,8 +129,8 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
             // first = true;
         }
         first = true;
-        for (int j = 0; j < frame->getWidth(); j++) {
-            D1GfxPixel pixel = frame->getPixel(j, frame->getHeight() - i);
+        for (int j = 0; j < width; j++) {
+            const D1GfxPixel pixel = frame->getPixel(j, height - i);
             if (!pixel.isTransparent()) {
                 // add opaque pixel
                 col = pixel.getPaletteIndex();
