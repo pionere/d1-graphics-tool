@@ -326,13 +326,16 @@ void D1Gfxset::save(const SaveAsParam &params)
             saveParams.celFilePath = filePath + anim;
         }
         D1Gfx *gfx = this->gfxList[i];
+#if 0
         if (gfx->getFrameCount() != 0) {
+#endif
             D1Cl2::save(*gfx, saveParams);
             // save the components and the meta-info
             if (gfx->getComponentCount() != 0 || !gfx->getCompFilePath().isEmpty()) {
                 gfx->saveComponents();
                 D1Clc::save(*gfx, saveParams);
             }
+#if 0
         } else {
             // CL2 without content -> delete
             QString cl2FilePath = saveParams.celFilePath;
@@ -343,6 +346,7 @@ void D1Gfxset::save(const SaveAsParam &params)
                 gfx->setModified(false);
             }
         }
+#endif
     }
 }
 
