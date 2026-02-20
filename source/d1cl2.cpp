@@ -29,120 +29,14 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in.setByteOrder(QDataStream::LittleEndian);
 
     QIODevice *device = in.device();
-#if 0
-    auto fileSize = device->size();
-    // CL2 HEADER CHECKS
-    if (fileSize < 4)
-        return false;
-
-    // Read first DWORD
-    quint32 firstDword;
-    in >> firstDword;
-
-    // Trying to find file size in CL2 header
-    if (fileSize < (4 + firstDword * 4 + 4))
-        return false;
-
-    device->seek(4 + firstDword * 4);
-    quint32 fileSizeDword;
-    in >> fileSizeDword;
-
-    // If the dword is not equal to the file size then
-    // try to read it as a CL2 with multiple groups
-    D1CEL_TYPE type = (firstDword == 0 || fileSize == fileSizeDword) ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
-    gfx.type = type;
-
-    // CL2 FRAMES OFFSETS CALCULATION
-    std::vector<std::pair<quint32, quint32>> frameOffsets;
-    quint32 metaOffset, contentOffset = fileSize;
-    if (type == D1CEL_TYPE::V2_MONO_GROUP) {
-        // Going through all frames of the only group
-        if (firstDword > 0) {
-            gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
-        }
-        unsigned i = 1;
-        for ( ; i <= firstDword; i++) {
-            device->seek(i * 4);
-            quint32 cl2FrameStartOffset;
-            in >> cl2FrameStartOffset;
-            quint32 cl2FrameEndOffset;
-            in >> cl2FrameEndOffset;
-
-            frameOffsets.push_back(
-                std::pair<quint32, quint32>(cl2FrameStartOffset, cl2FrameEndOffset));
-        }
-
-        metaOffset = 4 + i * 4;
-        if (frameOffsets.size() != 0)
-            contentOffset = frameOffsets[0].first;
-    } else {
-        // Going through all groups
-        int cursor = 0;
-        unsigned i = 0;
-        while (i * 4 < firstDword) {
-            device->seek(i * 4);
-            quint32 cl2GroupOffset;
-            in >> cl2GroupOffset;
-
-            if (fileSize < (cl2GroupOffset + 4)) {
-                dProgressErr() << QApplication::tr("Invalid frameoffset %1 of %2 for group %3.").arg(cl2GroupOffset).arg(fileSize).arg(i);
-                break;
-            }
-
-            device->seek(cl2GroupOffset);
-            quint32 cl2GroupFrameCount;
-            in >> cl2GroupFrameCount;
-
-            if (cl2GroupFrameCount == 0) {
-                i++;
-                continue;
-            }
-            if (fileSize < (cl2GroupOffset + cl2GroupFrameCount * 4 + 4 + 4)) {
-                dProgressErr() << QApplication::tr("Not enough space for %1 frameoffsets at %2 in %3 for group %4.").arg(cl2GroupFrameCount).arg(cl2GroupOffset).arg(fileSize).arg(i);
-                break;
-            }
-
-            if (cl2GroupOffset < contentOffset) {
-                contentOffset = cl2GroupOffset;
-            }
-            gfx.groupFrameIndices.push_back(std::pair<int, int>(cursor, cursor + cl2GroupFrameCount - 1));
-
-            // Going through all frames of the group
-            for (unsigned j = 1; j <= cl2GroupFrameCount; j++) {
-                quint32 cl2FrameStartOffset;
-                quint32 cl2FrameEndOffset;
-
-                device->seek(cl2GroupOffset + j * 4);
-                in >> cl2FrameStartOffset;
-                in >> cl2FrameEndOffset;
-
-                frameOffsets.push_back(
-                    std::pair<quint32, quint32>(cl2GroupOffset + cl2FrameStartOffset,
-                        cl2GroupOffset + cl2FrameEndOffset));
-            }
-            cursor += cl2GroupFrameCount;
-
-            i++;
-            if (frameOffsets.back().second == fileSize) {
-                break;
-            }
-        }
-
-        metaOffset = i * 4;
-    }
-
-    D1Cel::readMeta(device, in, metaOffset, contentOffset, frameOffsets.size(), gfx);
-#else
     CelHeaderInfo hi;
     if (!D1Cel::readHeader(device, in, hi, gfx)) {
         return false;
     }
     gfx.type = hi.groupped ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
     auto fileSize = device->size();
-#endif
 
     // BUILDING {CL2 FRAMES}
-    // std::stack<quint16> invalidFrames;
     int clipped = -1;
     for (unsigned i = 0; i < hi.frameOffsets.size(); i++) {
         const auto &offset = hi.frameOffsets[i];
@@ -157,7 +51,6 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                     dProgressErr() << QApplication::tr("Could not determine the width of Frame %1.").arg(i + 1);
                 else
                     dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(i + 1);
-                // invalidFrames.push(i);
             } else if (clipped != res) {
                 if (clipped == -1)
                     clipped = res;
@@ -173,11 +66,6 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
-    /*while (!invalidFrames.empty()) {
-        quint16 frameIndex = invalidFrames.top();
-        invalidFrames.pop();
-        gfx.removeFrame(frameIndex);
-    }*/
     return true;
 }
 
@@ -405,6 +293,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         }
         hdr += metaSize;
     }
+
     pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {

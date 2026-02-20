@@ -1,6 +1,5 @@
 #include "d1celframe.h"
 
-#include <QApplication>
 #include <QDataStream>
 
 #include "progressdialog.h"
@@ -78,9 +77,9 @@ int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
                 break;
             }
 
-            if (readByte == 0x00) {
-                dProgressWarn() << QApplication::tr("Invalid CEL frame data (0x00 found)");
-            }
+            // if (readByte == 0x00) {
+            //    dProgressWarn() << QString("Invalid CEL frame data (0x00 found)");
+            // }
             for (int i = 0; i < readByte; i++) {
                 // Go to the next palette index offset
                 o++;
