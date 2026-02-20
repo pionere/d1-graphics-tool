@@ -604,7 +604,7 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     }
     if (numGroups == 0) {
         // *(quint32 *)&buf[0] = SwapLE32(0);
-        *(quint32 *)&buf[4] = SwapLE32(sizeof(quint32));
+        *(quint32 *)&buf[4] = SwapLE32(pBuf - buf);
     }
 
     // write to file
