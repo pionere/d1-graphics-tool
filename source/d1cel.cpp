@@ -495,7 +495,7 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     if (numGroups == 0) {
         numGroups = gfx.getGroupCount();
         for (int i = 0; i < numGroups; i++) {
-            std::pair<int, int> gfi = gfx.getGroupFrameIndices(i);
+            std::pair<int, int> gfi = gfx.groupFrameIndices[i];
             int ni = gfi.second - gfi.first + 1;
             headerSize += 4 + 4 * (ni + 1);
         }
@@ -561,7 +561,7 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     // pBuf = &buf[headerSize + metaSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
-        std::pair<int, int> gfi = gfx.getGroupFrameIndices(ii);
+        std::pair<int, int> gfi = gfx.groupFrameIndices[ii];
         int ni = gfi.second - gfi.first + 1;
         *(quint32 *)&buf[ii * sizeof(quint32)] = SwapLE32(pBuf - buf);
 
