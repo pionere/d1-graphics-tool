@@ -25,7 +25,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
         return 0; // invalid header
     }
     if (data + celFrameHeaderSize > dataEnd) {
-        dProgress() << QString("computeWidthFromHeader 3 %1 %2 %3").arg(data).arg(celFrameHeaderSize).arg(dataEnd);
+        dProgress() << QString("computeWidthFromHeader 3 %1 %2 %3").arg((size_t)data).arg(celFrameHeaderSize).arg((size_t)dataEnd);
         return 0; // invalid header
     }
     // Decode the 32 pixel-lines blocks to calculate the image width
@@ -38,7 +38,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
             // check if the remaining entries are zero
             while (++i < celFrameHeaderSize) {
                 if (SwapLE16(header[i]) != 0) {
-                    dProgress() << QString("computeWidthFromHeader 4 %1").arg(data).arg(header[i]);
+                    dProgress() << QString("computeWidthFromHeader 4 %1").arg(header[i]);
                     return 0; // invalid header
                 }
             }
@@ -51,7 +51,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
             return 0; // invalid data
         for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
             if (data + j >= dataEnd) {
-                dProgress() << QString("computeWidthFromHeader 5 %1 %2 %3").arg(data).arg(j).arg(dataEnd);
+                dProgress() << QString("computeWidthFromHeader 5 %1 %2 %3").arg((size_t)data).arg(j).arg((size_t)dataEnd);
                 return 0; // invalid data
             }
 
