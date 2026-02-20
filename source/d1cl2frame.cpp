@@ -42,7 +42,10 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
                     return 0; // invalid header
                 }
             }
-            break;
+            if (celFrameWidth != 0)
+                break;
+            // last attempt using the size of the frame
+            nextFrameOffset = rawFrameData.size();
         }
 
         unsigned pixelCount = 0;
