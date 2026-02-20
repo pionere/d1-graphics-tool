@@ -394,15 +394,17 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
     }
     // convert to cel
     quint8 *pHead;
-    for (int i = 1; i <= frame->getHeight(); i++) {
+    const int width = frame->getWidth();
+    const int height = frame->getHeight();
+    for (int i = 1; i <= height; i++) {
         pHead = pBuf;
         pBuf++;
         bool alpha = false;
         if (clipped && (i % CEL_BLOCK_HEIGHT) == 1 /*&& (i / CEL_BLOCK_HEIGHT) * 2 < SUB_HEADER_SIZE*/) {
             *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
         }
-        for (int j = 0; j < frame->getWidth(); j++) {
-            D1GfxPixel pixel = frame->getPixel(j, frame->getHeight() - i);
+        for (int j = 0; j < width; j++) {
+            D1GfxPixel pixel = frame->getPixel(j, height - i);
             if (!pixel.isTransparent()) {
                 // add opaque pixel
                 if (alpha || *pHead > 126) {
@@ -423,6 +425,11 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
                 alpha = true;
             }
         }
+    }
+    // add an extra header entry to ensure the width of the frame can be determined using the header
+    if (clipped && height == CEL_BLOCK_HEIGHT) {
+        int i = height + 1;
+        *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
     }
     return pBuf;
 }

@@ -47,11 +47,13 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
 
         unsigned pixelCount = 0;
         // ensure the offsets are consecutive
-        if (lastFrameOffset >= nextFrameOffset)
+        if (lastFrameOffset >= nextFrameOffset) {
+            dProgress() << QString("computeWidthFromHeader 5 %1 %2").arg(lastFrameOffset).arg(nextFrameOffset);
             return 0; // invalid data
+        }
         for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
             if (data + j >= dataEnd) {
-                dProgress() << QString("computeWidthFromHeader 5 %1 %2 %3").arg((size_t)data).arg(j).arg((size_t)dataEnd);
+                dProgress() << QString("computeWidthFromHeader 6 %1 %2 %3").arg((size_t)data).arg(j).arg((size_t)dataEnd);
                 return 0; // invalid data
             }
 
@@ -74,13 +76,13 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
         // The calculated width has to be identical for each 32 pixel-line block
         if (celFrameWidth == 0) {
             if (width == 0) {
-                dProgress() << QString("computeWidthFromHeader 6 %1 %2").arg(width).arg(pixelCount);
+                dProgress() << QString("computeWidthFromHeader 7 %1 %2").arg(width).arg(pixelCount);
                 return 0; // invalid data
             }
             dProgress() << QString("computeWidthFromHeader ok %1").arg(width);
         } else {
             if (celFrameWidth != width) {
-                dProgress() << QString("computeWidthFromHeader 7 %1 %2").arg(width).arg(celFrameWidth);
+                dProgress() << QString("computeWidthFromHeader 8 %1 %2").arg(width).arg(celFrameWidth);
                 return 0; // mismatching width values
             }
         }
