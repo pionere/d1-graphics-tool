@@ -257,10 +257,14 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params, bool 
                     dProgressErr() << QApplication::tr("Failed loading CLC file: %1.").arg(QDir::toNativeSeparators(filePath));
                 }
             }
+#if 0
             if (!loaded || this->baseGfx->getType() != gfx->getType()) {
                 if (loaded) {
                     dProgressErr() << QApplication::tr("Mismatching type in %1 (%2 vs %3)").arg(QDir::toNativeSeparators(filePath)).arg(D1Gfx::gfxTypeToStr(this->baseGfx->getType())).arg(D1Gfx::gfxTypeToStr(gfx->getType()));
                 }
+#else
+            if (!loaded) {
+#endif
                 gfx->setType(this->baseGfx->getType());
                 filePath.chop(1);
                 filePath.push_back('2');
