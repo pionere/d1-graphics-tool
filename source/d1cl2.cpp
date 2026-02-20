@@ -190,6 +190,12 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
         }
     }
     pushHead(&pPrevHead, &pLastHead, pHead);
+    // add an extra header entry to ensure the width of the frame can be determined using the header
+    if (clipped && height == CEL_BLOCK_HEIGHT) {
+        int i = height + 1;
+        pHead = pBuf;
+        *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
+    }
     return pBuf;
 }
 
