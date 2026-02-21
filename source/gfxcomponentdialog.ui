@@ -152,6 +152,13 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="9">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
      <item row="1" column="0">
       <widget class="QLabel">
        <property name="minimumWidth">
@@ -288,7 +295,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1" colspan="7">
+     <item row="2" column="1" colspan="9">
       <widget class="LineEditWidget" name="labelEdit">
        <property name="charWidth">
         <number>8</number>
@@ -314,7 +321,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1" colspan="7">
+     <item row="3" column="1" colspan="9">
       <layout class="QHBoxLayout">
        <item>
         <widget class="QPushButton" name="zorderDecButton">
@@ -377,7 +384,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1" colspan="7">
+     <item row="4" column="1" colspan="9">
       <layout class="QHBoxLayout">
        <item>
         <widget class="LineEditWidget" name="xOffsetEdit">
@@ -440,7 +447,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1" colspan="7">
+     <item row="5" column="1" colspan="9">
       <layout class="QHBoxLayout">
        <item>
         <widget class="QPushButton" name="prevRefButton">
@@ -531,7 +538,7 @@
        </item>
       </layout>
      </item>
-     <item row="6" column="0" colspan="8">
+     <item row="6" column="0" colspan="10">
       <widget class="QGraphicsView" name="celGraphicsView">
        <!--property name="minimumSize">
         <size>
