@@ -640,7 +640,6 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                             // newunits += it->front_rle;
                             // newunits += it->back_rle;
                             newunits += it->len;
-                            colorit = ;
                             // dProgress() << QApplication::tr("match %1 len %2 rle %3:%4 -> %5 vs %6").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle).arg(units).arg(newunits);
 
                             if (units >= newunits) {
