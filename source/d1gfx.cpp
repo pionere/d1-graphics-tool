@@ -501,15 +501,37 @@ bool D1GfxFrame::flipVertical()
     return result;
 }
 
-bool D1GfxFrame::mask(const D1GfxFrame *frame)
+bool D1GfxFrame::mask(const D1GfxFrame *frame, unsigned flags)
 {
     bool result = false;
+    // assert(this->width == frame->width && this->height == frame->height);
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             D1GfxPixel pixelA = this->pixels[y][x]; // this->getPixel(x, y);
             if (pixelA.isTransparent()) continue;
             D1GfxPixel pixelB = frame->pixels[y][x]; // frame->getPixel(x, y);
-            if (pixelB.isTransparent() || pixelA.getPaletteIndex() != pixelB.getPaletteIndex()) {
+            if (!pixelB.isTransparent()) {
+                if ((flags & 2) || pixelA.getPaletteIndex() == pixelB.getPaletteIndex()) continue;
+            }
+            this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
+            result = true;
+        }
+    }
+    return result;
+}
+
+bool D1GfxFrame::subtract(const D1GfxFrame *frame, unsigned flags)
+{
+    bool result = false;
+    // assert(this->width == frame->width && this->height == frame->height);
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            D1GfxPixel pixelA = this->pixels[y][x]; // this->getPixel(x, y);
+            if (pixelA.isTransparent()) continue;
+            D1GfxPixel pixelB = frame->pixels[y][x]; // frame->getPixel(x, y);
+            if (pixelB.isTransparent()) continue;
+            // if (pixelA.getPaletteIndex() == pixelB.getPaletteIndex()) {
+            if ((flags & 2) || pixelA.getPaletteIndex() == pixelB.getPaletteIndex()) {
                 this->pixels[y][x] = D1GfxPixel::transparentPixel(); // this->setPixel(x, y, D1GfxPixel::transparentPixel());
                 result = true;
             }
@@ -1780,7 +1802,7 @@ bool D1Gfx::resize(const ResizeParam &params)
     return change;
 }
 
-void D1Gfx::mask()
+void D1Gfx::mask(int frameIndex, unsigned flags)
 {
     if (this->getFrameCount() <= 1)
         return;
@@ -1789,19 +1811,28 @@ void D1Gfx::mask()
         return;
     }
 
-    if (this->groupFrameIndices.size() <= 1) {
-        D1GfxFrame *frameA = this->frames[0];
-        for (const D1GfxFrame *frameB : this->frames) {
-            if (frameA->mask(frameB)) {
-                this->setModified();
+    if (this->getGroupCount() == 1) {
+        D1GfxFrame *frameA = this->frames[frameIndex];
+        for (D1GfxFrame *frameB : this->frames) {
+            if (frameA == frameB) continue;
+            if (flags & 1) {
+                if (frameB->subtract(frameA, flags)) {
+                    this->setModified();
+                }
+            } else {
+                if (frameA->mask(frameB, flags)) {
+                    this->setModified();
+                }
             }
         }
     } else {
-        if (this->getGroupSize() < 0) {
+        const int gs = this->getGroupSize();
+        if (gs < 0) {
             dProgressErr() << tr("Groupsize is not constant");
             return;
         }
-        for (int n = this->groupFrameIndices[0].first; n <= this->groupFrameIndices[0].second; n++) {
+        const int gi = frameIndex / gs;
+        for (int n = this->groupFrameIndices[gi].first; n <= this->groupFrameIndices[gi].second; n++) {
             D1GfxFrame *frameA = this->frames[n];
             auto git = this->groupFrameIndices.begin();
             while (true) {
@@ -1809,9 +1840,16 @@ void D1Gfx::mask()
                 if (git == this->groupFrameIndices.end()) {
                     break;
                 }
-                const D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[0].first];
-                if (frameA->mask(frameB)) {
-                    this->setModified();
+                D1GfxFrame *frameB = this->frames[git->first + n - this->groupFrameIndices[gi].first];
+                if (frameA == frameB) continue;
+                if (flags & 1) {
+                    if (frameB->subtract(frameA, flags)) {
+                        this->setModified();
+                    }
+                } else {
+                    if (frameA->mask(frameB, flags)) {
+                        this->setModified();
+                    }
                 }
             }
         }

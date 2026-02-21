@@ -725,10 +725,11 @@ bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
     return result;
 }
 
-void D1Gfxset::mask()
+void D1Gfxset::mask(int frameIndex, unsigned flags)
 {
     int width, height, w, h;
     int groupSize, gs;
+    int groupCount, gc;
     bool first = true;
     for (D1Gfx *gfx : this->gfxList) {
         if (gfx->getFrameCount() == 0) continue;
@@ -742,6 +743,7 @@ void D1Gfxset::mask()
             dProgressErr() << QApplication::tr("Groupsize is not constant");
             return;
         }
+        gc = gfx->getGroupCount();
         w = fs.width();
         h = fs.height();
         if (!first) {
@@ -753,39 +755,54 @@ void D1Gfxset::mask()
                 dProgressErr() << QApplication::tr("Groupsize is not constant");
                 return;
             }
+            if (gc != groupCount) {
+                dProgressErr() << QApplication::tr("Groupcount is not constant");
+                return;
+            }
         } else {
             width = w;
             height = h;
             groupSize = gs;
+            groupCount = gc;
             first = false;
         }
     }
     for (D1Gfx *gfx : this->gfxList) {
-        gfx->mask();
+        gfx->mask(frameIndex, flags);
     }
-    if (this->gfxList.count() <= 1)
+    D1Gfx *gfxA = this->baseGfx;
+    if (this->gfxList.indexOf(gfxA) < 0)
         return;
-    D1Gfx *gfxA = NULL;
     for (D1Gfx *gfxB : this->gfxList) {
         if (gfxB->getFrameCount() == 0) continue;
-        if (gfxA != NULL) {
-            if (gs == 1) {
-                D1GfxFrame *frameA = gfxA->getFrame(0);
-                D1GfxFrame *frameB = gfxB->getFrame(0);
-                if (frameA->mask(frameB)) {
-                    gfxA->setModified();
+        if (gfxA == gfxB) continue;
+        if (gfxA->getGroupCount() == 1) {
+            D1GfxFrame *frameA = gfxA->getFrame(frameIndex);
+            D1GfxFrame *frameB = gfxB->getFrame(frameIndex);
+            if (flags & 1) {
+                if (frameB->subtract(frameA, flags)) {
+                    gfxB->setModified();
                 }
             } else {
-                for (int n = 0; n < gs; n++) {
-                    D1GfxFrame *frameA = gfxA->getFrame(gfxA->getGroupFrameIndices(n).first);
-                    D1GfxFrame *frameB = gfxB->getFrame(gfxB->getGroupFrameIndices(n).first);
-                    if (frameA->mask(frameB)) {
+                if (frameA->mask(frameB, flags)) {
+                    gfxA->setModified();
+                }
+            }
+        } else {
+            const int gi = frameIndex / gs;
+            for (int n = 0; n < gs; n++) {
+                D1GfxFrame *frameA = gfxA->getFrame(gfxA->getGroupFrameIndices(gi).first + n);
+                D1GfxFrame *frameB = gfxB->getFrame(gfxB->getGroupFrameIndices(gi).first + n);
+                if (flags & 1) {
+                    if (frameB->subtract(frameA, flags)) {
+                        gfxB->setModified();
+                    }
+                } else {
+                    if (frameA->mask(frameB, flags)) {
                         gfxA->setModified();
                     }
                 }
             }
-        } else {
-            gfxA = gfxB;
         }
     }
 }

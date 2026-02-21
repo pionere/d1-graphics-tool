@@ -2937,12 +2937,27 @@ void MainWindow::on_actionSquash_triggered()
 
 void MainWindow::on_actionMask_triggered()
 {
+    const bool subtract = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool ignoreColors = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    const unsigned flags = (subtract ? 1 : 0) | (ignoreColors ? 2 : 0);
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
+    int frameIndex = 0;
+    if (this->celView != nullptr) {
+        frameIndex = this->celView->getCurrentFrameIndex();
+    }
+    if (this->levelCelView != nullptr) {
+        frameIndex = this->levelCelView->getCurrentFrameIndex();
+    }
+    if (this->gfxsetView != nullptr) {
+        frameIndex = this->gfxsetView->getCurrentFrameIndex();
+    }
+
     if (this->gfxset != nullptr)
-        this->gfxset->mask();
+        this->gfxset->mask(frameIndex, flags);
     else
-        this->gfx->mask();
+        this->gfx->mask(frameIndex, flags);
 
     // Clear loading message from status bar
     ProgressDialog::done();

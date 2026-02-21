@@ -119,7 +119,8 @@ public:
     bool copy(int dx, int dy, const D1GfxFrame* srcFrame, int sx, int sy, int ex, int ey);
     bool flipHorizontal();
     bool flipVertical();
-    bool mask(const D1GfxFrame *frame);
+    bool mask(const D1GfxFrame *frame, unsigned flags);
+    bool subtract(const D1GfxFrame *frame, unsigned flags);
     bool optimize(D1CEL_TYPE type);
 
     // functions for smk-frames
@@ -358,7 +359,7 @@ public:
     void inefficientFrames() const;
     int testResize(const ResizeParam &params);
     bool resize(const ResizeParam &params);
-    void mask();
+    void mask(int frameIndex, unsigned flags);
     bool squash();
     void optimize();
     bool check(int assetMpl, bool *typetested = nullptr) const;
