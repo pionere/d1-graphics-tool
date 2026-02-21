@@ -2975,8 +2975,8 @@ void MainWindow::on_actionSquash_triggered()
 void MainWindow::on_actionMask_triggered()
 {
     const bool subtract = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
-    const bool matchColors = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
-    const unsigned flags = (subtract ? 1 : 0) | (matchColors ? 2 : 0);
+    const bool ignoreColors = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    const unsigned flags = (subtract ? 1 : 0) | (ignoreColors ? 2 : 0);
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
