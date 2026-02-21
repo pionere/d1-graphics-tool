@@ -554,6 +554,18 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
 void PaintWidget::selectArea(const QRect &area)
 {
     QRect sceneRect = area;
+    if (!sceneRect.isValid()) {
+        sceneRect = QRect();
+        this->currPos = this->lastPos = this->lastDelta = QPoint();
+        D1GfxFrame *frame = this->getCurrentFrame();
+        if (frame != nullptr) {
+            const int w = frame->getWidth();
+            const int h = frame->getHeight();
+            this->lastPos = QPoint(w, h);
+            sceneRect.setWidth(w);
+            sceneRect.setHeight(h);
+        }
+    }
     sceneRect.adjust(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     QPolygon poly = this->graphView->mapFromScene(sceneRect);
     QRect vpRect = poly.boundingRect();
@@ -561,6 +573,9 @@ void PaintWidget::selectArea(const QRect &area)
     QPoint globalBottomRight = this->graphView->viewport()->mapToGlobal(vpRect.bottomRight());
     QPoint topLeft = this->parentWidget()->mapFromGlobal(globalTopLeft);
     QPoint bottomRight = this->parentWidget()->mapFromGlobal(globalBottomRight);
+    if (this->rubberBand == nullptr) {
+        this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
+    }
     this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
     this->rubberBand->show();
 }
@@ -655,9 +670,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
             return true;
         }
 
-        if (this->rubberBand == nullptr) {
-            this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
-        }
         this->currPos = pos;
         this->selectArea(getArea(this->currPos, this->lastPos));
         return true;
