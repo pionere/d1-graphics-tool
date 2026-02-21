@@ -130,6 +130,7 @@ public:
     void displayFrame();
     void toggleBottomPanel();
     bool toggleMute();
+    void zoomInOut(int dir);
 
     static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 

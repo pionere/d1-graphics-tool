@@ -1202,20 +1202,12 @@ void MainWindow::wheelEvent(QWheelEvent *event)
                 this->paintWidget->adjustBrush(dir);
             }
         } else {
-            CelScene *scene = nullptr;
             if (this->celView != nullptr) {
-                scene = this->celView->getCelScene();
+                this->celView->zoomInOut(dir);
             } else if (this->levelCelView != nullptr) {
-                scene = this->levelCelView->getCelScene();
+                this->levelCelView->zoomInOut(dir);
             } else if (this->gfxsetView != nullptr) {
-                scene = this->gfxsetView->getCelScene();
-            }
-            if (scene != nullptr) {
-                if (dir >= 0) {
-                    scene->zoomIn();
-                } else {
-                    scene->zoomOut();
-                }
+                this->gfxsetView->zoomInOut(dir);
             }
         }
     }

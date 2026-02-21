@@ -70,6 +70,7 @@ public:
     void displayFrame();
     void toggleBottomPanel();
     void changeColor(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
+    void zoomInOut(int dir);
 
 private:
     void drawGrid(QImage &celFrame);

@@ -1050,6 +1050,15 @@ void GfxsetView::changeColor(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replace
     }
 }
 
+void GfxsetView::zoomInOut(int dir)
+{
+    if (dir >= 0) {
+        this->on_zoomInButton_clicked();
+    } else {
+        this->on_zoomOutButton_clicked();
+    }
+}
+
 void GfxsetView::updateGroupIndex()
 {
     int i = 0;

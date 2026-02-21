@@ -1161,6 +1161,15 @@ bool CelView::toggleMute()
     return this->audioMuted;
 }
 
+void CelView::zoomInOut(int dir)
+{
+    if (dir >= 0) {
+        this->on_zoomInButton_clicked();
+    } else {
+        this->on_zoomOutButton_clicked();
+    }
+}
+
 void CelView::updateGroupIndex()
 {
     int i = 0;
