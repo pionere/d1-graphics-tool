@@ -762,16 +762,6 @@
                <property name="bottomMargin">
                 <number>0</number>
                </property>
-               <item row="0" column="0">
-                <widget class="QLabel">
-                 <property name="minimumWidth">
-                  <number>48</number>
-                 </property>
-                 <property name="text">
-                  <string>Anim Order:</string>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="1" rowspan="2">
                 <widget class="QTextEdit" name="animOrderEdit">
                  <property name="toolTip">
@@ -797,10 +787,10 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
+               <item row="0" column="3">
                 <widget class="QPushButton" name="formatAnimOrderButton">
                  <property name="text">
-                  <string notr="true">Format</string>
+                  <string>Format</string>
                  </property>
                 </widget>
                </item>
@@ -816,16 +806,6 @@
                <property name="bottomMargin">
                 <number>0</number>
                </property>
-               <item row="0" column="0">
-                <widget class="QLabel">
-                 <property name="minimumWidth">
-                  <number>48</number>
-                 </property>
-                 <property name="text">
-                  <string>Anim Delay:</string>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="1">
                 <widget class="LineEditWidget" name="animDelayEdit">
                  <property name="charWidth">
@@ -872,16 +852,6 @@
                <property name="bottomMargin">
                 <number>0</number>
                </property>
-               <item row="0" column="0">
-                <widget class="QLabel">
-                 <property name="minimumWidth">
-                  <number>48</number>
-                 </property>
-                 <property name="text">
-                  <string>Action Frames:</string>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="1">
                 <widget class="LineEditWidget" name="actionFramesEdit">
                  <property name="charWidth">
@@ -898,7 +868,7 @@
                <item row="0" column="2">
                 <widget class="QPushButton" name="formatActionFramesButton">
                  <property name="text">
-                  <string notr="true">Format</string>
+                  <string>Format</string>
                  </property>
                 </widget>
                </item>
