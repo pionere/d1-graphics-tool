@@ -2965,9 +2965,13 @@ void MainWindow::on_actionMask_triggered()
 
 void MainWindow::on_actionOptimize_triggered()
 {
+    const bool maskedGfx = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool voteColors = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    const unsigned flags = (maskedGfx ? 1 : 0) | (voteColors ? 2 : 0);
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    this->gfx->optimize();
+    this->gfx->optimize(flags);
 
     // Clear loading message from status bar
     ProgressDialog::done();
