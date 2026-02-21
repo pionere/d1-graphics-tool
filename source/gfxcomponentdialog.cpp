@@ -339,6 +339,7 @@ std::pair<int, int> GfxComponentDialog::getEditRange() const
 
     fs = fe = this->currentFrameIndex;
     if (allFrames) {
+        fs = 0;
         fe = this->newComp->getGFX()->getFrameCount() - (allButLast ? 2 : 1);
     }
     return std::pair<int, int>(fs, fe);
@@ -457,7 +458,7 @@ void GfxComponentDialog::on_frameRefEdit_returnPressed()
     int frameRef = this->ui->frameRefEdit->text().toInt();
     const auto editRange = this->getEditRange();
     for (int i = editRange.first; i <= editRange.second; i++) {
-        D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
         frame->cfFrameRef = frameRef;
     }
 
