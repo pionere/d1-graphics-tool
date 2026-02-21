@@ -202,12 +202,10 @@ static quint8 *writeFrameData(const D1GfxFrame *frame, quint8 *pBuf, int subHead
 bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 {
     // calculate header size
-    bool groupped = false;
     int numGroups = params.groupNum;
     int headerSize = 0;
     if (numGroups == 0) {
         numGroups = gfx.getGroupCount();
-        groupped = numGroups > 1;
         for (int i = 0; i < numGroups; i++) {
             std::pair<int, int> gfi = gfx.groupFrameIndices[i];
             int ni = gfi.second - gfi.first + 1;
@@ -216,11 +214,17 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     } else {
         // update group indices
         const int numFrames = gfx.frames.count();
-        if (numFrames == 0 || (numFrames % numGroups) != 0) {
+        if ((numFrames % numGroups) != 0) {
             dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
             return false;
         }
-        groupped = true;
+        if (numFrames == 0) {
+            if (numGroups != 1) {
+                dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
+                return false;
+            }
+            numGroups = 0;
+        }
         gfx.groupFrameIndices.clear();
         for (int i = 0; i < numGroups; i++) {
             int ni = numFrames / numGroups;
@@ -228,11 +232,14 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
             headerSize += 4 + 4 * (ni + 1);
         }
     }
-    if (groupped) {
-        headerSize += sizeof(quint32) * numGroups;
+    if (numGroups == 0) {
+        headerSize = 4 + 4;
     }
+    // if (numGroups > 1) {
+        headerSize += sizeof(quint32) * numGroups;
+    // }
     // update type
-    gfx.type = groupped ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
+    gfx.type = numGroups > 1 ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
     // update clipped info
     bool clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && gfx.clipped);
     gfx.clipped = clipped;
@@ -266,11 +273,11 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     quint8 *pBuf;
     // write meta
     { // write the metadata
-    pBuf = &buf[groupped ? numGroups * sizeof(quint32) : headerSize];
+    pBuf = &buf[numGroups > 1 ? numGroups * sizeof(quint32) : headerSize];
     pBuf = D1Cel::writeCelMeta(meta, gfx, pBuf);
     }
     quint8 *hdr = buf;
-    if (groupped) {
+    if (numGroups > 1) {
         // add optional {CL2 GROUP HEADER}
         int offset = numGroups * sizeof(quint32) + metaSize;
         for (int i = 0; i < numGroups; i++, hdr += 4) {
@@ -296,6 +303,10 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
             *(quint32 *)&hdr[4 + 4 * (n + 1)] = SwapLE32(pBuf - hdr);
         }
         hdr += 4 + 4 * (ni + 1);
+    }
+    if (numGroups == 0) {
+        // *(quint32 *)&buf[0] = SwapLE32(0);
+        *(quint32 *)&buf[4] = SwapLE32(pBuf - buf);
     }
 
     // write to file

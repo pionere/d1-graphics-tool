@@ -257,10 +257,14 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params, bool 
                     dProgressErr() << QApplication::tr("Failed loading CLC file: %1.").arg(QDir::toNativeSeparators(filePath));
                 }
             }
+#if 0
             if (!loaded || this->baseGfx->getType() != gfx->getType()) {
                 if (loaded) {
                     dProgressErr() << QApplication::tr("Mismatching type in %1 (%2 vs %3)").arg(QDir::toNativeSeparators(filePath)).arg(D1Gfx::gfxTypeToStr(this->baseGfx->getType())).arg(D1Gfx::gfxTypeToStr(gfx->getType()));
                 }
+#else
+            if (!loaded) {
+#endif
                 gfx->setType(this->baseGfx->getType());
                 filePath.chop(1);
                 filePath.push_back('2');
@@ -322,13 +326,16 @@ void D1Gfxset::save(const SaveAsParam &params)
             saveParams.celFilePath = filePath + anim;
         }
         D1Gfx *gfx = this->gfxList[i];
+#if 0
         if (gfx->getFrameCount() != 0) {
+#endif
             D1Cl2::save(*gfx, saveParams);
             // save the components and the meta-info
             if (gfx->getComponentCount() != 0 || !gfx->getCompFilePath().isEmpty()) {
                 gfx->saveComponents();
                 D1Clc::save(*gfx, saveParams);
             }
+#if 0
         } else {
             // CL2 without content -> delete
             QString cl2FilePath = saveParams.celFilePath;
@@ -339,6 +346,7 @@ void D1Gfxset::save(const SaveAsParam &params)
                 gfx->setModified(false);
             }
         }
+#endif
     }
 }
 

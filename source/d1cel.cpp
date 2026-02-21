@@ -24,7 +24,7 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
         switch (type) {
         case CELMETA_DIMENSIONS: {
             if (endOffset < startOffset + 8) {
-                dProgressErr() << QApplication::tr("Not enough dimensions in the meta info.");
+                dProgressErr() << QApplication::tr("Not enough space for dimensions in the meta info.");
                 return false;
             }
             startOffset += 8;
@@ -502,9 +502,16 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     } else {
         // update group indices
         const int numFrames = gfx.frames.count();
-        if (numFrames == 0 || (numFrames % numGroups) != 0) {
+        if ((numFrames % numGroups) != 0) {
             dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
             return false;
+        }
+        if (numFrames == 0) {
+            if (numGroups != 1) {
+                dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
+                return false;
+            }
+            numGroups = 0;
         }
         gfx.groupFrameIndices.clear();
         for (int i = 0; i < numGroups; i++) {
@@ -513,13 +520,15 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
             headerSize += 4 + 4 * (ni + 1);
         }
     }
-
+    if (numGroups == 0) {
+        headerSize = 4 + 4;
+    }
     // if (numGroups > 1) {
     headerSize += sizeof(quint32) * numGroups;
     // }
 
     // update type
-    gfx.type = D1CEL_TYPE::V1_COMPILATION;
+    gfx.type = numGroups > 1 ? D1CEL_TYPE::V1_COMPILATION : D1CEL_TYPE::V1_REGULAR;
     // update clipped info
     bool clipped = params.clipped == SAVE_CLIPPED_TYPE::TRUE || (params.clipped == SAVE_CLIPPED_TYPE::AUTODETECT && gfx.clipped);
     gfx.clipped = clipped;
@@ -549,12 +558,12 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     QByteArray fileData;
     fileData.append(maxSize, 0);
 
-    headerSize = sizeof(quint32) * numGroups;
+    // headerSize = sizeof(quint32) * numGroups;
 
     quint8 *buf = (quint8 *)fileData.data();
     quint8 *pBuf;
     { // write the metadata
-    pBuf = &buf[headerSize];
+    pBuf = &buf[numGroups > 1 ? numGroups * sizeof(quint32) : headerSize];
     pBuf = writeCelMeta(meta , gfx, pBuf);
     }
     { // write the content
@@ -577,6 +586,11 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
         }
     }
     }
+    if (numGroups == 0) {
+        // *(quint32 *)&buf[0] = SwapLE32(0);
+        *(quint32 *)&buf[4] = SwapLE32(pBuf - buf);
+    }
+
     // write to file
     QDataStream out(&outFile);
     out.writeRawData((char *)buf, pBuf - buf);
