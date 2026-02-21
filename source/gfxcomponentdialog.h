@@ -21,6 +21,7 @@ public:
 private:
     void updateFields();
     void displayFrame();
+    void zoomInOut(int dir);
 
     void setFrameIndex(int frameIndex);
     void updateGroupIndex();
@@ -65,6 +66,8 @@ private slots:
 
     void on_submitButton_clicked();
     void on_cancelButton_clicked();
+
+    void wheelEvent(QWheelEvent *event) override;
 
     // this event is called, when a new translator is loaded or the system language is changed
     void changeEvent(QEvent *event) override;
