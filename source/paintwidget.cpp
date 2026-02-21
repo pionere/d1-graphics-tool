@@ -569,6 +569,9 @@ void PaintWidget::selectArea(const QRect &area)
     QPoint globalBottomRight = this->graphView->viewport()->mapToGlobal(vpRect.bottomRight());
     QPoint topLeft = this->parentWidget()->mapFromGlobal(globalTopLeft);
     QPoint bottomRight = this->parentWidget()->mapFromGlobal(globalBottomRight);
+    if (this->rubberBand == nullptr) {
+        this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
+    }
     this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
     this->rubberBand->show();
 }
@@ -663,9 +666,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, int flags)
             return true;
         }
 
-        if (this->rubberBand == nullptr) {
-            this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
-        }
         this->currPos = pos;
         this->selectArea(getArea(this->currPos, this->lastPos));
         return true;

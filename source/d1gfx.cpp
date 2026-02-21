@@ -566,7 +566,6 @@ bool D1GfxFrame::subtract(const D1GfxFrame *frame, unsigned flags)
 bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
 {
     bool result = false;
-
     switch (type) {
     case D1CEL_TYPE::V1_REGULAR:
     case D1CEL_TYPE::V1_COMPILATION:
@@ -626,42 +625,25 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                     // dProgress() << QApplication::tr("match %1 len %2 rle %3").arg(sx).arg(this->width - sx).arg(rle);
                     matches.push_back({ sx, this->width - sx, rle, 0 });
                 }
-#if 0
-                for (auto it = matches.begin(); it != matches.end(); ++it) {
-                    if (it->back_rle != 0) continue;
-                    auto nit = it + 1;
-                    if (nit != matches.end() && nit->pos - nit->front_rle == it->pos + it->len/* + it->back_rle*/) {
-                        dProgress() << QApplication::tr("match %1 len %2 -> back rle %3").arg(it->pos).arg(it->len).arg(nit->front_rle);
-                        it->back_rle = nit->front_rle;
-                    }
-                }
-#endif
-                const int maxrle = 0x7F;
+
                 for (auto it = matches.begin(); it != matches.end(); ++it) {
                     // dProgress() << QApplication::tr("check match %1 len %2 rle %3 : %4").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle);
                     if (it->back_rle != 0) {
                         if (it->front_rle != 0) {
-                            bool colorit = false;
-                            //if (it->len <= 2) {
-                            {
-                                colorit = true;
-                                int units = (it->len - 1) / 128 + 1;
-                                units += (it->front_rle - 1) / 0x7F + 1;
-                                units += (it->back_rle - 1) / 0x7F + 1;
-                                // units += it->front_rle;
-                                // units += it->back_rle;
-                                int drawlen = it->len + it->front_rle + it->back_rle;
-                                int newunits = (drawlen - 1) / 0x7F + 1;
-                                // newunits += it->front_rle;
-                                // newunits += it->back_rle;
-                                newunits += it->len;
-                                if (units < newunits) {
-                                    colorit = false;
-                                }
-                                // dProgress() << QApplication::tr("match %1 len %2 rle %3:%4 -> %5 vs %6").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle).arg(units).arg(newunits);
-                            }
+                            int units = (it->len - 1) / 128 + 1;
+                            units += (it->front_rle - 1) / 0x7F + 1;
+                            units += (it->back_rle - 1) / 0x7F + 1;
+                            // units += it->front_rle;
+                            // units += it->back_rle;
+                            int drawlen = it->len + it->front_rle + it->back_rle;
+                            int newunits = (drawlen - 1) / 0x7F + 1;
+                            // newunits += it->front_rle;
+                            // newunits += it->back_rle;
+                            newunits += it->len;
+                            colorit = ;
+                            // dProgress() << QApplication::tr("match %1 len %2 rle %3:%4 -> %5 vs %6").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle).arg(units).arg(newunits);
 
-                            if (colorit) {
+                            if (units >= newunits) {
                                 for (int x = it->pos; x < it->pos + it->len; x++) {
                                     const D1GfxPixel d1pix = maskFrame->getPixel(x, y);
                                     result |= this->setPixel(x, y, d1pix);
@@ -678,9 +660,6 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                     for (int x = it->pos; x < it->pos + it->len; x++) {
                         result |= this->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
-                    // auto nit = it + 1;
-                    // if (nit != matches.end() && nit->pos = it->pos + it->len + it->back_rle) {
-                    // }
                 }
             }
             break;
@@ -3433,7 +3412,7 @@ bool D1Gfx::patchCandle(bool silent)
     }
     return result;
 }
-
+#if 0
 bool D1Gfx::patchLeftShrine(bool silent)
 {
     constexpr int FRAME_WIDTH = 128;
@@ -3524,7 +3503,7 @@ bool D1Gfx::patchRightShrine(bool silent)
     }
     return result;
 }
-
+#endif
 bool D1Gfx::patchCryptLight(bool silent)
 {
     constexpr int FRAME_WIDTH = 96;
@@ -9133,12 +9112,14 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_CANDLE2: // patch Candle2.CEL
         change = this->patchCandle(silent);
         break;
+#if 0
     case GFX_OBJ_LSHR: // patch LShrineG.CEL
         change = this->patchLeftShrine(silent);
         break;
     case GFX_OBJ_RSHR: // patch RShrineG.CEL
         change = this->patchRightShrine(silent);
         break;
+#endif
     case GFX_OBJ_TFOUNTN: // patch TFountn.CEL
         change = this->patchCELFrames(gfxFileIndex, silent);
         break;
@@ -9314,12 +9295,14 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "candle2") {
         fileIndex = GFX_OBJ_CANDLE2;
     }
+#if 0
     if (baseName == "lshrineg") {
         fileIndex = GFX_OBJ_LSHR;
     }
     if (baseName == "rshrineg") {
         fileIndex = GFX_OBJ_RSHR;
     }
+#endif
     if (baseName == "tfountn") {
         fileIndex = GFX_OBJ_TFOUNTN;
     }

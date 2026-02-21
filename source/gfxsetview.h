@@ -149,7 +149,7 @@ private slots:
     void on_lastGroupButton_clicked();
 
     void on_showGridCheckBox_clicked();
-    void on_showOutlineCheckBox_clicked();    
+    void on_showOutlineCheckBox_clicked();
     void on_assetMplEdit_returnPressed();
     void on_assetMplEdit_escPressed();
 
