@@ -991,7 +991,8 @@ void GfxsetView::displayFrame()
     // Getting the current frame to display
     Qt::CheckState compType = this->ui->showComponentsCheckBox->checkState();
     int component = compType == Qt::Unchecked ? 0 : (compType == Qt::PartiallyChecked ? this->ui->componentsComboBox->currentIndex() : -1);
-    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex, component) : QImage();
+    const int outline = this->ui->showOutlineCheckBox->isChecked() ? this->selectedColor : -1;
+    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex, component, outline) : QImage();
 
     // add grid if requested
     if (this->ui->showGridCheckBox->isChecked()) {
@@ -1202,6 +1203,16 @@ void GfxsetView::selectGfx(int gfxIndex)
     }
 
     dMainWindow().gfxChanged(nextGfx);
+}
+
+void GfxsetView::palColorsSelected(const std::vector<quint8> &indices)
+{
+    if (indices.empty()) {
+        this->selectedColor = -1;
+    } else {
+        this->selectedColor = indices.front();
+    }
+    this->displayFrame();
 }
 
 void GfxsetView::on_misNWButton_clicked()
@@ -1585,6 +1596,11 @@ void GfxsetView::on_lastGroupButton_clicked()
 }
 
 void GfxsetView::on_showGridCheckBox_clicked()
+{
+    this->displayFrame();
+}
+
+void GfxsetView::on_showOutlineCheckBox_clicked()
 {
     this->displayFrame();
 }

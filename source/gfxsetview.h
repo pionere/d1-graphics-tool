@@ -86,6 +86,9 @@ signals:
     void frameRefreshed();
     void palModified();
 
+public slots:
+    void palColorsSelected(const std::vector<quint8> &indices);
+
 private slots:
     void on_misNWButton_clicked();
     void on_misNNWButton_clicked();
@@ -146,6 +149,7 @@ private slots:
     void on_lastGroupButton_clicked();
 
     void on_showGridCheckBox_clicked();
+    void on_showOutlineCheckBox_clicked();
     void on_assetMplEdit_returnPressed();
     void on_assetMplEdit_escPressed();
 
@@ -202,6 +206,7 @@ private:
     D1Gfxset *gfxset;
     QPushButton *buttons[16];
     D1GFX_SET_TYPE currType = D1GFX_SET_TYPE::Unknown;
+    int selectedColor = 0;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     QList<int> animOrder;

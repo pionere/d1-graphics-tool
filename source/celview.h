@@ -149,6 +149,9 @@ signals:
     void frameRefreshed();
     void palModified();
 
+public slots:
+    void palColorsSelected(const std::vector<quint8> &indices);
+
 private slots:
     void on_newComponentPushButtonClicked();
     void on_editComponentPushButtonClicked();
@@ -173,6 +176,7 @@ private slots:
     void on_lastGroupButton_clicked();
 
     void on_showGridCheckBox_clicked();
+    void on_showOutlineCheckBox_clicked();
     void on_assetMplEdit_returnPressed();
     void on_assetMplEdit_escPressed();
 
@@ -228,6 +232,7 @@ private:
 
     D1Pal *pal;
     D1Gfx *gfx;
+    int selectedColor = 0;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     QList<int> animOrder;

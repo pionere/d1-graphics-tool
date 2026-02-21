@@ -336,7 +336,7 @@ public:
     QSize getFrameSize() const;
     int getGroupSize() const;
     QString getFramePixels(int frameIndex, bool values) const;
-    QImage getFrameImage(int frameIndex, int component = 0) const;
+    QImage getFrameImage(int frameIndex, int component = 0, int outline = -1) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
     void insertFrame(int frameIndex, int width, int height);
     D1GfxFrame *insertFrame(int frameIndex);

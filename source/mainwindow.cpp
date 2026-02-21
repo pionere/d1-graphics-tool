@@ -1704,6 +1704,13 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (this->paintWidget != nullptr) {
         QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintWidget, &PaintWidget::palColorsSelected);
     }
+    // Refresh cel/gfxset-view when the selected color is changed
+    if (this->celView != nullptr) {
+        QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->celView, &CelView::palColorsSelected);
+    }
+    if (this->gfxsetView != nullptr) {
+        QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->gfxsetView, &GfxsetView::palColorsSelected);
+    }
     // Refresh tbl-view when the selected color is changed
     if (this->tblView != nullptr) {
         QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->tblView, &TblView::palColorsSelected);
