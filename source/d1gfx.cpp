@@ -2367,9 +2367,14 @@ void D1Gfx::optimize(unsigned flags)
                 if (pixel.isTransparent()) continue;
                 for (int i = 1; i < fc; i++) {
                     const D1GfxFrame *frame = this->frames[i];
-                    if (frame->getPixel(x, y) != pixel) {
+                    const D1GfxPixel cp = frame->getPixel(x, y);
+                    if (cp == pixel) continue;
+                    if (cp.isTransparent()) {
                         tmpFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                         break;
+                    }
+                    if (maskFrame->getPixel(x, y) == pixel) {
+                        tmpFrame->setPixel(x, y, cp);
                     }
                 }
             }
