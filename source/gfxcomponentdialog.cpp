@@ -335,8 +335,9 @@ std::pair<int, int> GfxComponentDialog::getEditRange() const
 {
     const bool allFrames = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     const bool allButLast = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    int fs, fe;
 
-    int fs = fe = this->currentFrameIndex;
+    fs = fe = this->currentFrameIndex;
     if (allFrames) {
         fe = this->newComp->getGFX()->getFrameCount() - (allButLast ? 2 : 1);
     }
