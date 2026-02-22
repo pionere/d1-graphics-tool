@@ -254,7 +254,9 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 else
                     dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(i + 1);
             } else if (clipped != res) {
-                if (clipped == -1)
+                if (res == 2)
+                    ;
+                else if (clipped == -1)
                     clipped = res;
                 else
                     dProgressErr() << QApplication::tr("Inconsistent clipping (Frame %1 is %2).").arg(i + 1).arg(res == 0 ? QApplication::tr("not clipped") : QApplication::tr("clipped"));

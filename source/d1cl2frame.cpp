@@ -116,7 +116,7 @@ int D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsPa
 
     // check if a positive width was found
     if (frame.width == 0)
-        return rawData.size() == 0 ? (clipped ? 1 : 0) : -1;
+        return rawData.size() == 0 ? (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT ? 2 : (clipped ? 1 : 0)) : -1;
 
     // READ {CL2 FRAME DATA}
     int frameDataStartOffset = 0;

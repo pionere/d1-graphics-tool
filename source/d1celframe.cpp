@@ -45,7 +45,7 @@ int D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     }
     // check if a positive width was found
     if (width == 0) {
-        return rawData.size() == 0 ? (clipped ? 1 : 0) : -1;
+        return rawData.size() == 0 ? (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT ? 2 : (clipped ? 1 : 0)) : -1;
     }
     // calculate the offset in case of a clipped frame
     int frameDataStartOffset = 0;

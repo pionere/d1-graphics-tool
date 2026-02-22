@@ -2359,22 +2359,17 @@ void D1Gfx::optimize(unsigned flags)
     }
     // optimize the mask-frame by eliminating unused pixels
     if (maskFrame && fc != 0) {
-        D1GfxFrame *tmpFrame = this->frames[0];
-        tmpFrame = new D1GfxFrame(*tmpFrame);
+        D1GfxFrame *tmpFrame = new D1GfxFrame(*maskFrame);
         for (int y = 0; y < tmpFrame->getHeight(); y++) {
             for (int x = 0; x < tmpFrame->getWidth(); x++) {
                 const D1GfxPixel pixel = tmpFrame->getPixel(x, y);
                 if (pixel.isTransparent()) continue;
-                for (int i = 1; i < fc; i++) {
+                for (int i = 0; i < fc; i++) {
                     const D1GfxFrame *frame = this->frames[i];
                     const D1GfxPixel cp = frame->getPixel(x, y);
-                    if (cp == pixel) continue;
                     if (cp.isTransparent()) {
                         tmpFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
                         break;
-                    }
-                    if (maskFrame->getPixel(x, y) == pixel) {
-                        tmpFrame->setPixel(x, y, cp);
                     }
                 }
             }
