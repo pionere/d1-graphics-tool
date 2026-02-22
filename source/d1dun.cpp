@@ -4153,7 +4153,8 @@ bool D1Dun::setMapObject(MapObject &dstObj, int objectIndex)
         return false;
     }
     dstObj.oType = objectIndex;
-    dstObj.frameNum = 0;
+    dstObj.baseFrameNum = 0;
+    dstObj.animFrameNum = -1;
     dstObj.oPreFlag = false;
     return true;
 }
