@@ -556,10 +556,14 @@ void PaintWidget::selectArea(const QRect &area)
     QRect sceneRect = area;
     if (!sceneRect.isValid()) {
         sceneRect = QRect();
+        this->currPos = this->lastPos = this->lastDelta = QPoint();
         D1GfxFrame *frame = this->getCurrentFrame();
         if (frame != nullptr) {
-            sceneRect.setWidth(frame->getWidth());
-            sceneRect.setHeight(frame->getHeight());
+            const int w = frame->getWidth();
+            const int h = frame->getHeight();
+            this->lastPos = QPoint(w, h);
+            sceneRect.setWidth(w);
+            sceneRect.setHeight(h);
         }
     }
     sceneRect.adjust(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
