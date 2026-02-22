@@ -3557,7 +3557,7 @@ bool D1Gfx::patchCELFrames(int gfxFileIndex, bool silent)
     int frameCount = 0, width = 0, height = 0;
     switch (gfxFileIndex) {
     case GFX_OBJ_URN:     frameCount = 10 - 1; width =  96; height =  96; break;
-    case GFX_OBJ_TFOUNTN: frameCount =  8 - 4; width = 128; height =  96; break;
+//  case GFX_OBJ_TFOUNTN: frameCount =  8 - 4; width = 128; height =  96; break;
     }
 
     if (this->getGroupCount() < 1) {

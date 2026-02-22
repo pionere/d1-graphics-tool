@@ -676,7 +676,7 @@ static int SetupObject(int type, int ox, int oy)
 	os->_oPreFlag = ods->oPreFlag;
 	os->_oProc = ods->oProc;
 	os->_oModeFlags = ods->oModeFlags;
-	os->_oGfxFrame = ods->oAnimBaseFrame;
+	os->_oGfxFrame = ods->oBaseFrame;
 //	os->_oAnimData = objanimdata[ods->ofindex];
 	ofd = &objfiledata[ods->ofindex];
 //	os->_oSFX = ofd->oSFX;
@@ -805,10 +805,10 @@ static void AddL5StoryBook(int bookidx, int ox, int oy)
 	// assert(oi != -1);
 
 	os = &objects[oi];
-	// assert(os->_oGfxFrame == objectdata[OBJ_L5BOOK].oAnimBaseFrame);
-	os->_oVar4 = objectdata[OBJ_L5BOOK].oAnimBaseFrame + 1; // STORY_BOOK_READ_FRAME
-	os->_oVar2 = TEXT_BOOK4 + bookidx;                      // STORY_BOOK_MSG
-	os->_oVar5 = BK_STORY_NAKRUL_1 + bookidx;               // STORY_BOOK_NAME
+	// assert(os->_oGfxFrame == objectdata[OBJ_L5BOOK].oBaseFrame);
+	os->_oVar4 = objectdata[OBJ_L5BOOK].oBaseFrame + 1; // STORY_BOOK_READ_FRAME
+	os->_oVar2 = TEXT_BOOK4 + bookidx;                  // STORY_BOOK_MSG
+	os->_oVar5 = BK_STORY_NAKRUL_1 + bookidx;           // STORY_BOOK_NAME
 }
 
 static void AddNakrulBook(int oi)
@@ -834,11 +834,11 @@ static void AddNakrulBook(int oi)
 	bookidx += QNB_BOOK_A;
 
 	os = &objects[oi];
-	// assert(os->_oGfxFrame == objectdata[OBJ_NAKRULBOOK].oAnimBaseFrame);
-	os->_oVar4 = objectdata[OBJ_NAKRULBOOK].oAnimBaseFrame + 1; // STORY_BOOK_READ_FRAME
-	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A;             // STORY_BOOK_MSG
-	os->_oVar3 = bookidx;                                       // STORY_BOOK_NAKRUL_IDX
-	os->_oVar5 = BK_NAKRUL_SPELL;                               // STORY_BOOK_NAME
+	// assert(os->_oGfxFrame == objectdata[OBJ_NAKRULBOOK].oBaseFrame);
+	os->_oVar4 = objectdata[OBJ_NAKRULBOOK].oBaseFrame + 1; // STORY_BOOK_READ_FRAME
+	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A;         // STORY_BOOK_MSG
+	os->_oVar3 = bookidx;                                   // STORY_BOOK_NAKRUL_IDX
+	os->_oVar5 = BK_NAKRUL_SPELL;                           // STORY_BOOK_NAME
 }
 
 static void AddLvl2xBooks(int bookidx)

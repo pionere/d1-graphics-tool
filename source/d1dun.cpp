@@ -1188,7 +1188,7 @@ QImage D1Dun::getObjectImage(const MapObject &mapObj)
                 QImage anim = objEntry->objGfx->getFrameImage(animFrameNum - 1);
                 if (result.isNull()) {
                     result = anim;
-                } else if (anim.width() == result.width() && (anim.height() == result.height()) {
+                } else if (anim.width() == result.width() && anim.height() == result.height()) {
                     QRgb *srcBits = reinterpret_cast<QRgb *>(anim.bits());
                     QRgb *destBits = reinterpret_cast<QRgb *>(result.bits());
                     for (int y = 0; y < anim.height(); y++) {
