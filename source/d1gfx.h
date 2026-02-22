@@ -144,10 +144,10 @@ typedef enum gfx_file_index {
     GFX_OBJ_L2DOORS, // graphics of the doors in the Catacombs (L2Doors.CEL)
     GFX_OBJ_L3DOORS, // graphics of the doors in the Caves (L3Doors.CEL)
     GFX_OBJ_MCIRL,   // graphics of the magic circle object (Mcirl.CEL)
-    GFX_OBJ_CANDLE2, // graphics of a light stand with a candle (Candle2.CEL)
+//  GFX_OBJ_CANDLE2, // graphics of a light stand with a candle (Candle2.CEL)
 //  GFX_OBJ_LSHR,    // graphics of the west-facing shrine (LShrineG.CEL)
 //  GFX_OBJ_RSHR,    // graphics of the east-facing shrine (RShrineG.CEL)
-    GFX_OBJ_TFOUNTN, // graphics of the tear fountain (TFountn.CEL)
+//  GFX_OBJ_TFOUNTN, // graphics of the tear fountain (TFountn.CEL)
     GFX_OBJ_L5LIGHT, // graphics of the light stand in Crypt (L5Light.CEL)
     GFX_OBJ_URN,     // graphics of the urn in Crypt (Urn.CEL)
     GFX_PLR_RHTAT,   // graphics of rogue in heavy armor with staff attacking (RHTAT.CL2)
@@ -414,9 +414,9 @@ private:
     bool patchCatacombsDoors(bool silent);
     bool patchCavesDoors(bool silent);
     bool patchMagicCircle(bool silent);
-    bool patchCandle(bool silent);
-    bool patchLeftShrine(bool silent);
-    bool patchRightShrine(bool silent);
+    // bool patchCandle(bool silent);
+    // bool patchLeftShrine(bool silent);
+    // bool patchRightShrine(bool silent);
     bool patchCryptLight(bool silent);
     bool patchCELFrames(int gfxFileIndex, bool silent);
     bool patchPlrFrames(int gfxFileIndex, bool silent);

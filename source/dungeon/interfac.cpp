@@ -33,14 +33,15 @@ int counter1, counter2, lc2;
 
 typedef struct ObjStruct {
     int otype;
+    int baseFrame;
     int animFrame;
     QString name;
 
     bool operator==(const ObjStruct & oval) const {
-        return otype == oval.otype && animFrame == oval.animFrame && name == oval.name;
+        return otype == oval.otype && baseFrame == oval.baseFrame && animFrame == oval.animFrame && name == oval.name;
     };
     bool operator!=(const ObjStruct & oval) const {
-        return otype != oval.otype || animFrame != oval.animFrame || name != oval.name;
+        return otype != oval.otype || baseFrame != oval.baseFrame  || animFrame != oval.animFrame || name != oval.name;
     };
 } ObjStruct;
 
@@ -717,7 +718,10 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
                 obj.oPreFlag = os->_oPreFlag;
                 ObjStruct on;
                 on.otype = os->_otype;
-                on.animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : os->_oAnimFrame;
+                on.baseFrame = os->_oGfxFrame;
+                if (on.baseFrame == 0 && os->_oAnimFlag != OAM_LOOP)
+                    on.baseFrame = 1;
+                on.animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : -1;
                 on.name = infostr;
                 auto iter = objectTypes.begin();
                 for (; iter != objectTypes.end(); iter++) {
@@ -795,7 +799,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         objRes.name = objType.name.isEmpty() ? objfiledata[objectdata[otype].ofindex].ofName : objType.name;
         objRes.path = assetPath + "/Objects/" + objfiledata[objectdata[otype].ofindex].ofName + ".CEL";
         // objRes.width = objfiledata[objectdata[otype].ofindex].oAnimWidth;
-        objRes.frame = objType.animFrame;
+        objRes.frame = objType.baseFrame != 0 ? objType.baseFrame : objType.animFrame;
         dun->addResource(objRes);
     }
     view->updateEntityOptions();

@@ -3373,7 +3373,7 @@ bool D1Gfx::patchMagicCircle(bool silent)
     }
     return true;
 }
-
+#if 0
 bool D1Gfx::patchCandle(bool silent)
 {
     constexpr int FRAME_WIDTH = 96;
@@ -3411,7 +3411,7 @@ bool D1Gfx::patchCandle(bool silent)
     }
     return result;
 }
-#if 0
+
 bool D1Gfx::patchLeftShrine(bool silent)
 {
     constexpr int FRAME_WIDTH = 128;
@@ -9108,20 +9108,20 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_MCIRL: // patch Mcirl.CEL
         change = this->patchMagicCircle(silent);
         break;
+#if 0
     case GFX_OBJ_CANDLE2: // patch Candle2.CEL
         change = this->patchCandle(silent);
         break;
-#if 0
     case GFX_OBJ_LSHR: // patch LShrineG.CEL
         change = this->patchLeftShrine(silent);
         break;
     case GFX_OBJ_RSHR: // patch RShrineG.CEL
         change = this->patchRightShrine(silent);
         break;
-#endif
     case GFX_OBJ_TFOUNTN: // patch TFountn.CEL
         change = this->patchCELFrames(gfxFileIndex, silent);
         break;
+#endif
     case GFX_OBJ_L5LIGHT: // patch L5Light.CEL
         change = this->patchCryptLight(silent);
         break;
@@ -9291,20 +9291,20 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "mcirl") {
         fileIndex = GFX_OBJ_MCIRL;
     }
+#if 0
     if (baseName == "candle2") {
         fileIndex = GFX_OBJ_CANDLE2;
     }
-#if 0
     if (baseName == "lshrineg") {
         fileIndex = GFX_OBJ_LSHR;
     }
     if (baseName == "rshrineg") {
         fileIndex = GFX_OBJ_RSHR;
     }
-#endif
     if (baseName == "tfountn") {
         fileIndex = GFX_OBJ_TFOUNTN;
     }
+#endif
     if (baseName == "l5light") {
         fileIndex = GFX_OBJ_L5LIGHT;
     }

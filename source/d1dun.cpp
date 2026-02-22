@@ -1169,19 +1169,39 @@ QImage D1Dun::getObjectImage(const MapObject &mapObj)
         this->loadObject(mapObj.oType);
         objEntry = &this->objectCache.back();
     }
+    QImage result = QImage();
     if (objEntry->objGfx != nullptr) {
         const int frameCount = objEntry->objGfx->getFrameCount();
         if (frameCount != 0) {
-            int frameNum = mapObj.frameNum;
-            if (frameNum == 0)
-                frameNum = objEntry->frameNum;
-            if (frameNum == 0 || frameCount < frameNum) {
-                frameNum = 1;
+            int baseFrameNum = mapObj.baseFrameNum;
+            if (baseFrameNum == 0)
+                baseFrameNum = objEntry->baseFrameNum;
+            if (baseFrameNum != 0) {
+                result = objEntry->objGfx->getFrameImage(baseFrameNum - 1);
             }
-            return objEntry->objGfx->getFrameImage(frameNum - 1);
+            int animFrameNum = mapObj.animFrameNum;
+            if (animFrameNum == 0)
+                animFrameNum = objEntry->animFrameNum;
+            if (animFrameNum >= 0) {
+                if (animFrameNum == 0 || frameCount < animFrameNum)
+                    animFrameNum = 1;
+                QImage anim = objEntry->objGfx->getFrameImage(animFrameNum - 1);
+                if (result.isNull()) {
+                    result = anim;
+                } else if (anim.width() == result.width() && (anim.height() == result.height()) {
+                    QRgb *srcBits = reinterpret_cast<QRgb *>(anim.bits());
+                    QRgb *destBits = reinterpret_cast<QRgb *>(result.bits());
+                    for (int y = 0; y < anim.height(); y++) {
+                        for (int x = 0; x < anim.width(); x++, srcBits++, destBits++) {
+                            if (qAlpha(*srcBits) == 0) continue;
+                            *destBits = *srcBits;
+                        }
+                    }
+                }
+            }
         }
     }
-    return QImage();
+    return result;
 }
 
 QImage D1Dun::getMonsterImage(const MapMonster &mapMon)
@@ -2850,12 +2870,13 @@ void D1Dun::loadObjectGfx(const QString &filePath, ObjectCacheEntry &result)
 
 void D1Dun::loadObject(int objectIndex)
 {
-    ObjectCacheEntry result = { objectIndex, nullptr, 0 };
+    ObjectCacheEntry result = { objectIndex, nullptr, 0, 0 };
     unsigned i = 0;
     for ( ; i < this->customObjectTypes.size(); i++) {
         const CustomObjectStruct &customObject = this->customObjectTypes[i];
         if (customObject.type == objectIndex) {
-            result.frameNum = customObject.frameNum;
+            result.baseFrameNum = customObject.frameNum;
+            result.animFrameNum = -1;
             QString celFilePath = customObject.path;
             this->loadObjectGfx(celFilePath, result);
             break;
@@ -2865,10 +2886,11 @@ void D1Dun::loadObject(int objectIndex)
     if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && *objType != 0 && !this->assetPath.isEmpty()) {
         const ObjectData &od = objectdata[*objType];
         const ObjFileData &ofd = objfiledata[od.ofindex];
-        result.frameNum = od.oAnimBaseFrame;
-        if (result.frameNum == 0 && ofd.oAnimFlag != OAM_LOOP) {
-            result.frameNum = 1;
+        result.baseFrameNum = od.oBaseFrame;
+        if (result.baseFrameNum == 0 && ofd.oAnimFlag != OAM_LOOP) {
+            result.baseFrameNum = 1;
         }
+        result.animFrameNum = ofd.oAnimFlag == OAM_LOOP ? 0 : -1;
         QString celFilePath = this->assetPath + "/Objects/" + ofd.ofName + ".CEL";
         this->loadObjectGfx(celFilePath, result);
     }

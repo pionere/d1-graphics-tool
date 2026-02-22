@@ -80,10 +80,11 @@ Q_DECLARE_METATYPE(DunMonsterType);
 
 typedef struct MapObject {
     int oType;
-    int frameNum;
+    int baseFrameNum;
+    int animFrameNum;
     bool oPreFlag;
     bool operator==(const MapObject & oobj) const {
-        return oType == oobj.oType && frameNum == oobj.frameNum && oPreFlag == oobj.oPreFlag;
+        return oType == oobj.oType && baseFrameNum == oobj.baseFrameNum && animFrameNum == oobj.animFrameNum && oPreFlag == oobj.oPreFlag;
     };
 } MapObject;
 
@@ -156,7 +157,8 @@ typedef struct CustomMissileStruct {
 typedef struct ObjectCacheEntry {
     int objectIndex;
     D1Gfx *objGfx;
-    int frameNum;
+    int baseFrameNum;
+    int animFrameNum;
 } ObjectCacheEntry;
 
 typedef struct MonsterCacheEntry {

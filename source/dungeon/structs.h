@@ -626,7 +626,7 @@ typedef struct ObjectData {
 	BYTE otheme;         // theme_id
 	BYTE oquest;         // quest_id
 	//BYTE oAnimFlag;
-	BYTE oAnimBaseFrame; // The starting/base frame of (initially) non-animated objects
+	BYTE oBaseFrame;     // The base frame of the objects
 	//int oAnimFrameLen; // Tick length of each frame in the current animation
 	//int oAnimLen;      // Number of frames in current animation
 	//int oAnimWidth;
@@ -663,6 +663,7 @@ typedef struct ObjectStruct {
 	BYTE _oAnimFlag;  // object_anim_mode
 	BYTE _oProc;      // object_proc_func
 	BYTE _oModeFlags; // object_mode_flags
+	int _oGfxFrame;   // the base frame of graphics
 	int _oAnimFrameLen; // Tick length of each frame in the current animation
 	int _oAnimCnt;   // Increases by one each game tick, counting how close we are to _oAnimFrameLen
 	int _oAnimLen;   // Number of frames in current animation
