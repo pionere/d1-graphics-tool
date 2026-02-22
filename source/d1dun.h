@@ -118,7 +118,8 @@ typedef struct CustomItemStruct {
 typedef struct ObjectCacheEntry {
     int objectIndex;
     D1Gfx *objGfx;
-    int frameNum;
+    int baseFrameNum;
+    int animFrameNum;
 } ObjectCacheEntry;
 
 typedef struct MonsterCacheEntry {

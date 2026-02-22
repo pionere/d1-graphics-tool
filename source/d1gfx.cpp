@@ -3318,7 +3318,7 @@ bool D1Gfx::patchMagicCircle(bool silent)
     }
     return true;
 }
-
+#if 0
 bool D1Gfx::patchCandle(bool silent)
 {
     constexpr int FRAME_WIDTH = 96;
@@ -3447,7 +3447,7 @@ bool D1Gfx::patchRightShrine(bool silent)
     }
     return result;
 }
-
+#endif
 bool D1Gfx::patchCryptLight(bool silent)
 {
     constexpr int FRAME_WIDTH = 96;
@@ -3502,7 +3502,7 @@ bool D1Gfx::patchCELFrames(int gfxFileIndex, bool silent)
     int frameCount = 0, width = 0, height = 0;
     switch (gfxFileIndex) {
     case GFX_OBJ_URN:     frameCount = 10 - 1; width =  96; height =  96; break;
-    case GFX_OBJ_TFOUNTN: frameCount =  8 - 4; width = 128; height =  96; break;
+//  case GFX_OBJ_TFOUNTN: frameCount =  8 - 4; width = 128; height =  96; break;
     }
 
     if (this->getGroupCount() < 1) {
@@ -9031,6 +9031,7 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_MCIRL: // patch Mcirl.CEL
         change = this->patchMagicCircle(silent);
         break;
+#if 0
     case GFX_OBJ_CANDLE2: // patch Candle2.CEL
         change = this->patchCandle(silent);
         break;
@@ -9043,6 +9044,7 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_TFOUNTN: // patch TFountn.CEL
         change = this->patchCELFrames(gfxFileIndex, silent);
         break;
+#endif
     case GFX_OBJ_L5LIGHT: // patch L5Light.CEL
         change = this->patchCryptLight(silent);
         break;
@@ -9212,6 +9214,7 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "mcirl") {
         fileIndex = GFX_OBJ_MCIRL;
     }
+#if 0
     if (baseName == "candle2") {
         fileIndex = GFX_OBJ_CANDLE2;
     }
@@ -9224,6 +9227,7 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "tfountn") {
         fileIndex = GFX_OBJ_TFOUNTN;
     }
+#endif
     if (baseName == "l5light") {
         fileIndex = GFX_OBJ_L5LIGHT;
     }

@@ -378,7 +378,7 @@ static void AddBookLever(int type, int x1, int y1, int x2, int y2, int qn)
 	oi = AddObject(type, pos.x, pos.y);
 	SetObjMapRange(oi, x1, y1, x2, y2, leverid);
 	leverid++;
-	objects[oi]._oVar6 = objects[oi]._oAnimFrame + 1; // LEVER_BOOK_ANIM
+	objects[oi]._oVar6 = objects[oi]._oGfxFrame + 1; // LEVER_BOOK_ANIM
 	objects[oi]._oVar7 = qn; // LEVER_BOOK_QUEST
 }
 
@@ -663,7 +663,7 @@ static int SetupObject(int type, int ox, int oy)
 	os->_oPreFlag = ods->oPreFlag;
 	os->_oProc = ods->oProc;
 	os->_oModeFlags = ods->oModeFlags;
-	os->_oAnimFrame = ods->oAnimBaseFrame;
+	os->_oGfxFrame = ods->oBaseFrame;
 //	os->_oAnimData = objanimdata[ods->ofindex];
 	ofd = &objfiledata[ods->ofindex];
 //	os->_oSFX = ofd->oSFX;
@@ -672,9 +672,16 @@ static int SetupObject(int type, int ox, int oy)
 	os->_oAnimFrameLen = ofd->oAnimFrameLen;
 	os->_oAnimLen = ofd->oAnimLen;
 	//os->_oAnimCnt = 0;
+	os->_oAnimFrame = 0;
 	if (ofd->oAnimFlag != OAM_NONE) {
-		os->_oAnimCnt = random_low(146, os->_oAnimFrameLen);
-		os->_oAnimFrame = RandRangeLow(1, os->_oAnimLen);
+		if (ofd->oAnimFlag == OAM_SINGLE) {
+			os->_oAnimFlag = OAM_NONE;
+			os->_oAnimFrame = 1;
+		} else {
+			// assert(ofd->oAnimFlag == OAM_LOOP);
+			os->_oAnimCnt = random_low(146, os->_oAnimFrameLen);
+			os->_oAnimFrame = RandRangeLow(1, os->_oAnimLen);
+		}
 	}
 //	os->_oAnimWidth = objanimdim[ods->ofindex];
 //	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
@@ -780,8 +787,8 @@ static void AddL5StoryBook(int bookidx, int ox, int oy)
 	// assert(oi != -1);
 
 	os = &objects[oi];
-	// assert(os->_oAnimFrame == objectdata[OBJ_L5BOOK].oAnimBaseFrame);
-	os->_oVar4 = objectdata[OBJ_L5BOOK].oAnimBaseFrame + 1; // STORY_BOOK_READ_FRAME
+	// assert(os->_oGfxFrame == objectdata[OBJ_L5BOOK].oBaseFrame);
+	os->_oVar4 = objectdata[OBJ_L5BOOK].oBaseFrame + 1; // STORY_BOOK_READ_FRAME
 	os->_oVar2 = TEXT_BOOK4 + bookidx;                      // STORY_BOOK_MSG
 	os->_oVar5 = BK_STORY_NAKRUL_1 + bookidx;               // STORY_BOOK_NAME
 }
@@ -809,11 +816,11 @@ static void AddNakrulBook(int oi)
 	bookidx += QNB_BOOK_A;
 
 	os = &objects[oi];
-	// assert(os->_oAnimFrame == objectdata[OBJ_NAKRULBOOK].oAnimBaseFrame);
-	os->_oVar4 = objectdata[OBJ_NAKRULBOOK].oAnimBaseFrame + 1; // STORY_BOOK_READ_FRAME
-	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A;             // STORY_BOOK_MSG
-	os->_oVar3 = bookidx;                                       // STORY_BOOK_NAKRUL_IDX
-	os->_oVar5 = BK_NAKRUL_SPELL;                               // STORY_BOOK_NAME
+	// assert(os->_oGfxFrame == objectdata[OBJ_NAKRULBOOK].oBaseFrame);
+	os->_oVar4 = objectdata[OBJ_NAKRULBOOK].oBaseFrame + 1; // STORY_BOOK_READ_FRAME
+	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A;         // STORY_BOOK_MSG
+	os->_oVar3 = bookidx;                                   // STORY_BOOK_NAKRUL_IDX
+	os->_oVar5 = BK_NAKRUL_SPELL;                           // STORY_BOOK_NAME
 }
 
 static void AddLvl2xBooks(int bookidx)
@@ -1056,7 +1063,7 @@ static void AddChest(int oi)
 
 	os = &objects[oi];
 	if (random_(147, 2) == 0)
-		os->_oAnimFrame += 3;
+		os->_oGfxFrame += 3;
 	os->_oRndSeed = NextRndSeed(); // CHEST_ITEM_SEED1
 	//assert(os->_otype >= OBJ_CHEST1 && os->_otype <= OBJ_CHEST3
 	//	|| os->_otype >= OBJ_TCHEST1 && os->_otype <= OBJ_TCHEST3);
@@ -1155,7 +1162,7 @@ static void ObjAddBloodBook(int oi)
 	os = &objects[oi];
 	os->_oRndSeed = NextRndSeed();
 	os->_oVar5 = BK_BLOOD;                   // STORY_BOOK_NAME
-	os->_oVar6 = os->_oAnimFrame + 1;        // LEVER_BOOK_ANIM
+	os->_oVar6 = os->_oGfxFrame + 1;         // LEVER_BOOK_ANIM
 	os->_oVar7 = Q_BLOOD;                    // LEVER_BOOK_QUEST
 	SetObjMapRange(oi, 0, 0, 0, 0, leverid); // NULL_LVR_EFFECT
 	leverid++;
@@ -1184,7 +1191,7 @@ static void AddDecap(int oi)
 
 	os = &objects[oi];
 	os->_oRndSeed = NextRndSeed();
-	os->_oAnimFrame = RandRange(1, 8);
+	os->_oGfxFrame = RandRange(1, 8);
 }
 
 static void AddMagicCircle(int oi)
@@ -1211,8 +1218,8 @@ static void AddStoryBook(int oi)
 	// os->_oVar1 = bookframe;
 	os->_oVar2 = 3 * bookframe + idx + TEXT_BOOK11;      // STORY_BOOK_MSG
 	os->_oVar5 = 3 * bookframe + idx + BK_STORY_MAINA_1; // STORY_BOOK_NAME
-	os->_oAnimFrame = 5 - 2 * bookframe;                 //
-	os->_oVar4 = os->_oAnimFrame + 1;                    // STORY_BOOK_READ_FRAME
+	os->_oGfxFrame = 5 - 2 * bookframe;                  //
+	os->_oVar4 = os->_oGfxFrame + 1;                     // STORY_BOOK_READ_FRAME
 }
 
 static void AddTorturedMaleBody(int oi)
@@ -1221,7 +1228,7 @@ static void AddTorturedMaleBody(int oi)
 
 	os = &objects[oi];
 	//os->_oRndSeed = NextRndSeed();
-	os->_oAnimFrame = RandRange(1, 4);
+	os->_oGfxFrame = RandRange(1, 4);
 }
 
 static void AddTorturedFemaleBody(int oi)
@@ -1230,7 +1237,7 @@ static void AddTorturedFemaleBody(int oi)
 
 	os = &objects[oi];
 	//os->_oRndSeed = NextRndSeed();
-	os->_oAnimFrame = RandRange(1, 3);
+	os->_oGfxFrame = RandRange(1, 3);
 }
 
 int AddObject(int type, int ox, int oy)
