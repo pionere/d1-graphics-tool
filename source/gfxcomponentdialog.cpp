@@ -340,7 +340,8 @@ std::pair<int, int> GfxComponentDialog::getEditRange() const
     fs = fe = this->currentFrameIndex;
     if (allFrames) {
         fs = 0;
-        fe = this->newComp->getGFX()->getFrameCount() - (allButLast ? 2 : 1);
+        fe = this->newComp->getGFX()->getFrameCount();
+        fe -= (allButLast && fe > 1) ? 2 : 1;
     }
     return std::pair<int, int>(fs, fe);
 }
