@@ -2710,7 +2710,7 @@ void D1Gfx::removeComponent(int compIndex)
 
 D1GfxComp *D1Gfx::insertComponent(int compIndex, D1Gfx *gfx)
 {
-    D1GfxComp *newComp = new D1GfxComp(gfx);
+    D1GfxComp *newComp = new D1GfxComp(gfx, this);
     this->components.insert(compIndex, newComp);
     // this->modified = true;
     return newComp;
