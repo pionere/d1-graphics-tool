@@ -262,7 +262,7 @@ class D1GfxComp : public QObject {
 
     friend class D1Gfx;
 public:
-    D1GfxComp(D1Gfx *gfx);
+    D1GfxComp(D1Gfx *cg, const D1Gfx *g);
     D1GfxComp(const D1GfxComp &o);
     ~D1GfxComp();
 

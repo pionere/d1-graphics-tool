@@ -1346,11 +1346,11 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
     return this->frames[idx];
 }
 
-D1GfxComp::D1GfxComp(D1Gfx *g)
+D1GfxComp::D1GfxComp(D1Gfx *cg, const D1Gfx *g)
 {
-    this->gfx = g;
+    this->gfx = cg;
 
-    QFileInfo fileInfo(g->getFilePath());
+    QFileInfo fileInfo(cg->getFilePath());
     QString labelText = fileInfo.baseName();
     this->label = labelText;
 
@@ -2654,7 +2654,7 @@ void D1Gfx::removeComponent(int compIndex)
 
 D1GfxComp *D1Gfx::insertComponent(int compIndex, D1Gfx *gfx)
 {
-    D1GfxComp *newComp = new D1GfxComp(gfx);
+    D1GfxComp *newComp = new D1GfxComp(gfx, this);
     this->components.insert(compIndex, newComp);
     // this->modified = true;
     return newComp;
