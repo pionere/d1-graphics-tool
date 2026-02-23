@@ -387,6 +387,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
 {
     if (dx == 0 && dy == 0)
         return false;
+    const D1GfxPixel backPixel = D1GfxPixel::transparentPixel();
     int width = this->width;
     int height = this->height;
     // assert(sx >= 0 && sx < width);
@@ -400,7 +401,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
             for (int y = sy; y < ey; y++) {
                 // for (int x = std::max(sx, -dx); x < ex; x++) {
                 for (int x = sx; x < ex; x++) {
-                    D1GfxPixel pixel = this->pixels[y][x];
+                    const D1GfxPixel pixel = this->pixels[y][x];
                     if (x + dx >= 0 /*&& x + dx < width*/ && y + dy >= 0 /*&& y + dy < height*/)
                     {
                         if (pixel.isTransparent())
@@ -410,7 +411,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
                     } else {
                         change |= !pixel.isTransparent();
                     }
-                    this->pixels[y][x] = D1GfxPixel::transparentPixel();
+                    this->pixels[y][x] = backPixel;
                 }
             }
         } else {
@@ -418,7 +419,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
             for (int y = ey - 1; y >= sy; y--) {
                 // for (int x = std::max(sx, -dx); x < ex; x++) {
                 for (int x = sx; x < ex; x++) {
-                    D1GfxPixel pixel = this->pixels[y][x];
+                    const D1GfxPixel pixel = this->pixels[y][x];
                     if (x + dx >= 0 /*&& x + dx < width && y + dy >= 0 */&& y + dy < height)
                     {
                         if (pixel.isTransparent())
@@ -428,7 +429,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
                     } else {
                         change |= !pixel.isTransparent();
                     }
-                    this->pixels[y][x] = D1GfxPixel::transparentPixel();
+                    this->pixels[y][x] = backPixel;
                 }
             }
         }
@@ -438,7 +439,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
             for (int y = sy; y < ey; y++) {
                 // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
                 for (int x = ex - 1; x >= sx; x--) {
-                    D1GfxPixel pixel = this->pixels[y][x];
+                    const D1GfxPixel pixel = this->pixels[y][x];
                     if (/*x + dx >= 0 && */x + dx < width && y + dy >= 0 /*&& y + dy < height*/)
                     {
                         if (pixel.isTransparent())
@@ -448,7 +449,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
                     } else {
                         change |= !pixel.isTransparent();
                     }
-                    this->pixels[y][x] = D1GfxPixel::transparentPixel();
+                    this->pixels[y][x] = backPixel;
                 }
             }
         } else {
@@ -456,7 +457,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
             for (int y = ey - 1; y >= sy; y--) {
                 // for (int x = std::min(ex, width - dx) - 1; x >= sx; x--) {
                 for (int x = ex - 1; x >= sx; x--) {
-                    D1GfxPixel pixel = this->pixels[y][x];
+                    const D1GfxPixel pixel = this->pixels[y][x];
                     if (/*x + dx >= 0 && */x + dx < width /*&& y + dy >= 0 */&& y + dy < height)
                     {
                         if (pixel.isTransparent())
@@ -466,7 +467,7 @@ bool D1GfxFrame::shift(int dx, int dy, int sx, int sy, int ex, int ey)
                     } else {
                         change |= !pixel.isTransparent();
                     }
-                    this->pixels[y][x] = D1GfxPixel::transparentPixel();
+                    this->pixels[y][x] = backPixel;
                 }
             }
         }
@@ -1374,11 +1375,11 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
     return this->frames[idx];
 }
 
-D1GfxComp::D1GfxComp(D1Gfx *g)
+D1GfxComp::D1GfxComp(D1Gfx *cg, const D1Gfx *g)
 {
-    this->gfx = g;
+    this->gfx = cg;
 
-    QFileInfo fileInfo(g->getFilePath());
+    QFileInfo fileInfo(cg->getFilePath());
     QString labelText = fileInfo.baseName();
     this->label = labelText;
 
