@@ -434,13 +434,13 @@ static void AddDunObjs(int x1, int y1, int x2, int y2)
 	case DTYPE_TOWN:
 		return;
 	case DTYPE_CATHEDRAL:
-		for (j = y1; j <= y2; j++) {
+		/*for (j = y1; j <= y2; j++) {
 			for (i = x1; i <= x2; i++) {
 				pn = dPiece[i][j];
 				if (pn == 270)
 					AddObject(OBJ_L1LIGHT, i, j);
 			}
-		}
+		}*/
 		wdoor = OBJ_L1LDOOR;
 		edoor = OBJ_L1RDOOR;
 		break;
@@ -967,6 +967,7 @@ void InitObjects()
 #endif
 	}
 	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
+	static_assert(NUM_DTYPES <= sizeof(BYTE) * 8, "Level mask might overflow in InitObjects.");
 	BYTE lvlMask = 1 << currLvl._dType;
 	assert(objectdata[OBJ_TORCHL1].oLvlTypes == objectdata[OBJ_TORCHL2].oLvlTypes && objectdata[OBJ_TORCHL1].oLvlTypes == objectdata[OBJ_TORCHR1].oLvlTypes && objectdata[OBJ_TORCHR1].oLvlTypes == objectdata[OBJ_TORCHR2].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_TORCHL1].oLvlTypes) {
@@ -988,6 +989,11 @@ void InitObjects()
 				na++;
 	na = na * AllLevels[currLvl._dLevelNum].dObjDensity / 32;
 
+	if (lvlMask & objectdata[OBJ_L1LIGHT].oLvlTypes) {
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndLocObj(num / 512, OBJ_L1LIGHT);
+	}
 	if (lvlMask & objectdata[OBJ_SARC].oLvlTypes) {
 		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow I.");
 		unsigned num = RandRangeLow(na, na * 2 + 1);

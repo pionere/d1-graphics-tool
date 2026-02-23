@@ -4855,6 +4855,13 @@ void D1Dun::patch(int dunFileIndex)
         // replace books
         change |= this->changeObjectAt(10, 29, 47);
         change |= this->changeObjectAt(29, 30, 47);
+        // add braziers
+        change |= this->changeObjectAt(4, 24, 46);
+        change |= this->changeObjectAt(36, 24, 46);
+        change |= this->changeObjectAt(16, 28, 46);
+        change |= this->changeObjectAt(24, 28, 46);
+        change |= this->changeObjectAt(16, 34, 46);
+        change |= this->changeObjectAt(24, 34, 46);
         break;
     case DUN_VILE_AFT: // Vile1.DUN
         // external tiles
@@ -4906,6 +4913,13 @@ void D1Dun::patch(int dunFileIndex)
         // - corners
         change |= this->changeTileAt(4, 17, 159);
         change |= this->changeTileAt(16, 10, 159);
+        // eliminate obsolete braziers
+        change |= this->changeTileAt(2, 12, 0);
+        change |= this->changeTileAt(18, 12, 0);
+        change |= this->changeTileAt(8, 14, 0);
+        change |= this->changeTileAt(12, 14, 0);
+        change |= this->changeTileAt(8, 17, 0);
+        change |= this->changeTileAt(12, 17, 0);
         // remove objects, monsters
         for (int y = 0; y < 23 * 2; y++) {
             for (int x = 0; x < 21 * 2; x++) {
@@ -5173,6 +5187,13 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(32, 41, 5);
         change |= this->changeObjectAt(48, 45, 5);
         change |= this->changeObjectAt(48, 17, 5);
+        // add braziers
+        change |= this->changeObjectAt(22, 26, 46);
+        change |= this->changeObjectAt(22, 36, 46);
+        change |= this->changeObjectAt(46, 28, 46);
+        change |= this->changeObjectAt(52, 28, 46);
+        change |= this->changeObjectAt(46, 34, 46);
+        change |= this->changeObjectAt(52, 34, 46);
         // add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
         // remove monsters
@@ -5282,6 +5303,13 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(25, 14, 0);
         change |= this->changeTileAt(25, 16, 0);
         change |= this->changeTileAt(25, 17, 0);
+        // eliminate obsolete braziers
+        change |= this->changeTileAt(11, 13, 0);
+        change |= this->changeTileAt(11, 18, 0);
+        change |= this->changeTileAt(23, 14, 0);
+        change |= this->changeTileAt(26, 14, 0);
+        change |= this->changeTileAt(23, 17, 0);
+        change |= this->changeTileAt(26, 17, 0);
         // use common tiles
         change |= this->changeTileAt(7, 14, 84);
         // use the new shadows
