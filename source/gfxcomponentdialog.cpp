@@ -65,7 +65,7 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     // this->newGfx->setFilePath(g->getFilePath());
     this->newGfx->addGfx(g);
     this->newComp = this->newGfx->getComponent(compIdx);
-    QMessageBox::critical("Error", QApplication::tr("cfc %1 fc %2 ci %3").arg(this->newComp->getCompFrameCount()).arg(this->newGfx->getFrameCount()).arg(this->currentFrameIndex));
+    QMessageBox::critical(nullptr, "Error", QApplication::tr("cfc %1 fc %2 ci %3").arg(this->newComp->getCompFrameCount()).arg(this->newGfx->getFrameCount()).arg(this->currentFrameIndex));
     this->displayFrame();
 }
 
@@ -91,7 +91,7 @@ void GfxComponentDialog::updateFields()
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
-    QMessageBox::critical("Error", QApplication::tr("update cfc %1 fc %2 ci %3").arg(this->newComp->getCompFrameCount()).arg(this->newGfx->getFrameCount()).arg(this->currentFrameIndex));
+    QMessageBox::critical(nullptr, "Error", QApplication::tr("update cfc %1 fc %2 ci %3").arg(this->newComp->getCompFrameCount()).arg(this->newGfx->getFrameCount()).arg(this->currentFrameIndex));
     // set the details
     if (count != 0) {
         D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
