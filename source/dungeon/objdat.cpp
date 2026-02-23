@@ -61,7 +61,7 @@ const BYTE ObjConvTbl[128] = {
 	0, //OBJ_SKSTICK4,
 	0, //OBJ_SKSTICK5,
 	0,
-	0,
+	OBJ_L1LIGHT,  // Vile2.DUN
 	OBJ_VILEBOOK, // Vile2.DUN
 	0,
 	0,

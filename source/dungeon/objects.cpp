@@ -1080,8 +1080,7 @@ static void AddChest(int oi)
 	int num, rnum, itype;
 
 	os = &objects[oi];
-	if (random_(147, 2) == 0)
-		os->_oGfxFrame += 3;
+	os->_oGfxFrame = random_(147, 2) ? 1 : 3;
 	os->_oRndSeed = NextRndSeed(); // CHEST_ITEM_SEED1
 	//assert(os->_otype >= OBJ_CHEST1 && os->_otype <= OBJ_CHEST3
 	//	|| os->_otype >= OBJ_TCHEST1 && os->_otype <= OBJ_TCHEST3);
