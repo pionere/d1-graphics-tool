@@ -27,6 +27,8 @@ private:
     void updateGroupIndex();
     void setGroupIndex(int groupIndex);
 
+    std::pair<int, int> getEditRange() const;
+
 private slots:
     void on_labelEdit_returnPressed();
     void on_labelEdit_escPressed();

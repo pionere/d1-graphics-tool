@@ -1,6 +1,5 @@
 #include "gfxcomponentdialog.h"
 
-#include <QMessageBox>
 #include <QScrollBar>
 
 #include "config.h"
@@ -331,18 +330,39 @@ void GfxComponentDialog::on_lastGroupButton_clicked()
     this->setGroupIndex(this->gfx->getGroupCount() - 1);
 }
 
+std::pair<int, int> GfxComponentDialog::getEditRange() const
+{
+    const bool allFrames = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool allButLast = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    int fs, fe;
+
+    fs = fe = this->currentFrameIndex;
+    if (allFrames) {
+        fs = 0;
+        fe = this->newComp->getCompFrameCount();
+        fe -= (allButLast && fe > 1) ? 2 : 1;
+    }
+    return std::pair<int, int>(fs, fe);
+}
+
 void GfxComponentDialog::on_zorderDecButton_clicked()
 {
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    frame->cfZOrder--;
+    const auto editRange = this->getEditRange();
+    for (int i = editRange.first; i <= editRange.second; i++) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
+        frame->cfZOrder--;
+    }
 
     this->displayFrame();
 }
 
 void GfxComponentDialog::on_zorderIncButton_clicked()
 {
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    frame->cfZOrder++;
+    const auto editRange = this->getEditRange();
+    for (int i = editRange.first; i <= editRange.second; i++) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
+        frame->cfZOrder++;
+    }
 
     this->displayFrame();
 }
@@ -350,9 +370,11 @@ void GfxComponentDialog::on_zorderIncButton_clicked()
 void GfxComponentDialog::on_zorderEdit_returnPressed()
 {
     int zorder = this->ui->zorderEdit->text().toInt();
-
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    frame->cfZOrder = zorder;
+    const auto editRange = this->getEditRange();
+    for (int i = editRange.first; i <= editRange.second; i++) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
+        frame->cfZOrder = zorder;
+    }
 
     this->displayFrame();
 
@@ -368,9 +390,11 @@ void GfxComponentDialog::on_zorderEdit_escPressed()
 void GfxComponentDialog::on_xOffsetEdit_returnPressed()
 {
     int offset = this->ui->xOffsetEdit->text().toInt();
-
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    frame->cfOffsetX = offset;
+    const auto editRange = this->getEditRange();
+    for (int i = editRange.first; i <= editRange.second; i++) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
+        frame->cfOffsetX = offset;
+    }
 
     this->displayFrame();
 
@@ -386,9 +410,11 @@ void GfxComponentDialog::on_xOffsetEdit_escPressed()
 void GfxComponentDialog::on_yOffsetEdit_returnPressed()
 {
     int offset = this->ui->yOffsetEdit->text().toInt();
-
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    frame->cfOffsetY = offset;
+    const auto editRange = this->getEditRange();
+    for (int i = editRange.first; i <= editRange.second; i++) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
+        frame->cfOffsetY = offset;
+    }
 
     this->displayFrame();
 
@@ -403,9 +429,12 @@ void GfxComponentDialog::on_yOffsetEdit_escPressed()
 
 void GfxComponentDialog::on_prevRefButton_clicked()
 {
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    if (frame->cfFrameRef > 0) {
-        frame->cfFrameRef--;
+    const auto editRange = this->getEditRange();
+    for (int i = editRange.first; i <= editRange.second; i++) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
+        if (frame->cfFrameRef > 0) {
+            frame->cfFrameRef--;
+        }
     }
 
     this->displayFrame();
@@ -413,9 +442,12 @@ void GfxComponentDialog::on_prevRefButton_clicked()
 
 void GfxComponentDialog::on_nextRefButton_clicked()
 {
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    if (frame->cfFrameRef < (unsigned)this->newComp->getGFX()->getFrameCount()) {
-        frame->cfFrameRef++;
+    const auto editRange = this->getEditRange();
+    for (int i = editRange.first; i <= editRange.second; i++) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
+        if (frame->cfFrameRef < (unsigned)this->newComp->getGFX()->getFrameCount()) {
+            frame->cfFrameRef++;
+        }
     }
 
     this->displayFrame();
@@ -424,9 +456,11 @@ void GfxComponentDialog::on_nextRefButton_clicked()
 void GfxComponentDialog::on_frameRefEdit_returnPressed()
 {
     int frameRef = this->ui->frameRefEdit->text().toInt();
-
-    D1GfxCompFrame *frame = this->newComp->getCompFrame(this->currentFrameIndex);
-    frame->cfFrameRef = frameRef;
+    const auto editRange = this->getEditRange();
+    for (int i = editRange.first; i <= editRange.second; i++) {
+        D1GfxCompFrame *frame = this->newComp->getCompFrame(i);
+        frame->cfFrameRef = frameRef;
+    }
 
     this->displayFrame();
 
