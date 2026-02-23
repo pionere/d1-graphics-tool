@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 #include "ui_upscaledialog.h"
 
-static const int fixColors[NUM_DUNGEON_TYPES][2] = {
+static const int fixColors[NUM_DTYPES][2] = {
     // clang-format off
 /* DTYPE_TOWN      */ { -1, -1 },
 /* DTYPE_CATHEDRAL */ { -1, -1 },

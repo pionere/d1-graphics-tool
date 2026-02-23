@@ -28,7 +28,7 @@ typedef struct DungeonStruct {
     int defaultTile;
 } DungeonStruct;
 
-const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
+const DungeonStruct dungeonTbl[NUM_DTYPES] = {
     // clang-format off
 /* DTYPE_TOWN      */ { UNDEF_TILE },
 /* DTYPE_CATHEDRAL */ { 13,        },

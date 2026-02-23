@@ -3195,7 +3195,7 @@ typedef enum dungeon_type {
 	DTYPE_CRYPT,
 	DTYPE_NEST,
 	DTYPE_NONE,
-	NUM_DUNGEON_TYPES,
+	NUM_DTYPES,
 } dungeon_type;
 
 typedef enum dungeon_gen_type {
