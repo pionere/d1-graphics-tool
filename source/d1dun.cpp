@@ -89,7 +89,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr }, //OBJ_SKSTICK4,
                      { nullptr }, //OBJ_SKSTICK5,
                      { nullptr },
-                     { nullptr },
+/*OBJ_L1LIGHT*/      { "Brazier" },          // Vile2.DUN
 /*OBJ_VILEBOOK*/     { "Book of Vileness" }, // Vile2.DUN
                      { nullptr },
                      { nullptr },
