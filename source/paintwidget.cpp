@@ -554,7 +554,7 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
 void PaintWidget::selectArea(const QRect &area)
 {
     QRect sceneRect = area;
-    if (!sceneRect.isValid()) {
+    if (sceneRect.width() < 0) {
         sceneRect = QRect();
         this->currPos = this->lastPos = this->lastDelta = QPoint();
         D1GfxFrame *frame = this->getCurrentFrame();
