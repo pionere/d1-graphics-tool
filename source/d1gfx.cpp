@@ -117,7 +117,7 @@ D1GfxFrame::~D1GfxFrame()
 
 QRect D1GfxFrame::getBoundary() const
 {
-    int minx = INT_MAX, maxx = INT_MIN, miny = INT_MAX, maxy = INT_MIN;
+    int minx = INT_MAX, maxx = -1, miny = INT_MAX, maxy = -1;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             if (this->pixels[y][x].isTransparent()) continue;
@@ -131,7 +131,7 @@ QRect D1GfxFrame::getBoundary() const
                 maxy = y;
         }
     }
-    return QRect(minx, miny, maxx - minx + 1, maxy - miny + 1);
+    return maxx >= 0 ? QRect(minx, miny, maxx - minx + 1, maxy - miny + 1) : QRect();
 }
 
 int D1GfxFrame::getWidth() const
