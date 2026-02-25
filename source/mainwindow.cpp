@@ -35,6 +35,8 @@
 #include "d1trs.h"
 #include "ui_mainwindow.h"
 
+#include "dungeon/interfac.h"
+
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
@@ -137,7 +139,7 @@ void MainWindow::remapColors(const RemapParam &params)
 {
     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
     int index = params.colorTo.first;
-    const int dc = params.colorTo.first == params.colorTo.second ? 0 : (params.colorTo.first < params.colorTo.second ? 1 : -1);
+    const int dc = params.colorTo.first <= params.colorTo.second ? 1 : -1;
     LogErrorF("remapColors %d .. %d -> dc%d", params.colorTo.first, params.colorTo.second, dc);
     for (int i = params.colorFrom.first; i <= params.colorFrom.second; i++, index += dc) {
         D1GfxPixel source = ((unsigned)i >= D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(i);
