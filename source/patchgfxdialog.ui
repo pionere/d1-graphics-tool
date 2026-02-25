@@ -55,7 +55,7 @@
          <string>Magic circle object (Mcirl.CEL)</string>
         </property>
        </item>
-       <item>
+       <!--item>
         <property name="text">
          <string>Light stand with a candle (Candle2.CEL)</string>
         </property>
@@ -69,10 +69,20 @@
         <property name="text">
          <string>East-facing shrine (RShrineG.CEL)</string>
         </property>
-       </item>
+       </item-->
        <item>
         <property name="text">
          <string>Light stand in Crypt (L5Light.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Sarcophagi in Crypt (L5Sarco.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Urn in Crypt (Urn.CEL)</string>
         </property>
        </item>
        <item>
@@ -202,6 +212,31 @@
        </item>
        <item>
         <property name="text">
+         <string>Farmer (Farmrn2.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Cow-farmer (cfrmrn2.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Moose-farmer (mfrmrn2.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Girl with teddy (Girlw1.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Girl without teddy (Girls1.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Acid Beast dying (Acidd.CL2)</string>
         </property>
        </item>
@@ -305,7 +340,7 @@
          <string>Zombie dying (Zombied.CL2)</string>
         </property>
        </item>
-       <item>
+       <!--item>
         <property name="text">
          <string>Acid missile South (Acidbf1.CL2)</string>
         </property>
@@ -319,7 +354,7 @@
         <property name="text">
          <string>Acid missile North-East (Acidbf11.CL2)</string>
         </property>
-       </item>
+       </item-->
        <item>
         <property name="text">
          <string>Firaball missile South/South-West (Fireba2.CL2)</string>
@@ -523,6 +558,16 @@
        <item>
         <property name="text">
          <string>Lazarus's Staff Item animation (FLazStaf.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bomb Item animation (bombs1.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rune Item animation (runes1.CEL)</string>
         </property>
        </item>
        <item>

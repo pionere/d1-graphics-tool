@@ -149,6 +149,7 @@ typedef enum gfx_file_index {
 //  GFX_OBJ_RSHR,    // graphics of the east-facing shrine (RShrineG.CEL)
 //  GFX_OBJ_TFOUNTN, // graphics of the tear fountain (TFountn.CEL)
     GFX_OBJ_L5LIGHT, // graphics of the light stand in Crypt (L5Light.CEL)
+    GFX_OBJ_L5SARCO, // graphics of the sarcophagi in Crypt (L5Sarco.CEL)
     GFX_OBJ_URN,     // graphics of the urn in Crypt (Urn.CEL)
     GFX_PLR_RHTAT,   // graphics of rogue in heavy armor with staff attacking (RHTAT.CL2)
     GFX_PLR_RHUHT,   // graphics of rogue in heavy armor with shield getting hit (RHUHT.CL2)
@@ -418,6 +419,7 @@ private:
     // bool patchLeftShrine(bool silent);
     // bool patchRightShrine(bool silent);
     bool patchCryptLight(bool silent);
+    bool patchCryptSarco(bool silent);
     bool patchCELFrames(int gfxFileIndex, bool silent);
     bool patchPlrFrames(int gfxFileIndex, bool silent);
     bool patchMonFrames(int gfxFileIndex, bool silent);

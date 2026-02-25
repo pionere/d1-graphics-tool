@@ -3553,6 +3553,69 @@ bool D1Gfx::patchCryptLight(bool silent)
     return result;
 }
 
+bool D1Gfx::patchCryptSarco(bool silent)
+{
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        // eliminate level-specific colors
+        bool change = false;
+        for (int y = 0; y < frame->getHeight(); y++) {
+            for (int x = 0; x < frame->getWidth(); x++) {
+                const D1GfxPixel pixel = frame->getPixel(x, y);
+                if (pixel.isTransparent()) continue;
+                quint8 color = pixel.getPaletteIndex();
+                switch (color) {
+                case 32: color = 245; break;
+                case 33: color = 246; break;
+                case 34: color = 247; break;
+                case 35: color = 248; break;
+                case 36: color = 249; break;
+                case 37: color = 249; break;
+                case 38: color = 250; break;
+                case 39: color = 251; break;
+                case 40: color = 251; break;
+                case 41: color = 251; break;
+                case 42: color = 252; break;
+                case 43: color = 252; break;
+                case 44: color = 252; break;
+                case 45: color = 253; break;
+                case 46: color = 253; break;
+                case 47: color = 254; break;
+                case 58: color = 172; break;
+                case 59: color = 172; break;
+                case 60: color = 173; break;
+                case 61: color = 253; break;
+                case 63: color = 175; break;
+                case 65: color = 246; break;
+                case 69: color = 249; break;
+                case 70: color = 249; break;
+                case 71: color = 250; break;
+                case 72: color = 251; break;
+                case 73: color = 251; break;
+                case 74: color = 252; break;
+                case 75: color = 252; break;
+                case 76: color = 253; break;
+                case 77: color = 253; break;
+                case 78: color = 254; break;
+                case 79: color = 175; break;
+                default:
+                    continue;
+                }
+                change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(color));
+            }
+        }
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchCELFrames(int gfxFileIndex, bool silent)
 {
     int frameCount = 0, width = 0, height = 0;
@@ -9126,6 +9189,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_L5LIGHT: // patch L5Light.CEL
         change = this->patchCryptLight(silent);
         break;
+    case GFX_OBJ_L5SARCO: // patch L5Sarco.CEL
+        change = this->patchCryptSarco(silent);
+        break;
     case GFX_OBJ_URN: // patch Urn.CEL
         change = this->patchCELFrames(gfxFileIndex, silent);
         break;
@@ -9308,6 +9374,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
 #endif
     if (baseName == "l5light") {
         fileIndex = GFX_OBJ_L5LIGHT;
+    }
+    if (baseName == "l5sarco") {
+        fileIndex = GFX_OBJ_L5SARCO;
     }
     if (baseName == "urn") {
         fileIndex = GFX_OBJ_URN;
