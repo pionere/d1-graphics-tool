@@ -586,4 +586,3 @@ void GfxComponentDialog::wheelEvent(QWheelEvent *event)
 
     event->accept();
 }
-

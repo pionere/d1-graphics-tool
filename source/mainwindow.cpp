@@ -2916,6 +2916,8 @@ void MainWindow::on_actionReencode_triggered()
 
     this->loadPal(palFilePath);
     this->setPal(palFilePath);
+
+    this->updateWindow();
 }
 
 void MainWindow::on_actionMerge_triggered()
