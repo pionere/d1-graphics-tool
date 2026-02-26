@@ -108,7 +108,7 @@
     <addaction name="actionReportActiveSubtiles"/>
     <addaction name="actionReportActiveTiles"/>
     <addaction name="actionReportTilesetUse"/>
-    <addaction name="actionReportTilesetInefficientFrames"/>
+    <addaction name="actionReportInefficientFrames"/>
     <addaction name="actionReportCheckGraphics"/>
    </widget>
    <widget class="QMenu" name="menuTilesetCheckFlags">
