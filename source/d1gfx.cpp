@@ -3558,7 +3558,7 @@ bool D1Gfx::patchCryptSarco(bool silent)
     bool result = false;
     for (int i = 0; i < this->getFrameCount(); i++) {
         D1GfxFrame *frame = this->frames[i];
-        // eliminate level-specific colors
+        // make the colors more consistent + eliminate flare
         bool change = false;
         for (int y = 0; y < frame->getHeight(); y++) {
             for (int x = 0; x < frame->getWidth(); x++) {
@@ -3566,39 +3566,15 @@ bool D1Gfx::patchCryptSarco(bool silent)
                 if (pixel.isTransparent()) continue;
                 quint8 color = pixel.getPaletteIndex();
                 switch (color) {
-                case 32: color = 245; break;
-                case 33: color = 246; break;
-                case 34: color = 247; break;
-                case 35: color = 248; break;
-                case 36: color = 249; break;
-                case 37: color = 249; break;
-                case 38: color = 250; break;
-                case 39: color = 251; break;
-                case 40: color = 251; break;
-                case 41: color = 251; break;
-                case 42: color = 252; break;
-                case 43: color = 252; break;
-                case 44: color = 252; break;
-                case 45: color = 253; break;
-                case 46: color = 253; break;
-                case 47: color = 254; break;
-                case 58: color = 172; break;
-                case 59: color = 172; break;
-                case 60: color = 173; break;
-                case 61: color = 253; break;
-                case 63: color = 175; break;
-                case 65: color = 246; break;
-                case 69: color = 249; break;
-                case 70: color = 249; break;
-                case 71: color = 250; break;
-                case 72: color = 251; break;
-                case 73: color = 251; break;
-                case 74: color = 252; break;
-                case 75: color = 252; break;
-                case 76: color = 253; break;
-                case 77: color = 253; break;
-                case 78: color = 254; break;
-                case 79: color = 175; break;
+                case 175: color = 111; break;
+                case 176: color =  32; break;
+                case 178: color =  33; break;
+                case 179: color =  32; break;
+                case 180: color =  33; break;
+                case 181: color =  34; break;
+                case 183: color =  34; break;
+                case 189: color =  45; break;
+                case 191: color =  79; break;
                 default:
                     continue;
                 }
