@@ -3556,6 +3556,15 @@ bool D1Gfx::patchCryptLight(bool silent)
 bool D1Gfx::patchCryptSarco(bool silent)
 {
     bool result = false;
+    { // add frame-length metadata
+        D1GfxMeta* meta = this->getMeta(CELMETA_ANIMDELAY);
+        if (meta->setStored(true)) {
+            meta->setContent(QString::number(3));
+            result = true;
+            this->setModified();
+        }
+    }
+
     for (int i = 0; i < this->getFrameCount(); i++) {
         D1GfxFrame *frame = this->frames[i];
         // make the colors more consistent + eliminate flare
