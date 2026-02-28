@@ -4182,7 +4182,7 @@ typedef enum _object_id {
 	OBJ_CRUXM,
 	OBJ_CRUXR,
 	OBJ_CRUXL,
-	OBJ_STAND,
+	OBJ_ROCKSTAND,
 	//OBJ_ANGEL,
 	//OBJ_NUDEW2R,
 	OBJ_SWITCHSKL,
@@ -4214,17 +4214,13 @@ typedef enum _object_id {
 	OBJ_SHRINER,
 	OBJ_BOOKCASEL,
 	OBJ_BOOKCASER,
-	OBJ_BOOKCANDLE,
+	//OBJ_BOOKCANDLE,
 	OBJ_BLOODFTN,
 	OBJ_DECAP,
-	OBJ_TCHEST1,
-	OBJ_TCHEST2,
-	OBJ_TCHEST3,
 	OBJ_ANCIENTBOOK,
 	OBJ_VILEBOOK,
 	OBJ_MYTHICBOOK,
-	OBJ_BOOK2L,
-	OBJ_BOOK2R,
+	OBJ_BOOK2,
 	//OBJ_BOOKLVR,
 	OBJ_BLINDBOOK,
 	OBJ_BLOODBOOK,
@@ -4234,7 +4230,6 @@ typedef enum _object_id {
 	OBJ_L3RDOOR,
 	OBJ_PURIFYINGFTN,
 	OBJ_ARMORSTAND,
-	OBJ_ARMORSTANDN,
 	OBJ_GOATSHRINE,
 	OBJ_CAULDRON,
 	OBJ_MURKYFTN,
@@ -4243,12 +4238,9 @@ typedef enum _object_id {
 	OBJ_MCIRCLE1,
 	OBJ_MCIRCLE2,
 	OBJ_STORYBOOK,
-	OBJ_STORYCANDLE,
+	//OBJ_STORYCANDLE,
 	OBJ_TBCROSS,
-	OBJ_WEAPONRACKL,
-	OBJ_WEAPONRACKLN,
-	OBJ_WEAPONRACKR,
-	OBJ_WEAPONRACKRN,
+	OBJ_WEAPONRACK,
 	OBJ_MUSHPATCH,
 	OBJ_LAZSTAND,
 	//OBJ_SLAINHERO,
@@ -4267,7 +4259,49 @@ typedef enum _object_id {
 	OBJ_POD,
 	OBJ_PODEX,
 #endif
-	NUM_OBJECTS
+	NUM_OBJECTS,
+	OBJ_TCHEST1  = -1, // trapped chest in random direction
+	OBJ_TLCHEST1 = -2, // trapped chest in SW-NE direction
+	OBJ_TRCHEST1 = -3, // trapped chest in SE-Nw direction
+	OBJ_LCHEST1  = -4, // chest in SW-NE direction with optional trap
+	OBJ_RCHEST1  = -5, // chest in SE-Nw direction with optional trap
+	OBJ_NLCHEST1 = -6, // non-trapped chest in SW-NE
+	OBJ_NRCHEST1 = -7, // non-trapped chest in SE-Nw
+	OBJ_TCHEST2  = -8,
+	OBJ_TLCHEST2 = -9,
+	OBJ_TRCHEST2 = -10,
+	OBJ_LCHEST2  = -11,
+	OBJ_RCHEST2  = -12,
+	OBJ_NLCHEST2 = -13,
+	OBJ_NRCHEST2 = -14,
+	OBJ_TCHEST3  = -15,
+	OBJ_TLCHEST3 = -16,
+	OBJ_TRCHEST3 = -17,
+	OBJ_LCHEST3  = -18,
+	OBJ_RCHEST3  = -19,
+	OBJ_NLCHEST3 = -20,
+	OBJ_NRCHEST3 = -21,
+	OBJ_WEAPONRACKN  = -22, // inactive weaponrack in random direction
+	OBJ_WEAPONRACKL  = -23, // active weaponrack in SW-NE direction
+	OBJ_WEAPONRACKLN = -24, // inactive weaponrack in SW-NE direction
+	OBJ_WEAPONRACKR  = -25, // active weaponrack in SE-Nw direction
+	OBJ_WEAPONRACKRN = -26, // inactive weaponrack in SE-Nw direction
+	OBJ_ARMORSTANDN  = -27, // inactive armorstand in random direction
+	OBJ_ARMORSTANDL  = -28, // active armorstand in SW-NE direction
+	OBJ_ARMORSTANDLN = -29, // inactive armorstand in SW-NE direction
+	OBJ_ARMORSTANDR  = -30, // active armorstand in SE-Nw direction
+	OBJ_ARMORSTANDRN = -31, // inactive armorstand in SE-Nw direction
+	OBJ_BOOK1N       = -32, // inactive book1-stand in random direction
+	OBJ_BOOK1L       = -33, // active book1-stand in SW-NE direction
+	OBJ_BOOK1LN      = -34, // inactive book1-stand in SW-NE direction
+	OBJ_BOOK1R       = -35, // active book1-stand in SE-Nw direction
+	OBJ_BOOK1RN      = -36, // inactive book1-stand in SE-Nw direction
+	OBJ_BOOK2N       = -37, // inactive book2-stand in random direction
+	OBJ_BOOK2L       = -38, // active book2-stand in SW-NE direction
+	OBJ_BOOK2LN      = -39, // inactive book2-stand in SW-NE direction
+	OBJ_BOOK2R       = -40, // active book2-stand in SE-Nw direction
+	OBJ_BOOK2RN      = -41, // inactive book2-stand in SE-Nw direction
+	NUM_OBJVERSIONS = 41,
 } _object_id;
 
 typedef enum quest_id {

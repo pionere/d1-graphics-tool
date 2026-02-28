@@ -136,26 +136,25 @@ const char* const BookName[NUM_BOOKS] = {
 /*BK_NAKRUL_SPELL*/   "Spellbook",
 #endif
 };
-
-static void AddObjectType(const ObjectData* ods)
-{
 #if 0
+static BYTE* AddObjectType(const ObjectData* ods)
+{
 	const int ofindex = ods->ofindex;
 	char filestr[DATA_ARCHIVE_MAX_PATH];
+	BYTE* result = objanimdata[ofindex];
 
-	if (objanimdata[ofindex] != NULL) {
-		return;
+	if (result == NULL) {
+		snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", objfiledata[ofindex].ofName);
+		result = objanimdata[ofindex] = LoadFileInMem(filestr);
+		objanimdim[ofindex] = CelClippedWidth(objanimdata[ofindex]);
 	}
-
-	snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", objfiledata[ofindex].ofName);
-	objanimdata[ofindex] = LoadFileInMem(filestr);
-	objanimdim[ofindex] = CelClippedWidth(objanimdata[ofindex]);
-#endif
+	return result;
 }
-
+#endif
 void InitObjectGFX()
 {
-	/*const ObjectData* ods;
+#if 0
+	const ObjectData* ods;
 	bool themeload[NUM_THEMES];
 	int i;
 
@@ -174,16 +173,19 @@ void InitObjectGFX()
 			continue;
 		}
 		AddObjectType(ods);
-	}*/
+	}
+#endif
 }
 
 void FreeObjectGFX()
 {
-	/*int i;
+#if 0
+	int i;
 
 	for (i = 0; i < NUM_OFILE_TYPES; i++) {
 		MemFreeDbg(objanimdata[i]);
-	}*/
+	}
+#endif
 }
 
 void InitLvlObjects()
@@ -360,10 +362,10 @@ static void AddCandles()
 
 	tx = pWarps[DWARP_SIDE]._wx;
 	ty = pWarps[DWARP_SIDE]._wy;
-	AddObject(OBJ_STORYCANDLE, tx - 2, ty + 1);
-	AddObject(OBJ_STORYCANDLE, tx + 2, ty + 1);
-	AddObject(OBJ_STORYCANDLE, tx - 1, ty + 2);
-	AddObject(OBJ_STORYCANDLE, tx + 1, ty + 2);
+	AddObject(OBJ_CANDLE2, tx - 2, ty + 1);
+	AddObject(OBJ_CANDLE2, tx + 2, ty + 1);
+	AddObject(OBJ_CANDLE2, tx - 1, ty + 2);
+	AddObject(OBJ_CANDLE2, tx + 1, ty + 2);
 }
 
 static void AddBookLever(int type, int x1, int y1, int x2, int y2, int qn)
@@ -424,7 +426,7 @@ static void AddDunObjs(int x1, int y1, int x2, int y2)
 {
 	int i, j, pn, wdoor, edoor, type;
 
-	assert((objectdata[OBJ_L1LDOOR].oLvlTypes & DTM_CATHEDRAL) && (objectdata[OBJ_L1RDOOR].oLvlTypes & DTM_CATHEDRAL) && (objectdata[OBJ_L1LIGHT].oLvlTypes & DTM_CATHEDRAL));
+	assert((objectdata[OBJ_L1LDOOR].oLvlTypes & DTM_CATHEDRAL) && (objectdata[OBJ_L1RDOOR].oLvlTypes & DTM_CATHEDRAL));
 	assert((objectdata[OBJ_L2LDOOR].oLvlTypes & DTM_CATACOMBS) && (objectdata[OBJ_L2RDOOR].oLvlTypes & DTM_CATACOMBS));
 	assert((objectdata[OBJ_L3LDOOR].oLvlTypes & DTM_CAVES) && (objectdata[OBJ_L3RDOOR].oLvlTypes & DTM_CAVES));
 #ifdef HELLFIRE
@@ -581,21 +583,6 @@ static void AddObjTraps()
 	}
 }
 
-static void AddChestTraps()
-{
-	int i;
-
-	for (i = numobjects - 1; i >= 0; i--) {
-		int oi = i; // objectactive[i];
-		ObjectStruct* os = &objects[oi];
-		if (os->_otype >= OBJ_CHEST1 && os->_otype <= OBJ_CHEST3 && os->_oTrapChance == 0 && random_(0, 100) < 10) {
-			os->_otype += OBJ_TCHEST1 - OBJ_CHEST1;
-			os->_oTrapChance = RandRange(1, 64);
-			os->_oVar5 = 0; // TRAP_OI_BACKREF
-		}
-	}
-}
-
 static void LoadMapSetObjects(int idx)
 {
 	int startx = DBORDERX + pSetPieces[idx]._spx * 2;
@@ -622,14 +609,12 @@ static void LoadMapSetObjects(int idx)
 	rh += starty;
 	for (j = starty; j < rh; j++) {
 		for (i = startx; i < rw; i++) {
-			if (*lm != 0) {
-				oidx = SwapLE16(*lm);
-				if (oidx >= lengthof(ObjConvTbl) || ObjConvTbl[oidx] == 0) {
+			oidx = SwapLE16(*lm); // index of ObjConvTbl
+			if (oidx != 0) {
+				if (oidx >= lengthof(ObjConvTbl)) {
 					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(oidx).arg(i).arg(j);
 				} else {
-				oidx = ObjConvTbl[oidx];
-				AddObjectType(&objectdata[oidx]);
-				AddObject(oidx, i, j);
+				AddObject(ObjConvTbl[oidx], i, j);
 				}
 			}
 			lm++;
@@ -649,101 +634,6 @@ std::pair<int, int> themeLoc(int x, int y)
 		}
 	}
 	return std::pair<int, bool>(0, 0);
-}
-
-static int SetupObject(int type, int ox, int oy)
-{
-	int oi;
-	ObjectStruct* os;
-	const ObjectData* ods;
-	const ObjFileData* ofd;
-
-	if (numobjects >= MAXOBJECTS)
-		return -1;
-
-//	oi = objectavail[0];
-	oi = numobjects;
-	// objectactive[numobjects] = oi;
-	numobjects++;
-//	objectavail[0] = objectavail[MAXOBJECTS - numobjects];
-
-	os = &objects[oi];
-	os->_otype = type;
-	ods = &objectdata[type];
-	os->_oMissFlag = ods->oMissFlag;
-	os->_oDoorFlag = ods->oDoorFlag;
-	os->_oSelFlag = ods->oSelFlag;
-	os->_oPreFlag = ods->oPreFlag;
-	os->_oProc = ods->oProc;
-	os->_oModeFlags = ods->oModeFlags;
-	os->_oGfxFrame = ods->oBaseFrame;
-//	os->_oAnimData = objanimdata[ods->ofindex];
-	ofd = &objfiledata[ods->ofindex];
-//	os->_oSFX = ofd->oSFX;
-//	os->_oSFXCnt = ofd->oSFXCnt;
-	os->_oAnimFlag = ofd->oAnimFlag;
-	os->_oAnimFrameLen = ofd->oAnimFrameLen;
-	os->_oAnimLen = ofd->oAnimLen;
-	//os->_oAnimCnt = 0;
-	os->_oAnimFrame = 0;
-	if (ofd->oAnimFlag != OAM_NONE) {
-		if (ofd->oAnimFlag == OAM_SINGLE) {
-			os->_oAnimFlag = OAM_NONE;
-			os->_oAnimFrame = 1;
-		} else {
-			// assert(ofd->oAnimFlag == OAM_LOOP);
-			os->_oAnimCnt = random_low(146, os->_oAnimFrameLen);
-			os->_oAnimFrame = RandRangeLow(1, os->_oAnimLen);
-		}
-	}
-//	os->_oAnimWidth = objanimdim[ods->ofindex];
-//	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
-	os->_oSolidFlag = ofd->oSolidFlag;
-	os->_oBreak = ofd->oBreak;
-	// os->_oDelFlag = FALSE; - unused
-	os->_oTrapChance = 0;
-	// place object
-	os->_ox = ox;
-	os->_oy = oy;
-	if (dObject[ox][oy] != 0) {
-		int on = dObject[ox][oy];
-		on = on >= 0 ? on - 1 : -(on + 1);
-		std::pair<int, bool> tl = themeLoc(ox, oy);
-		QString msg = QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %7:%8, pos %9:%10 .. %11:%12 tv %13");
-		msg = msg.arg(ox).arg(oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
-		int i = tl.first;
-		msg = msg.arg(i).arg(tl.second).arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2).arg(themes[i]._tsTransVal);
-		dProgressErr() << msg;
-	}
-	dObject[ox][oy] = oi + 1;
-	// dFlags[ox][oy] |= BFLAG_OBJ_PROTECT | BFLAG_MON_PROTECT;
-	if (nSolidTable[dPiece[ox][oy]] && (os->_oModeFlags & OMF_FLOOR)) {
-		dObject[ox][oy] = 0;
-		os->_oModeFlags |= OMF_RESERVED;
-		os->_oSelFlag = 0;
-		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index %4.").arg(ox).arg(oy).arg(type).arg(oi);
-	} else {
-		/*if (ods->oLightRadius != 0) {
-#if FLICKER_LIGHT
-			if (type == OBJ_L1LIGHT) {
-				os->_olid = NO_LIGHT;
-			} else
-#endif
-			{
-				TraceLightSource(ox + ods->oLightOffX, oy + ods->oLightOffY, ods->oLightRadius);
-			}
-		}*/
-		if (ods->oDoorFlag != ODT_NONE) {
-			os->_oVar4 = DOOR_CLOSED;
-			//os->_oPreFlag = FALSE;
-			//os->_oSelFlag = 3;
-			//os->_oSolidFlag = FALSE; // TODO: should be TRUE;
-			//os->_oMissFlag = FALSE;
-			//os->_oDoorFlag = ldoor ? ODT_LEFT : ODT_RIGHT;
-			os->_oVar1 = dPiece[ox][oy]; // DOOR_PIECE_CLOSED
-		}
-	}
-	return oi;
 }
 
 static int ObjIndex(int x, int y)
@@ -854,18 +744,6 @@ static void AddLvl2xBooks(int bookidx)
 }
 #endif
 
-static void Alloc2x2Obj(int oi)
-{
-	int ox, oy;
-
-	ox = objects[oi]._ox;
-	oy = objects[oi]._oy;
-	oi = -(oi + 1);
-	dObject[ox][oy - 1] = oi;
-	dObject[ox - 1][oy] = oi;
-	dObject[ox - 1][oy - 1] = oi;
-}
-
 static void AddStoryBook()
 {
 	POS32 pos = RndLoc7x5();
@@ -874,12 +752,12 @@ static void AddStoryBook()
 		return;
 
 	AddObject(OBJ_STORYBOOK, pos.x, pos.y);
-	AddObject(OBJ_STORYCANDLE, pos.x - 2, pos.y + 1);
-	AddObject(OBJ_STORYCANDLE, pos.x - 2, pos.y);
-	AddObject(OBJ_STORYCANDLE, pos.x - 1, pos.y - 1);
-	AddObject(OBJ_STORYCANDLE, pos.x + 1, pos.y - 1);
-	AddObject(OBJ_STORYCANDLE, pos.x + 2, pos.y);
-	AddObject(OBJ_STORYCANDLE, pos.x + 2, pos.y + 1);
+	AddObject(OBJ_CANDLE2, pos.x - 2, pos.y + 1);
+	AddObject(OBJ_CANDLE2, pos.x - 2, pos.y);
+	AddObject(OBJ_CANDLE2, pos.x - 1, pos.y - 1);
+	AddObject(OBJ_CANDLE2, pos.x + 1, pos.y - 1);
+	AddObject(OBJ_CANDLE2, pos.x + 2, pos.y);
+	AddObject(OBJ_CANDLE2, pos.x + 2, pos.y + 1);
 }
 
 static void AddHookedBodies()
@@ -911,7 +789,7 @@ void InitObjects()
 {
 	//gbInitObjFlag = true;
 	if (QuestStatus(Q_ROCK)) // place first to make the life of PlaceRock easier
-		InitRndLocObj5x5(OBJ_STAND);
+		InitRndLocObj5x5(OBJ_ROCKSTAND);
 	if (QuestStatus(Q_PWATER))
 		AddCandles();
 	if (QuestStatus(Q_MUSHROOM))
@@ -1047,7 +925,7 @@ void InitObjects()
 	}
 #endif
 	assert(objectdata[OBJ_CHEST1].oLvlTypes == objectdata[OBJ_CHEST2].oLvlTypes && objectdata[OBJ_CHEST1].oLvlTypes == objectdata[OBJ_CHEST3].oLvlTypes);
-	if (lvlMask & objectdata[OBJ_TCHEST1].oLvlTypes) {
+	if (lvlMask & objectdata[OBJ_CHEST1].oLvlTypes) {
 		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow X.");
 		unsigned num = RandRangeLow(na, na * 2 + 1);
 		InitRndLocObj(num / 512, OBJ_CHEST1);
@@ -1059,13 +937,6 @@ void InitObjects()
 	assert(objectdata[OBJ_TRAPL].oLvlTypes == objectdata[OBJ_TRAPR].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_TRAPL].oLvlTypes) {
 		AddObjTraps();
-	}
-	assert(objectdata[OBJ_TCHEST1].oLvlTypes == objectdata[OBJ_TCHEST2].oLvlTypes && objectdata[OBJ_TCHEST1].oLvlTypes == objectdata[OBJ_TCHEST3].oLvlTypes); // trapped chest are placed in one place
-	assert((objectdata[OBJ_TCHEST1].oLvlTypes & ~objectdata[OBJ_CHEST1].oLvlTypes) == 0); // no point to place traps if there are not matching chests
-	assert((objectdata[OBJ_TCHEST2].oLvlTypes & ~objectdata[OBJ_CHEST2].oLvlTypes) == 0);
-	assert((objectdata[OBJ_TCHEST3].oLvlTypes & ~objectdata[OBJ_CHEST3].oLvlTypes) == 0);
-	if (lvlMask & objectdata[OBJ_TCHEST1].oLvlTypes) {
-		AddChestTraps();
 	}
 	//gbInitObjFlag = false;
 }
@@ -1080,13 +951,26 @@ void InitObjects()
 		objectactive[idx] = objectactive[numobjects];
 }*/
 
-static void AddChest(int oi)
+static void AddChest(int oi, int realtype)
 {
 	ObjectStruct* os;
 	int num, rnum, itype;
+	int8_t dir = -1, trap = -1;
+
+	if (realtype < 0) {
+		const ObjTypeConv &otc = objTypeConv[-realtype];
+		dir = otc.oTypeParam1;
+		trap = otc.oTypeParam2;
+	}
+	if (dir < 0) {
+		dir = random_(147, 2);
+	}
+	if (trap < 0) {
+		trap = random_(0, 128) < 13;
+	}
 
 	os = &objects[oi];
-	os->_oGfxFrame = random_(147, 2) ? 1 : 3;
+	os->_oGfxFrame = 1 + 2 * dir;
 	os->_oRndSeed = NextRndSeed(); // CHEST_ITEM_SEED1
 	//assert(os->_otype >= OBJ_CHEST1 && os->_otype <= OBJ_CHEST3
 	//	|| os->_otype >= OBJ_TCHEST1 && os->_otype <= OBJ_TCHEST3);
@@ -1101,6 +985,10 @@ static void AddChest(int oi)
 		itype = 8;
 	os->_oVar2 = itype;      // CHEST_ITEM_TYPE
 	//assert(num <= 3); otherwise the seeds are not 'reserved'
+	if (trap) {
+		os->_oTrapChance = RandRange(1, 64);
+		os->_oVar5 = 0; // TRAP_OI_BACKREF
+	}
 }
 
 static void AddSarc(int oi)
@@ -1108,9 +996,8 @@ static void AddSarc(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	dObject[os->_ox][os->_oy - 1] = -(oi + 1);
 	os->_oVar1 = random_(153, 10);       // SARC_ITEM
-	os->_oRndSeed = NextRndSeed();
+	//os->_oRndSeed = NextRndSeed();
 	if (os->_oVar1 >= 8)
 		os->_oVar2 = PreSpawnSkeleton(); // SARC_SKELE
 }
@@ -1124,7 +1011,7 @@ static void AddTrap(int oi)
 	mt = mt / 6 + 1;
 	mt = random_low(148, mt) & 3;
 	os = &objects[oi];
-	os->_oRndSeed = NextRndSeed();
+	//os->_oRndSeed = NextRndSeed();
 	// TRAP_MISTYPE
 	os->_oVar3 = MIS_ARROW;
 	if (mt == 1)
@@ -1139,7 +1026,7 @@ static void AddBarrel(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	os->_oRndSeed = NextRndSeed();
+	//os->_oRndSeed = NextRndSeed();
 	os->_oVar3 = random_(149, 3);  // BARREL_ITEM_TYPE
 	os->_oVar2 = random_(149, 10); // BARREL_ITEM
 	if (os->_oVar2 >= 8)
@@ -1164,7 +1051,7 @@ static void AddShrine(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	os->_oRndSeed = NextRndSeed();
+	//os->_oRndSeed = NextRndSeed();
 	os->_oVar1 = FindValidShrine(NUM_SHRINETYPE); // SHRINE_TYPE
 	/* -- disabled because the animation is shifted and not much point without trap (+ cel file is cut in the patcher)
 	if (random_(150, 2) != 0) {
@@ -1172,10 +1059,54 @@ static void AddShrine(int oi)
 		os->_oAnimLen = 22;
 	}*/
 }
-
+#if 0
 static void ObjAddRndSeed(int oi)
 {
 	objects[oi]._oRndSeed = NextRndSeed();
+}
+#endif
+static void AddArmorStand(int oi, int realtype)
+{
+	ObjectStruct* os;
+	int8_t inactive = 0;
+	int8_t dir = -1;
+
+	if (realtype < 0) {
+		const ObjTypeConv &otc = objTypeConv[-realtype];
+		dir = otc.oTypeParam1;
+		inactive = otc.oTypeParam2;
+	}
+	if (dir < 0) {
+		dir = random_(147, 2);
+	}
+	os = &objects[oi];
+	os->_oGfxFrame = objectdata[OBJ_ARMORSTAND].oBaseFrame + 2 * dir + (inactive ? 1 : 0);
+	os->_oMissFlag = inactive ? TRUE : objectdata[OBJ_ARMORSTAND].oMissFlag;
+	os->_oModeFlags = inactive ? (objectdata[OBJ_ARMORSTAND].oModeFlags & ~OMF_ACTIVE) : objectdata[OBJ_ARMORSTAND].oModeFlags;
+	os->_oSelFlag = inactive ? 0 : objectdata[OBJ_ARMORSTAND].oSelFlag;
+	//os->_oRndSeed = NextRndSeed();
+}
+
+static void AddWeaponRack(int oi, int realtype)
+{
+	ObjectStruct* os;
+	int8_t inactive = 0;
+	int8_t dir = -1;
+
+	if (realtype < 0) {
+		const ObjTypeConv &otc = objTypeConv[-realtype];
+		dir = otc.oTypeParam1;
+		inactive = otc.oTypeParam2;
+	}
+	if (dir < 0) {
+		dir = random_(147, 2);
+	}
+	os = &objects[oi];
+	os->_oGfxFrame = objectdata[OBJ_WEAPONRACK].oBaseFrame + 2 * dir + (inactive ? 1 : 0);
+	os->_oMissFlag = inactive ? TRUE : objectdata[OBJ_WEAPONRACK].oMissFlag;
+	os->_oModeFlags = inactive ? (objectdata[OBJ_WEAPONRACK].oModeFlags & ~OMF_ACTIVE) : objectdata[OBJ_WEAPONRACK].oModeFlags;
+	os->_oSelFlag = inactive ? 0 : objectdata[OBJ_WEAPONRACK].oSelFlag;
+	//os->_oRndSeed = NextRndSeed();
 }
 
 static void ObjAddBloodBook(int oi)
@@ -1183,7 +1114,7 @@ static void ObjAddBloodBook(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	os->_oRndSeed = NextRndSeed();
+	//os->_oRndSeed = NextRndSeed();
 	os->_oVar5 = BK_BLOOD;                   // STORY_BOOK_NAME
 	os->_oVar6 = os->_oGfxFrame + 1;         // LEVER_BOOK_ANIM
 	os->_oVar7 = Q_BLOOD;                    // LEVER_BOOK_QUEST
@@ -1199,12 +1130,34 @@ static void ObjAddBook(int oi, int bookidx)
 	os->_oVar5 = bookidx; // STORY_BOOK_NAME
 }
 
+static void ObjAddBook2(int oi, int realtype)
+{
+	ObjectStruct* os;
+	int8_t inactive = 0;
+	int8_t dir = -1;
+
+	if (realtype < 0) {
+		const ObjTypeConv &otc = objTypeConv[-realtype];
+		dir = otc.oTypeParam1;
+		inactive = otc.oTypeParam2;
+	}
+	if (dir < 0) {
+		dir = random_(147, 2);
+	}
+	os = &objects[oi];
+	os->_oGfxFrame = objectdata[OBJ_BOOK2].oBaseFrame + 3 * dir + (inactive ? 2 : 0);
+	// os->_oMissFlag = inactive ? TRUE : objectdata[OBJ_BOOK2].oMissFlag;
+	os->_oModeFlags = inactive ? (objectdata[OBJ_BOOK2].oModeFlags & ~OMF_ACTIVE) : objectdata[OBJ_BOOK2].oModeFlags;
+	os->_oSelFlag = inactive ? 0 : objectdata[OBJ_BOOK2].oSelFlag;
+	//os->_oRndSeed = NextRndSeed();
+}
+
 static void AddCauldronGoatShrine(int oi)
 {
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	os->_oRndSeed = NextRndSeed();
+	//os->_oRndSeed = NextRndSeed();
 	os->_oVar1 = FindValidShrine(SHRINE_THAUMATURGIC); // SHRINE_TYPE
 }
 
@@ -1213,7 +1166,7 @@ static void AddDecap(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	os->_oRndSeed = NextRndSeed();
+	//os->_oRndSeed = NextRndSeed();
 	os->_oGfxFrame = RandRange(1, 8);
 }
 
@@ -1222,7 +1175,6 @@ static void AddMagicCircle(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	//os->_oRndSeed = NextRndSeed();
 	os->_oVar5 = 0; // VILE_CIRCLE_PROGRESS
 }
 
@@ -1250,7 +1202,6 @@ static void AddTorturedMaleBody(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	//os->_oRndSeed = NextRndSeed();
 	os->_oGfxFrame = RandRange(1, 4);
 }
 
@@ -1259,27 +1210,137 @@ static void AddTorturedFemaleBody(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	//os->_oRndSeed = NextRndSeed();
 	os->_oGfxFrame = RandRange(1, 3);
 }
 
 int AddObject(int type, int ox, int oy)
 {
-	int oi = SetupObject(type, ox, oy);
-	if (oi >= 0) {
+	int oi, realType;
+	ObjectStruct* os;
+	const ObjectData* ods;
+	const ObjFileData* ofd;
+
+	if (numobjects >= MAXOBJECTS)
+		return -1;
+	realType = type;
+	if (type < 0) {
+		const ObjTypeConv &otc = objTypeConv[-type];
+		type = otc.oBaseType;
+	}
+
+//	oi = objectavail[0];
+	oi = numobjects;
+	// objectactive[numobjects] = oi;
+	numobjects++;
+//	objectavail[0] = objectavail[MAXOBJECTS - numobjects];
+
+	os = &objects[oi];
+	os->_otype = type;
+	ods = &objectdata[type];
+	os->_oMissFlag = ods->oMissFlag;
+	os->_oDoorFlag = ods->oDoorFlag;
+	os->_oSelFlag = ods->oSelFlag;
+	os->_oPreFlag = ods->oPreFlag;
+	os->_oProc = ods->oProc;
+	os->_oModeFlags = ods->oModeFlags;
+	os->_oGfxFrame = ods->oBaseFrame;
+#if 0
+	os->_oAnimData = AddObjectType(ods);
+	int animLen = LOAD_LE32(os->_oAnimData);
+	if (os->_oGfxFrame == animLen)
+		animLen--;
+	os->_oAnimLen = animLen;
+	os->_oAnimWidth = objanimdim[ods->ofindex];
+	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
+#endif
+	ofd = &objfiledata[ods->ofindex];
+//	os->_oSFX = ofd->oSFX;
+//	os->_oSFXCnt = ofd->oSFXCnt;
+	os->_oAnimFlag = ofd->oAnimFlag;
+	os->_oAnimFrameLen = ofd->oAnimFrameLen;
+	//os->_oAnimCnt = 0;
+	os->_oAnimFrame = 0;
+	if (ofd->oAnimFlag != OAM_NONE) {
+		if (ofd->oAnimFlag == OAM_SINGLE) {
+			os->_oAnimFlag = OAM_NONE;
+			os->_oAnimFrame = 1;
+		} else {
+			// assert(ofd->oAnimFlag == OAM_LOOP);
+#if 0
+			os->_oAnimCnt = random_low(146, os->_oAnimFrameLen);
+			os->_oAnimFrame = RandRangeLow(1, os->_oAnimLen);
+#else
+			random_low(146, 1);
+			RandRangeLow(1, 1);
+#endif
+		}
+	}
+	os->_oSolidFlag = ofd->oSolidFlag; // & 1; -- does not matter at the moment
+	os->_oBreak = ofd->oBreak;
+	// os->_oDelFlag = FALSE; - unused
+	os->_oTrapChance = 0;
+	os->_oRndSeed = NextRndSeed();
+	// place object
+	os->_ox = ox;
+	os->_oy = oy;
+	// dFlags[ox][oy] |= BFLAG_OBJ_PROTECT | BFLAG_MON_PROTECT;
+	const bool ready = !nSolidTable[dPiece[ox][oy]] || !(os->_oModeFlags & OMF_FLOOR);
+	if (dObject[ox][oy] != 0) {
+		int on = dObject[ox][oy];
+		on = on >= 0 ? on - 1 : -(on + 1);
+		std::pair<int, bool> tl = themeLoc(ox, oy);
+		QString msg = QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %7:%8, pos %9:%10 .. %11:%12 tv %13");
+		msg = msg.arg(ox).arg(oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
+		int i = tl.first;
+		msg = msg.arg(i).arg(tl.second).arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2).arg(themes[i]._tsTransVal);
+		dProgressErr() << msg;
+	}
+	dObject[ox][oy] = ready ? oi + 1 : 0;
+	const int noi = -(oi + 1);
+	if (ofd->oSolidFlags & 2) {
+		assert(dObject[ox][oy - 1] == 0);
+		dObject[ox][oy - 1] = noi;
+	}
+	if (ofd->oSolidFlags & 4) {
+		assert(dObject[ox - 1][oy] == 0);
+		dObject[ox - 1][oy] = noi;
+	}
+	if (ofd->oSolidFlags & 8) {
+		assert(dObject[ox - 1][oy - 1] == 0);
+		dObject[ox - 1][oy - 1] = noi;
+	}
+	if (ready) {
+		/*if (ods->oLightRadius != 0) {
+#if FLICKER_LIGHT
+			if (type == OBJ_L1LIGHT) {
+				os->_olid = NO_LIGHT;
+			} else
+#endif
+			{
+				TraceLightSource(ox + ods->oLightOffX, oy + ods->oLightOffY, ods->oLightRadius);
+			}
+		}*/
+		if (ods->oDoorFlag != ODT_NONE) {
+			os->_oVar4 = DOOR_CLOSED;
+			//os->_oPreFlag = FALSE;
+			//os->_oSelFlag = 3;
+			//os->_oSolidFlag = FALSE; // TODO: should be TRUE;
+			//os->_oMissFlag = FALSE;
+			//os->_oDoorFlag = ldoor ? ODT_LEFT : ODT_RIGHT;
+			os->_oVar1 = dPiece[ox][oy]; // DOOR_PIECE_CLOSED
+		}
+	} else {
+		os->_oModeFlags |= OMF_RESERVED;
+		os->_oSelFlag = 0;
+		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index %4.").arg(ox).arg(oy).arg(type).arg(oi);
+	}
+	{
 		// init object
 		switch (type) {
 		case OBJ_CHEST1:
 		case OBJ_CHEST2:
 		case OBJ_CHEST3:
 			AddChest(oi);
-			break;
-		case OBJ_TCHEST1:
-		case OBJ_TCHEST2:
-		case OBJ_TCHEST3:
-			AddChest(oi);
-			objects[oi]._oTrapChance = RandRange(1, 64);
-			objects[oi]._oVar5 = 0; // TRAP_OI_BACKREF
 			break;
 		case OBJ_SARC:
 #ifdef HELLFIRE
@@ -1305,6 +1366,7 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_DECAP:
 			AddDecap(oi);
 			break;
+#if 0
 		case OBJ_BOOKCASEL:
 		case OBJ_BOOKCASER:
 		case OBJ_BARRELEX:
@@ -1312,13 +1374,15 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_URNEX:
 		case OBJ_PODEX:
 #endif
-		case OBJ_BOOK2L:
-		case OBJ_BOOK2R:
 		case OBJ_PEDESTAL:
-		case OBJ_ARMORSTAND:
-		case OBJ_WEAPONRACKL:
-		case OBJ_WEAPONRACKR:
 			ObjAddRndSeed(oi);
+			break;
+#endif
+		case OBJ_ARMORSTAND:
+			AddArmorStand(oi, realType);
+			break;
+		case OBJ_WEAPONRACK:
+			AddWeaponRack(oi, realType);
 			break;
 		case OBJ_BLOODBOOK:
 			ObjAddBloodBook(oi);
@@ -1338,14 +1402,12 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_VILEBOOK:
 			ObjAddBook(oi, BK_VILENESS);
 			break;
+		case OBJ_BOOK2:
+			ObjAddBook2(oi, realType);
+			break;
 		case OBJ_GOATSHRINE:
 		case OBJ_CAULDRON:
 			AddCauldronGoatShrine(oi);
-			break;
-		case OBJ_PURIFYINGFTN:
-		case OBJ_MURKYFTN:
-		case OBJ_MUSHPATCH:
-			Alloc2x2Obj(oi);
 			break;
 		//case OBJ_BLOODFTN:
 		//case OBJ_TEARFTN:
@@ -1388,7 +1450,6 @@ void GetObjectStr(int oi)
 		copy_cstr(infostr, "Lever");
 		break;
 	case OBJ_CHEST1:
-	case OBJ_TCHEST1:
 		copy_cstr(infostr, "Small Chest");
 		break;
 	case OBJ_L1LDOOR:
@@ -1412,11 +1473,9 @@ void GetObjectStr(int oi)
 		copy_cstr(infostr, "Skull Lever");
 		break;
 	case OBJ_CHEST2:
-	case OBJ_TCHEST2:
 		copy_cstr(infostr, "Chest");
 		break;
 	case OBJ_CHEST3:
-	case OBJ_TCHEST3:
 	case OBJ_SIGNCHEST:
 		copy_cstr(infostr, "Large Chest");
 		break;
@@ -1456,8 +1515,7 @@ void GetObjectStr(int oi)
 	case OBJ_BOOKCASER:
 		copy_cstr(infostr, "Bookcase");
 		break;
-	case OBJ_BOOK2L:
-	case OBJ_BOOK2R:
+	case OBJ_BOOK2:
 		copy_cstr(infostr, "Lectern");
 		break;
 	case OBJ_BLOODFTN:
@@ -1500,8 +1558,7 @@ void GetObjectStr(int oi)
 #endif
 		SStrCopy(infostr, BookName[os->_oVar5], sizeof(infostr)); // STORY_BOOK_NAME
 		break;
-	case OBJ_WEAPONRACKL:
-	case OBJ_WEAPONRACKR:
+	case OBJ_WEAPONRACK:
 		copy_cstr(infostr, "Weapon Rack");
 		break;
 	case OBJ_MUSHPATCH:

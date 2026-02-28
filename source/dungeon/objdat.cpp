@@ -13,7 +13,7 @@ DEVILUTION_BEGIN_NAMESPACE
 #endif
 
 /** Maps from dun_object_id to object_id. */
-const BYTE ObjConvTbl[128] = {
+const int8_t ObjConvTbl[128] = {
 	// clang-format off
 	0,
 	OBJ_LEVER, // SklKng2.DUN
@@ -93,13 +93,13 @@ const BYTE ObjConvTbl[128] = {
 	0,
 	0,
 	0, //OBJ_CHEST1,
-	OBJ_CHEST1, // SklKng2.DUN
+	OBJ_LCHEST1, // SklKng2.DUN
 	0, //OBJ_CHEST1,
 	0, //OBJ_CHEST2,
-	OBJ_CHEST2, // SklKng2.DUN
+	OBJ_LCHEST2, // SklKng2.DUN
 	0, //OBJ_CHEST2,
 	0, //OBJ_CHEST3,
-	OBJ_CHEST3, // Bonecha1.DUN
+	OBJ_RCHEST3, // Bonecha1.DUN
 	OBJ_NAKRULBOOK, // Nakrul1.DUN (Q_NAKRUL)
 	OBJ_NAKRULLEVER, // Nakrul1.DUN (Q_NAKRUL)
 	0,
@@ -123,7 +123,7 @@ const BYTE ObjConvTbl[128] = {
 	OBJ_ALTBOY, // L4Data/Vile1.DUN (Q_BETRAYER), L1Data/Vile2.DUN
 	0,
 	0,
-	OBJ_ARMORSTANDN, //OBJ_ARMORSTAND, // Warlord2.DUN (Q_WARLORD) - changed to inactive versions to eliminate farming potential
+	OBJ_ARMORSTANDLN, //OBJ_ARMORSTAND, // Warlord2.DUN (Q_WARLORD) - changed to inactive versions to eliminate farming potential
 	OBJ_WEAPONRACKLN, //OBJ_WEAPONRACKL, // Warlord2.DUN (Q_WARLORD)
 	0, //OBJ_TORCHR1 (should be OBJ_TORCHL2) Blood2.DUN (Q_BLOOD)
 	0, //OBJ_TORCHL1 Blood2.DUN (Q_BLOOD)
@@ -157,6 +157,53 @@ const BYTE ObjConvTbl[128] = {
 	// clang-format on
 };
 
+/** Maps negative object IDs to the corresponding object ID and keeps track of the parameters to configure the final object. */
+const ObjTypeConv objTypeConv[NUM_OBJVERSIONS + 1] = {
+//                     oBaseType,      oTypeParam1, oTypeParam2, 
+                     { 0,              0,           0,           }, // trapped chest in random direction
+/*OBJ_TCHEST1*/      { OBJ_CHEST1,     -1,          1,           }, // trapped chest in random direction
+/*OBJ_TLCHEST1*/     { OBJ_CHEST1,     1,           1,           }, // trapped chest in SW-NE direction
+/*OBJ_TRCHEST1*/     { OBJ_CHEST1,     0,           1,           }, // trapped chest in SE-Nw direction
+/*OBJ_LCHEST1*/      { OBJ_CHEST1,     1,           -1,          }, // chest in SW-NE direction with optional trap
+/*OBJ_RCHEST1*/      { OBJ_CHEST1,     0,           -1,          }, // chest in SE-Nw direction with optional trap
+/*OBJ_NLCHEST1*/     { OBJ_CHEST1,     1,           0,           }, // non-trapped chest in SW-NE
+/*OBJ_NRCHEST1*/     { OBJ_CHEST1,     0,           0,           }, // non-trapped chest in SE-Nw
+/*OBJ_TCHEST2*/      { OBJ_CHEST2,     -1,          1,           },
+/*OBJ_TLCHEST2*/     { OBJ_CHEST2,     1,           1,           },
+/*OBJ_TRCHEST2*/     { OBJ_CHEST2,     0,           1,           },
+/*OBJ_LCHEST2*/      { OBJ_CHEST2,     1,           -1,          },
+/*OBJ_RCHEST2*/      { OBJ_CHEST2,     0,           -1,          },
+/*OBJ_NLCHEST2*/     { OBJ_CHEST2,     1,           0,           },
+/*OBJ_NRCHEST2*/     { OBJ_CHEST2,     0,           0,           },
+/*OBJ_TCHEST3*/      { OBJ_CHEST3,     -1,          1,           },
+/*OBJ_TLCHEST3*/     { OBJ_CHEST3,     1,           1,           },
+/*OBJ_TRCHEST3*/     { OBJ_CHEST3,     0,           1,           },
+/*OBJ_LCHEST3*/      { OBJ_CHEST3,     1,           -1,          },
+/*OBJ_RCHEST3*/      { OBJ_CHEST3,     0,           -1,          },
+/*OBJ_NLCHEST3*/     { OBJ_CHEST3,     1,           0,           },
+/*OBJ_NRCHEST3*/     { OBJ_CHEST3,     0,           0,           },
+/*OBJ_WEAPONRACKN*/  { OBJ_WEAPONRACK, -1,          1,           }, // inactive weaponrack in random direction
+/*OBJ_WEAPONRACKL*/  { OBJ_WEAPONRACK, 1,           0,           }, // active weaponrack in SW-NE direction
+/*OBJ_WEAPONRACKLN*/ { OBJ_WEAPONRACK, 1,           1,           }, // inactive weaponrack in SW-NE direction
+/*OBJ_WEAPONRACKR*/  { OBJ_WEAPONRACK, 0,           0,           }, // active weaponrack in SE-Nw direction
+/*OBJ_WEAPONRACKRN*/ { OBJ_WEAPONRACK, 0,           1,           }, // inactive weaponrack in SE-Nw direction
+/*OBJ_ARMORSTANDN*/  { OBJ_ARMORSTAND, -1,          1,           }, // inactive armorstand in random direction
+/*OBJ_ARMORSTANDL*/  { OBJ_ARMORSTAND, 1,           0,           }, // active armorstand in SW-NE direction
+/*OBJ_ARMORSTANDLN*/ { OBJ_ARMORSTAND, 1,           1,           }, // inactive armorstand in SW-NE direction
+/*OBJ_ARMORSTANDR*/  { OBJ_ARMORSTAND, 0,           0,           }, // active armorstand in SE-Nw direction
+/*OBJ_ARMORSTANDRN*/ { OBJ_ARMORSTAND, 0,           1,           }, // inactive armorstand in SE-Nw direction
+/*OBJ_BOOK1N*/       { 0/*OBJ_BOOK1*/, -1,          1,           }, // inactive book1-stand in random direction
+/*OBJ_BOOK1L*/       { 0/*OBJ_BOOK1*/, 1,           0,           }, // active book1-stand in SW-NE direction
+/*OBJ_BOOK1LN*/      { 0/*OBJ_BOOK1*/, 1,           1,           }, // inactive book1-stand in SW-NE direction
+/*OBJ_BOOK1R*/       { 0/*OBJ_BOOK1*/, 0,           0,           }, // active book1-stand in SE-Nw direction
+/*OBJ_BOOK1RN*/      { 0/*OBJ_BOOK1*/, 0,           1,           }, // inactive book1-stand in SE-Nw direction
+/*OBJ_BOOK2N*/       { OBJ_BOOK2,      -1,          1,           }, // inactive book2-stand in random direction
+/*OBJ_BOOK2L*/       { OBJ_BOOK2,      1,           0,           }, // active book2-stand in SW-NE direction
+/*OBJ_BOOK2LN*/      { OBJ_BOOK2,      1,           1,           }, // inactive book2-stand in SW-NE direction
+/*OBJ_BOOK2R*/       { OBJ_BOOK2,      0,           0,           }, // active book2-stand in SE-Nw direction
+/*OBJ_BOOK2RN*/      { OBJ_BOOK2,      0,           1,           }, // inactive book2-stand in SE-Nw direction
+};
+
 /** Contains the data related to each object ID. */
 const ObjectData objectdata[NUM_OBJECTS] = {
 	// clang-format off
@@ -184,7 +231,7 @@ const ObjectData objectdata[NUM_OBJECTS] = {
 /*OBJ_CRUXM*/        { OFILE_CRUXSK1,  0,                                         THEME_NONE,              Q_INVALID,          16,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_CRUXR*/        { OFILE_CRUXSK2,  0,                                         THEME_NONE,              Q_INVALID,          16,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_CRUXL*/        { OFILE_CRUXSK3,  0,                                         THEME_NONE,              Q_INVALID,          16,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
-/*OBJ_STAND*/        { OFILE_ROCKSTAN, 0,                                         THEME_NONE,              Q_ROCK,              1,            0, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, TRUE,     FALSE,     ALIGN },
+/*OBJ_ROCKSTAND*/    { OFILE_ROCKSTAN, 0,                                         THEME_NONE,              Q_ROCK,             11,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         2, TRUE,     FALSE,     ALIGN },
 /*OBJ_ANGEL*///      { OFILE_ANGEL,    0,                                         THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR,              FALSE,     ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
 /*OBJ_NUDEW2R*///    { OFILE_NUDE2,    0,                                         THEME_NONE,              Q_INVALID,           0,            0, OPF_NONE,   OMF_FLOOR,              FALSE,     ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
 /*OBJ_SWITCHSKL*/    { OFILE_SWITCH4,  DTM_HELL,                                  THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    TRUE,      ALIGN },
@@ -216,17 +263,13 @@ const ObjectData objectdata[NUM_OBJECTS] = {
 /*OBJ_SHRINER*/      { OFILE_RSHRINEG, 0,                                         THEME_SHRINE,            Q_INVALID,          12,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, TRUE,     FALSE,     ALIGN },
 /*OBJ_BOOKCASEL*/    { OFILE_BCASE,    0,                                         THEME_LIBRARY,           Q_INVALID,           3,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, TRUE,     FALSE,     ALIGN },
 /*OBJ_BOOKCASER*/    { OFILE_BCASE,    0,                                         THEME_LIBRARY,           Q_INVALID,           4,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, TRUE,     FALSE,     ALIGN },
-/*OBJ_BOOKCANDLE*/   { OFILE_CANDLE2,  0,                                         THEME_LIBRARY,           Q_INVALID,           5,            7, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN }, // OPF_LIGHT 5
+/*OBJ_BOOKCANDLE*/// { OFILE_CANDLE2,  0,                                         THEME_LIBRARY,           Q_INVALID,           5,            7, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN }, // OPF_LIGHT 5
 /*OBJ_BLOODFTN*/     { OFILE_BLOODFNT, 0,                                         THEME_BLOODFOUNTAIN,     Q_INVALID,          11,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_DECAP*/        { OFILE_DECAP,    DTM_HELL,                                  THEME_DECAPITATED,       Q_INVALID,           0,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, TRUE,     FALSE,     ALIGN },
-/*OBJ_TCHEST1*/      { OFILE_CHEST1,   DTM_ANY & ~DTM_CATHEDRAL,                  THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    FALSE,     ALIGN },
-/*OBJ_TCHEST2*/      { OFILE_CHEST2,   DTM_ANY & ~DTM_CATHEDRAL,                  THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    FALSE,     ALIGN },
-/*OBJ_TCHEST3*/      { OFILE_CHEST3,   DTM_ANY & ~DTM_CATHEDRAL,                  THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    FALSE,     ALIGN },
 /*OBJ_ANCIENTBOOK*/  { OFILE_BOOK2,    0,                                         THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_VILEBOOK*/     { OFILE_BOOK2,    0,                                         THEME_NONE,              Q_INVALID,           4,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_MYTHICBOOK*/   { OFILE_BOOK2,    0,                                         THEME_NONE,              Q_BCHAMB,            4,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
-/*OBJ_BOOK2L*/       { OFILE_BOOK2,    0,                                         THEME_LIBRARY,           Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
-/*OBJ_BOOK2R*/       { OFILE_BOOK2,    0,                                         THEME_SKELROOM,          Q_INVALID,           4,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
+/*OBJ_BOOK2*/        { OFILE_BOOK2,    0,                                         THEME_LIBRARY,           Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_BOOKLVR*///    { OFILE_BOOK1,    0,                                         THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_BLINDBOOK*/    { OFILE_BOOK1,    0,                                         THEME_NONE,              Q_BLIND,             1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_BLOODBOOK*/    { OFILE_BOOK1,    0,                                         THEME_NONE,              Q_BLOOD,             4,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
@@ -234,24 +277,20 @@ const ObjectData objectdata[NUM_OBJECTS] = {
 /*OBJ_PEDESTAL*/     { OFILE_PEDISTL,  0,                                         THEME_NONE,              Q_BLOOD,             1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_L3LDOOR*/      { OFILE_L3DOORS,  DTM_CAVES,                                 THEME_NONE,              Q_INVALID,           2,            0, OPF_DOOR,   OMF_ACTIVE,             FALSE,     ODT_LEFT,         3, FALSE,    TRUE,      ALIGN },
 /*OBJ_L3RDOOR*/      { OFILE_L3DOORS,  DTM_CAVES,                                 THEME_NONE,              Q_INVALID,           1,            0, OPF_DOOR,   OMF_ACTIVE,             FALSE,     ODT_RIGHT,        3, FALSE,    TRUE,      ALIGN },
-/*OBJ_PURIFYINGFTN*/ { OFILE_PFOUNTN,  0,                                         THEME_PURIFYINGFOUNTAIN, Q_INVALID,          11,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
+/*OBJ_PURIFYINGFTN*/ { OFILE_PFOUNTN,  0,                                         THEME_PURIFYINGFOUNTAIN, Q_INVALID,          11,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    FALSE,     ALIGN },
 /*OBJ_ARMORSTAND*/   { OFILE_ARMSTAND, 0,                                         THEME_ARMORSTAND,        Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
-/*OBJ_ARMORSTANDN*/  { OFILE_ARMSTAND, 0,                                         THEME_ARMORSTAND,        Q_WARLORD,           2,            0, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
 /*OBJ_GOATSHRINE*/   { OFILE_GOATSHRN, 0,                                         THEME_GOATSHRINE,        Q_INVALID,          11,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_CAULDRON*/     { OFILE_CAULDREN, DTM_HELL,                                  THEME_NONE,              Q_INVALID,           4,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
-/*OBJ_MURKYFTN*/     { OFILE_MFOUNTN,  0,                                         THEME_MURKYFOUNTAIN,     Q_INVALID,          11,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
+/*OBJ_MURKYFTN*/     { OFILE_MFOUNTN,  0,                                         THEME_MURKYFOUNTAIN,     Q_INVALID,          11,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    FALSE,     ALIGN },
 /*OBJ_TEARFTN*/      { OFILE_TFOUNTN,  0,                                         THEME_TEARFOUNTAIN,      Q_INVALID,           5,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_ALTBOY*/       { OFILE_ALTBOY,   0,                                         THEME_NONE,              Q_BETRAYER,          1,            0, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
 /*OBJ_MCIRCLE1*/     { OFILE_MCIRL,    0,                                         THEME_NONE,              Q_INVALID,           1,            0, OPF_CIRCLE, OMF_FLOOR,              TRUE,      ODT_NONE,         0, TRUE,     FALSE,     ALIGN },
 /*OBJ_MCIRCLE2*/     { OFILE_MCIRL,    0,                                         THEME_NONE,              Q_INVALID,           3,            0, OPF_CIRCLE, OMF_FLOOR,              TRUE,      ODT_NONE,         0, TRUE,     FALSE,     ALIGN },
 /*OBJ_STORYBOOK*/    { OFILE_BKSLBRNT, DTM_CATHEDRAL | DTM_CATACOMBS | DTM_CAVES, THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN }, // BUGFIX should only be loaded on level 1-12 (crypt masks as 1-4) (fixed)
-/*OBJ_STORYCANDLE*/  { OFILE_CANDLE2,  DTM_CATHEDRAL | DTM_CATACOMBS | DTM_CAVES, THEME_NONE,              Q_BETRAYER,          0,            7, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN }, // OPF_LIGHT
+/*OBJ_STORYCANDLE*///{ OFILE_CANDLE2,  DTM_CATHEDRAL | DTM_CATACOMBS | DTM_CAVES, THEME_NONE,              Q_BETRAYER,          5,            7, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN }, // OPF_LIGHT
 /*OBJ_TBCROSS*/      { OFILE_BURNCROS, 0,                                         THEME_BRNCROSS,          Q_INVALID,           0,           15, OPF_BCROSS, OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN }, // + OPF_LIGHT 5
-/*OBJ_WEAPONRACKL*/  { OFILE_WEAPSTND, 0,                                         THEME_WEAPONRACK,        Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
-/*OBJ_WEAPONRACKLN*/ { OFILE_WEAPSTND, 0,                                         THEME_WEAPONRACK,        Q_WARLORD,           2,            0, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
-/*OBJ_WEAPONRACKR*/  { OFILE_WEAPSTND, 0,                                         THEME_WEAPONRACK,        Q_INVALID,           3,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
-/*OBJ_WEAPONRACKRN*/ { OFILE_WEAPSTND, 0,                                         THEME_WEAPONRACK,        Q_INVALID,           4,            0, OPF_NONE,   OMF_FLOOR,              TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
-/*OBJ_MUSHPATCH*/    { OFILE_MUSHPTCH, 0,                                         THEME_NONE,              Q_MUSHROOM,          1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
+/*OBJ_WEAPONRACK*/   { OFILE_WEAPSTND, 0,                                         THEME_WEAPONRACK,        Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, FALSE,     ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
+/*OBJ_MUSHPATCH*/    { OFILE_MUSHPTCH, 0,                                         THEME_NONE,              Q_MUSHROOM,          1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    FALSE,     ALIGN },
 /*OBJ_LAZSTAND*/     { OFILE_LZSTAND,  0,                                         THEME_NONE,              Q_BETRAYER,          1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         3, FALSE,    FALSE,     ALIGN },
 /*OBJ_SLAINHERO*///  { OFILE_DECAP,    DTM_CAVES,                                 THEME_NONE,              Q_INVALID,           2,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    FALSE,     ALIGN },
 /*OBJ_SIGNCHEST*/    { OFILE_CHEST3,   0,                                         THEME_NONE,              Q_BANNER,            1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    FALSE,     ALIGN },
@@ -274,87 +313,87 @@ const ObjectData objectdata[NUM_OBJECTS] = {
 
 const ObjFileData objfiledata[NUM_OFILE_TYPES] = {
 	// clang-format off
-//                   ofName,     oSFX,        oSFXCnt, oAnimFlag, oAnimFrameLen, oAnimLen, oSolidFlag, oBreak, 
-/*OFILE_L1BRAZ*/   { "L1Braz",   SFX_NONE,          0, OAM_LOOP,              1,       26, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_L1DOORS*/  { "L1Doors",  IS_DOOROPEN,       2, OAM_NONE,              0,        0, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_LEVER*/    { "Lever",    SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_CHEST1*/   { "Chest1",   SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_CHEST2*/   { "Chest2",   SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_BANNER*/   { "Banner",   SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_SKULPILE*///{ "SkulPile", SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_SKULFIRE*/ { "SkulFire", SFX_NONE,          0, OAM_LOOP,              2,       11, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_SKULSTIK*///{ "SkulStik", SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_CRUXSK1*/  { "CruxSk1",  SFX_NONE,          0, OAM_SINGLE,            1,       15, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_CRUXSK2*/  { "CruxSk2",  SFX_NONE,          0, OAM_SINGLE,            1,       15, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_CRUXSK3*/  { "CruxSk3",  SFX_NONE,          0, OAM_SINGLE,            1,       15, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_BOOK1*/    { "Book1",    SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_BOOK2*/    { "Book2",    SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_ROCKSTAN*/ { "Rockstan", SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_ANGEL*///  { "Angel",    SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_GHOST*///  { "Ghost",    SFX_NONE,          0, OAM_LOOP,              0,       14, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_CHEST3*/   { "Chest3",   SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_BURNCROS*/ { "Burncros", SFX_NONE,          0, OAM_LOOP,              1,       10, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_CANDLE*/// { "Candle",   SFX_NONE,          0, OAM_NONE,              0,        9, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_CANDLE2*/  { "Candle2",  SFX_NONE,          0, OAM_LOOP,              2,        4, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_CANDLABR*///{ "Candlabr", SFX_NONE,          0, OAM_NONE,              0,        1, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_NUDE2*///  { "Nude2",    SFX_NONE,          0, OAM_LOOP,              3,        6, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_SWITCH2*///{ "Switch2",  SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_SWITCH3*///{ "Switch3",  SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_SWITCH4*/  { "Switch4",  SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_TNUDEM*/   { "TNudeM",   SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_TNUDEW*/   { "TNudeW",   SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_TSOUL*/    { "TSoul",    SFX_NONE,          0, OAM_NONE,              0,        0, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_L2DOORS*/  { "L2Doors",  IS_DOOROPEN,       2, OAM_NONE,              0,        0, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_WTORCH4*/  { "WTorch4",  SFX_NONE,          0, OAM_LOOP,              1,        9, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_WTORCH3*/  { "WTorch3",  SFX_NONE,          0, OAM_LOOP,              1,        9, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_SARC*/     { "Sarc",     SFX_NONE,          0, OAM_SINGLE,            3,        5, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_FLAME1*/// { "Flame1",   SFX_NONE,          0, OAM_LOOP,              1,       20, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_FLAME3*/// { "Flame3",   SFX_NONE,          0, OAM_LOOP,              1,       22, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_FIREWAL1*///{ "Firewal1", SFX_NONE,          0, OAM_LOOP,              1,       13, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_EXPLOD1*///{ "Explod1",  SFX_NONE,          0, OAM_LOOP,              1,       11, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_EXPLOD2*///{ "Explod2",  SFX_NONE,          0, OAM_LOOP,              1,       11, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_VAPOR1*/// { "Vapor1",   SFX_NONE,          0, OAM_LOOP,              1,       13, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_PRSRPLT1*///{ "Prsrplt1", SFX_NONE,          0, OAM_NONE,              0,       10, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_TRAPHOLE*/ { "Traphole", SFX_NONE,          0, OAM_NONE,              0,        0, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_DIRTFALL*///{ "Dirtfall", SFX_NONE,          0, OAM_LOOP,              0,       10, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_WATER*///  { "Water",    SFX_NONE,          0, OAM_LOOP,              1,       10, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_MINIWATR*///{ "MiniWatr", SFX_NONE,          0, OAM_LOOP,              1,       10, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_WTORCH2*/  { "WTorch2",  SFX_NONE,          0, OAM_LOOP,              1,        9, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_WTORCH1*/  { "WTorch1",  SFX_NONE,          0, OAM_LOOP,              1,        9, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_BCASE*/    { "BCase",    SFX_NONE,          0, OAM_NONE,              0,        0, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_BSHELF*/// { "BShelf",   SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_WEAPSTND*/ { "WeapStnd", SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_BKURNS*/// { "Bkurns",   SFX_NONE,          1, OAM_NONE,              1,       10, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_WATERJUG*///{ "Waterjug", SFX_NONE,          1, OAM_NONE,              1,        4, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_BARREL*/   { "Barrel",   IS_BARREL,         1, OAM_SINGLE,            1,        9, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_BARRELEX*/ { "Barrelex", IS_BARLFIRE,       1, OAM_SINGLE,            1,       10, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_LSHRINEG*/ { "LShrineG", IS_MAGIC,          2, OAM_SINGLE,            1,       11, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_RSHRINEG*/ { "RShrineG", IS_MAGIC,          2, OAM_SINGLE,            1,       11, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_BLOODFNT*/ { "Bloodfnt", SFX_NONE,          0, OAM_LOOP,              2,       10, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_DECAP*/    { "Decap",    SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_PEDISTL*/  { "Pedistl",  SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_L3DOORS*/  { "L3Doors",  IS_DOOROPEN,       2, OAM_NONE,              0,        0, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_PFOUNTN*/  { "PFountn",  SFX_NONE,          0, OAM_LOOP,              2,       10, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_ARMSTAND*/ { "Armstand", SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_GOATSHRN*/ { "Goatshrn", LS_GSHRINE,        1, OAM_LOOP,              2,       10, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_CAULDREN*/ { "Cauldren", LS_CALDRON,        1, OAM_SINGLE,            2,        3, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_MFOUNTN*/  { "MFountn",  SFX_NONE,          0, OAM_LOOP,              2,       10, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_TFOUNTN*/  { "TFountn",  SFX_NONE,          0, OAM_LOOP,              2,        4, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_ALTBOY*/   { "Altboy",   SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_MCIRL*/    { "Mcirl",    SFX_NONE,          0, OAM_NONE,              0,        0, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_BKSLBRNT*/ { "Bkslbrnt", SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_MUSHPTCH*/ { "Mushptch", SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_LZSTAND*/  { "LzStand",  SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
+//                   ofName,     oSFX,        oSFXCnt, oAnimFlag, oAnimFrameLen, oSolidFlags, oBreak, 
+/*OFILE_L1BRAZ*/   { "L1Braz",   SFX_NONE,          0, OAM_LOOP,              1, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_L1DOORS*/  { "L1Doors",  IS_DOOROPEN,       2, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_LEVER*/    { "Lever",    SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_CHEST1*/   { "Chest1",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_CHEST2*/   { "Chest2",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_BANNER*/   { "Banner",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_SKULPILE*///{ "SkulPile", SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_SKULFIRE*/ { "SkulFire", SFX_NONE,          0, OAM_LOOP,              2, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_SKULSTIK*///{ "SkulStik", SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_CRUXSK1*/  { "CruxSk1",  SFX_NONE,          0, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_CRUXSK2*/  { "CruxSk2",  SFX_NONE,          0, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_CRUXSK3*/  { "CruxSk3",  SFX_NONE,          0, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_BOOK1*/    { "Book1",    SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_BOOK2*/    { "Book2",    SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_ROCKSTAN*/ { "Rockstan", SFX_NONE,          0, OAM_LOOP,              1, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_ANGEL*///  { "Angel",    SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_GHOST*///  { "Ghost",    SFX_NONE,          0, OAM_LOOP,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_CHEST3*/   { "Chest3",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_BURNCROS*/ { "Burncros", SFX_NONE,          0, OAM_LOOP,              1, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_CANDLE*/// { "Candle",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_CANDLE2*/  { "Candle2",  SFX_NONE,          0, OAM_LOOP,              2, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_CANDLABR*///{ "Candlabr", SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_NUDE2*///  { "Nude2",    SFX_NONE,          0, OAM_LOOP,              3, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_SWITCH2*///{ "Switch2",  SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_SWITCH3*///{ "Switch3",  SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_SWITCH4*/  { "Switch4",  SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_TNUDEM*/   { "TNudeM",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_TNUDEW*/   { "TNudeW",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_TSOUL*/    { "TSoul",    SFX_NONE,          0, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_L2DOORS*/  { "L2Doors",  IS_DOOROPEN,       2, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_WTORCH4*/  { "WTorch4",  SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_WTORCH3*/  { "WTorch3",  SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_SARC*/     { "Sarc",     SFX_NONE,          0, OAM_SINGLE,            3, 1 | 2,       OBM_UNBREAKABLE, ALIGN },
+/*OFILE_FLAME1*/// { "Flame1",   SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_FLAME3*/// { "Flame3",   SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_FIREWAL1*///{ "Firewal1", SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_EXPLOD1*///{ "Explod1",  SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_EXPLOD2*///{ "Explod2",  SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_VAPOR1*/// { "Vapor1",   SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_PRSRPLT1*///{ "Prsrplt1", SFX_NONE,          0, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_TRAPHOLE*/ { "Traphole", SFX_NONE,          0, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_DIRTFALL*///{ "Dirtfall", SFX_NONE,          0, OAM_LOOP,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_WATER*///  { "Water",    SFX_NONE,          0, OAM_LOOP,              1, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_MINIWATR*///{ "MiniWatr", SFX_NONE,          0, OAM_LOOP,              1, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_WTORCH2*/  { "WTorch2",  SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_WTORCH1*/  { "WTorch1",  SFX_NONE,          0, OAM_LOOP,              1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_BCASE*/    { "BCase",    SFX_NONE,          0, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_BSHELF*/// { "BShelf",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_WEAPSTND*/ { "WeapStnd", SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_BKURNS*/// { "Bkurns",   SFX_NONE,          1, OAM_NONE,              1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_WATERJUG*///{ "Waterjug", SFX_NONE,          1, OAM_NONE,              1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_BARREL*/   { "Barrel",   IS_BARREL,         1, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_BARRELEX*/ { "Barrelex", IS_BARLFIRE,       1, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_LSHRINEG*/ { "LShrineG", IS_MAGIC,          2, OAM_SINGLE,            1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_RSHRINEG*/ { "RShrineG", IS_MAGIC,          2, OAM_SINGLE,            1, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_BLOODFNT*/ { "Bloodfnt", SFX_NONE,          0, OAM_LOOP,              2, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_DECAP*/    { "Decap",    SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_PEDISTL*/  { "Pedistl",  SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_L3DOORS*/  { "L3Doors",  IS_DOOROPEN,       2, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_PFOUNTN*/  { "PFountn",  SFX_NONE,          0, OAM_LOOP,              2, 1 | 14,      OBM_UNBREAKABLE, ALIGN },
+/*OFILE_ARMSTAND*/ { "Armstand", SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_GOATSHRN*/ { "Goatshrn", LS_GSHRINE,        1, OAM_LOOP,              2, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_CAULDREN*/ { "Cauldren", LS_CALDRON,        1, OAM_SINGLE,            2, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_MFOUNTN*/  { "MFountn",  SFX_NONE,          0, OAM_LOOP,              2, 1 | 14,      OBM_UNBREAKABLE, ALIGN },
+/*OFILE_TFOUNTN*/  { "TFountn",  SFX_NONE,          0, OAM_LOOP,              2, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_ALTBOY*/   { "Altboy",   SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_MCIRL*/    { "Mcirl",    SFX_NONE,          0, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_BKSLBRNT*/ { "Bkslbrnt", SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_MUSHPTCH*/ { "Mushptch", SFX_NONE,          0, OAM_NONE,              0, 1 | 14,      OBM_UNBREAKABLE, ALIGN },
+/*OFILE_LZSTAND*/  { "LzStand",  SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
 #ifdef HELLFIRE
-/*OFILE_L5DOOR*/   { "L5Door",   IS_CROPEN,         2, OAM_NONE,              0,        0, FALSE,      OBM_UNBREAKABLE, ALIGN },
-/*OFILE_L5SARCO*/  { "L5Sarco",  SFX_NONE,          0, OAM_SINGLE,            3,        5, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_URN*/      { "Urn",      IS_POPPOP2,        1, OAM_SINGLE,            1,        9, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_URNEXPLD*/ { "Urnexpld", IS_POPPOP3,        1, OAM_SINGLE,            1,       10, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_L5BOOKS*/  { "L5Books",  SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_L5CANDLE*/ { "L5Light",  SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_L5LEVER*/  { "L5Lever",  SFX_NONE,          0, OAM_NONE,              0,        0, TRUE,       OBM_UNBREAKABLE, ALIGN },
-/*OFILE_L6POD1*/   { "L6Pod1",   IS_POPPOP5,        1, OAM_SINGLE,            1,        9, TRUE,       OBM_BREAKABLE,   ALIGN },
-/*OFILE_L6POD2*/   { "L6Pod2",   IS_POPPOP8,        1, OAM_SINGLE,            1,       10, TRUE,       OBM_BREAKABLE,   ALIGN },
+/*OFILE_L5DOOR*/   { "L5Door",   IS_CROPEN,         2, OAM_NONE,              0, 0,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_L5SARCO*/  { "L5Sarco",  SFX_NONE,          0, OAM_SINGLE,            3, 1 | 2,       OBM_UNBREAKABLE, ALIGN },
+/*OFILE_URN*/      { "Urn",      IS_POPPOP2,        1, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_URNEXPLD*/ { "Urnexpld", IS_POPPOP3,        1, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_L5BOOKS*/  { "L5Books",  SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_L5CANDLE*/ { "L5Light",  SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_L5LEVER*/  { "L5Lever",  SFX_NONE,          0, OAM_NONE,              0, 1,           OBM_UNBREAKABLE, ALIGN },
+/*OFILE_L6POD1*/   { "L6Pod1",   IS_POPPOP5,        1, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
+/*OFILE_L6POD2*/   { "L6Pod2",   IS_POPPOP8,        1, OAM_SINGLE,            1, 1,           OBM_BREAKABLE,   ALIGN },
 #endif
 	// clang-format on
 };
