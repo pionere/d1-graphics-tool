@@ -228,7 +228,7 @@ bool D1GfxFrame::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &repla
     bool result = false;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
+            const D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
 
             for (const QPair<D1GfxPixel, D1GfxPixel> &replacement : replacements) {
                 if (d1pix == replacement.first) {
@@ -620,7 +620,7 @@ bool D1GfxFrame::optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame)
                             newunits += it->len;
                             // dProgress() << QApplication::tr("match %1 len %2 rle %3:%4 -> %5 vs %6").arg(it->pos).arg(it->len).arg(it->front_rle).arg(it->back_rle).arg(units).arg(newunits);
 
-                            if (newunits >= units) {
+                            if (units >= newunits) {
                                 for (int x = it->pos; x < it->pos + it->len; x++) {
                                     const D1GfxPixel d1pix = maskFrame->getPixel(x, y);
                                     result |= this->setPixel(x, y, d1pix);
