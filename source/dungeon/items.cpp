@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#define ITEM_ANIM_DELAY 1
+
 int itemactive[MAXITEMS];
 /** Contains the items on ground in the current game. */
 ItemStruct items[MAXITEMS + 1];
@@ -139,8 +141,6 @@ static void PlaceInitItems()
 void InitItems()
 {
 	// if (!currLvl._dSetLvl) {
-		if (QuestStatus(Q_ROCK))
-			PlaceRock();
 		if (QuestStatus(Q_ANVIL))
 			CreateQuestItemAt(IDI_ANVIL, 2 * pSetPieces[0]._spx + DBORDERX + 11, 2 * pSetPieces[0]._spy + DBORDERY + 11);
 		if (currLvl._dLevelIdx == questlist[Q_VEIL]._qdlvl + 1 && quests[Q_VEIL]._qactive != QUEST_NOTAVAIL)
@@ -1221,43 +1221,6 @@ void PlaceQuestItemInArea(int idx, int areasize)
 	RespawnItem(ii);
 }
 
-/**
- * Place a rock(item) on a stand (OBJ_STAND).
- */
-/*static*/ void PlaceRock()
-{
-	int i, oi;
-
-	if (numitems >= MAXITEMS)
-		return; // should never be the case
-
-	/*for (i = 0; i < numobjects; i++) {
-		oi = i; // objectactive[i];
-		if (objects[oi]._otype == OBJ_STAND)
-			break;
-	}
-	if (i != numobjects) {*/
-	oi = 0; // objectactive[0];
-	if (objects[oi]._otype == OBJ_STAND) {
-		i = itemactive[numitems];
-		assert(i == numitems);
-		CreateQuestItemAt(IDI_ROCK, objects[oi]._ox, objects[oi]._oy);
-//		SetItemData(i, IDI_ROCK);
-		// assert(gbLvlLoad);
-//		RespawnItem(i);
-		// draw it above the stand
-		items[i]._iSelFlag = 2;
-		//items[i]._iPostDraw = TRUE;
-		items[i]._iAnimFrame = 11;
-		//items[i]._iAnimFlag = TRUE;
-//		items[i]._iCreateInfo = items_get_currlevel(); // | CF_PREGEN;
-//		items[i]._iSeed = NextRndSeed();               // make sure it is unique
-//		SetItemLoc(i, objects[oi]._ox, objects[oi]._oy);
-
-//		numitems++;
-	}
-}
-
 void RespawnItem(int ii)
 {
 	ItemStruct* is;
@@ -1267,7 +1230,7 @@ void RespawnItem(int ii)
 	it = ItemCAnimTbl[is->_iCurs];
 //	is->_iAnimData = itemanims[it];
 	is->_iAnimLen = itemfiledata[it].iAnimLen;
-	is->_iAnimFrameLen = 1;
+	//is->_iAnimFrameLen = ITEM_ANIM_DELAY;
 	//is->_iAnimWidth = ITEM_ANIM_WIDTH;
 	//is->_iAnimXOffset = (ITEM_ANIM_WIDTH - TILE_WIDTH) / 2;
 	//is->_iPostDraw = FALSE;

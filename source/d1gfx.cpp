@@ -2160,10 +2160,10 @@ bool D1Gfx::check(int assetMpl, bool *typetested) const
                     dProgress() << tr("Object %1 is groupped.").arg(nativeFilePath);
                     result = true;
                 }
-                if (ofdata.oAnimLen != 0 && fc != ofdata.oAnimLen) {
-                    dProgress() << tr("Framecount of the object %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ofdata.oAnimLen);
-                    result = true;
-                }
+                // if (ofdata.oAnimLen != 0 && fc != ofdata.oAnimLen) {
+                //    dProgress() << tr("Framecount of the object %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(ofdata.oAnimLen);
+                //    result = true;
+                // }
                 for (int m = 0; m < NUM_CELMETA; m++) {
                     if (this->getMeta(m)->isStored()) {
                         dProgress() << tr("Meta %1 of the object %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(nativeFilePath);

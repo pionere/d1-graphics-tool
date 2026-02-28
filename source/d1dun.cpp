@@ -89,7 +89,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr }, //OBJ_SKSTICK4,
                      { nullptr }, //OBJ_SKSTICK5,
                      { nullptr },
-                     { nullptr },
+/*OBJ_L1LIGHT*/      { "Brazier" },          // Vile2.DUN
 /*OBJ_VILEBOOK*/     { "Book of Vileness" }, // Vile2.DUN
                      { nullptr },
                      { nullptr },
@@ -1033,28 +1033,30 @@ QImage D1Dun::getObjectImage(int objectIndex, unsigned time)
     }
     QImage result = QImage();
     if (objEntry->objGfx != nullptr) {
-        int baseFrameNum = objEntry->baseFrameNum;
-        if (baseFrameNum != 0) {
-            result = objEntry->objGfx->getFrameImage(baseFrameNum - 1);
-        }
-        int animFrameNum = objEntry->animFrameNum;
-        if (animFrameNum >= 0) {
-            const int frameCount = objEntry->objGfx->getFrameCount();
-            if (animFrameNum == 0) {
-                animFrameNum = 1 + (time % frameCount);
-            } else if (frameCount < animFrameNum) {
-                animFrameNum = 1;
+        const int frameCount = objEntry->objGfx->getFrameCount();
+        if (frameCount != 0) {
+            int baseFrameNum = objEntry->baseFrameNum;
+            if (baseFrameNum != 0) {
+                result = objEntry->objGfx->getFrameImage(baseFrameNum - 1);
             }
-            QImage anim = objEntry->objGfx->getFrameImage(animFrameNum - 1);
-            if (result.isNull()) {
-                result = anim;
-            } else if (anim.width() == result.width() && anim.height() == result.height()) {
-                QRgb *srcBits = reinterpret_cast<QRgb *>(anim.bits());
-                QRgb *destBits = reinterpret_cast<QRgb *>(result.bits());
-                for (int y = 0; y < anim.height(); y++) {
-                    for (int x = 0; x < anim.width(); x++, srcBits++, destBits++) {
-                        if (qAlpha(*srcBits) == 0) continue;
-                        *destBits = *srcBits;
+            int animFrameNum = objEntry->animFrameNum;
+            if (animFrameNum >= 0) {
+                if (animFrameNum == 0) {
+                    animFrameNum = 1 + (time % frameCount);
+                } else if (frameCount < animFrameNum) {
+                    animFrameNum = 1;
+                }
+                QImage anim = objEntry->objGfx->getFrameImage(animFrameNum - 1);
+                if (result.isNull()) {
+                    result = anim;
+                } else if (anim.width() == result.width() && anim.height() == result.height()) {
+                    QRgb *srcBits = reinterpret_cast<QRgb *>(anim.bits());
+                    QRgb *destBits = reinterpret_cast<QRgb *>(result.bits());
+                    for (int y = 0; y < anim.height(); y++) {
+                        for (int x = 0; x < anim.width(); x++, srcBits++, destBits++) {
+                            if (qAlpha(*srcBits) == 0) continue;
+                            *destBits = *srcBits;
+                        }
                     }
                 }
             }
@@ -2564,9 +2566,13 @@ void D1Dun::loadObject(int objectIndex)
             break;
         }
     }
-    const BYTE *objType = &ObjConvTbl[objectIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && *objType != 0 && !this->assetPath.isEmpty()) {
-        const ObjectData &od = objectdata[*objType];
+    const int8_t *objType = &ObjConvTbl[objectIndex];
+    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && !this->assetPath.isEmpty()) {
+        int type = *objType;
+        if (type < 0) {
+            type = objTypeConv[-type].oBaseType;
+        }
+        const ObjectData &od = objectdata[type];
         const ObjFileData &ofd = objfiledata[od.ofindex];
         result.baseFrameNum = od.oBaseFrame;
         if (result.baseFrameNum == 0 && ofd.oAnimFlag != OAM_LOOP) {
@@ -4381,6 +4387,13 @@ void D1Dun::patch(int dunFileIndex)
         // replace books
         change |= this->changeObjectAt(10, 29, 47);
         change |= this->changeObjectAt(29, 30, 47);
+        // add braziers
+        change |= this->changeObjectAt(4, 24, 46);
+        change |= this->changeObjectAt(36, 24, 46);
+        change |= this->changeObjectAt(16, 28, 46);
+        change |= this->changeObjectAt(24, 28, 46);
+        change |= this->changeObjectAt(16, 34, 46);
+        change |= this->changeObjectAt(24, 34, 46);
         break;
     case DUN_VILE_AFT: // Vile1.DUN
         // external tiles
@@ -4432,6 +4445,13 @@ void D1Dun::patch(int dunFileIndex)
         // - corners
         change |= this->changeTileAt(4, 17, 159);
         change |= this->changeTileAt(16, 10, 159);
+        // eliminate obsolete braziers
+        change |= this->changeTileAt(2, 12, 0);
+        change |= this->changeTileAt(18, 12, 0);
+        change |= this->changeTileAt(8, 14, 0);
+        change |= this->changeTileAt(12, 14, 0);
+        change |= this->changeTileAt(8, 17, 0);
+        change |= this->changeTileAt(12, 17, 0);
         // remove objects, monsters
         for (int y = 0; y < 23 * 2; y++) {
             for (int x = 0; x < 21 * 2; x++) {
@@ -4699,6 +4719,13 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(32, 41, 5);
         change |= this->changeObjectAt(48, 45, 5);
         change |= this->changeObjectAt(48, 17, 5);
+        // add braziers
+        change |= this->changeObjectAt(22, 26, 46);
+        change |= this->changeObjectAt(22, 36, 46);
+        change |= this->changeObjectAt(46, 28, 46);
+        change |= this->changeObjectAt(52, 28, 46);
+        change |= this->changeObjectAt(46, 34, 46);
+        change |= this->changeObjectAt(52, 34, 46);
         // add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
         // remove monsters
@@ -4808,6 +4835,13 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(25, 14, 0);
         change |= this->changeTileAt(25, 16, 0);
         change |= this->changeTileAt(25, 17, 0);
+        // eliminate obsolete braziers
+        change |= this->changeTileAt(11, 13, 0);
+        change |= this->changeTileAt(11, 18, 0);
+        change |= this->changeTileAt(23, 14, 0);
+        change |= this->changeTileAt(26, 14, 0);
+        change |= this->changeTileAt(23, 17, 0);
+        change |= this->changeTileAt(26, 17, 0);
         // use common tiles
         change |= this->changeTileAt(7, 14, 84);
         // use the new shadows

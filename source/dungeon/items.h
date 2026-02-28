@@ -38,7 +38,6 @@ void CreateRndItem(int x, int y, unsigned quality);
 void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc);
 void PlaceQuestItemInArea(int idx, int areasize);
 void CreateQuestItemAt(int idx, int x, int y);
-void PlaceRock();
 void RespawnItem(int ii);
 
 #endif /* __ITEMS_H__ */

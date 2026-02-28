@@ -157,7 +157,7 @@ typedef struct ItemStruct {
 	BOOLEAN _iFloorFlag;
 	BOOLEAN _iAnimFlag;
 	BYTE* _iAnimData;        // PSX name -> ItemFrame
-	unsigned _iAnimFrameLen; // Tick length of each frame in the current animation
+	//unsigned _iAnimFrameLen; // Tick length of each frame in the current animation
 	unsigned _iAnimCnt;      // Increases by one each game tick, counting how close we are to _iAnimFrameLen
 	unsigned _iAnimLen;      // Number of frames in current animation
 	unsigned _iAnimFrame;    // Current frame of animation.
@@ -620,6 +620,13 @@ typedef struct UniqMonData {
 // objects
 //////////////////////////////////////////////////
 
+typedef struct {
+	BYTE oBaseType;     // _object_id
+	int8_t oTypeParam1; // direction (left: 0, right:1, random: -1)
+	int8_t oTypeParam2; // trapped (no: 0, yes: 1, random: -1) for chests or inactive (no: 0, yes: 1) for armorstands and weaponracks
+	BYTE oAlign;
+} ObjTypeConv;
+
 typedef struct ObjectData {
 	BYTE ofindex;        // object_graphic_id
 	BYTE oLvlTypes;      // dungeon_type_mask
@@ -650,8 +657,7 @@ typedef struct ObjFileData {
 	BYTE oSFXCnt;
 	BYTE oAnimFlag; // object_anim_mode
 	int oAnimFrameLen; // Tick length of each frame in the current animation
-	int oAnimLen;   // Number of frames in current animation
-	BOOLEAN oSolidFlag;
+	BYTE oSolidFlags;
 	BYTE oBreak; // object_break_mode
 } ObjFileData;
 
