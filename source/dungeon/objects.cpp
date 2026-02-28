@@ -1275,7 +1275,7 @@ int AddObject(int type, int ox, int oy)
 #endif
 		}
 	}
-	os->_oSolidFlag = ofd->oSolidFlag; // & 1; -- does not matter at the moment
+	os->_oSolidFlag = ofd->oSolidFlags; // & 1; -- does not matter at the moment
 	os->_oBreak = ofd->oBreak;
 	// os->_oDelFlag = FALSE; - unused
 	os->_oTrapChance = 0;

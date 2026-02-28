@@ -207,9 +207,10 @@ static int TFit_Obj5(int themeId)
 	return random_low(0, numMatches);
 }
 
-static bool CheckThemeObj3(int x, int y, int themeId)
+static bool CheckThemeObj3(int x, int y)
 {
 	int i, xx, yy;
+    const int themeId = currThemeId;
 	const ThemeStruct &theme = themes[themeId];
 	BYTE tv = theme._tsTransVal;
 
@@ -237,7 +238,7 @@ static int TFit_Obj3(int themeId)
 	numMatches = 0;
 	for (xx = theme._tsx1 + 1; xx < theme._tsx2 - 1; xx++) {
 		for (yy = theme._tsy1 + 1; yy < theme._tsy2 - 1; yy++) {
-			if (CheckThemeObj3(xx, yy, themeId)) {
+			if (CheckThemeObj3(xx, yy)) {
 				drlg.thLocs[numMatches].tpdx = xx;
 				drlg.thLocs[numMatches].tpdy = yy;
 				drlg.thLocs[numMatches].tpdvar1 = 0;
@@ -422,6 +423,7 @@ void InitThemes()
 
 	if (QuestStatus(Q_ZHAR)) {
 		for (i = 0; i < numthemes; i++) {
+            currThemeId = i;
 			if (SpecialThemeFit(i, THEME_LIBRARY)) {
 				zharlib = i;
 				break;
@@ -429,6 +431,7 @@ void InitThemes()
 		}
 	}
 	for (i = 0; i < numthemes; i++) {
+        currThemeId = i;
 		if (i != zharlib) {
 			j = ThemeGood[random_(0, lengthof(ThemeGood))];
 			while (!SpecialThemeFit(i, j))
@@ -444,14 +447,13 @@ void InitThemes()
  * @param rndfrq: the frequency to place the object
  */
 typedef struct PlaceObj3QueryParam {
-	int themeId;
 	int rndfrq;
 	int type;
 } PlaceObj3QueryParam;
 static void Place_Obj3_Query(int xx, int yy, void* userParam)
 {
 	PlaceObj3QueryParam* param = (PlaceObj3QueryParam*)userParam;
-	if (CheckThemeObj3(xx, yy, param->themeId) && random_low(0, param->rndfrq) == 0) {
+	if (CheckThemeObj3(xx, yy) && random_low(0, param->rndfrq) == 0) {
 		AddObject(param->type, xx, yy);
 	}
 }
@@ -459,16 +461,15 @@ static void Place_Obj3(const ThemeStruct &theme, int type, int rndfrq)
 {
 #ifdef THEMEQUERY
 	PlaceObj3QueryParam param;
-	param.themeId = themeId;
 	param.rndfrq = rndfrq;
 	param.type = type;
-	QueryTheme(themeId, Place_Obj3_Query, &param);
+	QueryTheme(currThemeId, Place_Obj3_Query, &param);
 #else
 	int xx, yy;
 	// assert(rndfrq > 0);
 	for (xx = theme._tsx1 + 1; xx < theme._tsx2 - 1; xx++) {
 		for (yy = theme._tsy1 + 1; yy < theme._tsy2 - 1; yy++) {
-			if (CheckThemeObj3(xx, yy, themeId) && random_low(0, rndfrq) == 0) {
+			if (CheckThemeObj3(xx, yy) && random_low(0, rndfrq) == 0) {
 				AddObject(type, xx, yy);
 			}
 		}
@@ -520,7 +521,7 @@ static void PlaceThemeMonsts(const ThemeStruct &theme)
 	ThemeMonstsParam param;
 	param.rndfrq = rndfrq;
 	param.mtype = mtype;
-	QueryTheme(themeId, Theme_Monsts_Query, &param);
+	QueryTheme(currThemeId, Theme_Monsts_Query, &param);
 #else
 	for (xx = theme._tsx1; xx < theme._tsx2; xx++) {
 		for (yy = theme._tsy1; yy < theme._tsy2; yy++) {
@@ -840,7 +841,6 @@ static void Theme_Treasure(int themeId)
  */
 #ifdef THEMEQUERY
 typedef struct ThemeLibraryParam {
-	int themeId;
 	int librnd;
 } ThemeLibraryParam;
 static void Theme_Library_Query(int xx, int yy, void* userParam)
@@ -850,7 +850,7 @@ static void Theme_Library_Query(int xx, int yy, void* userParam)
 	type = OBJ_BOOK2L - 2 * random_(0, 2);
 	static_assert(OBJ_BOOK2L - 1 == OBJ_BOOK2LN, "Theme_Library depends on the order of OBJ_BOOK2L(N)");
 	static_assert(OBJ_BOOK2R - 1 == OBJ_BOOK2RN, "Theme_Library depends on the order of OBJ_BOOK2R(N)");
-	if (CheckThemeObj3(xx, yy, param->themeId) && dMonster[xx][yy] == 0 && random_low(0, param->librnd) == 0) {
+	if (CheckThemeObj3(xx, yy) && dMonster[xx][yy] == 0 && random_low(0, param->librnd) == 0) {
 		AddObject(type - (random_low(0, 2 * librnd) != 0 ? 1 : 0), xx, yy);
 	}
 }
@@ -866,20 +866,19 @@ static void Theme_Library(int themeId)
 	xx = theme._tsObjX;
 	yy = theme._tsObjY;
 	if (theme._tsObjVar1 != 0) {
-		AddObject(OBJ_BOOKCANDLE, xx - 1, yy);
+		AddObject(OBJ_CANDLE2, xx - 1, yy);
 		AddObject(OBJ_BOOKCASER, xx, yy);
-		AddObject(OBJ_BOOKCANDLE, xx + 1, yy);
+		AddObject(OBJ_CANDLE2, xx + 1, yy);
 	} else {
-		AddObject(OBJ_BOOKCANDLE, xx, yy - 1);
+		AddObject(OBJ_CANDLE2, xx, yy - 1);
 		AddObject(OBJ_BOOKCASEL, xx, yy);
-		AddObject(OBJ_BOOKCANDLE, xx, yy + 1);
+		AddObject(OBJ_CANDLE2, xx, yy + 1);
 	}
 	static_assert(DTYPE_CATHEDRAL == 1 && DTYPE_CATACOMBS == 2, "Theme_Library uses dungeon_type as an array-index.");
 	// assert(currLvl._dDunType == 1 /* DTYPE_CATHEDRAL */ || currLvl._dDunType == 2 /* DTYPE_CATACOMBS */);
 	librnd = librnds[currLvl._dDunType - 1];     // TODO: use dType instead?
 #ifdef THEMEQUERY
 	ThemeLibraryParam param;
-	param.themeId = themeId;
 	param.librnd = librnd;
 	QueryTheme(themeId, Theme_Library_Query, &param);
 #else
@@ -889,7 +888,7 @@ static void Theme_Library(int themeId)
 	static_assert(OBJ_BOOK2R - 1 == OBJ_BOOK2RN, "Theme_Library depends on the order of OBJ_BOOK2R(N)");
 	for (xx = theme._tsx1 + 1; xx < theme._tsx2 - 1; xx++) {
 		for (yy = theme._tsy1 + 1; yy < theme._tsy2 - 1; yy++) {
-			if (CheckThemeObj3(xx, yy, themeId) && dMonster[xx][yy] == 0 && random_low(0, librnd) == 0) {
+			if (CheckThemeObj3(xx, yy) && dMonster[xx][yy] == 0 && random_low(0, librnd) == 0) {
 				AddObject(type - (random_low(0, 2 * librnd) != 0 ? 1 : 0), xx, yy);
 			}
 		}
@@ -965,6 +964,7 @@ static void Theme_PurifyingFountain(int themeId)
  */
 static void Theme_ArmorStand(int themeId)
 {
+	int type;
 	const BYTE armorrnds[4] = { 6, 8, 3, 8 };
 	const BYTE armorrnd = armorrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 	const ThemeStruct &theme = themes[themeId];
@@ -1018,7 +1018,7 @@ static void Theme_Cauldron(int themeId)
 	const ThemeStruct &theme = themes[themeId];
 
 	AddObject(OBJ_CAULDRON, theme._tsObjX, theme._tsObjY);
-	PlaceThemeMonsts(themeId);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -1031,7 +1031,7 @@ static void Theme_MurkyFountain(int themeId)
 	const ThemeStruct &theme = themes[themeId];
 
 	AddObject(OBJ_MURKYFTN, theme._tsObjX, theme._tsObjY);
-	PlaceThemeMonsts(themeId);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -1044,7 +1044,7 @@ static void Theme_TearFountain(int themeId)
 	const ThemeStruct &theme = themes[themeId];
 
 	AddObject(OBJ_TEARFTN, theme._tsObjX, theme._tsObjY);
-	PlaceThemeMonsts(themeId);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -1060,7 +1060,7 @@ static void Theme_BrnCross(int themeId)
 
 	AddObject(OBJ_TBCROSS, theme._tsObjX, theme._tsObjY);
 	Place_Obj3(theme, OBJ_TBCROSS, bcrossrnd);
-	PlaceThemeMonsts(themeId);
+	PlaceThemeMonsts(theme);
 }
 
 /**
