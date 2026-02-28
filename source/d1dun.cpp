@@ -2882,9 +2882,13 @@ void D1Dun::loadObject(int objectIndex)
             break;
         }
     }
-    const BYTE *objType = &ObjConvTbl[objectIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && *objType != 0 && !this->assetPath.isEmpty()) {
-        const ObjectData &od = objectdata[*objType];
+    const int8_t *objType = &ObjConvTbl[objectIndex];
+    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) !this->assetPath.isEmpty()) {
+        int type = *objType;
+        if (type < 0) {
+            type = objTypeConv[-type].oBaseType;
+        }
+        const ObjectData &od = objectdata[type];
         const ObjFileData &ofd = objfiledata[od.ofindex];
         result.baseFrameNum = od.oBaseFrame;
         if (result.baseFrameNum == 0 && ofd.oAnimFlag != OAM_LOOP) {

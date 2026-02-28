@@ -157,7 +157,7 @@ typedef struct ItemStruct {
 	BOOLEAN _iFloorFlag;
 	BOOLEAN _iAnimFlag;
 	BYTE* _iAnimData;        // PSX name -> ItemFrame
-	unsigned _iAnimFrameLen; // Tick length of each frame in the current animation
+	//unsigned _iAnimFrameLen; // Tick length of each frame in the current animation
 	unsigned _iAnimCnt;      // Increases by one each game tick, counting how close we are to _iAnimFrameLen
 	unsigned _iAnimLen;      // Number of frames in current animation
 	unsigned _iAnimFrame;    // Current frame of animation.
