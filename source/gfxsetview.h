@@ -172,6 +172,11 @@ private slots:
     void on_animDelayEdit_escPressed();
     void on_metaAnimDelayCheckBox_clicked();
 
+    void on_animOffsetXEdit_returnPressed();
+    void on_animOffsetXEdit_escPressed();
+    void on_animOffsetYEdit_returnPressed();
+    void on_animOffsetYEdit_escPressed();
+
     void on_actionFramesEdit_returnPressed();
     void on_actionFramesEdit_escPressed();
     void on_formatActionFramesButton_clicked();

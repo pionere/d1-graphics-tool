@@ -61,6 +61,21 @@ bool D1Cel::readMeta(QIODevice *device, QDataStream &in, quint32 startOffset, qu
 
             meta->setContent(QString::number(delay));
         } break;
+        case CELMETA_ANIMOFFSET: {
+            if (endOffset < startOffset + 4) {
+                dProgressErr() << QApplication::tr("Not enough space for anim offset in the meta info.");
+                return false;
+            }
+            startOffset += 4;
+
+            qint16 width;
+            qint16 height;
+            in >> width;
+            in >> height;
+
+            meta->setWidth(width);
+            meta->setHeight(height);
+        } break;
         case CELMETA_ANIMORDER:
         case CELMETA_ACTIONFRAMES: {
             QString content;

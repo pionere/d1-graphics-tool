@@ -332,6 +332,8 @@ CelView::CelView(QWidget *parent)
     QObject::connect(this->ui->metaFrameWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_metaFrameWidthEdit_escPressed()));
     QObject::connect(this->ui->metaFrameHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_metaFrameHeightEdit_escPressed()));
     QObject::connect(this->ui->animDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_animDelayEdit_escPressed()));
+    QObject::connect(this->ui->animOffsetXEdit, SIGNAL(cancel_signal()), this, SLOT(on_animOffsetXEdit_escPressed()));
+    QObject::connect(this->ui->animOffsetYEdit, SIGNAL(cancel_signal()), this, SLOT(on_animOffsetYEdit_escPressed()));
     QObject::connect(this->ui->actionFramesEdit, SIGNAL(cancel_signal()), this, SLOT(on_actionFramesEdit_escPressed()));
 
     // setup context menu
@@ -601,6 +603,11 @@ void CelView::updateFields()
             }
             this->ui->animDelayEdit->setReadOnly(isReadOnly);
             this->ui->animDelayEdit->setText(animDelay);
+        }
+        {
+            const D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMOFFSET);
+            this->ui->animOffsetXEdit->setText(QString::number(meta->getWidth()));
+            this->ui->animOffsetYEdit->setText(QString::number(meta->getHeight()));
         }
         this->ui->actionFramesEdit->setText(this->gfx->getMeta(CELMETA_ACTIONFRAMES)->getContent());
     }
@@ -1669,6 +1676,42 @@ void CelView::on_animDelayEdit_escPressed()
 void CelView::on_metaAnimDelayCheckBox_clicked()
 {
     this->updateFields();
+}
+
+void CelView::on_animOffsetXEdit_returnPressed()
+{
+    QString text = this->ui->animOffsetXEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMOFFSET);
+    if (meta->setWidth(text.toShort()) && meta->isStored())
+        this->gfx->setModified();
+
+    this->on_animOffsetXEdit_escPressed();
+}
+
+void CelView::on_animOffsetXEdit_escPressed()
+{
+    // update animOffsetXEdit
+    this->updateFields();
+    this->ui->animOffsetXEdit->clearFocus();
+}
+
+void CelView::on_animOffsetYEdit_returnPressed()
+{
+    QString text = this->ui->animOffsetYEdit->text();
+
+    D1GfxMeta *meta = this->gfx->getMeta(CELMETA_ANIMOFFSET);
+    if (meta->setHeight(text.toShort()) && meta->isStored())
+        this->gfx->setModified();
+
+    this->on_animOffsetYEdit_escPressed();
+}
+
+void CelView::on_animOffsetYEdit_escPressed()
+{
+    // update animOffsetYEdit
+    this->updateFields();
+    this->ui->animOffsetYEdit->clearFocus();
 }
 
 void CelView::on_actionFramesEdit_returnPressed()
