@@ -1340,7 +1340,7 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_CHEST1:
 		case OBJ_CHEST2:
 		case OBJ_CHEST3:
-			AddChest(oi);
+			AddChest(oi, realType);
 			break;
 		case OBJ_SARC:
 #ifdef HELLFIRE

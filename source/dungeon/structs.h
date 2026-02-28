@@ -657,7 +657,7 @@ typedef struct ObjFileData {
 	BYTE oSFXCnt;
 	BYTE oAnimFlag; // object_anim_mode
 	int oAnimFrameLen; // Tick length of each frame in the current animation
-	BOOLEAN oSolidFlag;
+	BYTE oSolidFlags;
 	BYTE oBreak; // object_break_mode
 } ObjFileData;
 

@@ -2883,7 +2883,7 @@ void D1Dun::loadObject(int objectIndex)
         }
     }
     const int8_t *objType = &ObjConvTbl[objectIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) !this->assetPath.isEmpty()) {
+    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && !this->assetPath.isEmpty()) {
         int type = *objType;
         if (type < 0) {
             type = objTypeConv[-type].oBaseType;

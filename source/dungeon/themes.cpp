@@ -59,10 +59,11 @@ static const int trm3y[] = {
 static void QueryTheme(int themeId, void (func)(int x, int y, void *param), void *userParam)
 {
 	int xx, yy;
-	// BYTE tv = themes[themeId]._tsTransVal;
+	const ThemeStruct &theme = themes[themeId];
+	// BYTE tv = theme._tsTransVal;
 
-	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
+	for (xx = theme._tsx1; xx < theme._tsx2; xx++) {
+		for (yy = theme._tsy1; yy < theme._tsy2; yy++) {
 			// if (dTransVal[xx][yy] == tv)
 				func(xx, yy, userParam);
 		}
@@ -72,11 +73,12 @@ static void QueryTheme(int themeId, void (func)(int x, int y, void *param), void
 static int TFit_Shrine(int themeId)
 {
 	int xx, yy, numMatches;
-	BYTE tv = themes[themeId]._tsTransVal;
+	const ThemeStruct &theme = themes[themeId];
+	BYTE tv = theme._tsTransVal;
 
 	numMatches = 0;
-	yy = themes[themeId]._tsy1;
-	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 - 1; xx++) {
+	yy = theme._tsy1;
+	for (xx = theme._tsx1 + 1; xx < theme._tsx2 - 1; xx++) {
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
                 // dProgress() << QString("TFit_Shrine check 0 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx][yy - 1]).arg(nSpecTrapTable[dPiece[xx][yy - 1]] & PST_TRAP_TYPE)
                 //    .arg(nSolidTable[dPiece[xx - 1][yy]]).arg(nSolidTable[dPiece[xx + 1][yy]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx + 1][yy - 1]]);
@@ -95,14 +97,14 @@ static int TFit_Shrine(int themeId)
 					// assert(dObject[xx - 1][yy] == 0);
 					// assert(dObject[xx + 1][yy] == 0);
                     /*if (nSolidTable[dPiece[xx - 1][yy]])
-                        dProgressErr() << QString("TFit_Shrine failed(0) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(0) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
                     if (nSolidTable[dPiece[xx + 1][yy]])
-                        dProgressErr() << QString("TFit_Shrine failed(1) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);*/
+                        dProgressErr() << QString("TFit_Shrine failed(1) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);*/
 
                     if (dTransVal[xx - 1][yy] != tv)
-                        dProgressErr() << QString("TFit_Shrine failed(0) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(0) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx - 1).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
                     if (dTransVal[xx + 1][yy] != tv)
-                        dProgressErr() << QString("TFit_Shrine failed(1) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(1) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + 1).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 					drlg.thLocs[numMatches].tpdx = xx;
 					drlg.thLocs[numMatches].tpdy = yy;
 					drlg.thLocs[numMatches].tpdvar1 = 1;
@@ -113,11 +115,11 @@ static int TFit_Shrine(int themeId)
 					//	goto done;
 				}
 			} else {
-                // dProgressErr() << QString("TFit_Shrine failed(0) to check solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                // dProgressErr() << QString("TFit_Shrine failed(0) to check solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 			}
 	}
-	xx = themes[themeId]._tsx1;
-		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 - 1; yy++) {
+	xx = theme._tsx1;
+		for (yy = theme._tsy1 + 1; yy < theme._tsy2 - 1; yy++) {
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
             // dProgress() << QString("TFit_Shrine check 1 non solid %1:%2 pnn%3 trap%4 solid%5:%6:%7:%8.").arg(xx).arg(yy).arg(dPiece[xx - 1][yy]).arg(nSpecTrapTable[dPiece[xx - 1][yy]] & PST_TRAP_TYPE)
             //    .arg(nSolidTable[dPiece[xx][yy - 1]]).arg(nSolidTable[dPiece[xx][yy + 1]]).arg(nSolidTable[dPiece[xx - 1][yy - 1]]).arg(nSolidTable[dPiece[xx - 1][yy + 1]]);
@@ -136,14 +138,14 @@ static int TFit_Shrine(int themeId)
 					// assert(dObject[xx][yy - 1] == 0);
 					// assert(dObject[xx][yy + 1] == 0);
                     /*if (nSolidTable[dPiece[xx][yy - 1]])
-                        dProgressErr() << QString("TFit_Shrine failed(2) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy - 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(2) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy - 1).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
                     if (nSolidTable[dPiece[xx][yy + 1]])
-                        dProgressErr() << QString("TFit_Shrine failed(3) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy + 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);*/
+                        dProgressErr() << QString("TFit_Shrine failed(3) to check internal solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy + 1).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);*/
 
                     if (dTransVal[xx][yy - 1] != tv)
-                        dProgressErr() << QString("TFit_Shrine failed(2) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy - 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(2) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy - 1).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
                     if (dTransVal[xx][yy + 1] != tv)
-                        dProgressErr() << QString("TFit_Shrine failed(3) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy + 1).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Shrine failed(3) to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy + 1).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 					drlg.thLocs[numMatches].tpdx = xx;
 					drlg.thLocs[numMatches].tpdy = yy;
 					drlg.thLocs[numMatches].tpdvar1 = 0;
@@ -154,7 +156,7 @@ static int TFit_Shrine(int themeId)
 					//	goto done;
 				}
 			} else {
-                // dProgressErr() << QString("TFit_Shrine failed(1) to check solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                // dProgressErr() << QString("TFit_Shrine failed(1) to check solid piece at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 			}
 		}
 // done:
@@ -168,11 +170,12 @@ static int TFit_Shrine(int themeId)
 static int TFit_Obj5(int themeId)
 {
 	int xx, yy, i, numMatches;
-	BYTE tv = themes[themeId]._tsTransVal;
+	const ThemeStruct &theme = themes[themeId];
+	BYTE tv = theme._tsTransVal;
 
 	numMatches = 0;
-	for (xx = themes[themeId]._tsx1 + 2; xx < themes[themeId]._tsx2 - 2; xx++) {
-		for (yy = themes[themeId]._tsy1 + 2; yy < themes[themeId]._tsy2 - 2; yy++) {
+	for (xx = theme._tsx1 + 2; xx < theme._tsx2 - 2; xx++) {
+		for (yy = theme._tsy1 + 2; yy < theme._tsy2 - 2; yy++) {
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 				static_assert(lengthof(trm5x) == lengthof(trm5y), "Mismatching trm5 tables.");
 				for (i = 0; i < lengthof(trm5x); i++) {
@@ -180,7 +183,7 @@ static int TFit_Obj5(int themeId)
 						break;
 					}
 					if (dTransVal[xx + trm5x[i]][yy + trm5y[i]] != tv) {
-                        dProgressErr() << QString("TFit_Obj5 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + trm5x[i]).arg(yy + trm5y[i]).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+                        dProgressErr() << QString("TFit_Obj5 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx + trm5x[i]).arg(yy + trm5y[i]).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 						// break;
 					}
 				}
@@ -207,7 +210,8 @@ static int TFit_Obj5(int themeId)
 static bool CheckThemeObj3(int x, int y, int themeId)
 {
 	int i, xx, yy;
-	BYTE tv = themes[themeId]._tsTransVal;
+	const ThemeStruct &theme = themes[themeId];
+	BYTE tv = theme._tsTransVal;
 
 	static_assert(lengthof(trm3x) == lengthof(trm3y), "Mismatching trm3 tables.");
 	for (i = 0; i < lengthof(trm3x); i++) {
@@ -216,7 +220,7 @@ static bool CheckThemeObj3(int x, int y, int themeId)
 		//if (xx < 0 || yy < 0)
 		//	return false;
 		if (dTransVal[xx][yy] != tv)
-            dProgressErr() << QString("CheckThemeObj3 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+            dProgressErr() << QString("CheckThemeObj3 failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 			//return false;
 		if ((nSolidTable[dPiece[xx][yy]] | dObject[xx][yy]) != 0)
 			return false;
@@ -228,10 +232,11 @@ static bool CheckThemeObj3(int x, int y, int themeId)
 static int TFit_Obj3(int themeId)
 {
 	int xx, yy, numMatches;
+	const ThemeStruct &theme = themes[themeId];
 
 	numMatches = 0;
-	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 - 1; xx++) {
-		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 - 1; yy++) {
+	for (xx = theme._tsx1 + 1; xx < theme._tsx2 - 1; xx++) {
+		for (yy = theme._tsy1 + 1; yy < theme._tsy2 - 1; yy++) {
 			if (CheckThemeObj3(xx, yy, themeId)) {
 				drlg.thLocs[numMatches].tpdx = xx;
 				drlg.thLocs[numMatches].tpdy = yy;
@@ -450,7 +455,7 @@ static void Place_Obj3_Query(int xx, int yy, void* userParam)
 		AddObject(param->type, xx, yy);
 	}
 }
-static void Place_Obj3(int themeId, int type, int rndfrq)
+static void Place_Obj3(const ThemeStruct &theme, int type, int rndfrq)
 {
 #ifdef THEMEQUERY
 	PlaceObj3QueryParam param;
@@ -461,8 +466,8 @@ static void Place_Obj3(int themeId, int type, int rndfrq)
 #else
 	int xx, yy;
 	// assert(rndfrq > 0);
-	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 - 1; xx++) {
-		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 - 1; yy++) {
+	for (xx = theme._tsx1 + 1; xx < theme._tsx2 - 1; xx++) {
+		for (yy = theme._tsy1 + 1; yy < theme._tsy2 - 1; yy++) {
 			if (CheckThemeObj3(xx, yy, themeId) && random_low(0, rndfrq) == 0) {
 				AddObject(type, xx, yy);
 			}
@@ -483,8 +488,10 @@ static void Theme_Monsts_Query(int xx, int yy, void* userParam)
 {
 	ThemeMonstsParam* param = (ThemeMonstsParam*)userParam;
     int themeId = currThemeId;
-    if (dTransVal[xx][yy] != themes[themeId]._tsTransVal) {
-        dProgressErr() << QString("Theme_Monsts_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+	const ThemeStruct &theme = themes[themeId];
+
+    if (dTransVal[xx][yy] != theme._tsTransVal) {
+        dProgressErr() << QString("Theme_Monsts_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
     }
 	if (/*dTransVal[xx][yy] == tv &&*/ (nSolidTable[dPiece[xx][yy]] | dItem[xx][yy] | dObject[xx][yy]) == 0) {
 		if (random_low(0, param->rndfrq) == 0) {
@@ -492,10 +499,9 @@ static void Theme_Monsts_Query(int xx, int yy, void* userParam)
 		}
 	}
 }
-static void PlaceThemeMonsts(int themeId)
+static void PlaceThemeMonsts(const ThemeStruct &theme)
 {
 	int xx, yy;
-    BYTE tv = themes[themeId]._tsTransVal;
 	int scattertypes[MAX_LVLMTYPES];
 	int numscattypes, mtype, i;
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
@@ -516,10 +522,10 @@ static void PlaceThemeMonsts(int themeId)
 	param.mtype = mtype;
 	QueryTheme(themeId, Theme_Monsts_Query, &param);
 #else
-	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
-            if (dTransVal[xx][yy] != tv) {
-                dProgressErr() << QString("PlaceThemeMonsts failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+	for (xx = theme._tsx1; xx < theme._tsx2; xx++) {
+		for (yy = theme._tsy1; yy < theme._tsy2; yy++) {
+            if (dTransVal[xx][yy] != theme._tsTransVal) {
+                dProgressErr() << QString("PlaceThemeMonsts failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
             }
 			if (/*dTransVal[xx][yy] == tv &&*/ (nSolidTable[dPiece[xx][yy]] | dItem[xx][yy] | dObject[xx][yy]) == 0) {
 				if (random_low(0, rndfrq) == 0) {
@@ -543,8 +549,10 @@ static void Theme_Barrel_Query(int xx, int yy, void* userParam)
 {
 	ThemeBarrelParam* param = (ThemeBarrelParam*)userParam;
     int themeId = currThemeId;
-    if (dTransVal[xx][yy] != themes[themeId]._tsTransVal) {
-        dProgressErr() << QString("Theme_Barrel_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+	const ThemeStruct &theme = themes[themeId];
+
+    if (dTransVal[xx][yy] != theme._tsTransVal) {
+        dProgressErr() << QString("Theme_Barrel_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
     }
 	if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 		if (random_low(0, param->barrnd) == 0) {
@@ -556,19 +564,19 @@ static void Theme_Barrel_Query(int xx, int yy, void* userParam)
 static void Theme_Barrel(int themeId)
 {
 	int r, xx, yy;
-    BYTE tv = themes[themeId]._tsTransVal;
 	const BYTE barrnds[4] = { 2, 6, 4, 8 };
 	const BYTE barrnd = barrnds[currLvl._dDunType - 1];     // TODO: use dType instead?
+	const ThemeStruct &theme = themes[themeId];
 
 #ifdef THEMEQUERY
 	ThemeBarrelParam param;
 	param.barrnd = barrnd;
 	QueryTheme(themeId, Theme_Barrel_Query, &param);
 #else
-	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
-            if (dTransVal[xx][yy] != tv) {
-                dProgressErr() << QString("Theme_Barrel failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+	for (xx = theme._tsx1; xx < theme._tsx2; xx++) {
+		for (yy = theme._tsy1; yy < theme._tsy2; yy++) {
+            if (dTransVal[xx][yy] != theme._tsTransVal) {
+                dProgressErr() << QString("Theme_Barrel failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
             }
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, barrnd) == 0) {
@@ -579,7 +587,7 @@ static void Theme_Barrel(int themeId)
 		}
 	}
 #endif
-	PlaceThemeMonsts(themeId);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -590,10 +598,11 @@ static void Theme_Barrel(int themeId)
 static void Theme_Shrine(int themeId)
 {
 	int xx, yy;
+	const ThemeStruct &theme = themes[themeId];
 
-	xx = themes[themeId]._tsObjX;
-	yy = themes[themeId]._tsObjY;
-	if (themes[themeId]._tsObjVar1 != 0) {
+	xx = theme._tsObjX;
+	yy = theme._tsObjY;
+	if (theme._tsObjVar1 != 0) {
 		AddObject(OBJ_CANDLE2, xx - 1, yy);
 		AddObject(OBJ_SHRINER, xx, yy);
 		AddObject(OBJ_CANDLE2, xx + 1, yy);
@@ -602,7 +611,7 @@ static void Theme_Shrine(int themeId)
 		AddObject(OBJ_SHRINEL, xx, yy);
 		AddObject(OBJ_CANDLE2, xx, yy + 1);
 	}
-	PlaceThemeMonsts(themeId);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -617,8 +626,9 @@ static void Theme_MonstPit_Query(int xx, int yy, void* userParam)
 {
 	ThemeMonstPitParam* param = (ThemeMonstPitParam*)userParam;
     int themeId = currThemeId;
-    if (dTransVal[xx][yy] != themes[themeId]._tsTransVal) {
-        dProgressErr() << QString("Theme_MonstPit_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+	const ThemeStruct &theme = themes[themeId];
+    if (dTransVal[xx][yy] != theme._tsTransVal) {
+        dProgressErr() << QString("Theme_MonstPit_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
     }
 	if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]] && param->r >= 0 && --param->r < 0) {
 		CreateRndItem(xx, yy, CFDQ_GOOD);
@@ -627,8 +637,9 @@ static void Theme_MonstPit_Query(int xx, int yy, void* userParam)
 static void Theme_MonstPit(int themeId)
 {
 	int r, xx, yy;
-    BYTE tv = themes[themeId]._tsTransVal;
-	r = random_(11, (themes[themeId]._tsx2 - themes[themeId]._tsx1) * (themes[themeId]._tsy2 - themes[themeId]._tsy1));
+	const ThemeStruct &theme = themes[themeId];
+
+	r = random_(11, (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
 #ifdef THEMEQUERY
 	ThemeMonstPitParam param;
 	param.r = r;
@@ -638,10 +649,10 @@ restart:
 		goto restart;
 #else
 	while (true) {
-		for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
-			for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
-                if (dTransVal[xx][yy] != tv) {
-                    dProgressErr() << QString("Theme_MonstPit failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+		for (xx = theme._tsx1; xx < theme._tsx2; xx++) {
+			for (yy = theme._tsy1; yy < theme._tsy2; yy++) {
+                if (dTransVal[xx][yy] != theme._tsTransVal) {
+                    dProgressErr() << QString("Theme_MonstPit failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
                 }
 				if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]] && --r < 0) {
 					CreateRndItem(xx, yy, CFDQ_GOOD);
@@ -653,7 +664,7 @@ restart:
 done:
 #endif
 
-	PlaceThemeMonsts(themeId);
+	PlaceThemeMonsts(theme);
 }
 
 static void AddSkelMonster(int x, int y)
@@ -675,9 +686,10 @@ static void Theme_SkelRoom(int themeId)
 	int xx, yy;
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 	BYTE monstrnd;
+	const ThemeStruct &theme = themes[themeId];
 
-	xx = themes[themeId]._tsObjX;
-	yy = themes[themeId]._tsObjY;
+	xx = theme._tsObjX;
+	yy = theme._tsObjY;
 
 	AddObject(OBJ_SKFIRE, xx, yy);
 
@@ -727,7 +739,7 @@ static void Theme_SkelRoom(int themeId)
              && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy - 3] - 1]._oBreak != OBJ_BARREL && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_BARRELEX)))) {
             extern bool stopgen;
             stopgen = true;
-            LogErrorF("object to north-east %d type%d x:%d y:%d vs %d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, themes[themeId]._tsy1, yy - 3);
+            LogErrorF("object to north-east %d type%d x:%d y:%d vs %d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, theme._tsy1, yy - 3);
         }
 		// assert(dObject[xx][yy - 2] == 0);
 		AddObject(OBJ_BOOK2R, xx, yy - 2);
@@ -739,7 +751,7 @@ static void Theme_SkelRoom(int themeId)
          && (currLvl._dType != DTYPE_CATACOMBS || (dPiece[xx][yy - 3] != 553 && dPiece[xx][yy - 3] != 424))) {
             extern bool stopgen;
             stopgen = true;
-            LogErrorF("no object to north-east x:%d y:%d vs %d pn%d type %d", xx, themes[themeId]._tsy1, yy - 3, dPiece[xx][yy - 3], automaptype[dPiece[xx][yy - 3]]);
+            LogErrorF("no object to north-east x:%d y:%d vs %d pn%d type %d", xx, theme._tsy1, yy - 3, dPiece[xx][yy - 3], automaptype[dPiece[xx][yy - 3]]);
         }
 	}
 	if ((dObject[xx][yy + 3] == 0 || !objects[dObject[xx][yy + 3] - 1]._oDoorFlag)   // not a door
@@ -749,7 +761,7 @@ static void Theme_SkelRoom(int themeId)
              && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy + 3] - 1]._oBreak != OBJ_BARREL && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_BARRELEX)))) {
             extern bool stopgen;
             stopgen = true;
-            LogErrorF("object to south-east %d type%d x:%d y:%d vs %d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, themes[themeId]._tsy2, yy + 3);
+            LogErrorF("object to south-east %d type%d x:%d y:%d vs %d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, theme._tsy2, yy + 3);
         }
 		// assert(dObject[xx][yy + 2] == 0);
 		AddObject(OBJ_BOOK2R, xx, yy + 2);
@@ -761,7 +773,7 @@ static void Theme_SkelRoom(int themeId)
          && (currLvl._dType != DTYPE_CATACOMBS || (dPiece[xx][yy + 3] != 553))) {
             extern bool stopgen;
             stopgen = true;
-            LogErrorF("no object to south-east x:%d y:%d vs %d pn%d type %d", xx, themes[themeId]._tsy2, yy + 3, dPiece[xx][yy + 3], automaptype[dPiece[xx][yy + 3]]);
+            LogErrorF("no object to south-east x:%d y:%d vs %d pn%d type %d", xx, theme._tsy2, yy + 3, dPiece[xx][yy + 3], automaptype[dPiece[xx][yy + 3]]);
         }
 	}
 }
@@ -778,8 +790,10 @@ static void Theme_Treasure_Query(int xx, int yy, void* userParam)
 {
 	const ThemeTreasureParam* param = (const ThemeTreasureParam*)userParam;
     int themeId = currThemeId;
-    if (dTransVal[xx][yy] != themes[themeId]._tsTransVal) {
-        dProgressErr() << QString("Theme_Treasure_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+	const ThemeStruct &theme = themes[themeId];
+
+    if (dTransVal[xx][yy] != theme._tsTransVal) {
+        dProgressErr() << QString("Theme_Treasure_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
     }
 	if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 		if (random_low(0, param->treasrnd) == 0) {
@@ -792,19 +806,19 @@ static void Theme_Treasure_Query(int xx, int yy, void* userParam)
 static void Theme_Treasure(int themeId)
 {
 	int xx, yy;
-    BYTE tv = themes[themeId]._tsTransVal;
 	const BYTE treasrnds[4] = { 6, 9, 7, 10 };
 	const BYTE treasrnd = treasrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	const ThemeStruct &theme = themes[themeId];
 
 #ifdef THEMEQUERY
 	ThemeTreasureParam param;
 	param.treasrnd = treasrnd;
 	QueryTheme(themeId, Theme_Treasure_Query, &param);
 #else
-	for (xx = themes[themeId]._tsx1; xx < themes[themeId]._tsx2; xx++) {
-		for (yy = themes[themeId]._tsy1; yy < themes[themeId]._tsy2; yy++) {
-            if (dTransVal[xx][yy] != tv) {
-                dProgressErr() << QString("Theme_Treasure failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+	for (xx = theme._tsx1; xx < theme._tsx2; xx++) {
+		for (yy = theme._tsy1; yy < theme._tsy2; yy++) {
+            if (dTransVal[xx][yy] != theme._tsTransVal) {
+                dProgressErr() << QString("Theme_Treasure failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
             }
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, treasrnd) == 0) {
@@ -816,7 +830,7 @@ static void Theme_Treasure(int themeId)
 		}
 	}
 #endif
-	PlaceThemeMonsts(themeId);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -824,6 +838,7 @@ static void Theme_Treasure(int themeId)
  *
  * @param themeId: theme id.
  */
+#ifdef THEMEQUERY
 typedef struct ThemeLibraryParam {
 	int themeId;
 	int librnd;
@@ -831,23 +846,26 @@ typedef struct ThemeLibraryParam {
 static void Theme_Library_Query(int xx, int yy, void* userParam)
 {
 	const ThemeLibraryParam* param = (const ThemeLibraryParam*)userParam;
+	static_assert(OBJ_BOOK2L - 2 == OBJ_BOOK2R, "Theme_Library depends on the order of OBJ_BOOK2L/R");
+	type = OBJ_BOOK2L - 2 * random_(0, 2);
+	static_assert(OBJ_BOOK2L - 1 == OBJ_BOOK2LN, "Theme_Library depends on the order of OBJ_BOOK2L(N)");
+	static_assert(OBJ_BOOK2R - 1 == OBJ_BOOK2RN, "Theme_Library depends on the order of OBJ_BOOK2R(N)");
 	if (CheckThemeObj3(xx, yy, param->themeId) && dMonster[xx][yy] == 0 && random_low(0, param->librnd) == 0) {
-		int oi = AddObject(OBJ_BOOK2L, xx, yy);
-		if (random_low(0, 2 * param->librnd) != 0 && oi != -1) { /// BUGFIX: check AddObject succeeded (fixed)
-			objects[oi]._oSelFlag = 0;
-			objects[oi]._oAnimFrame += 2;
-		}
+		AddObject(type - (random_low(0, 2 * librnd) != 0 ? 1 : 0), xx, yy);
 	}
 }
+#endif
 static void Theme_Library(int themeId)
 {
-	int xx, yy, oi;
+	int xx, yy, type;
 	const BYTE librnds[4] = { 1, 2, 0, 0 };
 	BYTE librnd;
+	const ThemeStruct &theme = themes[themeId];
+	const bool placemonsters = /*QuestStatus(Q_ZHAR) &&*/ themeId != zharlib;
 
-	xx = themes[themeId]._tsObjX;
-	yy = themes[themeId]._tsObjY;
-	if (themes[themeId]._tsObjVar1 != 0) {
+	xx = theme._tsObjX;
+	yy = theme._tsObjY;
+	if (theme._tsObjVar1 != 0) {
 		AddObject(OBJ_BOOKCANDLE, xx - 1, yy);
 		AddObject(OBJ_BOOKCASER, xx, yy);
 		AddObject(OBJ_BOOKCANDLE, xx + 1, yy);
@@ -865,22 +883,20 @@ static void Theme_Library(int themeId)
 	param.librnd = librnd;
 	QueryTheme(themeId, Theme_Library_Query, &param);
 #else
-	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 - 1; xx++) {
-		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 - 1; yy++) {
+	static_assert(OBJ_BOOK2L - 2 == OBJ_BOOK2R, "Theme_Library depends on the order of OBJ_BOOK2L/R");
+	type = OBJ_BOOK2L - 2 * random_(0, 2);
+	static_assert(OBJ_BOOK2L - 1 == OBJ_BOOK2LN, "Theme_Library depends on the order of OBJ_BOOK2L(N)");
+	static_assert(OBJ_BOOK2R - 1 == OBJ_BOOK2RN, "Theme_Library depends on the order of OBJ_BOOK2R(N)");
+	for (xx = theme._tsx1 + 1; xx < theme._tsx2 - 1; xx++) {
+		for (yy = theme._tsy1 + 1; yy < theme._tsy2 - 1; yy++) {
 			if (CheckThemeObj3(xx, yy, themeId) && dMonster[xx][yy] == 0 && random_low(0, librnd) == 0) {
-				oi = AddObject(OBJ_BOOK2L, xx, yy);
-				if (random_low(0, 2 * librnd) != 0 && oi != -1) { /// BUGFIX: check AddObject succeeded (fixed)
-					objects[oi]._oSelFlag = 0;
-					objects[oi]._oAnimFrame += 2;
-				}
+				AddObject(type - (random_low(0, 2 * librnd) != 0 ? 1 : 0), xx, yy);
 			}
 		}
 	}
 #endif
-	if (/*QuestStatus(Q_ZHAR) &&*/ themeId == zharlib)
-		return;
-
-	PlaceThemeMonsts(themeId);
+	if (placemonsters)
+		PlaceThemeMonsts(theme);
 }
 
 /**
@@ -892,11 +908,12 @@ static void Theme_Torture(int themeId)
 {
 	const BYTE tortrnds[4] = { 6 * 2, 8 * 2, 3 * 2, 8 * 2 };
 	const BYTE tortrnd = tortrnds[currLvl._dDunType - 1];   // TODO: use dType instead?
+	const ThemeStruct &theme = themes[themeId];
 
-	AddObject(random_(46, 2) ? OBJ_TNUDEW : OBJ_TNUDEM, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
-	Place_Obj3(themeId, OBJ_TNUDEM, tortrnd);
-	Place_Obj3(themeId, OBJ_TNUDEW, tortrnd);
-	PlaceThemeMonsts(themeId);
+	AddObject(random_(46, 2) ? OBJ_TNUDEW : OBJ_TNUDEM, theme._tsObjX, theme._tsObjY);
+	Place_Obj3(theme, OBJ_TNUDEM, tortrnd);
+	Place_Obj3(theme, OBJ_TNUDEW, tortrnd);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -906,8 +923,10 @@ static void Theme_Torture(int themeId)
  */
 static void Theme_BloodFountain(int themeId)
 {
-	AddObject(OBJ_BLOODFTN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
-	PlaceThemeMonsts(themeId);
+	const ThemeStruct &theme = themes[themeId];
+
+	AddObject(OBJ_BLOODFTN, theme._tsObjX, theme._tsObjY);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -919,10 +938,11 @@ static void Theme_Decap(int themeId)
 {
 	const BYTE decaprnds[4] = { 6, 8, 3, 8 };
 	const BYTE decaprnd = decaprnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	const ThemeStruct &theme = themes[themeId];
 
-	AddObject(OBJ_DECAP, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
-	Place_Obj3(themeId, OBJ_DECAP, decaprnd);
-	PlaceThemeMonsts(themeId);
+	AddObject(OBJ_DECAP, theme._tsObjX, theme._tsObjY);
+	Place_Obj3(theme, OBJ_DECAP, decaprnd);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -932,8 +952,10 @@ static void Theme_Decap(int themeId)
  */
 static void Theme_PurifyingFountain(int themeId)
 {
-	AddObject(OBJ_PURIFYINGFTN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
-	PlaceThemeMonsts(themeId);
+	const ThemeStruct &theme = themes[themeId];
+
+	AddObject(OBJ_PURIFYINGFTN, theme._tsObjX, theme._tsObjY);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -945,11 +967,17 @@ static void Theme_ArmorStand(int themeId)
 {
 	const BYTE armorrnds[4] = { 6, 8, 3, 8 };
 	const BYTE armorrnd = armorrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	const ThemeStruct &theme = themes[themeId];
 
-	AddObject(_gbArmorFlag ? OBJ_ARMORSTAND : OBJ_ARMORSTANDN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
+	static_assert(OBJ_ARMORSTANDL - 2 == OBJ_ARMORSTANDR, "Theme_ArmorStand depends on the order of ARMORSTANDL/R");
+	type = OBJ_ARMORSTANDL - 2 * random_(0, 2);
+	static_assert(OBJ_ARMORSTANDL - 1 == OBJ_ARMORSTANDLN, "Theme_ArmorStand depends on the order of ARMORSTANDL(N)");
+	static_assert(OBJ_ARMORSTANDR - 1 == OBJ_ARMORSTANDRN, "Theme_ArmorStand depends on the order of ARMORSTANDR(N)");
+	AddObject(type - (_gbArmorFlag ? 0 : 1), theme._tsObjX, theme._tsObjY);
 	_gbArmorFlag = false;
-	Place_Obj3(themeId, OBJ_ARMORSTANDN, armorrnd);
-	PlaceThemeMonsts(themeId);
+	type -= 1;
+	Place_Obj3(theme, type, armorrnd);
+	PlaceThemeMonsts(theme);
 }
 
 /**
@@ -960,19 +988,20 @@ static void Theme_ArmorStand(int themeId)
 static void Theme_GoatShrine(int themeId)
 {
 	int i, xx, yy, x, y;
-    BYTE tv = themes[themeId]._tsTransVal;
+	const ThemeStruct &theme = themes[themeId];
+    BYTE tv = theme._tsTransVal;
 
-	xx = themes[themeId]._tsObjX;
-	yy = themes[themeId]._tsObjY;
+	xx = theme._tsObjX;
+	yy = theme._tsObjY;
 	AddObject(OBJ_GOATSHRINE, xx, yy);
 	for (i = 0; i < lengthof(offset_x); i++) {
 		x = xx + offset_x[i];
 		y = yy + offset_y[i];
         if (dTransVal[x][y] != tv) {
-            dProgressErr() << QString("Theme_GoatShrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(x).arg(y).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+            dProgressErr() << QString("Theme_GoatShrine failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(x).arg(y).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
         }
         if (nSolidTable[dPiece[x][y]]) {
-            dProgressErr() << QString("Theme_GoatShrine has a solid subtile at %1:%2. Room: %3:%4;%5:%6.").arg(x).arg(y).arg(themes[themeId]._tsx1).arg(themes[themeId]._tsy1).arg(themes[themeId]._tsx2).arg(themes[themeId]._tsy2);
+            dProgressErr() << QString("Theme_GoatShrine has a solid subtile at %1:%2. Room: %3:%4;%5:%6.").arg(x).arg(y).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
         }
 		// assert(dTransVal[x][y] == tv && !nSolidTable[dPiece[x][y]]);
 		AddMonster(mapGoatTypes[0], x, y); // OPPOSITE(i)
@@ -986,7 +1015,9 @@ static void Theme_GoatShrine(int themeId)
  */
 static void Theme_Cauldron(int themeId)
 {
-	AddObject(OBJ_CAULDRON, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
+	const ThemeStruct &theme = themes[themeId];
+
+	AddObject(OBJ_CAULDRON, theme._tsObjX, theme._tsObjY);
 	PlaceThemeMonsts(themeId);
 }
 
@@ -997,7 +1028,9 @@ static void Theme_Cauldron(int themeId)
  */
 static void Theme_MurkyFountain(int themeId)
 {
-	AddObject(OBJ_MURKYFTN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
+	const ThemeStruct &theme = themes[themeId];
+
+	AddObject(OBJ_MURKYFTN, theme._tsObjX, theme._tsObjY);
 	PlaceThemeMonsts(themeId);
 }
 
@@ -1008,7 +1041,9 @@ static void Theme_MurkyFountain(int themeId)
  */
 static void Theme_TearFountain(int themeId)
 {
-	AddObject(OBJ_TEARFTN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
+	const ThemeStruct &theme = themes[themeId];
+
+	AddObject(OBJ_TEARFTN, theme._tsObjX, theme._tsObjY);
 	PlaceThemeMonsts(themeId);
 }
 
@@ -1021,9 +1056,10 @@ static void Theme_BrnCross(int themeId)
 {
 	const BYTE bcrossrnds[4] = { 5, 7, 3, 8 };
 	const BYTE bcrossrnd = bcrossrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	const ThemeStruct &theme = themes[themeId];
 
-	AddObject(OBJ_TBCROSS, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
-	Place_Obj3(themeId, OBJ_TBCROSS, bcrossrnd);
+	AddObject(OBJ_TBCROSS, theme._tsObjX, theme._tsObjY);
+	Place_Obj3(theme, OBJ_TBCROSS, bcrossrnd);
 	PlaceThemeMonsts(themeId);
 }
 
@@ -1037,16 +1073,17 @@ static void Theme_WeaponRack(int themeId)
 	int type;
 	const BYTE weaponrnds[4] = { 6, 8, 5, 8 };
 	const BYTE weaponrnd = weaponrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	const ThemeStruct &theme = themes[themeId];
 
-	static_assert(OBJ_WEAPONRACKL + 2 == OBJ_WEAPONRACKR, "Theme_WeaponRack depends on the order of WEAPONRACKL/R");
-	type = OBJ_WEAPONRACKL + 2 * random_(0, 2);
-	static_assert(OBJ_WEAPONRACKL + 1 == OBJ_WEAPONRACKLN, "Theme_WeaponRack depends on the order of WEAPONRACKL(N)");
-	static_assert(OBJ_WEAPONRACKR + 1 == OBJ_WEAPONRACKRN, "Theme_WeaponRack depends on the order of WEAPONRACKR(N)");
-	AddObject(type + (_gbWeaponFlag ? 0 : 1), themes[themeId]._tsObjX, themes[themeId]._tsObjY);
+	static_assert(OBJ_WEAPONRACKL - 2 == OBJ_WEAPONRACKR, "Theme_WeaponRack depends on the order of WEAPONRACKL/R");
+	type = OBJ_WEAPONRACKL - 2 * random_(0, 2);
+	static_assert(OBJ_WEAPONRACKL - 1 == OBJ_WEAPONRACKLN, "Theme_WeaponRack depends on the order of WEAPONRACKL(N)");
+	static_assert(OBJ_WEAPONRACKR - 1 == OBJ_WEAPONRACKRN, "Theme_WeaponRack depends on the order of WEAPONRACKR(N)");
+	AddObject(type - (_gbWeaponFlag ? 0 : 1), theme._tsObjX, theme._tsObjY);
 	_gbWeaponFlag = false;
-	type += 1;
-	Place_Obj3(themeId, type, weaponrnd);
-	PlaceThemeMonsts(themeId);
+	type -= 1;
+	Place_Obj3(theme, type, weaponrnd);
+	PlaceThemeMonsts(theme);
 }
 
 /**
