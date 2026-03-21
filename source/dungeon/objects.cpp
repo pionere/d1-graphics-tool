@@ -774,12 +774,7 @@ static void AddHookedBodies()
 			type = random_(0, 32);
 			if (type >= 3)
 				continue;
-			if (ttv == PST_LEFT) {
-				type = OBJ_TORTUREL1 + type;
-			} else {
-				// assert(ttv == PST_RIGHT);
-				type = OBJ_TORTURER1 + type;
-			}
+			type = ttv == PST_LEFT ? OBJ_TORTUREL : OBJ_TORTURER;
 			AddObject(type, i, j);
 		}
 	}
@@ -851,12 +846,7 @@ void InitObjects()
 	if (lvlMask & objectdata[OBJ_TORCHL1].oLvlTypes) {
 		AddL2Torches();
 	}
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTUREL2].oLvlTypes);
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTUREL3].oLvlTypes);
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTURER1].oLvlTypes);
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTURER2].oLvlTypes);
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTURER3].oLvlTypes);
-	if (lvlMask & objectdata[OBJ_TORTUREL1].oLvlTypes) {
+	if (lvlMask & objectdata[OBJ_TORTURE].oLvlTypes) {
 		AddHookedBodies();
 	}
 
@@ -1341,6 +1331,9 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_CHEST2:
 		case OBJ_CHEST3:
 			AddChest(oi, realType);
+			break;
+		case OBJ_TORTURE:
+			AddTorture(oi, realType);
 			break;
 		case OBJ_SARC:
 #ifdef HELLFIRE

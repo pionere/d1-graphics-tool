@@ -98,13 +98,13 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr }, //OBJ_TRAPL,
                      { nullptr }, //OBJ_TRAPR,
-/*OBJ_TORTUREL1*/    { "Tortured body 1" }, // Butcher.DUN (Q_BUTCHER)
-/*OBJ_TORTUREL2*/    { "Tortured body 2" }, // Butcher.DUN (Q_BUTCHER)
-/*OBJ_TORTUREL3*/    { "Tortured body 3" }, // Butcher.DUN (Q_BUTCHER)
-/*OBJ_TORTUREL4*/    { "Tortured body 4" }, // Butcher.DUN (Q_BUTCHER)
-/*OBJ_TORTUREL5*/    { "Tortured body 5" }, // Butcher.DUN (Q_BUTCHER)
-                     { nullptr },
-                     { nullptr },
+                     { nullptr }, // Butcher.DUN (Q_BUTCHER)
+                     { nullptr }, // Butcher.DUN (Q_BUTCHER)
+                     { nullptr }, // Butcher.DUN (Q_BUTCHER)
+                     { nullptr }, // Butcher.DUN (Q_BUTCHER)
+                     { nullptr }, // Butcher.DUN (Q_BUTCHER)
+/*OBJ_TORTUREL*/     { "Tortured body NW" }, // Butcher.DUN (Q_BUTCHER)
+/*OBJ_TORTURER*/     { "Tortured body NE" }, // Butcher.DUN (Q_BUTCHER)
                      { nullptr },
                      { nullptr },
                      { nullptr },
@@ -121,13 +121,13 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr }, //OBJ_CHEST1,
-/*OBJ_CHEST1*/       { "Chest 1" }, // SklKng2.DUN
+/*OBJ_LCHEST1*/      { "Chest 1" }, // SklKng2.DUN
                      { nullptr }, //OBJ_CHEST1,
                      { nullptr }, //OBJ_CHEST2,
-/*OBJ_CHEST2*/       { "Chest 2" }, // SklKng2.DUN
+/*OBJ_LCHEST2*/      { "Chest 2" }, // SklKng2.DUN
                      { nullptr }, //OBJ_CHEST2,
                      { nullptr }, //OBJ_CHEST3,
-/*OBJ_CHEST3*/       { "Chest 3" }, // Bonecha1.DUN
+/*OBJ_RCHEST3*/      { "Chest 3" }, // Bonecha1.DUN
 /*OBJ_NAKRULBOOK*/   { "A Spellbook" }, // Nakrul1.DUN (Q_NAKRUL)
 /*OBJ_NAKRULLEVER*/  { "Nakrul's lever" }, // Nakrul1.DUN (Q_NAKRUL)
                      { nullptr },
