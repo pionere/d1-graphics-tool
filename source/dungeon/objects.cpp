@@ -1151,6 +1151,27 @@ static void AddCauldronGoatShrine(int oi)
 	os->_oVar1 = FindValidShrine(SHRINE_THAUMATURGIC); // SHRINE_TYPE
 }
 
+static void AddTorture(int oi, int realtype)
+{
+	ObjectStruct* os;
+	int8_t frame = -1;
+	int8_t dir = -1;
+
+	if (realtype < 0) {
+		const ObjTypeConv &otc = objTypeConv[-realtype];
+		dir = otc.oTypeParam1;
+		frame = otc.oTypeParam2;
+	}
+	if (dir < 0) {
+		dir = random_(147, 2);
+	}
+	if (frame < 0) {
+		frame = random_(147, 3);
+	}
+	os = &objects[oi];
+	os->_oGfxFrame = 1 + 3 * dir + frame;
+}
+
 static void AddDecap(int oi)
 {
 	ObjectStruct* os;
