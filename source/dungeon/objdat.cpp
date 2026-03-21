@@ -70,13 +70,13 @@ const int8_t ObjConvTbl[128] = {
 	0,
 	0, //OBJ_TRAPL,
 	0, //OBJ_TRAPR,
-	OBJ_TORTUREL1, // Butcher.DUN (Q_BUTCHER)
-	OBJ_TORTUREL2, // Butcher.DUN (Q_BUTCHER)
-	OBJ_TORTURER1, // Butcher.DUN (Q_BUTCHER)
-	OBJ_TORTURER2, // Butcher.DUN (Q_BUTCHER)
-	OBJ_TORTUREL3, // Butcher.DUN (Q_BUTCHER)
-	0,
-	0,
+	0, //OBJ_TORTUREL1, // Butcher.DUN (Q_BUTCHER)
+	0, //OBJ_TORTUREL2, // Butcher.DUN (Q_BUTCHER)
+	0, //OBJ_TORTURER1, // Butcher.DUN (Q_BUTCHER)
+	0, //OBJ_TORTURER2, // Butcher.DUN (Q_BUTCHER)
+	0, //OBJ_TORTUREL3, // Butcher.DUN (Q_BUTCHER)
+	OBJ_TORTUREL, // Butcher.DUN (Q_BUTCHER)
+	OBJ_TORTURER, // Butcher.DUN (Q_BUTCHER)
 	0,
 	0,
 	0,
@@ -183,25 +183,33 @@ const ObjTypeConv objTypeConv[NUM_OBJVERSIONS + 1] = {
 /*OBJ_NLCHEST3*/     { OBJ_CHEST3,     1,           0,           },
 /*OBJ_NRCHEST3*/     { OBJ_CHEST3,     0,           0,           },
 /*OBJ_WEAPONRACKN*/  { OBJ_WEAPONRACK, -1,          1,           }, // inactive weaponrack in random direction
-/*OBJ_WEAPONRACKL*/  { OBJ_WEAPONRACK, 1,           0,           }, // active weaponrack in SW-NE direction
-/*OBJ_WEAPONRACKLN*/ { OBJ_WEAPONRACK, 1,           1,           }, // inactive weaponrack in SW-NE direction
-/*OBJ_WEAPONRACKR*/  { OBJ_WEAPONRACK, 0,           0,           }, // active weaponrack in SE-Nw direction
-/*OBJ_WEAPONRACKRN*/ { OBJ_WEAPONRACK, 0,           1,           }, // inactive weaponrack in SE-Nw direction
+/*OBJ_WEAPONRACKL*/  { OBJ_WEAPONRACK, 0,           0,           }, // active weaponrack in SW-NE direction
+/*OBJ_WEAPONRACKLN*/ { OBJ_WEAPONRACK, 0,           1,           }, // inactive weaponrack in SW-NE direction
+/*OBJ_WEAPONRACKR*/  { OBJ_WEAPONRACK, 1,           0,           }, // active weaponrack in SE-Nw direction
+/*OBJ_WEAPONRACKRN*/ { OBJ_WEAPONRACK, 1,           1,           }, // inactive weaponrack in SE-Nw direction
 /*OBJ_ARMORSTANDN*/  { OBJ_ARMORSTAND, -1,          1,           }, // inactive armorstand in random direction
-/*OBJ_ARMORSTANDL*/  { OBJ_ARMORSTAND, 1,           0,           }, // active armorstand in SW-NE direction
-/*OBJ_ARMORSTANDLN*/ { OBJ_ARMORSTAND, 1,           1,           }, // inactive armorstand in SW-NE direction
-/*OBJ_ARMORSTANDR*/  { OBJ_ARMORSTAND, 0,           0,           }, // active armorstand in SE-Nw direction
-/*OBJ_ARMORSTANDRN*/ { OBJ_ARMORSTAND, 0,           1,           }, // inactive armorstand in SE-Nw direction
+/*OBJ_ARMORSTANDL*/  { OBJ_ARMORSTAND, 0,           0,           }, // active armorstand in SW-NE direction
+/*OBJ_ARMORSTANDLN*/ { OBJ_ARMORSTAND, 0,           1,           }, // inactive armorstand in SW-NE direction
+/*OBJ_ARMORSTANDR*/  { OBJ_ARMORSTAND, 1,           0,           }, // active armorstand in SE-Nw direction
+/*OBJ_ARMORSTANDRN*/ { OBJ_ARMORSTAND, 1,           1,           }, // inactive armorstand in SE-Nw direction
 /*OBJ_BOOK1N*/       { 0/*OBJ_BOOK1*/, -1,          1,           }, // inactive book1-stand in random direction
-/*OBJ_BOOK1L*/       { 0/*OBJ_BOOK1*/, 1,           0,           }, // active book1-stand in SW-NE direction
-/*OBJ_BOOK1LN*/      { 0/*OBJ_BOOK1*/, 1,           1,           }, // inactive book1-stand in SW-NE direction
-/*OBJ_BOOK1R*/       { 0/*OBJ_BOOK1*/, 0,           0,           }, // active book1-stand in SE-Nw direction
-/*OBJ_BOOK1RN*/      { 0/*OBJ_BOOK1*/, 0,           1,           }, // inactive book1-stand in SE-Nw direction
+/*OBJ_BOOK1L*/       { 0/*OBJ_BOOK1*/, 0,           0,           }, // active book1-stand in SW-NE direction
+/*OBJ_BOOK1LN*/      { 0/*OBJ_BOOK1*/, 0,           1,           }, // inactive book1-stand in SW-NE direction
+/*OBJ_BOOK1R*/       { 0/*OBJ_BOOK1*/, 1,           0,           }, // active book1-stand in SE-Nw direction
+/*OBJ_BOOK1RN*/      { 0/*OBJ_BOOK1*/, 1,           1,           }, // inactive book1-stand in SE-Nw direction
 /*OBJ_BOOK2N*/       { OBJ_BOOK2,      -1,          1,           }, // inactive book2-stand in random direction
-/*OBJ_BOOK2L*/       { OBJ_BOOK2,      1,           0,           }, // active book2-stand in SW-NE direction
-/*OBJ_BOOK2LN*/      { OBJ_BOOK2,      1,           1,           }, // inactive book2-stand in SW-NE direction
-/*OBJ_BOOK2R*/       { OBJ_BOOK2,      0,           0,           }, // active book2-stand in SE-Nw direction
-/*OBJ_BOOK2RN*/      { OBJ_BOOK2,      0,           1,           }, // inactive book2-stand in SE-Nw direction
+/*OBJ_BOOK2L*/       { OBJ_BOOK2,      0,           0,           }, // active book2-stand in SW-NE direction
+/*OBJ_BOOK2LN*/      { OBJ_BOOK2,      0,           1,           }, // inactive book2-stand in SW-NE direction
+/*OBJ_BOOK2R*/       { OBJ_BOOK2,      1,           0,           }, // active book2-stand in SE-Nw direction
+/*OBJ_BOOK2RN*/      { OBJ_BOOK2,      1,           1,           }, // inactive book2-stand in SE-Nw direction
+/*OBJ_TORTUREL*/     { OBJ_TORTURE,    0,          -1,           }, // random hooked body on the SW-NE wall
+/*OBJ_TORTURER*/     { OBJ_TORTURE,    1,          -1,           }, // random hooked body on the SE-Nw wall
+/*OBJ_TORTUREL1*/    { OBJ_TORTURE,    0,           0,           }, // 1. hooked body on the SW-NE wall
+/*OBJ_TORTUREL2*/    { OBJ_TORTURE,    0,           1,           }, // 2. hooked body on the SW-NE wall
+/*OBJ_TORTUREL3*/    { OBJ_TORTURE,    0,           2,           }, // 3. hooked body on the SW-NE wall
+/*OBJ_TORTURER1*/    { OBJ_TORTURE,    1,           0,           }, // 1. hooked body on the SE-NW wall
+/*OBJ_TORTURER2*/    { OBJ_TORTURE,    1,           1,           }, // 2. hooked body on the SE-NW wall
+/*OBJ_TORTURER3*/    { OBJ_TORTURE,    1,           2,           }, // 3. hooked body on the SE-NW wall
 };
 
 /** Contains the data related to each object ID. */
@@ -237,12 +245,7 @@ const ObjectData objectdata[NUM_OBJECTS] = {
 /*OBJ_SWITCHSKL*/    { OFILE_SWITCH4,  DTM_HELL,                                  THEME_NONE,              Q_INVALID,           1,            0, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, TRUE,      ODT_NONE,         1, FALSE,    TRUE,      ALIGN },
 /*OBJ_TNUDEM*/       { OFILE_TNUDEM,   DTM_HELL,                                  THEME_TORTURE,           Q_BUTCHER,           0,            0, OPF_NONE,   OMF_FLOOR,              FALSE,     ODT_NONE,         0, TRUE,     FALSE,     ALIGN },
 /*OBJ_TNUDEW*/       { OFILE_TNUDEW,   DTM_HELL,                                  THEME_TORTURE,           Q_BUTCHER,           0,            0, OPF_NONE,   OMF_FLOOR,              FALSE,     ODT_NONE,         0, TRUE,     FALSE,     ALIGN },
-/*OBJ_TORTUREL1*/    { OFILE_TSOUL,    DTM_HELL,                                  THEME_NONE,              Q_BUTCHER,           1,            0, OPF_NONE,   OMF_NONE,               TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
-/*OBJ_TORTUREL2*/    { OFILE_TSOUL,    DTM_HELL,                                  THEME_NONE,              Q_BUTCHER,           2,            0, OPF_NONE,   OMF_NONE,               TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
-/*OBJ_TORTUREL3*/    { OFILE_TSOUL,    DTM_HELL,                                  THEME_NONE,              Q_BUTCHER,           5,            0, OPF_NONE,   OMF_NONE,               TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
-/*OBJ_TORTURER1*/    { OFILE_TSOUL,    DTM_HELL,                                  THEME_NONE,              Q_BUTCHER,           3,            0, OPF_NONE,   OMF_NONE,               TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
-/*OBJ_TORTURER2*/    { OFILE_TSOUL,    DTM_HELL,                                  THEME_NONE,              Q_BUTCHER,           4,            0, OPF_NONE,   OMF_NONE,               TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
-/*OBJ_TORTURER3*/    { OFILE_TSOUL,    DTM_HELL,                                  THEME_NONE,              Q_BUTCHER,           6,            0, OPF_NONE,   OMF_NONE,               TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
+/*OBJ_TORTURE*/      { OFILE_TSOUL,    DTM_HELL,                                  THEME_NONE,              Q_BUTCHER,           0,            0, OPF_NONE,   OMF_NONE,               TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN },
 /*OBJ_L2LDOOR*/      { OFILE_L2DOORS,  DTM_CATACOMBS,                             THEME_NONE,              Q_INVALID,           1,            0, OPF_DOOR,   OMF_ACTIVE,             FALSE,     ODT_LEFT,         3, FALSE,    TRUE,      ALIGN },
 /*OBJ_L2RDOOR*/      { OFILE_L2DOORS,  DTM_CATACOMBS,                             THEME_NONE,              Q_INVALID,           2,            0, OPF_DOOR,   OMF_ACTIVE,             FALSE,     ODT_RIGHT,        3, FALSE,    TRUE,      ALIGN },
 /*OBJ_TORCHL1*/      { OFILE_WTORCH1,  DTM_CATACOMBS,                             THEME_NONE,              Q_BLOOD,            10,  OLF_XO | 12, OPF_NONE,   OMF_NONE,               TRUE,      ODT_NONE,         0, FALSE,    FALSE,     ALIGN }, // OPF_LIGHT 5

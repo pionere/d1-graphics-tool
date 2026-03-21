@@ -754,12 +754,7 @@ static void AddHookedBodies()
 			type = random_(0, 32);
 			if (type >= 3)
 				continue;
-			if (ttv == PST_LEFT) {
-				type = OBJ_TORTUREL1 + type;
-			} else {
-				// assert(ttv == PST_RIGHT);
-				type = OBJ_TORTURER1 + type;
-			}
+			type = ttv == PST_LEFT ? OBJ_TORTUREL : OBJ_TORTURER;
 			AddObject(type, i, j);
 		}
 	}
@@ -831,12 +826,7 @@ void InitObjects()
 	if (lvlMask & objectdata[OBJ_TORCHL1].oLvlTypes) {
 		AddL2Torches();
 	}
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTUREL2].oLvlTypes);
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTUREL3].oLvlTypes);
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTURER1].oLvlTypes);
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTURER2].oLvlTypes);
-	assert(objectdata[OBJ_TORTUREL1].oLvlTypes == objectdata[OBJ_TORTURER3].oLvlTypes);
-	if (lvlMask & objectdata[OBJ_TORTUREL1].oLvlTypes) {
+	if (lvlMask & objectdata[OBJ_TORTURE].oLvlTypes) {
 		AddHookedBodies();
 	}
 
@@ -1141,6 +1131,27 @@ static void AddCauldronGoatShrine(int oi)
 	os->_oVar1 = FindValidShrine(SHRINE_THAUMATURGIC); // SHRINE_TYPE
 }
 
+static void AddTorture(int oi, int realtype)
+{
+	ObjectStruct* os;
+	int8_t frame = -1;
+	int8_t dir = -1;
+
+	if (realtype < 0) {
+		const ObjTypeConv &otc = objTypeConv[-realtype];
+		dir = otc.oTypeParam1;
+		frame = otc.oTypeParam2;
+	}
+	if (dir < 0) {
+		dir = random_(147, 2);
+	}
+	if (frame < 0) {
+		frame = random_(147, 3);
+	}
+	os = &objects[oi];
+	os->_oGfxFrame = 1 + 3 * dir + frame;
+}
+
 static void AddDecap(int oi)
 {
 	ObjectStruct* os;
@@ -1316,6 +1327,9 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_CHEST2:
 		case OBJ_CHEST3:
 			AddChest(oi, realType);
+			break;
+		case OBJ_TORTURE:
+			AddTorture(oi, realType);
 			break;
 		case OBJ_SARC:
 #ifdef HELLFIRE
