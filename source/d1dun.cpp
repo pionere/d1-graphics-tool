@@ -45,9 +45,9 @@ const DunObjectStruct DunObjConvTbl[128] = {
     // clang-format off
                      { nullptr },
 /*OBJ_LEVER*/        { "Lever" },       // SklKng2.DUN
-/*OBJ_CRUXM*/        { "Crucifix1" },   // SklKng2.DUN
-/*OBJ_CRUXR*/        { "Crucifix2" },   // SklKng2.DUN
-/*OBJ_CRUXL*/        { "Crucifix3" },   // SklKng2.DUN
+/*OBJ_CRUXM*/        { "Crucifix N" },  // SklKng2.DUN
+/*OBJ_CRUXR*/        { "Crucifix NE" }, // SklKng2.DUN
+/*OBJ_CRUXL*/        { "Crucifix NW" }, // SklKng2.DUN
 /*OBJ_SARC*/         { "Sarcophagus" }, // SklKng2.DUN
                      { nullptr }, //OBJ_BANNERL,
                      { nullptr }, //OBJ_BANNERM,
@@ -151,8 +151,8 @@ const DunObjectStruct DunObjConvTbl[128] = {
 /*OBJ_ALTBOY*/       { "Altarboy" }, // L4Data/Vile1.DUN (Q_BETRAYER), L1Data/Vile2.DUN
                      { nullptr },
                      { nullptr },
-/*OBJ_ARMORSTANDN*/  { "Armor stand" }, //OBJ_ARMORSTAND, // Warlord2.DUN (Q_WARLORD) - changed to inactive versions to eliminate farming potential
-/*OBJ_WEAPONRACKLN*/ { "Weapon stand" }, //OBJ_WEAPONRACKL, // Warlord2.DUN (Q_WARLORD)
+/*OBJ_ARMORSTANDLN*/ { "Armor stand NW" },  //OBJ_ARMORSTAND, // Warlord2.DUN (Q_WARLORD) - changed to inactive versions to eliminate farming potential
+/*OBJ_WEAPONRACKLN*/ { "Weapon stand NW" }, //OBJ_WEAPONRACKL, // Warlord2.DUN (Q_WARLORD)
                      { nullptr }, //OBJ_TORCHR1  //Blood2.DUN (Q_BLOOD)
                      { nullptr }, //OBJ_TORCHL1  //Blood2.DUN (Q_BLOOD)
                      { nullptr }, //OBJ_MUSHPATCH,
