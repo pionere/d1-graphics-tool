@@ -3511,7 +3511,7 @@ bool D1Gfx::patchCryptBooks(bool silent)
     constexpr int FRAME_HEIGHT = 96;
 
     bool result = false;
-    for (int i = this->getFrameCount() - 1; i >= 0; i++) {
+    for (int i = this->getFrameCount() - 1; i >= 0; i--) {
         D1GfxFrame *frame = this->frames[i];
         if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
             dProgressErr() << tr("Framesize of the Light stand in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
