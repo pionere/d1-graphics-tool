@@ -3561,7 +3561,7 @@ bool D1Gfx::patchCryptBooks(bool silent)
                 // eliminate unused pixels
                 for (int y = 15 + 40; y < 22 + 40; y++) {
                     for (int x = 12 + 25; x < 21 + 25; x++) {
-                        if ((y - 40) - 17 > (x - 25) / 2 - 11) continue;
+                        if ((y - 40) - 17 > ((x - 25) - 11) / 2) continue;
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
