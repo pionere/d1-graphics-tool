@@ -3539,6 +3539,13 @@ bool D1Gfx::patchCryptBooks(bool silent)
                     change |= frame->setPixel(x, y, pixel);
                 }
             }
+            if (i + 1 == 6) {
+                // add missing pixels
+                change |= frame->setPixel(53, 60, D1GfxPixel::colorPixel(43)); // (was transparent)
+                change |= frame->setPixel(54, 59, D1GfxPixel::colorPixel(46)); // (was transparent)
+                change |= frame->setPixel(55, 59, D1GfxPixel::colorPixel(45)); // (was transparent)
+                change |= frame->setPixel(56, 58, D1GfxPixel::colorPixel(47)); // (was transparent)
+            }
         } else {
             // select the pixels of the book from frame 1 or 2
             for (int y = 0; y < FRAME_HEIGHT; y++) {
@@ -3561,7 +3568,7 @@ bool D1Gfx::patchCryptBooks(bool silent)
                     }
                 }
 
-                if (i + 1 == 5) {
+                if (i + 1 == 4) {
                     // fix the book-spine
                     change |= frame->setPixel(62, 46, D1GfxPixel::transparentPixel()); // (was color188)
                     change |= frame->setPixel(64, 48, D1GfxPixel::transparentPixel()); // (was color190)
