@@ -3547,6 +3547,24 @@ bool D1Gfx::patchCryptBooks(bool silent)
                 change |= frame->setPixel(54, 59, D1GfxPixel::colorPixel(46)); // (was transparent)
                 change |= frame->setPixel(55, 59, D1GfxPixel::colorPixel(45)); // (was transparent)
                 change |= frame->setPixel(56, 58, D1GfxPixel::colorPixel(47)); // (was transparent)
+                change |= frame->setPixel(52, 61, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(53, 61, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(54, 60, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(55, 60, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(56, 59, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(57, 59, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(57, 58, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(58, 58, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(57, 57, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(58, 57, D1GfxPixel::colorPixel(42)); // (was transparent)
+                change |= frame->setPixel(58, 56, D1GfxPixel::colorPixel(42)); // (was transparent)
+                // eliminate unused pixels
+                for (int y = 15 + 40; y < 22 + 40; y++) {
+                    for (int x = 12 + 25; x < 21 + 25; x++) {
+                        if ((y - 40) - 17 > (x - 25) / 2 - 11) continue;
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
             }
         } else {
             // select the pixels of the book from frame 1 or 2
