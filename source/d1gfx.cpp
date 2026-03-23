@@ -3528,9 +3528,9 @@ bool D1Gfx::patchCryptBooks(bool silent)
         if (i + 1 == 3 || i + 1 == 6) {
             // select the pixels of the stand from frame 1 and 2
             constexpr int FRAME_BORDER = 2;
-            const int dx = (i + 1 == 3) ? 0 : 2:
+            const int dx = (i + 1 == 3) ? 0 : 2;
             for (int y = FRAME_BORDER; y < FRAME_HEIGHT - FRAME_BORDER; y++) {
-                for (int x = FRAME_WIDTH - FRAME_BORDER - 1; x >= FRAME_BORDER ; x--) {
+                for (int x = FRAME_WIDTH - FRAME_BORDER - 1; x >= FRAME_BORDER; x--) {
                     D1GfxPixel pixel = srcFrame->getPixel(x, y);
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() >= 128) {
                         pixel = srcFrame1->getPixel(x, y);
