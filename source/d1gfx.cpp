@@ -3514,8 +3514,8 @@ bool D1Gfx::patchCryptBooks(bool silent)
     for (int i = this->getFrameCount() - 1; i >= 0; i--) {
         D1GfxFrame *frame = this->frames[i];
         if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
-            dProgressErr() << tr("Framesize of the Light stand in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
-            return false;
+            // dProgressErr() << tr("Framesize of the Books in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false; // assume it is already done
         }
         if (i + 1 == 6 && frame->getPixel(25, 50).isTransparent()) {
             return false; // assume it is already done
@@ -3527,8 +3527,10 @@ bool D1Gfx::patchCryptBooks(bool silent)
         const D1GfxFrame *srcFrame1 = this->frames[(i + 1 == 2 || i + 1 == 5) ? 0 : 1];
         if (i + 1 == 3 || i + 1 == 6) {
             // select the pixels of the stand from frame 1 and 2
-            for (int y = 0; y < FRAME_HEIGHT; y++) {
-                for (int x = 0; x < FRAME_WIDTH; x++) {
+            constexpr int FRAME_BORDER = 2;
+            const int dx = (i + 1 == 3) ? 0 : 2:
+            for (int y = FRAME_BORDER; y < FRAME_HEIGHT - FRAME_BORDER; y++) {
+                for (int x = FRAME_WIDTH - FRAME_BORDER - 1; x >= FRAME_BORDER ; x--) {
                     D1GfxPixel pixel = srcFrame->getPixel(x, y);
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() >= 128) {
                         pixel = srcFrame1->getPixel(x, y);
@@ -3536,7 +3538,7 @@ bool D1Gfx::patchCryptBooks(bool silent)
                             pixel = D1GfxPixel::transparentPixel();
                         }
                     }
-                    change |= frame->setPixel(x, y, pixel);
+                    change |= frame->setPixel(x + dx, y, pixel);
                 }
             }
             if (i + 1 == 6) {
@@ -3610,13 +3612,16 @@ bool D1Gfx::patchCryptBooks(bool silent)
             }
         }
 
-        if (change) {
+        // resize the frame
+        change |= frame->resize(46, 56, RESIZE_PLACEMENT::BOTTOM, D1GfxPixel::transparentPixel());
+
+        //if (change) {
             result = true;
             this->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
             }
-        }
+        //}
     }
     return result;
 }
