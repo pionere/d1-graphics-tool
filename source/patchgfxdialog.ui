@@ -72,6 +72,11 @@
        </item-->
        <item>
         <property name="text">
+         <string>Books in Crypt (L5Books.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Light stand in Crypt (L5Light.CEL)</string>
         </property>
        </item>
