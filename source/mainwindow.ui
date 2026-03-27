@@ -429,6 +429,7 @@
     <addaction name="actionResize"/>
     <addaction name="actionUpscale"/>
     <addaction name="actionReencode"/>
+    <addaction name="actionTranslate"/>
     <addaction name="actionMerge"/>
     <addaction name="actionSquash"/>
     <addaction name="actionMask"/>
@@ -781,6 +782,14 @@
    </property>
    <property name="toolTip">
     <string>Reencode the current graphics to use a new palette</string>
+   </property>
+  </action>
+  <action name="actionTranslate">
+   <property name="text">
+    <string>Translate</string>
+   </property>
+   <property name="toolTip">
+    <string>Translate the current graphics using a TRN file</string>
    </property>
   </action>
   <action name="actionMerge">

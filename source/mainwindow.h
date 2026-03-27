@@ -231,6 +231,7 @@ private slots:
     void on_actionResize_triggered();
     void on_actionUpscale_triggered();
     void on_actionReencode_triggered();
+    void on_actionTranslate_triggered();
     void on_actionMerge_triggered();
     void on_actionSquash_triggered();
     void on_actionMask_triggered();
