@@ -1800,13 +1800,13 @@ void D1Gfx::addGfx(D1Gfx *gfx)
     this->modified = true;
 }
 
-void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params, int verbose)
+void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const std::pair<int, int> &frames, int verbose)
 {
-    int rangeFrom = params.frames.first;
+    int rangeFrom = frames.first;
     if (rangeFrom != 0) {
         rangeFrom--;
     }
-    int rangeTo = params.frames.second;
+    int rangeTo = frames.second;
     if (rangeTo == 0 || rangeTo > this->getFrameCount()) {
         rangeTo = this->getFrameCount();
     }

@@ -149,10 +149,10 @@ void MainWindow::remapColors(const RemapParam &params)
     if (this->gfxset != nullptr) {
         QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
         for (D1Gfx *gfx : gfxs) {
-            gfx->replacePixels(replacements, params, 0);
+            gfx->replacePixels(replacements, params.frames, 0);
         }
     } else {
-        this->gfx->replacePixels(replacements, params, 0);
+        this->gfx->replacePixels(replacements, params.frames, 0);
     }
 
     // Clear loading message from status bar
@@ -1802,6 +1802,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionPatch->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionReencode->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionTranslate->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionMask->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionOptimize->setEnabled(this->celView != nullptr);
@@ -2898,6 +2900,8 @@ void MainWindow::on_actionUpscale_triggered()
 
 void MainWindow::on_actionReencode_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
     QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Palette File"), tr("PAL Files (*.pal *.PAL)"));
 
     if (palFilePath.isEmpty()) {
@@ -2911,7 +2915,14 @@ void MainWindow::on_actionReencode_triggered()
         return;
     }
 
-    this->gfx->reencode(newPal);
+    if (this->gfxset != nullptr && !gfxOnly) {
+        QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
+        for (D1Gfx *gfx : gfxs) {
+            gfx->reencode(newPal);
+        }
+    } else {
+        this->gfx->reencode(newPal);
+    }
     delete newPal;
 
     this->loadPal(palFilePath);
@@ -2922,6 +2933,9 @@ void MainWindow::on_actionReencode_triggered()
 
 void MainWindow::on_actionTranslate_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool currentOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (trnFilePath.isEmpty()) {
@@ -2929,7 +2943,7 @@ void MainWindow::on_actionTranslate_triggered()
     }
 
     D1Trn *newTrn = new D1Trn();
-    if (!newTrn->load(D1Trn::IDENTITY_PATH, this->pal)) {
+    if (!newTrn->load(trnFilePath, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -2949,15 +2963,27 @@ void MainWindow::on_actionTranslate_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     dProgress() << tr("Replacing %1 pixels").arg(replacements.count());
-    RemapParam params;
-    params.frames = std::pair<int, int>(0, 0);
-    if (this->gfxset != nullptr) {
+    int frameIndex = 0;
+    if (currentOnly) {
+        if (this->celView != nullptr) {
+            frameIndex = this->celView->getCurrentFrameIndex();
+        }
+        if (this->levelCelView != nullptr) {
+            frameIndex = this->levelCelView->getCurrentFrameIndex();
+        }
+        if (this->gfxsetView != nullptr) {
+            frameIndex = this->gfxsetView->getCurrentFrameIndex();
+        }
+        frameIndex++;
+    }
+    std::pair<int, int> frames = std::pair<int, int>(frameIndex, frameIndex);
+    if (this->gfxset != nullptr && !gfxOnly) {
         QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
         for (D1Gfx *gfx : gfxs) {
-            gfx->replacePixels(replacements, params, 1);
+            gfx->replacePixels(replacements, frames, 1);
         }
     } else {
-        this->gfx->replacePixels(replacements, params, 1);
+        this->gfx->replacePixels(replacements, frames, 1);
     }
 
     // Clear loading message from status bar
