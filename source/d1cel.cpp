@@ -319,6 +319,7 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
     // add an extra header entry to ensure the width of the frame can be determined using the header
     if (clipped && height == CEL_BLOCK_HEIGHT) {
         int i = height + 1;
+        pHead = pBuf;
         *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
     }
     return pBuf;

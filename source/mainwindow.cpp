@@ -2944,18 +2944,20 @@ void MainWindow::on_actionTranslate_triggered()
             replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(source, replacement));
         }
     }
+    delete newTrn;
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
+    dProgress() << tr("Replacing %1 pixels").arg(replacements.count());
     RemapParam params;
     params.frames = std::pair<int, int>(0, 0);
     if (this->gfxset != nullptr) {
         QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
         for (D1Gfx *gfx : gfxs) {
-            gfx->replacePixels(replacements, params, 0);
+            gfx->replacePixels(replacements, params, 1);
         }
     } else {
-        this->gfx->replacePixels(replacements, params, 0);
+        this->gfx->replacePixels(replacements, params, 1);
     }
 
     // Clear loading message from status bar
