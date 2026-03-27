@@ -1812,9 +1812,8 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
                     // dProgress() << QApplication::tr("Using %1 instead of %2 in frames [%3..%4)").arg(pc.index()).arg(i).arg(fix.frameFrom + 1).arg(fix.frameTo + 1);
                     QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
                     replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), D1GfxPixel::colorPixel(n)));
-                    RemapParam params;
-                    params.frames = std::pair<int, int>(fix.frameFrom + 1, fix.frameTo);
-                    fix.gfx->replacePixels(replacements, params, verbose);
+                    std::pair<int, int> frames = std::pair<int, int>(fix.frameFrom + 1, fix.frameTo);
+                    fix.gfx->replacePixels(replacements, frames, verbose);
 
                     palUse[n].first += palUse[i].first;
                     palUse[i].first = 0;
@@ -1854,9 +1853,8 @@ static bool fixPalColors(D1SmkColorFix &fix, int verbose)
         for (const QPair<unsigned, QColor> col : newColors) {
             fix.pal->setColor(col.first, col.second);
         }
-        RemapParam params;
-        params.frames = std::pair<int, int>(fix.frameFrom + 1, fix.frameTo);
-        fix.gfx->replacePixels(replacements, params, 0);
+        std::pair<int, int> frames = std::pair<int, int>(fix.frameFrom + 1, fix.frameTo);
+        fix.gfx->replacePixels(replacements, frames, 0);
         result = true;
     }
 /*
@@ -1988,9 +1986,8 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
                 }
             }
             if (!replacements.isEmpty()) {
-                RemapParam params;
-                params.frames = std::pair<int, int>(cf.frameFrom + 1, cf.frameTo);
-                cf.gfx->replacePixels(replacements, params, 0);
+                std::pair<int, int> frames = std::pair<int, int>(cf.frameFrom + 1, cf.frameTo);
+                cf.gfx->replacePixels(replacements, frames, 0);
             }
             result = true;
             QString msg;
@@ -2037,9 +2034,8 @@ static bool mergePals(D1SmkColorFix &pf, D1SmkColorFix &cf)
                 }
             }
             if (!replacements.isEmpty()) {
-                RemapParam params;
-                params.frames = std::pair<int, int>(pf.frameFrom + 1, pf.frameTo);
-                pf.gfx->replacePixels(replacements, params, 0);
+                std::pair<int, int> frames = std::pair<int, int>(pf.frameFrom + 1, pf.frameTo);
+                pf.gfx->replacePixels(replacements, frames, 0);
             }
             cf.gfx->getFrame(pf.frameFrom)->setFramePal(cf.pal);
             result = true;
