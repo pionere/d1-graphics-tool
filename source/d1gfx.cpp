@@ -1880,7 +1880,7 @@ void D1Gfx::inefficientFrames() const
     ProgressDialog::decBar();
 }
 
-int D1Gfx::testResize(const ResizeParam &params)
+int D1Gfx::testResize(const ResizeParam &params) const
 {
     const D1GfxPixel backPixel = (unsigned)params.backcolor < D1PAL_COLORS ? D1GfxPixel::colorPixel(params.backcolor) : D1GfxPixel::transparentPixel();
     int rangeFrom = params.rangeFrom;
@@ -1895,7 +1895,7 @@ int D1Gfx::testResize(const ResizeParam &params)
 
     int frameWithPixelLost = -1;
     for (int i = rangeFrom; i <= rangeTo; i++) {
-        D1GfxFrame *frame = this->frames[i];
+        const D1GfxFrame *frame = this->frames[i];
         if (!frame->testResize(params.width, params.height, params.placement, backPixel)) {
             frameWithPixelLost = i;
             break;
@@ -3517,9 +3517,9 @@ bool D1Gfx::patchCryptBooks(bool silent)
             // dProgressErr() << tr("Framesize of the Books in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
             return false; // assume it is already done
         }
-        if (i + 1 == 6 && frame->getPixel(25, 50).isTransparent()) {
-            return false; // assume it is already done
-        }
+        //if (i + 1 == 6 && frame->getPixel(25, 50).isTransparent()) {
+        //    return false; // assume it is already done
+        //}
 
         bool change = false;
         
@@ -3610,16 +3610,16 @@ bool D1Gfx::patchCryptBooks(bool silent)
                     change |= frame->setPixel(36, 54, D1GfxPixel::colorPixel(188)); // (was transparent)
                     change |= frame->setPixel(57, 54, D1GfxPixel::colorPixel(201)); // (was color191)
                     change |= frame->setPixel(58, 54, D1GfxPixel::colorPixel(202)); // (was color190)
-                    change |= frame->setPixel(37 + 25, 10 + 40, D1GfxPixel::colorPixel(202)); // (was color254)
-                    change |= frame->setPixel(29 + 25, 17 + 40, D1GfxPixel::colorPixel(202)); // (was color190)
-                    change |= frame->setPixel(25 + 25, 20 + 40, D1GfxPixel::colorPixel(202)); // (was color190)
-                    change |= frame->setPixel(28 + 25, 18 + 40, D1GfxPixel::colorPixel(188)); // (was color190)
-                    change |= frame->setPixel(32 + 25, 15 + 40, D1GfxPixel::colorPixel(188)); // (was color190)
-                    change |= frame->setPixel(37 + 25, 11 + 40, D1GfxPixel::colorPixel(188)); // (was color190)
+                    change |= frame->setPixel(62, 50, D1GfxPixel::colorPixel(202)); // (was color254)
+                    change |= frame->setPixel(54, 57, D1GfxPixel::colorPixel(202)); // (was color190)
+                    change |= frame->setPixel(50, 60, D1GfxPixel::colorPixel(202)); // (was color190)
+                    change |= frame->setPixel(53, 58, D1GfxPixel::colorPixel(188)); // (was color190)
+                    change |= frame->setPixel(57, 55, D1GfxPixel::colorPixel(188)); // (was color190)
+                    change |= frame->setPixel(62, 51, D1GfxPixel::colorPixel(188)); // (was color190)
                     change |= frame->setPixel(35, 55, D1GfxPixel::colorPixel(190)); // (was transparent)
                     change |= frame->setPixel(36, 55, D1GfxPixel::colorPixel(203)); // (was transparent)
                     change |= frame->setPixel(37, 55, D1GfxPixel::colorPixel(203)); // (was transparent)
-                    change |= frame->setPixel(10 + 25, 16 + 40, D1GfxPixel::colorPixel(189)); // (was transparent)
+                    change |= frame->setPixel(35, 56, D1GfxPixel::colorPixel(189)); // (was transparent)
                     change |= frame->setPixel(56, 55, D1GfxPixel::colorPixel(201)); // (was color191)
                     change |= frame->setPixel(54, 56, D1GfxPixel::colorPixel(201)); // (was color191)
                     change |= frame->setPixel(55, 56, D1GfxPixel::colorPixel(201)); // (was color191)

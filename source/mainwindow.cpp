@@ -2920,6 +2920,48 @@ void MainWindow::on_actionReencode_triggered()
     this->updateWindow();
 }
 
+void MainWindow::on_actionTranslate_triggered()
+{
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Translation File"), tr("TRN Files (*.trn *.TRN)"));
+
+    if (trnFilePath.isEmpty()) {
+        return;
+    }
+
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(D1Trn::IDENTITY_PATH, this->pal)) {
+        delete newTrn;
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
+        return;
+    }
+
+    QList<QPair<D1GfxPixel, D1GfxPixel>> replacements;
+    for (int i = 0; i < NUM_COLORS; i++) {
+        quint8 index = newTrn->getTranslation(i);
+        if (index != i) {
+            D1GfxPixel source = D1GfxPixel::colorPixel(i);
+            D1GfxPixel replacement = D1GfxPixel::colorPixel(index);
+            replacements.push_back(QPair<D1GfxPixel, D1GfxPixel>(source, replacement));
+        }
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
+
+    RemapParam params;
+    params.frames = std::pair<int, int>(0, 0);
+    if (this->gfxset != nullptr) {
+        QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
+        for (D1Gfx *gfx : gfxs) {
+            gfx->replacePixels(replacements, params, 0);
+        }
+    } else {
+        this->gfx->replacePixels(replacements, params, 0);
+    }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionMerge_triggered()
 {
     QStringList gfxFilePaths = this->filesDialog(tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));

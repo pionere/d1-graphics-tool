@@ -359,7 +359,7 @@ public:
     void addGfx(D1Gfx *gfx);
     void replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params, int verbose);
     void inefficientFrames() const;
-    int testResize(const ResizeParam &params);
+    int testResize(const ResizeParam &params) const;
     bool resize(const ResizeParam &params);
     void mask(int frameIndex, unsigned flags);
     bool squash();
