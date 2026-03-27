@@ -1774,6 +1774,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionPatch->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
     this->ui->actionUpscale->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
+    this->ui->actionReencode->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionMerge->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionMask->setEnabled(fileType != FILE_CONTENT::TBL && fileType != FILE_CONTENT::CPP);
     this->ui->actionOptimize->setEnabled(this->celView != nullptr);
@@ -2868,6 +2869,8 @@ void MainWindow::on_actionUpscale_triggered()
 
 void MainWindow::on_actionReencode_triggered()
 {
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
     QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Palette File"), tr("PAL Files (*.pal *.PAL)"));
 
     if (palFilePath.isEmpty()) {
@@ -2881,7 +2884,14 @@ void MainWindow::on_actionReencode_triggered()
         return;
     }
 
-    this->gfx->reencode(newPal);
+    if (this->gfxset != nullptr && !gfxOnly) {
+        QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
+        for (D1Gfx *gfx : gfxs) {
+            gfx->reencode(newPal);
+        }
+    } else {
+        this->gfx->reencode(newPal);
+    }
     delete newPal;
 
     this->loadPal(palFilePath);
