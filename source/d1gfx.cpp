@@ -1771,13 +1771,13 @@ void D1Gfx::addGfx(D1Gfx *gfx)
     this->modified = true;
 }
 
-void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params, int verbose)
+void D1Gfx::replacePixels(const QList<QPair<D1GfxPixel, D1GfxPixel>> &replacements, const std::pair<int, int> &frames, int verbose)
 {
-    int rangeFrom = params.frames.first;
+    int rangeFrom = frames.first;
     if (rangeFrom != 0) {
         rangeFrom--;
     }
-    int rangeTo = params.frames.second;
+    int rangeTo = frames.second;
     if (rangeTo == 0 || rangeTo > this->getFrameCount()) {
         rangeTo = this->getFrameCount();
     }
@@ -1851,7 +1851,7 @@ void D1Gfx::inefficientFrames() const
     ProgressDialog::decBar();
 }
 
-int D1Gfx::testResize(const ResizeParam &params)
+int D1Gfx::testResize(const ResizeParam &params) const
 {
     const D1GfxPixel backPixel = (unsigned)params.backcolor < D1PAL_COLORS ? D1GfxPixel::colorPixel(params.backcolor) : D1GfxPixel::transparentPixel();
     int rangeFrom = params.rangeFrom;
@@ -1866,7 +1866,7 @@ int D1Gfx::testResize(const ResizeParam &params)
 
     int frameWithPixelLost = -1;
     for (int i = rangeFrom; i <= rangeTo; i++) {
-        D1GfxFrame *frame = this->frames[i];
+        const D1GfxFrame *frame = this->frames[i];
         if (!frame->testResize(params.width, params.height, params.placement, backPixel)) {
             frameWithPixelLost = i;
             break;

@@ -121,10 +121,10 @@ void MainWindow::remapColors(const RemapParam &params)
     if (this->gfxset != nullptr) {
         QList<D1Gfx *> &gfxs = this->gfxset->getGfxList();
         for (D1Gfx *gfx : gfxs) {
-            gfx->replacePixels(replacements, params, 0);
+            gfx->replacePixels(replacements, params.frames, 0);
         }
     } else {
-        this->gfx->replacePixels(replacements, params, 0);
+        this->gfx->replacePixels(replacements, params.frames, 0);
     }
 
     // Clear loading message from status bar
