@@ -421,6 +421,7 @@ private:
     // bool patchLeftShrine(bool silent);
     // bool patchRightShrine(bool silent);
     bool patchCryptBooks(bool silent);
+    bool patchCryptLever(bool silent);
     bool patchCryptLight(bool silent);
     bool patchCryptSarco(bool silent);
     bool patchCELFrames(int gfxFileIndex, bool silent);
