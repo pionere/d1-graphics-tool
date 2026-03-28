@@ -77,6 +77,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Lever in Crypt (L5Lever.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Light stand in Crypt (L5Light.CEL)</string>
         </property>
        </item>

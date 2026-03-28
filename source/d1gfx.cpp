@@ -3454,6 +3454,8 @@ bool D1Gfx::patchCryptBooks(bool silent)
 {
     constexpr int FRAME_WIDTH = 96;
     constexpr int FRAME_HEIGHT = 96;
+    constexpr int RES_FRAME_WIDTH = 46;
+    constexpr int RES_FRAME_HEIGHT = 56;
 
     bool result = false;
     for (int i = this->getFrameCount() - 1; i >= 0; i--) {
@@ -3584,7 +3586,40 @@ bool D1Gfx::patchCryptBooks(bool silent)
         }
 
         // resize the frame
-        change |= frame->resize(46, 56, RESIZE_PLACEMENT::BOTTOM, D1GfxPixel::transparentPixel());
+        change |= frame->resize(RES_FRAME_WIDTH, RES_FRAME_HEIGHT, RESIZE_PLACEMENT::BOTTOM, D1GfxPixel::transparentPixel());
+
+        //if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        //}
+    }
+    return result;
+}
+
+bool D1Gfx::patchCryptLever(bool silent)
+{
+    constexpr int FRAME_WIDTH = 96;
+    constexpr int FRAME_HEIGHT = 96;
+    constexpr int RES_FRAME_WIDTH = 40;
+    constexpr int RES_FRAME_HEIGHT = 46;
+
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            // dProgressErr() << tr("Framesize of the Lever in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false; // assume it is already done
+        }
+
+        bool change = false;
+        // shift the frame
+        change |= frame->shift(0, -5, 0, 55, FRAME_WIDTH, FRAME_HEIGHT);
+
+        // resize the frame
+        change |= frame->resize(RES_FRAME_WIDTH, RES_FRAME_HEIGHT, RESIZE_PLACEMENT::BOTTOM, D1GfxPixel::transparentPixel());
 
         //if (change) {
             result = true;
@@ -9237,6 +9272,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_L5BOOKS: // patch L5Books.CEL
         change = this->patchCryptBooks(silent);
         break;
+    case GFX_OBJ_L5LEVER: // patch L5Lever.CEL
+        change = this->patchCryptLever(silent);
+        break;
     case GFX_OBJ_L5LIGHT: // patch L5Light.CEL
         change = this->patchCryptLight(silent);
         break;
@@ -9426,6 +9464,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "l5books") {
         fileIndex = GFX_OBJ_L5BOOKS;
     }
+    if (baseName == "l5lever") {
+        fileIndex = GFX_OBJ_L5LEVER;
+    }    
     if (baseName == "l5light") {
         fileIndex = GFX_OBJ_L5LIGHT;
     }
