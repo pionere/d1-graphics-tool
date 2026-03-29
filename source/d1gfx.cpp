@@ -3524,7 +3524,7 @@ bool D1Gfx::patchCryptBooks(bool silent)
         //}
 
         bool change = false;
-        
+
         const D1GfxFrame *srcFrame = this->frames[(i + 1 == 2 || i + 1 == 5) ? 1 : 0];
         const D1GfxFrame *srcFrame1 = this->frames[(i + 1 == 2 || i + 1 == 5) ? 0 : 1];
         if (i + 1 == 3 || i + 1 == 6) {
@@ -3638,6 +3638,54 @@ bool D1Gfx::patchCryptBooks(bool silent)
                     change |= frame->setPixel(49, 62, D1GfxPixel::colorPixel(189)); // (was color191)
                 }
             }
+        }
+
+        // resize the frame
+        change |= frame->resize(RES_FRAME_WIDTH, RES_FRAME_HEIGHT, RESIZE_PLACEMENT::BOTTOM, D1GfxPixel::transparentPixel());
+
+        //if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        //}
+    }
+    return result;
+}
+
+bool D1Gfx::patchCryptDoor(bool silent)
+{
+    constexpr int FRAME_WIDTH = 64;
+    constexpr int FRAME_HEIGHT = 160;
+    constexpr int RES_FRAME_WIDTH = 58;
+    constexpr int RES_FRAME_HEIGHT = 130;
+
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            // dProgressErr() << tr("Framesize of the Lever in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false; // assume it is already done
+        }
+
+        bool change = false;
+
+        if (i + 1 == 2) {
+            // swap frame 2 and 3
+            D1GfxFrame *srcFrame = this->frames[3 - 1];
+            /*for (int y = 0; y < FRAME_HEIGHT; y++) {
+                for (int x = 0; x < FRAME_WIDTH; x++) {
+                    D1GfxPixel pixel0 = srcFrame->getPixel(x, y);
+                    D1GfxPixel pixel1 = frame->getPixel(x, y);
+
+                    change |= frame->setPixel(x, y, pixel0);
+                    change |= srcFrame->setPixel(x, y, pixel1);
+                }
+            }*/
+            this->frames[3 - 1] = frame;
+            this->frames[i] = srcFrame;
+            frame = srcFrame;
         }
 
         // resize the frame
@@ -9357,6 +9405,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_L5BOOKS: // patch L5Books.CEL
         change = this->patchCryptBooks(silent);
         break;
+    case GFX_OBJ_L5DOOR: // patch L5Door.CEL
+        change = this->patchCryptDoor(silent);
+        break;
     case GFX_OBJ_L5LEVER: // patch L5Lever.CEL
         change = this->patchCryptLever(silent);
         break;
@@ -9548,6 +9599,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
 #endif
     if (baseName == "l5books") {
         fileIndex = GFX_OBJ_L5BOOKS;
+    }
+    if (baseName == "l5door") {
+        fileIndex = GFX_OBJ_L5DOOR;
     }
     if (baseName == "l5lever") {
         fileIndex = GFX_OBJ_L5LEVER;
