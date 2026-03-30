@@ -111,6 +111,8 @@ const BYTE shrineavail[NUM_SHRINETYPE] = {
 };
 /** Maps from book_id to book name. */
 const char* const BookName[NUM_BOOKS] = {
+/*BK_LECTERN*/        "Lectern",
+/*BK_SKILL*/          "Skillbook",
 /*BK_STORY_MAINA_1*/  "The Great Conflict",
 /*BK_STORY_MAINA_2*/  "The Wages of Sin are War",
 /*BK_STORY_MAINA_3*/  "The Tale of the Horadrim",
@@ -120,12 +122,12 @@ const char* const BookName[NUM_BOOKS] = {
 /*BK_STORY_MAINC_1*/  "The Realms Beyond",
 /*BK_STORY_MAINC_2*/  "Tale of the Three",
 /*BK_STORY_MAINC_3*/  "The Black King",
-/*BK_BLOOD*/          "Book of Blood",
 /*BK_ANCIENT*/        "Ancient Book",
-/*BK_STEEL*/          "Steel Tome",
 /*BK_BLIND*/          "Book of the Blind",
-/*BK_MYTHIC*/         "Mythical Book",
+/*BK_BLOOD*/          "Book of Blood",
+/*BK_STEEL*/          "Steel Tome",
 /*BK_VILENESS*/       "Book of Vileness",
+/*BK_MYTHIC*/         "Mythical Book",
 #ifdef HELLFIRE
 	//"Journal: The Ensorcellment",
 /*BK_STORY_NAKRUL_1*/ "Journal: The Meeting",
@@ -796,13 +798,13 @@ void InitObjects()
 		InitRndLocObj5x5(OBJ_BLINDBOOK);
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_SKELKING) {
-		AddSKingRanges();
+		ObjSetSKingRanges();
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
-		AddBChamRanges();
+		ObjSetBChamRanges();
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_BETRAYER) {
-		AddVileRanges();
+		ObjSetVileRanges();
 	}
 	switch (currLvl._dLevelIdx) {
 	case DLV_CATHEDRAL4:
@@ -815,7 +817,7 @@ void InitObjects()
 		AddStoryBook();
 		break;
 	case DLV_HELL4:
-        AddDiabRanges();
+		ObjSetDiabRanges();
 		return;
 #ifdef HELLFIRE
 	case DLV_CRYPT1:
