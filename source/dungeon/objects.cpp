@@ -1113,7 +1113,7 @@ static inline void AddLeverEffect(ObjectStruct* os, int x1, int y1, int x2, int 
 	leverid++;
 }
 
-static void AddBook(int oi, int bookidx)
+static void AddBook(int oi)
 {
 	ObjectStruct* os;
 	// int8_t dir;
@@ -1152,6 +1152,34 @@ static void AddBook(int oi, int bookidx)
 		os->_oVar7 = Q_BLIND;           // LEVER_BOOK_QUEST
 		AddLeverEffect(os, pSetPieces[0]._spx, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 11, pSetPieces[0]._spy + 10);
 	}
+}
+
+static void AddBook1(int oi, int realtype)
+{
+	ObjectStruct* os;
+	int8_t inactive = 0;
+	int8_t dir = -1;
+	int8_t bookidx = BK_SKILL;
+
+	if (realtype < 0) {
+		const ObjTypeConv &otc = objTypeConv[-realtype];
+		dir = otc.oTypeParam1;
+		inactive = otc.oTypeParam2;
+		bookidx = otc.oTypeParam3;
+	}
+	if (dir < 0) {
+		dir = random_(147, 2);
+	}
+	os = &objects[oi];
+	os->_oGfxFrame = objectdata[OBJ_BOOK1].oBaseFrame + 3 * dir;
+	os->_oAnimFrame = os->_oGfxFrame - (inactive ? 1 : 2);
+	os->_oVar6 = os->_oGfxFrame - 1; // STORY_BOOK_READ_ANIM
+	// os->_oMissFlag = inactive ? TRUE : objectdata[OBJ_BOOK2].oMissFlag;
+	os->_oModeFlags = inactive ? (objectdata[OBJ_BOOK1].oModeFlags & ~OMF_ACTIVE) : objectdata[OBJ_BOOK1].oModeFlags;
+	os->_oSelFlag = inactive ? 0 : objectdata[OBJ_BOOK1].oSelFlag;
+	os->_oVar5 = bookidx; // STORY_BOOK_NAME
+
+	os->_oVar7 = bookidx == BK_ANCIENT ? SPL_GUARDIAN : GetBookSpell(currLvl._dLevelIdx); // BOOK_SKILL
 }
 
 static void AddBook2(int oi, int realtype)

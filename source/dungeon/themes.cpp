@@ -670,11 +670,20 @@ done:
 
 static void AddSkelMonster(int x, int y)
 {
+	AddMonster(mapSkelTypes[random_low(136, numSkelTypes)], x, y);
+}
+
+static void AddSkelMonOrBanner(BYTE rnd, int x, int y)
+{
 	if (!PosOkActor(x, y)) {
 		dProgressErr() << QString("AddSkelMonster failed to place monster to %1:%2 room-id:%3").arg(x).arg(y).arg(dTransVal[x][y]);
 		return;
 	}
-	AddMonster(mapSkelTypes[random_low(136, numSkelTypes)], x, y);
+	if (rnd == 0 || random_low(0, rnd) != 0) {
+		AddMonster(mapSkelTypes[random_low(136, numSkelTypes)], x, y);
+	} else {
+		AddObject(OBJ_BANNER, x, y);
+	}
 }
 
 /**
@@ -682,12 +691,21 @@ static void AddSkelMonster(int x, int y)
  *
  * @param themeId: theme id.
  */
+static const int8_t SkelPatterns[][2] = {
+	{  0,  0 },
+	{ -1,  0 },
+	{  0, -1 },
+	{ -1, -1 },
+	{  1, -1 },
+	{ -1,  1 },
+};
 static void Theme_SkelRoom(int themeId)
 {
 	int xx, yy;
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
+	int8_t objs[2];
 
 	xx = theme._tsObjX;
 	yy = theme._tsObjY;
@@ -696,42 +714,28 @@ static void Theme_SkelRoom(int themeId)
 
 	monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
-	if (random_low(0, monstrnd) != 0) {
-		AddSkelMonster(xx - 1, yy - 1);
-	} else {
-		AddObject(OBJ_BANNERL, xx - 1, yy - 1);
-	}
+	AddSkelMonOrBanner(monstrnd, xx - 1, yy - 1);
 
-	AddSkelMonster(xx, yy - 1);
+	AddSkelMonOrBanner(0, xx, yy - 1);
 
-	if (random_low(0, monstrnd) != 0) {
-		AddSkelMonster(xx + 1, yy - 1);
-	} else {
-		AddObject(OBJ_BANNERR, xx + 1, yy - 1);
-	}
-	if (random_low(0, monstrnd) != 0) {
-		AddSkelMonster(xx - 1, yy);
-	} else {
-		AddObject(OBJ_BANNERM, xx - 1, yy);
-	}
-	if (random_low(0, monstrnd) != 0) {
-		AddSkelMonster(xx + 1, yy);
-	} else {
-		AddObject(OBJ_BANNERM, xx + 1, yy);
-	}
-	if (random_low(0, monstrnd) != 0) {
-		AddSkelMonster(xx - 1, yy + 1);
-	} else {
-		AddObject(OBJ_BANNERR, xx - 1, yy + 1);
-	}
+	AddSkelMonOrBanner(monstrnd, xx + 1, yy - 1);
 
-	AddSkelMonster(xx, yy + 1);
+	AddSkelMonOrBanner(monstrnd, xx - 1, yy);
 
-	if (random_low(0, monstrnd) != 0) {
-		AddSkelMonster(xx + 1, yy + 1);
-	} else {
-		AddObject(OBJ_BANNERL, xx + 1, yy + 1);
+	AddSkelMonOrBanner(monstrnd, xx + 1, yy);
+
+	AddSkelMonOrBanner(monstrnd, xx - 1, yy + 1);
+
+	AddSkelMonOrBanner(0, xx, yy + 1);
+
+	AddSkelMonOrBanner(monstrnd, xx + 1, yy + 1);
+
+	unsigned ver = random_(0, 8);
+	if (ver >= (unsigned)lengthof(SkelPatterns)) {
+		ver = 0;
 	}
+	objs[0] = SkelPatterns[ver][0];
+	objs[1] = SkelPatterns[ver][1];
 
 	if ((dObject[xx][yy - 3] == 0 || !objects[dObject[xx][yy - 3] - 1]._oDoorFlag)   // not a door
 	 && (nSolidTable[dPiece[xx][yy - 3]] || !nSolidTable[dPiece[xx + 1][yy - 3]])) { // or a single path to NE TODO: allow if !nSolidTable[dPiece[xx - 1][yy - 3]]?
@@ -743,7 +747,6 @@ static void Theme_SkelRoom(int themeId)
             LogErrorF("object to north-east %d type%d x:%d y:%d vs %d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, theme._tsy1, yy - 3);
         }
 		// assert(dObject[xx][yy - 2] == 0);
-		AddObject(OBJ_BOOK2R, xx, yy - 2);
 	} else {
         // if (dObject[xx][yy - 3] == 0 && dObject[xx][yy - 2] == 0 && dPiece[xx][yy - 3] != 11 && dPiece[xx][yy - 3] != 249 && dPiece[xx][yy - 3] != 325 && dPiece[xx + 1][yy - 3] != 270) {
         //if (dObject[xx][yy - 3] == 0 && dObject[xx][yy - 2] == 0 && dPiece[xx][yy - 3] != 553 && dPiece[xx][yy - 3] != 424 /*&& dPiece[xx][yy - 3] != 325 && dPiece[xx + 1][yy - 3] != 270*/) {
@@ -754,6 +757,7 @@ static void Theme_SkelRoom(int themeId)
             stopgen = true;
             LogErrorF("no object to north-east x:%d y:%d vs %d pn%d type %d", xx, theme._tsy1, yy - 3, dPiece[xx][yy - 3], automaptype[dPiece[xx][yy - 3]]);
         }
+		objs[1] = -1;
 	}
 	if ((dObject[xx][yy + 3] == 0 || !objects[dObject[xx][yy + 3] - 1]._oDoorFlag)   // not a door
 	 && (nSolidTable[dPiece[xx][yy + 3]] || !nSolidTable[dPiece[xx + 1][yy + 3]])) { // or a single path to SW TODO: allow if !nSolidTable[dPiece[xx - 1][yy + 3]]?
@@ -765,7 +769,6 @@ static void Theme_SkelRoom(int themeId)
             LogErrorF("object to south-east %d type%d x:%d y:%d vs %d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, theme._tsy2, yy + 3);
         }
 		// assert(dObject[xx][yy + 2] == 0);
-		AddObject(OBJ_BOOK2R, xx, yy + 2);
 	} else {
         // if (dObject[xx][yy + 3] == 0 && dObject[xx][yy + 2] == 0 && dPiece[xx][yy + 3] != 11 && dPiece[xx][yy + 3] != 249 && dPiece[xx][yy + 3] != 325 && dPiece[xx + 1][yy + 3] != 270) {
         //if (dObject[xx][yy + 3] == 0 && dObject[xx][yy + 2] == 0 && dPiece[xx][yy + 3] != 553 /*&& dPiece[xx][yy + 3] != 249 && dPiece[xx][yy + 3] != 325 && dPiece[xx + 1][yy + 3] != 270*/) {
@@ -776,6 +779,13 @@ static void Theme_SkelRoom(int themeId)
             stopgen = true;
             LogErrorF("no object to south-east x:%d y:%d vs %d pn%d type %d", xx, theme._tsy2, yy + 3, dPiece[xx][yy + 3], automaptype[dPiece[xx][yy + 3]]);
         }
+		objs[1] = -1;
+	}
+	if (objs[0] >= 0) {
+		AddObject(objs[0] == 0 ? OBJ_BOOK2R : OBJ_BOOK1R, xx, yy - 2);
+	}
+	if (objs[1] >= 0) {
+		AddObject(objs[1] == 0 ? OBJ_BOOK2R : OBJ_BOOK1R, xx, yy + 2);
 	}
 }
 
@@ -855,25 +865,60 @@ static void Theme_Library_Query(int xx, int yy, void* userParam)
 	}
 }
 #endif
+static const int8_t LibPatterns[][3] = {
+	{ -1, 0, 1 },
+	{  1, 0,-1 },
+	{  1, 0, 1 },
+	{  0, 1, 0 },
+};
+static int NextLibraryObj(int8_t type, bool notzhar, unsigned ver, int dx)
+{
+	ver &= 7;
+	return type < 0 ? type : (type == 0 ? ((ver & 3) ? OBJ_CANDLE2 : -1) : ((ver == 1 && notzhar) ? -1 : (((!notzhar || ver > 1) ? OBJ_BOOKCASEL : OBJ_BOOKSHELFL) + dx)));
+}
 static void Theme_Library(int themeId)
 {
-	int xx, yy, type;
+	int xx, yy, dx, dy, type, t0, t1, t2;
 	const BYTE librnds[4] = { 1, 2, 0, 0 };
 	BYTE librnd;
 	const ThemeStruct &theme = themes[themeId];
 	const bool placemonsters = /*QuestStatus(Q_ZHAR) &&*/ themeId != zharlib;
+	const int8_t* ptrn;
 
 	xx = theme._tsObjX;
 	yy = theme._tsObjY;
-	if (theme._tsObjVar1 != 0) {
-		AddObject(OBJ_CANDLE2, xx - 1, yy);
-		AddObject(OBJ_BOOKCASER, xx, yy);
-		AddObject(OBJ_CANDLE2, xx + 1, yy);
+	dx = theme._tsObjVar1;
+	dy = 1 - dx;
+	static_assert(OBJ_BOOKCASEL + 1 == OBJ_BOOKCASER, "Theme_Library depends on the order of OBJ_BOOKCASEL/R");
+	static_assert(OBJ_BOOKSHELFL + 1 == OBJ_BOOKSHELFR, "Theme_Library depends on the order of OBJ_BOOKSHELFL/R");
+	unsigned ver = random_(0, 1 << (2 + 3 + 3 + 3));
+	if (placemonsters
+		// make sure the place is wide enough
+		// - on the inside
+		&& !nSolidTable[dPiece[xx - 2 * dx][yy - 2 * dy]]
+		&& !nSolidTable[dPiece[xx + 2 * dx][yy + 2 * dy]]
+		 // - on the wall (to avoid doors)
+		&& !nSolidTable[dPiece[xx - 2 * dx - dy][yy - 2 * dy - dx]]
+		&& !nSolidTable[dPiece[xx - 2 * dx - dy][yy - 2 * dy - dx]]) {
+		type = ver & 3;
 	} else {
-		AddObject(OBJ_CANDLE2, xx, yy - 1);
-		AddObject(OBJ_BOOKCASEL, xx, yy);
-		AddObject(OBJ_CANDLE2, xx, yy + 1);
+		type = 3;
 	}
+	ptrn = &LibPatterns[type][0];
+	ver >>= 2;
+	t0 = NextLibraryObj(ptrn[0], placemonsters, ver, dx);
+	ver >>= 3;
+	if (t0 >= 0)
+		AddObject(t0, xx - dx, yy - dy);
+	t1 = NextLibraryObj(ptrn[1], placemonsters, ver, dx);
+	ver >>= 3;
+	if (t1 >= 0)
+		AddObject(t1, xx, yy);
+	t2 = NextLibraryObj(ptrn[2], placemonsters, ver, dx);
+	// ver >>= 3;
+	if (t2 >= 0)
+		AddObject(t2, xx + dx, yy + dy);
+
 	static_assert(DTYPE_CATHEDRAL == 1 && DTYPE_CATACOMBS == 2, "Theme_Library uses dungeon_type as an array-index.");
 	// assert(currLvl._dDunType == 1 /* DTYPE_CATHEDRAL */ || currLvl._dDunType == 2 /* DTYPE_CATACOMBS */);
 	librnd = librnds[currLvl._dDunType - 1];     // TODO: use dType instead?
