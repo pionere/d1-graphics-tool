@@ -388,7 +388,7 @@ restart:
 	}
 }*/
 
-void GetBookSpell(unsigned lvl)
+BYTE GetBookSpell(unsigned lvl)
 {
 	static_assert((int)NUM_SPELLS < UCHAR_MAX, "GetBookSpell stores spell-ids in BYTEs.");
 	BYTE ss[NUM_SPELLS];
@@ -440,7 +440,7 @@ static void SetBookSpell(ItemStruct* is, unsigned lvl)
 	is->_iCurs = bs;
 }
 
-static void GetScrollSpell(int ii, unsigned lvl)
+static BYTE GetScrollSpell(int ii, unsigned lvl)
 {
 	static_assert((int)NUM_SPELLS < UCHAR_MAX, "GetScrollSpell stores spell-ids in BYTEs.");
 #ifdef HELLFIRE
@@ -482,7 +482,7 @@ static void SetScrollSpell(ItemStruct* is, unsigned lvl)
 }
 
 #ifdef HELLFIRE
-static void GetRuneSpell(unsigned lvl)
+static BYTE GetRuneSpell(unsigned lvl)
 {
 	static_assert((int)NUM_SPELLS < UCHAR_MAX, "GetRuneSpell stores spell-ids in BYTEs.");
 	BYTE ss[SPL_RUNE_LAST - SPL_RUNE_FIRST + 1];
