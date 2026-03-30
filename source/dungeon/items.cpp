@@ -463,7 +463,7 @@ static BYTE GetScrollSpell(int ii, unsigned lvl)
 		}
 	}
 	// assert(ns > 0);
-	retrun ss[random_low(14, ns)];
+	return ss[random_low(14, ns)];
 }
 
 static void SetScrollSpell(ItemStruct* is, unsigned lvl)
