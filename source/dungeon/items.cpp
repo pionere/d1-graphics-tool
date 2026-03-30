@@ -440,7 +440,7 @@ static void SetBookSpell(ItemStruct* is, unsigned lvl)
 	is->_iCurs = bs;
 }
 
-static BYTE GetScrollSpell(int ii, unsigned lvl)
+static BYTE GetScrollSpell(unsigned lvl)
 {
 	static_assert((int)NUM_SPELLS < UCHAR_MAX, "GetScrollSpell stores spell-ids in BYTEs.");
 #ifdef HELLFIRE
