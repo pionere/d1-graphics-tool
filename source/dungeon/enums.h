@@ -3270,15 +3270,6 @@ typedef enum object_light_flags {
 	OLF_MASK  = (1 << 6) - 1
 } object_light_flags;
 
-typedef enum object_anim_mode {
-	OAM_NONE,
-	OAM_LOOP,  // animation is played continuously from the first frame
-	OAM_ONCE,  // animation is played once starting from the first frame
-	OAM_TRANS, // animation is a transient frame staring active
-	OAM_SINGLE = OAM_NONE, // animation is a transient frame staring inactive
-	OAM_SWITCH = OAM_NONE, // no animation, just switching frames
-} object_anim_mode;
-
 typedef enum object_mode_flags { // TODO: merge with object_break_mode?
 	OMF_NONE,
 	OMF_ACTIVE   = 1 << 0, // interactive object
@@ -3288,8 +3279,11 @@ typedef enum object_mode_flags { // TODO: merge with object_break_mode?
 
 typedef enum object_anim_mode {
 	OAM_NONE,
-	OAM_SINGLE,
-	OAM_LOOP,
+	OAM_LOOP,  // animation is played continuously from the first frame
+	OAM_ONCE,  // animation is played once starting from the first frame
+	OAM_TRANS, // animation is a transient frame staring active
+	OAM_SINGLE = OAM_NONE, // animation is a transient frame staring inactive
+	OAM_SWITCH = OAM_NONE, // no animation, just switching frames
 } object_anim_mode;
 
 typedef enum object_break_mode {
