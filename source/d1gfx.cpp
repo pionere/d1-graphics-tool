@@ -9376,6 +9376,7 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
 {
     bool change = false;
     switch (gfxFileIndex) {
+#if 0
     case GFX_OBJ_L1DOORS: // patch L1Doors.CEL
         change = this->patchCathedralDoors(silent);
         break;
@@ -9388,7 +9389,6 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_MCIRL: // patch Mcirl.CEL
         change = this->patchMagicCircle(silent);
         break;
-#if 0
     case GFX_OBJ_CANDLE2: // patch Candle2.CEL
         change = this->patchCandle(silent);
         break;
@@ -9571,6 +9571,7 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     int fileIndex = -1;
     QString baseName = QFileInfo(filePath).completeBaseName().toLower();
     // cel files
+#if 0
     if (baseName == "l1doors") {
         fileIndex = GFX_OBJ_L1DOORS;
     }
@@ -9583,7 +9584,6 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     if (baseName == "mcirl") {
         fileIndex = GFX_OBJ_MCIRL;
     }
-#if 0
     if (baseName == "candle2") {
         fileIndex = GFX_OBJ_CANDLE2;
     }

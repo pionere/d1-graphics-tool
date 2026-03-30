@@ -140,10 +140,10 @@ protected:
 };
 
 typedef enum gfx_file_index {
-    GFX_OBJ_L1DOORS, // graphics of the doors in the Cathedral (L1Doors.CEL)
-    GFX_OBJ_L2DOORS, // graphics of the doors in the Catacombs (L2Doors.CEL)
-    GFX_OBJ_L3DOORS, // graphics of the doors in the Caves (L3Doors.CEL)
-    GFX_OBJ_MCIRL,   // graphics of the magic circle object (Mcirl.CEL)
+//  GFX_OBJ_L1DOORS, // graphics of the doors in the Cathedral (L1Doors.CEL)
+//  GFX_OBJ_L2DOORS, // graphics of the doors in the Catacombs (L2Doors.CEL)
+//  GFX_OBJ_L3DOORS, // graphics of the doors in the Caves (L3Doors.CEL)
+//  GFX_OBJ_MCIRL,   // graphics of the magic circle object (Mcirl.CEL)
 //  GFX_OBJ_CANDLE2, // graphics of a light stand with a candle (Candle2.CEL)
 //  GFX_OBJ_LSHR,    // graphics of the west-facing shrine (LShrineG.CEL)
 //  GFX_OBJ_RSHR,    // graphics of the east-facing shrine (RShrineG.CEL)
@@ -414,10 +414,10 @@ public:
     static QString clippedtoStr(bool clipped);
 
 private:
-    bool patchCathedralDoors(bool silent);
-    bool patchCatacombsDoors(bool silent);
-    bool patchCavesDoors(bool silent);
-    bool patchMagicCircle(bool silent);
+    // bool patchCathedralDoors(bool silent);
+    // bool patchCatacombsDoors(bool silent);
+    // bool patchCavesDoors(bool silent);
+    // bool patchMagicCircle(bool silent);
     // bool patchCandle(bool silent);
     // bool patchLeftShrine(bool silent);
     // bool patchRightShrine(bool silent);
