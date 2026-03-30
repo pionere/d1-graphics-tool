@@ -2715,7 +2715,7 @@ D1GfxComp *D1Gfx::insertComponent(int compIndex, D1Gfx *gfx)
     // this->modified = true;
     return newComp;
 }
-
+#if 0
 bool D1Gfx::patchCathedralDoors(bool silent)
 {
     constexpr int FRAME_WIDTH = 64;
@@ -3374,7 +3374,7 @@ bool D1Gfx::patchMagicCircle(bool silent)
     }
     return true;
 }
-#if 0
+
 bool D1Gfx::patchCandle(bool silent)
 {
     constexpr int FRAME_WIDTH = 96;

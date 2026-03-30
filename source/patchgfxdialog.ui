@@ -35,7 +35,7 @@
      </item>
      <item>
       <widget class="QComboBox" name="gfxFileComboBox">
-       <item>
+       <!--item>
         <property name="text">
          <string>Doors in the Cathedral (L1Doors.CEL)</string>
         </property>
@@ -54,7 +54,7 @@
         <property name="text">
          <string>Magic circle object (Mcirl.CEL)</string>
         </property>
-       </item>
+       </item-->
        <!--item>
         <property name="text">
          <string>Light stand with a candle (Candle2.CEL)</string>

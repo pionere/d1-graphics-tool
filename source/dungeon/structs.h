@@ -677,7 +677,7 @@ typedef struct ObjectStruct {
 	BOOLEAN _oSolidFlag;
 	BYTE _oBreak; // object_break_mode
 	BYTE _oTrapChance;
-	BYTE _oAlign;
+	BYTE _oUniqAnim;
 	BOOLEAN _oMissFlag;
 	BYTE _oDoorFlag; // object_door_type
 	BYTE _oSelFlag;

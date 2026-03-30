@@ -204,11 +204,8 @@ void InitLvlObjects()
 	leverid = 1;
 }
 
-static void SetObjMapRange(int oi, int x1, int y1, int x2, int y2, int v)
+static void SetObjMapRange(ObjectStruct* os, int x1, int y1, int x2, int y2, int v)
 {
-	ObjectStruct* os;
-
-	os = &objects[oi];
 	// LEVER_EFFECT
 	os->_oVar1 = x1;
 	os->_oVar2 = y1;
@@ -366,22 +363,6 @@ static void AddCandles()
 	AddObject(OBJ_CANDLE2, tx + 2, ty + 1);
 	AddObject(OBJ_CANDLE2, tx - 1, ty + 2);
 	AddObject(OBJ_CANDLE2, tx + 1, ty + 2);
-}
-
-static void AddBookLever(int type, int x1, int y1, int x2, int y2, int qn)
-{
-	int oi;
-	POS32 pos;
-
-	pos = RndLoc5x5();
-	if (pos.x == 0)
-		return;
-
-	oi = AddObject(type, pos.x, pos.y);
-	SetObjMapRange(oi, x1, y1, x2, y2, leverid);
-	leverid++;
-	objects[oi]._oVar6 = objects[oi]._oGfxFrame + 1; // LEVER_BOOK_ANIM
-	objects[oi]._oVar7 = qn; // LEVER_BOOK_QUEST
 }
 
 // generate numobjs groups of barrels
@@ -636,69 +617,78 @@ std::pair<int, int> themeLoc(int x, int y)
 	return std::pair<int, bool>(0, 0);
 }
 
-static int ObjIndex(int x, int y)
+static ObjectStruct* ObjectAt(int x, int y)
 {
 	int oi = dObject[x][y];
 	if (oi == 0) {
-		dProgressErr() << QApplication::tr("ObjIndex: Active object not found at (%1,%2)").arg(x).arg(y);
+		dProgressErr() << QApplication::tr("ObjectAt: Active object not found at (%1,%2)").arg(x).arg(y);
 		return 0;
 	}
 	oi = oi >= 0 ? oi - 1 : -(oi + 1);
-	return oi;
+	return &objects[oi];;
 }
 
-static void AddSKingObjs()
+static void ObjSetSKingRanges()
 {
-	SetObjMapRange(ObjIndex(DBORDERX + 48, DBORDERY + 18), 20, 7, 23, 10, 1);
-	SetObjMapRange(ObjIndex(DBORDERX + 48, DBORDERY + 43), 20, 14, 21, 16, 2);
-	SetObjMapRange(ObjIndex(DBORDERX + 11, DBORDERY + 21), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(DBORDERX + 30, DBORDERY + 19), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(DBORDERX + 33, DBORDERY + 37), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(DBORDERX + 11, DBORDERY + 37), 8, 1, 15, 11, 3);
+	SetObjMapRange(ObjectAt(DBORDERX + 48, DBORDERY + 18), 20, 7, 23, 10, 1);
+	SetObjMapRange(ObjectAt(DBORDERX + 48, DBORDERY + 43), 20, 14, 21, 16, 2);
+	SetObjMapRange(ObjectAt(DBORDERX + 11, DBORDERY + 21), 8, 1, 15, 11, 3);
+	SetObjMapRange(ObjectAt(DBORDERX + 30, DBORDERY + 19), 8, 1, 15, 11, 3);
+	SetObjMapRange(ObjectAt(DBORDERX + 33, DBORDERY + 37), 8, 1, 15, 11, 3);
+	SetObjMapRange(ObjectAt(DBORDERX + 11, DBORDERY + 37), 8, 1, 15, 11, 3);
 }
 
-static void AddBChamObjs()
+static void ObjSetBChamRanges()
 {
-	SetObjMapRange(ObjIndex(DBORDERX + 21, DBORDERY + 14), 17, 0, 21, 5, 1);
-	SetObjMapRange(ObjIndex(DBORDERX + 21, DBORDERY + 30), 13, 0, 16, 5, 2);
+	SetObjMapRange(ObjectAt(DBORDERX + 21, DBORDERY + 14), 17, 0, 21, 5, 1);
+	SetObjMapRange(ObjectAt(DBORDERX + 21, DBORDERY + 30), 13, 0, 16, 5, 2);
 }
 
-static void AddVileObjs()
+static void ObjSetVileRanges()
 {
-	SetObjMapRange(ObjIndex(DBORDERX + 10, DBORDERY + 29), 3, 4, 8, 10, 1);
-	SetObjMapRange(ObjIndex(DBORDERX + 29, DBORDERY + 30), 11, 4, 16, 10, 2);
-	//SetObjMapRange(ObjIndex(DBORDERX + 19, DBORDERY + 20), 7, 11, 13, 18, 3);
+	SetObjMapRange(ObjectAt(DBORDERX + 10, DBORDERY + 29), 3, 4, 8, 10, 1);
+	SetObjMapRange(ObjectAt(DBORDERX + 29, DBORDERY + 30), 11, 4, 16, 10, 2);
+	//SetObjMapRange(ObjectAt(DBORDERX + 19, DBORDERY + 20), 7, 11, 13, 18, 3);
 }
 
-/*static void AddMazeObjs()
+/*static void ObjSetMazeRanges()
 {
-	SetObjMapRange(ObjIndex(DBORDERX + 33, DBORDERY + 25), 0?, 0?, 45?, ?, 1);
-	SetObjMapRange(ObjIndex(DBORDERX + 15, DBORDERY + 51), ?, ?, ?, ?, ?);
-	SetObjMapRange(ObjIndex(DBORDERX + 27, DBORDERY + 51), ?, ?, ?, ?, ?);
-	SetObjMapRange(ObjIndex(DBORDERX + 33, DBORDERY + 57), ?, ?, ?, ?, ?);
-	SetObjMapRange(ObjIndex(DBORDERX + 79, DBORDERY + 51), ?, ?, ?, ?, ?);
+	SetObjMapRange(ObjectAt(DBORDERX + 33, DBORDERY + 25), 0?, 0?, 45?, ?, 1);
+	SetObjMapRange(ObjectAt(DBORDERX + 15, DBORDERY + 51), ?, ?, ?, ?, ?);
+	SetObjMapRange(ObjectAt(DBORDERX + 27, DBORDERY + 51), ?, ?, ?, ?, ?);
+	SetObjMapRange(ObjectAt(DBORDERX + 33, DBORDERY + 57), ?, ?, ?, ?, ?);
+	SetObjMapRange(ObjectAt(DBORDERX + 79, DBORDERY + 51), ?, ?, ?, ?, ?);
 }*/
 
-static void AddDiabObjs()
+static void ObjSetDiabRanges()
 {
-	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[0]._spx + 5, DBORDERY + 2 * pSetPieces[0]._spy + 5), pSetPieces[1]._spx, pSetPieces[1]._spy, pSetPieces[1]._spx + 11, pSetPieces[1]._spy + 12, 1);
-	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[1]._spx + 13, DBORDERY + 2 * pSetPieces[1]._spy + 10), pSetPieces[2]._spx, pSetPieces[2]._spy, pSetPieces[2]._spx + 11, pSetPieces[2]._spy + 11, 2);
-	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 2), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
-	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 14), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
+	SetObjMapRange(ObjectAt(DBORDERX + 2 * pSetPieces[0]._spx + 5, DBORDERY + 2 * pSetPieces[0]._spy + 5), pSetPieces[1]._spx, pSetPieces[1]._spy, pSetPieces[1]._spx + 11, pSetPieces[1]._spy + 12, 1);
+	SetObjMapRange(ObjectAt(DBORDERX + 2 * pSetPieces[1]._spx + 13, DBORDERY + 2 * pSetPieces[1]._spy + 10), pSetPieces[2]._spx, pSetPieces[2]._spy, pSetPieces[2]._spx + 11, pSetPieces[2]._spy + 11, 2);
+	SetObjMapRange(ObjectAt(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 2), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
+	SetObjMapRange(ObjectAt(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 14), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
 }
 
 #ifdef HELLFIRE
-static void AddL5StoryBook(int bookidx, int ox, int oy)
+static void ObjAddL5StoryBook(int bookidx, int ox, int oy)
 {
 	ObjectStruct* os;
 	int oi = AddObject(OBJ_L5BOOK, ox, oy);
 	// assert(oi != -1);
 
 	os = &objects[oi];
-	// assert(os->_oGfxFrame == objectdata[OBJ_L5BOOK].oBaseFrame);
-	os->_oVar4 = objectdata[OBJ_L5BOOK].oBaseFrame + 1; // STORY_BOOK_READ_FRAME
 	os->_oVar2 = TEXT_BOOK4 + bookidx;                  // STORY_BOOK_MSG
 	os->_oVar5 = BK_STORY_NAKRUL_1 + bookidx;           // STORY_BOOK_NAME
+}
+
+static void AddL5StoryBook(int oi)
+{
+	ObjectStruct* os;
+
+	os = &objects[oi];
+	os->_oUniqAnim = TRN_MON_THIN_V3;
+	// assert(os->_oGfxFrame == objectdata[OBJ_L5BOOK].oBaseFrame);
+	os->_oAnimFrame = objectdata[OBJ_L5BOOK].oBaseFrame - 2;
+	os->_oVar6 = objectdata[OBJ_L5BOOK].oBaseFrame - 1; // STORY_BOOK_READ_ANIM
 }
 
 static void AddNakrulBook(int oi)
@@ -724,8 +714,10 @@ static void AddNakrulBook(int oi)
 	bookidx += QNB_BOOK_A;
 
 	os = &objects[oi];
+	os->_oUniqAnim = TRN_MON_THIN_V3;
 	// assert(os->_oGfxFrame == objectdata[OBJ_NAKRULBOOK].oBaseFrame);
-	os->_oVar4 = objectdata[OBJ_NAKRULBOOK].oBaseFrame + 1; // STORY_BOOK_READ_FRAME
+	os->_oAnimFrame = objectdata[OBJ_NAKRULBOOK].oBaseFrame - 2;
+	os->_oVar6 = objectdata[OBJ_NAKRULBOOK].oBaseFrame - 1; // STORY_BOOK_READ_ANIM
 	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A;         // STORY_BOOK_MSG
 	os->_oVar3 = bookidx;                                   // STORY_BOOK_NAKRUL_IDX
 	os->_oVar5 = BK_NAKRUL_SPELL;                           // STORY_BOOK_NAME
@@ -738,7 +730,7 @@ static void AddLvl2xBooks(int bookidx)
 	if (pos.x == 0)
 		return;
 
-	AddL5StoryBook(bookidx, pos.x, pos.y);
+	ObjAddL5StoryBook(bookidx, pos.x, pos.y);
 	AddObject(OBJ_L5CANDLE, pos.x - 1, pos.y - 1);
 	AddObject(OBJ_L5CANDLE, pos.x - 1, pos.y + 1);
 }
@@ -795,22 +787,22 @@ void InitObjects()
 		}
 	}
 	if (pSetPieces[0]._sptype == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
-		AddBookLever(OBJ_STEELTOME, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 5, Q_WARLORD);
+		InitRndLocObj5x5(OBJ_STEELTOME);
 	}
 	if (pSetPieces[0]._sptype == SPT_BCHAMB) { // QuestStatus(Q_BCHAMB)
-		AddBookLever(OBJ_MYTHICBOOK, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + 5, pSetPieces[0]._spy + 5, Q_BCHAMB);
+		InitRndLocObj5x5(OBJ_MYTHICBOOK);
 	}
 	if (pSetPieces[0]._sptype == SPT_BLIND) { // QuestStatus(Q_BLIND)
-		AddBookLever(OBJ_BLINDBOOK, pSetPieces[0]._spx, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 11, pSetPieces[0]._spy + 10, Q_BLIND);
+		InitRndLocObj5x5(OBJ_BLINDBOOK);
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_SKELKING) {
-		AddSKingObjs();
+		AddSKingRanges();
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
-		AddBChamObjs();
+		AddBChamRanges();
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_BETRAYER) {
-		AddVileObjs();
+		AddVileRanges();
 	}
 	switch (currLvl._dLevelIdx) {
 	case DLV_CATHEDRAL4:
@@ -823,7 +815,7 @@ void InitObjects()
 		AddStoryBook();
 		break;
 	case DLV_HELL4:
-		AddDiabObjs();
+        AddDiabRanges();
 		return;
 #ifdef HELLFIRE
 	case DLV_CRYPT1:
@@ -981,6 +973,18 @@ static void AddChest(int oi, int realtype)
 	}
 }
 
+static void AddBanner(int oi)
+{
+	ObjectStruct* os;
+	int8_t dir = -1;
+
+	if (dir < 0) {
+		dir = random_(147, 3);
+	}
+	os = &objects[oi];
+	os->_oGfxFrame = 1 + dir;
+}
+
 static void AddSarc(int oi)
 {
 	ObjectStruct* os;
@@ -1070,7 +1074,8 @@ static void AddArmorStand(int oi, int realtype)
 		dir = random_(147, 2);
 	}
 	os = &objects[oi];
-	os->_oGfxFrame = objectdata[OBJ_ARMORSTAND].oBaseFrame + 2 * dir + (inactive ? 1 : 0);
+	os->_oGfxFrame = objectdata[OBJ_ARMORSTAND].oBaseFrame + 2 * dir;
+	os->_oAnimFrame = inactive ? 0 : (os->_oGfxFrame - 1);
 	os->_oMissFlag = inactive ? TRUE : objectdata[OBJ_ARMORSTAND].oMissFlag;
 	os->_oModeFlags = inactive ? (objectdata[OBJ_ARMORSTAND].oModeFlags & ~OMF_ACTIVE) : objectdata[OBJ_ARMORSTAND].oModeFlags;
 	os->_oSelFlag = inactive ? 0 : objectdata[OBJ_ARMORSTAND].oSelFlag;
@@ -1092,35 +1097,62 @@ static void AddWeaponRack(int oi, int realtype)
 		dir = random_(147, 2);
 	}
 	os = &objects[oi];
-	os->_oGfxFrame = objectdata[OBJ_WEAPONRACK].oBaseFrame + 2 * dir + (inactive ? 1 : 0);
+	os->_oGfxFrame = objectdata[OBJ_WEAPONRACK].oBaseFrame + 2 * dir;
+	os->_oAnimFrame = inactive ? 0 : (os->_oGfxFrame - 1);
 	os->_oMissFlag = inactive ? TRUE : objectdata[OBJ_WEAPONRACK].oMissFlag;
 	os->_oModeFlags = inactive ? (objectdata[OBJ_WEAPONRACK].oModeFlags & ~OMF_ACTIVE) : objectdata[OBJ_WEAPONRACK].oModeFlags;
 	os->_oSelFlag = inactive ? 0 : objectdata[OBJ_WEAPONRACK].oSelFlag;
 	//os->_oRndSeed = NextRndSeed();
 }
 
-static void ObjAddBloodBook(int oi)
+static inline void AddLeverEffect(ObjectStruct* os, int x1, int y1, int x2, int y2)
 {
-	ObjectStruct* os;
-
-	os = &objects[oi];
-	//os->_oRndSeed = NextRndSeed();
-	os->_oVar5 = BK_BLOOD;                   // STORY_BOOK_NAME
-	os->_oVar6 = os->_oGfxFrame + 1;         // LEVER_BOOK_ANIM
-	os->_oVar7 = Q_BLOOD;                    // LEVER_BOOK_QUEST
-	SetObjMapRange(oi, 0, 0, 0, 0, leverid); // NULL_LVR_EFFECT
+	SetObjMapRange(os, x1, y1, x2, y2, leverid);
 	leverid++;
 }
 
-static void ObjAddBook(int oi, int bookidx)
+static void AddBook(int oi, int bookidx)
 {
 	ObjectStruct* os;
+	// int8_t dir;
 
 	os = &objects[oi];
-	os->_oVar5 = bookidx; // STORY_BOOK_NAME
+	if (os->_oGfxFrame == 0) {
+		int8_t dir = random_(147, 2);
+		// os->_oGfxFrame = objectdata[OBJ_BOOK1].oBaseFrame + 3 * dir;
+		os->_oGfxFrame = 3 * (dir + 1);
+	}
+	os->_oAnimFrame = os->_oGfxFrame - 2;
+	os->_oVar6 = os->_oGfxFrame - 1;     // LEVER_BOOK_READ_ANIM
+
+	os->_oUniqAnim = objectdata[os->_otype].ofindex == OFILE_BOOK1 ? TRN_MON_THIN_V2 : TRN_NONE;
+
+	static_assert((int)BK_BLOOD == (int)OBJ_BLOODBOOK - (int)OBJ_BLINDBOOK + (int)BK_BLIND, "AddBook requires ordered enums I.");
+	static_assert((int)BK_STEEL == (int)OBJ_STEELTOME - (int)OBJ_BLINDBOOK + (int)BK_BLIND, "AddBook requires ordered enums II.");
+	static_assert((int)BK_VILENESS == (int)OBJ_VILEBOOK - (int)OBJ_BLINDBOOK + (int)BK_BLIND, "AddBook requires ordered enums IV.");
+	static_assert((int)BK_MYTHIC == (int)OBJ_MYTHICBOOK - (int)OBJ_BLINDBOOK + (int)BK_BLIND, "AddBook requires ordered enums V.");
+
+	os->_oVar5 = os->_otype - (int)OBJ_BLINDBOOK + (int)BK_BLIND; // STORY_BOOK_NAME
+	if (os->_oVar5 == BK_BLOOD) {
+		//os->_oRndSeed = NextRndSeed();
+		os->_oVar7 = Q_BLOOD;           // LEVER_BOOK_QUEST
+		AddLeverEffect(os, 0, 0, 0, 0); // NULL_LVR_EFFECT
+	} else if (os->_oVar5 == BK_STEEL) {
+		// assert(pSetPieces[0]._sptype == SPT_WARLORD);
+		os->_oVar7 = Q_WARLORD;         // LEVER_BOOK_QUEST
+		AddLeverEffect(os, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 5);
+	} else if (os->_oVar5 == BK_MYTHIC) {
+		// assert(pSetPieces[0]._sptype == SPT_BCHAMB);
+		os->_oVar7 = Q_BCHAMB;          // LEVER_BOOK_QUEST
+		AddLeverEffect(os, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + 5, pSetPieces[0]._spy + 5);
+	} else if (os->_oVar5 == BK_BLIND) {
+		// assert(pSetPieces[0]._sptype == SPT_BLIND);
+		os->_oVar7 = Q_BLIND;           // LEVER_BOOK_QUEST
+		AddLeverEffect(os, pSetPieces[0]._spx, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 11, pSetPieces[0]._spy + 10);
+	}
 }
 
-static void ObjAddBook2(int oi, int realtype)
+static void AddBook2(int oi, int realtype)
 {
 	ObjectStruct* os;
 	int8_t inactive = 0;
@@ -1135,11 +1167,13 @@ static void ObjAddBook2(int oi, int realtype)
 		dir = random_(147, 2);
 	}
 	os = &objects[oi];
-	os->_oGfxFrame = objectdata[OBJ_BOOK2].oBaseFrame + 3 * dir + (inactive ? 2 : 0);
+	os->_oGfxFrame = objectdata[OBJ_BOOK2].oBaseFrame + 3 * dir;
+	os->_oAnimFrame = inactive ? 0 : (os->_oGfxFrame - 2);
 	// os->_oMissFlag = inactive ? TRUE : objectdata[OBJ_BOOK2].oMissFlag;
 	os->_oModeFlags = inactive ? (objectdata[OBJ_BOOK2].oModeFlags & ~OMF_ACTIVE) : objectdata[OBJ_BOOK2].oModeFlags;
 	os->_oSelFlag = inactive ? 0 : objectdata[OBJ_BOOK2].oSelFlag;
 	//os->_oRndSeed = NextRndSeed();
+    os->_oVar5 = BK_LECTERN; // STORY_BOOK_NAME
 }
 
 static void AddCauldronGoatShrine(int oi)
@@ -1186,26 +1220,32 @@ static void AddMagicCircle(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	os->_oVar5 = 0; // VILE_CIRCLE_PROGRESS
+	os->_oVar5 = 0;                                          // VILE_CIRCLE_PROGRESS
+	// assert(objectdata[OBJ_MCIRCLE1].oBaseFrame == os->_oGfxFrame);
+	// os->_oVar6 = objectdata[OBJ_MCIRCLE1].oBaseFrame + 1; // CIRCLE_ACTIVE_FRAME
 }
 
 static void AddStoryBook(int oi)
 {
 	ObjectStruct* os;
-	BYTE bookframe, idx;
+	BYTE bookframe, trn, idx;
 
 	static_assert((int)DLV_CATHEDRAL4 == 4, "AddStoryBook converts DLV to index with shift I.");
 	static_assert((int)DLV_CATACOMBS4 == 8, "AddStoryBook converts DLV to index with shift II.");
 	static_assert((int)DLV_CAVES4 == 12, "AddStoryBook converts DLV to index with shift III.");
 	idx = (currLvl._dLevelIdx >> 2) - 1;
 	bookframe = quests[Q_DIABLO]._qvar1;
+	// trn = bookframe == 0 ? TRN_UMON_TWH : (bookframe == 1 ? TRN_MON_THIN_V3 : TRN_NONE);
+	trn = bookframe == 0 ? TRN_MON_THIN_V2 : (bookframe == 1 ? TRN_MON_THIN_V3 : TRN_UMON_TWH);
 
 	os = &objects[oi];
 	// os->_oVar1 = bookframe;
 	os->_oVar2 = 3 * bookframe + idx + TEXT_BOOK11;      // STORY_BOOK_MSG
 	os->_oVar5 = 3 * bookframe + idx + BK_STORY_MAINA_1; // STORY_BOOK_NAME
-	os->_oGfxFrame = 5 - 2 * bookframe;                  //
-	os->_oVar4 = os->_oGfxFrame + 1;                     // STORY_BOOK_READ_FRAME
+	os->_oUniqAnim = trn;
+	// os->_oGfxFrame = objectdata[OBJ_STORYBOOK].oBaseFrame;
+	os->_oAnimFrame = objectdata[OBJ_STORYBOOK].oBaseFrame - 2;
+	os->_oVar6 = objectdata[OBJ_STORYBOOK].oBaseFrame - 1; // STORY_BOOK_READ_ANIM
 }
 
 static void AddTorturedMaleBody(int oi)
@@ -1272,11 +1312,7 @@ int AddObject(int type, int ox, int oy)
 	//os->_oAnimCnt = 0;
 	os->_oAnimFrame = 0;
 	if (ofd->oAnimFlag != OAM_NONE) {
-		if (ofd->oAnimFlag == OAM_SINGLE) {
-			os->_oAnimFlag = OAM_NONE;
-			os->_oAnimFrame = 1;
-		} else {
-			// assert(ofd->oAnimFlag == OAM_LOOP);
+		if (ofd->oAnimFlag == OAM_LOOP) {
 #if 0
 			os->_oAnimCnt = random_low(146, os->_oAnimFrameLen);
 			os->_oAnimFrame = RandRangeLow(1, os->_oAnimLen);
@@ -1284,6 +1320,10 @@ int AddObject(int type, int ox, int oy)
 			random_low(146, 1);
 			RandRangeLow(1, 1);
 #endif
+		} else {
+			// assert(ofd->oAnimFlag == OAM_ONCE || ofd->oAnimFlag == OAM_TRANS);
+			os->_oAnimFrame = ofd->oAnimFlag == OAM_ONCE ? 1 : (os->_oGfxFrame - 1);
+			os->_oAnimFlag = OAM_NONE;
 		}
 	}
 	os->_oSolidFlag = ofd->oSolidFlags; // & 1; -- does not matter at the moment
@@ -1353,6 +1393,9 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_CHEST3:
 			AddChest(oi, realType);
 			break;
+		case OBJ_BANNER:
+			AddBanner(oi);
+			break;
 		case OBJ_TORTURE:
 			AddTorture(oi, realType);
 			break;
@@ -1399,25 +1442,17 @@ int AddObject(int type, int ox, int oy)
 			AddWeaponRack(oi, realType);
 			break;
 		case OBJ_BLOODBOOK:
-			ObjAddBloodBook(oi);
-			break;
-		case OBJ_ANCIENTBOOK:
-			ObjAddBook(oi, BK_ANCIENT);
-			break;
-		case OBJ_STEELTOME:
-			ObjAddBook(oi, BK_STEEL);
-			break;
 		case OBJ_BLINDBOOK:
-			ObjAddBook(oi, BK_BLIND);
-			break;
+		case OBJ_STEELTOME:
 		case OBJ_MYTHICBOOK:
-			ObjAddBook(oi, BK_MYTHIC);
-			break;
 		case OBJ_VILEBOOK:
-			ObjAddBook(oi, BK_VILENESS);
+			AddBook(oi);
+			break;
+		case OBJ_BOOK1:
+			AddBook1(oi, realType);
 			break;
 		case OBJ_BOOK2:
-			ObjAddBook2(oi, realType);
+			AddBook2(oi, realType);
 			break;
 		case OBJ_GOATSHRINE:
 		case OBJ_CAULDRON:
@@ -1441,6 +1476,9 @@ int AddObject(int type, int ox, int oy)
 			AddTorturedFemaleBody(oi);
 			break;
 #ifdef HELLFIRE
+		case OBJ_L5BOOK:
+			AddL5StoryBook(oi);
+			break;
 		case OBJ_NAKRULBOOK:
 			AddNakrulBook(oi);
 			break;
