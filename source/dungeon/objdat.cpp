@@ -163,11 +163,11 @@ const ObjTypeConv objTypeConv[NUM_OBJVERSIONS + 1] = {
                      { 0,              0,           0,           }, // trapped chest in random direction
 /*OBJ_TCHEST1*/      { OBJ_CHEST1,     -1,          1,           }, // trapped chest in random direction
 /*OBJ_TLCHEST1*/     { OBJ_CHEST1,     1,           1,           }, // trapped chest in SW-NE direction
-/*OBJ_TRCHEST1*/     { OBJ_CHEST1,     0,           1,           }, // trapped chest in SE-Nw direction
+/*OBJ_TRCHEST1*/     { OBJ_CHEST1,     0,           1,           }, // trapped chest in SE-NW direction
 /*OBJ_LCHEST1*/      { OBJ_CHEST1,     1,           -1,          }, // chest in SW-NE direction with optional trap
-/*OBJ_RCHEST1*/      { OBJ_CHEST1,     0,           -1,          }, // chest in SE-Nw direction with optional trap
+/*OBJ_RCHEST1*/      { OBJ_CHEST1,     0,           -1,          }, // chest in SE-NW direction with optional trap
 /*OBJ_NLCHEST1*/     { OBJ_CHEST1,     1,           0,           }, // non-trapped chest in SW-NE
-/*OBJ_NRCHEST1*/     { OBJ_CHEST1,     0,           0,           }, // non-trapped chest in SE-Nw
+/*OBJ_NRCHEST1*/     { OBJ_CHEST1,     0,           0,           }, // non-trapped chest in SE-NW
 /*OBJ_TCHEST2*/      { OBJ_CHEST2,     -1,          1,           },
 /*OBJ_TLCHEST2*/     { OBJ_CHEST2,     1,           1,           },
 /*OBJ_TRCHEST2*/     { OBJ_CHEST2,     0,           1,           },
@@ -185,13 +185,13 @@ const ObjTypeConv objTypeConv[NUM_OBJVERSIONS + 1] = {
 /*OBJ_WEAPONRACKN*/  { OBJ_WEAPONRACK, -1,          1,           }, // inactive weaponrack in random direction
 /*OBJ_WEAPONRACKL*/  { OBJ_WEAPONRACK, 0,           0,           }, // active weaponrack in SW-NE direction
 /*OBJ_WEAPONRACKLN*/ { OBJ_WEAPONRACK, 0,           1,           }, // inactive weaponrack in SW-NE direction
-/*OBJ_WEAPONRACKR*/  { OBJ_WEAPONRACK, 1,           0,           }, // active weaponrack in SE-Nw direction
-/*OBJ_WEAPONRACKRN*/ { OBJ_WEAPONRACK, 1,           1,           }, // inactive weaponrack in SE-Nw direction
+/*OBJ_WEAPONRACKR*/  { OBJ_WEAPONRACK, 1,           0,           }, // active weaponrack in SE-NW direction
+/*OBJ_WEAPONRACKRN*/ { OBJ_WEAPONRACK, 1,           1,           }, // inactive weaponrack in SE-NW direction
 /*OBJ_ARMORSTANDN*/  { OBJ_ARMORSTAND, -1,          1,           }, // inactive armorstand in random direction
 /*OBJ_ARMORSTANDL*/  { OBJ_ARMORSTAND, 0,           0,           }, // active armorstand in SW-NE direction
 /*OBJ_ARMORSTANDLN*/ { OBJ_ARMORSTAND, 0,           1,           }, // inactive armorstand in SW-NE direction
-/*OBJ_ARMORSTANDR*/  { OBJ_ARMORSTAND, 1,           0,           }, // active armorstand in SE-Nw direction
-/*OBJ_ARMORSTANDRN*/ { OBJ_ARMORSTAND, 1,           1,           }, // inactive armorstand in SE-Nw direction
+/*OBJ_ARMORSTANDR*/  { OBJ_ARMORSTAND, 1,           0,           }, // active armorstand in SE-NW direction
+/*OBJ_ARMORSTANDRN*/ { OBJ_ARMORSTAND, 1,           1,           }, // inactive armorstand in SE-NW direction
 /*OBJ_BOOK1N*/       { OBJ_BOOK1,      -1,          1,           BK_SKILL }, // inactive book1-stand in random direction
 /*OBJ_BOOK1L*/       { OBJ_BOOK1,      0,           0,           BK_SKILL }, // active book1-stand in SW-NE direction
 /*OBJ_BOOK1LN*/      { OBJ_BOOK1,      0,           1,           BK_SKILL }, // inactive book1-stand in SW-NE direction
@@ -201,10 +201,10 @@ const ObjTypeConv objTypeConv[NUM_OBJVERSIONS + 1] = {
 /*OBJ_BOOK2N*/       { OBJ_BOOK2,      -1,          1,           }, // inactive book2-stand in random direction
 /*OBJ_BOOK2L*/       { OBJ_BOOK2,      0,           0,           }, // active book2-stand in SW-NE direction
 /*OBJ_BOOK2LN*/      { OBJ_BOOK2,      0,           1,           }, // inactive book2-stand in SW-NE direction
-/*OBJ_BOOK2R*/       { OBJ_BOOK2,      1,           0,           }, // active book2-stand in SE-Nw direction
-/*OBJ_BOOK2RN*/      { OBJ_BOOK2,      1,           1,           }, // inactive book2-stand in SE-Nw direction
+/*OBJ_BOOK2R*/       { OBJ_BOOK2,      1,           0,           }, // active book2-stand in SE-NW direction
+/*OBJ_BOOK2RN*/      { OBJ_BOOK2,      1,           1,           }, // inactive book2-stand in SE-NW direction
 /*OBJ_TORTUREL*/     { OBJ_TORTURE,    0,          -1,           }, // random hooked body on the SW-NE wall
-/*OBJ_TORTURER*/     { OBJ_TORTURE,    1,          -1,           }, // random hooked body on the SE-Nw wall
+/*OBJ_TORTURER*/     { OBJ_TORTURE,    1,          -1,           }, // random hooked body on the SE-NW wall
 /*OBJ_TORTUREL1*/    { OBJ_TORTURE,    0,           0,           }, // 1. hooked body on the SW-NE wall
 /*OBJ_TORTUREL2*/    { OBJ_TORTURE,    0,           1,           }, // 2. hooked body on the SW-NE wall
 /*OBJ_TORTUREL3*/    { OBJ_TORTURE,    0,           2,           }, // 3. hooked body on the SW-NE wall
