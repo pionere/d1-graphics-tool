@@ -21,6 +21,114 @@ typedef enum window_messages {
 	DVL_DWM_RETOWN,  // restart in town
 } window_messages;
 
+typedef enum _trn_id {
+	TRN_NONE,
+
+	TRN_MON_FIRST,
+	TRN_MON_ZOMBIE_BR = TRN_MON_FIRST,
+	TRN_MON_ZOMBIE_GREY,
+	TRN_MON_ZOMBIE_YEL,
+	TRN_MON_FALLSP_FALT,
+	TRN_MON_FALLSP_DARK,
+	TRN_MON_FALLSP_BLUE,
+	TRN_MON_SKELSD_WHITE,
+	TRN_MON_SKELSD_SKELT,
+	TRN_MON_SKELSD_BLACK,
+	TRN_MON_SCAV_BR,
+	TRN_MON_SCAV_BE,
+	TRN_MON_SCAV_WHITE,
+	TRN_MON_SNEAK_V1,
+	TRN_MON_SNEAK_V2,
+	TRN_MON_SNEAK_V3,
+	TRN_MON_GOATMC_BEIGE,
+	TRN_MON_GOATMC_RED,
+	TRN_MON_GOATMC_GRAY,
+	TRN_MON_BAT_RED,
+	TRN_MON_BAT_GREY,
+	TRN_MON_BAT_ORANGE,
+	TRN_MON_ACID_BLK,
+	TRN_MON_ACID_BLUE,
+	TRN_MON_ACID_RED,
+	TRN_MON_FAT_BLUE,
+	TRN_MON_FAT_BG,
+	TRN_MON_FAT_RED,
+	TRN_MON_MAGMA_YEL,
+	TRN_MON_MAGMA_BLUE,
+	TRN_MON_MAGMA_WIERD,
+	TRN_MON_RHINO_ORANGE,
+	TRN_MON_RHINO_BLUE,
+	TRN_MON_RHINO_BR,
+	TRN_MON_THIN_V1,
+	TRN_MON_THIN_V2,
+	TRN_MON_THIN_V3,
+	TRN_MON_GARG_E,
+	TRN_MON_GARG_BR,
+	TRN_MON_GARG_BLUE,
+	TRN_MON_MEGA_GUARD,
+	TRN_MON_MEGA_VTEXL,
+	TRN_MON_MEGA_BALR,
+	TRN_MON_SNAKE_R,
+	TRN_MON_SNAKE_G,
+	TRN_MON_SNAKE_B,
+	TRN_MON_BLACK_RT,
+	TRN_MON_BLACK_BT,
+	TRN_MON_BLACK_BE,
+	TRN_MON_SUCC_B,
+	TRN_MON_SUCC_RW,
+	TRN_MON_SUCC_BW,
+	TRN_MON_MAGE_G,
+	TRN_MON_MAGE_GD,
+	TRN_MON_MAGE_BK,
+	TRN_MON_LAST = TRN_MON_MAGE_BK,
+
+	TRN_UMON_FIRST,
+	TRN_UMON_BSDB = TRN_UMON_FIRST,
+	TRN_UMON_GENERAL,
+	TRN_UMON_BNG,
+	TRN_UMON_REDV,
+	TRN_UMON_BLKJD,
+	TRN_UMON_BHKA,
+	TRN_UMON_BSTS,
+	TRN_UMON_PTU,
+	TRN_UMON_BR,
+	TRN_UMON_ETH,
+	TRN_UMON_SHBT,
+	TRN_UMON_DE,
+	TRN_UMON_GTQ,
+	TRN_UMON_BHBS,
+	TRN_UMON_RCRN,
+	TRN_UMON_SKFR,
+	TRN_UMON_TSPO,
+	TRN_UMON_PMR,
+	TRN_UMON_MTD,
+	TRN_UMON_BASHTB,
+	TRN_UMON_DB,
+	TRN_UMON_SHDR,
+	TRN_UMON_BFTP,
+	TRN_UMON_BFDS,
+	TRN_UMON_BGBL,
+	TRN_UMON_DSFM,
+	TRN_UMON_BLF,
+	TRN_UMON_BHSM,
+	TRN_UMON_BSM,
+	TRN_UMON_TWH,
+	TRN_UMON_WFTD,
+	TRN_UMON_LAST = TRN_UMON_WFTD,
+
+	TRN_PLR_FIRST,
+	TRN_PLR_STONE = TRN_PLR_FIRST,
+	TRN_PLR_BLUE,
+	TRN_PLR_GRAY,
+	TRN_PLR_NONE,
+	TRN_PLR_ORANGE,
+	TRN_PLR_CORAL,
+	TRN_PLR_INFRA,
+	TRN_PLR_RED,
+	TRN_PLR_LAST = TRN_PLR_RED,
+
+	NUM_TRNS = TRN_PLR_LAST
+} _trn_id;
+
 typedef enum item_indexes {
 	IDI_GOLD,
 	IDI_WARRSWORD,
@@ -3106,7 +3214,7 @@ typedef enum object_graphic_id {
 	OFILE_WTORCH2,
 	OFILE_WTORCH1,
 	OFILE_BCASE,
-	//OFILE_BSHELF,
+	OFILE_BSHELF,
 	OFILE_WEAPSTND,
 	//OFILE_BKURNS,
 	//OFILE_WATERJUG,
@@ -3125,7 +3233,8 @@ typedef enum object_graphic_id {
 	OFILE_MFOUNTN,
 	OFILE_TFOUNTN,
 	OFILE_ALTBOY,
-	OFILE_MCIRL,
+	OFILE_MCIRL1,
+	OFILE_MCIRL2,
 	OFILE_BKSLBRNT,
 	OFILE_MUSHPTCH,
 	OFILE_LZSTAND,
@@ -3170,8 +3279,11 @@ typedef enum object_mode_flags { // TODO: merge with object_break_mode?
 
 typedef enum object_anim_mode {
 	OAM_NONE,
-	OAM_SINGLE,
-	OAM_LOOP,
+	OAM_LOOP,  // animation is played continuously from the first frame
+	OAM_ONCE,  // animation is played once starting from the first frame
+	OAM_TRANS, // animation is a transient frame staring active
+	OAM_SINGLE = OAM_NONE, // animation is a transient frame staring inactive
+	OAM_SWITCH = OAM_NONE, // no animation, just switching frames
 } object_anim_mode;
 
 typedef enum object_break_mode {
@@ -4170,9 +4282,7 @@ typedef enum _object_id {
 	//OBJ_CANDLE1,
 	OBJ_CANDLE2,
 	//OBJ_CANDLEO,
-	OBJ_BANNERL,
-	OBJ_BANNERM,
-	OBJ_BANNERR,
+	OBJ_BANNER,
 	//OBJ_SKPILE,
 	//OBJ_SKSTICK1,
 	//OBJ_SKSTICK2,
@@ -4201,7 +4311,6 @@ typedef enum _object_id {
 	//OBJ_WATER,
 	OBJ_TRAPL,
 	OBJ_TRAPR,
-	//OBJ_BOOKSHELF,
 	//OBJ_WEAPRACK,
 	OBJ_BARREL,
 	OBJ_BARRELEX,
@@ -4209,17 +4318,19 @@ typedef enum _object_id {
 	OBJ_SHRINER,
 	OBJ_BOOKCASEL,
 	OBJ_BOOKCASER,
+	OBJ_BOOKSHELFL,
+	OBJ_BOOKSHELFR,
 	//OBJ_BOOKCANDLE,
 	OBJ_BLOODFTN,
 	OBJ_DECAP,
-	OBJ_ANCIENTBOOK,
-	OBJ_VILEBOOK,
-	OBJ_MYTHICBOOK,
+	OBJ_BOOK1,
 	OBJ_BOOK2,
 	//OBJ_BOOKLVR,
 	OBJ_BLINDBOOK,
 	OBJ_BLOODBOOK,
 	OBJ_STEELTOME,
+	OBJ_VILEBOOK,
+	OBJ_MYTHICBOOK,
 	OBJ_PEDESTAL,
 	OBJ_L3LDOOR,
 	OBJ_L3RDOOR,
@@ -4240,7 +4351,6 @@ typedef enum _object_id {
 	OBJ_LAZSTAND,
 	//OBJ_SLAINHERO,
 	OBJ_SIGNCHEST,
-	//OBJ_BOOKSHELFR,
 #ifdef HELLFIRE
 	OBJ_L5LDOOR,
 	OBJ_L5RDOOR,
@@ -4291,20 +4401,21 @@ typedef enum _object_id {
 	OBJ_BOOK1LN      = -34, // inactive book1-stand in SW-NE direction
 	OBJ_BOOK1R       = -35, // active book1-stand in SE-NW direction
 	OBJ_BOOK1RN      = -36, // inactive book1-stand in SE-NW direction
-	OBJ_BOOK2N       = -37, // inactive book2-stand in random direction
-	OBJ_BOOK2L       = -38, // active book2-stand in SW-NE direction
-	OBJ_BOOK2LN      = -39, // inactive book2-stand in SW-NE direction
-	OBJ_BOOK2R       = -40, // active book2-stand in SE-NW direction
-	OBJ_BOOK2RN      = -41, // inactive book2-stand in SE-NW direction
-	OBJ_TORTUREL     = -42, // random hooked body on the SW-NE wall
-	OBJ_TORTURER     = -43, // random hooked body on the SE-NW wall
-	OBJ_TORTUREL1    = -44, // 1. hooked body on the SW-NE wall
-	OBJ_TORTUREL2    = -45, // 2. hooked body on the SW-NE wall
-	OBJ_TORTUREL3    = -46, // 3. hooked body on the SW-NE wall
-	OBJ_TORTURER1    = -47, // 1. hooked body on the SE-NW wall
-	OBJ_TORTURER2    = -48, // 2. hooked body on the SE-NW wall
-	OBJ_TORTURER3    = -49, // 3. hooked body on the SE-NW wall
-	NUM_OBJVERSIONS = 49,
+	OBJ_ANCIENTBOOK  = -37,
+	OBJ_BOOK2N       = -38, // inactive book2-stand in random direction
+	OBJ_BOOK2L       = -39, // active book2-stand in SW-NE direction
+	OBJ_BOOK2LN      = -40, // inactive book2-stand in SW-NE direction
+	OBJ_BOOK2R       = -41, // active book2-stand in SE-NW direction
+	OBJ_BOOK2RN      = -42, // inactive book2-stand in SE-NW direction
+	OBJ_TORTUREL     = -43, // random hooked body on the SW-NE wall
+	OBJ_TORTURER     = -44, // random hooked body on the SE-NW wall
+	OBJ_TORTUREL1    = -45, // 1. hooked body on the SW-NE wall
+	OBJ_TORTUREL2    = -46, // 2. hooked body on the SW-NE wall
+	OBJ_TORTUREL3    = -47, // 3. hooked body on the SW-NE wall
+	OBJ_TORTURER1    = -48, // 1. hooked body on the SE-NW wall
+	OBJ_TORTURER2    = -49, // 2. hooked body on the SE-NW wall
+	OBJ_TORTURER3    = -50, // 3. hooked body on the SE-NW wall
+	NUM_OBJVERSIONS = 50,
 } _object_id;
 
 typedef enum quest_id {
@@ -4411,6 +4522,8 @@ typedef enum quest_var1_state {
 } quest_var1_state;
 
 typedef enum book_id {
+	BK_LECTERN,
+	BK_SKILL,
 	BK_STORY_MAINA_1,
 	BK_STORY_MAINA_2,
 	BK_STORY_MAINA_3,
@@ -4420,12 +4533,12 @@ typedef enum book_id {
 	BK_STORY_MAINC_1,
 	BK_STORY_MAINC_2,
 	BK_STORY_MAINC_3,
-	BK_BLOOD,
 	BK_ANCIENT,
-	BK_STEEL,
 	BK_BLIND,
-	BK_MYTHIC,
+	BK_BLOOD,
+	BK_STEEL,
 	BK_VILENESS,
+	BK_MYTHIC,
 #ifdef HELLFIRE
 	BK_STORY_NAKRUL_1,
 	BK_STORY_NAKRUL_2,

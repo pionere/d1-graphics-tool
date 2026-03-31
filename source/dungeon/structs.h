@@ -624,7 +624,7 @@ typedef struct {
 	BYTE oBaseType;     // _object_id
 	int8_t oTypeParam1; // direction (left: 0, right:1, random: -1)
 	int8_t oTypeParam2; // trapped (no: 0, yes: 1, random: -1) for chests or inactive (no: 0, yes: 1) for armorstands and weaponracks
-	BYTE oAlign;
+	int8_t oTypeParam3;
 } ObjTypeConv;
 
 typedef struct ObjectData {
@@ -677,7 +677,7 @@ typedef struct ObjectStruct {
 	BOOLEAN _oSolidFlag;
 	BYTE _oBreak; // object_break_mode
 	BYTE _oTrapChance;
-	BYTE _oAlign;
+	BYTE _oUniqAnim;
 	BOOLEAN _oMissFlag;
 	BYTE _oDoorFlag; // object_door_type
 	BYTE _oSelFlag;

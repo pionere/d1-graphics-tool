@@ -32,6 +32,7 @@ void InitItems();
 void GetItemSeed(ItemStruct* is);
 void SetGoldItemValue(ItemStruct* is, int value);
 bool ItemSpaceOk(int x, int y);
+BYTE GetBookSpell(unsigned lvl);
 void SetItemData(int ii, int idata);
 void SetItemSData(ItemStruct* is, int idata);
 void CreateRndItem(int x, int y, unsigned quality);
