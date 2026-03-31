@@ -3518,8 +3518,9 @@ typedef enum _piece_spectrap_flag {
 	PST_NONE      = 0,
 	PST_LEFT      = 1 << 6,
 	PST_RIGHT     = 2 << 6,
+	PST_TOP       = 3 << 6,
 	PST_SPEC_TYPE = (1 << 6) - 1,
-	PST_TRAP_TYPE = (PST_LEFT | PST_RIGHT),
+	PST_TRAP_TYPE = (PST_LEFT | PST_RIGHT | PST_TOP),
 } _piece_spectrap_flag;
 
 typedef enum piece_micro_flag {

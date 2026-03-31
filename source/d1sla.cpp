@@ -194,6 +194,18 @@ static QString mapTypeToStr(quint8 mapType)
     return result;
 }
 
+QString trapTypeToStr(int myTrapProps)
+{
+    QString result = QApplication::tr("N/A");
+    switch (mapType) {
+    case PST_NONE:  result = QApplication::tr("None");  break;
+    case PST_LEFT:  result = QApplication::tr("Left");  break;
+    case PST_RIGHT: result = QApplication::tr("Right"); break;
+    case PST_TOP:   result = QApplication::tr("Top");   break;
+    }
+    return result;
+}
+
 void D1Sla::compareTo(const D1Sla *sla) const
 {
     unsigned subtileCount = sla->subProperties.size();
@@ -222,8 +234,8 @@ void D1Sla::compareTo(const D1Sla *sla) const
         int myTrapProps = this->trapProperties[i];
         if (myTrapProps != trapProps) {
             dProgress() << tr("The trap settings of tile %1 is '%2' (was '%3')").arg(i + 1)
-                .arg(myTrapProps == PST_NONE ? tr("None") : (myTrapProps == PST_LEFT ? tr("Left") : (myTrapProps == PST_RIGHT ? tr("Right") : tr("N/A"))))
-                .arg(trapProps == PST_NONE ? tr("None") : (trapProps == PST_LEFT ? tr("Left") : (trapProps == PST_RIGHT ? tr("Right") : tr("N/A"))));
+                .arg(trapTypeToStr(myTrapProps))
+                .arg(trapTypeToStr(trapProps));
         }
         int spec = sla->specProperties[i];
         int myspec = this->specProperties[i];
@@ -431,7 +443,7 @@ void D1Sla::insertSubtile(int subtileIndex)
 {
     this->subProperties.insert(subtileIndex, 0);
     this->lightRadius.insert(subtileIndex, 0);
-    this->trapProperties.insert(subtileIndex, 0);
+    this->trapProperties.insert(subtileIndex, PST_NONE);
     this->specProperties.insert(subtileIndex, 0);
     this->renderProperties.insert(subtileIndex, 0);
     this->mapTypes.insert(subtileIndex, 0);

@@ -1203,7 +1203,7 @@ static void AddBook2(int oi, int realtype)
 	os->_oModeFlags = inactive ? (objectdata[OBJ_BOOK2].oModeFlags & ~OMF_ACTIVE) : objectdata[OBJ_BOOK2].oModeFlags;
 	os->_oSelFlag = inactive ? 0 : objectdata[OBJ_BOOK2].oSelFlag;
 	//os->_oRndSeed = NextRndSeed();
-    os->_oVar5 = BK_LECTERN; // STORY_BOOK_NAME
+	os->_oVar5 = BK_LECTERN; // STORY_BOOK_NAME
 }
 
 static void AddCauldronGoatShrine(int oi)
@@ -1331,6 +1331,8 @@ int AddObject(int type, int ox, int oy)
 	if (os->_oGfxFrame == animLen)
 		animLen--;
 	os->_oAnimLen = animLen;
+	LoadCelMetaInfo(os->_oAnimData, mi);
+	os->_oAnimFrameLen = mi.cmiAnimDelay == 0 ? 1 : mi.cmiAnimDelay;
 	os->_oAnimWidth = objanimdim[ods->ofindex];
 	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
 #endif
@@ -1338,7 +1340,6 @@ int AddObject(int type, int ox, int oy)
 //	os->_oSFX = ofd->oSFX;
 //	os->_oSFXCnt = ofd->oSFXCnt;
 	os->_oAnimFlag = ofd->oAnimFlag;
-	os->_oAnimFrameLen = ofd->oAnimFrameLen;
 	//os->_oAnimCnt = 0;
 	os->_oAnimFrame = 0;
 	if (ofd->oAnimFlag != OAM_NONE) {

@@ -87,9 +87,7 @@ private slots:
     void on_sol2_clicked();
 
     void on_lightComboBox_activated(int index);
-    void on_trapNoneRadioButton_clicked();
-    void on_trapLeftRadioButton_clicked();
-    void on_trapRightRadioButton_clicked();
+    void on_trapTorchComboBox_activated(int index);
     void on_specCelComboBox_returnPressed();
     void on_specCelComboBox_activated(int index);
 
