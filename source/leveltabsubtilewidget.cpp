@@ -118,10 +118,10 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
         this->ui->lightComboBox->addItem(QString::number(i), QVariant::fromValue(i));
     }
     QComboBox* comboBox = this->ui->trapTorchComboBox;
-    comboBox->addItem(tr("None"), QVariant::fromValue(PST_NONE));
-    comboBox->addItem(tr("Left"), QVariant::fromValue(PST_LEFT));
-    comboBox->addItem(tr("Right"), QVariant::fromValue(PST_RIGHT));
-    comboBox->addItem(tr("Top"), QVariant::fromValue(PST_TOP));
+    comboBox->addItem(tr("None"), (int)PST_NONE);
+    comboBox->addItem(tr("Left"), (int)PST_LEFT);
+    comboBox->addItem(tr("Right"), (int)PST_RIGHT);
+    comboBox->addItem(tr("Top"), (int)PST_TOP);
 
     QObject::connect(ui->specCelComboBox->lineEdit(), &QLineEdit::returnPressed, this, &LevelTabSubtileWidget::on_specCelComboBox_returnPressed);
 }
