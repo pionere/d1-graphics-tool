@@ -96,26 +96,6 @@
           <property name="toolTip">
            <string>Support for trap/torch placement</string>
           </property>
-          <item>
-           <property name="text">
-            <string>None</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Left</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Right</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Top</string>
-           </property>
-          </item>
          </widget>
         </item>
         <item row="0" column="6">

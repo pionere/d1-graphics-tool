@@ -117,6 +117,11 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     for (int i = 0; i <= MAX_LIGHT_RAD; i++) {
         this->ui->lightComboBox->addItem(QString::number(i), QVariant::fromValue(i));
     }
+    QComboBox* comboBox = this->ui->trapTorchComboBox;
+    comboBox->addItem(tr("None"), QVariant::fromValue(PST_NONE));
+    comboBox->addItem(tr("Left"), QVariant::fromValue(PST_LEFT));
+    comboBox->addItem(tr("Right"), QVariant::fromValue(PST_RIGHT));
+    comboBox->addItem(tr("Top"), QVariant::fromValue(PST_TOP));
 
     QObject::connect(ui->specCelComboBox->lineEdit(), &QLineEdit::returnPressed, this, &LevelTabSubtileWidget::on_specCelComboBox_returnPressed);
 }
@@ -216,7 +221,7 @@ void LevelTabSubtileWidget::updateFields()
     this->ui->sol2->setChecked((solFlags & PSF_BLOCK_MISSILE) != 0);
 
     this->ui->lightComboBox->setCurrentIndex(lightRadius);
-    this->ui->trapTorchComboBox->setCurrentIndex(sptTrapFlags);
+    this->ui->trapTorchComboBox->setCurrentIndex(this->ui->trapTorchComboBox->findData(sptTrapFlags));
     int specIdx = this->ui->specCelComboBox->findData(sptSpecCel);
     if (specIdx != -1) {
         this->ui->specCelComboBox->setCurrentIndex(specIdx);
@@ -421,7 +426,7 @@ void LevelTabSubtileWidget::setTrapProperty(int trap)
 
 void LevelTabSubtileWidget::on_trapTorchComboBox_activated(int index)
 {
-    this->setTrapProperty(index);
+    this->setTrapProperty(this->ui->trapTorchComboBox->currentData().toInt());
 }
 
 void LevelTabSubtileWidget::setSpecProperty(int spec)
