@@ -194,10 +194,10 @@ static QString mapTypeToStr(quint8 mapType)
     return result;
 }
 
-QString trapTypeToStr(int myTrapProps)
+QString trapTypeToStr(int trapType)
 {
     QString result = QApplication::tr("N/A");
-    switch (mapType) {
+    switch (trapType) {
     case PST_NONE:  result = QApplication::tr("None");  break;
     case PST_LEFT:  result = QApplication::tr("Left");  break;
     case PST_RIGHT: result = QApplication::tr("Right"); break;
