@@ -15,7 +15,7 @@ public:
     D1Sla() = default;
     ~D1Sla() = default;
 
-    static QString mapTypeToStr(int mapType)
+    static QString mapTypeToStr(int mapType);
     static QString trapTypeToStr(int trapType);
 
     bool load(const QString &slaFilePath);
