@@ -118,10 +118,17 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
         this->ui->lightComboBox->addItem(QString::number(i), QVariant::fromValue(i));
     }
     QComboBox* comboBox = this->ui->trapTorchComboBox;
-    comboBox->addItem(tr("None"), (int)PST_NONE);
-    comboBox->addItem(tr("Left"), (int)PST_LEFT);
-    comboBox->addItem(tr("Right"), (int)PST_RIGHT);
-    comboBox->addItem(tr("Top"), (int)PST_TOP);
+    comboBox->addItem(D1Sla::trapTypeToStr(PST_NONE), (int)PST_NONE);
+    comboBox->addItem(D1Sla::trapTypeToStr(PST_LEFT), (int)PST_LEFT);
+    comboBox->addItem(D1Sla::trapTypeToStr(PST_RIGHT), (int)PST_RIGHT);
+    comboBox->addItem(D1Sla::trapTypeToStr(PST_TOP), (int)PST_TOP);
+
+    comboBox = this->ui->smpTypeComboBox;
+    comboBox->addItem(D1Sla::mapTypeToStr(MAT_NONE), MAT_NONE);
+    comboBox->addItem(D1Sla::mapTypeToStr(MAT_EXTERN), MAT_EXTERN);
+    comboBox->addItem(D1Sla::mapTypeToStr(MAT_STAIRS), MAT_STAIRS);
+    comboBox->addItem(D1Sla::mapTypeToStr(MAT_DOOR_WEST), MAT_DOOR_WEST);
+    comboBox->addItem(D1Sla::mapTypeToStr(MAT_DOOR_EAST), MAT_DOOR_EAST);
 
     QObject::connect(ui->specCelComboBox->lineEdit(), &QLineEdit::returnPressed, this, &LevelTabSubtileWidget::on_specCelComboBox_returnPressed);
 }
