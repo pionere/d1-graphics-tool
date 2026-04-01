@@ -181,7 +181,7 @@ void D1Sla::clear()
     this->modified = true;
 }
 
-QString D1Sla::mapTypeToStr(quint8 mapType)
+QString D1Sla::mapTypeToStr(int mapType)
 {
     QString result = QApplication::tr("N/A");
     switch (mapType) {
