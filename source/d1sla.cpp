@@ -201,6 +201,7 @@ QString D1Sla::trapTypeToStr(int trapType)
     case PST_NONE:  result = QApplication::tr("None");  break;
     case PST_LEFT:  result = QApplication::tr("NW-SE"); break;
     case PST_RIGHT: result = QApplication::tr("NE-SW"); break;
+    case PST_TOP:   result = QApplication::tr("N-S");   break;
     }
     return result;
 }

@@ -121,6 +121,7 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     comboBox->addItem(D1Sla::trapTypeToStr(PST_NONE), (int)PST_NONE);
     comboBox->addItem(D1Sla::trapTypeToStr(PST_LEFT), (int)PST_LEFT);
     comboBox->addItem(D1Sla::trapTypeToStr(PST_RIGHT), (int)PST_RIGHT);
+    comboBox->addItem(D1Sla::trapTypeToStr(PST_TOP), (int)PST_TOP);
 
     comboBox = this->ui->smpTypeComboBox;
     comboBox->addItem(D1Sla::mapTypeToStr(MAT_NONE), MAT_NONE);
