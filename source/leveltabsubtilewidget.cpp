@@ -117,6 +117,10 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     for (int i = 0; i <= MAX_LIGHT_RAD; i++) {
         this->ui->lightComboBox->addItem(QString::number(i), QVariant::fromValue(i));
     }
+    QComboBox* comboBox = this->ui->trapTorchComboBox;
+    comboBox->addItem(D1Sla::trapTypeToStr(PST_NONE), (int)PST_NONE);
+    comboBox->addItem(D1Sla::trapTypeToStr(PST_LEFT), (int)PST_LEFT);
+    comboBox->addItem(D1Sla::trapTypeToStr(PST_RIGHT), (int)PST_RIGHT);
 
     QObject::connect(ui->specCelComboBox->lineEdit(), &QLineEdit::returnPressed, this, &LevelTabSubtileWidget::on_specCelComboBox_returnPressed);
 }
@@ -176,7 +180,7 @@ void LevelTabSubtileWidget::updateFields()
         this->ui->sol2->setChecked(false);
 
         this->ui->lightComboBox->setCurrentIndex(-1);
-        this->ui->trapNoneRadioButton->setChecked(true);
+        this->ui->trapTorchComboBox->setCurrentIndex(-1);
         this->ui->specCelComboBox->setCurrentIndex(-1);
 
         this->ui->tmi0->setChecked(false);
@@ -216,12 +220,7 @@ void LevelTabSubtileWidget::updateFields()
     this->ui->sol2->setChecked((solFlags & PSF_BLOCK_MISSILE) != 0);
 
     this->ui->lightComboBox->setCurrentIndex(lightRadius);
-    if (sptTrapFlags == PST_NONE)
-        this->ui->trapNoneRadioButton->setChecked(true);
-    else if (sptTrapFlags == PST_LEFT)
-        this->ui->trapLeftRadioButton->setChecked(true);
-    else if (sptTrapFlags == PST_RIGHT)
-        this->ui->trapRightRadioButton->setChecked(true);
+    this->ui->trapTorchComboBox->setCurrentIndex(this->ui->trapTorchComboBox->findData(sptTrapFlags));
     int specIdx = this->ui->specCelComboBox->findData(sptSpecCel);
     if (specIdx != -1) {
         this->ui->specCelComboBox->setCurrentIndex(specIdx);
@@ -424,19 +423,9 @@ void LevelTabSubtileWidget::setTrapProperty(int trap)
     this->undoStack->push(command);
 }
 
-void LevelTabSubtileWidget::on_trapNoneRadioButton_clicked()
+void LevelTabSubtileWidget::on_trapTorchComboBox_activated(int index)
 {
-    this->setTrapProperty(PST_NONE);
-}
-
-void LevelTabSubtileWidget::on_trapLeftRadioButton_clicked()
-{
-    this->setTrapProperty(PST_LEFT);
-}
-
-void LevelTabSubtileWidget::on_trapRightRadioButton_clicked()
-{
-    this->setTrapProperty(PST_RIGHT);
+    this->setTrapProperty(this->ui->trapTorchComboBox->currentData().toInt());
 }
 
 void LevelTabSubtileWidget::setSpecProperty(int spec)

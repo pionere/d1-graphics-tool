@@ -87,38 +87,15 @@
         <item row="0" column="2">
          <widget class="QLabel">
           <property name="text">
-           <string>Trap:</string>
+           <string>Trap/Torch:</string>
           </property>
          </widget>
         </item>
         <item row="0" column="3">
-         <widget class="QRadioButton" name="trapNoneRadioButton">
-          <property name="text">
-           <string>None</string>
+         <widget class="QComboBox" name="trapTorchComboBox">
+          <property name="toolTip">
+           <string>Support for trap/torch placement</string>
           </property>
-          <attribute name="buttonGroup">
-           <string notr="true">trapButtonGroup</string>
-          </attribute>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QRadioButton" name="trapLeftRadioButton">
-          <property name="text">
-           <string>Left</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">trapButtonGroup</string>
-          </attribute>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QRadioButton" name="trapRightRadioButton">
-          <property name="text">
-           <string>Right</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">trapButtonGroup</string>
-          </attribute>
          </widget>
         </item>
         <item row="0" column="6">
@@ -402,7 +379,5 @@
  </widget>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="trapButtonGroup"/>
- </buttongroups>
+ <buttongroups/>
 </ui>
