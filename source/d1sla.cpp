@@ -181,15 +181,26 @@ void D1Sla::clear()
     this->modified = true;
 }
 
-static QString mapTypeToStr(quint8 mapType)
+QString D1Sla::mapTypeToStr(int mapType)
 {
     QString result = QApplication::tr("N/A");
     switch (mapType) {
-    case 0: result = QApplication::tr("None");      break;
-    case 1: result = QApplication::tr("Extern");    break;
-    case 2: result = QApplication::tr("Stairs");    break;
-    case 3: result = QApplication::tr("West Door"); break;
-    case 4: result = QApplication::tr("East Door"); break;
+    case MAT_NONE:      result = QApplication::tr("None");      break;
+    case MAT_EXTERN:    result = QApplication::tr("Extern");    break;
+    case MAT_STAIRS:    result = QApplication::tr("Stairs");    break;
+    case MAT_DOOR_WEST: result = QApplication::tr("West Door"); break;
+    case MAT_DOOR_EAST: result = QApplication::tr("East Door"); break;
+    }
+    return result;
+}
+
+QString D1Sla::trapTypeToStr(int trapType)
+{
+    QString result = QApplication::tr("N/A");
+    switch (trapType) {
+    case PST_NONE:  result = QApplication::tr("None");  break;
+    case PST_LEFT:  result = QApplication::tr("NW-SE"); break;
+    case PST_RIGHT: result = QApplication::tr("NE-SW"); break;
     }
     return result;
 }
@@ -222,8 +233,8 @@ void D1Sla::compareTo(const D1Sla *sla) const
         int myTrapProps = this->trapProperties[i];
         if (myTrapProps != trapProps) {
             dProgress() << tr("The trap settings of tile %1 is '%2' (was '%3')").arg(i + 1)
-                .arg(myTrapProps == PST_NONE ? tr("None") : (myTrapProps == PST_LEFT ? tr("Left") : (myTrapProps == PST_RIGHT ? tr("Right") : tr("N/A"))))
-                .arg(trapProps == PST_NONE ? tr("None") : (trapProps == PST_LEFT ? tr("Left") : (trapProps == PST_RIGHT ? tr("Right") : tr("N/A"))));
+                .arg(D1Sla::trapTypeToStr(myTrapProps))
+                .arg(D1Sla::trapTypeToStr(trapProps));
         }
         int spec = sla->specProperties[i];
         int myspec = this->specProperties[i];
@@ -245,7 +256,7 @@ void D1Sla::compareTo(const D1Sla *sla) const
         quint8 mapType = sla->mapTypes[i];
         quint8 myMapType = this->mapTypes[i];
         if (myMapType != mapType) {
-            dProgress() << tr("The map type of tile %1 is '%2' (was '%3')").arg(i + 1).arg(mapTypeToStr(myMapType)).arg(mapTypeToStr(mapType));
+            dProgress() << tr("The map type of tile %1 is '%2' (was '%3')").arg(i + 1).arg(D1Sla::mapTypeToStr(myMapType)).arg(D1Sla::mapTypeToStr(mapType));
         }
 
         quint8 mapProps = sla->mapProperties[i];
@@ -431,7 +442,7 @@ void D1Sla::insertSubtile(int subtileIndex)
 {
     this->subProperties.insert(subtileIndex, 0);
     this->lightRadius.insert(subtileIndex, 0);
-    this->trapProperties.insert(subtileIndex, 0);
+    this->trapProperties.insert(subtileIndex, PST_NONE);
     this->specProperties.insert(subtileIndex, 0);
     this->renderProperties.insert(subtileIndex, 0);
     this->mapTypes.insert(subtileIndex, 0);
