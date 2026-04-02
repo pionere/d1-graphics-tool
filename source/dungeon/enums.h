@@ -3197,6 +3197,8 @@ typedef enum object_graphic_id {
 	OFILE_TNUDEW,
 	OFILE_TSOUL,
 	OFILE_L2DOORS,
+	OFILE_WTORCH6,
+	OFILE_WTORCH5,
 	OFILE_WTORCH4,
 	OFILE_WTORCH3,
 	OFILE_SARC,
@@ -3521,6 +3523,8 @@ typedef enum _piece_spectrap_flag {
 	PST_TOP       = 3 << 6,
 	PST_SPEC_TYPE = (1 << 6) - 1,
 	PST_TRAP_TYPE = (PST_LEFT | PST_RIGHT | PST_TOP),
+
+	PST_TRAP_SHL = 6, // left shift to create TRAP_TYPE
 } _piece_spectrap_flag;
 
 typedef enum piece_micro_flag {
@@ -4306,6 +4310,8 @@ typedef enum _object_id {
 	OBJ_TORCHL2,
 	OBJ_TORCHR1,
 	OBJ_TORCHR2,
+	OBJ_TORCHM1,
+	OBJ_TORCHM2,
 	OBJ_SARC,
 	//OBJ_FLAMEHOLE,
 	//OBJ_FLAMELVR,

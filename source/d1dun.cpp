@@ -124,7 +124,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
 /*OBJ_LCHEST1*/      { "Chest 1 NW" }, // SklKng2.DUN
                      { nullptr }, //OBJ_CHEST1,
                      { nullptr }, //OBJ_CHEST2,
-/*OBJ_LCHEST2*/      { "Chest 2 Nw" }, // SklKng2.DUN
+/*OBJ_LCHEST2*/      { "Chest 2 NW" }, // SklKng2.DUN
                      { nullptr }, //OBJ_CHEST2,
                      { nullptr }, //OBJ_CHEST3,
 /*OBJ_RCHEST3*/      { "Chest 3 NE" }, // Bonecha1.DUN
