@@ -48,6 +48,7 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 
 #define MAX_LVLMTYPES            12
 #define MAX_LVLMIMAGE            4000
+#define MAX_LVLMUNIQS            8
 
 #ifdef HELLFIRE
 #define MAXTRIGGERS              7
