@@ -18,22 +18,30 @@ int nummonsters;
 /* The data of the monsters on the current level. */
 MonsterStruct monsters[MAXMONSTERS];
 /* Monster types on the current level. */
-MapMonData mapMonTypes[MAX_LVLMTYPES];
+MapMonData mapMonTypes[MAX_LVLMTYPES + 1];
 /* The number of monster types on the current level. */
 int nummtypes;
 
 static_assert(MAX_LVLMTYPES <= UCHAR_MAX, "Monster-type indices are stored in a BYTE fields.");
+/* The number of monster types scattered on the current level. */
+BYTE numScaTypes;
 /* The number of skeleton-monster types on the current level. */
 BYTE numSkelTypes;
 /* The number of goat-monster types on the current level. */
 BYTE numGoatTypes;
+/* Scattered monster types on the current level. */
+BYTE mapScaTypes[MAX_LVLMTYPES];
 /* Skeleton-monster types on the current level. */
 BYTE mapSkelTypes[MAX_LVLMTYPES];
 /* Goat-monster types on the current level. */
 BYTE mapGoatTypes[MAX_LVLMTYPES];
-
-/* The next light-index to be used for the trn of a unique monster. */
-BYTE uniquetrans;
+#if 0
+/* The animations of the unique monsters on the current level. */
+static BYTE* uniqAnimData[MAX_LVLMUNIQS][NUM_MON_ANIM];
+static MonAnimStruct uniqAnims[MAX_LVLMUNIQS][NUM_MON_ANIM];
+#endif
+/* The number of unique monsters on the current level. */
+static BYTE numUniqAnims;
 
 /** 'leader' of monsters without leaders. */
 static_assert(MAXMONSTERS <= UCHAR_MAX, "Leader of monsters are stored in a BYTE field.");
@@ -61,32 +69,24 @@ const int offset_x[NUM_DIRS] = { 1, 0, -1, -1, -1, 0, 1, 1 };
 /** Maps from direction to delta Y-offset. */
 const int offset_y[NUM_DIRS] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
-static inline void InitMonsterTRN(MonAnimStruct (&anims)[NUM_MON_ANIM], const char* transFile)
+static inline void InitMonsterTRN(MonAnimStruct (&anims)[NUM_MON_ANIM], BYTE transFile)
 {
-	/*int i, j;
+#if 0
+	int i, j;
 	const MonAnimStruct* as;
 	BYTE trn[NUM_COLORS];
 
-	// A TRN file contains a sequence of color transitions, represented
-	// as indexes into a palette. (a 256 byte array of palette indices)
-	LoadFileWithMem(transFile, trn);
-	// patch TRN files - Monsters/*.TRN
-	BYTE *cf = trn;
-	for (i = 0; i < NUM_COLORS; i++) {
-		if (*cf == 255) {
-			*cf = 0;
-		}
-		cf++;
-	}
-
-	for (i = 0; i < NUM_MON_ANIM; i++) {
-		as = &anims[i];
-		if (as->maFrames > 1) {
-			for (j = 0; j < lengthof(as->maAnimData); j++) {
-				Cl2ApplyTrans(as->maAnimData[j], trn, as->maFrames);
+	if (LoadTrnWithMem(transFile, trn)) {
+		for (i = 0; i < NUM_MON_ANIM; i++) {
+			as = &anims[i];
+			if (as->maFrames > 0) {
+				for (j = 0; j < lengthof(as->maAnimData); j++) {
+					Cl2ApplyTrans(as->maAnimData[j], trn);
+				}
 			}
 		}
-	}*/
+	}
+#endif
 }
 
 static void InitMonsterGFX(int midx)
@@ -99,8 +99,6 @@ static void InitMonsterGFX(int midx)
 
 	cmon = &mapMonTypes[midx];
 	mfdata = &monfiledata[cmon->cmFileNum];
-//	cmon->cmWidth = mfdata->moWidth * ASSET_MPL;
-//	cmon->cmXOffset = (cmon->cmWidth - TILE_WIDTH) >> 1;
 //	cmon->cmAFNum = mfdata->moAFNum;
 //	cmon->cmAFNum2 = mfdata->moAFNum2;
 
@@ -108,10 +106,9 @@ static void InitMonsterGFX(int midx)
 	auto& monAnims = cmon->cmAnims;
 	// static_assert(lengthof(animletter) == lengthof(monsterdata[0].maFrames), "");
 	for (anim = 0; anim < NUM_MON_ANIM; anim++) {
-		// monAnims[anim].maFrames = mfdata->moAnimFrames[anim];
-		monAnims[anim].maFrames = 0;
-		monAnims[anim].maFrameLen = mfdata->moAnimFrameLen[anim];
-		/*if (mfdata->moAnimFrames[anim] > 0) {
+#if 0
+		monAnims[anim].maFrames = monAnims[anim].maFrameLen = mfdata->moAnimFrameLen[anim];
+		if (mfdata->moAnimFrameLen[anim] > 0) {
 			snprintf(strBuff, sizeof(strBuff), mfdata->moGfxFile, animletter[anim]);
 
 			celBuf = LoadFileInMem(strBuff);
@@ -119,20 +116,93 @@ static void InitMonsterGFX(int midx)
 			cmon->cmAnimData[anim] = celBuf;
 
 			if (mtype != MT_GOLEM || (anim != MA_SPECIAL && anim != MA_DEATH)) {
-				for (i = 0; i < lengthof(monAnims[anim].maAnimData); i++) {
-					monAnims[anim].maAnimData[i] = const_cast<BYTE*>(CelGetFrameStart(celBuf, i));
-				}
+				LoadFrameGroups(celBuf, const_cast<const BYTE*(&)[8]>(monAnims[anim].maAnimData));
 			} else {
 				for (i = 0; i < lengthof(monAnims[anim].maAnimData); i++) {
 					monAnims[anim].maAnimData[i] = celBuf;
 				}
 			}
-		}*/
+			monAnims[anim].maFrames = LOAD_LE32(monAnims[anim].maAnimData[0]);
+#if !USE_PATCH
+			if (cmon->cmFileNum == MOFILE_ACID && anim == MA_DEATH) {
+				monAnims[anim].maFrames = 24 - 8;
+			}
+			if (cmon->cmFileNum == MOFILE_MAGMA && anim == MA_WALK) {
+				monAnims[anim].maFrames = 14 - 4;
+			}
+			if (cmon->cmFileNum == MOFILE_SCAV && anim == MA_GOTHIT) {
+				monAnims[anim].maFrames =  8 - 2;
+			}
+			if (cmon->cmFileNum == MOFILE_SKING && anim == MA_SPECIAL) {
+				monAnims[anim].maFrames = 12 - 6;
+			}
+			if (cmon->cmFileNum == MOFILE_SKING && anim == MA_WALK) {
+				monAnims[anim].maFrames =  8 - 2;
+			}
+			if (cmon->cmFileNum == MOFILE_SNAKE && anim == MA_GOTHIT) {
+				monAnims[anim].maFrames =  6 - 1;
+			}
+			if (cmon->cmFileNum == MOFILE_SKELBW && anim == MA_DEATH) {
+				monAnims[anim].maFrames = 16 - 3;
+			}
+#ifdef HELLFIRE
+			if (cmon->cmFileNum == MOFILE_UNRAV && anim == MA_ATTACK) {
+				monAnims[anim].maFrames = 18 - 6;
+			}
+#endif
+#endif
+		}
+#endif
+	}
+#if 0
+	//if (monsterdata[mtype].mTransFile != NULL) {
+		InitMonsterTRN(monAnims, monsterdata[mtype].mTransFile);
+	//}
+
+	// copy walk animation to the stand animation of the golem (except aCelData and alignment)
+	if (mtype == MT_GOLEM) {
+		copy_pod(monAnims[MA_STAND].maAnimData, monAnims[MA_WALK].maAnimData);
+		monAnims[MA_STAND].maFrames = monAnims[MA_WALK].maFrames;
+		monAnims[MA_STAND].maFrameLen = monAnims[MA_WALK].maFrameLen;
 	}
 
-//	if (monsterdata[mtype].mTransFile != NULL) {
-//		InitMonsterTRN(monAnims, monsterdata[mtype].mTransFile);
-//	}
+	cmon->cmWidth = Cl2Width(monAnims[0].maAnimData[0]);
+	cmon->cmXOffset = (cmon->cmWidth - TILE_WIDTH) >> 1;
+#endif
+}
+
+static void InitMonsterMis(int type, const MonsterAI ai)
+{
+#if 0
+	static_assert(sizeof(ai) <= sizeof(size_t), "Pass ai by reference to InitMonsterMis");
+#ifdef HELLFIRE
+	if ((type >= MT_NACID && type <= MT_XACID) || type == MT_SPIDLORD)
+#else
+	if (type >= MT_NACID && type <= MT_XACID)
+#endif
+		InitMissileGFX(MIS_ACIDPUD);
+	if (ai.aiType == AI_RANGED || ai.aiType == AI_ROUNDRANGED || ai.aiType == AI_ROUNDRANGED2 || ai.aiType == AI_COUNSLR || ai.aiType == AI_MAGE) {
+		if (ai.aiType == AI_MAGE) {
+			InitMissileGFX(MIS_MAGE);
+		}
+		// if (ai.aiType == AI_COUNSLR || ai.aiType == AI_MAGE) {
+		//	InitMissileGFX(MIS_FLASH);
+		// }
+		InitMissileGFX(ai.aiParam1);
+	// } else if (ai.aiType == AI_SKELBOW) {
+	//	InitMissileGFX(MIS_ARROW);
+	// } else if (ai.aiType == AI_FALLEN) {
+	//	InitMissileGFX(MIS_CTA);
+	// } else if (ai.aiType == AI_BAT) {
+	//	InitMissileGFX(MIS_LIGHTNING);
+	// } else if (ai.aiType == AI_FIREMAN) {
+	//	InitMissileGFX(MIS_KRULL);
+#ifdef HELLFIRE
+	} else if (ai.aiType == AI_HORKDMN) {
+		InitMissileGFX(MIS_HORKDMN);
+#endif
+	}
+#endif
 }
 
 static void InitMonsterStats(int midx)
@@ -195,6 +265,8 @@ static void InitMonsterStats(int midx)
 	cmon->cmMinHP = (cmon->cmMinHP * mpl) >> 1;
 	cmon->cmMaxHP = (cmon->cmMaxHP * mpl) >> 1;
 	cmon->cmExp = (cmon->cmExp * mpl) >> 1;
+
+	InitMonsterMis(cmon->cmType, cmon->cmAI);
 }
 
 static bool IsSkel(int mt)
@@ -232,9 +304,12 @@ static int AddMonsterType(int type, BOOL scatter)
 		mapMonTypes[i].cmPlaceScatter = FALSE;
 		InitMonsterStats(i); // init stats first because InitMonsterGFX depends on it (cmFileNum)
 		InitMonsterGFX(i);
+//		InitMonsterSFX(i);
 	}
 
 	if (scatter && !mapMonTypes[i].cmPlaceScatter) {
+		mapScaTypes[numScaTypes] = i;
+		numScaTypes++;
 		mapMonTypes[i].cmPlaceScatter = TRUE;
 		monstimgtot -= monfiledata[monsterdata[type].moFileNum].moImage;
 	}
@@ -247,21 +322,29 @@ void InitLvlMonsters()
 	int i;
 
 	nummtypes = 0;
+	numScaTypes = 0;
 	numSkelTypes = 0;
 	numGoatTypes = 0;
-	uniquetrans = COLOR_TRN_UNIQ;
+	numUniqAnims = 0;
 	monstimgtot = MAX_LVLMIMAGE - monfiledata[monsterdata[MT_GOLEM].moFileNum].moImage;
 	totalmonsters = MAXMONSTERS;
 
 	// reset monsters
 	for (i = 0; i < MAXMONSTERS; i++) {
 		monsters[i]._mmode = i < MAX_MINIONS ? MM_RESERVED : MM_UNUSED;
+		// reset squelch value to simplify MonFallenFear, sync_all_monsters and LevelDeltaExport
+		monsters[i]._msquelch = 0;
 		// reset _mMTidx value to simplify SyncMonsterAnim (loadsave.cpp)
 		monsters[i]._mMTidx = 0;
+		monsters[i]._mpathcount = 0;
+		monsters[i]._mAlign_1 = 0;
+		monsters[i]._mgoal = MGOAL_NORMAL;
 		// reset _muniqtype value to simplify SyncMonsterAnim (loadsave.cpp)
-		// reset _mlid value to simplify SyncMonstersLight, DeltaLoadLevel, SummonMonster and InitTownerInfo
+		// reset _muniqanim to simplify InitTownerInfo (towner.cpp)
+		// reset _mNameColor to simplify InitTownerInfo (towner.cpp)
+		// reset _mlid value to simplify SyncMonstersLight (loadsave.cpp), DeltaLoadLevel, SummonMonster and InitTownerInfo (towner.cpp)
 		monsters[i]._muniqtype = 0;
-		monsters[i]._muniqtrans = 0;
+		monsters[i]._muniqanim = 0;
 		monsters[i]._mNameColor = COL_WHITE;
 		monsters[i]._mlid = NO_LIGHT;
 		// reset _mleaderflag value to simplify GroupUnity
@@ -270,7 +353,7 @@ void InitLvlMonsters()
 		// monsters[i]._mpacksize = 0;
 		// monsters[i]._mvid = NO_VISION;
 	}
-	// reserve minions
+	// skip minions
 	nummonsters = MAX_MINIONS;
 }
 
@@ -385,12 +468,13 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	MonsterStruct* mon = &monsters[mnum];
 
 	mon->_mMTidx = mtidx;
-	mon->_mx = x;
-	mon->_my = y;
 	mon->_mdir = dir;
-
+	SetMonsterLoc(mon, x, y);
+	mon->_mxoff = 0;
+	mon->_myoff = 0;
+	mon->_mType = cmon->cmType;
 	mon->_mName = cmon->cmName;
-	// mon->_mFileNum = cmon->cmFileNum;
+//	mon->_mFileNum = cmon->cmFileNum;
 	mon->_mLevel = cmon->cmLevel;
 	mon->_mSelFlag = cmon->cmSelFlag;
 	mon->_mAI = cmon->cmAI; // aiType, aiInt, aiParam1, aiParam2
@@ -405,23 +489,77 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_mArmorClass = cmon->cmArmorClass;
 	mon->_mEvasion = cmon->cmEvasion;
 	mon->_mMagicRes = cmon->cmMagicRes;
-	// mon->_mAlign_1 = cmon->cmAlign_1;
+//	mon->_mAlign_1 = cmon->cmAlign_1;
 	mon->_mExp = cmon->cmExp;
-	// mon->_mAnimWidth = cmon->cmWidth;
-	// mon->_mAnimXOffset = cmon->cmXOffset;
-	// mon->_mAFNum = cmon->cmAFNum;
-	// mon->_mAFNum2 = cmon->cmAFNum2;
-	// mon->_mAlign_0 = cmon->cmAlign_0;
-	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP) << 6;
+#if 0
+	mon->_mAnimWidth = cmon->cmWidth;
+	mon->_mAnimXOffset = cmon->cmXOffset;
+	mon->_mAFNum = cmon->cmAFNum;
+	mon->_mAFNum2 = cmon->cmAFNum2;
+	mon->_mAlign_0 = cmon->cmAlign_0;*/
+	static_assert(offsetof(MapMonData, cmAlign_0) > offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance I.");
+	static_assert(offsetof(MonsterStruct, _mAlign_0) > offsetof(MonsterStruct, _mName), "InitMonster uses DWORD-memcpy to optimize performance II.");
+	static_assert(((offsetof(MapMonData, cmAlign_0) - offsetof(MapMonData, cmName) + sizeof(cmon->cmAlign_0)) % 4) == 0, "InitMonster uses DWORD-memcpy to optimize performance III.");
+	static_assert(offsetof(MonsterStruct, _mFileNum) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmFileNum) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance IV.");
+	static_assert(offsetof(MonsterStruct, _mLevel) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmLevel) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance Va.");
+	static_assert(offsetof(MonsterStruct, _mSelFlag) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmSelFlag) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance Vb.");
+	static_assert(offsetof(MonsterStruct, _mAI) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmAI) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance VI.");
+	static_assert(offsetof(MonsterStruct, _mFlags) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmFlags) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance VII.");
+	static_assert(offsetof(MonsterStruct, _mHit) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmHit) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance VIII.");
+	static_assert(offsetof(MonsterStruct, _mMinDamage) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmMinDamage) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance IX.");
+	static_assert(offsetof(MonsterStruct, _mMaxDamage) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmMaxDamage) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance X.");
+	static_assert(offsetof(MonsterStruct, _mHit2) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmHit2) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XI.");
+	static_assert(offsetof(MonsterStruct, _mMinDamage2) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmMinDamage2) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XII.");
+	static_assert(offsetof(MonsterStruct, _mMaxDamage2) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmMaxDamage2) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XIII.");
+	static_assert(offsetof(MonsterStruct, _mMagic) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmMagic) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XIV.");
+	static_assert(offsetof(MonsterStruct, _mArmorClass) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmArmorClass) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XVI.");
+	static_assert(offsetof(MonsterStruct, _mEvasion) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmEvasion) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XVII.");
+	static_assert(offsetof(MonsterStruct, _mMagicRes) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmMagicRes) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XVIII.");
+	static_assert(offsetof(MonsterStruct, _mExp) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmExp) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XX.");
+	static_assert(offsetof(MonsterStruct, _mAnimWidth) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmWidth) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XXII.");
+	static_assert(offsetof(MonsterStruct, _mAnimXOffset) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmXOffset) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XXIII.");
+	static_assert(offsetof(MonsterStruct, _mAFNum) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmAFNum) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XXIV.");
+	static_assert(offsetof(MonsterStruct, _mAFNum2) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmAFNum2) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XXV.");
+	static_assert(offsetof(MonsterStruct, _mAlign_0) - offsetof(MonsterStruct, _mName) == offsetof(MapMonData, cmAlign_0) - offsetof(MapMonData, cmName), "InitMonster uses DWORD-memcpy to optimize performance XXVI.");
+	memcpy(&mon->_mName, &cmon->cmName, offsetof(MapMonData, cmAlign_0) - offsetof(MapMonData, cmName) + sizeof(cmon->cmAlign_0));
+	mon->_mhitpoints = mon->_mmaxhp = RandRange(cmon->cmMinHP, cmon->cmMaxHP) << 6;
+	mon->_mAnims = cmon->cmAnims;
+	mon->_mAnimData = cmon->cmAnims[MA_STAND].maAnimData[dir];
+#endif
 	mon->_mAnimFrameLen = cmon->cmAnims[MA_STAND].maFrameLen;
 	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
 	mon->_mAnimLen = cmon->cmAnims[MA_STAND].maFrames;
 	mon->_mAnimFrame = mon->_mAnimLen == 0 ? 1 : RandRangeLow(1, mon->_mAnimLen);
 	mon->_mmode = MM_STAND;
+#if 0
+	mon->_mVar1 = MM_STAND;           // STAND_PREV_MODE
+	mon->_mVar2 = MON_WALK_DELAY + 1; // STAND_TICK
+	//mon->_mVar3 = 0;	-- should be set before use
+	//mon->_mVar4 = 0;
+	//mon->_mVar5 = 0;
+	//mon->_mVar6 = 0;
+	//mon->_mVar7 = 0;
+	//mon->_mVar8 = 0;
+	mon->_msquelch = 0;
+	mon->_mpathcount = 0;
+	mon->_mAlign_1 = 0;
+	mon->_mgoal = MGOAL_NORMAL;
+	//mon->_mgoalvar1 = 0;	-- should be set before use
+	//mon->_mgoalvar2 = 0;
+	//mon->_mgoalvar3 = 0;
+	mon->_menemy = 0;
+	mon->_menemyx = 0;
+	mon->_menemyy = 0;
+	mon->_mListener = 0;
+	mon->_mDelFlag = FALSE;
+	mon->_mlastx = 0; // should be set before use (except for stone-rune)
+	mon->_mlasty = 0;
+#endif
 	mon->_mRndSeed = NextRndSeed();
+	// mon->_mAISeed = -- should be set before use
 
 	mon->_muniqtype = 0;
-	mon->_muniqtrans = 0;
+	mon->_muniqanim = 0;
 	mon->_mNameColor = COL_WHITE;
 	mon->_mlid = NO_LIGHT;
 
@@ -520,6 +658,7 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 				// assert(leaderf & UMF_GROUP);
 				monsters[mnum]._mNameColor = COL_BLUE;
 				monsters[mnum]._mmaxhp *= 2;
+//				monsters[mnum]._mhitpoints = monsters[mnum]._mmaxhp;
 				monsters[mnum]._mAI.aiInt = monsters[leader]._mAI.aiInt;
 
 				if (leaderf & UMF_LEADER) {
@@ -544,10 +683,10 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 
 static unsigned InitUniqueMonster(int mnum, int uniqindex)
 {
-//	char filestr[DATA_ARCHIVE_MAX_PATH];
 	const UniqMonData* uniqm;
 	MonsterStruct* mon;
 	unsigned baseLvl, lvlBonus, monLvl;
+	int anim;
 
 #ifdef HELLFIRE
     if (uniqindex == UMT_NAKRUL && mnum != MAX_MINIONS) {
@@ -559,6 +698,38 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	mon->_muniqtype = uniqindex + 1;
 
 	uniqm = &uniqMonData[uniqindex];
+#if 0
+	// initialize unique-gfx
+	if (uniqm->muTrans != TRN_NONE) {
+		mapMonTypes[MAX_LVLMTYPES].cmFileNum = mon->_mFileNum;
+		mapMonTypes[MAX_LVLMTYPES].cmType = mon->_mType;
+		InitMonsterGFX(MAX_LVLMTYPES);
+		// assert(mon->_mType != MT_GOLEM);
+		InitMonsterTRN(mapMonTypes[MAX_LVLMTYPES].cmAnims, uniqm->muTrans);
+	} else {
+		for (anim = 0; anim < NUM_MON_ANIM; anim++)
+			mapMonTypes[MAX_LVLMTYPES].cmAnimData[anim] = mapMonTypes[mon->_mMTidx].cmAnimData[anim];
+	}
+#endif
+	anim = numUniqAnims++;
+	mon->_muniqanim = anim;
+#if 0
+	BYTE* (&umAnimData)[NUM_MON_ANIM] = uniqAnimData[anim];
+	MonAnimStruct* uam = uniqAnims[anim];
+
+	for (anim = 0; anim < NUM_MON_ANIM; anim++) {
+		BYTE* celBuf = mapMonTypes[MAX_LVLMTYPES].cmAnimData[anim];
+		mapMonTypes[MAX_LVLMTYPES].cmAnimData[anim] = NULL;
+		umAnimData[anim] = celBuf;
+		uam[anim].maFrameLen = mon->_mAnims[anim].maFrameLen;
+		uam[anim].maFrames = mon->_mAnims[anim].maFrames;
+		// assert(mon->_mType != MT_GOLEM);
+		if (celBuf != NULL)
+			LoadFrameGroups(celBuf, const_cast<const BYTE*(&)[8]>(uam[anim].maAnimData));
+	}
+	mon->_mAnims = uam;
+#endif
+	// initialize unique-stats
 	mon->_mLevel = uniqm->muLevel;
 
 	mon->_mExp *= 2;
@@ -571,14 +742,13 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	mon->_mMinDamage2 = uniqm->mMinDamage2;
 	mon->_mMaxDamage2 = uniqm->mMaxDamage2;
 	mon->_mMagicRes = uniqm->mMagicRes;
-
-	if (uniqm->mTrnName != NULL) {
-		/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
-		LoadFileWithMem(filestr, ColorTrns[uniquetrans]);*/
-		static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
-		mon->_muniqtrans = uniquetrans++;
+#if 0
+	if (uniqm->mtalkmsg != TEXT_NONE) {
+		mon->_mgoal = MGOAL_TALKING;
+		mon->_mgoalvar1 = FALSE;           // TALK_INQUIRING
+		mon->_mgoalvar2 = uniqm->mtalkmsg; // TALK_MESSAGE
 	}
-
+#endif
 	mon->_mHit += uniqm->mUnqHit;
 	mon->_mHit2 += uniqm->mUnqHit2;
 	mon->_mMagic += uniqm->mUnqMag;
@@ -617,13 +787,18 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	mon->_mmaxhp <<= 6;*/
 	mon->_mmaxhp = (mon->_mmaxhp * mpl) << (6 - 1);
 
+//	mon->_mhitpoints = mon->_mmaxhp;
+
 	unsigned flags = uniqm->mUnqFlags;
 	if (flags & UMF_NODROP)
 		mon->_mFlags |= MFLAG_NODROP;
-//	static_assert(MAX_LIGHT_RAD >= MON_LIGHTRAD, "Light-radius of unique monsters are too high.");
-//	if (flags & UMF_LIGHT) {
-//		mon->_mlid = AddLight(mon->_mx, mon->_my, MON_LIGHTRAD);
-//	}
+#if 0
+	static_assert(MAX_LIGHT_RAD >= MON_LIGHTRAD, "Light-radius of unique monsters are too high.");
+	if (flags & UMF_LIGHT) {
+		mon->_mlid = AddLight(mon->_mx, mon->_my, MON_LIGHTRAD);
+	}
+#endif
+	InitMonsterMis(mon->_mType, mon->_mAI);
 	return flags;
 }
 
@@ -697,7 +872,7 @@ static void PlaceUniques()
 	int u, mt;
 
 	for (u = 0; uniqMonData[u].mtype != MT_INVALID; u++) {
-		if (uniquetrans >= NUM_COLOR_TRNS)
+		if (numUniqAnims >= MAX_LVLMUNIQS)
 			continue;
 		/*if (uniqMonData[u].muLevelIdx != currLvl._dLevelIdx)
 			continue;
@@ -754,7 +929,7 @@ static void SetMapMonsters(int idx)
 				} else {
 					mtype = (mtype & INT16_MAX) - 1;
 					mtidx = AddMonsterType(uniqMonData[mtype].mtype, FALSE);
-					// assert(uniquetrans < NUM_COLOR_TRNS);
+					// assert(numUniqAnims < MAX_LVLMUNIQS);
 					mnum = PlaceMonster(mtidx, i, j);
 					InitUniqueMonster(mnum, mtype);
 				}
@@ -781,10 +956,9 @@ static void PlaceSetMapMonsters()
 
 void InitMonsters()
 {
-	unsigned na, numplacemonsters, numscattypes;
+	unsigned na, numplacemonsters;
 	int i, j, xx, yy;
 	int mtidx;
-	int scatteridx[MAX_LVLMTYPES];
 	const int tdx[4] = { -1, -1,  2,  2 };
 	const int tdy[4] = { -1,  2, -1,  2 };
 
@@ -818,17 +992,10 @@ void InitMonsters()
 			totalmonsters = MAXMONSTERS - 10;
 		// place quest/unique monsters
 		PlaceUniques();
-		numscattypes = 0;
-		for (i = 0; i < nummtypes; i++) {
-			if (mapMonTypes[i].cmPlaceScatter) {
-				scatteridx[numscattypes] = i;
-				numscattypes++;
-			}
-		}
-		// assert(numscattypes != 0 || na == 0);
+		// assert(numScaTypes != 0 || na == 0);
 		i = currLvl._dLevelIdx;
 		while (nummonsters < totalmonsters) {
-			mtidx = scatteridx[random_low(95, numscattypes)];
+			mtidx = mapScaTypes[random_low(95, numScaTypes)];
 			if (i == DLV_CATHEDRAL1 || random_(95, 2) == 0)
 				na = 1;
 #ifdef HELLFIRE

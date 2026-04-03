@@ -14,11 +14,17 @@
 
 extern int nummonsters;
 extern MonsterStruct monsters[MAXMONSTERS];
-extern MapMonData mapMonTypes[MAX_LVLMTYPES];
+extern MapMonData mapMonTypes[MAX_LVLMTYPES + 1];
+/* The number of monster types on the current level. */
 extern int nummtypes;
+/* The number of monster types scattered on the current level. */
+extern BYTE numScaTypes;
+/* The number of skeleton-monster types on the current level. */
 extern BYTE numSkelTypes;
 /* The number of goat-monster types on the current level. */
 extern BYTE numGoatTypes;
+/* Scattered monster types on the current level. */
+extern BYTE mapScaTypes[MAX_LVLMTYPES];
 /* Skeleton-monster types on the current level. */
 extern BYTE mapSkelTypes[MAX_LVLMTYPES];
 /* Goat-monster types on the current level. */
