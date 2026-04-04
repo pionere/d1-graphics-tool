@@ -525,9 +525,12 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_mhitpoints = mon->_mmaxhp = RandRange(cmon->cmMinHP, cmon->cmMaxHP) << 6;
 	mon->_mAnims = cmon->cmAnims;
 	mon->_mAnimData = cmon->cmAnims[MA_STAND].maAnimData[dir];
-#endif
 	mon->_mAnimFrameLen = cmon->cmAnims[MA_STAND].maFrameLen;
 	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
+#else
+	mon->_mmaxhp = RandRange(cmon->cmMinHP, cmon->cmMaxHP) << 6;
+	random_low(88, 1);
+#endif
 	mon->_mAnimLen = cmon->cmAnims[MA_STAND].maFrames;
 	mon->_mAnimFrame = mon->_mAnimLen == 0 ? 1 : RandRangeLow(1, mon->_mAnimLen);
 	mon->_mmode = MM_STAND;
@@ -979,6 +982,7 @@ void InitMonsters()
 	// }
 	// place the setmap/setpiece monsters
 	PlaceSetMapMonsters();
+LogErrorF("InitMonsters 0");
 	// if (!currLvl._dSetLvl) {
 		// calculate the available space for monsters
 		na = 0;
@@ -993,7 +997,9 @@ void InitMonsters()
 		if (totalmonsters > MAXMONSTERS - 10)
 			totalmonsters = MAXMONSTERS - 10;
 		// place quest/unique monsters
+LogErrorF("InitMonsters 1");
 		PlaceUniques();
+LogErrorF("InitMonsters 2");
 		// assert(numScaTypes != 0 || na == 0);
 		i = currLvl._dLevelIdx;
 		while (nummonsters < totalmonsters) {
@@ -1008,8 +1014,10 @@ void InitMonsters()
 				na = RandRange(2, 3);
 			else
 				na = RandRange(2, 5);
+LogErrorF("InitMonsters 2.5 %d", mtidx, );
 			PlaceGroup(mtidx, na, 0, 0);
 		}
+LogErrorF("InitMonsters 3");
 	// }
 	// revert entry/exit area reservation
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
