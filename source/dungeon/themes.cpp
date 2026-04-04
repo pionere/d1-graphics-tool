@@ -1028,7 +1028,7 @@ static void Theme_GoatShrine(int themeId)
 	yy = theme._tsObjY;
 	AddObject(OBJ_GOATSHRINE, xx, yy);
 	monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
-	monstrnd = monstrnd * AllLevels[currLvl._dLevelNum] / ((theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+	monstrnd = monstrnd * AllLevels[currLvl._dLevelNum].dMonDensity / ((theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
 	if (monstrnd == 0) monstrnd = 1;
 	mtidx = mapGoatTypes[random_low(136, numGoatTypes)];
 	for (i = 0; i < lengthof(offset_x); i++) {
