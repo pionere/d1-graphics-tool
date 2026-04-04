@@ -1826,6 +1826,9 @@ void GetObjectStr(int oi)
 	case OBJ_PRSPLT2:
 		txt0 = "Pressure Plate";
 		break;
+	case OBJ_TBCROSS:
+		txt0 = "Burning Cross";
+		break;
 	case OBJ_ALTBOY:
 		txt0 = "Altar";
 		break;
