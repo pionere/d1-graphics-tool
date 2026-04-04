@@ -2198,7 +2198,7 @@ rowend:
 					dProgressWarn() << QString("Not enough thops entry to store the theme-room option at %1:%2 (pos:%3;%4 w:%5, h:%6)").arg(room.lrx).arg(room.lry).arg(x).arg(y).arg(w).arg(h);
 					goto next;
 				}
-dProgressWarn() << QString("Adding room at %1:%2 (pos:%3;%4 w:%5, h:%6) from %7").arg(room.lrx).arg(room.lry).arg(x).arg(y).arg(w).arg(h).arg(i);
+// dProgressWarn() << QString("Adding room at %1:%2 (pos:%3;%4 w:%5, h:%6) from %7").arg(room.lrx).arg(room.lry).arg(x).arg(y).arg(w).arg(h).arg(i);
 				// register the room
 				thops[numops].x1 = x - 1;
 				thops[numops].y1 = y - 1;

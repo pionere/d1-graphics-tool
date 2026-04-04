@@ -1123,7 +1123,7 @@ static void Theme_WeaponRack(int themeId)
  *
  * @param themeId: theme id.
  */
-void Theme_Lock(int themeId)
+static void Theme_Lock(int themeId)
 {
 	int xx, yy, oi, doi = -1;
 	POS32 pos;
@@ -1262,6 +1262,7 @@ void CreateThemeRooms()
 			ASSUME_UNREACHABLE
 			break;
 		}
+		Theme_Lock(i);
 	}
     dt[0] += timer->nsecsElapsed();
     /*dt[1] -= timer->nsecsElapsed();
