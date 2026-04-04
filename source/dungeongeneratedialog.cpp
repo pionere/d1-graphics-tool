@@ -137,7 +137,7 @@ void DungeonGenerateDialog::on_questSeedLineEdit_returnPressed()
 
 void DungeonGenerateDialog::on_questSeedLineEdit_escPressed()
 {
-    this->ui->questSeedLineEdit->setText(QString::number(this->dunSeed));
+    this->ui->questSeedLineEdit->setText(QString::number(this->questSeed));
     this->ui->questSeedLineEdit->clearFocus();
 }
 
@@ -145,7 +145,8 @@ void DungeonGenerateDialog::on_actionGenerateQuestSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
     this->questSeed = (int)gen->generate();
-    this->ui->questSeedLineEdit->setText(QString::number(this->questSeed));
+    // this->ui->questSeedLineEdit->setText(QString::number(this->questSeed));
+    this->on_questSeedLineEdit_escPressed();
 }
 
 void DungeonGenerateDialog::on_generateButton_clicked()
