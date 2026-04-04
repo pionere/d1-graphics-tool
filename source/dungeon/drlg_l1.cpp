@@ -2097,13 +2097,16 @@ static void DRLG_L1FloodThemeRoom(int x, int y, const RECT_AREA32 &area)
 //	if (x < area.x1 || x > area.x2 || y < area.y1 || y > area.y2) {
 //		return;
 //	}
-if ((unsigned)(x - 1) >= (DMAXX - 2) || (unsigned)(y - 1) >= (DMAXY - 2)) {
+if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
     dProgressErr() << QString("Out-of-bounds in DRLG_L1FloodThemeRoom (%1:%2)").arg(x).arg(y);
 }
 	// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_PROTECTED)) {
 		return;
 	}
+if ((unsigned)(x - 1) >= (DMAXX - 2) || (unsigned)(y - 1) >= (DMAXY - 2)) {
+    dProgressErr() << QString("Floor on border in DRLG_L1FloodThemeRoom (%1:%2)").arg(x).arg(y);
+}
 	dungeon[x][y] = PLACEHOLDER_MEGATILE_L1;
 	DRLG_L1FloodThemeRoom(x, y - 1, area);
 	DRLG_L1FloodThemeRoom(x - 1, y, area);
@@ -2131,7 +2134,7 @@ static void DRLG_L1PlaceThemeRooms()
 //		for (int x = area.x1; x <= area.x2; x++) {
 //			for (int y = area.y1; y <= area.y2; y++) {
 		for (int x = 1; x <= DMAXX - 2; x++) {
-			for (int y = 1; y <= DMAXX - 2; y++) {
+			for (int y = 1; y <= DMAXY - 2; y++) {
 				// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
 if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
     dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(y);
@@ -2183,7 +2186,7 @@ rowend:
 					goto next; // room is too small or incomplete
 				}
 				for (int n = 0; n < numops; n++) {
-					if (thops[n].x1 == x && thops[n].y1 == y)
+					if (thops[n].x1 == x - 1 && thops[n].y1 == y - 1)
 						goto next; // already selected
 				}
 				int w = ex - (x - 1) + 1;
