@@ -503,8 +503,10 @@ static void Theme_Monsts_Query(int xx, int yy, void* userParam)
 static void PlaceThemeMonsts(const ThemeStruct &theme)
 {
 	int mtidx, xx, yy;
-	const BYTE monstrnds[4] = { 12, 10, 3, 9 };
-	const BYTE rndfrq = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	//const BYTE monstrnds[4] = { 12, 10, 3, 9 };
+	//const BYTE rndfrq = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+    BYTE rndfrq = 32u * 32u / 2 / AllLevels[currLvl._dLevelNum].dMonDensity;
+    if (rndfrq == 0) rndfrq = 1;
 
 	// assert(numScaTypes != 0);
 	mtidx = mapScaTypes[random_low(0, numScaTypes)];
@@ -665,7 +667,7 @@ static void AddSkelMonOrBanner(BYTE rnd, int x, int y)
 		dProgressErr() << QString("AddSkelMonOrBanner failed to place monster to %1:%2 room-id:%3").arg(x).arg(y).arg(dTransVal[x][y]);
 		return;
 	}
-	if (rnd == 0 || random_low(0, rnd) != 0) {
+	if (rnd == 0 || random_low(0, rnd) == 0) {
 		AddMonster(mapSkelTypes[random_low(136, numSkelTypes)], x, y);
 	} else {
 		AddObject(OBJ_BANNER, x, y);
@@ -688,7 +690,7 @@ static const int8_t SkelPatterns[][2] = {
 static void Theme_SkelRoom(int themeId)
 {
 	int xx, yy;
-	const BYTE monstrnds[4] = { 12, 10, 3, 9 };
+	// const BYTE monstrnds[4] = { 12, 10, 3, 9 };
 	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
 	int8_t objs[2];
@@ -698,8 +700,9 @@ static void Theme_SkelRoom(int themeId)
 
 	AddObject(OBJ_SKFIRE, xx, yy);
 
-	monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
-	monstrnd = monstrnd * AllLevels[currLvl._dLevelNum].dMonDensity / ((theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+	//monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	//monstrnd = monstrnd * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+    monstrnd = 8u * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
 	if (monstrnd == 0) monstrnd = 1;
 
 	AddSkelMonOrBanner(monstrnd, xx - 1, yy - 1);
@@ -1021,7 +1024,7 @@ static void Theme_ArmorStand(int themeId)
 static void Theme_GoatShrine(int themeId)
 {
 	int i, xx, yy, mtidx, x, y;
-	const BYTE monstrnds[4] = { 12, 10, 3, 9 };
+	// const BYTE monstrnds[4] = { 12, 10, 3, 9 };
 	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
     BYTE tv = theme._tsTransVal;
@@ -1029,8 +1032,9 @@ static void Theme_GoatShrine(int themeId)
 	xx = theme._tsObjX;
 	yy = theme._tsObjY;
 	AddObject(OBJ_GOATSHRINE, xx, yy);
-	monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
-	monstrnd = monstrnd * AllLevels[currLvl._dLevelNum].dMonDensity / ((theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+	// monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	// monstrnd = monstrnd * AllLevels[currLvl._dLevelNum].dMonDensity / ((theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+    monstrnd = 8u * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
 	if (monstrnd == 0) monstrnd = 1;
 	mtidx = mapGoatTypes[random_low(136, numGoatTypes)];
 	for (i = 0; i < lengthof(offset_x); i++) {
