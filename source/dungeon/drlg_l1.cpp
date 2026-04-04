@@ -15,7 +15,7 @@ DEVILUTION_BEGIN_NAMESPACE
 /** The default floor tile. */
 #define DEFAULT_MEGATILE_L1 13
 /** The placeholder floor tile. */
-#define PLACEHOLDER_METATILE_L1 0xFF
+#define PLACEHOLDER_MEGATILE_L1 0xFF
 /** Size of the main chambers in the dungeon. */
 #define CHAMBER_SIZE 10
 /** Shadow type of the base floor(13). */
@@ -2104,7 +2104,7 @@ if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_PROTECTED)) {
 		return;
 	}
-	dungeon[x][y] = PLACEHOLDER_METATILE_L1;
+	dungeon[x][y] = PLACEHOLDER_MEGATILE_L1;
 	DRLG_L1FloodThemeRoom(x, y - 1, area);
 	DRLG_L1FloodThemeRoom(x - 1, y, area);
 	DRLG_L1FloodThemeRoom(x + 1, y, area);
@@ -2131,9 +2131,9 @@ static void DRLG_L1PlaceThemeRooms()
 if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
     dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(y);
 }
-				if (dungeon[x][y] != PLACEHOLDER_METATILE_L1) continue;
+				if (dungeon[x][y] != PLACEHOLDER_MEGATILE_L1) continue;
 				int ex = x;
-				while (dungeon[ex][y] == PLACEHOLDER_METATILE_L1) {
+				while (dungeon[ex][y] == PLACEHOLDER_MEGATILE_L1) {
 					dungeon[ex][y] = DEFAULT_MEGATILE_L1;
 					ex++;
 					// assert(ex < DMAXX);
@@ -2149,7 +2149,7 @@ if ((unsigned)ey >= DMAXY) {
     dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(ey);
 }
 					for (int xx = x; xx < ex; xx++) {
-						if (dungeon[xx][ey] == PLACEHOLDER_METATILE_L1) {
+						if (dungeon[xx][ey] == PLACEHOLDER_MEGATILE_L1) {
 							dungeon[xx][ey] = DEFAULT_MEGATILE_L1;
 							continue;
 						}
@@ -2163,14 +2163,14 @@ rowend:
 				// check border tiles
 				bool fit = true;
 				for (int xx = x - 1; xx <= ex; xx++) {
-					if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y - 1] == PLACEHOLDER_METATILE_L1 ||
-						dungeon[xx][ey] == DEFAULT_MEGATILE_L1 || dungeon[xx][ey] == PLACEHOLDER_METATILE_L1) {
+					if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y - 1] == PLACEHOLDER_MEGATILE_L1 ||
+						dungeon[xx][ey] == DEFAULT_MEGATILE_L1 || dungeon[xx][ey] == PLACEHOLDER_MEGATILE_L1) {
 						fit = false;
 					}
 				}
 				for (int yy = y - 1; yy <= ey; yy++) {
-					if (dungeon[x - 1][yy] == DEFAULT_MEGATILE_L1 || dungeon[x - 1][yy] == PLACEHOLDER_METATILE_L1 ||
-						dungeon[ex][yy] == DEFAULT_MEGATILE_L1 || dungeon[ex][yy] == PLACEHOLDER_METATILE_L1) {
+					if (dungeon[x - 1][yy] == DEFAULT_MEGATILE_L1 || dungeon[x - 1][yy] == PLACEHOLDER_MEGATILE_L1 ||
+						dungeon[ex][yy] == DEFAULT_MEGATILE_L1 || dungeon[ex][yy] == PLACEHOLDER_MEGATILE_L1) {
 						fit = false;
 					}
 				}
@@ -2197,6 +2197,7 @@ rowend:
 				//	break; // should not happen (too often), otherwise the theme-placement is biased
 				//}
 next:
+                ;
 			}
 		}
 	}
