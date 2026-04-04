@@ -1020,6 +1020,7 @@ static void Theme_GoatShrine(int themeId)
 {
 	int i, xx, yy, mtidx, x, y;
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
+	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
     BYTE tv = theme._tsTransVal;
 
