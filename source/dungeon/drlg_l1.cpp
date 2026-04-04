@@ -2094,10 +2094,10 @@ static void DRLG_L1PlaceThemeRooms()
 #else
 static void DRLG_L1FloodThemeRoom(int x, int y, const RECT_AREA32 &area)
 {
-	if (x < area.x1 || x > area.x2 || y < area.y1 || y > area.y2) {
-		return;
-	}
-if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
+//	if (x < area.x1 || x > area.x2 || y < area.y1 || y > area.y2) {
+//		return;
+//	}
+if ((unsigned)(x - 1) >= (DMAXX - 2) || (unsigned)(y - 1) >= (DMAXY - 2)) {
     dProgressErr() << QString("Out-of-bounds in DRLG_L1FloodThemeRoom (%1:%2)").arg(x).arg(y);
 }
 	// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
@@ -2118,15 +2118,20 @@ static void DRLG_L1PlaceThemeRooms()
 	for (i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
 		const L1ROOM &room = drlg.L1RoomList[i];
 		// -- extend the room with one tile to handle L1ConvTbl of DRLG_L1MakeMegas
-		const RECT_AREA32 area = { room.lrx - 1, room.lry - 1, room.lrx + room.lrw, room.lry + room.lrh };
-		for (int x = area.x1 + 1; x < area.x2; x++) {
-			for (int y = area.y1 + 1; y < area.y2; y++) {
+		// const RECT_AREA32 area = { room.lrx - 1, room.lry - 1, room.lrx + room.lrw, room.lry + room.lrh };
+		const RECT_AREA32 area = { room.lrx, room.lry, room.lrx + room.lrw, room.lry + room.lrh };
+//		for (int x = area.x1 + 1; x < area.x2; x++) {
+//			for (int y = area.y1 + 1; y < area.y2; y++) {
+		for (int x = area.x1; x < area.x2; x++) {
+			for (int y = area.y1; y < area.y2; y++) {
 				if (dungeon[x][y] == DEFAULT_MEGATILE_L1)
 					DRLG_L1FloodThemeRoom(x, y, area);
 			}
 		}
-		for (int x = area.x1; x <= area.x2; x++) {
-			for (int y = area.y1; y <= area.y2; y++) {
+//		for (int x = area.x1; x <= area.x2; x++) {
+//			for (int y = area.y1; y <= area.y2; y++) {
+		for (int x = 1; x <= DMAXX - 2; x++) {
+			for (int y = 1; y <= DMAXX - 2; y++) {
 				// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
 if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
     dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(y);
@@ -2160,8 +2165,8 @@ if ((unsigned)ey >= DMAXY) {
 				}
 rowend:
 				{
-				// check border tiles
 				bool fit = true;
+				// check border tiles
 				for (int xx = x - 1; xx <= ex; xx++) {
 					if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y - 1] == PLACEHOLDER_MEGATILE_L1 ||
 						dungeon[xx][ey] == DEFAULT_MEGATILE_L1 || dungeon[xx][ey] == PLACEHOLDER_MEGATILE_L1) {
@@ -2176,6 +2181,10 @@ rowend:
 				}
 				if (!fit) {
 					goto next; // room is too small or incomplete
+				}
+				for (int n = 0; n < numops; n++) {
+					if (thops[n].x1 == x && thops[n].y1 == y)
+						goto next; // already selected
 				}
 				int w = ex - (x - 1) + 1;
 				int h = ey - (y - 1) + 1;
