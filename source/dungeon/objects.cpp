@@ -16,6 +16,7 @@ DEVILUTION_BEGIN_NAMESPACE
 #define DOOR_CLOSED  0
 #define DOOR_OPEN    1
 #define DOOR_BLOCKED 2
+#define DOOR_LOCKED  3
 
 #define TRAP_ACTIVE   0
 #define TRAP_INACTIVE 1
@@ -259,7 +260,7 @@ static bool RndLocOk(int xp, int yp)
 	//return false;
 }
 
-static POS32 RndLoc3x3()
+POS32 RndLoc3x3()
 {
 	int xp, yp, i, j, tries;
 	static_assert(DBORDERX != 0, "RndLoc3x3 returns 0;0 position as a failed location.");
@@ -822,6 +823,19 @@ static void ObjAddHookedBodies()
 			type = ttv == (PST_LEFT >> PST_TRAP_SHL) ? OBJ_TORTUREL : OBJ_TORTURER;
 			AddObject(type, i, j);
 		}
+	}
+}
+
+void ObjAddDoorLock(int ox, int oy, int oi)
+{
+	int on;
+
+	on = AddObject(currLvl._dType != DTYPE_CAVES ? OBJ_PRSPLT1 : OBJ_PRSPLT2, ox, oy);
+	if (on >= 0) {
+		objects[on]._oVar1 = oi + 1; // LOCK_OI_REF
+		objects[oi]._oVar4 = DOOR_LOCKED;
+
+		dProgressWarn() << QString("Locked door %1:%2 plate %3:%4").arg(objects[oi]._ox).arg(objects[oi]._oy).arg(ox).arg(oy);
 	}
 }
 
@@ -1672,6 +1686,8 @@ void GetObjectStr(int oi)
 			txt0 = "Open";
 		else if (os->_oVar4 == DOOR_CLOSED)
 			txt0 = "Closed";
+		else if (os->_oVar4 == DOOR_LOCKED)
+			txt0 = "Locked";
 		else // if (os->_oVar4 == DOOR_BLOCKED)
 			txt0 = "Blocked";
 		txt1 = " Door";

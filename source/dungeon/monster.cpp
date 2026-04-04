@@ -982,7 +982,6 @@ void InitMonsters()
 	// }
 	// place the setmap/setpiece monsters
 	PlaceSetMapMonsters();
-LogErrorF("InitMonsters 0");
 	// if (!currLvl._dSetLvl) {
 		// calculate the available space for monsters
 		na = 0;
@@ -997,9 +996,7 @@ LogErrorF("InitMonsters 0");
 		if (totalmonsters > MAXMONSTERS - 10)
 			totalmonsters = MAXMONSTERS - 10;
 		// place quest/unique monsters
-LogErrorF("InitMonsters 1");
 		PlaceUniques();
-LogErrorF("InitMonsters 2");
 		// assert(numScaTypes != 0 || na == 0);
 		i = currLvl._dLevelIdx;
 		while (nummonsters < totalmonsters) {
@@ -1016,7 +1013,6 @@ LogErrorF("InitMonsters 2");
 				na = RandRange(2, 5);
 			PlaceGroup(mtidx, na, 0, 0);
 		}
-LogErrorF("InitMonsters 3");
 	// }
 	// revert entry/exit area reservation
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
