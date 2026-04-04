@@ -14,6 +14,8 @@ DEVILUTION_BEGIN_NAMESPACE
 #define BASE_MEGATILE_L1 22
 /** The default floor tile. */
 #define DEFAULT_MEGATILE_L1 13
+/** The placeholder floor tile. */
+#define PLACEHOLDER_METATILE_L1 0xFF
 /** Size of the main chambers in the dungeon. */
 #define CHAMBER_SIZE 10
 /** Shadow type of the base floor(13). */
@@ -1999,7 +2001,7 @@ static void L1TileFix()
 	}
 #endif
 }
-
+#if 0
 static void DRLG_L1PlaceThemeRooms()
 {
 	RECT_AREA32 thops[32];
@@ -2089,7 +2091,129 @@ static void DRLG_L1PlaceThemeRooms()
 	}
 	numthemes = numops;
 }
+#else
+static void DRLG_L1FloodThemeRoom(int x, int y, const RECT_AREA32 &area)
+{
+	if (x < area.x1 || x > area.x2 || y < area.y1 || y > area.y2) {
+		return;
+	}
+if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
+    dProgressErr() << QString("Out-of-bounds in DRLG_L1FloodThemeRoom (%1:%2)").arg(x).arg(y);
+}
+	// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
+	if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_PROTECTED)) {
+		return;
+	}
+	dungeon[x][y] = PLACEHOLDER_METATILE_L1;
+	DRLG_L1FloodThemeRoom(x, y - 1, area);
+	DRLG_L1FloodThemeRoom(x - 1, y, area);
+	DRLG_L1FloodThemeRoom(x + 1, y, area);
+	DRLG_L1FloodThemeRoom(x, y + 1, area);
+}
 
+static void DRLG_L1PlaceThemeRooms()
+{
+	RECT_AREA32 thops[32];
+	int i, numops = 0;
+	for (i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
+		const L1ROOM &room = drlg.L1RoomList[i];
+		// -- extend the room with one tile to handle L1ConvTbl of DRLG_L1MakeMegas
+		const RECT_AREA32 area = { room.lrx - 1, room.lry - 1, room.lrx + room.lrw, room.lry + room.lrh };
+		for (int x = area.x1 + 1; x < area.x2; x++) {
+			for (int y = area.y1 + 1; y < area.y2; y++) {
+				if (dungeon[x][y] == DEFAULT_MEGATILE_L1)
+					DRLG_L1FloodThemeRoom(x, y, drlg.L1RoomList[i]);
+			}
+		}
+		for (int x = area.x1; x <= area.x2; x++) {
+			for (int y = area.y1; y <= area.y2; y++) {
+				assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
+				if (dungeon[x][y] != PLACEHOLDER_METATILE_L1) continue;
+				int ex = x;
+				while (dungeon[ex][y] == PLACEHOLDER_METATILE_L1) {
+					dungeon[ex][y] = DEFAULT_MEGATILE_L1;
+					ex++;
+					// assert(ex < DMAXX);
+if ((unsigned)ex >= DMAXX) {
+    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(ex).arg(y);
+}
+				}
+				int ey = y;
+				while (true) {
+					ey += 1;
+					// assert(ey < DMAXY);
+if ((unsigned)ey >= DMAXY) {
+    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(ey);
+}
+					for (int xx = x; xx < ex; xx++) {
+						if (dungeon[xx][ey] == PLACEHOLDER_METATILE_L1) {
+							dungeon[xx][ey] = DEFAULT_MEGATILE_L1;
+							continue;
+						}
+						if (xx != x)
+							goto fail;
+						goto rowend;
+					}
+				}
+rowend:
+				bool fit = true;
+				// check border tiles
+				for (int xx = x - 1; xx <= ex; xx++) {
+					if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y - 1] == PLACEHOLDER_METATILE_L1 ||
+						dungeon[xx][ey] == DEFAULT_MEGATILE_L1 || dungeon[xx][ey] == PLACEHOLDER_METATILE_L1) {
+						fit = false;
+					}
+				}
+				for (int yy = y - 1; yy <= ey; yy++) {
+					if (dungeon[x - 1][yy] == DEFAULT_MEGATILE_L1 || dungeon[x - 1][yy] == PLACEHOLDER_METATILE_L1 ||
+						dungeon[ex][yy] == DEFAULT_MEGATILE_L1 || dungeon[ex][yy] == PLACEHOLDER_METATILE_L1) {
+						fit = false;
+					}
+				}
+				if (!fit) {
+fail:
+					continue; // room is too small or incomplete
+				}
+				int w = ex - (x - 1) + 1;
+				int h = ey - (y - 1) + 1;
+				if (w > 10 - 2 || h > 10 - 2) {
+					continue; // room is too large
+				}
+                if (numops == lengthof(thops)) {
+                    dProgressWarn() << QString("Not enough thops entry to store the theme-room option at %1:%2 (pos:%3;%4 w:%5, h:%6)").arg(roomLeft - 1).arg(roomTop - 1).arg(x).arg(y).arg(w).arg(h);
+                    continue;
+                }
+				// register the room
+				thops[numops].x1 = x - 1;
+				thops[numops].y1 = y - 1;
+				thops[numops].x2 = x - 1 + w - 1;
+				thops[numops].y2 = y - 1 + h - 1;
+				numops++;
+				// if (numops == lengthof(thops)) {
+				//	break; // should not happen (too often), otherwise the theme-placement is biased
+				//}
+			}
+		}
+	}
+if (numops > lengthof(themes)) {
+	dProgressWarn() << QString("Too many rooms :%1").arg(numops);
+}
+	// filter the rooms
+	while (numops > lengthof(themes)) {
+		i = random_low(0, numops);
+		--numops;
+		thops[i] = thops[numops];
+	}
+	// add the rooms
+	for (i = 0; i < numops; i++) {
+		themes[i]._tsx1 = thops[i].x1;
+		themes[i]._tsy1 = thops[i].y1;
+		themes[i]._tsx2 = thops[i].x2;
+		themes[i]._tsy2 = thops[i].y2;
+	}
+	numthemes = numops;
+}
+#endif
 #ifdef HELLFIRE
 static void DRLG_L5PlaceRndSet(const BYTE* miniset, BYTE rndper)
 {

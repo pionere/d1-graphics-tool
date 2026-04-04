@@ -597,6 +597,8 @@ void AddMonster(int mtidx, int x, int y)
 {
 	if (nummonsters < MAXMONSTERS) {
 		PlaceMonster(mtidx, x, y);
+	} else {
+		dProgressErr() << QString("Monster overflow");
 	}
 }
 
