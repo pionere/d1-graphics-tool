@@ -1014,7 +1014,6 @@ LogErrorF("InitMonsters 2");
 				na = RandRange(2, 3);
 			else
 				na = RandRange(2, 5);
-LogErrorF("InitMonsters 2.5 %d", mtidx, );
 			PlaceGroup(mtidx, na, 0, 0);
 		}
 LogErrorF("InitMonsters 3");
