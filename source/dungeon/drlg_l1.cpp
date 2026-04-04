@@ -2122,12 +2122,15 @@ static void DRLG_L1PlaceThemeRooms()
 		for (int x = area.x1 + 1; x < area.x2; x++) {
 			for (int y = area.y1 + 1; y < area.y2; y++) {
 				if (dungeon[x][y] == DEFAULT_MEGATILE_L1)
-					DRLG_L1FloodThemeRoom(x, y, drlg.L1RoomList[i]);
+					DRLG_L1FloodThemeRoom(x, y, area);
 			}
 		}
 		for (int x = area.x1; x <= area.x2; x++) {
 			for (int y = area.y1; y <= area.y2; y++) {
-				assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
+				// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
+if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
+    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(y);
+}
 				if (dungeon[x][y] != PLACEHOLDER_METATILE_L1) continue;
 				int ex = x;
 				while (dungeon[ex][y] == PLACEHOLDER_METATILE_L1) {
@@ -2151,13 +2154,14 @@ if ((unsigned)ey >= DMAXY) {
 							continue;
 						}
 						if (xx != x)
-							goto fail;
+							goto next;
 						goto rowend;
 					}
 				}
 rowend:
-				bool fit = true;
+				{
 				// check border tiles
+				bool fit = true;
 				for (int xx = x - 1; xx <= ex; xx++) {
 					if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y - 1] == PLACEHOLDER_METATILE_L1 ||
 						dungeon[xx][ey] == DEFAULT_MEGATILE_L1 || dungeon[xx][ey] == PLACEHOLDER_METATILE_L1) {
@@ -2171,27 +2175,28 @@ rowend:
 					}
 				}
 				if (!fit) {
-fail:
-					continue; // room is too small or incomplete
+					goto next; // room is too small or incomplete
 				}
 				int w = ex - (x - 1) + 1;
 				int h = ey - (y - 1) + 1;
 				if (w > 10 - 2 || h > 10 - 2) {
-					continue; // room is too large
+					goto next; // room is too large
 				}
-                if (numops == lengthof(thops)) {
-                    dProgressWarn() << QString("Not enough thops entry to store the theme-room option at %1:%2 (pos:%3;%4 w:%5, h:%6)").arg(roomLeft - 1).arg(roomTop - 1).arg(x).arg(y).arg(w).arg(h);
-                    continue;
-                }
+				if (numops == lengthof(thops)) {
+					dProgressWarn() << QString("Not enough thops entry to store the theme-room option at %1:%2 (pos:%3;%4 w:%5, h:%6)").arg(room.lrx).arg(room.lry).arg(x).arg(y).arg(w).arg(h);
+					goto next;
+				}
 				// register the room
 				thops[numops].x1 = x - 1;
 				thops[numops].y1 = y - 1;
 				thops[numops].x2 = x - 1 + w - 1;
 				thops[numops].y2 = y - 1 + h - 1;
 				numops++;
+				}
 				// if (numops == lengthof(thops)) {
 				//	break; // should not happen (too often), otherwise the theme-placement is biased
 				//}
+next:
 			}
 		}
 	}
