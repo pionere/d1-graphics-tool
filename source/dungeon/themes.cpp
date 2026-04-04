@@ -1019,12 +1019,14 @@ static void Theme_ArmorStand(int themeId)
 static void Theme_GoatShrine(int themeId)
 {
 	int i, xx, yy, mtidx, x, y;
+	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 	const ThemeStruct &theme = themes[themeId];
     BYTE tv = theme._tsTransVal;
 
 	xx = theme._tsObjX;
 	yy = theme._tsObjY;
 	AddObject(OBJ_GOATSHRINE, xx, yy);
+	monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 	mtidx = mapGoatTypes[random_low(136, numGoatTypes)];
 	for (i = 0; i < lengthof(offset_x); i++) {
 		x = xx + offset_x[i];
@@ -1036,6 +1038,7 @@ static void Theme_GoatShrine(int themeId)
             dProgressErr() << QString("Theme_GoatShrine has a solid subtile at %1:%2. Room: %3:%4;%5:%6.").arg(x).arg(y).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
         }
 		// assert(dTransVal[x][y] == tv && !nSolidTable[dPiece[x][y]]);
+		if (random_low(0, monstrnd) == 0)
 		AddMonster(mtidx, x, y); // OPPOSITE(i)
 	}
 }
