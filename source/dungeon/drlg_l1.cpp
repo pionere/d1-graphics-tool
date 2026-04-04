@@ -2192,10 +2192,10 @@ rowend:
 				thops[numops].x2 = x - 1 + w - 1;
 				thops[numops].y2 = y - 1 + h - 1;
 				numops++;
-				}
 				// if (numops == lengthof(thops)) {
 				//	break; // should not happen (too often), otherwise the theme-placement is biased
 				//}
+				}
 next:
                 ;
 			}

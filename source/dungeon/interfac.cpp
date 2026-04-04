@@ -231,7 +231,9 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	// fill pre: pSetPieces
 	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
 	// fill post: themeLoc, pdungeon, dPiece, dTransVal
+LogErrorF("LoadGameLevel 0");
 	CreateDungeon();
+LogErrorF("LoadGameLevel 1");
 	// LoadLvlPalette();
 	int rv = RandRange(1, 4);
 	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
@@ -239,7 +241,9 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
+LogErrorF("LoadGameLevel 2");
 		InitThemes();     // protect themes with dFlags and select theme types
+LogErrorF("LoadGameLevel 3");
 		IncProgress();
 		InitMonsters();   // place monsters
 	} else {
@@ -250,19 +254,22 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 
 //		InitTowners();
 	}
+LogErrorF("LoadGameLevel 4");
 	IncProgress();
 	InitObjectGFX();    // load object graphics
 	IncProgress();
 	InitObjects();      // place objects
+LogErrorF("LoadGameLevel 5");
 	InitItems();        // place items
     baseMonsters = nummonsters;
 	CreateThemeRooms(); // populate theme rooms
+LogErrorF("LoadGameLevel 6");
 	FreeSetPieces();
 	IncProgress();
 //	InitMissiles();  // reset missiles
 //	SavePreLighting(); // fill dPreLight
 	InitView(lvldir);
-
+LogErrorF("LoadGameLevel 7");
 	IncProgress();
 
 //	music_start(AllLevels[currLvl._dLevelNum].dMusic);
