@@ -503,7 +503,7 @@ static void Theme_Monsts_Query(int xx, int yy, void* userParam)
 static void PlaceThemeMonsts(const ThemeStruct &theme)
 {
 	int mtidx, xx, yy;
-	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
+	const BYTE monstrnds[4] = { 12, 7, 3, 9 };
 	const BYTE rndfrq = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
 	// assert(numScaTypes != 0);
@@ -688,7 +688,7 @@ static const int8_t SkelPatterns[][2] = {
 static void Theme_SkelRoom(int themeId)
 {
 	int xx, yy;
-	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
+	const BYTE monstrnds[4] = { 12, 7, 3, 9 };
 	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
 	int8_t objs[2];
@@ -1019,7 +1019,7 @@ static void Theme_ArmorStand(int themeId)
 static void Theme_GoatShrine(int themeId)
 {
 	int i, xx, yy, mtidx, x, y;
-	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
+	const BYTE monstrnds[4] = { 12, 7, 3, 9 };
 	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
     BYTE tv = theme._tsTransVal;
@@ -1028,6 +1028,8 @@ static void Theme_GoatShrine(int themeId)
 	yy = theme._tsObjY;
 	AddObject(OBJ_GOATSHRINE, xx, yy);
 	monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	monstrnd = monstrnd * AllLevels[currLvl._dLevelNum] / ((theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+	if (monstrnd == 0) monstrnd = 1;
 	mtidx = mapGoatTypes[random_low(136, numGoatTypes)];
 	for (i = 0; i < lengthof(offset_x); i++) {
 		x = xx + offset_x[i];

@@ -1652,6 +1652,7 @@ void GetObjectStr(int oi)
 	ObjectStruct* os;
 	const char* prefix = "";
 	const char *txt0, *txt1 = "";
+	char tempstr[256];
 
 	os = &objects[oi];
 	switch (os->_otype) {
@@ -1796,6 +1797,8 @@ void GetObjectStr(int oi)
 	default:
 		// ASSUME_UNREACHABLE
 		txt0 = "Unknown Object";
+		snprintf(tempstr, sizeof(tempstr), " (%d)", os->_otype);
+		txt1 = tempstr;
 		break;
 	}
 	// infoclr = COL_WHITE;
