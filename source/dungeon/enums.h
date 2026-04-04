@@ -3260,6 +3260,7 @@ typedef enum object_proc_func {
 	OPF_DOOR,
 	//OPF_FLTRP,
 	OPF_TRAP,
+	OPF_PRSPLT,
 	OPF_CIRCLE,
 	OPF_BCROSS,
 #if FLICKER_LIGHT
