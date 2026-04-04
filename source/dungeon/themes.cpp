@@ -1136,7 +1136,7 @@ static void Theme_Lock(int themeId)
 		for (yy = theme._tsy1 - 1; yy <= theme._tsy2; yy++) {
 			if (xx >= theme._tsx1 && xx < theme._tsx2 && yy >= theme._tsy1 && yy < theme._tsy2) continue;
 			if (!nSolidTable[dPiece[xx][yy]]) {
-				dProgressWarn() << QString("Non-closed %1 at %2:%3 (pn:%4), %5:%6..%7:%8").arg(themeId).arg(xx).arg(yy).arg(dPiece[xx][yy]).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+				// dProgressWarn() << QString("Non-closed %1 at %2:%3 (pn:%4), %5:%6..%7:%8").arg(themeId).arg(xx).arg(yy).arg(dPiece[xx][yy]).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 				return;
 			}
 			oi = dObject[xx][yy];
@@ -1144,7 +1144,7 @@ static void Theme_Lock(int themeId)
 			oi--;
 			if (objects[oi]._oDoorFlag == ODT_NONE) continue;
 			if (doi >= 0) {
-				dProgressWarn() << QString("Multidoor %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+				// dProgressWarn() << QString("Multidoor %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 				return;
 			}
 			doi = oi;

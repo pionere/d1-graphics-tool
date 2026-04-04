@@ -835,7 +835,7 @@ void ObjAddDoorLock(int ox, int oy, int oi)
 		objects[on]._oVar1 = oi + 1; // LOCK_OI_REF
 		objects[oi]._oVar4 = DOOR_LOCKED;
 
-		dProgressWarn() << QString("Locked door %1:%2 plate %3:%4").arg(objects[oi]._ox).arg(objects[oi]._oy).arg(ox).arg(oy);
+		// dProgressWarn() << QString("Locked door %1:%2 plate %3:%4").arg(objects[oi]._ox).arg(objects[oi]._oy).arg(ox).arg(oy);
 	}
 }
 
@@ -1788,6 +1788,10 @@ void GetObjectStr(int oi)
 		break;
 	case OBJ_LAZSTAND:
 		txt0 = "Vile Stand";
+		break;
+	case OBJ_PRSPLT1:
+	case OBJ_PRSPLT2:
+		txt0 = "Pressure Plate";
 		break;
 	default:
 		// ASSUME_UNREACHABLE
