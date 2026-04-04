@@ -1790,9 +1790,44 @@ void GetObjectStr(int oi)
 	case OBJ_LAZSTAND:
 		txt0 = "Vile Stand";
 		break;
+	case OBJ_L1LIGHT:
+		txt0 = "Brazier";
+		break;
+	case OBJ_CANDLE2:
+#ifdef HELLFIRE
+	case OBJ_L5CANDLE:
+#endif
+		txt0 = "Candle";
+		break;
+	case OBJ_BANNER:
+		txt0 = "Banner";
+		break;
+	case OBJ_SKFIRE:
+		txt0 = "Fire";
+		break;
+	case OBJ_TNUDEM:
+	case OBJ_TNUDEW:
+	case OBJ_TORTURE:
+		txt0 = "Tortured Body";
+		break;
+	case OBJ_TORCHL1:
+	case OBJ_TORCHL2:
+	case OBJ_TORCHR1:
+	case OBJ_TORCHR2:
+	case OBJ_TORCHM1:
+	case OBJ_TORCHM2:
+		txt0 = "Torch";
+		break;
+	case OBJ_TRAPL:
+	case OBJ_TRAPR:
+		txt0 = "Traphole";
+		break;
 	case OBJ_PRSPLT1:
 	case OBJ_PRSPLT2:
 		txt0 = "Pressure Plate";
+		break;
+	case OBJ_ALTBOY:
+		txt0 = "Altar";
 		break;
 	default:
 		// ASSUME_UNREACHABLE

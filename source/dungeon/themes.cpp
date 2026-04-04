@@ -699,6 +699,8 @@ static void Theme_SkelRoom(int themeId)
 	AddObject(OBJ_SKFIRE, xx, yy);
 
 	monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	monstrnd = monstrnd * AllLevels[currLvl._dLevelNum].dMonDensity / ((theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+	if (monstrnd == 0) monstrnd = 1;
 
 	AddSkelMonOrBanner(monstrnd, xx - 1, yy - 1);
 
