@@ -2121,7 +2121,7 @@ static void DRLG_L4()
 			L4FirstRoom();
 			L4ConnectBlock();
 			i = DRLG_L4GetArea();
-		} while (i < 190);
+		} while (i < 190 || i > 220);
 
 		L4Block2Dungeon();
 		DRLG_L4MakeMegas();
