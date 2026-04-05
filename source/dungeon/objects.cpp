@@ -827,7 +827,7 @@ static void ObjAddHookedBodies()
 	}
 }
 
-void ObjAddDoorLock(int ox, int oy, int oi)
+bool ObjAddDoorLock(int ox, int oy, int oi)
 {
 	int on;
 
@@ -837,7 +837,9 @@ void ObjAddDoorLock(int ox, int oy, int oi)
 		objects[oi]._oVar4 = DOOR_LOCKED;
 
 		// dProgressWarn() << QString("Locked door %1:%2 plate %3:%4").arg(objects[oi]._ox).arg(objects[oi]._oy).arg(ox).arg(oy);
+		return true;
 	}
+	return false;
 }
 
 void InitObjects()

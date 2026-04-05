@@ -1135,37 +1135,37 @@ static void Theme_WeaponRack(int themeId)
  *
  * @param themeId: theme id.
  */
-static void Theme_Lock(int themeId)
+#define DOOR_LOCKED  3
+static bool Theme_Lock(int themeId)
 {
 	int xx, yy, oi, doi = -1;
 	POS32 pos;
 	const ThemeStruct &theme = themes[themeId];
 
 	//if (random_(0, 16) != 0) {
-	//	return;
+	//	return false;
 	//}
 	for (xx = theme._tsx1 - 1; xx <= theme._tsx2; xx++) {
 		for (yy = theme._tsy1 - 1; yy <= theme._tsy2; yy++) {
 			if (xx >= theme._tsx1 && xx < theme._tsx2 && yy >= theme._tsy1 && yy < theme._tsy2) continue;
 			if (!nSolidTable[dPiece[xx][yy]]) {
 				// dProgressWarn() << QString("Non-closed %1 at %2:%3 (pn:%4), %5:%6..%7:%8").arg(themeId).arg(xx).arg(yy).arg(dPiece[xx][yy]).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
-				return;
+				return false;
 			}
 			oi = dObject[xx][yy];
 			if (oi <= 0) continue;
 			oi--;
-			if (objects[oi]._oDoorFlag == ODT_NONE) continue;
+			if (objects[oi]._oDoorFlag == ODT_NONE || objects[oi]._oVar4 == DOOR_LOCKED) continue;
 			if (doi >= 0) {
 				// dProgressWarn() << QString("Multidoor %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
-				return;
+				return false;
 			}
 			doi = oi;
 		}
 	}
-	// assert(doi >= 0);
 	if (doi < 0) {
-		dProgressErr() << QString("Unlockable %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
-		return;
+		// dProgressErr() << QString("Unlockable %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+		return false;
 	}
 	while (true) {
 		pos = RndLoc3x3();
@@ -1175,7 +1175,7 @@ static void Theme_Lock(int themeId)
 			break;
 	}
 
-	ObjAddDoorLock(pos.x, pos.y, doi);
+	return ObjAddDoorLock(pos.x, pos.y, doi);
 }
 
 /**
@@ -1274,7 +1274,11 @@ void CreateThemeRooms()
 			ASSUME_UNREACHABLE
 			break;
 		}
-		Theme_Lock(i);
+	}
+	for (i = numthemes - 1; i >= 0; i--) {
+		if (Theme_Lock(i)) {
+			i = numthemes;
+		}
 	}
     dt[0] += timer->nsecsElapsed();
     /*dt[1] -= timer->nsecsElapsed();

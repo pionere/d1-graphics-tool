@@ -15,7 +15,7 @@ void InitLvlObjects();
 void InitObjects();
 POS32 RndLoc3x3();
 int AddObject(int type, int ox, int oy);
-void ObjAddDoorLock(int ox, int oy, int oi);
+bool ObjAddDoorLock(int ox, int oy, int oi);
 // void ObjChangeMap(int x1, int y1, int x2, int y2 /*, bool hasNewObjPiece*/);
 void GetObjectStr(int oi);
 
