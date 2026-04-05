@@ -998,10 +998,17 @@ static void L1ClearChamberFlags()
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++)
 		*pTmp &= ~DRLG_L1_CHAMBER;
 }
-
+static int spaceLeft;
 static void L1DrawRoom(int x, int y, int width, int height)
 {
 	int i, j, x2, y2;
+
+	i = width * height;
+	i = spaceLeft - i;
+	if (i < 0) {
+		return;
+	}
+	spaceLeft = i;
 
 	drlg.L1RoomList[nRoomCnt].lrx = x;
 	drlg.L1RoomList[nRoomCnt].lry = y;
@@ -2875,8 +2882,12 @@ static void DRLG_L1()
 		do {
             counter1++;
 			memset(dungeon, 0, sizeof(dungeon));
+			spaceLeft = arealimits[areaidx];
 			DRLG_L1CreateDungeon();
 			i = DRLG_L1GetArea();
+            if (i + spaceLeft != arealimits[areaidx]) {
+                dProgressErr() << QString("miscalculated rooms: %1 left %2 limit %3").arg(i).arg(spaceLeft).arg(arealimits[areaidx]);
+            }
 		} while (i > arealimits[areaidx] || i < arealimits[areaidx + 1]);
 
 		DRLG_L1MakeMegas();

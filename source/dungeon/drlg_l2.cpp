@@ -1625,7 +1625,7 @@ static int DL2_FillVoids()
 	while (true) {
 		i = DRLG_L2GetArea();
 		if (i >= 1000) {
-			return i < 1200 ? i : 0;
+			return i <= 1200 ? i : 0;
 		}
 next_try:
 		if (--tries == 0)
