@@ -2185,6 +2185,7 @@ rowend:
 				if (!fit) {
 					goto next; // room is too small or incomplete
 				}
+				// ensure there is no overlapping with previous themes
 				for (int n = 0; n < numops; n++) {
 					if (thops[n].x1 == x - 1 && thops[n].y1 == y - 1)
 						goto next; // already selected
@@ -2195,6 +2196,7 @@ rowend:
 					goto next; // room is too large
 				}
 				if (numops == lengthof(thops)) {
+					// should not happen (too often), otherwise the theme-placement is biased
 					dProgressWarn() << QString("Not enough thops entry to store the theme-room option at %1:%2 (pos:%3;%4 w:%5, h:%6)").arg(room.lrx).arg(room.lry).arg(x).arg(y).arg(w).arg(h);
 					goto next;
 				}
@@ -2205,9 +2207,6 @@ rowend:
 				thops[numops].x2 = x - 1 + w - 1;
 				thops[numops].y2 = y - 1 + h - 1;
 				numops++;
-				// if (numops == lengthof(thops)) {
-				//	break; // should not happen (too often), otherwise the theme-placement is biased
-				//}
 				}
 next:
                 ;

@@ -1340,25 +1340,26 @@ void InitLvlMap()
  * @param floor the id of the floor tile in dungeon
  * @param x the x-coordinate of the starting position
  * @param y the y-coordinate of the starting position
- * @param minSize the minimum size of the room (must be less than 20)
- * @param maxSize the maximum size of the room (must be less than 20)
+ * @param minSize the minimum size of the room
+ * @param maxSize the maximum size of the room (must be less than MAXTHEMESIZE)
  * @param room the w/h of the room if found
  * @return whether a fitting room was found
  */
 static bool DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSize, AREA32 &room)
 {
 	int xmax, ymax, i, j, smallest;
-	int xArray[16], yArray[16];
+	int xArray[MAXTHEMESIZE], yArray[MAXTHEMESIZE];
 	int size, bestSize, w, h;
 
-	// assert(maxSize < 16);
+	// assert(maxSize < MAXTHEMESIZE);
 
 	xmax = std::min(maxSize, DMAXX - x);
 	ymax = std::min(maxSize, DMAXY - y);
 	// BUGFIX: change '&&' to '||' (fixed)
-	if (xmax < minSize || ymax < minSize)
-		return false;
-
+    if (xmax < minSize || ymax < minSize) {
+dProgressErr() << QString("Precheck for DRLG_FitThemeRoom failed %1:%2 max %3:%4 min %5").arg(x).arg(y).arg(xmax).arg(ymax).arg(minSize);
+        return false;
+    }
 	memset(xArray, 0, sizeof(xArray));
 	memset(yArray, 0, sizeof(yArray));
 
@@ -1488,13 +1489,13 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 	int min;
     RECT32 lastArea = { 0, 0, 0, 0 };
     AREA32 currArea;
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
+	for (i = 0; i < DMAXX - minSize; i++) {
+		for (j = 0; j < DMAXY - minSize; j++) {
 			// always start from a floor tile
 			if (dungeon[i][j] != themeTiles[DRT_FLOOR]) {
 				continue;
 			}
-			if (random_(0, 128) < rndSkip) {
+			if (rndSkip > 0 && random_(0, 128) < rndSkip) {
 				continue;
 			}
 			// check if there is enough space
@@ -1503,6 +1504,10 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				continue;
 			}
 			// assert(tArea.w > 0); -- assert(minSize > 2);
+			// ensure there is no overlapping with previous themes
+			if (InThemeRoom(i, j)) {
+				goto next;
+			}
             currArea = tArea;
 			// randomize the size
 			if (rndSkip) {
@@ -1513,8 +1518,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				tArea.w = RandRangeLow(min, tArea.w);
 				tArea.h = RandRangeLow(min, tArea.h);
 			}
-			// ensure there is no overlapping with previous themes
-			if (!InThemeRoom(i + 1, j + 1)) {
+			{
                 if (numthemes == lengthof(themes)) {
                     if (!POS_IN_RECT(i + 1, j + 1, lastArea.x, lastArea.y, lastArea.w, lastArea.h)) {
                         dProgressWarn() << QString("Not enough themes entry to store the theme-room option at %1:%2 (w:%3, h:%4)").arg(i + 1).arg(j + 1).arg(currArea.w).arg(currArea.h);
@@ -1535,7 +1539,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				} // if (numthemes == lengthof(themes))
 				//	return;
 			}
-
+next:
 			j += tArea.h;
 		}
 	}

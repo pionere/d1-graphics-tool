@@ -2369,6 +2369,7 @@ void DRLG_L3InitTransVals()
 static void DRLG_L3()
 {
 	bool doneflag;
+	int i;
 
 	do {
 		while (true) {
@@ -2384,7 +2385,8 @@ static void DRLG_L3()
 				} while (!doneflag);
 				DRLG_L3FillSingles();
 				// DRLG_L3Edges(); - Commented out because it is no longer necessary
-			} while (DRLG_L3GetArea() < 600 || !DRLG_L3Lockout());
+				i = DRLG_L3GetArea();
+			} while (i < 600 || !DRLG_L3Lockout());
 			DRLG_L3MakeMegas();
 			memset(drlgFlags, 0, sizeof(drlgFlags));
 			if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
@@ -2488,6 +2490,15 @@ static void DRLG_L3()
 		}
 	} while (_guLavapools < MIN_LAVA_POOL);
 
+    extern int counter2;
+    extern int minars[4];
+    extern int maxars[4];
+    counter2 += i;
+    if (minars[2] > i)
+        minars[2] = i;
+    if (maxars[2] < i)
+        maxars[2] = i;
+
 	DRLG_L3PlaceRndSet(L3VERTWALLFIX1, 70);
 	DRLG_L3PlaceRndSet(L3HORZWALLFIX1, 70);
 #ifdef HELLFIRE
@@ -2554,7 +2565,7 @@ static void DRLG_L3()
 		// assert(currLvl._dType == DTYPE_CAVES);
 		FixL3HallofHeroes();
 		DRLG_L3River();
-		DRLG_PlaceThemeRooms(5, 10, themeTiles, 0);
+		DRLG_PlaceThemeRooms(5, MAXTHEMESIZE, themeTiles, 0);
 
 		DRLG_L3Wood();
 		//DRLG_L3PlaceRndSet(L3LTITE1, 20); - commented out because of a graphical glitch

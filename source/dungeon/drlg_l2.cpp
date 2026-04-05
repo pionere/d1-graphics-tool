@@ -1615,7 +1615,7 @@ static void DL2_KnockWalls(int x1, int y1, int x2, int y2)
 	}
 }
 
-static bool DL2_FillVoids()
+static int DL2_FillVoids()
 {
 	int i, j, xx, yy, x1, x2, y1, y2;
 	bool xLeft, xRight, xUp, xDown;
@@ -1623,8 +1623,10 @@ static bool DL2_FillVoids()
 
 	tries = 0;
 	while (true) {
-		if (DRLG_L2GetArea() >= 800)
-			return true;
+		i = DRLG_L2GetArea();
+		if (i >= 800) {
+			return i;
+		}
 next_try:
 		if (++tries > 200)
 			break;
@@ -1820,7 +1822,7 @@ next_try:
 		DL2_KnockWalls(x1, y1, x2, y2);
 	}
 
-	return false;
+	return 0;
 }
 
 static void DRLG_L2CreateDungeon()
@@ -2324,12 +2326,14 @@ static void L2CreateArches()
 
 static void DRLG_L2()
 {
+    int i;
 	while (true) {
 		do {
 			static_assert(sizeof(pdungeon) == DMAXX * DMAXY, "Linear traverse of pdungeon does not work in DRLG_L2.");
 			memset(pdungeon, PRE_EXTERN, sizeof(pdungeon));
 			DRLG_L2CreateDungeon();
-		} while (!DL2_FillVoids());
+            i = DL2_FillVoids();
+		} while (i == 0);
 
 		DRLG_L2MakeMegas();
 
@@ -2391,11 +2395,19 @@ static void DRLG_L2()
 		}
 		break;
 	}
+    extern int counter2;
+    extern int minars[4];
+    extern int maxars[4];
+    counter2 += i;
+    if (minars[2] > i)
+        minars[2] = i;
+    if (maxars[2] < i)
+        maxars[2] = i;
 
 	L2LockoutFix();
 	// L2DoorFix(); - commented out, because this is no longer necessary
 
-	DRLG_PlaceThemeRooms(6, 10, themeTiles, 0);
+	DRLG_PlaceThemeRooms(6, MAXTHEMESIZE, themeTiles, 0);
 
 	L2CreateArches();
 	// L2DoorFix2(); - commented out, because there is not much point to do this after L2CreateArches
