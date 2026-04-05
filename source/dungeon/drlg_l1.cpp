@@ -2113,16 +2113,16 @@ static void DRLG_L1FloodThemeRoom(int x, int y, const RECT_AREA32 &area)
 //	if (x < area.x1 || x > area.x2 || y < area.y1 || y > area.y2) {
 //		return;
 //	}
-if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
-    dProgressErr() << QString("Out-of-bounds in DRLG_L1FloodThemeRoom (%1:%2)").arg(x).arg(y);
-}
+//if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
+//    dProgressErr() << QString("Out-of-bounds in DRLG_L1FloodThemeRoom (%1:%2)").arg(x).arg(y);
+//}
 	// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_PROTECTED)) {
 		return;
 	}
-if ((unsigned)(x - 1) >= (DMAXX - 2) || (unsigned)(y - 1) >= (DMAXY - 2)) {
-    dProgressErr() << QString("Floor on border in DRLG_L1FloodThemeRoom (%1:%2)").arg(x).arg(y);
-}
+//if ((unsigned)(x - 1) >= (DMAXX - 2) || (unsigned)(y - 1) >= (DMAXY - 2)) {
+//    dProgressErr() << QString("Floor on border in DRLG_L1FloodThemeRoom (%1:%2)").arg(x).arg(y);
+//}
 	dungeon[x][y] = PLACEHOLDER_MEGATILE_L1;
 	DRLG_L1FloodThemeRoom(x, y - 1, area);
 	DRLG_L1FloodThemeRoom(x - 1, y, area);
@@ -2152,26 +2152,26 @@ static void DRLG_L1PlaceThemeRooms()
 		for (int x = 1; x <= DMAXX - 2; x++) {
 			for (int y = 1; y <= DMAXY - 2; y++) {
 				// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
-if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
-    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(y);
-}
+//if ((unsigned)x >= DMAXX || (unsigned)y >= DMAXY) {
+//    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(y);
+//}
 				if (dungeon[x][y] != PLACEHOLDER_MEGATILE_L1) continue;
 				int ex = x;
 				while (dungeon[ex][y] == PLACEHOLDER_MEGATILE_L1) {
 					dungeon[ex][y] = DEFAULT_MEGATILE_L1;
 					ex++;
 					// assert(ex < DMAXX);
-if ((unsigned)ex >= DMAXX) {
-    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(ex).arg(y);
-}
+//if ((unsigned)ex >= DMAXX) {
+//    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(ex).arg(y);
+//}
 				}
 				int ey = y;
 				while (true) {
 					ey += 1;
 					// assert(ey < DMAXY);
-if ((unsigned)ey >= DMAXY) {
-    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(ey);
-}
+//if ((unsigned)ey >= DMAXY) {
+//    dProgressErr() << QString("Out-of-bounds in DRLG_L1PlaceThemeRooms (%1:%2)").arg(x).arg(ey);
+//}
 					for (int xx = x; xx < ex; xx++) {
 						if (dungeon[xx][ey] == PLACEHOLDER_MEGATILE_L1) {
 							dungeon[xx][ey] = DEFAULT_MEGATILE_L1;
@@ -2213,7 +2213,7 @@ rowend:
 				}
 				if (numops == lengthof(thops)) {
 					// should not happen (too often), otherwise the theme-placement is biased
-					dProgressWarn() << QString("Not enough thops entry to store the theme-room option at %1:%2 (pos:%3;%4 w:%5, h:%6)").arg(room.lrx).arg(room.lry).arg(x).arg(y).arg(w).arg(h);
+//					dProgressWarn() << QString("Not enough thops entry to store the theme-room option at %1:%2 (pos:%3;%4 w:%5, h:%6)").arg(room.lrx).arg(room.lry).arg(x).arg(y).arg(w).arg(h);
 					goto next;
 				}
 // dProgressWarn() << QString("Adding room at %1:%2 (pos:%3;%4 w:%5, h:%6) from %7").arg(room.lrx).arg(room.lry).arg(x).arg(y).arg(w).arg(h).arg(i);
@@ -2229,9 +2229,9 @@ next:
 			}
 		}
 	}
-if (numops > lengthof(themes)) {
-	dProgressWarn() << QString("Too many rooms :%1").arg(numops);
-}
+//if (numops > lengthof(themes)) {
+//	dProgressWarn() << QString("Too many rooms :%1").arg(numops);
+//}
 	// filter the rooms
 	while (numops > lengthof(themes)) {
 		i = random_low(0, numops);
@@ -2893,11 +2893,12 @@ static void DRLG_L1()
 			memset(dungeon, 0, sizeof(dungeon));
 			spaceLeft = arealimits[areaidx];
 			DRLG_L1CreateDungeon();
-			i = DRLG_L1GetArea();
-            if (i + spaceLeft != arealimits[areaidx]) {
-                dProgressErr() << QString("miscalculated rooms: %1 left %2 limit %3").arg(i).arg(spaceLeft).arg(arealimits[areaidx]);
-            }
-		} while (i > arealimits[areaidx] || i < arealimits[areaidx + 1]);
+//			i = DRLG_L1GetArea();
+//            if (i + spaceLeft != arealimits[areaidx]) {
+//                dProgressErr() << QString("miscalculated rooms: %1 left %2 limit %3").arg(i).arg(spaceLeft).arg(arealimits[areaidx]);
+//            }
+			i = arealimits[areaidx] - spaceLeft;
+		} while (/*i > arealimits[areaidx] || */i < arealimits[areaidx + 1]);
 
 		DRLG_L1MakeMegas();
 		L1TileFix();
