@@ -998,18 +998,20 @@ static void L1ClearChamberFlags()
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++)
 		*pTmp &= ~DRLG_L1_CHAMBER;
 }
+#ifdef SPACEL
 static int spaceLeft;
+#endif
 static int L1DrawRoom(int x, int y, int width, int height)
 {
 	int i, j, x2, y2;
-
+#ifdef SPACEL
 	i = width * height;
 	i = spaceLeft - i;
 	if (i < 0) {
 		return 0;
 	}
 	spaceLeft = i;
-
+#endif
 	drlg.L1RoomList[nRoomCnt].lrx = x;
 	drlg.L1RoomList[nRoomCnt].lry = y;
 	drlg.L1RoomList[nRoomCnt].lrw = width;
@@ -1247,8 +1249,10 @@ static void DRLG_L1CreateDungeon()
 		else
 			ie = 15;
 		// draw a hallway between the rooms
+#ifdef SPACEL
 		if (is < ie) {
 		spaceLeft -= 6 * ((ie - is) - (i == 7 ? CHAMBER_SIZE : 0));
+#endif
 		for (i = is; i < ie; i++) {
 			dungeon[17][i] = 1;
 			dungeon[18][i] = 1;
@@ -1257,7 +1261,9 @@ static void DRLG_L1CreateDungeon()
 			dungeon[21][i] = 1;
 			dungeon[22][i] = 1;
 		}
+#ifdef SPACEL
 		}
+#endif
 		// spread additional rooms starting from the main rooms
 		if (ChambersFirst)
 			L1RoomGen(15, 1, CHAMBER_SIZE, CHAMBER_SIZE, false);
@@ -1284,8 +1290,10 @@ static void DRLG_L1CreateDungeon()
 		else
 			ie = 15;
 		// draw a hallway between the rooms
+#ifdef SPACEL
 		if (is < ie) {
 		spaceLeft -= 6 * ((ie - is) - (i == 7 ? CHAMBER_SIZE : 0));
+#endif
 		for (i = is; i < ie; i++) {
 			dungeon[i][17] = 1;
 			dungeon[i][18] = 1;
@@ -1294,7 +1302,9 @@ static void DRLG_L1CreateDungeon()
 			dungeon[i][21] = 1;
 			dungeon[i][22] = 1;
 		}
+#ifdef SPACEL
 		}
+#endif
 		// spread additional rooms starting from the main rooms
 		if (ChambersFirst)
 			L1RoomGen(1, 15, CHAMBER_SIZE, CHAMBER_SIZE, true);
@@ -2891,14 +2901,20 @@ static void DRLG_L1()
 		do {
             counter1++;
 			memset(dungeon, 0, sizeof(dungeon));
+#ifdef SPACEL
 			spaceLeft = arealimits[areaidx];
+#endif
 			DRLG_L1CreateDungeon();
-//			i = DRLG_L1GetArea();
+#ifdef SPACEL
+			i = arealimits[areaidx] - spaceLeft;
 //            if (i + spaceLeft != arealimits[areaidx]) {
 //                dProgressErr() << QString("miscalculated rooms: %1 left %2 limit %3").arg(i).arg(spaceLeft).arg(arealimits[areaidx]);
 //            }
-			i = arealimits[areaidx] - spaceLeft;
-		} while (/*i > arealimits[areaidx] || */i < arealimits[areaidx + 1]);
+		} while (i < arealimits[areaidx + 1]);
+#else
+			i = DRLG_L1GetArea();
+		} while (i > arealimits[areaidx] || i < arealimits[areaidx + 1]);
+#endif
 
 		DRLG_L1MakeMegas();
 		L1TileFix();
