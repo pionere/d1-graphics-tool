@@ -2386,7 +2386,7 @@ static void DRLG_L3()
 				DRLG_L3FillSingles();
 				// DRLG_L3Edges(); - Commented out because it is no longer necessary
 				i = DRLG_L3GetArea();
-			} while (i < 600 || !DRLG_L3Lockout());
+			} while (i < 700 || !DRLG_L3Lockout());
 			DRLG_L3MakeMegas();
 			memset(drlgFlags, 0, sizeof(drlgFlags));
 			if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE

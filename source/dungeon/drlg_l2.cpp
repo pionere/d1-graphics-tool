@@ -1621,14 +1621,14 @@ static int DL2_FillVoids()
 	bool xLeft, xRight, xUp, xDown;
 	int tries;
 
-	tries = 0;
+	tries = 200;
 	while (true) {
 		i = DRLG_L2GetArea();
-		if (i >= 800) {
+		if (i >= 1000) {
 			return i;
 		}
 next_try:
-		if (++tries > 200)
+		if (--tries == 0)
 			break;
 		// find a 3-tile wide room-wall-empty space
 		do {

@@ -2139,7 +2139,6 @@ static void DRLG_L4()
 			if (warpPos.x < 0) {
 				continue;
 			}
-dProgressErr() << QString("Entry tile %1").arg(dungeon[warpPos.x + 1][warpPos.y]);
 			pWarps[DWARP_ENTRY]._wx = warpPos.x;
 			pWarps[DWARP_ENTRY]._wy = warpPos.y;
 			pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
