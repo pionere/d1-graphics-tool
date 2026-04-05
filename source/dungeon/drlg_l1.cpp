@@ -1247,6 +1247,7 @@ static void DRLG_L1CreateDungeon()
 		else
 			ie = 15;
 		// draw a hallway between the rooms
+		if (is < ie) {
 		spaceLeft -= 6 * ((ie - is) - (i == 7 ? CHAMBER_SIZE : 0));
 		for (i = is; i < ie; i++) {
 			dungeon[17][i] = 1;
@@ -1255,6 +1256,7 @@ static void DRLG_L1CreateDungeon()
 			dungeon[20][i] = 1;
 			dungeon[21][i] = 1;
 			dungeon[22][i] = 1;
+		}
 		}
 		// spread additional rooms starting from the main rooms
 		if (ChambersFirst)
@@ -1282,6 +1284,7 @@ static void DRLG_L1CreateDungeon()
 		else
 			ie = 15;
 		// draw a hallway between the rooms
+		if (is < ie) {
 		spaceLeft -= 6 * ((ie - is) - (i == 7 ? CHAMBER_SIZE : 0));
 		for (i = is; i < ie; i++) {
 			dungeon[i][17] = 1;
@@ -1290,6 +1293,7 @@ static void DRLG_L1CreateDungeon()
 			dungeon[i][20] = 1;
 			dungeon[i][21] = 1;
 			dungeon[i][22] = 1;
+		}
 		}
 		// spread additional rooms starting from the main rooms
 		if (ChambersFirst)
