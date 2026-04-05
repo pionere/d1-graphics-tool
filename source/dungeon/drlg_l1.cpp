@@ -999,14 +999,14 @@ static void L1ClearChamberFlags()
 		*pTmp &= ~DRLG_L1_CHAMBER;
 }
 static int spaceLeft;
-static void L1DrawRoom(int x, int y, int width, int height)
+static int L1DrawRoom(int x, int y, int width, int height)
 {
 	int i, j, x2, y2;
 
 	i = width * height;
 	i = spaceLeft - i;
 	if (i < 0) {
-		return;
+		return 0;
 	}
 	spaceLeft = i;
 
@@ -1023,6 +1023,7 @@ static void L1DrawRoom(int x, int y, int width, int height)
 			dungeon[i][j] = 1;
 		}
 	}
+	return 1;
 }
 
 static bool L1CheckRoom(int x, int y, int width, int height)
@@ -1125,13 +1126,14 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			if (L1CheckVHall(x, ry - 1, height + 2)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 1, height + 2)) { // BUGFIX: swap args 3 and 4 ("height+2" and "width+1") (fixed)
 				// - add room to the left
-				L1DrawRoom(rx, ry, width, height);
+				i = L1DrawRoom(rx, ry, width, height);
 				break;
 			}
 		}
 		if (i != 0) {
 			// room added to the left -> force similar room on the right side
-			i = 1;
+			// assert(i == 1);
+			//i = 1;
 		} else {
 			// room was not added to the left -> try more options on the right
 			rx = -1;
@@ -1143,7 +1145,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			if (L1CheckVHall(rxy2 - 1, ry - 1, height + 2)
 			 && L1CheckRoom(rxy2, ry - 1, width + 1, height + 2)) {
 				// - add room to the right
-				L1DrawRoom(rxy2, ry, width, height);
+				i = L1DrawRoom(rxy2, ry, width, height);
 				break;
 			}
 			if (--i == 0)
@@ -1168,13 +1170,14 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			if (L1CheckHHall(y, rx - 1, width + 2)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 2, height + 1)) {
 				// - add room to the top
-				L1DrawRoom(rx, ry, width, height);
+				i = L1DrawRoom(rx, ry, width, height);
 				break;
 			}
 		}
 		if (i != 0) {
 			// room added to the top -> force similar room on the bottom side
-			i = 1;
+			// assert(i == 1);
+			//i = 1;
 		} else {
 			// room was not added to the top -> try more options on the bottom
 			ry = -1;
@@ -1186,7 +1189,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			if (L1CheckHHall(rxy2 - 1, rx - 1, width + 2)
 			 && L1CheckRoom(rx - 1, rxy2, width + 2, height + 1)) {
 				// - add room to the bottom
-				L1DrawRoom(rx, rxy2, width, height);
+				i = L1DrawRoom(rx, rxy2, width, height);
 				break;
 			}
 			if (--i == 0)
@@ -1244,7 +1247,7 @@ static void DRLG_L1CreateDungeon()
 		else
 			ie = 15;
 		// draw a hallway between the rooms
-        spaceLeft -= 6 * (ie - is);
+		spaceLeft -= 6 * ((ie - is) - (i == 7 ? CHAMBER_SIZE : 0));
 		for (i = is; i < ie; i++) {
 			dungeon[17][i] = 1;
 			dungeon[18][i] = 1;
@@ -1279,7 +1282,7 @@ static void DRLG_L1CreateDungeon()
 		else
 			ie = 15;
 		// draw a hallway between the rooms
-        spaceLeft -= 6 * (ie - is);
+		spaceLeft -= 6 * ((ie - is) - (i == 7 ? CHAMBER_SIZE : 0));
 		for (i = is; i < ie; i++) {
 			dungeon[i][17] = 1;
 			dungeon[i][18] = 1;
@@ -2889,9 +2892,7 @@ static void DRLG_L1()
 			i = DRLG_L1GetArea();
             if (i + spaceLeft != arealimits[areaidx]) {
                 dProgressErr() << QString("miscalculated rooms: %1 left %2 limit %3").arg(i).arg(spaceLeft).arg(arealimits[areaidx]);
-                LogErrorF("miscalculated rooms: %d left %d limit %d", i, spaceLeft, arealimits[areaidx]);
             }
-            LogErrorF("next round %d (%d .. %d)", i, arealimits[areaidx], arealimits[areaidx + 1]);
 		} while (i > arealimits[areaidx] || i < arealimits[areaidx + 1]);
 
 		DRLG_L1MakeMegas();
