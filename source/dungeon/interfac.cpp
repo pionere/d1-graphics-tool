@@ -639,7 +639,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();
         extern int nRoomCnt;
-        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms. (%8:%9)").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt).arg(counter1).arg(counter2).arg(counter2 - lc2);
+        dProgress() << QApplication::tr("Done. The dungeon contains %1/%2 monsters (%3 types), %4 objects and %5 items %6 themes %7 rooms. (%8:%9:%10)").arg(nummonsters - MAX_MINIONS).arg(nummonsters - baseMonsters).arg(nummtypes - 1).arg(numobjects).arg(numitems).arg(numthemes).arg(nRoomCnt).arg(counter1).arg(counter2).arg(counter2 - lc2);
         rounds++;
         lc2 = counter2;
         totalMonsters += (nummonsters - MAX_MINIONS);
