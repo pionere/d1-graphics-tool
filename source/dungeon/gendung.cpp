@@ -1348,7 +1348,7 @@ void InitLvlMap()
 static bool DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSize, AREA32 &room)
 {
 	int xmax, ymax, i, j, smallest;
-	int xArray[MAXTHEMESIZE], yArray[MAXTHEMESIZE];
+	int xArray[MAXTHEMESIZE + 1], yArray[MAXTHEMESIZE + 1];
 	int size, bestSize, w, h;
 
 	// assert(maxSize < MAXTHEMESIZE);
