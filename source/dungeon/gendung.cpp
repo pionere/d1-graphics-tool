@@ -1348,7 +1348,9 @@ void InitLvlMap()
 static bool DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSize, AREA32 &room)
 {
 	int xmax, ymax, i, j, smallest;
-	int xArray[MAXTHEMESIZE + 1], yArray[MAXTHEMESIZE + 1];
+	int wArray[2 * (MAXTHEMESIZE + 1)] = { };
+	int* xArray = &wArray[0];
+	int* yArray = &wArray[MAXTHEMESIZE + 1];
 	int size, bestSize, w, h;
 
 	// assert(maxSize < MAXTHEMESIZE);
@@ -1360,8 +1362,6 @@ static bool DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSize
 dProgressErr() << QString("Precheck for DRLG_FitThemeRoom failed %1:%2 max %3:%4 min %5").arg(x).arg(y).arg(xmax).arg(ymax).arg(minSize);
         return false;
     }
-	memset(xArray, 0, sizeof(xArray));
-	memset(yArray, 0, sizeof(yArray));
 
 	// find horizontal(x) limits
 	smallest = xmax;
