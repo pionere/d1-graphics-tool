@@ -271,7 +271,7 @@ void OpenAsDialog::keyPressEvent(QKeyEvent *event)
         this->close();
         return;
     }
-
+QMessageBox::critical(nullptr, "error", QApplication::tr("Gotkey %1").arg(kc));
     QDialog::keyPressEvent(event);
 }
 
