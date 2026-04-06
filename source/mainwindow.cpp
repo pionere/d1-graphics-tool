@@ -174,10 +174,6 @@ void MainWindow::setPal(const QString &path)
     this->trnUnique->setPalette(this->pal);
     this->trnUnique->refreshResultingPalette();
     this->trnBase->refreshResultingPalette();
-    // update entities
-    if (this->dun != nullptr) {
-        this->dun->setPal(pal);
-    }
     // update the widgets
     // - views
     if (this->celView != nullptr) {
@@ -219,6 +215,9 @@ void MainWindow::setBaseTrn(const QString &path)
     D1Pal *resPal = this->trnBase->getResultingPalette();
     // update entities
     this->gfx->setPalette(resPal);
+    if (this->dun != nullptr) {
+        this->dun->setPal(resPal);
+    }
     if (this->tileset != nullptr) {
         this->tileset->cls->setPalette(resPal);
     }
@@ -844,7 +843,7 @@ void MainWindow::importFile(const ImportParam &params)
         if (fileType == IMPORT_FILE_TYPE::DUNGEON) {
             D1Dun *dun = new D1Dun();
             if (dun->load(openParams.dunFilePath, openParams)) {
-                dun->initialize(this->pal, this->tileset);
+                dun->initialize(this->trnBase->getResultingPalette(), this->tileset);
                 // TODO: this->dunChanged(dun)
                 delete this->dun;
                 this->dun = dun;

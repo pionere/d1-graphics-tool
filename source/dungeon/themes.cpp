@@ -1286,7 +1286,7 @@ void CreateThemeRooms()
 	}
 	for (i = numthemes - 1; i >= 0; i--) {
 		if (Theme_Lock(i)) {
-			i = numthemes;
+			// i = numthemes;
 		}
 	}
     dt[0] += timer->nsecsElapsed();

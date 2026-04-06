@@ -2045,6 +2045,9 @@ QImage D1Dun::getImage(const DunDrawParam &params)
 void D1Dun::setPal(D1Pal *pal)
 {
     this->pal = pal;
+    for (auto &entry : this->itemCache) {
+        entry.itemGfx->setPalette(pal);
+    }
     for (auto &entry : this->objectCache) {
         entry.objGfx->setPalette(pal);
     }
