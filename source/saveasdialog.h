@@ -81,8 +81,6 @@ private slots:
     void on_saveButton_clicked();
     void on_saveCancelButton_clicked();
 
-    void keyPressEvent(QKeyEvent *event) override;
-
     // this event is called, when a new translator is loaded or the system language is changed
     void changeEvent(QEvent *event) override;
 

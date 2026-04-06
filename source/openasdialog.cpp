@@ -264,17 +264,6 @@ void OpenAsDialog::on_openCancelButton_clicked()
     this->close();
 }
 
-void OpenAsDialog::keyPressEvent(QKeyEvent *event)
-{
-    const int kc = event->key() | event->modifiers();
-    if (MainWindow::keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
-        this->close();
-        return;
-    }
-QMessageBox::critical(nullptr, "error", QApplication::tr("Gotkey %1").arg(kc));
-    QDialog::keyPressEvent(event);
-}
-
 void OpenAsDialog::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {

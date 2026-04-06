@@ -1075,6 +1075,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     const int kc = event->key() | event->modifiers();
     if (keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
+QMessageBox::critical(nullptr, "error", QApplication::tr("Gotkey %1").arg(kc));
         if (this->isPainting()) {
             this->paintWidget->hide();
         }
