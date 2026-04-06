@@ -375,7 +375,8 @@ void InitThemes()
 	if (numthemes == 0)
 		return;
 	// assert(currLvl._dLevelNum < DLV_HELL4 || (currLvl._dDynLvl && currLvl._dLevelNum == DLV_HELL4)); // there are no themes in hellfire (and on diablo-level)
-	sh = currLvl._dDunType == DGT_CAVES ? 1 : 0; // shift location of the room where the walls are on the southern side of the tile (fences in caves)
+	static_assert(DBORDERX == DBORDERY, "Shift of InitThemes requires matching borders.");
+	sh = DBORDERX + (currLvl._dDunType == DGT_CAVES ? 1 : 0); // shift location of the room where the walls are on the southern side of the tile (fences in caves)
 	// for (i = 0; i < numthemes; i++) {
 	for (i = numthemes - 1; i >= 0; i--) {
 		x1 = themes[i]._tsx1;
@@ -383,10 +384,10 @@ void InitThemes()
 		x2 = themes[i]._tsx2;
 		y2 = themes[i]._tsy2;
 		// convert to subtile-coordinates and select the internal subtiles of the room [p0;p1)
-		x1 = DBORDERX + 2 * x1 + 1 + sh;
-		y1 = DBORDERY + 2 * y1 + 1 + sh;
-		x2 = DBORDERX + 2 * x2 + sh;
-		y2 = DBORDERY + 2 * y2 + sh;
+		x1 = 2 * x1 + 1 + sh;
+		y1 = 2 * y1 + 1 + sh;
+		x2 = 2 * x2 + sh;
+		y2 = 2 * y2 + sh;
 		themes[i]._tsx1 = x1;
 		themes[i]._tsy1 = y1;
 		themes[i]._tsx2 = x2;
@@ -1137,57 +1138,46 @@ static void Theme_WeaponRack(int themeId)
  *
  * @param themeId: theme id.
  */
-#define DOOR_LOCKED  3
-static bool Theme_Lock(int themeId)
+static void Theme_Lock(int themeId)
 {
 	int xx, yy, oi, doi = -1;
 	POS32 pos;
 	const ThemeStruct &theme = themes[themeId];
-    bool ll = false;
+
 	if (random_(0, 16) != 0) {
-		return false;
+		return;
 	}
 	for (xx = theme._tsx1 - 1; xx <= theme._tsx2; xx++) {
 		for (yy = theme._tsy1 - 1; yy <= theme._tsy2; yy++) {
 			if (xx >= theme._tsx1 && xx < theme._tsx2 && yy >= theme._tsy1 && yy < theme._tsy2) continue;
 			if (!nSolidTable[dPiece[xx][yy]]) {
 				// dProgressWarn() << QString("Non-closed %1 at %2:%3 (pn:%4), %5:%6..%7:%8").arg(themeId).arg(xx).arg(yy).arg(dPiece[xx][yy]).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
-				return false;
+				return;
 			}
 			oi = dObject[xx][yy];
 			if (oi <= 0) continue;
 			oi--;
 			// if (objects[oi]._oDoorFlag == ODT_NONE || objects[oi]._oVar4 == DOOR_LOCKED) continue;
 			if (objects[oi]._oDoorFlag == ODT_NONE) continue;
-            if (objects[oi]._oVar4 == DOOR_LOCKED) {
-                ll = true;
-                continue;
-            }
 			if (doi >= 0) {
 				// dProgressWarn() << QString("Multidoor %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
-				return false;
+				return;
 			}
 			doi = oi;
 		}
 	}
 	if (doi < 0) {
-        // if (ll)
-        //     dProgressWarn() << QString("Locked already %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
-        // else
-        //     dProgressErr() << QString("Unlockable %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
-		return false;
+        dProgressErr() << QString("Unlockable %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+		return;
 	}
 	while (true) {
 		pos = RndLoc3x3();
 		if (pos.x == 0)
-			return false;
+			return;
 		if (pos.x < theme._tsx1 || pos.x > theme._tsx2 || pos.y < theme._tsy1 || pos.y > theme._tsy2)
 			break;
 	}
-    if (ll) {
-        dProgressErr() << QString("Lock Lock");
-    }
-	return ObjAddDoorLock(pos.x, pos.y, doi);
+	ObjAddDoorLock(pos.x, pos.y, doi);
 }
 
 /**
@@ -1286,11 +1276,7 @@ void CreateThemeRooms()
 			ASSUME_UNREACHABLE
 			break;
 		}
-	}
-	for (i = numthemes - 1; i >= 0; i--) {
-		if (Theme_Lock(i)) {
-			i = numthemes;
-		}
+		Theme_Lock(i);
 	}
     dt[0] += timer->nsecsElapsed();
     /*dt[1] -= timer->nsecsElapsed();

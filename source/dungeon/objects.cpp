@@ -575,7 +575,7 @@ static void ObjAddTraps()
 	for (i = numobjects - 1; i >= 0; i--) {
 		int oi = i; // objectactive[i];
 		ObjectStruct* os = &objects[oi];
-		if (!objectdata[os->_otype].oTrapFlag)
+		if (objectdata[os->_otype].oTrapFlag == OTM_NONE)
 			continue;
 		if (random_(144, 128) >= rndv)
 			continue;
@@ -827,7 +827,7 @@ static void ObjAddHookedBodies()
 	}
 }
 
-bool ObjAddDoorLock(int ox, int oy, int oi)
+void ObjAddDoorLock(int ox, int oy, int oi)
 {
 	int on;
 
@@ -837,9 +837,7 @@ bool ObjAddDoorLock(int ox, int oy, int oi)
 		objects[oi]._oVar4 = DOOR_LOCKED;
 
 		// dProgressWarn() << QString("Locked door %1:%2 plate %3:%4").arg(objects[oi]._ox).arg(objects[oi]._oy).arg(ox).arg(oy);
-		return true;
 	}
-	return false;
 }
 
 void InitObjects()

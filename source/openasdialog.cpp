@@ -267,7 +267,7 @@ void OpenAsDialog::on_openCancelButton_clicked()
 void OpenAsDialog::keyPressEvent(QKeyEvent *event)
 {
     const int kc = event->key() | event->modifiers();
-    if (keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) {
+    if (MainWindow::keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
         this->close();
         return;
     }

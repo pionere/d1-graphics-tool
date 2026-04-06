@@ -550,7 +550,8 @@ void BuilderWidget::on_movePushButtonClicked()
 
 void BuilderWidget::keyPressEvent(QKeyEvent *event)
 {
-    if (event->matches(QKeySequence::Cancel)) {
+    const int kc = event->key() | event->modifiers();
+    if (MainWindow::keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
         if (this->moving) {
             this->stopMove();
         } else {

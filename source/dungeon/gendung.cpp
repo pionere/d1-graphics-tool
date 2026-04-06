@@ -1495,7 +1495,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 			if (dungeon[i][j] != themeTiles[DRT_FLOOR]) {
 				continue;
 			}
-			if (rndSkip > 0 && random_(0, 128) < rndSkip) {
+			if (random_(0, 128) < rndSkip) {
 				continue;
 			}
 			// check if there is enough space
