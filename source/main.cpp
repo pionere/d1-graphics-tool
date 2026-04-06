@@ -27,7 +27,12 @@ int main(int argc, char *argv[])
     { // run the application
         MainWindow w = MainWindow();
         w.show();
+        w.open();
+        w.raise();
         w.activateWindow();
+        w.update();
+        w.setFocus();
+        a.setActivateWindow(w);
 
         if (argc > 1) {
             w.openArgFile(argv[argc - 1]);
