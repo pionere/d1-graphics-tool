@@ -16,9 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="focusPolicy">
-   <enum>Qt::StrongFocus</enum>
-  </property>
   <widget class="QWidget">
    <layout class="QHBoxLayout">
     <item>

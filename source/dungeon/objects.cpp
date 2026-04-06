@@ -611,6 +611,7 @@ static void ObjAddTraps()
 		if (on == -1)
 			return;
 		objects[on]._oVar1 = oi; // TRAP_OI_REF
+		objects[on]._oVar2 = objectdata[objects[oi]._otype].oTrapFlag; // TRAP_TRIG_TYPE
 		objects[oi]._oTrapChance = RandRange(1, 64);
 		objects[oi]._oVar5 = on + 1; // TRAP_OI_BACKREF
 	}
