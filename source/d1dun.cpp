@@ -2860,6 +2860,8 @@ void D1Dun::loadObjectGfx(const QString &filePath, ObjectCacheEntry &result)
     // create new entry
     result.objGfx = new D1Gfx();
     result.objGfx->setPalette(this->pal);
+    dProgressErr() << QString("gfx pal address %1").arg((size_t)this->pal);
+    LogErrorF("gfx pal address %ull", (size_t)this->pal));
     OpenAsParam params = OpenAsParam();
     D1Cel::load(*result.objGfx, filePath, params);
     if (result.objGfx->getFrameCount() != 0) {
