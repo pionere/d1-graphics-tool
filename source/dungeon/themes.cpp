@@ -1144,9 +1144,9 @@ static bool Theme_Lock(int themeId)
 	POS32 pos;
 	const ThemeStruct &theme = themes[themeId];
     bool ll = false;
-	//if (random_(0, 16) != 0) {
-	//	return false;
-	//}
+	if (random_(0, 16) != 0) {
+		return false;
+	}
 	for (xx = theme._tsx1 - 1; xx <= theme._tsx2; xx++) {
 		for (yy = theme._tsy1 - 1; yy <= theme._tsy2; yy++) {
 			if (xx >= theme._tsx1 && xx < theme._tsx2 && yy >= theme._tsy1 && yy < theme._tsy2) continue;
@@ -1171,7 +1171,10 @@ static bool Theme_Lock(int themeId)
 		}
 	}
 	if (doi < 0) {
-		// dProgressErr() << QString("Unlockable %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+        // if (ll)
+        //     dProgressWarn() << QString("Locked already %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+        // else
+        //     dProgressErr() << QString("Unlockable %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 		return false;
 	}
 	while (true) {
@@ -1286,7 +1289,7 @@ void CreateThemeRooms()
 	}
 	for (i = numthemes - 1; i >= 0; i--) {
 		if (Theme_Lock(i)) {
-			// i = numthemes;
+			i = numthemes;
 		}
 	}
     dt[0] += timer->nsecsElapsed();
