@@ -2152,8 +2152,6 @@ void MainWindow::on_actionOpenAs_triggered()
     }
     this->openAsDialog->initialize();
     this->openAsDialog->show();
-    this->openAsDialog->raise();
-    this->openAsDialog->activateWindow();
 }
 
 void MainWindow::on_actionSave_triggered()
