@@ -340,6 +340,17 @@ void SaveAsDialog::on_saveCancelButton_clicked()
     this->close();
 }
 
+void SaveAsDialog::keyPressEvent(QKeyEvent *event)
+{
+    const int kc = event->key() | event->modifiers();
+    if (keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) {
+        this->close();
+        return;
+    }
+
+    QDialog::keyPressEvent(event);
+}
+
 void SaveAsDialog::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
