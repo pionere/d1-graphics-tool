@@ -2151,7 +2151,7 @@ void MainWindow::on_actionOpenAs_triggered()
         this->openAsDialog = new OpenAsDialog(this);
     }
     this->openAsDialog->initialize();
-    this->openAsDialog->show();
+    this->openAsDialog->open();
 }
 
 void MainWindow::on_actionSave_triggered()
