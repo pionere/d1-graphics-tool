@@ -1188,8 +1188,6 @@ void PaletteWidget::patchTrn()
 void PaletteWidget::keyPressEvent(QKeyEvent *event)
 {
     const int kc = event->key() | event->modifiers();
-    if (event->matches(QKeySequence::Cancel)) {
-
     if (this->pickingTranslationColor && MainWindow::keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
         this->initStopColorPicking();
         return;

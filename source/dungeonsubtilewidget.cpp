@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "levelcelview.h"
+#include "mainwindow.h"
 #include "ui_dungeonsubtilewidget.h"
 
 #include "dungeon/all.h"
