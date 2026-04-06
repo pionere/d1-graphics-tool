@@ -369,22 +369,24 @@ void InitLvlThemes()
 
 void InitThemes()
 {
-	int i, j, x, y, x1, y1, x2, y2;
+	int sh, i, j, x, y, x1, y1, x2, y2;
 
 	// assert(currLvl._dType != DTYPE_TOWN);
 	if (numthemes == 0)
 		return;
 	// assert(currLvl._dLevelNum < DLV_HELL4 || (currLvl._dDynLvl && currLvl._dLevelNum == DLV_HELL4)); // there are no themes in hellfire (and on diablo-level)
-	for (i = 0; i < numthemes; i++) {
+	sh = currLvl._dDunType == DGT_CAVES ? 1 : 0; // shift location of the room where the walls are on the southern side of the tile (fences in caves)
+	// for (i = 0; i < numthemes; i++) {
+	for (i = numthemes - 1; i >= 0; i--) {
 		x1 = themes[i]._tsx1;
 		y1 = themes[i]._tsy1;
 		x2 = themes[i]._tsx2;
 		y2 = themes[i]._tsy2;
 		// convert to subtile-coordinates and select the internal subtiles of the room [p0;p1)
-		x1 = DBORDERX + 2 * x1 + 1;
-		y1 = DBORDERY + 2 * y1 + 1;
-		x2 = DBORDERX + 2 * x2;
-		y2 = DBORDERY + 2 * y2;
+		x1 = DBORDERX + 2 * x1 + 1 + sh;
+		y1 = DBORDERY + 2 * y1 + 1 + sh;
+		x2 = DBORDERX + 2 * x2 + sh;
+		y2 = DBORDERY + 2 * y2 + sh;
 		themes[i]._tsx1 = x1;
 		themes[i]._tsy1 = y1;
 		themes[i]._tsx2 = x2;
@@ -1141,7 +1143,7 @@ static bool Theme_Lock(int themeId)
 	int xx, yy, oi, doi = -1;
 	POS32 pos;
 	const ThemeStruct &theme = themes[themeId];
-
+    bool ll = false;
 	//if (random_(0, 16) != 0) {
 	//	return false;
 	//}
@@ -1155,7 +1157,12 @@ static bool Theme_Lock(int themeId)
 			oi = dObject[xx][yy];
 			if (oi <= 0) continue;
 			oi--;
-			if (objects[oi]._oDoorFlag == ODT_NONE || objects[oi]._oVar4 == DOOR_LOCKED) continue;
+			// if (objects[oi]._oDoorFlag == ODT_NONE || objects[oi]._oVar4 == DOOR_LOCKED) continue;
+			if (objects[oi]._oDoorFlag == ODT_NONE) continue;
+            if (objects[oi]._oVar4 == DOOR_LOCKED) {
+                ll = true;
+                continue;
+            }
 			if (doi >= 0) {
 				// dProgressWarn() << QString("Multidoor %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 				return false;
@@ -1170,11 +1177,13 @@ static bool Theme_Lock(int themeId)
 	while (true) {
 		pos = RndLoc3x3();
 		if (pos.x == 0)
-			return;
+			return false;
 		if (pos.x < theme._tsx1 || pos.x > theme._tsx2 || pos.y < theme._tsy1 || pos.y > theme._tsy2)
 			break;
 	}
-
+    if (ll) {
+        dProgressErr() << QString("Lock Lock");
+    }
 	return ObjAddDoorLock(pos.x, pos.y, doi);
 }
 
