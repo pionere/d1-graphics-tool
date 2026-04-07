@@ -634,7 +634,6 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     while (!stopgen /*true*/) {
         //LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, questSeed, params.entryMode);
         dProgress() << QApplication::tr("Generating dungeon %1: %2/%3 with seed: %4 / %5. Entry mode: %6").arg(rounds).arg(params.levelIdx).arg(params.levelNum).arg(lvlSeed).arg(questSeed).arg(params.entryMode);
-//LogErrorF("Generating dungeon %d: %d/%d with seed: %d / %d. Entry mode: %d", rounds, params.levelIdx, params.levelNum, lvlSeed, questSeed, params.entryMode);
         // dooDebug = lvlSeed == 952458269 && questSeed == 1654566178;
         LoadGameLevel(params.entryMode, dun);
         FreeLvlDungeon();

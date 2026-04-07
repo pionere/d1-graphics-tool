@@ -506,10 +506,10 @@ static void Theme_Monsts_Query(int xx, int yy, void* userParam)
 static void PlaceThemeMonsts(const ThemeStruct &theme)
 {
 	int mtidx, xx, yy;
-	//const BYTE monstrnds[4] = { 12, 10, 3, 9 };
+	//const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 	//const BYTE rndfrq = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
-    BYTE rndfrq = 32u * 32u / 2 / AllLevels[currLvl._dLevelNum].dMonDensity;
-    if (rndfrq == 0) rndfrq = 1;
+	BYTE rndfrq = 32u * 32u / 2 / AllLevels[currLvl._dLevelNum].dMonDensity;
+	if (rndfrq == 0) rndfrq = 1;
 
 	// assert(numScaTypes != 0);
 	mtidx = mapScaTypes[random_low(0, numScaTypes)];
@@ -693,7 +693,7 @@ static const int8_t SkelPatterns[][2] = {
 static void Theme_SkelRoom(int themeId)
 {
 	int xx, yy;
-	// const BYTE monstrnds[4] = { 12, 10, 3, 9 };
+	// const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
 	int8_t objs[2];
@@ -704,8 +704,7 @@ static void Theme_SkelRoom(int themeId)
 	AddObject(OBJ_SKFIRE, xx, yy);
 
 	//monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
-	//monstrnd = monstrnd * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
-    monstrnd = 8u * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+	monstrnd = 8u * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
 	if (monstrnd == 0) monstrnd = 1;
 
 	AddSkelMonOrBanner(monstrnd, xx - 1, yy - 1);
@@ -1036,8 +1035,7 @@ static void Theme_GoatShrine(int themeId)
 	yy = theme._tsObjY;
 	AddObject(OBJ_GOATSHRINE, xx, yy);
 	// monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
-	// monstrnd = monstrnd * AllLevels[currLvl._dLevelNum].dMonDensity / ((theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
-    monstrnd = 8u * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+	monstrnd = 8u * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
 	if (monstrnd == 0) monstrnd = 1;
 	mtidx = mapGoatTypes[random_low(136, numGoatTypes)];
 	for (i = 0; i < lengthof(offset_x); i++) {
@@ -1157,7 +1155,6 @@ static void Theme_Lock(int themeId)
 			oi = dObject[xx][yy];
 			if (oi <= 0) continue;
 			oi--;
-			// if (objects[oi]._oDoorFlag == ODT_NONE || objects[oi]._oVar4 == DOOR_LOCKED) continue;
 			if (objects[oi]._oDoorFlag == ODT_NONE) continue;
 			if (doi >= 0) {
 				// dProgressWarn() << QString("Multidoor %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
@@ -1176,6 +1173,7 @@ static void Theme_Lock(int themeId)
 			return;
 		if (pos.x < theme._tsx1 || pos.x > theme._tsx2 || pos.y < theme._tsy1 || pos.y > theme._tsy2)
 			break;
+        dProgressErr() << QString("Theme lock %1 at %2:%3, %4:%5..%6:%7").arg(themeId).arg(pos.x).arg(pos.y).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
 	}
 	ObjAddDoorLock(pos.x, pos.y, doi);
 }

@@ -966,13 +966,13 @@ void InitMonsters()
 	int mtidx;
 	// const int tdx[4] = { -1, -1,  2,  2 };
 	// const int tdy[4] = { -1,  2, -1,  2 };
-	const int tdx[4] = { 0 };
-	const int tdy[4] = { 0 };
+	const int tdx[] = { 0 };
+	const int tdy[] = { 0 };
 	// reserve the entry/exit area
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
 		if (pWarps[i]._wx == 0)
 			continue;
-		if (i == DWARP_EXIT /*&& currLvl._dLevelIdx == DLV_HELL3*/)
+		if (i == DWARP_EXIT) // && currLvl._dLevelIdx == DLV_HELL3)
 			continue;
 		if (i == DWARP_SIDE)
 			continue;
@@ -1023,7 +1023,7 @@ dProgressErr() << QString("Light blocking warp at %1:%2 - %3 (%4)").arg(pWarps[i
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
 		if (pWarps[i]._wx == 0)
 			continue;
-		if (i == DWARP_EXIT /*&& currLvl._dLevelIdx == DLV_HELL3*/)
+		if (i == DWARP_EXIT) // && currLvl._dLevelIdx == DLV_HELL3)
 			continue;
 		if (i == DWARP_SIDE)
 			continue;

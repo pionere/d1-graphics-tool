@@ -35,8 +35,6 @@
 #include "d1trs.h"
 #include "ui_mainwindow.h"
 
-#include "dungeon/all.h"
-
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
@@ -216,8 +214,6 @@ void MainWindow::setBaseTrn(const QString &path)
 
     D1Pal *resPal = this->trnBase->getResultingPalette();
     // update entities
-    dProgressErr() << QString("base trn res pal address %1").arg((size_t)resPal);
-    LogErrorF("base trn res pal address %ull", (size_t)resPal);
     this->gfx->setPalette(resPal);
     if (this->dun != nullptr) {
         this->dun->setPal(resPal);
