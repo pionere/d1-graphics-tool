@@ -1171,9 +1171,10 @@ static void Theme_Lock(int themeId)
 		pos = RndLoc3x3();
 		if (pos.x == 0)
 			return;
-		if (pos.x < theme._tsx1 || pos.x > theme._tsx2 || pos.y < theme._tsy1 || pos.y > theme._tsy2)
-			break;
+        // assert(pos.x < theme._tsx1 || pos.x > theme._tsx2 || pos.y < theme._tsy1 || pos.y > theme._tsy2);
+		if (!(pos.x < theme._tsx1 || pos.x > theme._tsx2 || pos.y < theme._tsy1 || pos.y > theme._tsy2))
         dProgressErr() << QString("Theme lock %1 at %2:%3, %4:%5..%6:%7").arg(themeId).arg(pos.x).arg(pos.y).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+		break;
 	}
 	ObjAddDoorLock(pos.x, pos.y, doi);
 }

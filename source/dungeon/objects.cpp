@@ -567,9 +567,10 @@ static void ObjAddTraps()
 
 	rndv = 10 + (currLvl._dLevel >> 1);
 	for (i = numobjects - 1; i >= 0; i--) {
-		int oi = i; // objectactive[i];
+		const int oi = i; // objectactive[i];
 		ObjectStruct* os = &objects[oi];
-		if (objectdata[os->_otype].oTrapFlag == OTM_NONE)
+		const BYTE tt = objectdata[os->_otype].oTrapFlag;
+		if (tt == OTM_NONE)
 			continue;
 		if (random_(144, 128) >= rndv)
 			continue;
@@ -603,7 +604,7 @@ static void ObjAddTraps()
 		if (on == -1)
 			return;
 		objects[on]._oVar1 = oi; // TRAP_OI_REF
-		objects[on]._oVar2 = objectdata[objects[oi]._otype].oTrapFlag; // TRAP_TRIG_TYPE
+		objects[on]._oVar2 = tt; // TRAP_TRIG_TYPE
 		objects[oi]._oTrapChance = RandRange(1, 64);
 		objects[oi]._oVar5 = on + 1; // TRAP_OI_BACKREF
 	}
