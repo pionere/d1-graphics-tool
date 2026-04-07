@@ -525,9 +525,12 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_mhitpoints = mon->_mmaxhp = RandRange(cmon->cmMinHP, cmon->cmMaxHP) << 6;
 	mon->_mAnims = cmon->cmAnims;
 	mon->_mAnimData = cmon->cmAnims[MA_STAND].maAnimData[dir];
-#endif
 	mon->_mAnimFrameLen = cmon->cmAnims[MA_STAND].maFrameLen;
 	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
+#else
+	mon->_mmaxhp = RandRange(cmon->cmMinHP, cmon->cmMaxHP) << 6;
+	random_low(88, 1);
+#endif
 	mon->_mAnimLen = cmon->cmAnims[MA_STAND].maFrames;
 	mon->_mAnimFrame = mon->_mAnimLen == 0 ? 1 : RandRangeLow(1, mon->_mAnimLen);
 	mon->_mmode = MM_STAND;
@@ -597,6 +600,8 @@ void AddMonster(int mtidx, int x, int y)
 {
 	if (nummonsters < MAXMONSTERS) {
 		PlaceMonster(mtidx, x, y);
+	} else {
+		dProgressErr() << QString("Monster overflow");
 	}
 }
 
@@ -956,14 +961,15 @@ void InitMonsters()
 	unsigned na, numplacemonsters;
 	int i, j, xx, yy;
 	int mtidx;
-	const int tdx[4] = { -1, -1,  2,  2 };
-	const int tdy[4] = { -1,  2, -1,  2 };
-
-	// reserve the entry/exit area
+	const int tdx[] = { 0 };
+	const int tdy[] = { 0 };
+	// reserve the entry area
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
 		if (pWarps[i]._wx == 0)
 			continue;
-		if (i == DWARP_EXIT && currLvl._dLevelIdx == DLV_HELL3)
+		if (i == DWARP_EXIT) // && currLvl._dLevelIdx == DLV_HELL3)
+			continue;
+		if (i == DWARP_SIDE)
 			continue;
 		static_assert(MAX_LIGHT_RAD >= 15, "Tile reservation in InitMonsters requires at least 15 light radius.");
 		for (j = lengthof(tdx) - 1; j >= 0; j--)
@@ -1010,7 +1016,9 @@ void InitMonsters()
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
 		if (pWarps[i]._wx == 0)
 			continue;
-		if (i == DWARP_EXIT && currLvl._dLevelIdx == DLV_HELL3)
+		if (i == DWARP_EXIT) // && currLvl._dLevelIdx == DLV_HELL3)
+			continue;
+		if (i == DWARP_SIDE)
 			continue;
 		for (j = lengthof(tdx) - 1; j >= 0; j--)
 			DoUnVision(pWarps[i]._wx + tdx[j], pWarps[i]._wy + tdy[j], 15);

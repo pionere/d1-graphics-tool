@@ -325,22 +325,24 @@ void InitLvlThemes()
 
 void InitThemes()
 {
-	int i, j, x, y, x1, y1, x2, y2;
+	int sh, i, j, x, y, x1, y1, x2, y2;
 
 	// assert(currLvl._dType != DTYPE_TOWN);
 	if (numthemes == 0)
 		return;
 	// assert(currLvl._dLevelNum < DLV_HELL4 || (currLvl._dDynLvl && currLvl._dLevelNum == DLV_HELL4)); // there are no themes in hellfire (and on diablo-level)
-	for (i = 0; i < numthemes; i++) {
+	static_assert(DBORDERX == DBORDERY, "Shift of InitThemes requires matching borders.");
+	sh = DBORDERX + (currLvl._dDunType == DGT_CAVES ? 1 : 0); // shift location of the room where the walls are on the southern side of the tile (fences in caves)
+	for (i = numthemes - 1; i >= 0; i--) {
 		x1 = themes[i]._tsx1;
 		y1 = themes[i]._tsy1;
 		x2 = themes[i]._tsx2;
 		y2 = themes[i]._tsy2;
 		// convert to subtile-coordinates and select the internal subtiles of the room [p0;p1)
-		x1 = DBORDERX + 2 * x1 + 1;
-		y1 = DBORDERY + 2 * y1 + 1;
-		x2 = DBORDERX + 2 * x2;
-		y2 = DBORDERY + 2 * y2;
+		x1 = 2 * x1 + 1 + sh;
+		y1 = 2 * y1 + 1 + sh;
+		x2 = 2 * x2 + sh;
+		y2 = 2 * y2 + sh;
 		themes[i]._tsx1 = x1;
 		themes[i]._tsy1 = y1;
 		themes[i]._tsx2 = x2;
@@ -418,8 +420,8 @@ static void Place_Obj3(const ThemeStruct &theme, int type, int rndfrq)
 static void PlaceThemeMonsts(const ThemeStruct &theme)
 {
 	int mtidx, xx, yy;
-	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
-	const BYTE rndfrq = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	BYTE rndfrq = 32u * 32u / 2 / AllLevels[currLvl._dLevelNum].dMonDensity;
+	if (rndfrq == 0) rndfrq = 1;
 
 	// assert(numScaTypes != 0);
 	mtidx = mapScaTypes[random_low(0, numScaTypes)];
@@ -512,10 +514,15 @@ done:
 	PlaceThemeMonsts(theme);
 }
 
+static unsigned ThemeMonCount(const ThemeStruct &theme)
+{
+	return AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1);
+}
+
 static void AddSkelMonOrBanner(BYTE rnd, int x, int y)
 {
 	// assert(PosOkActor(x, y));
-	if (rnd == 0 || random_low(0, rnd) != 0) {
+	if (rnd == 0 || random_low(0, rnd) == 0) {
 		AddMonster(mapSkelTypes[random_low(136, numSkelTypes)], x, y);
 	} else {
 		AddObject(OBJ_BANNER, x, y);
@@ -538,7 +545,6 @@ static const int8_t SkelPatterns[][2] = {
 static void Theme_SkelRoom(int themeId)
 {
 	int xx, yy;
-	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
 	int8_t objs[2];
@@ -548,7 +554,8 @@ static void Theme_SkelRoom(int themeId)
 
 	AddObject(OBJ_SKFIRE, xx, yy);
 
-	monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
+	monstrnd = 8u * 32u * 32u / ThemeMonCount(theme);
+	if (monstrnd == 0) monstrnd = 1;
 
 	AddSkelMonOrBanner(monstrnd, xx - 1, yy - 1);
 
@@ -788,17 +795,21 @@ static void Theme_ArmorStand(int themeId)
 static void Theme_GoatShrine(int themeId)
 {
 	int i, xx, yy, mtidx, x, y;
+	BYTE monstrnd;
 	const ThemeStruct &theme = themes[themeId];
 
 	xx = theme._tsObjX;
 	yy = theme._tsObjY;
 	AddObject(OBJ_GOATSHRINE, xx, yy);
+	monstrnd = 8u * 32u * 32u / ThemeMonCount(theme);
+	if (monstrnd == 0) monstrnd = 1;
 	mtidx = mapGoatTypes[random_low(136, numGoatTypes)];
 	for (i = 0; i < lengthof(offset_x); i++) {
 		x = xx + offset_x[i];
 		y = yy + offset_y[i];
 		// assert(dTransVal[x][y] == theme._tsTransVal && !nSolidTable[dPiece[x][y]]);
-		AddMonster(mtidx, x, y); // OPPOSITE(i)
+		if (random_low(0, monstrnd) == 0)
+			AddMonster(mtidx, x, y); // OPPOSITE(i)
 	}
 }
 
@@ -881,6 +892,49 @@ static void Theme_WeaponRack(int themeId)
 }
 
 /**
+ * Theme_Lock locks the door of themes.
+ *
+ * @param themeId: theme id.
+ */
+static void Theme_Lock(int themeId)
+{
+	int xx, yy, oi, doi = -1;
+	POS32 pos;
+	const ThemeStruct &theme = themes[themeId];
+
+	if (random_(0, 16) != 0) {
+		return;
+	}
+	for (xx = theme._tsx1 - 1; xx <= theme._tsx2; xx++) {
+		for (yy = theme._tsy1 - 1; yy <= theme._tsy2; yy++) {
+			if (xx >= theme._tsx1 && xx < theme._tsx2 && yy >= theme._tsy1 && yy < theme._tsy2) continue;
+			if (!nSolidTable[dPiece[xx][yy]]) {
+				// dProgressWarn() << QString("Non-closed %1 at %2:%3 (pn:%4), %5:%6..%7:%8").arg(themeId).arg(xx).arg(yy).arg(dPiece[xx][yy]).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+				return;
+			}
+			oi = dObject[xx][yy];
+			if (oi <= 0) continue;
+			oi--;
+			if (objects[oi]._oDoorFlag == ODT_NONE) continue;
+			if (doi >= 0) {
+				// dProgressWarn() << QString("Multidoor %1, %2:%3..%4:%5").arg(themeId).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
+				return;
+			}
+			doi = oi;
+		}
+	}
+	// assert(doi >= 0);
+	while (true) {
+		pos = RndLoc3x3();
+		if (pos.x == 0)
+			return;
+		// assert(pos.x < theme._tsx1 || pos.x > theme._tsx2 || pos.y < theme._tsy1 || pos.y > theme._tsy2);
+		break;
+	}
+	ObjAddDoorLock(pos.x, pos.y, doi);
+}
+
+/**
  * UpdateL4Trans sets each value of the transparency map to 1.
  */
 /*static void UpdateL4Trans()
@@ -957,6 +1011,7 @@ void CreateThemeRooms()
 			ASSUME_UNREACHABLE
 			break;
 		}
+		Theme_Lock(i);
 	}
 	//gbInitObjFlag = false;
 	// TODO: why was this necessary in the vanilla code?

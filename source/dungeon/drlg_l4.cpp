@@ -46,8 +46,8 @@ const BYTE L4DYNENTRY2[] = {
 	// clang-format off
 	2, 2, // width, height
 
-	2, 6, // search
-	2, 6,
+	1, 6, // search
+	1, 6,
 
 	63, 0, // replace
 	0, 0,
@@ -2030,6 +2030,8 @@ H2:
 
 static void DRLG_L4()
 {
+	int i;
+
 	while (true) {
 		do {
 			memset(drlg.dungBlock, 0, sizeof(drlg.dungBlock));
@@ -2038,7 +2040,8 @@ static void DRLG_L4()
 			//memset(dungeon, 30, sizeof(dungeon));
 			L4FirstRoom();
 			L4ConnectBlock();
-		} while (DRLG_L4GetArea() < 190);
+			i = DRLG_L4GetArea();
+		} while (i < 190 || i > 220);
 
 		L4Block2Dungeon();
 		DRLG_L4MakeMegas();
@@ -2114,7 +2117,7 @@ static void DRLG_L4()
 	// DRLG_L4GeneralFix(); - commented out, because this is no longer necessary
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
-		DRLG_PlaceThemeRooms(7, 10, themeTiles, 112);
+		DRLG_PlaceThemeRooms(7, MAXTHEMESIZE, themeTiles, 112);
 		DRLG_L4ThemeExitFix();
 	}
 

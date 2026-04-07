@@ -1621,12 +1621,14 @@ static bool DL2_FillVoids()
 	bool xLeft, xRight, xUp, xDown;
 	int tries;
 
-	tries = 0;
+	tries = 200;
 	while (true) {
-		if (DRLG_L2GetArea() >= 800)
-			return true;
+		i = DRLG_L2GetArea();
+		if (i >= 1000) {
+			return i <= 1200;
+		}
 next_try:
-		if (++tries > 200)
+		if (--tries == 0)
 			break;
 		// find a 3-tile wide room-wall-empty space
 		do {
@@ -2395,7 +2397,7 @@ static void DRLG_L2()
 	L2LockoutFix();
 	// L2DoorFix(); - commented out, because this is no longer necessary
 
-	DRLG_PlaceThemeRooms(6, 10, themeTiles, 0);
+	DRLG_PlaceThemeRooms(6, MAXTHEMESIZE, themeTiles, 0);
 
 	L2CreateArches();
 	// L2DoorFix2(); - commented out, because there is not much point to do this after L2CreateArches

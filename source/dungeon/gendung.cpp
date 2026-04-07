@@ -1324,27 +1324,25 @@ void InitLvlMap()
  * @param floor the id of the floor tile in dungeon
  * @param x the x-coordinate of the starting position
  * @param y the y-coordinate of the starting position
- * @param minSize the minimum size of the room (must be less than 20)
- * @param maxSize the maximum size of the room (must be less than 20)
+ * @param minSize the minimum size of the room (must be less than maxSize)
+ * @param maxSize the maximum size of the room (must be less than MAXTHEMESIZE)
  * @param room the w/h of the room if found
  * @return whether a fitting room was found
  */
 static bool DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSize, AREA32 &room)
 {
 	int xmax, ymax, i, j, smallest;
-	int xArray[16], yArray[16];
+	int wArray[2 * (MAXTHEMESIZE + 1)] = { };
+	int* xArray = &wArray[0];
+	int* yArray = &wArray[MAXTHEMESIZE + 1];
 	int size, bestSize, w, h;
 
-	// assert(maxSize < 16);
+	// assert(maxSize < MAXTHEMESIZE);
 
 	xmax = std::min(maxSize, DMAXX - x);
 	ymax = std::min(maxSize, DMAXY - y);
 	// BUGFIX: change '&&' to '||' (fixed)
-	if (xmax < minSize || ymax < minSize)
-		return false;
-
-	memset(xArray, 0, sizeof(xArray));
-	memset(yArray, 0, sizeof(yArray));
+	assert(xmax >= minSize && ymax >= minSize);
 
 	// find horizontal(x) limits
 	smallest = xmax;
@@ -1471,8 +1469,8 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 	int i, j;
 	int min;
 	// assert((maxSize - 2) * (maxSize - 2) <= lengthof(drlg.thLocs));
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
+	for (i = 0; i < DMAXX - minSize; i++) {
+		for (j = 0; j < DMAXY - minSize; j++) {
 			// always start from a floor tile
 			if (dungeon[i][j] != themeTiles[DRT_FLOOR]) {
 				continue;
@@ -1485,6 +1483,10 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 			if (!DRLG_FitThemeRoom(themeTiles[DRT_FLOOR], i, j, minSize, maxSize, tArea)) {
 				continue;
 			}
+			// ensure there is no overlapping with previous themes
+			if (InThemeRoom(i, j)) {
+				goto next;
+			}
 			// randomize the size
 			if (rndSkip) {
 				// assert(minSize > 2);
@@ -1494,8 +1496,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				tArea.w = RandRangeLow(min, tArea.w);
 				tArea.h = RandRangeLow(min, tArea.h);
 			}
-			// ensure there is no overlapping with previous themes
-			if (!InThemeRoom(i + 1, j + 1)) {
+			{
 				// create the room
 				themes[numthemes]._tsx1 = i + 1;
 				themes[numthemes]._tsy1 = j + 1;
@@ -1506,7 +1507,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 				if (numthemes == lengthof(themes))
 					return; // should not happen (too often), otherwise the theme-placement is biased
 			}
-
+next:
 			j += tArea.h;
 		}
 	}

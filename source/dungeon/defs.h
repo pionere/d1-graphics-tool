@@ -36,6 +36,8 @@
 #define DSIZEY                   80
 #define MAXDUNX                  112
 #define MAXDUNY                  112
+/** The maximum size of the theme rooms (tiles) */
+#define MAXTHEMESIZE             10
 /** The size of the quads in hell. */
 static_assert(DMAXX % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a quarter block -> requires to have a dungeon with even width.");
 #define L4BLOCKX (DMAXX / 2)
@@ -71,7 +73,7 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define MAXOBJECTS              127
 #define OBJ_NONE                0xFF
 #define OBJ_VALID(x) ((int8_t)x >= 0)
-#define MAXTHEMES               8
+#define MAXTHEMES               16
 #define MAXTILES                255
 #define MAXSUBTILES             1023
 #define MAXVISION               (MAX_PLRS + MAX_MINIONS)

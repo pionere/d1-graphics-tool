@@ -15,6 +15,8 @@ DEVILUTION_BEGIN_NAMESPACE
 #define BASE_MEGATILE_L1 22
 /** The default floor tile. */
 #define DEFAULT_MEGATILE_L1 13
+/** The placeholder floor tile. */
+#define PLACEHOLDER_MEGATILE_L1 0xFF
 /** Size of the main chambers in the dungeon. */
 #define CHAMBER_SIZE 10
 /** Shadow type of the base floor(13). */
@@ -1089,17 +1091,17 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 1, height + 2)) { // BUGFIX: swap args 3 and 4 ("height+2" and "width+1") (fixed)
 				// - add room to the left
 				L1DrawRoom(rx, ry, width, height);
-				break;
+				// room added to the left -> force similar room on the right side
+				i = 1;
+				goto right;
 			}
 		}
-		if (i != 0) {
-			// room added to the left -> force similar room on the right side
-			i = 1;
-		} else {
+		{
 			// room was not added to the left -> try more options on the right
 			rx = -1;
 			i = 20;
 		}
+right:
 		// try to place a room to the right
 		rxy2 = x + w;
 		while (true) {
@@ -1107,6 +1109,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			 && L1CheckRoom(rxy2, ry - 1, width + 1, height + 2)) {
 				// - add room to the right
 				L1DrawRoom(rxy2, ry, width, height);
+				// i = 1;
 				break;
 			}
 			if (--i == 0)
@@ -1132,17 +1135,17 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			 && L1CheckRoom(rx - 1, ry - 1, width + 2, height + 1)) {
 				// - add room to the top
 				L1DrawRoom(rx, ry, width, height);
-				break;
+				// room added to the top -> force similar room on the bottom side
+				i = 1;
+				goto bottom;
 			}
 		}
-		if (i != 0) {
-			// room added to the top -> force similar room on the bottom side
-			i = 1;
-		} else {
+		{
 			// room was not added to the top -> try more options on the bottom
 			ry = -1;
 			i = 20;
 		}
+bottom:
 		// try to place a room to the bottom
 		rxy2 = y + h;
 		while (true) {
@@ -1150,6 +1153,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 			 && L1CheckRoom(rx - 1, rxy2, width + 2, height + 1)) {
 				// - add room to the bottom
 				L1DrawRoom(rx, rxy2, width, height);
+				// i = 1;
 				break;
 			}
 			if (--i == 0)
@@ -1948,75 +1952,102 @@ static void L1TileFix()
 #endif
 }
 
+static void DRLG_L1FloodThemeRoom(int x, int y)
+{
+//	if (x < area.x1 || x > area.x2 || y < area.y1 || y > area.y2) {
+//		return;
+//	}
+	// assert((unsigned)x < DMAXX && (unsigned)y < DMAXY);
+	if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_PROTECTED)) {
+		return;
+	}
+	dungeon[x][y] = PLACEHOLDER_MEGATILE_L1;
+	DRLG_L1FloodThemeRoom(x, y - 1);
+	DRLG_L1FloodThemeRoom(x - 1, y);
+	DRLG_L1FloodThemeRoom(x + 1, y);
+	DRLG_L1FloodThemeRoom(x, y + 1);
+}
+
 static void DRLG_L1PlaceThemeRooms()
 {
 	RECT_AREA32 thops[32];
 	int i, numops = 0;
 	for (i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
-		int roomLeft = drlg.L1RoomList[i].lrx;
-		int roomRight = roomLeft + drlg.L1RoomList[i].lrw - 1;
-		int roomTop = drlg.L1RoomList[i].lry;
-		int roomBottom = roomTop + drlg.L1RoomList[i].lrh - 1;
-		// select floor on the top-left corner
-		if (dungeon[roomLeft][roomTop] != DEFAULT_MEGATILE_L1) {
-			if (dungeon[roomLeft + 1][roomTop] == DEFAULT_MEGATILE_L1) {
-				roomLeft++;
-			} else if (dungeon[roomLeft][roomTop + 1] == DEFAULT_MEGATILE_L1) {
-				roomTop++;
-			} else if (dungeon[roomLeft + 1][roomTop + 1] == DEFAULT_MEGATILE_L1) {
-				roomLeft++;
-				roomTop++;
-			} else {
-				continue;
+		const L1ROOM &room = drlg.L1RoomList[i];
+		const RECT_AREA32 area = { room.lrx, room.lry, room.lrx + room.lrw, room.lry + room.lrh };
+		for (int x = area.x1; x < area.x2; x++) {
+			for (int y = area.y1; y < area.y2; y++) {
+				if (dungeon[x][y] == DEFAULT_MEGATILE_L1)
+					DRLG_L1FloodThemeRoom(x, y);
 			}
 		}
-		// select floor on the bottom-right corner
-		if (dungeon[roomRight][roomBottom] != DEFAULT_MEGATILE_L1) {
-			if (dungeon[roomRight - 1][roomBottom] == DEFAULT_MEGATILE_L1) {
-				roomRight--;
-			} else if (dungeon[roomLeft][roomBottom - 1] == DEFAULT_MEGATILE_L1) {
-				roomBottom--;
-			} else if (dungeon[roomRight - 1][roomBottom - 1] == DEFAULT_MEGATILE_L1) {
-				roomRight--;
-				roomBottom--;
-			} else {
-				continue;
-			}
-		}
-		// check inner tiles
-		bool fit = roomLeft <= roomRight && roomTop <= roomBottom;
-		for (int x = roomLeft; x <= roomRight; x++) {
-			for (int y = roomTop; y <= roomBottom; y++) {
-				if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_PROTECTED)) {
-					fit = false;
+		for (int x = 1; x <= DMAXX - 2; x++) {
+			for (int y = 1; y <= DMAXY - 2; y++) {
+				if (dungeon[x][y] != PLACEHOLDER_MEGATILE_L1) continue;
+				int ex = x;
+				while (dungeon[ex][y] == PLACEHOLDER_MEGATILE_L1) {
+					dungeon[ex][y] = DEFAULT_MEGATILE_L1;
+					ex++;
+					// assert(ex < DMAXX);
 				}
+				int ey = y;
+				while (true) {
+					ey += 1;
+					// assert(ey < DMAXY);
+					for (int xx = x; xx < ex; xx++) {
+						if (dungeon[xx][ey] == PLACEHOLDER_MEGATILE_L1) {
+							dungeon[xx][ey] = DEFAULT_MEGATILE_L1;
+							continue;
+						}
+						if (xx != x)
+							goto next;
+						goto rowend;
+					}
+				}
+rowend:
+				{
+				bool fit = true;
+				// check border tiles
+				for (int xx = x - 1; xx <= ex; xx++) {
+					if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y - 1] == PLACEHOLDER_MEGATILE_L1 ||
+						dungeon[xx][ey] == DEFAULT_MEGATILE_L1 || dungeon[xx][ey] == PLACEHOLDER_MEGATILE_L1) {
+						fit = false;
+					}
+				}
+				for (int yy = y - 1; yy <= ey; yy++) {
+					if (dungeon[x - 1][yy] == DEFAULT_MEGATILE_L1 || dungeon[x - 1][yy] == PLACEHOLDER_MEGATILE_L1 ||
+						dungeon[ex][yy] == DEFAULT_MEGATILE_L1 || dungeon[ex][yy] == PLACEHOLDER_MEGATILE_L1) {
+						fit = false;
+					}
+				}
+				if (!fit) {
+					goto next; // room is too small or incomplete
+				}
+				// ensure there is no overlapping with previous themes
+				for (int n = 0; n < numops; n++) {
+					if (thops[n].x1 == x - 1 && thops[n].y1 == y - 1)
+						goto next; // already selected
+				}
+				int w = ex - (x - 1) + 1;
+				int h = ey - (y - 1) + 1;
+				if (w > MAXTHEMESIZE - 2 || h > MAXTHEMESIZE - 2) {
+					goto next; // room is too large
+				}
+				if (numops == lengthof(thops)) {
+					// should not happen (too often), otherwise the theme-placement is biased
+					goto next;
+				}
+				// register the room
+				thops[numops].x1 = x - 1;
+				thops[numops].y1 = y - 1;
+				thops[numops].x2 = x - 1 + w - 1;
+				thops[numops].y2 = y - 1 + h - 1;
+				numops++;
+				}
+next:
+				;
 			}
 		}
-		// check border tiles
-		for (int x = roomLeft - 1; x <= roomRight + 1; x++) {
-			if (dungeon[x][roomTop - 1] == DEFAULT_MEGATILE_L1 || dungeon[x][roomBottom + 1] == DEFAULT_MEGATILE_L1) {
-				fit = false;
-			}
-		}
-		for (int y = roomTop - 1; y <= roomBottom + 1; y++) {
-			if (dungeon[roomLeft - 1][y] == DEFAULT_MEGATILE_L1 || dungeon[roomRight + 1][y] == DEFAULT_MEGATILE_L1) {
-				fit = false;
-			}
-		}
-		if (!fit)
-			continue; // room is too small or incomplete
-		int w = (roomRight + 1) - (roomLeft - 1) + 1;
-		int h = (roomBottom + 1) - (roomTop - 1) + 1;
-		if (w > 10 - 2 || h > 10 - 2)
-			continue; // room is too large
-		// register the room
-		thops[numops].x1 = roomLeft - 1;
-		thops[numops].y1 = roomTop - 1;
-		thops[numops].x2 = roomLeft - 1 + w - 1;
-		thops[numops].y2 = roomTop - 1 + h - 1;
-		numops++;
-		if (numops == lengthof(thops))
-			break; // should not happen (too often), otherwise the theme-placement is biased
 	}
 	// filter the rooms
 	while (numops > lengthof(themes)) {
@@ -2662,7 +2693,7 @@ static void DRLG_L1()
 {
 	int i, areaidx;
 	// bool placeWater = QuestStatus(Q_PWATER);
-	const int arealimits[] = { DMAXX * DMAXY, 761, 693, 533 };
+	const int arealimits[] = { 900, 800, 693, 533 };
 	areaidx = 0;
 	if (currLvl._dLevelIdx == DLV_CATHEDRAL1) {
 		areaidx = 2;
