@@ -42,7 +42,11 @@ private slots:
     void on_lvlTypeComboBox_activated(int index);
     void on_lvlLineEdit_returnPressed();
     void on_lvlLineEdit_escPressed();
+    void on_seedLineEdit_returnPressed();
+    void on_seedLineEdit_escPressed();
     void on_actionGenerateSeed_triggered();
+    void on_questSeedLineEdit_returnPressed();
+    void on_questSeedLineEdit_escPressed();
     void on_actionGenerateQuestSeed_triggered();
 
     void on_generateButton_clicked();
@@ -53,4 +57,6 @@ private:
 
     D1Dun *dun;
     D1Tileset *tileset;
+    int dunSeed = 0;
+    int questSeed = 0;
 };
