@@ -59,6 +59,8 @@ void DungeonGenerateDialog::on_lvlComboBox_activated(int index)
         static_assert(DTYPE_CRYPT == 5, "DungeonGenerateDialog has hardcoded enum values VI.");
         static_assert(DTYPE_NEST == 6, "DungeonGenerateDialog has hardcoded enum values VII.");
         ltc->setCurrentIndex((int)AllLevels[index + 1].dType);
+    } else {
+        this->on_lvlTypeComboBox_activated(ltc->currentIndex());
     }
 }
 
@@ -68,7 +70,7 @@ void DungeonGenerateDialog::on_lvlTypeComboBox_activated(int index)
     int levelNum = lew->text().toUShort();
     if (index != 0) {
         int from = INT_MAX;
-        for (int i = 0; i < NUM_FIXLVLS; i++) {
+        for (int i = DLV_CATHEDRAL1; i < NUM_STDLVLS; i++) {
             if (AllLevels[i].dType == index) {
                 int lvl = AllLevels[i].dLevel;
                 if (from > lvl)
