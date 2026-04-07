@@ -1340,7 +1340,7 @@ void InitLvlMap()
  * @param floor the id of the floor tile in dungeon
  * @param x the x-coordinate of the starting position
  * @param y the y-coordinate of the starting position
- * @param minSize the minimum size of the room
+ * @param minSize the minimum size of the room (must be less than maxSize)
  * @param maxSize the maximum size of the room (must be less than MAXTHEMESIZE)
  * @param room the w/h of the room if found
  * @return whether a fitting room was found

@@ -964,11 +964,9 @@ void InitMonsters()
 	unsigned na, numplacemonsters;
 	int i, j, xx, yy;
 	int mtidx;
-	// const int tdx[4] = { -1, -1,  2,  2 };
-	// const int tdy[4] = { -1,  2, -1,  2 };
 	const int tdx[] = { 0 };
 	const int tdy[] = { 0 };
-	// reserve the entry/exit area
+	// reserve the entry area
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
 		if (pWarps[i]._wx == 0)
 			continue;

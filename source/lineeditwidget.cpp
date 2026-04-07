@@ -67,16 +67,17 @@ void LineEditWidget::setReadOnly(bool ro)
 
 void LineEditWidget::keyPressEvent(QKeyEvent *event)
 {
-    int key = event->key();
-    if (key == Qt::Key_Escape && !this->isReadOnly()) {
-        emit cancel_signal();
-        return;
+    if (!this->isReadOnly()) {
+        int key = event->key();
+        if (key == Qt::Key_Escape &&) {
+            emit cancel_signal();
+            return;
+        }
+        if (key == Qt::Key_Return || key == Qt::Key_Enter) {
+            emit returnPressed();
+            return;
+        }
     }
-    if (key == Qt::Key_Return || key == Qt::Key_Enter) {
-        emit returnPressed();
-        return;
-    }
-
     QLineEdit::keyPressEvent(event);
 }
 

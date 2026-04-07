@@ -6,6 +6,7 @@
 #include "all.h"
 
 #include <QString>
+
 #include "../progressdialog.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -2218,7 +2219,7 @@ rowend:
 				}
 				int w = ex - (x - 1) + 1;
 				int h = ey - (y - 1) + 1;
-				if (w > 10 - 2 || h > 10 - 2) {
+				if (w > MAXTHEMESIZE - 2 || h > MAXTHEMESIZE - 2) {
 					goto next; // room is too large
 				}
 				if (numops == lengthof(thops)) {
@@ -2235,7 +2236,7 @@ rowend:
 				numops++;
 				}
 next:
-                ;
+				;
 			}
 		}
 	}

@@ -2109,7 +2109,7 @@ H2:
 
 static void DRLG_L4()
 {
-    int i;
+	int i;
     extern int counter1;
 	while (true) {
 		do {

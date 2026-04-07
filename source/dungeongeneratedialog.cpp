@@ -106,7 +106,7 @@ void DungeonGenerateDialog::on_seedLineEdit_returnPressed()
     } else {
         QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
     }
-    
+
     this->on_seedLineEdit_escPressed();
 }
 
@@ -120,7 +120,7 @@ void DungeonGenerateDialog::on_actionGenerateSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
     this->dunSeed = (int)gen->generate();
-    this->ui->seedLineEdit->setText(QString::number(this->dunSeed));
+    this->on_seedLineEdit_escPressed();
 }
 
 void DungeonGenerateDialog::on_questSeedLineEdit_returnPressed()
@@ -133,7 +133,7 @@ void DungeonGenerateDialog::on_questSeedLineEdit_returnPressed()
     } else {
         QMessageBox::critical(this, "Error", "Failed to parse the quest-seed to a 32-bit integer.");
     }
-    
+
     this->on_questSeedLineEdit_escPressed();
 }
 

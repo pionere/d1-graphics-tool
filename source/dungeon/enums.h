@@ -3305,9 +3305,9 @@ typedef enum object_door_type {
 typedef enum object_trap_mode {
 	OTM_NONE,
 	OTM_DOOR, // 1x1 object which is not passable, triggered by open
-	OTM_0X0,  // 1x1 object which is passable, triggered by gfx change
 	OTM_1X1,  // 1x1 object which is not passable, triggered by inactivation
 	OTM_1X2,  // 1x2 object which is not passable, triggered by inactivation
+	OTM_0X0,  // 1x1 object which is passable, triggered by gfx change
 } object_trap_mode;
 
 typedef enum _object_id {
