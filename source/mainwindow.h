@@ -153,6 +153,7 @@ public:
     static bool isResourcePath(const QString &path);
     static void supportedImageFormats(QStringList &allSupportedImageFormats);
     static QString FileContentTypeToStr(FILE_CONTENT fileType);
+    static bool keyCombinationMatchesSequence(int kc, const QKeySequence &ks);
 
 private:
     static IMPORT_FILE_TYPE guessFileType(const QString& filePath, bool dunMode);

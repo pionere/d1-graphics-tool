@@ -1024,7 +1024,7 @@ void MainWindow::openFiles(const QStringList &filePaths)
     }
 }
 
-static bool keyCombinationMatchesSequence(int kc, const QKeySequence &ks)
+bool MainWindow::keyCombinationMatchesSequence(int kc, const QKeySequence &ks)
 {
     for (int i = 0; i < ks.count(); i++) {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)

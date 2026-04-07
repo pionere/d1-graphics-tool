@@ -1187,17 +1187,18 @@ void PaletteWidget::patchTrn()
 
 void PaletteWidget::keyPressEvent(QKeyEvent *event)
 {
-    if (this->pickingTranslationColor && event->matches(QKeySequence::Cancel)) {
+    const int kc = event->key() | event->modifiers();
+    if (this->pickingTranslationColor && MainWindow::keyCombinationMatchesSequence(kc, QKeySequence::Cancel)) { // event->matches(QKeySequence::Cancel)) {
         this->initStopColorPicking();
         return;
     }
-    if (event->matches(QKeySequence::Copy)) {
+    if (MainWindow::keyCombinationMatchesSequence(kc, QKeySequence::Copy)) { // event->matches(QKeySequence::Copy)) {
         if (this->selectedFirstColorIndex != COLORIDX_TRANSPARENT) {
             this->on_actionCopy_triggered();
         }
         return;
     }
-    if (event->matches(QKeySequence::Paste)) {
+    if (MainWindow::keyCombinationMatchesSequence(kc, QKeySequence::Paste)) { // event->matches(QKeySequence::Paste)) {
         this->on_actionPaste_triggered();
         return;
     }
