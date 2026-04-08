@@ -3693,10 +3693,18 @@ void LevelCelView::toggleBottomPanel()
 
 void LevelCelView::zoomInOut(int dir)
 {
-    if (dir >= 0) {
-        this->on_zoomInButton_clicked();
+    if (this->dunView) {
+        if (dir >= 0) {
+            this->on_dunZoomInButton_clicked();
+        } else {
+            this->on_dunZoomOutButton_clicked();
+        }
     } else {
-        this->on_zoomOutButton_clicked();
+        if (dir >= 0) {
+            this->on_zoomInButton_clicked();
+        } else {
+            this->on_zoomOutButton_clicked();
+        }
     }
 }
 
