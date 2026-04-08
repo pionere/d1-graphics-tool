@@ -1482,6 +1482,7 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     if (params.gfxType == OPEN_GFX_TYPE::AUTODETECT) {
         if (!dunFilePath.isEmpty() && QFileInfo::exists(dunFilePath) && (fileType == FILE_CONTENT::CEL || fileType == FILE_CONTENT::EMPTY)) {
             fileType = FILE_CONTENT::DUN;
+            result->fileType = fileType;
             isTileset = true;
         } else if (!isTileset && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && fileType == FILE_CONTENT::CEL) {
             if (QFileInfo::exists(slaFilePath)) {
