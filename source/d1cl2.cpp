@@ -264,7 +264,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     // calculate the meta info size
     CelMetaInfo meta;
     int metaSize = D1Cel::prepareCelMeta(gfx, meta);
-dProgressErr() << tr("numGroups %1 headerSize: %2 meta %3").arg(numGroups).arg(headerSize).arg(metaSize);
+
     // calculate sub header size
     int subHeaderSize = SUB_HEADER_SIZE;
     for (D1GfxFrame *frame : gfx.frames) {

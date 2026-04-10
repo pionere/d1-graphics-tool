@@ -125,7 +125,7 @@ bool D1Cel::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1
     device->seek(4 + firstDword * 4);
     quint32 fileSizeDword;
     in >> fileSizeDword;
-dProgressErr() << tr("firstDword %1 fizeSize: %2 fsword %3").arg(firstDword).arg(fileSize).arg(fileSizeDword);
+
     // If the dword is not equal to the file size then
     // try to read it as a groupped CEL
     hi.groupped = (firstDword != 0 && fileSize != fileSizeDword);
