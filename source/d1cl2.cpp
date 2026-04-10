@@ -237,9 +237,9 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     if (numGroups == 0) {
         headerSize = 4 + 4;
     }
-    // if (numGroups > 1) {
+    if (numGroups > 1) {
         headerSize += sizeof(quint32) * numGroups;
-    // }
+    }
     // update type
     gfx.type = numGroups > 1 ? D1CEL_TYPE::V2_MULTIPLE_GROUPS : D1CEL_TYPE::V2_MONO_GROUP;
     // update clipped info
