@@ -571,6 +571,7 @@ void GfxsetView::createFrame(bool append)
     this->gfx->insertFrame(newFrameIndex, width, height);
     // jump to the new frame
     this->currentFrameIndex = newFrameIndex;
+    this->updateGroupIndex();
     // update the view - done by the caller
     // this->displayFrame();
 }
