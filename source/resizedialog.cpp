@@ -85,6 +85,10 @@ void ResizeDialog::setMinSize(bool width)
         case 1: w = frameSize.width() - 2 * std::min(rect.x(), frameSize.width() - (w + rect.x())); break;
         case 2: w = frameSize.width() - rect.x(); break;
         }
+        // ensure it is an even number
+        if (w & 1) {
+            w += 1;
+        }
         this->ui->widthLineEdit->setText(QString::number(w));
     } else {
         int h = rect.height();
@@ -93,6 +97,7 @@ void ResizeDialog::setMinSize(bool width)
         case 1: h = frameSize.height() - 2 * std::min(rect.y(), frameSize.height() - (h + rect.y())); break;
         case 2: h = frameSize.height() - rect.y(); break;
         }
+        // ensure the width can be calculated for clipped graphics
         if (clipped && h < CEL_BLOCK_HEIGHT) {
             h = CEL_BLOCK_HEIGHT;
         }
