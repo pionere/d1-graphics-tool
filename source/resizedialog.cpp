@@ -77,7 +77,7 @@ void ResizeDialog::setMinSize(bool width)
     case RESIZE_PLACEMENT::BOTTOM:       vert = 2; horz = 1; break;
     case RESIZE_PLACEMENT::BOTTOM_RIGHT: vert = 2; horz = 2; break;
     }
-    getFrameSize
+
     if (width) {
         int w = rect.width();
         switch (horz) {
@@ -91,12 +91,12 @@ void ResizeDialog::setMinSize(bool width)
         switch (vert) {
         case 0: h += rect.y(); break;
         case 1: h = frameSize.height() - 2 * std::min(rect.y(), frameSize.height() - (h + rect.y())); break;
-        case 2: h = frameSize.height() - rect.y()); break;
+        case 2: h = frameSize.height() - rect.y(); break;
         }
         if (clipped && h < CEL_BLOCK_HEIGHT) {
             h = CEL_BLOCK_HEIGHT;
         }
-        this->ui->heightLineEdit->setText(QString::number(w));
+        this->ui->heightLineEdit->setText(QString::number(h));
     }
 }
 

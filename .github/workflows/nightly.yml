@@ -17,7 +17,7 @@ jobs:
     outputs:
       should_run: ${{ steps.should_run.outputs.should_run }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: print latest_commit
         run: echo ${{ github.sha }}
 
@@ -38,10 +38,10 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: '6.2.4'
         modules: 'qtmultimedia qtimageformats'
@@ -68,7 +68,7 @@ jobs:
         directory: 'dist'
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Windows-x64.zip
@@ -83,10 +83,10 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: '5.15.2'
         arch: 'win32_msvc2019'
@@ -114,7 +114,7 @@ jobs:
         directory: 'dist'
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Windows-x86.zip
@@ -128,7 +128,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Dependencies
       run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-tools-dev qt6-l10n-tools qt6-tools-dev-tools
@@ -145,7 +145,7 @@ jobs:
         zip -j -q D1GraphicsTool.zip build/D1GraphicsTool build/D1GraphicsTool-Linux-x64.deb
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Linux-x64.zip
@@ -157,20 +157,20 @@ jobs:
     steps:
     # x86 builds
     - name: Download Win D1GraphicsTool artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: D1GraphicsTool-Windows-x86.zip
     - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Windows-x86.zip
 
     # x64 builds
     - name: Download Win D1GraphicsTool artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: D1GraphicsTool-Windows-x64.zip
     - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Windows-x64.zip
 
     - name: Download Linux D1GraphicsTool artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: D1GraphicsTool-Linux-x64.zip
     - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Linux-x64.zip
@@ -208,7 +208,7 @@ jobs:
       shell: bash
 
     - name: Release
-      uses: softprops/action-gh-release@v0.1.15
+      uses: softprops/action-gh-release@v3.0.0
       with:
         tag_name: dgt-nightly
         body_path: ${{ github.workspace }}/RELEASE_NOTE.md
