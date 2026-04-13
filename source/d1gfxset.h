@@ -61,6 +61,7 @@ public:
     bool isGroupsConstant() const;
     void compareTo(const LoadFileContent *fileContent, bool patchData) const;
     QRect getBoundary() const;
+    QSize getFrameSize() const;
     bool check(const D1Gfx *gfx, int assetMpl) const;
     void mask(int frameIndex, unsigned flags);
 

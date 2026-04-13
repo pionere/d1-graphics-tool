@@ -513,6 +513,22 @@ QRect D1Gfxset::getBoundary() const
     return rect;
 }
 
+QSize D1Gfxset::getFrameSize() const
+{
+    QSize frameSize = QSize(0, 0);
+    for (const D1Gfx *gfx : this->gfxList) {
+        QSize fs = gfx->getFrameSize();
+        if (!fs.isValid())
+            return fs;
+        if (fs.isNull()) continue;
+        if (!frameSize.isNull() && (fs.width() != frameSize.width() || fs.height() != frameSize.height())) {
+            return QSize();
+        }
+        frameSize = fs;
+    }
+    return frameSize;
+}
+
 bool D1Gfxset::check(const D1Gfx *gfx, int assetMpl) const
 {
     bool result = false;
