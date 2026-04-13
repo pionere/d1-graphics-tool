@@ -26,8 +26,11 @@ ResizeDialog::~ResizeDialog()
     delete ui;
 }
 
-void ResizeDialog::initialize(D1Gfxset *gfxset)
+void ResizeDialog::initialize(D1Gfx *gfx, D1Gfxset *gfxset)
 {
+    this->gfx = gfx;
+    this->gfxset = gfxset;
+
     this->ui->resizeAllCheckBox->setVisible(gfxset != nullptr);
     if (this->ui->backColorLineEdit->text().isEmpty()) {
         this->ui->backColorLineEdit->setText("256");
@@ -37,6 +40,66 @@ void ResizeDialog::initialize(D1Gfxset *gfxset)
     this->ui->rangeFromLineEdit->setText("");
     this->ui->rangeToLineEdit->setText("");
     this->ui->centerPlacementRadioButton->setChecked(true);
+}
+
+void ResizeDialog::setMinSize(bool width)
+{
+    const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    QRect rect;
+    QSize frameSize;
+    if (this->gfxset != nullptr && !gfxOnly) {
+        rect = this->gfxset->getBoundary();
+        frameSize = this->gfxset->getFrameSize();
+    } else {
+        rect = this->gfx->getBoundary();
+        frameSize = this->gfx->getFrameSize();
+    }
+    if (!frameSize.isValid()) {
+        QMessageBox::critical(this, tr("Error"), tr("Framesize is not constant"));
+        return;
+    }
+    RESIZE_PLACEMENT placement = (RESIZE_PLACEMENT)this->ui->placementButtonGroup->checkedId();
+
+    int vert = 0, horz = 0;
+    switch (placement) {
+    case RESIZE_PLACEMENT::TOP_LEFT:     vert = 0; horz = 0; break;
+    case RESIZE_PLACEMENT::TOP:          vert = 0; horz = 1; break;
+    case RESIZE_PLACEMENT::TOP_RIGHT:    vert = 0; horz = 2; break;
+    case RESIZE_PLACEMENT::CENTER_LEFT:  vert = 1; horz = 0; break;
+    case RESIZE_PLACEMENT::CENTER:       vert = 1; horz = 1; break;
+    case RESIZE_PLACEMENT::CENTER_RIGHT: vert = 1; horz = 2; break;
+    case RESIZE_PLACEMENT::BOTTOM_LEFT:  vert = 2; horz = 0; break;
+    case RESIZE_PLACEMENT::BOTTOM:       vert = 2; horz = 1; break;
+    case RESIZE_PLACEMENT::BOTTOM_RIGHT: vert = 2; horz = 2; break;
+    }
+    getFrameSize
+    if (width) {
+        int w = rect.width();
+        switch (horz) {
+        case 0: w += rect.x(); break;
+        case 1: w = frameSize.width() - 2 * std::min(rect.x(), frameSize.width() - (w + rect.x())); break;
+        case 2: w = frameSize.width() - rect.x(); break;
+        }
+        this->ui->widthLineEdit->setText(QString::number(w));
+    } else {
+        int h = rect.height();
+        switch (vert) {
+        case 0: h += rect.y(); break;
+        case 1: h = frameSize.height() - 2 * std::min(rect.y(), frameSize.height() - (h + rect.y())); break;
+        case 2: h = frameSize.height() - rect.y()); break;
+        }
+        this->ui->heightLineEdit->setText(QString::number(w));
+    }
+}
+
+void ResizeDialog::on_minWidthButton_clicked()
+{
+    this->setMinSize(true);
+}
+
+void ResizeDialog::on_minHeightButton_clicked()
+{
+    this->setMinSize(false);
 }
 
 void ResizeDialog::on_resizeButton_clicked()

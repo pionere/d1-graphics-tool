@@ -38,9 +38,15 @@ public:
     explicit ResizeDialog(QWidget *parent);
     ~ResizeDialog();
 
-    void initialize(D1Gfxset *gfxset);
+    void initialize(D1Gfx *gfx, D1Gfxset *gfxset);
+
+private:
+    void setMinSize(bool width);
 
 private slots:
+    void on_minWidthButton_clicked();
+    void on_minHeightButton_clicked();
+
     void on_resizeButton_clicked();
     void on_resizeCancelButton_clicked();
 
@@ -49,4 +55,7 @@ private slots:
 
 private:
     Ui::ResizeDialog *ui;
+
+    D1Gfx *gfx;
+    D1Gfxset *gfxset;
 };
