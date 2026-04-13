@@ -2,6 +2,7 @@
 
 #include <QDialog>
 
+class D1Gfx;
 class D1Gfxset;
 
 enum class RESIZE_PLACEMENT {

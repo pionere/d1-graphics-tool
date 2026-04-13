@@ -1,5 +1,7 @@
 #include "resizedialog.h"
 
+#include <QMessageBox>
+
 #include "d1gfxset.h"
 #include "mainwindow.h"
 #include "ui_resizedialog.h"
@@ -47,12 +49,15 @@ void ResizeDialog::setMinSize(bool width)
     const bool gfxOnly = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     QRect rect;
     QSize frameSize;
+    bool clipped;
     if (this->gfxset != nullptr && !gfxOnly) {
         rect = this->gfxset->getBoundary();
         frameSize = this->gfxset->getFrameSize();
+        clipped = this->gfxset->getGfxCount() != 0 && (!this->gfxset->isClippedConstant() || this->gfxset->getGfx(0)->isClipped());
     } else {
         rect = this->gfx->getBoundary();
         frameSize = this->gfx->getFrameSize();
+        clipped = this->gfx->isClipped();
     }
     if (!frameSize.isValid()) {
         QMessageBox::critical(this, tr("Error"), tr("Framesize is not constant"));
@@ -87,6 +92,9 @@ void ResizeDialog::setMinSize(bool width)
         case 0: h += rect.y(); break;
         case 1: h = frameSize.height() - 2 * std::min(rect.y(), frameSize.height() - (h + rect.y())); break;
         case 2: h = frameSize.height() - rect.y()); break;
+        }
+        if (clipped && h < CEL_BLOCK_HEIGHT) {
+            h = CEL_BLOCK_HEIGHT;
         }
         this->ui->heightLineEdit->setText(QString::number(w));
     }
