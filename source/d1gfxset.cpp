@@ -515,9 +515,6 @@ QRect D1Gfxset::getBoundary() const
 
 QSize D1Gfxset::getFrameSize() const
 {
-    if (this->gfxList.isEmpty()) {
-        return QSize(0, 0);
-    }
     QSize frameSize = QSize(0, 0);
     for (const D1Gfx *gfx : this->gfxList) {
         QSize fs = gfx->getFrameSize();
