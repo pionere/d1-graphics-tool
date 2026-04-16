@@ -3667,7 +3667,7 @@ void MainWindow::on_actionSearch_Dungeon_triggered()
 
 void MainWindow::on_actionNew_PAL_triggered()
 {
-    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Palette File"), tr("PAL Files (*.pal *.PAL)"));
+    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("New Palette File"), tr("PAL Files (*.pal *.PAL)"));
 
     if (palFilePath.isEmpty()) {
         return;
@@ -3794,7 +3794,7 @@ void MainWindow::on_actionClose_PAL_triggered()
 
 void MainWindow::on_actionNew_Translation_Unique_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Translation File"), tr("TRN Files (*.trn *.TRN)"));
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("New Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (trnFilePath.isEmpty()) {
         return;
@@ -3802,7 +3802,6 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
 
     QFileInfo trnFileInfo(trnFilePath);
     const QString &path = trnFilePath; // trnFileInfo.absoluteFilePath();
-    const QString name = trnFileInfo.fileName();
 
     D1Trn *newTrn = new D1Trn();
     if (!newTrn->load(D1Trn::IDENTITY_PATH, this->pal)) {
@@ -3901,7 +3900,7 @@ void MainWindow::on_actionPatch_Translation_Unique_triggered()
 
 void MainWindow::on_actionNew_Translation_Base_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Translation File"), tr("TRN Files (*.trn *.TRN)"));
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("New Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (trnFilePath.isEmpty()) {
         return;
@@ -3909,7 +3908,6 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
 
     QFileInfo trnFileInfo(trnFilePath);
     const QString &path = trnFilePath; // trnFileInfo.absoluteFilePath();
-    const QString name = trnFileInfo.fileName();
 
     D1Trn *newTrn = new D1Trn();
     if (!newTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette())) {
