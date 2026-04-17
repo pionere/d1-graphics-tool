@@ -3847,7 +3847,6 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
 
     QFileInfo trnFileInfo(trnFilePath);
     const QString &path = trnFilePath; // trnFileInfo.absoluteFilePath();
-    const QString name = trnFileInfo.fileName();
 
     D1Trn *newTrn = new D1Trn();
     if (!newTrn->load(D1Trn::IDENTITY_PATH, this->pal)) {
@@ -3954,7 +3953,6 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
 
     QFileInfo trnFileInfo(trnFilePath);
     const QString &path = trnFilePath; // trnFileInfo.absoluteFilePath();
-    const QString name = trnFileInfo.fileName();
 
     D1Trn *newTrn = new D1Trn();
     if (!newTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette())) {
