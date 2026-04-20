@@ -446,7 +446,7 @@ static void DoTeleport(int pnum, int dx, int dy)
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
 */
-static int GetDirection8(int x1, int y1, int x2, int y2)
+int GetDirection8(int x1, int y1, int x2, int y2)
 {
 #if UNOPTIMIZED_DIRECTION
 	int mx, my, md;
@@ -518,7 +518,7 @@ static int GetDirection8(int x1, int y1, int x2, int y2)
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
 */
-static int GetDirection16(int x1, int y1, int x2, int y2)
+int GetDirection16(int x1, int y1, int x2, int y2)
 {
 #if UNOPTIMIZED_DIRECTION
 	int mx, my, md;

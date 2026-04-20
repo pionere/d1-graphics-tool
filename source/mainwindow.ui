@@ -310,6 +310,7 @@
     <addaction name="menuTrnUnique"/>
     <addaction name="menuTrnSet"/>
     <addaction name="separator"/>
+    <addaction name="actionDir_Colors"/>
     <addaction name="actionDisplay_Colors"/>
     <addaction name="actionRemap_Colors"/>
     <addaction name="actionSmack_Colors"/>
@@ -1342,6 +1343,14 @@
    </property>
    <property name="toolTip">
     <string>Replace translation values of 255 with 0</string>
+   </property>
+  </action>
+  <action name="actionDir_Colors">
+   <property name="text">
+    <string>Draw Direction Map</string>
+   </property>
+   <property name="toolTip">
+    <string>Draw direction map on the current frame</string>
    </property>
   </action>
   <action name="actionDisplay_Colors">

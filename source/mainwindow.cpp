@@ -35,6 +35,8 @@
 #include "d1trs.h"
 #include "ui_mainwindow.h"
 
+#include "dungeon/missiles.h"
+
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
@@ -262,6 +264,8 @@ void MainWindow::updateDynamicMenus()
         }
     }
     this->ui->actionSquash->setEnabled(hasComponent);
+    // - Colors
+    this->ui->actionDir_Colors->setEnabled((this->gfxsetView != nullptr || this->celView != nullptr) && hasFrame);
     // - Data
     bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
     this->ui->actionDelColumn_Table->setEnabled(hasColumn);
@@ -4049,6 +4053,33 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 void MainWindow::on_actionPatch_Translation_Base_triggered()
 {
     this->trnBaseWidget->patchTrn();
+}
+
+void MainWindow::on_actionDir_Colors_triggered()
+{
+    const bool dir8 = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    int frameIndex = 0;
+    if (this->celView != nullptr) {
+        frameIndex = this->celView->getCurrentFrameIndex();
+    }
+    if (this->gfxsetView != nullptr) {
+        frameIndex = this->gfxsetView->getCurrentFrameIndex();
+    }
+
+    if (this->gfx->getFrameCount() > frameIndex) {
+        D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
+        int sx = frame->getWidth() / 2;
+        int sy = frame->getHeight() / 2;
+        for (int y = 0; y < frame->getHeight(); y++) {
+            for (int x = 0; x < frame->getWidth(); x++) {
+                int dir = dir8 ? GetDirection8(sx, sy, x, y) : GetDirection16(sx, sy, x, y);
+                frame->setPixel(x, y, D1GfxPixel::colorPixel(dir));
+            }
+        }
+
+        this->updateWindow();
+    }
 }
 
 void MainWindow::on_actionDisplay_Colors_triggered()

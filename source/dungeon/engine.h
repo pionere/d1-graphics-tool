@@ -13,6 +13,8 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+/* Calculate direction (DIR_) from (x1;y1) to (x2;y2) */
+int GetDirection(int x1, int y1, int x2, int y2);
 /* Set the current RNG seed */
 void SetRndSeed(int32_t s);
 /* Retrieve the current RNG seed */
