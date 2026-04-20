@@ -35,7 +35,7 @@
 #include "d1trs.h"
 #include "ui_mainwindow.h"
 
-#include "dungeon/missiles.h"
+#include "dungeon/all.h"
 
 static MainWindow *theMainWindow;
 
