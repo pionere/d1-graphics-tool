@@ -173,7 +173,7 @@ const MonFileData monfiledata[NUM_MOFILE] = {
 /*MOFILE_TSNEAK*/// {     800, "Monsters\\TSneak\\TSneak%c.CL2",   "Monsters\\TSneak\\Sneakl%c%d.wav",  { 2, 1, 1, 1, 1, 0 }, FALSE,              8,        0 },
 /*MOFILE_SNEAK*/    {     992, "Monsters\\Sneak\\Sneak%c.CL2",     "Monsters\\Sneak\\Sneak%c%d.wav",    { 2, 1, 1, 1, 1, 1 }, FALSE,              8,        0 },
 /*MOFILE_GOATMC*/   {    1030, "Monsters\\GoatMace\\Goat%c.CL2",   "Monsters\\GoatMace\\Goat%c%d.wav",  { 2, 1, 1, 1, 1, 1 }, FALSE,              8,        9 },
-/*MOFILE_BAT*/      {     400, "Monsters\\Bat\\Bat%c.CL2",         "Monsters\\Bat\\Bat%c%d.wav",        { 1, 1, 1, 1, 1, 0 }, FALSE,              5,        0 },
+/*MOFILE_BAT*/      {     364, "Monsters\\Bat\\Bat%c.CL2",         "Monsters\\Bat\\Bat%c%d.wav",        { 1, 1, 1, 1, 1, 0 }, FALSE,              5,        0 },
 /*MOFILE_GOATBW*/   {    1040, "Monsters\\GoatBow\\GoatB%c.CL2",   "Monsters\\GoatBow\\GoatB%c%d.wav",  { 3, 1, 1, 1, 1, 0 }, FALSE,             13,        0 },
 /*MOFILE_ACID*/     {     716, "Monsters\\Acid\\Acid%c.CL2",       "Monsters\\Acid\\Acid%c%d.wav",      { 1, 1, 1, 1, 1, 1 }, TRUE,               8,        8 },
 /*MOFILE_SKING*/    {    1010, "Monsters\\SKing\\SKing%c.CL2",     "Monsters\\SKing\\SKing%c%d.wav",    { 2, 1, 1, 1, 1, 2 }, TRUE,               8,        0 },

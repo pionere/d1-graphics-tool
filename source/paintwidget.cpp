@@ -396,7 +396,7 @@ void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos,
         QPoint currPos = posQueue.front().first;
         int dist = posQueue.front().second;
         posQueue.pop();
-
+        // check if the position is visited
         unsigned n = 0;
         for (; n < pixels.size(); n++) {
             if (pixels[n].pos == currPos) {
@@ -406,7 +406,11 @@ void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos,
         if (n < pixels.size()) {
             continue;
         }
-        pixels.push_back(FramePixel(currPos, this->getCurrentColor(dist)));
+        // check if the color would be changed
+        const D1GfxPixel cpx = this->getCurrentColor(dist);
+        if (cpx == frame->getPixel(currPos.x(), currPos.y())) continue;
+        // proceed
+        pixels.push_back(FramePixel(currPos, cpx));
         dist++;
 
         unsigned numOffsets;
