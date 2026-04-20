@@ -4069,11 +4069,16 @@ void MainWindow::on_actionDir_Colors_triggered()
 
     if (this->gfx->getFrameCount() > frameIndex) {
         D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
-        int sx = frame->getWidth() / 2;
-        int sy = frame->getHeight() / 2;
+        int sx = 0;
+        int sy = 0;
+        constexpr int assetMpl = 1;
+        SHIFT_GRID(sx, sy, frame->getWidth() / (2 * 2 * MICRO_WIDTH * assetMpl), frame->getHeight() / (2 * MICRO_HEIGHT * assetMpl));
         for (int y = 0; y < frame->getHeight(); y++) {
             for (int x = 0; x < frame->getWidth(); x++) {
-                int dir = dir8 ? GetDirection8(sx, sy, x, y) : GetDirection16(sx, sy, x, y);
+                int dx = 0;
+                int dy = 0;
+                SHIFT_GRID(dx, dy, x / TILE_WIDTH, y / TILE_HEIGHT);
+                int dir = dir8 ? GetDirection8(sx, sy, dx, dy) : GetDirection16(sx, sy, dx, dy);
                 frame->setPixel(x, y, D1GfxPixel::colorPixel(dir));
             }
         }
