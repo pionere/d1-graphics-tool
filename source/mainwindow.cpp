@@ -4077,7 +4077,7 @@ void MainWindow::on_actionDir_Colors_triggered()
             for (int x = 0; x < frame->getWidth(); x++) {
                 int dx = 0;
                 int dy = 0;
-                SHIFT_GRID(dx, dy, x / TILE_WIDTH, y / TILE_HEIGHT);
+                SHIFT_GRID(dx, dy, x / (2 * MICRO_WIDTH * assetMpl), y / (MICRO_HEIGHT * assetMpl));
                 int dir = dir8 ? GetDirection8(sx, sy, dx, dy) : GetDirection16(sx, sy, dx, dy);
                 frame->setPixel(x, y, D1GfxPixel::colorPixel(dir));
             }
