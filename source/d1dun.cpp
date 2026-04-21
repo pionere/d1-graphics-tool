@@ -1171,11 +1171,11 @@ void D1Dun::DrawDir(D1GfxFrame* frame, int assetMpl, int type)
 
             flipy = py < (px >> 1);
             if (flipy) {
-                my--;
+                my += sx >= 0 ? -1 : +1;
             }
             flipx = py >= TILE_HEIGHT_PX - (px >> 1);
             if (flipx) {
-                mx++;
+                mx += sy >= 0 ? +1 : -1;
             }
 
             int dir = type ? GetDirection8(0, 0, mx, my) : GetDirection16(0, 0, mx, my);
