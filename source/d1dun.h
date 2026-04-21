@@ -256,6 +256,8 @@ public:
     const std::vector<CustomItemStruct> &getCustomItemTypes() const;
     void clearAssets();
 
+    static void DrawGrid(QImage &image, int assetMpl, const QColor &color);
+
 private:
     static void DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color);
     static void DrawPixel(int sx, int sy, uint8_t color);

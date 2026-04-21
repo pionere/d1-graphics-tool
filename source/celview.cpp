@@ -1091,26 +1091,6 @@ void CelView::upscale(const UpscaleParam &params)
     }
 }
 
-void CelView::drawGrid(QImage &celFrame)
-{
-    int width = celFrame.width();
-    int height = celFrame.height();
-    QColor color = this->pal->getUndefinedColor();
-
-    unsigned microHeight = MICRO_HEIGHT * this->assetMpl;
-    for (int i = (height + microHeight) / microHeight - 1; i >= 0; i--) {
-        for (int x = 0; x < width; x++) {
-            int y0 = height - microHeight * (i + 1) + ( 0 + (x - width / 2) / 2) % microHeight;
-            if (y0 >= 0 && y0 < height)
-                celFrame.setPixelColor(x, y0, color);
-
-            int y1 = height - microHeight * (i + 1) + (microHeight - 1 - (x - width / 2) / 2) % microHeight;
-            if (y1 >= 0 && y1 < height)
-                celFrame.setPixelColor(x, y1, color);
-        }
-    }
-}
-
 void CelView::displayFrame()
 {
     this->updateFields();
@@ -1124,7 +1104,7 @@ void CelView::displayFrame()
 
     // add grid if requested
     if (this->ui->showGridCheckBox->isChecked()) {
-        this->drawGrid(celFrame);
+        D1Dun::DrawGrid(celFrame, this->assetMpl, this->pal->getUndefinedColor());
     }
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));

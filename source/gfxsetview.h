@@ -73,7 +73,6 @@ public:
     void zoomInOut(int dir);
 
 private:
-    void drawGrid(QImage &celFrame);
     void updateFields();
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);

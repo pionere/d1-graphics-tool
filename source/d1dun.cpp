@@ -1018,6 +1018,25 @@ void D1Dun::DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
     }
 }
 
+void D1Dun::DrawGrid(QImage &image, int assetMpl, const QColor &color)
+{
+    int width = image.width();
+    int height = image.height();
+
+    unsigned microHeight = MICRO_HEIGHT * assetMpl;
+    for (int i = (height + microHeight) / microHeight - 1; i >= 0; i--) {
+        for (int x = 0; x < width; x++) {
+            int y0 = height - microHeight * (i + 1) + ( 0 + (x - width / 2) / 2) % microHeight;
+            if (y0 >= 0 && y0 < height)
+                image.setPixelColor(x, y0, color);
+
+            int y1 = height - microHeight * (i + 1) + (microHeight - 1 - (x - width / 2) / 2) % microHeight;
+            if (y1 >= 0 && y1 < height)
+                image.setPixelColor(x, y1, color);
+        }
+    }
+}
+
 QImage D1Dun::getObjectImage(int objectIndex, unsigned time)
 {
     const ObjectCacheEntry *objEntry = nullptr;
