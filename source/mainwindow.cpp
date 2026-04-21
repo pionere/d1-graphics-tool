@@ -35,8 +35,6 @@
 #include "d1trs.h"
 #include "ui_mainwindow.h"
 
-#include "dungeon/all.h"
-
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
@@ -406,11 +404,7 @@ void MainWindow::pointHovered(const QPoint &pos)
         if (pos.y() == UINT_MAX) {
             msg = QString(":%1:").arg(pos.x());
         } else {
-            constexpr int assetMpl = 1;
-            int dx = 0;
-            int dy = 0;
-            SHIFT_GRID(dx, dy, pos.x() / (2 * MICRO_WIDTH * assetMpl), pos.y() / (MICRO_HEIGHT * assetMpl));
-            msg = QString("%1:%2 | %3:%4").arg(pos.x()).arg(pos.y()).arg(dx).arg(dy);
+            msg = QString("%1:%2").arg(pos.x()).arg(pos.y());
         }
     }
     this->progressWidget.showMessage(msg);
@@ -4063,46 +4057,14 @@ void MainWindow::on_actionDir_Colors_triggered()
 {
     const bool dir8 = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
 
-    int frameIndex = 0;
     if (this->celView != nullptr) {
-        frameIndex = this->celView->getCurrentFrameIndex();
+        this->celView->drawDir(dir8);
     }
     if (this->gfxsetView != nullptr) {
-        frameIndex = this->gfxsetView->getCurrentFrameIndex();
+        this->gfxsetView->drawDir(dir8);
     }
 
-    if (this->gfx->getFrameCount() > frameIndex) {
-        D1GfxFrame* frame = this->gfx->getFrame(frameIndex);
-#if 1
-        int sx = 0;
-        int sy = 0;
-        constexpr int assetMpl = 1;
-        SHIFT_GRID(sx, sy, frame->getWidth() / (2 * 2 * MICRO_WIDTH * assetMpl), frame->getHeight() / (2 * MICRO_HEIGHT * assetMpl));
-#else
-        int sx = frame->getWidth() / 2;
-        int sy = frame->getHeight() / 2;
-#endif
-        for (int y = 0; y < frame->getHeight(); y++) {
-            for (int x = 0; x < frame->getWidth(); x++) {
-#if 1
-                int dx = 0;
-                int dy = 0;
-                SHIFT_GRID(dx, dy, x / (2 * MICRO_WIDTH * assetMpl), y / (MICRO_HEIGHT * assetMpl));
-                int dir = dir8 ? GetDirection8(sx, sy, dx, dy) : GetDirection16(sx, sy, dx, dy);
-#else
-                int dx = 0;
-                int dy = 0;
-                SHIFT_GRID(dx, dy, x - sx, y - sy);
-                dy /= (2 * MICRO_WIDTH * assetMpl);
-                dx /= (MICRO_HEIGHT * assetMpl);
-                int dir = dir8 ? GetDirection8(0, 0, dx, dy) : GetDirection16(sx, sy, dx, dy);
-#endif
-                frame->setPixel(x, y, D1GfxPixel::colorPixel(dir));
-            }
-        }
-
-        this->updateWindow();
-    }
+    this->updateWindow();
 }
 
 void MainWindow::on_actionDisplay_Colors_triggered()

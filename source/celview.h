@@ -126,6 +126,7 @@ public:
 
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
+    void drawDir(int type);
 
     void displayFrame();
     void toggleBottomPanel();
@@ -135,7 +136,6 @@ public:
     static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 
 private:
-    void drawGrid(QImage &celFrame);
     void updateFields();
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);

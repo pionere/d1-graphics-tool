@@ -66,6 +66,7 @@ public:
 
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
+    void drawDir(int type);
 
     void displayFrame();
     void toggleBottomPanel();
@@ -73,7 +74,6 @@ public:
     void zoomInOut(int dir);
 
 private:
-    void drawGrid(QImage &celFrame);
     void updateFields();
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);

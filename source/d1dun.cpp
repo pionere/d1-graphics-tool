@@ -1131,6 +1131,60 @@ static unsigned AmLine16;
 static QPainter *DunPainter = nullptr;
 static D1Pal *DunPal = nullptr;
 
+void D1Dun::DrawDir(D1GfxFrame* frame, int assetMpl, int type)
+{
+    const int TILE_WIDTH_PX = 2 * MICRO_WIDTH * assetMpl;
+    const int TILE_HEIGHT_PX = MICRO_HEIGHT * assetMpl;
+    const int width = frame->getWidth();
+    const int height = frame->getHeight();
+#if 0
+    int cx = 0;
+    int cy = 0;
+    SHIFT_GRID(cx, cy, width / (2 * 2 * MICRO_WIDTH * assetMpl), height / (2 * MICRO_HEIGHT * assetMpl));
+#else
+    int cx = width / 2;
+    int cy = height / 2;
+#endif
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+#if 0
+            int dx = 0;
+            int dy = 0;
+            SHIFT_GRID(dx, dy, x / (2 * MICRO_WIDTH * assetMpl), y / (MICRO_HEIGHT * assetMpl));
+            int dir = type ? GetDirection8(cx, cy, dx, dy) : GetDirection16(cx, cy, dx, dy);
+#else
+            int sx, sy, tx, ty, px, py, mx, my, dx, dy;
+            bool flipx, flipy;
+
+            sx = x - cx;
+            sy = y - cy;
+            tx = sx / TILE_WIDTH_PX;
+            ty = sy / TILE_HEIGHT_PX;
+
+            mx = 0;
+            my = 0;
+            SHIFT_GRID(mx, my, tx, ty);
+
+            // Shift position to match diamond grid aligment
+            px = ((unsigned)abs(sx)) % TILE_WIDTH_PX;
+            py = ((unsigned)abs(sy)) % TILE_HEIGHT_PX;
+
+            flipy = py < (px >> 1);
+            if (flipy) {
+                my--;
+            }
+            flipx = py >= TILE_HEIGHT_PX - (px >> 1);
+            if (flipx) {
+                mx++;
+            }
+
+            int dir = type ? GetDirection8(0, 0, mx, my) : GetDirection16(0, 0, mx, my);
+#endif
+            frame->setPixel(x, y, D1GfxPixel::colorPixel(dir));
+        }
+    }
+}
+
 void D1Dun::DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color)
 {
     unsigned len = 0;
@@ -1153,6 +1207,25 @@ void D1Dun::DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
             destBits[x] = srcBit;
         }
         destBits += image.width();
+    }
+}
+
+void D1Dun::DrawGrid(QImage &image, int assetMpl, const QColor &color)
+{
+    int width = image.width();
+    int height = image.height();
+
+    unsigned microHeight = MICRO_HEIGHT * assetMpl;
+    for (int i = (height + microHeight) / microHeight - 1; i >= 0; i--) {
+        for (int x = 0; x < width; x++) {
+            int y0 = height - microHeight * (i + 1) + ( 0 + (x - width / 2) / 2) % microHeight;
+            if (y0 >= 0 && y0 < height)
+                image.setPixelColor(x, y0, color);
+
+            int y1 = height - microHeight * (i + 1) + (microHeight - 1 - (x - width / 2) / 2) % microHeight;
+            if (y1 >= 0 && y1 < height)
+                image.setPixelColor(x, y1, color);
+        }
     }
 }
 
