@@ -291,7 +291,10 @@ static int AddMonsterType(int type, BOOL scatter)
 
 	if (i == nummtypes) {
 		nummtypes++;
-		assert(nummtypes <= MAX_LVLMTYPES);
+		// assert(nummtypes <= MAX_LVLMTYPES);
+        if (nummtypes > MAX_LVLMTYPES) {
+            dProgressErr() << QApplication::tr("Too many monster types.");
+        }
 		if (IsGoat(type)) {
 			mapGoatTypes[numGoatTypes] = i;
 			numGoatTypes++;
@@ -600,8 +603,8 @@ void AddMonster(int mtidx, int x, int y)
 {
 	if (nummonsters < MAXMONSTERS) {
 		PlaceMonster(mtidx, x, y);
-	} else {
-		dProgressErr() << QString("Monster overflow");
+    } else {
+        dProgressErr() << QApplication::tr("Monster overflow");
 	}
 }
 
