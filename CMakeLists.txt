@@ -150,6 +150,7 @@ set(PROJECT_SOURCES
         source/dungeon/spelldat.cpp
         source/dungeon/themes.cpp
         source/dungeon/trigs.cpp
+        source/dungeon/trndat.cpp
         source/dungeongeneratedialog.cpp
         source/dungeongeneratedialog.h
         source/dungeongeneratedialog.ui

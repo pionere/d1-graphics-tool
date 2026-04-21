@@ -2740,10 +2740,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
-            QString baseTrnFilePath;
-            if (md.mTransFile != nullptr) {
-                baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
-            }
+            QString baseTrnFilePath = getTrnFilePath(md.mTransFile);
             QString uniqueTrnFilePath;
             this->loadMonsterGfx(cl2FilePath, 0, baseTrnFilePath, uniqueTrnFilePath, result);
         }
@@ -2754,14 +2751,8 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
-            QString baseTrnFilePath;
-            if (md.mTransFile != nullptr) {
-                baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
-            }
-            QString uniqueTrnFilePath;
-            if (uniqMonData[monUniqueType].mTrnName != nullptr) {
-                uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monUniqueType].mTrnName + ".TRN";
-            }
+            QString baseTrnFilePath = getTrnFilePath(md.mTransFile);
+            QString uniqueTrnFilePath = getTrnFilePath(uniqMonData[monUniqueType].muTrans);
             this->loadMonsterGfx(cl2FilePath, 0, baseTrnFilePath, uniqueTrnFilePath, result);
         }
     }
