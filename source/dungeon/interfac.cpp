@@ -346,6 +346,9 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     while (true) {
         LogErrorF("Generating dungeon %d/%d with seed: %d / %d. Entry mode: %d", params.levelIdx, params.levelNum, lvlSeed, questSeed, params.entryMode);
         LoadGameLevel(params.entryMode, dun);
+        if (nummtypes > MAX_LVLMTYPES - NUM_MMTYPES) {
+            dProgressErr() << QApplication::tr("Not enough space for minion monster types.");
+        }
         FreeLvlDungeon();
         if (--extraRounds < 0) {
             break;
