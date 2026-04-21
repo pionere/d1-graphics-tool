@@ -13,6 +13,8 @@
 #include "../levelcelview.h"
 #include "../progressdialog.h"
 
+#include "trndat.h"
+
 int ViewX;
 int ViewY;
 bool IsMultiGame;
@@ -73,6 +75,25 @@ void LogErrorF(const char* msg, ...)
 	fputc('\n', f0);
 
 	fclose(f0);
+}
+
+QString getTrnFilePath(int id)
+{
+    QString result;
+
+    const char* path = NULL;
+    if (id >= TRN_MON_FIRST && id <= TRN_MON_LAST) {
+        path = "Monsters";
+    } else if (id >= TRN_UMON_FIRST && id <= TRN_UMON_LAST) {
+        path = "Monsters\\Monsters";
+    } else if (id >= TRN_PLR_FIRST && id <= TRN_PLR_LAST) {
+        path = "PlrGFX";
+    }
+    const char* name = trnfiledata[id].trnName;
+    if (path != NULL) {
+        result = QString("%1\\%2.TRN").arg(path).arg(name);
+    }
+    return result;
 }
 
 static void StoreProtections(D1Dun *dun)
@@ -757,16 +778,15 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     // - normal
     for (int i = 0; i < nummtypes; i++) {
         AddResourceParam monRes = AddResourceParam();
+        const MapMonData &md = mapMonTypes[i];
         monRes.type = DUN_ENTITY_TYPE::MONSTER;
         monRes.index = lengthof(DunMonstConvTbl) + i;
-        monRes.name = mapMonTypes[i].cmName;
-        monRes.path = monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
+        monRes.name = md.cmName;
+        monRes.path = monfiledata[md.cmFileNum].moGfxFile;
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
-        // monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
-        if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
-            monRes.baseTrnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
-        }
+        // monRes.width = monfiledata[md.cmFileNum].moWidth;
+        monRes.baseTrnPath = getTrnFilePath(monsterdata[md.cmType].mTransFile);
         monRes.uniqueMon = false;
         dun->addResource(monRes);
     }
@@ -783,12 +803,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
         monRes.width = monfiledata[md.cmFileNum].moWidth;
-        if (monsterdata[md.cmType].mTransFile != NULL) {
-            monRes.baseTrnPath = assetPath + "/" + monsterdata[md.cmType].mTransFile;
-        }
-        if (uniqMonData[ms->_muniqtype - 1].mTrnName != NULL) {
-            monRes.uniqueTrnPath = assetPath + "/Monsters/Monsters/" + uniqMonData[ms->_muniqtype - 1].mTrnName + ".TRN";
-        }
+        monRes.baseTrnPath = getTrnFilePath(monsterdata[md.cmType].mTransFile);
+        monRes.uniqueTrnPath = getTrnFilePath(uniqMonData[ms->_muniqtype - 1].muTrans);
         monRes.uniqueMon = true;
         dun->addResource(monRes);
     }*/

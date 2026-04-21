@@ -27,6 +27,7 @@ extern QString assetPath;
 extern char infostr[256];
 
 void LogErrorF(const char* msg, ...);
+QString getTrnFilePath(int id);
 void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const DecorateDunParam &params);
 void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params);
 MonsterStruct* GetMonsterAt(int x, int y);

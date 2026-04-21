@@ -23,7 +23,6 @@
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
-#include "dungeon/trndat.h"
 
 typedef struct DungeonStruct {
     int defaultTile;
@@ -3033,25 +3032,6 @@ void D1Dun::loadMonsterGfx(const QString &filePath, const QString &baseTrnFilePa
         }
         result.monBaseTrn = trn;
     }
-}
-
-QString getTrnFilePath(int id)
-{
-    QString result;
-
-    const char* path = NULL;
-    if (id >= TRN_MON_FIRST && id <= TRN_MON_LAST) {
-        path = "Monsters";
-    } else if (id >= TRN_UMON_FIRST && id <= TRN_UMON_LAST) {
-        path = "Monsters\\Monsters";
-    } else if (id >= TRN_PLR_FIRST && id <= TRN_PLR_LAST) {
-        path = "PlrGFX";
-    }
-    const char* name = trnfiledata[id].trnName;
-    if (path != NULL) {
-        result = QString("%1\\%2.TRN").arg(path).arg(name);
-    }
-    return result;
 }
 
 void D1Dun::loadMonster(const MapMonster &mapMon)
