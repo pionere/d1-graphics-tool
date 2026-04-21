@@ -23,6 +23,7 @@
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
+#include "dungeon/trndat.h"
 
 typedef struct DungeonStruct {
     int defaultTile;
@@ -3034,6 +3035,25 @@ void D1Dun::loadMonsterGfx(const QString &filePath, const QString &baseTrnFilePa
     }
 }
 
+QString getTrnFilePath(int id)
+{
+    QString result;
+
+    const char* path = NULL;
+    if (id >= TRN_MON_FIRST && id <= TRN_MON_LAST) {
+        path = "Monsters";
+    } else if (id >= TRN_UMON_FIRST && id <= TRN_UMON_LAST) {
+        path = "Monsters\\Monsters";
+    } else if (id >= TRN_PLR_FIRST && id <= TRN_PLR_LAST) {
+        path = "PlrGFX";
+    }
+    const char* name = trnfiledata[id].trnName;
+    if (path != NULL) {
+        result = QString("%1\\%2.TRN").arg(path).arg(name);
+    }
+    return result;
+}
+
 void D1Dun::loadMonster(const MapMonster &mapMon)
 {
     MonsterCacheEntry result = { mapMon.moType, nullptr, this->pal, nullptr, nullptr };
@@ -3055,10 +3075,7 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", mapMon.moType.monDeadFlag ? "d" : "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
-            QString baseTrnFilePath;
-            if (md.mTransFile != nullptr) {
-                baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
-            }
+            QString baseTrnFilePath = getTrnFilePath(md.mTransFile);
             QString uniqueTrnFilePath;
             this->loadMonsterGfx(cl2FilePath, baseTrnFilePath, uniqueTrnFilePath, result);
         }
@@ -3069,14 +3086,8 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", mapMon.moType.monDeadFlag ? "d" : "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
-            QString baseTrnFilePath;
-            if (md.mTransFile != nullptr) {
-                baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
-            }
-            QString uniqueTrnFilePath;
-            if (uniqMonData[monUniqueType].mTrnName != nullptr) {
-                uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monUniqueType].mTrnName + ".TRN";
-            }
+            QString baseTrnFilePath = getTrnFilePath(md.mTransFile);
+            QString uniqueTrnFilePath = getTrnFilePath(uniqMonData[monUniqueType].muTrans);
             this->loadMonsterGfx(cl2FilePath, baseTrnFilePath, uniqueTrnFilePath, result);
         }
     }

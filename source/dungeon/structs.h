@@ -595,7 +595,7 @@ typedef struct MonsterStruct {
 typedef struct UniqMonData {
 	int mtype; // _monster_id
 	const char* mName;
-	const char* mTrnName;
+	BYTE muTrans;
 	BYTE muLevelIdx; // level-index to place the monster (dungeon_level)
 	BYTE muLevel;    // difficulty level of the monster
 	uint16_t mmaxhp;
