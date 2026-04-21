@@ -1133,7 +1133,8 @@ static D1Pal *DunPal = nullptr;
 
 static POS32 gridPos(unsigned sx, unsigned sy, unsigned TILE_WIDTH_PX, unsigned TILE_HEIGHT_PX)
 {
-    int tx, ty, mx, my;
+    int tx, ty, mx, my, px, py;
+    bool flipx, flipy;
     tx = sx / TILE_WIDTH_PX;
     ty = sy / TILE_HEIGHT_PX;
 
