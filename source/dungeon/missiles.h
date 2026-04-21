@@ -24,6 +24,20 @@ void FreeMonMissileGFX();
 void InitMissiles();
 void ProcessMissiles();
 
+int GetDirection16(int x1, int y1, int x2, int y2);
+int GetDirection8(int x1, int y1, int x2, int y2);
+/**
+ * @brief Shifting the view area along the logical grid
+ *        Note: this won't allow you to shift between even and odd rows
+ * @param horizontal Shift the screen left or right
+ * @param vertical Shift the screen up or down
+ */
+#define SHIFT_GRID(x, y, horizontal, vertical) \
+	{                                          \
+		x += (vertical) + (horizontal);        \
+		y += (vertical) - (horizontal);        \
+	}
+
 #ifdef __cplusplus
 }
 #endif

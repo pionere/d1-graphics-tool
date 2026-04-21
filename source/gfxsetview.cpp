@@ -970,6 +970,14 @@ void GfxsetView::upscale(const UpscaleParam &params)
     }
 }
 
+void GfxsetView::drawDir(int type)
+{
+    if (this->gfx->getFrameCount() > this->currentFrameIndex) {
+        D1GfxFrame* frame = this->gfx->getFrame(this->currentFrameIndex);
+        D1Dun::DrawDir(frame, this->assetMpl, type);
+    }
+}
+
 void GfxsetView::displayFrame()
 {
     this->updateFields();

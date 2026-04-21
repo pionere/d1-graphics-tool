@@ -11,6 +11,7 @@
 #include "saveasdialog.h"
 
 class D1Gfx;
+class D1GfxFrame;
 class D1Min;
 class D1Pal;
 class D1Sla;
@@ -256,6 +257,7 @@ public:
     const std::vector<CustomItemStruct> &getCustomItemTypes() const;
     void clearAssets();
 
+    static void DrawDir(D1GfxFrame* frame, int assetMpl, int type);
     static void DrawGrid(QImage &image, int assetMpl, const QColor &color);
 
 private:

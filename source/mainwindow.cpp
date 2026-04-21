@@ -234,6 +234,8 @@ void MainWindow::updateDynamicMenus()
         }
     }
     this->ui->actionSquash->setEnabled(hasComponent);
+    // - Colors
+    this->ui->actionDir_Colors->setEnabled((this->gfxsetView != nullptr || this->celView != nullptr) && hasFrame);
     // - Data
     bool hasColumn = this->cppView != nullptr && this->cppView->getCurrentTable() != nullptr && this->cppView->getCurrentTable()->getColumnCount() != 0;
     this->ui->actionDelColumn_Table->setEnabled(hasColumn);
@@ -4004,6 +4006,20 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 void MainWindow::on_actionPatch_Translation_Base_triggered()
 {
     this->trnBaseWidget->patchTrn();
+}
+
+void MainWindow::on_actionDir_Colors_triggered()
+{
+    const bool dir8 = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    if (this->celView != nullptr) {
+        this->celView->drawDir(dir8);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->drawDir(dir8);
+    }
+
+    this->updateWindow();
 }
 
 void MainWindow::on_actionDisplay_Colors_triggered()

@@ -126,6 +126,7 @@ public:
 
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
+    void drawDir(int type);
 
     void displayFrame();
     void toggleBottomPanel();

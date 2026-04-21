@@ -1091,6 +1091,14 @@ void CelView::upscale(const UpscaleParam &params)
     }
 }
 
+void CelView::drawDir(int type)
+{
+    if (this->gfx->getFrameCount() > this->currentFrameIndex) {
+        D1GfxFrame* frame = this->gfx->getFrame(this->currentFrameIndex);
+        D1Dun::DrawDir(frame, this->assetMpl, type);
+    }
+}
+
 void CelView::displayFrame()
 {
     this->updateFields();
