@@ -2484,6 +2484,8 @@ void MainWindow::on_actionDuplicate_Frame_triggered()
     this->updateFramePals();
     // select the new frame palette if necessary
     this->selectFramePal();
+
+    this->updateWindow();
 }
 
 void MainWindow::on_actionReplace_Frame_triggered()
