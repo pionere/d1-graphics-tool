@@ -11,6 +11,7 @@
 #include "saveasdialog.h"
 
 class D1Gfx;
+class D1GfxFrame;
 class D1Min;
 class D1Pal;
 class D1Sla;
