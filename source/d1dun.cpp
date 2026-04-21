@@ -1163,54 +1163,13 @@ void D1Dun::DrawDir(D1GfxFrame* frame, int assetMpl, int type)
     const int TILE_HEIGHT_PX = MICRO_HEIGHT * assetMpl;
     const int width = frame->getWidth();
     const int height = frame->getHeight();
-#if 0
-    int cx = 0;
-    int cy = 0;
-    SHIFT_GRID(cx, cy, width / (2 * 2 * MICRO_WIDTH * assetMpl), height / (2 * MICRO_HEIGHT * assetMpl));
-#elif 0
-    int cx = width / 2;
-    int cy = height / 2;
-#else
+
     POS32 cpos = gridPos(width / 2, height / 2, TILE_WIDTH_PX, TILE_HEIGHT_PX);
-#endif
+
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-#if 0
-            int dx = 0;
-            int dy = 0;
-            SHIFT_GRID(dx, dy, x / (2 * MICRO_WIDTH * assetMpl), y / (MICRO_HEIGHT * assetMpl));
-            int dir = type ? GetDirection8(cx, cy, dx, dy) : GetDirection16(cx, cy, dx, dy);
-#elif 0
-            int sx, sy, tx, ty, px, py, mx, my, dx, dy;
-            bool flipx, flipy;
-
-            sx = x - cx;
-            sy = y - cy;
-            tx = sx / TILE_WIDTH_PX;
-            ty = sy / TILE_HEIGHT_PX;
-
-            mx = 0;
-            my = 0;
-            SHIFT_GRID(mx, my, tx, ty);
-
-            // Shift position to match diamond grid aligment
-            px = ((unsigned)abs(sx)) % TILE_WIDTH_PX;
-            py = ((unsigned)abs(sy)) % TILE_HEIGHT_PX;
-
-            flipy = py < (px >> 1);
-            if (flipy) {
-                my += sx >= 0 ? -1 : +1;
-            }
-            flipx = py >= TILE_HEIGHT_PX - (px >> 1);
-            if (flipx) {
-                mx += sy >= 0 ? +1 : -1;
-            }
-
-            int dir = type ? GetDirection8(0, 0, mx, my) : GetDirection16(0, 0, mx, my);
-#else
             POS32 tpos = gridPos(x, y, TILE_WIDTH_PX, TILE_HEIGHT_PX);
             int dir = type ? GetDirection8(cpos.x, cpos.y, tpos.x, tpos.y) : GetDirection16(cpos.x, cpos.y, tpos.x, tpos.y);
-#endif
             frame->setPixel(x, y, D1GfxPixel::colorPixel(dir));
         }
     }
