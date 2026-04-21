@@ -418,7 +418,7 @@ static void SetBookSpell(ItemStruct* is, unsigned lvl)
 
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-	is->_iMinMag = sd->sMinInt;
+	is->_iMinMag = sd->sMinMag;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sBookCost;
 	is->_iIvalue = sd->sBookCost;
@@ -475,7 +475,7 @@ static void SetScrollSpell(ItemStruct* is, unsigned lvl)
 
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-	is->_iMinMag = sd->sMinInt > 20 ? sd->sMinInt - 20 : 0;
+	is->_iMinMag = sd->sMinMag > 20 ? sd->sMinMag - 20 : 0;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sStaffCost;
 	is->_iIvalue = sd->sStaffCost;
@@ -512,7 +512,7 @@ static void SetRuneSpell(ItemStruct* is, unsigned lvl)
 
 	is->_iSpell = bs;
 	sd = &spelldata[bs];
-	is->_iMinMag = sd->sMinInt;
+	is->_iMinMag = sd->sMinMag;
 	// assert(is->_ivalue == 0 && is->_iIvalue == 0);
 	is->_ivalue = sd->sStaffCost;
 	is->_iIvalue = sd->sStaffCost;
@@ -564,7 +564,7 @@ static void GetStaffSpell(int ii, unsigned lvl)
 	is->_iCharges = RandRangeLow(sd->sStaffMin, sd->sStaffMax);
 	is->_iMaxCharges = is->_iCharges;
 
-	is->_iMinMag = sd->sMinInt;
+	is->_iMinMag = sd->sMinMag;
 	v = is->_iCharges * sd->sStaffCost;
 	is->_ivalue += v;
 	is->_iIvalue += v;
@@ -747,7 +747,7 @@ static int SaveItemPower(int ii, int power, int param1, int param2)
 		is->_iSpell = param1;
 		is->_iCharges = param2;
 		is->_iMaxCharges = param2;
-		is->_iMinMag = spelldata[param1].sMinInt;
+		is->_iMinMag = spelldata[param1].sMinMag;
 		break;
 	case IPL_ONEHAND:
 		is->_iLoc = ILOC_ONEHAND;
