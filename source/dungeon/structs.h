@@ -36,6 +36,10 @@ typedef struct RECT_AREA32 {
 	int y2;
 } RECT_AREA32;
 
+typedef struct TRNFileData {
+	const char* trnName;
+} TRNFileData;
+
 //////////////////////////////////////////////////
 // items
 //////////////////////////////////////////////////
