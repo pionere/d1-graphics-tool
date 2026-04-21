@@ -616,6 +616,11 @@ typedef struct UniqMonData {
 	int mtalkmsg;  // _speech_id
 } UniqMonData;
 
+typedef struct MinionMonData {
+	int mtype; // _monster_id
+	MonsterAI mAI;
+} MinionMonData;
+
 //////////////////////////////////////////////////
 // objects
 //////////////////////////////////////////////////
