@@ -449,7 +449,7 @@ typedef struct MonsterData {
 	uint16_t moFileNum; // _monster_gfx_id
 	BYTE mLevel;
 	BYTE mSelFlag;
-	const char* mTransFile;
+	BYTE mTransFile;
 	const char* mName;
 	MonsterAI mAI;
 	uint16_t mMinHP;
@@ -809,7 +809,7 @@ typedef struct SpellData {
 	BYTE scCurs; // cursor for scrolls/runes
 	BYTE spCurs; // cursor for spells
 	BYTE sUseFlags; // the required flags(SFLAG*) to use the skill
-	BYTE sMinInt;
+	BYTE sMinMag;
 	BYTE sSFX;     // _sfx_id
 	BYTE sMissile; // missile_id
 	BYTE sManaAdj;
