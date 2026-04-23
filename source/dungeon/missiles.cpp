@@ -533,7 +533,7 @@ int GetMisDirection16(int x1, int y1, int x2, int y2)
 			md = sx ? 10 : 2; // DIR_NE | DIR_SW
 		} else if (11 * mx < 9 * my) {
 			md = sx ? 9 : 1; // DIR_Ne | DIR_Sw
-		} else if (9 * mx < 11 * my) {
+		} else if (9 * mx <= 11 * my) {
 			md = sx ? 8 : 0; // DIR_N | DIR_S
 		} else if (1 * mx < 2 * my) {
 			md = sx ? 7 : 15; // DIR_Nw | DIR_Se
@@ -545,7 +545,7 @@ int GetMisDirection16(int x1, int y1, int x2, int y2)
 	} else {
 		if (7 * mx < 3 * my) {
 			md = sx ? 3 : 11; // DIR_sW | DIR_nE
-		} else if (3 * mx < 7 * my) {
+		} else if (3 * mx <= 7 * my) {
 			md = sx ? 4 : 12; // DIR_W | DIR_E
 		} else {
 			md = sx ? 5 : 13; // DIR_nW | DIR_sE
