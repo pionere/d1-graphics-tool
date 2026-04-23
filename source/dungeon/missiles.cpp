@@ -544,11 +544,11 @@ int GetMisDirection16(int x1, int y1, int x2, int y2)
 		}
 	} else {
 		if (7 * mx < 3 * my) {
-			md = sx ? 5 : 13; // DIR_nW | DIR_sE
+			md = sx ? 3 : 11; // DIR_sW | DIR_nE
 		} else if (3 * mx < 7 * my) {
 			md = sx ? 4 : 12; // DIR_W | DIR_E
 		} else {
-			md = sx ? 11 : 3; // DIR_nE | DIR_sW
+			md = sx ? 5 : 13; // DIR_nW | DIR_sE
 		}
 	}
 	return md;
