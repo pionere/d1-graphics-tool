@@ -531,14 +531,14 @@ int GetMisDirection16(int x1, int y1, int x2, int y2)
 			md = sx ? 11 : 3; // DIR_nE | DIR_sW
 		} else if (2 * mx < 1 * my) {
 			md = sx ? 10 : 2; // DIR_NE | DIR_SW
-		} else if (5 * mx < 4 * my) {
+		} else if (6 * mx < 5 * my) {
 			md = sx ? 9 : 1; // DIR_Ne | DIR_Sw
 		} else if (5 * mx < 6 * my) {
 			md = sx ? 8 : 0; // DIR_N | DIR_S
 		} else if (1 * mx < 2 * my) {
 			md = sx ? 7 : 15; // DIR_Nw | DIR_Se
 		} else if (1 * mx < 7 * my) {
-			md = sx ? 6 : 5; // DIR_NW | DIR_SE
+			md = sx ? 6 : 14; // DIR_NW | DIR_SE
 		} else {
 			md = sx ? 5 : 13; // DIR_nW | DIR_sE
 		}
