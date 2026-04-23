@@ -4060,10 +4060,10 @@ void MainWindow::on_actionDir_Colors_triggered()
     const int type = (dir8 ? 1 : 0) | (misdir ? 2 : 0);
 
     if (this->celView != nullptr) {
-        this->celView->drawDir(dir8);
+        this->celView->drawDir(type);
     }
     if (this->gfxsetView != nullptr) {
-        this->gfxsetView->drawDir(dir8);
+        this->gfxsetView->drawDir(type);
     }
 
     this->updateWindow();
