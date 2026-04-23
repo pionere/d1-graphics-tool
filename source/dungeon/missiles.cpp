@@ -449,7 +449,7 @@ static void DoTeleport(int pnum, int dx, int dy)
 int GetMisDirection8(int x1, int y1, int x2, int y2)
 {
 #if 1 || UNOPTIMIZED_DIRECTION
-	int mx, my, md;
+	int mx, my, sx, sy, md;
 
 	mx = x2 - x1;
 	my = y2 - y1;
@@ -516,7 +516,8 @@ int GetMisDirection8(int x1, int y1, int x2, int y2)
 int GetMisDirection16(int x1, int y1, int x2, int y2)
 {
 #if 1 || UNOPTIMIZED_DIRECTION
-	int mx, my, md;
+	int mx, my, sx, sy, md;
+
 	mx = x2 - x1;
 	my = y2 - y1;
 	sx = mx < 0;
