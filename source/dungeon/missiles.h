@@ -24,8 +24,8 @@ void FreeMonMissileGFX();
 void InitMissiles();
 void ProcessMissiles();
 
-int GetDirection16(int x1, int y1, int x2, int y2);
-int GetDirection8(int x1, int y1, int x2, int y2);
+int GetMisDirection16(int x1, int y1, int x2, int y2);
+int GetMisDirection8(int x1, int y1, int x2, int y2);
 /**
  * @brief Shifting the view area along the logical grid
  *        Note: this won't allow you to shift between even and odd rows

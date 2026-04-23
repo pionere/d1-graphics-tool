@@ -446,40 +446,35 @@ static void DoTeleport(int pnum, int dx, int dy)
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
 */
-int GetDirection8(int x1, int y1, int x2, int y2)
+int GetMisDirection8(int x1, int y1, int x2, int y2)
 {
-#if UNOPTIMIZED_DIRECTION
+#if 1 || UNOPTIMIZED_DIRECTION
 	int mx, my, md;
 
 	mx = x2 - x1;
 	my = y2 - y1;
-	if (mx >= 0) {
-		if (my >= 0) {
-			if (5 * mx <= (my << 1)) // mx/my <= 0.4, approximation of tan(22.5)
-				return 1;            // DIR_SW
-			md = 0;                  // DIR_S
-		} else {
-			my = -my;
-			if (5 * mx <= (my << 1))
-				return 5; // DIR_NE
-			md = 6;       // DIR_E
-		}
-		if (5 * my <= (mx << 1)) // my/mx <= 0.4
-			md = 7;              // DIR_SE
-	} else {
+	sx = mx < 0;
+	sy = my < 0;
+	if (sx)
 		mx = -mx;
-		if (my >= 0) {
-			if (5 * mx <= (my << 1))
-				return 1; // DIR_SW
-			md = 2;       // DIR_W
+	if (sy)
+		my = -my;
+	if (sx == sy) {
+		if (3 * mx < 2 * my) {
+			md = sx ? 5 : 1; // DIR_NE | DIR_SW
+		} else if (2 * mx < 3 * my) {
+			md = sx ? 4 : 0; // DIR_N | DIR_S
 		} else {
-			my = -my;
-			if (5 * mx <= (my << 1))
-				return 5; // DIR_NE
-			md = 4;       // DIR_N
+			md = sx ? 3 : 7; // DIR_NW | DIR_SE
 		}
-		if (5 * my <= (mx << 1))
-			md = 3; // DIR_NW
+	} else {
+		if (9 * mx < 1 * my) {
+			md = sx ? 1 : 5; // DIR_SW | DIR_NE
+		} else if (1 * mx < 9 * my) {
+			md = sx ? 2 : 6; // DIR_W | DIR_E
+		} else {
+			md = sx ? 3 : 7; // DIR_Nw | DIR_SE
+		}
 	}
 	return md;
 #else
@@ -518,56 +513,41 @@ int GetDirection8(int x1, int y1, int x2, int y2)
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
 */
-int GetDirection16(int x1, int y1, int x2, int y2)
+int GetMisDirection16(int x1, int y1, int x2, int y2)
 {
-#if UNOPTIMIZED_DIRECTION
+#if 1 || UNOPTIMIZED_DIRECTION
 	int mx, my, md;
 	mx = x2 - x1;
 	my = y2 - y1;
-	if (mx >= 0) {
-		if (my >= 0) {
-			if (3 * mx <= (my << 1)) { // mx/my <= 2/3, approximation of tan(33.75)
-				if (5 * mx < my)       // mx/my < 0.2, approximation of tan(11.25)
-					return 2;          // DIR_SW;
-				return 1;              // DIR_Sw;
-			}
-			md = 0; // DIR_S;
+	sx = mx < 0;
+	sy = my < 0;
+	if (sx)
+		mx = -mx;
+	if (sy)
+		my = -my;
+	if (sx == sy) {
+		if (7 * mx < 1 * my) {
+			md = sx ? 11 : 3; // DIR_nE | DIR_sW
+		} else if (2 * mx < 1 * my) {
+			md = sx ? 10 : 2; // DIR_NE | DIR_SW
+		} else if (5 * mx < 4 * my) {
+			md = sx ? 9 : 1; // DIR_Ne | DIR_Sw
+		} else if (5 * mx < 6 * my) {
+			md = sx ? 8 : 0; // DIR_N | DIR_S
+		} else if (1 * mx < 2 * my) {
+			md = sx ? 7 : 15; // DIR_Nw | DIR_Se
+		} else if (1 * mx < 7 * my) {
+			md = sx ? 6 : 5; // DIR_NW | DIR_SE
 		} else {
-			my = -my;
-			if (3 * mx <= (my << 1)) {
-				if (5 * mx < my)
-					return 10; // DIR_NE;
-				return 11;     // DIR_nE;
-			}
-			md = 12; // DIR_E;
-		}
-		if (3 * my <= (mx << 1)) {    // my/mx <= 2/3
-			if (5 * my < mx)          // my/mx < 0.2
-				return 14;            // DIR_SE;
-			return md == 0 ? 15 : 13; // DIR_S ? DIR_Se : DIR_sE;
+			md = sx ? 5 : 13; // DIR_nW | DIR_sE
 		}
 	} else {
-		mx = -mx;
-		if (my >= 0) {
-			if (3 * mx <= (my << 1)) {
-				if (5 * mx < my)
-					return 2; // DIR_SW;
-				return 3;     // DIR_sW;
-			}
-			md = 4; // DIR_W;
+		if (7 * mx < 3 * my) {
+			md = sx ? 5 : 13; // DIR_nW | DIR_sE
+		} else if (3 * mx < 7 * my) {
+			md = sx ? 4 : 12; // DIR_W | DIR_E
 		} else {
-			my = -my;
-			if (3 * mx <= (my << 1)) {
-				if (5 * mx < my)
-					return 10; // DIR_NE;
-				return 9;      // DIR_Ne;
-			}
-			md = 8; // DIR_N;
-		}
-		if (3 * my <= (mx << 1)) {
-			if (5 * my < mx)
-				return 6;           // DIR_NW;
-			return md == 4 ? 5 : 7; // DIR_W ? DIR_nW : DIR_Nw;
+			md = sx ? 11 : 3; // DIR_nE | DIR_sW
 		}
 	}
 	return md;

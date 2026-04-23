@@ -1169,7 +1169,12 @@ void D1Dun::DrawDir(D1GfxFrame* frame, int assetMpl, int type)
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             POS32 tpos = gridPos(x, y, TILE_WIDTH_PX, TILE_HEIGHT_PX);
-            int dir = type ? GetDirection8(cpos.x, cpos.y, tpos.x, tpos.y) : GetDirection16(cpos.x, cpos.y, tpos.x, tpos.y);
+            int dir;
+            if (type & 2) {
+                dir = (type & 1) ? GetMisDirection8(cpos.x, cpos.y, tpos.x, tpos.y) : GetMisDirection16(cpos.x, cpos.y, tpos.x, tpos.y);
+            } else {
+                dir = (type & 1) ? GetDirection8(cpos.x, cpos.y, tpos.x, tpos.y) : GetDirection16(cpos.x, cpos.y, tpos.x, tpos.y);
+            }
             frame->setPixel(x, y, D1GfxPixel::colorPixel(dir));
         }
     }

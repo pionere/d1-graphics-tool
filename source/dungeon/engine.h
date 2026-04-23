@@ -13,6 +13,8 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+int GetDirection16(int x1, int y1, int x2, int y2);
+int GetDirection8(int x1, int y1, int x2, int y2);
 /* Set the current RNG seed */
 void SetRndSeed(int32_t s);
 /* Retrieve the current RNG seed */

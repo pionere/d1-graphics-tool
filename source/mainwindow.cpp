@@ -4056,6 +4056,8 @@ void MainWindow::on_actionPatch_Translation_Base_triggered()
 void MainWindow::on_actionDir_Colors_triggered()
 {
     const bool dir8 = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    const bool misdir = QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier;
+    const int type = (dir8 ? 1 : 0) | (misdir ? 2 : 0);
 
     if (this->celView != nullptr) {
         this->celView->drawDir(dir8);
