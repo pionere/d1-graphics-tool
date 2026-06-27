@@ -73,6 +73,51 @@ jobs:
         path: D1GraphicsTool.zip
         name: D1GraphicsTool-Windows-x64.zip
 
+  #  cmake 64bit
+  build_win_x64_c:
+    needs: build_check
+    if: ${{ needs.build_check.outputs.should_run != 'false' }}
+    name: Nightly-Win-x64c
+
+    runs-on: windows-2022
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.2.4'
+        modules: 'qtmultimedia qtimageformats'
+
+    - name: Configure
+      run: cmake -S. -Bbuild
+
+    - name: Make
+      run: cmake --build build -j $(nproc) --config Release
+
+    - name: Package
+      run: |
+        mkdir dist
+        copy build\Release\D1GraphicsTool.exe dist
+        cd dist
+        windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
+      shell: cmd
+
+    - name: Create zip
+      uses: thedoctor0/zip-release@main
+      with:
+        type: 'zip'
+        filename: '../D1GraphicsTool.zip'
+        directory: 'dist'
+
+    - name: Upload
+      uses: actions/upload-artifact@v7
+      with:
+        path: D1GraphicsTool.zip
+        name: D1GraphicsTool-Windows-x64c.zip
+
   #  cmake 32bit
   build_win_x86:
     needs: build_check
@@ -169,6 +214,12 @@ jobs:
         name: D1GraphicsTool-Windows-x64.zip
     - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Windows-x64.zip
 
+    - name: Download Classic Win D1GraphicsTool artifact
+      uses: actions/download-artifact@v8
+      with:
+        name: D1GraphicsTool-Windows-x64c.zip
+    - run: mv ${{github.workspace}}/D1GraphicsTool.zip ${{github.workspace}}/D1GraphicsTool-Windows-x64c.zip
+
     - name: Download Linux D1GraphicsTool artifact
       uses: actions/download-artifact@v8
       with:
@@ -182,11 +233,12 @@ jobs:
         echo 'For the list of changes see [changelog](CHANGELOG.md).' >> RELEASE_NOTE.md
         echo ''                             >> RELEASE_NOTE.md
         echo '### **Downloads**'       >> RELEASE_NOTE.md
-        echo '_Environment_ | _Package_'   >> RELEASE_NOTE.md
+        echo '_Package_ | _Description_'   >> RELEASE_NOTE.md
         echo '------------ | -------------' >> RELEASE_NOTE.md
-        echo '`Windows x64` | [Windows-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x64.zip)' >> RELEASE_NOTE.md
-        echo '`Windows x86` | [Windows-x86.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x86.zip)' >> RELEASE_NOTE.md
-        echo '`Linux x64` | [Linux-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Linux-x64.zip)' >> RELEASE_NOTE.md
+        echo '[Windows-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x64.zip)   | D1GraphicsTool for `Windows x64`' >> RELEASE_NOTE.md
+        echo '[Windows-x64c.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x64c.zip)   | D1GraphicsTool Classic for `Windows x64`' >> RELEASE_NOTE.md
+        echo '[Windows-x86.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x86.zip)   | D1GraphicsTool for `Windows x86`' >> RELEASE_NOTE.md
+        echo '[Linux-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Linux-x64.zip)   | D1GraphicsTool for `Linux x64`' >> RELEASE_NOTE.md
 
     #- name: Show content of workspace
     #  run: find $RUNNER_WORKSPACE
@@ -216,6 +268,7 @@ jobs:
         prerelease: true
         files: |
           ${{github.workspace}}/D1GraphicsTool-Windows-x64.zip
+          ${{github.workspace}}/D1GraphicsTool-Windows-x64c.zip
           ${{github.workspace}}/D1GraphicsTool-Windows-x86.zip
           ${{github.workspace}}/D1GraphicsTool-Linux-x64.zip
         fail_on_unmatched_files: true
