@@ -23,11 +23,12 @@ jobs:
         cache: 'true'
         modules: 'qtmultimedia qtimageformats'
 
+    # --config Release
     - name: Configure
       run: cmake -S. -Bbuild
 
     - name: Make
-      run: cmake --build build -j $(nproc) --config Release
+      run: cmake --build build -j $(nproc)
 
     #--no-virtualkeyboard
     - name: Package
