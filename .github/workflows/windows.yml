@@ -19,7 +19,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.8.*'
+        version: '6.8.3'
         cache: 'true'
         modules: 'qtmultimedia qtimageformats'
 
@@ -29,13 +29,13 @@ jobs:
     - name: Make
       run: cmake --build build -j $(nproc) --config Release
 
-    #--no-virtualkeyboard --no-system-dxc-compiler --no-ffmpeg
+    #--no-virtualkeyboard
     - name: Package
       run: |
         mkdir dist
         copy build\Release\D1GraphicsTool.exe dist
         cd dist
-        windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-translations --no-quick-import
+        windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-system-dxc-compiler --no-translations --no-quick-import --no-ffmpeg
       shell: cmd
 
     - name: Upload
