@@ -400,7 +400,7 @@ typedef struct MissileData {
 
 typedef struct MisFileData {
 	const char* mfName;
-	BYTE mfAnimTrans;
+	const char* mfAnimTrans;
 	int mfAnimFAmt;
 	BOOLEAN mfDrawFlag;
 	BOOLEAN mfAnimFlag;
