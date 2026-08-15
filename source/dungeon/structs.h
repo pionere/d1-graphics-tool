@@ -105,7 +105,7 @@ typedef struct ItemFileData {
 	const char* ifName; // Map of item type .cel file names.
 	int idSFX;          // sounds effect of dropping the item on ground (_sfx_id).
 	int iiSFX;          // sounds effect of placing the item in the inventory (_sfx_id).
-	ALIGNMENT32(1)
+	int iAnimLen;       // item drop animation length
 } ItemFileData;
 
 typedef struct ItemData {
@@ -406,7 +406,8 @@ typedef struct MisFileData {
 	BOOLEAN mfAnimFlag;
 	BOOLEAN mfLightFlag;
 	BOOLEAN mfPreFlag;
-	ALIGNMENT64(3)
+	BYTE mfAnimFrameLen;
+	BYTE mfAnimLen[16];
 } MisFileData;
 
 typedef struct MissileStruct {
