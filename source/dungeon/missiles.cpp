@@ -2435,6 +2435,7 @@ int AddMisexp(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, i
 int AddTown(int mi, int sx, int sy, int dx, int dy, int midir, int micaster, int misource, int spllvl)
 {
 	int i, j, tx, ty;
+#if 0
 	const int8_t* cr;
 	// assert((micaster & MST_PLAYER) || micaster == MST_NA);
 	// assert((unsigned)misource < MAX_PLRS);
@@ -2464,6 +2465,7 @@ done:
 	// assert(!missile[mi]._miDelFlag);
 	RemovePortalMissile(misource);
 	missile[mi]._miDelFlag = FALSE; // revert delete flag of the current missile
+#endif
 	// setup the new portal
 	return AddPortal(mi, 0, 0, tx, ty, 0, 0, misource, spllvl);
 }
