@@ -41,26 +41,6 @@ typedef struct RECT_AREA32 {
 	int y2;
 } RECT_AREA32;
 
-typedef struct CelMetaInfo {
-	DWORD cmiDimensions;
-	DWORD cmiDimensionsPerFrame;
-	DWORD cmiAnimOrder;
-	BYTE  cmiAnimDelay;
-	int16_t cmiAnimOffsetX;
-	int16_t cmiAnimOffsetY;
-	DWORD cmiActionFrames;
-} CelMetaInfo;
-
-typedef struct CelImageBuf {
-#if DEBUG_MODE
-	WORD ciWidth; // number of images before loaded, but overwritten with width when loaded
-	WORD ciFrameCnt; // number of images
-#else
-	DWORD ciWidth; // number of images before loaded, but overwritten with width when loaded
-#endif
-	BYTE imageData[32000]; // size does not matter, the struct is allocated dynamically
-} CelImageBuf;
-
 typedef struct CelAnimBuf {
 	uint16_t caWidth;      // width of the animation
 	BYTE caFrameCnt;       // number of frames
