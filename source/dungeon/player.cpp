@@ -11,15 +11,13 @@ int mypnum;
 PlayerStruct players[MAX_PLRS];
 
 /** Specifies the frame of attack and spell animation for which the action is triggered, for each player class. */
-static const BYTE PlrActFrames[NUM_CLASSES][9] = {
+static const BYTE PlrActFrames[NUM_CLASSES][NUM_WANIM_IDS] = {
 	// clang-format off
 	{  9,  9,  9,  9, 11, 10,  9,  9, 11 },
 	{ 10, 10, 10, 10,  7, 13, 10, 10, 11 },
 	{ 12,  9, 12, 12, 16, 16, 12, 12, 12 },
 #ifdef HELLFIRE
 	{  7,  7, 12, 12, 14, 14, 12, 12,  8 },
-	{ 10, 10, 10, 10, 11, 13, 10, 10, 11 },
-	{  9,  9,  9,  9, 11,  8,  8,  8, 11 },
 #endif
 	// clang-format on
 };
@@ -30,8 +28,6 @@ static const BYTE PlrSplFrames[NUM_CLASSES] = {
 	 8,
 #ifdef HELLFIRE
 	13,
-	12,
-	14
 #endif
 	// clang-format on
 };
@@ -43,6 +39,7 @@ void SetPlrAnims(int pnum)
 	if ((unsigned)pnum >= MAX_PLRS) {
 		dev_fatal("SetPlrAnims: illegal player %d", pnum);
 	}
+
 	pc = plr._pClass;
 	gn = plr._pgfxnum & 0xF;
 

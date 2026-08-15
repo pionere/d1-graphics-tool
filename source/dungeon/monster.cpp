@@ -9,6 +9,8 @@
 
 #include "../progressdialog.h"
 
+#define WORK_LVLMTYPE (MAX_LVLMTYPES - 1)
+
 /* Limit the number of monsters to be placed. */
 int totalmonsters;
 /* Limit the number of (scattered) monster-types on the current level by the required resources (In CRYPT the values are not valid). */
@@ -18,7 +20,7 @@ int nummonsters;
 /* The data of the monsters on the current level. */
 MonsterStruct monsters[MAXMONSTERS];
 /* Monster types on the current level. */
-MapMonData mapMonTypes[MAX_LVLMTYPES + 1];
+MapMonData mapMonTypes[MAX_LVLMTYPES];
 /* The number of monster types on the current level. */
 int nummtypes;
 
@@ -81,6 +83,7 @@ static inline void InitMonsterTRN(MonAnimStruct (&anims)[NUM_MON_ANIM], BYTE tra
 			as = &anims[i];
 			if (as->maFrames > 0) {
 				for (j = 0; j < lengthof(as->maAnimData); j++) {
+					if (j != 0 && (as->maAnimData[j] == as->maAnimData[0])) continue; // apply trn only once to unidirectional/incomplete animations
 					Cl2ApplyTrans(as->maAnimData[j], trn);
 				}
 			}
@@ -115,14 +118,15 @@ static void InitMonsterGFX(int midx)
 			assert(cmon->cmAnimData[anim] == NULL);
 			cmon->cmAnimData[anim] = celBuf;
 
-			if (mtype != MT_GOLEM || (anim != MA_SPECIAL && anim != MA_DEATH)) {
-				LoadFrameGroups(celBuf, const_cast<const BYTE*(&)[8]>(monAnims[anim].maAnimData));
-			} else {
-				for (i = 0; i < lengthof(monAnims[anim].maAnimData); i++) {
-					monAnims[anim].maAnimData[i] = celBuf;
+			LoadFrameGroups(celBuf, const_cast<const BYTE*(&)[8]>(monAnims[anim].maAnimData));
+			auto animLen = LOAD_LE32(monAnims[anim].maAnimData[0]);
+			for (i = 1; i < lengthof(monAnims[anim].maAnimData); i++) {
+				if (LOAD_LE32(monAnims[anim].maAnimData[i]) != animLen) {
+					// overwrite unidirectional/incomplete animations
+					monAnims[anim].maAnimData[i] = monAnims[anim].maAnimData[0];
 				}
 			}
-			monAnims[anim].maFrames = LOAD_LE32(monAnims[anim].maAnimData[0]);
+			monAnims[anim].maFrames = animLen;
 #if !USE_PATCH
 			if (cmon->cmFileNum == MOFILE_ACID && anim == MA_DEATH) {
 				monAnims[anim].maFrames = 24 - 8;
@@ -158,13 +162,6 @@ static void InitMonsterGFX(int midx)
 	//if (monsterdata[mtype].mTransFile != NULL) {
 		InitMonsterTRN(monAnims, monsterdata[mtype].mTransFile);
 	//}
-
-	// copy walk animation to the stand animation of the golem (except aCelData and alignment)
-	if (mtype == MT_GOLEM) {
-		copy_pod(monAnims[MA_STAND].maAnimData, monAnims[MA_WALK].maAnimData);
-		monAnims[MA_STAND].maFrames = monAnims[MA_WALK].maFrames;
-		monAnims[MA_STAND].maFrameLen = monAnims[MA_WALK].maFrameLen;
-	}
 
 	cmon->cmWidth = Cl2Width(monAnims[0].maAnimData[0]);
 	cmon->cmXOffset = (cmon->cmWidth - TILE_WIDTH) >> 1;
@@ -339,8 +336,8 @@ void InitLvlMonsters()
 		monsters[i]._msquelch = 0;
 		// reset _mMTidx value to simplify SyncMonsterAnim (loadsave.cpp)
 		monsters[i]._mMTidx = 0;
-		monsters[i]._mpathcount = 0;
-		monsters[i]._mAlign_1 = 0;
+		monsters[i]._mMType = 0;
+		monsters[i]._mMLevel = 0;
 		monsters[i]._mgoal = MGOAL_NORMAL;
 		// reset _muniqtype value to simplify SyncMonsterAnim (loadsave.cpp)
 		// reset _muniqanim to simplify InitTownerInfo (towner.cpp)
@@ -547,8 +544,8 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	//mon->_mVar7 = 0;
 	//mon->_mVar8 = 0;
 	mon->_msquelch = 0;
-	mon->_mpathcount = 0;
-	mon->_mAlign_1 = 0;
+	//mon->_mMType = 0;	-- should be set before use
+	//mon->_mMLevel = 0;
 	mon->_mgoal = MGOAL_NORMAL;
 	//mon->_mgoalvar1 = 0;	-- should be set before use
 	//mon->_mgoalvar2 = 0;
@@ -696,11 +693,6 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	unsigned baseLvl, lvlBonus, monLvl;
 	int anim;
 
-#ifdef HELLFIRE
-    if (uniqindex == UMT_NAKRUL && mnum != MAX_MINIONS) {
-        dProgressErr() << QApplication::tr("Bad Na-Krul placement. Received-Id:%1 instead of %2.").arg(mnum).arg(MAX_MINIONS);
-    }
-#endif
 	mon = &monsters[mnum];
 	mon->_mNameColor = COL_GOLD;
 	mon->_muniqtype = uniqindex + 1;
@@ -709,14 +701,13 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 #if 0
 	// initialize unique-gfx
 	if (uniqm->muTrans != TRN_NONE) {
-		mapMonTypes[MAX_LVLMTYPES].cmFileNum = mon->_mFileNum;
-		mapMonTypes[MAX_LVLMTYPES].cmType = mon->_mType;
-		InitMonsterGFX(MAX_LVLMTYPES);
-		// assert(mon->_mType != MT_GOLEM);
-		InitMonsterTRN(mapMonTypes[MAX_LVLMTYPES].cmAnims, uniqm->muTrans);
+		mapMonTypes[WORK_LVLMTYPE].cmFileNum = mon->_mFileNum;
+		mapMonTypes[WORK_LVLMTYPE].cmType = mon->_mType;
+		InitMonsterGFX(WORK_LVLMTYPE);
+		InitMonsterTRN(mapMonTypes[WORK_LVLMTYPE].cmAnims, uniqm->muTrans);
 	} else {
 		for (anim = 0; anim < NUM_MON_ANIM; anim++)
-			mapMonTypes[MAX_LVLMTYPES].cmAnimData[anim] = mapMonTypes[mon->_mMTidx].cmAnimData[anim];
+			mapMonTypes[WORK_LVLMTYPE].cmAnimData[anim] = mapMonTypes[mon->_mMTidx].cmAnimData[anim];
 	}
 #endif
 	anim = numUniqAnims++;
@@ -726,12 +717,11 @@ static unsigned InitUniqueMonster(int mnum, int uniqindex)
 	MonAnimStruct* uam = uniqAnims[anim];
 
 	for (anim = 0; anim < NUM_MON_ANIM; anim++) {
-		BYTE* celBuf = mapMonTypes[MAX_LVLMTYPES].cmAnimData[anim];
-		mapMonTypes[MAX_LVLMTYPES].cmAnimData[anim] = NULL;
+		BYTE* celBuf = mapMonTypes[WORK_LVLMTYPE].cmAnimData[anim];
+		mapMonTypes[WORK_LVLMTYPE].cmAnimData[anim] = NULL;
 		umAnimData[anim] = celBuf;
 		uam[anim].maFrameLen = mon->_mAnims[anim].maFrameLen;
 		uam[anim].maFrames = mon->_mAnims[anim].maFrames;
-		// assert(mon->_mType != MT_GOLEM);
 		if (celBuf != NULL)
 			LoadFrameGroups(celBuf, const_cast<const BYTE*(&)[8]>(uam[anim].maAnimData));
 	}
@@ -971,17 +961,18 @@ void InitMonsters()
 	const int tdy[] = { 0 };
 	// reserve the entry area
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
-		if (pWarps[i]._wx == 0)
-			continue;
 		if (i == DWARP_EXIT) // && currLvl._dLevelIdx == DLV_HELL3)
 			continue;
 		if (i == DWARP_SIDE)
 			continue;
-		static_assert(MAX_LIGHT_RAD >= 15, "Tile reservation in InitMonsters requires at least 15 light radius.");
+		if (pWarps[i]._wx == 0)
+			continue;
 if (nBlockTable[dPiece[pWarps[i]._wx][pWarps[i]._wy]])
 dProgressErr() << QString("Light blocking warp at %1:%2 - %3 (%4)").arg(pWarps[i]._wx).arg(pWarps[i]._wy).arg(dPiece[pWarps[i]._wx][pWarps[i]._wy], i);
+		const POS32 pos = TrigEntryPos(i);
+		static_assert(MAX_LIGHT_RAD >= 15, "Subtile reservation in InitMonsters requires at least 15 light radius I.");
 		for (j = lengthof(tdx) - 1; j >= 0; j--)
-			DoVision(pWarps[i]._wx + tdx[j], pWarps[i]._wy + tdy[j], 15);
+			DoVision(pos.x + tdx[j], pos.y + tdy[j], 15);
 	}
 	// if (currLvl._dLevelIdx == DLV_HELL3) {
 	//	DoVision(quests[Q_BETRAYER]._qtx + 2, quests[Q_BETRAYER]._qty + 2, 4);
@@ -1022,32 +1013,20 @@ dProgressErr() << QString("Light blocking warp at %1:%2 - %3 (%4)").arg(pWarps[i
 	// }
 	// revert entry/exit area reservation
 	for (i = lengthof(pWarps) - 1; i >= 0; i--) {
-		if (pWarps[i]._wx == 0)
-			continue;
 		if (i == DWARP_EXIT) // && currLvl._dLevelIdx == DLV_HELL3)
 			continue;
 		if (i == DWARP_SIDE)
 			continue;
+		if (pWarps[i]._wx == 0)
+			continue;
+		const POS32 pos = TrigEntryPos(i);
+		static_assert(MAX_LIGHT_RAD >= 15, "Subtile reservation in InitMonsters requires at least 15 light radius II.");
 		for (j = lengthof(tdx) - 1; j >= 0; j--)
-			DoUnVision(pWarps[i]._wx + tdx[j], pWarps[i]._wy + tdy[j], 15);
+			DoUnVision(pos.x + tdx[j], pos.y + tdy[j], 15);
 	}
 	// if (currLvl._dLevelIdx == DLV_HELL3) {
 	//	DoUnVision(quests[Q_BETRAYER]._qtx + 2, quests[Q_BETRAYER]._qty + 2, 4, false);
 	// }
-}
-
-int PreSpawnSkeleton()
-{
-	int n = numSkelTypes, mnum = -1;
-
-	if (n != 0 && nummonsters < MAXMONSTERS) {
-		mnum = nummonsters;
-		nummonsters++;
-		n = mapSkelTypes[random_low(136, n)];
-		InitMonster(mnum, 0, n, 0, 0);
-		monsters[mnum]._mmode = MM_RESERVED;
-	}
-	return mnum;
 }
 
 static bool CheckVisible(int x, int y)
@@ -1162,4 +1141,18 @@ static bool LineClearF(bool (*Clear)(int, int), int x1, int y1, int x2, int y2)
 bool LineClear(int x1, int y1, int x2, int y2)
 {
 	return LineClearF(CheckVisible, x1, y1, x2, y2);
+}
+
+int PreSpawnSkeleton()
+{
+	int n = numSkelTypes, mnum = -1;
+
+	if (n != 0 && nummonsters < MAXMONSTERS) {
+		mnum = nummonsters;
+		nummonsters++;
+		n = mapSkelTypes[random_low(136, n)];
+		InitMonster(mnum, 0, n, 0, 0);
+		monsters[mnum]._mmode = MM_RESERVED;
+	}
+	return mnum;
 }
