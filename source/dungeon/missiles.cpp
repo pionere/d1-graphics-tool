@@ -501,7 +501,7 @@ static void DoTeleport(int pnum, int dx, int dy)
 		myview.y = py; // - ScrollInfo._sdy;
 	}
 }
-
+#endif
 #define GetDirection8 GetDirection
 
 /**
