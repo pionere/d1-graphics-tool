@@ -2123,10 +2123,6 @@ bool D1Gfx::check(int assetMpl, bool *typetested) const
                         dProgress() << tr("Missile %1 is groupped.").arg(nativeFilePath);
                         result = true;
                     }
-                    if (fc != mfdata.mfAnimLen[i]) {
-                        dProgress() << tr("Framecount of the missile %1 does not match with the game (%2 vs %3).").arg(nativeFilePath).arg(fc).arg(mfdata.mfAnimLen[i]);
-                        result = true;
-                    }
                     for (int m = 0; m < NUM_CELMETA; m++) {
                         if (this->getMeta(m)->isStored()) {
                             dProgress() << tr("Meta %1 of the missile %2 is not used by the game.").arg(D1GfxMeta::metaTypeToStr(m)).arg(nativeFilePath);
