@@ -502,6 +502,152 @@ static void DoTeleport(int pnum, int dx, int dy)
 	}
 }
 #endif
+/**
+ * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
+ *
+ *      W    SW     S
+ *            ^
+ *            |	
+ *     NW ----+---> SE
+ *            |
+ *            |
+ *      N    NE     E
+ *
+ * @param x1 the x coordinate of p1
+ * @param y1 the y coordinate of p1
+ * @param x2 the x coordinate of p2
+ * @param y2 the y coordinate of p2
+ * @return the direction of the p1->p2 vector
+*/
+int GetMisDirection8(int x1, int y1, int x2, int y2)
+{
+#if 1 || UNOPTIMIZED_DIRECTION
+	int mx, my, sx, sy, md;
+
+	mx = x2 - x1;
+	my = y2 - y1;
+	sx = mx < 0;
+	sy = my < 0;
+	if (sx)
+		mx = -mx;
+	if (sy)
+		my = -my;
+	if (sx == sy) {
+		if (3 * mx < 2 * my) {
+			md = sx ? 5 : 1; // DIR_NE | DIR_SW
+		} else if (2 * mx < 3 * my) {
+			md = sx ? 4 : 0; // DIR_N | DIR_S
+		} else {
+			md = sx ? 3 : 7; // DIR_NW | DIR_SE
+		}
+	} else {
+		if (9 * mx < 1 * my) {
+			md = sx ? 1 : 5; // DIR_SW | DIR_NE
+		} else if (1 * mx < 9 * my) {
+			md = sx ? 2 : 6; // DIR_W | DIR_E
+		} else {
+			md = sx ? 3 : 7; // DIR_Nw | DIR_SE
+		}
+	}
+	return md;
+#else
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	unsigned adx = abs(dx);
+	unsigned ady = abs(dy);
+	//                        SE  NE  SW  NW
+	const int BaseDirs[4] = {  7,  5,  1,  3 };
+	int dir = BaseDirs[2 * (dx < 0) + (dy < 0)];
+	//const int DeltaDirs[2][4] = { {0, 1, 2}, {2, 1, 0} };
+	const int DeltaDirs[2][4] = { { 1, 0, 2 }, { 1, 2, 0 } };
+	const int(&DeltaDir)[4] = DeltaDirs[(dx < 0) ^ (dy < 0)];
+	//dir += DeltaDir[5 * adx <= (ady << 1) ? 2 : (5 * ady <= (adx << 1) ? 0 : 1)];
+	dir += DeltaDir[5 * adx <= (ady << 1) ? 2 : (5 * ady <= (adx << 1) ? 1 : 0)];
+	return dir & 7;
+#endif
+}
+
+/**
+ * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
+ *
+ *      W  sW  SW   Sw  S
+ *              ^
+ *     nW       |       Se
+ *              |
+ *     NW ------+-----> SE
+ *              |
+ *     Nw       |       sE
+ *              |
+ *      N  Ne  NE   nE  E
+ *
+ * @param x1 the x coordinate of p1
+ * @param y1 the y coordinate of p1
+ * @param x2 the x coordinate of p2
+ * @param y2 the y coordinate of p2
+ * @return the direction of the p1->p2 vector
+*/
+int GetMisDirection16(int x1, int y1, int x2, int y2)
+{
+#if 1 || UNOPTIMIZED_DIRECTION
+	int mx, my, sx, sy, md;
+
+	mx = x2 - x1;
+	my = y2 - y1;
+	sx = mx < 0;
+	sy = my < 0;
+	if (sx)
+		mx = -mx;
+	if (sy)
+		my = -my;
+	if (sx == sy) {
+		if (7 * mx < 1 * my) {
+			md = sx ? 11 : 3; // DIR_nE | DIR_sW
+		} else if (2 * mx < 1 * my) {
+			md = sx ? 10 : 2; // DIR_NE | DIR_SW
+		} else if (11 * mx < 9 * my) {
+			md = sx ? 9 : 1; // DIR_Ne | DIR_Sw
+		} else if (9 * mx <= 11 * my) {
+			md = sx ? 8 : 0; // DIR_N | DIR_S
+		} else if (1 * mx < 2 * my) {
+			md = sx ? 7 : 15; // DIR_Nw | DIR_Se
+		} else if (1 * mx < 7 * my) {
+			md = sx ? 6 : 14; // DIR_NW | DIR_SE
+		} else {
+			md = sx ? 5 : 13; // DIR_nW | DIR_sE
+		}
+	} else {
+		if (7 * mx < 3 * my) {
+			md = sx ? 3 : 11; // DIR_sW | DIR_nE
+		} else if (3 * mx <= 7 * my) {
+			md = sx ? 4 : 12; // DIR_W | DIR_E
+		} else {
+			md = sx ? 5 : 13; // DIR_nW | DIR_sE
+		}
+	}
+	return md;
+#else
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	unsigned adx = abs(dx);
+	unsigned ady = abs(dy);
+	//                        SE  NE  SW  NW
+	//const int BaseDirs[4] = { 14, 10,  2,  6 };
+	const int BaseDirs[4] = { 14 + 2, 10 + 2, 2 + 2, 6 + 2 };
+	int dir = BaseDirs[2 * (dx < 0) + (dy < 0)];
+	//const int DeltaDirs[2][8] = { { 0, 1, 2, 3, 4 }, { 4, 3, 2, 1, 0 } };
+	const int DeltaDirs[2][4] = { { 0 - 2, 1 - 2, 3 - 2, 4 - 2 }, { 4 - 2, 3 - 2 , 1 - 2, 0 - 2 } };
+	//const int(&DeltaDir)[8] = DeltaDirs[(dx < 0) ^ (dy < 0)];
+	const int(&DeltaDir)[4] = DeltaDirs[(dx < 0) ^ (dy < 0)];
+	if (3 * adx <= (ady << 1)) {
+		//dir += DeltaDir[5 * adx < ady ? 4 : 3];
+		dir += DeltaDir[5 * adx <= ady ? 3 : 2]; // HACK: using <= instead of < to select a better gfx-frame for [-1;-5] and its mirrors
+	} else if (3 * ady <= (adx << 1)) {
+		dir += DeltaDir[5 * ady <= adx ? 0 : 1]; // HACK: using <= instead of < to select a better gfx-frame for [-1;-5] and its mirrors
+	} // else
+	//	dir += DeltaDir[2];
+	return dir & 15;
+#endif
+}
 
 static void DeleteMissile(int mi, int idx)
 {
