@@ -373,8 +373,10 @@ typedef enum item_misc_id {
 	IMISC_OILLAST = IMISC_OILCLEAN,
 	//IMISC_MAPOFDOOM,
 	IMISC_MAP,
+#ifdef HELLFIRE
 	IMISC_RUNE,
 	IMISC_NOTE,
+#endif
 	IMISC_INVALID   = -1,
 } item_misc_id;
 
@@ -497,6 +499,7 @@ typedef enum item_effect_type {
 	IPL_ACIDRES,
 	IPL_ALLRES,
 	IPL_CRITP,
+	IPL_POWMOD,
 	IPL_SKILLLVL,
 	IPL_SKILLLEVELS,
 	IPL_CHARGES,
@@ -534,7 +537,8 @@ typedef enum item_effect_type {
 	IPL_SETDAM,
 	IPL_SETDUR,
 	IPL_REQSTR,
-	IPL_SPELL,
+	IPL_SKILL,
+	IPL_SETSKILL,
 	IPL_ONEHAND,
 	IPL_ALLRESZERO,
 	IPL_DRAINLIFE,
@@ -562,7 +566,7 @@ typedef enum item_affix_range {
 } item_affix_range;
 
 typedef enum affix_item_type {
-	PLT_MISC   = 1 << 0,
+	PLT_JEWEL  = 1 << 0,
 	PLT_BOW    = 1 << 1,
 	PLT_STAFF  = 1 << 2,
 	PLT_CHRG   = 1 << 3,
@@ -922,6 +926,7 @@ typedef enum inv_item {
 	INVITEM_HAND_LEFT  = 4,
 	INVITEM_HAND_RIGHT = 5,
 	INVITEM_CHEST      = 6,
+	INVITEM_BODY_LAST  = 6,
 	INVITEM_INV_FIRST  = 7,
 	INVITEM_INV_LAST   = 46,
 	INVITEM_BELT_FIRST = 47,
@@ -2174,9 +2179,9 @@ typedef enum missile_id {
 	//MIS_MANATRAP,
 	//MIS_LIGHTRING,
 	MIS_RUNEFIRE,
+	MIS_RUNEWAVE,
 	MIS_RUNELIGHT,
 	MIS_RUNENOVA,
-	MIS_RUNEWAVE,
 	MIS_RUNESTONE,
 	MIS_FIREEXP,
 	MIS_HORKDMN,
@@ -2343,6 +2348,7 @@ typedef enum _monster_ai {
 	AI_SNEAK,
 	//AI_FIREMAN,
 	AI_GARBUD,
+	AI_FOLLOW,
 	AI_GOLUM,
 	AI_BLDGOLUM,
 	AI_MINIONAX,
@@ -2632,8 +2638,8 @@ typedef enum _monster_flag {
 	MFLAG_CAN_BLEED       = 0x0800,
 	MFLAG_NODROP          = 0x1000,
 	// MFLAG_NOHEAL          = 0x1000,
-	MFLAG_KNOCKBACK       = 0x00010000,
-	// TODO: ensure the high word does not conflict and matches with ISPL_HITFLAGS
+	MFLAG_KNOCKBACK       = ISPL_KNOCKBACK,
+	MFLAG_BLEED           = ISPL_BLEED,
 } _monster_flag;
 
 typedef enum _uniq_monster_flag {
@@ -3253,7 +3259,7 @@ typedef enum object_graphic_id {
 	OFILE_ALTBOY,
 	OFILE_MCIRL1,
 	OFILE_MCIRL2,
-	OFILE_BKSLBRNT,
+	//OFILE_BKSLBRNT,
 	OFILE_MUSHPTCH,
 	OFILE_LZSTAND,
 #ifdef HELLFIRE
@@ -3278,6 +3284,7 @@ typedef enum object_proc_func {
 	OPF_PRSPLT,
 	OPF_CIRCLE,
 	OPF_BCROSS,
+	OPF_SUN,
 #if FLICKER_LIGHT
 	OPF_LIGHT,
 #endif
@@ -3410,6 +3417,7 @@ typedef enum _object_id {
 	OBJ_LAZSTAND,
 	//OBJ_SLAINHERO,
 	OBJ_SIGNCHEST,
+	OBJ_SUN,
 #ifdef HELLFIRE
 	OBJ_L5LDOOR,
 	OBJ_L5RDOOR,
@@ -3483,10 +3491,12 @@ typedef enum dungeon_type {
 	DTYPE_CATACOMBS,
 	DTYPE_CAVES,
 	DTYPE_HELL,
+#ifdef HELLFIRE
 	DTYPE_CRYPT,
 	DTYPE_NEST,
+#endif
 	DTYPE_NONE,
-	NUM_DTYPES,
+	NUM_DTYPES
 } dungeon_type;
 
 typedef enum dungeon_gen_type {
@@ -3503,8 +3513,13 @@ typedef enum dungeon_type_mask {
 	DTM_CATACOMBS = 1 << DTYPE_CATACOMBS,
 	DTM_CAVES     = 1 << DTYPE_CAVES,
 	DTM_HELL      = 1 << DTYPE_HELL,
+#ifdef HELLFIRE
 	DTM_CRYPT     = 1 << DTYPE_CRYPT,
 	DTM_NEST      = 1 << DTYPE_NEST,
+#else
+	DTM_CRYPT     = 0,
+	DTM_NEST      = 0,
+#endif
 	DTM_ANY       = DTM_CATHEDRAL | DTM_CATACOMBS | DTM_CAVES | DTM_HELL | DTM_CRYPT | DTM_NEST,
 	DTM_NONE      = 0,
 } dungeon_type_mask;
@@ -3798,11 +3813,13 @@ typedef enum dflag {
 	BFLAG_MISSILE_PRE = 0x01, // 'missile-on-floor' flag, used by DrawView to draw missiles in pre-phase
 	BFLAG_ALERT       = 0x02, // alert flag, used by monsters to set squelch
 	BFLAG_DEAD_PLAYER = 0x04,
-	BFLAG_MON_PROTECT = 0x08, // protection flag used during dungeon generation
-	BFLAG_OBJ_PROTECT = 0x10, // protection flag used during dungeon generation
+	BFLAG_MIS_ACTIVE  = 0x08, // whether there is an active/blocking missile at the given position (e.g. guardian, shroud or rune)
 	BFLAG_HAZARD      = 0x20, // fire hazard flag, used by monsters to avoid tiles
 	BFLAG_VISIBLE     = 0x40, // visibility flag, used by the local player to check if monsters/players are visible
 	BFLAG_EXPLORED    = 0x80, // whether the automapview is set (not in sync after load/deltaload/shrine-effect)
+
+	BFLAG_MON_PROTECT = 0x08, // protection flag used during dungeon generation
+	BFLAG_OBJ_PROTECT = 0x10, // protection flag used during dungeon generation
 
 	BFLAG_MON_PROTECT_SHL = 3, // left shift to create BFLAG_MON_PROTECT
 } dflag;
@@ -4025,14 +4042,9 @@ typedef enum PLR_EAR {
 typedef enum spell_type {
 	RSPLTYPE_ABILITY,
 	RSPLTYPE_SPELL,
-	RSPLTYPE_SCROLL,
 	RSPLTYPE_CHARGES,
 	RSPLTYPE_INVALID,
-#ifdef HELLFIRE
-	RSPLTYPE_RUNE,
-#endif
 	NUM_RSPLTYPES,
-	RSPLTYPE_INV = RSPLTYPE_SCROLL,
 } spell_type;
 
 typedef enum spell_from_type {
@@ -4040,8 +4052,9 @@ typedef enum spell_from_type {
 	SPLFROM_MANA           = -2,
 	SPLFROM_INVALID_SOURCE = -3,
 	SPLFROM_INVALID_MANA   = -4,
-	SPLFROM_INVALID_LEVEL  = -5,
-	SPLFROM_INVALID_TYPE   = -6,
+	SPLFROM_INVALID_LEVEL  = -3,
+	SPLFROM_INVALID_TYPE   = -3,
+	SPLFROM_INVALID_MAGIC  = -3,
 } spell_from_type;
 
 typedef enum cursor_id {
@@ -4176,7 +4189,6 @@ typedef enum spell_id {
 	SPL_SKELAX,
 	SPL_SKELBW,
 	SPL_STONE,
-	SPL_INFRA,
 	SPL_MANASHIELD,
 	SPL_ATTRACT,
 	SPL_TELEKINESIS,
@@ -4186,26 +4198,26 @@ typedef enum spell_id {
 	SPL_HEAL,
 	SPL_HEALOTHER,
 	SPL_RESURRECT,
+	SPL_INFRA,
 	SPL_IDENTIFY,
 	SPL_OIL,
 	SPL_REPAIR,
 	SPL_RECHARGE,
 	SPL_DISARM,
 #ifdef HELLFIRE
-	SPL_BUCKLE,
 	SPL_WHITTLE,
 	//SPL_LIGHTWALL,
 	//SPL_IMMOLAT,
 	SPL_RUNEFIRE,
+	SPL_RUNEWAVE,
 	SPL_RUNELIGHT,
 	SPL_RUNENOVA,
-	SPL_RUNEWAVE,
 	SPL_RUNESTONE,
 #endif
 	NUM_SPELLS,
 	SPL_INVALID = NUM_SPELLS,
 #ifdef HELLFIRE
-	NUM_SPELLS_DIABLO = SPL_BUCKLE,
+	NUM_SPELLS_DIABLO = SPL_WHITTLE,
 	SPL_RUNE_FIRST = SPL_RUNEFIRE,
 	SPL_RUNE_LAST = SPL_RUNESTONE
 #endif
@@ -4268,6 +4280,7 @@ typedef enum _cmd_id {
 	//CMD_TRAPOPEN,
 	//CMD_TRAPCLOSE,
 	CMD_SHRINE,
+	CMD_BOOK,
 	CMD_TELEKINITM,
 	CMD_TELEKINMON,
 	CMD_TELEKINPLR,
@@ -4302,11 +4315,11 @@ typedef enum _cmd_id {
 } _cmd_id;
 
 typedef enum _dcmd_item {
-	DCMD_INVALID,
-	DCMD_ITM_SPAWNED,
-	DCMD_ITM_TAKEN,
-	DCMD_ITM_MOVED,
-	DCMD_ITM_DROPPED,
+	DCMD_INVALID,     // free entry in delta-items
+	DCMD_ITM_SPAWNED, // used entry in delta-items of a spawned item without item-details
+	DCMD_ITM_TAKEN,   // free entry in delta-items which was a spawned item originally
+	DCMD_ITM_MOVED,   // used entry in delta-items which was a spawned item originally
+	DCMD_ITM_DROPPED, // used entry in delta-items
 } _dcmd_item;
 
 typedef enum _dcmd_monster {
@@ -4628,6 +4641,7 @@ typedef enum talk_id {
 	STORE_IDSHOW,
 	STORE_TAVERN,
 	STORE_DRUNK,
+	STORE_DFORGET,
 	STORE_BARMAID,
 	STORE_PRIEST,
 	STORE_ERRAND,
@@ -4640,8 +4654,6 @@ typedef enum plr_class {
 	PC_SORCERER,
 #ifdef HELLFIRE
 	PC_MONK,
-	PC_BARD,
-	PC_BARBARIAN,
 #endif
 	NUM_CLASSES
 } plr_class;
@@ -4682,6 +4694,8 @@ typedef enum skill_details_type {
 	SDT_DAMAGE,
 	SDT_DAMAGE_MELEE,
 	SDT_DAMAGE_RANGED,
+	SDT_SUMMON,
+	SDT_DURATION,
 } skill_details_type;
 
 typedef enum window_active {
@@ -4758,6 +4772,7 @@ typedef enum anim_weapon_id {
 	ANIM_ID_MACE,
 	ANIM_ID_MACE_SHIELD,
 	ANIM_ID_STAFF,
+	NUM_WANIM_IDS
 } anim_weapon_id;
 
 typedef enum anim_armor_id {

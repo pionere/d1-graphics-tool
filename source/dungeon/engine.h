@@ -13,6 +13,8 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+extern POS32 myview;
+
 /* Set the current RNG seed */
 void SetRndSeed(int32_t s);
 /* Retrieve the current RNG seed */

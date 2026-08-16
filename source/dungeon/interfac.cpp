@@ -13,8 +13,6 @@
 
 #include "trndat.h"
 
-int ViewX;
-int ViewY;
 bool IsMultiGame;
 bool IsHellfireGame;
 bool HasTileset;
@@ -348,8 +346,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     dun->setHeight(MAXDUNY, true);
 
     InitQuests(params.seedQuest);
-    ViewX = 0;
-    ViewY = 0;
+    myview.x = 0;
+    myview.y = 0;
 //    if (IsMultiGame) {
 //        DeltaSaveLevel();
 //    } else {
@@ -512,7 +510,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     }
     view->updateEntityOptions();
 
-    view->scrollTo(ViewX, ViewY);
+    view->scrollTo(myview.x, myview.y);
 }
 
 MonsterStruct* GetMonsterAt(int x, int y)

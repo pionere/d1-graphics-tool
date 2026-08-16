@@ -16,8 +16,6 @@ class GenerateDunParam;
 class LevelCelView;
 struct MonsterStruct;
 
-extern int ViewX;
-extern int ViewY;
 extern bool IsMultiGame;
 extern bool IsHellfireGame;
 extern bool HasTileset;

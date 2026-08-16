@@ -9,6 +9,7 @@
 extern int numtrigs;
 extern TriggerStruct trigs[MAXTRIGGERS];
 
+POS32 TrigEntryPos(int idx);
 void InitView(int entry);
 void InitTriggers();
 
