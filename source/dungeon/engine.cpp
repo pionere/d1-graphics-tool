@@ -20,6 +20,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+POS32 myview;
+
 /** Current game seed */
 int32_t sglGameSeed;
 

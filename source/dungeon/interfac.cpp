@@ -15,7 +15,6 @@
 
 #include "trndat.h"
 
-POS32 myview;
 bool IsMultiGame;
 bool IsHellfireGame;
 bool HasTileset;
