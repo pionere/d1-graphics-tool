@@ -4342,6 +4342,59 @@ bool D1Gfx::patchWarriorStand(bool silent)
     return result;
 }
 
+bool D1Gfx::patchPriest(bool silent)
+{
+    constexpr int FRAME_WIDTH = 96;
+    constexpr int FRAME_HEIGHT = 96;
+    constexpr int RES_FRAME_WIDTH = 44;
+    constexpr int RES_FRAME_HEIGHT = 72;
+
+    for (int i = this->getFrameCount() - 1; i >= 0; i--) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            // dProgressErr() << tr("Framesize of the Books in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return false; // assume it is already done
+        }
+        if (!frame->testResize(RES_FRAME_WIDTH, RES_FRAME_HEIGHT, RESIZE_PLACEMENT::BOTTOM, D1GfxPixel::transparentPixel())) {
+            dProgressErr() << tr("Framesize of the Priest would eliminate pixels. Target size: %1:%2").arg(RES_FRAME_WIDTH).arg(RES_FRAME_HEIGHT);
+            return false;
+        }
+    }
+
+    bool result = false;
+    for (int i = this->getFrameCount() - 1; i >= 0; i--) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            // dProgressErr() << tr("Framesize of the Books in Crypt does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            break; // assume it is already done
+        }
+
+        bool change = false;
+        // replace black pixels on the robe
+        for (int y = 0; y < frame->getHeight(); y++) {
+            for (int x = 0; x < frame->getWidth(); x++) {
+                const D1GfxPixel pixel = frame->getPixel(x, y);
+                if (pixel.isTransparent()) continue;
+                if (pixel.getPaletteIndex() != 0) continue;
+                if (x <= 38 && y >= 62) continue;
+                change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(135)):
+            }
+        }
+
+        // resize the frame
+        change |= frame->resize(RES_FRAME_WIDTH, RES_FRAME_HEIGHT, RESIZE_PLACEMENT::BOTTOM, D1GfxPixel::transparentPixel());
+
+        //if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        //}
+    }
+    return result;
+}
+
 bool D1Gfx::addAnimDelayInfo(int gfxFileIndex, bool silent)
 {
     int frameDelay = 0;
@@ -9447,6 +9500,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
         break;
+    case GFX_TWN_PRIEST:  // Priest8.CEL
+        change = this->patchPriest(silent);
+        break;
     case GFX_TWN_FARMER:  // Farmrn2.CEL
     case GFX_TWN_CFARMER: // cfrmrn2.CEL
     case GFX_TWN_MFARMER: // mfrmrn2.CEL
@@ -9610,6 +9666,9 @@ int D1Gfx::getPatchFileIndex(QString &filePath)
     }
     if (baseName == "urn") {
         fileIndex = GFX_OBJ_URN;
+    }
+    if (baseName == "priest8") {
+        fileIndex = GFX_TWN_PRIEST;
     }
     if (baseName == "farmrn2") {
         fileIndex = GFX_TWN_FARMER;
