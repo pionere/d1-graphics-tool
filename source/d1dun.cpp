@@ -3207,8 +3207,8 @@ void D1Dun::loadMissile(int misIndex)
             if (mfd.mfAnimFAmt == 1)
                 cl2FilePath += ".CL2";
             QString trnFilePath;
-            if (mfd.mfAnimTrans != nullptr) {
-                trnFilePath = this->assetPath + "/" + mfd.mfAnimTrans;
+            if (mfd.mfAnimTrans != TRN_NONE) {
+                trnFilePath = this->assetPath + "/" + getTrnFilePath(md.mTransFile);
             }
             this->loadMissileGfx(cl2FilePath, trnFilePath, result);
         }
