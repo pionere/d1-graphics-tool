@@ -4377,7 +4377,7 @@ bool D1Gfx::patchPriest(bool silent)
                 if (pixel.isTransparent()) continue;
                 if (pixel.getPaletteIndex() != 0) continue;
                 if (x <= 38 && y >= 62) continue;
-                change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(135)):
+                change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(135));
             }
         }
 
