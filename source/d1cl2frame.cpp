@@ -9,9 +9,9 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
     // Reading the frame header {CEL FRAME HEADER}
     const quint8 *data = (const quint8 *)rawFrameData.constData();
     const quint16 *header = (const quint16 *)data;
-    const quint8 *dataEnd = data + rawFrameData.size();
+    const unsigned dataSize = rawFrameData.size();
 
-    if (rawFrameData.size() < SUB_HEADER_SIZE) {
+    if (dataSize < SUB_HEADER_SIZE) {
         // dProgress() << QString("computeWidthFromHeader 0 %1").arg(rawFrameData.size());
         return 0; // invalid header
     }
@@ -24,8 +24,8 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
         // dProgress() << QString("computeWidthFromHeader 2 %1").arg(celFrameHeaderSize);
         return 0; // invalid header
     }
-    if (data + celFrameHeaderSize > dataEnd) {
-        // dProgress() << QString("computeWidthFromHeader 3 %1 %2 %3").arg((size_t)data).arg(celFrameHeaderSize).arg((size_t)dataEnd);
+    if (celFrameHeaderSize > dataSize) {
+        // dProgress() << QString("computeWidthFromHeader 3 %1 %2").arg(celFrameHeaderSize).arg(dataSize);
         return 0; // invalid header
     }
     // Decode the 32 pixel-lines blocks to calculate the image width
@@ -45,7 +45,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
             if (celFrameWidth != 0)
                 break;
             // last attempt using the size of the frame
-            nextFrameOffset = rawFrameData.size();
+            nextFrameOffset = dataSize;
         }
 
         unsigned pixelCount = 0;
@@ -54,9 +54,9 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
             // dProgress() << QString("computeWidthFromHeader 5 %1 %2").arg(lastFrameOffset).arg(nextFrameOffset);
             return 0; // invalid data
         }
-        for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
-            if (data + j >= dataEnd) {
-                // dProgress() << QString("computeWidthFromHeader 6 %1 %2 %3").arg((size_t)data).arg(j).arg((size_t)dataEnd);
+        for (unsigned j = lastFrameOffset; j < nextFrameOffset; j++) {
+            if (j >= dataSize) {
+                // dProgress() << QString("computeWidthFromHeader 6 %1 %2").arg(j).arg(dataSize);
                 return 0; // invalid data
             }
 

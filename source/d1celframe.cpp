@@ -119,16 +119,16 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
     // Reading the frame header {CEL FRAME HEADER}
     const quint8 *data = (const quint8 *)rawFrameData.constData();
     const quint16 *header = (const quint16 *)data;
-    const quint8 *dataEnd = data + rawFrameData.size();
+    const unsigned dataSize = rawFrameData.size();
 
-    if (rawFrameData.size() < SUB_HEADER_SIZE)
+    if (dataSize < SUB_HEADER_SIZE)
         return 0; // invalid header
     unsigned celFrameHeaderSize = SwapLE16(header[0]);
     if (celFrameHeaderSize & 1)
         return 0; // invalid header
     if (celFrameHeaderSize < SUB_HEADER_SIZE)
         return 0; // invalid header
-    if (data + celFrameHeaderSize > dataEnd)
+    if (celFrameHeaderSize > dataSize)
         return 0; // invalid header
     // Decode the 32 pixel-lines blocks to calculate the image width
     unsigned celFrameWidth = 0;
@@ -145,7 +145,7 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
             if (celFrameWidth != 0)
                 break;
             // last attempt using the size of the frame
-            nextFrameOffset = rawFrameData.size();
+            nextFrameOffset = dataSize;
         }
 
         unsigned pixelCount = 0;
@@ -153,8 +153,8 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
         if (lastFrameOffset >= nextFrameOffset)
             return 0; // invalid data
         // calculate width based on the data-block
-        for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
-            if (data + j >= dataEnd)
+        for (unsigned j = lastFrameOffset; j < nextFrameOffset; j++) {
+            if (j >= dataSize)
                 return 0; // invalid data
 
             quint8 readByte = data[j];
@@ -168,7 +168,7 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
             }
         }
         if (pixelCount % CEL_BLOCK_HEIGHT)
-            return false; // invalid block
+            return 0; // invalid block
         unsigned width = pixelCount / CEL_BLOCK_HEIGHT;
         // The calculated width has to be identical for each 32 pixel-line block
         if (celFrameWidth == 0) {
