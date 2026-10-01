@@ -153,7 +153,7 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
         if (lastFrameOffset >= nextFrameOffset)
             return 0; // invalid data
         // calculate width based on the data-block
-        for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
+        for (unsigned j = lastFrameOffset; j < nextFrameOffset; j++) {
             if (j >= dataSize)
                 return 0; // invalid data
 

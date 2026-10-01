@@ -54,7 +54,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
             // dProgress() << QString("computeWidthFromHeader 5 %1 %2").arg(lastFrameOffset).arg(nextFrameOffset);
             return 0; // invalid data
         }
-        for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
+        for (unsigned j = lastFrameOffset; j < nextFrameOffset; j++) {
             if (j >= dataSize) {
                 // dProgress() << QString("computeWidthFromHeader 6 %1 %2").arg(j).arg(dataSize);
                 return 0; // invalid data
