@@ -295,6 +295,28 @@ else()
     )
 endif()
 
+# TORCH
+#set(Torch_DIR c:/downloads/libtorch/source/libtorch-win-shared-with-deps-2.0.1+cu118/libtorch/share/cmake/Torch)
+set(Torch_DIR "C:/downloads/wintorch/share/cmake/Torch")
+find_package(Torch REQUIRED)
+set(USE_KINETO 0)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+target_link_libraries(${BIN_TARGET} PRIVATE "${TORCH_LIBRARIES}")
+
+if (MSVC)
+  #set(TORCH_LIBRARIES ${TORCH_LIBRARIES} "${TORCH_ROOT}/lib/c10.lib" "${TORCH_ROOT}/lib/c10_cuda.lib")
+  #set_target_properties(torch PROPERTIES
+  #IMPORTED_IMPLIB "${_IMPORT_PREFIX}/lib/torch.lib"
+  #IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/torch.dll"
+  #)
+  file(GLOB TORCH_DLLS "${TORCH_INSTALL_PREFIX}/lib/*.dll")
+  add_custom_command(TARGET ${BIN_TARGET}
+                     POST_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                     ${TORCH_DLLS}
+                     $<TARGET_FILE_DIR:${BIN_TARGET}>)
+endif (MSVC)
+
 #add_library(smacker STATIC
 #  3rdParty/libsmacker/smacker.c)
 #target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
