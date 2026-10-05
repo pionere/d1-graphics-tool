@@ -35,9 +35,10 @@ jobs:
       shell: bash
 
     #winget -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.14.1%2Bcpu.zip
+    #unzip libtorch.zip -d /libtorch
     - name: Install Torch
       run: |
-        unzip libtorch.zip -d /libtorch
+        unzip libtorch.zip
       shell: cmd
 
     - name: Configure
