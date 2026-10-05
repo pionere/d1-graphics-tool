@@ -24,12 +24,16 @@ jobs:
         cache: 'true'
         modules: 'qtmultimedia qtimageformats'
 
-    - name: Install winget
-      uses: Cyberboss/install-winget@v1
+    - name: Download Torch
+      uses: suisei-cn/actions-download-file@v1 # 9f75b8c2dad5ccced7509c44a3b881c5613abde2 # 1.6.1
+      #id: downloadfile  # Remember to give an ID if you need the output filename
+      with:
+        url: "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.14.1%2Bcpu.zip"
+        target: libtorch.zip
 
+    #winget -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.14.1%2Bcpu.zip
     - name: Install Torch
       run: |
-        winget -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.14.1%2Bcpu.zip
         unzip libtorch.zip -d /libtorch
       shell: cmd
 
