@@ -24,8 +24,14 @@ jobs:
         cache: 'true'
         modules: 'qtmultimedia qtimageformats'
 
+    - name: Install Torch
+      run: |
+        wget  -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.14.1%2Bcpu.zip
+        unzip libtorch.zip -d /libtorch
+      shell: cmd
+
     - name: Configure
-      run: cmake -S. -Bbuild
+      run: cmake -S. -Bbuild -DCMAKE_PREFIX_PATH=/libtorch
 
     - name: Make
       run: cmake --build build -j $(nproc) --config Release

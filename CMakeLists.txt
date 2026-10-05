@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.18)
 
 project(D1GraphicsTool VERSION 0.5.0 LANGUAGES CXX)
 string(TOLOWER ${PROJECT_NAME} project_name)
@@ -297,7 +297,7 @@ endif()
 
 # TORCH
 #set(Torch_DIR c:/downloads/libtorch/source/libtorch-win-shared-with-deps-2.0.1+cu118/libtorch/share/cmake/Torch)
-set(Torch_DIR "C:/downloads/wintorch/share/cmake/Torch")
+#set(Torch_DIR "C:/downloads/wintorch/share/cmake/Torch")
 find_package(Torch REQUIRED)
 set(USE_KINETO 0)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
