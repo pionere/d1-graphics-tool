@@ -28,7 +28,7 @@ jobs:
       shell: pwsh
       run: |
         Invoke-WebRequest -Uri "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.14.1%2Bcpu.zip" -OutFile "libtorch.zip"
-        unzip libtorch.zip -d "D:\a\d1-graphics-tool/d1-graphics-tool/libtorch"
+        unzip libtorch.zip -d "D:\a\d1-graphics-tool/d1-graphics-tool"
 
     - name: Show content of workspace
       run: find $RUNNER_WORKSPACE
@@ -42,7 +42,7 @@ jobs:
     #  shell: cmd
 
     - name: Configure
-      run: cmake -S. -Bbuild -DCMAKE_PREFIX_PATH="D:\a\d1-graphics-tool/d1-graphics-tool/"
+      run: cmake -S. -Bbuild -DCMAKE_PREFIX_PATH="D:\a\d1-graphics-tool/d1-graphics-tool"
 
     - name: Make
       run: cmake --build build -j $(nproc) --config Release
