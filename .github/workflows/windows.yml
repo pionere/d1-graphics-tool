@@ -42,7 +42,7 @@ jobs:
     #  shell: cmd
 
     - name: Configure
-      run: cmake -S. -Bbuild -DCMAKE_PREFIX_PATH="D:\a\d1-graphics-tool/d1-graphics-tool"
+      run: cmake -S. -Bbuild -DCMAKE_PREFIX_PATH="D:\a\d1-graphics-tool/d1-graphics-tool/libtorch/share/cmake/Torch"
 
     - name: Make
       run: cmake --build build -j $(nproc) --config Release
