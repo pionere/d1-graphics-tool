@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
     { // run the application
         MainWindow w = MainWindow();
 #if 1
-        try {
+        //try {
+        {
             Net net;
             // example inpuit batch of 2 samples, each with 4 features 
             torch::Tensor input = torch::rand({ 2,4 });
@@ -57,8 +58,8 @@ int main(int argc, char *argv[])
             Net loaded_net;
             torch::load(loaded_net, "model.pt");
 
-        } catch (const c10::Error& e) {
-            LogErrorF("failed c10");
+        //} catch (const c10::Error& e) {
+        //    LogErrorF("failed c10");
         }
         LogErrorF("success");
 #endif
