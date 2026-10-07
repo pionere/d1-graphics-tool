@@ -179,7 +179,6 @@ typedef enum gfx_file_index {
     GFX_PLR_WLNLM,   // graphics of warrior in light armor unarmed casting lightning (WLNLM.CL2)
     GFX_PLR_WMDLM,   // graphics of warrior in medium armor with sword and shield casting lightning (WMDLM.CL2)
     GFX_PLR_WMHAS,   // graphics of warrior in medium armor with mace and shield standing in dungeon (WMHAS.CL2)
-    GFX_TWN_PRIEST,  // graphics of the farmer (Priest8.CEL)
     GFX_TWN_FARMER,  // graphics of the farmer (Farmrn2.CEL)
     GFX_TWN_CFARMER, // graphics of the cow-farmer (cfrmrn2.CEL)
     GFX_TWN_MFARMER, // graphics of the moose-farmer (mfrmrn2.CEL)
@@ -432,7 +431,6 @@ private:
     bool patchMonFrames(int gfxFileIndex, bool silent);
     bool patchRogueExtraPixels(int gfxFileIndex, bool silent);
     bool patchWarriorStand(bool silent);
-    bool patchPriest(bool silent);
     bool addAnimDelayInfo(int gfxFileIndex, bool silent);
     bool patchFallGDie(bool silent);
     bool patchFallGWalk(bool silent);
