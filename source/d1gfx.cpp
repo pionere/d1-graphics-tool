@@ -2260,7 +2260,7 @@ void D1Gfx::optimize(unsigned flags)
     // try to choose better opaque colors in the mask-frame
     if (maskFrame && fc != 0) {
         // calculate the frame-size
-        int w, h;
+        int w = 0, h = 0;
         for (int i = 0; i < fc + 1; i++) {
             const D1GfxFrame *frame = this->frames[i];
             int cw = frame->getWidth(), ch = frame->getHeight();
