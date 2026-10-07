@@ -227,11 +227,6 @@
        </item>
        <item>
         <property name="text">
-         <string>Priest (Priest8.CEL)</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>Farmer (Farmrn2.CEL)</string>
         </property>
        </item>
