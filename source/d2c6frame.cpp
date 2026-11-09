@@ -4,7 +4,7 @@
 
 #include "progressdialog.h"
 
-int D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
+bool D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
 {
     QDataStream in(rawData);
     in.setByteOrder(QDataStream::LittleEndian);
@@ -40,11 +40,11 @@ int D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsPa
         return false;
 
     // calculate the offset
-    int frameDataStartOffset = 8 * 4;
+    unsigned frameDataStartOffset = 8 * 4;
     // READ {CEL FRAME DATA}
     std::vector<std::vector<D1GfxPixel>> pixels;
     std::vector<D1GfxPixel> pixelLine;
-    for (int o = frameDataStartOffset; o < frameDataStartOffset + lengthDword; o++) {
+    for (unsigned o = frameDataStartOffset; o < frameDataStartOffset + lengthDword; o++) {
         quint8 readByte = rawData[o];
 
         if (readByte == 0x80) {
@@ -56,7 +56,7 @@ int D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsPa
             pixelLine.clear();
         } else if (readByte > 0x7F /*&& readByte <= 0xFF*/) {
             // Transparent pixels group
-            for (int i = 0; i < readByte & 0x7F; i++) {
+            for (int i = 0; i < (readByte & 0x7F); i++) {
                 // Add transparent pixel
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
             }
@@ -85,7 +85,10 @@ int D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsPa
     for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
         frame.pixels.push_back(std::move(*it));
     }
-    frame.width = width;
+    frame.width = widthDword;
     frame.height = frame.pixels.size();
+    if (heightDword != frame.height) {
+        dProgressWarn() << QString("Invalid C6 frame height %1 (expected %2)").arg(heightDword).arg(frame.height);
+    }
     return true;
 }

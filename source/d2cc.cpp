@@ -8,7 +8,7 @@
 #include <QDir>
 #include <QMessageBox>
 
-#include "d2cxframe.h"
+#include "d2ccframe.h"
 #include "progressdialog.h"
 
 static quint32 readBits(const QByteArray &rawData, int numBits, quint32 &remVal, int &remBits, int &cursor)

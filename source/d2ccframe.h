@@ -7,5 +7,5 @@
 
 class D2CcFrame {
 public:
-    static int load(D1GfxFrame &frame, int idx, const QByteArray &rawData, const OpenAsParam &params);
+    static bool load(D1GfxFrame &frame, int idx, const QByteArray &rawData, const OpenAsParam &params);
 };
