@@ -46,8 +46,6 @@ bool D2C6::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1G
             return false;
 
         quint32 celFrameStartOffset;
-        quint32 celFrameEndOffset;
-
         in >> celFrameStartOffset;
 
         for (unsigned i = 0; i < directionsDword; i++) {
@@ -55,6 +53,8 @@ bool D2C6::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1G
 
             // Going through all frames of the CEL
             for (unsigned int j = 1; j <= framesPerDirectionDword; j++) {
+
+                quint32 celFrameEndOffset;
                 if (i != directionsDword - 1 || j != framesPerDirectionDword) {
                     in >> celFrameEndOffset;
                     if (fileSize < celFrameEndOffset) {

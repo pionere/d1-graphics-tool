@@ -11,7 +11,7 @@
 #include "d2ccframe.h"
 #include "progressdialog.h"
 
-static quint32 readBits(const QByteArray &rawData, int numBits, quint32 &remVal, int &remBits, int &cursor)
+/*static quint32 readBits(const QByteArray &rawData, int numBits, quint32 &remVal, int &remBits, int &cursor)
 {
     while (numBits > remBits) {
 
@@ -25,7 +25,7 @@ static quint32 readBits(const QByteArray &rawData, int numBits, quint32 &remVal,
     }
 
 
-}
+}*/
 
 bool D2Cc::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1Gfx &gfx)
 {
@@ -82,6 +82,7 @@ bool D2Cc::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1G
 
             gfx.groupFrameIndices.push_back(std::pair<int, int>(i * framesPerDirectionDword, (i + 1) * framesPerDirectionDword - 1));
 
+            quint32 celGroupEndOffset;
             if (i != directionsByte - 1) {
                 in >> celGroupEndOffset;
                 if (fileSize < celGroupEndOffset) {
