@@ -126,6 +126,14 @@ set(PROJECT_SOURCES
         source/d1trs.h
         source/d1wav.cpp
         source/d1wav.h
+        source/d2cc.cpp
+        source/d2cc.h
+        source/d2ccframe.cpp
+        source/d2ccframe.h
+        source/d2c6.cpp
+        source/d2c6.h
+        source/d2c6frame.cpp
+        source/d2c6frame.h
         source/dungeon/automap.cpp
         source/dungeon/drlg_l1.cpp
         source/dungeon/drlg_l2.cpp

@@ -33,6 +33,8 @@
 #include "d1pcx.h"
 #include "d1smk.h"
 #include "d1trs.h"
+#include "d2cc.h"
+#include "d2c6.h"
 #include "ui_mainwindow.h"
 
 static MainWindow *theMainWindow;
@@ -767,7 +769,7 @@ void MainWindow::on_actionNew_Gfxset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;CLC Files (*.clc *.CLC);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;CLC Files (*.clc *.CLC);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C);;D2 Files(*.dcc *.DCC *.dc6 *.DC6 )"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -817,6 +819,10 @@ IMPORT_FILE_TYPE MainWindow::guessFileType(const QString& filePath, bool dunMode
             fileType = IMPORT_FILE_TYPE::TBL;
         else if (fileLower.endsWith(".cpp"))
             fileType = IMPORT_FILE_TYPE::CPP;
+        // else if (fileLower.endsWith(".dcc"))
+        //     fileType = IMPORT_FILE_TYPE::DCC;
+        // else if (fileLower.endsWith(".dc6"))
+        //     fileType = IMPORT_FILE_TYPE::DC6;
         else
             fileType = IMPORT_FILE_TYPE::CEL;
     }
@@ -1339,6 +1345,10 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
             fileType = FILE_CONTENT::CPP;
         else if (fileLower.endsWith(".smk"))
             fileType = FILE_CONTENT::SMK;
+        else if (fileLower.endsWith(".dcc"))
+            fileType = FILE_CONTENT::DCC;
+        else if (fileLower.endsWith(".dc6"))
+            fileType = FILE_CONTENT::DC6;
         else
             fileType = FILE_CONTENT::UNKNOWN;
     }
@@ -1569,6 +1579,16 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     } else if (fileType == FILE_CONTENT::CLC) {
         if (!D1Clc::load(*result->gfx, gfxFilePath, params)) {
             MainWindow::failWithError(instance, result, tr("Failed loading CLC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::DCC) {
+        if (!D2Cc::load(*result->gfx, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading DCC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::DC6) {
+        if (!D2C6::load(*result->gfx, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading DC6 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else if (fileType == FILE_CONTENT::PCX) {

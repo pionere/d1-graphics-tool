@@ -82,6 +82,8 @@ enum class FILE_CONTENT {
     CPP,
     SMK,
     DUN,
+    DCC,
+    DC6,
     UNKNOWN = -1
 };
 
