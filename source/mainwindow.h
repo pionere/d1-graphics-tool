@@ -310,6 +310,9 @@ private slots:
     void on_actionClose_Translation_Unique_triggered();
     void on_actionPatch_Translation_Unique_triggered();
 
+    void on_actionLoadPals_Colors_triggered();
+    void on_actionSavePals_Colors_triggered();
+
     void on_actionNew_Translation_Base_triggered();
     void on_actionOpen_Translation_Base_triggered();
     void on_actionSave_Translation_Base_triggered();

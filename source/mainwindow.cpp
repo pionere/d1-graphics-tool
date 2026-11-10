@@ -35,6 +35,7 @@
 #include "d1trs.h"
 #include "d2cc.h"
 #include "d2c6.h"
+#include "d2dat.h"
 #include "ui_mainwindow.h"
 
 static MainWindow *theMainWindow;
@@ -3859,6 +3860,61 @@ void MainWindow::on_actionClose_PAL_triggered()
     }
     // select the next palette
     this->setPal(nextPath);
+}
+
+void MainWindow::on_actionLoadPals_Colors_triggered()
+{
+    QString palsFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Palette-Set File"), tr("DAT Files (*.dat *.DAT)"));
+
+    if (palsFilePath.isEmpty()) {
+        return;
+    }
+
+    std::vector<D1Pal *> pals;
+    if (!D2Dat::load(palsFilePath, pals)) {
+        return;
+    }
+
+    this->setPal(D1Pal::DEFAULT_PATH);
+    // reset palettes
+    for (auto it = this->pals.begin(); it != this->pals.end(); ) {
+        if (MainWindow::isResourcePath(it.key())) {
+            it++;
+            continue;
+        }
+        MemFree(it.value());
+        it = this->pals.erase(it);
+    }
+    if (pals.empty()) {
+        return;
+    }
+    // load the PAL files
+    for (D1Pal *pal : pals) {
+        this->pals[pal->getFilePath()] = pal;
+    }
+    this->setPal(pals[0]->getFilePath());
+}
+
+void MainWindow::on_actionSavePals_Colors_triggered()
+{
+    std::vector<D1Pal *> pals;
+    for (auto it = this->pals.cbegin(); it != this->pals.cend(); it++) {
+        if (MainWindow::isResourcePath(it.key())) {
+            continue;
+        }
+        pals.push_back(it.value());
+    }
+
+    if (pals.empty()) {
+        QMessageBox::critical(this, tr("Error"), tr("Built-in PAL files can not be saved to a palette set."));
+        return;
+    }
+
+    QString palsFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("Save Palette-Set File as..."), tr("DAT Files (*.dat *.DAT)"));
+
+    if (!palsFilePath.isEmpty()) {
+        D2Dat::save(palsFilePath, pals);
+    }
 }
 
 void MainWindow::on_actionNew_Translation_Unique_triggered()

@@ -99,7 +99,7 @@ static int crazyLookup(unsigned idx)
 {
     const int crazyBitTable[] = { 0, 1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 26, 28, 30, 32 };
 
-    if (idx >= lengthof(crazyBitTable)) {
+    if (idx >= (unsigned)lengthof(crazyBitTable)) {
         dProgressErr() << QString("Invalid index (%1) to the lookup table (must be less than %2).").arg(idx).arg(lengthof(crazyBitTable));
         idx = 0;
     }
@@ -128,6 +128,16 @@ static quint32 readBits(const QByteArray &rawData, int numBits, D2CcBitReaderSta
     hi.remBits -= numBits;
     return res;
 }
+
+typedef struct D2CcFrameInfo
+{
+    int width;
+    int height;
+    int XOffset;
+    int YOffset;
+    bool flipped;
+    // RECT32 box;
+} D2CcFrameInfo;
 
 typedef struct D2CcDirectionInfo
 {
@@ -160,16 +170,6 @@ typedef struct D2CcDirectionInfo
     RECT32 box;
 } D2CcDirectionInfo;
 
-typedef struct D2CcFrameInfo
-{
-    int width;
-    int height;
-    int XOffset;
-    int YOffset;
-    bool flipped;
-    // RECT32 box;
-} D2CcFrameInfo;
-
 static void readFrameHeader(const QByteArray &rawData, const D2CcDirectionInfo &di, D2CcFrameInfo &fi, D2CcBitReaderState &rs)
 {
     int Variable0, OptionalData, CodedBytes;
@@ -184,7 +184,7 @@ static void readFrameHeader(const QByteArray &rawData, const D2CcDirectionInfo &
 
     fi.flipped = readBits(rawData, 1, rs);
 
-    fi.YOffset = fi.YOffset - fi.Height + 1;
+    fi.YOffset = fi.YOffset - fi.height + 1;
     // fi.box = { fi.XOffset, fi.YOffset - fi.Height + 1, fi.width, fi.height};
 }
 

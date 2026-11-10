@@ -134,6 +134,8 @@ set(PROJECT_SOURCES
         source/d2c6.h
         source/d2c6frame.cpp
         source/d2c6frame.h
+        source/d2dat.cpp
+        source/d2dat.h
         source/dungeon/automap.cpp
         source/dungeon/drlg_l1.cpp
         source/dungeon/drlg_l2.cpp

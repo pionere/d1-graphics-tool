@@ -259,6 +259,16 @@
     <addaction name="actionGen_PAL"/>
     <addaction name="actionClose_PAL"/>
    </widget>
+   <widget class="QMenu" name="menuPalSet">
+    <property name="title">
+     <string>Palette Set</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionLoadPals_Colors"/>
+    <addaction name="actionSavePals_Colors"/>
+   </widget>
    <widget class="QMenu" name="menuTrnBase">
     <property name="title">
      <string>Base Translation</string>
@@ -306,6 +316,7 @@
      <bool>true</bool>
     </property>
     <addaction name="menuPalette"/>
+    <addaction name="menuPalSet"/>
     <addaction name="menuTrnBase"/>
     <addaction name="menuTrnUnique"/>
     <addaction name="menuTrnSet"/>
@@ -1287,6 +1298,22 @@
   <action name="actionClose_PAL">
    <property name="text">
     <string>Close</string>
+   </property>
+  </action>
+  <action name="actionLoadPals_Colors">
+   <property name="text">
+    <string>Load Palette Set</string>
+   </property>
+   <property name="toolTip">
+    <string>Load a palette set</string>
+   </property>
+  </action>
+  <action name="actionSavePals_Colors">
+   <property name="text">
+    <string>Save Palette Set</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the palettes as a palette set</string>
    </property>
   </action>
   <action name="actionNew_Translation_Unique">
