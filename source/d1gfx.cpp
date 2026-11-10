@@ -2292,12 +2292,15 @@ bool D1Gfx::squash()
 
     // squash the offsets
     if (this->hasOffset()) {
-LogErrorF("squash the offsets");
-        QRect rect = QRect();
+LogErrorF("squash the offsets %d", this->getFrameCount();
+        QRect rect;
         for (int i = 0; i < this->getFrameCount(); i++) {
             D1GfxFrame* frame = this->frames[i];
             QRect frameRect = QRect(frame->xoffset, frame->yoffset, frame->getWidth(), frame->getHeight());
-            rect.united(frameRect);
+            if (i != 0)
+                rect.united(frameRect);
+            else
+                rect = frameRect;
         }
 LogErrorF("rect %d:%d -> %dx%d", rect.x(), rect.y(), rect.width(), rect.height());
         for (int i = 0; i < this->getFrameCount(); i++) {
