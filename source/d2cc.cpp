@@ -82,11 +82,9 @@ bool D2Cc::readHeader(QIODevice *device, QDataStream &in, D2CcHeaderInfo &hi, D1
                 celGroupEndOffset = fileSize;
             }
 
-            // Going through all frames of the CC
-            for (unsigned int j = 1; j <= celFrameCount; j++) {
-                hi.frameOffsets.push_back(
-                    QPair<quint32, quint32>(celGroupStartOffset, celGroupEndOffset));
-            }
+            // add the address of the directionData
+            hi.dirOffsets.push_back(
+                QPair<quint32, quint32>(celGroupStartOffset, celGroupEndOffset));
 
             celGroupStartOffset = celGroupEndOffset;
         }

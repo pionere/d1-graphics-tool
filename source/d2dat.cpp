@@ -37,7 +37,7 @@ bool D2Dat::load(const QString &filePath, std::vector<D1Pal *> &pals)
             quint8 blue;
             in >> blue;
 
-            this->colors[i] = QColor(red, green, blue);
+            pal->colors[i] = QColor(red, green, blue);
         }
 
 
