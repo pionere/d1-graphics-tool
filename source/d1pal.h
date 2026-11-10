@@ -10,7 +10,7 @@
 
 #define D1PAL_COLORS 256
 #define D1PAL_COLOR_BITS 8
-#define D1PAL_SIZE_BYTES 768
+#define D1PAL_SIZE_BYTES (D1PAL_COLORS * 3)
 
 enum class D1PAL_CYCLE_TYPE {
     CAVES,

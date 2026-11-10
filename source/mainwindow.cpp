@@ -3864,19 +3864,21 @@ void MainWindow::on_actionClose_PAL_triggered()
 
 void MainWindow::on_actionLoadPals_Colors_triggered()
 {
-    QString palsFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Palette-Set File"), tr("DAT Files (*.dat *.DAT)"));
+    QString palsFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Palette-Set File"), tr("DAT Files (*.dat *.DAT);;PL2 Files (*.pl2 *.PL2)"));
 
     if (palsFilePath.isEmpty()) {
         return;
     }
 
     std::vector<D1Pal *> pals;
-    if (!D2Dat::load(palsFilePath, pals)) {
+    std::vector<D1Trn *> trns;
+    if (!D2Dat::load(palsFilePath, pals, trns)) {
         return;
     }
 
-    this->setPal(D1Pal::DEFAULT_PATH);
     // reset palettes
+    // this->updatePals(pals);
+    this->setPal(D1Pal::DEFAULT_PATH);
     for (auto it = this->pals.begin(); it != this->pals.end(); ) {
         if (MainWindow::isResourcePath(it.key())) {
             it++;
@@ -3893,6 +3895,11 @@ void MainWindow::on_actionLoadPals_Colors_triggered()
         this->pals[pal->getFilePath()] = pal;
     }
     this->setPal(pals[0]->getFilePath());
+
+    if (!trns.empty()) {
+        this->updateTrns(trns);
+        this->setUniqueTrn(D1Trn::IDENTITY_PATH);
+    }
 }
 
 void MainWindow::on_actionSavePals_Colors_triggered()
@@ -4191,7 +4198,8 @@ void MainWindow::on_actionGenTrns_Colors_triggered()
 void MainWindow::updateTrns(const std::vector<D1Trn *> &newTrns)
 {
     // reset unique translations
-    this->on_actionClose_Translation_Unique_triggered();
+    // this->on_actionClose_Translation_Unique_triggered();
+    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
     for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
         if (MainWindow::isResourcePath(it.key())) {
             it++;
@@ -4201,7 +4209,8 @@ void MainWindow::updateTrns(const std::vector<D1Trn *> &newTrns)
         it = this->uniqueTrns.erase(it);
     }
     // reset base translations
-    this->on_actionClose_Translation_Base_triggered();
+    // this->on_actionClose_Translation_Base_triggered();
+    this->setBaseTrn(D1Trn::IDENTITY_PATH);
     for (auto it = this->baseTrns.begin(); it != this->baseTrns.end(); ) {
         if (MainWindow::isResourcePath(it.key())) {
             it++;
@@ -4210,6 +4219,7 @@ void MainWindow::updateTrns(const std::vector<D1Trn *> &newTrns)
         MemFree(it.value());
         it = this->baseTrns.erase(it);
     }
+    // update the unique translations
     if (newTrns.empty()) {
         return;
     }
@@ -4236,7 +4246,8 @@ void MainWindow::on_actionLoadTrns_Colors_triggered()
     }
 
     // reset unique translations
-    this->on_actionClose_Translation_Unique_triggered();
+    // this->on_actionClose_Translation_Unique_triggered();
+    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
     for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
         if (MainWindow::isResourcePath(it.key())) {
             it++;
@@ -4246,7 +4257,6 @@ void MainWindow::on_actionLoadTrns_Colors_triggered()
         it = this->uniqueTrns.erase(it);
     }
     if (trns.empty()) {
-        this->setUniqueTrn(D1Trn::IDENTITY_PATH);
         return;
     }
     // load the TRN files
