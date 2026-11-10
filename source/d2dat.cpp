@@ -8,6 +8,8 @@
 #include <QFile>
 #include <QMessageBox>
 
+#include "progressdialog.h"
+
 void D2Dat::loadRegularPalettes(QFile &file, const QString &baseFilePath, std::vector<D1Pal *> &pals)
 {
     const QByteArray fileData = file.readAll();
@@ -58,7 +60,7 @@ static unsigned readPalette4(const QByteArray &fileData, unsigned cursor, const 
 
         cursor++;
 
-        pal->colors[i] = QColor(red, green, blue);
+        pal->setColor(i, QColor(red, green, blue));
     }
 
     pal->setFilePath(filePath);
@@ -196,9 +198,9 @@ bool D2Dat::load(const QString &filePath, std::vector<D1Pal *> &pals, std::vecto
 
     size_t fileSize = file.size();
     if (fileSize == trnpalSize) {
-        loadTransformationPalette(file, baseFilePath);
+        loadTransformationPalette(file, baseFilePath, pals, trns);
     } else if ((fileSize % D1PAL_SIZE_BYTES) == 0) {
-        loadRegularPalettes(file, baseFilePath);
+        loadRegularPalettes(file, baseFilePath, pals);
     } else {
         dProgressErr() << QApplication::tr("Invalid size %1 vs %2.").arg(fileSize).arg(trnpalSize);
         return false;
