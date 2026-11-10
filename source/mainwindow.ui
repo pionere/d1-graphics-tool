@@ -818,7 +818,7 @@
     <string>Squash</string>
    </property>
    <property name="toolTip">
-    <string>Add components to the main graphics</string>
+    <string>Add the components to the main graphics</string>
    </property>
   </action>
   <action name="actionMask">

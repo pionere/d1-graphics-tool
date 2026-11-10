@@ -2210,10 +2210,21 @@ bool D1Gfx::check(int assetMpl, bool *typetested) const
     return result;
 }
 
+bool D1Gfx::hasOffset()
+{
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame* frame = this->frames[i];
+        result |= frame->xoffset != 0 || frame->yoffset != 0;
+    }
+    return result;
+}
+
 bool D1Gfx::squash()
 {
     const D1GfxPixel backPixel = D1GfxPixel::transparentPixel();
     bool change = false;
+    // squash the components
     for (int i = 0; i < this->getFrameCount(); i++) {
         QRect rect = this->getFrameRect(i, true);
         rect.moveTo(-rect.x(), -rect.y());
@@ -2278,6 +2289,41 @@ bool D1Gfx::squash()
     // eliminate the obsolete components
     qDeleteAll(this->components);
     this->components.clear();
+
+    // squash the offsets
+    if (this->hasOffset()) {
+        QRect rect = QRect();
+        for (int i = 0; i < this->getFrameCount(); i++) {
+            D1GfxFrame* frame = this->frames[i];
+            QRect frameRect = QRect(frame->xoffset, frame->yoffset, frame->getWidth(), frame->getHeight());
+            rect.united(frameRect);
+        }
+
+        for (int i = 0; i < this->getFrameCount(); i++) {
+            D1GfxFrame* frame = this->frames[i];
+            int dx = frame->xoffset - rect.x();
+            if (dx != 0) {
+                change |= frame->resize(dx + frame->getWidth(), frame->getHeight(), RESIZE_PLACEMENT::CENTER_RIGHT, backPixel);
+            }
+            dx = rect.width() - frame->getWidth();
+            if (dx != 0) {
+                change |= frame->resize(dx + frame->getWidth(), frame->getHeight(), RESIZE_PLACEMENT::CENTER_LEFT, backPixel);
+            }
+            frame->xoffset = 0;
+
+            int dy = frame->yoffset - rect.y();
+            if (dy != 0) {
+                change |= frame->resize(frame->getWidth(), dy + frame->getHeight(), RESIZE_PLACEMENT::BOTTOM, backPixel);
+            }
+            dy = rect.height() - frame->getHeight();
+            if (dx != 0) {
+                change |= frame->resize(frame->getWidth(), dy + frame->getHeight(), RESIZE_PLACEMENT::TOP, backPixel);
+            }
+
+            frame->yoffset = 0;
+        }
+    }
+
     return change;
 }
 

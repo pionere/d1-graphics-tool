@@ -258,13 +258,13 @@ void MainWindow::updateDynamicMenus()
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
-    bool hasComponent = this->gfx != nullptr && this->gfx->getComponentCount() != 0;
+    bool isSquashable = this->gfx != nullptr && (this->gfx->getComponentCount() != 0 || this->gfx->hasOffset());
     if (this->gfxset != nullptr) {
         for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
-            hasComponent |= this->gfxset->getGfx(i)->getComponentCount() != 0;
+            isSquashable |= this->gfxset->getGfx(i)->getComponentCount() != 0 || this->gfxset->getGfx(i)->hasOffset();
         }
     }
-    this->ui->actionSquash->setEnabled(hasComponent);
+    this->ui->actionSquash->setEnabled(isSquashable);
     // - Colors
     this->ui->actionDir_Colors->setEnabled((this->gfxsetView != nullptr || this->celView != nullptr) && hasFrame);
     // - Data

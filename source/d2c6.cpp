@@ -11,7 +11,7 @@
 #include "d2c6frame.h"
 #include "progressdialog.h"
 
-bool D2C6::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1Gfx &gfx)
+bool D2C6::readHeader(QIODevice *device, QDataStream &in, D2C6HeaderInfo &hi, D1Gfx &gfx)
 {
     auto fileSize = device->size();
     // CEL HEADER CHECKS
@@ -37,8 +37,6 @@ bool D2C6::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1G
 
     quint32 framesPerDirectionDword;
     in >> framesPerDirectionDword;
-
-    hi.groupped = false; // directionsDword > 1;
 
     // C6 FRAMES OFFSETS CALCULATION
     if (directionsDword * framesPerDirectionDword != 0) {
@@ -92,11 +90,12 @@ bool D2C6::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     in.setByteOrder(QDataStream::LittleEndian);
 
     QIODevice *device = in.device();
-    CelHeaderInfo hi;
+    D2C6HeaderInfo hi;
     if (!readHeader(device, in, hi, gfx)) {
         return false;
     }
-    gfx.type = hi.groupped ? D1CEL_TYPE::V1_COMPILATION : D1CEL_TYPE::V1_REGULAR;
+    // gfx.type = hi.groupped ? D1CEL_TYPE::V1_COMPILATION : D1CEL_TYPE::V1_REGULAR;
+    gfx.type = D1CEL_TYPE::V1_REGULAR;
     auto fileSize = device->size();
 
     // BUILDING {CEL FRAMES}

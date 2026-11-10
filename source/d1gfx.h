@@ -141,6 +141,10 @@ protected:
     // fields of smk-frames
     D1Pal* framePal = nullptr;
     D1SmkAudioData *frameAudio = nullptr;
+    // fields of d2 graphics
+    int xoffset = 0;
+    int yoffset = 0;
+    bool flipped = false;
 };
 
 typedef enum gfx_file_index {
@@ -370,6 +374,7 @@ public:
     int testResize(const ResizeParam &params) const;
     bool resize(const ResizeParam &params);
     void mask(int frameIndex, unsigned flags);
+    bool hasOffset() const;
     bool squash();
     void optimize(unsigned flags);
     bool check(int assetMpl, bool *typetested = nullptr) const;
