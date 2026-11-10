@@ -83,7 +83,7 @@ static unsigned readTransform(const QByteArray &fileData, unsigned cursor, const
     return cursor;
 }
 
-bool D2Dat::loadTransformationPalette(QFile &file, const QString &baseFilePath, std::vector<D1Pal *> &pals, std::vector<D1Trn *> &trns)
+void D2Dat::loadTransformationPalette(QFile &file, const QString &baseFilePath, std::vector<D1Pal *> &pals, std::vector<D1Trn *> &trns)
 {
 /*
     Palette	256 * 4 bytes	0's between each R,G,B byte sequence
@@ -123,7 +123,7 @@ Text color shifts	14 transforms	color-shifts used for text
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 
-    for (unsigned n = 0; n < 3; i++) {
+    for (unsigned n = 0; n < 3; n++) {
         for (unsigned i = 0; i < 256; i++) {
             QString filePath = baseFilePath + QString("alpha%1_%2.trn").arg((n + 1) * 25).arg(i, 3, QChar('0'));
             cursor = readTransform(fileData, cursor, filePath, pal, trns);

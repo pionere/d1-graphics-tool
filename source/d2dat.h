@@ -19,6 +19,6 @@ public:
     static bool save(const QString &datFilePath, const std::vector<D1Pal *> &pals);
 
 private:
-    void loadRegularPalettes(QFile &file, const QString &baseFilePath, std::vector<D1Pal *> &pals);
-    bool loadTransformationPalette(QFile &file, const QString &baseFilePath, std::vector<D1Pal *> &pals, std::vector<D1Trn *> &trns);
+    static void loadRegularPalettes(QFile &file, const QString &baseFilePath, std::vector<D1Pal *> &pals);
+    static void loadTransformationPalette(QFile &file, const QString &baseFilePath, std::vector<D1Pal *> &pals, std::vector<D1Trn *> &trns);
 };
