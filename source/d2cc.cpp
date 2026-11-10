@@ -11,37 +11,22 @@
 #include "d2ccframe.h"
 #include "progressdialog.h"
 
-/*static quint32 readBits(const QByteArray &rawData, int numBits, quint32 &remVal, int &remBits, int &cursor)
-{
-    while (numBits > remBits) {
-
-        remBits += 8;
-    }
-
-    if (numBits > remBits) {
-        quint32 nextDword;
-        in >> nextDword;
-
-    }
-
-
-}*/
-
 bool D2Cc::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1Gfx &gfx)
 {
     auto fileSize = device->size();
     const int headerSize = 3 * 1 + 3 * 4;
     // CEL HEADER CHECKS
     // Read first DWORD
-    if (fileSize < headerSize)
+    if (fileSize < headerSize) {
         return false;
+    }
 
     quint8 signatureByte;
     in >> signatureByte;
 
-	if (signatureByte != 0x74) {
+    if (signatureByte != 0x74) {
         return false;
-	}
+    }
 
     quint8 versionByte;
     in >> versionByte;
@@ -55,9 +40,9 @@ bool D2Cc::readHeader(QIODevice *device, QDataStream &in, CelHeaderInfo &hi, D1G
     quint32 checkDword;
     in >> checkDword;
 
-	if (checkDword != 1) {
+    if (checkDword != 1) {
         return false;
-	}
+    }
 
     hi.groupped = true; // directionsByte > 1;
 

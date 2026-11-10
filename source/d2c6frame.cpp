@@ -81,14 +81,49 @@ bool D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     if (!pixelLine.empty()) {
         return false;
     }
+    int frameHeight = frame.pixels.size();
+    if (heightDword != frameHeight) {
+        dProgressWarn() << QString("Invalid C6 frame height %1 (expected %2)").arg(heightDword).arg(frameHeight);
+    }
 
-    for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
-        frame.pixels.push_back(std::move(*it));
+    if (offsetXDword < 0) {
+        dProgressWarn() << QString("Negative X-Offset (%1) of the frame is ignored.").arg(offsetXDword);
+        offsetXDword = 0;
+    }
+    if (offsetYDword > 0) {
+        dProgressWarn() << QString("Positive Y-Offset (%1) of the frame is ignored.").arg(offsetYDword);
+        offsetYDword = 0;
+    }
+
+    if (offsetXDword != 0 || offsetYDword != 0) {
+        // add empty columns to imitate the x-offset
+        for (auto it = pixels.begin(); it != pixels.end(); ++it) {
+            for (int i = 0; i < offsetXDword; i++) {
+                it->insert(it->begin(), D1GfxPixel::transparentPixel());
+                it->push_back(D1GfxPixel::transparentPixel());
+            }
+        }
+        widthDword += 2 * offsetXDword;
+
+        // add empty lines to imitate the y-offset
+        offsetYDword = -offsetYDword;
+        for (unsigned i = 0; i < widthDword; i++) {
+            pixelLine.push_back(D1GfxPixel::transparentPixel());
+        }
+        for (int i = 0; i < offsetYDword; i++) {
+            pixels.insert(pixels.begin(), pixelLine);
+        }
+        frameHeight += offsetYDword;
+    }
+
+    if (flippedDword) {
+        frame.pixels.swap(pixels);
+    } else {
+        for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
+            frame.pixels.push_back(std::move(*it));
+        }
     }
     frame.width = widthDword;
-    frame.height = frame.pixels.size();
-    if (heightDword != frame.height) {
-        dProgressWarn() << QString("Invalid C6 frame height %1 (expected %2)").arg(heightDword).arg(frame.height);
-    }
+    frame.height = frameHeight;
     return true;
 }
