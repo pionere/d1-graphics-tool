@@ -54,8 +54,8 @@ bool D2Cc::readHeader(QIODevice *device, QDataStream &in, D2CcHeaderInfo &hi, D1
     in >> sizeDword;
 
     // Trying to find file size in CEL header
-    if (fileSize < sizeDword)
-        dProgressWarn() << QApplication::tr("Invalid filesize %1 (expected %2).").arg(sizeDword).arg(fileSize);
+    // if (fileSize < sizeDword)
+    //    dProgressWarn() << QApplication::tr("Invalid filesize %1 (expected %2).").arg(sizeDword).arg(fileSize);
     //    return false;
 
     // CEL FRAMES OFFSETS CALCULATION

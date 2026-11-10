@@ -81,7 +81,7 @@ bool D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     if (!pixelLine.empty()) {
         return false;
     }
-    int frameHeight = frame.pixels.size();
+    int frameHeight = pixels.size();
     if (heightDword != frameHeight) {
         dProgressWarn() << QString("Invalid C6 frame height %1 (expected %2)").arg(heightDword).arg(frameHeight);
     }
