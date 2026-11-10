@@ -2210,7 +2210,7 @@ bool D1Gfx::check(int assetMpl, bool *typetested) const
     return result;
 }
 
-bool D1Gfx::hasOffset()
+bool D1Gfx::hasOffset() const
 {
     bool result = false;
     for (int i = 0; i < this->getFrameCount(); i++) {
