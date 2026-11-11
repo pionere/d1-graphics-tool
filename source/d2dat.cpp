@@ -197,6 +197,7 @@ bool D2Dat::load(const QString &filePath, std::vector<D1Pal *> &pals, std::vecto
     baseFilePath.resize(baseFilePath.length() - 4);
 
     size_t fileSize = file.size();
+LogErrorF("D2Dat size %d vs %d.", fileSize, trnpalSize);
     if (fileSize == trnpalSize) {
         loadTransformationPalette(file, baseFilePath, pals, trns);
     } else if ((fileSize % D1PAL_SIZE_BYTES) == 0) {

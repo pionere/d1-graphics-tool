@@ -3875,7 +3875,7 @@ void MainWindow::on_actionLoadPals_Colors_triggered()
     if (!D2Dat::load(palsFilePath, pals, trns)) {
         return;
     }
-
+LogErrorF("on_actionLoadPals_Colors_triggered %d %d", pals.size(), trns.size());
     // reset palettes
     // this->updatePals(pals);
     this->setPal(D1Pal::DEFAULT_PATH);
