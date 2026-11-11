@@ -10,6 +10,8 @@
 
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+
 void D2Dat::loadRegularPalettes(QFile &file, const QString &baseFilePath, std::vector<D1Pal *> &pals)
 {
     const QByteArray fileData = file.readAll();
