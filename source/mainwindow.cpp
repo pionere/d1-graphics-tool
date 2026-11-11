@@ -38,6 +38,8 @@
 #include "d2dat.h"
 #include "ui_mainwindow.h"
 
+#include "dungeon/all.h"
+
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
