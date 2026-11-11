@@ -4,6 +4,8 @@
 
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+
 bool D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
 {
     QDataStream in(rawData);
