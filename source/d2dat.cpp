@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QMessageBox>
 
+#include "config.h"
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
