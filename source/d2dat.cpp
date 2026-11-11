@@ -44,12 +44,12 @@ void D2Dat::loadRegularPalettes(QFile &file, const QString &baseFilePath, std::v
 }
 
 static const unsigned trnSize = D2PAL_COLORS;
-static const unsigned palSize = D2PAL_COLORS * 4;
-static const unsigned trnpalSize = palSize + trnSize * (32 + 16 + 3 * 256 + 256 + 256 + 111 + 1 + 1 + 1 + 14 + 256 + 1) + palSize + trnSize * 14;
+static const unsigned trnpalSize = D2PAL_COLORS * 4 + trnSize * (32 + 16 + 3 * 256 + 256 + 256 + 111 + 1 + 1 + 1 + 14 + 256 + 1) + 13 * 3 + trnSize * 14;
 
 static unsigned readPalette4(const QByteArray &fileData, unsigned cursor, const QString &filePath, std::vector<D1Pal *> &pals)
 {
     D1Pal *pal = new D1Pal();
+    
     for (int i = 0; i < D2PAL_COLORS; i++) {
         quint8 red = fileData[cursor];
         cursor++;
@@ -65,6 +65,39 @@ static unsigned readPalette4(const QByteArray &fileData, unsigned cursor, const 
         pal->setColor(i, QColor(red, green, blue));
     }
 
+    QColor undefinedColor = QColor(Config::getPaletteUndefinedColor());
+
+    pal->setUndefinedColor(undefinedColor);
+    pal->setFilePath(filePath);
+    pals.push_back(pal);
+    return cursor;
+}
+
+static unsigned read13Palette3(const QByteArray &fileData, unsigned cursor, const QString &filePath, std::vector<D1Pal *> &pals)
+{
+    D1Pal *pal = new D1Pal();
+    int i = 0;
+    for ( ; i < 13; i++) {
+        quint8 red = fileData[cursor];
+        cursor++;
+
+        quint8 green = fileData[cursor];
+        cursor++;
+
+        quint8 blue = fileData[cursor];
+        cursor++;
+
+        cursor++;
+
+        pal->setColor(i, QColor(red, green, blue));
+    }
+
+    QColor undefinedColor = QColor(Config::getPaletteUndefinedColor());
+    for ( ; i < D2PAL_COLORS; i++) {
+        pal->setColor(i, undefinedColor);
+    }
+
+    pal->setUndefinedColor(undefinedColor);
     pal->setFilePath(filePath);
     pals.push_back(pal);
     return cursor;

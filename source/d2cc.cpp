@@ -201,7 +201,7 @@ typedef struct D2CcDirectionInfo
     D2CcBitReaderState pixelCodesDisplacementBitStream;
 } D2CcDirectionInfo;
 
-static void readFrameHeader(const QByteArray &rawData, const D2CcDirectionInfo &di, D2CcFrameInfo &fi, D2CcBitReaderState &rs)
+static void readFrameHeader(D2CcBitReaderState &rs, const D2CcDirectionInfo &di, D2CcFrameInfo &fi)
 {
     int Variable0, OptionalData, CodedBytes;
     Variable0 = readBits(rs, di.Variable0Bits);
@@ -222,7 +222,7 @@ static void readFrameHeader(const QByteArray &rawData, const D2CcDirectionInfo &
 /**
  * @return the number of pixels codes decoded from the stream
  */
-static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, uint8_t &pixelCodesStack[4])
+static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, uint8_t (&pixelCodesStack)[4])
 {
     if (!pixelMask) return 0; // Reuse the previous cell values, but still decode the cell in stage2
     const int nbPixelsInMask = qPopulationCount(pixelMask);
@@ -257,7 +257,7 @@ static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, 
             break;
         } else {
             pixelCodesStack[curPixelIdx] = nextPixelCode;
-            lastPixelCode = curPixelCode;
+            lastPixelCode = nextPixelCode;
         }
     }
     return curPixelIdx;
@@ -284,7 +284,7 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
             uint8_t pixelMask          = 0x0F;  // Default pixel mask
 
             // Check if this cell is equal to the previous one
-            if (lastPixelEntryIndexForCell < pbEntries.size()) {
+            if (lastPixelEntryIndexForCell < (size_t)pbEntries.size()) {
                 // Check if we have to reuse the previous values
                 if (dirInfo.compressEqualCells) {
                     // If true, the cell is the same as the previous one or transparent.
@@ -297,16 +297,16 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
             }
 
             // Store the fact that we skipped this cell for the 2nd phase
-            frameData.cellSameAsPrevious.push_back(sameAsPreviousCell);
+            frameInfo.cellSameAsPrevious.push_back(sameAsPreviousCell);
 
             if (!sameAsPreviousCell) {
                 // Pixel buffer entries are encoded as a stack in the stream which means the
                 // last value decoded is actually the 1st value with a bit in the mask.
                 uint8_t pixelCodesStack[PixelBufferEntry::nbValues] = { };
-                int nbPixelsDecoded = decodePixelCodesStack(data, pixelMask, pixelCodesStack);
+                int nbPixelsDecoded = decodePixelCodesStack(dirInfo, pixelMask, pixelCodesStack);
 
                 PixelBufferEntry previousEntryForCell;
-                if (lastPixelEntryIndexForCell < pbEntries.size()) {
+                if (lastPixelEntryIndexForCell < (size_t)pbEntries.size()) {
                     previousEntryForCell = pbEntries[lastPixelEntryIndexForCell];
                 } else {
                     // No need for previousEntryForCell if it doesn't exist, as the mask is 0xF
@@ -370,7 +370,7 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
     // read direction-header
     const int directionHeaderBitSize = 32 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4 + 4;
     bitCursor += directionHeaderBitSize;
-    if (rawData.size() < (bitCursor + 8 - 1) / 8)
+    if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
         return false;
 
     di.OutSizeCoded = readBits(rs, 32);
@@ -387,7 +387,7 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
     // read frame headers
     const int frameHeaderBitSize = di.Variable0Bits + di.WidthBits + di.HeightBits + di.XOffsetBits + di.YOffsetBits + di.OptionalDataBits + di.CodedBytesBits + 1;
     bitCursor += hi.framesPerDirection * frameHeaderBitSize;
-    if (rawData.size() < (bitCursor + 8 - 1) / 8)
+    if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
         return false;
 
     di.box = { INT_MAX, INT_MAX, INT_MIN, INT_MIN };
@@ -433,7 +433,7 @@ dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.b
     // read compression flags
     const int streamBitSize = 20;
     bitCursor += (di.compressEqualCells ? streamBitSize : 0) + streamBitSize + (di.hasRawPixelEncoding ? 2 * streamBitSize : 0);
-    if (rawData.size() < (bitCursor + 8 - 1) / 8)
+    if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
         return false;
 
     if (di.compressEqualCells) {
@@ -449,7 +449,7 @@ dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.b
 
     // read palette entries
     bitCursor += D2PAL_COLORS;
-    if (rawData.size() < (bitCursor + 8 - 1) / 8)
+    if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
         return false;
 
     int paletteEntryCount = 0;
