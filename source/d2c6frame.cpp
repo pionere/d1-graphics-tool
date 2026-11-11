@@ -85,7 +85,7 @@ bool D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     if (heightDword != frameHeight) {
         dProgressWarn() << QString("Invalid C6 frame height %1 (expected %2)").arg(heightDword).arg(frameHeight);
     }
-
+LogErrorF("C6 Frame %dx%d at %d:%d flopped: %d", widthDword, frameHeight, offsetXDword, offsetYDword, flippedDword);
     if (flippedDword) {
         frame.pixels.swap(pixels);
     } else {
