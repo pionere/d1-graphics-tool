@@ -2292,40 +2292,30 @@ bool D1Gfx::squash()
 
     // squash the offsets
     if (this->hasOffset()) {
-LogErrorF("squash the offsets %d", this->getFrameCount());
         QRect rect;
         for (int i = 0; i < this->getFrameCount(); i++) {
             D1GfxFrame* frame = this->frames[i];
             QRect frameRect = QRect(frame->xoffset, frame->yoffset, frame->getWidth(), frame->getHeight());
-            /*if (i != 0)
-                rect.united(frameRect);
-            else
-                rect = frameRect;*/
             rect = rect.united(frameRect);
         }
-LogErrorF("rect %d:%d -> %dx%d", rect.x(), rect.y(), rect.width(), rect.height());
         for (int i = 0; i < this->getFrameCount(); i++) {
             D1GfxFrame* frame = this->frames[i];
             int dx = frame->xoffset - rect.x();
             if (dx != 0) {
-LogErrorF("extending %d to left %d + %d -> %d", i, frame->getWidth(), dx, dx + frame->getWidth());
                 change |= frame->resize(dx + frame->getWidth(), frame->getHeight(), RESIZE_PLACEMENT::CENTER_RIGHT, backPixel);
             }
             dx = rect.width() - frame->getWidth();
             if (dx != 0) {
-LogErrorF("extending %d to right %d + %d -> %d", i, frame->getWidth(), dx, dx + frame->getWidth());
                 change |= frame->resize(dx + frame->getWidth(), frame->getHeight(), RESIZE_PLACEMENT::CENTER_LEFT, backPixel);
             }
             frame->xoffset = 0;
 
             int dy = frame->yoffset - rect.y();
             if (dy != 0) {
-LogErrorF("extending %d to top %d + %d -> %d", i, frame->getHeight(), dy, dy + frame->getHeight());
                 change |= frame->resize(frame->getWidth(), dy + frame->getHeight(), RESIZE_PLACEMENT::BOTTOM, backPixel);
             }
             dy = rect.height() - frame->getHeight();
             if (dy != 0) {
-LogErrorF("extending %d to bottom %d + %d -> %d", i, frame->getHeight(), dy, dy + frame->getHeight());
                 change |= frame->resize(frame->getWidth(), dy + frame->getHeight(), RESIZE_PLACEMENT::TOP, backPixel);
             }
 

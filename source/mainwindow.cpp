@@ -3875,9 +3875,9 @@ void MainWindow::on_actionLoadPals_Colors_triggered()
     std::vector<D1Pal *> pals;
     std::vector<D1Trn *> trns;
     if (!D2Dat::load(palsFilePath, pals, trns)) {
+        dProgressErr() << tr("Failed loading Palette-Set file: %1.").arg(QDir::toNativeSeparators(filePath));
         return;
     }
-LogErrorF("on_actionLoadPals_Colors_triggered %d %d", pals.size(), trns.size());
     // reset palettes
     // this->updatePals(pals);
     this->setPal(D1Pal::DEFAULT_PATH);

@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include <QtAlgorithms>
 #include <QApplication>
 #include <QByteArray>
 #include <QDataStream>
@@ -107,40 +108,66 @@ static int crazyLookup(unsigned idx)
 typedef struct D2CcBitReaderState
 {
     // reader state
+    QByteArray *rawStreamData;
     quint64 remVal;
     int remBits;
     int cursor;
 } D2CcBitReaderState;
 
-static quint32 readBits(const QByteArray &rawData, int numBits, D2CcBitReaderState& hi)  // quint32 &remVal, int &remBits, int &cursor)
+static quint32 readBits(D2CcBitReaderState& hi, int numBits)  // quint32 &remVal, int &remBits, int &cursor)
 {
     while (numBits > hi.remBits) {
-        quint8 val = rawData[hi.cursor];
+        quint8 val = (*hi.rawStreamData)[hi.cursor];
         hi.cursor++;
+        if (hi.remBits >= 64 - 8) {
+            // discard bits in case of a long read assuming it is for skipping
+            hi.remVal >>= 32;
+            hi.remBits -= 32;
+            numBits -= 32;
+        }
         hi.remVal |= val << hi.remBits;
         hi.remBits += 8;
     }
 
-    quint32 res = hi.remVal & ((1ll << numBits) - 1);
-    hi.remVal >>= numBits;
-    hi.remBits -= numBits;
+    quint32 res = hi.remVal;
+    if (numBits < 64) {
+        res &= ((1ll << numBits) - 1);
+        hi.remVal >>= numBits;
+        hi.remBits -= numBits;
+    } else {
+        hi.remVal = 0;
+        hi.remBits = 0;
+    }
     return res;
 }
 
+typedef struct PixelBufferEntry
+{
+    static constexpr size_t nbValues = 4;
+    uint8_t                 values[nbValues];
+} PixelBufferEntry;
+
 typedef struct D2CcFrameInfo
 {
+    // values from file
     int width;
     int height;
     int XOffset;
     int YOffset;
     bool flipped;
+    // calculated values
+    int XCells;
+    int YCells;
     // RECT32 box;
+    size_t firstPixelBufferEntry;
+    QList<bool> cellSameAsPrevious;
 } D2CcFrameInfo;
 
 typedef struct D2CcDirectionInfo
 {
     int OutSizeCoded;
-    unsigned CompressionFlags;
+    bool hasRawPixelEncoding;
+    bool compressEqualCells;
     unsigned Variable0Bits;
     unsigned WidthBits;
     unsigned HeightBits;
@@ -166,47 +193,196 @@ typedef struct D2CcDirectionInfo
 
     QList<D2CcFrameInfo> frameInfos;
     RECT32 box;
+
+    D2CcBitReaderState equalCellBitStream;
+    D2CcBitReaderState pixelMaskBitStream;
+    D2CcBitReaderState encodingTypeBitStream;
+    D2CcBitReaderState rawPixelCodesBitStream;
+    D2CcBitReaderState pixelCodesDisplacementBitStream;
 } D2CcDirectionInfo;
 
 static void readFrameHeader(const QByteArray &rawData, const D2CcDirectionInfo &di, D2CcFrameInfo &fi, D2CcBitReaderState &rs)
 {
     int Variable0, OptionalData, CodedBytes;
-    Variable0 = readBits(rawData, di.Variable0Bits, rs);
-    fi.width = readBits(rawData, di.WidthBits, rs);
-    fi.height = readBits(rawData, di.HeightBits, rs);
+    Variable0 = readBits(rs, di.Variable0Bits);
+    fi.width = readBits(rs, di.WidthBits);
+    fi.height = readBits(rs, di.HeightBits);
 
-    fi.XOffset = readBits(rawData, di.XOffsetBits, rs);
-    fi.YOffset = readBits(rawData, di.YOffsetBits, rs);
-    OptionalData = readBits(rawData, di.OptionalDataBits, rs);
-    CodedBytes = readBits(rawData, di.CodedBytesBits, rs);
+    fi.XOffset = readBits(rs, di.XOffsetBits);
+    fi.YOffset = readBits(rs, di.YOffsetBits);
+    OptionalData = readBits(rs, di.OptionalDataBits);
+    CodedBytes = readBits(rs, di.CodedBytesBits);
 
-    fi.flipped = readBits(rawData, 1, rs);
+    fi.flipped = readBits(rs, 1);
 
     fi.YOffset = fi.YOffset - fi.height + 1;
     // fi.box = { fi.XOffset, fi.YOffset - fi.Height + 1, fi.width, fi.height};
 }
 
-static bool readDirHeader(const QByteArray &rawData, const D2CcHeaderInfo &hi, D2CcDirectionInfo &di, D2CcBitReaderState &rs)
+/**
+ * @return the number of pixels codes decoded from the stream
+ */
+static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, uint8_t &pixelCodesStack[4])
+{
+    if (!pixelMask) return 0; // Reuse the previous cell values, but still decode the cell in stage2
+    const int nbPixelsInMask = qPopulationCount(pixelMask);
+
+    // Is the cell encoded in the raw stream ?
+    const bool decodeRaw = (dirInfo.encodingTypeBitStream.remBits != 0 || (dirInfo.encodingTypeBitStream.rawStreamData->size() > dirInfo.encodingTypeBitStream.cursor)) &&
+                           readBits(dirInfo.encodingTypeBitStream, 1);
+
+    uint8_t lastPixelCode = 0;
+    int  curPixelIdx   = 0;
+
+    for ( ; curPixelIdx < nbPixelsInMask; curPixelIdx++) {
+        uint8_t nextPixelCode;
+        if (decodeRaw) {
+            // Read the value of the code directly from rawPixelCodesBitStream
+            nextPixelCode = readBits(dirInfo.rawPixelCodesBitStream, 8);
+        } else {
+            // Read the value of the code incrementally from pixelCodesDisplacementBitStream
+            nextPixelCode = lastPixelCode;
+            uint8_t pixelDisplacement;
+            do {
+                pixelDisplacement = readBits(dirInfo.pixelCodesDisplacementBitStream, 4);
+                nextPixelCode += pixelDisplacement;
+            } while (pixelDisplacement == 0xF);
+        }
+        // Stop decoding if we encounter twice the same pixel code.
+        // It also means that this pixel code is discarded.
+        if (nextPixelCode == lastPixelCode) {
+            // Note : We discard the pixel by putting a 0 but it doesn't matter anyway since we only
+            // use nbPixelsDecoded values later when popping the stack
+            pixelCodesStack[curPixelIdx] = 0;
+            break;
+        } else {
+            pixelCodesStack[curPixelIdx] = nextPixelCode;
+            lastPixelCode = curPixelCode;
+        }
+    }
+    return curPixelIdx;
+}
+
+static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameInfo, QList<size_t>& pixelBuffer,
+                       QList<PixelBufferEntry>& pbEntries)
+{
+    // Offset in terms of cells for this frame
+    const size_t frameCellOffsetX = frameInfo.XOffset / cellSize;
+    const size_t frameCellOffsetY = frameInfo.YOffset / cellSize;
+
+    // For each cell of this frame (not the same number as the pixel buffer cells ! )
+    for (size_t y = 0; y < frameInfo.YCells; y++) {
+        const size_t curCellY = frameCellOffsetY + y;
+        for (size_t x = 0; x < frameInfo.XCells; x++) {
+            const size_t curCellX = frameCellOffsetX + x;
+
+            const size_t curPbCellIndex    = curCellX + curCellY * dirInfo.HorizontalCellCount;
+
+            size_t& lastPixelEntryIndexForCell = pixelBuffer[curPbCellIndex];
+
+            bool    sameAsPreviousCell = false; // By default always decode the cell
+            uint8_t pixelMask          = 0x0F;  // Default pixel mask
+
+            // Check if this cell is equal to the previous one
+            if (lastPixelEntryIndexForCell < pbEntries.size()) {
+                // Check if we have to reuse the previous values
+                if (dirInfo.compressEqualCells) {
+                    // If true, the cell is the same as the previous one or transparent.
+                    // Which actually mean the same thing : skip the decoding of this cell
+                    sameAsPreviousCell = readBits(dirInfo.equalCellBitStream, 1);
+                }
+                if (!sameAsPreviousCell) {
+                    pixelMask = readBits(dirInfo.pixelMaskBitStream, 4);
+                }
+            }
+
+            // Store the fact that we skipped this cell for the 2nd phase
+            frameData.cellSameAsPrevious.push_back(sameAsPreviousCell);
+
+            if (!sameAsPreviousCell) {
+                // Pixel buffer entries are encoded as a stack in the stream which means the
+                // last value decoded is actually the 1st value with a bit in the mask.
+                uint8_t pixelCodesStack[PixelBufferEntry::nbValues] = { };
+                int nbPixelsDecoded = decodePixelCodesStack(data, pixelMask, pixelCodesStack);
+
+                PixelBufferEntry previousEntryForCell;
+                if (lastPixelEntryIndexForCell < pbEntries.size()) {
+                    previousEntryForCell = pbEntries[lastPixelEntryIndexForCell];
+                } else {
+                    // No need for previousEntryForCell if it doesn't exist, as the mask is 0xF
+                    assert(pixelMask == 0xF);
+                }
+
+                // Finalize the decoding of the pixel buffer entry
+                PixelBufferEntry newEntry;
+
+                int curIndex = nbPixelsDecoded - 1;
+                for (size_t i = 0; i < PixelBufferEntry::nbValues; i++) {
+                    uint8_t pixel;
+                    if (pixelMask & (1u << i)) {
+                        // Pop a value if bit set in the mask
+                        if (curIndex >= 0) {
+                            pixel = pixelCodesStack[size_t(curIndex--)];
+                        } else {
+                            pixel = 0;
+                        }
+                        // Store the actual values instead of the codes
+                        pixel = dirInfo.PaletteEntries[pixel];
+                    } else {
+                        // If not set, use the previous value for this entry
+                        pixel = previousEntryForCell.values[i];
+                    }
+                    newEntry.values[i] = pixel;
+                }
+                // Update the pixel buffer cell information
+                lastPixelEntryIndexForCell = pbEntries.size();
+                // Add the new entry for use in the 2nd stage
+                pbEntries.push_back(newEntry);
+            }
+        }
+    }
+}
+
+static int cellCountAt(int len, unsigned offset)
+{
+    if (len == 0)
+        dProgressErr() << QString("Zero frame len.");
+    int nc = 0;
+    if (offset % cellSize != 0) {
+        len -= offset % cellSize;
+        //if (len < 0)
+        //    len = 0;
+        nc++;
+    // } else if (len == 0) {
+    //    len = 1;
+    }
+    nc += (len + cellSize - 1) / cellSize;
+
+    return len;
+}
+
+static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2CcDirectionInfo &di)
 {
     int bitCursor = 0;
 
     di = { };
 
     // read direction-header
-    const int directionHeaderBitSize = 32 + 2 + 4 + 4 + 4 + 4 + 4 + 4 + 4;
+    const int directionHeaderBitSize = 32 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4 + 4;
     bitCursor += directionHeaderBitSize;
     if (rawData.size() < (bitCursor + 8 - 1) / 8)
         return false;
 
-    di.OutSizeCoded = readBits(rawData, 32, rs);
-    di.CompressionFlags = readBits(rawData, 2, rs);
-    di.Variable0Bits = crazyLookup(readBits(rawData, 4, rs));
-    di.WidthBits = crazyLookup(readBits(rawData, 4, rs));
-    di.HeightBits = crazyLookup(readBits(rawData, 4, rs));
-    di.XOffsetBits = crazyLookup(readBits(rawData, 4, rs));
-    di.YOffsetBits = crazyLookup(readBits(rawData, 4, rs));
-    di.OptionalDataBits = crazyLookup(readBits(rawData, 4, rs));
-    di.CodedBytesBits = crazyLookup(readBits(rawData, 4, rs));
+    di.OutSizeCoded = readBits(rs, 32);
+    di.hasRawPixelEncoding = readBits(rs, 1);
+    di.compressEqualCells = readBits(rs, 1);
+    di.Variable0Bits = crazyLookup(readBits(rs, 4));
+    di.WidthBits = crazyLookup(readBits(rs, 4));
+    di.HeightBits = crazyLookup(readBits(rs, 4));
+    di.XOffsetBits = crazyLookup(readBits(rs, 4));
+    di.YOffsetBits = crazyLookup(readBits(rs, 4));
+    di.OptionalDataBits = crazyLookup(readBits(rs, 4));
+    di.CodedBytesBits = crazyLookup(readBits(rs, 4));
 
     // read frame headers
     const int frameHeaderBitSize = di.Variable0Bits + di.WidthBits + di.HeightBits + di.XOffsetBits + di.YOffsetBits + di.OptionalDataBits + di.CodedBytesBits + 1;
@@ -218,7 +394,7 @@ static bool readDirHeader(const QByteArray &rawData, const D2CcHeaderInfo &hi, D
 
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
         D2CcFrameInfo fi;
-        readFrameHeader(rawData, di, fi, rs);
+        readFrameHeader(rs, di, fi);
 
     dProgressWarn() << QApplication::tr("frame dimensions %1x%2 with offset %3x%4 (flipped %5).").arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
 
@@ -242,21 +418,33 @@ dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.b
     di.HorizontalCellCount = (di.box.w + cellSize - 1) / cellSize;
     di.VerticalCellCount = (di.box.h + cellSize - 1) / cellSize;
 
+    for (unsigned i = 0; i < hi.framesPerDirection; i++) {
+        D2CcFrameInfo &fi = di.frameInfos[i];
+        fi.XOffset -= di.box.x;
+        fi.YOffset -= di.box.y;
+
+        fi.XCells = cellCountAt(fi.width, fi.XOffset);
+        fi.YCells = cellCountAt(fi.height, fi.YOffset);
+    }
+
+    di.box.x = 0;
+    di.box.y = 0;
+
     // read compression flags
     const int streamBitSize = 20;
-    bitCursor += ((di.CompressionFlags & 2) ? streamBitSize : 0) + streamBitSize + ((di.CompressionFlags & 1) ? 2 * streamBitSize : 0);
+    bitCursor += (di.compressEqualCells ? streamBitSize : 0) + streamBitSize + (di.hasRawPixelEncoding ? 2 * streamBitSize : 0);
     if (rawData.size() < (bitCursor + 8 - 1) / 8)
         return false;
 
-    if (di.CompressionFlags & 2) {
-        di.EqualCellsBitstreamSize = readBits(rawData, streamBitSize, rs);
+    if (di.compressEqualCells) {
+        di.EqualCellsBitstreamSize = readBits(rs, streamBitSize);
     }
 
-    di.PixelMaskBitstreamSize = readBits(rawData, streamBitSize, rs);
+    di.PixelMaskBitstreamSize = readBits(rs, streamBitSize);
 
-    if (di.CompressionFlags & 1) {
-        di.EncodingTypeBitstreamSize = readBits(rawData, streamBitSize, rs);
-        di.RawPixelCodesBitstreamSize = readBits(rawData, streamBitSize, rs);
+    if (di.hasRawPixelEncoding) {
+        di.EncodingTypeBitstreamSize = readBits(rs, streamBitSize);
+        di.RawPixelCodesBitstreamSize = readBits(rs, streamBitSize);
     }
 
     // read palette entries
@@ -266,13 +454,39 @@ dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.b
 
     int paletteEntryCount = 0;
     for (unsigned i = 0; i < D2PAL_COLORS; i++) {
-        if (readBits(rawData, 1, rs)) {
+        if (readBits(rs, 1)) {
             di.PaletteEntries[paletteEntryCount] = i;
             paletteEntryCount++;
         }
     }
 
+    // prepare subviews
+    di.equalCellBitStream = rs;
+    di.pixelMaskBitStream = di.equalCellBitStream;
+    readBits(di.pixelMaskBitStream, di.EqualCellsBitstreamSize);
+    di.encodingTypeBitStream = di.pixelMaskBitStream;
+    readBits(di.encodingTypeBitStream, di.PixelMaskBitstreamSize);
+    di.rawPixelCodesBitStream = di.encodingTypeBitStream;
+    readBits(di.rawPixelCodesBitStream, di.EncodingTypeBitstreamSize);
+
+    di.pixelCodesDisplacementBitStream = di.rawPixelCodesBitStream;
+    readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
+
     // fillPixelBuffer
+    QList<PixelBufferEntry> pbEntries;
+    // For each cell store a PixelBufferEntry index that points to the last entry for this cell
+    // This will be used to retrieve values from the previous frame
+    constexpr size_t invalidIndex = SIZE_MAX;
+    const size_t  pixelBufferNbCells = di.HorizontalCellCount * di.VerticalCellCount;
+    QList<size_t> pixelBuffer(pixelBufferNbCells, invalidIndex);
+
+    // 1st phase of decoding : fill the pixel buffer
+    // We actually fill a buffer of entries as to avoid storing empty entries
+    for (unsigned i = 0; i < hi.framesPerDirection; i++) {
+        D2CcFrameInfo &fi = di.frameInfos[i];
+        fi.firstPixelBufferEntry = pbEntries.size();
+        decodeFrameStage1(di, fi, pixelBuffer, pbEntries);
+    }
 
     return true;
 }
@@ -312,8 +526,9 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             QByteArray ccDirRawData = device->read(offset.second - offset.first);
 
             D2CcBitReaderState rs = { };
+            rs.rawStreamData = &ccDirRawData;
             D2CcDirectionInfo cdi;
-            if (readDirHeader(ccDirRawData, hi, cdi, rs)) {
+            if (readDirHeader(rs, hi, cdi)) {
                 for (unsigned i = 0; i < hi.framesPerDirection; i++) {
                     D1GfxFrame *frame = new D1GfxFrame();
 
