@@ -150,34 +150,34 @@ Text color shifts	14 transforms	color-shifts used for text
     D1Pal* pal = pals.front();
 
     for (unsigned i = 0; i < 32; i++) {
-        QString filePath = baseFilePath + QString("dark%1.trn").arg(i, 2, QChar('0'));
+        QString filePath = baseFilePath + QString("dark%1.trn").arg(i, 2, 10, QChar('0'));
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 
     for (unsigned i = 0; i < 16; i++) {
-        QString filePath = baseFilePath + QString("light%1.trn").arg(i, 2, QChar('0'));
+        QString filePath = baseFilePath + QString("light%1.trn").arg(i, 2, 10, QChar('0'));
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 
     for (unsigned n = 0; n < 3; n++) {
         for (unsigned i = 0; i < 256; i++) {
-            QString filePath = baseFilePath + QString("alpha%1_%2.trn").arg((n + 1) * 25).arg(i, 3, QChar('0'));
+            QString filePath = baseFilePath + QString("alpha%1_%2.trn").arg((n + 1) * 25).arg(i, 3, 10, QChar('0'));
             cursor = readTransform(fileData, cursor, filePath, pal, trns);
         }
     }
 
     for (unsigned i = 0; i < 256; i++) {
-        QString filePath = baseFilePath + QString("add%1.trn").arg(i, 2, QChar('0'));
+        QString filePath = baseFilePath + QString("add%1.trn").arg(i, 2, 10, QChar('0'));
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 
     for (unsigned i = 0; i < 256; i++) {
-        QString filePath = baseFilePath + QString("mul%1.trn").arg(i, 2, QChar('0'));
+        QString filePath = baseFilePath + QString("mul%1.trn").arg(i, 2, 10, QChar('0'));
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 
     for (unsigned i = 0; i < 111; i++) {
-        QString filePath = baseFilePath + QString("hue%1.trn").arg(i, 2, QChar('0'));
+        QString filePath = baseFilePath + QString("hue%1.trn").arg(i, 2, 10, QChar('0'));
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 
@@ -197,12 +197,12 @@ Text color shifts	14 transforms	color-shifts used for text
     }
 
     for (unsigned i = 0; i < 14; i++) {
-        QString filePath = baseFilePath + QString("un%1.trn").arg(i, 2, QChar('0'));
+        QString filePath = baseFilePath + QString("un%1.trn").arg(i, 2, 10, QChar('0'));
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 
     for (unsigned i = 0; i < 256; i++) {
-        QString filePath = baseFilePath + QString("blend%1.trn").arg(i, 3, QChar('0'));
+        QString filePath = baseFilePath + QString("blend%1.trn").arg(i, 3, 10, QChar('0'));
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 
@@ -217,7 +217,7 @@ Text color shifts	14 transforms	color-shifts used for text
     }
 
     for (unsigned i = 0; i < 14; i++) {
-        QString filePath = baseFilePath + QString("txtshift%1.trn").arg(i, 2, QChar('0'));
+        QString filePath = baseFilePath + QString("txtshift%1.trn").arg(i, 2, 10, QChar('0'));
         cursor = readTransform(fileData, cursor, filePath, pal, trns);
     }
 }

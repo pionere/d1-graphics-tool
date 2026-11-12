@@ -230,7 +230,7 @@ static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, 
     // Is the cell encoded in the raw stream ?
     const bool decodeRaw = (dirInfo.encodingTypeBitStream.remBits != 0 || (dirInfo.encodingTypeBitStream.rawStreamData->size() > dirInfo.encodingTypeBitStream.cursor)) &&
                            readBits(dirInfo.encodingTypeBitStream, 1);
-
+LogErrorF("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
     uint8_t lastPixelCode = 0;
     int  curPixelIdx   = 0;
 
@@ -396,7 +396,8 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
         D2CcFrameInfo fi;
         readFrameHeader(rs, di, fi);
 
-    dProgressWarn() << QApplication::tr("frame dimensions %1x%2 with offset %3x%4 (flipped %5).").arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
+//    dProgressWarn() << QApplication::tr("frame dimensions %1x%2 with offset %3x%4 (flipped %5).").arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
+LogErrorF("frame dimensions %dx%d with offset %dx%d (flipped %d).").arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
 
         di.frameInfos.push_back(fi);
 
@@ -413,7 +414,8 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
     di.box.w -= di.box.x;
     di.box.h -= di.box.y;
 
-dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.box.w).arg(di.box.h).arg(di.box.x).arg(di.box.y);
+// dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.box.w).arg(di.box.h).arg(di.box.x).arg(di.box.y);
+LogErrorF("dir box %dx%d with offset %dx%d.").arg(di.box.w).arg(di.box.h).arg(di.box.x).arg(di.box.y);
 
     di.HorizontalCellCount = (di.box.w + cellSize - 1) / cellSize;
     di.VerticalCellCount = (di.box.h + cellSize - 1) / cellSize;
@@ -425,6 +427,7 @@ dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.b
 
         fi.XCells = cellCountAt(fi.width, fi.XOffset);
         fi.YCells = cellCountAt(fi.height, fi.YOffset);
+LogErrorF("frame offset %dx%d cells %dx%d.").arg(fi.XOffset).arg(fi.YOffset).arg(fi.XCells).arg(fi.YCells);
     }
 
     di.box.x = 0;
@@ -447,6 +450,7 @@ dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.b
         di.RawPixelCodesBitstreamSize = readBits(rs, streamBitSize);
     }
 
+LogErrorF("streamsizes %d : %d : %d : %d.").arg(di.EqualCellsBitstreamSize).arg(di.PixelMaskBitstreamSize).arg(di.EncodingTypeBitstreamSize).arg(di.RawPixelCodesBitstreamSize);
     // read palette entries
     bitCursor += D2PAL_COLORS;
     if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
@@ -461,16 +465,21 @@ dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.b
     }
 
     // prepare subviews
+LogErrorF("preparing subviews.");
     di.equalCellBitStream = rs;
     di.pixelMaskBitStream = di.equalCellBitStream;
     readBits(di.pixelMaskBitStream, di.EqualCellsBitstreamSize);
+LogErrorF("preparing subviews 1.");
     di.encodingTypeBitStream = di.pixelMaskBitStream;
     readBits(di.encodingTypeBitStream, di.PixelMaskBitstreamSize);
+LogErrorF("preparing subviews 2.");
     di.rawPixelCodesBitStream = di.encodingTypeBitStream;
     readBits(di.rawPixelCodesBitStream, di.EncodingTypeBitstreamSize);
+LogErrorF("preparing subviews 3.");
 
     di.pixelCodesDisplacementBitStream = di.rawPixelCodesBitStream;
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
+LogErrorF("preparing subviews 4.");
 
     // fillPixelBuffer
     QList<PixelBufferEntry> pbEntries;
@@ -485,6 +494,7 @@ dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.b
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
         D2CcFrameInfo &fi = di.frameInfos[i];
         fi.firstPixelBufferEntry = pbEntries.size();
+LogErrorF("decoding framebuffers %d.", i);
         decodeFrameStage1(di, fi, pixelBuffer, pbEntries);
     }
 

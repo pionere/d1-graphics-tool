@@ -2295,7 +2295,7 @@ bool D1Gfx::squash()
         QRect rect;
         for (int i = 0; i < this->getFrameCount(); i++) {
             D1GfxFrame* frame = this->frames[i];
-            QRect frameRect = QRect(frame->xoffset, frame->yoffset, frame->getWidth(), frame->getHeight());
+            QRect frameRect = QRect(frame->xoffset, frame->yoffset - frame->getHeight(), frame->getWidth(), frame->getHeight());
             rect = rect.united(frameRect);
         }
         for (int i = 0; i < this->getFrameCount(); i++) {
@@ -2310,7 +2310,7 @@ bool D1Gfx::squash()
             }
             frame->xoffset = 0;
 
-            int dy = frame->yoffset - rect.y();
+            int dy = (frame->yoffset - frame->getHeight()) - rect.y();
             if (dy != 0) {
                 change |= frame->resize(frame->getWidth(), dy + frame->getHeight(), RESIZE_PLACEMENT::BOTTOM, backPixel);
             }
