@@ -59,6 +59,7 @@ bool D2Cc::readHeader(QIODevice *device, QDataStream &in, D2CcHeaderInfo &hi, D1
     //    dProgressWarn() << QApplication::tr("Invalid filesize %1 (expected %2).").arg(sizeDword).arg(fileSize);
     //    return false;
 
+    hi.framesPerDirection = framesPerDirectionDword;
     // CEL FRAMES OFFSETS CALCULATION
     if (directionsByte * framesPerDirectionDword != 0) {
         if (fileSize < headerSize + directionsByte * 4)
@@ -396,8 +397,8 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
         D2CcFrameInfo fi;
         readFrameHeader(rs, di, fi);
 
-//    dProgressWarn() << QApplication::tr("frame dimensions %1x%2 with offset %3x%4 (flipped %5).").arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
-LogErrorF("frame dimensions %dx%d with offset %dx%d (flipped %d).", fi.width, fi.height, fi.XOffset, fi.YOffset, fi.flipped);
+//    dProgressWarn() << QApplication::tr("frame %1 dimensions %2x%3 with offset %4x%5 (flipped %6).").arg(i).arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
+LogErrorF("frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fi.width, fi.height, fi.XOffset, fi.YOffset, fi.flipped);
 
         di.frameInfos.push_back(fi);
 
