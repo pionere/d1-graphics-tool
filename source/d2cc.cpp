@@ -397,7 +397,7 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
         readFrameHeader(rs, di, fi);
 
 //    dProgressWarn() << QApplication::tr("frame dimensions %1x%2 with offset %3x%4 (flipped %5).").arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
-LogErrorF("frame dimensions %dx%d with offset %dx%d (flipped %d).").arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
+LogErrorF("frame dimensions %dx%d with offset %dx%d (flipped %d).", fi.width, fi.height, fi.XOffset, fi.YOffset, fi.flipped);
 
         di.frameInfos.push_back(fi);
 
@@ -415,7 +415,7 @@ LogErrorF("frame dimensions %dx%d with offset %dx%d (flipped %d).").arg(fi.width
     di.box.h -= di.box.y;
 
 // dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.box.w).arg(di.box.h).arg(di.box.x).arg(di.box.y);
-LogErrorF("dir box %dx%d with offset %dx%d.").arg(di.box.w).arg(di.box.h).arg(di.box.x).arg(di.box.y);
+LogErrorF("dir box %dx%d with offset %dx%d.", di.box.w, di.box.h, di.box.x, di.box.y);
 
     di.HorizontalCellCount = (di.box.w + cellSize - 1) / cellSize;
     di.VerticalCellCount = (di.box.h + cellSize - 1) / cellSize;
@@ -427,7 +427,7 @@ LogErrorF("dir box %dx%d with offset %dx%d.").arg(di.box.w).arg(di.box.h).arg(di
 
         fi.XCells = cellCountAt(fi.width, fi.XOffset);
         fi.YCells = cellCountAt(fi.height, fi.YOffset);
-LogErrorF("frame offset %dx%d cells %dx%d.").arg(fi.XOffset).arg(fi.YOffset).arg(fi.XCells).arg(fi.YCells);
+LogErrorF("frame offset %dx%d cells %dx%d.", fi.XOffset, fi.YOffset, fi.XCells, fi.YCells);
     }
 
     di.box.x = 0;
@@ -450,7 +450,7 @@ LogErrorF("frame offset %dx%d cells %dx%d.").arg(fi.XOffset).arg(fi.YOffset).arg
         di.RawPixelCodesBitstreamSize = readBits(rs, streamBitSize);
     }
 
-LogErrorF("streamsizes %d : %d : %d : %d.").arg(di.EqualCellsBitstreamSize).arg(di.PixelMaskBitstreamSize).arg(di.EncodingTypeBitstreamSize).arg(di.RawPixelCodesBitstreamSize);
+LogErrorF("streamsizes %d : %d : %d : %d.", di.EqualCellsBitstreamSize, di.PixelMaskBitstreamSize, di.EncodingTypeBitstreamSize, di.RawPixelCodesBitstreamSize);
     // read palette entries
     bitCursor += D2PAL_COLORS;
     if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
