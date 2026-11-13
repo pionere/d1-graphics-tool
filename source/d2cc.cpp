@@ -692,18 +692,24 @@ LogErrorF("decoding direction %d.", d + 1);
             D2CcBitReaderState rs = { };
             rs.rawStreamData = &ccDirRawData;
             D2CcDirectionInfo cdi;
-            if (readDirHeader(rs, hi, cdi) && decodeFrames(hi, cdi, gfx)) {
-                /*for (unsigned i = 0; i < hi.framesPerDirection; i++) {
-                    D1GfxFrame *frame = new D1GfxFrame();
+            if (readDirHeader(rs, hi, cdi)) {
+                LogErrorF("calling decodeFrames.");
+                if (decodeFrames(hi, cdi, gfx)) {
+                    /*for (unsigned i = 0; i < hi.framesPerDirection; i++) {
+                        D1GfxFrame *frame = new D1GfxFrame();
 
-                    if (!D2CcFrame::load(*frame, ccDirRawData, params)) {
-                        dProgressErr() << QApplication::tr("Frame %1 of direction %2 is invalid.").arg(i + 1).arg(d + 1);
-                    }
-                    gfx.frames.append(frame);
-                }*/
+                        if (!D2CcFrame::load(*frame, ccDirRawData, params)) {
+                            dProgressErr() << QApplication::tr("Frame %1 of direction %2 is invalid.").arg(i + 1).arg(d + 1);
+                        }
+                        gfx.frames.append(frame);
+                    }*/
 
-
-                continue;
+                    LogErrorF("decodeFrames ok.");
+                    continue;
+                }
+                LogErrorF("decodeFrames failed.");
+            } else {
+                LogErrorF("not calling decodeFrames.");
             }
         } else {
             dProgressErr() << QApplication::tr("Address of Direction %1 is invalid (%2-%3 of %4).").arg(d + 1).arg(offset.first).arg(offset.second).arg(fileSize);
