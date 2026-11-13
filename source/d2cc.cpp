@@ -528,10 +528,10 @@ LogErrorF("preparing subviews 4.");
 LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
     }
-    delete di.equalCellBitStream;
-    delete di.pixelMaskBitStream;
-    delete di.encodingTypeBitStream;
-    delete di.rawPixelCodesBitStream;
+    delete di.equalCellBitStream.rawStreamData;
+    delete di.pixelMaskBitStream.rawStreamData;
+    delete di.encodingTypeBitStream.rawStreamData;
+    delete di.rawPixelCodesBitStream.rawStreamData;
 LogErrorF("readDirHeader done.");
     return true;
 }
