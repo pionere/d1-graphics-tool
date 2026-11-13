@@ -515,12 +515,12 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
 {
     // This is the reason why we need to stages, we don't have the offset of this bitstream
     // di.pixelCodesDisplacementBitStream;
-
+LogErrorF("decodeFrames 0");
     const size_t pbWidth            = size_t(di.box.w);
     const size_t pbHeight           = size_t(di.box.h);
     // const size_t pbStride           = pbWidth;
     // const size_t nbPixelBufferCells = di.HorizontalCellCount * di.VerticalCellCount;
-LogErrorF("decodeFrames area %d:%d.", pbWidth, pbHeight);
+LogErrorF("decodeFrames area %d:%d.", (unsigned)pbWidth, (unsigned)pbHeight);
     // QList<Cell>       pixelBufferCells(nbPixelBufferCells, Cell{0xF, 0xF});
     // QList<uint8_t>    pixelBufferColors(pbStride * pbHeight);
     // ImageView<uint8_t> pBuffer{pixelBufferColors.data(), pbWidth, pbHeight, pbStride};
