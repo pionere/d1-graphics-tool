@@ -1,5 +1,7 @@
 #include "d2cc.h"
-
+/*
+ * Dcc decoder based on the implementation from https://github.com/Lectem/Worldstone .
+ */
 #include <vector>
 
 #include <QtAlgorithms>
@@ -192,6 +194,7 @@ typedef struct D2CcDirectionInfo
     unsigned HorizontalCellCount;
     unsigned VerticalCellCount;
 
+    QList<PixelBufferEntry> pbEntries;
     QList<D2CcFrameInfo> frameInfos;
     RECT32 box;
 
@@ -483,7 +486,6 @@ LogErrorF("preparing subviews 3.");
 LogErrorF("preparing subviews 4.");
 
     // fillPixelBuffer
-    QList<PixelBufferEntry> pbEntries;
     // For each cell store a PixelBufferEntry index that points to the last entry for this cell
     // This will be used to retrieve values from the previous frame
     constexpr size_t invalidIndex = SIZE_MAX;
@@ -494,9 +496,149 @@ LogErrorF("preparing subviews 4.");
     // We actually fill a buffer of entries as to avoid storing empty entries
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
         D2CcFrameInfo &fi = di.frameInfos[i];
-        fi.firstPixelBufferEntry = pbEntries.size();
-LogErrorF("decoding framebuffers %d.", i);
-        decodeFrameStage1(di, fi, pixelBuffer, pbEntries);
+        fi.firstPixelBufferEntry = di.pbEntries.size();
+LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
+        decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
+    }
+
+    return true;
+}
+
+bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &gfx)
+{
+    // This is the reason why we need to stages, we don't have the offset of this bitstream
+    // di.pixelCodesDisplacementBitStream;
+
+    const size_t pbWidth            = size_t(di.box.w);
+    const size_t pbHeight           = size_t(di.box.h);
+    // const size_t pbStride           = pbWidth;
+    // const size_t nbPixelBufferCells = di.HorizontalCellCount * di.VerticalCellCount;
+
+    // QList<Cell>       pixelBufferCells(nbPixelBufferCells, Cell{0xF, 0xF});
+    // QList<uint8_t>    pixelBufferColors(pbStride * pbHeight);
+    // ImageView<uint8_t> pBuffer{pixelBufferColors.data(), pbWidth, pbHeight, pbStride};
+    D1GfxFrame *pBuffer = new D1GfxFrame();
+    // pBuffer->resize(pbWidth, pbHeight, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::colorPixel(0));
+    pBuffer->resize(pbWidth, pbHeight, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
+
+    // 2nd phase of decoding : Finish using the pixel buffer entries
+    for (size_t frameIndex = 0; frameIndex < hi.framesPerDirection; ++frameIndex) {
+        const D2CcFrameInfo &frameInfo = di.frameInfos[frameIndex];
+        size_t           pbEntryIndex = frameInfo.firstPixelBufferEntry;
+
+        size_t pbCellPosY = frameInfo.YOffset;
+        for (size_t cellY = 0; cellY < frameInfo.YCells; cellY++) {
+            size_t pbCellPosX = frameInfo.XOffset;
+
+            int ch = cellSize;
+            if (cellY == 0) {
+                ch -= pbCellPosY % cellSize;
+            }
+            if (cellY == frameInfo.YCells - 1) {
+                ch = (frameInfo.YOffset + frameInfo.height) % cellSize;
+                if (ch == 0) {
+                    ch = cellSize;
+                }
+            }
+
+            for (size_t cellX = 0; cellX < frameInfo.XCells; cellX++)
+            {
+                const size_t frameCellIndex = cellX + cellY * frameInfo.XCells;
+                // Cell         frameCell;
+
+                int cw = cellSize;
+                if (cellX == 0) {
+                    cw -= pbCellPosX % cellSize;
+                }
+                if (cellX == frameInfo.XCells - 1) {
+                    cw = (frameInfo.XOffset + frameInfo.width) % cellSize;
+                    if (cw == 0) {
+                        cw = cellSize;
+                    }
+                }
+
+                // frameCell.width  = cw;
+                // frameCell.height  = ch;
+                // frameCell.width  = frameInfo.cellWidths[cellX];
+                // frameCell.height = frameInfo.cellHeights[cellY];
+
+                const size_t pbCellIndex =
+                    (pbCellPosX / cellSize) +
+                    (pbCellPosY / cellSize) * di.HorizontalCellCount;
+//                Cell& pbCell = pixelBufferCells[pbCellIndex];
+
+                if (frameInfo.cellSameAsPrevious[frameCellIndex]) {
+/*
+                    if ((cw != pbCell.width) || (ch != pbCell.height)) {
+                        // Clear the cell to 0
+                        // If we used the previous frame pixels instead of reusing the same
+                        // buffer for all frames we would not need to clear this (it would be
+                        // initialized to 0 before writing any value to the frame pixels) But we
+                        // would then need to copy values if the size matched
+//                        pBuffer.fillBytes(pbCellPosX, pbCellPosY, frameCell.width, frameCell.height,
+//                                          0);
+                    }
+                    else
+                    {
+                        // Same size, copy from previous cell in the buffer
+                        // Nothing to change !
+                    }
+*/
+                } else {
+                    const auto& pixelValues = pbEntries[pbEntryIndex++].values;
+
+                    if (pixelValues[0] == pixelValues[1]) {
+                        // This means we only got one pixel code, so fill the cell with it
+                        for (int y = 0; y < ch; y++) {
+                            for (int x = 0; x < cw; x++) {
+                                pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValues[0]));
+                            }
+                        }
+                        // pBuffer.fillBytes(pbCellPosX, pbCellPosY, frameCell.width, frameCell.height,
+                        //                  pixelValues[0]);
+                    } else {
+                        int nbBitsToRead = 0;
+                        if (pixelValues[1] == pixelValues[2]) {
+                            // Stopped decoding after the 2nd value, only pixelValues[0] and
+                            // pixelValues[1] are different, so only 1bit needs to be read to choose
+                            // from those values
+                            nbBitsToRead = 1;
+                        } else {
+                            // We need 2 bits to index 3-4 values
+                            nbBitsToRead = 2;
+                        }
+
+                        // fill FRAME cell with pixels
+                        for (size_t y = 0; y < ch; y++) {
+                            for (size_t x = 0; x < cw; x++) {
+                                const uint8_t pixelCodeIndex =
+                                    readBits(di.pixelCodesDisplacementBitStream, nbBitsToRead);
+                                // Note: This actually means that a cell (4x4 block) can use at most
+                                // 4 colors, a bit like DXT !
+                                const uint8_t pixelValue = pixelValues[pixelCodeIndex];
+
+                                // pBuffer(pbCellPosX + x, pbCellPosY + y) = pixelValue;
+                                pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValue));
+                            }
+                        }
+                    }
+                }
+
+//                pbCell = frameCell;
+                pbCellPosX += cw;
+            }
+            // pbCellPosY += frameInfo.cellHeights[cellY];
+            pbCellPosY += ch;
+        }
+        // Done decoding this frame, now copy its content.
+        D1GfxFrame *frame = new D1GfxFrame();
+        frame->resize(frameInfo.width, frameInfo.height, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
+        for (int x = 0; x < frameInfo.width; x++) {
+            for (int y = 0; y < frameInfo.height; y++) {
+                frame->setPixel(x, y, pBuffer->getPixel(x + frameInfo.XOffset, y + frameInfo.YOffset));
+            }
+        }
+        gfx.frames.append(frame);
     }
 
     return true;
@@ -528,7 +670,7 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     auto fileSize = device->size();
 
     // CEL FRAMES OFFSETS CALCULATION
-
+LogErrorF("dcc directions %d.", hi.dirOffsets.size());
     // BUILDING {CEL FRAMES}
     for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
         const auto &offset = hi.dirOffsets[d];
@@ -539,15 +681,17 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             D2CcBitReaderState rs = { };
             rs.rawStreamData = &ccDirRawData;
             D2CcDirectionInfo cdi;
-            if (readDirHeader(rs, hi, cdi)) {
-                for (unsigned i = 0; i < hi.framesPerDirection; i++) {
+            if (readDirHeader(rs, hi, cdi) && decodeFrames(hi, cdi, gfx)) {
+                /*for (unsigned i = 0; i < hi.framesPerDirection; i++) {
                     D1GfxFrame *frame = new D1GfxFrame();
 
                     if (!D2CcFrame::load(*frame, ccDirRawData, params)) {
                         dProgressErr() << QApplication::tr("Frame %1 of direction %2 is invalid.").arg(i + 1).arg(d + 1);
                     }
                     gfx.frames.append(frame);
-                }
+                }*/
+
+
                 continue;
             }
         } else {
