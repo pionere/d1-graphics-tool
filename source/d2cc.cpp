@@ -507,7 +507,7 @@ LogErrorF("preparing subviews 4.");
 LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
     }
-
+LogErrorF("readDirHeader done.");
     return true;
 }
 
@@ -527,9 +527,10 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
     D1GfxFrame *pBuffer = new D1GfxFrame();
     // pBuffer->resize(pbWidth, pbHeight, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::colorPixel(0));
     pBuffer->resize(pbWidth, pbHeight, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
-
+LogErrorF("decodeFrames area %d:%d.", pbWidth, pbHeight);
     // 2nd phase of decoding : Finish using the pixel buffer entries
     for (size_t frameIndex = 0; frameIndex < hi.framesPerDirection; ++frameIndex) {
+LogErrorF("decodeFrame %d", frameIndex);
         const D2CcFrameInfo &frameInfo = di.frameInfos[frameIndex];
         size_t           pbEntryIndex = frameInfo.firstPixelBufferEntry;
 
@@ -638,6 +639,7 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
             pbCellPosY += ch;
         }
         // Done decoding this frame, now copy its content.
+LogErrorF("decodeFrame %d size %dx%d done", frameIndex, frameInfo.width, frameInfo.height);
         D1GfxFrame *frame = new D1GfxFrame();
         frame->resize(frameInfo.width, frameInfo.height, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
         for (int x = 0; x < frameInfo.width; x++) {
@@ -647,7 +649,7 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
         }
         gfx.frames.append(frame);
     }
-
+LogErrorF("decodeFrames done");
     return true;
 }
 
@@ -680,6 +682,7 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 LogErrorF("dcc directions %d.", hi.dirOffsets.size());
     // BUILDING {CEL FRAMES}
     for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
+LogErrorF("decoding direction %d.", d + 1);
         const auto &offset = hi.dirOffsets[d];
         if (fileSize >= offset.second && offset.second >= offset.first) {
             device->seek(offset.first);
@@ -708,6 +711,7 @@ LogErrorF("dcc directions %d.", hi.dirOffsets.size());
             gfx.frames.append(new D1GfxFrame());
         }
     }
+LogErrorF("decoding done.");
     gfx.clipped = false;
 
     gfx.gfxFilePath = filePath;
