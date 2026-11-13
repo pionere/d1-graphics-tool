@@ -13,12 +13,19 @@
 
 #include "d2ccframe.h"
 #include "progressdialog.h"
+#include "resizedialog.h"
 
 #include "dungeon/all.h"
 
 #define D2PAL_COLORS 256
 
 static const int cellSize = 4;
+
+typedef struct D2CcHeaderInfo
+{
+    QList<QPair<quint32, quint32>> dirOffsets;
+    quint32 framesPerDirection;
+} D2CcHeaderInfo;
 
 bool D2Cc::readHeader(QIODevice *device, QDataStream &in, D2CcHeaderInfo &hi, D1Gfx &gfx)
 {
@@ -585,7 +592,7 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
                     }
 */
                 } else {
-                    const auto& pixelValues = pbEntries[pbEntryIndex++].values;
+                    const auto& pixelValues = di.pbEntries[pbEntryIndex++].values;
 
                     if (pixelValues[0] == pixelValues[1]) {
                         // This means we only got one pixel code, so fill the cell with it

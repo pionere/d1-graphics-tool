@@ -11,12 +11,7 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
-typedef struct D2CcHeaderInfo
-{
-    QList<QPair<quint32, quint32>> dirOffsets;
-    quint32 framesPerDirection;
-} D2CcHeaderInfo;
-
+struct D2CcHeaderInfo;
 struct D2CcDirectionInfo;
 
 class D2Cc {
