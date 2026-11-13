@@ -376,7 +376,7 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
 {
     int bitCursor = 0;
 
-    di = { };
+    // di = { };
 
     // read direction-header
     const int directionHeaderBitSize = 32 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4 + 4;
@@ -450,12 +450,15 @@ LogErrorF("frame offset %dx%d cells %dx%d.", fi.XOffset, fi.YOffset, fi.XCells, 
     if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
         return false;
 
+    di.EqualCellsBitstreamSize = 0;
     if (di.compressEqualCells) {
         di.EqualCellsBitstreamSize = readBits(rs, streamBitSize);
     }
 
     di.PixelMaskBitstreamSize = readBits(rs, streamBitSize);
 
+    di.EncodingTypeBitstreamSize = 0;
+    di.RawPixelCodesBitstreamSize = 0;
     if (di.hasRawPixelEncoding) {
         di.EncodingTypeBitstreamSize = readBits(rs, streamBitSize);
         di.RawPixelCodesBitstreamSize = readBits(rs, streamBitSize);
