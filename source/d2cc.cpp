@@ -520,14 +520,14 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
     const size_t pbHeight           = size_t(di.box.h);
     // const size_t pbStride           = pbWidth;
     // const size_t nbPixelBufferCells = di.HorizontalCellCount * di.VerticalCellCount;
-
+LogErrorF("decodeFrames area %d:%d.", pbWidth, pbHeight);
     // QList<Cell>       pixelBufferCells(nbPixelBufferCells, Cell{0xF, 0xF});
     // QList<uint8_t>    pixelBufferColors(pbStride * pbHeight);
     // ImageView<uint8_t> pBuffer{pixelBufferColors.data(), pbWidth, pbHeight, pbStride};
     D1GfxFrame *pBuffer = new D1GfxFrame();
     // pBuffer->resize(pbWidth, pbHeight, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::colorPixel(0));
     pBuffer->resize(pbWidth, pbHeight, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
-LogErrorF("decodeFrames area %d:%d.", pbWidth, pbHeight);
+
     // 2nd phase of decoding : Finish using the pixel buffer entries
     for (size_t frameIndex = 0; frameIndex < hi.framesPerDirection; ++frameIndex) {
 LogErrorF("decodeFrame %d", frameIndex);
@@ -649,6 +649,7 @@ LogErrorF("decodeFrame %d size %dx%d done", frameIndex, frameInfo.width, frameIn
         }
         gfx.frames.append(frame);
     }
+    delete pBuffer;
 LogErrorF("decodeFrames done");
     return true;
 }
