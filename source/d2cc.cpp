@@ -120,11 +120,11 @@ typedef struct D2CcBitReaderState
     // reader state
     QByteArray *rawStreamData;
     quint64 remVal;
-    int remBits;
+    unsigned remBits;
     int cursor;
 } D2CcBitReaderState;
 
-static quint32 readBits(D2CcBitReaderState& hi, int numBits)  // quint32 &remVal, int &remBits, int &cursor)
+static quint32 readBits(D2CcBitReaderState& hi, unsigned numBits)  // quint32 &remVal, int &remBits, int &cursor)
 {
     while (numBits > hi.remBits) {
         quint8 val = (*hi.rawStreamData)[hi.cursor];
@@ -372,6 +372,19 @@ static int cellCountAt(int len, unsigned offset)
     return len;
 }
 
+static void limitBitStream(D2CcBitReaderState &bitStream, unsigned size)
+{
+    if (size < bitStream.remBits) {
+        bitStream.remVal >>= bitStream.remBits - size;
+        bitStream.remBits = size;
+
+        bitStream.rawStreamData = new QByteArray();
+    } else {
+        QByteArray* src = bitStream.rawStreamData;
+        bitStream.rawStreamData = new QByteArray(src->first(size - bitStream.remBits));
+    }
+}
+
 static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2CcDirectionInfo &di)
 {
     int bitCursor = 0;
@@ -495,6 +508,11 @@ LogErrorF("preparing subviews 3.");
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
 LogErrorF("preparing subviews 4.");
 
+    limitBitStream(di.equalCellBitStream, di.EqualCellsBitstreamSize);
+    limitBitStream(di.pixelMaskBitStream, di.PixelMaskBitstreamSize);
+    limitBitStream(di.encodingTypeBitStream, di.EncodingTypeBitstreamSize);
+    limitBitStream(di.rawPixelCodesBitStream, di.RawPixelCodesBitstreamSize);
+
     // fillPixelBuffer
     // For each cell store a PixelBufferEntry index that points to the last entry for this cell
     // This will be used to retrieve values from the previous frame
@@ -510,6 +528,10 @@ LogErrorF("preparing subviews 4.");
 LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
     }
+    delete cdi.equalCellBitStream;
+    delete cdi.pixelMaskBitStream;
+    delete cdi.encodingTypeBitStream;
+    delete cdi.rawPixelCodesBitStream;
 LogErrorF("readDirHeader done.");
     return true;
 }
