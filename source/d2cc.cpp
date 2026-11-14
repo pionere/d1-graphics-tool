@@ -328,7 +328,7 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
             }
 
             // Store the fact that we skipped this cell for the 2nd phase
-//            frameInfo.cellSameAsPrevious.push_back(sameAsPreviousCell);
+            frameInfo.cellSameAsPrevious.push_back(sameAsPreviousCell);
 
             if (!sameAsPreviousCell) {
                 // Pixel buffer entries are encoded as a stack in the stream which means the
@@ -426,13 +426,13 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
     di.box = { INT_MAX, INT_MAX, INT_MIN, INT_MIN };
 
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
-        D2CcFrameInfo fi;
+        D2CcFrameInfo &fi = di.frameInfos.emplaceBack();
         readFrameHeader(rs, di, fi);
 
 //    dProgressWarn() << QApplication::tr("frame %1 dimensions %2x%3 with offset %4x%5 (flipped %6).").arg(i).arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
 LogErrorF("frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fi.width, fi.height, fi.XOffset, fi.YOffset, fi.flipped);
 
-        di.frameInfos.push_back(fi);
+        // di.frameInfos.push_back(fi);
 
         if (di.box.x > fi.XOffset)
             di.box.x = fi.XOffset;
