@@ -190,6 +190,7 @@ typedef struct D2CcDirectionInfo
     unsigned PixelMaskBitstreamSize;
     unsigned EncodingTypeBitstreamSize;
     unsigned RawPixelCodesBitstreamSize;
+    unsigned pixelCodesDisplacementBitStreamSize;
 
     quint8 PaletteEntries[256];
     /*
@@ -252,12 +253,20 @@ LogErrorF("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
         uint8_t nextPixelCode;
         if (decodeRaw) {
             // Read the value of the code directly from rawPixelCodesBitStream
+            if (dirInfo.RawPixelCodesBitstreamSize < 8) {
+                LogErrorF("oob in rawPixelCodesBitStream %d", dirInfo.RawPixelCodesBitstreamSize);
+            }
+            dirInfo.RawPixelCodesBitstreamSize -= 8;
             nextPixelCode = readBits(dirInfo.rawPixelCodesBitStream, 8);
         } else {
             // Read the value of the code incrementally from pixelCodesDisplacementBitStream
             nextPixelCode = lastPixelCode;
             uint8_t pixelDisplacement;
             do {
+                if (dirInfo.pixelCodesDisplacementBitStreamSize < 4) {
+                    LogErrorF("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
+                }
+                dirInfo.pixelCodesDisplacementBitStreamSize -= 4;
                 pixelDisplacement = readBits(dirInfo.pixelCodesDisplacementBitStream, 4);
                 nextPixelCode += pixelDisplacement;
             } while (pixelDisplacement == 0xF);
@@ -303,9 +312,17 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
                 if (dirInfo.compressEqualCells) {
                     // If true, the cell is the same as the previous one or transparent.
                     // Which actually mean the same thing : skip the decoding of this cell
+                    if (dirInfo.EqualCellsBitstreamSize < 1) {
+                        LogErrorF("oob in decodeFrameStage1 %d", dirInfo.EqualCellsBitstreamSize);
+                    }
+                    dirInfo.EqualCellsBitstreamSize -= 1;
                     sameAsPreviousCell = readBits(dirInfo.equalCellBitStream, 1);
                 }
                 if (!sameAsPreviousCell) {
+                    if (dirInfo.PixelMaskBitstreamSize < 4) {
+                        LogErrorF("oob in decodeFrameStage1 %d", dirInfo.PixelMaskBitstreamSize);
+                    }
+                    dirInfo.PixelMaskBitstreamSize -= 4;
                     pixelMask = readBits(dirInfo.pixelMaskBitStream, 4);
                 }
             }
@@ -498,6 +515,8 @@ LogErrorF("preparing subviews 3.");
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
 LogErrorF("preparing subviews 4.");
 
+    di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * 8;
+return false;
     // fillPixelBuffer
     // For each cell store a PixelBufferEntry index that points to the last entry for this cell
     // This will be used to retrieve values from the previous frame
