@@ -328,7 +328,7 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
             }
 
             // Store the fact that we skipped this cell for the 2nd phase
-            frameInfo.cellSameAsPrevious.push_back(sameAsPreviousCell);
+//            frameInfo.cellSameAsPrevious.push_back(sameAsPreviousCell);
 
             if (!sameAsPreviousCell) {
                 // Pixel buffer entries are encoded as a stack in the stream which means the
@@ -341,6 +341,8 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
                     previousEntryForCell = pbEntries[lastPixelEntryIndexForCell];
                 } else {
                     // No need for previousEntryForCell if it doesn't exist, as the mask is 0xF
+                    if (pixelMask != 0xF)
+                        LogErrorF("previousEntryForCell is not set with mask %d", pixelMask);
                     assert(pixelMask == 0xF);
                 }
 
