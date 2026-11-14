@@ -516,7 +516,7 @@ LogErrorF("preparing subviews 3.");
 LogErrorF("preparing subviews 4.");
 
     di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.pixelCodesDisplacementBitStream.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * 8;
-return false;
+
     // fillPixelBuffer
     // For each cell store a PixelBufferEntry index that points to the last entry for this cell
     // This will be used to retrieve values from the previous frame
@@ -533,7 +533,7 @@ LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
     }
 LogErrorF("readDirHeader done.");
-    return true;
+    return false; // true;
 }
 
 bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &gfx)
