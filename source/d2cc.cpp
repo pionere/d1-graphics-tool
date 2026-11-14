@@ -515,7 +515,7 @@ LogErrorF("preparing subviews 3.");
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
 LogErrorF("preparing subviews 4.");
 
-    di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * 8;
+    di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.pixelCodesDisplacementBitStream.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * 8;
 return false;
     // fillPixelBuffer
     // For each cell store a PixelBufferEntry index that points to the last entry for this cell
