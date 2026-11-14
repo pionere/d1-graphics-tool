@@ -239,8 +239,11 @@ static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, 
     const int nbPixelsInMask = qPopulationCount(pixelMask);
 
     // Is the cell encoded in the raw stream ?
-    const bool decodeRaw = (dirInfo.encodingTypeBitStream.remBits != 0 || (dirInfo.encodingTypeBitStream.rawStreamData->size() > dirInfo.encodingTypeBitStream.cursor)) &&
-                           readBits(dirInfo.encodingTypeBitStream, 1);
+    bool decodeRaw = false;
+    if (dirInfo.EncodingTypeBitstreamSize != 0) {
+        dirInfo.EncodingTypeBitstreamSize = dirInfo.EncodingTypeBitstreamSize - 1;
+        decodeRaw = readBits(dirInfo.encodingTypeBitStream, 1);
+    }
 LogErrorF("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
     uint8_t lastPixelCode = 0;
     int  curPixelIdx   = 0;
@@ -372,19 +375,6 @@ static int cellCountAt(int len, unsigned offset)
     return len;
 }
 
-static void limitBitStream(D2CcBitReaderState &bitStream, unsigned size)
-{
-    if (size < bitStream.remBits) {
-        bitStream.remVal >>= bitStream.remBits - size;
-        bitStream.remBits = size;
-
-        bitStream.rawStreamData = new QByteArray();
-    } else {
-        QByteArray* src = bitStream.rawStreamData;
-        bitStream.rawStreamData = new QByteArray(src->first(size - bitStream.remBits));
-    }
-}
-
 static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2CcDirectionInfo &di)
 {
     int bitCursor = 0;
@@ -508,11 +498,6 @@ LogErrorF("preparing subviews 3.");
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
 LogErrorF("preparing subviews 4.");
 
-    limitBitStream(di.equalCellBitStream, di.EqualCellsBitstreamSize);
-    limitBitStream(di.pixelMaskBitStream, di.PixelMaskBitstreamSize);
-    limitBitStream(di.encodingTypeBitStream, di.EncodingTypeBitstreamSize);
-    limitBitStream(di.rawPixelCodesBitStream, di.RawPixelCodesBitstreamSize);
-
     // fillPixelBuffer
     // For each cell store a PixelBufferEntry index that points to the last entry for this cell
     // This will be used to retrieve values from the previous frame
@@ -528,10 +513,6 @@ LogErrorF("preparing subviews 4.");
 LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
     }
-    delete di.equalCellBitStream.rawStreamData;
-    delete di.pixelMaskBitStream.rawStreamData;
-    delete di.encodingTypeBitStream.rawStreamData;
-    delete di.rawPixelCodesBitStream.rawStreamData;
 LogErrorF("readDirHeader done.");
     return true;
 }
