@@ -373,6 +373,7 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frame
                         pixel = previousEntryForCell.values[i];
                     }
                     newEntry.values[i] = pixel;
+                    LogErrorF("new entry value %d: %d", i, pixel);
                 }
                 // Update the pixel buffer cell information
                 lastPixelEntryIndexForCell = pbEntries.size();

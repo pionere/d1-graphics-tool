@@ -5,8 +5,8 @@
  */
 
 #include "dcc.h"
-#include <BitStream.h>
-#include <SystemUtils.h>
+#include "BitStream.h"
+#include "SystemUtils.h"
 #include <array>
 #include <assert.h>
 //#include <fmt/format.h>
@@ -356,7 +356,7 @@ int decodePixelCodesStack(DirectionData& data, uint8_t pixelMask, PixelCodesStac
     // Is the cell encoded in the raw stream ?
     const bool decodeRaw = data.rawPixelUsageBitStream.bufferSizeInBits() > 0 &&
                            data.rawPixelUsageBitStream.readBool();
-
+LogErrorF("correct decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
     uint8_t lastPixelCode = 0;
     size_t  curPixelIdx   = 0;
 
@@ -476,6 +476,7 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameData.offsetX, frame
                     {
                         newEntry.values[i] = previousEntryForCell.values[i];
                     }
+                    LogErrorF("correct new entry value %d: %d", i, newEntry.values[i]);
                 }
                 // Update the pixel buffer cell information
                 lastPixelEntryIndexForCell = pbEntries.size();
