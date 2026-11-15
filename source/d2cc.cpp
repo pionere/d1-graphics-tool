@@ -304,7 +304,7 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frame
             const size_t curCellX = frameCellOffsetX + x;
 
             const size_t curPbCellIndex    = curCellX + curCellY * dirInfo.HorizontalCellCount;
-            if (curPbCellIndex >= pixelBuffer.size())
+            if (curPbCellIndex >= (unsigned)pixelBuffer.size())
                 LogErrorF("oob in decodeFrameStage1 pbuf %d of %d cell [%d:%d] area [%d:%d]", curPbCellIndex, pixelBuffer.size(), curCellX, curCellY, dirInfo.HorizontalCellCount, dirInfo.VerticalCellCount);
             size_t& lastPixelEntryIndexForCell = pixelBuffer[curPbCellIndex];
 

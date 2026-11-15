@@ -291,6 +291,7 @@ set(PROJECT_SOURCES
         source/wc/Stream.h
         source/wc/SystemUtils.h
         source/wc/Vector.h
+        source/wc/_VTablesTU.cpp
         source/wc/AABB.h
         source/wc/dcc.cpp
         source/wc/dcc.h
