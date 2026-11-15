@@ -396,7 +396,7 @@ static int cellCountAt(int len, unsigned offset)
     }
     nc += (len + cellSize - 1) / cellSize;
 
-    return len;
+    return nc;
 }
 
 static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2CcDirectionInfo &di)
