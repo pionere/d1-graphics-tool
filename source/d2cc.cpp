@@ -301,7 +301,8 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
             const size_t curCellX = frameCellOffsetX + x;
 
             const size_t curPbCellIndex    = curCellX + curCellY * dirInfo.HorizontalCellCount;
-
+            if (curPbCellIndex >= pixelBuffer.size())
+                LogErrorF("oob in decodeFrameStage1 pbuf %d", pixelBuffer.size());
             size_t& lastPixelEntryIndexForCell = pixelBuffer[curPbCellIndex];
 
             bool    sameAsPreviousCell = false; // By default always decode the cell
@@ -314,14 +315,14 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
                     // If true, the cell is the same as the previous one or transparent.
                     // Which actually mean the same thing : skip the decoding of this cell
                     if (dirInfo.EqualCellsBitstreamSize < 1) {
-                        LogErrorF("oob in decodeFrameStage1 %d", dirInfo.EqualCellsBitstreamSize);
+                        LogErrorF("oob in decodeFrameStage1 cell %d", dirInfo.EqualCellsBitstreamSize);
                     }
                     dirInfo.EqualCellsBitstreamSize -= 1;
                     sameAsPreviousCell = readBits(dirInfo.equalCellBitStream, 1);
                 }
                 if (!sameAsPreviousCell) {
                     if (dirInfo.PixelMaskBitstreamSize < 4) {
-                        LogErrorF("oob in decodeFrameStage1 %d", dirInfo.PixelMaskBitstreamSize);
+                        LogErrorF("oob in decodeFrameStage1 mask %d", dirInfo.PixelMaskBitstreamSize);
                     }
                     dirInfo.PixelMaskBitstreamSize -= 4;
                     pixelMask = readBits(dirInfo.pixelMaskBitStream, 4);
@@ -362,7 +363,7 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
                         }
                         // Store the actual values instead of the codes
                         if (dirInfo.paletteEntryCount <= pixel)
-                            LogErrorF("PaletteEntries is not set for pixel %d", pixel);
+                            LogErrorF("PaletteEntries is not set for pixel %d (entries: %d)", pixel, dirInfo.paletteEntryCount);
                         pixel = dirInfo.PaletteEntries[pixel];
                     } else {
                         // If not set, use the previous value for this entry
@@ -410,8 +411,11 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
         return false;
 
     di.OutSizeCoded = readBits(rs, 32);
+LogErrorF("OutSizeCoded : %d (c:%d, bits:%d val:%x", di.OutSizeCoded, rs.cursor, rs.remBits, rs.remVal);
     di.hasRawPixelEncoding = readBits(rs, 1);
+LogErrorF("hasRawPixelEncoding : %d (c:%d, bits:%d val:%x", di.hasRawPixelEncoding, rs.cursor, rs.remBits, rs.remVal);
     di.compressEqualCells = readBits(rs, 1);
+LogErrorF("compressEqualCells : %d (c:%d, bits:%d val:%x", di.compressEqualCells, rs.cursor, rs.remBits, rs.remVal);
     di.Variable0Bits = crazyLookup(readBits(rs, 4));
     di.WidthBits = crazyLookup(readBits(rs, 4));
     di.HeightBits = crazyLookup(readBits(rs, 4));
@@ -715,8 +719,8 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 LogErrorF("dcc directions %d.", hi.dirOffsets.size());
     // BUILDING {CEL FRAMES}
     for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
-LogErrorF("decoding direction %d.", d + 1);
         const auto &offset = hi.dirOffsets[d];
+LogErrorF("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.second);
         if (fileSize >= offset.second && offset.second >= offset.first) {
             device->seek(offset.first);
             QByteArray ccDirRawData = device->read(offset.second - offset.first);
