@@ -614,13 +614,13 @@ LogErrorF("decodeFrame %d", frameIndex);
 //                Cell& pbCell = pixelBufferCells[pbCellIndex];
 
                 if (frameInfo.cellSameAsPrevious[frameCellIndex]) {
-/*
-                    if ((cw != pbCell.width) || (ch != pbCell.height)) {
+                    if (false) { // (cw != pbCell.width) || (ch != pbCell.height)) {
                         // Clear the cell to 0
                         // If we used the previous frame pixels instead of reusing the same
                         // buffer for all frames we would not need to clear this (it would be
                         // initialized to 0 before writing any value to the frame pixels) But we
                         // would then need to copy values if the size matched
+// LogErrorF("pBuffer.fillBytes %d:%d, %dx%d zero - skipped", pbCellPosX, pbCellPosY, cw, ch);
 //                        pBuffer.fillBytes(pbCellPosX, pbCellPosY, frameCell.width, frameCell.height,
 //                                          0);
                     }
@@ -629,12 +629,12 @@ LogErrorF("decodeFrame %d", frameIndex);
                         // Same size, copy from previous cell in the buffer
                         // Nothing to change !
                     }
-*/
                 } else {
                     const auto& pixelValues = di.pbEntries[pbEntryIndex++].values;
 
                     if (pixelValues[0] == pixelValues[1]) {
                         // This means we only got one pixel code, so fill the cell with it
+LogErrorF("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, pixelValues[0]);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValues[0]));
@@ -662,7 +662,7 @@ LogErrorF("decodeFrame %d", frameIndex);
                                 // Note: This actually means that a cell (4x4 block) can use at most
                                 // 4 colors, a bit like DXT !
                                 const uint8_t pixelValue = pixelValues[pixelCodeIndex];
-
+LogErrorF("pBuffer.setByte %d:%d %d", pbCellPosX + x, pbCellPosY + y, pixelValue);
                                 // pBuffer(pbCellPosX + x, pbCellPosY + y) = pixelValue;
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValue));
                             }

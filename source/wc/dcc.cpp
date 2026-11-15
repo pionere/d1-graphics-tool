@@ -546,7 +546,7 @@ void decodeDirectionStage2(DirectionData& data, const Vector<PixelBufferEntry>& 
                         // buffer for all frames we would not need to clear this (it would be
                         // initialized to 0 before writing any value to the frame pixels) But we
                         // would then need to copy values if the size matched
-LogErrorF("pBuffer.fillBytes %d:%d, %dx%d zero", pbCellPosX, pbCellPosY, frameCell.width, frameCell.height);
+LogErrorF("correct pBuffer.fillBytes %d:%d, %dx%d zero", pbCellPosX, pbCellPosY, frameCell.width, frameCell.height);
 //                        pBuffer.fillBytes(pbCellPosX, pbCellPosY, frameCell.width, frameCell.height,
 //                                          0);
                     }
@@ -562,7 +562,7 @@ LogErrorF("pBuffer.fillBytes %d:%d, %dx%d zero", pbCellPosX, pbCellPosY, frameCe
 
                     if (pixelValues[0] == pixelValues[1]) {
                         // This means we only got one pixel code, so fill the cell with it
-LogErrorF("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, frameCell.width, frameCell.height, pixelValues[0]);
+LogErrorF("correct pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, frameCell.width, frameCell.height, pixelValues[0]);
 //                        pBuffer.fillBytes(pbCellPosX, pbCellPosY, frameCell.width, frameCell.height,
 //                                          pixelValues[0]);
                     }
@@ -590,7 +590,7 @@ LogErrorF("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, frameCell
                                 // Note: This actually means that a cell (4x4 block) can use at most
                                 // 4 colors, a bit like DXT !
                                 const uint8_t pixelValue = pixelValues[pixelCodeIndex];
-LogErrorF("pBuffer.setByte %d:%d %d", pbCellPosX + x, pbCellPosY + y, pixelValue);
+LogErrorF("correct pBuffer.setByte %d:%d %d", pbCellPosX + x, pbCellPosY + y, pixelValue);
 //                                pBuffer(pbCellPosX + x, pbCellPosY + y) = pixelValue;
                             }
                         }
