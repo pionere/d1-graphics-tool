@@ -4,8 +4,8 @@
 #pragma once
 
 #include <stdint.h>
-#include <FileStream.h>
-#include <Vector.h>
+#include "FileStream.h"
+#include "Vector.h"
 #include <memory>
 #include <type_traits>
 #include "AABB.h"

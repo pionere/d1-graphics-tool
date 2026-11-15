@@ -510,7 +510,7 @@ LogErrorF("streamsizes %d : %d : %d : %d.", di.EqualCellsBitstreamSize, di.Pixel
             di.paletteEntryCount++;
         }
     }
-
+LogErrorF("palette entries %d.", di.paletteEntryCount);
     // prepare subviews
 LogErrorF("preparing subviews.");
     di.equalCellBitStream = rs;
@@ -614,7 +614,7 @@ LogErrorF("decodeFrame %d", frameIndex);
 //                Cell& pbCell = pixelBufferCells[pbCellIndex];
 
                 if (frameInfo.cellSameAsPrevious[frameCellIndex]) {
-                    if (false) { // (cw != pbCell.width) || (ch != pbCell.height)) {
+/*                    if (cw != pbCell.width) || (ch != pbCell.height)) {
                         // Clear the cell to 0
                         // If we used the previous frame pixels instead of reusing the same
                         // buffer for all frames we would not need to clear this (it would be
@@ -628,6 +628,22 @@ LogErrorF("decodeFrame %d", frameIndex);
                     {
                         // Same size, copy from previous cell in the buffer
                         // Nothing to change !
+                    }
+*/
+                    int prevs = 0;
+                    for (int y = 0; y < ch; y++) {
+                        for (int x = 0; x < cw; x++) {
+                            if (pBuffer->getPixel(pbCellPosX + x, pbCellPosY + y).isTransparent())
+                                prevs++;
+                        }
+                    }
+                    if (prevs != 0) {
+LogErrorF("pBuffer.fillBytes %d:%d, %dx%d zero - prevs: %d", pbCellPosX, pbCellPosY, cw, ch, prevs);
+                        for (int y = 0; y < ch; y++) {
+                            for (int x = 0; x < cw; x++) {
+                                pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(0));
+                            }
+                        }
                     }
                 } else {
                     const auto& pixelValues = di.pbEntries[pbEntryIndex++].values;

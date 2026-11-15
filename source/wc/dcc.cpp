@@ -293,7 +293,7 @@ LogErrorF("correct streamsizes %d : %d : %d : %d.", equalCellsBitStreamSize, pix
             const bool pixelValueUsed = bitStream.readBool();
             if (pixelValueUsed) codeToPixelValue.push_back(uint8_t(i));
         }
-
+LogErrorF("correct palette entries %d.", codeToPixelValue.size());
         // Prepare the bitstreams
 
         assert(!dir.header.compressEqualCells || equalCellsBitStreamSize);
@@ -467,6 +467,8 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameData.offsetX, frame
                             pixelCode = 0;
                         }
                         // Store the actual values instead of the codes
+                        if (data.codeToPixelValue.size() <= pixelCode)
+                            LogErrorF("correct PaletteEntries is not set for pixel %d (entries: %d)", pixelCode, data.codeToPixelValue.size());
                         newEntry.values[i] = data.codeToPixelValue[pixelCode];
                     }
                     // If not set, use the previous value for this entry
