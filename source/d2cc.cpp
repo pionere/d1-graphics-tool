@@ -17,6 +17,8 @@
 
 #include "dungeon/all.h"
 
+#include "wc/dcc.h"
+
 #define D2PAL_COLORS 256
 
 static const int cellSize = 4;
@@ -456,10 +458,11 @@ LogErrorF("frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fi.wid
     di.box.h -= di.box.y;
 
 // dProgressWarn() << QApplication::tr("dir box %1x%2 with offset %3x%4.").arg(di.box.w).arg(di.box.h).arg(di.box.x).arg(di.box.y);
-LogErrorF("dir box %dx%d with offset %dx%d.", di.box.w, di.box.h, di.box.x, di.box.y);
 
     di.HorizontalCellCount = (di.box.w + cellSize - 1) / cellSize;
     di.VerticalCellCount = (di.box.h + cellSize - 1) / cellSize;
+
+LogErrorF("dir box %dx%d with offset %dx%d cells %dx%d.", di.box.w, di.box.h, di.box.x, di.box.y, di.HorizontalCellCount, di.VerticalCellCount);
 
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
         D2CcFrameInfo &fi = di.frameInfos[i];
@@ -692,6 +695,18 @@ LogErrorF("decodeFrames done");
 bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
+
+    DCC dcc;
+    if (dcc.initDecoder(std::make_unique<FileStream>(filePath.toLatin1().data())))
+        LogErrorF("dcc decoder ready");
+    else
+        LogErrorF("dcc decoder failed");
+
+    DCC::Direction dir0;
+    if (dcc.readDirection(dir0, 0))
+        LogErrorF("dcc dir0 ready");
+    else
+        LogErrorF("dcc dir0 failed");
 
     // Opening CEL file and load it in RAM
     QFile file = QFile(filePath);

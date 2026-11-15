@@ -281,6 +281,11 @@ set(PROJECT_SOURCES
         source/upscaletaskdialog.cpp
         source/upscaletaskdialog.h
         source/upscaletaskdialog.ui
+
+
+        source/wc/AABB.h
+        source/wc/dcc.cpp
+        source/wc/dcc.h
 )
 
 qt_add_resources(RESOURCES
