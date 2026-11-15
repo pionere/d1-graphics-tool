@@ -192,6 +192,7 @@ typedef struct D2CcDirectionInfo
     unsigned RawPixelCodesBitstreamSize;
     unsigned pixelCodesDisplacementBitStreamSize;
 
+    unsigned paletteEntryCount;
     quint8 PaletteEntries[256];
     /*
     Box                        *image.Rectangle
@@ -360,6 +361,8 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
                             pixel = 0;
                         }
                         // Store the actual values instead of the codes
+                        if (dirInfo.paletteEntryCount <= pixel)
+                            LogErrorF("PaletteEntries is not set for pixel %d", pixel);
                         pixel = dirInfo.PaletteEntries[pixel];
                     } else {
                         // If not set, use the previous value for this entry
@@ -492,11 +495,11 @@ LogErrorF("streamsizes %d : %d : %d : %d.", di.EqualCellsBitstreamSize, di.Pixel
     if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
         return false;
 
-    int paletteEntryCount = 0;
+    di.paletteEntryCount = 0;
     for (unsigned i = 0; i < D2PAL_COLORS; i++) {
         if (readBits(rs, 1)) {
-            di.PaletteEntries[paletteEntryCount] = i;
-            paletteEntryCount++;
+            di.PaletteEntries[di.paletteEntryCount] = i;
+            di.paletteEntryCount++;
         }
     }
 
@@ -525,7 +528,7 @@ LogErrorF("preparing subviews 4.");
     constexpr size_t invalidIndex = SIZE_MAX;
     const size_t  pixelBufferNbCells = di.HorizontalCellCount * di.VerticalCellCount;
     QList<size_t> pixelBuffer(pixelBufferNbCells, invalidIndex);
-return false;
+
     // 1st phase of decoding : fill the pixel buffer
     // We actually fill a buffer of entries as to avoid storing empty entries
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
@@ -533,8 +536,10 @@ return false;
         fi.firstPixelBufferEntry = di.pbEntries.size();
 LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
+break;
     }
 LogErrorF("readDirHeader done.");
+return false;
     return true;
 }
 
