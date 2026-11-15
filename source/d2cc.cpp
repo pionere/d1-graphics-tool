@@ -525,7 +525,7 @@ LogErrorF("preparing subviews 4.");
     constexpr size_t invalidIndex = SIZE_MAX;
     const size_t  pixelBufferNbCells = di.HorizontalCellCount * di.VerticalCellCount;
     QList<size_t> pixelBuffer(pixelBufferNbCells, invalidIndex);
-
+return false;
     // 1st phase of decoding : fill the pixel buffer
     // We actually fill a buffer of entries as to avoid storing empty entries
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
@@ -535,7 +535,7 @@ LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
     }
 LogErrorF("readDirHeader done.");
-    return false; // true;
+    return true;
 }
 
 bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &gfx)
