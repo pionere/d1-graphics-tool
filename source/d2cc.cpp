@@ -713,13 +713,13 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
 
-    DCC dcc;
-    if (dcc.initDecoder(std::make_unique<FileStream>(filePath.toLatin1().data())))
+    WorldStone::DCC dcc;
+    if (dcc.initDecoder(std::make_unique<WorldStone::FileStream>(filePath.toLatin1().data())))
         LogErrorF("dcc decoder ready");
     else
         LogErrorF("dcc decoder failed");
 
-    DCC::Direction dir0;
+    WorldStone::DCC::Direction dir0;
     if (dcc.readDirection(dir0, 0))
         LogErrorF("dcc dir0 ready");
     else
