@@ -2,7 +2,7 @@
 // Created by Lectem on 12/11/2016.
 //
 
-#include "Archive.h"
+// #include "Archive.h"
 #include "Stream.h"
 
 /*
@@ -11,7 +11,7 @@
 
 namespace WorldStone
 {
-Archive::~Archive() {}
+// Archive::~Archive() {}
 IStream::~IStream() {}
 
 int IStream::getc()
