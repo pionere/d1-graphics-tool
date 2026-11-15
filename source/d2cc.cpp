@@ -541,10 +541,8 @@ LogErrorF("preparing subviews 4.");
         fi.firstPixelBufferEntry = di.pbEntries.size();
 LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
-break;
     }
 LogErrorF("readDirHeader done.");
-return false;
     return true;
 }
 
