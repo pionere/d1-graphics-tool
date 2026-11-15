@@ -643,7 +643,7 @@ bool DCC::readDirection(Direction& outDir, uint32_t dirIndex)//, IImageProvider<
 
     outDir.computeDirExtents();
 
-    DirectionData data{outDir, bitStream, header.framesPerDir); // , imgProvider};
+    DirectionData data{outDir, bitStream, header.framesPerDir}; // , imgProvider};
     if (!data.isValid()) return false;
 
     Vector<PixelBufferEntry> pbEntries;
