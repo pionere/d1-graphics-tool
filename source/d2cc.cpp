@@ -294,6 +294,7 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
     const size_t frameCellOffsetX = frameInfo.XOffset / cellSize;
     const size_t frameCellOffsetY = frameInfo.YOffset / cellSize;
 
+LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameInfo.YOffset, frameInfo.XCells, frameInfo.YCells);
     // For each cell of this frame (not the same number as the pixel buffer cells ! )
     for (size_t y = 0; y < frameInfo.YCells; y++) {
         const size_t curCellY = frameCellOffsetY + y;
@@ -302,7 +303,7 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
 
             const size_t curPbCellIndex    = curCellX + curCellY * dirInfo.HorizontalCellCount;
             if (curPbCellIndex >= pixelBuffer.size())
-                LogErrorF("oob in decodeFrameStage1 pbuf %d", pixelBuffer.size());
+                LogErrorF("oob in decodeFrameStage1 pbuf %d of %d cell [%d:%d] area [%d:%d]", curPbCellIndex, pixelBuffer.size(), curCellX, curCellY, dirInfo.HorizontalCellCount, dirInfo.VerticalCellCount);
             size_t& lastPixelEntryIndexForCell = pixelBuffer[curPbCellIndex];
 
             bool    sameAsPreviousCell = false; // By default always decode the cell
@@ -467,7 +468,7 @@ LogErrorF("dir box %dx%d with offset %dx%d.", di.box.w, di.box.h, di.box.x, di.b
 
         fi.XCells = cellCountAt(fi.width, fi.XOffset);
         fi.YCells = cellCountAt(fi.height, fi.YOffset);
-LogErrorF("frame offset %dx%d cells %dx%d.", fi.XOffset, fi.YOffset, fi.XCells, fi.YCells);
+LogErrorF("frame %d offset %dx%d cells %dx%d.", i, fi.XOffset, fi.YOffset, fi.XCells, fi.YCells);
     }
 
     di.box.x = 0;
