@@ -304,13 +304,13 @@ LogErrorF("correct palette entries %d first %d.", codeToPixelValue.size(), codeT
         equalCellBitStream = bitStream.createSubView(equalCellsBitStreamSize);
 size_t cursor;
 cursor = equalCellBitStream.tell();
-LogErrorF("preparing subviews ecstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, equalCellBitStream.readUnsigned(32));
+LogErrorF("preparing subviews ecstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, equalCellsBitStreamSize > 32 ? equalCellBitStream.readUnsigned(32) : 0);
 equalCellBitStream.setPosition(cursor);
         bitStream.skip(equalCellsBitStreamSize);
 
         pixelMaskBitStream = bitStream.createSubView(pixelMaskBitStreamSize);
 cursor = pixelMaskBitStream.tell();
-LogErrorF("preparing subviews mkstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, pixelMaskBitStream.readUnsigned(32));
+LogErrorF("preparing subviews mkstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, pixelMaskBitStreamSize > 32 ? pixelMaskBitStream.readUnsigned(32) : 0);
 pixelMaskBitStream.setPosition(cursor);
         bitStream.skip(pixelMaskBitStreamSize);
 
@@ -318,13 +318,13 @@ pixelMaskBitStream.setPosition(cursor);
                (encodingTypeBitsreamSize && rawPixelCodesBitStreamSize));
         rawPixelUsageBitStream = bitStream.createSubView(encodingTypeBitsreamSize);
 cursor = rawPixelUsageBitStream.tell();
-LogErrorF("preparing subviews etstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, rawPixelUsageBitStream.readUnsigned(32));
+LogErrorF("preparing subviews etstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, encodingTypeBitsreamSize > 32 ? rawPixelUsageBitStream.readUnsigned(32) : 0);
 rawPixelUsageBitStream.setPosition(cursor);
         bitStream.skip(encodingTypeBitsreamSize);
 
         rawPixelCodesBitStream = bitStream.createSubView(rawPixelCodesBitStreamSize);
 cursor = rawPixelCodesBitStream.tell();
-LogErrorF("preparing subviews rwstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, rawPixelCodesBitStream.readUnsigned(32));
+LogErrorF("preparing subviews rwstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, rawPixelCodesBitStreamSize > 32 ? rawPixelCodesBitStream.readUnsigned(32) : 0);
 rawPixelCodesBitStream.setPosition(cursor);
         bitStream.skip(rawPixelCodesBitStreamSize);
 
