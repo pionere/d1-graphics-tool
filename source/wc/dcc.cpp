@@ -392,7 +392,7 @@ static bool stopDebug = false;
             // Read the value of the code incrementally from pixelCodesDisplacementBitStream
             curPixelCode = lastPixelCode;
 if (!stopDebug)
-LogErrorF("nextPixelCode %d", nextPixelCode);
+LogErrorF("nextPixelCode %d", curPixelCode);
             uint8_t pixelDisplacement;
             do
             {
