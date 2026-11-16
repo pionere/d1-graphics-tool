@@ -721,7 +721,7 @@ LogDebug("decodeFrame %d", frameIndex);
                     }
                     if (prevs != 0) {
 LogDebug("pBuffer.fillBytes %d:%d, %dx%d zero - prevs: %d", pbCellPosX, pbCellPosY, cw, ch, prevs);
-dProgressWarn() << QString("mismatching cells. %1 pixels are not set by the previous cell in %1:%2, %3x%4").arg(prevs).arg(pbCellPosX).arg(pbCellPosY).arg(cw).arg(ch);
+dProgressWarn() << QString("mismatching cells in frame %1 of direction %2. %3 pixels are not set by the previous cell at %4:%5 (area %6x%7)").arg(frameIndex + 1).arg(gfx.frames.size() / hi.framesPerDirection + 1).arg(prevs).arg(pbCellPosX).arg(pbCellPosY).arg(cw).arg(ch);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(0));
