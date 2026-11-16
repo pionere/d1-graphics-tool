@@ -298,7 +298,7 @@ if (!stopDebug)
 LogDebug("nextPixelCode %d", nextPixelCode);
             uint8_t pixelDisplacement;
             do {
-                if (dirInfo. < 4) {
+                if (dirInfo.pixelCodesDisplacementBitStreamSize < 4) {
                     LogDebug("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
                     dProgressErr() << QString("oob in pixelCodesDisplacementBitStream %1").arg(dirInfo.pixelCodesDisplacementBitStreamSize);
                 }
@@ -676,7 +676,14 @@ LogDebug("decodeFrame %d", frameIndex);
                 // frameCell.height  = ch;
                 // frameCell.width  = frameInfo.cellWidths[cellX];
                 // frameCell.height = frameInfo.cellHeights[cellY];
-
+if (pbCellPosX + cw > di.box.w) {
+LogDebug("oob in frame %d to the right %d + %d -> %d vs %d", frameIndex + 1, pbCellPosX, cw, pbCellPosX + cw, di.box.w);
+dProgressErr() << QString("oob in frame %1 to the right %2 + %3 -> %4 vs %5").arg(frameIndex + 1).arg(pbCellPosX).arg(cw).arg(pbCellPosX + cw).arg(di.box.w);
+}
+if (pbCellPosY + ch > di.box.h) {
+LogDebug("oob in frame %d to the bottom %d + %d -> %d vs %d", frameIndex + 1, pbCellPosY, ch, pbCellPosY + ch, di.box.h);
+dProgressErr() << QString("oob in frame %1 to the bottom %2 + %3 -> %4 vs %5").arg(frameIndex + 1).arg(pbCellPosY).arg(ch).arg(pbCellPosY + ch).arg(di.box.h);
+}
                 const size_t pbCellIndex =
                     (pbCellPosX / cellSize) +
                     (pbCellPosY / cellSize) * di.HorizontalCellCount;
