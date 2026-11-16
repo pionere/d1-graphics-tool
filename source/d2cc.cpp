@@ -141,7 +141,7 @@ if (debugRead)
             hi.remBits -= 32;
             numBits -= 32;
         }
-        hi.remVal |= val << hi.remBits;
+        hi.remVal |= (quint64)val << hi.remBits;
         hi.remBits += 8;
     }
 
