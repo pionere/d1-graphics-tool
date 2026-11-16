@@ -635,11 +635,12 @@ LogErrorF("decodeFrame %d", frameIndex);
                 }
             }
 */
+            const int ch = frameInfo.cellHeights[cellY];
+
             for (size_t cellX = 0; cellX < frameInfo.XCells; cellX++)
             {
                 const size_t frameCellIndex = cellX + cellY * frameInfo.XCells;
                 // Cell         frameCell;
-                const int ch = frameInfo.cellHeights[cellY];
                 const int cw = frameInfo.cellWidths[cellX];
 /*
                 int cw = cellSize;
