@@ -183,6 +183,8 @@ typedef struct D2CcFrameInfo
     // calculated values
     int XCells;
     int YCells;
+    QList<int> cellWidths;
+    QList<int> cellHeights;
     // RECT32 box;
     size_t firstPixelBufferEntry;
     QList<bool> cellSameAsPrevious;
@@ -398,7 +400,7 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frame
     }
 }
 
-static int cellCountAt(int len, unsigned offset)
+/*static int cellCountAt(int len, unsigned offset)
 {
     if (len == 0)
         dProgressErr() << QString("Zero frame len.");
@@ -414,6 +416,35 @@ static int cellCountAt(int len, unsigned offset)
     nc += (len + cellSize - 1) / cellSize;
 
     return nc;
+}*/
+
+static int calculateCells(int len, int offset, QList<int> &values)
+{
+    // add partial starting cell if necessary
+    if (offset % cellSize != 0) {
+        int widthFirstColumn = 4 - offset % cellSize;
+        len -= widthFirstColumn;
+        if (len < 0) {
+            widthFirstColumn += len;
+            len = 0;
+        }
+        values.push_back(widthFirstColumn);
+    }
+    // add standard cells
+    int nc = (unsigned)len / cellSize;
+    for (int i = 0; i < nc; i++) {
+        values.push_back(cellSize);
+    }
+    len -= nc * cellSize;
+    // add an extra cell if it is larger than 1 pixel, otherwise extend the last cell
+    if (len > 0) {
+        if (len > 1) {
+            values.push_back(len);
+        } else {
+            values.last()++;
+        }
+    }
+    return values.size();
 }
 
 static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2CcDirectionInfo &di)
@@ -486,8 +517,8 @@ LogErrorF("dir box %dx%d with offset %dx%d cells %dx%d.", di.box.w, di.box.h, di
         fi.XOffset -= di.box.x;
         fi.YOffset -= di.box.y;
 
-        fi.XCells = cellCountAt(fi.width, fi.XOffset);
-        fi.YCells = cellCountAt(fi.height, fi.YOffset);
+        fi.XCells = calculateCells(fi.width, fi.XOffset, fi.cellWidths);
+        fi.YCells = calculateCells(fi.height, fi.YOffset, fi.cellHeights);
 LogErrorF("frame %d offset %dx%d cells %dx%d.", i, fi.XOffset, fi.YOffset, fi.XCells, fi.YCells);
     }
 
@@ -592,7 +623,7 @@ LogErrorF("decodeFrame %d", frameIndex);
         size_t pbCellPosY = frameInfo.YOffset;
         for (size_t cellY = 0; cellY < frameInfo.YCells; cellY++) {
             size_t pbCellPosX = frameInfo.XOffset;
-
+/*
             int ch = cellSize;
             if (cellY == 0) {
                 ch -= pbCellPosY % cellSize;
@@ -603,12 +634,14 @@ LogErrorF("decodeFrame %d", frameIndex);
                     ch = cellSize;
                 }
             }
-
+*/
             for (size_t cellX = 0; cellX < frameInfo.XCells; cellX++)
             {
                 const size_t frameCellIndex = cellX + cellY * frameInfo.XCells;
                 // Cell         frameCell;
-
+                const int ch = frameInfo.cellHeights[cellY];
+                const int cw = frameInfo.cellWidths[cellX];
+/*
                 int cw = cellSize;
                 if (cellX == 0) {
                     cw -= pbCellPosX % cellSize;
@@ -619,7 +652,7 @@ LogErrorF("decodeFrame %d", frameIndex);
                         cw = cellSize;
                     }
                 }
-
+*/
                 // frameCell.width  = cw;
                 // frameCell.height  = ch;
                 // frameCell.width  = frameInfo.cellWidths[cellX];
@@ -686,7 +719,7 @@ LogErrorF("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, p
                             // We need 2 bits to index 3-4 values
                             nbBitsToRead = 2;
                         }
-
+LogErrorF("pBuffer.setBytes %d:%d %dx%d", pbCellPosX, pbCellPosY, cw, ch);
                         // fill FRAME cell with pixels
                         for (size_t y = 0; y < ch; y++) {
                             for (size_t x = 0; x < cw; x++) {
@@ -765,7 +798,8 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // CEL FRAMES OFFSETS CALCULATION
 LogErrorF("dcc directions %d.", hi.dirOffsets.size());
     // BUILDING {CEL FRAMES}
-    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
+//    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
+    for (unsigned d = 0; d < 1; d++) {
         const auto &offset = hi.dirOffsets[d];
 LogErrorF("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.second);
         if (fileSize >= offset.second && offset.second >= offset.first) {

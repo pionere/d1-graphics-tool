@@ -134,7 +134,7 @@ i++;
             // Upper excluded (max==upper-1)
             fHdr.extents.yUpper = fHdr.yOffset + 1;
         }
-LogErrorF("correct frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fHdr.width, fHdr.height, fHdr.xOffset, fHdr.yOffset, fHdr.frameBottomUp);
+LogErrorF("correct frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fHdr.width, fHdr.height, fHdr.extents.xLower, fHdr.extents.yLower, fHdr.frameBottomUp);
     }
 
     // Handle optional data
@@ -586,7 +586,7 @@ LogErrorF("correct pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, f
                         {
                             nbBitsToRead = 2;
                         }
-
+LogErrorF("pBuffer.setBytes %d:%d %dx%d", pbCellPosX, pbCellPosY, frameCell.width, frameCell.height);
                         // fill FRAME cell with pixels
                         for (size_t y = 0; y < frameCell.height; y++)
                         {
