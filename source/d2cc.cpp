@@ -17,9 +17,16 @@
 
 #include "dungeon/all.h"
 
-#include "wc/dcc.h"
+// #include "wc/dcc.h"
 
 #define D2PAL_COLORS 256
+
+#define DEBUGDCC 0
+#if DEBUGDCC
+#define LogDebug(exp) LogErrorF(exp)
+#else
+#define LogDebug(exp) do { (void) sizeof(exp); } while(0)
+#endif
 
 static const int cellSize = 4;
 
@@ -133,7 +140,7 @@ static quint32 readBits(D2CcBitReaderState& hi, unsigned numBits)  // quint32 &r
     while (numBits > hi.remBits) {
         quint8 val = (*hi.rawStreamData)[hi.cursor];
 if (debugRead)
-    LogErrorF("stream %d (%x): %d", hi.cursor, hi.cursor, val);
+    LogDebug("stream %d (%x): %d", hi.cursor, hi.cursor, val);
         hi.cursor++;
         if (hi.remBits >= 64 - 8) {
             // discard bits in case of a long read assuming it is for skipping
@@ -160,7 +167,7 @@ if (debugRead)
 static qint32 readSgnBits(D2CcBitReaderState& hi, unsigned numBits)
 {
     if (numBits > 32)
-        LogErrorF("oob readSgnBits does not support %d", numBits);
+        LogDebug("oob readSgnBits does not support %d", numBits);
     quint32 res = readBits(hi, numBits);
     quint32 sgn = (UINT32_MAX >> (numBits - 1)) << (numBits - 1);
     if (res & sgn) {
@@ -268,7 +275,7 @@ static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, 
         dirInfo.EncodingTypeBitstreamSize = dirInfo.EncodingTypeBitstreamSize - 1;
         decodeRaw = readBits(dirInfo.encodingTypeBitStream, 1);
     }
-LogErrorF("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
+LogDebug("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
     uint8_t lastPixelCode = 0;
     int  curPixelIdx   = 0;
 static bool stopDebug = false;
@@ -277,7 +284,7 @@ static bool stopDebug = false;
         if (decodeRaw) {
             // Read the value of the code directly from rawPixelCodesBitStream
             if (dirInfo.RawPixelCodesBitstreamSize < 8) {
-                LogErrorF("oob in rawPixelCodesBitStream %d", dirInfo.RawPixelCodesBitstreamSize);
+                LogDebug("oob in rawPixelCodesBitStream %d", dirInfo.RawPixelCodesBitstreamSize);
             }
             dirInfo.RawPixelCodesBitstreamSize -= 8;
             nextPixelCode = readBits(dirInfo.rawPixelCodesBitStream, 8);
@@ -285,19 +292,19 @@ static bool stopDebug = false;
             // Read the value of the code incrementally from pixelCodesDisplacementBitStream
             nextPixelCode = lastPixelCode;
 if (!stopDebug)
-LogErrorF("nextPixelCode %d", nextPixelCode);
+LogDebug("nextPixelCode %d", nextPixelCode);
             uint8_t pixelDisplacement;
             do {
                 if (dirInfo.pixelCodesDisplacementBitStreamSize < 4) {
-                    LogErrorF("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
+                    LogDebug("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
                 }
                 dirInfo.pixelCodesDisplacementBitStreamSize -= 4;
 if (!stopDebug)
-LogErrorF("reading from %d (%x) rem %d value %x", dirInfo.pixelCodesDisplacementBitStream.cursor, dirInfo.pixelCodesDisplacementBitStream.cursor, dirInfo.pixelCodesDisplacementBitStream.remBits, dirInfo.pixelCodesDisplacementBitStream.remVal);
+LogDebug("reading from %d (%x) rem %d value %x", dirInfo.pixelCodesDisplacementBitStream.cursor, dirInfo.pixelCodesDisplacementBitStream.cursor, dirInfo.pixelCodesDisplacementBitStream.remBits, dirInfo.pixelCodesDisplacementBitStream.remVal);
                 pixelDisplacement = readBits(dirInfo.pixelCodesDisplacementBitStream, 4);
                 nextPixelCode += pixelDisplacement;
 if (!stopDebug)
-LogErrorF(" + %d -> %d", pixelDisplacement, nextPixelCode);
+LogDebug(" + %d -> %d", pixelDisplacement, nextPixelCode);
             } while (pixelDisplacement == 0xF);
 stopDebug = true;
         }
@@ -323,7 +330,7 @@ static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameIn
     const size_t frameCellOffsetX = frameInfo.XOffset / cellSize;
     const size_t frameCellOffsetY = frameInfo.YOffset / cellSize;
 
-LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameInfo.YOffset, frameInfo.XCells, frameInfo.YCells);
+LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameInfo.YOffset, frameInfo.XCells, frameInfo.YCells);
     // For each cell of this frame (not the same number as the pixel buffer cells ! )
     for (size_t y = 0; y < frameInfo.YCells; y++) {
         const size_t curCellY = frameCellOffsetY + y;
@@ -332,7 +339,7 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frame
 
             const size_t curPbCellIndex    = curCellX + curCellY * dirInfo.HorizontalCellCount;
             if (curPbCellIndex >= (unsigned)pixelBuffer.size())
-                LogErrorF("oob in decodeFrameStage1 pbuf %d of %d cell [%d:%d] area [%d:%d]", curPbCellIndex, pixelBuffer.size(), curCellX, curCellY, dirInfo.HorizontalCellCount, dirInfo.VerticalCellCount);
+                LogDebug("oob in decodeFrameStage1 pbuf %d of %d cell [%d:%d] area [%d:%d]", curPbCellIndex, pixelBuffer.size(), curCellX, curCellY, dirInfo.HorizontalCellCount, dirInfo.VerticalCellCount);
             size_t& lastPixelEntryIndexForCell = pixelBuffer[curPbCellIndex];
 
             bool    sameAsPreviousCell = false; // By default always decode the cell
@@ -345,14 +352,14 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frame
                     // If true, the cell is the same as the previous one or transparent.
                     // Which actually mean the same thing : skip the decoding of this cell
                     if (dirInfo.EqualCellsBitstreamSize < 1) {
-                        LogErrorF("oob in decodeFrameStage1 cell %d", dirInfo.EqualCellsBitstreamSize);
+                        LogDebug("oob in decodeFrameStage1 cell %d", dirInfo.EqualCellsBitstreamSize);
                     }
                     dirInfo.EqualCellsBitstreamSize -= 1;
                     sameAsPreviousCell = readBits(dirInfo.equalCellBitStream, 1);
                 }
                 if (!sameAsPreviousCell) {
                     if (dirInfo.PixelMaskBitstreamSize < 4) {
-                        LogErrorF("oob in decodeFrameStage1 mask %d", dirInfo.PixelMaskBitstreamSize);
+                        LogDebug("oob in decodeFrameStage1 mask %d", dirInfo.PixelMaskBitstreamSize);
                     }
                     dirInfo.PixelMaskBitstreamSize -= 4;
                     pixelMask = readBits(dirInfo.pixelMaskBitStream, 4);
@@ -374,7 +381,7 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frame
                 } else {
                     // No need for previousEntryForCell if it doesn't exist, as the mask is 0xF
                     if (pixelMask != 0xF)
-                        LogErrorF("previousEntryForCell is not set with mask %d", pixelMask);
+                        LogDebug("previousEntryForCell is not set with mask %d", pixelMask);
                     assert(pixelMask == 0xF);
                 }
 
@@ -393,14 +400,14 @@ LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frame
                         }
                         // Store the actual values instead of the codes
                         if (dirInfo.paletteEntryCount <= pixel)
-                            LogErrorF("PaletteEntries is not set for pixel %d (entries: %d)", pixel, dirInfo.paletteEntryCount);
+                            LogDebug("PaletteEntries is not set for pixel %d (entries: %d)", pixel, dirInfo.paletteEntryCount);
                         pixel = dirInfo.PaletteEntries[pixel];
                     } else {
                         // If not set, use the previous value for this entry
                         pixel = previousEntryForCell.values[i];
                     }
                     newEntry.values[i] = pixel;
-                    LogErrorF("new entry value %d: %d", i, pixel);
+                    LogDebug("new entry value %d: %d", i, pixel);
                 }
                 // Update the pixel buffer cell information
                 lastPixelEntryIndexForCell = pbEntries.size();
@@ -471,11 +478,11 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
         return false;
 
     di.OutSizeCoded = readBits(rs, 32);
-LogErrorF("OutSizeCoded : %d (c:%d, bits:%d val:%x", di.OutSizeCoded, rs.cursor, rs.remBits, rs.remVal);
+LogDebug("OutSizeCoded : %d (c:%d, bits:%d val:%x", di.OutSizeCoded, rs.cursor, rs.remBits, rs.remVal);
     di.hasRawPixelEncoding = readBits(rs, 1);
-LogErrorF("hasRawPixelEncoding : %d (c:%d, bits:%d val:%x", di.hasRawPixelEncoding, rs.cursor, rs.remBits, rs.remVal);
+LogDebug("hasRawPixelEncoding : %d (c:%d, bits:%d val:%x", di.hasRawPixelEncoding, rs.cursor, rs.remBits, rs.remVal);
     di.compressEqualCells = readBits(rs, 1);
-LogErrorF("compressEqualCells : %d (c:%d, bits:%d val:%x", di.compressEqualCells, rs.cursor, rs.remBits, rs.remVal);
+LogDebug("compressEqualCells : %d (c:%d, bits:%d val:%x", di.compressEqualCells, rs.cursor, rs.remBits, rs.remVal);
     di.Variable0Bits = crazyLookup(readBits(rs, 4));
     di.WidthBits = crazyLookup(readBits(rs, 4));
     di.HeightBits = crazyLookup(readBits(rs, 4));
@@ -497,7 +504,7 @@ LogErrorF("compressEqualCells : %d (c:%d, bits:%d val:%x", di.compressEqualCells
         readFrameHeader(rs, di, fi);
 
 //    dProgressWarn() << QApplication::tr("frame %1 dimensions %2x%3 with offset %4x%5 (flipped %6).").arg(i).arg(fi.width).arg(fi.height).arg(fi.XOffset).arg(fi.YOffset).arg(fi.flipped);
-LogErrorF("frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fi.width, fi.height, fi.XOffset, fi.YOffset, fi.flipped);
+LogDebug("frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fi.width, fi.height, fi.XOffset, fi.YOffset, fi.flipped);
 
         // di.frameInfos.push_back(fi);
 
@@ -519,11 +526,11 @@ LogErrorF("frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fi.wid
     di.HorizontalCellCount = (di.box.w + cellSize - 1) / cellSize;
     di.VerticalCellCount = (di.box.h + cellSize - 1) / cellSize;
 
-LogErrorF("dir box %dx%d with offset %dx%d cells %dx%d.", di.box.w, di.box.h, di.box.x, di.box.y, di.HorizontalCellCount, di.VerticalCellCount);
+LogDebug("dir box %dx%d with offset %dx%d cells %dx%d.", di.box.w, di.box.h, di.box.x, di.box.y, di.HorizontalCellCount, di.VerticalCellCount);
 
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
         D2CcFrameInfo &fi = di.frameInfos[i];
-debugRead = i == hi.framesPerDirection - 1;
+// debugRead = i == hi.framesPerDirection - 1;
         readBits(rs, fi.OptionalData);
 
         fi.XOffset -= di.box.x;
@@ -531,7 +538,7 @@ debugRead = i == hi.framesPerDirection - 1;
 
         fi.XCells = calculateCells(fi.width, fi.XOffset, fi.cellWidths);
         fi.YCells = calculateCells(fi.height, fi.YOffset, fi.cellHeights);
-LogErrorF("frame %d offset %dx%d cells %dx%d.", i, fi.XOffset, fi.YOffset, fi.XCells, fi.YCells);
+LogDebug("frame %d offset %dx%d cells %dx%d.", i, fi.XOffset, fi.YOffset, fi.XCells, fi.YCells);
     }
 
     di.box.x = 0;
@@ -557,7 +564,7 @@ LogErrorF("frame %d offset %dx%d cells %dx%d.", i, fi.XOffset, fi.YOffset, fi.XC
         di.RawPixelCodesBitstreamSize = readBits(rs, streamBitSize);
     }
 
-LogErrorF("streamsizes %d : %d : %d : %d.", di.EqualCellsBitstreamSize, di.PixelMaskBitstreamSize, di.EncodingTypeBitstreamSize, di.RawPixelCodesBitstreamSize);
+LogDebug("streamsizes %d : %d : %d : %d.", di.EqualCellsBitstreamSize, di.PixelMaskBitstreamSize, di.EncodingTypeBitstreamSize, di.RawPixelCodesBitstreamSize);
     // read palette entries
     bitCursor += D2PAL_COLORS;
     if (rs.rawStreamData->size() < (bitCursor + CHAR_BIT - 1) / CHAR_BIT)
@@ -570,23 +577,23 @@ LogErrorF("streamsizes %d : %d : %d : %d.", di.EqualCellsBitstreamSize, di.Pixel
             di.paletteEntryCount++;
         }
     }
-LogErrorF("palette entries %d first %d.", di.paletteEntryCount, di.PaletteEntries[0]);
+LogDebug("palette entries %d first %d.", di.paletteEntryCount, di.PaletteEntries[0]);
     // prepare subviews
     di.equalCellBitStream = rs;
-LogErrorF("preparing subviews ecstream: from %d (%x) rem %d value %x.", di.equalCellBitStream.cursor, di.equalCellBitStream.cursor, di.equalCellBitStream.remBits, di.equalCellBitStream.remVal);
+LogDebug("preparing subviews ecstream: from %d (%x) rem %d value %x.", di.equalCellBitStream.cursor, di.equalCellBitStream.cursor, di.equalCellBitStream.remBits, di.equalCellBitStream.remVal);
     di.pixelMaskBitStream = di.equalCellBitStream;
     readBits(di.pixelMaskBitStream, di.EqualCellsBitstreamSize);
-LogErrorF("preparing subviews mkstream: from %d (%x) rem %d value %x.", di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.remBits, di.pixelMaskBitStream.remVal);
+LogDebug("preparing subviews mkstream: from %d (%x) rem %d value %x.", di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.remBits, di.pixelMaskBitStream.remVal);
     di.encodingTypeBitStream = di.pixelMaskBitStream;
     readBits(di.encodingTypeBitStream, di.PixelMaskBitstreamSize);
-LogErrorF("preparing subviews etstream: from %d (%x) rem %d value %x.", di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.remBits, di.encodingTypeBitStream.remVal);
+LogDebug("preparing subviews etstream: from %d (%x) rem %d value %x.", di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.remBits, di.encodingTypeBitStream.remVal);
     di.rawPixelCodesBitStream = di.encodingTypeBitStream;
     readBits(di.rawPixelCodesBitStream, di.EncodingTypeBitstreamSize);
-LogErrorF("preparing subviews rwstream: from %d (%x) rem %d value %x.", di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.remBits, di.rawPixelCodesBitStream.remVal);
+LogDebug("preparing subviews rwstream: from %d (%x) rem %d value %x.", di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.remBits, di.rawPixelCodesBitStream.remVal);
 
     di.pixelCodesDisplacementBitStream = di.rawPixelCodesBitStream;
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
-LogErrorF("preparing subviews pcstream: from %d (%x) rem %d value %x.", di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.remBits, di.pixelCodesDisplacementBitStream.remVal);
+LogDebug("preparing subviews pcstream: from %d (%x) rem %d value %x.", di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.remBits, di.pixelCodesDisplacementBitStream.remVal);
 
     di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.pixelCodesDisplacementBitStream.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * CHAR_BIT;
 
@@ -602,10 +609,10 @@ LogErrorF("preparing subviews pcstream: from %d (%x) rem %d value %x.", di.pixel
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
         D2CcFrameInfo &fi = di.frameInfos[i];
         fi.firstPixelBufferEntry = di.pbEntries.size();
-LogErrorF("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
+LogDebug("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
     }
-LogErrorF("readDirHeader done.");
+LogDebug("readDirHeader done.");
     return true;
 }
 
@@ -613,12 +620,12 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
 {
     // This is the reason why we need to stages, we don't have the offset of this bitstream
     // di.pixelCodesDisplacementBitStream;
-LogErrorF("decodeFrames 0");
+LogDebug("decodeFrames 0");
     const size_t pbWidth            = size_t(di.box.w);
     const size_t pbHeight           = size_t(di.box.h);
     // const size_t pbStride           = pbWidth;
     // const size_t nbPixelBufferCells = di.HorizontalCellCount * di.VerticalCellCount;
-LogErrorF("decodeFrames area %d:%d.", (unsigned)pbWidth, (unsigned)pbHeight);
+LogDebug("decodeFrames area %d:%d.", (unsigned)pbWidth, (unsigned)pbHeight);
     // QList<Cell>       pixelBufferCells(nbPixelBufferCells, Cell{0xF, 0xF});
     // QList<uint8_t>    pixelBufferColors(pbStride * pbHeight);
     // ImageView<uint8_t> pBuffer{pixelBufferColors.data(), pbWidth, pbHeight, pbStride};
@@ -628,7 +635,7 @@ LogErrorF("decodeFrames area %d:%d.", (unsigned)pbWidth, (unsigned)pbHeight);
 
     // 2nd phase of decoding : Finish using the pixel buffer entries
     for (size_t frameIndex = 0; frameIndex < hi.framesPerDirection; ++frameIndex) {
-LogErrorF("decodeFrame %d", frameIndex);
+LogDebug("decodeFrame %d", frameIndex);
         const D2CcFrameInfo &frameInfo = di.frameInfos[frameIndex];
         size_t           pbEntryIndex = frameInfo.firstPixelBufferEntry;
 
@@ -683,7 +690,7 @@ LogErrorF("decodeFrame %d", frameIndex);
                         // buffer for all frames we would not need to clear this (it would be
                         // initialized to 0 before writing any value to the frame pixels) But we
                         // would then need to copy values if the size matched
-// LogErrorF("pBuffer.fillBytes %d:%d, %dx%d zero - skipped", pbCellPosX, pbCellPosY, cw, ch);
+// LogDebug("pBuffer.fillBytes %d:%d, %dx%d zero - skipped", pbCellPosX, pbCellPosY, cw, ch);
 //                        pBuffer.fillBytes(pbCellPosX, pbCellPosY, frameCell.width, frameCell.height,
 //                                          0);
                     }
@@ -701,7 +708,7 @@ LogErrorF("decodeFrame %d", frameIndex);
                         }
                     }
                     if (prevs != 0) {
-LogErrorF("pBuffer.fillBytes %d:%d, %dx%d zero - prevs: %d", pbCellPosX, pbCellPosY, cw, ch, prevs);
+LogDebug("pBuffer.fillBytes %d:%d, %dx%d zero - prevs: %d", pbCellPosX, pbCellPosY, cw, ch, prevs);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(0));
@@ -713,7 +720,7 @@ LogErrorF("pBuffer.fillBytes %d:%d, %dx%d zero - prevs: %d", pbCellPosX, pbCellP
 
                     if (pixelValues[0] == pixelValues[1]) {
                         // This means we only got one pixel code, so fill the cell with it
-LogErrorF("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, pixelValues[0]);
+LogDebug("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, pixelValues[0]);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValues[0]));
@@ -732,7 +739,7 @@ LogErrorF("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, p
                             // We need 2 bits to index 3-4 values
                             nbBitsToRead = 2;
                         }
-LogErrorF("pBuffer.setBytes %d:%d %dx%d", pbCellPosX, pbCellPosY, cw, ch);
+LogDebug("pBuffer.setBytes %d:%d %dx%d", pbCellPosX, pbCellPosY, cw, ch);
                         // fill FRAME cell with pixels
                         for (size_t y = 0; y < ch; y++) {
                             for (size_t x = 0; x < cw; x++) {
@@ -741,7 +748,7 @@ LogErrorF("pBuffer.setBytes %d:%d %dx%d", pbCellPosX, pbCellPosY, cw, ch);
                                 // Note: This actually means that a cell (4x4 block) can use at most
                                 // 4 colors, a bit like DXT !
                                 const uint8_t pixelValue = pixelValues[pixelCodeIndex];
-LogErrorF("pBuffer.setByte %d:%d %d", pbCellPosX + x, pbCellPosY + y, pixelValue);
+LogDebug("pBuffer.setByte %d:%d %d", pbCellPosX + x, pbCellPosY + y, pixelValue);
                                 // pBuffer(pbCellPosX + x, pbCellPosY + y) = pixelValue;
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValue));
                             }
@@ -756,7 +763,7 @@ LogErrorF("pBuffer.setByte %d:%d %d", pbCellPosX + x, pbCellPosY + y, pixelValue
             pbCellPosY += ch;
         }
         // Done decoding this frame, now copy its content.
-LogErrorF("decodeFrame %d size %dx%d done", frameIndex, frameInfo.width, frameInfo.height);
+LogDebug("decodeFrame %d size %dx%d done", frameIndex, frameInfo.width, frameInfo.height);
         D1GfxFrame *frame = new D1GfxFrame();
         frame->resize(frameInfo.width, frameInfo.height, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
         for (int x = 0; x < frameInfo.width; x++) {
@@ -767,25 +774,25 @@ LogErrorF("decodeFrame %d size %dx%d done", frameIndex, frameInfo.width, frameIn
         gfx.frames.append(frame);
     }
     delete pBuffer;
-LogErrorF("decodeFrames done");
+LogDebug("decodeFrames done");
     return true;
 }
 
 bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     gfx.clear();
-
+/*
     WorldStone::DCC dcc;
     if (dcc.initDecoder(std::make_unique<WorldStone::FileStream>(filePath.toLatin1().data())))
-        LogErrorF("dcc decoder ready");
+        LogDebug("dcc decoder ready");
     else
-        LogErrorF("dcc decoder failed");
+        LogDebug("dcc decoder failed");
 
     WorldStone::DCC::Direction dir0;
     if (dcc.readDirection(dir0, 0))
-        LogErrorF("dcc dir0 ready");
+        LogDebug("dcc dir0 ready");
     else
-        LogErrorF("dcc dir0 failed");
+        LogDebug("dcc dir0 failed");*/
 
     // Opening CEL file and load it in RAM
     QFile file = QFile(filePath);
@@ -809,12 +816,11 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     auto fileSize = device->size();
 
     // CEL FRAMES OFFSETS CALCULATION
-LogErrorF("dcc directions %d.", hi.dirOffsets.size());
+LogDebug("dcc directions %d.", hi.dirOffsets.size());
     // BUILDING {CEL FRAMES}
-//    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
-    for (unsigned d = 0; d < 1; d++) {
+    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
         const auto &offset = hi.dirOffsets[d];
-LogErrorF("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.second);
+LogDebug("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.second);
         if (fileSize >= offset.second && offset.second >= offset.first) {
             device->seek(offset.first);
             QByteArray ccDirRawData = device->read(offset.second - offset.first);
@@ -823,7 +829,7 @@ LogErrorF("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.seco
             rs.rawStreamData = &ccDirRawData;
             D2CcDirectionInfo cdi;
             if (readDirHeader(rs, hi, cdi)) {
-                LogErrorF("calling decodeFrames.");
+                LogDebug("calling decodeFrames.");
                 if (decodeFrames(hi, cdi, gfx)) {
                     /*for (unsigned i = 0; i < hi.framesPerDirection; i++) {
                         D1GfxFrame *frame = new D1GfxFrame();
@@ -834,12 +840,12 @@ LogErrorF("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.seco
                         gfx.frames.append(frame);
                     }*/
 
-                    LogErrorF("decodeFrames ok.");
+                    LogDebug("decodeFrames ok.");
                     continue;
                 }
-                LogErrorF("decodeFrames failed.");
+                LogDebug("decodeFrames failed.");
             } else {
-                LogErrorF("not calling decodeFrames.");
+                LogDebug("not calling decodeFrames.");
             }
         } else {
             dProgressErr() << QApplication::tr("Address of Direction %1 is invalid (%2-%3 of %4).").arg(d + 1).arg(offset.first).arg(offset.second).arg(fileSize);
@@ -848,7 +854,7 @@ LogErrorF("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.seco
             gfx.frames.append(new D1GfxFrame());
         }
     }
-LogErrorF("decoding done.");
+LogDebug("decoding done.");
     gfx.clipped = false;
 
     gfx.gfxFilePath = filePath;

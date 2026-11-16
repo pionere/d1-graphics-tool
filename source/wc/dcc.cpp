@@ -426,7 +426,7 @@ void decodeFrameStage1(DirectionData& data, FrameData& frameData, Vector<size_t>
     const size_t frameCellOffsetX = frameData.offsetX / 4;
     const size_t frameCellOffsetY = frameData.offsetY / 4;
 
-LogErrorF("decodeFrameStage1 offset %d:%d cells %d:%d", frameData.offsetX, frameData.offsetY, frameData.nbCellsX, frameData.nbCellsY);
+LogErrorF("correct decodeFrameStage1 offset %d:%d cells %d:%d", frameData.offsetX, frameData.offsetY, frameData.nbCellsX, frameData.nbCellsY);
     // For each cell of this frame (not the same number as the pixel buffer cells ! )
     for (size_t y = 0; y < frameData.nbCellsY; y++)
     {
