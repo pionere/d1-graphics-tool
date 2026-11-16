@@ -153,6 +153,18 @@ static quint32 readBits(D2CcBitReaderState& hi, unsigned numBits)  // quint32 &r
     return res;
 }
 
+static qint32 readSgnBits(D2CcBitReaderState& hi, unsigned numBits)
+{
+    if (numBits > 32)
+        LogErrorF("oob readSgnBits does not support %d", numBits);
+    quint32 res = readBits(hi, numBits);
+    quint32 sgn = (UINT32_MAX >> (numBits - 1)) << (numBits - 1);
+    if (res & sgn) {
+        res |= sgn;
+    }
+    return res;
+}
+
 typedef struct PixelBufferEntry
 {
     static constexpr size_t nbValues = 4;
@@ -224,8 +236,8 @@ static void readFrameHeader(D2CcBitReaderState &rs, const D2CcDirectionInfo &di,
     fi.width = readBits(rs, di.WidthBits);
     fi.height = readBits(rs, di.HeightBits);
 
-    fi.XOffset = readBits(rs, di.XOffsetBits);
-    fi.YOffset = readBits(rs, di.YOffsetBits);
+    fi.XOffset = readSgnBits(rs, di.XOffsetBits);
+    fi.YOffset = readSgnBits(rs, di.YOffsetBits);
     fi.OptionalData = readBits(rs, di.OptionalDataBits);
     CodedBytes = readBits(rs, di.CodedBytesBits);
 
