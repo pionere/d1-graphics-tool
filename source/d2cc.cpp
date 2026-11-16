@@ -166,6 +166,7 @@ typedef struct D2CcFrameInfo
     int height;
     int XOffset;
     int YOffset;
+    unsigned OptionalData;
     bool flipped;
     // calculated values
     int XCells;
@@ -225,12 +226,13 @@ static void readFrameHeader(D2CcBitReaderState &rs, const D2CcDirectionInfo &di,
 
     fi.XOffset = readBits(rs, di.XOffsetBits);
     fi.YOffset = readBits(rs, di.YOffsetBits);
-    OptionalData = readBits(rs, di.OptionalDataBits);
+    fi.OptionalData = readBits(rs, di.OptionalDataBits);
     CodedBytes = readBits(rs, di.CodedBytesBits);
 
     fi.flipped = readBits(rs, 1);
 
-    fi.YOffset = fi.YOffset - fi.height + 1;
+    if (!fi.flipped)
+        fi.YOffset = fi.YOffset - fi.height + 1;
     // fi.box = { fi.XOffset, fi.YOffset - fi.Height + 1, fi.width, fi.height};
 }
 
@@ -467,6 +469,8 @@ LogErrorF("dir box %dx%d with offset %dx%d cells %dx%d.", di.box.w, di.box.h, di
 
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
         D2CcFrameInfo &fi = di.frameInfos[i];
+        readBits(rs, fi.OptionalData);
+
         fi.XOffset -= di.box.x;
         fi.YOffset -= di.box.y;
 

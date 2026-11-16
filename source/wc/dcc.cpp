@@ -101,8 +101,10 @@ static bool readFrameHeaders(uint32_t nbFrames, DCC::Direction& outDir, BitStrea
     const DCC::DirectionHeader& dirHeader = outDir.header;
     // Read all frame headers
     outDir.frameHeaders.resize(nbFrames);
+int i = 0;
     for (DCC::FrameHeader& fHdr : outDir.frameHeaders)
     {
+i++;
         // We are using member function pointers here because we would have one indirection
         // From looking up the size anyway, so we might as well call the template instance directly
         fHdr.variable0 = bitStream.readUnsigned(bitsWidthTable[dirHeader.variable0Bits]);
@@ -132,6 +134,7 @@ static bool readFrameHeaders(uint32_t nbFrames, DCC::Direction& outDir, BitStrea
             // Upper excluded (max==upper-1)
             fHdr.extents.yUpper = fHdr.yOffset + 1;
         }
+LogErrorF("correct frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fHdr.width, fHdr.height, fHdr.xOffset, fHdr.yOffset, fHdr.frameBottomUp);
     }
 
     // Handle optional data
@@ -240,6 +243,7 @@ struct FrameData
                 CellSize(frameHeight - (heightFirstRow + heightExcludingFirstAndLastRows));
         }
 
+LogErrorF("correct frame %d offset %dx%d cells %dx%d.", dir.frameHeaders.size(), offsetX, offsetY, nbCellsX, nbCellsY);
 //        imageView = imgProvider.getNewImage(frameWidth, frameHeight);
     }
 };
