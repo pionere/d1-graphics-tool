@@ -2295,7 +2295,7 @@ bool D1Gfx::squash()
         QRect rect;
         for (int i = 0; i < this->getFrameCount(); i++) {
             D1GfxFrame* frame = this->frames[i];
-            QRect frameRect = QRect(frame->xoffset, frame->yoffset - frame->getHeight(), frame->getWidth(), frame->getHeight());
+            QRect frameRect = QRect(frame->xoffset, frame->yoffset - (frame->flipped ? 0 : frame->getHeight()), frame->getWidth(), frame->getHeight());
             rect = rect.united(frameRect);
         }
         for (int i = 0; i < this->getFrameCount(); i++) {

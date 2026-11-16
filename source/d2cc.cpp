@@ -166,8 +166,10 @@ if (debugRead)
 
 static qint32 readSgnBits(D2CcBitReaderState& hi, unsigned numBits)
 {
-    if (numBits > 32)
+    if (numBits > 32) {
         LogDebug("oob readSgnBits does not support %d", numBits);
+        dProgressErr() << QString("oob readSgnBits does not support %1").arg(numBits);
+    }
     quint32 res = readBits(hi, numBits);
     quint32 sgn = (UINT32_MAX >> (numBits - 1)) << (numBits - 1);
     if (res & sgn) {
@@ -285,6 +287,7 @@ static bool stopDebug = false;
             // Read the value of the code directly from rawPixelCodesBitStream
             if (dirInfo.RawPixelCodesBitstreamSize < 8) {
                 LogDebug("oob in rawPixelCodesBitStream %d", dirInfo.RawPixelCodesBitstreamSize);
+                dProgressErr() << QString("oob in rawPixelCodesBitStream %1").arg(dirInfo.RawPixelCodesBitstreamSize);
             }
             dirInfo.RawPixelCodesBitstreamSize -= 8;
             nextPixelCode = readBits(dirInfo.rawPixelCodesBitStream, 8);
@@ -297,6 +300,7 @@ LogDebug("nextPixelCode %d", nextPixelCode);
             do {
                 if (dirInfo.pixelCodesDisplacementBitStreamSize < 4) {
                     LogDebug("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
+                    dProgressErr() << QString("oob in pixelCodesDisplacementBitStream %1").arg(dirInfo.pixelCodesDisplacementBitStreamSize);
                 }
                 dirInfo.pixelCodesDisplacementBitStreamSize -= 4;
 if (!stopDebug)
@@ -338,8 +342,10 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
             const size_t curCellX = frameCellOffsetX + x;
 
             const size_t curPbCellIndex    = curCellX + curCellY * dirInfo.HorizontalCellCount;
-            if (curPbCellIndex >= (unsigned)pixelBuffer.size())
+            if (curPbCellIndex >= (unsigned)pixelBuffer.size()) {
                 LogDebug("oob in decodeFrameStage1 pbuf %d of %d cell [%d:%d] area [%d:%d]", curPbCellIndex, pixelBuffer.size(), curCellX, curCellY, dirInfo.HorizontalCellCount, dirInfo.VerticalCellCount);
+                dProgressErr() << QString("oob in decodeFrameStage1 pbuf %1 of %2 cell [%3:%4] area [%5:%6]").arg(curPbCellIndex).arg(pixelBuffer.size()).arg(curCellX).arg(curCellY).arg(dirInfo.HorizontalCellCount).arg(dirInfo.VerticalCellCount);
+            }
             size_t& lastPixelEntryIndexForCell = pixelBuffer[curPbCellIndex];
 
             bool    sameAsPreviousCell = false; // By default always decode the cell
@@ -353,6 +359,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                     // Which actually mean the same thing : skip the decoding of this cell
                     if (dirInfo.EqualCellsBitstreamSize < 1) {
                         LogDebug("oob in decodeFrameStage1 cell %d", dirInfo.EqualCellsBitstreamSize);
+                        dProgressErr() << QString("oob in decodeFrameStage1 cell %1").arg(dirInfo.EqualCellsBitstreamSize);
                     }
                     dirInfo.EqualCellsBitstreamSize -= 1;
                     sameAsPreviousCell = readBits(dirInfo.equalCellBitStream, 1);
@@ -360,6 +367,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                 if (!sameAsPreviousCell) {
                     if (dirInfo.PixelMaskBitstreamSize < 4) {
                         LogDebug("oob in decodeFrameStage1 mask %d", dirInfo.PixelMaskBitstreamSize);
+                        dProgressErr() << QString("oob in decodeFrameStage1 mask %1").arg(dirInfo.PixelMaskBitstreamSize);
                     }
                     dirInfo.PixelMaskBitstreamSize -= 4;
                     pixelMask = readBits(dirInfo.pixelMaskBitStream, 4);
@@ -380,8 +388,10 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                     previousEntryForCell = pbEntries[lastPixelEntryIndexForCell];
                 } else {
                     // No need for previousEntryForCell if it doesn't exist, as the mask is 0xF
-                    if (pixelMask != 0xF)
+                    if (pixelMask != 0xF) {
                         LogDebug("previousEntryForCell is not set with mask %d", pixelMask);
+                        dProgressErr() << QString("previousEntryForCell is not set with mask %1").arg(pixelMask);
+                    }
                     assert(pixelMask == 0xF);
                 }
 
@@ -399,8 +409,10 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                             pixel = 0;
                         }
                         // Store the actual values instead of the codes
-                        if (dirInfo.paletteEntryCount <= pixel)
+                        if (dirInfo.paletteEntryCount <= pixel) {
                             LogDebug("PaletteEntries is not set for pixel %d (entries: %d)", pixel, dirInfo.paletteEntryCount);
+                            dProgressErr() << QString("PaletteEntries is not set for pixel %1 (entries: %2)").arg(pixel).arg(dirInfo.paletteEntryCount);
+                        }
                         pixel = dirInfo.PaletteEntries[pixel];
                     } else {
                         // If not set, use the previous value for this entry
@@ -541,8 +553,8 @@ LogDebug("dir box %dx%d with offset %dx%d cells %dx%d.", di.box.w, di.box.h, di.
 LogDebug("frame %d offset %dx%d cells %dx%d.", i, fi.XOffset, fi.YOffset, fi.XCells, fi.YCells);
     }
 
-    di.box.x = 0;
-    di.box.y = 0;
+//    di.box.x = 0;
+//    di.box.y = 0;
 
     // read compression flags
     const int streamBitSize = 20;
@@ -709,6 +721,7 @@ LogDebug("decodeFrame %d", frameIndex);
                     }
                     if (prevs != 0) {
 LogDebug("pBuffer.fillBytes %d:%d, %dx%d zero - prevs: %d", pbCellPosX, pbCellPosY, cw, ch, prevs);
+dProgressWarn() << QString("mismatching cells. %1 pixels are not set by the previous cell in %1:%2, %3x%4").arg(prevs).arg(pbCellPosX).arg(pbCellPosY).arg(cw).arg(ch);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(0));
@@ -771,6 +784,11 @@ LogDebug("decodeFrame %d size %dx%d done", frameIndex, frameInfo.width, frameInf
                 frame->setPixel(x, y, pBuffer->getPixel(x + frameInfo.XOffset, y + frameInfo.YOffset));
             }
         }
+        frame->flipped = frameInfo.flipped;
+        frame->xoffset = frameInfo.XOffset + di.box.x;
+        frame->yoffset = frameInfo.YOffset + di.box.y;
+        if (!frame->flipped)
+            frame->yoffset += frameInfo.height - 1;
         gfx.frames.append(frame);
     }
     delete pBuffer;
