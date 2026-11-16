@@ -392,14 +392,14 @@ static bool stopDebug = false;
             // Read the value of the code incrementally from pixelCodesDisplacementBitStream
             curPixelCode = lastPixelCode;
 if (!stopDebug)
-LogErrorF("nextPixelCode %d", curPixelCode);
+LogErrorF("correct nextPixelCode %d", curPixelCode);
             uint8_t pixelDisplacement;
             do
             {
                 pixelDisplacement = data.pixelCodesDisplacementBitStream.readUnsigned8OrLess(4);
                 curPixelCode += pixelDisplacement;
 if (!stopDebug)
-LogErrorF(" + %d -> %d", pixelDisplacement, curPixelCode);
+LogErrorF("correct + %d -> %d", pixelDisplacement, curPixelCode);
             } while (pixelDisplacement == 0xF);
 stopDebug = true;
         }

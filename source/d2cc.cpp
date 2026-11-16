@@ -126,10 +126,14 @@ typedef struct D2CcBitReaderState
     int cursor;
 } D2CcBitReaderState;
 
+static bool debugRead = false;
+
 static quint32 readBits(D2CcBitReaderState& hi, unsigned numBits)  // quint32 &remVal, int &remBits, int &cursor)
 {
     while (numBits > hi.remBits) {
         quint8 val = (*hi.rawStreamData)[hi.cursor];
+if (debugRead)
+    LogErrorF("stream %d (%x): %d", hi.cursor, hi.cursor, val);
         hi.cursor++;
         if (hi.remBits >= 64 - 8) {
             // discard bits in case of a long read assuming it is for skipping
@@ -288,10 +292,12 @@ LogErrorF("nextPixelCode %d", nextPixelCode);
                     LogErrorF("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
                 }
                 dirInfo.pixelCodesDisplacementBitStreamSize -= 4;
+if (!stopDebug)
+LogErrorF("reading from %d (%x) rem %d value %x", dirInfo.pixelCodesDisplacementBitStream.cursor, dirInfo.pixelCodesDisplacementBitStream.cursor, dirInfo.pixelCodesDisplacementBitStream.remBits, dirInfo.pixelCodesDisplacementBitStream.remVal);
                 pixelDisplacement = readBits(dirInfo.pixelCodesDisplacementBitStream, 4);
+                nextPixelCode += pixelDisplacement;
 if (!stopDebug)
 LogErrorF(" + %d -> %d", pixelDisplacement, nextPixelCode);
-                nextPixelCode += pixelDisplacement;
             } while (pixelDisplacement == 0xF);
 stopDebug = true;
         }
@@ -461,7 +467,7 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
     // read direction-header
     const int directionHeaderBitSize = 32 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4 + 4;
     bitCursor += directionHeaderBitSize;
-    if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
+    if (rs.rawStreamData->size() < (bitCursor + CHAR_BIT - 1) / CHAR_BIT)
         return false;
 
     di.OutSizeCoded = readBits(rs, 32);
@@ -481,7 +487,7 @@ LogErrorF("compressEqualCells : %d (c:%d, bits:%d val:%x", di.compressEqualCells
     // read frame headers
     const int frameHeaderBitSize = di.Variable0Bits + di.WidthBits + di.HeightBits + di.XOffsetBits + di.YOffsetBits + di.OptionalDataBits + di.CodedBytesBits + 1;
     bitCursor += hi.framesPerDirection * frameHeaderBitSize;
-    if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
+    if (rs.rawStreamData->size() < (bitCursor + CHAR_BIT - 1) / CHAR_BIT)
         return false;
 
     di.box = { INT_MAX, INT_MAX, INT_MIN, INT_MIN };
@@ -517,6 +523,7 @@ LogErrorF("dir box %dx%d with offset %dx%d cells %dx%d.", di.box.w, di.box.h, di
 
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
         D2CcFrameInfo &fi = di.frameInfos[i];
+debugRead = i == hi.framesPerDirection - 1;
         readBits(rs, fi.OptionalData);
 
         fi.XOffset -= di.box.x;
@@ -533,7 +540,7 @@ LogErrorF("frame %d offset %dx%d cells %dx%d.", i, fi.XOffset, fi.YOffset, fi.XC
     // read compression flags
     const int streamBitSize = 20;
     bitCursor += (di.compressEqualCells ? streamBitSize : 0) + streamBitSize + (di.hasRawPixelEncoding ? 2 * streamBitSize : 0);
-    if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
+    if (rs.rawStreamData->size() < (bitCursor + CHAR_BIT - 1) / CHAR_BIT)
         return false;
 
     di.EqualCellsBitstreamSize = 0;
@@ -553,7 +560,7 @@ LogErrorF("frame %d offset %dx%d cells %dx%d.", i, fi.XOffset, fi.YOffset, fi.XC
 LogErrorF("streamsizes %d : %d : %d : %d.", di.EqualCellsBitstreamSize, di.PixelMaskBitstreamSize, di.EncodingTypeBitstreamSize, di.RawPixelCodesBitstreamSize);
     // read palette entries
     bitCursor += D2PAL_COLORS;
-    if (rs.rawStreamData->size() < (bitCursor + 8 - 1) / 8)
+    if (rs.rawStreamData->size() < (bitCursor + CHAR_BIT - 1) / CHAR_BIT)
         return false;
 
     di.paletteEntryCount = 0;
@@ -581,7 +588,7 @@ LogErrorF("preparing subviews rwstream: from %d (%x) rem %d value %x.", di.rawPi
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
 LogErrorF("preparing subviews pcstream: from %d (%x) rem %d value %x.", di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.remBits, di.pixelCodesDisplacementBitStream.remVal);
 
-    di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.pixelCodesDisplacementBitStream.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * 8;
+    di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.pixelCodesDisplacementBitStream.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * CHAR_BIT;
 
     // fillPixelBuffer
     // For each cell store a PixelBufferEntry index that points to the last entry for this cell
