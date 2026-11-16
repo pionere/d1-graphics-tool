@@ -297,27 +297,43 @@ LogErrorF("correct streamsizes %d : %d : %d : %d.", equalCellsBitStreamSize, pix
             const bool pixelValueUsed = bitStream.readBool();
             if (pixelValueUsed) codeToPixelValue.push_back(uint8_t(i));
         }
-LogErrorF("correct palette entries %d.", codeToPixelValue.size());
+LogErrorF("correct palette entries %d first %d.", codeToPixelValue.size(), codeToPixelValue[0]);
         // Prepare the bitstreams
 
         assert(!dir.header.compressEqualCells || equalCellsBitStreamSize);
         equalCellBitStream = bitStream.createSubView(equalCellsBitStreamSize);
+size_t cursor;
+cursor = equalCellBitStream.tell();
+LogErrorF("preparing subviews ecstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, equalCellBitStream.readUnsigned(32));
+equalCellBitStream.setPosition(cursor);
         bitStream.skip(equalCellsBitStreamSize);
 
         pixelMaskBitStream = bitStream.createSubView(pixelMaskBitStreamSize);
+cursor = pixelMaskBitStream.tell();
+LogErrorF("preparing subviews mkstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, pixelMaskBitStream.readUnsigned(32));
+pixelMaskBitStream.setPosition(cursor);
         bitStream.skip(pixelMaskBitStreamSize);
 
         assert(!dir.header.hasRawPixelEncoding ||
                (encodingTypeBitsreamSize && rawPixelCodesBitStreamSize));
         rawPixelUsageBitStream = bitStream.createSubView(encodingTypeBitsreamSize);
+cursor = rawPixelUsageBitStream.tell();
+LogErrorF("preparing subviews etstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, rawPixelUsageBitStream.readUnsigned(32));
+rawPixelUsageBitStream.setPosition(cursor);
         bitStream.skip(encodingTypeBitsreamSize);
 
         rawPixelCodesBitStream = bitStream.createSubView(rawPixelCodesBitStreamSize);
+cursor = rawPixelCodesBitStream.tell();
+LogErrorF("preparing subviews rwstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, rawPixelCodesBitStream.readUnsigned(32));
+rawPixelCodesBitStream.setPosition(cursor);
         bitStream.skip(rawPixelCodesBitStreamSize);
 
         // Note : goes until the end of the direction
         pixelCodesDisplacementBitStream =
             bitStream.createSubView(bitStream.bufferSizeInBits() - bitStream.tell());
+cursor = pixelCodesDisplacementBitStream.tell();
+LogErrorF("preparing subviews ecstream: from %d (%x) rem %d value %x.", cursor / CHAR_BIT, cursor / CHAR_BIT, cursor % CHAR_BIT, pixelCodesDisplacementBitStream.readUnsigned(32));
+pixelCodesDisplacementBitStream.setPosition(cursor);
 
         const size_t dirWidth  = size_t(dir.extents.width());
         const size_t dirHeight = size_t(dir.extents.height());
@@ -363,7 +379,7 @@ int decodePixelCodesStack(DirectionData& data, uint8_t pixelMask, PixelCodesStac
 LogErrorF("correct decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
     uint8_t lastPixelCode = 0;
     size_t  curPixelIdx   = 0;
-
+static bool stopDebug = false;
     for (curPixelIdx = 0; curPixelIdx < nbPixelsInMask; curPixelIdx++)
     {
         uint8_t& curPixelCode = pixelCodesStack[curPixelIdx];
@@ -375,12 +391,17 @@ LogErrorF("correct decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
         {
             // Read the value of the code incrementally from pixelCodesDisplacementBitStream
             curPixelCode = lastPixelCode;
+if (!stopDebug)
+LogErrorF("nextPixelCode %d", nextPixelCode);
             uint8_t pixelDisplacement;
             do
             {
                 pixelDisplacement = data.pixelCodesDisplacementBitStream.readUnsigned8OrLess(4);
                 curPixelCode += pixelDisplacement;
+if (!stopDebug)
+LogErrorF(" + %d -> %d", pixelDisplacement, curPixelCode);
             } while (pixelDisplacement == 0xF);
+stopDebug = true;
         }
         // Stop decoding if we encounter twice the same pixel code.
         // It also means that this pixel code is discarded.

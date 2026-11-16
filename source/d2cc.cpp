@@ -267,7 +267,7 @@ static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, 
 LogErrorF("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
     uint8_t lastPixelCode = 0;
     int  curPixelIdx   = 0;
-
+static bool stopDebug = false;
     for ( ; curPixelIdx < nbPixelsInMask; curPixelIdx++) {
         uint8_t nextPixelCode;
         if (decodeRaw) {
@@ -280,6 +280,8 @@ LogErrorF("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
         } else {
             // Read the value of the code incrementally from pixelCodesDisplacementBitStream
             nextPixelCode = lastPixelCode;
+if (!stopDebug)
+LogErrorF("nextPixelCode %d", nextPixelCode);
             uint8_t pixelDisplacement;
             do {
                 if (dirInfo.pixelCodesDisplacementBitStreamSize < 4) {
@@ -287,8 +289,11 @@ LogErrorF("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
                 }
                 dirInfo.pixelCodesDisplacementBitStreamSize -= 4;
                 pixelDisplacement = readBits(dirInfo.pixelCodesDisplacementBitStream, 4);
+if (!stopDebug)
+LogErrorF(" + %d -> %d", pixelDisplacement, nextPixelCode);
                 nextPixelCode += pixelDisplacement;
             } while (pixelDisplacement == 0xF);
+stopDebug = true;
         }
         // Stop decoding if we encounter twice the same pixel code.
         // It also means that this pixel code is discarded.
@@ -558,23 +563,23 @@ LogErrorF("streamsizes %d : %d : %d : %d.", di.EqualCellsBitstreamSize, di.Pixel
             di.paletteEntryCount++;
         }
     }
-LogErrorF("palette entries %d.", di.paletteEntryCount);
+LogErrorF("palette entries %d first %d.", di.paletteEntryCount, di.PaletteEntries[0]);
     // prepare subviews
-LogErrorF("preparing subviews.");
     di.equalCellBitStream = rs;
+LogErrorF("preparing subviews ecstream: from %d (%x) rem %d value %x.", di.equalCellBitStream.cursor, di.equalCellBitStream.cursor, di.equalCellBitStream.remBits, di.equalCellBitStream.remVal);
     di.pixelMaskBitStream = di.equalCellBitStream;
     readBits(di.pixelMaskBitStream, di.EqualCellsBitstreamSize);
-LogErrorF("preparing subviews 1.");
+LogErrorF("preparing subviews mkstream: from %d (%x) rem %d value %x.", di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.remBits, di.pixelMaskBitStream.remVal);
     di.encodingTypeBitStream = di.pixelMaskBitStream;
     readBits(di.encodingTypeBitStream, di.PixelMaskBitstreamSize);
-LogErrorF("preparing subviews 2.");
+LogErrorF("preparing subviews etstream: from %d (%x) rem %d value %x.", di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.remBits, di.encodingTypeBitStream.remVal);
     di.rawPixelCodesBitStream = di.encodingTypeBitStream;
     readBits(di.rawPixelCodesBitStream, di.EncodingTypeBitstreamSize);
-LogErrorF("preparing subviews 3.");
+LogErrorF("preparing subviews rwstream: from %d (%x) rem %d value %x.", di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.remBits, di.rawPixelCodesBitStream.remVal);
 
     di.pixelCodesDisplacementBitStream = di.rawPixelCodesBitStream;
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
-LogErrorF("preparing subviews 4.");
+LogErrorF("preparing subviews pcstream: from %d (%x) rem %d value %x.", di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.remBits, di.pixelCodesDisplacementBitStream.remVal);
 
     di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.pixelCodesDisplacementBitStream.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * 8;
 
