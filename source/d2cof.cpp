@@ -151,7 +151,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
 
         D1Gfx* cg = new D1Gfx();
         cg->setFilePath(componentsNames[componentByte]);
-        D1GfxComp* comp = new D1GfxComp(cg, gfx);
+        D1GfxComp* comp = new D1GfxComp(cg, &gfx);
 
         gfx.components.push_back(comp);
     }
