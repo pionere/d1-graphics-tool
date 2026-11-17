@@ -118,7 +118,7 @@ static int crazyLookup(unsigned idx)
     const int crazyBitTable[] = { 0, 1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 26, 28, 30, 32 };
 
     if (idx >= (unsigned)lengthof(crazyBitTable)) {
-        dProgressErr() << QString("Invalid index (%1) to the lookup table (must be less than %2).").arg(idx).arg(lengthof(crazyBitTable));
+        dProgressErr() << QApplication::tr("Invalid index (%1) to the lookup table (must be less than %2).").arg(idx).arg(lengthof(crazyBitTable));
         idx = 0;
     }
     return crazyBitTable[idx];
@@ -168,7 +168,7 @@ static qint32 readSgnBits(D2CcBitReaderState& hi, unsigned numBits)
 {
     if (numBits > 32) {
         LogDebug("oob readSgnBits does not support %d", numBits);
-        dProgressErr() << QString("oob readSgnBits does not support %1").arg(numBits);
+        dProgressErr() << QApplication::tr("oob readSgnBits does not support %1").arg(numBits);
     }
     quint32 res = readBits(hi, numBits);
     quint32 sgn = (UINT32_MAX >> (numBits - 1)) << (numBits - 1);
@@ -287,7 +287,7 @@ static bool stopDebug = true;
             // Read the value of the code directly from rawPixelCodesBitStream
             if (dirInfo.RawPixelCodesBitstreamSize < 8) {
                 LogDebug("oob in rawPixelCodesBitStream %d", dirInfo.RawPixelCodesBitstreamSize);
-                dProgressErr() << QString("oob in rawPixelCodesBitStream %1").arg(dirInfo.RawPixelCodesBitstreamSize);
+                dProgressErr() << QApplication::tr("oob in rawPixelCodesBitStream %1").arg(dirInfo.RawPixelCodesBitstreamSize);
             }
             dirInfo.RawPixelCodesBitstreamSize -= 8;
             nextPixelCode = readBits(dirInfo.rawPixelCodesBitStream, 8);
@@ -300,7 +300,7 @@ LogDebug("nextPixelCode %d", nextPixelCode);
             do {
                 if (dirInfo.pixelCodesDisplacementBitStreamSize < 4) {
                     LogDebug("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
-                    dProgressErr() << QString("oob in pixelCodesDisplacementBitStream %1").arg(dirInfo.pixelCodesDisplacementBitStreamSize);
+                    dProgressErr() << QApplication::tr("oob in pixelCodesDisplacementBitStream %1").arg(dirInfo.pixelCodesDisplacementBitStreamSize);
                 }
                 dirInfo.pixelCodesDisplacementBitStreamSize -= 4;
 if (!stopDebug)
@@ -344,7 +344,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
             const unsigned curPbCellIndex    = curCellX + curCellY * dirInfo.HorizontalCellCount;
             if (curPbCellIndex >= (unsigned)pixelBuffer.size()) {
                 LogDebug("oob in decodeFrameStage1 pbuf %d of %d cell [%d:%d] area [%d:%d]", curPbCellIndex, pixelBuffer.size(), curCellX, curCellY, dirInfo.HorizontalCellCount, dirInfo.VerticalCellCount);
-                dProgressErr() << QString("oob in decodeFrameStage1 pbuf %1 of %2 cell [%3:%4] area [%5:%6]").arg(curPbCellIndex).arg(pixelBuffer.size()).arg(curCellX).arg(curCellY).arg(dirInfo.HorizontalCellCount).arg(dirInfo.VerticalCellCount);
+                dProgressErr() << QApplication::tr("oob in decodeFrameStage1 pbuf %1 of %2 cell [%3:%4] area [%5:%6]").arg(curPbCellIndex).arg(pixelBuffer.size()).arg(curCellX).arg(curCellY).arg(dirInfo.HorizontalCellCount).arg(dirInfo.VerticalCellCount);
             }
             unsigned& lastPixelEntryIndexForCell = pixelBuffer[curPbCellIndex];
 
@@ -359,7 +359,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                     // Which actually mean the same thing : skip the decoding of this cell
                     if (dirInfo.EqualCellsBitstreamSize < 1) {
                         LogDebug("oob in decodeFrameStage1 cell %d", dirInfo.EqualCellsBitstreamSize);
-                        dProgressErr() << QString("oob in decodeFrameStage1 cell %1").arg(dirInfo.EqualCellsBitstreamSize);
+                        dProgressErr() << QApplication::tr("oob in decodeFrameStage1 cell %1").arg(dirInfo.EqualCellsBitstreamSize);
                     }
                     dirInfo.EqualCellsBitstreamSize -= 1;
                     sameAsPreviousCell = readBits(dirInfo.equalCellBitStream, 1);
@@ -367,7 +367,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                 if (!sameAsPreviousCell) {
                     if (dirInfo.PixelMaskBitstreamSize < 4) {
                         LogDebug("oob in decodeFrameStage1 mask %d", dirInfo.PixelMaskBitstreamSize);
-                        dProgressErr() << QString("oob in decodeFrameStage1 mask %1").arg(dirInfo.PixelMaskBitstreamSize);
+                        dProgressErr() << QApplication::tr("oob in decodeFrameStage1 mask %1").arg(dirInfo.PixelMaskBitstreamSize);
                     }
                     dirInfo.PixelMaskBitstreamSize -= 4;
                     pixelMask = readBits(dirInfo.pixelMaskBitStream, 4);
@@ -390,7 +390,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                     // No need for previousEntryForCell if it doesn't exist, as the mask is 0xF
                     if (pixelMask != 0xF) {
                         LogDebug("previousEntryForCell is not set with mask %d", pixelMask);
-                        dProgressErr() << QString("previousEntryForCell is not set with mask %1").arg(pixelMask);
+                        dProgressErr() << QApplication::tr("previousEntryForCell is not set with mask %1").arg(pixelMask);
                     }
                     assert(pixelMask == 0xF);
                 }
@@ -411,7 +411,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                         // Store the actual values instead of the codes
                         if (dirInfo.paletteEntryCount <= pixel) {
                             LogDebug("PaletteEntries is not set for pixel %d (entries: %d)", pixel, dirInfo.paletteEntryCount);
-                            dProgressErr() << QString("PaletteEntries is not set for pixel %1 (entries: %2)").arg(pixel).arg(dirInfo.paletteEntryCount);
+                            dProgressErr() << QApplication::tr("PaletteEntries is not set for pixel %1 (entries: %2)").arg(pixel).arg(dirInfo.paletteEntryCount);
                         }
                         pixel = dirInfo.PaletteEntries[pixel];
                     } else {
@@ -433,7 +433,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
 /*static int cellCountAt(int len, unsigned offset)
 {
     if (len == 0)
-        dProgressErr() << QString("Zero frame len.");
+        dProgressErr() << QApplication::tr("Zero frame len.");
     int nc = 0;
     if (offset % cellSize != 0) {
         len -= offset % cellSize;
@@ -630,18 +630,6 @@ LogDebug("palette entries %d first %d.", di.paletteEntryCount, di.PaletteEntries
 LogDebug("decoding framebuffers %d of %d.", i + 1, hi.framesPerDirection);
         decodeFrameStage1(di, fi, pixelBuffer, di.pbEntries);
     }
-    if (di.EqualCellsBitstreamSize != 0) {
-        dProgressWarn() << QString("%1 unused bits in the equal cells stream.").arg(di.EqualCellsBitstreamSize);
-    }
-    if (di.PixelMaskBitstreamSize != 0) {
-        dProgressWarn() << QString("%1 unused bits in the pixel masks stream.").arg(di.PixelMaskBitstreamSize);
-    }
-    if (di.EncodingTypeBitstreamSize != 0) {
-        dProgressWarn() << QString("%1 unused bits in the encodings stream.").arg(di.EncodingTypeBitstreamSize);
-    }
-    if (di.pixelCodesDisplacementBitStreamSize != 0) {
-        dProgressWarn() << QString("%1 unused bits in the pixel codes stream.").arg(di.pixelCodesDisplacementBitStreamSize);
-    }
 LogDebug("readDirHeader done.");
     return true;
 }
@@ -658,7 +646,6 @@ LogDebug("decodeFrames area %d:%d.", di.box.w, di.box.h);
 #else
     pBuffer->resize(di.box.w, di.box.h, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::colorPixel(0));
 #endif
-
     // 2nd phase of decoding : Finish using the pixel buffer entries
     for (unsigned frameIndex = 0; frameIndex < hi.framesPerDirection; ++frameIndex) {
 LogDebug("decodeFrame %d", frameIndex);
@@ -681,11 +668,11 @@ LogDebug("decodeFrame %d", frameIndex);
                 // frameCell.height = frameInfo.cellHeights[cellY];
 if (pbCellPosX + cw > di.box.w) {
 LogDebug("oob in frame %d to the right %d + %d -> %d vs %d", frameIndex + 1, pbCellPosX, cw, pbCellPosX + cw, di.box.w);
-dProgressErr() << QString("oob in frame %1 to the right %2 + %3 -> %4 vs %5").arg(frameIndex + 1).arg(pbCellPosX).arg(cw).arg(pbCellPosX + cw).arg(di.box.w);
+dProgressErr() << QApplication::tr("oob in frame %1 to the right %2 + %3 -> %4 vs %5").arg(frameIndex + 1).arg(pbCellPosX).arg(cw).arg(pbCellPosX + cw).arg(di.box.w);
 }
 if (pbCellPosY + ch > di.box.h) {
 LogDebug("oob in frame %d to the bottom %d + %d -> %d vs %d", frameIndex + 1, pbCellPosY, ch, pbCellPosY + ch, di.box.h);
-dProgressErr() << QString("oob in frame %1 to the bottom %2 + %3 -> %4 vs %5").arg(frameIndex + 1).arg(pbCellPosY).arg(ch).arg(pbCellPosY + ch).arg(di.box.h);
+dProgressErr() << QApplication::tr("oob in frame %1 to the bottom %2 + %3 -> %4 vs %5").arg(frameIndex + 1).arg(pbCellPosY).arg(ch).arg(pbCellPosY + ch).arg(di.box.h);
 }
                 const size_t pbCellIndex =
                     (pbCellPosX / cellSize) +
@@ -703,13 +690,13 @@ dProgressErr() << QString("oob in frame %1 to the bottom %2 + %3 -> %4 vs %5").a
                     }
                     if (prevs != 0) {
 LogDebug("pBuffer.fillBytes %d:%d, %dx%d zero - prevs: %d", pbCellPosX, pbCellPosY, cw, ch, prevs);
-dProgressWarn() << QString("mismatching cells in frame %1 of direction %2. %3 pixels are not set by the previous cell at %4:%5 (area %6x%7)").arg(frameIndex + 1).arg(gfx.frames.size() / hi.framesPerDirection + 1).arg(prevs).arg(pbCellPosX).arg(pbCellPosY).arg(cw).arg(ch);
+dProgressWarn() << QApplication::tr("mismatching cells in frame %1 of direction %2. %3 pixels are not set by the previous cell at %4:%5 (area %6x%7)").arg(frameIndex + 1).arg(gfx.frames.size() / hi.framesPerDirection + 1).arg(prevs).arg(pbCellPosX).arg(pbCellPosY).arg(cw).arg(ch);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
                                 D1GfxPixel pixel = pBuffer->getPixel(pbCellPosX + x, pbCellPosY + y);
                                 if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0) {
 LogDebug("zero write overwrites color pixel %d at %d:%d", pixel.getPaletteIndex(), pbCellPosX + x, pbCellPosY + y);
-dProgressWarn() << QString("zero write overwrites color pixel %1 at %2:%3").arg(pixel.getPaletteIndex()).arg(pbCellPosX + x).arg(pbCellPosY + y);
+dProgressWarn() << QApplication::tr("zero write overwrites color pixel %1 at %2:%3").arg(pixel.getPaletteIndex()).arg(pbCellPosX + x).arg(pbCellPosY + y);
                                 }
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(0));
                             }
@@ -722,15 +709,16 @@ dProgressWarn() << QString("zero write overwrites color pixel %1 at %2:%3").arg(
                     if (pixelValues[0] == pixelValues[1]) {
                         // This means we only got one pixel code, so fill the cell with it
 // LogDebug("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, pixelValues[0]);
+                        const D1GfxPixel pixel = D1GfxPixel::colorPixel(pixelValues[0]);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
-                                pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValues[0]));
+                                pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, pixel);
                             }
                         }
                         // pBuffer.fillBytes(pbCellPosX, pbCellPosY, frameCell.width, frameCell.height,
                         //                  pixelValues[0]);
                     } else {
-                        int nbBitsToRead = 0;
+                        unsigned nbBitsToRead;
                         if (pixelValues[1] == pixelValues[2]) {
                             // Stopped decoding after the 2nd value, only pixelValues[0] and
                             // pixelValues[1] are different, so only 1bit needs to be read to choose
@@ -744,6 +732,11 @@ dProgressWarn() << QString("zero write overwrites color pixel %1 at %2:%3").arg(
                         // fill FRAME cell with pixels
                         for (size_t y = 0; y < ch; y++) {
                             for (size_t x = 0; x < cw; x++) {
+                                if (dirInfo.pixelCodesDisplacementBitStreamSize < nbBitsToRead) {
+                                    LogDebug("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
+                                    dProgressErr() << QApplication::tr("oob in pixelCodesDisplacementBitStream %1").arg(dirInfo.pixelCodesDisplacementBitStreamSize);
+                                }
+                                dirInfo.pixelCodesDisplacementBitStreamSize -= nbBitsToRead;
                                 const uint8_t pixelCodeIndex =
                                     readBits(di.pixelCodesDisplacementBitStream, nbBitsToRead);
                                 // Note: This actually means that a cell (4x4 block) can use at most
@@ -769,7 +762,8 @@ LogDebug("decodeFrame %d size %dx%d done", frameIndex, frameInfo.width, frameInf
         frame->resize(frameInfo.width, frameInfo.height, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
         for (int x = 0; x < frameInfo.width; x++) {
             for (int y = 0; y < frameInfo.height; y++) {
-                frame->setPixel(x, y, pBuffer->getPixel(x + frameInfo.XOffset, y + frameInfo.YOffset));
+                const D1GfxPixel pixel = pBuffer->getPixel(x + frameInfo.XOffset, y + frameInfo.YOffset);
+                frame->setPixel(x, y, pixel.getPaletteIndex() == 0 ? D1GfxPixel::transparentPixel() : pixel);
             }
         }
         frame->flipped = frameInfo.flipped;
@@ -846,7 +840,18 @@ LogDebug("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.secon
                         }
                         gfx.frames.append(frame);
                     }*/
-
+                    if (cdi.EqualCellsBitstreamSize != 0) {
+                        dProgressWarn() << QApplication::tr("Direction %1 has %2 unused bits in the equal cells stream.").arg(d + 1).arg(cdi.EqualCellsBitstreamSize);
+                    }
+                    if (cdi.PixelMaskBitstreamSize != 0) {
+                        dProgressWarn() << QApplication::tr("Direction %1 has %2 unused bits in the pixel masks stream.").arg(d + 1).arg(cdi.PixelMaskBitstreamSize);
+                    }
+                    if (cdi.EncodingTypeBitstreamSize != 0) {
+                        dProgressWarn() << QApplication::tr("Direction %1 has %2 unused bits in the encodings stream.").arg(d + 1).arg(cdi.EncodingTypeBitstreamSize);
+                    }
+                    if (cdi.pixelCodesDisplacementBitStreamSize > cdi.pixelCodesDisplacementBitStream.remBits) {
+                        dProgressWarn() << QApplication::tr("Direction %1 has %2 unused bits in the pixel codes stream.").arg(d + 1).arg(cdi.pixelCodesDisplacementBitStreamSize);
+                    }
                     LogDebug("decodeFrames ok.");
                     continue;
                 }
