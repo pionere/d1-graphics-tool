@@ -273,6 +273,7 @@ class D1GfxComp : public QObject {
     Q_OBJECT
 
     friend class D1Gfx;
+    friend class D2Cof;
 public:
     D1GfxComp(D1Gfx *cg, const D1Gfx *g);
     D1GfxComp(const D1GfxComp &o);
@@ -328,6 +329,7 @@ class D1Gfx : public QObject {
     friend class D1Cel;
     friend class D1Cl2;
     friend class D2Cc;
+    friend class D2Cof;
     friend class D2C6;
     friend class D1CelTileset;
     friend class D1Font;

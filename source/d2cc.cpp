@@ -11,7 +11,6 @@
 #include <QDir>
 #include <QMessageBox>
 
-#include "d2ccframe.h"
 #include "progressdialog.h"
 #include "resizedialog.h"
 
@@ -815,9 +814,8 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     gfx.type = D1CEL_TYPE::V1_COMPILATION;
     auto fileSize = device->size();
 
-    // CEL FRAMES OFFSETS CALCULATION
 LogDebug("dcc directions %d.", hi.dirOffsets.size());
-    // BUILDING {CEL FRAMES}
+    // BUILDING {DCC FRAMES}
     for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
 //    for (unsigned d = 0; d < 1; d++) {
         const auto &offset = hi.dirOffsets[d];
@@ -832,14 +830,6 @@ LogDebug("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.secon
             if (readDirHeader(rs, hi, cdi)) {
                 LogDebug("calling decodeFrames.");
                 if (decodeFrames(hi, cdi, gfx)) {
-                    /*for (unsigned i = 0; i < hi.framesPerDirection; i++) {
-                        D1GfxFrame *frame = new D1GfxFrame();
-
-                        if (!D2CcFrame::load(*frame, ccDirRawData, params)) {
-                            dProgressErr() << QApplication::tr("Frame %1 of direction %2 is invalid.").arg(i + 1).arg(d + 1);
-                        }
-                        gfx.frames.append(frame);
-                    }*/
                     if (cdi.EqualCellsBitstreamSize != 0) {
                         dProgressWarn() << QApplication::tr("Direction %1 has %2 unused bits in the equal cells stream.").arg(d + 1).arg(cdi.EqualCellsBitstreamSize);
                     }

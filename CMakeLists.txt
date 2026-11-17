@@ -128,8 +128,8 @@ set(PROJECT_SOURCES
         source/d1wav.h
         source/d2cc.cpp
         source/d2cc.h
-        source/d2ccframe.cpp
-        source/d2ccframe.h
+        source/d2cof.cpp
+        source/d2cof.h
         source/d2c6.cpp
         source/d2c6.h
         source/d2c6frame.cpp
@@ -283,18 +283,18 @@ set(PROJECT_SOURCES
         source/upscaletaskdialog.ui
 
 
-        source/wc/BitStream.h
-        source/wc/FileStream.cpp
-        source/wc/FileStream.h
-        source/wc/IOBase.h
-        source/wc/Platform.h
-        source/wc/Stream.h
-        source/wc/SystemUtils.h
-        source/wc/Vector.h
-        source/wc/_VTablesTU.cpp
-        source/wc/AABB.h
-        source/wc/dcc.cpp
-        source/wc/dcc.h
+        #source/wc/BitStream.h
+        #source/wc/FileStream.cpp
+        #source/wc/FileStream.h
+        #source/wc/IOBase.h
+        #source/wc/Platform.h
+        #source/wc/Stream.h
+        #source/wc/SystemUtils.h
+        #source/wc/Vector.h
+        #source/wc/_VTablesTU.cpp
+        #source/wc/AABB.h
+        #source/wc/dcc.cpp
+        #source/wc/dcc.h
 )
 
 qt_add_resources(RESOURCES
