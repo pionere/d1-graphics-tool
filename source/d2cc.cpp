@@ -21,7 +21,7 @@
 
 #define D2PAL_COLORS 256
 
-#define DEBUGDCC 1
+#define DEBUGDCC 0
 #if DEBUGDCC
 #define LogDebug(exp, ...) LogErrorF(exp, __VA_ARGS__)
 #else
@@ -653,8 +653,11 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
 LogDebug("decodeFrames area %d:%d.", di.box.w, di.box.h);
     // QList<Cell>       pixelBufferCells(nbPixelBufferCells, Cell{0xF, 0xF});
     D1GfxFrame *pBuffer = new D1GfxFrame();
-    // pBuffer->resize(pbWidth, pbHeight, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::colorPixel(0));
+#if TRANSPARENT_BGR
     pBuffer->resize(di.box.w, di.box.h, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
+#else
+    pBuffer->resize(di.box.w, di.box.h, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::colorPixel(0));
+#endif
 
     // 2nd phase of decoding : Finish using the pixel buffer entries
     for (unsigned frameIndex = 0; frameIndex < hi.framesPerDirection; ++frameIndex) {
@@ -690,22 +693,7 @@ dProgressErr() << QString("oob in frame %1 to the bottom %2 + %3 -> %4 vs %5").a
 //                Cell& pbCell = pixelBufferCells[pbCellIndex];
 
                 if (frameInfo.cellSameAsPrevious[frameCellIndex]) {
-/*                    if (cw != pbCell.width) || (ch != pbCell.height)) {
-                        // Clear the cell to 0
-                        // If we used the previous frame pixels instead of reusing the same
-                        // buffer for all frames we would not need to clear this (it would be
-                        // initialized to 0 before writing any value to the frame pixels) But we
-                        // would then need to copy values if the size matched
-// LogDebug("pBuffer.fillBytes %d:%d, %dx%d zero - skipped", pbCellPosX, pbCellPosY, cw, ch);
-//                        pBuffer.fillBytes(pbCellPosX, pbCellPosY, frameCell.width, frameCell.height,
-//                                          0);
-                    }
-                    else
-                    {
-                        // Same size, copy from previous cell in the buffer
-                        // Nothing to change !
-                    }
-*/
+#if TRANSPARENT_BGR
                     int prevs = 0;
                     for (int y = 0; y < ch; y++) {
                         for (int x = 0; x < cw; x++) {
@@ -727,6 +715,7 @@ dProgressWarn() << QString("zero write overwrites color pixel %1 at %2:%3").arg(
                             }
                         }
                     }
+#endif
                 } else {
                     const auto& pixelValues = di.pbEntries[pbEntryIndex++].values;
 
@@ -835,8 +824,8 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // CEL FRAMES OFFSETS CALCULATION
 LogDebug("dcc directions %d.", hi.dirOffsets.size());
     // BUILDING {CEL FRAMES}
-//    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
-    for (unsigned d = 0; d < 1; d++) {
+    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
+//    for (unsigned d = 0; d < 1; d++) {
         const auto &offset = hi.dirOffsets[d];
 LogDebug("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.second);
         if (fileSize >= offset.second && offset.second >= offset.first) {
