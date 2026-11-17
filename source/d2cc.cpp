@@ -23,7 +23,7 @@
 
 #define DEBUGDCC 1
 #if DEBUGDCC
-#define LogDebug(exp) LogErrorF(exp)
+#define LogDebug(exp, ...) LogErrorF(exp, __VA_ARGS__)
 #else
 #define LogDebug(exp) do { (void) sizeof(exp); } while(0)
 #endif
