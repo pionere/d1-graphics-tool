@@ -24,7 +24,7 @@
 #if DEBUGDCC
 #define LogDebug(exp, ...) LogErrorF(exp, __VA_ARGS__)
 #else
-#define LogDebug(exp) do { (void) sizeof(exp); } while(0)
+#define LogDebug(exp, ...) do { (void) sizeof(exp); } while(0)
 #endif
 
 static const int cellSize = 4;
@@ -731,11 +731,11 @@ dProgressWarn() << QApplication::tr("zero write overwrites color pixel %1 at %2:
                         // fill FRAME cell with pixels
                         for (size_t y = 0; y < ch; y++) {
                             for (size_t x = 0; x < cw; x++) {
-                                if (dirInfo.pixelCodesDisplacementBitStreamSize < nbBitsToRead) {
-                                    LogDebug("oob in pixelCodesDisplacementBitStream %d", dirInfo.pixelCodesDisplacementBitStreamSize);
-                                    dProgressErr() << QApplication::tr("oob in pixelCodesDisplacementBitStream %1").arg(dirInfo.pixelCodesDisplacementBitStreamSize);
+                                if (di.pixelCodesDisplacementBitStreamSize < nbBitsToRead) {
+                                    LogDebug("oob in pixelCodesDisplacementBitStream %d", di.pixelCodesDisplacementBitStreamSize);
+                                    dProgressErr() << QApplication::tr("oob in pixelCodesDisplacementBitStream %1").arg(di.pixelCodesDisplacementBitStreamSize);
                                 }
-                                dirInfo.pixelCodesDisplacementBitStreamSize -= nbBitsToRead;
+                                di.pixelCodesDisplacementBitStreamSize -= nbBitsToRead;
                                 const uint8_t pixelCodeIndex =
                                     readBits(di.pixelCodesDisplacementBitStream, nbBitsToRead);
                                 // Note: This actually means that a cell (4x4 block) can use at most
