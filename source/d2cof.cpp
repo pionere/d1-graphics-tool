@@ -149,8 +149,9 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
 
         // hi.layers.push_Back(layer);
 
-        D1GfxComp* comp = new D1GfxComp();
-        comp->setLabel(componentsNames[componentByte]);
+        D1Gfx* cg = new D1Gfx();
+        cg->setFilePath(componentsNames[componentByte]);
+        D1GfxComp* comp = new D1GfxComp(cg, gfx);
 
         gfx.components.push_back(comp);
     }
@@ -193,7 +194,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
                     dProgressErr() << QApplication::tr("invalid layer number %1").arg(layerByte);
                     continue;
                 }
-                D1GfxComp* comp = &gfx.components[layerByte - 1];
+                D1GfxComp* comp = gfx.components[layerByte - 1];
                 comp->compFrames.push_back(D1GfxCompFrame());
                 D1GfxCompFrame &compFrame = comp->compFrames.back();
                 compFrame.cfZOrder = i;

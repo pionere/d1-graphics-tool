@@ -193,8 +193,8 @@ typedef struct D2CcFrameInfo
     unsigned OptionalData;
     bool flipped;
     // calculated values
-    int XCells;
-    int YCells;
+    unsigned XCells;
+    unsigned YCells;
     QList<int> cellWidths;
     QList<int> cellHeights;
     // RECT32 box;
@@ -245,7 +245,7 @@ typedef struct D2CcDirectionInfo
 
 static void readFrameHeader(D2CcBitReaderState &rs, const D2CcDirectionInfo &di, D2CcFrameInfo &fi)
 {
-    int Variable0, OptionalData, CodedBytes;
+    int Variable0, CodedBytes;
     Variable0 = readBits(rs, di.Variable0Bits);
     fi.width = readBits(rs, di.WidthBits);
     fi.height = readBits(rs, di.HeightBits);
