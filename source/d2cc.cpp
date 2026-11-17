@@ -277,7 +277,7 @@ static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, 
         dirInfo.EncodingTypeBitstreamSize = dirInfo.EncodingTypeBitstreamSize - 1;
         decodeRaw = readBits(dirInfo.encodingTypeBitStream, 1);
     }
-LogDebug("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
+// LogDebug("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
     uint8_t lastPixelCode = 0;
     int curPixelIdx = 0;
 static bool stopDebug = true;
