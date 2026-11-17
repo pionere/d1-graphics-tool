@@ -280,7 +280,7 @@ static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, 
 LogDebug("decodePixelCodesStack %d , %d.", nbPixelsInMask, decodeRaw);
     uint8_t lastPixelCode = 0;
     int curPixelIdx = 0;
-static bool stopDebug = false;
+static bool stopDebug = true;
     for ( ; curPixelIdx < nbPixelsInMask; curPixelIdx++) {
         uint8_t nextPixelCode;
         if (decodeRaw) {
@@ -419,7 +419,7 @@ LogDebug("decodeFrameStage1 offset %d:%d cells %d:%d", frameInfo.XOffset, frameI
                         pixel = previousEntryForCell.values[i];
                     }
                     newEntry.values[i] = pixel;
-                    LogDebug("new entry value %d: %d", i, pixel);
+//                    LogDebug("new entry value %d: %d", i, pixel);
                 }
                 // Update the pixel buffer cell information
                 lastPixelEntryIndexForCell = pbEntries.size();
@@ -490,11 +490,11 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
         return false;
 
     di.OutSizeCoded = readBits(rs, 32);
-LogDebug("OutSizeCoded : %d (c:%d, bits:%d val:%x", di.OutSizeCoded, rs.cursor, rs.remBits, rs.remVal);
+// LogDebug("OutSizeCoded : %d (c:%d, bits:%d val:%x", di.OutSizeCoded, rs.cursor, rs.remBits, rs.remVal);
     di.hasRawPixelEncoding = readBits(rs, 1);
-LogDebug("hasRawPixelEncoding : %d (c:%d, bits:%d val:%x", di.hasRawPixelEncoding, rs.cursor, rs.remBits, rs.remVal);
+// LogDebug("hasRawPixelEncoding : %d (c:%d, bits:%d val:%x", di.hasRawPixelEncoding, rs.cursor, rs.remBits, rs.remVal);
     di.compressEqualCells = readBits(rs, 1);
-LogDebug("compressEqualCells : %d (c:%d, bits:%d val:%x", di.compressEqualCells, rs.cursor, rs.remBits, rs.remVal);
+// LogDebug("compressEqualCells : %d (c:%d, bits:%d val:%x", di.compressEqualCells, rs.cursor, rs.remBits, rs.remVal);
     di.Variable0Bits = crazyLookup(readBits(rs, 4));
     di.WidthBits = crazyLookup(readBits(rs, 4));
     di.HeightBits = crazyLookup(readBits(rs, 4));
@@ -598,20 +598,20 @@ LogDebug("palette entries %d first %d.", di.paletteEntryCount, di.PaletteEntries
         return false;
 
     di.equalCellBitStream = rs;
-LogDebug("preparing subviews ecstream: from %d (%x) rem %d value %x.", di.equalCellBitStream.cursor, di.equalCellBitStream.cursor, di.equalCellBitStream.remBits, di.equalCellBitStream.remVal);
+// LogDebug("preparing subviews ecstream: from %d (%x) rem %d value %x.", di.equalCellBitStream.cursor, di.equalCellBitStream.cursor, di.equalCellBitStream.remBits, di.equalCellBitStream.remVal);
     di.pixelMaskBitStream = di.equalCellBitStream;
     readBits(di.pixelMaskBitStream, di.EqualCellsBitstreamSize);
-LogDebug("preparing subviews mkstream: from %d (%x) rem %d value %x.", di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.remBits, di.pixelMaskBitStream.remVal);
+// LogDebug("preparing subviews mkstream: from %d (%x) rem %d value %x.", di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.cursor, di.pixelMaskBitStream.remBits, di.pixelMaskBitStream.remVal);
     di.encodingTypeBitStream = di.pixelMaskBitStream;
     readBits(di.encodingTypeBitStream, di.PixelMaskBitstreamSize);
-LogDebug("preparing subviews etstream: from %d (%x) rem %d value %x.", di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.remBits, di.encodingTypeBitStream.remVal);
+// LogDebug("preparing subviews etstream: from %d (%x) rem %d value %x.", di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.cursor, di.encodingTypeBitStream.remBits, di.encodingTypeBitStream.remVal);
     di.rawPixelCodesBitStream = di.encodingTypeBitStream;
     readBits(di.rawPixelCodesBitStream, di.EncodingTypeBitstreamSize);
-LogDebug("preparing subviews rwstream: from %d (%x) rem %d value %x.", di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.remBits, di.rawPixelCodesBitStream.remVal);
+// LogDebug("preparing subviews rwstream: from %d (%x) rem %d value %x.", di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.cursor, di.rawPixelCodesBitStream.remBits, di.rawPixelCodesBitStream.remVal);
 
     di.pixelCodesDisplacementBitStream = di.rawPixelCodesBitStream;
     readBits(di.pixelCodesDisplacementBitStream, di.RawPixelCodesBitstreamSize);
-LogDebug("preparing subviews pcstream: from %d (%x) rem %d value %x.", di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.remBits, di.pixelCodesDisplacementBitStream.remVal);
+// LogDebug("preparing subviews pcstream: from %d (%x) rem %d value %x.", di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.cursor, di.pixelCodesDisplacementBitStream.remBits, di.pixelCodesDisplacementBitStream.remVal);
 
     di.pixelCodesDisplacementBitStreamSize = di.pixelCodesDisplacementBitStream.remBits + (di.pixelCodesDisplacementBitStream.rawStreamData->size() - di.pixelCodesDisplacementBitStream.cursor) * CHAR_BIT;
 
@@ -718,6 +718,11 @@ LogDebug("pBuffer.fillBytes %d:%d, %dx%d zero - prevs: %d", pbCellPosX, pbCellPo
 dProgressWarn() << QString("mismatching cells in frame %1 of direction %2. %3 pixels are not set by the previous cell at %4:%5 (area %6x%7)").arg(frameIndex + 1).arg(gfx.frames.size() / hi.framesPerDirection + 1).arg(prevs).arg(pbCellPosX).arg(pbCellPosY).arg(cw).arg(ch);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
+                                D1GfxPixel pixel = pBuffer->getPixel(pbCellPosX + x, pbCellPosY + y);
+                                if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0) {
+LogDebug("zero write overwrites color pixel %d at %d:%d", pixel.getPaletteIndex(), pbCellPosX + x, pbCellPosY + y);
+dProgressWarn() << QString("zero write overwrites color pixel %1 at %2:%3").arg(pixel.getPaletteIndex()).arg(pbCellPosX + x).arg(pbCellPosY + y);
+                                }
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(0));
                             }
                         }
@@ -727,7 +732,7 @@ dProgressWarn() << QString("mismatching cells in frame %1 of direction %2. %3 pi
 
                     if (pixelValues[0] == pixelValues[1]) {
                         // This means we only got one pixel code, so fill the cell with it
-LogDebug("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, pixelValues[0]);
+// LogDebug("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, pixelValues[0]);
                         for (int y = 0; y < ch; y++) {
                             for (int x = 0; x < cw; x++) {
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValues[0]));
@@ -746,7 +751,7 @@ LogDebug("pBuffer.fillBytes %d:%d, %dx%d %d", pbCellPosX, pbCellPosY, cw, ch, pi
                             // We need 2 bits to index 3-4 values
                             nbBitsToRead = 2;
                         }
-LogDebug("pBuffer.setBytes %d:%d %dx%d", pbCellPosX, pbCellPosY, cw, ch);
+// LogDebug("pBuffer.setBytes %d:%d %dx%d", pbCellPosX, pbCellPosY, cw, ch);
                         // fill FRAME cell with pixels
                         for (size_t y = 0; y < ch; y++) {
                             for (size_t x = 0; x < cw; x++) {
@@ -755,7 +760,7 @@ LogDebug("pBuffer.setBytes %d:%d %dx%d", pbCellPosX, pbCellPosY, cw, ch);
                                 // Note: This actually means that a cell (4x4 block) can use at most
                                 // 4 colors, a bit like DXT !
                                 const uint8_t pixelValue = pixelValues[pixelCodeIndex];
-LogDebug("pBuffer.setByte %d:%d %d", pbCellPosX + x, pbCellPosY + y, pixelValue);
+// LogDebug("pBuffer.setByte %d:%d %d", pbCellPosX + x, pbCellPosY + y, pixelValue);
                                 // pBuffer(pbCellPosX + x, pbCellPosY + y) = pixelValue;
                                 pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(pixelValue));
                             }
@@ -830,7 +835,8 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     // CEL FRAMES OFFSETS CALCULATION
 LogDebug("dcc directions %d.", hi.dirOffsets.size());
     // BUILDING {CEL FRAMES}
-    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
+//    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
+    for (unsigned d = 0; d < 1; d++) {
         const auto &offset = hi.dirOffsets[d];
 LogDebug("decoding direction %d addr %d..%d.", d + 1, offset.first, offset.second);
         if (fileSize >= offset.second && offset.second >= offset.first) {
