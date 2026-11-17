@@ -84,6 +84,7 @@ enum class FILE_CONTENT {
     DUN,
     DCC,
     DC6,
+    COF,
     UNKNOWN = -1
 };
 

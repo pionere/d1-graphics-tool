@@ -59,7 +59,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
     quint8 layersByte;
     in >> layersByte;
 
-    hi.numLayers = layersByte;
+    // hi.numLayers = layersByte;
 
     quint8 framesByte;
     in >> framesByte;
@@ -97,16 +97,16 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
     hi.box.h = yMaxDWord - yMinDWord;
 #endif
     quint32 animRateDWord;
-    in >> animRateDword;
+    in >> animRateDWord;
 
-    gfx.frameLen = animRateDword * 1000 / 256;
+    gfx.frameLen = animRateDWord * 1000 / 256;
 
     cursor += headerSize;
-    if (fileSize < cursor + numLayers * 9) {
+    if (fileSize < cursor + layersByte * 9) {
         return false;
     }
 
-    for (int i = 0; i < numLayers; i++) {
+    for (int i = 0; i < layersByte; i++) {
         D2CofLayer layer;
 
         quint8 componentByte;
@@ -155,7 +155,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
         gfx.components.push_back(comp);
     }
 
-    cursor += numLayers * 9;
+    cursor += layersByte * 9;
     if (fileSize < cursor + framesByte) {
         return false;
     }
@@ -176,14 +176,14 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
     }
 
     cursor += framesByte;
-    int layersOrders = directionsByte * framesByte * numLayers;
+    int layersOrders = directionsByte * framesByte * layersByte;
     if (fileSize < cursor + layersOrders) {
         return false;
     }
 
     for (int d = 0; d < directionsByte; d++) {
         for (int n = 0; n < framesByte; n++) {
-            for (int i = 0; i < numLayers; i++) {
+            for (int i = 0; i < layersByte; i++) {
                 quint8 layerByte;
                 in >> layerByte;
 
@@ -193,9 +193,9 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
                     dProgressErr() << QApplication::tr("invalid layer number %1").arg(layerByte);
                     continue;
                 }
-                comp = gfx.components[layerByte - 1];
+                D1GfxComp* comp = &gfx.components[layerByte - 1];
                 comp->compFrames.push_back(D1GfxCompFrame());
-                D1GfxCompFrame &compFrame = gfx.components.back();
+                D1GfxCompFrame &compFrame = comp->compFrames.back();
                 compFrame.cfZOrder = i;
             }
         }
