@@ -1448,23 +1448,23 @@ void D1GfxComp::setGFX(D1Gfx *g)
     this->gfx = g;
 
     const bool updateOffsets = g->hasOffset();
-    for (D1GfxCompFrame* compFrame : this->compFrames) {
-        if (compFrame->cfFrameRef == 0) continue;
+    for (D1GfxCompFrame &compFrame : this->compFrames) {
+        if (compFrame.cfFrameRef == 0) continue;
         // discard invalid references
-        if (g->getFrameCount() < compFrame->cfFrameRef) {
-            compFrame->cfFrameRef = 0;
+        if (g->getFrameCount() < compFrame.cfFrameRef) {
+            compFrame.cfFrameRef = 0;
             continue;
         }
         if (!updateOffsets) continue;
         // inherit offsets
-        D1GfxFrame* frame = g->getFrame(compFrame->cfFrameRef);
+        D1GfxFrame* frame = g->getFrame(compFrame.cfFrameRef);
         int xoff = frame->getXOffset();
         int yoff = frame->getYOffset();
         if (frame->getFlipped()) {
             yoff -= frame->getHeight();
         }
-        compFrame->cfOffsetX = xoff;
-        compFrame->cfOffsetY = yoff;
+        compFrame.cfOffsetX = xoff;
+        compFrame.cfOffsetY = yoff;
         frame->setXOffset(0);
         frame->setYOffset(0);
     }
