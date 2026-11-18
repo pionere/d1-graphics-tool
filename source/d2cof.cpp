@@ -206,7 +206,14 @@ LogErrorF("Adding components %d", directionsByte);
                     dProgressErr() << QApplication::tr("invalid layer number %1").arg(layerByte);
                     continue;
                 }
+                if (layerByte > gfx.components.size()) {
+                    dProgressErr() << QApplication::tr("invalid layer number %1 (max %2).").arg(layerByte).arg(gfx.components.size());
+                    continue;
+                }
                 D1GfxComp* comp = gfx.components[layerByte - 1];
+if (comp->getCompFrameCount() <= d * framesByte + n) {
+LogErrorF("not enough frames in the component %d vs (%d * %d + %d = ) %d", comp->getCompFrameCount(), d, framesByte, n, d * framesByte + n);
+}
                 D1GfxCompFrame* compFrame = comp->getCompFrame(d * framesByte + n);
                 compFrame->cfZOrder = i;
             }
