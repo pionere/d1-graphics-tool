@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QDir>
+#include <QMap>
 #include <QMessageBox>
 
 #include "progressdialog.h"
@@ -106,6 +107,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
         return false;
     }
 LogErrorF("Adding layers %d", layersByte);
+    QMap<int, D1GfxComp*> compMap;
     for (int i = 0; i < layersByte; i++) {
         D2CofLayer layer;
 
@@ -151,9 +153,15 @@ LogErrorF("Adding layers %d", layersByte);
 
         D1Gfx* cg = new D1Gfx();
         cg->setPalette(gfx.getPalette());
-        cg->setFilePath(componentsNames[componentByte]);
+        if (componentByte >= lengthof(componentsNames))
+            dProgressWarn() << QApplication::tr("unknown component %1 (max %2).").arg(componentByte).arg(lengthof(componentsNames) - 1);
+        cg->setFilePath(componentByte >= lengthof(componentsNames) ? "UNKNOWN" : componentsNames[componentByte]);
         D1GfxComp* comp = new D1GfxComp(cg, &gfx);
 
+        if (compMap.contains(componentByte)) {
+            dProgressErr() << QApplication::tr("duplicate layer %1").arg(componentByte);
+        }
+        compMap[componentByte] = comp;
         gfx.components.push_back(comp);
     }
 
@@ -202,15 +210,12 @@ LogErrorF("Adding components %d", directionsByte);
 
                 // hi.layerOrder.push_back(layerByte);
 
-                if (layerByte == 0) {
-                    dProgressErr() << QApplication::tr("invalid layer number %1").arg(layerByte);
+
+                if (!compMap.contains(layerByte)) {
+                    dProgressErr() << QApplication::tr("undefined layer (%1) referenced").arg(layerByte);
                     continue;
                 }
-                if (layerByte > gfx.components.size()) {
-                    dProgressErr() << QApplication::tr("invalid layer number %1 (max %2).").arg(layerByte).arg(gfx.components.size());
-                    continue;
-                }
-                D1GfxComp* comp = gfx.components[layerByte - 1];
+                D1GfxComp* comp = compMap[layerByte];
 if (comp->getCompFrameCount() <= d * framesByte + n) {
 LogErrorF("not enough frames in the component %d vs (%d * %d + %d = ) %d", comp->getCompFrameCount(), d, framesByte, n, d * framesByte + n);
 }
