@@ -105,7 +105,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
     if (fileSize < cursor + layersByte * 9) {
         return false;
     }
-
+LogErrorF("Adding layers %d", layersByte);
     for (int i = 0; i < layersByte; i++) {
         D2CofLayer layer;
 
@@ -150,17 +150,29 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
         // hi.layers.push_Back(layer);
 
         D1Gfx* cg = new D1Gfx();
+        cg->setPalette(gfx.getPalette());
         cg->setFilePath(componentsNames[componentByte]);
         D1GfxComp* comp = new D1GfxComp(cg, &gfx);
 
         gfx.components.push_back(comp);
     }
 
+    // add empty frames
+LogErrorF("Creating frames %d", directionsByte * framesByte);
+    for (int i = 0; i < directionsByte * framesByte; i++) {
+        gfx.insertFrame(i);
+    }
+LogErrorF("Creating groups %d", directionsByte);
+    gfx.groupFrameIndices.resize(directionsByte);
+    for (int d = 0; d < directionsByte; d++) {
+        gfx.groupFrameIndices[d] = std::pair<int, int>(d * framesByte, (d + 1) * framesByte - 1);
+    }
+
     cursor += layersByte * 9;
     if (fileSize < cursor + framesByte) {
         return false;
     }
-
+LogErrorF("Adding metas %d", framesByte);
     for (int i = 0; i < framesByte; i++) {
         quint8 keyFrameByte;
         in >> keyFrameByte;
@@ -181,7 +193,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
     if (fileSize < cursor + layersOrders) {
         return false;
     }
-
+LogErrorF("Adding components %d", directionsByte);
     for (int d = 0; d < directionsByte; d++) {
         for (int n = 0; n < framesByte; n++) {
             for (int i = 0; i < layersByte; i++) {
@@ -195,22 +207,13 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
                     continue;
                 }
                 D1GfxComp* comp = gfx.components[layerByte - 1];
-                comp->compFrames.push_back(D1GfxCompFrame());
-                D1GfxCompFrame &compFrame = comp->compFrames.back();
-                compFrame.cfZOrder = i;
+                D1GfxCompFrame* compFrame = comp->getCompFrame(d * framesByte + n);
+                compFrame->cfZOrder = i;
             }
         }
     }
 
-    // regroup the graphics
-    for (int i = 0; i < directionsByte * framesByte; i++) {
-        gfx.insertFrame(i);
-    }
-    gfx.groupFrameIndices.resize(directionsByte);
-    for (int d = 0; d < directionsByte; d++) {
-        gfx.groupFrameIndices[d] = std::pair<int, int>(d * framesByte, (d + 1) * framesByte - 1);
-    }
-
+LogErrorF("Load done.");
     return true;
 }
 
