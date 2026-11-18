@@ -1397,7 +1397,7 @@ void GfxsetView::on_loadGfxPushButtonClicked()
 
 void GfxsetView::on_newComponentPushButtonClicked()
 {
-    QString gfxFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
+    QString gfxFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;D2 Files (*.dcc *.DCC *.dc6 *.DC6)"));
     if (gfxFilePath.isEmpty()) {
         return;
     }

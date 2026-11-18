@@ -11,6 +11,8 @@
 #include "d1celtilesetframe.h"
 #include "d1cl2.h"
 #include "d1smk.h"
+#include "d2cc.h"
+#include "d2c6.h"
 #include "openasdialog.h"
 #include "progressdialog.h"
 #include "remapdialog.h"
@@ -806,6 +808,36 @@ D1SmkAudioData *D1GfxFrame::getFrameAudio()
     return this->frameAudio;
 }
 
+int D1GfxFrame::getXOffset() const
+{
+    return this->xoffset;
+}
+
+void D1GfxFrame::setXOffset(int value)
+{
+    this->xoffset = value;
+}
+
+int D1GfxFrame::getYOffset() const
+{
+    return this->yoffset;
+}
+
+void D1GfxFrame::setYOffset(int value)
+{
+    this->yoffset = value;
+}
+
+bool D1GfxFrame::getFlipped() const
+{
+    return this->flipped;
+}
+
+void D1GfxFrame::setFlipped(bool value)
+{
+    this->flipped = value;
+}
+
 QString D1Gfx::gfxTypeToStr(D1CEL_TYPE type)
 {
     QString result = QApplication::tr("Unknown");
@@ -1414,6 +1446,28 @@ void D1GfxComp::setGFX(D1Gfx *g)
 {
     delete this->gfx;
     this->gfx = g;
+
+    const bool updateOffsets = g->hasOffset();
+    for (D1GfxCompFrame* compFrame : this->compFrames) {
+        if (compFrame->cfFrameRef == 0) continue;
+        // discard invalid references
+        if (g->getFrameCount() < compFrame->cfFrameRef) {
+            compFrame->cfFrameRef = 0;
+            continue;
+        }
+        if (!updateOffsets) continue;
+        // inherit offsets
+        D1GfxFrame* frame = g->getFrame(compFrame->cfFrameRef);
+        int xoff = frame->getXOffset();
+        int yoff = frame->getYOffset();
+        if (frame->getFlipped()) {
+            yoff -= frame->getHeight();
+        }
+        compFrame->cfOffsetX = xoff;
+        compFrame->cfOffsetY = yoff;
+        frame->setXOffset(0);
+        frame->setYOffset(0);
+    }
 }
 
 QString D1GfxComp::getLabel() const
@@ -1547,10 +1601,22 @@ D1Gfx *D1Gfx::loadComponentGFX(QString gfxFilePath)
             QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return nullptr;
         }
-    } else { // if (fileLower.endsWith(".cl2")) {
+    } else if (fileLower.endsWith(".cl2")) {
         if (!D1Cl2::load(*gfx, gfxFilePath, params)) {
             delete gfx;
             QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return nullptr;
+        }
+    } else if (fileLower.endsWith(".dc6")) {
+        if (!D2C6::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading DC6 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return nullptr;
+        }
+    } else { // if (fileLower.endsWith(".dcc")) {
+        if (!D2Cc::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading DCC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return nullptr;
         }
     }

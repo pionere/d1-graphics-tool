@@ -132,6 +132,14 @@ public:
     void setFramePal(D1Pal *pal);
     D1SmkAudioData *getFrameAudio();
 
+    // functions for D2-frames
+    int getXOffset() const;
+    void setXOffset(int value);
+    int getYOffset() const;
+    void setYOffset(int value);
+    bool getFlipped() const;
+    void setFlipped(bool value);
+
 protected:
     int width = 0;
     int height = 0;

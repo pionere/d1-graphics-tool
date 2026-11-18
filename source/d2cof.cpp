@@ -169,11 +169,29 @@ LogErrorF("Adding layers %d", layersByte);
 LogErrorF("Creating frames %d", directionsByte * framesByte);
     for (int i = 0; i < directionsByte * framesByte; i++) {
         gfx.insertFrame(i);
+
+        for (int n = 0; n < layersByte; n++) {
+            D1GfxComp* comp = gfx.components[i];
+            D1Gfx* cg = comp->getGFX();
+            cg->insertFrame(i);
+            comp->getCompFrame(i)->cfFrameRef = i + 1;
+        }
     }
 LogErrorF("Creating groups %d", directionsByte);
-    gfx.groupFrameIndices.resize(directionsByte);
     for (int d = 0; d < directionsByte; d++) {
-        gfx.groupFrameIndices[d] = std::pair<int, int>(d * framesByte, (d + 1) * framesByte - 1);
+        if (d == 0)
+            gfx.groupFrameIndices[0].second = (d + 1) * framesByte - 1;
+        else
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(d * framesByte, (d + 1) * framesByte - 1));
+
+        for (int n = 0; n < layersByte; n++) {
+            D1GfxComp* comp = gfx.components[i];
+            D1Gfx* cg = comp->getGFX();
+            if (d == 0)
+                cg->groupFrameIndices[0].second = (d + 1) * framesByte - 1;
+            else
+                cg->groupFrameIndices.push_back(std::pair<int, int>(d * framesByte, (d + 1) * framesByte - 1));
+        }
     }
 
     cursor += layersByte * 9;
