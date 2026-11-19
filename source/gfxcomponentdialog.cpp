@@ -545,6 +545,14 @@ void GfxComponentDialog::on_cancelButton_clicked()
     D1GfxComp *gc = this->gfxComp;
     if (gc == this->newComp)
         QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate comp in on_cancelButton_clicked"));
+    for (int i = 0; i < gc->getCompFrameCount(); i++) {
+        D1GfxCompFrame *frame = gc->getCompFrame(i);
+        D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
+        if (frame == newFrame) {
+            QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames"));
+            break;
+        }
+    }
 #endif
     this->close();
 
