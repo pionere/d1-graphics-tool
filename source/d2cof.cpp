@@ -171,7 +171,7 @@ LogErrorF("Creating frames %d", directionsByte * framesByte);
         gfx.insertFrame(i);
 
         for (int n = 0; n < layersByte; n++) {
-            D1GfxComp* comp = gfx.components[i];
+            D1GfxComp* comp = gfx.components[n];
             D1Gfx* cg = comp->getGFX();
             cg->insertFrame(i);
             comp->getCompFrame(i)->cfFrameRef = i + 1;
@@ -185,7 +185,7 @@ LogErrorF("Creating groups %d", directionsByte);
             gfx.groupFrameIndices.push_back(std::pair<int, int>(d * framesByte, (d + 1) * framesByte - 1));
 
         for (int n = 0; n < layersByte; n++) {
-            D1GfxComp* comp = gfx.components[i];
+            D1GfxComp* comp = gfx.components[n];
             D1Gfx* cg = comp->getGFX();
             if (d == 0)
                 cg->groupFrameIndices[0].second = (d + 1) * framesByte - 1;
