@@ -109,7 +109,15 @@ D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
     this->width = o.width;
     this->height = o.height;
     this->pixels = o.pixels;
+    // fields of tileset-frames
     this->frameType = o.frameType;
+    // fields of smk-frames
+    // this->framePal = o.framePal;
+    // this->frameAudio = o.frameAudio;
+    // fields of d2 graphics
+    this->xoffset = o.xoffset;
+    this->yoffset = o.yoffset;
+    this->flipped = o.flipped;
 }
 
 D1GfxFrame::~D1GfxFrame()
@@ -2317,8 +2325,9 @@ bool D1Gfx::squash()
     // squash the components
     for (int i = 0; i < this->getFrameCount(); i++) {
         QRect rect = this->getFrameRect(i, true);
+dProgressErr() << QString("frame %1 at %d:%d").arg(i + 1).arg(rect.y()).arg(rect.x());
         rect.moveTo(-rect.x(), -rect.y());
-
+dProgressErr() << QString(" - moved to %d:%d height %d").arg(rect.y()).arg(rect.x());
         D1GfxFrame* frame = this->frames[i];
         // resize the image if necessary
         change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT, backPixel);
@@ -2374,10 +2383,10 @@ bool D1Gfx::squash()
                 this->frames[i] = newFrame;
             }
         }
-        // preserve offset info
+        /*// preserve offset info
         frame->xoffset = rect.x();
         frame->yoffset = rect.y() + frame->getHeight();
-        frame->flipped = false;
+        frame->flipped = false;*/
     }
 
     // eliminate the obsolete components

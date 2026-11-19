@@ -1,5 +1,6 @@
 #include "gfxcomponentdialog.h"
 
+#include <QMessageBox>
 #include <QScrollBar>
 
 #include "config.h"
@@ -509,6 +510,8 @@ void GfxComponentDialog::on_submitButton_clicked()
     for (int i = 0; i < gc->getCompFrameCount(); i++) {
         D1GfxCompFrame *frame = gc->getCompFrame(i);
         D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
+if (frame == newFrame)
+    QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames");
         if (frame->cfZOrder != newFrame->cfZOrder) {
             frame->cfZOrder = newFrame->cfZOrder;
             change = true;
@@ -536,10 +539,20 @@ void GfxComponentDialog::on_submitButton_clicked()
 
 void GfxComponentDialog::on_cancelButton_clicked()
 {
+#if 1
+    D1GfxComp *gc = this->gfxComp;
+    for (int i = 0; i < gc->getCompFrameCount(); i++) {
+        D1GfxCompFrame *frame = gc->getCompFrame(i);
+        D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
+        if (frame == newFrame)
+            QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames");
+    }
+#endif
     this->close();
 
     delete this->newGfx;
     this->newGfx = nullptr;
+    this->newComp = nullptr;
 }
 
 void GfxComponentDialog::changeEvent(QEvent *event)
