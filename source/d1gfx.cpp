@@ -843,7 +843,7 @@ bool D1GfxFrame::reencode(int palmap[D1PAL_COLORS])
     bool result = false;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
+            D1GfxPixel pixel = this->pixels[y][x]; // this->getPixel(x, y);
             if (!pixel.isTransparent()) {
                 quint8 color = pixel.getPaletteIndex();
                 int ci = palmap[color];
@@ -1475,7 +1475,7 @@ void D1GfxComp::setGFX(D1Gfx *g)
     for (D1GfxCompFrame &compFrame : this->compFrames) {
         if (compFrame.cfFrameRef == 0) continue;
         // discard invalid references
-        if (g->getFrameCount() < compFrame.cfFrameRef) {
+        if ((unsigned)g->getFrameCount() < compFrame.cfFrameRef) {
             compFrame.cfFrameRef = 0;
             continue;
         }
