@@ -21,6 +21,13 @@
     COFKEY_MAX,
 };*/
 
+#define DEBUGDCC 0
+#if DEBUGDCC
+#define LogDebug(exp, ...) LogErrorF(exp, __VA_ARGS__)
+#else
+#define LogDebug(exp, ...) do { (void) sizeof(exp); } while(0)
+#endif
+
 static constexpr const char* componentsNames[] = {
         "HD", "TR", "LG", "RA", "LA", "RH", "LH", "SH",
         "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"};
@@ -106,7 +113,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
     if (fileSize < cursor + layersByte * 9) {
         return false;
     }
-LogErrorF("Adding layers %d", layersByte);
+LogDebug("Adding layers %d", layersByte);
     QMap<int, D1GfxComp*> compMap;
     for (int i = 0; i < layersByte; i++) {
         D2CofLayer layer;
@@ -166,7 +173,7 @@ LogErrorF("Adding layers %d", layersByte);
     }
 
     // add empty frames
-LogErrorF("Creating frames %d", directionsByte * framesByte);
+LogDebug("Creating frames %d", directionsByte * framesByte);
     for (int i = 0; i < directionsByte * framesByte; i++) {
         gfx.insertFrame(i);
 
@@ -177,7 +184,7 @@ LogErrorF("Creating frames %d", directionsByte * framesByte);
             comp->getCompFrame(i)->cfFrameRef = i + 1;
         }
     }
-LogErrorF("Creating groups %d", directionsByte);
+LogDebug("Creating groups %d", directionsByte);
     for (int d = 0; d < directionsByte; d++) {
         if (d == 0)
             gfx.groupFrameIndices[0].second = (d + 1) * framesByte - 1;
@@ -198,7 +205,7 @@ LogErrorF("Creating groups %d", directionsByte);
     if (fileSize < cursor + framesByte) {
         return false;
     }
-LogErrorF("Adding metas %d", framesByte);
+LogDebug("Adding metas %d", framesByte);
     for (int i = 0; i < framesByte; i++) {
         quint8 keyFrameByte;
         in >> keyFrameByte;
@@ -219,7 +226,7 @@ LogErrorF("Adding metas %d", framesByte);
     if (fileSize < cursor + layersOrders) {
         return false;
     }
-LogErrorF("Adding components %d", directionsByte);
+LogDebug("Adding components %d", directionsByte);
     for (int d = 0; d < directionsByte; d++) {
         for (int n = 0; n < framesByte; n++) {
             for (int i = 0; i < layersByte; i++) {
@@ -228,22 +235,18 @@ LogErrorF("Adding components %d", directionsByte);
 
                 // hi.layerOrder.push_back(layerByte);
 
-
                 if (!compMap.contains(layerByte)) {
                     dProgressErr() << QApplication::tr("undefined layer (%1) referenced").arg(layerByte);
                     continue;
                 }
                 D1GfxComp* comp = compMap[layerByte];
-if (comp->getCompFrameCount() <= d * framesByte + n) {
-LogErrorF("not enough frames in the component %d vs (%d * %d + %d = ) %d", comp->getCompFrameCount(), d, framesByte, n, d * framesByte + n);
-}
                 D1GfxCompFrame* compFrame = comp->getCompFrame(d * framesByte + n);
                 compFrame->cfZOrder = i;
             }
         }
     }
 
-LogErrorF("Load done.");
+LogDebug("Load done.");
     return true;
 }
 
