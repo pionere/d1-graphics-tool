@@ -64,6 +64,8 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     // this->newGfx->setFilePath(g->getFilePath());
     this->newGfx->addGfx(g);
     this->newComp = this->newGfx->getComponent(compIdx);
+    if (gc == this->newComp)
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate comp in initialize"));
 
     this->displayFrame();
 }
@@ -541,12 +543,8 @@ void GfxComponentDialog::on_cancelButton_clicked()
 {
 #if 1
     D1GfxComp *gc = this->gfxComp;
-    for (int i = 0; i < gc->getCompFrameCount(); i++) {
-        D1GfxCompFrame *frame = gc->getCompFrame(i);
-        D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
-        if (frame == newFrame)
-            QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames"));
-    }
+    if (gc == this->newComp)
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate comp in on_cancelButton_clicked"));
 #endif
     this->close();
 
