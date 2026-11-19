@@ -828,7 +828,7 @@ void D1GfxFrame::setYOffset(int value)
     this->yoffset = value;
 }
 
-bool D1GfxFrame::getFlipped() const
+bool D1GfxFrame::isFlipped() const
 {
     return this->flipped;
 }
@@ -1448,19 +1448,22 @@ void D1GfxComp::setGFX(D1Gfx *g)
     this->gfx = g;
 
     const bool updateOffsets = g->hasOffset();
+LogErrorF("setGFX fc %d off %d", g->getFrameCount(), updateOffsets);
     for (D1GfxCompFrame &compFrame : this->compFrames) {
         if (compFrame.cfFrameRef == 0) continue;
         // discard invalid references
         if (g->getFrameCount() < compFrame.cfFrameRef) {
+LogErrorF("frameref too high %d -> resettting to 0", compFrame.cfFrameRef);
             compFrame.cfFrameRef = 0;
             continue;
         }
         if (!updateOffsets) continue;
         // inherit offsets
-        D1GfxFrame* frame = g->getFrame(compFrame.cfFrameRef);
+        D1GfxFrame* frame = g->getFrame(compFrame.cfFrameRef - 1);
         int xoff = frame->getXOffset();
         int yoff = frame->getYOffset();
-        if (frame->getFlipped()) {
+LogErrorF("inheriting offset %d:%d %d", xoff, yoff, frame->isFlipped());
+        if (frame->isFlipped()) {
             yoff -= frame->getHeight();
         }
         compFrame.cfOffsetX = xoff;

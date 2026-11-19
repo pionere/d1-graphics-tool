@@ -137,7 +137,7 @@ public:
     void setXOffset(int value);
     int getYOffset() const;
     void setYOffset(int value);
-    bool getFlipped() const;
+    bool isFlipped() const;
     void setFlipped(bool value);
 
 protected:
