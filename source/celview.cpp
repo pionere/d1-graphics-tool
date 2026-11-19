@@ -1377,8 +1377,16 @@ void CelView::on_reloadComponentPushButtonClicked()
 {
     int compIdx = this->ui->componentsComboBox->currentIndex();
     if (compIdx != 0) {
+        const bool forceNew = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+        QString filePath = gfxComp->getGFX()->getFilePath();
+        if (forceNew || !file.exists(QFile(filePath))) {
+            filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;D2 Files (*.dcc *.DCC *.dc6 *.DC6)"));
+            if (filePath.isEmpty()) {
+                return;
+            }
+        }
         D1GfxComp *gfxComp = this->gfx->getComponent(compIdx - 1);
-        D1Gfx* cGfx = this->gfx->loadComponentGFX(gfxComp->getGFX()->getFilePath());
+        D1Gfx* cGfx = this->gfx->loadComponentGFX(filePath);
         if (cGfx != nullptr) {
             gfxComp->setGFX(cGfx);
 
