@@ -243,6 +243,14 @@ typedef struct D2CcDirectionInfo
     D2CcBitReaderState pixelCodesDisplacementBitStream;
 } D2CcDirectionInfo;
 
+typedef struct CellInfo
+{
+    int width;
+    int height;
+    int xoffset;
+    int yoffset;
+} CellInfo;
+
 static void readFrameHeader(D2CcBitReaderState &rs, const D2CcDirectionInfo &di, D2CcFrameInfo &fi)
 {
     int Variable0, CodedBytes;
@@ -638,7 +646,7 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
     // This is the reason why we need to stages, we don't have the offset of this bitstream
     // di.pixelCodesDisplacementBitStream;
 LogDebug("decodeFrames area %d:%d.", di.box.w, di.box.h);
-    // QList<Cell>       pixelBufferCells(nbPixelBufferCells, Cell{0xF, 0xF});
+    QList<CellInfo> pixelBufferCells(di.HorizontalCellCount * di.VerticalCellCount);
     D1GfxFrame *pBuffer = new D1GfxFrame();
 #if TRANSPARENT_BGR
     pBuffer->resize(di.box.w, di.box.h, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::transparentPixel());
@@ -655,16 +663,13 @@ LogDebug("decodeFrame %d", frameIndex);
         for (size_t cellY = 0; cellY < frameInfo.YCells; cellY++) {
             size_t pbCellPosX = frameInfo.XOffset;
             const int ch = frameInfo.cellHeights[cellY];
+            const int yo = pbCellPosY % cellSize;
 
             for (size_t cellX = 0; cellX < frameInfo.XCells; cellX++)
             {
                 const size_t frameCellIndex = cellX + cellY * frameInfo.XCells;
-                // Cell         frameCell;
                 const int cw = frameInfo.cellWidths[cellX];
-                // frameCell.width  = cw;
-                // frameCell.height  = ch;
-                // frameCell.width  = frameInfo.cellWidths[cellX];
-                // frameCell.height = frameInfo.cellHeights[cellY];
+                const int xo = pbCellPosX % cellSize;
 if (pbCellPosX + cw > di.box.w) {
 LogDebug("oob in frame %d to the right %d + %d -> %d vs %d", frameIndex + 1, pbCellPosX, cw, pbCellPosX + cw, di.box.w);
 dProgressErr() << QApplication::tr("oob in frame %1 to the right %2 + %3 -> %4 vs %5").arg(frameIndex + 1).arg(pbCellPosX).arg(cw).arg(pbCellPosX + cw).arg(di.box.w);
@@ -676,7 +681,7 @@ dProgressErr() << QApplication::tr("oob in frame %1 to the bottom %2 + %3 -> %4 
                 const size_t pbCellIndex =
                     (pbCellPosX / cellSize) +
                     (pbCellPosY / cellSize) * di.HorizontalCellCount;
-//                Cell& pbCell = pixelBufferCells[pbCellIndex];
+                CellInfo& pbCell = pixelBufferCells[pbCellIndex];
 
                 if (frameInfo.cellSameAsPrevious[frameCellIndex]) {
 #if TRANSPARENT_BGR
@@ -702,6 +707,15 @@ dProgressWarn() << QApplication::tr("zero write overwrites color pixel %1 at %2:
                         }
                     }
 #endif
+                    if (pbCell.width != cw || pbCell.height != ch || pbCell.xoffset != xo || pbCell.yoffset != yo) {
+                        if (pbCell.width == cw && pbCell.height == ch)
+                            dProgressWarn() << QApplication::tr("mismatching cell offsets (%1:%2 vs %3:%4) in frame %5 of direction %6 at %4:%5 (area %6x%7)").arg(xo).arg(yo).arg(pbCell.xoffset).arg(pbCell.yoffset).arg(frameIndex + 1).arg(gfx.frames.size() / hi.framesPerDirection + 1).arg(pbCellPosX).arg(pbCellPosY).arg(cw).arg(ch);
+                        for (int y = 0; y < ch; y++) {
+                            for (int x = 0; x < cw; x++) {
+                                pBuffer->setPixel(pbCellPosX + x, pbCellPosY + y, D1GfxPixel::colorPixel(0));
+                            }
+                        }
+                    }
                 } else {
                     const auto& pixelValues = di.pbEntries[pbEntryIndex++].values;
 
@@ -749,10 +763,13 @@ dProgressWarn() << QApplication::tr("zero write overwrites color pixel %1 at %2:
                     }
                 }
 
-//                pbCell = frameCell;
+                pbCell.width = cw;
+                pbCell.height = ch;
+                pbCell.xoffset = xo;
+                pbCell.yoffset = yo;
+
                 pbCellPosX += cw;
             }
-            // pbCellPosY += frameInfo.cellHeights[cellY];
             pbCellPosY += ch;
         }
         // Done decoding this frame, now copy its content.
