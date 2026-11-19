@@ -511,7 +511,7 @@ void GfxComponentDialog::on_submitButton_clicked()
         D1GfxCompFrame *frame = gc->getCompFrame(i);
         D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
 if (frame == newFrame)
-    QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames");
+    QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames"));
         if (frame->cfZOrder != newFrame->cfZOrder) {
             frame->cfZOrder = newFrame->cfZOrder;
             change = true;
@@ -545,7 +545,7 @@ void GfxComponentDialog::on_cancelButton_clicked()
         D1GfxCompFrame *frame = gc->getCompFrame(i);
         D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
         if (frame == newFrame)
-            QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames");
+            QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames"));
     }
 #endif
     this->close();
