@@ -2374,6 +2374,10 @@ bool D1Gfx::squash()
                 this->frames[i] = newFrame;
             }
         }
+        // preserve offset info
+        frame->xoffset = rect.x();
+        frame->yoffset = rect.y() + frame->getHeight();
+        frame->flipped = false;
     }
 
     // eliminate the obsolete components
