@@ -1,7 +1,5 @@
 #include "d2dat.h"
 
-#include <array>
-
 #include <QApplication>
 #include <QChar>
 #include <QDir>
@@ -139,7 +137,6 @@ Text color palette	256 * 4 bytes	this is another color palette, but for text
 Text color shifts	14 transforms	color-shifts used for text
 */
     const QByteArray fileData = file.readAll();
-
 
     unsigned cursor = 0;
     {
