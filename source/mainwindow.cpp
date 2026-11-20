@@ -33,6 +33,7 @@
 #include "d1pcx.h"
 #include "d1smk.h"
 #include "d1trs.h"
+#include "d2dat.h"
 #include "ui_mainwindow.h"
 
 static MainWindow *theMainWindow;
@@ -3796,6 +3797,68 @@ void MainWindow::on_actionClose_PAL_triggered()
     this->setPal(nextPath);
 }
 
+void MainWindow::on_actionLoadPals_Colors_triggered()
+{
+    QString palsFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Palette-Set File"), tr("DAT Files (*.dat *.DAT);;PL2 Files (*.pl2 *.PL2)"));
+
+    if (palsFilePath.isEmpty()) {
+        return;
+    }
+
+    std::vector<D1Pal *> pals;
+    std::vector<D1Trn *> trns;
+    if (!D2Dat::load(palsFilePath, pals, trns)) {
+        dProgressErr() << tr("Failed loading Palette-Set file: %1.").arg(QDir::toNativeSeparators(palsFilePath));
+        return;
+    }
+    // reset palettes
+    // this->updatePals(pals);
+    this->setPal(D1Pal::DEFAULT_PATH);
+    for (auto it = this->pals.begin(); it != this->pals.end(); ) {
+        if (MainWindow::isResourcePath(it.key())) {
+            it++;
+            continue;
+        }
+        MemFree(it.value());
+        it = this->pals.erase(it);
+    }
+    if (pals.empty()) {
+        return;
+    }
+    // load the PAL files
+    for (D1Pal *pal : pals) {
+        this->pals[pal->getFilePath()] = pal;
+    }
+    this->setPal(pals[0]->getFilePath());
+
+    if (!trns.empty()) {
+        this->updateTrns(trns);
+        this->setUniqueTrn(D1Trn::IDENTITY_PATH);
+    }
+}
+
+void MainWindow::on_actionSavePals_Colors_triggered()
+{
+    std::vector<D1Pal *> pals;
+    for (auto it = this->pals.cbegin(); it != this->pals.cend(); it++) {
+        if (MainWindow::isResourcePath(it.key())) {
+            continue;
+        }
+        pals.push_back(it.value());
+    }
+
+    if (pals.empty()) {
+        QMessageBox::critical(this, tr("Error"), tr("Built-in PAL files can not be saved to a palette set."));
+        return;
+    }
+
+    QString palsFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("Save Palette-Set File as..."), tr("DAT Files (*.dat *.DAT)"));
+
+    if (!palsFilePath.isEmpty()) {
+        D2Dat::save(palsFilePath, pals);
+    }
+}
+
 void MainWindow::on_actionNew_Translation_Unique_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("New Translation File"), tr("TRN Files (*.trn *.TRN)"));
@@ -4068,7 +4131,8 @@ void MainWindow::on_actionGenTrns_Colors_triggered()
 void MainWindow::updateTrns(const std::vector<D1Trn *> &newTrns)
 {
     // reset unique translations
-    this->on_actionClose_Translation_Unique_triggered();
+    // this->on_actionClose_Translation_Unique_triggered();
+    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
     for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
         if (MainWindow::isResourcePath(it.key())) {
             it++;
@@ -4078,7 +4142,8 @@ void MainWindow::updateTrns(const std::vector<D1Trn *> &newTrns)
         it = this->uniqueTrns.erase(it);
     }
     // reset base translations
-    this->on_actionClose_Translation_Base_triggered();
+    // this->on_actionClose_Translation_Base_triggered();
+    this->setBaseTrn(D1Trn::IDENTITY_PATH);
     for (auto it = this->baseTrns.begin(); it != this->baseTrns.end(); ) {
         if (MainWindow::isResourcePath(it.key())) {
             it++;
@@ -4087,6 +4152,7 @@ void MainWindow::updateTrns(const std::vector<D1Trn *> &newTrns)
         MemFree(it.value());
         it = this->baseTrns.erase(it);
     }
+    // update the unique translations
     if (newTrns.empty()) {
         return;
     }
@@ -4113,7 +4179,8 @@ void MainWindow::on_actionLoadTrns_Colors_triggered()
     }
 
     // reset unique translations
-    this->on_actionClose_Translation_Unique_triggered();
+    // this->on_actionClose_Translation_Unique_triggered();
+    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
     for (auto it = this->uniqueTrns.begin(); it != this->uniqueTrns.end(); ) {
         if (MainWindow::isResourcePath(it.key())) {
             it++;
@@ -4123,7 +4190,6 @@ void MainWindow::on_actionLoadTrns_Colors_triggered()
         it = this->uniqueTrns.erase(it);
     }
     if (trns.empty()) {
-        this->setUniqueTrn(D1Trn::IDENTITY_PATH);
         return;
     }
     // load the TRN files

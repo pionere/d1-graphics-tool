@@ -64,6 +64,7 @@ private:
 class D1Pal : public QObject {
     Q_OBJECT
 
+    friend class D2Dat;
 public:
     static constexpr const char *DEFAULT_PATH = ":/default.pal";
     static constexpr const char *EMPTY_PATH = ":/null.pal";
