@@ -2326,9 +2326,9 @@ bool D1Gfx::squash()
     // squash the components
     for (int i = 0; i < this->getFrameCount(); i++) {
         QRect rect = this->getFrameRect(i, true);
-dProgressErr() << QString("frame %1 at %d:%d").arg(i + 1).arg(rect.y()).arg(rect.x());
+dProgressErr() << QString("frame %1 at %2:%3").arg(i + 1).arg(rect.y()).arg(rect.x());
         rect.moveTo(-rect.x(), -rect.y());
-dProgressErr() << QString(" - moved to %d:%d height %d").arg(rect.y()).arg(rect.x());
+dProgressErr() << QString(" - moved to %1:%2 height %3").arg(rect.y()).arg(rect.x()).arg(rect.height());
         D1GfxFrame* frame = this->frames[i];
         // resize the image if necessary
         change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT, backPixel);
