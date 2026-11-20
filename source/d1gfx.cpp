@@ -1397,6 +1397,7 @@ D1GfxComp::D1GfxComp(const D1GfxComp &o)
     this->gfx = g;
     this->label = o.label;
     this->compFrames = o.compFrames;
+    this->compFrames.detach(); // thanks Qt, you are really smart...
 }
 
 D1GfxComp::~D1GfxComp()
