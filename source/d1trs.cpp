@@ -23,7 +23,7 @@ bool D1Trs::load(const QString &filePath, D1Pal *pal, std::vector<D1Trn *> &trns
         return false;
 
     const QByteArray fileData = file.readAll();
-    // Read SLA binary data
+    // Read TRS binary data
     QDataStream in(fileData);
 
     unsigned numTrns = fileSize / D1TRN_TRANSLATIONS;

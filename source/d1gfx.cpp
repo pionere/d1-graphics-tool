@@ -107,7 +107,11 @@ D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
     this->width = o.width;
     this->height = o.height;
     this->pixels = o.pixels;
+    // fields of tileset-frames
     this->frameType = o.frameType;
+    // fields of smk-frames
+    // this->framePal = o.framePal;
+    // this->frameAudio = o.frameAudio;
 }
 
 D1GfxFrame::~D1GfxFrame()

@@ -540,6 +540,7 @@ void GfxComponentDialog::on_cancelButton_clicked()
 
     delete this->newGfx;
     this->newGfx = nullptr;
+    this->newComp = nullptr;
 }
 
 void GfxComponentDialog::changeEvent(QEvent *event)
