@@ -18,6 +18,8 @@ enum class IMPORT_FILE_TYPE {
     PCX,
     TBL,
     CPP,
+    // DCC,
+    // DC6,
 };
 
 typedef struct ImportParam {

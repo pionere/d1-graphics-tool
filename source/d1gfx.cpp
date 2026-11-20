@@ -11,6 +11,8 @@
 #include "d1celtilesetframe.h"
 #include "d1cl2.h"
 #include "d1smk.h"
+#include "d2cc.h"
+#include "d2c6.h"
 #include "openasdialog.h"
 #include "progressdialog.h"
 #include "remapdialog.h"
@@ -112,6 +114,10 @@ D1GfxFrame::D1GfxFrame(const D1GfxFrame &o)
     // fields of smk-frames
     // this->framePal = o.framePal;
     // this->frameAudio = o.frameAudio;
+    // fields of d2 graphics
+    this->xoffset = o.xoffset;
+    this->yoffset = o.yoffset;
+    this->flipped = o.flipped;
 }
 
 D1GfxFrame::~D1GfxFrame()
@@ -787,6 +793,36 @@ D1SmkAudioData *D1GfxFrame::getFrameAudio()
     return this->frameAudio;
 }
 
+int D1GfxFrame::getXOffset() const
+{
+    return this->xoffset;
+}
+
+void D1GfxFrame::setXOffset(int value)
+{
+    this->xoffset = value;
+}
+
+int D1GfxFrame::getYOffset() const
+{
+    return this->yoffset;
+}
+
+void D1GfxFrame::setYOffset(int value)
+{
+    this->yoffset = value;
+}
+
+bool D1GfxFrame::isFlipped() const
+{
+    return this->flipped;
+}
+
+void D1GfxFrame::setFlipped(bool value)
+{
+    this->flipped = value;
+}
+
 bool D1GfxFrame::reencode(int palmap[D1PAL_COLORS])
 {
     bool result = false;
@@ -1414,6 +1450,28 @@ void D1GfxComp::setGFX(D1Gfx *g)
 {
     delete this->gfx;
     this->gfx = g;
+
+    const bool updateOffsets = g->hasOffset();
+    for (D1GfxCompFrame &compFrame : this->compFrames) {
+        if (compFrame.cfFrameRef == 0) continue;
+        // discard invalid references
+        if ((unsigned)g->getFrameCount() < compFrame.cfFrameRef) {
+            compFrame.cfFrameRef = 0;
+            continue;
+        }
+        if (!updateOffsets) continue;
+        // inherit offsets
+        D1GfxFrame* frame = g->getFrame(compFrame.cfFrameRef - 1);
+        int xoff = frame->getXOffset();
+        int yoff = frame->getYOffset();
+        if (!frame->isFlipped()) {
+            yoff -= frame->getHeight();
+        }
+        compFrame.cfOffsetX = xoff;
+        compFrame.cfOffsetY = yoff;
+        frame->setXOffset(0);
+        frame->setYOffset(0);
+    }
 }
 
 QString D1GfxComp::getLabel() const
@@ -1547,10 +1605,22 @@ D1Gfx *D1Gfx::loadComponentGFX(QString gfxFilePath)
             QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return nullptr;
         }
-    } else { // if (fileLower.endsWith(".cl2")) {
+    } else if (fileLower.endsWith(".cl2")) {
         if (!D1Cl2::load(*gfx, gfxFilePath, params)) {
             delete gfx;
             QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return nullptr;
+        }
+    } else if (fileLower.endsWith(".dc6")) {
+        if (!D2C6::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading DC6 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return nullptr;
+        }
+    } else { // if (fileLower.endsWith(".dcc")) {
+        if (!D2Cc::load(*gfx, gfxFilePath, params)) {
+            delete gfx;
+            QMessageBox::critical(nullptr, tr("Error"), tr("Failed loading DCC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return nullptr;
         }
     }
@@ -2210,15 +2280,28 @@ bool D1Gfx::check(int assetMpl, bool *typetested) const
     return result;
 }
 
+bool D1Gfx::hasOffset() const
+{
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame* frame = this->frames[i];
+        result |= frame->xoffset != 0 || frame->yoffset != 0;
+    }
+    return result;
+}
+
 bool D1Gfx::squash()
 {
     const D1GfxPixel backPixel = D1GfxPixel::transparentPixel();
     bool change = false;
+    // squash the components
     for (int i = 0; i < this->getFrameCount(); i++) {
         QRect rect = this->getFrameRect(i, true);
-        rect.moveTo(-rect.x(), -rect.y());
-
         D1GfxFrame* frame = this->frames[i];
+        // update offset info
+        frame->xoffset += rect.x();
+        frame->yoffset += rect.y() + (frame->flipped ? 0 : (rect.height() - frame->getHeight()));
+        rect.moveTo(-rect.x(), -rect.y());
         // resize the image if necessary
         change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT, backPixel);
 
@@ -2278,6 +2361,40 @@ bool D1Gfx::squash()
     // eliminate the obsolete components
     qDeleteAll(this->components);
     this->components.clear();
+
+    // squash the offsets
+    if (this->hasOffset()) {
+        QRect rect;
+        for (int i = 0; i < this->getFrameCount(); i++) {
+            D1GfxFrame* frame = this->frames[i];
+            QRect frameRect = QRect(frame->xoffset, frame->yoffset - (frame->flipped ? 0 : frame->getHeight()), frame->getWidth(), frame->getHeight());
+            rect = rect.united(frameRect);
+        }
+        for (int i = 0; i < this->getFrameCount(); i++) {
+            D1GfxFrame* frame = this->frames[i];
+            int dx = frame->xoffset - rect.x();
+            if (dx != 0) {
+                change |= frame->resize(dx + frame->getWidth(), frame->getHeight(), RESIZE_PLACEMENT::CENTER_RIGHT, backPixel);
+            }
+            dx = rect.width() - frame->getWidth();
+            if (dx != 0) {
+                change |= frame->resize(dx + frame->getWidth(), frame->getHeight(), RESIZE_PLACEMENT::CENTER_LEFT, backPixel);
+            }
+            frame->xoffset = 0;
+
+            int dy = (frame->yoffset - frame->getHeight()) - rect.y();
+            if (dy != 0) {
+                change |= frame->resize(frame->getWidth(), dy + frame->getHeight(), RESIZE_PLACEMENT::BOTTOM, backPixel);
+            }
+            dy = rect.height() - frame->getHeight();
+            if (dy != 0) {
+                change |= frame->resize(frame->getWidth(), dy + frame->getHeight(), RESIZE_PLACEMENT::TOP, backPixel);
+            }
+
+            frame->yoffset = 0;
+        }
+    }
+
     return change;
 }
 

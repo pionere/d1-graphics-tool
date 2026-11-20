@@ -83,6 +83,9 @@ class D1GfxFrame : public QObject {
     friend class D1CelFrame;
     friend class D1Cl2;
     friend class D1Cl2Frame;
+    friend class D2Cc;
+    friend class D2C6;
+    friend class D2C6Frame;
     friend class D1CelTileset;
     friend class D1CelTilesetFrame;
     friend class D1Gfx;
@@ -129,6 +132,14 @@ public:
     void setFramePal(D1Pal *pal);
     D1SmkAudioData *getFrameAudio();
 
+    // functions for D2-frames
+    int getXOffset() const;
+    void setXOffset(int value);
+    int getYOffset() const;
+    void setYOffset(int value);
+    bool isFlipped() const;
+    void setFlipped(bool value);
+
 protected:
     int width = 0;
     int height = 0;
@@ -138,6 +149,10 @@ protected:
     // fields of smk-frames
     D1Pal* framePal = nullptr;
     D1SmkAudioData *frameAudio = nullptr;
+    // fields of d2 graphics
+    int xoffset = 0;
+    int yoffset = 0;
+    bool flipped = false;
 };
 
 typedef enum gfx_file_index {
@@ -266,6 +281,7 @@ class D1GfxComp : public QObject {
     Q_OBJECT
 
     friend class D1Gfx;
+    friend class D2Cof;
 public:
     D1GfxComp(D1Gfx *cg, const D1Gfx *g);
     D1GfxComp(const D1GfxComp &o);
@@ -320,6 +336,9 @@ class D1Gfx : public QObject {
 
     friend class D1Cel;
     friend class D1Cl2;
+    friend class D2Cc;
+    friend class D2Cof;
+    friend class D2C6;
     friend class D1CelTileset;
     friend class D1Font;
     friend class D1Min;
@@ -365,6 +384,7 @@ public:
     int testResize(const ResizeParam &params) const;
     bool resize(const ResizeParam &params);
     void mask(int frameIndex, unsigned flags);
+    bool hasOffset() const;
     bool squash();
     void optimize(unsigned flags);
     bool check(int assetMpl, bool *typetested = nullptr) const;

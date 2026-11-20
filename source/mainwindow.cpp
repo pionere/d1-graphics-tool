@@ -33,6 +33,9 @@
 #include "d1pcx.h"
 #include "d1smk.h"
 #include "d1trs.h"
+#include "d2cc.h"
+#include "d2cof.h"
+#include "d2c6.h"
 #include "d2dat.h"
 #include "ui_mainwindow.h"
 
@@ -228,13 +231,13 @@ void MainWindow::updateDynamicMenus()
     this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
-    bool hasComponent = this->gfx != nullptr && this->gfx->getComponentCount() != 0;
+    bool isSquashable = this->gfx != nullptr && (this->gfx->getComponentCount() != 0 || this->gfx->hasOffset());
     if (this->gfxset != nullptr) {
         for (int i = 0; i < this->gfxset->getGfxCount(); i++) {
-            hasComponent |= this->gfxset->getGfx(i)->getComponentCount() != 0;
+            isSquashable |= this->gfxset->getGfx(i)->getComponentCount() != 0 || this->gfxset->getGfx(i)->hasOffset();
         }
     }
-    this->ui->actionSquash->setEnabled(hasComponent);
+    this->ui->actionSquash->setEnabled(isSquashable);
     // - Colors
     this->ui->actionDir_Colors->setEnabled((this->gfxsetView != nullptr || this->celView != nullptr) && hasFrame);
     // - Data
@@ -740,7 +743,7 @@ void MainWindow::on_actionNew_Gfxset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;CLC Files (*.clc *.CLC);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;CLC Files (*.clc *.CLC);;PCX Files (*.pcx *.PCX);;SMK Files (*.smk *.SMK);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL);;CPP Files (*.cpp *.CPP *.c *.C);;D2 Files(*.dcc *.DCC *.dc6 *.DC6 *.cof *.COF)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -790,6 +793,12 @@ IMPORT_FILE_TYPE MainWindow::guessFileType(const QString& filePath, bool dunMode
             fileType = IMPORT_FILE_TYPE::TBL;
         else if (fileLower.endsWith(".cpp"))
             fileType = IMPORT_FILE_TYPE::CPP;
+        // else if (fileLower.endsWith(".dcc"))
+        //     fileType = IMPORT_FILE_TYPE::DCC;
+        // else if (fileLower.endsWith(".dc6"))
+        //     fileType = IMPORT_FILE_TYPE::DC6;
+        // else if (fileLower.endsWith(".cof"))
+        //     fileType = IMPORT_FILE_TYPE::COF;
         else
             fileType = IMPORT_FILE_TYPE::CEL;
     }
@@ -1312,6 +1321,12 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
             fileType = FILE_CONTENT::CPP;
         else if (fileLower.endsWith(".smk"))
             fileType = FILE_CONTENT::SMK;
+        else if (fileLower.endsWith(".dcc"))
+            fileType = FILE_CONTENT::DCC;
+        else if (fileLower.endsWith(".dc6"))
+            fileType = FILE_CONTENT::DC6;
+        else if (fileLower.endsWith(".cof"))
+            fileType = FILE_CONTENT::COF;
         else
             fileType = FILE_CONTENT::UNKNOWN;
     }
@@ -1542,6 +1557,21 @@ void MainWindow::loadFile(const OpenAsParam &params, MainWindow *instance, LoadF
     } else if (fileType == FILE_CONTENT::CLC) {
         if (!D1Clc::load(*result->gfx, gfxFilePath, params)) {
             MainWindow::failWithError(instance, result, tr("Failed loading CLC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::DCC) {
+        if (!D2Cc::load(*result->gfx, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading DCC file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::DC6) {
+        if (!D2C6::load(*result->gfx, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading DC6 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (fileType == FILE_CONTENT::COF) {
+        if (!D2Cof::load(*result->gfx, gfxFilePath, params)) {
+            MainWindow::failWithError(instance, result, tr("Failed loading COF file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else if (fileType == FILE_CONTENT::PCX) {
