@@ -84,7 +84,6 @@ class D1GfxFrame : public QObject {
     friend class D1Cl2;
     friend class D1Cl2Frame;
     friend class D2Cc;
-    friend class D2CcFrame;
     friend class D2C6;
     friend class D2C6Frame;
     friend class D1CelTileset;

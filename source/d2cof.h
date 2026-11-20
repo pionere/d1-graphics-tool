@@ -10,5 +10,5 @@ public:
     static bool load(D1Gfx &gfx, const QString &cofFilePath, const OpenAsParam &params);
 
 private:
-    static bool readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx);
+    static bool readContent(QDataStream &in, D1Gfx &gfx);
 };

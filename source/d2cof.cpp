@@ -41,20 +41,10 @@ typedef struct D2CofLayer
     uint8_t newTranslvl;      ///<
     char    weaponClass[4];   ///<
 } D2CofLayer;
-/*
-typedef struct D2CofHeaderInfo
-{
-    int numDirections;
 
-    // QList<D2CofLayer> layers;
-    // QList<int> keyFrames;
-    // QList<uint8_t> layerOrder; // [directions][frame][layer]
-
-    // RECT32 box;
-} D2CofHeaderInfo;
-*/
-bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
+bool D2Cof::readContent(QDataStream &in, D1Gfx &gfx)
 {
+    QIODevice *device = in.device();
     auto fileSize = device->size();
     const int headerSize = 4 * 1 + 4 + 4 * 4 + 2 * 2;
     int cursor = 0;
@@ -67,15 +57,11 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
     quint8 layersByte;
     in >> layersByte;
 
-    // hi.numLayers = layersByte;
-
     quint8 framesByte;
     in >> framesByte;
 
     quint8 directionsByte;
     in >> directionsByte;
-
-    // hi.numDirections = directionsByte;
 
     quint8 versionByte;
     in >> versionByte;
@@ -98,12 +84,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
 
     qint32 yMaxDWord;
     in >> yMaxDWord;
-#if 0
-    hi.box.x = xMinDWord;
-    hi.box.y = yMinDWord;
-    hi.box.w = xMaxDWord - xMinDWord;
-    hi.box.h = yMaxDWord - yMinDWord;
-#endif
+
     quint32 animRateDWord;
     in >> animRateDWord;
 
@@ -113,7 +94,7 @@ bool D2Cof::readContent(QIODevice *device, QDataStream &in, D1Gfx &gfx)
     if (fileSize < cursor + layersByte * 9) {
         return false;
     }
-LogDebug("Adding layers %d", layersByte);
+
     QMap<int, D1GfxComp*> compMap;
     for (int i = 0; i < layersByte; i++) {
         D2CofLayer layer;
@@ -156,8 +137,6 @@ LogDebug("Adding layers %d", layersByte);
         layer.weaponClass[2] = weaponClass2Byte;
         layer.weaponClass[3] = weaponClass3Byte;
 
-        // hi.layers.push_Back(layer);
-
         D1Gfx* cg = new D1Gfx();
         cg->setPalette(gfx.getPalette());
         if (componentByte >= lengthof(componentsNames))
@@ -173,7 +152,6 @@ LogDebug("Adding layers %d", layersByte);
     }
 
     // add empty frames
-LogDebug("Creating frames %d", directionsByte * framesByte);
     for (int i = 0; i < directionsByte * framesByte; i++) {
         gfx.insertFrame(i);
 
@@ -184,7 +162,6 @@ LogDebug("Creating frames %d", directionsByte * framesByte);
             comp->getCompFrame(i)->cfFrameRef = i + 1;
         }
     }
-LogDebug("Creating groups %d", directionsByte);
     for (int d = 0; d < directionsByte; d++) {
         if (d == 0)
             gfx.groupFrameIndices[0].second = (d + 1) * framesByte - 1;
@@ -202,15 +179,13 @@ LogDebug("Creating groups %d", directionsByte);
     }
 
     cursor += layersByte * 9;
+    // add action frames as meta-info
     if (fileSize < cursor + framesByte) {
         return false;
     }
-LogDebug("Adding metas %d", framesByte);
     for (int i = 0; i < framesByte; i++) {
         quint8 keyFrameByte;
         in >> keyFrameByte;
-
-        // hi.keyFrames.push_back(keyFrameByte);
 
         if (keyFrameByte != 0) {
             QString frames = gfx.metas[CELMETA_ACTIONFRAMES].getContent();
@@ -222,18 +197,16 @@ LogDebug("Adding metas %d", framesByte);
     }
 
     cursor += framesByte;
+    // add zorder to components
     int layersOrders = directionsByte * framesByte * layersByte;
     if (fileSize < cursor + layersOrders) {
         return false;
     }
-LogDebug("Adding components %d", directionsByte);
     for (int d = 0; d < directionsByte; d++) {
         for (int n = 0; n < framesByte; n++) {
             for (int i = 0; i < layersByte; i++) {
                 quint8 layerByte;
                 in >> layerByte;
-
-                // hi.layerOrder.push_back(layerByte);
 
                 if (!compMap.contains(layerByte)) {
                     dProgressErr() << QApplication::tr("undefined layer (%1) referenced").arg(layerByte);
@@ -245,8 +218,6 @@ LogDebug("Adding components %d", directionsByte);
             }
         }
     }
-
-LogDebug("Load done.");
     return true;
 }
 
@@ -266,6 +237,5 @@ bool D2Cof::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     QDataStream in(fileData);
     in.setByteOrder(QDataStream::LittleEndian);
 
-    QIODevice *device = in.device();
-    return readContent(device, in, gfx);
+    return readContent(in, gfx);
 }

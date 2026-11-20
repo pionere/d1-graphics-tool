@@ -1,7 +1,5 @@
 #include "d2c6.h"
 
-#include <vector>
-
 #include <QApplication>
 #include <QByteArray>
 #include <QDataStream>

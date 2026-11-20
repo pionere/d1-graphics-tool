@@ -1,6 +1,5 @@
 #include "gfxcomponentdialog.h"
 
-#include <QMessageBox>
 #include <QScrollBar>
 
 #include "config.h"
@@ -64,8 +63,6 @@ void GfxComponentDialog::initialize(D1Gfx* g, D1GfxComp *gc)
     // this->newGfx->setFilePath(g->getFilePath());
     this->newGfx->addGfx(g);
     this->newComp = this->newGfx->getComponent(compIdx);
-    if (gc == this->newComp)
-        QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate comp in initialize"));
 
     this->displayFrame();
 }
@@ -512,8 +509,6 @@ void GfxComponentDialog::on_submitButton_clicked()
     for (int i = 0; i < gc->getCompFrameCount(); i++) {
         D1GfxCompFrame *frame = gc->getCompFrame(i);
         D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
-if (frame == newFrame)
-    QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames"));
         if (frame->cfZOrder != newFrame->cfZOrder) {
             frame->cfZOrder = newFrame->cfZOrder;
             change = true;
@@ -541,19 +536,6 @@ if (frame == newFrame)
 
 void GfxComponentDialog::on_cancelButton_clicked()
 {
-#if 1
-    D1GfxComp *gc = this->gfxComp;
-    if (gc == this->newComp)
-        QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate comp in on_cancelButton_clicked"));
-    for (int i = 0; i < gc->getCompFrameCount(); i++) {
-        D1GfxCompFrame *frame = gc->getCompFrame(i);
-        D1GfxCompFrame *newFrame = this->newComp->getCompFrame(i);
-        if (frame == newFrame) {
-            QMessageBox::critical(nullptr, "Error", QStringLiteral("Failed to duplicate compFrames"));
-            break;
-        }
-    }
-#endif
     this->close();
 
     delete this->newGfx;
