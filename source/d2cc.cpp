@@ -472,8 +472,10 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
     di.box = { INT_MAX, INT_MAX, INT_MIN, INT_MIN };
 
     for (unsigned i = 0; i < hi.framesPerDirection; i++) {
-        D2CcFrameInfo &fi = di.frameInfos.emplaceBack();
+        D2CcFrameInfo fi;
         readFrameHeader(rs, di, fi);
+
+        di.frameInfos.push_back(fi);
 
         LogDebug("frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fi.width, fi.height, fi.XOffset, fi.YOffset, fi.flipped);
 
