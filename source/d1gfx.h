@@ -122,6 +122,7 @@ public:
     bool mask(const D1GfxFrame *frame, unsigned flags);
     bool subtract(const D1GfxFrame *frame, unsigned flags);
     bool optimize(D1CEL_TYPE type, const D1GfxFrame *maskFrame);
+    bool reencode(int palmap[D1PAL_COLORS]);
 
     // functions for smk-frames
     D1Pal* getFramePal() const;

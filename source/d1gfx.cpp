@@ -787,6 +787,30 @@ D1SmkAudioData *D1GfxFrame::getFrameAudio()
     return this->frameAudio;
 }
 
+bool D1GfxFrame::reencode(int palmap[D1PAL_COLORS])
+{
+    bool result = false;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            D1GfxPixel pixel = this->pixels[y][x]; // this->getPixel(x, y);
+            if (!pixel.isTransparent()) {
+                quint8 color = pixel.getPaletteIndex();
+                int ci = palmap[color];
+                if (ci < 0) {
+                    palmap[color] = 0;
+                    dProgressWarn() << tr("Pixel with undefined color (%1) is replaced by 0.").arg(color);
+                    ci = 0;
+                }
+                if (color != ci) {
+                    this->setPixel(x, y, D1GfxPixel::colorPixel(ci));
+                    result = true;
+                }
+            }
+        }
+    }
+    return result;
+}
+
 QString D1Gfx::gfxTypeToStr(D1CEL_TYPE type)
 {
     QString result = QApplication::tr("Unknown");
@@ -2524,23 +2548,13 @@ void D1Gfx::reencode(const D1Pal *pal)
     }
     // change the pixels of the frames
     for (D1GfxFrame* frame : this->frames) {
-        for (int y = 0; y < frame->getHeight(); y++) {
-            for (int x = 0; x < frame->getWidth(); x++) {
-                D1GfxPixel pixel = frame->getPixel(x, y);
-                if (!pixel.isTransparent()) {
-                    quint8 color = pixel.getPaletteIndex();
-                    int ci = palmap[color];
-                    if (ci < 0) {
-                        palmap[color] = 0;
-                        dProgressWarn() << tr("Pixel with undefined color (%1) is replaced by 0.").arg(color);
-                        ci = 0;
-                    }
-                    if (color != ci) {
-                        frame->setPixel(x, y, D1GfxPixel::colorPixel(ci));
-                        this->modified = true;
-                    }
-                }
-            }
+        this->modified |= frame->reencode(palmap);
+    }
+    // change the pixels of the components
+    for (D1GfxComp* comp : this->components) {
+        D1Gfx* gfx = comp->getGFX();
+        for (D1GfxFrame* frame : gfx->frames) {
+            this->modified |= frame->reencode(palmap);
         }
     }
 }
