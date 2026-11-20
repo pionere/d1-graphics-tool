@@ -59,10 +59,6 @@ void ResizeDialog::setMinSize(bool width)
         frameSize = this->gfx->getFrameSize();
         clipped = this->gfx->isClipped();
     }
-    if (!frameSize.isValid()) {
-        QMessageBox::critical(this, tr("Error"), tr("Framesize is not constant"));
-        return;
-    }
     RESIZE_PLACEMENT placement = (RESIZE_PLACEMENT)this->ui->placementButtonGroup->checkedId();
 
     int vert = 0, horz = 0;
@@ -80,10 +76,12 @@ void ResizeDialog::setMinSize(bool width)
 
     if (width) {
         int w = rect.width();
-        switch (horz) {
-        case 0: w += rect.x(); break;
-        case 1: w = frameSize.width() - 2 * std::min(rect.x(), frameSize.width() - (w + rect.x())); break;
-        case 2: w = frameSize.width() - rect.x(); break;
+        if (frameSize.isValid()) {
+            switch (horz) {
+            case 0: w += rect.x(); break;
+            case 1: w = frameSize.width() - 2 * std::min(rect.x(), frameSize.width() - (w + rect.x())); break;
+            case 2: w = frameSize.width() - rect.x(); break;
+            }
         }
         // ensure it is an even number
         if (w & 1) {
@@ -92,10 +90,12 @@ void ResizeDialog::setMinSize(bool width)
         this->ui->widthLineEdit->setText(QString::number(w));
     } else {
         int h = rect.height();
-        switch (vert) {
-        case 0: h += rect.y(); break;
-        case 1: h = frameSize.height() - 2 * std::min(rect.y(), frameSize.height() - (h + rect.y())); break;
-        case 2: h = frameSize.height() - rect.y(); break;
+        if (frameSize.isValid()) {
+            switch (vert) {
+            case 0: h += rect.y(); break;
+            case 1: h = frameSize.height() - 2 * std::min(rect.y(), frameSize.height() - (h + rect.y())); break;
+            case 2: h = frameSize.height() - rect.y(); break;
+            }
         }
         // ensure the width can be calculated for clipped graphics
         if (clipped && h < CEL_BLOCK_HEIGHT) {
