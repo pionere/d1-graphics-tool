@@ -11,7 +11,7 @@ bool D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     QDataStream in(rawData);
     in.setByteOrder(QDataStream::LittleEndian);
 
-    if (rawData.length() < 8 * 4)
+    if (rawData.size() < 8 * 4)
         return false;
 
     quint32 flippedDword;
@@ -38,7 +38,7 @@ bool D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
     quint32 lengthDword;
     in >> lengthDword;
 
-    if (rawData.length() < 8 * 4 + lengthDword + 3)
+    if ((unsigned)rawData.size() < 8 * 4 + lengthDword + 3)
         return false;
 
     // calculate the offset
@@ -64,7 +64,7 @@ bool D2C6Frame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsP
             }
         } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
             // Palette indices group
-            if ((o + readByte) >= rawData.size()) {
+            if ((o + readByte) >= (unsigned)rawData.size()) {
                 pixelLine.push_back(D1GfxPixel::transparentPixel()); // ensure pixelLine is not empty to report error at the end
                 break;
             }

@@ -1276,7 +1276,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component, int outline) const
                 const D1GfxCompFrame *compFrame = &comp->compFrames[frameIndex];
 
                 if (compFrame->cfFrameRef == 0) continue;
-                if (compFrame->cfFrameRef > comp->gfx->frames.count()) {
+                if (compFrame->cfFrameRef > (unsigned)comp->gfx->frames.count()) {
                     // TODO: add warning?
                     continue;
                 }
@@ -1309,7 +1309,7 @@ QImage D1Gfx::getFrameImage(int frameIndex, int component, int outline) const
                 const D1GfxCompFrame *compFrame = &comp->compFrames[frameIndex];
 
                 if (compFrame->cfFrameRef == 0) continue;
-                if (compFrame->cfFrameRef > comp->gfx->frames.count()) {
+                if (compFrame->cfFrameRef > (unsigned)comp->gfx->frames.count()) {
                     // TODO: add warning?
                     continue;
                 }
@@ -2347,7 +2347,7 @@ bool D1Gfx::squash()
                 const D1GfxCompFrame *compFrame = &comp->compFrames[i];
 
                 if (compFrame->cfFrameRef == 0) continue;
-                if (compFrame->cfFrameRef > comp->gfx->frames.count()) {
+                if (compFrame->cfFrameRef > (unsigned)comp->gfx->frames.count()) {
                     // TODO: add warning?
                     continue;
                 }

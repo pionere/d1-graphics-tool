@@ -579,8 +579,16 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
  */
 static bool MonstPlace(int xp, int yp)
 {
+#if 0
 	return (dMonster[xp][yp]/* | dPlayer[xp][yp] | dObject[xp][yp]*/
 		 | nSolidTable[dPiece[xp][yp]] | (dFlags[xp][yp] & (BFLAG_ALERT | BFLAG_MON_PROTECT))) == 0;
+#else
+	bool result = (dMonster[xp][yp]/* | dPlayer[xp][yp] | dObject[xp][yp]*/
+		 | nSolidTable[dPiece[xp][yp]] | (dFlags[xp][yp] & (BFLAG_ALERT | BFLAG_MON_PROTECT))) == 0;
+	if (result && dObject[xp][yp] != 0)
+		dProgressErr() << QApplication::tr("Monster on object at %1:%1", xp, yp);
+	return result;
+#endif
 }
 
 static int PlaceMonster(int mtidx, int x, int y)

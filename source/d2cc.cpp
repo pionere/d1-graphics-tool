@@ -9,6 +9,7 @@
 #include <QDataStream>
 #include <QDir>
 #include <QMessageBox>
+#include <QVector>
 
 #include "progressdialog.h"
 #include "resizedialog.h"
@@ -310,7 +311,7 @@ static int decodePixelCodesStack(D2CcDirectionInfo& dirInfo, uint8_t pixelMask, 
     return curPixelIdx;
 }
 
-static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameInfo, QList<unsigned>& pixelBuffer,
+static void decodeFrameStage1(D2CcDirectionInfo& dirInfo, D2CcFrameInfo &frameInfo, QVector<unsigned>& pixelBuffer,
                        QList<PixelBufferEntry>& pbEntries)
 {
     // Offset in terms of cells for this frame
@@ -475,9 +476,9 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
         D2CcFrameInfo fi;
         readFrameHeader(rs, di, fi);
 
-        di.frameInfos.push_back(fi);
-
         LogDebug("frame %d dimensions %dx%d with offset %dx%d (flipped %d).", i, fi.width, fi.height, fi.XOffset, fi.YOffset, fi.flipped);
+
+        di.frameInfos.push_back(fi);
 
         if (di.box.x > fi.XOffset)
             di.box.x = fi.XOffset;
@@ -565,7 +566,7 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
     // This will be used to retrieve values from the previous frame
     constexpr unsigned invalidIndex = UINT_MAX;
     const size_t  pixelBufferNbCells = di.HorizontalCellCount * di.VerticalCellCount;
-    QList<unsigned> pixelBuffer(pixelBufferNbCells, invalidIndex);
+    QVector<unsigned> pixelBuffer(pixelBufferNbCells, invalidIndex);
 
     // 1st phase of decoding : fill the pixel buffer
     // We actually fill a buffer of entries as to avoid storing empty entries
@@ -579,7 +580,7 @@ static bool readDirHeader(D2CcBitReaderState &rs, const D2CcHeaderInfo &hi, D2Cc
 
 bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &gfx)
 {
-    QList<CellInfo> pixelBufferCells(di.HorizontalCellCount * di.VerticalCellCount);
+    QVector<CellInfo> pixelBufferCells(di.HorizontalCellCount * di.VerticalCellCount);
     D1GfxFrame *pBuffer = new D1GfxFrame();
     pBuffer->resize(di.box.w, di.box.h, RESIZE_PLACEMENT::TOP_LEFT, D1GfxPixel::colorPixel(0));
     // 2nd phase of decoding : Finish using the pixel buffer entries
@@ -643,8 +644,8 @@ dProgressErr() << QApplication::tr("oob in frame %1 to the bottom %2 + %3 -> %4 
                             nbBitsToRead = 2;
                         }
                         // fill FRAME cell with pixels
-                        for (size_t y = 0; y < ch; y++) {
-                            for (size_t x = 0; x < cw; x++) {
+                        for (int y = 0; y < ch; y++) {
+                            for (int x = 0; x < cw; x++) {
                                 if (di.pixelCodesDisplacementBitStreamSize < nbBitsToRead) {
                                     LogDebug("oob in pixelCodesDisplacementBitStream %d", di.pixelCodesDisplacementBitStreamSize);
                                     dProgressErr() << QApplication::tr("oob in pixelCodesDisplacementBitStream %1").arg(di.pixelCodesDisplacementBitStreamSize);
@@ -728,7 +729,7 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     auto fileSize = device->size();
 
     // BUILDING {DCC FRAMES}
-    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
+    for (unsigned d = 0; d < (unsigned)hi.dirOffsets.size(); d++) {
         const auto &offset = hi.dirOffsets[d];
         if (fileSize >= offset.second && offset.second >= offset.first) {
             device->seek(offset.first);
