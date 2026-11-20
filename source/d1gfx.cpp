@@ -2329,8 +2329,7 @@ bool D1Gfx::squash()
         D1GfxFrame* frame = this->frames[i];
         // update offset info
         frame->xoffset += rect.x();
-        // assert(!frame->flipped);
-        frame->yoffset += rect.y()/* + rect.height()*/;
+        frame->yoffset += rect.y() + (frame->flipped ? 0 : (rect.height() - frame->getHeight()));
         rect.moveTo(-rect.x(), -rect.y());
         // resize the image if necessary
         change |= frame->resize(rect.width(), rect.height(), RESIZE_PLACEMENT::TOP_LEFT, backPixel);
@@ -2386,10 +2385,6 @@ bool D1Gfx::squash()
                 this->frames[i] = newFrame;
             }
         }
-        /*// preserve offset info
-        frame->xoffset = rect.x();
-        frame->yoffset = rect.y() + frame->getHeight();
-        frame->flipped = false;*/
     }
 
     // eliminate the obsolete components
