@@ -97,7 +97,7 @@ bool D2C6::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     auto fileSize = device->size();
 
     // BUILDING {CEL FRAMES}
-    for (unsigned i = 0; i < hi.frameOffsets.size(); i++) {
+    for (unsigned i = 0; i < (unsigned)hi.frameOffsets.size(); i++) {
         const auto &offset = hi.frameOffsets[i];
         D1GfxFrame *frame = new D1GfxFrame();
         if (fileSize >= offset.second && offset.second >= offset.first) {

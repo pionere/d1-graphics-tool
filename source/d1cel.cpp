@@ -239,7 +239,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 
     // BUILDING {CEL FRAMES}
     int clipped = -1;
-    for (unsigned i = 0; i < hi.frameOffsets.size(); i++) {
+    for (unsigned i = 0; i < (unsigned)hi.frameOffsets.size(); i++) {
         const auto &offset = hi.frameOffsets[i];
         D1GfxFrame *frame = new D1GfxFrame();
         if (fileSize >= offset.second && offset.second >= offset.first) {

@@ -993,9 +993,12 @@ static unsigned AmLine16;
 static QPainter *DunPainter = nullptr;
 static D1Pal *DunPal = nullptr;
 
-static POS32 gridPos(unsigned sx, unsigned sy, unsigned TILE_WIDTH_PX, unsigned TILE_HEIGHT_PX)
+static POS32 gridPos(unsigned sx, unsigned sy, int assetMpl)
 {
-    int tx, ty, mx, my, px, py;
+    const unsigned TILE_WIDTH_PX = 2 * MICRO_WIDTH * assetMpl;
+    const unsigned TILE_HEIGHT_PX = MICRO_HEIGHT * assetMpl;
+    int tx, ty, mx, my;
+    unsigned px, py;
     bool flipx, flipy;
     tx = sx / TILE_WIDTH_PX;
     ty = sy / TILE_HEIGHT_PX;
@@ -1005,8 +1008,8 @@ static POS32 gridPos(unsigned sx, unsigned sy, unsigned TILE_WIDTH_PX, unsigned 
     SHIFT_GRID(mx, my, tx, ty);
 
     // Shift position to match diamond grid aligment
-    px = ((unsigned)sx) % TILE_WIDTH_PX;
-    py = ((unsigned)sy) % TILE_HEIGHT_PX;
+    px = sx % TILE_WIDTH_PX;
+    py = sy % TILE_HEIGHT_PX;
 
     flipy = py < (px >> 1);
     if (flipy) {
@@ -1021,16 +1024,14 @@ static POS32 gridPos(unsigned sx, unsigned sy, unsigned TILE_WIDTH_PX, unsigned 
 
 void D1Dun::DrawDir(D1GfxFrame* frame, int assetMpl, int type)
 {
-    const int TILE_WIDTH_PX = 2 * MICRO_WIDTH * assetMpl;
-    const int TILE_HEIGHT_PX = MICRO_HEIGHT * assetMpl;
     const int width = frame->getWidth();
     const int height = frame->getHeight();
 
-    POS32 cpos = gridPos(width / 2, height / 2, TILE_WIDTH_PX, TILE_HEIGHT_PX);
+    POS32 cpos = gridPos(width / 2, height / 2, assetMpl);
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            POS32 tpos = gridPos(x, y, TILE_WIDTH_PX, TILE_HEIGHT_PX);
+            POS32 tpos = gridPos(x, y, assetMpl);
             int dir = type ? GetDirection8(cpos.x, cpos.y, tpos.x, tpos.y) : GetDirection16(cpos.x, cpos.y, tpos.x, tpos.y);
             frame->setPixel(x, y, D1GfxPixel::colorPixel(dir));
         }

@@ -633,8 +633,8 @@ bool D2Cc::decodeFrames(const D2CcHeaderInfo& hi, D2CcDirectionInfo &di, D1Gfx &
                         }
 
                         // fill FRAME cell with pixels
-                        for (size_t y = 0; y < ch; y++) {
-                            for (size_t x = 0; x < cw; x++) {
+                        for (int y = 0; y < ch; y++) {
+                            for (int x = 0; x < cw; x++) {
                                 if (di.pixelCodesDisplacementBitStreamSize < nbBitsToRead) {
                                     LogDebug("oob in pixelCodesDisplacementBitStream %d", di.pixelCodesDisplacementBitStreamSize);
                                     dProgressErr() << QApplication::tr("oob in pixelCodesDisplacementBitStream %1").arg(di.pixelCodesDisplacementBitStreamSize);
@@ -706,7 +706,7 @@ bool D2Cc::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     auto fileSize = device->size();
 
     // BUILDING {DCC FRAMES}
-    for (unsigned d = 0; d < hi.dirOffsets.size(); d++) {
+    for (unsigned d = 0; d < (unsigned)hi.dirOffsets.size(); d++) {
         const auto &offset = hi.dirOffsets[d];
         if (fileSize >= offset.second && offset.second >= offset.first) {
             device->seek(offset.first);
