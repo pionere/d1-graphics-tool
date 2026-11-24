@@ -253,7 +253,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	CreateDungeon();
 	// LoadLvlPalette();
 	int rv = RandRange(1, 4);
-	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
+	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dFlags+, dLight+
 	StoreProtections(dun);
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
@@ -401,8 +401,7 @@ static void LoadDungeon(D1Dun *dun, bool first)
     DRLG_InitTrans();
     /*memset(dFlags, 0, sizeof(dFlags));
     memset(dMonster, 0, sizeof(dMonster));
-    memset(dObject, 0, sizeof(dObject));
-    memset(dItem, 0, sizeof(dItem));*/
+    memset(dObject, 0, sizeof(dObject));*/
     InitLvlMap();
     for (int y = 0; y < dun->getHeight() && y < TILE_HEIGHT * DMAXY; y++) {
         for (int x = 0; x < dun->getWidth() && y < TILE_WIDTH * DMAXX; x++) {
@@ -425,7 +424,6 @@ static void LoadDungeon(D1Dun *dun, bool first)
             // DunMonsterType monType = dun->getMonsterAt(baseX + x, baseY + y);
             // TODO: dMonster[DBORDERX + x][DBORDERX + y] = monType.monIndex;
             dObject[DBORDERX + x][DBORDERX + y] = dun->getObjectAt(baseX + x, baseY + y).oType;
-            dItem[DBORDERX + x][DBORDERX + y] = dun->getItemAt(baseX + x, baseY + y);
             // load subtile
             int subtile = dun->getSubtileAt(baseX + x, baseY + y);
             if (subtile == UNDEF_SUBTILE) {
@@ -696,6 +694,9 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     for (int y = 0; y < MAXDUNY; y += TILE_HEIGHT) {
         for (int x = 0; x < MAXDUNX; x += TILE_WIDTH) {
             dun->setTileAt(x, y, baseTile);
+            dun->setItemAt(x, y, 0);
+            MapObject obj = { 0, 0, false };
+            dun->setObjectAt(x, y, obj);
         }
     }
     for (int y = 0; y < DMAXY; y++) {
@@ -706,15 +707,40 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     std::vector<ObjStruct> objectTypes;
     std::set<int> itemTypes;
     // std::vector<int> monUniques;
+    for (int i = 0; i < numitems; i++) {
+        const ItemStruct* is = &items[itemactive[i]];
+        int idx = is->_iIdx + 1;
+        itemTypes.insert(idx - 1);
+        dun->setItemAt((unsigned)is->_ipos.x / DUN_WIDTH, (unsigned)is->_ipos.y / DUN_WIDTH, idx);
+    }
+    for (int i = 0; i < numobjects; i++) {
+        int objIdx = i + 1;
+        MapObject obj = { 0, 0, false };
+        const ObjectStruct* os = &objects[i];
+        GetObjectStr(objIdx - 1);
+        obj.oPreFlag = os->_oPreFlag;
+        ObjStruct on;
+        on.otype = os->_otype;
+        on.baseFrame = os->_oGfxFrame;
+        if (on.baseFrame == 0 && os->_oAnimFlag != OAM_LOOP)
+            on.baseFrame = 1;
+        on.animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : -1;
+        on.name = infostr;
+        auto iter = objectTypes.begin();
+        for (; iter != objectTypes.end(); iter++) {
+            if (*iter == on) {
+                break;
+            }
+        }
+        obj.oType = lengthof(DunObjConvTbl) + std::distance(objectTypes.begin(), iter);
+        if (iter == objectTypes.end()) {
+            objectTypes.push_back(on);
+        }
+        dun->setObjectAt((unsigned)os->_opos.x / DUN_WIDTH, (unsigned)os->_opos.y / DUN_WIDTH, obj);
+    }
     for (int y = 0; y < MAXDUNY; y++) {
         for (int x = 0; x < MAXDUNX; x++) {
             dun->setSubtileAt(x, y, dPiece[x][y]);
-            int item = dItem[x][y];
-            if (item != 0) {
-                item = items[item - 1]._iIdx + 1;
-                itemTypes.insert(item - 1);
-            }
-            dun->setItemAt(x, y, item);
             int monIdx = dMonster[x][y];
             MapMonster mon = { { 0, false, false }, 0, 0, 0, 0 };
             if (monIdx != 0) {
@@ -732,31 +758,6 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
                 mon.moType.monIndex = monIdx;
             }
             dun->setMonsterAt(x, y, mon);
-            int objIdx = dObject[x][y];
-            MapObject obj = { 0, 0, false };
-            if (objIdx > 0) {
-                GetObjectStr(objIdx - 1);
-                ObjectStruct *os = &objects[objIdx - 1];
-                obj.oPreFlag = os->_oPreFlag;
-                ObjStruct on;
-                on.otype = os->_otype;
-                on.baseFrame = os->_oGfxFrame;
-                if (on.baseFrame == 0 && os->_oAnimFlag != OAM_LOOP)
-                    on.baseFrame = 1;
-                on.animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : -1;
-                on.name = infostr;
-                auto iter = objectTypes.begin();
-                for (; iter != objectTypes.end(); iter++) {
-                    if (*iter == on) {
-                        break;
-                    }
-                }
-                obj.oType = lengthof(DunObjConvTbl) + std::distance(objectTypes.begin(), iter);
-                if (iter == objectTypes.end()) {
-                    objectTypes.push_back(on);
-                }
-            }
-            dun->setObjectAt(x, y, obj);
             dun->setRoomAt(x, y, dTransVal[x][y]);
         }
     }

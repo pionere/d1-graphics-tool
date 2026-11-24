@@ -231,17 +231,17 @@ void InitLvlDungeon()
 			}
 			assetMpl = sqrt(dwMinSize / (2 * blocks * dwSubtiles));
 			if (2 * blocks * dwSubtiles * assetMpl * assetMpl != dwMinSize) {
-				mem_free_dbg(minData);
+				mem_free_dbg(minFile);
 				dProgressErr() << QApplication::tr("MIN file (%1) blocksize is invalid.").arg(lfd->dMiniTiles);
 				MicroTileLen = 0;
 				return;
 			}
 			rowLen = 16 * assetMpl * assetMpl;
 			pSubtiles = malloc(dwMinSize + sizeof(*pSubtiles) * rowLen);
-			memcpy(&pSubtiles[rowLen], minData, dwMinSize);
+			memcpy(&pSubtiles[rowLen], minFile, dwMinSize);
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-			for (int i = 1; i < dwSubtiles; i++) {
-				for (int bv = 0; bv < rowLen; bv++) {
+			for (unsigned i = 1; i < dwSubtiles; i++) {
+				for (unsigned bv = 0; bv < rowLen; bv++) {
 					pSubtiles[i * rowLen + bv] = SwapLE16(pSubtiles[i * rowLen + bv]);
 				}
 			}
