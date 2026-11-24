@@ -543,10 +543,40 @@ static void StoreDungeon(D1Dun *dun)
             dun->setSubtileAt(baseX + x, baseY + y, dPiece[DBORDERX + x][DBORDERY + y]);
             dun->setRoomAt(baseX + x, baseY + y, dTransVal[DBORDERX + x][DBORDERY + y]);
             // TODO: dun->setMonsterAt(baseX + x, baseY + y, dMonster[DBORDERX + x][DBORDERY + y], 0, 0);
-            const MapObject obj = { dObject[DBORDERX + x][DBORDERY + y], 0 };
-            dun->setObjectAt(baseX + x, baseY + y, obj);
-            dun->setItemAt(baseX + x, baseY + y, dItem[DBORDERX + x][DBORDERY + y]);
+            dun->setItemAt(x, y, 0);
+            const MapObject obj = { 0, 0, 0, false };
+            dun->setObjectAt(x, y, obj);
         }
+    }
+    for (int i = 0; i < numitems; i++) {
+        const ItemStruct* is = &items[itemactive[i]];
+        int idx = is->_iIdx + 1;
+        dun->setItemAt((unsigned)is->_ipos.x / DUN_WIDTH - DBORDERX + baseX, (unsigned)is->_ipos.y / DUN_WIDTH - DBORDERY + baseY, idx);
+    }
+    for (int i = 0; i < numobjects; i++) {
+        int objIdx = i + 1;
+        MapObject obj = { 0, 0, 0, false };
+        const ObjectStruct* os = &objects[i];
+        GetObjectStr(objIdx - 1);
+        obj.oPreFlag = os->_oPreFlag;
+        ObjStruct on;
+        on.otype = os->_otype;
+        on.baseFrame = os->_oGfxFrame;
+        if (on.baseFrame == 0 && os->_oAnimFlag != OAM_LOOP)
+            on.baseFrame = 1;
+        on.animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : -1;
+        on.name = infostr;
+        auto iter = objectTypes.begin();
+        for (; iter != objectTypes.end(); iter++) {
+            if (*iter == on) {
+                break;
+            }
+        }
+        obj.oType = lengthof(DunObjConvTbl) + std::distance(objectTypes.begin(), iter);
+        if (iter == objectTypes.end()) {
+            objectTypes.push_back(on);
+        }
+        dun->setObjectAt((unsigned)os->_opos.x / DUN_WIDTH - DBORDERX + baseX, (unsigned)os->_opos.y / DUN_WIDTH - DBORDERY + baseY, obj);
     }
 }
 
@@ -695,7 +725,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         for (int x = 0; x < MAXDUNX; x += TILE_WIDTH) {
             dun->setTileAt(x, y, baseTile);
             dun->setItemAt(x, y, 0);
-            MapObject obj = { 0, 0, false };
+            MapObject obj = { 0, 0, 0, false };
             dun->setObjectAt(x, y, obj);
         }
     }
@@ -715,7 +745,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     }
     for (int i = 0; i < numobjects; i++) {
         int objIdx = i + 1;
-        MapObject obj = { 0, 0, false };
+        MapObject obj = { 0, 0, 0, false };
         const ObjectStruct* os = &objects[i];
         GetObjectStr(objIdx - 1);
         obj.oPreFlag = os->_oPreFlag;

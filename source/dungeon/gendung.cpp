@@ -12,6 +12,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#undef ASSET_MPL
 #define ASSET_MPL assetMpl
 #define MICRO_WIDTH 32
 #define TILE_WIDTH (64 * ASSET_MPL)
@@ -237,7 +238,7 @@ void InitLvlDungeon()
 				return;
 			}
 			rowLen = 16 * assetMpl * assetMpl;
-			pSubtiles = malloc(dwMinSize + sizeof(*pSubtiles) * rowLen);
+			pSubtiles = (uint16_t*)malloc(dwMinSize + sizeof(*pSubtiles) * rowLen);
 			memcpy(&pSubtiles[rowLen], minFile, dwMinSize);
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 			for (unsigned i = 1; i < dwSubtiles; i++) {

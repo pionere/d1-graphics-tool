@@ -497,7 +497,7 @@ static void Theme_Monsts_Query(int xx, int yy, void* userParam)
     if (dTransVal[xx][yy] != theme._tsTransVal) {
         dProgressErr() << QString("Theme_Monsts_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
     }
-	if (/*dTransVal[xx][yy] == tv &&*/ (nSolidTable[dPiece[xx][yy]] | dItem[xx][yy] | dObject[xx][yy]) == 0) {
+	if (/*dTransVal[xx][yy] == tv &&*/ (nSolidTable[dPiece[xx][yy]] | dObject[xx][yy]) == 0) {
 		if (random_low(0, param->rndfrq) == 0) {
 			AddMonster(param->mtype, xx, yy);
 		}
@@ -522,7 +522,7 @@ static void PlaceThemeMonsts(const ThemeStruct &theme)
             if (dTransVal[xx][yy] != theme._tsTransVal) {
                 dProgressErr() << QString("PlaceThemeMonsts failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
             }
-			if (/*dTransVal[xx][yy] == tv &&*/ (nSolidTable[dPiece[xx][yy]] | dItem[xx][yy] | dObject[xx][yy]) == 0) {
+			if (/*dTransVal[xx][yy] == tv &&*/ (nSolidTable[dPiece[xx][yy]] | dObject[xx][yy]) == 0) {
 				if (random_low(0, rndfrq) == 0) {
 					AddMonster(mtidx, xx, yy);
 				}
@@ -626,7 +626,7 @@ static void Theme_MonstPit_Query(int xx, int yy, void* userParam)
         dProgressErr() << QString("Theme_MonstPit_Query failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
     }
 	if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]] && param->r >= 0 && --param->r < 0) {
-		CreateRndItem(xx, yy, CFDQ_GOOD);
+		PlaceRndItem(xx, yy, CFDQ_GOOD);
 	}
 }
 static void Theme_MonstPit(int themeId)
@@ -802,9 +802,9 @@ static void Theme_Treasure_Query(int xx, int yy, void* userParam)
     }
 	if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 		if (random_low(0, param->treasrnd) == 0) {
-			CreateTypeItem(xx, yy, CFDQ_NORMAL, ITYPE_GOLD, IMISC_NONE);
+			PlaceGoldItem(xx, yy);
 		} else if (random_low(0, param->treasrnd) == 0) {
-			CreateRndItem(xx, yy, CFDQ_NORMAL);
+			PlaceRndItem(xx, yy, CFDQ_NORMAL);
 		}
 	}
 }

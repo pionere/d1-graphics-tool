@@ -42,6 +42,7 @@ inline void SetMonsterLoc(MonsterStruct* mon, int x, int y)
 {
 	mon->_mx = x;
 	mon->_my = y;
+    mon->_mpos = DungeonToDunPos(x, y);
 }
 
 /* data */

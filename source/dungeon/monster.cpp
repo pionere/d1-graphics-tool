@@ -470,8 +470,6 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_mMTidx = mtidx;
 	mon->_mdir = dir;
 	SetMonsterLoc(mon, x, y);
-	mon->_mxoff = 0;
-	mon->_myoff = 0;
 	mon->_mType = cmon->cmType;
 	mon->_mName = cmon->cmName;
 //	mon->_mFileNum = cmon->cmFileNum;

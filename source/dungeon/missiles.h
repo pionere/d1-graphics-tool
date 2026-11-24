@@ -16,7 +16,7 @@ extern int missileactive[MAXMISSILES];
 extern MissileStruct missile[MAXMISSILES];
 extern int nummissiles;
 
-int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, int micaster, int misource, int spllvl);
+int AddMissile(POS32 sp, POS32 dp, int midir, int mitype, int micaster, int misource, int spllvl);
 void LoadMissileGFX(BYTE midx);
 void InitGameMissileGFX();
 void FreeGameMissileGFX();

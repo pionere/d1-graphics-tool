@@ -19,12 +19,17 @@ void RemovePortalMissile(int pnum)
 {
 }
 
-void PlaySfxLoc(int nsfx, int x, int y)
+void PlaySfxLoc(int nsfx, POS32 pos)
 {
 }
 
-void PlaySfxLocN(int nsfx, int x, int y, int rndCnt)
+void PlaySfxLocN(int nsfx, POS32 pos, int rndCnt)
 {
+}
+
+bool LineClearPos(POS32 sp, POS32 dp)
+{
+    return true;
 }
 
 /*
@@ -374,8 +379,10 @@ void RemovePortalMissile(int pnum)
  */
 static bool PosOkMis2(int x, int y)
 {
-	// int oi;
+	int x, y;
 
+	x = (unsigned)dp.x / DUN_WIDTH;
+	y = (unsigned)dp.y / DUN_WIDTH;
 	if (nMissileTable[dPiece[x][y]] != 0)
 		return false;
 
@@ -387,7 +394,7 @@ static bool PosOkMis2(int x, int y)
 			return false;
 	}*/
 
-	return true;
+    return LineClearPos(sp, dp);
 }
 
 /*
@@ -791,15 +798,15 @@ static void DeleteMissiles()
 	}
 }
 
-static void PutMissileH(int mi)
+static void PutMissileH(MissileStruct* mis)
 {
 	int x, y;
 
 	x = (unsigned)mis->_mipos.x / DUN_WIDTH;
 	y = (unsigned)mis->_mipos.y / DUN_WIDTH;
 	assert(IN_DUNGEON_AREA(x, y));
-	assert(!missile[mi]._miDelFlag);
-	//if (!missile[mi]._miDelFlag) {
+	assert(!mis->_miDelFlag);
+	//if (!mis->_miDelFlag) {
 		dFlags[x][y] |= BFLAG_HAZARD;
 	//}
 }
@@ -999,7 +1006,8 @@ unsigned CalcMonsterDam(unsigned mor, BYTE mRes, unsigned mindam, unsigned maxda
 int AddElementalExplosion(int fdam, int ldam, int mdam, int adam, bool isMonster, int mpnum)
 {
 	int dam = fdam + ldam + mdam + adam;
-	int mtype, mx, my, mxoff, myoff, mi;
+	int mtype;
+	POS32 mp;
 
 	if (dam == 0) {
 		return 0;
@@ -1011,27 +1019,17 @@ int AddElementalExplosion(int fdam, int ldam, int mdam, int adam, bool isMonster
 		mtype = mdam >= adam ? MIS_EXMAGIC : MIS_EXACID;
 	}
 	if (isMonster) {
-		mx = monsters[mpnum]._mx;
-		my = monsters[mpnum]._my;
-		mxoff = monsters[mpnum]._mxoff;
-		myoff = monsters[mpnum]._myoff;
+		mp = monsters[mpnum]._mpos;
 	} else {
-		mx = plx(mpnum)._px;
-		my = plx(mpnum)._py;
-		mxoff = plx(mpnum)._pxoff;
-		myoff = plx(mpnum)._pyoff;
+		mp = plx(mpnum)._ppos;
 	}
-	mi = AddMissile(mx, my, -1, 0, 0, mtype, MST_NA, 0, 0);
-	if (mi >= 0) {
-		missile[mi]._mixoff = mxoff;
-		missile[mi]._miyoff = myoff;
-	}
+	AddMissile(mp, { 0, 0 }, 0, mtype, MST_NA, 0, 0);
 	/*int gfx = random_(8, dam);
 	if (gfx >= dam - (fdam + ldam)) {
 		if (gfx < dam - ldam) {
-			AddMissile(dx, dy, 0, 0, 0, MIS_WEAPFEXP, MST_NA, 0, 0);
+			AddMissile(mp, { 0, 0 }, 0, MIS_WEAPFEXP, MST_NA, 0, 0);
 		} else {
-			AddMissile(dx, dy, 0, 0, 0, MIS_WEAPLEXP, MST_NA, 0, 0);
+			AddMissile(mp, { 0, 0 }, 0, MIS_WEAPLEXP, MST_NA, 0, 0);
 		}
 	}*/
 	return dam;
@@ -1653,6 +1651,7 @@ int CheckHRectAreaHit(RECT32 rect, bool(*callback)(int, int), int cbArg)
  */
 static bool MisHitCallback(int mponum, int mi)
 {
+#if 0
 	bool result;
 	if (mponum >= 0) {
 		result = MonMissHit(mponum, mi);
@@ -1670,6 +1669,9 @@ static bool MisHitCallback(int mponum, int mi)
 		}
 	}
 	return result;
+#else
+    return false;
+#endif
 }
 
 /*
@@ -2191,7 +2193,6 @@ static void SyncMissAnim(int mi)
 		mis->_miAnimLen = anim->caFrameCnt;
 		mis->_miAnimFrameLen = anim->caFrameLen;
 		mis->_miAnimWidth = anim->caWidth;
-		mis->_miAnimXOffset = (mis->_miAnimWidth - TILE_WIDTH) >> 1;
 	}
 }
 #if 0
@@ -2211,7 +2212,6 @@ static void SyncRhinoAnim(MissileStruct* mis)
 	mis->_miAnimFrameLen = anim->maFrameLen;
 	mis->_miAnimLen = anim->maFrames;
 	mis->_miAnimWidth = mon->_mAnimWidth;
-	mis->_miAnimXOffset = mon->_mAnimXOffset;
 	mis->_miAnimAdd = mon->_mFileNum == MOFILE_SNAKE ? 2 : 1;
 }
 
@@ -2229,7 +2229,6 @@ static void SyncChargeAnim(MissileStruct* mis)
 	mis->_miAnimFrameLen = PlrAnimFrameLens[PGX_WALK];
 	mis->_miAnimLen = anim->paFrames;
 	mis->_miAnimWidth = anim->paAnimWidth;
-	mis->_miAnimXOffset = (anim->paAnimWidth - TILE_WIDTH) >> 1;
 }
 #endif
 static void SetMissAnim(int mi, int dir)
@@ -3165,8 +3164,8 @@ int AddPortal(int mi, POS32 dp, int midir, int micaster, int misource, int spllv
 	mis->_miLid = AddLight(mis->_mipos, spllvl >= 0 ? 1 : 15);
 	if (spllvl >= 0) {
 		PlaySfxLoc(LS_SENTINEL, mis->_mipos);
-		if (misource == mypnum)
-			NetSendCmdLocBParam1(CMD_ACTIVATEPORTAL, mis->_mipos, currLvl._dLevelIdx);
+//		if (misource == mypnum)
+//			NetSendCmdLocBParam1(CMD_ACTIVATEPORTAL, mis->_mipos, currLvl._dLevelIdx);
 	} else {
 		// a recreated portal (by AddWarpMissile or InitVP*Trigger)
 		// make sure the portal is in its final form even on the first frame
@@ -3368,7 +3367,6 @@ int AddCharge(int mi, POS32 dp, int midir, int micaster, int misource, int spllv
 	mis->_miAnimFrameLen = anim->maFrameLen;
 	mis->_miAnimLen = anim->maFrames;
 	mis->_miAnimWidth = mon->_mAnimWidth;
-	mis->_miAnimXOffset = mon->_mAnimXOffset;
 	mis->_miAnimAdd = 1;
 	//mis->_miVar1 = FALSE;
 	//mis->_miVar2 = 0;
@@ -3853,7 +3851,7 @@ int AddAttract(int mi, POS32 dp, int midir, int micaster, int misource, int spll
 	MissileStruct* mis;
 	MonsterStruct* mon;
 	int dx, dy, dist, mnum;
-
+#if 0
 	// assert(micaster & MST_PLAYER);
 	// assert((unsigned)misource < MAX_PLRS);
 	mis = &missile[mi];
@@ -3882,6 +3880,7 @@ int AddAttract(int mi, POS32 dp, int midir, int micaster, int misource, int spll
 			mon->_mlasty = dy;
 		}
 	}
+#endif
 	return MIRES_DONE;
 }
 
@@ -3944,6 +3943,7 @@ int AddApocaC2(int mi, POS32 dp, int midir, int micaster, int misource, int spll
 	// assert(misource == DIABLO);
 
 	mis = &missile[mi];
+#if 0
 	mis->_miMinDam = mis->_miMaxDam = 40 << (6 + gnDifficulty);
 	for (pnum = 0; pnum < MAX_PLRS; pnum++) {
 		if (!plr._pActive || plr._pDunLevel != currLvl._dLevelIdx || plr._pLvlChanging || plr._pHitPoints == 0)
@@ -3959,6 +3959,7 @@ int AddApocaC2(int mi, POS32 dp, int midir, int micaster, int misource, int spll
 		// add explosion effect
 		AddMissile(plr._ppos, { 0, 0 }, 0, MIS_EXAPOCA2, MST_NA, 0, 0);
 	}
+#endif
 	return MIRES_DELETE;
 }
 
@@ -4061,7 +4062,7 @@ int AddCallToArms(int mi, POS32 dp, int midir, int micaster, int misource, int s
 	return MIRES_DELETE;
 }
 
-int AddMissile(POS32 dp, int midir, int mitype, int micaster, int misource, int spllvl)
+int AddMissile(POS32 sp, POS32 dp, int midir, int mitype, int micaster, int misource, int spllvl)
 {
 	MissileStruct* mis;
 	const MissileData* mds;
@@ -5587,7 +5588,7 @@ void SyncMissilesAnim()
 		} else if (mis->_miType == MIS_CHARGE) {
 			SyncChargeAnim(mis);
 		} else if (mis->_miType == MIS_FIREWALL || mis->_miType == MIS_FIREWAVE) {
-            PutMissileH(mi);
+            PutMissileH(mis);
 		}
 	}
 }
