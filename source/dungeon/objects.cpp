@@ -665,6 +665,31 @@ std::pair<int, int> themeLoc(int x, int y)
 	return std::pair<int, bool>(0, 0);
 }
 
+static void PlaceObject(int oi)
+{
+	ObjectStruct* os;
+	int ox, oy;
+
+	os = &objects[oi];
+	ox = (unsigned)os->_opos.x / DUN_WIDTH;
+	oy = (unsigned)os->_opos.y / DUN_WIDTH;
+	assert(dObject[ox][oy] == 0);
+	dObject[ox][oy] = oi + 1;
+	const int noi = -(oi + 1);
+	if (os->_oSolidFlag & 2) {
+		assert(dObject[ox][oy - 1] == 0);
+		dObject[ox][oy - 1] = noi;
+	}
+	if (os->_oSolidFlag & 4) {
+		assert(dObject[ox - 1][oy] == 0);
+		dObject[ox - 1][oy] = noi;
+	}
+	if (os->_oSolidFlag & 8) {
+		assert(dObject[ox - 1][oy - 1] == 0);
+		dObject[ox - 1][oy - 1] = noi;
+	}
+}
+
 static ObjectStruct* ObjectAt(int x, int y)
 {
 	int oi = dObject[x][y];
@@ -1416,7 +1441,6 @@ int AddObject(int type, int ox, int oy)
 	LoadCelMetaInfo(os->_oAnimData, mi);
 	os->_oAnimFrameLen = mi.cmiAnimDelay == 0 ? 1 : mi.cmiAnimDelay;
 	os->_oAnimWidth = objanimdim[ods->ofindex];
-	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
 #endif
 	ofd = &objfiledata[ods->ofindex];
 //	os->_oSFX = ofd->oSFX;
@@ -1448,6 +1472,7 @@ int AddObject(int type, int ox, int oy)
 	// place object
 	os->_ox = ox;
 	os->_oy = oy;
+	os->_opos = DungeonToDunPos(ox, oy);
 	// dFlags[ox][oy] |= BFLAG_OBJ_PROTECT | BFLAG_MON_PROTECT;
 	const bool ready = !nSolidTable[dPiece[ox][oy]] || !(os->_oModeFlags & OMF_FLOOR);
 	if (dObject[ox][oy] != 0) {
@@ -1460,34 +1485,8 @@ int AddObject(int type, int ox, int oy)
 		msg = msg.arg(i).arg(tl.second).arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2).arg(themes[i]._tsTransVal);
 		dProgressErr() << msg;
 	}
-	dObject[ox][oy] = ready ? oi + 1 : 0;
-	const int noi = -(oi + 1);
-	if (ofd->oSolidFlags & 2) {
-		assert(dObject[ox][oy - 1] == 0);
-		dObject[ox][oy - 1] = noi;
-	}
-	if (ofd->oSolidFlags & 4) {
-		assert(dObject[ox - 1][oy] == 0);
-		dObject[ox - 1][oy] = noi;
-	}
-	if (ofd->oSolidFlags & 8) {
-		assert(dObject[ox - 1][oy - 1] == 0);
-		dObject[ox - 1][oy - 1] = noi;
-	}
 	if (ready) {
-#if 0
-		const BYTE olr = ods->oLightRadius;
-		if (olr != 0) {
-#if FLICKER_LIGHT
-			if (type == OBJ_L1LIGHT) {
-				os->_olid = NO_LIGHT;
-			} else
-#endif
-			{
-				TraceLightSource(ox + ((olr & OLF_XO) ? 1 : 0), oy + ((olr & OLF_YO) ? 1 : 0), olr & OLF_MASK);
-			}
-		}
-#endif
+		PlaceObject(oi);
 		if (ods->oDoorFlag != ODT_NONE) {
 			os->_oVar4 = DOOR_CLOSED;
 			//os->_oPreFlag = FALSE;
@@ -1569,11 +1568,11 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_WEAPONRACK:
 			AddWeaponRack(oi, realType);
 			break;
+		case OBJ_BLINDBOOK:
 		case OBJ_BLOODBOOK:
 		case OBJ_STEELTOME:
-		case OBJ_BLINDBOOK:
-		case OBJ_MYTHICBOOK:
 		case OBJ_VILEBOOK:
+		case OBJ_MYTHICBOOK:
 			AddBook(oi);
 			break;
 		case OBJ_BOOK1:
@@ -1655,6 +1654,32 @@ int AddObject(int type, int ox, int oy)
 	}
 #endif
 	return oi;
+}
+
+void ObjInitLight()
+{
+#if 0
+	int i;
+
+	for (i = 0; i < numobjects; i++) {
+		int oi = i; // objectactive[i];
+		ObjectStruct* os = &objects[oi];
+		if (os->_oModeFlags & OMF_RESERVED)
+			continue;
+		const ObjectData* ods = &objectdata[os->_otype];
+		const BYTE olr = ods->oLightRadius;
+		if (olr != 0) {
+#if FLICKER_LIGHT
+			if (type == OBJ_L1LIGHT) {
+				os->_olid = NO_LIGHT;
+			} else
+#endif
+			{
+				TraceLightSource(os->_ox + ((olr & OLF_XO) ? 1 : 0), os->_oy + ((olr & OLF_YO) ? 1 : 0), olr & OLF_MASK);
+			}
+		}
+	}
+#endif
 }
 
 void GetObjectStr(int oi)
@@ -1774,11 +1799,11 @@ void GetObjectStr(int oi)
 	case OBJ_TEARFTN:
 		txt0 = "Fountain of Tears";
 		break;
+	case OBJ_BLINDBOOK:
+	case OBJ_BLOODBOOK:
+	case OBJ_STEELTOME:
 	case OBJ_VILEBOOK:
 	case OBJ_MYTHICBOOK:
-	case OBJ_BLOODBOOK:
-	case OBJ_BLINDBOOK:
-	case OBJ_STEELTOME:
 	case OBJ_STORYBOOK:
 	case OBJ_BOOK1:
 	case OBJ_BOOK2:

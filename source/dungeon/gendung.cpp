@@ -73,14 +73,16 @@ BYTE dTransVal[MAXDUNX][MAXDUNY];
 // BYTE dPreLight[MAXDUNX][MAXDUNY];
 /** Specifies the current darkness levels of each square on the map. */
 // BYTE dLight[MAXDUNX][MAXDUNY];
+/** Specifies the draw order of each square on the map. */
+uint16_t dSubtileZOrder[MAXDUNX][MAXDUNY];
 /** Specifies the (runtime) flags of each square on the map (dflag) */
 BYTE dFlags[MAXDUNX][MAXDUNY];
 /**
  * Contains the player numbers (players array indices) of the map.
  *   pnum + 1 : the player is on the given location.
- * -(pnum + 1): reserved for a moving player
  */
-int8_t dPlayer[MAXDUNX][MAXDUNY];
+BYTE dPlayer[MAXDUNX][MAXDUNY];
+static_assert(MAX_PLRS <= UCHAR_MAX, "Index of a player might not fit to dPlayer.");
 /**
  * Contains the NPC numbers of the map. The NPC number represents a
  * towner number (towners array index) in Tristram and a monster number
@@ -96,20 +98,6 @@ int dMonster[MAXDUNX][MAXDUNY];
  */
 int8_t dObject[MAXDUNX][MAXDUNY];
 static_assert(MAXOBJECTS <= CHAR_MAX, "Index of an object might not fit to dObject.");
-/**
- * Contains the item numbers (items array indices) of the map.
- *   ii + 1 : the item is on the floor on the given location.
- */
-BYTE dItem[MAXDUNX][MAXDUNY];
-static_assert(MAXITEMS <= UCHAR_MAX, "Index of an item might not fit to dItem.");
-/**
- * Contains the missile numbers (missiles array indices) of the map.
- *   mi + 1 : the missile is on the given location.
- * MIS_MULTI: more than one missile on the given location.
- */
-BYTE dMissile[MAXDUNX][MAXDUNY];
-static_assert(MAXMISSILES <= UCHAR_MAX, "Index of a missile might not fit to dMissile.");
-static_assert((BYTE)(MAXMISSILES + 1) < (BYTE)MIS_MULTI, "Multi-missile in dMissile reserves one entry.");
 
 void InitLvlDungeon()
 {
@@ -1239,10 +1227,7 @@ void DRLG_LoadSP(int idx, BYTE bv)
 
 static void DRLG_InitFlags()
 {
-	BYTE c;
-
-	c = currLvl._dType == DTYPE_TOWN ? BFLAG_VISIBLE : 0;
-	memset(dFlags, c, sizeof(dFlags));
+	memset(dFlags, 0, sizeof(dFlags));
 
 	if (!currLvl._dSetLvl) {
 		for (int i = lengthof(pWarps) - 1; i >= 0; i--) {
@@ -1302,11 +1287,7 @@ static void DRLG_LightSubtiles()
 	int i, j, pn;
 
 	c = currLvl._dType == DTYPE_TOWN ? 0 : MAXDARKNESS;
-#if DEBUG_MODE
-	if (lightflag)
-		c = 0;
-#endif
-	memset(dLight, c, sizeof(dLight));
+	memset(dPreLight, c, sizeof(dPreLight));
 
 	if (!nCollLightTable[0]) {
 		for (i = 0; i < MAXDUNX; i++) {
@@ -1321,17 +1302,160 @@ static void DRLG_LightSubtiles()
 	}*/
 }
 
-void InitLvlMap()
+static bool microColumnEmpty(int pn, int column)
+{
+	uint16_t levelCelBlock;
+	uint16_t* pMap;
+	pMap = &pSubtiles[pn][column];
+	for (int i = column; i < MicroTileLen; ) {
+		for (int j = 0; j < ASSET_MPL; j++) {
+			for (int k = 0; k < ASSET_MPL; k++) {
+				levelCelBlock = pMap[k + j * ASSET_MPL * 2];
+				if (levelCelBlock != 0) {
+					return false;
+				}
+			}
+			pMap++;
+		}
+		i += (TILE_WIDTH / MICRO_WIDTH);
+		pMap += ASSET_MPL;
+	}
+	return true;
+}
+
+static bool subtileFloorLeft(int pn)
+{
+	if (microFlags[pn] & TMIF_LEFT_REDRAW)
+		return false;
+	if (nMissileTable[pn])
+		return false;
+	if (nSpecTrapTable[pn] & PST_SPEC_TYPE)
+		return false;
+	return microColumnEmpty(pn, 2);
+}
+
+static bool subtileFloorRight(int pn)
+{
+	if (microFlags[pn] & TMIF_RIGHT_REDRAW)
+		return false;
+	if (nMissileTable[pn])
+		return false;
+	if (nSpecTrapTable[pn] & PST_SPEC_TYPE)
+		return false;
+	return microColumnEmpty(pn, 3);
+}
+
+static void DRLG_InitSubtileZOrder()
+{
+	int x, y, sx, sy, i;
+	// calculate base zorder
+	for (x = 0; x < MAXDUNX; x++) {
+		for (y = 0; y < MAXDUNY; y++) {
+			sx = x - y;
+			sy = x + y;
+			static_assert(MAXDUNX < 128 && MAXDUNY < 128, "Higher bits of the zOrder might overflow.");
+			sx ^= 128;
+			sx &= 0xFF;
+			// assert(sy <= 0xFF);
+			dSubtileZOrder[x][y] = (sx << 0) | (sy << 8);
+		}
+	}
+	if (currLvl._dType == DTYPE_TOWN)
+		return;
+	// adjust zorder for better visual
+	constexpr int DBORDER = DBORDERX >= DBORDERY ? DBORDERX : DBORDERY;
+	for (i = 0; i < MAXDUNX + MAXDUNY - 1 - 4 * DBORDER; i++) {
+		y = i + DBORDER;
+		x = DBORDER;
+		if (y > MAXDUNY - DBORDER - 1) {
+			x += y - (MAXDUNY - DBORDER - 1);
+			y = MAXDUNY - DBORDER - 1;
+		}
+next:
+		sx = x;
+		sy = y;
+		int state = 0;
+		int ex = x, ey = y;
+
+		while (true) {
+			// if (!subtileFloor(dPiece[x][y])) {
+			if (nMissileTable[dPiece[x][y]]) {
+				break;
+			}
+
+			bool needSwap = false;
+			if (state >= 0) {
+				assert(y + 1 < MAXDUNY && x > 0);
+				if (!subtileFloorLeft(dPiece[x + 0][y + 1]) && !subtileFloorRight(dPiece[x - 1][y + 1])) {
+					if (x - 1 < sx) {
+						sx = x - 1;
+						sy = y + 1;
+					}
+					ex = x;
+					ey = y;
+					needSwap = true;
+					state = -1;
+				}
+			}
+			if (state <= 0) {
+				assert(x + 1 < MAXDUNX && y > 0);
+				if (subtileFloorLeft(dPiece[x + 1][y + 0]) && !subtileFloorRight(dPiece[x + 0][y - 1]) && !subtileFloorLeft(dPiece[x + 1][y - 1])) {
+					ex = x + 1;
+					ey = y - 1;
+					needSwap = true;
+					state = 1;
+				}
+			}
+			if (!needSwap) {
+				break;
+			}
+			x += 2;
+			y -= 2;
+		}
+
+		x = ex;
+		y = ey;
+		while (ex > sx) {
+			std::swap(dSubtileZOrder[sx][sy], dSubtileZOrder[ex][ey]);
+			sx += 1;
+			sy -= 1;
+			ex -= 1;
+			ey += 1;
+		}
+
+		x += 1;
+		y -= 1;
+		// if (y >= 0 && x < MAXDUNX)
+		if (y >= DBORDERY && x < MAXDUNX - DBORDERX)
+			goto next;
+	}
+}
+
+static void DRLG_InitLight()
 {
 	DRLG_LightSubtiles();
+	ObjInitLight();
+	LoadPreLighting();
+}
+
+void InitLvlMap()
+{
 	DRLG_InitFlags();
 
 	// memset(dPlayer, 0, sizeof(dPlayer));
 	memset(dMonster, 0, sizeof(dMonster));
-	// memset(dDead, 0, sizeof(dDead));
 	memset(dObject, 0, sizeof(dObject));
-	memset(dItem, 0, sizeof(dItem));
-	// memset(dMissile, 0, sizeof(dMissile));
+}
+
+void FinishLvlMap()
+{
+	BYTE c;
+	// reset BFLAG_MON_PROTECT/BFLAG_OBJ_PROTECT flags, initialize visible town
+	c = currLvl._dType == DTYPE_TOWN ? (BFLAG_VISIBLE | BFLAG_ALERT) : 0;
+	memset(dFlags, c, sizeof(dFlags));
+
+	DRLG_InitSubtileZOrder();
+	DRLG_InitLight();
 }
 
 /**

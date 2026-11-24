@@ -31,14 +31,14 @@ void InitLvlItems();
 void InitItems();
 void GetItemSeed(ItemStruct* is);
 void SetGoldItemValue(ItemStruct* is, int value);
-bool ItemSpaceOk(int x, int y);
+bool ItemSpaceOk(POS32 pos);
 BYTE GetBookSpell(unsigned lvl);
 void SetItemData(int ii, int idata);
 void SetItemSData(ItemStruct* is, int idata);
-void CreateRndItem(int x, int y, unsigned quality);
-void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc);
+void PlaceRndItem(int x, int y, unsigned quality);
+void PlaceGoldItem(int x, int y);
 void PlaceQuestItemInArea(int idx, int areasize);
-void CreateQuestItemAt(int idx, int x, int y);
+void PlaceQuestItemAt(int idx, int x, int y);
 void RespawnItem(int ii);
 
 #endif /* __ITEMS_H__ */

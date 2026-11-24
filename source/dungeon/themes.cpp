@@ -482,7 +482,7 @@ static void Place_Obj3(const ThemeStruct &theme, int type, int rndfrq)
 /**
  * PlaceThemeMonsts places theme monsters with the specified frequency.
  *
- * @param theme: the theme in which the object should be placed
+ * @param theme: the theme in which the monsters should be placed
  */
 typedef struct ThemeMonstsParam {
 	int rndfrq;
@@ -650,7 +650,7 @@ restart:
                     dProgressErr() << QString("Theme_MonstPit failed to check tv-mismatch at %1:%2. Room: %3:%4;%5:%6.").arg(xx).arg(yy).arg(theme._tsx1).arg(theme._tsy1).arg(theme._tsx2).arg(theme._tsy2);
                 }
 				if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]] && --r < 0) {
-					CreateRndItem(xx, yy, CFDQ_GOOD);
+					PlaceRndItem(xx, yy, CFDQ_GOOD);
 					goto done;
 				}
 			}
@@ -705,7 +705,7 @@ static void Theme_SkelRoom(int themeId)
 
 	AddObject(OBJ_SKFIRE, xx, yy);
 
-	monstrnd = 8u * 32u * 32u / (AllLevels[currLvl._dLevelNum].dMonDensity * (theme._tsx2 - theme._tsx1) * (theme._tsy2 - theme._tsy1));
+	monstrnd = 8u * 32u * 32u / ThemeMonCount(theme);
 	if (monstrnd == 0) monstrnd = 1;
 
 	AddSkelMonOrBanner(monstrnd, xx - 1, yy - 1);
@@ -827,9 +827,9 @@ static void Theme_Treasure(int themeId)
             }
 			if (/*dTransVal[xx][yy] == tv &&*/ !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, treasrnd) == 0) {
-					CreateTypeItem(xx, yy, CFDQ_NORMAL, ITYPE_GOLD, IMISC_NONE);
+					PlaceGoldItem(xx, yy);
 				} else if (random_low(0, treasrnd) == 0) {
-					CreateRndItem(xx, yy, CFDQ_NORMAL);
+					PlaceRndItem(xx, yy, CFDQ_NORMAL);
 				}
 			}
 		}

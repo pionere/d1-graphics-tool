@@ -13,31 +13,85 @@ ItemStruct items[MAXITEMS + 1];
 //static CelAnimBuf* itemanims[NUM_IFILE];
 int numitems;
 
-/** Maps from direction to delta X-offset in an 3x3 area. */
-static const int area3x3_x[NUM_DIRS + 1] = { 0, 1, 0, -1, -1, -1, 0, 1, 1 };
-/** Maps from direction to delta Y-offset in an 3x3 area. */
-static const int area3x3_y[NUM_DIRS + 1] = { 0, 1, 1, 1, 0, -1, -1, -1, 0 };
-
 static void SetItemLoc(int ii, int x, int y)
 {
-	items[ii]._ix = x;
-	items[ii]._iy = y;
-	if (ii != MAXITEMS)
-		dItem[x][y] = ii + 1;
+	items[ii]._ipos = DungeonToDunPos(x, y);
+}
+
+static bool PosOkItem(POS32 pos)
+{
+	int i;
+	for (i = 0; i < numitems; i++) {
+		const ItemStruct* is = &items[itemactive[i]];
+		if (GetDunDistance2(pos, is->_ipos) <= (DUN_WIDTH >> DUN_SHIFT) * (DUN_WIDTH >> DUN_SHIFT) * 4 / 16)
+			return false;
+	}
+	return true;
+}
+
+static bool PosOkItemSpawn(POS32 pos, POS32 unused)
+{
+	int x, y, oi, i;
+
+	x = (unsigned)pos.x / DUN_WIDTH;
+	y = (unsigned)pos.y / DUN_WIDTH;
+	if (x < DBORDERX || x >= DBORDERX + DSIZEX || y < DBORDERY || y >= DBORDERY + DSIZEY)
+		return false;
+
+	if (nSolidTable[dPiece[x][y]] != 0)
+		return false;
+
+	oi = dObject[x][y];
+	if (oi != 0) {
+		oi = oi >= 0 ? oi - 1 : -(oi + 1);
+		if (objects[oi]._oSolidFlag)
+			return false;
+	}
+
+	/*oi = dObject[x + 1][y + 1];
+	if (oi != 0) {
+		oi = oi >= 0 ? oi - 1 : -(oi + 1);
+		if (objects[oi]._oSelFlag != 0)
+			return false;
+	}
+
+	oi = dObject[x + 1][y];
+	if (oi > 0) {
+		oi2 = dObject[x][y + 1];
+		if (oi2 > 0 && objects[oi - 1]._oSelFlag != 0 && objects[oi2 - 1]._oSelFlag != 0)
+			return false;
+	}*/
+
+	if (currLvl._dType == DTYPE_TOWN)
+		if ((dMonster[x][y] /*| dMonster[x + 1][y + 1]*/) != 0)
+			return false;
+
+	return PosOkItem(pos);
+}
+
+/**
+ * Check the location if an item can be placed there in 'runtime'.
+ */
+bool ItemSpaceOk(POS32 pos)
+{
+	return PosOkItemSpawn(pos, { 0, 0 });
 }
 
 /**
  * Check the location if an item can be placed there in the init phase.
- * Must not consider the player's position, since it is already initialized
- * and messes up the pseudo-random generated dungeon.
  */
 static bool RandomItemPlace(int x, int y)
 {
-	return (dMonster[x][y] | /*dPlayer[x][y] |*/ dItem[x][y] | dObject[x][y]
-	 | (dFlags[x][y] & BFLAG_OBJ_PROTECT) | nSolidTable[dPiece[x][y]]) == 0;
+	if (((dFlags[x][y] & BFLAG_OBJ_PROTECT) | nSolidTable[dPiece[x][y]]) != 0)
+		return false;
+
+	if (dObject[x][y] != 0)
+		return false;
+
+	return PosOkItem(DungeonToDunPos(x, y));
 }
 
-static void GetRandomItemSpace(int ii)
+static POS32 GetRandomItemSpace()
 {
 	int x, y;
 
@@ -45,10 +99,10 @@ static void GetRandomItemSpace(int ii)
 		x = random_(12, DSIZEX) + DBORDERX;
 		y = random_(12, DSIZEY) + DBORDERY;
 	} while (!RandomItemPlace(x, y));
-	SetItemLoc(ii, x, y);
+	return { x, y };
 }
 
-static void GetRandomItemSpace(int randarea, int ii)
+static POS32 GetRandomItemSpace(int randarea)
 {
 	int x, y, i, j, tries;
 	constexpr int numTries = 1000;
@@ -72,8 +126,7 @@ fail:
 			tries = numTries;
 		}
 	}
-
-	SetItemLoc(ii, x, y);
+	return { x, y };
 }
 
 static inline unsigned items_get_currlevel()
@@ -137,18 +190,20 @@ static void PlaceInitItems()
 	lvl = items_get_currlevel();
 
 	for (i = RandRange(3, 5); i != 0; i--) {
+		POS32 pos = GetRandomItemSpace();
+
 		ii = itemactive[numitems];
 		assert(ii == numitems);
+		numitems++;
 		seed = NextRndSeed();
 		SetItemData(ii, random_(12, 2) != 0 ? IDI_HEAL : IDI_MANA);
 		items[ii]._iSeed = seed;
 		items[ii]._iCreateInfo = lvl; // | CF_PREGEN;
+
+		SetItemLoc(ii, pos.x, pos.y);
+
 		// assert(gbLvlLoad);
 		RespawnItem(ii);
-
-		GetRandomItemSpace(ii);
-
-		numitems++;
 	}
 }
 
@@ -156,7 +211,7 @@ void InitItems()
 {
 	// if (!currLvl._dSetLvl) {
 		if (QuestStatus(Q_ANVIL))
-			CreateQuestItemAt(IDI_ANVIL, 2 * pSetPieces[0]._spx + DBORDERX + 11, 2 * pSetPieces[0]._spy + DBORDERY + 11);
+			PlaceQuestItemAt(IDI_ANVIL, 2 * pSetPieces[0]._spx + DBORDERX + 11, 2 * pSetPieces[0]._spy + DBORDERY + 11);
 		if (currLvl._dLevelIdx == questlist[Q_VEIL]._qdlvl + 1 && quests[Q_VEIL]._qactive != QUEST_NOTAVAIL)
 			PlaceQuestItemInArea(IDI_GLDNELIX, 5);
 		if (QuestStatus(Q_MUSHROOM))
@@ -208,6 +263,7 @@ void SetItemSData(ItemStruct* is, int idata)
 	is->_iMinDam = ids->iMinDam;
 	is->_iMaxDam = ids->iMaxDam;
 	is->_iBaseCrit = ids->iBaseCrit;
+	is->_iBasePow = ids->iBasePow;
 	is->_iReqStr = ids->iReqStr;
 	is->_iReqMag = ids->iReqMag;
 	is->_iReqDex = ids->iReqDex;
@@ -253,159 +309,6 @@ void SetGoldItemValue(ItemStruct* is, int value)
 	else
 		is->_iCurs = ICURS_GOLD_MEDIUM;
 }
-
-/**
- * Check the location if an item can be placed there while generating the dungeon.
- */
-static bool CanPut(int x, int y)
-{
-	int oi; // , oi2;
-
-	if (x < DBORDERX || x >= DBORDERX + DSIZEX || y < DBORDERY || y >= DBORDERY + DSIZEY)
-		return false;
-
-	if ((dItem[x][y] | nSolidTable[dPiece[x][y]]) != 0)
-		return false;
-
-	oi = dObject[x][y];
-	if (oi != 0) {
-		oi = oi >= 0 ? oi - 1 : -(oi + 1);
-		if (objects[oi]._oSolidFlag)
-			return false;
-	}
-
-	/*oi = dObject[x + 1][y + 1];
-	if (oi != 0) {
-		oi = oi >= 0 ? oi - 1 : -(oi + 1);
-		if (objects[oi]._oSelFlag != 0)
-			return false;
-	}
-
-	oi = dObject[x + 1][y];
-	if (oi > 0) {
-		oi2 = dObject[x][y + 1];
-		if (oi2 > 0 && objects[oi - 1]._oSelFlag != 0 && objects[oi2 - 1]._oSelFlag != 0)
-			return false;
-	}*/
-
-	if (currLvl._dType == DTYPE_TOWN)
-		if ((dMonster[x][y] /*| dMonster[x + 1][y + 1]*/) != 0)
-			return false;
-
-	return true;
-}
-
-/**
- * Check the location if an item can be placed there in 'runtime'.
- */
-bool ItemSpaceOk(int x, int y)
-{
-	return CanPut(x, y) && (dMonster[x][y] /*| dPlayer[x][y]*/) == 0;
-#if 0
-	int oi;
-
-	if (x < DBORDERX || x >= DBORDERX + DSIZEX || y < DBORDERY || y >= DBORDERY + DSIZEY)
-		return false;
-
-	if ((dItem[x][y] | dMonster[x][y] | /*dPlayer[x][y] |*/ nSolidTable[dPiece[x][y]]) != 0)
-		return false;
-
-	oi = dObject[x][y];
-	if (oi != 0) {
-		oi = oi >= 0 ? oi - 1 : -(oi + 1);
-		if (objects[oi]._oSolidFlag)
-			return false;
-	}
-
-	/*oi = dObject[x + 1][y + 1];
-	if (oi != 0) {
-		oi = oi >= 0 ? oi - 1 : -(oi + 1);
-		if (objects[oi]._oSelFlag != 0)
-			return false;
-	}
-
-	oi = dObject[x + 1][y];
-	if (oi > 0) {
-		oi2 = dObject[x][y + 1];
-		if (oi2 > 0 && objects[oi - 1]._oSelFlag != 0 && objects[oi2 - 1]._oSelFlag != 0)
-			return false;
-	}
-
-	if (currLvl._dType == DTYPE_TOWN)
-		if (dMonster[x + 1][y + 1] != 0)
-			return false;
-	*/
-	return true;
-#endif
-}
-
-static bool GetItemSpace(int x, int y, bool (func)(int x, int y), int ii)
-{
-	BYTE i, rs;
-	BYTE slist[NUM_DIRS + 1];
-
-	rs = 0;
-	for (i = 0; i < lengthof(area3x3_x); i++) {
-		if (func(x + area3x3_x[i], y + area3x3_y[i])) {
-			slist[rs] = i;
-			rs++;
-		}
-	}
-
-	if (rs == 0)
-		return false;
-
-	rs = slist[random_low(13, rs)];
-
-	SetItemLoc(ii, x + area3x3_x[rs], y + area3x3_y[rs]);
-	return true;
-}
-
-static void GetSuperItemSpace(int x, int y, int ii)
-{
-	int xx, yy;
-	int i, j;
-
-	if (!GetItemSpace(x, y, ItemSpaceOk, ii) && !GetItemSpace(x, y, CanPut, ii)) {
-		const int8_t* cr;
-		bool ignoreLine = false;
-restart:
-		for (i = 2; i < lengthof(CrawlNum); i++) {
-			cr = &CrawlTable[CrawlNum[i]];
-			for (j = (BYTE)*cr; j > 0; j--) {
-				xx = x + *++cr;
-				yy = y + *++cr;
-				if (CanPut(xx, yy) && (ignoreLine || LineClear(x, y, xx, yy))) {
-					SetItemLoc(ii, xx, yy);
-					return;
-				}
-			}
-		}
-		if (!ignoreLine) {
-			ignoreLine = true;
-			goto restart;
-		}
-	}
-}
-
-/*static void GetSuperItemLoc(int x, int y, int ii)
-{
-	int xx, yy;
-	int i, j, k;
-
-	for (k = 1; k < 50; k++) {
-		for (j = -k; j <= k; j++) {
-			yy = y + j;
-			for (i = -k; i <= k; i++) {
-				xx = i + x;
-				if (ItemSpaceOk(xx, yy)) {
-					SetItemLoc(ii, xx, yy);
-					return;
-				}
-			}
-		}
-	}
-}*/
 
 BYTE GetBookSpell(unsigned lvl)
 {
@@ -575,9 +478,9 @@ static void SetStaffSpell(ItemStruct* is, unsigned lvl)
 
 	bs = GetStaffSpell(lvl);
 
+	is->_iSpell = bs;
 	sd = &spelldata[bs];
 
-	is->_iSpell = bs;
 	is->_iCharges = RandRangeLow(sd->sStaffMin, sd->sStaffMax);
 	is->_iMaxCharges = is->_iCharges;
 
@@ -884,7 +787,7 @@ static void GetItemBonus(int ii, unsigned lvl, BYTE range, bool onlygood, bool a
 
 	switch (is->_itype) {
 	case ITYPE_MISC:
-		if (items[ii]._iMiscId != IMISC_MAP)
+		if (is->_iMiscId != IMISC_MAP)
 			return;
 		flgs = PLT_MAP;
 		break;
@@ -1106,9 +1009,12 @@ static void SetupItem(int ii, int idx, int32_t iseed, unsigned lvl, unsigned qua
 			ItemRndDur(ii);
 }
 
-static void SpawnRndItem(unsigned quality, unsigned lvl, int x, int y)
+void PlaceRndItem(int x, int y, unsigned quality)
 {
+	unsigned lvl;
 	int idx, ii;
+
+	lvl = items_get_currlevel();
 
 	if (quality >= CFDQ_GOOD)
 		idx = RndUItem(lvl);
@@ -1122,18 +1028,9 @@ static void SpawnRndItem(unsigned quality, unsigned lvl, int x, int y)
 
 	SetupItem(ii, idx, NextRndSeed(), lvl, quality);
 
-	GetSuperItemSpace(x, y, ii);
+	SetItemLoc(ii, x, y);
 
 	RespawnItem(ii);
-}
-
-void CreateRndItem(int x, int y, unsigned quality)
-{
-	unsigned lvl;
-
-	lvl = items_get_currlevel();
-
-	SpawnRndItem(quality, lvl, x, y);
 }
 
 static void SetupUsefulItem(int ii, int32_t iseed, unsigned lvl)
@@ -1165,17 +1062,16 @@ static void SetupUsefulItem(int ii, int32_t iseed, unsigned lvl)
 	items[ii]._iCreateInfo = lvl; // | CF_USEFUL;
 }
 
-void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
+void PlaceGoldItem(int x, int y)
 {
 	int idx, ii;
-	unsigned lvl;
+	unsigned quality, lvl;
 
 	lvl = items_get_currlevel();
 
-	if (itype != ITYPE_GOLD)
-		idx = RndTypeItem(itype, imisc, lvl);
-	else
-		idx = IDI_GOLD;
+	idx = IDI_GOLD;
+	quality = CFDQ_NORMAL;
+
 	if (numitems >= MAXITEMS)
 		return; // should never be the case
 	ii = itemactive[numitems];
@@ -1183,7 +1079,7 @@ void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
 
 	SetupItem(ii, idx, NextRndSeed(), lvl, quality);
 
-	GetSuperItemSpace(x, y, ii);
+	SetItemLoc(ii, x, y);
 
 	RespawnItem(ii);
 }
@@ -1194,16 +1090,15 @@ void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc)
  * @param idx: the index of the item(item_indexes enum)
  * @param x tile-coordinate of the target location
  * @param y tile-coordinate of the target location
- * @param mode icreate_mode except for ICM_SEND_FLIP
  */
-void CreateQuestItemAt(int idx, int x, int y)
+void PlaceQuestItemAt(int idx, int x, int y)
 {
 	int ii;
 
-		if (numitems >= MAXITEMS)
-			return; // should never be the case
-		ii = itemactive[numitems];
-		numitems++;
+	if (numitems >= MAXITEMS)
+		return; // should never be the case
+	ii = itemactive[numitems];
+	numitems++;
 
 	SetItemData(ii, idx);
 	items[ii]._iCreateInfo = items_get_currlevel();
@@ -1213,7 +1108,7 @@ void CreateQuestItemAt(int idx, int x, int y)
 
 	SetItemLoc(ii, x, y);
 
-		RespawnItem(ii);
+	RespawnItem(ii);
 }
 
 /**
@@ -1225,6 +1120,7 @@ void CreateQuestItemAt(int idx, int x, int y)
 void PlaceQuestItemInArea(int idx, int areasize)
 {
 	int ii;
+	POS32 pos = GetRandomItemSpace(areasize);
 
 	if (numitems >= MAXITEMS)
 		return; // should never be the case
@@ -1236,7 +1132,7 @@ void PlaceQuestItemInArea(int idx, int areasize)
 	items[ii]._iCreateInfo = items_get_currlevel(); // | CF_PREGEN;
 	items[ii]._iSeed = NextRndSeed();               // make sure it is unique
 
-	GetRandomItemSpace(areasize, ii);
+	SetItemLoc(ii, pos.x, pos.y);
 
 	RespawnItem(ii);
 }
