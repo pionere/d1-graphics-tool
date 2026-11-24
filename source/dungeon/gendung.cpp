@@ -197,9 +197,9 @@ void InitLvlDungeon()
 	}
 	{
 		size_t dwMinSize;
-		minFile = LoadFileInMem(lfd->dMiniTiles, &dwMinSize); // .MIN
+		minFile = (uint16_t*)LoadFileInMem(lfd->dMiniTiles, &dwMinSize); // .MIN
 		if (minFile == NULL) {
-			dProgressErr() << QApplication::tr("MIN file (%1) is missing.").arg(lfd->dMiniTiles));
+			dProgressErr() << QApplication::tr("MIN file (%1) is missing.").arg(lfd->dMiniTiles);
 			MicroTileLen = 0;
 			return;
 		}
@@ -225,14 +225,14 @@ void InitLvlDungeon()
 		} else {
 			if (dwMinSize % (2 * blocks) != 0) {
 				mem_free_dbg(minFile);
-				dProgressErr() << QApplication::tr("MIN file (%1) is invalid.").arg(lfd->dMiniTiles));
+				dProgressErr() << QApplication::tr("MIN file (%1) is invalid.").arg(lfd->dMiniTiles);
 				MicroTileLen = 0;
 				return;
 			}
 			assetMpl = sqrt(dwMinSize / (2 * blocks * dwSubtiles));
 			if (2 * blocks * dwSubtiles * assetMpl * assetMpl != dwMinSize) {
 				mem_free_dbg(minData);
-				dProgressErr() << QApplication::tr("MIN file (%1) blocksize is invalid.").arg(lfd->dMiniTiles));
+				dProgressErr() << QApplication::tr("MIN file (%1) blocksize is invalid.").arg(lfd->dMiniTiles);
 				MicroTileLen = 0;
 				return;
 			}
