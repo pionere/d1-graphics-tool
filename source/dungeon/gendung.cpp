@@ -12,6 +12,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#define ASSET_MPL assetMpl
+#define MICRO_WIDTH 32
+#define TILE_WIDTH (64 * ASSET_MPL)
+
 /** Contains the mega tile IDs of the (mega-)map. */
 BYTE dungeon[DMAXX][DMAXY];
 /** Contains a backup of the mega tile IDs of the (mega-)map. */
@@ -37,6 +41,12 @@ BYTE automaptype[MAXSUBTILES + 1];
  * Flags of tiles to specify room propagation and shadow-type flags (_tile_flags)
  */
 BYTE nTrnShadowTable[MAXTILES + 1];
+/*
+ * The micros of the subtiles
+ */
+uint16_t* pSubtiles; //[MAXSUBTILES + 1][16 * ASSET_MPL * ASSET_MPL];
+static unsigned rowLen;
+static unsigned assetMpl;
 /**
  * Flags of subtiles to specify collision properties and the light radius
  */
@@ -61,6 +71,7 @@ BYTE nSpecTrapTable[MAXSUBTILES + 1];
 int gnDifficulty;
 /** Contains the data of the active dungeon level. */
 LevelStruct currLvl;
+int MicroTileLen;
 /** Specifies the number of transparency blocks on the map. */
 BYTE numtrans;
 /* Specifies whether the transvals should be re-processed. */
@@ -103,6 +114,7 @@ void InitLvlDungeon()
 {
 	size_t dwSubtiles;
 	BYTE* pTmp;
+	uint16_t blocks, *minFile, *pSubtile, *pPTmp;
 	const LevelData* lds = &AllLevels[currLvl._dLevelNum];
 	const LevelFileData* lfd = &levelfiledata[lds->dfindex];
 
@@ -182,6 +194,61 @@ void InitLvlDungeon()
 		pTmp += dwSubtiles;
 
 		mem_free_dbg(subFile);
+	}
+	{
+		size_t dwMinSize;
+		minFile = LoadFileInMem(lfd->dMiniTiles, &dwMinSize); // .MIN
+		if (minFile == NULL) {
+			dProgressErr() << QApplication::tr("MIN file (%1) is missing.").arg(lfd->dMiniTiles));
+			MicroTileLen = 0;
+			return;
+		}
+		blocks = lds->dBlocks;
+		if (dwMinSize == (2 * blocks * (dwSubtiles + 1))) {
+			assetMpl = 1;
+			rowLen = 16;
+			pSubtiles = minFile;
+			for (unsigned i = 1; i <= dwSubtiles; i++) {
+				pPTmp = &pSubtiles[i * 16];
+				pSubtile = &minFile[blocks * i];
+				for (uint16_t bv = 0; bv < blocks; bv += 2) {
+					pSubtile -= 2;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+					pPTmp[0] = SwapLE16(pSubtile[0]);
+					pPTmp[1] = SwapLE16(pSubtile[1]);
+#else
+					*((uint32_t*)pPTmp) = *((uint32_t*)pSubtile);
+#endif
+					pPTmp += 2;
+				}
+			}
+		} else {
+			if (dwMinSize % (2 * blocks) != 0) {
+				mem_free_dbg(minFile);
+				dProgressErr() << QApplication::tr("MIN file (%1) is invalid.").arg(lfd->dMiniTiles));
+				MicroTileLen = 0;
+				return;
+			}
+			assetMpl = sqrt(dwMinSize / (2 * blocks * dwSubtiles));
+			if (2 * blocks * dwSubtiles * assetMpl * assetMpl != dwMinSize) {
+				mem_free_dbg(minData);
+				dProgressErr() << QApplication::tr("MIN file (%1) blocksize is invalid.").arg(lfd->dMiniTiles));
+				MicroTileLen = 0;
+				return;
+			}
+			rowLen = 16 * assetMpl * assetMpl;
+			pSubtiles = malloc(dwMinSize + sizeof(*pSubtiles) * rowLen);
+			memcpy(&pSubtiles[rowLen], minData, dwMinSize);
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+			for (int i = 1; i < dwSubtiles; i++) {
+				for (int bv = 0; bv < rowLen; bv++) {
+					pSubtiles[i * rowLen + bv] = SwapLE16(pSubtiles[i * rowLen + bv]);
+				}
+			}
+#endif
+		}
+		MicroTileLen = lds->dMicroTileLen * ASSET_MPL * ASSET_MPL;
+		mem_free_dbg(minFile);
 	}
 
 	switch (currLvl._dType) {
@@ -1306,7 +1373,7 @@ static bool microColumnEmpty(int pn, int column)
 {
 	uint16_t levelCelBlock;
 	uint16_t* pMap;
-	pMap = &pSubtiles[pn][column];
+	pMap = &pSubtiles[pn * rowLen + column];
 	for (int i = column; i < MicroTileLen; ) {
 		for (int j = 0; j < ASSET_MPL; j++) {
 			for (int k = 0; k < ASSET_MPL; k++) {
@@ -1317,7 +1384,7 @@ static bool microColumnEmpty(int pn, int column)
 			}
 			pMap++;
 		}
-		i += (TILE_WIDTH / MICRO_WIDTH);
+        i += TILE_WIDTH / MICRO_WIDTH;
 		pMap += ASSET_MPL;
 	}
 	return true;
@@ -1435,7 +1502,7 @@ static void DRLG_InitLight()
 {
 	DRLG_LightSubtiles();
 	ObjInitLight();
-	LoadPreLighting();
+//	LoadPreLighting();
 }
 
 void InitLvlMap()

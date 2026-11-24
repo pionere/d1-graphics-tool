@@ -201,6 +201,28 @@ int GetDirection16(int x1, int y1, int x2, int y2)
 #endif
 }
 
+int GetDunDistance2(POS32 dp1, POS32 dp2)
+{
+	int ddx = (dp1.x - dp2.x);
+	int ddy = (dp1.y - dp2.y);
+
+	ddx >>= DUN_SHIFT;
+	ddy >>= DUN_SHIFT;
+
+	return ddx * ddx + ddy * ddy;
+}
+
+POS32 DungeonToDunPos(int x, int y)
+{
+	x *= DUN_WIDTH;
+	y *= DUN_WIDTH;
+
+	x |= DUN_WIDTH / 2;
+	y |= DUN_WIDTH / 2;
+
+	return { x, y };
+}
+
 /**
  * @brief Set the RNG seed
  * @param s RNG seed

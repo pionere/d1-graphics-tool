@@ -13,10 +13,15 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+#define DUN_SHIFT (16 - 6)
+#define DUN_WIDTH ((1 << 6) << DUN_SHIFT)
+
 extern POS32 myview;
 
 int GetDirection16(int x1, int y1, int x2, int y2);
 int GetDirection8(int x1, int y1, int x2, int y2);
+int GetDunDistance2(POS32 dp1, POS32 dp2);
+POS32 DungeonToDunPos(int x, int y);
 /* Set the current RNG seed */
 void SetRndSeed(int32_t s);
 /* Retrieve the current RNG seed */

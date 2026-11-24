@@ -153,8 +153,7 @@ typedef struct ItemStruct {
 	int32_t _iSeed;
 	uint16_t _iIdx;        // item_indexes
 	uint16_t _iCreateInfo; // icreateinfo_flag
-	int _ix;
-	int _iy;
+	POS32 _ipos;
 	int _iCurs;   // item_cursor_graphic
 	int _itype;   // item_type
 	int _iMiscId; // item_misc_id
@@ -268,14 +267,9 @@ typedef struct PlayerStruct {
 	int16_t _pTimer[NUM_PLRTIMERS];
 	unsigned _pExperience;
 	unsigned _pNextExper;
-	int _px;      // Tile X-position where the player should be drawn
-	int _py;      // Tile Y-position where the player should be drawn
-	int _pfutx;   // Future tile X-position where the player will be at the end of its action
-	int _pfuty;   // Future tile Y-position where the player will be at the end of its action
-	int _poldx;   // Most recent tile X-position where the player was at the start of its action
-	int _poldy;   // Most recent tile Y-position where the player was at the start of its action
-	int _pxoff;   // Pixel X-offset from tile position where the player should be drawn
-	int _pyoff;   // Pixel Y-offset from tile position where the player should be drawn
+	int _px;      // (Future) subtile X-position of the player
+	int _py;      // (Future) subtile Y-position of the player
+	POS32 _ppos;  // Precise dungeon position of the player
 	int _pdir;    // Direction faced by player (direction enum)
 	const BYTE* _pAnimData;
 	int _pAnimFrameLen; // Tick length of each frame in the current animation
@@ -424,20 +418,16 @@ typedef struct MissileStruct {
 	int _miAnimFrameLen; // Tick length of each frame in the current animation
 	int _miAnimLen;   // Number of frames in current animation
 	int _miAnimWidth;
-	int _miAnimXOffset;
 	int _miAnimCnt; // Increases by one each game tick, counting how close we are to _miAnimFrameLen
 	int _miAnimAdd;
 	int _miAnimFrame; // Current frame of animation.
-	int _misx;    // Initial tile X-position
-	int _misy;    // Initial tile Y-position
-	int _mix;     // Tile X-position where the missile should be drawn
-	int _miy;     // Tile Y-position where the missile should be drawn
-	int _mixoff;  // Pixel X-offset from tile position where the missile should be drawn
-	int _miyoff;  // Pixel Y-offset from tile position where the missile should be drawn
+	POS32 _misrcpos;  // Starting dungeon position of the missile
+	POS32 _mipos; // Precise dungeon position of the missile
+	int _mizoff;  // Pixel Z-offset from tile position where the missile should be drawn
 	int _mixvel;  // Missile tile (X - Y)-velocity while moving. This gets added onto _mitxoff each game tick
 	int _miyvel;  // Missile tile (X + Y)-velocity while moving. This gets added onto _mityoff each game tick
-	int _mitxoff; // How far the missile has travelled in its lifespan along the (X - Y)-axis. mix/miy/mxoff/myoff get updated every game tick based on this
-	int _mityoff; // How far the missile has travelled in its lifespan along the (X + Y)-axis. mix/miy/mxoff/myoff get updated every game tick based on this
+	int _mitxoff; // How far the missile has travelled in its lifespan along the (X - Y)-axis. mipos get updated every game tick based on this
+	int _mityoff; // How far the missile has travelled in its lifespan along the (X + Y)-axis. mipos get updated every game tick based on this
 	int _miDir;   // The direction of the missile
 	int _miSpllvl;
 	int _miSource; // missile_source_type
@@ -557,14 +547,9 @@ typedef struct MonsterStruct {
 	int _mgoalvar1;
 	int _mgoalvar2;
 	int _mgoalvar3;
-	int _mx;           // Tile X-position where the monster should be drawn
-	int _my;           // Tile Y-position where the monster should be drawn
-	int _mfutx;        // Future tile X-position where the monster will be at the end of its action
-	int _mfuty;        // Future tile Y-position where the monster will be at the end of its action
-	int _moldx;        // Most recent tile X-position where the monster was at the start of its action
-	int _moldy;        // Most recent tile Y-position where the monster was at the start of its action
-	int _mxoff;        // Pixel X-offset from tile position where the monster should be drawn
-	int _myoff;        // Pixel Y-offset from tile position where the monster should be drawn
+	int _mx;           // (Future) subtile X-position of the monster
+	int _my;           // (Future) subtile Y-position of the monster
+	POS32 _mpos;       // Precise dungeon position of the monster
 	int _mdir;         // Direction faced by monster (direction enum)
 	int _menemy;       // The current target of the monster. An index in to either a player(zero or positive) or a monster (negative)
 	BYTE _menemyx;     // Future (except for teleporting) tile X-coordinate of the enemy
@@ -711,6 +696,7 @@ typedef struct ObjectStruct {
 	int _otype; // _object_id
 	int _ox;    // Tile X-position of the object
 	int _oy;    // Tile Y-position of the object
+	POS32 _opos; // Precise dungeon X-position of the object
 	int _oSFX;  // _sfx_id
 	BYTE _oSFXCnt;
 	BYTE _oAnimFlag;  // object_anim_mode
