@@ -1838,7 +1838,9 @@ static void DRLG_L2CreateDungeon()
 	}
 
 	nRoomCnt = 0;
-	CreateRoom(1, 1, DMAXX - 2, DMAXY - 2, -1, HDIR_NONE, ForceW, ForceH);
+    // reduce area areaidx
+    extern int border;
+	CreateRoom(border + 1, border + 1, (DMAXX - 1) - (border + 1), (DMAXY - 1) - (border + 1), -1, HDIR_NONE, ForceW, ForceH);
 
 	if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 		pSetPieces[0]._spx = drlg.RoomList[0].nRoomx1 + 2;
@@ -2327,8 +2329,10 @@ static void L2CreateArches()
 static void DRLG_L2()
 {
     int i;
+    extern int counter1;
 	while (true) {
 		do {
+            counter1++;
 			static_assert(sizeof(pdungeon) == DMAXX * DMAXY, "Linear traverse of pdungeon does not work in DRLG_L2.");
 			memset(pdungeon, PRE_EXTERN, sizeof(pdungeon));
 			DRLG_L2CreateDungeon();

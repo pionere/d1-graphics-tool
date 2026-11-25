@@ -1208,26 +1208,30 @@ static void L4Block2Dungeon()
 	int i, j;
 	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in L4Block2Dungeon.");
 	if (sizeof(dungeon) != L4BLOCKX * L4BLOCKY * 4 || sizeof(dungeon[0]) != L4BLOCKY * 2) {
-		memset(dungeon, BASE_MEGATILE_L4, sizeof(dungeon));
+		memset(dungeon, 0, sizeof(dungeon));
 	}
+    // top-left block
 	for (j = 0; j < L4BLOCKY; j++) {
 		for (i = 0; i < L4BLOCKX; i++) {
-			dungeon[i][j] = drlg.dungBlock[i][j];
+			dungeon[i + DMAXX / 2 - L4BLOCKX][j + DMAXY / 2 - L4BLOCKY] = drlg.dungBlock[i][j];
 		}
 	}
+    // top-right block
 	for (j = 0; j < L4BLOCKY; j++) {
 		for (i = 0; i < L4BLOCKX; i++) {
-			dungeon[i][j + L4BLOCKY] = drlg.dungBlock[i][L4BLOCKY - 1 - j];
+			dungeon[i + DMAXX / 2 - L4BLOCKX][DMAXY / 2 + j] = drlg.dungBlock[i][L4BLOCKY - 1 - j];
 		}
 	}
+    // bottom-left block
 	for (j = 0; j < L4BLOCKY; j++) {
 		for (i = 0; i < L4BLOCKX; i++) {
-			dungeon[i + L4BLOCKX][j] = drlg.dungBlock[L4BLOCKX - 1 - i][j];
+			dungeon[DMAXX / 2 + i][DMAXY / 2 - L4BLOCKY + j] = drlg.dungBlock[L4BLOCKX - 1 - i][j];
 		}
 	}
+    // bottom-right block
 	for (j = 0; j < L4BLOCKY; j++) {
 		for (i = 0; i < L4BLOCKX; i++) {
-			dungeon[i + L4BLOCKX][j + L4BLOCKY] = drlg.dungBlock[L4BLOCKX - 1 - i][L4BLOCKY - 1 - j];
+			dungeon[DMAXX / 2 + i][DMAXY / 2 + j] = drlg.dungBlock[L4BLOCKX - 1 - i][L4BLOCKY - 1 - j];
 		}
 	}
 }
@@ -1532,11 +1536,11 @@ static void L4FirstRoom()
 		w = DQUAD_ROOM_SIZE;
 		h = DQUAD_ROOM_SIZE;
 	}
-
+    // set xmax DMAXX / 2 - 1 - w to work in dungeon
 	xmax = L4BLOCKX - 1 - w;
 	xmin = (xmax + 1) >> 1;
 	x = RandRange(xmin, xmax);
-
+    // set ymax DMAXY / 2 - 1 - h to work in dungeon
 	ymax = L4BLOCKY - 1 - h;
 	ymin = (ymax + 1) >> 1;
 	y = RandRange(ymin, ymax);
@@ -2107,22 +2111,36 @@ H2:
 	}
 }
 
+void DRLG_L4AddBorder(int border, int val)
+{
+    int x, y;
+    if (border == 0) return;
+    memset(drlg.dungBlock, val, sizeof(drlg.dungBlock[0]) * border);
+    for (x = border; x < lengthof(drlg.dungBlock)/* - border*/; x++) {
+        for (y = 0; y < border; y++) {
+            drlg.dungBlock[x][y] = val;
+//            drlg.dungBlock[x][DMAXY - 1 - y] = val;
+        }
+    }
+//    memset(&drlg.dungBlock[lengthof[drlg.dungBlock]] - sizeof(drlg.dungBlock[0]) * border, val, sizeof(drlg.dungBlock[0]) * border);
+}
+
 static void DRLG_L4()
 {
 	int i;
-    extern int counter1;
+    extern int counter1, border;
 	while (true) {
 		do {
             counter1++;
+            // adjust the size of dungBlock? work in dungeon directly (add border)?
 			memset(drlg.dungBlock, 0, sizeof(drlg.dungBlock));
-
-			//static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L4.");
-			//memset(dungeon, 30, sizeof(dungeon));
+            DRLG_L4AddBorder(border, 1);
 			L4FirstRoom();
+            DRLG_L4AddBorder(border, 0);
 			L4ConnectBlock();
 			i = DRLG_L4GetArea();
 		} while (i < 190 || i > 220);
-
+        // adjust the copy from dungBlock to dungeon
 		L4Block2Dungeon();
 		DRLG_L4MakeMegas();
 		L4TileFix();

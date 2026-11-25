@@ -2885,6 +2885,20 @@ void DRLG_L1InitTransVals()
 	}
 }*/
 
+void DRLG_AddBorder(int border, int val)
+{
+    int x, y;
+    if (border == 0) return;
+    memset(dungeon, val, sizeof(dungeon[0]) * border);
+    for (x = border; x < DMAXX - border; x++) {
+        for (y = 0; y < border; y++) {
+            dungeon[x][y] = val;
+            dungeon[x][DMAXY - 1 - y] = val;
+        }
+    }
+    memset(&dungeon[lengthof[dungeon]] - sizeof(dungeon[0]) * border, val, sizeof(dungeon[0]) * border);
+}
+
 static void DRLG_L1()
 {
 	int i, areaidx;
@@ -2897,15 +2911,18 @@ static void DRLG_L1()
 		areaidx = 1;
 	}
 
-    extern int counter1;
+    extern int counter1, border;
 	while (true) {
 		do {
             counter1++;
 			memset(dungeon, 0, sizeof(dungeon));
+            // add border based on areaidx
+            DRLG_AddBorder(border, 1);
 #ifdef SPACEL
 			spaceLeft = arealimits[areaidx];
 #endif
 			DRLG_L1CreateDungeon();
+            DRLG_AddBorder(border, 0);
 #ifdef SPACEL
 			i = arealimits[areaidx] - spaceLeft;
 //            if (i + spaceLeft != arealimits[areaidx]) {

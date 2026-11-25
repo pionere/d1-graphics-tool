@@ -7,6 +7,10 @@
  */
 #include "all.h"
 
+#include <QString>
+
+#include "../progressdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** The default external tile. */
@@ -1195,8 +1199,8 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 		y2 = y1 + blksizey;
 		break;
 	case 4: // the central block
-		x1 = x;
-		y1 = y;
+		x1 = x - blksizex / 2u;
+		y1 = y - blksizey / 2u;
 		x2 = x1 + blksizex;
 		y2 = y1 + blksizey;
 		break;
@@ -1224,24 +1228,25 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 static void DRLG_L3FloorArea()
 {
 	int w, h, xr, yb, x1, y1, x2, y2, i, j;
+    extern int border;
 
 	w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
 	h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
-	xr = DMAXX - w - 10;
-	yb = DMAXY - h - 10;
+	xr = DMAXX - (w + 10 + border);
+	yb = DMAXY - (h + 10 + border);
 
-	assert(xr > 10);
-	assert(yb > 10);
+	assert(xr > border + 10);
+	assert(yb > border + 10);
 
-	x1 = RandRangeLow(10, xr);
-	y1 = RandRangeLow(10, yb);
+	x1 = RandRangeLow(border + 10, xr);
+	y1 = RandRangeLow(border + 10, yb);
 	pSetPieces[0]._spx = x1;
 	pSetPieces[0]._spy = y1;
 	x2 = x1 + w;
 	y2 = y1 + h;
 
-	for (j = y1; j <= y2; j++) {
-		for (i = x1; i <= x2; i++) {
+    for (i = x1; i <= x2; i++) {
+	    for (j = y1; j <= y2; j++) {
 			dungeon[i][j] = 1;
 		}
 	}
@@ -2334,7 +2339,7 @@ static void DRLG_L3LockRec(unsigned offset)
  * using only the four basic directions.
  * Assumes the border of dungeon is empty.
  */
-static bool DRLG_L3Lockout()
+static bool DRLG_L3LockoutOrig()
 {
 	int i;
 	BYTE* pTmp = &drlg.lockoutMap[0][0];
@@ -2358,6 +2363,38 @@ static bool DRLG_L3Lockout()
 	return true;
 }
 
+static bool DRLG_L3Lockout()
+{
+    if (pSetPieces[0]._spData != NULL) {
+        int w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
+	    int h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
+
+        int x1 = pSetPieces[0]._spx;
+	    int y1 = pSetPieces[0]._spy;
+        int y2 = y1 + h;
+        int x2 = x1 + w;
+        bool connects = false;
+        for (j = y1; j <= y2; j++) {
+            if (dungeon[x1 - 1][j] != 0 || dungeon[x2 + 1][j] != 0) {
+                connects = true;
+            }
+        }
+		for (i = x1; i <= x2; i++) {
+            if (dungeon[i][y1 - 1] != 0 || dungeon[i][y2 + 1] != 0) {
+                connects = true;
+		    }
+	    }
+        if (!connects)
+            return false;
+
+    }
+    if (!DRLG_L3LockoutOrig()) {
+        dProgressErr() << QString("Original lockout check still needed");
+        return false;
+    }
+    return true;
+}
+
 void DRLG_L3InitTransVals()
 {
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
@@ -2366,16 +2403,20 @@ void DRLG_L3InitTransVals()
 	DRLG_FloodTVal();
 }
 
+extern void DRLG_AddBorder(int border, int val);
 static void DRLG_L3()
 {
 	bool doneflag;
 	int i;
-
+    extern int counter1, border;
 	do {
 		while (true) {
 			do {
+                counter1++;
 				memset(dungeon, 0, sizeof(dungeon));
-				DRLG_L3CreateBlock(RandRange(10, 29), RandRange(10, 29), 0, 4);
+                // add border based on areaidx
+                DRLG_AddBorder(border, 1);
+				DRLG_L3CreateBlock(RandRange(border + 10, DMAXX - (border + 10)), RandRange(border + 10, DMAXY - (border + 10)), 0, 4);
 				if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 					DRLG_L3FloorArea();
 				}

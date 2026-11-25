@@ -29,7 +29,7 @@ bool stopgen;
 bool dooDebug;
 QElapsedTimer* timer;
 quint64 dt[16];
-int counter1, counter2, lc2;
+int counter1, counter2, lc2, border;
 
 typedef struct ObjStruct {
     int otype;
@@ -653,6 +653,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     rounds = 0;
     counter1 = 0;
     counter2 = 0;
+    border = ddLevelPlrs - 1;
     lc2 = 0;
     totalThemes = 0;
     totalMonsters = 0;
