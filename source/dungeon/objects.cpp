@@ -55,10 +55,6 @@ static int leverid;
 ObjectStruct objects[MAXOBJECTS];
 //bool gbInitObjFlag;
 
-/** Specifies the X-coordinate delta between barrels. */
-static const int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
-/** Specifies the Y-coordinate delta between barrels. */
-static const int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 /** Maps from shrine_id to shrine name. */
 static const char* const shrinestrs[NUM_SHRINETYPE] = {
 	"Hidden",
@@ -419,8 +415,8 @@ static void InitRndBarrels(int numobjs, int otype)
 		do {
 			for (t = 0; t < 3; t++) {
 				dir = random_(143, NUM_DIRS);
-				xp += bxadd[dir];
-				yp += byadd[dir];
+				xp += offset_x[dir];
+				yp += offset_y[dir];
 				if (RndLocOk(xp, yp))
 					break;
 			}
