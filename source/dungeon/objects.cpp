@@ -1070,12 +1070,21 @@ static void AddBanner(int oi)
 static void AddSarc(int oi)
 {
 	ObjectStruct* os;
+	int rnd;
 
 	os = &objects[oi];
-	os->_oVar1 = random_(153, 10);       // SARC_ITEM
 	//os->_oRndSeed = NextRndSeed();
-	if (os->_oVar1 >= 8)
-		os->_oVar2 = PreSpawnSkeleton(); // SARC_SKELE
+	rnd = random_(153, 128);
+	if (rnd < 64)
+		rnd = -1;                 // SARC_EMPTY
+	else if (rnd < 103)
+		rnd = 0;                  // SARC_ITEM
+	else {
+		rnd = PreSpawnSkeleton(); // SARC_SKELE
+		// assert(rnd1 == -1 || rnd1 >= MAX_MINIONS);
+		static_assert(MAX_MINIONS > 0, "AddSarc might not spawn a skeleton");
+	}
+	os->_oVar1 = rnd;
 }
 
 /*static void AddFlameTrap(int oi)
@@ -1119,13 +1128,22 @@ static void AddTrap(int oi)
 static void AddBarrel(int oi)
 {
 	ObjectStruct* os;
+	int rnd1, rnd2;
 
 	os = &objects[oi];
 	//os->_oRndSeed = NextRndSeed();
-	os->_oVar3 = random_(149, 3);  // BARREL_ITEM_TYPE
-	os->_oVar2 = random_(149, 10); // BARREL_ITEM
-	if (os->_oVar2 >= 8)
-		os->_oVar4 = PreSpawnSkeleton(); // BARREL_SKELE
+	rnd1 = random_(149, 128);
+	rnd2 = random_(149, 128);
+	if (rnd1 < 77) {
+		rnd1 = -1;                 // BARREL_EMPTY
+	} else if (rnd1 < 103) {
+		rnd1 = rnd2 >= 43 ? 1 : 0;  // BARREL_ITEM / BARREL_ITEM_TYPE
+	} else {
+		rnd1 = PreSpawnSkeleton(); // BARREL_SKELE
+		// assert(rnd1 == -1 || rnd1 >= MAX_MINIONS);
+		static_assert(MAX_MINIONS > 1, "AddBarrel might not spawn a skeleton");
+	}
+	os->_oVar1 = rnd1;
 }
 
 static int FindValidShrine(int filter)
