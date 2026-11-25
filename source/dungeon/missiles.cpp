@@ -377,7 +377,7 @@ void RemovePortalMissile(int pnum)
 /*
  * Check if a missile can be placed at the given position.
  */
-static bool PosOkMis2(int x, int y)
+static bool PosOkMis2(POS32 dp, POS32 sp)
 {
 	int x, y;
 
@@ -472,7 +472,7 @@ bool FindPlace(const POS32 sp, int r, bool (*func)(POS32, POS32), POS32& dp)
 	return false;
 }
 
-static bool FindClosest(int sx, int sy, int& dx, int& dy)
+static bool FindClosest(const POS32 sp, POS32& dp)
 {
 	constexpr int MAX_DIST = (DUN_WIDTH >> DUN_SHIFT) * (DUN_WIDTH >> DUN_SHIFT) * 15 * 15;
 	int sx, sy, mnum, tx, ty, dist;
@@ -526,12 +526,11 @@ static bool FindClosestChain(const MissileStruct* mis, POS32& dp)
 
 static bool FindNextMon(const POS32 sp, POS32& dp)
 {
-#if 0
 	constexpr int MAX_DIST = (DUN_WIDTH >> DUN_SHIFT) * (DUN_WIDTH >> DUN_SHIFT) * 6 * 6;
 	int mnum, dist;
 	int bestDist = -1;
 	MonsterStruct* mon;
-
+#if 0
 	for (mnum = MAX_MINIONS; mnum < MAXMONSTERS; mnum++) {
 		mon = &monsters[mnum];
 		// if (CanTalkToMonst(mnum)) continue;
@@ -772,6 +771,8 @@ int GetMisDirection16(int x1, int y1, int x2, int y2)
 	return dir & 15;
 #endif
 }
+
+#define GetDirection8 GetDirection
 
 static void DeleteMissile(int mi, int idx)
 {

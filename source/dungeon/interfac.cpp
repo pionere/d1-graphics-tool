@@ -566,16 +566,6 @@ static void StoreDungeon(D1Dun *dun)
             on.baseFrame = 1;
         on.animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : -1;
         on.name = infostr;
-        auto iter = objectTypes.begin();
-        for (; iter != objectTypes.end(); iter++) {
-            if (*iter == on) {
-                break;
-            }
-        }
-        obj.oType = lengthof(DunObjConvTbl) + std::distance(objectTypes.begin(), iter);
-        if (iter == objectTypes.end()) {
-            objectTypes.push_back(on);
-        }
         dun->setObjectAt((unsigned)os->_opos.x / DUN_WIDTH - DBORDERX + baseX, (unsigned)os->_opos.y / DUN_WIDTH - DBORDERY + baseY, obj);
     }
 }

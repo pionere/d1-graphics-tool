@@ -805,7 +805,7 @@ void ChangeLight(unsigned lnum, POS32 pos, int r)
 {
 }
 
-void ChangeVisionXY(unsigned vnum, int x, int y)
+void ChangeVisionXY(unsigned vnum, POS32 pos)
 {
 }
 
