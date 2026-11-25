@@ -49,6 +49,10 @@ uint16_t* pSubtiles; //[MAXSUBTILES + 1][16 * ASSET_MPL * ASSET_MPL];
 static unsigned rowLen;
 static unsigned assetMpl;
 /**
+ * Flags to control the drawing of a subtile (piece_micro_flag)
+ */
+BYTE microFlags[MAXSUBTILES + 1];
+/**
  * Flags of subtiles to specify collision properties and the light radius
  */
 BYTE nCollLightTable[MAXSUBTILES + 1];
@@ -188,7 +192,7 @@ void InitLvlDungeon()
 		memcpy(nSpecTrapTable, pTmp, dwSubtiles);
 		pTmp += dwSubtiles;
 		// read the render-properties
-		// memcpy(nSpecTrapTable, pTmp, dwSubtiles);
+		memcpy(microFlags, pTmp, dwSubtiles);
 		pTmp += dwSubtiles;
 		// read the map-properties
 		memcpy(automaptype, pTmp, dwSubtiles);
