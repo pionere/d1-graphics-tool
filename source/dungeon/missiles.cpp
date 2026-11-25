@@ -2795,9 +2795,7 @@ int AddWind(int mi, POS32 dp, int midir, int micaster, int misource, int spllvl)
 	// assert(micaster & MST_PLAYER);
 	// assert((unsigned)misource < MAX_PLRS);
 	mis = &missile[mi];
-	mis->_mitxoff += 4 * mis->_mixvel;
-	mis->_mityoff += 4 * mis->_miyvel;
-	GetMissilePos(mis);
+	MoveMissile(mi, 4);
 	//if (misource != -1) {
 		power = plx(misource)._pIPower;
 		mindam = (power >> 3) + 7 * spllvl + 1;
