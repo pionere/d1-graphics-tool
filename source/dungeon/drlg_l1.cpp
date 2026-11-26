@@ -2896,7 +2896,7 @@ void DRLG_AddBorder(int border, int val)
             dungeon[x][DMAXY - 1 - y] = val;
         }
     }
-    memset(&dungeon[lengthof[dungeon]][0] - sizeof(dungeon[0]) * border, val, sizeof(dungeon[0]) * border);
+    memset(&dungeon[lengthof(dungeon)][0] - sizeof(dungeon[0]) * border, val, sizeof(dungeon[0]) * border);
 }
 
 static void DRLG_L1()
