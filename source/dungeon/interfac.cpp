@@ -65,7 +65,7 @@ static void LogErrorF(const char* msg, ...)
 	fclose(f0);*/
 }
 
-QString getTrnFilePath(int id)
+QString getTrnFilePath(int id, const QString& assetPath)
 {
     QString result;
 
@@ -79,7 +79,10 @@ QString getTrnFilePath(int id)
     }
     const char* name = trnfiledata[id].trnName;
     if (path != NULL) {
-        result = QString("%1\\%2.TRN").arg(path).arg(name);
+        result = assetPath;
+        if (!assetPath.isEmpty())
+            result.append('\\');
+        result.append(QString("%1\\%2.TRN").arg(path).arg(name));
     }
     return result;
 }
@@ -475,7 +478,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.path = monfiledata[md.cmFileNum].moGfxFile;
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
-        monRes.baseTrnPath = getTrnFilePath(monsterdata[md.cmType].mTransFile);
+        monRes.baseTrnPath = getTrnFilePath(monsterdata[md.cmType].mTransFile, assetPath);
         monRes.uniqueMon = false;
         dun->addResource(monRes);
     }
@@ -491,8 +494,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.path = monfiledata[md.cmFileNum].moGfxFile;
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
-        monRes.baseTrnPath = getTrnFilePath(monsterdata[md.cmType].mTransFile);
-        monRes.uniqueTrnPath = getTrnFilePath(uniqMonData[ms->_muniqtype - 1].muTrans);
+        monRes.baseTrnPath = getTrnFilePath(monsterdata[md.cmType].mTransFile, assetPath);
+        monRes.uniqueTrnPath = getTrnFilePath(uniqMonData[ms->_muniqtype - 1].muTrans, assetPath);
         monRes.uniqueMon = true;
         dun->addResource(monRes);
     }*/

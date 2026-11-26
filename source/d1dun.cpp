@@ -2741,7 +2741,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
-            QString baseTrnFilePath = getTrnFilePath(md.mTransFile);
+            QString baseTrnFilePath = getTrnFilePath(md.mTransFile, this->assetPath);
             QString uniqueTrnFilePath;
             this->loadMonsterGfx(cl2FilePath, 0, baseTrnFilePath, uniqueTrnFilePath, result);
         }
@@ -2752,8 +2752,8 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
-            QString baseTrnFilePath = getTrnFilePath(md.mTransFile);
-            QString uniqueTrnFilePath = getTrnFilePath(uniqMonData[monUniqueType].muTrans);
+            QString baseTrnFilePath = getTrnFilePath(md.mTransFile, this->assetPath);
+            QString uniqueTrnFilePath = getTrnFilePath(uniqMonData[monUniqueType].muTrans, this->assetPath);
             this->loadMonsterGfx(cl2FilePath, 0, baseTrnFilePath, uniqueTrnFilePath, result);
         }
     }
