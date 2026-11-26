@@ -1241,7 +1241,7 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 			y2 = y1 + blksizey;
 			cy = y1;
 		}
-		x1 = x + RandRangeLow(-(blksizex - 1), obs);
+		x1 = x + RandRangeLow(-blksizex, obs);
 		x2 = x1 + blksizex;
 		cx = RandRangeLow(x < x1 ? x1 : x, (x + obs) < x2 ? x + obs : x2);
 		break;
@@ -1251,14 +1251,14 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 			// block to the east
 			x1 = x + 1;
 			x2 = x1 + blksizex;
-			cx = x2;
+			cx = x1;
 		} else {
 			 // block to the west
 			x2 = x - 1;
 			x1 = x2 - blksizex;
-			cx = x1;
+			cx = x2;
 		}
-		y1 = y + RandRangeLow(-(blksizey - 1), obs);
+		y1 = y + RandRangeLow(-blksizey, obs);
 		y2 = y1 + blksizey;
 		cy = RandRangeLow(y < y1 ? y1 : y, (y + obs) < y2 ? y + obs : y2);
 		break;
