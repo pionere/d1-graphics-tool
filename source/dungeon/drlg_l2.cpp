@@ -2329,8 +2329,9 @@ static void L2CreateArches()
 static void DRLG_L2()
 {
     int i;
-    extern int counter1;
+    extern int counter1, counter2;
 	while (true) {
+        counter2++;
 		do {
             counter1++;
 			static_assert(sizeof(pdungeon) == DMAXX * DMAXY, "Linear traverse of pdungeon does not work in DRLG_L2.");
@@ -2399,6 +2400,7 @@ static void DRLG_L2()
 		}
 		break;
 	}
+#if 0
     extern int counter2;
     extern int minars[4];
     extern int maxars[4];
@@ -2407,7 +2409,7 @@ static void DRLG_L2()
         minars[2] = i;
     if (maxars[2] < i)
         maxars[2] = i;
-
+#endif
 	L2LockoutFix();
 	// L2DoorFix(); - commented out, because this is no longer necessary
 

@@ -2911,8 +2911,9 @@ static void DRLG_L1()
 		areaidx = 1;
 	}
 
-    extern int counter1, border;
+    extern int counter1, counter2, border;
 	while (true) {
+        counter2++;
 		do {
             counter1++;
 			memset(dungeon, 0, sizeof(dungeon));
@@ -3045,12 +3046,14 @@ static void DRLG_L1()
 		}
 		break;
 	}
+#if 0
     extern int counter2;
     counter2 += i;
     if (minars[2] > i)
         minars[2] = i;
     if (maxars[2] < i)
         maxars[2] = i;
+#endif
 	/*if (placeWater) {
 		int x, y;
 

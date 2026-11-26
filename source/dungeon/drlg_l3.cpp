@@ -1121,11 +1121,11 @@ static void L1_dumpDun()
         for (int y = 0; y < DMAXY; y++) {
             tempstr[y] = dungeon[x][y] != 0 ? 'x' : ' ';
         }
-        LogErrorF("%2d: %s", x, tempstr);
+        LogErrorF("%2d:%s", x, tempstr);
     }
 }
 
-static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int dir)
+static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int dir)
 {
 	int i, j;
 	BYTE v;
@@ -1144,8 +1144,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int dir)
 	if (v != 0) {
 		return false;
 	}
-LogErrorF("DRLG_L3FillRoom %d:%d..%d:%d from %d", x1, y1, x2, y2, dir);
-L1_dumpDun();
+LogErrorF("DRLG_L3FillRoom %d:%d..%d:%d to %d cp %d:%d", x1, y1, x2, y2, dir, cx, cy);
 	// draw the inside of the room
 	for (j = y1 + 1; j < y2; j++) {
 		for (i = x1 + 1; i < x2; i++) {
@@ -1172,24 +1171,44 @@ L1_dumpDun();
 	// ensure it is connected to the other room
 	switch (dir) {
 	case 0: // block to the north
+#if 0
 		i = RandRangeLow(x1, x2);
 		dungeon[i][y2] = 1;
 		dungeon[i][y2 + 1] = 1;
+#else
+		dungeon[cx][cy + 0] = 1;
+		dungeon[cx][cy + 1] = 1;
+#endif
 		break;
 	case 1: // block to the east
+#if 0
 		j = RandRangeLow(y1, y2);
 		dungeon[x1][j] = 1;
 		dungeon[x1 - 1][j] = 1;
+#else
+		dungeon[cx + 0][cy] = 1;
+		dungeon[cx - 1][cy] = 1;
+#endif
 		break;
 	case 2: // block to the south
+#if 0
 		i = RandRangeLow(x1, x2);
 		dungeon[i][y1] = 1;
 		dungeon[i][y1 - 1] = 1;
+#else
+		dungeon[cx][cy + 0] = 1;
+		dungeon[cx][cy - 1] = 1;
+#endif
 		break;
 	case 3: // block to the west
+#if 0
 		j = RandRangeLow(y1, y2);
 		dungeon[x2][j] = 1;
 		dungeon[x2 + 1][j] = 1;
+#else
+		dungeon[cx + 0][cy] = 1;
+		dungeon[cx + 1][cy] = 1;
+#endif
 		break;
 	case 4: // the central block
 		break;
@@ -1197,49 +1216,51 @@ L1_dumpDun();
 		ASSUME_UNREACHABLE
 		break;
 	}
-
+L1_dumpDun();
 	return true;
 }
 
 static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 {
-	int blksizex, blksizey, x1, y1, x2, y2;
+	int blksizex, blksizey, x1, y1, x2, y2, cx, cy;
 
 	blksizex = RandRange(3, 4);
 	blksizey = RandRange(3, 4);
 
 	switch (dir) {
-	case 0: // block to the north
-		y2 = y - 1;
-		y1 = y2 - blksizey;
-		x1 = random_low(0, blksizex);
-		x1 = blksizex < obs ? x1 : -x1;
-		x1 = x + x1;
-		x2 = blksizex + x1;
-		break;
-	case 1: // block to the east
-		x1 = x + 1;
+	case 0:
+	case 2:
+		if (dir == 0) {
+			// block to the north
+			y2 = y - 1;
+			y1 = y2 - blksizey;
+			cy = y2;
+		} else {
+			// block to the south
+			y1 = y + 1;
+			y2 = y1 + blksizey;
+			cy = y1;
+		}
+		x1 = x + RandRangeLow(-(blksizex - 1), obs);
 		x2 = x1 + blksizex;
-		y1 = random_low(0, blksizey);
-		y1 = blksizey < obs ? y1 : -y1;
-		y1 = y + y1;
-		y2 = y1 + blksizey;
+		cx = RandRangeLow(x < x1 ? x1 : x, (x + obs) < x2 ? x + obs : x2);
 		break;
-	case 2: // block to the south
-		y1 = y + 1;
+	case 1:
+	case 3:
+		if (dir == 1) {
+			// block to the east
+			x1 = x + 1;
+			x2 = x1 + blksizex;
+			cx = x2;
+		} else {
+			 // block to the west
+			x2 = x - 1;
+			x1 = x2 - blksizex;
+			cx = x1;
+		}
+		y1 = y + RandRangeLow(-(blksizey - 1), obs);
 		y2 = y1 + blksizey;
-		x1 = random_low(0, blksizex);
-		x1 = blksizex < obs ? x1 : -x1;
-		x1 = x + x1;
-		x2 = blksizex + x1;
-		break;
-	case 3: // block to the west
-		x2 = x - 1;
-		x1 = x2 - blksizex;
-		y1 = random_low(0, blksizey);
-		y1 = blksizey < obs ? y1 : -y1;
-		y1 = y + y1;
-		y2 = y1 + blksizey;
+		cy = RandRangeLow(y < y1 ? y1 : y, (y + obs) < y2 ? y + obs : y2);
 		break;
 	case 4: // the central block
 		x1 = x - blksizex / 2u;
@@ -1252,7 +1273,7 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 		break;
 	}
 
-	if (DRLG_L3FillRoom(x1, y1, x2, y2, dir) && (random_(0, 4) != 0 || dir == 4)) {
+	if (DRLG_L3FillRoom(x1, y1, x2, y2, cx, cy, dir) && (random_(0, 4) != 0 || dir == 4)) {
 		if (dir != 2) {
 			DRLG_L3CreateBlock(x1, y1, blksizex, 0); // to north
 		}
@@ -2455,8 +2476,9 @@ static void DRLG_L3()
 {
 	bool doneflag;
 	int i;
-    extern int counter1, border;
+    extern int counter1, counter2, border;
 	do {
+        counter2++;
 		while (true) {
 			do {
                 counter1++;
@@ -2464,6 +2486,7 @@ static void DRLG_L3()
                 // add border based on areaidx
                 DRLG_AddBorder(border, 1);
 				DRLG_L3CreateBlock(RandRangeLow(border + 10, DMAXX - (border + 10) - 1), RandRangeLow(border + 10, DMAXY - (border + 10) - 1), 0, 4);
+                DRLG_AddBorder(border, 0);
 				if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 					DRLG_L3FloorArea();
 				}
@@ -2577,7 +2600,7 @@ static void DRLG_L3()
 			DRLG_L3Pool();
 		}
 	} while (_guLavapools < MIN_LAVA_POOL);
-
+#if 0
     extern int counter2;
     extern int minars[4];
     extern int maxars[4];
@@ -2586,7 +2609,7 @@ static void DRLG_L3()
         minars[2] = i;
     if (maxars[2] < i)
         maxars[2] = i;
-
+#endif
 	DRLG_L3PlaceRndSet(L3VERTWALLFIX1, 70);
 	DRLG_L3PlaceRndSet(L3HORZWALLFIX1, 70);
 #ifdef HELLFIRE

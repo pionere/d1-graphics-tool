@@ -2128,8 +2128,9 @@ void DRLG_L4AddBorder(int border, int val)
 static void DRLG_L4()
 {
 	int i;
-    extern int counter1, border;
+    extern int counter1, counter2, border;
 	while (true) {
+        counter2++;
 		do {
             counter1++;
             // adjust the size of dungBlock? work in dungeon directly (add border)?
@@ -2211,13 +2212,14 @@ static void DRLG_L4()
 		}
 		break;
 	}
+#if 0
     extern int counter2;
     counter2 += i;
     if (minars[2] > i)
         minars[2] = i;
     if (maxars[2] < i)
         maxars[2] = i;
-
+#endif
 	// DRLG_L4GeneralFix(); - commented out, because this is no longer necessary
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
