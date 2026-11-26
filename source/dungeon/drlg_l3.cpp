@@ -1113,15 +1113,15 @@ static void DRLG_LoadL3SP()
 	}
 }
 
-static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
+static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int dir)
 {
 	int i, j;
 	BYTE v;
-
+	// test if it fits to the dungeon
 	if (x1 <= 0 || x2 >= DMAXX - 1 || y1 <= 0 || y2 >= DMAXY - 1) {
 		return false;
 	}
-
+	// test if there is a room collision
 	v = 0;
 	for (j = y1; j <= y2; j++) {
 		for (i = x1; i <= x2; i++) {
@@ -1132,12 +1132,13 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 	if (v != 0) {
 		return false;
 	}
-
+	// draw the inside of the room
 	for (j = y1 + 1; j < y2; j++) {
 		for (i = x1 + 1; i < x2; i++) {
 			dungeon[i][j] = 1;
 		}
 	}
+	// add random connections
 	for (j = y1; j <= y2; j++) {
 		if (random_(0, 2) != 0) {
 			dungeon[x1][j] = 1;
@@ -1153,6 +1154,34 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 		if (random_(0, 2) != 0) {
 			dungeon[i][y2] = 1;
 		}
+	}
+	// ensure it is connected to the other room
+	switch (dir) {
+	case 0: // block to the north
+		i = RandRangeLow(x1, x2);
+		dungeon[i][y1] = 1;
+		dungeon[i][y1 + 1] = 1;
+		break;
+	case 1: // block to the east
+		j = RandRangeLow(y1, y2);
+		dungeon[x2][j] = 1;
+		dungeon[x2 - 1][j] = 1;
+		break;
+	case 2: // block to the south
+		i = RandRangeLow(x1, x2);
+		dungeon[i][y2] = 1;
+		dungeon[i][y2 - 1] = 1;
+		break;
+	case 3: // block to the west
+		j = RandRangeLow(x1, x2);
+		dungeon[x1][j] = 1;
+		dungeon[x1 + 1][j] = 1;
+		break;
+	case 4: // the central block
+		break;
+	default:
+		ASSUME_UNREACHABLE
+		break;
 	}
 
 	return true;
@@ -1209,7 +1238,7 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 		break;
 	}
 
-	if (DRLG_L3FillRoom(x1, y1, x2, y2) && (random_(0, 4) != 0 || dir == 4)) {
+	if (DRLG_L3FillRoom(x1, y1, x2, y2, dir) && (random_(0, 4) != 0 || dir == 4)) {
 		if (dir != 2) {
 			DRLG_L3CreateBlock(x1, y1, blksizex, 0); // to north
 		}
@@ -1232,8 +1261,8 @@ static void DRLG_L3FloorArea()
 
 	w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
 	h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
-	xr = DMAXX - (w + 10 + border);
-	yb = DMAXY - (h + 10 + border);
+	xr = DMAXX - (w + 10 + border) - 1;
+	yb = DMAXY - (h + 10 + border) - 1;
 
 	assert(xr > border + 10);
 	assert(yb > border + 10);
@@ -1245,8 +1274,8 @@ static void DRLG_L3FloorArea()
 	x2 = x1 + w;
 	y2 = y1 + h;
 
-    for (i = x1; i <= x2; i++) {
-	    for (j = y1; j <= y2; j++) {
+	for (i = x1; i <= x2; i++) {
+		for (j = y1; j <= y2; j++) {
 			dungeon[i][j] = 1;
 		}
 	}
@@ -2215,7 +2244,7 @@ static void DRLG_L3Wood()
 					dungeon[i][y] = 135;
 				}
 				// add door
-				dungeon[i][RandRange(y1 + 1, j - 1)] = 147;
+				dungeon[i][RandRangeLow(y1 + 1, j - 1)] = 147;
 				// replace first tile
 				if (dungeon[i][j] == 2)
 					dungeon[i][j] = 139;
@@ -2270,7 +2299,7 @@ static void DRLG_L3Wood()
 					dungeon[x][j] = 134;
 				}
 				// add door
-				dungeon[RandRange(x1 + 1, i - 1)][j] = 146;
+				dungeon[RandRangeLow(x1 + 1, i - 1)][j] = 146;
 				// replace first tile
 				if (dungeon[i][j] == 4)
 					dungeon[i][j] = 140;
@@ -2366,27 +2395,27 @@ static bool DRLG_L3LockoutOrig()
 static bool DRLG_L3Lockout()
 {
 	int i, j;
-    if (pSetPieces[0]._spData != NULL) {
-        int w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
-	    int h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
+	if (pSetPieces[0]._spData != NULL) {
+		int w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
+		int h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
 
-        int x1 = pSetPieces[0]._spx;
-	    int y1 = pSetPieces[0]._spy;
-        int y2 = y1 + h;
-        int x2 = x1 + w;
-        bool connects = false;
-        for (j = y1; j <= y2; j++) {
-            if (dungeon[x1 - 1][j] != 0 || dungeon[x2 + 1][j] != 0) {
-                connects = true;
-            }
-        }
+		int x1 = pSetPieces[0]._spx;
+		int y1 = pSetPieces[0]._spy;
+		int y2 = y1 + h;
+		int x2 = x1 + w;
+		bool connects = false;
+		for (j = y1; j <= y2; j++) {
+			if (dungeon[x1 - 1][j] != 0 || dungeon[x2 + 1][j] != 0) {
+				connects = true;
+			}
+		}
 		for (i = x1; i <= x2; i++) {
-            if (dungeon[i][y1 - 1] != 0 || dungeon[i][y2 + 1] != 0) {
-                connects = true;
-		    }
-	    }
-        if (!connects)
-            return false;
+			if (dungeon[i][y1 - 1] != 0 || dungeon[i][y2 + 1] != 0) {
+				connects = true;
+			}
+		}
+		if (!connects)
+			return false;
 
     }
     if (!DRLG_L3LockoutOrig()) {
@@ -2417,7 +2446,7 @@ static void DRLG_L3()
 				memset(dungeon, 0, sizeof(dungeon));
                 // add border based on areaidx
                 DRLG_AddBorder(border, 1);
-				DRLG_L3CreateBlock(RandRange(border + 10, DMAXX - (border + 10)), RandRange(border + 10, DMAXY - (border + 10)), 0, 4);
+				DRLG_L3CreateBlock(RandRangeLow(border + 10, DMAXX - (border + 10) - 1), RandRangeLow(border + 10, DMAXY - (border + 10) - 1), 0, 4);
 				if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 					DRLG_L3FloorArea();
 				}
