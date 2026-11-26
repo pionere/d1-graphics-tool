@@ -1159,23 +1159,23 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int dir)
 	switch (dir) {
 	case 0: // block to the north
 		i = RandRangeLow(x1, x2);
-		dungeon[i][y1] = 1;
-		dungeon[i][y1 + 1] = 1;
+		dungeon[i][y2] = 1;
+		dungeon[i][y2 + 1] = 1;
 		break;
 	case 1: // block to the east
 		j = RandRangeLow(y1, y2);
-		dungeon[x2][j] = 1;
-		dungeon[x2 - 1][j] = 1;
+		dungeon[x1][j] = 1;
+		dungeon[x1 - 1][j] = 1;
 		break;
 	case 2: // block to the south
 		i = RandRangeLow(x1, x2);
-		dungeon[i][y2] = 1;
-		dungeon[i][y2 - 1] = 1;
+		dungeon[i][y1] = 1;
+		dungeon[i][y1 - 1] = 1;
 		break;
 	case 3: // block to the west
 		j = RandRangeLow(x1, x2);
-		dungeon[x1][j] = 1;
-		dungeon[x1 + 1][j] = 1;
+		dungeon[x2][j] = 1;
+		dungeon[x2 + 1][j] = 1;
 		break;
 	case 4: // the central block
 		break;
