@@ -1113,6 +1113,18 @@ static void DRLG_LoadL3SP()
 	}
 }
 
+static void L1_dumpDun()
+{
+    char tempstr[128];
+    tempstr[DMAXY] = '\0';
+    for (int x = 0; x < DMAXX; x++) {
+        for (int y = 0; y < DMAXY; y++) {
+            tempstr[y] = dungeon[x][y] != 0 ? 'x' : ' ';
+        }
+        LogErrorF("%2d: %s", x, tempstr);
+    }
+}
+
 static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int dir)
 {
 	int i, j;
@@ -1133,6 +1145,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int dir)
 		return false;
 	}
 LogErrorF("DRLG_L3FillRoom %d:%d..%d:%d from %d", x1, y1, x2, y2, dir);
+L1_dumpDun();
 	// draw the inside of the room
 	for (j = y1 + 1; j < y2; j++) {
 		for (i = x1 + 1; i < x2; i++) {
@@ -2421,16 +2434,7 @@ static bool DRLG_L3Lockout()
     }
     if (!DRLG_L3LockoutOrig()) {
         dProgressErr() << QString("Original lockout check still needed");
-        LogErrorF("lockout dun begin");
-        char tempstr[128];
-        tempstr[DMAXY] = '\0';
-        for (int x = 0; x < DMAXX; x++) {
-            for (int y = 0; y < DMAXY; y++) {
-                tempstr[y] = dungeon[x][y] != 0 ? 'x' : ' ';
-            }
-            LogErrorF("%2d: %s", x, tempstr);
-        }
-        LogErrorF("lockout dun end");
+        L1_dumpDun();
         return false;
     } else {
         dProgressWarn() << QString("Original lockout check not needed");
