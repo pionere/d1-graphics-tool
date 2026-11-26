@@ -1173,7 +1173,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int dir)
 		dungeon[i][y1 - 1] = 1;
 		break;
 	case 3: // block to the west
-		j = RandRangeLow(x1, x2);
+		j = RandRangeLow(y1, y2);
 		dungeon[x2][j] = 1;
 		dungeon[x2 + 1][j] = 1;
 		break;
@@ -2421,6 +2421,8 @@ static bool DRLG_L3Lockout()
     if (!DRLG_L3LockoutOrig()) {
         dProgressErr() << QString("Original lockout check still needed");
         return false;
+    } else {
+        dProgressWarn() << QString("Original lockout check not needed");
     }
     return true;
 }
