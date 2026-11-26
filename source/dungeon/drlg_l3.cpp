@@ -2420,6 +2420,15 @@ static bool DRLG_L3Lockout()
     }
     if (!DRLG_L3LockoutOrig()) {
         dProgressErr() << QString("Original lockout check still needed");
+        LogErrorF("lockout dun begin");
+        tempstr[DMAXY] = '\0';
+        for (int x = 0; x < DMAXX; x++) {
+            for (int y = 0; y < DMAXY; y++) {
+                tempstr[y] = dungeon[x][y] != 0 ? 'x' : ' ';
+            }
+            LogErrorF("%2d: %s", x, tempstr);
+        }
+        LogErrorF("lockout dun end");
         return false;
     } else {
         dProgressWarn() << QString("Original lockout check not needed");
