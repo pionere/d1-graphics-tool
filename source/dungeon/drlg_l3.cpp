@@ -1132,6 +1132,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int dir)
 	if (v != 0) {
 		return false;
 	}
+LogErrorF("DRLG_L3FillRoom %d:%d..%d:%d from %d", x1, y1, x2, y2, dir);
 	// draw the inside of the room
 	for (j = y1 + 1; j < y2; j++) {
 		for (i = x1 + 1; i < x2; i++) {
@@ -2421,6 +2422,7 @@ static bool DRLG_L3Lockout()
     if (!DRLG_L3LockoutOrig()) {
         dProgressErr() << QString("Original lockout check still needed");
         LogErrorF("lockout dun begin");
+        char tempstr[128];
         tempstr[DMAXY] = '\0';
         for (int x = 0; x < DMAXX; x++) {
             for (int y = 0; y < DMAXY; y++) {
