@@ -2365,6 +2365,7 @@ static bool DRLG_L3LockoutOrig()
 
 static bool DRLG_L3Lockout()
 {
+	int i, j;
     if (pSetPieces[0]._spData != NULL) {
         int w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
 	    int h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
