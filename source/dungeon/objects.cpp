@@ -1359,10 +1359,9 @@ static void AddDecap(int oi)
 
 static void AddMagicCircle(int oi)
 {
-	ObjectStruct* os;
+	// ObjectStruct* os;
 
-	os = &objects[oi];
-	os->_oVar5 = 0;                                          // VILE_CIRCLE_PROGRESS
+	// os = &objects[oi];
 	// assert(objectdata[OBJ_MCIRCLE1].oBaseFrame == os->_oGfxFrame);
 	// os->_oVar6 = objectdata[OBJ_MCIRCLE1].oBaseFrame + 1; // CIRCLE_ACTIVE_FRAME
 }
