@@ -3061,7 +3061,7 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", mapMon.moType.monDeadFlag ? "d" : "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
-            QString baseTrnFilePath = getTrnFilePath(md.mTransFile);
+            QString baseTrnFilePath = getTrnFilePath(md.mTransFile, this->assetPath);
             QString uniqueTrnFilePath;
             this->loadMonsterGfx(cl2FilePath, baseTrnFilePath, uniqueTrnFilePath, result);
         }
@@ -3072,8 +3072,8 @@ void D1Dun::loadMonster(const MapMonster &mapMon)
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", mapMon.moType.monDeadFlag ? "d" : "n");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
-            QString baseTrnFilePath = getTrnFilePath(md.mTransFile);
-            QString uniqueTrnFilePath = getTrnFilePath(uniqMonData[monUniqueType].muTrans);
+            QString baseTrnFilePath = getTrnFilePath(md.mTransFile, this->assetPath);
+            QString uniqueTrnFilePath = getTrnFilePath(uniqMonData[monUniqueType].muTrans, this->assetPath);
             this->loadMonsterGfx(cl2FilePath, baseTrnFilePath, uniqueTrnFilePath, result);
         }
     }
@@ -3207,10 +3207,7 @@ void D1Dun::loadMissile(int misIndex)
             cl2FilePath = this->assetPath + "/Missiles/" + cl2FilePath;
             if (mfd.mfAnimFAmt == 1)
                 cl2FilePath += ".CL2";
-            QString trnFilePath;
-            if (mfd.mfAnimTrans != TRN_NONE) {
-                trnFilePath = this->assetPath + "/" + getTrnFilePath(mfd.mfAnimTrans);
-            }
+            QString trnFilePath = getTrnFilePath(mfd.mfAnimTrans, this->assetPath);;
             this->loadMissileGfx(cl2FilePath, trnFilePath, result);
         }
     }

@@ -75,7 +75,7 @@ void LogErrorF(const char* msg, ...)
 	fclose(f0);
 }
 
-QString getTrnFilePath(int id)
+QString getTrnFilePath(int id, const QString& assetPath)
 {
     QString result;
 
@@ -89,7 +89,10 @@ QString getTrnFilePath(int id)
     }
     const char* name = trnfiledata[id].trnName;
     if (path != NULL) {
-        result = QString("%1\\%2.TRN").arg(path).arg(name);
+        result = assetPath;
+        if (!assetPath.isEmpty())
+            result.append('\\');
+        result.append(QString("%1\\%2.TRN").arg(path).arg(name));
     }
     return result;
 }
