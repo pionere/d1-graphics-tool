@@ -809,7 +809,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
         // monRes.width = monfiledata[md.cmFileNum].moWidth;
-        monRes.baseTrnPath = assetPath + "/" + getTrnFilePath(monsterdata[md.cmType].mTransFile);
+        monRes.baseTrnPath = getTrnFilePath(monsterdata[md.cmType].mTransFile, assetPath);
         monRes.uniqueMon = false;
         dun->addResource(monRes);
     }
@@ -826,8 +826,8 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
         monRes.path.replace("%c", "N");
         monRes.path = assetPath + "/" + monRes.path;
         monRes.width = monfiledata[md.cmFileNum].moWidth;
-        monRes.baseTrnPath = assetPath + "/" + getTrnFilePath(monsterdata[md.cmType].mTransFile);
-        monRes.uniqueTrnPath = assetPath + "/" + getTrnFilePath(uniqMonData[ms->_muniqtype - 1].muTrans);
+        monRes.baseTrnPath = getTrnFilePath(monsterdata[md.cmType].mTransFile, assetPath);
+        monRes.uniqueTrnPath = getTrnFilePath(uniqMonData[ms->_muniqtype - 1].muTrans, assetPath);
         monRes.uniqueMon = true;
         dun->addResource(monRes);
     }*/
