@@ -1425,7 +1425,7 @@ static void DRLG_InitSubtileZOrder()
 		for (y = 0; y < MAXDUNY; y++) {
 			sx = x - y;
 			sy = x + y;
-			static_assert(MAXDUNX < 128 && MAXDUNY < 128, "Higher bits of the zOrder might overflow.");
+			static_assert(MAXDUNX <= 128 && MAXDUNY <= 128, "Higher bits of the zOrder might overflow.");
 			sx ^= 128;
 			sx &= 0xFF;
 			// assert(sy <= 0xFF);
