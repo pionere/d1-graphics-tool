@@ -735,7 +735,7 @@ static void Theme_SkelRoom(int themeId)
 	 && (nSolidTable[dPiece[xx][yy - 3]] || !nSolidTable[dPiece[xx + 1][yy - 3]])) { // or a single path to NE TODO: allow if !nSolidTable[dPiece[xx - 1][yy - 3]]?
 		if (dObject[xx][yy - 2] != 0 || dObject[xx][yy - 3] < 0 || (dObject[xx][yy - 3] > 0
              && (currLvl._dType != DTYPE_CATHEDRAL || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_L1LIGHT && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR))
-             && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TORCHM1 && objects[dObject[xx][yy - 3] - 1]._oBreak != OBJ_BARREL && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_BARRELEX)))) {
+             && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TORCHM1 && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_BARREL && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_BARRELEX)))) {
 //            extern bool stopgen;
 //            stopgen = true;
             dProgressErr() << QString("object to north-east %1 type%2 x:%3 y:%4 vs %5").arg(dObject[xx][yy - 3]).arg(objects[dObject[xx][yy - 3]- 1]._otype).arg(xx).arg(theme._tsy1).arg(yy - 3);
@@ -757,7 +757,7 @@ static void Theme_SkelRoom(int themeId)
 	 && (nSolidTable[dPiece[xx][yy + 3]] || !nSolidTable[dPiece[xx + 1][yy + 3]])) { // or a single path to SW TODO: allow if !nSolidTable[dPiece[xx - 1][yy + 3]]?
         if (dObject[xx][yy + 2] != 0 || dObject[xx][yy + 3] < 0 || (dObject[xx][yy + 3] > 0
              && (currLvl._dType != DTYPE_CATHEDRAL || (objects[dObject[xx][yy + 3] - 1]._otype != OBJ_L1LIGHT && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TRAPR))
-             && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TORCHM1 && objects[dObject[xx][yy + 3] - 1]._oBreak != OBJ_BARREL && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_BARRELEX)))) {
+             && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TORCHM1 && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_BARREL && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_BARRELEX)))) {
 //            extern bool stopgen;
 //            stopgen = true;
             dProgressErr() << QString("object to south-east %1 type%2 x:%3 y:%4 vs %5").arg(dObject[xx][yy + 3]).arg(objects[dObject[xx][yy + 3] - 1]._otype).arg(xx).arg(theme._tsy2).arg(yy + 3);
