@@ -28,14 +28,14 @@
 
 // MAXDUN = DSIZE + 2 * DBORDER
 // DSIZE = 2 * DMAX
-#define DMAXX                    40
-#define DMAXY                    40
+#define DMAXX                    48
+#define DMAXY                    48
 #define DBORDERX                 16
 #define DBORDERY                 16
-#define DSIZEX                   80
-#define DSIZEY                   80
-#define MAXDUNX                  112
-#define MAXDUNY                  112
+#define DSIZEX                   96
+#define DSIZEY                   96
+#define MAXDUNX                  128
+#define MAXDUNY                  128
 /** The maximum size of the theme rooms (tiles) */
 #define MAXTHEMESIZE             10
 /** The size of the quads in hell. */
