@@ -736,9 +736,9 @@ static void Theme_SkelRoom(int themeId)
 		if (dObject[xx][yy - 2] != 0 || dObject[xx][yy - 3] < 0 || (dObject[xx][yy - 3] > 0
              && (currLvl._dType != DTYPE_CATHEDRAL || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_L1LIGHT && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR))
              && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy - 3] - 1]._oBreak != OBJ_BARREL && objects[dObject[xx][yy - 3] - 1]._otype != OBJ_BARRELEX)))) {
-            extern bool stopgen;
-            stopgen = true;
-            LogErrorF("object to north-east %d type%d x:%d y:%d vs %d", dObject[xx][yy - 3], objects[dObject[xx][yy - 3]- 1]._otype, xx, theme._tsy1, yy - 3);
+//            extern bool stopgen;
+//            stopgen = true;
+            dProgressErr() << QString("object to north-east %1 type%2 x:%3 y:%4 vs %5").arg(dObject[xx][yy - 3]).arg(objects[dObject[xx][yy - 3]- 1]._otype).arg(xx).arg(theme._tsy1).arg(yy - 3);
         }
 		// assert(dObject[xx][yy - 2] == 0);
 	} else {
@@ -747,9 +747,9 @@ static void Theme_SkelRoom(int themeId)
         if (dObject[xx][yy - 3] == 0 && dObject[xx][yy - 2] == 0
          && (currLvl._dType != DTYPE_CATHEDRAL || (dPiece[xx][yy - 3] != 11 && dPiece[xx][yy - 3] != 249 && dPiece[xx][yy - 3] != 325 && dPiece[xx + 1][yy - 3] != 270))
          && (currLvl._dType != DTYPE_CATACOMBS || (dPiece[xx][yy - 3] != 553 && dPiece[xx][yy - 3] != 424))) {
-            extern bool stopgen;
-            stopgen = true;
-            LogErrorF("no object to north-east x:%d y:%d vs %d pn%d type %d", xx, theme._tsy1, yy - 3, dPiece[xx][yy - 3], automaptype[dPiece[xx][yy - 3]]);
+//            extern bool stopgen;
+//            stopgen = true;
+            dProgressErr() << QString("no object to north-east x:%1 y:%2 vs %3 pn%4 type %5").arg(xx).arg(theme._tsy1).arg(yy - 3).arg(dPiece[xx][yy - 3]).arg(automaptype[dPiece[xx][yy - 3]]);
         }
 		objs[0] = -1;
 	}
@@ -757,10 +757,10 @@ static void Theme_SkelRoom(int themeId)
 	 && (nSolidTable[dPiece[xx][yy + 3]] || !nSolidTable[dPiece[xx + 1][yy + 3]])) { // or a single path to SW TODO: allow if !nSolidTable[dPiece[xx - 1][yy + 3]]?
         if (dObject[xx][yy + 2] != 0 || dObject[xx][yy + 3] < 0 || (dObject[xx][yy + 3] > 0
              && (currLvl._dType != DTYPE_CATHEDRAL || (objects[dObject[xx][yy + 3] - 1]._otype != OBJ_L1LIGHT && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TRAPR))
-             && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy + 3] - 1]._oBreak != OBJ_BARREL && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_BARRELEX)))) {
-            extern bool stopgen;
-            stopgen = true;
-            LogErrorF("object to south-east %d type%d x:%d y:%d vs %d", dObject[xx][yy + 3], objects[dObject[xx][yy + 3] - 1]._otype, xx, theme._tsy2, yy + 3);
+             && (currLvl._dType != DTYPE_CATACOMBS || (objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TRAPR && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TORCHR1 && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_TORCHM1 && objects[dObject[xx][yy + 3] - 1]._oBreak != OBJ_BARREL && objects[dObject[xx][yy + 3] - 1]._otype != OBJ_BARRELEX)))) {
+//            extern bool stopgen;
+//            stopgen = true;
+            dProgressErr() << QString("object to south-east %1 type%2 x:%3 y:%4 vs %5").arg(dObject[xx][yy + 3]).arg(objects[dObject[xx][yy + 3] - 1]._otype).arg(xx).arg(theme._tsy2).arg(yy + 3);
         }
 		// assert(dObject[xx][yy + 2] == 0);
 	} else {
@@ -769,9 +769,9 @@ static void Theme_SkelRoom(int themeId)
         if (dObject[xx][yy + 3] == 0 && dObject[xx][yy + 2] == 0
          && (currLvl._dType != DTYPE_CATHEDRAL || (dPiece[xx][yy + 3] != 11 && dPiece[xx][yy + 3] != 249 && dPiece[xx][yy + 3] != 325 && dPiece[xx + 1][yy + 3] != 270))
          && (currLvl._dType != DTYPE_CATACOMBS || (dPiece[xx][yy + 3] != 553))) {
-            extern bool stopgen;
-            stopgen = true;
-            LogErrorF("no object to south-east x:%d y:%d vs %d pn%d type %d", xx, theme._tsy2, yy + 3, dPiece[xx][yy + 3], automaptype[dPiece[xx][yy + 3]]);
+//            extern bool stopgen;
+//            stopgen = true;
+            dProgressErr() << QString("no object to south-east x:%1 y:%2 vs %3 pn%4 type %5").arg(xx).arg(theme._tsy2).arg(yy + 3).arg(dPiece[xx][yy + 3]).arg(automaptype[dPiece[xx][yy + 3]]);
         }
 		objs[1] = -1;
 	}

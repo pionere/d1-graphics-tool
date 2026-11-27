@@ -694,9 +694,7 @@ typedef struct ObjFileData {
 
 typedef struct ObjectStruct {
 	int _otype; // _object_id
-	int _ox;    // Tile X-position of the object
-	int _oy;    // Tile Y-position of the object
-	POS32 _opos; // Precise dungeon X-position of the object
+	POS32 _opos; // Precise dungeon position of the object
 	int _oSFX;  // _sfx_id
 	BYTE _oSFXCnt;
 	BYTE _oAnimFlag;  // object_anim_mode
