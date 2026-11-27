@@ -718,6 +718,10 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     for (int y = 0; y < MAXDUNY; y += TILE_HEIGHT) {
         for (int x = 0; x < MAXDUNX; x += TILE_WIDTH) {
             dun->setTileAt(x, y, baseTile);
+        }
+    }
+    for (int y = 0; y < MAXDUNY; y++) {
+        for (int x = 0; x < MAXDUNX; x++) {
             dun->setItemAt(x, y, 0);
             MapObject obj = { 0, 0, 0, false };
             dun->setObjectAt(x, y, obj);
