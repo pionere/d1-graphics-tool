@@ -33,16 +33,9 @@ bool LineClearPos(POS32 sp, POS32 dp)
 }
 
 /*
- * Similar to walk offsetx/y with PLR/MON_WALK_SHIFT, missile velocity values
- * are shifted with MIS_*VELO_SHIFT to the higher range for better precision.
- * if MIS_VELO_SHIFT is set to 0 and MIS_BASE_VELO_SHIFT to 16:
- *    the result is reduced code size with slightly slower runtime speed.
- * if MIS_VELO_SHIFT is set to 16, MIS_BASE_VELO_SHIFT to 0:
- *    the result is increased code size with slightly better runtime speed.
+ * Missile velocity values are shifted with MIS_*VELO_SHIFT to the higher range for better precision.
  */
-#define MIS_VELO_SHIFT      0
-#define MIS_BASE_VELO_SHIFT 16
-#define MIS_SHIFTEDVEL(x)   ((x) << MIS_VELO_SHIFT)
+#define MIS_VELO_SHIFT      16
 
 int missileactive[MAXMISSILES];
 MissileStruct missile[MAXMISSILES];
