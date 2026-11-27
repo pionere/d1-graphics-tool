@@ -572,8 +572,8 @@ static void ObjAddTraps()
 			continue;
 		if (random_(144, 128) >= rndv)
 			continue;
-		ox = os->_ox;
-		oy = os->_oy;
+		ox = (unsigned)os->_opos.x / DUN_WIDTH;
+		oy = (unsigned)os->_opos.y / DUN_WIDTH;
 		if (random_(144, 2) == 0) {
 			tx = ox - 1;
 			while (!nSolidTable[dPiece[tx][oy]])
@@ -853,7 +853,7 @@ void ObjAddDoorLock(int ox, int oy, int oi)
 		objects[on]._oVar1 = oi + 1; // LOCK_OI_REF
 		objects[oi]._oVar4 = DOOR_LOCKED;
 
-		// dProgressWarn() << QString("Locked door %1:%2 plate %3:%4").arg(objects[oi]._ox).arg(objects[oi]._oy).arg(ox).arg(oy);
+		// dProgressWarn() << QString("Locked door %1:%2 plate %3:%4").arg(objects[oi]._opos.x).arg(objects[oi]._opos.y).arg(ox).arg(oy);
 	}
 }
 
@@ -1003,7 +1003,9 @@ void InitObjects()
 /*static void DeleteObject_(int oi, int idx)
 {
 	//objectavail[MAXOBJECTS - numobjects] = oi;
-	dObject[objects[oi]._ox][objects[oi]._oy] = 0;
+	int ox = (unsigned)objects[oi]._opos.x / DUN_WIDTH;
+	int oy = (unsigned)objects[oi]._opos.y / DUN_WIDTH;
+	dObject[ox][oy] = 0;
 	//objectavail[numobjects] = oi;
 	numobjects--;
 	if (numobjects > 0 && idx != numobjects)
@@ -1131,13 +1133,13 @@ static void AddBarrel(int oi)
 	rnd1 = random_(149, 128);
 	rnd2 = random_(149, 128);
 	if (rnd1 < 77) {
-		rnd1 = -1;                 // BARREL_EMPTY
+		rnd1 = -1;                     // BARREL_EMPTY
 	} else if (rnd1 < 103) {
-		rnd1 = rnd2 >= 43 ? 1 : 0;  // BARREL_ITEM / BARREL_ITEM_TYPE
+		rnd1 = rnd2 >= 43 ? 1 : 0;     // BARREL_ITEM / BARREL_ITEM_TYPE
 	} else {
-		rnd1 = PreSpawnSkeleton(); // BARREL_SKELE
+		rnd1 = PreSpawnSkeleton() + 1; // BARREL_SKELE
 		// assert(rnd1 == -1 || rnd1 >= MAX_MINIONS);
-		static_assert(MAX_MINIONS > 1, "AddBarrel might not spawn a skeleton");
+		static_assert(MAX_MINIONS + 1 > 1, "AddBarrel might not spawn a skeleton");
 	}
 	os->_oVar1 = rnd1;
 }
@@ -1483,8 +1485,6 @@ int AddObject(int type, int ox, int oy)
 	// os->_oUniqAnim = TRN_NONE;
 	os->_oRndSeed = NextRndSeed();
 	// place object
-	os->_ox = ox;
-	os->_oy = oy;
 	os->_opos = DungeonToDunPos(ox, oy);
 	// dFlags[ox][oy] |= BFLAG_OBJ_PROTECT | BFLAG_MON_PROTECT;
 	const bool ready = !nSolidTable[dPiece[ox][oy]] || !(os->_oModeFlags & OMF_FLOOR);
@@ -1688,7 +1688,9 @@ void ObjInitLight()
 			} else
 #endif
 			{
-				TraceLightSource(os->_ox + ((olr & OLF_XO) ? 1 : 0), os->_oy + ((olr & OLF_YO) ? 1 : 0), olr & OLF_MASK);
+				int ox = (unsigned)os->_opos.x / DUN_WIDTH;
+				int oy = (unsigned)os->_opos.y / DUN_WIDTH;
+				TraceLightSource(ox + ((olr & OLF_XO) ? 1 : 0), oy + ((olr & OLF_YO) ? 1 : 0), olr & OLF_MASK);
 			}
 		}
 	}
