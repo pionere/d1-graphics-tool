@@ -287,9 +287,10 @@ static int AddMonsterType(int type, BOOL scatter)
 		;
 
 	if (i == nummtypes) {
+dProgressWarn() << QApplication::tr("adding monster type %1 (%2) img %3.", type, scatter, monstimgtot);
 		nummtypes++;
 		// assert(nummtypes <= MAX_LVLMTYPES);
-        if (nummtypes > MAX_LVLMTYPES) {
+        if (nummtypes > MAX_LVLMTYPES - NUM_MMTYPES) {
             dProgressErr() << QApplication::tr("Too many monster types.");
         }
 		if (IsGoat(type)) {
