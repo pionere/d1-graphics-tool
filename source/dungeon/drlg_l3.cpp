@@ -1131,6 +1131,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int 
 {
 	int i, j;
 	BYTE v;
+	unsigned c;
 	// test if it fits to the dungeon
 	if (x1 <= 0 || x2 >= DMAXX - 1 || y1 <= 0 || y2 >= DMAXY - 1) {
 		return false;
@@ -1154,21 +1155,25 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int 
 		}
 	}
 	// add random connections
+	// assert(y2 - y1 + 1 < 6);
+	c = random_(0, 1 << (6 * 2));
 	for (j = y1; j <= y2; j++) {
-		if (random_(0, 2) != 0) {
+		if (c & 1)
 			dungeon[x1][j] = 1;
-		}
-		if (random_(0, 2) != 0) {
+		c >>= 1;
+		if (c & 1)
 			dungeon[x2][j] = 1;
-		}
+		c >>= 1;
 	}
+	// assert(x2 - x1 + 1 < 6);
+	c = random_(0, 1 << (6 * 2));
 	for (i = x1; i <= x2; i++) {
-		if (random_(0, 2) != 0) {
+		if (c & 1)
 			dungeon[i][y1] = 1;
-		}
-		if (random_(0, 2) != 0) {
+		c >>= 1;
+		if (c & 1)
 			dungeon[i][y2] = 1;
-		}
+		c >>= 1;
 	}
 	// ensure it is connected to the other room
 	switch (dir) {

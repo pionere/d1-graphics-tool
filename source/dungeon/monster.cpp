@@ -287,7 +287,7 @@ static int AddMonsterType(int type, BOOL scatter)
 		;
 
 	if (i == nummtypes) {
-dProgressWarn() << QApplication::tr("adding monster type %1 (%2) img %3.").arg(type).arg(scatter).arg(monstimgtot);
+// dProgressWarn() << QApplication::tr("adding monster type %1 (%2) img %3.").arg(type).arg(scatter).arg(monstimgtot);
 		nummtypes++;
 		// assert(nummtypes <= MAX_LVLMTYPES);
         if (nummtypes > MAX_LVLMTYPES - NUM_MMTYPES) {
