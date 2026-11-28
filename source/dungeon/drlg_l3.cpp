@@ -1304,6 +1304,7 @@ static void DRLG_L3FloorArea()
 
 	w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
 	h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
+restart:
 	xr = DMAXX - (w + 10 + border) - 1;
 	yb = DMAXY - (h + 10 + border) - 1;
 
@@ -1316,6 +1317,18 @@ static void DRLG_L3FloorArea()
 	pSetPieces[0]._spy = y1;
 	x2 = x1 + w;
 	y2 = y1 + h;
+
+	bool connects = false;
+	for (i = x1 - 1; i <= x2 + 1; i++) {
+		for (j = y1 - 1; j <= y2 + 1; j++) {
+			if (dungeon[i][j] != 0) {
+				connects = true;
+			}
+		}
+	}
+	if (!connects)
+		goto restart;
+	}
 
 	for (i = x1; i <= x2; i++) {
 		for (j = y1; j <= y2; j++) {
