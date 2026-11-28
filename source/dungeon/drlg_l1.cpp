@@ -1686,9 +1686,28 @@ static void DRLG_L1SetRoom(int rx1, int ry1)
  */
 static void L1FillChambers()
 {
-	int c;
+	int c, i, x, y, xp, yp;
 
-	if (ChambersVertical) {
+	c = ChambersFirst + ChambersMiddle + ChambersLast;
+	for (i = 0; i < c; i++) {
+		x = drlg.L1RoomList[i].lrx;
+		y = drlg.L1RoomList[i].lry;
+		DRLG_L1GChamber(x, y);
+		if (i != 0) {
+			if (x == xp) {
+				assert(ChambersVertical);
+				DRLG_L1GHallVert(x + 3, yp + CHAMBER_SIZE, y - 1);
+			} else {
+				assert(y == yp);
+				assert(!ChambersVertical);
+				DRLG_L1GHallHoriz(xp + CHAMBER_SIZE, y + 3, x - 1);
+			}
+		}
+		xp = x;
+		yp = y;
+	}
+
+	/*if (ChambersVertical) {
 		// draw the vertical chambers
 		if (ChambersFirst)
 			DRLG_L1GChamber(15, 1);
@@ -1750,6 +1769,13 @@ static void L1FillChambers()
 		} else {
 			DRLG_L1SetRoom(c, 16);
 		}
+	}*/
+
+	if (pSetPieces[0]._spData != NULL) {
+		i = random_low(0, c);
+		x = drlg.L1RoomList[i].lrx;
+		y = drlg.L1RoomList[i].lry;
+		DRLG_L1SetRoom(x + 1, y + 1);
 	}
 }
 

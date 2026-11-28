@@ -1210,25 +1210,25 @@ static void L4Block2Dungeon()
 	if (sizeof(dungeon) != L4BLOCKX * L4BLOCKY * 4 || sizeof(dungeon[0]) != L4BLOCKY * 2) {
 		memset(dungeon, 0, sizeof(dungeon));
 	}
-    // top-left block
+	// top-left block
 	for (j = 0; j < L4BLOCKY; j++) {
 		for (i = 0; i < L4BLOCKX; i++) {
 			dungeon[i + DMAXX / 2 - L4BLOCKX][j + DMAXY / 2 - L4BLOCKY] = drlg.dungBlock[i][j];
 		}
 	}
-    // top-right block
+	// top-right block
 	for (j = 0; j < L4BLOCKY; j++) {
 		for (i = 0; i < L4BLOCKX; i++) {
 			dungeon[i + DMAXX / 2 - L4BLOCKX][DMAXY / 2 + j] = drlg.dungBlock[i][L4BLOCKY - 1 - j];
 		}
 	}
-    // bottom-left block
+	// bottom-left block
 	for (j = 0; j < L4BLOCKY; j++) {
 		for (i = 0; i < L4BLOCKX; i++) {
 			dungeon[DMAXX / 2 + i][DMAXY / 2 - L4BLOCKY + j] = drlg.dungBlock[L4BLOCKX - 1 - i][j];
 		}
 	}
-    // bottom-right block
+	// bottom-right block
 	for (j = 0; j < L4BLOCKY; j++) {
 		for (i = 0; i < L4BLOCKX; i++) {
 			dungeon[DMAXX / 2 + i][DMAXY / 2 + j] = drlg.dungBlock[L4BLOCKX - 1 - i][L4BLOCKY - 1 - j];
