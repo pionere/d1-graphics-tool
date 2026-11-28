@@ -1326,7 +1326,7 @@ restart:
 			}
 		}
 	}
-	if (!connects)
+	if (!connects) {
 		goto restart;
 	}
 
@@ -2450,7 +2450,7 @@ static bool DRLG_L3LockoutOrig()
 
 static bool DRLG_L3Lockout()
 {
-	int i, j;
+	/*int i, j;
 	if (pSetPieces[0]._spData != NULL) {
 		int w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
 		int h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
@@ -2473,9 +2473,10 @@ static bool DRLG_L3Lockout()
 		if (!connects)
 			return false;
 
-    }
+    }*/
     if (!DRLG_L3LockoutOrig()) {
         dProgressErr() << QString("Original lockout check still needed");
+        LogErrorF("Original lockout check still needed");
         L1_dumpDun();
         return false;
 //    } else {
