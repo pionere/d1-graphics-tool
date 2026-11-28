@@ -19,6 +19,10 @@ DEVILUTION_BEGIN_NAMESPACE
 #define DEFAULT_MEGATILE_L3 7
 /** The required number of lava pools.*/
 #define MIN_LAVA_POOL 3
+
+#define BLOCK_MAX    5
+#define BLOCK_MIN    4
+
 /** Helper variable to check if sufficient number of lava pools have been generated */
 unsigned _guLavapools;
 
@@ -1115,7 +1119,7 @@ static void DRLG_LoadL3SP()
 
 static void L1_dumpDun()
 {
-/*
+
     char tempstr[128];
     tempstr[DMAXY] = '\0';
     for (int x = 0; x < DMAXX; x++) {
@@ -1124,7 +1128,6 @@ static void L1_dumpDun()
         }
         LogErrorF("%2d:%s", x, tempstr);
     }
-*/
 }
 
 static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int dir)
@@ -1147,7 +1150,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int 
 	if (v != 0) {
 		return false;
 	}
-// LogErrorF("DRLG_L3FillRoom %d:%d..%d:%d to %d cp %d:%d", x1, y1, x2, y2, dir, cx, cy);
+ LogErrorF("DRLG_L3FillRoom %d:%d..%d:%d to %d cp %d:%d", x1, y1, x2, y2, dir, cx, cy);
 	// draw the inside of the room
 	for (j = y1 + 1; j < y2; j++) {
 		for (i = x1 + 1; i < x2; i++) {
@@ -1155,8 +1158,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int 
 		}
 	}
 	// add random connections
-	// assert(y2 - y1 + 1 < 6);
-	c = random_(0, 1 << (6 * 2));
+	c = random_(0, 1 << (BLOCK_MAX * 2));
 	for (j = y1; j <= y2; j++) {
 		if (c & 1)
 			dungeon[x1][j] = 1;
@@ -1165,8 +1167,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int 
 			dungeon[x2][j] = 1;
 		c >>= 1;
 	}
-	// assert(x2 - x1 + 1 < 6);
-	c = random_(0, 1 << (6 * 2));
+	c = random_(0, 1 << (BLOCK_MAX * 2));
 	for (i = x1; i <= x2; i++) {
 		if (c & 1)
 			dungeon[i][y1] = 1;
@@ -1223,7 +1224,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int 
 		ASSUME_UNREACHABLE
 		break;
 	}
-//L1_dumpDun();
+L1_dumpDun();
 	return true;
 }
 
@@ -1231,8 +1232,8 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 {
 	int blksizex, blksizey, x1, y1, x2, y2, cx, cy;
 
-	blksizex = RandRange(3, 4);
-	blksizey = RandRange(3, 4);
+	blksizex = RandRange(BLOCK_MIN, BLOCK_MAX) - 1;
+	blksizey = RandRange(BLOCK_MIN, BLOCK_MAX) - 1;
 
 	switch (dir) {
 	case 0:
