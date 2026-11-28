@@ -1119,7 +1119,7 @@ static void DRLG_LoadL3SP()
 
 static void L1_dumpDun()
 {
-
+/*
     char tempstr[128];
     tempstr[DMAXY] = '\0';
     for (int x = 0; x < DMAXX; x++) {
@@ -1128,6 +1128,7 @@ static void L1_dumpDun()
         }
         LogErrorF("%2d:%s", x, tempstr);
     }
+*/
 }
 
 static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int dir)
@@ -1150,7 +1151,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2, int cx, int cy, int 
 	if (v != 0) {
 		return false;
 	}
- LogErrorF("DRLG_L3FillRoom %d:%d..%d:%d to %d cp %d:%d", x1, y1, x2, y2, dir, cx, cy);
+// LogErrorF("DRLG_L3FillRoom %d:%d..%d:%d to %d cp %d:%d", x1, y1, x2, y2, dir, cx, cy);
 	// draw the inside of the room
 	for (j = y1 + 1; j < y2; j++) {
 		for (i = x1 + 1; i < x2; i++) {

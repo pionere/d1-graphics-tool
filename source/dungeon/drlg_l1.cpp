@@ -1217,7 +1217,7 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
 static void DRLG_L1CreateDungeon()
 {
 	int is, ie, i;
-
+extern int border;
 	nRoomCnt = 0;
 	ChambersVertical = random_(0, 2);
 	// select the base chambers
@@ -1239,14 +1239,14 @@ static void DRLG_L1CreateDungeon()
 
 		// draw the selected rooms
 		if (ChambersFirst)
-			L1DrawRoom(15, 1, CHAMBER_SIZE, CHAMBER_SIZE);
+			L1DrawRoom(15 + border, 1 + border, CHAMBER_SIZE, CHAMBER_SIZE);
 		else
 			is = 1 + CHAMBER_SIZE + 4 + CHAMBER_SIZE;
 
 		if (ChambersMiddle)
-			L1DrawRoom(15, 15, CHAMBER_SIZE, CHAMBER_SIZE);
+			L1DrawRoom(15 + border, 15 + border, CHAMBER_SIZE, CHAMBER_SIZE);
 		if (ChambersLast)
-			L1DrawRoom(15, 29, CHAMBER_SIZE, CHAMBER_SIZE);
+			L1DrawRoom(15 + border, 29 + border, CHAMBER_SIZE, CHAMBER_SIZE);
 		else
 			ie = 15;
 		// draw a hallway between the rooms
@@ -1254,24 +1254,24 @@ static void DRLG_L1CreateDungeon()
 		if (is < ie) {
 		spaceLeft -= 6 * ((ie - is) - (i == 7 ? CHAMBER_SIZE : 0));
 #endif
-		for (i = is; i < ie; i++) {
-			dungeon[17][i] = 1;
-			dungeon[18][i] = 1;
-			dungeon[19][i] = 1;
-			dungeon[20][i] = 1;
-			dungeon[21][i] = 1;
-			dungeon[22][i] = 1;
+		for (i = is + border; i < ie + border; i++) {
+			dungeon[17 + border][i] = 1;
+			dungeon[18 + border][i] = 1;
+			dungeon[19 + border][i] = 1;
+			dungeon[20 + border][i] = 1;
+			dungeon[21 + border][i] = 1;
+			dungeon[22 + border][i] = 1;
 		}
 #ifdef SPACEL
 		}
 #endif
 		// spread additional rooms starting from the main rooms
 		if (ChambersFirst)
-			L1RoomGen(15, 1, CHAMBER_SIZE, CHAMBER_SIZE, false);
+			L1RoomGen(15 + border, 1 + border, CHAMBER_SIZE, CHAMBER_SIZE, false);
 		if (ChambersMiddle)
-			L1RoomGen(15, 15, CHAMBER_SIZE, CHAMBER_SIZE, false);
+			L1RoomGen(15 + border, 15 + border, CHAMBER_SIZE, CHAMBER_SIZE, false);
 		if (ChambersLast)
-			L1RoomGen(15, 29, CHAMBER_SIZE, CHAMBER_SIZE, false);
+			L1RoomGen(15 + border, 29 + border, CHAMBER_SIZE, CHAMBER_SIZE, false);
 
 	} else {
 		// place the main rooms horizontally
@@ -1280,14 +1280,14 @@ static void DRLG_L1CreateDungeon()
 
 		// draw the selected rooms
 		if (ChambersFirst)
-			L1DrawRoom(1, 15, CHAMBER_SIZE, CHAMBER_SIZE);
+			L1DrawRoom(1 + border, 15 + border, CHAMBER_SIZE, CHAMBER_SIZE);
 		else
 			is = 1 + CHAMBER_SIZE + 4 + CHAMBER_SIZE;
 
 		if (ChambersMiddle)
-			L1DrawRoom(1 + CHAMBER_SIZE + 4, 15, CHAMBER_SIZE, CHAMBER_SIZE);
+			L1DrawRoom(1 + border + CHAMBER_SIZE + 4, 15 + border, CHAMBER_SIZE, CHAMBER_SIZE);
 		if (ChambersLast)
-			L1DrawRoom(1 + CHAMBER_SIZE + 4 + CHAMBER_SIZE + 4, 15, CHAMBER_SIZE, CHAMBER_SIZE);
+			L1DrawRoom(1 + border + CHAMBER_SIZE + 4 + CHAMBER_SIZE + 4, 15 + border, CHAMBER_SIZE, CHAMBER_SIZE);
 		else
 			ie = 15;
 		// draw a hallway between the rooms
@@ -1295,24 +1295,24 @@ static void DRLG_L1CreateDungeon()
 		if (is < ie) {
 		spaceLeft -= 6 * ((ie - is) - (i == 7 ? CHAMBER_SIZE : 0));
 #endif
-		for (i = is; i < ie; i++) {
-			dungeon[i][17] = 1;
-			dungeon[i][18] = 1;
-			dungeon[i][19] = 1;
-			dungeon[i][20] = 1;
-			dungeon[i][21] = 1;
-			dungeon[i][22] = 1;
+		for (i = is + border; i < ie + border; i++) {
+			dungeon[i][17 + border] = 1;
+			dungeon[i][18 + border] = 1;
+			dungeon[i][19 + border] = 1;
+			dungeon[i][20 + border] = 1;
+			dungeon[i][21 + border] = 1;
+			dungeon[i][22 + border] = 1;
 		}
 #ifdef SPACEL
 		}
 #endif
 		// spread additional rooms starting from the main rooms
 		if (ChambersFirst)
-			L1RoomGen(1, 15, CHAMBER_SIZE, CHAMBER_SIZE, true);
+			L1RoomGen(1 + border, 15 + border, CHAMBER_SIZE, CHAMBER_SIZE, true);
 		if (ChambersMiddle)
-			L1RoomGen(15, 15, CHAMBER_SIZE, CHAMBER_SIZE, true);
+			L1RoomGen(15 + border, 15 + border, CHAMBER_SIZE, CHAMBER_SIZE, true);
 		if (ChambersLast)
-			L1RoomGen(29, 15, CHAMBER_SIZE, CHAMBER_SIZE, true);
+			L1RoomGen(29 + border, 15 + border, CHAMBER_SIZE, CHAMBER_SIZE, true);
 	}
 }
 extern int minars[4];
